@@ -1,0 +1,6050 @@
+[
+  {
+    "id": "home",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 35.67,
+    "areaFraction": 0.2477,
+    "centroid": [
+      6.0,
+      6.9115
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 3.5424,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "home",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.333,
+      1.333,
+      14.667,
+      14.667
+    ],
+    "area": 70.2018,
+    "areaFraction": 0.2742,
+    "centroid": [
+      8.0,
+      9.1857
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 4.3895,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "home",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 142.692,
+    "areaFraction": 0.2477,
+    "centroid": [
+      12.0,
+      13.8224
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 7.0844,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "home",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 59.5,
+    "areaFraction": 0.4132,
+    "centroid": [
+      6.0,
+      6.5252
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "home",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.333,
+      1.333,
+      14.667,
+      14.667
+    ],
+    "area": 105.7842,
+    "areaFraction": 0.4132,
+    "centroid": [
+      8.0,
+      8.7002
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "home",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 238.0,
+    "areaFraction": 0.4132,
+    "centroid": [
+      12.0,
+      13.0504
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "menu",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      9.0
+    ],
+    "area": 30.0,
+    "areaFraction": 0.2083,
+    "centroid": [
+      6.0,
+      5.5
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "menu",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      2.583,
+      14.5,
+      13.417
+    ],
+    "area": 58.5,
+    "areaFraction": 0.2285,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "menu",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      4.0,
+      22.0,
+      20.0
+    ],
+    "area": 120.0,
+    "areaFraction": 0.2083,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "menu",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      10.0
+    ],
+    "area": 60.0,
+    "areaFraction": 0.4167,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "menu",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      2.083,
+      14.5,
+      13.917
+    ],
+    "area": 97.5,
+    "areaFraction": 0.3809,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "menu",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      3.5,
+      22.0,
+      20.5
+    ],
+    "area": 180.0,
+    "areaFraction": 0.3125,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "more",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      5.0,
+      10.0,
+      6.0
+    ],
+    "area": 3.0,
+    "areaFraction": 0.0208,
+    "centroid": [
+      5.5,
+      5.5
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "more",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.667,
+      7.0,
+      14.333,
+      9.0
+    ],
+    "area": 12.0,
+    "areaFraction": 0.0469,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "more",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.5,
+      10.5,
+      21.5,
+      13.5
+    ],
+    "area": 27.0,
+    "areaFraction": 0.0469,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "more",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      5.0,
+      11.0,
+      7.0
+    ],
+    "area": 12.0,
+    "areaFraction": 0.0833,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "more",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.167,
+      6.5,
+      14.833,
+      9.5
+    ],
+    "area": 27.0,
+    "areaFraction": 0.1055,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "more",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      10.0,
+      22.0,
+      14.0
+    ],
+    "area": 48.0,
+    "areaFraction": 0.0833,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "search",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 26.8625,
+    "areaFraction": 0.1865,
+    "centroid": [
+      5.4484,
+      5.4484
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "search",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.499,
+      14.499
+    ],
+    "area": 51.6396,
+    "areaFraction": 0.2017,
+    "centroid": [
+      7.3565,
+      7.3565
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 7.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "search",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      21.999,
+      21.999
+    ],
+    "area": 105.7889,
+    "areaFraction": 0.1837,
+    "centroid": [
+      10.9543,
+      10.9543
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 11.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "search",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      10.999,
+      10.999
+    ],
+    "area": 46.0854,
+    "areaFraction": 0.32,
+    "centroid": [
+      5.4388,
+      5.4388
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 3.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "search",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.499,
+      14.499
+    ],
+    "area": 76.5452,
+    "areaFraction": 0.299,
+    "centroid": [
+      7.3445,
+      7.3445
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "search",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      21.999,
+      21.999
+    ],
+    "area": 147.263,
+    "areaFraction": 0.2557,
+    "centroid": [
+      10.9493,
+      10.9493
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 9.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "grid",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 48.0,
+    "areaFraction": 0.3333,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 4,
+    "holes": 4,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "grid",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 84.0,
+    "areaFraction": 0.3281,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 4,
+    "holes": 4,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "grid",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 160.0,
+    "areaFraction": 0.2778,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 4,
+    "holes": 4,
+    "minimumHoleDiameter": 3.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "grid",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 64.0,
+    "areaFraction": 0.4444,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 4,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "grid",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 100.0,
+    "areaFraction": 0.3906,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 4,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "grid",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 196.0,
+    "areaFraction": 0.3403,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 4,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-left",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.793,
+      2.146,
+      10.5,
+      9.854
+    ],
+    "area": 16.9475,
+    "areaFraction": 0.1177,
+    "centroid": [
+      5.3731,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-left",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.273,
+      2.803,
+      14.0,
+      13.197
+    ],
+    "area": 33.6418,
+    "areaFraction": 0.1314,
+    "centroid": [
+      7.1781,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-left",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.586,
+      4.293,
+      21.0,
+      19.707
+    ],
+    "area": 67.764,
+    "areaFraction": 0.1176,
+    "centroid": [
+      10.7466,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-left",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.086,
+      1.793,
+      10.5,
+      10.207
+    ],
+    "area": 31.968,
+    "areaFraction": 0.222,
+    "centroid": [
+      5.4243,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-left",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.566,
+      2.449,
+      14.0,
+      13.551
+    ],
+    "area": 53.6845,
+    "areaFraction": 0.2097,
+    "centroid": [
+      7.2292,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-left",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.879,
+      3.939,
+      21.0,
+      20.061
+    ],
+    "area": 98.7875,
+    "areaFraction": 0.1715,
+    "centroid": [
+      10.8155,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-right",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.5,
+      2.146,
+      10.207,
+      9.854
+    ],
+    "area": 16.9475,
+    "areaFraction": 0.1177,
+    "centroid": [
+      6.6269,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-right",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.803,
+      13.727,
+      13.197
+    ],
+    "area": 33.6418,
+    "areaFraction": 0.1314,
+    "centroid": [
+      8.8219,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-right",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.293,
+      20.414,
+      19.707
+    ],
+    "area": 67.764,
+    "areaFraction": 0.1176,
+    "centroid": [
+      13.2534,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-right",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.5,
+      1.793,
+      10.914,
+      10.207
+    ],
+    "area": 31.968,
+    "areaFraction": 0.222,
+    "centroid": [
+      6.5757,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-right",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.449,
+      14.434,
+      13.551
+    ],
+    "area": 53.6845,
+    "areaFraction": 0.2097,
+    "centroid": [
+      8.7708,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-right",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.939,
+      21.121,
+      20.061
+    ],
+    "area": 98.7875,
+    "areaFraction": 0.1715,
+    "centroid": [
+      13.1845,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      2.146,
+      1.793,
+      9.854,
+      10.5
+    ],
+    "area": 16.9475,
+    "areaFraction": 0.1177,
+    "centroid": [
+      6.0,
+      5.3731
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.803,
+      2.273,
+      13.197,
+      14.0
+    ],
+    "area": 33.6418,
+    "areaFraction": 0.1314,
+    "centroid": [
+      8.0,
+      7.1781
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      4.293,
+      3.586,
+      19.707,
+      21.0
+    ],
+    "area": 67.764,
+    "areaFraction": 0.1176,
+    "centroid": [
+      12.0,
+      10.7466
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.793,
+      1.086,
+      10.207,
+      10.5
+    ],
+    "area": 31.968,
+    "areaFraction": 0.222,
+    "centroid": [
+      6.0,
+      5.4243
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.449,
+      1.566,
+      13.551,
+      14.0
+    ],
+    "area": 53.6845,
+    "areaFraction": 0.2097,
+    "centroid": [
+      8.0,
+      7.2292
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.939,
+      2.879,
+      20.061,
+      21.0
+    ],
+    "area": 98.7875,
+    "areaFraction": 0.1715,
+    "centroid": [
+      12.0,
+      10.8155
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-down",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      2.146,
+      1.5,
+      9.854,
+      10.207
+    ],
+    "area": 16.9475,
+    "areaFraction": 0.1177,
+    "centroid": [
+      6.0,
+      6.6269
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-down",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.803,
+      2.0,
+      13.197,
+      13.727
+    ],
+    "area": 33.6418,
+    "areaFraction": 0.1314,
+    "centroid": [
+      8.0,
+      8.8219
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-down",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      4.293,
+      3.0,
+      19.707,
+      20.414
+    ],
+    "area": 67.764,
+    "areaFraction": 0.1176,
+    "centroid": [
+      12.0,
+      13.2534
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-down",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.793,
+      1.5,
+      10.207,
+      10.914
+    ],
+    "area": 31.968,
+    "areaFraction": 0.222,
+    "centroid": [
+      6.0,
+      6.5757
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-down",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.449,
+      2.0,
+      13.551,
+      14.434
+    ],
+    "area": 53.6845,
+    "areaFraction": 0.2097,
+    "centroid": [
+      8.0,
+      8.7708
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-down",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.939,
+      3.0,
+      20.061,
+      21.121
+    ],
+    "area": 98.7875,
+    "areaFraction": 0.1715,
+    "centroid": [
+      12.0,
+      13.1845
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up-right",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.646,
+      2.0,
+      10.0,
+      10.354
+    ],
+    "area": 19.6547,
+    "areaFraction": 0.1365,
+    "centroid": [
+      6.8621,
+      5.1379
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up-right",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.136,
+      2.583,
+      13.417,
+      13.864
+    ],
+    "area": 39.0677,
+    "areaFraction": 0.1526,
+    "centroid": [
+      9.1371,
+      6.8629
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up-right",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.293,
+      4.0,
+      20.0,
+      20.707
+    ],
+    "area": 78.5923,
+    "areaFraction": 0.1364,
+    "centroid": [
+      13.7259,
+      10.2741
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up-right",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.293,
+      1.5,
+      10.5,
+      10.707
+    ],
+    "area": 37.3823,
+    "areaFraction": 0.2596,
+    "centroid": [
+      6.8012,
+      5.1988
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up-right",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.783,
+      2.083,
+      13.917,
+      14.217
+    ],
+    "area": 62.7121,
+    "areaFraction": 0.245,
+    "centroid": [
+      9.0755,
+      6.9245
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "arrow-up-right",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.939,
+      3.5,
+      20.5,
+      21.061
+    ],
+    "area": 115.0301,
+    "areaFraction": 0.1997,
+    "centroid": [
+      13.6532,
+      10.3468
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-left",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      3.793,
+      2.146,
+      8.354,
+      9.854
+    ],
+    "area": 9.905,
+    "areaFraction": 0.0688,
+    "centroid": [
+      6.2325,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-left",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      4.939,
+      2.97,
+      11.03,
+      13.03
+    ],
+    "area": 19.089,
+    "areaFraction": 0.0746,
+    "centroid": [
+      8.2184,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-left",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      7.586,
+      4.293,
+      16.707,
+      19.707
+    ],
+    "area": 39.592,
+    "areaFraction": 0.0687,
+    "centroid": [
+      12.4643,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-left",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      3.086,
+      1.793,
+      8.707,
+      10.207
+    ],
+    "area": 19.796,
+    "areaFraction": 0.1375,
+    "centroid": [
+      6.1786,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-left",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      4.232,
+      2.616,
+      11.384,
+      13.384
+    ],
+    "area": 31.824,
+    "areaFraction": 0.1243,
+    "centroid": [
+      8.1632,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-left",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      6.879,
+      3.939,
+      17.061,
+      20.061
+    ],
+    "area": 59.402,
+    "areaFraction": 0.1031,
+    "centroid": [
+      12.4199,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-right",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      3.646,
+      2.146,
+      8.207,
+      9.854
+    ],
+    "area": 9.905,
+    "areaFraction": 0.0688,
+    "centroid": [
+      5.7675,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-right",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      4.97,
+      2.97,
+      11.061,
+      13.03
+    ],
+    "area": 19.089,
+    "areaFraction": 0.0746,
+    "centroid": [
+      7.7816,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-right",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      7.293,
+      4.293,
+      16.414,
+      19.707
+    ],
+    "area": 39.592,
+    "areaFraction": 0.0687,
+    "centroid": [
+      11.5357,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-right",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      3.293,
+      1.793,
+      8.914,
+      10.207
+    ],
+    "area": 19.796,
+    "areaFraction": 0.1375,
+    "centroid": [
+      5.8214,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-right",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      4.616,
+      2.616,
+      11.768,
+      13.384
+    ],
+    "area": 31.824,
+    "areaFraction": 0.1243,
+    "centroid": [
+      7.8368,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-right",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      6.939,
+      3.939,
+      17.121,
+      20.061
+    ],
+    "area": 59.402,
+    "areaFraction": 0.1031,
+    "centroid": [
+      11.5801,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-up",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      2.146,
+      3.793,
+      9.854,
+      8.354
+    ],
+    "area": 9.905,
+    "areaFraction": 0.0688,
+    "centroid": [
+      6.0,
+      6.2325
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-up",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.97,
+      4.939,
+      13.03,
+      11.03
+    ],
+    "area": 19.089,
+    "areaFraction": 0.0746,
+    "centroid": [
+      8.0,
+      8.2184
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-up",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      4.293,
+      7.586,
+      19.707,
+      16.707
+    ],
+    "area": 39.592,
+    "areaFraction": 0.0687,
+    "centroid": [
+      12.0,
+      12.4643
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-up",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.793,
+      3.086,
+      10.207,
+      8.707
+    ],
+    "area": 19.796,
+    "areaFraction": 0.1375,
+    "centroid": [
+      6.0,
+      6.1786
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-up",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.616,
+      4.232,
+      13.384,
+      11.384
+    ],
+    "area": 31.824,
+    "areaFraction": 0.1243,
+    "centroid": [
+      8.0,
+      8.1632
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-up",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.939,
+      6.879,
+      20.061,
+      17.061
+    ],
+    "area": 59.402,
+    "areaFraction": 0.1031,
+    "centroid": [
+      12.0,
+      12.4199
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-down",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      2.146,
+      3.646,
+      9.854,
+      8.207
+    ],
+    "area": 9.905,
+    "areaFraction": 0.0688,
+    "centroid": [
+      6.0,
+      5.7675
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-down",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.97,
+      4.97,
+      13.03,
+      11.061
+    ],
+    "area": 19.089,
+    "areaFraction": 0.0746,
+    "centroid": [
+      8.0,
+      7.7816
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-down",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      4.293,
+      7.293,
+      19.707,
+      16.414
+    ],
+    "area": 39.592,
+    "areaFraction": 0.0687,
+    "centroid": [
+      12.0,
+      11.5357
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-down",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.793,
+      3.293,
+      10.207,
+      8.914
+    ],
+    "area": 19.796,
+    "areaFraction": 0.1375,
+    "centroid": [
+      6.0,
+      5.8214
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-down",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.616,
+      4.616,
+      13.384,
+      11.768
+    ],
+    "area": 31.824,
+    "areaFraction": 0.1243,
+    "centroid": [
+      8.0,
+      7.8368
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chevron-down",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.939,
+      6.939,
+      20.061,
+      17.121
+    ],
+    "area": 59.402,
+    "areaFraction": 0.1031,
+    "centroid": [
+      12.0,
+      11.5801
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "plus",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 19.0,
+    "areaFraction": 0.1319,
+    "centroid": [
+      5.7632,
+      5.7632
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "plus",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 36.75,
+    "areaFraction": 0.1436,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "plus",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 76.0,
+    "areaFraction": 0.1319,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "plus",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 36.0,
+    "areaFraction": 0.25,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "plus",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 58.75,
+    "areaFraction": 0.2295,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "plus",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 111.0,
+    "areaFraction": 0.1927,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "minus",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      5.0,
+      11.0,
+      6.0
+    ],
+    "area": 10.0,
+    "areaFraction": 0.0694,
+    "centroid": [
+      6.0,
+      5.5
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "minus",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      7.25,
+      14.5,
+      8.75
+    ],
+    "area": 19.5,
+    "areaFraction": 0.0762,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "minus",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      11.0,
+      22.0,
+      13.0
+    ],
+    "area": 40.0,
+    "areaFraction": 0.0694,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "minus",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      5.0,
+      11.0,
+      7.0
+    ],
+    "area": 20.0,
+    "areaFraction": 0.1389,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "minus",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      6.75,
+      14.5,
+      9.25
+    ],
+    "area": 32.5,
+    "areaFraction": 0.127,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "minus",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      10.5,
+      22.0,
+      13.5
+    ],
+    "area": 60.0,
+    "areaFraction": 0.1042,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "check",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.646,
+      2.646,
+      10.354,
+      9.207
+    ],
+    "area": 11.32,
+    "areaFraction": 0.0786,
+    "centroid": [
+      6.0004,
+      6.2339
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "check",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.136,
+      3.47,
+      13.864,
+      12.394
+    ],
+    "area": 22.6247,
+    "areaFraction": 0.0884,
+    "centroid": [
+      8.0,
+      8.3181
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "check",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.293,
+      5.293,
+      20.707,
+      18.414
+    ],
+    "area": 45.248,
+    "areaFraction": 0.0786,
+    "centroid": [
+      12.0,
+      12.4687
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "check",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.293,
+      2.293,
+      10.707,
+      9.914
+    ],
+    "area": 22.624,
+    "areaFraction": 0.1571,
+    "centroid": [
+      6.0,
+      6.2812
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "check",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.783,
+      3.116,
+      14.217,
+      13.101
+    ],
+    "area": 37.7105,
+    "areaFraction": 0.1473,
+    "centroid": [
+      8.0001,
+      8.3648
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "check",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.939,
+      4.939,
+      21.061,
+      19.121
+    ],
+    "area": 67.888,
+    "areaFraction": 0.1179,
+    "centroid": [
+      12.0002,
+      12.5075
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "close",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 25.2809,
+    "areaFraction": 0.1756,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "close",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 48.4177,
+    "areaFraction": 0.1891,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "close",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 101.1236,
+    "areaFraction": 0.1756,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "close",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 44.5636,
+    "areaFraction": 0.3095,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "close",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 73.1811,
+    "areaFraction": 0.2859,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "close",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 142.6882,
+    "areaFraction": 0.2477,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "edit",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.5,
+      1.0,
+      11.0,
+      10.5
+    ],
+    "area": 21.7231,
+    "areaFraction": 0.1509,
+    "centroid": [
+      5.8374,
+      6.1626
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 1.5358,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "edit",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      1.0,
+      15.0,
+      14.0
+    ],
+    "area": 44.0377,
+    "areaFraction": 0.172,
+    "centroid": [
+      7.9552,
+      8.0448
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 1.9502,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "edit",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      22.0,
+      21.0
+    ],
+    "area": 86.9025,
+    "areaFraction": 0.1509,
+    "centroid": [
+      11.6745,
+      12.3255
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 3.0715,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "edit",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.5,
+      1.0,
+      11.0,
+      10.5
+    ],
+    "area": 30.625,
+    "areaFraction": 0.2127,
+    "centroid": [
+      5.7347,
+      6.2653
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "edit",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      1.0,
+      15.0,
+      14.0
+    ],
+    "area": 58.5,
+    "areaFraction": 0.2285,
+    "centroid": [
+      7.7949,
+      8.2051
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "edit",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      22.0,
+      21.0
+    ],
+    "area": 122.5,
+    "areaFraction": 0.2127,
+    "centroid": [
+      11.4694,
+      12.5306
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "copy",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 36.5857,
+    "areaFraction": 0.2541,
+    "centroid": [
+      5.8189,
+      5.9965
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "copy",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 72.4646,
+    "areaFraction": 0.2831,
+    "centroid": [
+      7.8144,
+      7.8261
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 6.167,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "copy",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 150.3428,
+    "areaFraction": 0.261,
+    "centroid": [
+      11.7272,
+      11.7405
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 10.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "copy",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 61.5,
+    "areaFraction": 0.4271,
+    "centroid": [
+      6.4966,
+      6.6023
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "copy",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 114.5002,
+    "areaFraction": 0.4473,
+    "centroid": [
+      8.5835,
+      8.4683
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "copy",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 260.0,
+    "areaFraction": 0.4514,
+    "centroid": [
+      13.1013,
+      12.8974
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "trash",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 35.5857,
+    "areaFraction": 0.2471,
+    "centroid": [
+      5.967,
+      5.3817
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 4.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "trash",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 66.0073,
+    "areaFraction": 0.2578,
+    "centroid": [
+      7.9725,
+      7.6565
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "trash",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 150.3428,
+    "areaFraction": 0.261,
+    "centroid": [
+      11.9375,
+      11.4678
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "trash",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 55.5,
+    "areaFraction": 0.3854,
+    "centroid": [
+      5.976,
+      6.1381
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "trash",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 86.5,
+    "areaFraction": 0.3379,
+    "centroid": [
+      7.9788,
+      8.33
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "trash",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 202.0,
+    "areaFraction": 0.3507,
+    "centroid": [
+      11.9472,
+      12.4917
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "refresh",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.5,
+      1.0,
+      10.354,
+      10.5
+    ],
+    "area": 27.8571,
+    "areaFraction": 0.1935,
+    "centroid": [
+      5.8276,
+      5.5648
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "refresh",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.25,
+      1.5,
+      13.53,
+      13.75
+    ],
+    "area": 52.8131,
+    "areaFraction": 0.2063,
+    "centroid": [
+      7.8403,
+      7.4067
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "refresh",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      20.707,
+      21.0
+    ],
+    "area": 111.4203,
+    "areaFraction": 0.1934,
+    "centroid": [
+      11.6546,
+      11.1291
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "refresh",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      10.707,
+      11.0
+    ],
+    "area": 53.7963,
+    "areaFraction": 0.3736,
+    "centroid": [
+      5.7333,
+      5.6711
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "refresh",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.75,
+      1.5,
+      13.884,
+      14.25
+    ],
+    "area": 85.6271,
+    "areaFraction": 0.3345,
+    "centroid": [
+      7.7486,
+      7.5134
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "refresh",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.5,
+      2.0,
+      21.061,
+      21.5
+    ],
+    "area": 164.2637,
+    "areaFraction": 0.2852,
+    "centroid": [
+      11.5564,
+      11.2256
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "filter",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.5,
+      2.0,
+      10.5,
+      11.0
+    ],
+    "area": 26.898,
+    "areaFraction": 0.1868,
+    "centroid": [
+      5.9876,
+      5.1471
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.9699,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "filter",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.5,
+      14.0,
+      14.5
+    ],
+    "area": 52.8244,
+    "areaFraction": 0.2063,
+    "centroid": [
+      7.9787,
+      6.7073
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 3.6271,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "filter",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.0,
+      21.0,
+      22.0
+    ],
+    "area": 107.592,
+    "areaFraction": 0.1868,
+    "centroid": [
+      11.9752,
+      10.2943
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.9407,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "filter",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.5,
+      2.0,
+      10.5,
+      11.0
+    ],
+    "area": 39.75,
+    "areaFraction": 0.276,
+    "centroid": [
+      5.9916,
+      4.8396
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "filter",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.5,
+      14.0,
+      14.5
+    ],
+    "area": 72.0,
+    "areaFraction": 0.2812,
+    "centroid": [
+      7.9844,
+      6.375
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "filter",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.0,
+      21.0,
+      22.0
+    ],
+    "area": 159.0,
+    "areaFraction": 0.276,
+    "centroid": [
+      11.9832,
+      9.6792
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "sliders",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      10.0
+    ],
+    "area": 30.0,
+    "areaFraction": 0.2083,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 1.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "sliders",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.25,
+      14.0,
+      13.75
+    ],
+    "area": 58.5,
+    "areaFraction": 0.2285,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "sliders",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.0,
+      21.0,
+      20.0
+    ],
+    "area": 112.0,
+    "areaFraction": 0.1944,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "sliders",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      10.0
+    ],
+    "area": 32.0,
+    "areaFraction": 0.2222,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "sliders",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.25,
+      14.0,
+      13.75
+    ],
+    "area": 63.0,
+    "areaFraction": 0.2461,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "sliders",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.0,
+      21.0,
+      20.0
+    ],
+    "area": 120.0,
+    "areaFraction": 0.2083,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "upload",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.793,
+      11.0,
+      11.0
+    ],
+    "area": 22.5325,
+    "areaFraction": 0.1565,
+    "centroid": [
+      6.0,
+      7.1418
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "upload",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      2.439,
+      14.5,
+      14.5
+    ],
+    "area": 43.3147,
+    "areaFraction": 0.1692,
+    "centroid": [
+      8.0,
+      9.4709
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "upload",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      3.086,
+      22.0,
+      22.0
+    ],
+    "area": 93.108,
+    "areaFraction": 0.1616,
+    "centroid": [
+      12.0,
+      14.047
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "upload",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.086,
+      11.0,
+      11.0
+    ],
+    "area": 43.14,
+    "areaFraction": 0.2996,
+    "centroid": [
+      6.0,
+      7.0269
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "upload",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.732,
+      14.5,
+      14.5
+    ],
+    "area": 69.8055,
+    "areaFraction": 0.2727,
+    "centroid": [
+      8.0,
+      9.3501
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "upload",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.379,
+      22.0,
+      22.0
+    ],
+    "area": 136.8015,
+    "areaFraction": 0.2375,
+    "centroid": [
+      12.0,
+      13.9568
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "download",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 23.0325,
+    "areaFraction": 0.1599,
+    "centroid": [
+      6.0,
+      7.055
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "download",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 44.8147,
+    "areaFraction": 0.1751,
+    "centroid": [
+      8.0,
+      9.2558
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "download",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 95.108,
+    "areaFraction": 0.1651,
+    "centroid": [
+      12.0,
+      14.5747
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "download",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 44.14,
+    "areaFraction": 0.3065,
+    "centroid": [
+      6.0,
+      6.9408
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "download",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 72.3055,
+    "areaFraction": 0.2824,
+    "centroid": [
+      8.0,
+      9.1449
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "download",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 139.8015,
+    "areaFraction": 0.2427,
+    "centroid": [
+      12.0,
+      14.4305
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "save",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 46.4137,
+    "areaFraction": 0.3223,
+    "centroid": [
+      5.6189,
+      6.2519
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0451,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "save",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 79.7493,
+    "areaFraction": 0.3115,
+    "centroid": [
+      7.7183,
+      8.4165
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "save",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 167.9988,
+    "areaFraction": 0.2917,
+    "centroid": [
+      11.4934,
+      12.4352
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "save",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 74.5,
+    "areaFraction": 0.5174,
+    "centroid": [
+      5.9396,
+      6.3423
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "save",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 105.5,
+    "areaFraction": 0.4121,
+    "centroid": [
+      8.0142,
+      8.3934
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 3.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "save",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 240.0,
+    "areaFraction": 0.4167,
+    "centroid": [
+      12.0444,
+      12.4889
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 4.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "file",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      2.0,
+      1.0,
+      10.0,
+      11.0
+    ],
+    "area": 30.4137,
+    "areaFraction": 0.2112,
+    "centroid": [
+      5.7664,
+      6.2857
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 6.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "file",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.667,
+      1.333,
+      13.333,
+      14.667
+    ],
+    "area": 59.8719,
+    "areaFraction": 0.2339,
+    "centroid": [
+      7.6928,
+      8.3769
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 7.666,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "file",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      4.0,
+      2.0,
+      20.0,
+      22.0
+    ],
+    "area": 137.6548,
+    "areaFraction": 0.239,
+    "centroid": [
+      11.5872,
+      12.7375
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 12.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "file",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      2.0,
+      1.0,
+      10.0,
+      11.0
+    ],
+    "area": 75.5,
+    "areaFraction": 0.5243,
+    "centroid": [
+      5.8212,
+      6.2384
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "file",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.667,
+      1.333,
+      13.333,
+      14.667
+    ],
+    "area": 134.2204,
+    "areaFraction": 0.5243,
+    "centroid": [
+      7.7616,
+      8.3179
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "file",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      4.0,
+      2.0,
+      20.0,
+      22.0
+    ],
+    "area": 286.0,
+    "areaFraction": 0.4965,
+    "centroid": [
+      11.6224,
+      12.3916
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "folder",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      11.0
+    ],
+    "area": 32.4137,
+    "areaFraction": 0.2251,
+    "centroid": [
+      5.6649,
+      6.743
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.6104,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "folder",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.333,
+      2.667,
+      14.667,
+      14.667
+    ],
+    "area": 63.8734,
+    "areaFraction": 0.2495,
+    "centroid": [
+      7.556,
+      8.9971
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 7.1362,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "folder",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      4.0,
+      22.0,
+      22.0
+    ],
+    "area": 129.6548,
+    "areaFraction": 0.2251,
+    "centroid": [
+      11.3297,
+      13.486
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 11.2215,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "folder",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      11.0
+    ],
+    "area": 80.25,
+    "areaFraction": 0.5573,
+    "centroid": [
+      5.7103,
+      6.8505
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "folder",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.333,
+      2.667,
+      14.667,
+      14.667
+    ],
+    "area": 126.675,
+    "areaFraction": 0.4948,
+    "centroid": [
+      7.5649,
+      9.4354
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "folder",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      4.0,
+      22.0,
+      22.0
+    ],
+    "area": 289.0,
+    "areaFraction": 0.5017,
+    "centroid": [
+      11.3564,
+      14.1107
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "link",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.5,
+      2.5,
+      10.5,
+      9.5
+    ],
+    "area": 22.656,
+    "areaFraction": 0.1573,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "link",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.75,
+      3.25,
+      14.25,
+      12.75
+    ],
+    "area": 45.732,
+    "areaFraction": 0.1786,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "link",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      5.0,
+      21.0,
+      19.0
+    ],
+    "area": 94.624,
+    "areaFraction": 0.1643,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "link",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.25,
+      2.25,
+      10.75,
+      9.75
+    ],
+    "area": 33.988,
+    "areaFraction": 0.236,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "link",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      3.0,
+      14.5,
+      13.0
+    ],
+    "area": 60.968,
+    "areaFraction": 0.2382,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "link",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.75,
+      4.75,
+      21.25,
+      19.25
+    ],
+    "area": 118.288,
+    "areaFraction": 0.2054,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bookmark",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      3.0,
+      1.0,
+      9.0,
+      11.0
+    ],
+    "area": 28.2417,
+    "areaFraction": 0.1961,
+    "centroid": [
+      5.9584,
+      5.7275
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 4.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bookmark",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      3.5,
+      1.5,
+      12.5,
+      14.5
+    ],
+    "area": 57.1088,
+    "areaFraction": 0.2231,
+    "centroid": [
+      7.9306,
+      7.5804
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.5039,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bookmark",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      5.0,
+      2.0,
+      19.0,
+      22.0
+    ],
+    "area": 120.0808,
+    "areaFraction": 0.2085,
+    "centroid": [
+      11.8362,
+      11.5248
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 9.3758,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bookmark",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      3.0,
+      1.0,
+      9.0,
+      11.0
+    ],
+    "area": 50.5,
+    "areaFraction": 0.3507,
+    "centroid": [
+      5.9736,
+      5.3333
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bookmark",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      3.5,
+      1.5,
+      12.5,
+      14.5
+    ],
+    "area": 97.875,
+    "areaFraction": 0.3823,
+    "centroid": [
+      7.954,
+      7.1188
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bookmark",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      5.0,
+      2.0,
+      19.0,
+      22.0
+    ],
+    "area": 233.5,
+    "areaFraction": 0.4054,
+    "centroid": [
+      11.8844,
+      10.7345
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "star",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      10.65
+    ],
+    "area": 27.6794,
+    "areaFraction": 0.1922,
+    "centroid": [
+      6.0,
+      6.3342
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.7505,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "star",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.2,
+      1.5,
+      14.8,
+      14.5
+    ],
+    "area": 54.5555,
+    "areaFraction": 0.2131,
+    "centroid": [
+      8.0,
+      8.6763
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 3.4742,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "star",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      21.1
+    ],
+    "area": 110.2741,
+    "areaFraction": 0.1914,
+    "centroid": [
+      12.0,
+      12.5878
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.5924,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "star",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      10.65
+    ],
+    "area": 39.765,
+    "areaFraction": 0.2761,
+    "centroid": [
+      6.0,
+      6.3398
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "star",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.2,
+      1.5,
+      14.8,
+      14.5
+    ],
+    "area": 73.24,
+    "areaFraction": 0.2861,
+    "centroid": [
+      8.0,
+      8.6761
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "star",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      21.1
+    ],
+    "area": 159.1725,
+    "areaFraction": 0.2763,
+    "centroid": [
+      12.0,
+      12.5778
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "calendar",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 39.5857,
+    "areaFraction": 0.2749,
+    "centroid": [
+      5.9494,
+      6.4546
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 6.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "calendar",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      1.5,
+      14.0,
+      14.0
+    ],
+    "area": 72.0073,
+    "areaFraction": 0.2813,
+    "centroid": [
+      7.9611,
+      8.317
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 7.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "calendar",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      21.0,
+      21.0
+    ],
+    "area": 148.3428,
+    "areaFraction": 0.2575,
+    "centroid": [
+      11.9032,
+      12.2065
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 12.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "calendar",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 79.5,
+    "areaFraction": 0.5521,
+    "centroid": [
+      5.9706,
+      6.7254
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "calendar",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      1.5,
+      14.0,
+      14.0
+    ],
+    "area": 119.0,
+    "areaFraction": 0.4648,
+    "centroid": [
+      7.9762,
+      8.5865
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "calendar",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      21.0,
+      21.0
+    ],
+    "area": 280.0,
+    "areaFraction": 0.4861,
+    "centroid": [
+      11.9405,
+      12.5083
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 3.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "user",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 32.7562,
+    "areaFraction": 0.2275,
+    "centroid": [
+      6.0,
+      7.1363
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "user",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.333,
+      1.5,
+      14.667,
+      14.667
+    ],
+    "area": 63.2736,
+    "areaFraction": 0.2472,
+    "centroid": [
+      8.0,
+      9.6135
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 2.167,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "user",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 131.0248,
+    "areaFraction": 0.2275,
+    "centroid": [
+      12.0,
+      14.2726
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 4.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "user",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 52.75,
+    "areaFraction": 0.3663,
+    "centroid": [
+      6.0,
+      7.3918
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "user",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.333,
+      1.5,
+      14.667,
+      14.667
+    ],
+    "area": 92.8948,
+    "areaFraction": 0.3629,
+    "centroid": [
+      8.0,
+      9.9334
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "user",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 211.0,
+    "areaFraction": 0.3663,
+    "centroid": [
+      12.0,
+      14.7836
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chat",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      11.0
+    ],
+    "area": 31.2423,
+    "areaFraction": 0.217,
+    "centroid": [
+      5.8749,
+      5.4743
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 4.1563,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chat",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.333,
+      2.0,
+      14.667,
+      14.667
+    ],
+    "area": 64.0731,
+    "areaFraction": 0.2503,
+    "centroid": [
+      7.8213,
+      7.1754
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 6.484,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chat",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      3.0,
+      22.0,
+      22.0
+    ],
+    "area": 154.5283,
+    "areaFraction": 0.2683,
+    "centroid": [
+      11.764,
+      10.5149
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 10.2681,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chat",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      11.0
+    ],
+    "area": 64.5,
+    "areaFraction": 0.4479,
+    "centroid": [
+      5.9302,
+      5.2791
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chat",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.333,
+      2.0,
+      14.667,
+      14.667
+    ],
+    "area": 119.1142,
+    "areaFraction": 0.4653,
+    "centroid": [
+      7.8881,
+      7.0487
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chat",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      3.0,
+      22.0,
+      22.0
+    ],
+    "area": 271.0,
+    "areaFraction": 0.4705,
+    "centroid": [
+      11.8339,
+      10.5683
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bell",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.5,
+      1.0,
+      10.5,
+      11.0
+    ],
+    "area": 27.0626,
+    "areaFraction": 0.1879,
+    "centroid": [
+      6.0,
+      6.2358
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 4.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bell",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      1.333,
+      14.0,
+      14.5
+    ],
+    "area": 51.6174,
+    "areaFraction": 0.2016,
+    "centroid": [
+      8.0,
+      8.2225
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bell",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      21.0,
+      22.0
+    ],
+    "area": 108.2504,
+    "areaFraction": 0.1879,
+    "centroid": [
+      12.0,
+      12.4715
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bell",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.5,
+      1.0,
+      10.5,
+      11.0
+    ],
+    "area": 45.75,
+    "areaFraction": 0.3177,
+    "centroid": [
+      6.0,
+      6.0209
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bell",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      1.333,
+      14.0,
+      14.5
+    ],
+    "area": 80.8894,
+    "areaFraction": 0.316,
+    "centroid": [
+      8.0,
+      7.992
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "bell",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      21.0,
+      22.0
+    ],
+    "area": 183.0,
+    "areaFraction": 0.3177,
+    "centroid": [
+      12.0,
+      12.0419
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "warning",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 30.1242,
+    "areaFraction": 0.2092,
+    "centroid": [
+      6.0,
+      7.5737
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 4.1796,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "warning",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.333,
+      1.333,
+      14.667,
+      14.667
+    ],
+    "area": 55.4426,
+    "areaFraction": 0.2166,
+    "centroid": [
+      8.0,
+      10.129
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 5.24,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "warning",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 115.2466,
+    "areaFraction": 0.2001,
+    "centroid": [
+      12.0,
+      15.1547
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 8.36,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "warning",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 47.0,
+    "areaFraction": 0.3264,
+    "centroid": [
+      6.0,
+      7.6879
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "warning",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.333,
+      1.333,
+      14.667,
+      14.667
+    ],
+    "area": 86.3978,
+    "areaFraction": 0.3375,
+    "centroid": [
+      8.0,
+      10.2331
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "warning",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 193.25,
+    "areaFraction": 0.3355,
+    "centroid": [
+      12.0,
+      15.3654
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "info",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 35.9988,
+    "areaFraction": 0.25,
+    "centroid": [
+      5.9444,
+      6.0556
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "info",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 67.4973,
+    "areaFraction": 0.2637,
+    "centroid": [
+      8.0,
+      8.0444
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 10.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "info",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 143.9952,
+    "areaFraction": 0.25,
+    "centroid": [
+      12.0,
+      12.0278
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 16.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "info",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 88.0,
+    "areaFraction": 0.6111,
+    "centroid": [
+      6.0227,
+      5.9773
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "info",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 143.5,
+    "areaFraction": 0.5605,
+    "centroid": [
+      8.0,
+      7.9791
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "info",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 352.0,
+    "areaFraction": 0.6111,
+    "centroid": [
+      12.0,
+      11.9886
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "help",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 40.7233,
+    "areaFraction": 0.2828,
+    "centroid": [
+      5.9862,
+      5.7696
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "help",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 75.5653,
+    "areaFraction": 0.2952,
+    "centroid": [
+      8.0375,
+      7.747
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 10.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "help",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 164.6881,
+    "areaFraction": 0.2859,
+    "centroid": [
+      12.1363,
+      11.4997
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 16.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "help",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 83.2755,
+    "areaFraction": 0.5783,
+    "centroid": [
+      6.0067,
+      6.1127
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "help",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 135.432,
+    "areaFraction": 0.529,
+    "centroid": [
+      7.9791,
+      8.1411
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "help",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 331.3071,
+    "areaFraction": 0.5752,
+    "centroid": [
+      11.9323,
+      12.2487
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "lock",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 38.1711,
+    "areaFraction": 0.2651,
+    "centroid": [
+      5.9475,
+      6.4987
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 3.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "lock",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 72.9717,
+    "areaFraction": 0.285,
+    "centroid": [
+      7.9331,
+      8.6444
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 3.667,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "lock",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 160.6844,
+    "areaFraction": 0.279,
+    "centroid": [
+      11.9003,
+      13.1469
+    ],
+    "components": 2,
+    "holes": 2,
+    "minimumHoleDiameter": 6.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "lock",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 66.0854,
+    "areaFraction": 0.4589,
+    "centroid": [
+      5.9647,
+      7.1304
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "lock",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 117.1977,
+    "areaFraction": 0.4578,
+    "centroid": [
+      7.9541,
+      9.3713
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "lock",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 272.3416,
+    "areaFraction": 0.4728,
+    "centroid": [
+      11.9315,
+      14.3119
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "shield",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 30.312,
+    "areaFraction": 0.2105,
+    "centroid": [
+      6.0,
+      4.8543
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 6.2839,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "shield",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 52.839,
+    "areaFraction": 0.2064,
+    "centroid": [
+      8.0,
+      6.6296
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 6.9409,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "shield",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 107.592,
+    "areaFraction": 0.1868,
+    "centroid": [
+      12.0,
+      9.9407
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 10.9116,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "shield",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 75.0,
+    "areaFraction": 0.5208,
+    "centroid": [
+      6.0,
+      4.8889
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "shield",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 108.0,
+    "areaFraction": 0.4219,
+    "centroid": [
+      8.0,
+      6.6667
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "shield",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 243.0,
+    "areaFraction": 0.4219,
+    "centroid": [
+      12.0,
+      10.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "gear",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 39.2305,
+    "areaFraction": 0.2724,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "gear",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 71.9791,
+    "areaFraction": 0.2812,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 6.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "gear",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      2.5,
+      2.5,
+      21.5,
+      21.5
+    ],
+    "area": 152.2328,
+    "areaFraction": 0.2643,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 10.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "gear",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 53.8097,
+    "areaFraction": 0.3737,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 4.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "gear",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.5,
+      1.5,
+      14.5,
+      14.5
+    ],
+    "area": 89.8408,
+    "areaFraction": 0.3509,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 5.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "gear",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.5,
+      2.5,
+      21.5,
+      21.5
+    ],
+    "area": 189.5496,
+    "areaFraction": 0.3291,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "terminal",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      10.0
+    ],
+    "area": 36.5847,
+    "areaFraction": 0.2541,
+    "centroid": [
+      5.8155,
+      6.0434
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 6.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "terminal",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.5,
+      14.0,
+      13.5
+    ],
+    "area": 66.5998,
+    "areaFraction": 0.2602,
+    "centroid": [
+      7.7696,
+      8.1109
+    ],
+    "components": 2,
+    "holes": 1,
+    "minimumHoleDiameter": 8.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "terminal",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.0,
+      21.0,
+      20.0
+    ],
+    "area": 140.1388,
+    "areaFraction": 0.2433,
+    "centroid": [
+      11.6765,
+      12.289
+    ],
+    "components": 3,
+    "holes": 1,
+    "minimumHoleDiameter": 12.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "terminal",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      2.0,
+      11.0,
+      10.0
+    ],
+    "area": 74.501,
+    "areaFraction": 0.5174,
+    "centroid": [
+      6.0324,
+      6.0246
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 1.2485,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "terminal",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.5,
+      14.0,
+      13.5
+    ],
+    "area": 122.0285,
+    "areaFraction": 0.4767,
+    "centroid": [
+      7.9722,
+      8.0792
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 1.8077,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "terminal",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      4.0,
+      21.0,
+      20.0
+    ],
+    "area": 260.532,
+    "areaFraction": 0.4523,
+    "centroid": [
+      11.9386,
+      12.0518
+    ],
+    "components": 1,
+    "holes": 2,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "branch",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 37.0,
+    "areaFraction": 0.2569,
+    "centroid": [
+      6.7162,
+      5.8784
+    ],
+    "components": 1,
+    "holes": 3,
+    "minimumHoleDiameter": 1.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "branch",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 70.875,
+    "areaFraction": 0.2769,
+    "centroid": [
+      8.9702,
+      8.0
+    ],
+    "components": 1,
+    "holes": 3,
+    "minimumHoleDiameter": 1.5,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "branch",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 136.0,
+    "areaFraction": 0.2361,
+    "centroid": [
+      13.4706,
+      12.0
+    ],
+    "components": 1,
+    "holes": 3,
+    "minimumHoleDiameter": 2.0,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "branch",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 40.0,
+    "areaFraction": 0.2778,
+    "centroid": [
+      6.75,
+      5.875
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "branch",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 77.625,
+    "areaFraction": 0.3032,
+    "centroid": [
+      8.9946,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "branch",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 148.0,
+    "areaFraction": 0.2569,
+    "centroid": [
+      13.5135,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chart",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      10.0,
+      11.0
+    ],
+    "area": 21.0,
+    "areaFraction": 0.1458,
+    "centroid": [
+      6.6429,
+      7.0714
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chart",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      1.917,
+      1.167,
+      14.083,
+      14.5
+    ],
+    "area": 40.9995,
+    "areaFraction": 0.1602,
+    "centroid": [
+      9.5609,
+      9.3537
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chart",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      2.0,
+      21.0,
+      22.0
+    ],
+    "area": 82.0,
+    "areaFraction": 0.1424,
+    "centroid": [
+      14.3415,
+      14.2805
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chart",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 42.0,
+    "areaFraction": 0.2917,
+    "centroid": [
+      7.1429,
+      7.0714
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chart",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      1.167,
+      1.167,
+      14.833,
+      14.5
+    ],
+    "area": 81.999,
+    "areaFraction": 0.3203,
+    "centroid": [
+      9.5609,
+      9.3537
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "chart",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      2.0,
+      2.0,
+      22.0,
+      22.0
+    ],
+    "area": 164.0,
+    "areaFraction": 0.2847,
+    "centroid": [
+      14.3415,
+      14.2805
+    ],
+    "components": 3,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "play",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      3.0,
+      1.5,
+      11.0,
+      10.5
+    ],
+    "area": 22.1616,
+    "areaFraction": 0.1539,
+    "centroid": [
+      5.675,
+      6.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 3.262,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "play",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      4.0,
+      2.0,
+      14.667,
+      14.0
+    ],
+    "area": 43.0245,
+    "areaFraction": 0.1681,
+    "centroid": [
+      7.5654,
+      8.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 4.0173,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "play",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      6.0,
+      3.0,
+      22.0,
+      21.0
+    ],
+    "area": 88.6408,
+    "areaFraction": 0.1539,
+    "centroid": [
+      11.3498,
+      12.0
+    ],
+    "components": 1,
+    "holes": 1,
+    "minimumHoleDiameter": 6.5259,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "play",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      3.0,
+      1.5,
+      11.0,
+      10.5
+    ],
+    "area": 36.0,
+    "areaFraction": 0.25,
+    "centroid": [
+      5.6667,
+      6.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "play",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      4.0,
+      2.0,
+      14.667,
+      14.0
+    ],
+    "area": 64.002,
+    "areaFraction": 0.25,
+    "centroid": [
+      7.5557,
+      8.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "play",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      6.0,
+      3.0,
+      22.0,
+      21.0
+    ],
+    "area": 144.0,
+    "areaFraction": 0.25,
+    "centroid": [
+      11.3333,
+      12.0
+    ],
+    "components": 1,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "pause",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      3.0,
+      1.0,
+      9.0,
+      11.0
+    ],
+    "area": 20.0,
+    "areaFraction": 0.1389,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "pause",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      3.917,
+      1.5,
+      12.083,
+      14.5
+    ],
+    "area": 39.0,
+    "areaFraction": 0.1523,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "pause",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      6.0,
+      2.0,
+      18.0,
+      22.0
+    ],
+    "area": 80.0,
+    "areaFraction": 0.1389,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "pause",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      2.375,
+      1.0,
+      9.625,
+      11.0
+    ],
+    "area": 45.0,
+    "areaFraction": 0.3125,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "pause",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      3.167,
+      1.5,
+      12.833,
+      14.5
+    ],
+    "area": 78.0,
+    "areaFraction": 0.3047,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "pause",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      5.0,
+      2.0,
+      19.0,
+      22.0
+    ],
+    "area": 160.0,
+    "areaFraction": 0.2778,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 2,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "focus",
+    "appearance": "outline",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 20.0,
+    "areaFraction": 0.1389,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 5,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "focus",
+    "appearance": "outline",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 37.0,
+    "areaFraction": 0.1445,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 5,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "focus",
+    "appearance": "outline",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 68.0,
+    "areaFraction": 0.1181,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 5,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "focus",
+    "appearance": "filled",
+    "master": 12,
+    "bounds": [
+      1.0,
+      1.0,
+      11.0,
+      11.0
+    ],
+    "area": 25.0,
+    "areaFraction": 0.1736,
+    "centroid": [
+      6.0,
+      6.0
+    ],
+    "components": 5,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "focus",
+    "appearance": "filled",
+    "master": 16,
+    "bounds": [
+      2.0,
+      2.0,
+      14.0,
+      14.0
+    ],
+    "area": 46.25,
+    "areaFraction": 0.1807,
+    "centroid": [
+      8.0,
+      8.0
+    ],
+    "components": 5,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  },
+  {
+    "id": "focus",
+    "appearance": "filled",
+    "master": 24,
+    "bounds": [
+      3.0,
+      3.0,
+      21.0,
+      21.0
+    ],
+    "area": 84.0,
+    "areaFraction": 0.1458,
+    "centroid": [
+      12.0,
+      12.0
+    ],
+    "components": 5,
+    "holes": 0,
+    "minimumHoleDiameter": null,
+    "interpretation": "diagnostic, not a visual-quality score"
+  }
+]

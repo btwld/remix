@@ -1,0 +1,5 @@
+# Rename to CODEOWNERS only after replacing placeholders with actual owners.
+# /source/angular/ @design-owner
+# /catalog/ @design-owner @package-maintainer
+# /tests/ @package-maintainer
+# /generated/ @design-owner @package-maintainer

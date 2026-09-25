@@ -1,0 +1,118 @@
+{
+  "status": "blocked",
+  "catalogSha256": "0f0b0e1c4c8b4a8ec1947f7f2b25b9dcaa464fe5f8d2e15fc6f95ea6f4d0b0b8",
+  "catalogHTMLSHA256": "820b9473b133ccb95b280adcc88007253ceb91452db8ff237f1cda5019c561f0",
+  "inputFingerprint": "c126a41d928737fce883e71854722c29b4e1051e15567db7e6b305093b2a5262",
+  "toolchainFingerprint": "939c9fca379dca711ef3f1ef81bcf4d9812c05d9abbc1704c46086f0befd76f5",
+  "scope": "Public release readiness, separate from private pilot usability. Checks recorded evidence; does not certify design, legal rights, or accessibility.",
+  "blockers": [
+    "final-name",
+    "named-owner-and-reviewer",
+    "independent-icon-approval",
+    "explicit-public-approval",
+    "public-package-metadata",
+    "exception-ownership",
+    "full-browser-chromium",
+    "full-browser-webkit",
+    "immutable-ci-action-pins",
+    "human-evidence-recognition",
+    "human-evidence-screen-audit"
+  ],
+  "checks": [
+    {
+      "check": "final-name",
+      "passed": false,
+      "detail": "Set nameStatus to approved-final-name only after owner approval."
+    },
+    {
+      "check": "named-owner-and-reviewer",
+      "passed": false,
+      "detail": "Owner and independent design reviewer must be identified; no names are inferred."
+    },
+    {
+      "check": "independent-icon-approval",
+      "passed": false,
+      "detail": "48 of 48 icons await recorded independent approval."
+    },
+    {
+      "check": "explicit-public-approval",
+      "passed": false,
+      "detail": "No automatic public release approval is inferred from technical tests."
+    },
+    {
+      "check": "distribution-license",
+      "passed": true,
+      "detail": "BSD 3-Clause is selected."
+    },
+    {
+      "check": "public-package-metadata",
+      "passed": false,
+      "detail": "The web package is BSD-3-Clause and remains private until a deliberate publication decision."
+    },
+    {
+      "check": "exception-geometry-revision",
+      "passed": true,
+      "detail": "Exceptions must match exact SVG bytes: all match"
+    },
+    {
+      "check": "exception-ownership",
+      "passed": false,
+      "detail": "6 spacing exceptions need named approval or resolution."
+    },
+    {
+      "check": "generated-product-integrity",
+      "passed": true,
+      "detail": "Checked 357 products; 0 differ or are missing."
+    },
+    {
+      "check": "technical-asset-checks.json",
+      "passed": true,
+      "detail": "Evidence matches all current inputs and the local toolchain; a clean rebuild and unchanged baselines are required."
+    },
+    {
+      "check": "technical-web-adapter.json",
+      "passed": true,
+      "detail": "Evidence matches all current inputs and the local toolchain; a clean rebuild and unchanged baselines are required."
+    },
+    {
+      "check": "technical-rebuild.json",
+      "passed": true,
+      "detail": "Evidence matches all current inputs and the local toolchain; a clean rebuild and unchanged baselines are required."
+    },
+    {
+      "check": "technical-pixel-regression.json",
+      "passed": true,
+      "detail": "Evidence matches all current inputs and the local toolchain; a clean rebuild and unchanged baselines are required."
+    },
+    {
+      "check": "full-browser-chromium",
+      "passed": false,
+      "detail": "Needs a successful full-mode report for this exact guide, including HTTP, file, and module loading. WebKit does not claim branded Safari coverage."
+    },
+    {
+      "check": "full-browser-firefox",
+      "passed": true,
+      "detail": "Needs a successful full-mode report for this exact guide, including HTTP, file, and module loading. WebKit does not claim branded Safari coverage."
+    },
+    {
+      "check": "full-browser-webkit",
+      "passed": false,
+      "detail": "Needs a successful full-mode report for this exact guide, including HTTP, file, and module loading. WebKit does not claim branded Safari coverage."
+    },
+    {
+      "check": "immutable-ci-action-pins",
+      "passed": false,
+      "detail": "Unpinned references: actions/checkout@v6, actions/setup-node@v6, actions/setup-python@v6, actions/upload-artifact@v5"
+    },
+    {
+      "check": "human-evidence-recognition",
+      "passed": false,
+      "detail": "Requires real findings, a named reviewer, a project-local evidence file, and the current catalog hash. Empty templates are not evidence."
+    },
+    {
+      "check": "human-evidence-screen-audit",
+      "passed": false,
+      "detail": "Requires real findings, a named reviewer, a project-local evidence file, and the current catalog hash. Empty templates are not evidence."
+    }
+  ]
+}
