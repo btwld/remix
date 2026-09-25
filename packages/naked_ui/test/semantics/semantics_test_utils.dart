@@ -75,6 +75,11 @@ class SemanticsSummary {
   );
 }
 
+/// The semantics root for the running test.
+SemanticsNode semanticsRootOf(WidgetTester tester) {
+  return tester.binding.pipelineOwner.semanticsOwner!.rootSemanticsNode!;
+}
+
 /// Traverses semantics tree depth-first and returns the first node
 /// that matches the provided predicate.
 SemanticsNode? findSemanticsNode(

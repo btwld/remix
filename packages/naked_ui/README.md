@@ -19,6 +19,7 @@ The complete documentation covers detailed component APIs and examples, guides a
 - NakedButton — button interactions (hover, press, focus)
 - NakedLink — link semantics and Enter-only activation
 - NakedCheckbox — toggle behavior and semantics
+- NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio — single‑select radio with group management
 - NakedSelect — controlled/uncontrolled dropdown with keyboard navigation
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics

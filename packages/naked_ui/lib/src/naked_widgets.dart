@@ -1,6 +1,7 @@
 export 'naked_accordion.dart';
 export 'naked_button.dart';
 export 'naked_checkbox.dart';
+export 'naked_combobox.dart';
 export 'naked_dialog.dart';
 export 'naked_disclosure.dart';
 export 'naked_link.dart';

@@ -152,6 +152,25 @@ void main() {
             NakedSelectOptionState<String>(states: states, value: 'opt1'),
       ),
       _ContractCase(
+        description: 'NakedComboboxState',
+        orderedStates: [WidgetState.focused, WidgetState.disabled],
+        create: (states) => NakedComboboxState<String>(
+          states: states,
+          isOpen: true,
+          value: 'apple',
+          text: 'apple',
+        ),
+      ),
+      _ContractCase(
+        description: 'NakedComboboxOptionState',
+        orderedStates: [WidgetState.selected, WidgetState.focused],
+        create: (states) => NakedComboboxOptionState<String>(
+          states: states,
+          value: 'apple',
+          isHighlighted: true,
+        ),
+      ),
+      _ContractCase(
         description: 'NakedAccordionGroupState',
         orderedStates: [WidgetState.focused, WidgetState.hovered],
         create: (states) => NakedAccordionGroupState(
