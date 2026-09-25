@@ -7,6 +7,8 @@
   to select, Escape, and async option staleness come from Flutter.
 - Add `NakedMenubar` on `RawMenuAnchorGroup`. Menus in the bar close their
   siblings, switch on hover while one is open, and move with the arrow keys.
+- Add `NakedScrollbar` on `RawScrollbar`, with thumb and track colors resolved
+  from hovered and dragged states.
 
 ### Docs
 
