@@ -6,8 +6,7 @@
 // - Non-brittle spellcheck/magnifier checks
 // - Covers lifecycle, editing, selection, semantics, restoration, etc.
 
-import 'package:flutter/cupertino.dart'
-    show CupertinoDynamicColor, CupertinoTheme, CupertinoThemeData;
+import 'package:flutter/cupertino.dart' show CupertinoDynamicColor;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -479,38 +478,46 @@ void main() {
       expect(et.selectionColor, const Color(0xFF9E9E9E));
     });
 
-    testWidgets('ambient dynamic selection style resolves in dark mode', (
+    testWidgets('draws no selection handles unless the caller supplies them', (
       tester,
     ) async {
-      const lightCursorColor = Color(0xFF1565C0);
-      const darkCursorColor = Color(0xFF90CAF9);
-      const lightSelectionColor = Color(0x661565C0);
-      const darkSelectionColor = Color(0x6690CAF9);
+      await _pumpApp(tester, child: NakedTextField(builder: _builder()));
 
+      expect(
+        _getEditableText(tester).selectionControls?.getHandleSize(20),
+        Size.zero,
+      );
+    });
+
+    testWidgets('forwards caller selection controls', (tester) async {
       await _pumpApp(
         tester,
-        child: CupertinoTheme(
-          data: const CupertinoThemeData(brightness: Brightness.dark),
-          child: DefaultSelectionStyle(
-            cursorColor: const CupertinoDynamicColor.withBrightness(
-              color: lightCursorColor,
-              darkColor: darkCursorColor,
-            ),
-            selectionColor: const CupertinoDynamicColor.withBrightness(
-              color: lightSelectionColor,
-              darkColor: darkSelectionColor,
-            ),
-            child: NakedTextField(builder: _builder()),
-          ),
+        child: NakedTextField(
+          selectionControls: emptyTextSelectionControls,
+          builder: _builder(),
         ),
       );
 
-      await tester.tap(find.byType(EditableText));
-      await tester.pump();
+      expect(
+        _getEditableText(tester).selectionControls,
+        same(emptyTextSelectionControls),
+      );
+    });
 
-      final et = _getEditableText(tester);
-      expect(et.cursorColor.toARGB32(), darkCursorColor.toARGB32());
-      expect(et.selectionColor?.toARGB32(), darkSelectionColor.toARGB32());
+    testWidgets('passes a CupertinoDynamicColor through unresolved', (
+      tester,
+    ) async {
+      const dynamicCursor = CupertinoDynamicColor.withBrightness(
+        color: Color(0xFF1565C0),
+        darkColor: Color(0xFF90CAF9),
+      );
+
+      await _pumpApp(
+        tester,
+        child: NakedTextField(cursorColor: dynamicCursor, builder: _builder()),
+      );
+
+      expect(_getEditableText(tester).cursorColor, same(dynamicCursor));
     });
   });
 

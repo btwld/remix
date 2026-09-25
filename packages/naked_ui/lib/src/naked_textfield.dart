@@ -1,23 +1,12 @@
 import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
-import 'package:flutter/cupertino.dart'
-    show
-        CupertinoDynamicColor,
-        cupertinoDesktopTextSelectionHandleControls,
-        cupertinoTextSelectionHandleControls;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-// We import just what we need from Material/Cupertino to keep surface minimal,
-// but we intentionally *opt in* to OS-adaptive selection/magnifier.
-import 'package:flutter/material.dart'
-    show
-        TextMagnifier,
-        materialTextSelectionHandleControls,
-        desktopTextSelectionHandleControls;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
+import 'naked_text_magnifier.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
 
@@ -83,7 +72,10 @@ class NakedTextFieldState extends NakedState {
 
 /// Headless, builder-first text input built on [EditableText].
 ///
-/// Exposes native-feeling defaults while remaining design-system agnostic.
+/// Caret shape, selection color, and cursor offset follow the platform.
+/// Selection handles are not drawn. Pass [selectionControls] from your
+/// design system when a selection should show handles, and
+/// [contextMenuBuilder] for the cut, copy, and paste menu.
 /// Renders no visuals; use [builder] to style or decorate its editable child.
 ///
 /// ```dart
@@ -145,7 +137,7 @@ class NakedTextField extends StatefulWidget {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection = true,
-    this.selectionControls, // override adaptive controls if needed
+    this.selectionControls,
     this.onTap, // prefer this name for a field tap
     this.onTapAlwaysCalled = false,
     this.onTapChange,
@@ -303,7 +295,8 @@ class NakedTextField extends StatefulWidget {
   /// The cursor color.
   ///
   /// If null, uses the ambient [DefaultSelectionStyle.cursorColor] before the
-  /// platform fallback.
+  /// platform fallback. A `CupertinoDynamicColor` is not resolved; call
+  /// `CupertinoDynamicColor.resolve` before passing it in.
   final Color? cursorColor;
 
   /// How selection highlights align vertically with text boxes.
@@ -333,7 +326,32 @@ class NakedTextField extends StatefulWidget {
   /// Whether users can select, cut, copy, and paste text.
   final bool enableInteractiveSelection;
 
-  /// Controls the platform text-selection handles and toolbar.
+  /// Selection handles for this field.
+  ///
+  /// Null draws no handles. An invisible control is still installed so the
+  /// touch magnifier and a [contextMenuBuilder] keep working. The Material
+  /// and Cupertino handle objects read their own themes and throw when that
+  /// theme is missing, so pass them only under the matching ancestor.
+  ///
+  /// ```dart
+  /// import 'package:flutter/material.dart';
+  ///
+  /// NakedTextField(
+  ///   selectionControls: materialTextSelectionHandleControls,
+  ///   contextMenuBuilder: (context, editableTextState) {
+  ///     return AdaptiveTextSelectionToolbar.editableText(
+  ///       editableTextState: editableTextState,
+  ///     );
+  ///   },
+  ///   builder: (context, state, field) => field,
+  /// )
+  /// ```
+  ///
+  /// On iOS pass `cupertinoTextSelectionHandleControls`, and on macOS pass
+  /// `cupertinoDesktopTextSelectionHandleControls`, both from
+  /// `package:flutter/cupertino.dart`, under a `CupertinoTheme`.
+  /// On Linux and Windows pass `desktopTextSelectionHandleControls` from
+  /// `package:flutter/material.dart`.
   final TextSelectionControls? selectionControls;
 
   /// Builds the context menu shown for text-selection actions.
@@ -773,31 +791,23 @@ class _NakedTextFieldState extends State<NakedTextField>
     final DefaultSelectionStyle selectionStyle = DefaultSelectionStyle.of(
       context,
     );
-    final Color? cursorColor = CupertinoDynamicColor.maybeResolve(
-      widget.cursorColor ?? selectionStyle.cursorColor,
-      context,
-    );
-    final Color? selectionColor = CupertinoDynamicColor.maybeResolve(
-      selectionStyle.selectionColor,
-      context,
-    );
 
     final _PlatformDefaults p = _PlatformDefaults.resolve(
       context: context,
-      cursorColorOverride: cursorColor,
-      selectionColorOverride: selectionColor,
+      cursorColorOverride: widget.cursorColor ?? selectionStyle.cursorColor,
+      selectionColorOverride: selectionStyle.selectionColor,
       cursorRadiusOverride: widget.cursorRadius,
       cursorOpacityAnimatesOverride: widget.cursorOpacityAnimates,
     );
     forcePressEnabled = p.forcePressEnabled;
 
     final TextSelectionControls? controls = widget.enableInteractiveSelection
-        ? (widget.selectionControls ?? p.platformSelectionControls)
+        ? (widget.selectionControls ?? _NoHandleSelectionControls.instance)
         : null;
 
     final TextMagnifierConfiguration magnifier =
         widget.magnifierConfiguration ??
-        TextMagnifier.adaptiveMagnifierConfiguration;
+        NakedTextMagnifier.adaptiveConfiguration();
 
     Widget editable = Builder(
       builder: (context) {
@@ -1053,6 +1063,36 @@ class _NakedSelectionGestureDetectorBuilder
   bool get onUserTapAlwaysCalled => _state.widget.onTapAlwaysCalled;
 }
 
+/// Keeps the selection overlay alive without painting handles.
+///
+/// Mixes in [TextSelectionHandleControls] so a caller's [contextMenuBuilder]
+/// is used for cut, copy, and paste instead of [TextSelectionControls.buildToolbar].
+class _NoHandleSelectionControls extends TextSelectionControls
+    with TextSelectionHandleControls {
+  _NoHandleSelectionControls._();
+
+  static final _NoHandleSelectionControls instance =
+      _NoHandleSelectionControls._();
+
+  @override
+  Size getHandleSize(double textLineHeight) => Size.zero;
+
+  @override
+  Widget buildHandle(
+    BuildContext context,
+    TextSelectionHandleType type,
+    double textLineHeight, [
+    VoidCallback? onTap,
+  ]) {
+    return const SizedBox.shrink();
+  }
+
+  @override
+  Offset getHandleAnchor(TextSelectionHandleType type, double textLineHeight) {
+    return Offset.zero;
+  }
+}
+
 class _PlatformDefaults {
   final bool forcePressEnabled;
   final bool paintCursorAboveText;
@@ -1061,7 +1101,6 @@ class _PlatformDefaults {
   final Color selectionColor;
   final Radius? cursorRadius;
   final Offset? cursorOffset;
-  final TextSelectionControls? platformSelectionControls;
 
   static const Color _androidBlue = Color(0xFF2196F3);
 
@@ -1073,7 +1112,6 @@ class _PlatformDefaults {
     required this.selectionColor,
     this.cursorRadius,
     this.cursorOffset,
-    this.platformSelectionControls,
   });
 
   static _PlatformDefaults resolve({
@@ -1098,7 +1136,6 @@ class _PlatformDefaults {
                 MediaQuery.devicePixelRatioOf(context),
             0,
           ),
-          platformSelectionControls: cupertinoTextSelectionHandleControls,
         );
       case TargetPlatform.macOS:
         return _PlatformDefaults(
@@ -1113,8 +1150,6 @@ class _PlatformDefaults {
                 MediaQuery.devicePixelRatioOf(context),
             0,
           ),
-          platformSelectionControls:
-              cupertinoDesktopTextSelectionHandleControls,
         );
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
@@ -1127,7 +1162,6 @@ class _PlatformDefaults {
               selectionColorOverride ?? _androidBlue.withValues(alpha: 0.40),
           cursorRadius: cursorRadiusOverride,
           cursorOffset: null,
-          platformSelectionControls: materialTextSelectionHandleControls,
         );
       case TargetPlatform.linux:
       case TargetPlatform.windows:
@@ -1140,7 +1174,6 @@ class _PlatformDefaults {
               selectionColorOverride ?? _androidBlue.withValues(alpha: 0.40),
           cursorRadius: cursorRadiusOverride,
           cursorOffset: null,
-          platformSelectionControls: desktopTextSelectionHandleControls,
         );
     }
   }
