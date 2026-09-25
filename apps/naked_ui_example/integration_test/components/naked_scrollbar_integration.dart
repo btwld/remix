@@ -1,4 +1,5 @@
-import 'package:naked_ui_example/api/naked_scrollbar.0.dart' as scrollbar_example;
+import 'package:naked_ui_example/api/naked_scrollbar.0.dart'
+    as scrollbar_example;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
