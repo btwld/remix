@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,13 +12,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const Center(child: MenubarExample()),
-      ),
-    );
+    return const ExampleApp(child: Center(child: MenubarExample()));
   }
 }
 
