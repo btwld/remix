@@ -1,0 +1,132 @@
+{
+  "version": "0.5.0-pilot.2",
+  "scope": "Audit fixes only; no new icon artwork or public release",
+  "sourceArchiveSha256": "937e068094b10b83262b0d1a4a651efd33b98b6b7c907206abd6cc670cb1ee57",
+  "artwork": {
+    "icons": 48,
+    "individualSVGs": 288,
+    "unchangedPilotSVGs": 288,
+    "unchangedLegacySVGs": 198,
+    "unchangedPixelBaselines": 288
+  },
+  "tests": {
+    "assetTestMethods": 28,
+    "newAuditTestMethods": 11,
+    "originalCatalogAssertions": 150,
+    "additionalAuditBrowserAssertions": 1219,
+    "coordinatePairInstances": 576,
+    "nativeRasterInstances": 1152,
+    "cleanRebuildProducts": 357,
+    "nodeDrawingComparisons": 288,
+    "isolatedImports": 48
+  },
+  "inputFingerprint": "caed40983ba2b334573bf6355d6ae004dd0479476eb473f05528ee47be921311",
+  "toolchainFingerprint": "1af211d9822574dd196d6671c07e1085e6e041b6730ff218201ac86cd377e1f0",
+  "fixes": [
+    {
+      "id": "F01",
+      "title": "Forced-colors controls",
+      "status": "implemented; tested in Chromium emulation",
+      "changes": "System Highlight/HighlightText and ButtonFace/ButtonText pairs; remove CanvasText override on selected SVGs. No page-wide forced-color opt-out.",
+      "evidence": "audit-browser-chromium-content.json; ../review/audit-patch/forced-light.png; ../review/audit-patch/forced-dark.png"
+    },
+    {
+      "id": "F02",
+      "title": "Coordinate-aligned inspection",
+      "status": "implemented; tested at both zoom levels and device densities",
+      "changes": "Per-icon viewBox grid, native-unit step, reference inset, canvas-center guides, and separate device-aligned native SVG raster proofs. No artwork edits.",
+      "evidence": "audit-browser-chromium-content.json; ../review/audit-patch/coordinate-inspector-1x.png; ../review/audit-patch/coordinate-inspector-2x.png"
+    },
+    {
+      "id": "F03",
+      "title": "Single-source Warning restrictions",
+      "status": "implemented; human ownership remains pending",
+      "changes": "One six-cell size/appearance restriction record; visible labels required for both styles at all native sizes and scaled uses. Docs, inspector, and usage API derive from it. Five geometry-bound exception entries record outline gaps and filled 16/24 punctuation.",
+      "evidence": "../catalog/restrictions.json; ../catalog/exceptions.json; asset-checks.json; web-adapter.json"
+    },
+    {
+      "id": "F04",
+      "title": "Evidence freshness and clean builds",
+      "status": "implemented; mutation-tested",
+      "changes": "Shared fingerprints cover source, tests, dependency closure pins, metadata, workflow files, generated outputs, relevant runtime versions, and report payloads. Add/remove/edit inputs invalidate evidence. The clean rebuild occurs in a separate temporary tree.",
+      "evidence": "asset-checks.json; rebuild.json; ../tools/evidence.py; ../tests/test_audit_regressions.py"
+    },
+    {
+      "id": "F05",
+      "title": "Strict standalone SVG parser",
+      "status": "implemented; negative tests and current matrix passed",
+      "changes": "Exact namespace, element structure, per-element attribute allowlists, and attribute values. Reject hidden or recolored overrides, strokes, event handlers, unsupported markup, and directives. Angular-only; not a general SVG sanitizer.",
+      "evidence": "asset-checks.json; ../tests/geometry/paths.py; ../tests/test_audit_regressions.py"
+    }
+  ],
+  "reportFreshness": [
+    {
+      "report": "browser-firefox-full.json",
+      "status": "failed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "rebuild.json",
+      "status": "passed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "asset-checks.json",
+      "status": "passed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "browser-chromium-full.json",
+      "status": "failed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "browser-chromium-content.json",
+      "status": "partial-integration",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "audit-browser-chromium-content.json",
+      "status": "partial-integration",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "audit-browser-chromium-full.json",
+      "status": "failed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "pixel-regression.json",
+      "status": "passed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "web-adapter.json",
+      "status": "passed",
+      "fresh": true,
+      "problems": []
+    },
+    {
+      "report": "browser-webkit-full.json",
+      "status": "failed",
+      "fresh": true,
+      "problems": []
+    }
+  ],
+  "limits": [
+    "HTTP/file navigation blocked by environment policy; content-mode browser results do not establish hosted loading.",
+    "Firefox and WebKit executables unavailable; launch failures recorded, not passing tests.",
+    "No physical Windows contrast-theme, real-device, screen-reader, independent-design, or user-recognition tests.",
+    "GitHub workflow not run remotely. Dependency lock captured from this environment; a fresh dependency installation was not performed.",
+    "Warning ownership/reviewer fields remain null; no approval was invented.",
+    "Naming, licensing, independent design approval, and human evidence remain release blockers."
+  ]
+}

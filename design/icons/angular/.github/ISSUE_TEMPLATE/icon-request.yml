@@ -1,0 +1,24 @@
+name: Icon request
+description: Propose a missing interface concept.
+title: "[icon] "
+labels: []
+body:
+  - type: input
+    id: concept
+    attributes:
+      label: Proposed canonical name
+      description: Name the object or symbol, not only one application action.
+    validations:
+      required: true
+  - type: textarea
+    id: task
+    attributes:
+      label: Interface need and related icons
+      description: Include a target task, expected sizes, labels, and closest confusions.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: Concept references and provenance
+      description: Links may explain meaning. Do not paste unreviewed artwork for tracing.
