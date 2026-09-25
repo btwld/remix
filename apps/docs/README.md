@@ -28,7 +28,7 @@ DOCS_OUTPUT=out pnpm start
 
 The app exports static HTML with `/remix` as its base path. Set
 `NEXT_PUBLIC_SITE_URL` to the HTTPS origin before building metadata; it defaults
-to `https://conceptadev.github.io`. Search downloads static page and section
+to `https://btwld.github.io`. Search downloads static page and section
 indexes and runs in the browser, preserving component-title and keyword ranking.
 No Node server runs in production.
 

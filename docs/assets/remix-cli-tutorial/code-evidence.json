@@ -5,7 +5,7 @@
   },
   "reviewed-checkout": {
     "language": "bash",
-    "sha256": "ebae21090d5a1d680bb1d61c36696a5394e166a86c935d87b507cd943ef5c8b5"
+    "sha256": "2bfbd3074f221bd372bc511dd42711a2a4be3da3c939b7dc359c0abbfb07ce7a"
   },
   "remix-override": {
     "language": "yaml",
