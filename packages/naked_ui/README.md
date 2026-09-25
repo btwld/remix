@@ -22,6 +22,7 @@ The complete documentation covers detailed component APIs and examples, guides a
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio — single‑select radio with group management
 - NakedSelect — controlled/uncontrolled dropdown with keyboard navigation
+- NakedScrollbar — styleable scrollbar thumb and track
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics
 - NakedToggle — toggle button or switch behavior
 - NakedTabs — tablist + roving focus

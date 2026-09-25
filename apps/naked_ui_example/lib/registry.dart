@@ -23,6 +23,8 @@ import 'api/naked_menubar.0.dart' as menubar_example;
 import 'api/naked_popover.0.dart' as popover_example;
 // Radio
 import 'api/naked_radio.0.dart' as radio_basic_example;
+// Scrollbar
+import 'api/naked_scrollbar.0.dart' as scrollbar_example;
 // Select
 import 'api/naked_select.0.dart' as select_example;
 import 'api/naked_select.2.dart' as select_checkmark_example;
@@ -104,6 +106,15 @@ class DemoRegistry {
       sourceUrl:
           'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_radio.0.dart',
       tags: ['radio'],
+    ),
+    Demo(
+      id: 'scrollbar-basic',
+      title: 'Scrollbar – Basic',
+      category: 'Scrollbar',
+      builder: (_) => const scrollbar_example.ScrollbarExample(),
+      sourceUrl:
+          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_scrollbar.0.dart',
+      tags: ['scrollbar'],
     ),
     Demo(
       id: 'select-basic',
