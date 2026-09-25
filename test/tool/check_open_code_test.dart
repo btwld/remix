@@ -66,7 +66,7 @@ void main() {
       expect(options.item, isNull);
     });
 
-    test('either preset can select an explicit source', () {
+    test('both official presets can select an explicit source', () {
       for (final preset in ['vanilla', 'fortal']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
@@ -140,6 +140,14 @@ void main() {
           'dashboard_demo',
           '--item',
           'dashboard_shell',
+        ],
+        [
+          '--source',
+          'checkout',
+          '--preset',
+          'unsupported',
+          '--item',
+          'dashboard_demo',
         ],
       ]) {
         expect(checker.parseConsumerCheckOptions(arguments), isNull);

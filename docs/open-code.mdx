@@ -10,8 +10,8 @@ command and configuration reference.
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
-small `vanilla` preset or the full Radix Themes-inspired `fortal` preset when
-you initialize the project.
+small `vanilla` preset, the full Radix Themes-inspired `fortal` preset, or the
+initial IBM Carbon-inspired `carbon` slice when you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
 handling, focus management, accessibility semantics, and the loading/disabled
@@ -21,19 +21,21 @@ interaction rules. The installed file only decides what things look like.
 `remix_cli` has not been published. The hosted installation commands below
 apply after its first release. Until then, use the checkout installation
 described in the CLI README. The CLI has its own version and release schedule.
-Fortal preset does not add a `remix_fortal` dependency.
+The standalone Carbon registry's `stable` ref has not yet been promoted, so
+its bare `--preset carbon` command is not available to consumers yet. Fortal
+preset does not add a `remix_fortal` dependency.
 </Info>
 
 ## Choose a preset
 
-| | `vanilla` | `fortal` |
-|---|---|---|
-| Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface |
-| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes |
-| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable |
-| Best for | A house system you intend to shape | Starting from a complete Radix-like system |
+| | `vanilla` | `fortal` | `carbon` |
+|---|---|---|---|
+| Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface | IBM Carbon foundation |
+| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes | White, Gray 10, Gray 90, and Gray 100 token maps |
+| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | Carbon button kinds and sizes |
+| Best for | A house system you intend to shape | Starting from a complete Radix-like system | Adopting the first Carbon theme-and-button slice |
 
-Both choices install local Dart under `lib/`, use Remix for behavior, and use
+All three choices install local Dart under `lib/`, use Remix for behavior, and use
 the same `add --diff` / `add --overwrite` review workflow. They cannot be mixed
 inside one initialized source tree because their tokens and variant
 vocabularies are different.
@@ -56,7 +58,7 @@ dependency_overrides:
 ```
 
 After both releases are available, remove this override and use the hosted
-installation below. Both presets require Remix `^1.0.0-beta.10`.
+installation below. All three presets require Remix `^1.0.0-beta.10`.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
@@ -244,8 +246,8 @@ registries:
 |---|---|---|
 | `schema` | `3` | The only readable schema. Schemas 1–2 shipped in earlier prereleases and named no registry; such a project is reinitialized, not migrated. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
-| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla` or `fortal` at `init`. |
-| `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
+| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla`, `fortal`, or `carbon` at `init`. |
+| `defaultRegistry` | `@remix` for Vanilla/Fortal; `@carbon` for Carbon | Configured namespace for bare item names. |
 | `registries` | official GitHub source | Each namespace records repository, path, requested ref and full commit revision. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
@@ -392,6 +394,30 @@ variant, or merge a one-instance styler last. Future CLI versions never merge
 over those decisions automatically: inspect `remix add <item> --diff`, then
 use `--overwrite` only when you want the new authored file wholesale.
 
+## The Carbon preset
+
+Carbon begins as a deliberately narrow standalone registry: its complete
+theme foundation and `button`. The CLI selects `@carbon` at
+`btwld/flutter-carbon` when you initialize; it pins that source's commit before
+installing Button:
+
+```bash
+remix init --prefix Acme --preset carbon
+remix add button
+```
+
+The application receives `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle` as editable local source. `AcmeTheme.white`, `.g10`, `.g90`,
+and `.g100` select Carbon's four themes. Button supports Carbon's primary,
+secondary, tertiary, ghost, and danger treatments; its default 48 px height can
+be overridden directly or inherited from `AcmeLayoutScope`.
+
+This preset intentionally does not claim catalog parity yet. It contains no
+icon button, chart, icons, Agent surface, or dashboard item. Its authored
+source, generated distribution, and release gate live in the separate
+[`btwld/flutter-carbon`](https://github.com/btwld/flutter-carbon) repository;
+the CLI does not bundle a Carbon catalog.
+
 ## Application host and appearance
 
 Open Code documentation and runnable examples use `WidgetsApp`. For a routed
@@ -400,7 +426,7 @@ its `child` through. That child is the Navigator; keeping the scope above it
 makes the active theme available to routes, dialogs, and overlays. See the
 [complete routed host example](/fortal#scope-placement).
 
-The generated scopes expose `theme`, `darkTheme`, and `mode`. A root without
+The Vanilla and Fortal generated scopes expose `theme`, `darkTheme`, and `mode`. A root without
 arguments supplies the preset's light and dark defaults and follows the system.
 A nested scope inherits its parent's configured pair and active selection.
 
@@ -410,7 +436,7 @@ A nested scope inherits its parent's configured pair and active selection.
 | `fortal` | `AcmeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
 
 Use your configured prefix in place of `Acme`. The same parameters apply to
-both presets:
+Vanilla and Fortal:
 
 ```dart
 AcmeThemeScope(
@@ -442,7 +468,7 @@ the newly installed theme while building, put Flutter's `Builder` below the
 scope and use that callback's context.
 
 The [downloadable tutorial apps](/tutorials/settings-screen) show the same API
-in both presets. Their generated theme files are editable application source;
+in the Vanilla and Fortal presets. Their generated theme files are editable application source;
 regeneration still preserves existing authored files unless you explicitly use
 `--overwrite`. The CLI installs the theme layer, not a complete app host or
 appearance picker. Selection controls and persistence belong to the application.
@@ -718,6 +744,11 @@ components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
+The separate `carbon` catalog is intentionally smaller: it contains `theme`
+and `button` only. Adding Button installs both, generates `AcmeButton`, and
+exposes the four Carbon theme maps through `AcmeScope`. Carbon does not inherit
+the official Vanilla/Fortal catalog merely because item names overlap.
+
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
 recipe declares, and a recipe whose axis is named `variant` also gets one
@@ -810,7 +841,7 @@ If generation or analysis fails *after* installation, the authored source stays
 on disk for inspection. Fix the reported problem and rerun the same command.
 
 
-## Agent surfaces in both presets
+## Agent surfaces in Vanilla and Fortal
 
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript` install unstyled, application-owned behavior source in either
@@ -828,8 +859,8 @@ These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
 opt-in spec-styler builder for their installed source paths in `build.yaml`,
 preserving other builder settings and comments. Explicit exclusions or disabled
 generation are reported before writes. `--dry-run` and `--diff` remain read-only.
-Agent recipes extend both existing presets; they do not constitute a third preset
-or claim Radix component parity.
+Agent recipes extend Vanilla and Fortal; they are not included in the Carbon
+slice and do not claim Radix component parity.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

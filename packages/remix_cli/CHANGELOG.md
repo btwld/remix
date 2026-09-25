@@ -1,5 +1,12 @@
-## Unreleased
+## 0.0.1-beta.1
 
+First public beta of the `remix` terminal command, distributed as the
+`remix_cli` pub package.
+
+- `remix init` accepts an explicit public GitHub source and pins its preset
+  before writing configuration. CLI-known defaults select the official
+  `@remix` source for Vanilla/Fortal and the separate `@carbon` source at
+  `btwld/flutter-carbon` for Carbon; custom sources can override either.
 - **Breaking.** `remix.yaml` schema 3 is the only readable configuration.
   Schemas 1 and 2 named no registry and read from a catalog frozen inside the
   CLI; both that catalog and `remix registry migrate` are gone. A project still
@@ -28,8 +35,6 @@
   conflicting targets and incompatible package requirements while preserving
   application-owned source and installed generated adapters.
 - Diff and overwrite remain explicit source-review actions.
-
-## 0.1.0
 
 - `remix add` accepts several items in one invocation, as in
   `remix add button card dialog`. The batch resolves to a single ordered
@@ -60,9 +65,6 @@
   repository's analyzed Radix Themes 3.3.0 implementation. It installs a
   prefixed 277-token theme and full component catalog without a
   `remix_fortal`, direct `mix`, or direct `naked_ui` dependency.
-- Adds a preset axis to `remix init`. New configurations use schema 2 and
-  record `preset: default`; schema 1 configurations remain compatible and
-  read as the default preset.
 - Initial project-local CLI for installing editable Remix UI source.
 - Uses the Flutter SDK and its Dart executable on Windows. CI verifies installation with the real SDK.
 - Supports explicit, glob, and nested workspace members through Pub's resolved package configuration.

@@ -15,7 +15,7 @@ Six words carry the whole system.
 | --- | --- |
 | **Registry** | A public GitHub repository holding a directory of component source. |
 | **Namespace** | The name your project gives a registry, like `@remix`. Commands and dependencies use it to say which registry they mean. |
-| **Preset** | One design language inside a registry — `vanilla` or `fortal` officially. A project picks exactly one. |
+| **Preset** | One design language inside a registry — `vanilla` or `fortal` officially, or a preset supplied by your chosen registry. A project picks exactly one. |
 | **Catalog** | The `registry.yaml` for one preset. It lists items. |
 | **Item** | One installable unit: its templates, its dependencies, what it exports. |
 | **Pin** | The exact commit your project reads from, recorded in `remix.yaml`. |
@@ -31,10 +31,17 @@ Two rules follow from this and explain most of the CLI's behavior:
 
 ## Install from the official registry
 
+Install the `remix_cli` pub package to get the `remix` terminal command. Ensure
+Dart's pub-cache `bin` directory is on your `PATH`:
+
 ```shell
-dart run remix_cli:remix init
-dart run remix_cli:remix add button
+dart pub global activate remix_cli 0.0.1-beta.1
+remix init
+remix add button
 ```
+
+For a project-local dev dependency, use `dart run remix_cli:remix` in place of
+`remix`; `remix_cli` is the package name because `remix` is the runtime package.
 
 `init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
 its full commit SHA. It checks that your preset exists in that branch and
@@ -45,7 +52,7 @@ Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
 `--prefix`/`--ui-path` to control naming and location:
 
 ```shell
-dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design_system
+remix init --prefix Acme --preset fortal --ui-path lib/design_system
 ```
 
 The result:
@@ -67,19 +74,41 @@ registries:
 
 Commit `remix.yaml`. There is no separate lockfile.
 
-`init` registers the official registry under the namespace `@remix` and makes
-it `defaultRegistry`, so bare names like `add button` install from it. Keep
-that name: other registries can depend on official items as `@remix/theme`,
-and those dependencies resolve through your project's `@remix`.
+For `vanilla` and `fortal`, `init` registers the official registry under the
+namespace `@remix` and makes it `defaultRegistry`, so bare names like
+`add button` install from it. Other registries can depend on official items as
+`@remix/theme` only when the project has explicitly registered `@remix` and
+the official registry offers the project's selected preset.
+
+The CLI also knows the default source for Carbon, which remains a separate
+registry rather than an official `@remix` catalog. Once
+`btwld/flutter-carbon` publishes its `stable` ref, initialize it with:
+
+```shell
+remix init --prefix Acme --preset carbon
+remix add button
+```
+
+The CLI maps `carbon` to `@carbon` at `btwld/flutter-carbon/registry`, resolves
+`stable` to a full commit SHA, verifies that repository's index lists
+`carbon`, and records only `@carbon` as the default source. Bare `add button`
+then reads that pinned Carbon catalog. The CLI ships defaults only for
+Vanilla, Fortal, and Carbon; another preset requires explicit `--registry`
+and `--repository` at initialization. Those options also override a known
+preset's default source. `--path` defaults to `registry`; without `--ref`, an
+explicit repository uses its default branch. A later `init` cannot silently
+change an existing source: use `registry update @carbon` to move its pin.
+Changing its repository, path, or namespace requires an explicit migration or
+reinitialization.
 
 `add` resolves the item's full dependency graph, renders every template, checks
 your `pubspec.yaml`, and only then writes. Your edits to already-installed
 files are preserved.
 
 ```shell
-dart run remix_cli:remix add button --dry-run   # print the plan, write nothing
-dart run remix_cli:remix add button --diff      # show what would change
-dart run remix_cli:remix add button --overwrite # replace just this item
+remix add button --dry-run   # print the plan, write nothing
+remix add button --diff      # show what would change
+remix add button --overwrite # replace just this item
 ```
 
 `--overwrite` replaces only the item you name. It never touches a dependency
@@ -90,9 +119,9 @@ you have customized.
 Changing a pin and installing source are separate steps, on purpose.
 
 ```shell
-dart run remix_cli:remix registry update @remix
-dart run remix_cli:remix add button --diff
-dart run remix_cli:remix add button --overwrite
+remix registry update @remix
+remix add button --diff
+remix add button --overwrite
 ```
 
 `registry update` resolves the recorded `ref` again. For the official registry
@@ -100,8 +129,8 @@ that is `registry-stable`, so it moves the pin to the newest promoted commit.
 Pass `--ref` to choose something else:
 
 ```shell
-dart run remix_cli:remix registry update @remix --ref <sha>            # pin that exact commit
-dart run remix_cli:remix registry update @remix --ref registry-stable  # follow the branch again
+remix registry update @remix --ref <sha>            # pin that exact commit
+remix registry update @remix --ref registry-stable  # follow the branch again
 ```
 
 A pin recorded with a SHA or a tag resolves to the same commit every time, so a
@@ -124,8 +153,8 @@ migrate a pin *from*, so such a project is reinitialized:
 
 ```shell
 rm remix.yaml
-dart run remix_cli:remix init --prefix Acme --preset vanilla
-dart run remix_cli:remix add button --diff
+remix init --prefix Acme --preset vanilla
+remix add button --diff
 ```
 
 Pass the `--prefix`, `--preset` and `--ui-path` the old file recorded; `init`
@@ -163,21 +192,22 @@ presets:
 This trips people up, so it is worth being precise:
 
 - A **namespace** (`@acme`) identifies *your registry* inside a consuming
-  project. Your registry files do not declare it; the consumer types it in
-  `registry add`. Pick one and tell consumers to use it, because any catalog
+  project. Your registry files do not declare it; the consumer selects it at
+  `init` or `registry add` (a CLI-known preset can choose its default). Pick
+  one and tell consumers to use it, because any catalog
   that depends on your items names it too.
-- A **preset** (`vanilla`) identifies *a design language*. The consuming
-  project selects exactly one, at `remix init`, and it stays fixed.
+- A **preset** (`vanilla`, `carbon`, or another registry-defined name)
+  identifies *a design language*. The consuming project selects exactly one,
+  at `remix init`, and it stays fixed.
 
 `remix registry add` validates your registry against the preset the project
 **already** selected. So **every registry a project uses must offer that
-project's preset.** Publishing only a `acme` preset means no project that
-initialized against the official registry can add you — `remix init` always
-resolves the official registry, which has no `acme`.
-
-Until a preset can be introduced by a third-party registry, publish under a
-preset name the consuming projects already use — `vanilla` here. Your
-namespace is what keeps your items distinct, not your preset name.
+project's preset.** To introduce a new preset without a CLI-shipped default,
+consumers initialize directly from your registry with `--registry` and
+`--repository`. Carbon already has such a default lookup in the CLI.
+To serve an existing Vanilla project as an additional source, offer `vanilla`
+in your index and let it use `registry add`. A registry dependency never
+registers another source automatically.
 
 ### The catalog
 
@@ -268,16 +298,16 @@ code is installed from.
 ### Publish and consume
 
 Commit the `registry/` directory and push it to the ref your consumers follow.
-A consumer with a `vanilla` project then registers you and installs:
+A consumer with an existing `vanilla` project then registers you and installs:
 
 ```shell
-dart run remix_cli:remix init                 # selects vanilla
-dart run remix_cli:remix registry add @acme \
+remix init                 # selects vanilla
+remix registry add @acme \
   --repository your-org/your-repo \
   --path registry \
   --ref stable
 
-dart run remix_cli:remix add @acme/button
+remix add @acme/button
 ```
 
 `registry add` resolves the ref to a commit and records both. Without `--ref`
@@ -286,6 +316,18 @@ commit. Namespaces match `^@[a-z][a-z0-9_-]*$`.
 
 Bare item names resolve through `defaultRegistry`; `@acme/button` names yours
 explicitly.
+
+If your registry owns a different preset, the consumer initializes directly
+from it instead of initializing from `@remix` first:
+
+```shell
+remix init --preset acme \
+  --registry @acme --repository your-org/your-repo --ref stable
+remix add button
+```
+
+That project records only `@acme` initially. Another source can be registered
+later with `registry add` only if it also offers the `acme` preset.
 
 ### Choose the ref consumers follow
 
@@ -310,12 +352,12 @@ change to a working branch, then install it in a scratch app initialized with
 the preset your consumers use:
 
 ```shell
-dart run remix_cli:remix registry add @acme \
+remix registry add @acme \
   --repository your-org/your-repo \
   --path registry \
   --ref my-change
-dart run remix_cli:remix add @acme/button --dry-run
-dart run remix_cli:remix add @acme/button
+remix add @acme/button --dry-run
+remix add @acme/button
 ```
 
 `--dry-run` resolves the whole dependency graph and renders every template

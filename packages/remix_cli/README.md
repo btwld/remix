@@ -5,11 +5,12 @@ migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
 Choose the compact `vanilla` preset or the Radix Themes-inspired `fortal`
-preset at initialization. Remix remains the behavior dependency; the
+preset from the official registry. A separate public registry can supply its
+own preset, such as Carbon. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
 
-The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
+The current official catalogs include an opt-in `icons` seam and cover the core Remix
 component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
@@ -31,7 +32,7 @@ The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. Registry content is published independently on GitHub and pinned in `remix.yaml`.
 Registry updates change pins only; installed source remains application-owned.
 
-Both presets additionally distribute the unstyled Agent items:
+Vanilla and Fortal additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript`, with shared `models` and `support` dependencies. These are
 application-owned source, not a dependency on the private authoring source.
@@ -39,10 +40,25 @@ Each surface has an opt-in `<component>_recipe` item that installs a complete,
 preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
 unstyled and backward compatible.
 
-## Install project-locally
+## Install the `remix` command
 
-The CLI has not been published. The hosted commands below apply after its
-first release. Until then, use the checkout command in this section.
+The pub.dev package is named `remix_cli` because `remix` is the separate
+runtime package. Its terminal executable is named `remix`. For the first
+public beta, activate the CLI globally and ensure Dart's pub-cache `bin`
+directory is on your `PATH`:
+
+```shell
+dart pub global activate remix_cli 0.0.1-beta.1
+remix --version
+remix init --prefix Acme --preset fortal
+remix add button
+```
+
+The `remix` command can be run from a Flutter package root. Global activation
+chooses the CLI version for your machine; the project's `remix.yaml` still pins
+the registry content separately.
+
+## Install project-locally
 
 The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
 the dependency fails during version solving.
@@ -62,7 +78,8 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.10`. Before that release is available,
+Vanilla, Fortal, and the separate Carbon registry require Remix
+`^1.0.0-beta.10`. Before that release is available,
 add this `pubspec_overrides.yaml` to the application:
 
 ```yaml
@@ -74,12 +91,9 @@ dependency_overrides:
 Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
-Global activation is convenient for experiments. Registry content remains
-pinned per project in `remix.yaml`:
-
-```shell
-dart pub global activate remix_cli
-```
+Use the global installation above when you want to type `remix` directly.
+A project-local dev dependency instead keeps the CLI version in that project's
+lockfile and uses `dart run remix_cli:remix` without global activation.
 
 `remix_cli` is versioned independently of `remix`, so its version does not
 match Remix's. Its registry is authored against one `remix`
@@ -122,6 +136,24 @@ configuration is refused instead of silently rewriting an existing project.
 The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
+The CLI knows the default source for Carbon, a separate public registry:
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset carbon
+```
+
+This selects `@carbon` at `btwld/flutter-carbon/registry` and its `stable`
+ref. Vanilla and Fortal still select the official `@remix` registry. Other
+presets require `--registry` and `--repository`; those options also override
+a known preset's default. They are required together. `--path` defaults to
+`registry`; for an explicit repository, `--ref` defaults to its default
+branch. The CLI validates the selected preset at the resolved full commit SHA
+before writing configuration. It records only that source as
+`defaultRegistry`, so bare item names use it. A later `init` cannot repoint an
+existing source; use `registry update` for a new ref and an explicit migration
+for a new repository, path, or namespace. See the
+[registry guide](../../docs/guides/registries.mdx).
+
 ### Fortal as owned source
 
 With `preset: fortal`, `add button` installs the full local theme layer,
@@ -137,7 +169,7 @@ the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
 
-Both presets support `theme`, `darkTheme`, and `mode` on their generated scope.
+Vanilla and Fortal support `theme`, `darkTheme`, and `mode` on their generated scope.
 The old scope `data` and `brightness` parameters and config `createScope`
 shortcut are removed. Update application-owned callers to this API.
 With no configuration, roots use the generated light/dark pair and follow the
@@ -153,6 +185,21 @@ theme files, not a complete app host or appearance picker. See the
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
+
+### Carbon as owned source
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset carbon
+dart run remix_cli:remix add button
+```
+
+Carbon currently installs its theme foundation and Button only. The configured
+prefix produces `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle`. Select `AcmeTheme.white`, `.g10`, `.g90`, or `.g100` on the
+scope. This slice has no icon button, charts, icons, Agent surfaces, or
+dashboard recipes.
+The repository and its `stable` ref must be public and promoted before the
+hosted command can succeed.
 
 ## Add a component
 
@@ -396,7 +443,7 @@ the source you install; the registry pin in `remix.yaml` does:
 5. reapply or refine application-specific changes and commit `remix.yaml`
    and the regenerated adapter.
 
-There is no automatic merge or migration layer in 0.1.0.
+There is no automatic merge or migration layer in this beta.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and
