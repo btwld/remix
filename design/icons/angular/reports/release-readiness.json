@@ -1,8 +1,8 @@
 {
   "status": "blocked",
   "catalogSha256": "0f0b0e1c4c8b4a8ec1947f7f2b25b9dcaa464fe5f8d2e15fc6f95ea6f4d0b0b8",
-  "catalogHTMLSHA256": "e6f828b18f2193f484718d96bc9f6524d0a08b6140cdd12cd642f3b5a0badc69",
-  "inputFingerprint": "403064fc19a0ff160a331f6f944851c4dab343850b9f426245154695feae9090",
+  "catalogHTMLSHA256": "820b9473b133ccb95b280adcc88007253ceb91452db8ff237f1cda5019c561f0",
+  "inputFingerprint": "c126a41d928737fce883e71854722c29b4e1051e15567db7e6b305093b2a5262",
   "toolchainFingerprint": "939c9fca379dca711ef3f1ef81bcf4d9812c05d9abbc1704c46086f0befd76f5",
   "scope": "Public release readiness, separate from private pilot usability. Checks recorded evidence; does not certify design, legal rights, or accessibility.",
   "blockers": [
@@ -13,7 +13,6 @@
     "public-package-metadata",
     "exception-ownership",
     "full-browser-chromium",
-    "full-browser-firefox",
     "full-browser-webkit",
     "immutable-ci-action-pins",
     "human-evidence-recognition",
@@ -92,7 +91,7 @@
     },
     {
       "check": "full-browser-firefox",
-      "passed": false,
+      "passed": true,
       "detail": "Needs a successful full-mode report for this exact guide, including HTTP, file, and module loading. WebKit does not claim branded Safari coverage."
     },
     {

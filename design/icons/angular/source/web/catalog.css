@@ -13,12 +13,33 @@
   }
   button, input, select, textarea, summary { forced-color-adjust: auto; }
   button, button:hover { color: ButtonText; background: ButtonFace; border-color: ButtonText; }
-  button[aria-pressed="true"], .app button[aria-pressed="true"],
-  .action-primary, .action-primary:hover, .tag.new {
+  /* HighlightText on Firefox's Highlight (#3399FF) is only 2.941:1.
+     contrast-color() keeps the selected Highlight fill and picks black or
+     white against that exact system color. aria-pressed behavior is unchanged. */
+  button[aria-pressed="true"], .app button[aria-pressed="true"] {
+    color: CanvasText;
+    color: contrast-color(Highlight);
+    background: Highlight;
+    border-color: Highlight;
+    forced-color-adjust: none;
+  }
+  .action-primary, .action-primary:hover {
+    color: CanvasText;
+    color: contrast-color(Highlight);
+    background: Highlight;
+    border-color: Highlight;
+    forced-color-adjust: none;
+  }
+  .tag.new {
     color: HighlightText; background: Highlight; border-color: Highlight;
     forced-color-adjust: none;
   }
   button svg { color: inherit; fill: currentColor; forced-color-adjust: preserve-parent-color; }
+  /* Firefox keyboard focus matches :focus here and not :focus-visible. */
+  button:focus, button:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 4px;
+  }
   :focus-visible { outline: 3px solid Highlight; outline-offset: 4px; }
   input:focus-visible, select:focus-visible { outline-color: Highlight; }
   button:disabled { color: GrayText; border-color: GrayText; background: ButtonFace; }

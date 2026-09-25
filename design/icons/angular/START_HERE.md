@@ -1,7 +1,30 @@
-# START HERE — agent handoff
+# START HERE — handoff status
 
 This package is the audited **Vector UI Angular icon-family pilot** (`0.5.0-pilot.2`).
-It exists so another agent can finish the GitHub integration without repeating the design and validation work.
+
+## Current state
+
+Recorded after the import, not as a prediction:
+
+- Repository: `btwld/remix`
+- Branch: `feat/angular-icon-family-pilot`
+- Location: `design/icons/angular/`
+- The icon package is committed. Commit `0c38cf8cfce49f115d0d7480ac4f01e5aaba8893` added it.
+- Draft pull request: https://github.com/btwld/remix/pull/244
+- `main` was not modified. It remains `849dbc0c03348f13f8a99bb50bebd3b0e1321012` until that PR is reviewed.
+- License: BSD 3-Clause, `Copyright (c) 2026, Leo Farias`. The web package metadata is `BSD-3-Clause` and `private: true`.
+- The temporary root workflow `.github/workflows/import-angular-icons.yml` has been removed.
+- Handoff checks ran on CPython 3.12.13. The package lock still targets CPython 3.13 for CI. Do not treat those as the same runtime.
+- This is still a private pilot. Draft PR status is not public-release approval.
+
+## Historical pre-import state
+
+The notes below described the branch before the package was copied in. They are not the current state.
+
+- `main` was at `849dbc0c03348f13f8a99bb50bebd3b0e1321012` when the branch was created.
+- The branch was then one commit ahead at `f745fdd79c0130817309393437e59148e16c35e0`.
+- That commit added only `.github/workflows/import-angular-icons.yml`.
+- At that time the icon package was not committed and no pull request existed.
 
 ## Goal
 
@@ -13,31 +36,6 @@ Finish the handoff into:
 - Default branch: `main`
 
 Do **not** merge to `main`, publish a package, or claim public-release readiness as part of the handoff unless the remaining release blockers below have been explicitly resolved.
-
-## Current GitHub state
-
-At handoff time:
-
-- `main` was at `849dbc0c03348f13f8a99bb50bebd3b0e1321012` when the branch was created.
-- `feat/angular-icon-family-pilot` exists.
-- The branch is currently one commit ahead of `main` at `f745fdd79c0130817309393437e59148e16c35e0`.
-- That commit adds only `.github/workflows/import-angular-icons.yml`.
-- **The icon package itself has not been committed to the branch.**
-- No pull request was opened.
-- No merge, deployment, or package publication was performed.
-
-Before doing anything else, inspect the live branch and confirm it still matches this description:
-
-```sh
-git fetch origin
-git switch feat/angular-icon-family-pilot
-git status
-git log --oneline --decorate -5
-git diff --stat origin/main...HEAD
-git diff origin/main...HEAD -- .github/workflows/import-angular-icons.yml
-```
-
-The temporary import workflow was created during an incomplete transfer attempt. Treat it as disposable scaffolding. Remove it if you are going to copy the package normally.
 
 ## License decision
 
@@ -166,8 +164,7 @@ The package is still a **private review build**, not a 1.0/public release.
 Do not claim these are complete unless new evidence exists:
 
 - Final family name.
-- Ownership/provenance decision.
-- Public distribution license.
+- Ownership names for exceptions and an independent design reviewer.
 - Independent design approval.
 - User recognition study.
 - Screen-reader testing.
@@ -234,13 +231,13 @@ Do not merge merely because technical checks are green.
 
 This GitHub handoff is complete when:
 
-- The owner has explicitly resolved the public-license/provenance question.
-- The actual package exists under `design/icons/angular/` on `feat/angular-icon-family-pilot`.
-- The temporary import workflow is removed or deliberately replaced.
+- The owner selected BSD 3-Clause, copyright Leo Farias. Public release is still not approved.
+- The package exists under `design/icons/angular/` on `feat/angular-icon-family-pilot`.
+- The temporary import workflow is removed.
 - The 288 SVG hashes still match the audited package.
 - Package checks pass in the target checkout.
-- Any new hosted/cross-browser evidence is recorded honestly.
-- A draft PR is open against `main` with remaining nontechnical blockers clearly listed.
+- Hosted browser evidence is recorded with its failures, not relabeled as a full pass.
+- Draft PR #244 is open against `main`.
 - `main` is not modified except through the normal reviewed PR process.
 
 If any of those facts cannot be verified, stop and report the gap rather than guessing.

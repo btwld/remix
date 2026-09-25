@@ -20,9 +20,9 @@ Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catal
 
 ## What is not finished
 
-The remaining **72 Core proposals**, Rounded, independent design sign-off, user-recognition testing, final name, public license, and public publication. No GitHub repository was created or changed. No npm package was published. The workflow is supplied but has not run on GitHub.
+The remaining **72 Core proposals**, Rounded, independent design sign-off, user-recognition testing, final name, and public publication. The distribution license is selected: BSD 3-Clause, copyright Leo Farias. The package is committed on `feat/angular-icon-family-pilot` and open as draft pull request [#244](https://github.com/btwld/remix/pull/244). No npm package was published. This is still a private pilot, not a public release.
 
-**Browser limit:** 150 interaction assertions passed using injected HTML in Chromium 144.0.7559.96, with two real download byte comparisons. This environment blocked HTTP and file navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`). Hosted loading, direct file loading, and browser ESM loading remain unverified here. Node tested all isolated imports separately. Firefox, WebKit, branded Safari, and assistive technology were not tested. Do not describe this as cross-browser certification.
+**Browser evidence from the handoff host:** Firefox 144 passed the full catalog script (HTTP, file, and module loading). Its forced-colors audit originally measured the selected star at 2.941:1 on the light surface because Firefox's Highlight (`#3399FF`) with HighlightText (white) misses 3:1. The selected star and primary action keep that Highlight fill. The color rule declares `CanvasText` first and `contrast-color(Highlight)` second, because Firefox drops a lone `contrast-color()` declaration and would otherwise paint white. After that change the light selected star measures 7.141:1 and the primary label measures 7.141:1. `aria-pressed`, the name "Favorite project", the 44px target, and the 3px focus outline stay in place. Chromium 151 passed the same forced-colors audit, including HTTP and file loading; its full catalog script stopped when headless Copy SVG left `#copy-status` empty. WebKit did not launch on this Amazon Linux host. Do not describe this as cross-browser certification or branded Safari evidence.
 
 ## Use the SVGs
 
@@ -59,7 +59,7 @@ The convenience API loads all icon path data. Per-icon imports reference only th
 
 ## Build and check
 
-Tested locally with Python 3.13, Node 22.16, Shapely 2.1.2, CairoSVG 2.8.2, and Cairo 1.18.4. Dependencies are pinned; this is a tested toolchain, not a claim that every pin is the newest release.
+The pinned toolchain this package was authored against is CPython 3.13, Node 22.16, Shapely 2.1.2, CairoSVG 2.8.2, and Cairo 1.18.4. The handoff checkout ran the same pins on CPython 3.12.13, Node 24.14.1, CairoSVG 2.8.2, and Cairo 1.18.0. Those are separate runtimes. Reports from one must not be relabeled as the other. Dependencies are pinned; this is not a claim that every pin is the newest release.
 
 ```sh
 python -m venv .venv
@@ -145,5 +145,6 @@ old reports. The rebuild check uses a clean temporary tree; pixel tests never
 refresh baselines in validation mode. Report fingerprints are not signatures.
 
 See `reports/AUDIT-FIXES.md` for actual patch results and test boundaries.
-Unassigned exception owners, design review, licensing, and human recognition
-remain deliberate public-release blockers.
+Unassigned exception owners, design review, and human recognition remain
+deliberate public-release blockers. The BSD 3-Clause license is selected;
+public release is not.

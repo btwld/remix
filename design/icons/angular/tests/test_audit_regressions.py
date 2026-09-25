@@ -198,5 +198,27 @@ class EvidenceFreshnessRegression(unittest.TestCase):
             self.assertFalse(any(checks['technical-'+f] for f in filenames))
 
 
+class SelectedStarContrastRegression(unittest.TestCase):
+    def test_forced_colors_selected_icon_uses_contrast_color(self):
+        css = (ROOT / 'source/web/catalog.css').read_text()
+        block = css.split('@media (forced-colors: active)', 1)[1].split('@media', 1)[0]
+        rule = block.split('button[aria-pressed="true"]', 1)[1].split('}', 1)[0]
+        self.assertIn('color: CanvasText', rule)
+        self.assertIn('contrast-color(Highlight)', rule)
+        self.assertIn('background: Highlight', rule)
+        self.assertNotIn('HighlightText', rule)
+        primary = block.split('.action-primary', 1)[1].split('}', 1)[0]
+        self.assertIn('color: CanvasText', primary)
+        self.assertIn('contrast-color(Highlight)', primary)
+        self.assertNotIn('HighlightText', primary)
+        focus = block.split('button:focus', 1)[1].split('}', 1)[0]
+        self.assertIn('outline: 3px solid Highlight', focus)
+        page = (ROOT / 'docs/catalog/index.html').read_text()
+        self.assertIn('color: CanvasText', page)
+        self.assertIn('contrast-color(Highlight)', page)
+        self.assertIn('aria-label="Favorite project"', page)
+        self.assertIn('aria-pressed="false"', page)
+
+
 if __name__=='__main__':
     unittest.main()
