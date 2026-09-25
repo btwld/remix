@@ -150,9 +150,7 @@ void main() {
         isA<FormatException>().having(
           (e) => e.message,
           'message',
-          contains(
-            'No registry-stable branch is published for btwld/remix',
-          ),
+          contains('No registry-stable branch is published for btwld/remix'),
         ),
       ),
     );
