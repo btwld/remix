@@ -25,7 +25,7 @@ dev_dependencies:
     sdk: flutter
   mix_generator: ^2.2.0-beta.3
   # Project-local CLI pin for the application-owned UI source.
-  remix_cli: ^0.1.0
+  remix_cli: ^0.0.1-beta.1
 
 flutter:
   uses-material-design: true
