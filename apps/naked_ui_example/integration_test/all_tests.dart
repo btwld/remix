@@ -10,6 +10,7 @@ import 'components/naked_combobox_integration.dart' as combobox_tests;
 import 'components/naked_dialog_integration.dart' as dialog_tests;
 import 'components/naked_link_integration.dart' as link_tests;
 import 'components/naked_menu_integration.dart' as menu_tests;
+import 'components/naked_menubar_integration.dart' as menubar_tests;
 import 'components/naked_popover_integration.dart' as popover_tests;
 import 'components/naked_radio_integration.dart' as radio_tests;
 import 'components/naked_select_integration.dart' as select_tests;
@@ -39,6 +40,7 @@ void main() {
     group('Dialog Tests', dialog_tests.main);
     group('Link Tests', link_tests.main);
     group('Menu Tests', menu_tests.main);
+    group('Menubar Tests', menubar_tests.main);
     group('Popover Tests', popover_tests.main);
     group('Radio Tests', radio_tests.main);
     group('Select Tests', select_tests.main);

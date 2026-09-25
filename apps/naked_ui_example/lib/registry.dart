@@ -17,6 +17,8 @@ import 'api/naked_disclosure.0.dart' as disclosure_example;
 import 'api/naked_link.0.dart' as link_example;
 // Menu
 import 'api/naked_menu.0.dart' as menu_example;
+// Menubar
+import 'api/naked_menubar.0.dart' as menubar_example;
 // Popover
 import 'api/naked_popover.0.dart' as popover_example;
 // Radio
@@ -156,6 +158,15 @@ class DemoRegistry {
       sourceUrl:
           'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_textfield.0.dart',
       tags: ['textfield'],
+    ),
+    Demo(
+      id: 'menubar-basic',
+      title: 'Menubar – Basic',
+      category: 'Menubar',
+      builder: (_) => const menubar_example.MenubarExample(),
+      sourceUrl:
+          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_menubar.0.dart',
+      tags: ['menubar', 'menu'],
     ),
     Demo(
       id: 'menu-basic',

@@ -5,6 +5,8 @@
 - Add `NakedCombobox`, a headless autocomplete field on `RawAutocomplete`.
   Callers own the text field and the options panel. Keyboard highlight, Enter
   to select, Escape, and async option staleness come from Flutter.
+- Add `NakedMenubar` on `RawMenuAnchorGroup`. Menus in the bar close their
+  siblings, switch on hover while one is open, and move with the arrow keys.
 
 ### Docs
 
