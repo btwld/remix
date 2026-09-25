@@ -1,0 +1,149 @@
+[
+  {
+    "id": "warning-gap-16",
+    "icon": "warning",
+    "pack": "technical",
+    "appearance": "outline",
+    "nativeSize": 16,
+    "target": 1.5,
+    "measuredApprox": 0.6,
+    "status": "recorded-for-calibration",
+    "rule": "meaningful-mark-to-frame-gap",
+    "permittedUse": "visible-label-required",
+    "owner": null,
+    "reviewer": null,
+    "reason": "Chamfered caution plate cannot host 1/1.5/2 px punctuation with full side and base clearance at this native size. Visible-label restriction remains concept-level and is not weakened.",
+    "restrictionId": "warning-visible-label",
+    "geometrySha256": "fb9ad70f73917edddff81c4b9e66c337083da27045ecc26d579c9c310064186c"
+  },
+  {
+    "id": "warning-gap-24",
+    "icon": "warning",
+    "pack": "technical",
+    "appearance": "outline",
+    "nativeSize": 24,
+    "target": 2.0,
+    "measuredApprox": 1.5,
+    "status": "recorded-for-calibration",
+    "rule": "meaningful-mark-to-frame-gap",
+    "permittedUse": "visible-label-required",
+    "owner": null,
+    "reviewer": null,
+    "reason": "Chamfered caution plate cannot host 1/1.5/2 px punctuation with full side and base clearance at this native size. Visible-label restriction remains concept-level and is not weakened.",
+    "restrictionId": "warning-visible-label",
+    "geometrySha256": "475e049507e6cf76d5311c0beb074b9bbbdafbbea5abd4c06295fb1c84f8332f"
+  },
+  {
+    "id": "branch-chamfer-12",
+    "icon": "branch",
+    "pack": "technical",
+    "nativeSize": 12,
+    "target": 1.0,
+    "measuredApprox": 0.75,
+    "status": "recorded-for-calibration",
+    "rule": "part-chamfer-reduction",
+    "reason": "Full chamfer token would collapse the outline ring on this dense plate (knob or junction box). Construction uses the reduced cut; styles.json lists the same override.",
+    "owner": null,
+    "reviewer": null,
+    "geometrySha256": {
+      "outline": "01858c674f7f7689d7ac2823aa3c87bf48749fedd20fa8c7264a66c394e13cb4",
+      "filled": "0ec6faa32c61751b07c25f37ef71ec28df0c1c1f191b63e9597de4bac95cf250"
+    }
+  },
+  {
+    "id": "branch-chamfer-16",
+    "icon": "branch",
+    "pack": "technical",
+    "nativeSize": 16,
+    "target": 1.5,
+    "measuredApprox": 1.0,
+    "status": "recorded-for-calibration",
+    "rule": "part-chamfer-reduction",
+    "reason": "Full chamfer token would collapse the outline ring on this dense plate (knob or junction box). Construction uses the reduced cut; styles.json lists the same override.",
+    "owner": null,
+    "reviewer": null,
+    "geometrySha256": {
+      "outline": "a1bf782bc459b0ea3353f118ba5d2e3f0045e470e5d0de3c982a466407882725",
+      "filled": "7771dbbfd078794e327f560dbfc3dc92f681a28112508a91aaca4f1613c620a1"
+    }
+  },
+  {
+    "id": "branch-chamfer-24",
+    "icon": "branch",
+    "pack": "technical",
+    "nativeSize": 24,
+    "target": 2.0,
+    "measuredApprox": 1.5,
+    "status": "recorded-for-calibration",
+    "rule": "part-chamfer-reduction",
+    "reason": "Full chamfer token would collapse the outline ring on this dense plate (knob or junction box). Construction uses the reduced cut; styles.json lists the same override.",
+    "owner": null,
+    "reviewer": null,
+    "geometrySha256": {
+      "outline": "7a1cbc39972149965e2589baee1ac4e731d64b09130801d9b0eeef8c6fac4822",
+      "filled": "8b0b15947e05fe699e2ad036cd91a9c6802d67b259889efbef2607d7a1a8cc14"
+    }
+  },
+  {
+    "id": "sliders-chamfer-12",
+    "icon": "sliders",
+    "pack": "technical",
+    "nativeSize": 12,
+    "target": 1.0,
+    "measuredApprox": 0.75,
+    "status": "recorded-for-calibration",
+    "rule": "part-chamfer-reduction",
+    "reason": "Full chamfer token would collapse the outline ring on this dense plate (knob or junction box). Construction uses the reduced cut; styles.json lists the same override.",
+    "owner": null,
+    "reviewer": null,
+    "geometrySha256": {
+      "outline": "c5f45cbf6762a3a0657770572e59ccc9e9b34465dd76e0be1b85be4aad66ceae",
+      "filled": "ba586c1b8a35cfef020f55faf8c902f00e5143c04c2f9c231b41b51976c19b59"
+    }
+  },
+  {
+    "id": "sliders-chamfer-16",
+    "icon": "sliders",
+    "pack": "technical",
+    "nativeSize": 16,
+    "target": 1.5,
+    "measuredApprox": 1.0,
+    "status": "recorded-for-calibration",
+    "rule": "part-chamfer-reduction",
+    "reason": "Full chamfer token would collapse the outline ring on this dense plate (knob or junction box). Construction uses the reduced cut; styles.json lists the same override.",
+    "owner": null,
+    "reviewer": null,
+    "geometrySha256": {
+      "outline": "571ca0097bd4ea53f487f51ea01f60425151d7c91df6f6feba39cb9de7979ad0",
+      "filled": "ff52fc797c0495df28ca947e4a50ecf073ba1302c78a351a0d3907d0969807bf"
+    }
+  },
+  {
+    "id": "sliders-chamfer-24",
+    "icon": "sliders",
+    "pack": "technical",
+    "nativeSize": 24,
+    "target": 2.0,
+    "measuredApprox": 1.5,
+    "status": "recorded-for-calibration",
+    "rule": "part-chamfer-reduction",
+    "reason": "Full chamfer token would collapse the outline ring on this dense plate (knob or junction box). Construction uses the reduced cut; styles.json lists the same override.",
+    "owner": null,
+    "reviewer": null,
+    "geometrySha256": {
+      "outline": "0a3745b37bf418f61a865462964f8869ae7e8b68eb2b05748e7d44b0cdced8aa",
+      "filled": "a62b5596217f946fd5014c1112888936c253e75a3ea3b23d39692edd1997b974"
+    }
+  },
+  {
+    "id": "plus-12-outline-centered-odd-width",
+    "icon": "plus",
+    "pack": "technical",
+    "appearance": "outline",
+    "nativeSize": 12,
+    "status": "allowed-optical-policy",
+    "rule": "odd-width-canvas-centering",
+    "reason": "A 1 px stem on a 12 px even canvas stays on center 6, so edges are 5.5\u20136.5. This is Technical centering, not Angular's integer 5\u20136 split.",
+    "geometrySha256": "3f1188d4f0d27e8716413bf099ba61a849cb96920f2f66e9b591e7cbc11a9144"
+  }
+]
