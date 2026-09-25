@@ -628,7 +628,9 @@ def build():
     )
     write_proof(catalog, registry_paths, exceptions)
     write_rasters(inventory, registry_paths)
-    products = [p for p in generated.rglob("*") if p.is_file()]
+    # Hash reproducible products, not the checksum file itself (Angular
+    # writes generated-sha256.json outside the hashed tree for the same reason).
+    products = [p for p in generated.rglob("*") if p.is_file() and p.name != "sha256.json"]
     products += [p for p in (ROOT / "proof").rglob("*") if p.is_file()]
     products += list((ROOT / "catalog").glob("*.json"))
     products += list((ROOT / "catalog/schemas").glob("*.json"))

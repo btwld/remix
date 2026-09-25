@@ -365,18 +365,25 @@ class RebuildTests(unittest.TestCase):
         hashes = {r["path"]: r["sha256"] for r in before}
         from source.build import build
 
+        checksum = ROOT / "generated/sha256.json"
+        checksum_before = checksum.read_bytes()
+        proof_before = {
+            name: (ROOT / name).read_bytes()
+            for name in (
+                "proof/contact-sheet.png",
+                "proof/masters-12-4x.png",
+                "proof/masters-16-4x.png",
+                "proof/masters-24-4x.png",
+                "proof/angular-vs-technical-24.png",
+            )
+        }
         build()
         after = json.loads(INV_PATH.read_text())
         self.assertEqual({r["path"]: r["sha256"] for r in after}, hashes)
         self.assertEqual(len(after), 72)
-        for name in (
-            "proof/contact-sheet.png",
-            "proof/masters-12-4x.png",
-            "proof/masters-16-4x.png",
-            "proof/masters-24-4x.png",
-            "proof/angular-vs-technical-24.png",
-        ):
-            self.assertTrue((ROOT / name).exists(), name)
+        self.assertEqual(checksum.read_bytes(), checksum_before)
+        for name, data in proof_before.items():
+            self.assertEqual((ROOT / name).read_bytes(), data, name)
 
 
 if __name__ == "__main__":
