@@ -1,3 +1,18 @@
+## Unreleased
+
+### Docs
+
+- Document `NakedTooltip` as built on `RawMenuAnchor`. The 1.0 Flutter 3.41
+  requirement was originally tied to `RawTooltip`; the tooltip no longer uses it.
+
+### Evaluated and skipped
+
+- `Expansible` hard-wires a clipped height animation and would drop
+  `reverseDuration`.
+- `RawTooltip` still has no controlled open state, hoverable content, or
+  `useRootOverlay`.
+- `showRawDialog` needs Flutter 3.44 and only adds native-window dialogs.
+
 ## 1.0.1
 
 ### Fixes
