@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Features
+
+- Add `NakedCombobox`, a headless autocomplete field on `RawAutocomplete`.
+  Callers own the text field and the options panel. Keyboard highlight, Enter
+  to select, Escape, and async option staleness come from Flutter.
+
 ### Docs
 
 - Document `NakedTooltip` as built on `RawMenuAnchor`. The 1.0 Flutter 3.41
