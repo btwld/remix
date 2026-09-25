@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,18 +12,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const Center(child: ScrollbarExample()),
-      ),
-    );
+    return const ExampleApp(child: Center(child: ScrollbarExample()));
   }
 }
 
-class ScrollbarExample extends StatelessWidget {
+class ScrollbarExample extends StatefulWidget {
   const ScrollbarExample({super.key});
+
+  @override
+  State<ScrollbarExample> createState() => _ScrollbarExampleState();
+}
+
+class _ScrollbarExampleState extends State<ScrollbarExample> {
+  final _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +47,12 @@ class ScrollbarExample extends StatelessWidget {
           return Colors.blue.shade200;
         }),
         child: ListView.builder(
+          controller: _controller,
           itemCount: 30,
-          itemBuilder: (context, index) => ListTile(title: Text('Row $index')),
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Text('Row $index'),
+          ),
         ),
       ),
     );
