@@ -254,6 +254,10 @@ void main() {
               .last,
           ref ?? 'main',
         );
+        expect(
+          requests.where((uri) => uri.host == 'api.github.com').length,
+          ref == null ? 2 : 1,
+        );
       },
     );
   }
@@ -296,9 +300,8 @@ void main() {
               301,
               '',
               headers: {
-                'location': uri.path.endsWith('/commits/registry-stable')
-                    ? 'https://api.github.com/repositories/1012065150/commits/registry-stable'
-                    : 'https://api.github.com/repositories/1012065150',
+                'location':
+                    'https://api.github.com/repositories/1012065150/commits/registry-stable',
               },
             );
           }
@@ -310,8 +313,6 @@ void main() {
       expect(source.ref, officialStableRef);
       expect(source.revision, sha);
       expect(requests.map((uri) => uri.path), [
-        '/repos/conceptadev/remix',
-        '/repositories/1012065150',
         '/repos/conceptadev/remix/commits/registry-stable',
         '/repositories/1012065150/commits/registry-stable',
       ]);
@@ -361,7 +362,6 @@ void main() {
     'latestOfficial keeps transport failures distinct from a missing branch',
     () async {
       for (final entry in <String, RegistryTransport>{
-        'not found': (_) async => const RegistryResponse(404, ''),
         'rate limit': (_) async => const RegistryResponse(
           403,
           '',

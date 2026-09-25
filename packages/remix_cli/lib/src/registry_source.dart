@@ -234,9 +234,9 @@ final class GitHubSources implements RegistrySources {
     validateRegistryPath(path);
     if (ref != null && ref.isEmpty)
       throw const FormatException('Registry ref must not be empty.');
-    final metadata = await _api('/repos/$repository');
     var requested = ref;
     if (requested == null) {
+      final metadata = await _api('/repos/$repository');
       final branch = metadata is Map ? metadata['default_branch'] : null;
       if (branch is! String || branch.isEmpty) {
         throw const FormatException('GitHub repository has no default branch.');
