@@ -71,7 +71,8 @@ final _retiredApis = <(RegExp, String)>[
   (
     RegExp(r'\.constraintsOnly\s*\('),
     'retired Box constraints convenience; use '
-        'constraints(.width/.height(...)) or constraints(BoxConstraintsMix(...))',
+        'width(w).maxWidth(max) with the broad setter first, or '
+        'constraints(BoxConstraintsMix(...)) for nullable/prebuilt values',
   ),
   (
     RegExp(
@@ -79,7 +80,8 @@ final _retiredApis = <(RegExp, String)>[
       r'borderEnd|borderVertical|borderHorizontal|borderAll)\s*\(',
     ),
     'retired Box border-side convenience; use '
-        'border(.top/.bottom/.left/.right/.start/.end/.vertical/.horizontal/.all(...))',
+        'border(.color(c).width(w).style(s).strokeAlign(a)) for uniform values, '
+        'or border(.top(.color(c).width(w)...)) for a specific side',
   ),
   (
     RegExp(
@@ -114,11 +116,12 @@ final _retiredApis = <(RegExp, String)>[
   ),
   (
     RegExp(r'\.(shadowOnly|boxShadows|boxElevation)\s*\('),
-    'retired Box shadow convenience; use decoration(.boxShadow([...]))',
+    'retired Box shadow convenience; use '
+        'shadow(.color(c).offset(x: x, y: y).blurRadius(b).spreadRadius(s))',
   ),
   (
     RegExp(r'\.transformReset\s*\('),
-    'retired Box transform convenience; use transform(Matrix4.identity())',
+    'retired Box transform convenience; use transform(.identity())',
   ),
   (
     _removedComponentBackgroundColorInvocation,

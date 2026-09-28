@@ -114,7 +114,9 @@ differs:
 | `.padding(.all(...))`, `.padding(.horizontal(...))` | `paddingAll`, `paddingX`, `paddingY` |
 | `.margin(...)` shorthands | `marginAll`, `marginX`, `marginY` |
 | `.borderRadius(.circular(x))`, `.borderRadius(.all(...))` | `borderRounded*` |
-| `.border(.all(...))` | `borderAll` |
+| `.border(.color(...).width(...))`, `.border(.top(...))` | `borderAll`, `borderTop`, … |
+| `.shadow(.color(...).offset(x: ..., y: ...).blurRadius(...))` | `shadowOnly`, `boxShadows`, `boxElevation` |
+| `.transform(.identity())` | `transformReset` |
 | `.color()` | `.backgroundColor()` |
 | `items:` (Menu/Select) | `entries:` |
 | `ButtonStyler` | the deprecated `RemixButtonStyler` alias |
