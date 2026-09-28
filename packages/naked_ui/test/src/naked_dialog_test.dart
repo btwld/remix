@@ -882,6 +882,71 @@ void main() {
   });
 
   group('Reduced motion', () {
+    Future<BuildContext> pumpReducedMotionHost(WidgetTester tester) async {
+      late BuildContext host;
+      await tester.pumpWidget(
+        MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(disableAnimations: true),
+            child: child!,
+          ),
+          home: Builder(
+            builder: (context) {
+              host = context;
+
+              return const Scaffold(body: SizedBox());
+            },
+          ),
+        ),
+      );
+
+      return host;
+    }
+
+    testWidgets('a barrier tap closes the dialog in one frame', (tester) async {
+      final host = await pumpReducedMotionHost(tester);
+
+      var closed = false;
+      showNakedDialog<void>(
+        context: host,
+        barrierColor: Colors.black54,
+        barrierDismissible: true,
+        builder: (_) => const Center(child: Text('Dialog Content')),
+      ).then((_) => closed = true);
+      // Settle so the close starts from a fully open dialog.
+      await tester.pumpAndSettle();
+
+      expect(find.text('Dialog Content'), findsOneWidget);
+
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pump();
+
+      expect(find.text('Dialog Content'), findsNothing);
+      expect(closed, isTrue);
+    });
+
+    testWidgets('Escape closes the dialog in one frame', (tester) async {
+      final host = await pumpReducedMotionHost(tester);
+
+      var closed = false;
+      showNakedDialog<void>(
+        context: host,
+        barrierColor: Colors.black54,
+        barrierDismissible: true,
+        builder: (_) => const Center(child: Text('Dialog Content')),
+      ).then((_) => closed = true);
+      // Settle so the close starts from a fully open dialog.
+      await tester.pumpAndSettle();
+
+      expect(find.text('Dialog Content'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+
+      expect(find.text('Dialog Content'), findsNothing);
+      expect(closed, isTrue);
+    });
+
     testWidgets('opens and closes the dialog in one frame', (tester) async {
       late BuildContext host;
       await tester.pumpWidget(
@@ -926,7 +991,9 @@ void main() {
       expect(find.text('Dialog body'), findsNothing);
     });
 
-    testWidgets('closes in one frame after motion turns off', (tester) async {
+    testWidgets('closes in one frame after reduced motion turns on', (
+      tester,
+    ) async {
       var disableAnimations = false;
       late StateSetter rebuild;
       late BuildContext host;

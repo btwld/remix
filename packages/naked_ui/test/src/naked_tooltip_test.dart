@@ -621,6 +621,53 @@ void main() {
         expect(find.text('Tip'), findsNothing);
       });
 
+      testWidgets('hover opens and closes in one frame after its delays', (
+        tester,
+      ) async {
+        const triggerKey = Key('reduced-motion-trigger');
+        Animation<double>? animation;
+        await tester.pumpMaterialWidget(
+          MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: NakedTooltip(
+              hoverDelay: const Duration(milliseconds: 100),
+              dismissDelay: const Duration(milliseconds: 200),
+              overlayBuilder: (context, value) {
+                animation = value;
+
+                return const Text('Tip');
+              },
+              child: const SizedBox(key: triggerKey, width: 40, height: 40),
+            ),
+          ),
+        );
+
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer();
+        await mouse.moveTo(tester.getCenter(find.byKey(triggerKey)));
+        await tester.pump(const Duration(milliseconds: 50));
+
+        expect(find.text('Tip'), findsNothing);
+
+        await tester.pump(const Duration(milliseconds: 50));
+        await tester.pump();
+
+        expect(find.text('Tip'), findsOneWidget);
+        expect(animation!.value, 1);
+
+        await mouse.moveTo(const Offset(-1000, -1000));
+        await tester.pump(const Duration(milliseconds: 150));
+
+        // The dismiss delay still applies; only the fade is skipped.
+        expect(find.text('Tip'), findsOneWidget);
+
+        await tester.pump(const Duration(milliseconds: 50));
+        await tester.pump();
+
+        expect(find.text('Tip'), findsNothing);
+        await mouse.removePointer();
+      });
+
       testWidgets('applies a motion change from the next transition', (
         tester,
       ) async {

@@ -1519,6 +1519,50 @@ void main() {
         expect(find.text('Option A'), findsNothing);
       });
 
+      testWidgets('tapping an item closes in one frame', (tester) async {
+        String? selected;
+        await tester.pumpRemixApp(
+          _reducedMotion(
+            _select(onChanged: (value) => selected = value),
+            disableAnimations: true,
+          ),
+        );
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pump();
+
+        expect(_menuOpacity(tester), 1);
+
+        await tester.tap(find.text('Option B'));
+        await tester.pump();
+
+        expect(selected, 'b');
+        expect(find.text('Option A'), findsNothing);
+      });
+
+      testWidgets('Enter on an item closes in one frame', (tester) async {
+        String? selected;
+        await tester.pumpRemixApp(
+          _reducedMotion(
+            _select(onChanged: (value) => selected = value),
+            disableAnimations: true,
+          ),
+        );
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pump();
+
+        expect(_menuOpacity(tester), 1);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pump();
+
+        expect(selected, 'a');
+        expect(find.text('Option A'), findsNothing);
+      });
+
       testWidgets('applies a motion change from the next transition', (
         tester,
       ) async {
@@ -1569,9 +1613,9 @@ void main() {
   });
 }
 
-Widget _select() {
+Widget _select({ValueChanged<String?>? onChanged}) {
   return RemixSelect<String>(
-    onChanged: (_) {},
+    onChanged: onChanged ?? (_) {},
     trigger: const RemixSelectTrigger(placeholder: 'Select'),
     items: const [
       RemixSelectItem(value: 'a', label: 'Option A'),
