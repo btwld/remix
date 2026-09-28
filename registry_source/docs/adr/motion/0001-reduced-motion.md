@@ -5,9 +5,12 @@ Date: 2026-09-27. Status: proposed.
 ## Decision
 
 Flutter's `MediaQuery.disableAnimations` is the only reduced-motion signal.
-Mix, naked_ui, Remix, and both presets read it with
-`MediaQuery.maybeDisableAnimationsOf(context) ?? false`, and none of them
-defines a second flag. Flutter fills it from the OS; an application may set it
+Mix, naked_ui, and Remix read it with
+`MediaQuery.maybeDisableAnimationsOf(context) ?? false`, and no layer defines a
+second flag. The presets' existing reads (the sidebar layouts and the Agent
+loading glyph) still use `MediaQuery.maybeOf(context)?.disableAnimations`,
+which rebuilds on every `MediaQuery` change; they move to the same form in the
+preset change. Flutter fills the signal from the OS; an application may set it
 with a `MediaQuery` override. Animation is on by default and follows the OS.
 
 Each layer owns one part:
@@ -29,10 +32,16 @@ Each layer owns one part:
 - Looping decoration (the skeleton pulse, looping Mix phase and keyframe
   configs) holds its resting frame.
 - A change to the signal applies from the next transition, without
-  remounting. A transition that is already running finishes (tooltip, select,
-  toast, dialog, Mix curve and spring configs). Widgets that can land without
-  extra state do so at once (disclosure, accordion, sidebar, skeleton). Loops
-  stop when the signal turns on and resume when it clears.
+  remounting. Two widgets are one-way exceptions: once the signal was on when
+  a dialog was pushed or an accordion panel opened, that dialog or panel
+  closes at once even if the signal clears first. `RawDialogRoute` and
+  `AnimatedSwitcher` fix a child's exit duration when it enters.
+- A transition that is already running finishes (tooltip, select, toast,
+  dialog, an accordion expand, Mix curve and spring configs). Widgets that can
+  land without extra state do so at once (disclosure, sidebar, skeleton). An
+  accordion collapse lands at once, because under the signal the accordion
+  lays out only its current child. Loops stop when the signal turns on and
+  resume when it clears.
 - Progress indicators (spinner, the Agent loading glyph) are not decided here.
 
 A widget-owned transition takes its duration from the signal when it starts:
@@ -42,11 +51,14 @@ A widget-owned transition takes its duration from the signal when it starts:
 `reverse().whenComplete(hide)` close paths unmount without special cases.
 Settling a running transition would need `stop(canceled: false)` and overlay
 guards per widget, and the signal changes only when someone changes a setting.
-Running transitions last at most 400 ms (the dialog's default enter).
+With default durations, a running transition lasts at most 400 ms (the
+dialog's default enter); an application can configure longer ones.
 `RawDialogRoute` fixes its durations at push, so the dialog also re-reads the
 signal when a pop starts. That re-read only shortens the close: the push read
 the caller's context, which can carry an override the root-navigator route
-does not see.
+does not see. `AnimatedSwitcher` likewise keeps each child's exit duration
+from when that child entered, so the accordion drops outgoing children from
+its layout under the signal instead of waiting for them.
 
 Applications set the signal above the Navigator, which covers routes and
 root-navigator dialogs:
@@ -98,9 +110,13 @@ would animate buttons for users who asked for reduced motion. Library work
   OS flag (`animation_controller.dart`, `_animateToInternal`). That does not
   apply to a `MediaQuery` override, to `animateWith` (Mix springs), or to
   `repeat` (loops), so every layer has to read `MediaQuery` itself.
-- In the library, 4 of 11 animated widgets honor the signal (disclosure,
-  toast, sidebar, skeleton), each in a different way. Accordion (200 ms) and
-  select (150 ms) hardcode their timing; tooltip and dialog ignore the signal.
+- In the library, 9 widgets own a controller, switcher, or route transition:
+  tooltip, dialog, disclosure, and toast in naked_ui; accordion, select,
+  sidebar, skeleton, and spinner in Remix. Before this decision 4 of them
+  honored the signal (disclosure, toast, sidebar, skeleton), each in a
+  different way. Accordion (200 ms) and select (150 ms) hardcoded their
+  timing; tooltip and dialog ignored the signal. The spinner is left to the
+  progress-indicator decision.
 - In the presets, the only `.animate()` is Fortal's card. Vanilla's buttons
   change state without a transition.
 
@@ -127,6 +143,8 @@ would animate buttons for users who asked for reduced motion. Library work
   that subtree still skip their transitions, which are read at the call site,
   but content inside a root-navigator dialog does not see that override.
 - A transition already running when the signal changes may play to its end.
+- A dialog pushed, or an accordion panel opened, while the signal is on
+  closes at once even after the signal clears.
 - Motion cannot be forced on against the OS, including for demos.
 - Motion values cannot differ per subtree.
 - A recipe transition animates every property that differs between states
