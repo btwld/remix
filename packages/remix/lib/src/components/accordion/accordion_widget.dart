@@ -195,6 +195,10 @@ class RemixAccordion<T> extends StatelessWidget {
   final AccordionSpec? styleSpec;
 
   /// The transition builder for the accordion item.
+  ///
+  /// Wraps the panel as it enters and the empty placeholder as it leaves.
+  /// When [MediaQuery.disableAnimations] is set as a switch starts, the
+  /// animation passed here completes in the same frame.
   final Widget Function(Widget, Animation<double>) transitionBuilder;
 
   static final styleFrom = AccordionStyler.new;
@@ -213,6 +217,17 @@ class _RemixAccordionBody<T> extends StatefulWidget {
 }
 
 class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
+  static const Duration _defaultDuration = Duration(milliseconds: 200);
+
+  // Same Stack as AnimatedSwitcher.defaultLayoutBuilder, so the current
+  // child keeps its element when the layout switches.
+  static Widget _currentChildLayout(
+    Widget? currentChild,
+    List<Widget> previousChildren,
+  ) {
+    return Stack(alignment: Alignment.center, children: [?currentChild]);
+  }
+
   // NakedAccordion tracks these same states, but only publishes them below
   // itself — and the panel container is mounted above it. Mirroring the
   // trigger's interaction states here is what lets one resolved spec drive
@@ -302,18 +317,22 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     bool isExpanded,
     Widget panel,
   ) {
-    final child = isExpanded
-        ? Box(styleSpec: spec.content, child: panel)
-        : const SizedBox.shrink();
-    // Duration.zero is not safe here: AnimatedSwitcher reverses the outgoing
-    // child from didUpdateWidget, and that completion calls setState during
-    // build. Skipping the switcher lands on the target in this frame.
-    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) return child;
+    // The switcher stays mounted under reduced motion so the panel keeps its
+    // state when the flag flips. A zero duration lands the next switch in
+    // this frame. The switcher fixes a child's exit duration when that child
+    // enters, so a panel opened with motion on would still animate its close;
+    // the layout drops outgoing children instead.
+    final reducedMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
+      duration: reducedMotion ? Duration.zero : _defaultDuration,
       transitionBuilder: _config.transitionBuilder,
-      child: child,
+      layoutBuilder: reducedMotion
+          ? _currentChildLayout
+          : AnimatedSwitcher.defaultLayoutBuilder,
+      child: isExpanded
+          ? Box(styleSpec: spec.content, child: panel)
+          : const SizedBox.shrink(),
     );
   }
 

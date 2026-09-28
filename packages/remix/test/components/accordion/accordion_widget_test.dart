@@ -905,15 +905,88 @@ void main() {
         await tester.pump();
 
         expect(find.text('Panel'), findsOneWidget);
-        expect(find.byType(SizeTransition), findsNothing);
+        expect(tester.getSize(find.text('Panel')).height, greaterThan(0));
+        expect(tester.hasRunningAnimations, isFalse);
 
         await tester.tap(find.text('Title'));
         await tester.pump();
 
         expect(find.text('Panel'), findsNothing);
+        expect(tester.hasRunningAnimations, isFalse);
       });
 
-      testWidgets('lands an in-progress expand when motion turns off', (
+      testWidgets('controller open and close land in one frame', (
+        tester,
+      ) async {
+        final controller = RemixAccordionController<String>();
+        await tester.pumpRemixApp(
+          _reducedMotion(_accordion(controller), disableAnimations: true),
+        );
+
+        controller.open('item');
+        await tester.pump();
+
+        expect(find.text('Panel'), findsOneWidget);
+        expect(tester.hasRunningAnimations, isFalse);
+
+        controller.close('item');
+        await tester.pump();
+
+        expect(find.text('Panel'), findsNothing);
+        expect(tester.hasRunningAnimations, isFalse);
+      });
+
+      testWidgets('keeps the panel state when the flag flips', (tester) async {
+        final controller = RemixAccordionController<String>();
+        var disableAnimations = false;
+        late StateSetter rebuild;
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+
+              return _reducedMotion(
+                _accordion(controller, child: const _PanelProbe()),
+                disableAnimations: disableAnimations,
+              );
+            },
+          ),
+        );
+
+        controller.open('item');
+        await tester.pumpAndSettle();
+        final original = tester.state(find.byType(_PanelProbe));
+
+        rebuild(() => disableAnimations = true);
+        await tester.pumpAndSettle();
+        expect(tester.state(find.byType(_PanelProbe)), same(original));
+
+        rebuild(() => disableAnimations = false);
+        await tester.pumpAndSettle();
+        expect(tester.state(find.byType(_PanelProbe)), same(original));
+      });
+
+      testWidgets('rapid toggles do not throw', (tester) async {
+        final controller = RemixAccordionController<String>();
+        await tester.pumpRemixApp(
+          _reducedMotion(_accordion(controller), disableAnimations: true),
+        );
+
+        for (var i = 0; i < 6; i++) {
+          await tester.tap(find.text('Title'));
+          await tester.pump();
+        }
+        controller.open('item');
+        await tester.pump();
+        controller.close('item');
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+        expect(find.text('Panel'), findsNothing);
+        expect(tester.hasRunningAnimations, isFalse);
+      });
+
+      testWidgets('a running expand finishes after the flag turns on', (
         tester,
       ) async {
         final controller = RemixAccordionController<String>();
@@ -933,31 +1006,75 @@ void main() {
         );
 
         await tester.tap(find.text('Title'));
-        await tester.pump();
-
-        // The switcher keeps both the outgoing and incoming panels during
-        // the 200 ms transition.
-        expect(find.byType(SizeTransition), findsWidgets);
+        await tester.pump(const Duration(milliseconds: 50));
 
         rebuild(() => disableAnimations = true);
         await tester.pump();
 
-        expect(find.byType(SizeTransition), findsNothing);
+        expect(tester.hasRunningAnimations, isTrue);
+
+        await tester.pumpAndSettle();
+
         expect(find.text('Panel'), findsOneWidget);
       });
+
+      testWidgets(
+        'a panel opened with motion on closes in one frame after reduced '
+        'motion turns on',
+        (tester) async {
+          final controller = RemixAccordionController<String>();
+          var disableAnimations = false;
+          late StateSetter rebuild;
+          await tester.pumpRemixApp(
+            StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+
+                return _reducedMotion(
+                  _accordion(controller),
+                  disableAnimations: disableAnimations,
+                );
+              },
+            ),
+          );
+
+          controller.open('item');
+          await tester.pumpAndSettle();
+
+          rebuild(() => disableAnimations = true);
+          await tester.pump();
+
+          await tester.tap(find.text('Title'));
+          await tester.pump();
+
+          expect(find.text('Panel'), findsNothing);
+        },
+      );
     });
   });
 }
 
-Widget _accordion(RemixAccordionController<String> controller) {
+Widget _accordion(
+  RemixAccordionController<String> controller, {
+  Widget child = const Text('Panel'),
+}) {
   return RemixAccordionGroup<String>(
     controller: controller,
-    child: RemixAccordion<String>(
-      value: 'item',
-      title: 'Title',
-      child: const Text('Panel'),
-    ),
+    child: RemixAccordion<String>(value: 'item', title: 'Title', child: child),
   );
+}
+
+/// A stateful panel body, so tests can check that its [State] survives.
+class _PanelProbe extends StatefulWidget {
+  const _PanelProbe();
+
+  @override
+  State<_PanelProbe> createState() => _PanelProbeState();
+}
+
+class _PanelProbeState extends State<_PanelProbe> {
+  @override
+  Widget build(BuildContext context) => const Text('Panel');
 }
 
 Widget _reducedMotion(Widget child, {required bool disableAnimations}) {
