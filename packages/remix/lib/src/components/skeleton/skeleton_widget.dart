@@ -156,7 +156,7 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
   }
 
   void _syncMotion() {
-    if (MediaQuery.disableAnimationsOf(context)) {
+    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
       _controller.stop();
       // Deterministic base frame, so a static placeholder always paints the
       // container exactly as styled.

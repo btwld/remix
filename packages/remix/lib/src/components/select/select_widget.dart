@@ -161,16 +161,28 @@ class RemixSelect<T> extends StatefulWidget {
 
 class _RemixSelectState<T> extends State<RemixSelect<T>>
     with SingleTickerProviderStateMixin {
+  static const Duration _defaultMotion = Duration(milliseconds: 150);
+
   late final AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      reverseDuration: const Duration(milliseconds: 150),
+      duration: _defaultMotion,
+      reverseDuration: _defaultMotion,
       vsync: this,
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final disabled = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    final motion = disabled ? Duration.zero : _defaultMotion;
+    animationController
+      ..duration = motion
+      ..reverseDuration = motion;
   }
 
   SelectStyler _buildStyle() {
@@ -205,7 +217,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   Widget _buildOverlayMenu(SelectSpec spec, SelectStyler style) {
     return _AnimatedOverlayMenu(
       controller: animationController,
-      duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
       content: spec.content,
       menuContainer: spec.menuContainer,
@@ -340,7 +351,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 class _AnimatedOverlayMenu extends StatefulWidget {
   const _AnimatedOverlayMenu({
     required this.controller,
-    required this.duration,
     required this.curve,
     required this.content,
     required this.menuContainer,
@@ -348,7 +358,6 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   });
 
   final AnimationController controller;
-  final Duration duration;
   final Curve curve;
   final StyleSpec<SelectContentSpec> content;
   final StyleSpec<FlexBoxSpec> menuContainer;
@@ -369,7 +378,6 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
   void initState() {
     super.initState();
 
-    widget.controller.duration = widget.duration;
     _fadeCurve = CurvedAnimation(
       parent: widget.controller,
       curve: widget.curve,

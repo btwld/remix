@@ -893,7 +893,82 @@ void main() {
         expect(align.heightFactor, 0.5);
       });
     });
+
+    group('Reduced motion', () {
+      testWidgets('expands and collapses in one frame', (tester) async {
+        final controller = RemixAccordionController<String>();
+        await tester.pumpRemixApp(
+          _reducedMotion(_accordion(controller), disableAnimations: true),
+        );
+
+        await tester.tap(find.text('Title'));
+        await tester.pump();
+
+        expect(find.text('Panel'), findsOneWidget);
+        expect(find.byType(SizeTransition), findsNothing);
+
+        await tester.tap(find.text('Title'));
+        await tester.pump();
+
+        expect(find.text('Panel'), findsNothing);
+      });
+
+      testWidgets('lands an in-progress expand when motion turns off', (
+        tester,
+      ) async {
+        final controller = RemixAccordionController<String>();
+        var disableAnimations = false;
+        late StateSetter rebuild;
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+
+              return _reducedMotion(
+                _accordion(controller),
+                disableAnimations: disableAnimations,
+              );
+            },
+          ),
+        );
+
+        await tester.tap(find.text('Title'));
+        await tester.pump();
+
+        // The switcher keeps both the outgoing and incoming panels during
+        // the 200 ms transition.
+        expect(find.byType(SizeTransition), findsWidgets);
+
+        rebuild(() => disableAnimations = true);
+        await tester.pump();
+
+        expect(find.byType(SizeTransition), findsNothing);
+        expect(find.text('Panel'), findsOneWidget);
+      });
+    });
   });
+}
+
+Widget _accordion(RemixAccordionController<String> controller) {
+  return RemixAccordionGroup<String>(
+    controller: controller,
+    child: RemixAccordion<String>(
+      value: 'item',
+      title: 'Title',
+      child: const Text('Panel'),
+    ),
+  );
+}
+
+Widget _reducedMotion(Widget child, {required bool disableAnimations}) {
+  return Builder(
+    builder: (context) => MediaQuery(
+      data: MediaQuery.of(
+        context,
+      ).copyWith(disableAnimations: disableAnimations),
+      child: child,
+    ),
+  );
 }
 
 Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(

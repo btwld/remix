@@ -183,6 +183,7 @@ Future<T?> showNakedDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
+  final reducedMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
   final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
   final CapturedThemes themes = InheritedTheme.capture(
     from: context,
@@ -190,7 +191,7 @@ Future<T?> showNakedDialog<T>({
   );
 
   return navigator.push<T>(
-    RawDialogRoute<T>(
+    _NakedDialogRoute<T>(
       pageBuilder:
           (
             BuildContext routeContext,
@@ -209,7 +210,7 @@ Future<T?> showNakedDialog<T>({
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
       barrierLabel: barrierLabel,
-      transitionDuration: transitionDuration,
+      transitionDuration: reducedMotion ? Duration.zero : transitionDuration,
       transitionBuilder: transitionBuilder,
       settings: routeSettings,
       requestFocus: requestFocus,
@@ -218,6 +219,35 @@ Future<T?> showNakedDialog<T>({
           traversalEdgeBehavior ?? TraversalEdgeBehavior.closedLoop,
     ),
   );
+}
+
+/// [RawDialogRoute] freezes [transitionDuration] when the route is pushed.
+/// Re-read reduced motion when the exit starts so a later signal still skips
+/// the close. Push-time [Duration.zero] stays on [showNakedDialog].
+class _NakedDialogRoute<T> extends RawDialogRoute<T> {
+  _NakedDialogRoute({
+    required super.pageBuilder,
+    required super.barrierDismissible,
+    required super.barrierColor,
+    super.barrierLabel,
+    required super.transitionDuration,
+    super.transitionBuilder,
+    super.settings,
+    super.requestFocus,
+    super.anchorPoint,
+    super.traversalEdgeBehavior,
+  });
+
+  @override
+  bool didPop(T? result) {
+    final BuildContext? routeContext = subtreeContext;
+    if (routeContext != null &&
+        routeContext.mounted &&
+        (MediaQuery.maybeDisableAnimationsOf(routeContext) ?? false)) {
+      controller?.reverseDuration = Duration.zero;
+    }
+    return super.didPop(result);
+  }
 }
 
 /// Provides modal dialog semantics and accessibility.

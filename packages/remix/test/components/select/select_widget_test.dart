@@ -1500,7 +1500,105 @@ void main() {
         }
       });
     });
+
+    group('Reduced motion', () {
+      testWidgets('opens and closes in one frame', (tester) async {
+        await tester.pumpRemixApp(
+          _reducedMotion(_select(), disableAnimations: true),
+        );
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pump();
+
+        expect(_menuOpacity(tester), 1);
+        expect(find.text('Option A'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+
+        expect(find.text('Option A'), findsNothing);
+      });
+
+      testWidgets('applies a motion change from the next transition', (
+        tester,
+      ) async {
+        var disableAnimations = false;
+        late StateSetter rebuild;
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+
+              return _reducedMotion(
+                _select(),
+                disableAnimations: disableAnimations,
+              );
+            },
+          ),
+        );
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsOneWidget);
+
+        // A close that is already running finishes and unmounts.
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 40));
+        rebuild(() => disableAnimations = true);
+        await tester.pump();
+
+        expect(_menuOpacity(tester), inExclusiveRange(0, 1));
+
+        await tester.pumpAndSettle();
+
+        expect(find.text('Option A'), findsNothing);
+
+        // Transitions started after the change take one frame.
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pump();
+
+        expect(_menuOpacity(tester), 1);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+
+        expect(find.text('Option A'), findsNothing);
+      });
+    });
   });
+}
+
+Widget _select() {
+  return RemixSelect<String>(
+    onChanged: (_) {},
+    trigger: const RemixSelectTrigger(placeholder: 'Select'),
+    items: const [
+      RemixSelectItem(value: 'a', label: 'Option A'),
+      RemixSelectItem(value: 'b', label: 'Option B'),
+    ],
+  );
+}
+
+Widget _reducedMotion(Widget child, {required bool disableAnimations}) {
+  return Builder(
+    builder: (context) => MediaQuery(
+      data: MediaQuery.of(
+        context,
+      ).copyWith(disableAnimations: disableAnimations),
+      child: child,
+    ),
+  );
+}
+
+double _menuOpacity(WidgetTester tester) {
+  return tester
+      .widget<Opacity>(
+        find
+            .ancestor(of: find.text('Option A'), matching: find.byType(Opacity))
+            .first,
+      )
+      .opacity;
 }
 
 // Test helpers

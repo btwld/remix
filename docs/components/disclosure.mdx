@@ -98,8 +98,9 @@ and `borderRadius` to the trigger. Style the other parts explicitly:
 - `onExpanded(...)` / `onCollapsed(...)`
 - `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`
 
-Default transition is a 200ms top-anchored fade and size. Use
-`AnimationStyle.noAnimation` to skip it.
+Default transition is a 200ms top-anchored fade and size. That transition
+also skips when `MediaQuery.disableAnimations` is set. Use
+`AnimationStyle.noAnimation` to skip it for that widget.
 
 ## Keyboard and accessibility
 

@@ -561,7 +561,7 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    _reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     if (_reduceMotion) _controller.value = 1;
   }
 

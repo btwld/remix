@@ -302,12 +302,18 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     bool isExpanded,
     Widget panel,
   ) {
+    final child = isExpanded
+        ? Box(styleSpec: spec.content, child: panel)
+        : const SizedBox.shrink();
+    // Duration.zero is not safe here: AnimatedSwitcher reverses the outgoing
+    // child from didUpdateWidget, and that completion calls setState during
+    // build. Skipping the switcher lands on the target in this frame.
+    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) return child;
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 200),
       transitionBuilder: _config.transitionBuilder,
-      child: isExpanded
-          ? Box(styleSpec: spec.content, child: panel)
-          : const SizedBox.shrink(),
+      child: child,
     );
   }
 

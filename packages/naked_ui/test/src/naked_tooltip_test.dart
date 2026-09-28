@@ -589,5 +589,98 @@ void main() {
         expect(placement!.wasFlipped, isTrue);
       });
     });
+
+    group('Reduced motion', () {
+      testWidgets('opens and closes without playing the fade', (tester) async {
+        var open = true;
+        late StateSetter setOwner;
+        await tester.pumpMaterialWidget(
+          MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                setOwner = setState;
+
+                return NakedTooltip(
+                  open: open,
+                  overlayBuilder: (context, animation) => const Text('Tip'),
+                  child: const SizedBox(width: 40, height: 40),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(find.text('Tip'), findsOneWidget);
+
+        setOwner(() => open = false);
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.text('Tip'), findsNothing);
+      });
+
+      testWidgets('applies a motion change from the next transition', (
+        tester,
+      ) async {
+        var open = true;
+        var disableAnimations = false;
+        late StateSetter rebuild;
+        Animation<double>? animation;
+        await tester.pumpMaterialWidget(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+
+              return MediaQuery(
+                data: MediaQueryData(disableAnimations: disableAnimations),
+                child: NakedTooltip(
+                  open: open,
+                  overlayBuilder: (context, value) {
+                    animation = value;
+
+                    return const Text('Tip');
+                  },
+                  child: const SizedBox(width: 40, height: 40),
+                ),
+              );
+            },
+          ),
+        );
+        await tester.pump();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Tip'), findsOneWidget);
+
+        // A close that is already running finishes and unmounts.
+        rebuild(() => open = false);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 30));
+        await tester.pump(const Duration(milliseconds: 30));
+        rebuild(() => disableAnimations = true);
+        await tester.pump();
+
+        expect(animation!.value, inExclusiveRange(0, 1));
+
+        await tester.pumpAndSettle();
+
+        expect(find.text('Tip'), findsNothing);
+
+        // Transitions started after the change take one frame.
+        rebuild(() => open = true);
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.text('Tip'), findsOneWidget);
+        expect(animation!.value, 1);
+
+        rebuild(() => open = false);
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.text('Tip'), findsNothing);
+      });
+    });
   });
 }

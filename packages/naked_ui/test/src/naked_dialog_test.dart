@@ -880,4 +880,110 @@ void main() {
       expect(FocusManager.instance.primaryFocus, same(invokerNode));
     });
   });
+
+  group('Reduced motion', () {
+    testWidgets('opens and closes the dialog in one frame', (tester) async {
+      late BuildContext host;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(disableAnimations: true),
+                child: Builder(
+                  builder: (context) {
+                    host = context;
+
+                    return const SizedBox.shrink();
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      showNakedDialog<void>(
+        context: host,
+        barrierColor: const Color(0x8A000000),
+        builder: (context) => const Text('Dialog body'),
+      );
+      await tester.pump();
+
+      final fade = tester.widget<FadeTransition>(
+        find
+            .ancestor(
+              of: find.text('Dialog body'),
+              matching: find.byType(FadeTransition),
+            )
+            .first,
+      );
+      expect(fade.opacity.value, 1);
+
+      Navigator.of(host, rootNavigator: true).pop();
+      await tester.pump();
+
+      expect(find.text('Dialog body'), findsNothing);
+    });
+
+    testWidgets('closes in one frame after motion turns off', (tester) async {
+      var disableAnimations = false;
+      late StateSetter rebuild;
+      late BuildContext host;
+      await tester.pumpWidget(
+        MaterialApp(
+          builder: (context, child) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+
+                return MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(disableAnimations: disableAnimations),
+                  child: child!,
+                );
+              },
+            );
+          },
+          home: Builder(
+            builder: (context) {
+              host = context;
+
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      showNakedDialog<void>(
+        context: host,
+        barrierColor: const Color(0x8A000000),
+        builder: (context) => const Text('Dialog body'),
+      );
+      await tester.pump();
+
+      final fade = tester.widget<FadeTransition>(
+        find
+            .ancestor(
+              of: find.text('Dialog body'),
+              matching: find.byType(FadeTransition),
+            )
+            .first,
+      );
+      expect(fade.opacity.value, lessThan(1));
+
+      await tester.pumpAndSettle();
+      expect(find.text('Dialog body'), findsOneWidget);
+
+      rebuild(() => disableAnimations = true);
+      await tester.pump();
+      expect(find.text('Dialog body'), findsOneWidget);
+
+      Navigator.of(host, rootNavigator: true).pop();
+      await tester.pump();
+
+      expect(find.text('Dialog body'), findsNothing);
+    });
+  });
 }

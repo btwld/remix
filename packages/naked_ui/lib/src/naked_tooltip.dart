@@ -156,6 +156,13 @@ class _NakedTooltipState extends State<NakedTooltip>
   Curve get _reverseCurve =>
       widget.animationStyle.reverseCurve ?? _forwardCurve.flipped;
 
+  void _applyDurations() {
+    final disabled = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    _animationController
+      ..duration = disabled ? Duration.zero : _forwardDuration
+      ..reverseDuration = disabled ? Duration.zero : _reverseDuration;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -179,6 +186,12 @@ class _NakedTooltipState extends State<NakedTooltip>
   );
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _applyDurations();
+  }
+
+  @override
   void didUpdateWidget(covariant NakedTooltip oldWidget) {
     super.didUpdateWidget(oldWidget);
     assert(!widget.hoverDelay.isNegative, 'hoverDelay must not be negative');
@@ -188,9 +201,7 @@ class _NakedTooltipState extends State<NakedTooltip>
       'dismissDelay must not be negative',
     );
     if (widget.animationStyle != oldWidget.animationStyle) {
-      _animationController
-        ..duration = _forwardDuration
-        ..reverseDuration = _reverseDuration;
+      _applyDurations();
       _animation.dispose();
       _animation = _createAnimation();
     }

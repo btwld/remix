@@ -712,6 +712,19 @@ void main() {
     });
 
     group('Reduced motion', () {
+      testWidgets('does not throw when no MediaQuery is present', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MixScope.empty(child: RemixSkeleton(style: _pulseStyle())),
+        );
+
+        expect(tester.takeException(), isNull);
+        // No MediaQuery means motion stays on, so the pulse schedules a frame
+        // instead of throwing or holding the base frame.
+        expect(tester.binding.hasScheduledFrame, isTrue);
+      });
+
       testWidgets('stays on the base frame when animations are disabled', (
         tester,
       ) async {
