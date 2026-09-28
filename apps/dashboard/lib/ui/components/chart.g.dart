@@ -9,7 +9,7 @@ part of 'chart.dart';
 /// Ui presentation for a Mix line or area chart.
 ///
 /// Generates [UiLineChart] through `mix_generator`. The plot remains
-/// transparent so callers can compose it inside any Ui surface.
+/// transparent so callers can compose it inside any surface.
 class UiLineChart extends StatelessWidget {
   const UiLineChart({
     super.key,

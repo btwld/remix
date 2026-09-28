@@ -124,6 +124,7 @@ RemixToggle remixToggleConstructor({
   FocusNode? focusNode,
   bool autofocus = false,
   String? semanticLabel,
+  bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
   ToggleStyler style = const ToggleStyler.create(),
   ToggleSpec? styleSpec,
@@ -177,6 +178,10 @@ Optional. Whether the toggle should automatically request focus when it is creat
 #### `semanticLabel` -> `String?`
 
 Optional. The semantic label for the toggle.
+
+#### `excludeSemantics` -> `bool`
+
+Optional. Drops the toggle's own toggled on/off semantics. Use it when an ancestor supplies a different semantics contract, such as selected destination semantics.
 
 #### `mouseCursor` -> `MouseCursor`
 

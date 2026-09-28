@@ -1,7 +1,7 @@
 # Pinned GitHub registries
 
 Registry publication is independent of CLI releases. New projects use schema 3;
-`init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
+`init` resolves the `registry-stable` branch of `btwld/remix` and stores
 its full commit SHA. It validates the selected preset. No published
 `registry-stable` branch means initialization fails without creating files.
 Repeating initialization preserves the existing configuration and pin.
@@ -15,7 +15,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: conceptadev/remix
+    repository: btwld/remix
     path: registry
     ref: registry-stable
     revision: "<resolved-full-commit-sha>"

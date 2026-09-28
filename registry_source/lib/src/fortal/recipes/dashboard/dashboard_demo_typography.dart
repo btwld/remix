@@ -24,9 +24,10 @@ enum TextTone {
 /// Dashboard body text at a Fortal [size].
 ///
 /// This starts from `fortalTextStyle()` so the scale, weights, and flow
-/// behaviour stay Fortal's; the only thing layered on top is the neutral tone,
-/// which is the one opinion Fortal does not ship. Text that wants [strong] and
-/// nothing else should use [FortalText] directly rather than this helper.
+/// behaviour stay the preset's; the only thing layered on top is the neutral
+/// tone, which is the one opinion the preset does not ship. Text that wants
+/// [strong] and nothing else should use [FortalText] directly rather than this
+/// helper.
 ///
 /// Callers that need more than a weight or tone change chain onto the result
 /// rather than reintroducing an inline `TextStyler`.

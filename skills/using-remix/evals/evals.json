@@ -3,30 +3,30 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with indigo accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget using the application-owned Fortal preset with the Fortal prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalScope(accent: .indigo), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets. Setup uses remix_cli init --prefix Fortal --preset fortal and adds the required items.",
+      "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with a green accent. Make it look polished.",
+      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalScope(accent: .green), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses dart run remix_cli:remix init --prefix Fortal --preset fortal and adds the required items.",
       "files": [],
       "expectations": [
         "Uses the Fortal preset and its owned ui/ui.dart barrel, importing remix only if base Remix types are used.",
-        "Places the UI below FortalScope with the indigo accent.",
+        "Places the UI below FortalScope with the green accent.",
         "Uses FortalTextField, FortalCheckbox, FortalButton, and a named FortalSelect variant without redundant item styling."
       ]
     },
     {
       "id": 2,
       "prompt": "Create a custom-styled button that has a gradient background, rounded corners, scales down on press, and glows on hover. Don't use Fortal — build a fully custom style from scratch using the Remix fluent API. Show me the complete code.",
-      "expected_output": "A RemixButton with a fully custom ButtonStyler using the fluent API — gradient, borderRadius(.circular(...)), .onPressed with scale, .onHovered with shadow/glow, and .animate(AnimationConfig...) for transitions. Imports only package:remix/remix.dart, since no theme package is needed. Uses ButtonStyler (not the removed RemixButtonStyle) throughout.",
+      "expected_output": "A RemixButton with a fully custom ButtonStyler using the fluent API — gradient, borderRadius(.circular(...)), .onPressed with scale, .onHovered with shadow/glow, and .animate(AnimationConfig...) for transitions. Imports only package:remix/remix.dart, since no theme preset is needed. Uses ButtonStyler, not the deprecated RemixButtonStyler alias, throughout.",
       "files": [],
       "expectations": [
-        "Imports remix without initializing the Fortal preset or adding FortalScope.",
+        "Imports remix without initializing a preset or adding a theme scope.",
         "Uses ButtonStyler gradient, borderRadius(.circular(...)), pressed scale, hovered shadow, and animation APIs.",
-        "Does not use removed RemixButtonStyle or borderRounded APIs."
+        "Does not use the deprecated RemixButtonStyler alias or a retired Box border/shadow convenience like borderRounded."
       ]
     },
     {
       "id": 3,
       "prompt": "I'm using FortalIconButton but I need a long-press action and a semantic label on it. How do I do that?",
-      "expected_output": "Explains that the application-owned FortalIconButton forwards the complete RemixIconButton behavior surface, and shows a named variant constructor using both onLongPress and semanticLabel directly, imported from the installed ui/ui.dart barrel.",
+      "expected_output": "Explains that the Fortal FortalIconButton forwards the complete RemixIconButton behavior surface, and shows a named variant constructor using both onLongPress and semanticLabel directly, imported from the installed ui/ui.dart barrel.",
       "files": [],
       "expectations": [
         "Imports the owned Fortal barrel and uses a named FortalIconButton variant constructor.",
@@ -48,7 +48,7 @@
     {
       "id": 5,
       "prompt": "Can I call showRemixDialog from a subtree that does not have MixScope? I only need a plain Remix dialog, not Fortal tokens.",
-      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the installed Fortal source and an ambient FortalScope so FortalTokens can resolve.",
+      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the installed Fortal preset and an ambient FortalScope so FortalTokens can resolve.",
       "files": [],
       "expectations": [
         "States that showRemixDialog works without MixScope.",
@@ -70,29 +70,29 @@
     {
       "id": 7,
       "prompt": "This Flutter app already depends on remix. I want to switch one screen to FortalButton and FortalTextField. Which dependency and imports do I need?",
-      "expected_output": "Initializes the application-owned Fortal preset with remix_cli when remix.yaml is absent, adds button and textfield, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes. It does not add remix_fortal as a new dependency.",
+      "expected_output": "Initializes the Fortal preset with remix_cli (init --prefix Fortal --preset fortal) when remix.yaml is absent, adds button and textfield, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes.",
       "files": [],
       "expectations": [
-        "Initializes the Fortal preset, adds the needed items, and imports the owned UI barrel.",
+        "Initializes the Fortal preset with --prefix Fortal --preset fortal, adds the needed items, and imports the owned UI barrel.",
         "Keeps a remix import only when base Remix APIs are used in the file.",
-        "Does not add remix_fortal as a new consumer dependency."
+        "Does not claim a new published theme package dependency is required."
       ]
     },
     {
       "id": 8,
-      "prompt": "My Fortal screen opens menus and pushes a Fortal-styled dialog route. Where should FortalScope go relative to MaterialApp.router?",
-      "expected_output": "Places FortalScope in MaterialApp.router(builder: ...), wrapping the builder child so it sits below Material's DefaultTextStyle and above the Navigator, routed content, and overlay. Explains that this preserves both Fortal tokens and the courtesy bare-Text fallback, and does not invent a Remix-owned app or scaffold wrapper.",
+      "prompt": "My Fortal screen opens menus and pushes a Fortal-styled dialog route on a routed WidgetsApp. Where should FortalScope go?",
+      "expected_output": "Places FortalScope in WidgetsApp.builder, wrapping the builder's child so the scope sits above the Navigator, so routed content, dialogs, and overlays inherit the same tokens and courtesy text default. Explains this preserves both Fortal tokens and the courtesy bare-Text fallback, and does not invent a Remix-owned app or scaffold wrapper.",
       "files": [],
       "expectations": [
-        "Places FortalScope inside MaterialApp.router.builder around the builder child.",
-        "Explains that the scope is below Material's DefaultTextStyle and above the Navigator, routes, and overlay.",
-        "Does not invent a Remix app, scaffold, or overlay-host wrapper."
+        "Places FortalScope inside WidgetsApp.builder around the builder's child.",
+        "Explains that the scope sits above the Navigator so routes, dialogs, and overlays inherit it.",
+        "Does not invent a Remix app, scaffold, or overlay-host wrapper, and does not reach for a Material application host."
       ]
     },
     {
       "id": 9,
       "prompt": "Build a Fortal action menu in a WidgetsApp without routing, then explain what changes if I call showRemixAlertDialog from the same feature.",
-      "expected_output": "Uses a caller-owned Overlay (such as Overlay.wrap) for the menu without requiring a Navigator, keeps the content below FortalScope, and explains that showRemixAlertDialog pushes a route and therefore needs a caller-owned Navigator plus a nonempty semanticLabel; it does not add RemixOverlayHost or RemixApp.",
+      "expected_output": "Uses a caller-owned Overlay (such as Overlay.wrap) for the menu without requiring a Navigator, keeps the content below FortalScope, and explains that showRemixAlertDialog pushes a route and therefore needs a caller-owned Navigator plus a nonempty semanticLabel; it does not add a Remix-owned overlay host or app wrapper.",
       "files": [],
       "expectations": [
         "Uses a caller-owned Overlay such as Overlay.wrap for the menu without requiring routing.",
@@ -103,7 +103,7 @@
     {
       "id": 10,
       "prompt": "Create Fortal-styled tabs for Overview and Billing. I expected a FortalTabs widget; show the correct composition.",
-      "expected_output": "Uses RemixTabs as the behavioral root with FortalTabBar, FortalTab, and FortalTabView children, imports remix plus the application-owned UI barrel, and explicitly states that no FortalTabs wrapper exists.",
+      "expected_output": "Uses RemixTabs as the behavioral root with FortalTabBar, FortalTab, and FortalTabView children, imports remix plus the installed Fortal UI barrel, and explicitly states that no FortalTabs wrapper exists.",
       "files": [],
       "expectations": [
         "Uses RemixTabs as the behavioral root.",
@@ -125,11 +125,11 @@
     {
       "id": 12,
       "prompt": "In a plain Flutter app with no Remix dependencies, write a CustomPainter that draws a sparkline.",
-      "expected_output": "Does not trigger or invoke using-remix, does not add Remix or initialize a Fortal preset, and answers with ordinary Flutter CustomPainter guidance.",
+      "expected_output": "Does not trigger or invoke using-remix, does not add Remix or initialize a preset, and answers with ordinary Flutter CustomPainter guidance.",
       "files": [],
       "expectations": [
         "Does not invoke using-remix for an unrelated Flutter painting task.",
-        "Does not add Remix dependencies, remix_cli, or Fortal source.",
+        "Does not add Remix dependencies, remix_cli, or a preset.",
         "Answers with ordinary Flutter CustomPainter guidance."
       ]
     },
@@ -158,26 +158,141 @@
     {
       "id": 15,
       "prompt": "Audit a Fortal reference dashboard that mixes realistic product screens with an exhaustive variant-by-size gallery. How should wrappers, highContrast, accent scopes, and the matrix layout be organized so the example stays canonical?",
-      "expected_output": "Separates product-example policy from coverage-gallery policy: small app-owned wrappers only for repeated product concepts, direct Fortal widgets in gallery cells, highContrast only where meaningful product content needs it while matrices preserve defaults, and nested FortalScope(accent: ..., hasBackground: false) for semantic accents while inheriting unrelated theme settings. Keeps the Navigator and Overlay under one correctly placed outer FortalScope and builds showcase chrome from active tokens rather than a parallel hard-coded palette. Derives matrix axes from the public enum values with typed row/column builders, uses the unnamed runtime-variant constructor in cells, and recommends Mix GridBox for the two-dimensional layout with tests for Cartesian coverage, semantics, builder-trigger interaction, and theme inheritance.",
+      "expected_output": "Separates product-example policy from coverage-gallery policy: small app-owned wrappers only for repeated product concepts, direct Fortal widgets in gallery cells, highContrast only where meaningful product content needs it while matrices preserve defaults, and nested FortalScope(accent: ..., hasBackground: false) for semantic accents while inheriting unrelated theme settings. Keeps the Navigator and Overlay under one correctly placed outer FortalScope and builds showcase chrome from active tokens rather than a parallel hard-coded palette. Derives matrix axes from the public enum values with typed row/column builders, uses the unnamed runtime-variant constructor in cells, notes that GalleryMatrix itself is an app-owned widget from the dashboard_demo recipe rather than a library API, and recommends Mix GridBox for the two-dimensional layout with tests for Cartesian coverage, semantics, builder-trigger interaction, and theme inheritance.",
       "files": [],
       "expectations": [
         "Separates product-wrapper policy from direct component coverage in the gallery.",
         "Uses highContrast selectively for meaningful product content while preserving defaults in matrices.",
         "Uses nested FortalScope accent overrides with hasBackground false and inherited unrelated theme settings.",
         "Keeps routes and overlays under a correctly placed outer FortalScope and resolves showcase chrome from active tokens.",
-        "Derives typed matrix axes from public enum values, uses runtime variant constructors and Mix GridBox, and names relevant coverage tests.",
+        "Derives typed matrix axes from the public enum values.",
+        "Uses the unnamed runtime-variant constructor in gallery cells.",
+        "Uses Mix GridBox for the two-dimensional layout.",
+        "Names relevant coverage tests.",
         "Verifies Cartesian specimen coverage and presents important non-enum states separately unless they are an explicit comparison axis."
       ]
     },
     {
       "id": 16,
-      "prompt": "Create a new standalone Acme design-system package on Remix, including a traceable token pipeline and generated Acme-prefixed component API.",
-      "expected_output": "Routes the task to building-remix-design-system rather than treating it as ordinary application UI. It does not apply Fortal's product-consumption defaults or use using-remix as the sole workflow for package scaffolding, token provenance, and public API generation.",
+      "prompt": "Build an Acme design system on Remix that our other Flutter apps can install with remix_cli, with traceable tokens and Acme-named components.",
+      "expected_output": "Routes the task to building-remix-design-system rather than treating it as ordinary application UI. It does not restyle one application's installed Fortal or Vanilla source as a substitute, and does not use using-remix as the workflow for token provenance, template derivation, or registry publishing.",
       "files": [],
       "expectations": [
-        "Routes standalone design-system package work to building-remix-design-system.",
+        "Routes reusable, registry-published design-system work to building-remix-design-system.",
         "Does not substitute Fortal tokens or component vocabulary for Acme's source system.",
-        "Does not use using-remix as the sole workflow for package, pipeline, and generated public API work."
+        "Does not use using-remix as the workflow for token provenance, templates, or registry publishing."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "This is a fresh Flutter app with no Remix dependency yet. Set it up with Remix's default preset and build a primary action button styled from the starter theme.",
+      "expected_output": "Runs flutter pub add dev:remix_cli then remix init with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiThemeScope (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
+      "files": [],
+      "expectations": [
+        "Runs remix init without --preset, explaining the default is the vanilla preset with the Ui prefix.",
+        "Wraps the app in UiThemeScope inside WidgetsApp.builder, above the Navigator.",
+        "Uses a named UiButton variant constructor and does not initialize the Fortal preset."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Our project's remix.yaml is pinned to an older registry-stable commit. Move the pin to the latest promoted commit and safely adopt the new source for just the button item.",
+      "expected_output": "Runs remix registry update @remix, explaining that it only rewrites the pin in remix.yaml and never touches installed files. Then reviews the change with remix add button --diff before adopting it with remix add button --overwrite, explaining there is no automatic merge and adoption happens item by item. Notes that --overwrite refreshes only the named item, so theme and other dependencies stay as installed unless named too.",
+      "files": [],
+      "expectations": [
+        "Runs remix registry update @remix and explains it only rewrites the pin, not installed source.",
+        "Reviews the change with add button --diff before adopting it.",
+        "Adopts the new source with add button --overwrite rather than assuming an automatic merge.",
+        "Notes that dependencies such as theme are not refreshed unless named on the command line."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Add light/dark mode support to a Fortal-themed app: default to the system setting, but let the user force light or dark from a settings screen.",
+      "expected_output": "Keeps a persisted FortalThemeMode preference, initially .system, and passes theme, darkTheme, and mode to FortalScope inside WidgetsApp.builder. Explains that .system reacts to platform brightness changes automatically and that only the preference persistence and the System/Light/Dark choice are the app's responsibility. Does not use brightness, lightTheme, or the removed createScope shortcut.",
+      "files": [],
+      "expectations": [
+        "Passes theme, darkTheme, and mode to FortalScope, not brightness or lightTheme.",
+        "Defaults the persisted preference to FortalThemeMode.system and updates it from a settings screen.",
+        "Does not use the removed createScope config shortcut."
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Add app-wide toast notifications (for example 'Draft saved') to a Fortal app that also pushes dialogs and routes.",
+      "expected_output": "Places one RemixToastScope inside WidgetsApp.builder, wrapped in Overlay.wrap, below FortalScope and above the Navigator, so every route including dialogs can reach it, and styles it with style: fortalToastStyle() so toasts use the Fortal recipe. Calls showRemixToast(context, RemixToastData(title: 'Draft saved')) from an event callback in feature code. Does not use the generated FortalToast widget for runtime toasts and does not invent a Remix-owned scaffold or a separate overlay host.",
+      "files": [],
+      "expectations": [
+        "Places one RemixToastScope inside WidgetsApp.builder, wrapped in Overlay.wrap, below FortalScope.",
+        "Styles the scope with fortalToastStyle() rather than using FortalToast for runtime toasts.",
+        "Calls showRemixToast with RemixToastData(title: ...) from feature code rather than building a custom overlay.",
+        "Does not invent a Remix app or scaffold wrapper for toasts."
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "This project's remix.yaml still has schema: 1 and was originally initialized with --prefix Acme --preset fortal. remix add button now fails, saying the schema is unsupported. Fix it.",
+      "expected_output": "Explains that remix.yaml schema 3 is the only readable configuration, so a schema 1 file fails outright rather than being migrated automatically. Deletes remix.yaml, reruns remix init --prefix Acme --preset fortal to match the project's original configuration, then re-adopts each previously installed item's source with remix add <item> --diff, using --overwrite only for items where the new file should replace the old one. Notes that already-installed application source is left untouched by re-initialization itself.",
+      "files": [],
+      "expectations": [
+        "Deletes the schema-1 remix.yaml and reruns remix init with the project's original prefix and preset.",
+        "Reviews previously installed items with add <item> --diff rather than assuming an automatic migration.",
+        "Explains that re-initialization leaves installed source untouched and adoption happens item by item."
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Our app uses the Vanilla preset. Give the app a brand indigo primary color everywhere buttons and other primary-emphasis controls appear.",
+      "expected_output": "Sets the brand color via UiThemeScope(theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)), ...), not an accent: parameter — the Vanilla scope has no accent: parameter, since accent is the interaction surface for otherwise transparent controls, not a brand hue. Explains that copyWith derives a changed theme and every recipe reading UiTokens.primary() picks it up.",
+      "files": [],
+      "expectations": [
+        "Sets the brand color with UiThemeData.light().copyWith(primary: ...) passed to the scope's theme.",
+        "Explains that the Vanilla scope has no accent: parameter and that accent means something different (interaction surface for transparent controls).",
+        "Does not invent a nonexistent UiThemeScope accent parameter."
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "Add a new 'link' visual variant to our installed Vanilla button recipe (lib/ui/components/button.dart) that looks like a hyperlink with no fill or border.",
+      "expected_output": "Edits the installed lib/ui/components/button.dart directly: adds a link value to UiButtonVariant, adds a matching style branch in uiButtonStyle, and explains the enum value gets its own named constructor (UiButton.link(...)) once regenerated. Runs dart run build_runner build to regenerate button.g.dart after the change, since the @MixWidget-generated adapter is derived from the enum and function signature.",
+      "files": [],
+      "expectations": [
+        "Edits the installed lib/ui/components/button.dart directly rather than a Remix package file.",
+        "Adds the new variant to UiButtonVariant and a matching branch in uiButtonStyle.",
+        "Runs dart run build_runner build to regenerate the .g.dart adapter after the change."
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "This project's remix.yaml says preset: vanilla. One screen needs a bolder, more colorful look, so use FortalButton there instead of our usual UiButton.",
+      "expected_output": "Explains a project has exactly one preset and prefix, recorded in remix.yaml, so mixing in FortalButton is not supported without re-initializing the whole project onto Fortal. Recommends restyling the installed Vanilla button recipe, or overriding style: on UiButton for that screen, instead of introducing Fortal widgets.",
+      "files": [],
+      "expectations": [
+        "States that a project has exactly one preset and prefix, per remix.yaml.",
+        "Declines to add FortalButton into a Vanilla project.",
+        "Recommends restyling the Vanilla recipe or overriding style: on UiButton instead."
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "This project's remix.yaml has prefix: Ui and preset: fortal. Add a primary action button to a screen.",
+      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal, the generated scope class follows Fortal's <Prefix>Scope shape (UiScope) and the button is UiButton, not UiThemeScope or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiScope ancestor.",
+      "files": [],
+      "expectations": [
+        "Reads prefix and preset independently from remix.yaml rather than assuming Ui always means Vanilla.",
+        "Uses UiScope and UiButton, not UiThemeScope or FortalButton.",
+        "Does not assume the Fortal preset always uses the Fortal prefix."
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "We moved our registry pin to the newest promoted commit and want to adopt an upstream token rename in both the theme and button items, keeping any of our own edits we can.",
+      "expected_output": "Runs remix add theme button --diff first to review the upstream token rename against local edits, reading the hunks since --diff always reports local edits whether or not the template moved. Then runs remix add theme button --overwrite naming both items explicitly, since --overwrite only rewrites items named on the command line and leaves every other installed dependency exactly as it is. Re-applies any deliberate local edits that the diff showed and --overwrite discarded.",
+      "files": [],
+      "expectations": [
+        "Runs add theme button --diff before changing anything, and reads the hunks rather than trusting an empty-diff assumption.",
+        "Runs add theme button --overwrite naming both items explicitly to adopt the change.",
+        "Explains that --overwrite only rewrites items named on the command line, leaving other installed dependencies untouched."
       ]
     }
   ]

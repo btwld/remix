@@ -70,7 +70,7 @@ the main-branch Pages workflow to restore the previous deployment.
 ## Theme package
 
 The site pins `@concepta/docs-theme@0.0.1` from the public npm registry.
-The theme uses BSD-3-Clause; its source repository is `conceptadev/docs-theme`.
+The theme uses BSD-3-Clause; its source repository is `btwld/docs-theme`.
 The lockfile records the published archive integrity. The release-age exception
 is limited to this reviewed first version. To upgrade, change the pinned version,
 regenerate the lockfile, and repeat the production and deployment smoke checks.
@@ -129,7 +129,7 @@ The build uses the current Git commit for page-source links. Set
 `app/global.css` loads Tailwind, the Fumadocs `preset.css`, and the theme's
 `theme.css`, in that order. The Concepta payload is a complete Fumadocs color
 preset, so `fumadocs-ui/css/neutral.css` must not be stacked underneath it.
-Shared fonts, reading styles, and logo support belong in `conceptadev/docs-theme`.
+Shared fonts, reading styles, and logo support belong in `btwld/docs-theme`.
 Remix keeps only its own identity in `.remix-docs`: its existing artwork, the
 green accent through `--docs-primary-light`/`--docs-primary-dark`, and the
 Flutter preview styles. The theme documents its Concepta design-system

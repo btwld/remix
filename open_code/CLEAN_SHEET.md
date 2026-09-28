@@ -57,7 +57,7 @@ surface for its data, rendering, interaction, and semantics contract.
 The recipe is a normal function returning `ButtonStyler`:
 
 ```dart
-@MixWidget(name: 'AcmeButton', target: RemixButton.new)
+@MixWidget(target: RemixButton.new)
 ButtonStyler acmeButtonStyle({
   AcmeButtonVariant variant = .primary,
   AcmeButtonSize size = .medium,
@@ -133,8 +133,8 @@ The recurring costs are visible:
 **Since 2026-09-04:** Fortal is available as a second application-owned preset.
 Its separate source tree, derivation contract, and publication transition are
 recorded in [Presets: Fortal as application-owned source](PRESETS.md). There is
-still no general component marketplace, remote registry, automatic migration,
-or source lockfile. The CLI now has a tag-based publish workflow with a
+still no general component marketplace, automatic migration, or source
+lockfile. The CLI now has a tag-based publish workflow with a
 hosted consumer check.
 
 The first public release still requires package bootstrap and hosted CLI

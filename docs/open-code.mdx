@@ -127,7 +127,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: conceptadev/remix
+    repository: btwld/remix
     path: registry
     ref: registry-stable
     revision: "<resolved-full-commit-sha>"
@@ -234,7 +234,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: conceptadev/remix
+    repository: btwld/remix
     path: registry
     ref: registry-stable
     revision: "<resolved-full-commit-sha>"
@@ -310,7 +310,7 @@ enum UiButtonVariant { primary, secondary, outline, ghost, destructive }
 
 enum UiButtonSize { small, medium, large }
 
-@MixWidget(name: 'UiButton', target: RemixButton.new)
+@MixWidget(target: RemixButton.new)
 ButtonStyler uiButtonStyle({
   UiButtonVariant variant = UiButtonVariant.primary,
   UiButtonSize size = UiButtonSize.medium,
@@ -412,6 +412,8 @@ A nested scope inherits its parent's configured pair and active selection.
 Use your configured prefix in place of `Acme`. The same parameters apply to
 both presets:
 
+{/* dart-excerpt: illustrative Acme prefix */}
+
 ```dart
 AcmeThemeScope(
   theme: const AcmeThemeData.light(),
@@ -462,26 +464,35 @@ options such as `accent` still override the supplied theme values.
 the recipe reads tokens and the scope decides what tokens resolve to:
 
 ```dart
-UiThemeScope(
+import 'package:flutter/widgets.dart';
+
+import 'ui/ui.dart';
+
+Widget rounded(Widget child) => UiThemeScope(
   theme: const UiThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     radius: const Radius.circular(999),
   ),
   child: child,
-)
+);
 ```
 
 **Override one instance:** `style` is merged **last**, so it beats the resolved
 recipe without forking it:
 
 ```dart
-UiButton.primary(
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'ui/ui.dart';
+
+Widget publishButton(VoidCallback publish) => UiButton.primary(
   label: 'Just this one',
   style: ButtonStyler()
       .color(const Color(0xFF7C3AED))
       .onHovered(ButtonStyler().color(const Color(0xFF5B21B6))),
   onPressed: publish,
-)
+);
 ```
 
 <Warning>
@@ -751,6 +762,7 @@ earlier CLI build lacks them: add the five tokens to `tokens.dart` and
 Import chart data directly and give the chart finite dimensions:
 
 ```dart
+import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
 
 import 'ui/ui.dart';
