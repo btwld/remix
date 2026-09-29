@@ -8,15 +8,6 @@
 - Add `NakedMenubar` on `RawMenuAnchorGroup`. Menus in the bar close their
   siblings, switch on hover while one is open, and move with the arrow keys.
 
-### Fixes
-
-- Remove the inner `container: true` from the `NakedSelect` trigger's merged
-  semantics. On Flutter 3.44 the overlay made that folded-away node the menu's
-  traversal parent, so the platform received a node with no parent and the
-  macOS accessibility bridge dropped the update and could crash. The trigger
-  still announces one merged node with its label, value, button role, and
-  expanded state.
-
 ### Docs
 
 - Document `NakedTooltip` as built on `RawMenuAnchor`. The 1.0 Flutter 3.41
@@ -29,6 +20,17 @@
 - `RawTooltip` still has no controlled open state, hoverable content, or
   `useRootOverlay`.
 - `showRawDialog` needs Flutter 3.44 and only adds native-window dialogs.
+
+## 1.0.2
+
+### Fixes
+
+- Remove the inner `container: true` from the `NakedSelect` trigger's merged
+  semantics. On Flutter 3.44 the overlay made that folded-away node the menu's
+  traversal parent, so the platform received a node with no parent and the
+  macOS accessibility bridge dropped the update and could crash. The trigger
+  still announces one merged node with its label, value, button role, and
+  expanded state.
 
 ## 1.0.1
 
