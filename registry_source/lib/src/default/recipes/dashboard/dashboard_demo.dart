@@ -571,7 +571,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
-        yAxis: registryDashboardNumericAxis(max: 100),
+        yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
       ),
       .linePatterns => VanillaLineChart(
         showMarkers: true,
@@ -608,6 +608,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 50),
       ),
       .stepGaps => VanillaLineChart(
         showMarkers: true,
@@ -629,6 +630,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 40),
       ),
       .viewportLabels => VanillaLineChart(
         showMarkers: true,
@@ -650,18 +652,22 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 50),
       ),
       .groupedBars => VanillaBarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: registryDashboardGroupedBars(),
+        yAxis: registryDashboardNumericAxis(max: 60),
       ),
       .stackedBars => VanillaBarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: registryDashboardStackedBars(),
+        yAxis: registryDashboardNumericAxis(max: 60),
       ),
       .floatingBars => VanillaBarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: registryDashboardFloatingBars(),
+        yAxis: registryDashboardNumericAxis(max: 40),
       ),
       .trackedBars => VanillaBarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
@@ -712,9 +718,8 @@ class _VanillaDashboardCharts extends StatelessWidget {
   );
 }
 
-/// How far every pie on the charts page reaches: 80% of the way to the edge
-/// of its 240px box, where Recharts, and so shadcn, puts a pie
-/// by default.
+/// How far every pie on the charts page reaches: 80% of the way to the edge of
+/// its 240px box, where Recharts puts a pie by default.
 ///
 /// mix_chart draws each slice 80px wide whatever the box, so a donut left at
 /// that default spills out of the box by the width of its hole.

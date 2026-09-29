@@ -589,7 +589,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
       ),
       .linePatterns => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -626,6 +626,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
       ),
       .stepGaps => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -647,6 +648,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
       ),
       .viewportLabels => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -668,18 +670,22 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
       ),
       .groupedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: {{valuePrefix}}DashboardGroupedBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
       ),
       .stackedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: {{valuePrefix}}DashboardStackedBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
       ),
       .floatingBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: {{valuePrefix}}DashboardFloatingBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
       ),
       .trackedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',

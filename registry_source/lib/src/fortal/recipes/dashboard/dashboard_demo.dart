@@ -589,7 +589,7 @@ class _FortalDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
-        yAxis: registryDashboardNumericAxis(max: 100),
+        yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
       ),
       .linePatterns => FortalLineChart(
         showMarkers: true,
@@ -626,6 +626,7 @@ class _FortalDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 50),
       ),
       .stepGaps => FortalLineChart(
         showMarkers: true,
@@ -647,6 +648,7 @@ class _FortalDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 40),
       ),
       .viewportLabels => FortalLineChart(
         showMarkers: true,
@@ -668,18 +670,22 @@ class _FortalDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 50),
       ),
       .groupedBars => FortalBarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: registryDashboardGroupedBars(),
+        yAxis: registryDashboardNumericAxis(max: 60),
       ),
       .stackedBars => FortalBarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: registryDashboardStackedBars(),
+        yAxis: registryDashboardNumericAxis(max: 60),
       ),
       .floatingBars => FortalBarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: registryDashboardFloatingBars(),
+        yAxis: registryDashboardNumericAxis(max: 40),
       ),
       .trackedBars => FortalBarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',

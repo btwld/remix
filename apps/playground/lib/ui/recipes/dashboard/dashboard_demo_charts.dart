@@ -274,10 +274,17 @@ List<PieSlice> playgroundDashboardEmptySlices() => [
   PieSlice(id: 'empty', label: 'No data', value: 0),
 ];
 
+/// Monday through Sunday, with half a day of room at each end.
+///
+/// The room keeps the first and last labels and markers off the plot's edges:
+/// flush against an edge, a marker is cut in half and a label is pushed inward
+/// into its neighbor. The two bounds are not labels themselves.
 ChartAxis playgroundDashboardWeekdayAxis() => ChartAxis.numeric(
-  min: 0,
-  max: 6,
+  min: -0.5,
+  max: 6.5,
   interval: 1,
+  minIncluded: false,
+  maxIncluded: false,
   labelFormatter: (value) {
     final index = value.round();
     return index >= 0 && index < playgroundDashboardWeekdays.length
@@ -286,8 +293,16 @@ ChartAxis playgroundDashboardWeekdayAxis() => ChartAxis.numeric(
   },
 );
 
-ChartAxis playgroundDashboardNumericAxis({double min = 0, double max = 70}) =>
-    ChartAxis.numeric(min: min, max: max, interval: 10);
+/// A value axis on round steps.
+///
+/// Give every chart one, with [max] a whole number of [interval]s: an axis
+/// left to the data ends on the data's own extremes, and labels them beside
+/// the nearest round step, where the two labels collide.
+ChartAxis playgroundDashboardNumericAxis({
+  double min = 0,
+  double max = 70,
+  double interval = 10,
+}) => ChartAxis.numeric(min: min, max: max, interval: interval);
 
 const playgroundDashboardWeekdays = [
   'Mon',
