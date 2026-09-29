@@ -129,6 +129,8 @@ lib/ui/
     tokens.dart
     theme_data.dart
     theme_scope.dart
+    scale.dart
+    effects.dart
   components/
     button.dart       authored; edit this
     button.g.dart     generated; do not hand-edit

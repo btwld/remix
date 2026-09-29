@@ -28,8 +28,8 @@ Fortal preset does not add a `remix_fortal` dependency.
 
 | | `vanilla` | `fortal` |
 |---|---|---|
-| Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface |
-| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes |
+| Design language | shadcn/ui's default look (new-york, neutral) | Radix Themes 3.3.0 parity surface |
+| Theme | 32 color tokens, a radius scale, and a type scale | 277 tokens, Radix color scales, scaling, radius, and panel modes |
 | Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable |
 | Best for | A house system you intend to shape | Starting from a complete Radix-like system |
 
@@ -166,9 +166,9 @@ remix add button --dry-run
 ```
 Items: theme -> button
 Dependencies: remix@^1.0.0-beta.10, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
-theme: missing; lib/ui/theme/tokens.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart
+theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/scale.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 button: missing; lib/ui/components/button.dart
-Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, components/button.dart
+Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/scale.dart, theme/effects.dart, components/button.dart
 Generated: lib/ui/components/button.g.dart
 ```
 
@@ -288,7 +288,9 @@ lib/ui/
 ├── theme/
 │   ├── tokens.dart             # token surface the recipe reads
 │   ├── theme_data.dart         # light() / dark() / copyWith()
-│   └── theme_scope.dart        # inherited scope
+│   ├── theme_scope.dart        # inherited scope
+│   ├── scale.dart              # spacing, sizes, strokes, motion
+│   └── effects.dart            # tints, shadows, focus ring
 └── components/
     ├── button.dart             # the recipe — yours to edit
     └── button.g.dart           # generated adapter — do not edit
@@ -570,6 +572,35 @@ Updated button.
 If you only want part of the upstream change, copy it out of the diff by hand.
 That is the intended workflow. The file is yours.
 
+### Moving a Vanilla install onto the shadcn theme
+
+The Vanilla preset now carries shadcn/ui's default theme (new-york, neutral).
+The recipes read new tokens, so update the theme together with the components:
+
+```bash
+remix add theme --diff
+remix add theme --overwrite
+remix add button --overwrite
+```
+
+Then adjust any code of your own that read the old names:
+
+- `UiTokens.focusRing` is `UiTokens.ring`. Recipes draw the ring at half
+  strength, 3px wide with no offset, and turn a bordered control's outline
+  `ring` while it has focus.
+- `UiTokens.radius` is replaced by four steps derived from the theme's one
+  `radius` value (now 10): `radiusSm` (6), `radiusMd` (8, the control radius),
+  `radiusLg` (10), and `radiusXl` (14, cards).
+- `accent` is no longer the `border` gray: it is the same light gray as
+  `muted`, so hover and selected surfaces stay distinct from outlines. A
+  selected toggle no longer draws a `primary` outline.
+- There is no pressed step: a press lands on the hover fill.
+- `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is
+  shadcn's pill list; pass `variant: .line` to both for the underline strip.
+- The root `UiThemeScope` now paints the page background and gives bare `Text`
+  the theme's body run, so remove any `ColoredBox` or `DefaultTextStyle` you
+  added around the scope for that.
+
 ### The Remix drift notice
 
 Each registry revision is authored against one `remix` version, and the
@@ -654,8 +685,10 @@ manifest and rerun; the CLI will not edit it for you.
 The official registry is deliberately small, and every item after `theme`
 depends on it:
 
-`theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
-giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every component item
+`theme` installs `tokens.dart`, `theme_data.dart`, `theme_scope.dart`,
+`scale.dart`, and `effects.dart`, giving you `UiTokens`, `UiThemeData`,
+`UiThemeScope`, the fixed spacing and size scales, and the shared tint, shadow,
+and focus-ring helpers the recipes draw on. Every component item
 installs one authored file plus its generated adapter under
 `components/<item>.dart`. Five items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
@@ -715,7 +748,7 @@ The installer rejects older resolved versions before it writes source.
 | `slider` | `UiSlider` | — |
 | `spinner` | `UiSpinner` | — |
 | `switch` | `UiSwitch` | — |
-| `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | — |
+| `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | variant |
 | `textfield` | `UiTextField`, `UiTextArea` | — |
 | `toast` | `UiToast` | variant |
 | `toggle` | `UiToggle` | variant, size |
@@ -787,8 +820,11 @@ final chart = SizedBox(
 ```
 
 The palette is `UiTokens.chart`: `chart1` to `chart5` in series order. The
-shipped light and dark values keep each series' hue and clear 4.5:1 against
-the page background. Edit them in `UiThemeData` for a design-system change.
+shipped values are shadcn's neutral gray ramp, the same five grays in both
+brightnesses, so series are told apart by lightness. Pie labels are off by
+default; a chart that turns them on colors each slice's label with
+`uiPieSliceLabelColor`, which picks `foreground` or `background` by contrast.
+Edit the tokens in `UiThemeData` for a design-system change.
 Pass `palette` or `style` for a one-chart override. The UI barrel does not
 re-export `mix_chart`.
 

@@ -17,7 +17,12 @@ reference
 
 ## 1. Theme item
 
-Three files, installed together as the `theme` item.
+Three files at the least, installed together as the `theme` item. Vanilla
+adds two more that are worth copying once a system has fixed scales and shared
+recipe helpers: `scale.dart` (spacing, sizes, strokes, and motion as plain
+constants) and `effects.dart` (tints, shadows, and the focus ring every
+control draws). Anything a recipe needs from the theme belongs in the item, so
+a component never imports another component to get it.
 
 **`tokens.dart` — identities only.** A Mix token names a value; the active
 `MixScope` supplies it. Ids use the value word so they render per consumer.
@@ -109,6 +114,10 @@ set up every Remix design system the same way:
 - `AcmeTheme.of(context)` throws a `FlutterError` naming the missing scope;
   `AcmeTheme.maybeOf(context)` returns null. Provide both: only `maybeOf` can
   tell "no scope" from "scope chose its default".
+- The outermost scope sets the page up: it paints the theme's background and
+  installs a root `DefaultTextStyle` in the body text and foreground, so a bare
+  `Text` reads correctly in every mode. A nested scope re-scopes tokens only;
+  reinstalling either would repaint the surface it sits on.
 - `AcmeTheme.wrap` rebuilds the `MixScope` as well as itself (see §3).
 - `updateShouldNotify` compares every carried field; this is why theme data
   needs value equality.

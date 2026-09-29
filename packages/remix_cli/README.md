@@ -4,8 +4,8 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the compact `vanilla` preset or the Radix Themes-inspired `fortal`
-preset at initialization. Remix remains the behavior dependency; the
+Choose the shadcn/ui-styled `vanilla` preset or the Radix Themes-inspired
+`fortal` preset at initialization. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
 
@@ -202,6 +202,8 @@ lib/ui/
     tokens.dart
     theme_data.dart
     theme_scope.dart
+    scale.dart
+    effects.dart
   components/
     button.dart
     button.g.dart
@@ -322,8 +324,9 @@ final chart = SizedBox(
 
 Charts have no intrinsic height, so give line and bar charts a bounded height
 and pie charts a bounded size. The palette is the theme's `chart1` to
-`chart5` tokens: edit them in `theme/theme_data.dart` to restyle every chart,
-or pass `palette` or a chart `style` for one instance.
+`chart5` tokens, shadcn's neutral gray ramp: edit them in
+`theme/theme_data.dart` to restyle every chart, or pass `palette` or a chart
+`style` for one instance.
 
 `RemixCheckboxGroup`, `RemixRadioGroup`, `RemixTabs`, and
 `RemixAccordionGroup` are behavioral and carry no style, so the registry has
