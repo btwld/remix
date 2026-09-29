@@ -7,6 +7,8 @@ import 'api/naked_button.0.dart' as button_basic_example;
 import 'api/naked_button.1.dart' as button_builder_example;
 // Checkbox
 import 'api/naked_checkbox.0.dart' as checkbox_basic_example;
+// Combobox
+import 'api/naked_combobox.0.dart' as combobox_example;
 // Dialog
 import 'api/naked_dialog.0.dart' as dialog_basic_example;
 // Disclosure
@@ -73,6 +75,15 @@ class DemoRegistry {
       sourceUrl:
           'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_button.1.dart',
       tags: ['button', 'builder'],
+    ),
+    Demo(
+      id: 'combobox-basic',
+      title: 'Combobox – Basic',
+      category: 'Combobox',
+      builder: (_) => const combobox_example.ComboboxExample(),
+      sourceUrl:
+          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_combobox.0.dart',
+      tags: ['combobox', 'autocomplete'],
     ),
     Demo(
       id: 'checkbox-basic',
