@@ -5,8 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'base/overlay_base.dart';
+import 'mixins/naked_mixins.dart';
 import 'naked_button.dart';
+import 'naked_menubar.dart';
 import 'utilities/anchored_overlay_shell.dart';
+import 'utilities/intents.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
 import 'utilities/state.dart';
@@ -718,8 +721,64 @@ class NakedMenu<T> extends StatefulWidget {
 }
 
 class _NakedMenuState<T> extends State<NakedMenu<T>>
-    with OverlayStateMixin<NakedMenu<T>> {
+    with OverlayStateMixin<NakedMenu<T>>, FocusNodeMixin<NakedMenu<T>> {
+  NakedMenubarScope? _menubar;
+  MenubarTriggers? _registeredTriggers;
+  FocusNode? _registeredNode;
+
   bool get _isOpen => widget.controller.isOpen;
+
+  @override
+  FocusNode? get widgetProvidedNode => widget.triggerFocusNode;
+
+  @override
+  ValueChanged<bool>? get onFocusChange => _handleMenubarFocus;
+
+  /// Opens this menu when its trigger gains focus while a sibling is open.
+  ///
+  /// Reads the group controller rather than the scope snapshot: focus can
+  /// change between a close and the bar's next build, and the snapshot would
+  /// still report the bar as open.
+  void _handleMenubarFocus(bool focused) {
+    if (!focused || !mounted) return;
+    final bar = _menubar;
+    if (bar == null || !bar.controller.isOpen || widget.controller.isOpen) {
+      return;
+    }
+    widget.controller.open();
+  }
+
+  void _handleMenubarHover() {
+    final bar = _menubar;
+    if (bar == null || !bar.openOnHover || !bar.controller.isOpen) return;
+    if (widget.controller.isOpen) return;
+    widget.controller.open();
+  }
+
+  void _syncMenubarRegistration() {
+    final triggers = _menubar?.triggers;
+    final node = effectiveFocusNode;
+    if (identical(triggers, _registeredTriggers) &&
+        identical(node, _registeredNode)) {
+      return;
+    }
+    final previousNode = _registeredNode;
+    if (previousNode != null) _registeredTriggers?.unregister(previousNode);
+    triggers?.register(node);
+    _registeredTriggers = triggers;
+    _registeredNode = triggers == null ? null : node;
+  }
+
+  void _traverseBar({required bool forward}) {
+    _menubar?.triggers.move(effectiveFocusNode, forward: forward);
+  }
+
+  @override
+  void dispose() {
+    final node = _registeredNode;
+    if (node != null) _registeredTriggers?.unregister(node);
+    super.dispose();
+  }
 
   void _toggle() => widget.controller.isOpen
       ? widget.controller.close()
@@ -727,6 +786,8 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
 
   void _handleOpen() {
     handleOpen(widget.onOpen);
+    // RawMenuAnchor already focuses childFocusNode (the trigger) on open.
+    _menubar?.triggers.activate(effectiveFocusNode);
     if (mounted) setState(() {});
   }
 
@@ -747,9 +808,15 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
   @override
   Widget build(BuildContext context) {
     final parentMenu = _NakedMenuScope.maybeOf<T>(context);
+    final menubar = NakedMenubarScope.maybeOf(context);
+    _menubar = menubar;
+    _syncMenubarRegistration();
+    final triggerFocusNode = menubar == null
+        ? widget.triggerFocusNode
+        : effectiveFocusNode;
     Widget button = NakedButton(
       onPressed: _toggle,
-      focusNode: widget.triggerFocusNode,
+      focusNode: triggerFocusNode,
       semanticLabel: widget.semanticLabel,
       child: widget.child,
       builder: (context, buttonState, child) {
@@ -770,14 +837,41 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
       },
     );
 
+    if (menubar != null) {
+      // Left/Right and Home/End on a focused trigger are handled by the bar's
+      // own Shortcuts/Actions above this widget. Only Up/Down live here.
+      button = MouseRegion(
+        onEnter: (_) => _handleMenubarHover(),
+        child: Shortcuts(
+          shortcuts: NakedIntentActions.menubar.triggerShortcuts,
+          child: Actions(
+            actions: NakedIntentActions.menubar.triggerActions(
+              onOpen: () {
+                if (!widget.controller.isOpen) widget.controller.open();
+              },
+            ),
+            child: MergeSemantics(
+              child: Semantics(
+                role: SemanticsRole.menuItem,
+                expanded: _isOpen,
+                child: button,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget menuChild = widget.excludeSemantics
         ? ExcludeSemantics(child: button)
+        : menubar != null
+        ? button
         : Semantics(expanded: _isOpen, child: button);
 
     return AnchoredOverlayShell(
       controller: widget.controller,
       overlayBuilder: (context, info) {
-        return Semantics(
+        Widget panel = Semantics(
           role: SemanticsRole.menu,
           container: true,
           explicitChildNodes: true,
@@ -797,6 +891,23 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
             ),
           ),
         );
+        if (menubar != null) {
+          // The overlay is outside the bar's subtree, so bar traversal is
+          // re-bound here. Home/End are left to the menu's own bindings.
+          final direction = Directionality.of(context);
+          panel = Shortcuts(
+            shortcuts: NakedIntentActions.menubar.traversalShortcuts(direction),
+            child: Actions(
+              actions: NakedIntentActions.menubar.traversalActions(
+                onNext: () => _traverseBar(forward: true),
+                onPrevious: () => _traverseBar(forward: false),
+              ),
+              child: panel,
+            ),
+          );
+        }
+
+        return panel;
       },
       onOpen: _handleOpen,
       onClose: _handleClose,
@@ -805,7 +916,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
       consumeOutsideTaps: widget.consumeOutsideTaps,
       useRootOverlay: widget.useRootOverlay,
       closeOnClickOutside: widget.closeOnClickOutside,
-      triggerFocusNode: widget.triggerFocusNode,
+      triggerFocusNode: triggerFocusNode,
       positioning: widget.positioning,
       child: menuChild,
     );
