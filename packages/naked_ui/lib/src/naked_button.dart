@@ -29,14 +29,7 @@ class NakedButtonState extends NakedState {
       NakedState.maybeControllerOf<NakedButtonState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedButtonState && statesEqual(other);
-  }
-
-  @override
-  int get hashCode => statesHashCode;
+  List<Object?> get props => [...super.props];
 }
 
 /// A headless button without visuals that provides interaction states.

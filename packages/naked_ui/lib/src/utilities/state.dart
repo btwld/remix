@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import 'equality.dart';
 import 'naked_state_scope.dart';
 
 /// Immutable view over a widget's state set with convenient helpers.
@@ -8,16 +8,14 @@ import 'naked_state_scope.dart';
 /// Use subclasses to expose component-specific metadata while retaining
 /// access to the underlying [WidgetState] set for custom styling.
 @immutable
-abstract class NakedState {
+abstract class NakedState with NakedEquatable {
   final Set<WidgetState> _states;
-  final int _statesHashCode;
 
   /// Creates a [NakedState] snapshot from the given [states] set.
   ///
   /// The [states] parameter contains the widget states to track.
   NakedState({required Set<WidgetState> states})
-    : _states = Set<WidgetState>.unmodifiable(states),
-      _statesHashCode = Object.hashAllUnordered(states);
+    : _states = Set<WidgetState>.unmodifiable(states);
 
   /// Gets the state of type [T] from the nearest [NakedStateScope].
   ///
@@ -120,13 +118,17 @@ abstract class NakedState {
   /// Remains useful for custom logic not covered by convenience getters.
   Set<WidgetState> get states => _states;
 
-  /// Whether this snapshot and [other] contain the same widget states.
-  @protected
-  bool statesEqual(NakedState other) => setEquals(other._states, _states);
-
-  /// The order-independent hash of [states].
-  @protected
-  int get statesHashCode => _statesHashCode;
+  /// Properties equality is derived from.
+  ///
+  /// Subclasses override this to append their own fields, and get `==` and
+  /// [hashCode] for free:
+  ///
+  /// ```dart
+  /// @override
+  /// List<Object?> get props => [...super.props, isChecked, tristate];
+  /// ```
+  @override
+  List<Object?> get props => [_states];
 
   /// Whether the pointer is hovering over the control.
   bool get isHovered => _states.contains(WidgetState.hovered);

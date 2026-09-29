@@ -48,16 +48,7 @@ class NakedDisclosureState extends NakedState {
       NakedState.maybeControllerOf<NakedDisclosureState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedDisclosureState &&
-        other.isExpanded == isExpanded &&
-        statesEqual(other);
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, isExpanded);
+  List<Object?> get props => [...super.props, isExpanded];
 }
 
 /// A headless disclosure button controlling one content panel.

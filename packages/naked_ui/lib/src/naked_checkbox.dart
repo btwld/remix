@@ -41,17 +41,7 @@ class NakedCheckboxState extends NakedState {
   bool get isIntermediate => tristate && isChecked == null;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedCheckboxState &&
-        statesEqual(other) &&
-        other.isChecked == isChecked &&
-        other.tristate == tristate;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, isChecked, tristate);
+  List<Object?> get props => [...super.props, isChecked, tristate];
 }
 
 /// A headless checkbox without visuals.

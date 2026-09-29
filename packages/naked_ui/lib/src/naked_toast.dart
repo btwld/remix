@@ -548,29 +548,15 @@ class NakedToastState<T> extends NakedState {
   ]) => _onDismiss(reason);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedToastState<T> &&
-        statesEqual(other) &&
-        other.id == id &&
-        other.data == data &&
-        other.priority == priority &&
-        other.duration == duration &&
-        other.isPaused == isPaused &&
-        other.isExiting == isExiting;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    statesHashCode,
+  List<Object?> get props => [
+    ...super.props,
     id,
     data,
     priority,
     duration,
     isPaused,
     isExiting,
-  );
+  ];
 }
 
 /// Builds the visuals for one toast.

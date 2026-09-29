@@ -26,17 +26,7 @@ class NakedSelectState<T> extends NakedState {
   });
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedSelectState<T> &&
-        statesEqual(other) &&
-        other.isOpen == isOpen &&
-        other.value == value;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, isOpen, value);
+  List<Object?> get props => [...super.props, isOpen, value];
 
   /// Returns the nearest [NakedSelectState] of the requested type.
   static NakedSelectState<S> of<S>(BuildContext context) =>
@@ -67,16 +57,7 @@ class NakedSelectOptionState<T> extends NakedState {
   NakedSelectOptionState({required super.states, required this.value});
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedSelectOptionState<T> &&
-        statesEqual(other) &&
-        other.value == value;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, value);
+  List<Object?> get props => [...super.props, value];
 
   /// Returns the nearest [NakedSelectOptionState] of the requested type.
   static NakedSelectOptionState<S> of<S>(BuildContext context) =>
