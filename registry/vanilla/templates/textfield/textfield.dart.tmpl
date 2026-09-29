@@ -20,11 +20,9 @@ part 'textfield.g.dart';
 /// including announcing the error state. This recipe supplies the surface, the
 /// text colors, and the focus/error/disabled fragments.
 ///
-/// There is deliberately no hover fragment, unlike the select trigger this
-/// otherwise matches. A select is a button that opens something, so it has to
-/// say "I am pressable"; a text field's affordance is the I-beam cursor Remix
-/// already sets, and tinting the box on hover would only compete with the
-/// focus ring that follows a moment later.
+/// There is deliberately no hover fragment, as in shadcn: a text field's
+/// affordance is the I-beam cursor Remix already sets, and tinting the box on
+/// hover would only compete with the focus ring that follows a moment later.
 ///
 /// One host requirement travels with it: `EditableText` asserts on an
 /// `Overlay` ancestor the moment the field takes focus, for its selection
@@ -41,7 +39,10 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(_minHeight)
+      .minHeight({{typePrefix}}Size.controlMd)
+      .padding(
+        .symmetric(horizontal: {{typePrefix}}Space.s3, vertical: {{typePrefix}}Space.s1),
+      )
       // A single line sits on the field's centre line; the accessories go with
       // it.
       .crossAxisAlignment(.center)
@@ -51,9 +52,9 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
 /// The application's TextArea recipe.
 ///
 /// `RemixTextArea` is `RemixTextField` with multi-line defaults, and it shares
-/// the same styler, so this is the field's recipe with two changes: a taller
-/// resting box, and accessories pinned to the first line instead of floating
-/// in the middle of a growing one.
+/// the same styler, so this is the field's recipe with two changes: shadcn's
+/// taller resting box (`min-h-16 py-2`), and accessories pinned to the first
+/// line instead of floating in the middle of a growing one.
 ///
 /// [style] is merged **last**, exactly as it is for the single-line field.
 @MixWidget(target: RemixTextArea.new)
@@ -61,79 +62,52 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(_minHeight * _textAreaLines)
-      .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
+      .minHeight({{typePrefix}}Space.s16)
+      .padding(
+        .symmetric(horizontal: {{typePrefix}}Space.s3, vertical: {{typePrefix}}Space.s2),
+      )
       .crossAxisAlignment(.start)
       .merge(style);
 }
 
-/// Resting height of a text area, as a multiple of one field's height.
+/// The field's fill: transparent on a light page, and `input` at 30% on a
+/// dark one, as shadcn's `bg-transparent dark:bg-input/30` paints it, so a
+/// dark field reads as a well rather than a hole.
+final _fill = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: _darkFillAlpha);
+
+/// See [_fill].
+const _darkFillAlpha = 0.3;
+
+/// The surface, the four text roles, and every state fragment: shadcn's
+/// `input.tsx`, with the field label and helper from `field.tsx`.
 ///
-/// `RemixTextArea` defaults to `minLines: 2`, so anything less would let the
-/// box grow the moment a second line arrives.
-const _textAreaLines = 2.5;
-
-/// Horizontal inset between the field edge and its content.
-///
-/// Flat across the sizes, unlike the button's 12/16/20. A button's padding is
-/// what gives its label room to breathe, so it grows with the control; a
-/// field's is the gutter before the text cursor, and a wider gutter at a
-/// larger size just moves the caret away from the edge the reader clicked.
-/// The select trigger uses the same value for the same reason.
-const _paddingX = 12.0;
-
-/// Vertical inset, used only by the text area: a single-line field centres its
-/// content instead.
-const _paddingY = 10.0;
-
-/// Gap between the field and its leading or trailing accessory.
-const _accessoryGap = 8.0;
-
-/// Gap between the label, the field, and the helper line.
-const _stackGap = 6.0;
-
-/// Label size, one step below the value it names.
-const _labelSize = 13.0;
-
-/// Width of the field outline.
-const _borderWidth = 1.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// The field's resting height, matching shadcn's `h-9` and the button beside
-/// it — a field and the button that submits it sit in the same row.
-///
-/// One size, not a scale. A call site that needs another sets `.minHeight(...)`
-/// through [style].
-const _minHeight = 36.0;
-
-/// Value and placeholder size, matching body copy.
-const _textSize = 14.0;
-
-/// The surface, the four text roles, and every state fragment.
-///
-/// Both recipes share this whole body; only the box's height and the
-/// accessory alignment differ between them.
+/// Both recipes share this whole body; only the box's height, its vertical
+/// inset, and the accessory alignment differ between them.
 TextFieldStyler _base() => TextFieldStyler()
     .animate({{typePrefix}}Motion.standard)
-    .color({{typePrefix}}Tokens.background())
-    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
+    .color(_fill())
+    .border(.color({{typePrefix}}Tokens.input()).width({{typePrefix}}Stroke.hairline))
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-    .padding(.horizontal(_paddingX))
-    .spacing(_accessoryGap)
-    .text(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
+    // In the effects layer rather than the decoration: the fill is
+    // transparent, and a decoration shadow would show through it.
+    .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects))
+    .spacing({{typePrefix}}Space.s2)
+    .text(.style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.foreground()))
     // The placeholder is not the value: it has to read as the quieter of the
     // two, or an empty field looks filled in.
-    .hintText(.fontSize(_textSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .hintText(
+      .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
+    )
     .cursorColor({{typePrefix}}Tokens.foreground())
     .label(
-      .fontSize(
-        _labelSize,
+      .style(
+        {{typePrefix}}Tokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
-    .helperText(.fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()))
-    .layout(.direction(.vertical).spacing(_stackGap))
+    .helperText(
+      .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
+    )
+    .layout(.direction(.vertical).spacing({{typePrefix}}Space.s2))
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
@@ -148,26 +122,22 @@ TextFieldStyler _focusVisibleStyle() => TextFieldStyler()
     .containerEffects({{valuePrefix}}FocusRing())
     .border({{valuePrefix}}FocusBorder());
 
-/// The invalid field: a `destructive` outline and a heavier helper line.
+/// The invalid field: a `destructive` outline and a `destructive` helper line.
 ///
 /// Spelled with `variant` rather than one of the `on…` helpers because Mix
 /// ships no `onError`; the state itself is a standard `WidgetState` that
 /// `RemixTextField` drives from its own `error` flag.
 ///
-/// The outline carries the tone, and the message that explains the problem
-/// is set in `foreground` and made a little heavier. Remix announces the
-/// error to assistive technology either way.
-///
 /// Of this vocabulary's thirty-three tokens, `destructive` is the one that
 /// means danger, and the shipped themes keep it above the 4.5:1 text floor on
-/// the page, so a helper line in `destructive` is a one-line change here.
+/// the page — 4.8:1 in the light theme and 6.9:1 in the dark — so the message
+/// that explains the problem is set in it, as shadcn's `FieldError` is. Remix
+/// announces the error to assistive technology either way.
 TextFieldStyler _errorStyle() => TextFieldStyler().variant(
   ContextVariant.widgetState(.error),
   TextFieldStyler()
-      .border(.color({{typePrefix}}Tokens.destructive()).width(_borderWidth))
-      .helperText(
-        .color({{typePrefix}}Tokens.foreground()).fontWeight(FontWeight.w500),
-      )
+      .border(.color({{typePrefix}}Tokens.destructive()))
+      .helperText(.color({{typePrefix}}Tokens.destructive()))
       // An invalid field that takes focus rings in its own red, as shadcn's
       // `aria-invalid:ring-destructive/20` does, and keeps its red outline.
       .onFocusVisible(
@@ -194,4 +164,4 @@ const _darkErrorRingAlpha = 0.4;
 /// editable.
 TextFieldStyler _disabledStyle() => TextFieldStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity({{typePrefix}}Opacity.disabled));

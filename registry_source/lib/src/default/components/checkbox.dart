@@ -14,7 +14,7 @@ part 'checkbox.g.dart';
 ///
 /// Everything visual about a checkbox lives in this function: the box
 /// geometry, the indicator, the label, and the
-/// hover/checked/indeterminate/focus/disabled fragments. Remix keeps
+/// checked/indeterminate/focus/disabled fragments. Remix keeps
 /// ownership of rendering, the tristate transition, pointer and keyboard
 /// behavior, the minimum tap target, and the checkbox accessibility
 /// semantics — this recipe never reimplements any of that.
@@ -45,9 +45,10 @@ part 'checkbox.g.dart';
 /// the recipe's checked fill has to be declared as a selected fragment too
 /// (`CheckboxStyler().onSelected(...)`).
 ///
-/// There is deliberately no pressed fragment. A button needs one because
-/// nothing else about it changes on tap; a checkbox flips its own state, and
-/// that is the feedback.
+/// There is deliberately no hover or pressed fragment, as in shadcn. A button
+/// needs them because nothing else about it changes on tap; a checkbox flips
+/// its own state, and that is the feedback. The pointer cursor Remix sets says
+/// it can be clicked.
 @MixWidget(target: RemixCheckbox.new)
 CheckboxStyler vanillaCheckboxStyle({
   CheckboxStyler style = const CheckboxStyler.create(),
@@ -59,17 +60,6 @@ CheckboxStyler vanillaCheckboxStyle({
   final checked = _checkedStyle();
 
   return _base()
-      // The outline has to survive the hover fill, exactly as it does on the
-      // radio beside it: `accent` on `border` is 1.09:1 in the shipped light
-      // theme, so tinting the box alone leaves an unchecked checkbox with no
-      // visible edge while the pointer is on it.
-      .onHovered(
-        CheckboxStyler()
-            .color(VanillaTokens.accent())
-            .border(
-              .color(VanillaTokens.mutedForeground()).width(_borderWidth),
-            ),
-      )
       // Before the checked fragments, so a checked box keeps its `primary`
       // outline while it also shows the ring.
       .onFocusVisible(_focusVisibleStyle())
@@ -95,14 +85,8 @@ CheckboxStyler vanillaCheckboxGroupItemStyle({
   CheckboxStyler style = const CheckboxStyler.create(),
 }) => vanillaCheckboxStyle(style: style);
 
-/// Alpha applied to the checked fill while hovered.
-const _hoverAlpha = 0.9;
-
-/// The checked fill, dimmed. See `vanillaTint` for why this is a token rather
-/// than a color with an alpha directive.
-final _primaryHoverFill = vanillaTint(VanillaTokens.primary, _hoverAlpha);
-
-/// The largest corner radius a checkbox box may take.
+/// The largest corner radius a checkbox box may take: shadcn's
+/// `rounded-[4px]`.
 ///
 /// `VanillaTokens.radiusMd` is authored for 32-40px controls. Applied
 /// unclamped to a 16px box, a pill radius draws a circle, which reads as a
@@ -111,7 +95,7 @@ final _primaryHoverFill = vanillaTint(VanillaTokens.primary, _hoverAlpha);
 /// checkboxes.
 const _maxBoxRadius = 4.0;
 
-/// The theme's corner radius, clamped to [_maxBoxRadius].
+/// The theme's control radius, clamped to [_maxBoxRadius].
 ///
 /// Declared as a top-level final because `ContextToken` equality is resolver
 /// identity: rebuilding one per call would make two identical recipes compare
@@ -125,55 +109,44 @@ final _boxRadius = ContextToken<Radius>((context) {
   );
 });
 
-/// Width of the box outline, in every state.
-const _borderWidth = 1.0;
+/// The unchecked box's fill: transparent, or `dark:bg-input/30`.
+final _fill = vanillaTint(VanillaTokens.input, 0, dark: _darkFillAlpha);
 
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
+/// See [_fill].
+const _darkFillAlpha = 0.3;
 
-/// Side of the box, matching shadcn's `h-4 w-4`.
-const _box = 16.0;
-
-/// Side of the check or dash drawn inside the box.
-const _indicator = 10.0;
-
-/// Gap between the box and its label.
-const _gap = 8.0;
-
-/// Label size, matching body copy.
-const _labelSize = 14.0;
-
-/// The unchecked box, the indicator geometry, and the label.
+/// The unchecked box, the indicator geometry, and the label: shadcn's
+/// `size-4 rounded-[4px] border-input shadow-xs`, and a `size-3.5` check.
 ///
 /// The indicator gets a size but no color here: Remix renders no indicator at
 /// all while unchecked, so the only states that can show one set their own
 /// content color.
 CheckboxStyler _base() => CheckboxStyler()
     .animate(VanillaMotion.standard)
-    .size(_box, _box)
+    .size(VanillaSize.icon, VanillaSize.icon)
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
-    .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(_borderWidth))
-    .indicator(.size(_indicator))
-    .labelSpacing(_gap)
-    .label(.fontSize(_labelSize).color(VanillaTokens.foreground()));
+    .color(_fill())
+    .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+    // In the effects layer rather than the decoration: the empty box is
+    // transparent, and a decoration shadow would show through it.
+    .containerEffects(.behindContent(VanillaShadow.xs.effects))
+    .indicator(.size(VanillaSize.iconSm))
+    .labelSpacing(VanillaSpace.s2)
+    .label(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()),
+    );
 
-/// The checked and indeterminate surface.
+/// The checked and indeterminate surface: `primary`, outline and all, as
+/// shadcn's `data-[state=checked]:bg-primary border-primary` paints it.
 ///
 /// The border is repainted in the fill color rather than removed: dropping it
 /// would shrink the painted box by two logical pixels at the moment of
 /// checking, so the control would visibly twitch.
-CheckboxStyler _checkedStyle() => _filled(VanillaTokens.primary())
-    .indicator(.color(VanillaTokens.primaryForeground()))
-    // Declared as a hover fragment inside the checked fragment so a hovered,
-    // checked box dims its own fill. A top-level hover fragment could not do
-    // this: it does not know which fill it is dimming.
-    .onHovered(_filled(_primaryHoverFill()));
-
-/// One fill applied to both the box and its outline.
-CheckboxStyler _filled(Color fill) =>
-    CheckboxStyler().color(fill).border(.color(fill).width(_borderWidth));
+CheckboxStyler _checkedStyle() => CheckboxStyler()
+    .color(VanillaTokens.primary())
+    .border(.color(VanillaTokens.primary()))
+    .indicator(.color(VanillaTokens.primaryForeground()));
 
 /// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
 /// the box's own outline turned `ring`.
@@ -192,4 +165,4 @@ CheckboxStyler _focusVisibleStyle() => CheckboxStyler()
 /// draws a focus ring reads as actionable.
 CheckboxStyler _disabledStyle() => CheckboxStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

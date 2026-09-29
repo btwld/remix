@@ -1508,7 +1508,7 @@ void main() {
 
   group('acmeCheckboxStyle sizes', () {
     const expected = <String, _CheckboxMetrics>{
-      'default': (box: 16.0, indicator: 10.0, gap: 8.0, labelSize: 14.0),
+      'default': (box: 16.0, indicator: 14.0, gap: 8.0, labelSize: 14.0),
     };
 
     for (final entry in expected.entries) {
@@ -1538,10 +1538,10 @@ void main() {
       ) async {
         final spec = await _checkboxSpec(tester, theme: theme.data);
 
-        expect(_checkboxBackground(spec), theme.data.background);
+        expect(_checkboxBackground(spec), _fieldFill(theme.data));
         expect(
           _checkboxBorder(spec),
-          Border.all(color: theme.data.border, width: 1),
+          Border.all(color: theme.data.input, width: 1),
         );
         expect(spec.spec.label.spec.style?.color, theme.data.foreground);
         // Unchecked renders no indicator at all, so the recipe deliberately
@@ -1618,34 +1618,30 @@ void main() {
 
   group('acmeCheckboxStyle states', () {
     for (final theme in _themes) {
-      testWidgets('an unchecked box hovers onto accent in ${theme.name}', (
-        tester,
-      ) async {
-        final spec = await _checkboxSpec(
-          tester,
-          theme: theme.data,
-          hovered: true,
+      // No hover fill, as in shadcn: flipping its own state is a checkbox's
+      // feedback. Hovering must change neither the empty nor the checked box.
+      for (final selected in const [false, true]) {
+        testWidgets(
+          'hover leaves a ${selected ? 'checked' : 'empty'} box as it is in '
+          '${theme.name}',
+          (tester) async {
+            final rest = await _checkboxSpec(
+              tester,
+              theme: theme.data,
+              selected: selected,
+            );
+            final hovered = await _checkboxSpec(
+              tester,
+              theme: theme.data,
+              selected: selected,
+              hovered: true,
+            );
+
+            expect(_checkboxBackground(hovered), _checkboxBackground(rest));
+            expect(_checkboxBorder(hovered), _checkboxBorder(rest));
+          },
         );
-
-        expect(_checkboxBackground(spec), theme.data.accent);
-      });
-
-      testWidgets('a checked box dims its own fill in ${theme.name}', (
-        tester,
-      ) async {
-        final spec = await _checkboxSpec(
-          tester,
-          theme: theme.data,
-          selected: true,
-          hovered: true,
-        );
-        final dimmed = theme.data.primary.withValues(alpha: 0.9);
-
-        // The nested hover fragment inside the checked fragment wins over the
-        // top-level one: a hovered checked box must not fall back to accent.
-        expect(_checkboxBackground(spec), dimmed);
-        expect(_checkboxBorder(spec), Border.all(color: dimmed, width: 1));
-      });
+      }
 
       testWidgets('focus-visible draws the ring in ${theme.name}', (
         tester,
@@ -1753,7 +1749,7 @@ void main() {
       expect(spec.spec.label.spec.style?.color, const Color(0xFFFFFF00));
       // Untouched recipe values survive.
       expect(spec.spec.labelSpacing, 8);
-      expect(spec.spec.indicator.spec.size, 10);
+      expect(spec.spec.indicator.spec.size, 14);
     });
 
     testWidgets('an idle override does not reach the checked fragment', (
@@ -1863,7 +1859,7 @@ void main() {
 
       expect(
         _checkboxBackground(_resolvedSpecOf<CheckboxSpec>(tester)),
-        const AcmeThemeData.light().background,
+        _fieldFill(const AcmeThemeData.light()),
       );
 
       await tester.tap(find.byType(AcmeCheckbox));
@@ -3549,33 +3545,22 @@ void main() {
   });
 
   group('acmeSwitchStyle', () {
-    const heights = <String, double>{'default': 20};
-
-    for (final entry in heights.entries) {
-      testWidgets('${entry.key} keeps the thumb flush in the track', (
+    testWidgets('the thumb fills the track without spilling out', (
+      tester,
+    ) async {
+      final spec = await _resolve(
         tester,
-      ) async {
-        final spec = await _resolve(
-          tester,
-          acmeSwitchStyle(),
-          theme: const AcmeThemeData.light(),
-        );
+        acmeSwitchStyle(),
+        theme: const AcmeThemeData.light(),
+      );
+      final track = spec.spec.container.spec.constraints!;
+      final thumb = spec.spec.thumb.spec.constraints!;
 
-        expect(spec.spec.container.spec.constraints?.maxHeight, entry.value);
-        expect(
-          spec.spec.container.spec.constraints?.maxWidth,
-          entry.value * 1.8,
-        );
-        // Track height minus the 2px inset on both sides: the thumb must not
-        // spill out of the rail at any size.
-        expect(
-          spec.spec.thumb.spec.constraints?.maxHeight,
-          entry.value - 4,
-          reason: entry.key,
-        );
-        expect(spec.spec.container.spec.padding, const EdgeInsets.all(2));
-      });
-    }
+      // shadcn's 32 x 18.4 track around a 16px thumb, inside a 1px outline.
+      expect(track, BoxConstraints.tight(const Size(32, 18.4)));
+      expect(thumb, BoxConstraints.tight(const Size.square(16)));
+      expect(thumb.maxHeight, lessThanOrEqualTo(track.maxHeight - 2));
+    });
 
     for (final theme in _themes) {
       testWidgets('only the track carries the state in ${theme.name}', (
@@ -3593,14 +3578,26 @@ void main() {
           states: const {WidgetState.selected},
         );
 
-        expect(_boxBackground(off.spec.container), theme.data.muted);
-        expect(_boxBackground(on.spec.container), theme.data.primary);
-        // The thumb never changes, so it has to stay visible on both tracks.
-        for (final spec in [off, on]) {
-          expect(_boxBackground(spec.spec.thumb), theme.data.background);
-        }
+        final dark = theme.data.brightness == Brightness.dark;
+
         expect(
-          _contrastRatio(theme.data.background, theme.data.primary),
+          _boxBackground(off.spec.container),
+          theme.data.input.withValues(
+            alpha: theme.data.input.a * (dark ? 0.8 : 1),
+          ),
+        );
+        expect(_boxBackground(on.spec.container), theme.data.primary);
+        // The thumb has to stay visible on both tracks. shadcn keeps it the
+        // page color in the light theme and swaps it per state in the dark.
+        final offThumb = _boxBackground(off.spec.thumb)!;
+        final onThumb = _boxBackground(on.spec.thumb)!;
+        expect(offThumb, dark ? theme.data.foreground : theme.data.background);
+        expect(
+          onThumb,
+          dark ? theme.data.primaryForeground : theme.data.background,
+        );
+        expect(
+          _contrastRatio(onThumb, theme.data.primary),
           greaterThanOrEqualTo(3.0),
         );
       });
@@ -3659,39 +3656,31 @@ void main() {
   });
 
   group('acmeRadioStyle', () {
-    const expected = <String, ({double diameter, double dot})>{
-      'default': (diameter: 16, dot: 6),
-    };
-
-    for (final entry in expected.entries) {
-      testWidgets('${entry.key} is a circle around a smaller dot', (
+    testWidgets('a circle around a smaller dot', (tester) async {
+      final spec = await _resolve(
         tester,
-      ) async {
-        final spec = await _resolve(
-          tester,
-          acmeRadioStyle(),
-          theme: const AcmeThemeData.light(),
-        );
+        acmeRadioStyle(),
+        theme: const AcmeThemeData.light(),
+      );
 
+      expect(
+        spec.spec.container.spec.constraints,
+        BoxConstraints.tight(const Size.square(16)),
+      );
+      expect(
+        spec.spec.indicator.spec.constraints,
+        BoxConstraints.tight(const Size.square(8)),
+      );
+      for (final part in [spec.spec.container, spec.spec.indicator]) {
         expect(
-          spec.spec.container.spec.constraints,
-          BoxConstraints.tight(Size.square(entry.value.diameter)),
+          _boxBorderRadius(part),
+          const BorderRadius.all(Radius.circular(9999)),
         );
-        expect(
-          spec.spec.indicator.spec.constraints,
-          BoxConstraints.tight(Size.square(entry.value.dot)),
-        );
-        for (final part in [spec.spec.container, spec.spec.indicator]) {
-          expect(
-            _boxBorderRadius(part),
-            const BorderRadius.all(Radius.circular(999)),
-          );
-        }
-      });
-    }
+      }
+    });
 
     for (final theme in _themes) {
-      testWidgets('chosen keeps an open middle in ${theme.name}', (
+      testWidgets('the dot carries the choice in ${theme.name}', (
         tester,
       ) async {
         final unchosen = await _resolve(
@@ -3706,42 +3695,21 @@ void main() {
           states: const {WidgetState.selected},
         );
 
-        expect(_boxBackground(unchosen.spec.container), theme.data.background);
-        expect(
-          _boxBorder(unchosen.spec.container),
-          Border.all(color: theme.data.border, width: 1),
-        );
-        // The surface stays the page color: the dot is the mark, not a fill.
-        expect(_boxBackground(chosen.spec.container), theme.data.background);
-        expect(
-          _boxBorder(chosen.spec.container),
-          Border.all(color: theme.data.primary, width: 1.5),
-        );
+        // The ring and the surface stay as they are, as shadcn's do; only
+        // the `primary` dot says an option is chosen.
+        for (final spec in [unchosen, chosen]) {
+          expect(_boxBackground(spec.spec.container), _fieldFill(theme.data));
+          expect(
+            _boxBorder(spec.spec.container),
+            Border.all(color: theme.data.input, width: 1),
+          );
+        }
         expect(_boxBackground(chosen.spec.indicator), theme.data.primary);
         expect(
           _contrastRatio(theme.data.primary, theme.data.background),
           greaterThanOrEqualTo(3.0),
         );
       });
-
-      testWidgets(
-        'a chosen radio dims its own ring on hover in ${theme.name}',
-        (tester) async {
-          final spec = await _resolve(
-            tester,
-            acmeRadioStyle(),
-            theme: theme.data,
-            states: const {WidgetState.selected, WidgetState.hovered},
-          );
-          final dimmed = theme.data.primary.withValues(alpha: 0.9);
-
-          expect(
-            _boxBorder(spec.spec.container),
-            Border.all(color: dimmed, width: 1.5),
-          );
-          expect(_boxBackground(spec.spec.indicator), dimmed);
-        },
-      );
     }
 
     testWidgets('selecting one option clears the other', (tester) async {
@@ -3778,29 +3746,10 @@ void main() {
   });
 
   group('acmeSliderStyle', () {
-    const rails = <String, double>{'default': 6};
-
-    for (final entry in rails.entries) {
-      testWidgets('${entry.key} scales the thumb with the rail', (
-        tester,
-      ) async {
-        final spec = await _resolve(
-          tester,
-          acmeSliderStyle(),
-          theme: const AcmeThemeData.light(),
-        );
-
-        expect(spec.spec.trackWidth, entry.value);
-        expect(spec.spec.rangeWidth, entry.value);
-        expect(
-          spec.spec.thumb.spec.constraints,
-          BoxConstraints.tight(Size.square(entry.value * 2.5)),
-        );
-      });
-    }
-
+    // The thumb's size, outline, fill, and shadow are held to the shadcn spec
+    // in registry_source/test/vanilla; this pins the rail and the range.
     for (final theme in _themes) {
-      testWidgets('rail, range, and thumb take their tokens in ${theme.name}', (
+      testWidgets('rail and range take their tokens in ${theme.name}', (
         tester,
       ) async {
         final spec = await _resolve(
@@ -3809,15 +3758,10 @@ void main() {
           theme: theme.data,
         );
 
-        // The same pairing the progress bar uses: a slider is a progress bar
-        // you can grab.
+        expect(spec.spec.trackWidth, 6);
+        expect(spec.spec.rangeWidth, 6);
         expect(spec.spec.trackColor, theme.data.muted);
         expect(spec.spec.rangeColor, theme.data.primary);
-        expect(_boxBackground(spec.spec.thumb), theme.data.background);
-        expect(
-          _boxBorder(spec.spec.thumb),
-          Border.all(color: theme.data.primary, width: 2),
-        );
       });
     }
 
@@ -3881,34 +3825,8 @@ void main() {
   });
 
   group('acmeTextFieldStyle and acmeTextAreaStyle', () {
-    const heights = <String, ({double minHeight, double textSize})>{
-      'default': (minHeight: 36, textSize: 14),
-    };
-
-    for (final entry in heights.entries) {
-      testWidgets('${entry.key} sizes the field and its text', (tester) async {
-        const theme = AcmeThemeData.light();
-        final field = await _resolve(
-          tester,
-          acmeTextFieldStyle(),
-          theme: theme,
-        );
-        final area = await _resolve(tester, acmeTextAreaStyle(), theme: theme);
-
-        expect(
-          field.spec.container.spec.constraints?.minHeight,
-          entry.value.minHeight,
-        );
-        expect(field.spec.text.spec.style?.fontSize, entry.value.textSize);
-        // A text area rests taller, because `RemixTextArea` defaults to two
-        // lines and the box must not grow the moment the second one arrives.
-        expect(
-          area.spec.container.spec.constraints?.minHeight,
-          entry.value.minHeight * 2.5,
-        );
-      });
-    }
-
+    // Heights, insets, the surface, and the type are held to the shadcn spec
+    // in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('the four text roles take their tokens in ${theme.name}', (
         tester,
@@ -3933,7 +3851,7 @@ void main() {
         expect(spec.spec.cursorColor, theme.data.foreground);
         expect(
           _boxBorder(spec.spec.container),
-          Border.all(color: theme.data.border, width: 1),
+          Border.all(color: theme.data.input, width: 1),
         );
       });
 
@@ -3951,17 +3869,23 @@ void main() {
             _boxBorder(spec.spec.container),
             Border.all(color: theme.data.destructive, width: 1),
           );
-          // The outline carries the tone, where the non-text floor is 3:1.
-          // The message that explains the problem stays `foreground` and gets
-          // heavier, because `destructive` is 4.1:1 on the dark page.
-          expect(spec.spec.helperText.spec.style?.color, theme.data.foreground);
-          expect(spec.spec.helperText.spec.style?.fontWeight, FontWeight.w500);
+          // The message that explains the problem is set in `destructive`,
+          // which the shipped themes keep above 4.5:1 on the page. The value
+          // the reader typed stays `foreground`.
+          expect(
+            spec.spec.helperText.spec.style?.color,
+            theme.data.destructive,
+          );
+          expect(
+            _contrastRatio(theme.data.destructive, theme.data.background),
+            greaterThanOrEqualTo(4.5),
+          );
           expect(spec.spec.text.spec.style?.color, theme.data.foreground);
         },
       );
     }
 
-    testWidgets('the area only differs in height and alignment', (
+    testWidgets('the area only differs in height, inset, and alignment', (
       tester,
     ) async {
       const theme = AcmeThemeData.light();
@@ -4559,11 +4483,8 @@ void main() {
 
         // Two files on purpose, but a menu and a popover anchored to adjacent
         // buttons must not read as two systems.
-        expect(_boxBackground(popover.spec.container), theme.data.background);
-        expect(
-          _flexDecoration(menu.spec.overlay)?.color,
-          theme.data.background,
-        );
+        expect(_boxBackground(popover.spec.container), theme.data.popover);
+        expect(_flexDecoration(menu.spec.overlay)?.color, theme.data.popover);
         expect(
           _boxBorder(popover.spec.container),
           Border.all(color: theme.data.border, width: 1),
@@ -4818,7 +4739,9 @@ void main() {
 
         expect(idleIndicator.size, 16);
         expect(idleIndicator.color, theme.data.mutedForeground);
-        expect(hoveredIndicator.color, theme.data.accentForeground);
+        expect(idle.spec.trigger.spec.indicatorOpacity, 0.5);
+        // Hover changes the trigger's fill at most, never its content.
+        expect(hoveredIndicator.color, idleIndicator.color);
       });
 
       testWidgets('the panel matches the menu panel in ${theme.name}', (
@@ -6007,6 +5930,11 @@ BorderSide _focusRing(AcmeThemeData theme) => BorderSide(
 /// [_focusRing] as the foreground border of a control with no effects slot.
 Border _focusRingBorder(AcmeThemeData theme) => Border.fromBorderSide(
   _focusRing(theme).copyWith(strokeAlign: BorderSide.strokeAlignOutside),
+);
+
+/// A form control's fill: transparent, or `input` at 30% in the dark theme.
+Color _fieldFill(AcmeThemeData theme) => theme.input.withValues(
+  alpha: theme.input.a * (theme.brightness == Brightness.dark ? 0.3 : 0),
 );
 
 /// The destructive fill at rest: solid in the light theme, 60% in the dark.

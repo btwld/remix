@@ -15,8 +15,8 @@ part of 'popover.dart';
 /// A popover sits *over* arbitrary content, so its edge is doing real work:
 /// it is what tells a reader where the panel stops and the page resumes. That
 /// edge is a `border` hairline plus a soft drop shadow. The fill is
-/// `background`, the same token the page uses, because this vocabulary has no
-/// separate surface step — see the theme's own comments if you add one.
+/// `popover`, the surface every floating panel shares: the page color in the
+/// light theme and a step lighter than the page in the dark one.
 ///
 /// One composition trap worth knowing: `RemixPopover` opens on a tap of its
 /// own `child`, so a trigger that handles its own taps never lets the popover

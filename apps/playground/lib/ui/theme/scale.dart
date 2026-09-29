@@ -48,6 +48,9 @@ abstract final class PlaygroundSpace {
 
   /// 48px.
   static const double s12 = 48;
+
+  /// 64px.
+  static const double s16 = 64;
 }
 
 /// Control heights and icon sizes shared across recipes.
@@ -69,6 +72,10 @@ abstract final class PlaygroundSize {
 
   /// The default glyph: shadcn's `size-4`.
   static const double icon = 16;
+
+  /// The narrowest a floating list gets, so a one-word menu is still a
+  /// target: shadcn's `min-w-[8rem]`.
+  static const double panelMinWidth = 128;
 
   /// A corner radius that rounds any control into a pill or a circle:
   /// shadcn's `rounded-full`.

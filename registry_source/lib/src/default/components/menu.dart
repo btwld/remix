@@ -20,10 +20,11 @@ part 'menu.g.dart';
 /// `submenuItem` fall back to it unless a recipe says otherwise. Setting only
 /// `item` is what keeps a menu looking like one list rather than four.
 ///
-/// The panel is the same `background` fill and `border` hairline the popover
-/// uses. The two files are deliberately separate — the components have
-/// separate update stories — but the values are meant to match, so a menu and
-/// a popover anchored to adjacent buttons do not read as two systems.
+/// The panel is the same `popover` fill and `border` hairline the popover and
+/// the select's options use. The files are deliberately separate — the
+/// components have separate update stories — but the values are meant to
+/// match, so a menu and a popover anchored to adjacent buttons do not read as
+/// two systems.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
@@ -37,7 +38,7 @@ MenuStyler vanillaMenuStyle({MenuStyler style = const MenuStyler.create()}) =>
           FlexBoxStyler()
               .direction(.vertical)
               .mainAxisSize(.min)
-              .color(VanillaTokens.background())
+              .color(VanillaTokens.popover())
               .border(.color(VanillaTokens.border()).width(_borderWidth))
               .borderRadius(.all(VanillaTokens.radiusMd()))
               .padding(.all(_panelPadding))

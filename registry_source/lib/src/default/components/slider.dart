@@ -14,9 +14,9 @@ part 'slider.g.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The rail is `muted` and the range is `primary`, the same pairing the
-/// progress bar uses — a slider is a progress bar you can grab, and reading
-/// them as one family is worth more than distinguishing them by color.
+/// The rail is `muted` and the range is `primary`, as shadcn's are. The thumb
+/// is a white disc with a `primary` outline and a small shadow, which keeps
+/// it a distinct handle on either page.
 ///
 /// `semanticFormatterCallback` is deliberately not forwarded to the generated
 /// `VanillaSlider`. Its type is
@@ -55,62 +55,57 @@ SliderStyler vanillaSliderStyle({
       .thickness(_rail)
       .trackColor(VanillaTokens.muted())
       .rangeColor(VanillaTokens.primary())
-      .thumbSize(const Size.square(_thumb))
-      .thumbColor(VanillaTokens.background())
+      .thumbSize(const Size.square(VanillaSize.icon))
+      // White in both themes, as shadcn's `bg-white` is: the thumb is a
+      // physical-looking handle, and its `primary` outline and small shadow
+      // are what separate it from the range it sits on.
+      .thumbColor(_thumbFill)
       .thumb(
         BoxStyler()
             .borderRadius(.all(_circular))
-            // The thumb is a light disc on a light rail, so its own outline is
-            // what separates it from the range it sits on.
-            .border(.color(VanillaTokens.primary()).width(_thumbBorderWidth)),
+            .border(
+              .color(VanillaTokens.primary()).width(VanillaStroke.hairline),
+            )
+            .shadows(VanillaShadow.sm.box),
       )
-      // A thumb is a grab target, so it answers the pointer. The outline
-      // keeps identifying it; only the fill moves, which is why hovering does
-      // not make the thumb harder to find on a light rail.
-      .onHovered(SliderStyler().thumbColor(VanillaTokens.accent()))
+      // A thumb is a grab target, so it answers the pointer with the same ring
+      // keyboard focus draws, shadcn's `hover:ring-4`.
+      .onHovered(SliderStyler().thumbEffects(_thumbRing()))
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// A radius large enough to round any thumb in this scale into a circle.
-const _circular = Radius.circular(999);
+/// A radius large enough to round the thumb into a circle.
+const _circular = Radius.circular(VanillaSize.pill);
 
-/// Width of the thumb's outline.
-const _thumbBorderWidth = 2.0;
+/// The thumb's fill: shadcn's `bg-white`, in both themes.
+const _thumbFill = Color(0xFFFFFFFF);
 
-/// Width of the ring around a focused thumb: shadcn's `ring-4`, a step
-/// wider than other controls' because the thumb is a small target.
+/// Width of the ring around a hovered or focused thumb: shadcn's `ring-4`, a
+/// step wider than other controls' because the thumb is a small target.
 const _thumbRingWidth = 4.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
 
 /// The rail's thickness, matching shadcn's `h-1.5`.
 ///
 /// One size, not a scale. A call site that needs another sets `.thickness(...)`
 /// through [style].
-const _rail = 6.0;
+const _rail = VanillaSpace.s1_5;
 
-/// Thumb diameter as a multiple of the rail thickness.
-///
-/// Derived rather than stated, so the grab target keeps its relationship to
-/// the rail if the rail is ever changed.
-const _thumbRatio = 2.5;
-
-/// The thumb's diameter.
-const _thumb = _rail * _thumbRatio;
+/// The ring around a hovered or focused thumb.
+RemixBoxEffectsMix _thumbRing() => vanillaFocusRing(width: _thumbRingWidth);
 
 /// The keyboard focus ring, drawn around the thumb.
 ///
 /// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
 /// only while the slider has visible focus, which is the state a ring is for.
 SliderStyler _focusVisibleStyle() =>
-    SliderStyler().thumbFocusEffects(vanillaFocusRing(width: _thumbRingWidth));
+    SliderStyler().thumbFocusEffects(_thumbRing());
 
 /// Declared last so it wins over every other state fragment.
 ///
 /// A disabled slider keeps its rail and range and simply fades; there is no
 /// ring to clear because the focus effects are already conditional on focus.
-SliderStyler _disabledStyle() =>
-    SliderStyler().wrap(.opacity(_disabledOpacity));
+SliderStyler _disabledStyle() => SliderStyler()
+    .thumbEffects(RemixBoxEffectsMix.outline(.style(.none)))
+    .wrap(.opacity(VanillaOpacity.disabled));

@@ -16,7 +16,7 @@ import 'support.dart';
 /// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
 /// checked once that phase is listed in [enforcedPhases]; until then it is
 /// reported as skipped, so the distance to the spec stays visible.
-const enforcedPhases = <String>{'E', 'F1'};
+const enforcedPhases = <String>{'E', 'F1', 'F2'};
 
 /// One measured property of one resolved recipe.
 final class SpecTarget {
@@ -104,11 +104,15 @@ BorderSide _focusRing(VanillaThemeData theme) =>
 /// A hairline border in [color] on every side.
 Border _hairline(Color color) => Border.all(color: color, width: 1);
 
+/// A form control's fill: transparent, or `dark:bg-input/30`.
+Color _fieldFill(VanillaThemeData theme) =>
+    tint(theme.input, _isDark(theme) ? 0.3 : 0);
+
 /// The destructive fill at rest, `dark:bg-destructive/60`.
 Color _destructiveFill(VanillaThemeData theme) =>
     tint(theme.destructive, _isDark(theme) ? 0.6 : 1);
 
-// -- button -----------------------------------------------------------------
+// -- button -------------------------------------------------------------------
 
 SpecTarget _button(
   String property, {
@@ -386,7 +390,7 @@ final _iconButtonTargets = <SpecTarget>[
   ),
 ];
 
-// -- link -------------------------------------------------------------------
+// -- link ---------------------------------------------------------------------
 
 SpecTarget _link(
   String property, {
@@ -434,7 +438,7 @@ final _linkTargets = <SpecTarget>[
   ),
 ];
 
-// -- badge ------------------------------------------------------------------
+// -- badge --------------------------------------------------------------------
 
 SpecTarget _badge(
   String property, {
@@ -495,7 +499,7 @@ final _badgeTargets = <SpecTarget>[
   ),
 ];
 
-// -- toggle -----------------------------------------------------------------
+// -- toggle -------------------------------------------------------------------
 
 SpecTarget _toggle(
   String property, {
@@ -731,15 +735,19 @@ final _textFieldTargets = <SpecTarget>[
   ),
   _textField(
     'surface',
-    source: 'input.tsx: border border-input bg-transparent shadow-xs',
+    source: 'input.tsx: border-input bg-transparent dark:bg-input/30 shadow-xs',
     read: (spec) {
       final decoration = decorationOf(spec.spec.container);
-      return (decoration?.border, decoration?.color, decoration?.boxShadow);
+      return (
+        decoration?.border,
+        decoration?.color,
+        spec.spec.containerEffects?.behindContent?.shadows,
+      );
     },
     expected: (theme) => (
       _hairline(theme.input),
-      const Color(0x00000000),
-      VanillaShadow.xs.shadows,
+      _fieldFill(theme),
+      _effectShadows(VanillaShadow.xs),
     ),
   ),
   _textField(
@@ -821,7 +829,7 @@ final _textFieldTargets = <SpecTarget>[
   ),
 ];
 
-// -- select -----------------------------------------------------------------
+// -- select -------------------------------------------------------------------
 
 SpecTarget _select(
   String property, {
@@ -868,15 +876,20 @@ final _selectTargets = <SpecTarget>[
   ),
   _select(
     'trigger surface',
-    source: 'select.tsx: border-input bg-transparent shadow-xs',
+    source:
+        'select.tsx: border-input bg-transparent dark:bg-input/30 shadow-xs',
     read: (spec) {
       final decoration = flexDecorationOf(spec.spec.trigger.spec.container);
-      return (decoration?.border, decoration?.color, decoration?.boxShadow);
+      return (
+        decoration?.border,
+        decoration?.color,
+        spec.spec.trigger.spec.containerEffects?.behindContent?.shadows,
+      );
     },
     expected: (theme) => (
       _hairline(theme.input),
-      const Color(0x00000000),
-      VanillaShadow.xs.shadows,
+      _fieldFill(theme),
+      _effectShadows(VanillaShadow.xs),
     ),
   ),
   _select(
@@ -944,7 +957,7 @@ final _selectTargets = <SpecTarget>[
   ),
 ];
 
-// -- checkbox ---------------------------------------------------------------
+// -- checkbox -----------------------------------------------------------------
 
 SpecTarget _checkbox(
   String property, {
@@ -982,9 +995,13 @@ final _checkboxTargets = <SpecTarget>[
     source: 'checkbox.tsx: border-input shadow-xs',
     read: (spec) {
       final decoration = decorationOf(spec.spec.container);
-      return (decoration?.border, decoration?.boxShadow);
+      return (
+        decoration?.border,
+        spec.spec.containerEffects?.behindContent?.shadows,
+      );
     },
-    expected: (theme) => (_hairline(theme.input), VanillaShadow.xs.shadows),
+    expected: (theme) =>
+        (_hairline(theme.input), _effectShadows(VanillaShadow.xs)),
   ),
   _checkbox(
     'checked',
@@ -1007,7 +1024,7 @@ final _checkboxTargets = <SpecTarget>[
   ),
 ];
 
-// -- radio ------------------------------------------------------------------
+// -- radio --------------------------------------------------------------------
 
 SpecTarget _radio(
   String property, {
@@ -1035,13 +1052,13 @@ final _radioTargets = <SpecTarget>[
       return (
         spec.spec.container.spec.constraints,
         decoration?.border,
-        decoration?.boxShadow,
+        spec.spec.containerEffects?.behindContent?.shadows,
       );
     },
     expected: (theme) => (
       BoxConstraints.tight(const Size.square(16)),
       _hairline(theme.input),
-      VanillaShadow.xs.shadows,
+      _effectShadows(VanillaShadow.xs),
     ),
   ),
   _radio(
@@ -1064,7 +1081,7 @@ final _radioTargets = <SpecTarget>[
   ),
 ];
 
-// -- switch -----------------------------------------------------------------
+// -- switch -------------------------------------------------------------------
 
 SpecTarget _switch(
   String property, {
@@ -1092,13 +1109,13 @@ final _switchTargets = <SpecTarget>[
       return (
         spec.spec.container.spec.constraints,
         decoration?.border,
-        decoration?.boxShadow,
+        spec.spec.trackEffects?.behindContent?.shadows,
       );
     },
     expected: (_) => (
       BoxConstraints.tight(const Size(32, 18.4)),
       _hairline(const Color(0x00000000)),
-      VanillaShadow.xs.shadows,
+      _effectShadows(VanillaShadow.xs),
     ),
   ),
   _switch(
@@ -1126,7 +1143,7 @@ final _switchTargets = <SpecTarget>[
   ),
 ];
 
-// -- slider -----------------------------------------------------------------
+// -- slider -------------------------------------------------------------------
 
 SpecTarget _slider(
   String property, {
@@ -1290,7 +1307,7 @@ final _tabsTargets = <SpecTarget>[
   ),
 ];
 
-// -- sidebar ----------------------------------------------------------------
+// -- sidebar ------------------------------------------------------------------
 
 SpecTarget _sidebar(
   String property, {
@@ -1722,7 +1739,7 @@ final _surfaceTargets = <SpecTarget>[
   ),
 ];
 
-// -- data and display -----------------------------------------------------------
+// -- data and display ---------------------------------------------------------
 
 final _displayTargets = <SpecTarget>[
   _target<DataTableSpec>(

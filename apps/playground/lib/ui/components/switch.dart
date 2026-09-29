@@ -28,60 +28,78 @@ SwitchStyler playgroundSwitchStyle({
 }) {
   return SwitchStyler()
       .animate(PlaygroundMotion.standard)
-      .size(_trackHeight * _trackRatio, _trackHeight)
-      .padding(.all(_thumbInset))
+      .size(_trackWidth, _trackHeight)
       .borderRadius(.all(_pill))
-      .trackColor(PlaygroundTokens.muted())
-      // Both boxes are outlined, and neither outline is decoration. `muted`
-      // on `background` measures 1.09:1 in the light theme and `background`
-      // on `muted` is the same pair inverted — so with no edge, an off switch
-      // is a pale shape on a pale page holding an invisible thumb. The `on`
-      // track does not need the help (`primary` on `background` is 17.9:1),
-      // but keeping the outline in both states is what stops the control
-      // changing size when it flips.
-      .border(.color(PlaygroundTokens.border()).width(_borderWidth))
+      .trackColor(_offTrack())
+      // A transparent outline, as shadcn's `border-transparent`: it holds the
+      // pixel the focus fragment turns `ring`, so focusing a switch never
+      // changes its size.
+      .border(.color(_noEdge).width(PlaygroundStroke.hairline))
+      // In the effects layer rather than the decoration: the dark off-track
+      // is translucent, and a decoration shadow would show through it.
+      .trackEffects(
+        RemixBoxEffectsMix(behindContent: PlaygroundShadow.xs.effects),
+      )
       .thumb(
         BoxStyler()
-            .size(_thumbSize, _thumbSize)
+            .size(PlaygroundSize.icon, PlaygroundSize.icon)
             .borderRadius(.all(_pill))
-            .color(PlaygroundTokens.background())
-            .border(.color(PlaygroundTokens.border()).width(_borderWidth)),
+            .color(_offThumb()),
       )
-      .onSelected(SwitchStyler().trackColor(PlaygroundTokens.primary()))
+      .onSelected(
+        SwitchStyler()
+            .trackColor(PlaygroundTokens.primary())
+            .thumbColor(_onThumb()),
+      )
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Track width as a multiple of its height.
+/// The track: shadcn's `w-8 h-[1.15rem]`, 32 by 18.4.
 ///
-/// Under 2 the thumb has nowhere to travel and the control stops reading as a
-/// switch; well over 2 it reads as a slider.
-const _trackRatio = 1.8;
+/// The height is shadcn's own, off the four-pixel grid on purpose: it is the
+/// 16px thumb, the 1px outline above and below it, and a fifth of a pixel of
+/// air on each side, so the thumb reads as filling the track. The thumb's
+/// travel is the track's inner width less its own, 14px, which is shadcn's
+/// `translate-x-[calc(100%-2px)]`.
+const _trackWidth = PlaygroundSpace.s8;
+const _trackHeight =
+    PlaygroundSize.icon + 2 * (PlaygroundStroke.hairline + _thumbAir);
 
-/// Gap between the track edge and the thumb, on every side.
-const _thumbInset = 2.0;
+/// See [_trackHeight].
+const _thumbAir = 0.2;
 
-/// A radius large enough to round any track or thumb in this scale.
-const _pill = Radius.circular(999);
+/// A radius large enough to round the track and the thumb.
+const _pill = Radius.circular(PlaygroundSize.pill);
 
-/// Width of the track and thumb outlines.
-const _borderWidth = 1.0;
+/// A color that paints nothing, for the resting outline.
+const _noEdge = Color(0x00000000);
 
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
+/// The off track: `input`, at 80% in the dark theme (`dark:bg-input/80`).
+final _offTrack = playgroundTint(
+  PlaygroundTokens.input,
+  1,
+  dark: _darkOffTrackAlpha,
+);
 
-/// The track's height, matching shadcn's `h-5`.
-///
-/// One size, not a scale. A call site that needs another sets `.size(...)`
-/// through [style].
-const _trackHeight = 20.0;
+/// See [_offTrack].
+const _darkOffTrackAlpha = 0.8;
 
-/// The thumb, sized so it sits flush inside the track.
-///
-/// Derived rather than stated: it is the track height minus the inset on both
-/// sides, so the two cannot drift apart.
-const _thumbSize = _trackHeight - _thumbInset * 2;
+/// The thumb while off: the page color on a light page, and `foreground` on a
+/// dark one, where a page-colored thumb would vanish into the track.
+final _offThumb = playgroundByBrightness(
+  light: PlaygroundTokens.background,
+  dark: PlaygroundTokens.foreground,
+);
+
+/// The thumb while on: the page color on a light page, and
+/// `primaryForeground` on a dark one, the color that reads on the light dark
+/// `primary` track.
+final _onThumb = playgroundByBrightness(
+  light: PlaygroundTokens.background,
+  dark: PlaygroundTokens.primaryForeground,
+);
 
 /// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
 /// the track's own outline turned `ring`.
@@ -100,4 +118,4 @@ SwitchStyler _focusVisibleStyle() => SwitchStyler()
 /// draws a focus ring reads as actionable.
 SwitchStyler _disabledStyle() => SwitchStyler()
     .trackEffects(RemixBoxEffectsMix.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));
