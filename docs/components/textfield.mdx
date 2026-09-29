@@ -327,7 +327,17 @@ Optional. Whether to enable user interface affordances for changing the text sel
 
 #### `selectionControls` → `TextSelectionControls?`
 
-Optional. Optional delegate for building the text selection handles and toolbar.
+Optional. `RemixTextField` and `RemixTextArea` draw visible selection handles on
+touch platforms by default. Pass your own controls to replace those handles.
+The underlying `NakedTextField` is headless and draws no handles unless you
+provide controls. The context menu is configured separately through
+`contextMenuBuilder`; omitting it leaves the menu absent.
+
+Before the text-selection update, `NakedTextField` supplied Material or
+Cupertino handles. It now supplies no visible handles by default, while styled
+Remix fields supply Remix handles. Apps that used the raw field and need the
+previous native appearance should provide `selectionControls`. The absence of
+a default context menu predates this change.
 
 #### `onTap` → `GestureTapCallback?`
 
@@ -379,7 +389,8 @@ Optional. Whether to enable that the IME update personalized data.
 
 #### `contextMenuBuilder` → `EditableTextContextMenuBuilder?`
 
-Optional. A context menu builder for the text field.
+Optional. A context menu builder for the text field. The field does not supply
+a default cut/copy/paste menu; provide a builder if your design needs one.
 
 #### `spellCheckConfiguration` → `SpellCheckConfiguration?`
 
@@ -387,7 +398,60 @@ Optional. Configuration for spell checking.
 
 #### `magnifierConfiguration` → `TextMagnifierConfiguration?`
 
-Optional. Configuration for text magnification.
+Optional. Configuration for text magnification. Android and iOS use the neutral
+`NakedTextMagnifier` lens by default; desktop platforms disable it. Pass a
+custom configuration for a branded or platform-specific lens.
+
+If you use `CupertinoDynamicColor` for a cursor or for ambient cursor and
+selection colors in `DefaultSelectionStyle`, resolve each color with
+`resolveFrom(context)` before passing it to the field or inherited style. This
+preserves dark-mode and high-contrast colors.
+
+To restore Cupertino handles and magnification for one styled field while
+resolving ambient colors for the current context:
+
+```dart
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class NativeSelectionField extends StatelessWidget {
+  const NativeSelectionField({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const cursor = CupertinoDynamicColor.withBrightnessAndContrast(
+      color: Color(0xFF1565C0),
+      darkColor: Color(0xFF90CAF9),
+      highContrastColor: Color(0xFF0D47A1),
+      darkHighContrastColor: Color(0xFFBBDEFB),
+    );
+    const selection = CupertinoDynamicColor.withBrightnessAndContrast(
+      color: Color(0x661565C0),
+      darkColor: Color(0x6690CAF9),
+      highContrastColor: Color(0x660D47A1),
+      darkHighContrastColor: Color(0x66BBDEFB),
+    );
+
+    return Builder(
+      builder: (context) => DefaultSelectionStyle(
+        cursorColor: cursor.resolveFrom(context),
+        selectionColor: selection.resolveFrom(context),
+        child: RemixTextField(
+          selectionControls: cupertinoTextSelectionHandleControls,
+          magnifierConfiguration: TextMagnifierConfiguration(
+            magnifierBuilder: (context, controller, info) =>
+                CupertinoTextMagnifier(
+                  controller: controller,
+                  magnifierInfo: info,
+                ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
 
 #### `canRequestFocus` → `bool`
 

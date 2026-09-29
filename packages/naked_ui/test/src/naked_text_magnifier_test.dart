@@ -75,43 +75,46 @@ void main() {
     }
   });
 
-  testWidgets('NakedTextField shows the lens on a long-press drag on Android', (
-    tester,
-  ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.android;
-    try {
-      final controller = TextEditingController(text: 'hello world hello');
-      addTearDown(controller.dispose);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: NakedTextField(
-                  controller: controller,
-                  builder: (context, state, child) => child,
+  for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+    testWidgets(
+      'NakedTextField shows the lens on a $platform long-press drag',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = platform;
+        try {
+          final controller = TextEditingController(text: 'hello world hello');
+          addTearDown(controller.dispose);
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: Center(
+                  child: SizedBox(
+                    width: 300,
+                    child: NakedTextField(
+                      controller: controller,
+                      builder: (context, state, child) => child,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
+          );
+          await tester.pumpAndSettle();
 
-      final gesture = await tester.startGesture(
-        tester.getCenter(find.byType(EditableText)),
-      );
-      await tester.pump(const Duration(milliseconds: 600));
-      await gesture.moveBy(const Offset(20, 0));
-      await tester.pump();
-      expect(find.byType(RawMagnifier), findsOneWidget);
+          final gesture = await tester.startGesture(
+            tester.getCenter(find.byType(EditableText)),
+          );
+          await tester.pump(const Duration(milliseconds: 600));
+          await gesture.moveBy(const Offset(20, 0));
+          await tester.pump();
+          expect(find.byType(RawMagnifier), findsOneWidget);
 
-      await gesture.up();
-      await tester.pumpAndSettle();
-      expect(find.byType(RawMagnifier), findsNothing);
-    } finally {
-      debugDefaultTargetPlatformOverride = null;
-    }
-  });
+          await gesture.up();
+          await tester.pumpAndSettle();
+          expect(find.byType(RawMagnifier), findsNothing);
+        } finally {
+          debugDefaultTargetPlatformOverride = null;
+        }
+      },
+    );
+  }
 }

@@ -1,5 +1,8 @@
 ## 1.0.0-beta.10
 
+- Styled text fields now draw Remix selection handles on touch platforms; the
+  underlying `NakedTextField` remains headless. Supply `selectionControls` to
+  replace the handles and `contextMenuBuilder` for a cut/copy/paste menu.
 - **BREAKING**: Tabs apply their container styling to custom tab children; use the builder escape hatch for fully custom tab rendering.
 - **BREAKING**: `RemixIconAlignment` is replaced by `RemixPlacement`. `ButtonSpec.iconAlignment` and the button styler's `iconAlignment` take a `RemixPlacement`.
 - **BREAKING**: `RemixDataListItem.alignment` takes a Flutter `CrossAxisAlignment` (default `baseline`); `RemixDataListItemAlignment` is removed.

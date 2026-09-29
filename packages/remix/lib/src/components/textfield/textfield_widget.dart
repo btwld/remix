@@ -170,7 +170,9 @@ class RemixTextField extends StatelessWidget {
   /// Whether to enable user interface affordances for changing the text selection.
   final bool enableInteractiveSelection;
 
-  /// Optional delegate for building the text selection handles and toolbar.
+  /// Replaces Remix's visible text selection handles when provided.
+  /// With the default handles, a context menu is supplied separately through
+  /// [contextMenuBuilder].
   final TextSelectionControls? selectionControls;
 
   /// Called when the text field is tapped.
@@ -278,6 +280,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   // is Mix resolution for chrome outside that subtree, not a second
   // interaction owner.
   late final WidgetStatesController _styleController;
+  _RemixTextSelectionControls? _defaultSelectionControls;
   final _activePressSources = <_RemixTextFieldPressSource>{};
   // Naked owns an internal FocusNode when none is provided, but Remix still
   // needs the same node for chrome tap-to-focus. Sharing one node here is
@@ -355,6 +358,12 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     _styleController.update(.pressed, _activePressSources.isNotEmpty);
   }
 
+  TextSelectionControls _selectionControlsFor(Color color) {
+    final controls = _defaultSelectionControls;
+    if (controls != null && controls.color == color) return controls;
+    return _defaultSelectionControls = _RemixTextSelectionControls(color);
+  }
+
   @override
   void dispose() {
     _styleController.dispose();
@@ -429,7 +438,17 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       scrollPadding: spec.scrollPadding ?? const .all(20.0),
       dragStartBehavior: config.dragStartBehavior,
       enableInteractiveSelection: config.enableInteractiveSelection,
-      selectionControls: config.selectionControls,
+      selectionControls:
+          config.selectionControls ??
+          _selectionControlsFor(
+            spec.cursorColor ??
+                DefaultSelectionStyle.of(context).cursorColor ??
+                switch (defaultTargetPlatform) {
+                  TargetPlatform.iOS ||
+                  TargetPlatform.macOS => const Color(0xFF007AFF),
+                  _ => const Color(0xFF2196F3),
+                },
+          ),
       onTap: config.onTap,
       onTapAlwaysCalled: config.onTapAlwaysCalled,
       onTapOutside: config.onTapOutside,
@@ -632,6 +651,74 @@ String? _joinSemanticText(Iterable<String?> values) {
   }
 
   return pieces.isEmpty ? null : pieces.join('\n');
+}
+
+/// Branded selection handles for the styled field, leaving menu ownership to
+/// [EditableText.contextMenuBuilder]. The raw Naked field stays handle-free.
+class _RemixTextSelectionControls extends TextSelectionControls
+    with TextSelectionHandleControls {
+  _RemixTextSelectionControls(this.color);
+
+  static const Size _handleSize = Size(24, 30);
+
+  final Color color;
+
+  double _anchorX(TextSelectionHandleType type) => switch (type) {
+    TextSelectionHandleType.left => _handleSize.width - 2,
+    TextSelectionHandleType.right => 2,
+    TextSelectionHandleType.collapsed => _handleSize.width / 2,
+  };
+
+  @override
+  Size getHandleSize(double textLineHeight) => _handleSize;
+
+  @override
+  Offset getHandleAnchor(TextSelectionHandleType type, double textLineHeight) =>
+      Offset(_anchorX(type), 0);
+
+  @override
+  Widget buildHandle(
+    BuildContext context,
+    TextSelectionHandleType type,
+    double textLineHeight, [
+    VoidCallback? onTap,
+  ]) {
+    final anchorX = _anchorX(type);
+    final circleLeft = switch (type) {
+      TextSelectionHandleType.left => _handleSize.width - 18,
+      TextSelectionHandleType.right => 2.0,
+      TextSelectionHandleType.collapsed => (_handleSize.width - 16) / 2,
+    };
+
+    return SizedBox.fromSize(
+      key: const ValueKey('remix-text-selection-handle'),
+      size: _handleSize,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: onTap,
+        child: Stack(
+          children: [
+            Positioned(
+              left: anchorX - 1,
+              top: 0,
+              width: 2,
+              height: 14,
+              child: ColoredBox(color: color),
+            ),
+            Positioned(
+              left: circleLeft,
+              top: 12,
+              width: 16,
+              height: 16,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// Baseline style merged beneath the user-supplied style.

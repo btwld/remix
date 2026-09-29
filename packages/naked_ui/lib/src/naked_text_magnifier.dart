@@ -9,6 +9,9 @@ import 'package:flutter/widgets.dart';
 /// along the current line, stays on screen, and animates only when the caret
 /// jumps between lines. Visuals come from [decoration].
 class NakedTextMagnifier extends StatefulWidget {
+  static final TextMagnifierConfiguration _defaultMobileConfiguration =
+      configuration();
+
   /// Creates a magnifier that follows [magnifierInfo].
   const NakedTextMagnifier({
     super.key,
@@ -70,7 +73,7 @@ class NakedTextMagnifier extends StatefulWidget {
       case TargetPlatform.android:
       case TargetPlatform.iOS:
       case TargetPlatform.fuchsia:
-        return configuration();
+        return _defaultMobileConfiguration;
       case TargetPlatform.linux:
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
