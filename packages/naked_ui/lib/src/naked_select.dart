@@ -514,9 +514,13 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
         // still throw "Missing checks for role SemanticsRole.comboBox"
         // (flutter/flutter#172918). The supported trigger contract on this
         // floor is the merged button + expanded + value node.
+        //
+        // Keep this Semantics free of `container: true`. The overlay makes
+        // the nearest semantics node the traversal parent of the menu, and a
+        // container folded into this merge still reaches the platform with
+        // no parent, which the macOS accessibility bridge rejects.
         : MergeSemantics(
             child: Semantics(
-              container: true,
               expanded: _isOpen,
               value: semanticsValue,
               child: selectWidget,
