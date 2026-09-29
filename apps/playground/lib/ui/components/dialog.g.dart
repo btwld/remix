@@ -12,11 +12,11 @@ part of 'dialog.dart';
 /// and barrier dismissal rules, and the dialog accessibility semantics; this
 /// recipe supplies the panel, the two text roles, and the action row.
 ///
-/// It is a popover with a title: the same `background` fill, `border`
-/// hairline, and lift, sized wider and padded more because a dialog holds a
-/// decision rather than a control. The two are deliberately separate files —
-/// they have separate update stories, and sharing a surface helper would make
-/// every change to one a change to the other.
+/// It is shadcn's dialog: the page's `background` fill with a `border`
+/// hairline, `radiusLg` corners, the heaviest shadow in the scale, a 24px
+/// inset, and at most 512px wide. The title is `textLg` semibold and set
+/// tight, the description `textSm` in `mutedForeground` 8px below it, and the
+/// decisions sit at the trailing edge 16px below that.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.

@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'popover.g.dart';
@@ -14,7 +16,7 @@ part 'popover.g.dart';
 ///
 /// A popover sits *over* arbitrary content, so its edge is doing real work:
 /// it is what tells a reader where the panel stops and the page resumes. That
-/// edge is a `border` hairline plus a soft drop shadow. The fill is
+/// edge is a `border` hairline plus shadcn's `shadow-md`. The fill is
 /// `popover`, the surface every floating panel shares: the page color in the
 /// light theme and a step lighter than the page in the dark one.
 ///
@@ -51,25 +53,12 @@ PopoverStyler playgroundPopoverStyle({
   PopoverStyler style = const PopoverStyler.create(),
 }) => PopoverStyler()
     .color(PlaygroundTokens.popover())
-    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
+    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .padding(.all(_padding))
-    .shadow(_shadow)
+    // shadcn's `w-72`: a popover holds a short form or a few lines, and a
+    // fixed width keeps it from resizing as that content changes. A call site
+    // with wider content sets `.width(...)` through [style].
+    .width(PlaygroundSize.popoverWidth)
+    .padding(.all(PlaygroundSpace.s4))
+    .shadows(PlaygroundShadow.md.box)
     .merge(style);
-
-/// Width of the panel outline.
-const _borderWidth = 1.0;
-
-/// Inset between the panel edge and its content.
-const _padding = 16.0;
-
-/// The lift that separates the panel from whatever it covers.
-///
-/// Deliberately soft and untinted. A shadow is nearly invisible on a dark
-/// page, so it is a *second* cue rather than the primary one; the outline
-/// above is what has to carry the boundary in both themes.
-final _shadow = BoxShadowMix(
-  color: const Color(0x1A000000),
-  offset: const Offset(0, 4),
-  blurRadius: 12,
-);

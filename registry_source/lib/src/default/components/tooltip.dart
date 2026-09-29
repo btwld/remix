@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'tooltip.g.dart';
@@ -11,6 +12,10 @@ part 'tooltip.g.dart';
 /// Remix owns the rendering, the overlay, the anchor positioning, and the
 /// hover and focus timing; this recipe supplies the bubble and the three
 /// durations that decide when it appears and how long it stays.
+///
+/// It is shadcn's tooltip: `textXs` on a `foreground` bubble with `radiusMd`
+/// corners, shown the moment the pointer arrives, as shadcn's
+/// `TooltipProvider` (`delayDuration = 0`) shows it.
 ///
 /// It is the one floating surface here that does *not* use `background`. A
 /// tooltip is a transient label, not a panel a reader can act in, and
@@ -25,34 +30,14 @@ TooltipStyler vanillaTooltipStyle({
 }) => TooltipStyler()
     .color(VanillaTokens.foreground())
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
-    .label(.fontSize(_labelSize).color(VanillaTokens.background()))
-    .waitDuration(_waitDuration)
+    .padding(
+      .symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s1_5),
+    )
+    .label(.style(VanillaTokens.textXs.mix()).color(VanillaTokens.background()))
+    .waitDuration(Duration.zero)
     .showDuration(_showDuration)
     .dismissDuration(_dismissDuration)
     .merge(style);
-
-/// Horizontal inset between the bubble edge and its label.
-///
-/// Twelve, matching shadcn's `px-3`. A bubble narrower than that crowds a
-/// short label against its own corner radius.
-const _paddingX = 12.0;
-
-/// Vertical inset between the bubble edge and its label.
-///
-/// Six, matching the vertical inset a menu and select row already use, and
-/// the only value here that had been off the layer's four-pixel grid.
-const _paddingY = 6.0;
-
-/// Label size, one step below body text: a tooltip annotates, it does not
-/// narrate.
-const _labelSize = 12.0;
-
-/// How long the pointer must rest before the tooltip appears.
-///
-/// Long enough that crossing a toolbar does not strobe a row of bubbles.
-/// Remix passes this straight through as Naked UI's `hoverDelay`.
-const _waitDuration = Duration(milliseconds: 500);
 
 /// How long a *touch*-triggered tooltip stays up after the press ends.
 ///

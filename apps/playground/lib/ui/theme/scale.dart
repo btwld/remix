@@ -77,6 +77,15 @@ abstract final class PlaygroundSize {
   /// target: shadcn's `min-w-[8rem]`.
   static const double panelMinWidth = 128;
 
+  /// A popover's width: shadcn's `w-72`.
+  static const double popoverWidth = 288;
+
+  /// A toast's width: sonner's default, which shadcn's `Toaster` keeps.
+  static const double toastWidth = 356;
+
+  /// The widest a dialog gets: shadcn's `sm:max-w-lg`.
+  static const double dialogMaxWidth = 512;
+
   /// A corner radius that rounds any control into a pill or a circle:
   /// shadcn's `rounded-full`.
   static const double pill = 9999;

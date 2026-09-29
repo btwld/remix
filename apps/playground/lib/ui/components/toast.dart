@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
 import 'icon_button.dart';
@@ -66,58 +67,44 @@ ToastStyler playgroundToastStyle({
   ToastStyler style = const ToastStyler.create(),
 }) => _base().merge(_variantStyle(variant)).merge(style);
 
-/// Inset between the toast edge and its content.
-const _padding = 16.0;
-
-/// Gap between the icon, the message, and the controls.
-const _gap = 12.0;
-
-/// Gap between the title and the description.
-const _textGap = 4.0;
-
-/// Widest a toast grows. Narrow screens shrink it further.
-const _maxWidth = 360.0;
-
-const _titleSize = 14.0;
-
-const _descriptionSize = 13.0;
-
-const _iconSize = 16.0;
-
-const _borderWidth = 1.0;
-
-/// A toast floats over content that keeps scrolling beneath it, so it gets
-/// the same lift as a dialog.
+/// The lift sonner gives every toast, which shadcn's `Toaster` keeps:
+/// `0 4px 12px` black at 10%. A toast floats over content that keeps
+/// scrolling beneath it, so it is heavier than a card's.
 final _shadow = BoxShadowMix(
-  color: const Color(0x26000000),
-  offset: const Offset(0, 8),
-  blurRadius: 24,
+  color: const Color(0x1A000000),
+  offset: const Offset(0, 4),
+  blurRadius: 12,
 );
 
-/// Surface, layout, and typography shared by both tones.
+/// Surface, layout, and typography shared by both tones: shadcn's
+/// `Toaster`, which paints sonner's toast on the `popover` surface with the
+/// theme's `radius`.
 ToastStyler _base() => ToastStyler()
-    .color(PlaygroundTokens.background())
-    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .padding(.all(_padding))
-    .maxWidth(_maxWidth)
+    .color(PlaygroundTokens.popover())
+    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .borderRadius(.all(PlaygroundTokens.radiusLg()))
+    .padding(.all(PlaygroundSpace.s4))
+    .maxWidth(PlaygroundSize.toastWidth)
     .shadow(_shadow)
-    .spacing(_gap)
-    .content(FlexBoxStyler().spacing(_textGap))
+    .spacing(PlaygroundSpace.s3)
+    .content(FlexBoxStyler().spacing(PlaygroundSpace.s1))
     .title(
-      .fontSize(
-        _titleSize,
-      ).fontWeight(FontWeight.w600).color(PlaygroundTokens.foreground()),
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).fontWeight(FontWeight.w500).color(PlaygroundTokens.popoverForeground()),
     )
     .description(
-      .fontSize(_descriptionSize).color(PlaygroundTokens.mutedForeground()),
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).color(PlaygroundTokens.mutedForeground()),
     )
-    .icon(.size(_iconSize))
+    .icon(.size(PlaygroundSize.icon))
     .action(playgroundButtonStyle(variant: .outline, size: .small))
     .closeButton(playgroundIconButtonStyle(variant: .ghost, size: .small));
 
 /// The tone shows in the glyph and, for `destructive`, the outline. The
-/// sentence stays in `foreground` for contrast.
+/// sentence stays in `popoverForeground`, the color it is readable in on the
+/// toast's own surface.
 ToastStyler _variantStyle(PlaygroundToastVariant variant) => switch (variant) {
   .neutral => ToastStyler().icon(.color(PlaygroundTokens.mutedForeground())),
   .destructive =>

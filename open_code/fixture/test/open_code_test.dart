@@ -2363,16 +2363,16 @@ void main() {
         final spec = await _resolve(tester, acmeCardStyle(), theme: theme.data);
         final box = spec.spec.container.spec;
 
-        // The page fill on purpose: a card is told apart by its outline, not
-        // by a second surface color. See the recipe's own note.
-        expect(_boxBackground(spec.spec.container), theme.data.background);
+        // The `card` surface: the page color in the light theme and a step
+        // lighter than the page in the dark one.
+        expect(_boxBackground(spec.spec.container), theme.data.card);
         expect(
           _boxBorder(spec.spec.container),
           Border.all(color: theme.data.border, width: 1),
         );
         expect(
           _boxBorderRadius(spec.spec.container),
-          BorderRadius.all(_radiusMd(theme.data)),
+          BorderRadius.all(theme.data.tokens[AcmeTokens.radiusXl]! as Radius),
         );
         expect(box.padding, const EdgeInsets.all(24));
       });
@@ -3062,53 +3062,51 @@ void main() {
 
   group('acmeCalloutStyle', () {
     for (final theme in _themes) {
-      testWidgets('neutral sits on the muted surface in ${theme.name}', (
+      testWidgets('both tones sit on the card surface in ${theme.name}', (
         tester,
       ) async {
-        final spec = await _resolve(
+        for (final variant in AcmeCalloutVariant.values) {
+          final spec = await _resolve(
+            tester,
+            acmeCalloutStyle(variant: variant),
+            theme: theme.data,
+          );
+
+          expect(
+            _flexDecoration(spec.spec.container)?.color,
+            theme.data.card,
+            reason: variant.name,
+          );
+          expect(
+            _flexBorder(spec.spec.container),
+            Border.all(color: theme.data.border, width: 1),
+            reason: variant.name,
+          );
+        }
+      });
+
+      testWidgets('the tone is one content color in ${theme.name}', (
+        tester,
+      ) async {
+        final neutral = await _resolve(
           tester,
           acmeCalloutStyle(),
           theme: theme.data,
         );
-
-        expect(_flexDecoration(spec.spec.container)?.color, theme.data.muted);
-        expect(
-          _flexBorder(spec.spec.container),
-          Border.all(color: theme.data.border, width: 1),
-        );
-        expect(spec.spec.text.spec.style?.color, theme.data.foreground);
-        expect(spec.spec.icon.spec.color, theme.data.mutedForeground);
-      });
-
-      testWidgets('destructive is outline-only in ${theme.name}', (
-        tester,
-      ) async {
-        final spec = await _resolve(
+        final destructive = await _resolve(
           tester,
           acmeCalloutStyle(variant: AcmeCalloutVariant.destructive),
           theme: theme.data,
         );
 
+        expect(neutral.spec.text.spec.style?.color, theme.data.cardForeground);
+        expect(neutral.spec.icon.spec.color, theme.data.cardForeground);
+        expect(destructive.spec.text.spec.style?.color, theme.data.destructive);
+        expect(destructive.spec.icon.spec.color, theme.data.destructive);
+        // The destructive sentence is text, where WCAG asks for 4.5:1.
         expect(
-          _flexDecoration(spec.spec.container)?.color,
-          const Color(0x00000000),
-        );
-        expect(
-          _flexBorder(spec.spec.container),
-          Border.all(color: theme.data.destructive, width: 1),
-        );
-        // The sentence stays in `foreground`: `destructive` is a fill color,
-        // and on the dark page it measures below the 4.5:1 body-text floor.
-        expect(spec.spec.text.spec.style?.color, theme.data.foreground);
-        expect(spec.spec.icon.spec.color, theme.data.destructive);
-        expect(
-          _contrastRatio(theme.data.foreground, theme.data.background),
+          _contrastRatio(theme.data.destructive, theme.data.card),
           greaterThanOrEqualTo(4.5),
-        );
-        // The border and the glyph are non-text, where WCAG asks for 3:1.
-        expect(
-          _contrastRatio(theme.data.destructive, theme.data.background),
-          greaterThanOrEqualTo(3.0),
         );
       });
     }
@@ -3128,7 +3126,7 @@ void main() {
           const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           reason: variant.name,
         );
-        expect(flex?.spacing, 8, reason: variant.name);
+        expect(flex?.spacing, 12, reason: variant.name);
         expect(
           flex?.crossAxisAlignment,
           CrossAxisAlignment.start,
@@ -4221,7 +4219,7 @@ void main() {
 
   group('acmeDataTableStyle', () {
     for (final theme in _themes) {
-      testWidgets('the frame matches the card in ${theme.name}', (
+      testWidgets('the frame is the page inside a hairline in ${theme.name}', (
         tester,
       ) async {
         final table = await _resolve(
@@ -4229,20 +4227,13 @@ void main() {
           acmeDataTableStyle(),
           theme: theme.data,
         );
-        final card = await _resolve(tester, acmeCardStyle(), theme: theme.data);
 
-        expect(
-          _boxBackground(table.spec.container),
-          _boxBackground(card.spec.container),
-        );
+        expect(_boxBackground(table.spec.container), theme.data.background);
         expect(
           _boxBorder(table.spec.container),
-          _boxBorder(card.spec.container),
+          Border.all(color: theme.data.border, width: 1),
         );
         expect(table.spec.container.spec.clipBehavior, Clip.antiAlias);
-        // The header sits on `muted` so column names stay legible while the
-        // body scrolls under them.
-        expect(_boxBackground(table.spec.headerRow), theme.data.muted);
       });
 
       testWidgets('the three text roles take their tokens in ${theme.name}', (
@@ -4465,17 +4456,13 @@ void main() {
           _boxBorder(spec.spec.container),
           Border.all(color: theme.data.border, width: 1),
         );
-        expect(spec.spec.container.spec.constraints?.maxWidth, 420);
-        expect(spec.spec.container.spec.padding, const EdgeInsets.all(24));
-        expect(spec.spec.title.spec.style?.fontSize, 18);
-        expect(spec.spec.title.spec.style?.fontWeight, FontWeight.w600);
         expect(spec.spec.title.spec.style?.color, theme.data.foreground);
         expect(
           spec.spec.title.widgetModifiers!
               .whereType<PaddingModifier>()
               .single
               .padding,
-          const EdgeInsets.only(bottom: 6),
+          const EdgeInsets.only(bottom: 8),
         );
         expect(
           spec.spec.description.spec.style?.color,
@@ -4500,11 +4487,11 @@ void main() {
           theme: theme.data,
         );
 
-        // The one floating surface that is not `background`: a tooltip is a
-        // transient label, not a panel a reader can act in.
+        // The one inverted floating surface: a tooltip is a transient label,
+        // not a panel a reader can act in. It shows as the pointer arrives.
         expect(_boxBackground(spec.spec.container), theme.data.foreground);
         expect(spec.spec.label.spec.style?.color, theme.data.background);
-        expect(spec.spec.waitDuration, const Duration(milliseconds: 500));
+        expect(spec.spec.waitDuration, Duration.zero);
         expect(spec.spec.showDuration, const Duration(milliseconds: 1500));
         expect(spec.spec.dismissDuration, const Duration(milliseconds: 100));
         _expectReadable(
@@ -4524,12 +4511,13 @@ void main() {
 
       final popoverShadow = _boxDecoration(
         popover.spec.container,
-      )!.boxShadow!.single;
+      )!.boxShadow!.first;
       final dialogShadow = _boxDecoration(
         dialog.spec.container,
-      )!.boxShadow!.single;
+      )!.boxShadow!.first;
 
-      // A dialog is meant to stop the reader, so its lift is the heavier one.
+      // A dialog is meant to stop the reader, so its lift is the heavier one:
+      // shadcn's `shadow-lg` against the popover's `shadow-md`.
       expect(dialogShadow.blurRadius, greaterThan(popoverShadow.blurRadius));
       expect(dialogShadow.offset.dy, greaterThan(popoverShadow.offset.dy));
     });

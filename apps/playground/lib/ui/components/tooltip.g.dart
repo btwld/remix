@@ -12,6 +12,10 @@ part of 'tooltip.dart';
 /// hover and focus timing; this recipe supplies the bubble and the three
 /// durations that decide when it appears and how long it stays.
 ///
+/// It is shadcn's tooltip: `textXs` on a `foreground` bubble with `radiusMd`
+/// corners, shown the moment the pointer arrives, as shadcn's
+/// `TooltipProvider` (`delayDuration = 0`) shows it.
+///
 /// It is the one floating surface here that does *not* use `background`. A
 /// tooltip is a transient label, not a panel a reader can act in, and
 /// inverting it — `foreground` fill, `background` text — is what makes that
