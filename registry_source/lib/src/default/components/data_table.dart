@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
 import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'checkbox.dart';
@@ -32,10 +33,12 @@ part 'data_table.g.dart';
 /// recipes that drift, or a table whose controls do not match the rest of the
 /// application.
 ///
-/// The frame is the card's: `background` fill, `border` hairline, the theme
-/// radius. Header and body rows are separated by the same hairline, and the
-/// last body row drops it so the table does not draw a second line on top of
-/// its own bottom edge.
+/// It is shadcn's table inside a frame: the page's `background` fill, a
+/// `border` hairline, and `radiusMd` corners around a header with no surface
+/// of its own. Header and body rows are separated by the same hairline, and
+/// the last body row drops it so the table does not draw a second line on top
+/// of its own bottom edge. A row under the pointer sits on `muted` at half
+/// strength and a selected row on `muted`, as shadcn's `TableRow` does.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
@@ -44,43 +47,51 @@ DataTableStyler vanillaDataTableStyle({
   DataTableStyler style = const DataTableStyler.create(),
 }) => DataTableStyler()
     .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(_borderWidth))
+    .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
     .borderRadius(.all(_frameRadius()))
     .clipBehavior(Clip.antiAlias)
-    // The header sits on `muted` so a long table keeps its column names
-    // legible while the body scrolls under them.
-    .headerRow(.color(VanillaTokens.muted()).border(_rowRule()))
-    .bodyRow(BoxStyler().animate(VanillaMotion.standard).border(_rowRule()))
+    .headerRow(.border(_rowRule()))
+    .bodyRow(
+      BoxStyler()
+          .animate(VanillaMotion.standard)
+          .border(_rowRule())
+          .onHovered(.color(_hoveredRow()))
+          .onSelected(.color(VanillaTokens.muted())),
+    )
     // Without this the bottom row's rule would double up with the frame's own
     // edge, which reads as a two-pixel border on one side only.
     .lastBodyRow(.border(.bottom(.style(.none))))
-    .headerCell(_cell())
+    // shadcn's `TableHead` insets its label from the sides only and takes its
+    // height from the row; `TableCell` insets on every side.
+    .headerCell(.padding(.horizontal(VanillaSpace.s2)))
     .bodyCell(_cell())
     .selectionCell(_cell())
-    .headerMinHeight(_headerHeight)
-    .rowMinHeight(_rowHeight)
-    .selectionColumnWidth(_selectionColumnWidth)
-    // `foreground`, not `mutedForeground`: the header already sits on its own
-    // surface, and `mutedForeground` on `muted` measures 4.35:1 — under the
-    // floor for text this size. The weight is what makes a column name read
-    // as a label rather than as data.
+    .headerMinHeight(VanillaSize.controlLg)
+    .rowMinHeight(VanillaSize.controlMd)
+    .selectionColumnWidth(VanillaSize.controlLg)
+    // `foreground` at medium weight: the weight is what makes a column name
+    // read as a label rather than as data.
     .headerLabel(
-      .fontSize(
-        _labelSize,
+      .style(
+        VanillaTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
     )
-    .cellText(.fontSize(_textSize).color(VanillaTokens.foreground()))
-    .footerLabel(.fontSize(_labelSize).color(VanillaTokens.mutedForeground()))
-    .sortIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
-    .sortIconSpacing(_sortIconSpacing)
+    .cellText(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()),
+    )
+    .footerLabel(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
+    )
+    .sortIcon(.size(VanillaSize.iconSm).color(VanillaTokens.mutedForeground()))
+    .sortIconSpacing(VanillaSpace.s1)
     .footer(
       FlexBoxStyler()
           .direction(.horizontal)
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
-          .minHeight(_headerHeight)
-          .padding(.horizontal(_cellPaddingX))
-          .spacing(_footerGap)
+          .minHeight(VanillaSize.controlLg)
+          .padding(.horizontal(VanillaSpace.s2))
+          .spacing(VanillaSpace.s3)
           .border(.top(_rule())),
     )
     // The application's own controls, not restatements of them.
@@ -89,59 +100,32 @@ DataTableStyler vanillaDataTableStyle({
     .pageSizeSelect(vanillaSelectStyle())
     .merge(style);
 
-/// Width of the frame, the row rules, and the footer rule.
-const _borderWidth = 1.0;
+/// A row under the pointer: `muted` at half strength, shadcn's
+/// `hover:bg-muted/50`.
+final _hoveredRow = vanillaTint(VanillaTokens.muted, _hoveredRowAlpha);
 
-/// Horizontal inset inside every cell.
-const _cellPaddingX = 12.0;
-
-/// Vertical inset inside every cell.
-const _cellPaddingY = 8.0;
-
-/// Minimum height of the header row and the footer.
-const _headerHeight = 40.0;
-
-/// Minimum height of a body row.
-const _rowHeight = 44.0;
-
-/// Width of the column holding the selection checkboxes.
-const _selectionColumnWidth = 44.0;
-
-/// Column-name size, one step below the data it names.
-const _labelSize = 13.0;
-
-/// Cell text size, matching body copy.
-const _textSize = 14.0;
-
-/// Size of the sort indicator.
-const _iconSize = 14.0;
-
-/// Gap between a column name and its sort indicator.
-const _sortIconSpacing = 4.0;
-
-/// Gap between the footer's controls.
-const _footerGap = 12.0;
+/// See [_hoveredRow].
+const _hoveredRowAlpha = 0.5;
 
 /// The frame's corner radius, bounded so the clip cannot eat a corner cell.
 ///
 /// This is the one recipe here that both rounds its frame and clips to it.
-/// The clip is not optional: the header sits on `muted` and would otherwise
-/// square off the top two corners inside the rounded border. But the corner
+/// The clip is not optional: a hovered or selected first or last row would
+/// otherwise square off two corners inside the rounded border. But the corner
 /// arc is carved out of the first and last rows, and the leading cell of both
 /// is the selection column — so past a certain radius the clip stops trimming
 /// a fill and starts removing a checkbox.
 ///
 /// The bound is the geometry, not a taste: an arc of radius r has finished
 /// turning r from the corner, so a radius no larger than half the header's
-/// height is fully out of the way by the row's own content line. Rows are
-/// taller than the header, so the header is what binds.
+/// height is fully out of the way by the row's own content line.
 ///
 /// Clamping rather than hardcoding leaves the theme in charge in the other
 /// direction: `radius: Radius.zero` still gives a square table. The checkbox
 /// recipe clamps for the same class of reason at a different scale.
-const _maxFrameRadius = _headerHeight / 2;
+const _maxFrameRadius = VanillaSize.controlLg / 2;
 
-/// The theme's corner radius, clamped to [_maxFrameRadius].
+/// The theme's control radius, clamped to [_maxFrameRadius].
 ///
 /// A top-level final rather than a per-call closure because `ContextToken`
 /// equality is resolver identity: rebuilding one per call would make two
@@ -157,13 +141,11 @@ final _frameRadius = ContextToken<Radius>((context) {
 
 /// One hairline in the `border` token, shared by every rule the table draws.
 BorderSideMix _rule() =>
-    BorderSideMix(color: VanillaTokens.border(), width: _borderWidth);
+    BorderSideMix(color: VanillaTokens.border(), width: VanillaStroke.hairline);
 
 /// The rule under a row.
 BoxBorderMix _rowRule() => .bottom(_rule());
 
-/// One cell's padding, shared by the header, the body, and the selection
-/// column so the columns line up regardless of what is in them.
-BoxStyler _cell() => BoxStyler().padding(
-  .symmetric(horizontal: _cellPaddingX, vertical: _cellPaddingY),
-);
+/// One body cell's inset, shadcn's `p-2`, shared by the selection column so
+/// the columns line up regardless of what is in them.
+BoxStyler _cell() => BoxStyler().padding(.all(VanillaSpace.s2));

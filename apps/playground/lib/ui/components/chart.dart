@@ -5,6 +5,8 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'chart.g.dart';
@@ -160,7 +162,7 @@ PieChartStyler playgroundPieChartStyle({
           .cornerRadius(_sliceRadius)
           .label(
             TextStyler()
-                .fontSize(_labelSize)
+                .style(PlaygroundTokens.textXs.mix())
                 .fontWeight(FontWeight.w600)
                 .color(PlaygroundTokens.background()),
           ),
@@ -196,9 +198,6 @@ const _selectedSliceOffset = 4.0;
 /// Corner radius applied to each pie slice.
 const _sliceRadius = 2.0;
 
-/// Axis, tooltip, and optional pie-label text size.
-const _labelSize = 12.0;
-
 /// Maximum corner radius for bars.
 const _maxBarRadius = 4.0;
 
@@ -218,7 +217,7 @@ ChartAxisStyler _chartAxisStyle() => ChartAxisStyler()
     .showLabels(true)
     .label(
       TextStyler()
-          .fontSize(_labelSize)
+          .style(PlaygroundTokens.textXs.mix())
           .color(PlaygroundTokens.mutedForeground()),
     )
     .labelSpace(8)
@@ -247,25 +246,41 @@ ChartTooltipStyler _chartTooltipStyle() =>
         .fitVertically(true)
         .text(
           TextStyler()
-              .fontSize(_labelSize)
+              .style(PlaygroundTokens.textXs.mix())
               .fontWeight(FontWeight.w500)
               .color(PlaygroundTokens.foreground()),
         );
 
-BorderSide _resolveTooltipBorder(BuildContext context) =>
-    BorderSide(color: PlaygroundTokens.border.resolve(context), width: 1);
+/// shadcn's `ChartTooltipContent`: `border-border/50`.
+BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
+  color: _tooltipBorderColor.resolve(context),
+  width: PlaygroundStroke.hairline,
+);
 
-BorderRadius _resolveTooltipRadius(BuildContext context) =>
-    BorderRadius.all(_clampedThemeRadius(context, _maxTooltipRadius));
+final _tooltipBorderColor = playgroundTint(PlaygroundTokens.border, 0.5);
 
+/// shadcn's `ChartTooltipContent`: `rounded-lg`.
+BorderRadius _resolveTooltipRadius(BuildContext context) => BorderRadius.all(
+  _clampedThemeRadius(context, PlaygroundTokens.radiusLg, _maxTooltipRadius),
+);
+
+/// shadcn's `ChartTooltipContent`: `px-2.5 py-1.5`.
 EdgeInsets _resolveTooltipPadding(BuildContext context) =>
-    const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+    const EdgeInsets.symmetric(
+      horizontal: PlaygroundSpace.s2_5,
+      vertical: PlaygroundSpace.s1_5,
+    );
 
-BorderRadius _resolveBarRadius(BuildContext context) =>
-    BorderRadius.all(_clampedThemeRadius(context, _maxBarRadius));
+BorderRadius _resolveBarRadius(BuildContext context) => BorderRadius.all(
+  _clampedThemeRadius(context, PlaygroundTokens.radiusMd, _maxBarRadius),
+);
 
-Radius _clampedThemeRadius(BuildContext context, double maximum) {
-  final radius = PlaygroundTokens.radiusMd.resolve(context);
+Radius _clampedThemeRadius(
+  BuildContext context,
+  RadiusToken step,
+  double maximum,
+) {
+  final radius = step.resolve(context);
 
   return Radius.elliptical(
     math.min(radius.x, maximum),

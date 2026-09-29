@@ -5,11 +5,8 @@
 # This list only shrinks. Moving a recipe onto VanillaSpace, VanillaSize,
 # VanillaStroke, or a text token removes its lines here; a new off-scale
 # literal is a finding, not a new line.
-avatar.dart 999 1
 chart.dart 280 1
 data_list.dart 96 1
-data_table.dart 13 1
-data_table.dart 44 2
 select.dart 320 1
 sidebar_layout.dart 56 1
 sidebar_layout.dart 256 1

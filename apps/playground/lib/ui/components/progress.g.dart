@@ -18,9 +18,9 @@ part of 'progress.dart';
 /// is that bar. A call site that wants a different weight sets `.height(...)`
 /// through [style], which is one line and says what it means.
 ///
-/// The track is `muted` and the indicator is `primary`: the same pairing the
-/// checked checkbox uses, so "how far along" reads in the accent the rest of
-/// the application already uses for state.
+/// The indicator is `primary` on a track of `primary` at 20%, as shadcn's
+/// `bg-primary/20` paints it: the track reads as the same bar, not yet
+/// filled, rather than as a separate surface.
 ///
 /// Both are fully rounded rather than sharing the theme's control radius. The
 /// theme radius is authored for 32-40px controls; on an 8px bar anything

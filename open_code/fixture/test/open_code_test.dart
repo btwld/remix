@@ -2558,7 +2558,7 @@ void main() {
   });
 
   group('acmeSpinnerStyle', () {
-    const diameters = <String, double>{'default': 20};
+    const diameters = <String, double>{'default': 16};
 
     for (final theme in _themes) {
       testWidgets('takes the foreground color in ${theme.name}', (
@@ -2601,7 +2601,7 @@ void main() {
 
   group('acmeSkeletonStyle', () {
     for (final theme in _themes) {
-      testWidgets('pulses between the two neutral surfaces in ${theme.name}', (
+      testWidgets('pulses accent to half strength in ${theme.name}', (
         tester,
       ) async {
         final spec = await _resolve(
@@ -2610,8 +2610,13 @@ void main() {
           theme: theme.data,
         );
 
-        expect(_boxBackground(spec.spec.container), theme.data.muted);
-        expect(spec.spec.pulseColor, theme.data.accent);
+        // shadcn's `animate-pulse bg-accent`: the block fades to half
+        // strength and back.
+        expect(_boxBackground(spec.spec.container), theme.data.accent);
+        expect(
+          spec.spec.pulseColor,
+          theme.data.accent.withValues(alpha: theme.data.accent.a * 0.5),
+        );
         expect(
           _boxBorderRadius(spec.spec.container),
           BorderRadius.all(_radiusMd(theme.data)),
@@ -2651,7 +2656,12 @@ void main() {
           theme: theme.data,
         );
 
-        expect(_boxBackground(spec.spec.track), theme.data.muted);
+        // shadcn's `bg-primary/20`: the track is the same bar, not yet
+        // filled.
+        expect(
+          _boxBackground(spec.spec.track),
+          theme.data.primary.withValues(alpha: theme.data.primary.a * 0.2),
+        );
         expect(_boxBackground(spec.spec.indicator), theme.data.primary);
       });
     }
@@ -2813,10 +2823,18 @@ void main() {
         expect(series.marker!.spec.show, isTrue);
         expect(series.marker!.spec.borderColor, theme.data.background);
         expect(tooltip.backgroundColor, theme.data.background);
-        expect(tooltip.border, BorderSide(color: theme.data.border));
+        // shadcn's `ChartTooltipContent`: `border-border/50 px-2.5 py-1.5`.
+        expect(
+          tooltip.border,
+          BorderSide(
+            color: theme.data.border.withValues(
+              alpha: theme.data.border.a * 0.5,
+            ),
+          ),
+        );
         expect(
           tooltip.padding,
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         );
         expect(tooltip.text!.spec.style!.color, theme.data.foreground);
       });
@@ -2955,7 +2973,7 @@ void main() {
 
   group('acmeAvatarStyle', () {
     const expected = <String, ({double diameter, double labelSize})>{
-      'default': (diameter: 40, labelSize: 14),
+      'default': (diameter: 32, labelSize: 14),
     };
 
     for (final entry in expected.entries) {
@@ -2971,13 +2989,17 @@ void main() {
         );
         expect(
           _boxBorderRadius(spec.spec.container),
-          const BorderRadius.all(Radius.circular(999)),
+          const BorderRadius.all(Radius.circular(9999)),
         );
         expect(spec.spec.label.spec.style?.fontSize, entry.value.labelSize);
-        // `foreground`, not `mutedForeground`: initials are content, and
-        // `mutedForeground` on `muted` is 4.35:1 in the light theme.
-        expect(spec.spec.label.spec.style?.color, theme.foreground);
-        expect(spec.spec.icon.spec.color, theme.foreground);
+        // shadcn's `text-muted-foreground`, which the shipped light theme
+        // darkens one step so that initials on `muted` clear 4.5:1.
+        expect(spec.spec.label.spec.style?.color, theme.mutedForeground);
+        expect(spec.spec.icon.spec.color, theme.mutedForeground);
+        expect(
+          _contrastRatio(theme.mutedForeground, theme.muted),
+          greaterThanOrEqualTo(4.5),
+        );
         expect(_boxBackground(spec.spec.container), theme.muted);
         expect(spec.spec.container.spec.clipBehavior, Clip.antiAlias);
       });
@@ -4245,9 +4267,8 @@ void main() {
           theme: theme.data,
         );
 
-        // `foreground`, not `mutedForeground`: the header sits on `muted`, and
-        // that pairing measures 4.35:1. The weight is what makes a column name
-        // read as a label rather than as data.
+        // The weight is what makes a column name read as a label rather than
+        // as data.
         expect(spec.spec.headerLabel.spec.style?.color, theme.data.foreground);
         expect(spec.spec.headerLabel.spec.style?.fontWeight, FontWeight.w500);
         expect(spec.spec.cellText.spec.style?.color, theme.data.foreground);
@@ -4255,20 +4276,14 @@ void main() {
           spec.spec.footerLabel.spec.style?.color,
           theme.data.mutedForeground,
         );
-        // A column name sits on `muted`, not on the page.
+        // A selected row sits on `muted`, the darkest surface a cell's text
+        // meets, so that is where it has to stay readable.
         _expectReadable(
-          spec.spec.headerLabel.spec.style!.color!,
+          spec.spec.cellText.spec.style!.color!,
           theme.data.muted,
           page: theme.data.background,
           floor: 4.5,
-          reason: 'header label',
-        );
-        _expectReadable(
-          spec.spec.cellText.spec.style!.color!,
-          const Color(0x00000000),
-          page: theme.data.background,
-          floor: 4.5,
-          reason: 'cell text',
+          reason: 'cell text on a selected row',
         );
       });
     }
@@ -4279,8 +4294,8 @@ void main() {
       // The table is the one recipe here that both rounds its frame and clips
       // to it, so a theme radius larger than the rows can absorb stops
       // trimming the header fill and starts removing the select-all checkbox.
-      // A single radius token has to serve pill buttons too, so the recipe
-      // bounds its own frame rather than asking the theme not to.
+      // One radius value has to serve pill buttons too, so the recipe bounds
+      // its own frame rather than asking the theme not to.
       final pill = await _resolve(
         tester,
         acmeDataTableStyle(),
@@ -4327,26 +4342,24 @@ void main() {
       );
     });
 
-    testWidgets('every cell shares one padding so the columns line up', (
-      tester,
-    ) async {
+    testWidgets('the cells inset as shadcn\'s do', (tester) async {
       final spec = await _resolve(
         tester,
         acmeDataTableStyle(),
         theme: const AcmeThemeData.light(),
       );
-      const padding = EdgeInsets.symmetric(horizontal: 12, vertical: 8);
-
-      for (final cell in [
-        spec.spec.headerCell,
-        spec.spec.bodyCell,
-        spec.spec.selectionCell,
-      ]) {
-        expect(cell.spec.padding, padding);
+      // shadcn's `TableHead` insets from the sides only; `TableCell` and the
+      // selection column inset on every side, so their columns line up.
+      expect(
+        spec.spec.headerCell.spec.padding,
+        const EdgeInsets.symmetric(horizontal: 8),
+      );
+      for (final cell in [spec.spec.bodyCell, spec.spec.selectionCell]) {
+        expect(cell.spec.padding, const EdgeInsets.all(8));
       }
       expect(spec.spec.headerMinHeight, 40);
-      expect(spec.spec.rowMinHeight, 44);
-      expect(spec.spec.selectionColumnWidth, 44);
+      expect(spec.spec.rowMinHeight, 36);
+      expect(spec.spec.selectionColumnWidth, 40);
     });
 
     testWidgets('its controls are the recipes the application already owns', (

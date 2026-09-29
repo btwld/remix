@@ -17,11 +17,12 @@ part of 'avatar.dart';
 /// the fill only ever shows in the fallback case. The recipe sets no
 /// alignment: Remix already centers whichever fallback it renders.
 ///
-/// The fallback takes `foreground`, not `mutedForeground`. Initials are the
-/// content — they name a person — and `mutedForeground` on `muted` measures
-/// 4.35:1 in the shipped light theme, under the 4.5:1 WCAG floor for text
-/// this size. `mutedForeground` remains correct for the markers that pair
-/// with it elsewhere; it is not a color to set names in.
+/// The fallback is shadcn's: `textSm` in `mutedForeground`, a 16px icon.
+/// The shipped light theme darkens `mutedForeground` one step from shadcn's
+/// so that initials on the `muted` circle clear the 4.5:1 text floor.
+///
+/// It is 32px across, shadcn's `size-8`; a call site that wants a profile
+/// header sets `.size(...)` through [style].
 ///
 /// The shape is a full circle rather than the theme's control radius. An
 /// avatar stands for a person or an organisation, and that is a circle in

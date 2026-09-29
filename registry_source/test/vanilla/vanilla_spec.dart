@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
 import 'support.dart';
@@ -16,7 +17,7 @@ import 'support.dart';
 /// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
 /// checked once that phase is listed in [enforcedPhases]; until then it is
 /// reported as skipped, so the distance to the spec stays visible.
-const enforcedPhases = <String>{'E', 'F1', 'F2', 'F3', 'F4'};
+const enforcedPhases = <String>{'E', 'F1', 'F2', 'F3', 'F4', 'F5'};
 
 /// One measured property of one resolved recipe.
 final class SpecTarget {
@@ -1870,6 +1871,39 @@ final _displayTargets = <SpecTarget>[
     style: vanillaProgressStyle,
     read: (spec) => decorationOf(spec.spec.track)?.color,
     expected: (theme) => tint(theme.primary, 0.2),
+  ),
+  _target<LineChartSpec>(
+    'chart',
+    'tooltip',
+    source:
+        'chart.tsx: ChartTooltipContent rounded-lg border-border/50 '
+        'px-2.5 py-1.5 text-xs',
+    phase: 'F5',
+    style: vanillaLineChartStyle,
+    read: (spec) {
+      final tooltip = spec.spec.tooltip!.spec;
+      return (
+        tooltip.padding,
+        tooltip.borderRadius,
+        tooltip.border,
+        tooltip.text?.spec.style?.fontSize,
+      );
+    },
+    expected: (theme) => (
+      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      _rounded(theme, VanillaTokens.radiusLg),
+      BorderSide(color: tint(theme.border, 0.5)),
+      12.0,
+    ),
+  ),
+  _target<LineChartSpec>(
+    'chart',
+    'axis labels',
+    source: 'chart.tsx: text-xs',
+    phase: 'F5',
+    style: vanillaLineChartStyle,
+    read: (spec) => spec.spec.axis!.spec.label!.spec.style?.fontSize,
+    expected: (_) => 12.0,
   ),
   _target<SpinnerSpec>(
     'spinner',
