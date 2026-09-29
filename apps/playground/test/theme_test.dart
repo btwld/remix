@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playground/ui/ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 /// Covers the application-owned theme this app installs from the default
 /// registry preset.
@@ -44,6 +45,8 @@ void main() {
     expect(light.primaryForeground, const Color(0xFFFAFAFA));
     expect(light.ring, const Color(0xFFA1A1A1));
     expect(light.radius, const Radius.circular(10));
+    expect(light.fontFamily, RemixFonts.geist);
+    expect(light.monoFontFamily, RemixFonts.geistMono);
   });
 
   testWidgets('the scope resolves tokens for stylers below it', (tester) async {

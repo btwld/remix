@@ -361,6 +361,32 @@ dependency_overrides:
       );
     });
 
+    test('permits Vanilla to import its own fonts package', () {
+      final app = Directory('${sandbox.path}/app');
+      _writeInstalledUi(app);
+      File('${app.path}/lib/ui/theme/theme_data.dart').writeAsStringSync('''
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
+''');
+
+      expect(checker.installedUiProblem(app), isNull);
+    });
+
+    test('does not let Fortal import the fonts package', () {
+      final app = Directory('${sandbox.path}/app');
+      _writeInstalledUi(app);
+      File('${app.path}/lib/ui/theme/theme_data.dart').writeAsStringSync('''
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
+''');
+
+      expect(
+        checker.installedUiProblem(app, preset: 'fortal'),
+        contains(
+          'theme/theme_data.dart: imports package:remix_ui_fonts, which is '
+          'outside the registry contract',
+        ),
+      );
+    });
+
     test('checks every URI in conditional directives', () {
       final app = Directory('${sandbox.path}/app');
       _writeInstalledUi(app);
@@ -375,6 +401,17 @@ import 'package:flutter/widgets.dart'
       expect(problem, contains('imports package:unexpected_package'));
       expect(problem, contains('`../../outside.dart` escapes lib/ui'));
     });
+  });
+
+  test('only Vanilla requires the fonts package in an installed app', () {
+    expect(
+      checker.requiredRuntimeDependenciesForTest('vanilla'),
+      contains('remix_ui_fonts'),
+    );
+    expect(
+      checker.requiredRuntimeDependenciesForTest('fortal'),
+      isNot(contains('remix_ui_fonts')),
+    );
   });
 
   test('retained failure reporting includes the temporary directory', () {

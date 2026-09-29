@@ -165,7 +165,7 @@ remix add button --dry-run
 
 ```
 Items: theme -> button
-Dependencies: remix@^1.0.0-beta.10, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.10, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/scale.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/scale.dart, theme/effects.dart, components/button.dart
@@ -597,6 +597,10 @@ Then adjust any code of your own that read the old names:
 - There is no pressed step: a press lands on the hover fill.
 - `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is a
   recessed pill list; pass `variant: .line` to both for the underline strip.
+- The shipped themes set `fontFamily` and `monoFontFamily` to Geist and Geist
+  Mono from `remix_ui_fonts`, which `remix add theme` adds to your
+  `dependencies`. To keep another family, change those two fields in
+  `theme_data.dart` or pass them to `copyWith`.
 - The root `UiThemeScope` now paints the page background and gives bare `Text`
   the theme's body run and bare `Icon`s its `foreground`, so remove any
   `ColoredBox` or `DefaultTextStyle` you added around the scope for that. A
@@ -666,6 +670,7 @@ Section placement is enforced, because the installed source lives under your
 | `remix`, `mix_annotations` | `dependencies` |
 | `mix_chart` | `dependencies` when `chart` is installed |
 | `remix_ui_icons` | `dependencies` when `icons` is installed |
+| `remix_ui_fonts` | `dependencies` with the Vanilla preset's `theme` |
 | `build_runner`, `mix_generator` | either (build-time only) |
 
 A runtime package declared only under `dev_dependencies` fails **before** any
@@ -689,7 +694,9 @@ depends on it:
 `theme` installs `tokens.dart`, `theme_data.dart`, `theme_scope.dart`,
 `scale.dart`, and `effects.dart`, giving you `UiTokens`, `UiThemeData`,
 `UiThemeScope`, the fixed spacing and size scales, and the shared tint, shadow,
-and focus-ring helpers the recipes draw on. Every component item
+and focus-ring helpers the recipes draw on. It also adds `remix_ui_fonts`, the
+package that bundles Geist and Geist Mono, which the shipped themes set the
+text steps in. Every component item
 installs one authored file plus its generated adapter under
 `components/<item>.dart`. Five items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over

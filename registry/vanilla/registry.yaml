@@ -4,6 +4,7 @@ items:
   theme:
     dependencies:
       remix: ^1.0.0-beta.10
+      remix_ui_fonts: ^0.1.0
     files:
       - source: templates/theme/effects.dart.tmpl
         target: "@ui/theme/effects.dart"

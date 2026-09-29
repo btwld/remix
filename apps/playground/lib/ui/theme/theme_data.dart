@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import 'tokens.dart';
 
@@ -15,16 +16,17 @@ enum PlaygroundThemeMode { system, light, dark }
 /// one, and only this layer moves. `PlaygroundThemeScope` turns an instance into the
 /// `MixScope` token map that every recipe resolves against.
 ///
-/// The shipped values are a neutral grayscale theme. Two kinds of token are
-/// derived rather than stored: the four radius steps come from [radius], and
-/// the text steps from [fontFamily] and [monoFontFamily], so one edit here
-/// moves a whole scale.
+/// The shipped values are a neutral grayscale theme set in Geist and Geist
+/// Mono from `remix_ui_fonts`. Two kinds of token are derived rather than
+/// stored: the four radius steps come from [radius], and the text steps from
+/// [fontFamily] and [monoFontFamily], so one edit here moves a whole scale.
 @immutable
 class PlaygroundThemeData {
   /// Creates a theme with an explicit value for every color and the radius.
   ///
   /// [fontFamily] and [monoFontFamily] may be null, which leaves the family to
-  /// whatever the platform text stack picks.
+  /// whatever the platform text stack picks. [PlaygroundThemeData.light] and
+  /// [PlaygroundThemeData.dark] set them to Geist and Geist Mono.
   const PlaygroundThemeData({
     this.brightness = Brightness.light,
     required this.background,
@@ -100,8 +102,8 @@ class PlaygroundThemeData {
       sidebarBorder = const Color(0xFFE5E5E5),
       sidebarRing = const Color(0xFFA1A1A1),
       radius = const Radius.circular(10),
-      fontFamily = null,
-      monoFontFamily = null;
+      fontFamily = RemixFonts.geist,
+      monoFontFamily = RemixFonts.geistMono;
 
   /// The neutral dark theme.
   const PlaygroundThemeData.dark()
@@ -139,8 +141,8 @@ class PlaygroundThemeData {
       sidebarBorder = const Color(0x1AFFFFFF),
       sidebarRing = const Color(0xFF737373),
       radius = const Radius.circular(10),
-      fontFamily = null,
-      monoFontFamily = null;
+      fontFamily = RemixFonts.geist,
+      monoFontFamily = RemixFonts.geistMono;
 
   /// Brightness of these concrete values, independent of the selection mode.
   final Brightness brightness;
@@ -249,9 +251,15 @@ class PlaygroundThemeData {
   final Radius radius;
 
   /// Family for every text step except [PlaygroundTokens.textMono].
+  ///
+  /// The shipped themes use [RemixFonts.geist]. Null leaves the family to the
+  /// platform text stack.
   final String? fontFamily;
 
   /// Family for [PlaygroundTokens.textMono].
+  ///
+  /// The shipped themes use [RemixFonts.geistMono]. Null leaves the family to
+  /// the platform text stack.
   final String? monoFontFamily;
 
   /// This theme's values keyed by the token that resolves them.

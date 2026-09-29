@@ -6,6 +6,7 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 void main() {
   group('installed Agent behavior', () {
@@ -257,8 +258,8 @@ void main() {
       expect(theme.sidebarBorder, const Color(0xFFE5E5E5));
       expect(theme.sidebarRing, const Color(0xFFA1A1A1));
       expect(theme.radius, const Radius.circular(10));
-      expect(theme.fontFamily, isNull);
-      expect(theme.monoFontFamily, isNull);
+      expect(theme.fontFamily, RemixFonts.geist);
+      expect(theme.monoFontFamily, RemixFonts.geistMono);
     });
 
     test('dark carries the declared palette', () {
@@ -297,8 +298,8 @@ void main() {
       expect(theme.sidebarBorder, const Color(0x1AFFFFFF));
       expect(theme.sidebarRing, const Color(0xFF737373));
       expect(theme.radius, const Radius.circular(10));
-      expect(theme.fontFamily, isNull);
-      expect(theme.monoFontFamily, isNull);
+      expect(theme.fontFamily, RemixFonts.geist);
+      expect(theme.monoFontFamily, RemixFonts.geistMono);
     });
 
     test('every declared token has a value and nothing else is exported', () {
@@ -389,6 +390,21 @@ void main() {
         // Weight and color are the recipe's to choose.
         expect(style.fontWeight, isNull, reason: step);
         expect(style.color, isNull, reason: step);
+      }
+    });
+
+    test('the shipped themes set the type scale in Geist and Geist Mono', () {
+      for (final theme in const [AcmeThemeData.light(), AcmeThemeData.dark()]) {
+        for (final token in AcmeTokens.textStyles) {
+          final step = token.name.split('.').last;
+          final style = theme.tokens[token]! as TextStyle;
+
+          expect(
+            style.fontFamily,
+            step == 'mono' ? RemixFonts.geistMono : RemixFonts.geist,
+            reason: '${theme.brightness} $step',
+          );
+        }
       }
     });
 

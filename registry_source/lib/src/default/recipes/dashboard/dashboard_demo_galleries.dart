@@ -1121,7 +1121,7 @@ class _Code extends StatelessWidget {
       child: StyledText(
         value,
         style: TextStyler()
-            .fontFamily('monospace')
+            .style(VanillaTokens.textMono.mix())
             .fontSize(13)
             .color(VanillaTokens.foreground()),
       ),

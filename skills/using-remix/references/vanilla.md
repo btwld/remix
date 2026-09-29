@@ -32,7 +32,8 @@ from it (6, 8, 10, 14), so `copyWith(radius: ...)` rounds everything. Controls
 use `radiusMd`, dialogs and callouts `radiusLg`, cards `radiusXl`, menu rows
 `radiusSm`. The text steps carry the family, size, and line height only; set
 weight and color in the recipe. `fontFamily` and `monoFontFamily` default to
-null.
+Geist and Geist Mono from `remix_ui_fonts`, which `theme` adds to your
+`dependencies`; set either to null to leave the family to the platform.
 
 `accent` is the interaction surface for otherwise transparent controls (the
 hovered ghost button, the highlighted menu row, the toggle that is on), not a
