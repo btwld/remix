@@ -702,7 +702,7 @@ class _RemixTextSelectionControls extends TextSelectionControls
               left: anchorX - 1,
               top: 0,
               width: 2,
-              height: 14,
+              height: 20,
               child: ColoredBox(color: color),
             ),
             Positioned(
