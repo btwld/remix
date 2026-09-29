@@ -1,14 +1,15 @@
 name: Publish to pub.dev
 
-# Four tag-gated jobs keep each package aligned with its configured pub.dev
+# Five tag-gated jobs keep each package aligned with its configured pub.dev
 # automated-publishing tag pattern.
 #
-# THE FOUR PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
+# THE FIVE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
 # choice — it is each package's "Automated publishing" tag pattern on pub.dev,
 # and the OIDC token is rejected if the pushed tag does not match:
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
 #   remix_ui_icons ->  remix_ui_icons-v<version>
+#   remix_ui_fonts ->  remix_ui_fonts-v<version>
 #   remix_cli      ->  remix_cli-v<version>
 #   naked_ui       ->  naked_ui-v<version>
 #
@@ -29,8 +30,13 @@ name: Publish to pub.dev
 # publishes, `remix-v<version>` is what melos reads. Only the first triggers
 # this workflow.
 #
-# remix_cli, remix_ui_icons, and naked_ui are versioned independently from
-# Remix.
+# remix_cli, remix_ui_icons, remix_ui_fonts, and naked_ui are versioned
+# independently from Remix.
+#
+# remix_ui_fonts 0.1.0 is published by hand: pub.dev only offers automated
+# publishing for an existing package. Enable it for the package with the tag
+# pattern above after that first release.
+#
 # The CLI release requires `registry-stable` to resolve and its hosted
 # runtime dependencies. registry_source/ is private authoring source; registry/
 # is published independently through the CI-promoted `registry-stable` branch.
@@ -39,6 +45,7 @@ on:
     tags:
       - 'remix_cli-v[0-9]+.[0-9]+.[0-9]+*'
       - 'remix_ui_icons-v[0-9]+.[0-9]+.[0-9]+*'
+      - 'remix_ui_fonts-v[0-9]+.[0-9]+.[0-9]+*'
       - 'naked_ui-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
@@ -81,6 +88,17 @@ jobs:
     with:
       packages_folder_path: "packages"
       packages: "remix_ui_icons"
+      flutter_version_file: ".fvmrc"
+    permissions:
+      id-token: write
+      contents: read
+
+  publish-remix-ui-fonts:
+    if: startsWith(github.ref, 'refs/tags/remix_ui_fonts-v')
+    uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
+    with:
+      packages_folder_path: "packages"
+      packages: "remix_ui_fonts"
       flutter_version_file: ".fvmrc"
     permissions:
       id-token: write

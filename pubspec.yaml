@@ -19,6 +19,7 @@ workspace:
   - packages/naked_ui
   - packages/remix
   - packages/remix_cli
+  - packages/remix_ui_fonts
   - packages/remix_ui_icons
   - registry_source
 
