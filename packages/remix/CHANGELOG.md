@@ -1,3 +1,7 @@
+## 1.0.0-beta.11
+
+- Require `naked_ui` `^1.0.2`. That release fixes the `NakedSelect` trigger's merged semantics: the trigger no longer adds an inner container node, which on Flutter 3.44 became the select menu's traversal parent, reached the platform without a parent, and could crash the macOS accessibility bridge. `RemixSelect` still announces one merged trigger node with its label, value, button role, and expanded state.
+
 ## 1.0.0-beta.10
 
 - **BREAKING**: Tabs apply their container styling to custom tab children; use the builder escape hatch for fully custom tab rendering.
