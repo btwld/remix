@@ -58,27 +58,39 @@ class ComboboxExample extends StatelessWidget {
               );
             },
         overlayBuilder: (context, options) {
-          return Material(
-            elevation: 4,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final fruit in options)
-                  NakedCombobox.Option<String>(
-                    value: fruit,
-                    builder: (context, state, _) {
-                      return Container(
-                        width: double.infinity,
-                        color: state.isHighlighted ? Colors.blue.shade50 : null,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        child: Text(fruit),
-                      );
-                    },
-                  ),
-              ],
+          return Padding(
+            padding: const .only(top: 4),
+            child: Material(
+              elevation: 4,
+              shadowColor: Colors.black.withAlpha(50),
+              clipBehavior: .antiAlias,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: .circular(10),
+                side: BorderSide(color: Colors.grey.shade300),
+              ),
+              child: Column(
+                mainAxisSize: .min,
+                children: [
+                  for (final fruit in options)
+                    NakedCombobox.Option<String>(
+                      value: fruit,
+                      builder: (context, state, _) {
+                        return Container(
+                          width: .infinity,
+                          color: state.isHighlighted
+                              ? Colors.blue.shade50
+                              : null,
+                          padding: const .symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Text(fruit),
+                        );
+                      },
+                    ),
+                ],
+              ),
             ),
           );
         },
