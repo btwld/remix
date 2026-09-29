@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Migration
+
+- `NakedState` subclasses now supply equality fields through `props`, starting
+  with `...super.props`. When migrating a manual `==`/`hashCode` override,
+  include its former fields in `props`; the protected `statesEqual` and
+  `statesHashCode` helpers have been removed.
+
 ### Features
 
 - Add `NakedCombobox`, a headless autocomplete field on `RawAutocomplete`.

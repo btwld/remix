@@ -33,6 +33,15 @@ class _Collections with NakedEquatable {
   List<Object?> get props => [list, set, map];
 }
 
+class _NestedCollection with NakedEquatable {
+  const _NestedCollection(this.value);
+
+  final Object? value;
+
+  @override
+  List<Object?> get props => [value];
+}
+
 class _TestState extends NakedState {
   _TestState({required super.states, required this.label});
 
@@ -73,6 +82,54 @@ void main() {
 
       expect(a, b);
       expect(a.hashCode, b.hashCode);
+    });
+
+    test('nested maps hash equal regardless of entry order', () {
+      final a = _NestedCollection({
+        'list': [
+          1,
+          {
+            'value': [2, 3],
+          },
+        ],
+        'other': {'a': 4},
+      });
+      final b = _NestedCollection({
+        'other': {'a': 4},
+        'list': [
+          1,
+          {
+            'value': [2, 3],
+          },
+        ],
+      });
+
+      expect(a, b);
+      expect(a.hashCode, b.hashCode);
+      expect({a}.contains(b), isTrue);
+    });
+
+    test('nested sets compare and hash without regard to order', () {
+      final a = _NestedCollection({
+        <int>[1, 2],
+        <int>[3, 4],
+      });
+      final b = _NestedCollection({
+        <int>[3, 4],
+        <int>[1, 2],
+      });
+
+      expect(a, b);
+      expect(a.hashCode, b.hashCode);
+      expect({a}.contains(b), isTrue);
+    });
+
+    test('ordered lists use order-sensitive hashes', () {
+      final a = _NestedCollection([1, 2]);
+      final b = _NestedCollection([2, 1]);
+
+      expect(a, isNot(b));
+      expect(a.hashCode, isNot(b.hashCode));
     });
   });
 

@@ -35,8 +35,13 @@ class DeepCollectionEquality {
 
   bool _setsEqual(Set set1, Set set2) {
     if (set1.length != set2.length) return false;
+    final unmatched = set2.toList();
     for (final value in set1) {
-      if (!set2.contains(value)) return false;
+      final match = unmatched.indexWhere(
+        (candidate) => equals(value, candidate),
+      );
+      if (match == -1) return false;
+      unmatched.removeAt(match);
     }
 
     return true;
@@ -58,18 +63,12 @@ class DeepCollectionEquality {
   /// A hash for [obj] consistent with [equals].
   int hash(Object? obj) {
     if (obj is Map) {
-      return Object.hashAllUnordered(obj.keys) ^
-          Object.hashAllUnordered(obj.values);
+      return Object.hashAllUnordered(
+        obj.entries.map((entry) => Object.hash(entry.key, hash(entry.value))),
+      );
     }
-    if (obj is Set) return Object.hashAllUnordered(obj);
-    if (obj is Iterable) {
-      int hashCode = 0;
-      for (final value in obj) {
-        hashCode ^= hash(value);
-      }
-
-      return hashCode;
-    }
+    if (obj is Set) return Object.hashAllUnordered(obj.map(hash));
+    if (obj is List) return Object.hashAll(obj.map(hash));
 
     return obj.hashCode;
   }
