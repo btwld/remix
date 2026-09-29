@@ -197,6 +197,9 @@ Widget _fulfillmentCard() => VanillaCard(
         height: 220,
         child: VanillaPieChart(
           centerRadius: 44,
+          // mix_chart draws each slice 80px wide in any box; this ring stops
+          // the donut at 88px, 80% of the way to the edge of its 220px box.
+          style: PieChartStyler().slice(PieSliceStyler().radius(44)),
           semanticsLabel: 'Current order status',
           slices: [
             PieSlice(id: 'fulfilled', label: 'Fulfilled', value: 72),

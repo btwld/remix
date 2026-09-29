@@ -214,6 +214,11 @@ class FortalBarChart extends StatelessWidget {
 /// low-contrast text onto arbitrary categorical colors. Generates
 /// [FortalPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
+///
+/// The pie does not scale to its box: mix_chart draws each slice 80px wide
+/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
+/// clipped in a box less than twice that. Set the ring to fit the box:
+/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
 class FortalPieChart extends StatelessWidget {
   const FortalPieChart({
     super.key,

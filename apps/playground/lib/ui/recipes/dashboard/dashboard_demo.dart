@@ -681,12 +681,14 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         yAxis: playgroundDashboardNumericAxis(max: 70),
       ),
       .trafficPie => PlaygroundPieChart(
+        style: _pieRing(),
         semanticsLabel: 'Traffic share by device',
         slices: playgroundDashboardChannelSlices(),
         valueFormatter: (value) => '${value.toInt()}%',
       ),
       .interactivePie => PlaygroundPieChart(
         centerRadius: 40,
+        style: _pieRing(40),
         semanticsLabel: 'Product mix',
         slices: playgroundDashboardProductSlices(),
         selectedSliceIds: {?selected},
@@ -695,6 +697,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
       ),
       .badgePie => PlaygroundPieChart(
         centerRadius: 34,
+        style: _pieRing(34),
         semanticsLabel: 'Device traffic with badge markers',
         slices: playgroundDashboardChannelSlices(badges: true),
       ),
@@ -703,6 +706,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         children: [
           PlaygroundPieChart(
             centerRadius: 52,
+            style: _pieRing(52),
             semanticsLabel: 'No channel data',
             slices: playgroundDashboardEmptySlices(),
           ),
@@ -719,6 +723,18 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
     },
   );
 }
+
+/// How far every pie on the charts page reaches: 80% of the way to the edge
+/// of its 240px box, where Recharts, and so shadcn, puts a pie
+/// by default.
+///
+/// mix_chart draws each slice 80px wide whatever the box, so a donut left at
+/// that default spills out of the box by the width of its hole.
+const _pieRadius = 96.0;
+
+/// A pie ring that ends at [_pieRadius] around a hole of [centerRadius].
+PieChartStyler _pieRing([double centerRadius = 0]) =>
+    PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
 Widget _chartCard(String title, String description, Widget chart) =>
     PlaygroundCard(
