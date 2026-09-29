@@ -178,6 +178,12 @@ melos:
       run: dart run tool/check_open_code_dogfood.dart
       description: Verify the dogfood consumers' installed source still mirrors the registry
 
+    vanilla:scale:check:
+      steps:
+        - dart test test/tool/check_vanilla_scale_test.dart
+        - dart run tool/check_vanilla_scale.dart
+      description: Fail on numeric literals off Vanilla's spacing and type scale
+
     icons:generate:
       steps:
         - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json
@@ -248,6 +254,7 @@ melos:
         - docs:check
         - fortal:parity:check
         - open-code:registry:check
+        - vanilla:scale:check
       description: >-
         Every cheap contract checker; seconds in total, so they share one job
 

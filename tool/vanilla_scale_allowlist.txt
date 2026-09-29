@@ -1,0 +1,32 @@
+# Off-scale numeric literals in registry_source/lib/src/default/components that
+# predate tool/check_vanilla_scale.dart. One line per file and value:
+# `<file> <value> <count>`.
+#
+# This list only shrinks. Moving a recipe onto VanillaSpace, VanillaSize,
+# VanillaStroke, or a text token removes its lines here; a new off-scale
+# literal is a finding, not a new line.
+accordion.dart 44 1
+avatar.dart 999 1
+chart.dart 280 1
+data_list.dart 96 1
+data_table.dart 13 1
+data_table.dart 44 2
+dialog.dart 420 1
+disclosure.dart 44 1
+menu.dart 160 1
+radio.dart 1.5 1
+radio.dart 999 1
+select.dart 160 1
+select.dart 320 1
+sidebar_layout.dart 56 1
+sidebar_layout.dart 72 1
+sidebar_layout.dart 256 1
+sidebar_layout.dart 720 1
+slider.dart 2.5 1
+slider.dart 999 1
+switch.dart 1.8 1
+switch.dart 999 1
+textfield.dart 2.5 1
+textfield.dart 13 1
+toast.dart 13 1
+toast.dart 360 1

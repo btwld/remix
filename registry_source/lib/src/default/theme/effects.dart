@@ -42,8 +42,8 @@ final _tints = <(ColorToken, double, double?), ContextToken<Color>>{};
 
 /// shadcn's shadow scale, `shadow-xs` through `shadow-lg`.
 ///
-/// Each level is one table of layers, handed out in the two shapes recipes
-/// need: [box] for a decoration's `shadows`, and [effects] for a Remix
+/// Each level is one table of layers, handed out in the shapes recipes need:
+/// [box] for a styler's `shadows`, and [effects] for a Remix
 /// `containerEffects` layer. The two render the same shadow; which one a
 /// recipe uses depends only on the slot its spec offers.
 enum VanillaShadow {
@@ -73,28 +73,28 @@ enum VanillaShadow {
 
   final List<({double y, double blur, double spread, double alpha})> _layers;
 
-  /// This level as decoration shadows.
-  List<BoxShadowMix> get box => [
+  /// This level as plain shadows, for a decoration built by hand.
+  List<BoxShadow> get shadows => [
     for (final layer in _layers)
-      BoxShadowMix(
-        color: _black(layer.alpha),
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: layer.alpha),
         offset: Offset(0, layer.y),
         blurRadius: layer.blur,
         spreadRadius: layer.spread,
       ),
   ];
 
+  /// This level as decoration shadows, for a styler's `shadows`.
+  List<BoxShadowMix> get box => [for (final shadow in shadows) .value(shadow)];
+
   /// This level as a Remix effects layer, for a `containerEffects` slot.
   RemixBoxEffectLayerMix get effects => .shadows([
-    for (final layer in _layers)
+    for (final shadow in shadows)
       RemixBoxShadowMix(
-        color: _black(layer.alpha),
-        offset: Offset(0, layer.y),
-        blurRadius: layer.blur,
-        spreadRadius: layer.spread,
+        color: shadow.color,
+        offset: shadow.offset,
+        blurRadius: shadow.blurRadius,
+        spreadRadius: shadow.spreadRadius,
       ),
   ]);
-
-  static Color _black(double alpha) =>
-      const Color(0xFF000000).withValues(alpha: alpha);
 }
