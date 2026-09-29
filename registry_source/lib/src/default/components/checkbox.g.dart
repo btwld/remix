@@ -41,10 +41,10 @@ part of 'checkbox.dart';
 /// the recipe's checked fill has to be declared as a selected fragment too
 /// (`CheckboxStyler().onSelected(...)`).
 ///
-/// There is deliberately no hover or pressed fragment, as in shadcn. A button
-/// needs them because nothing else about it changes on tap; a checkbox flips
-/// its own state, and that is the feedback. The pointer cursor Remix sets says
-/// it can be clicked.
+/// There is deliberately no hover or pressed fragment. A button needs them
+/// because nothing else about it changes on tap; a checkbox flips its own
+/// state, and that is the feedback. The pointer cursor Remix sets says it can
+/// be clicked.
 class VanillaCheckbox extends StatelessWidget {
   const VanillaCheckbox({
     super.key,

@@ -16,8 +16,8 @@ enum VanillaButtonVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis on the page's own fill, with an `input` outline and a
-  /// slight lift.
+  /// Low emphasis: a quiet fill inside an `input` outline, with a slight
+  /// lift.
   outline,
 
   /// Low emphasis with no fill and no border.
@@ -47,10 +47,10 @@ enum VanillaButtonSize {
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
 /// hover/pressed/focus/disabled fragments. Every state change settles over
-/// 150ms on Tailwind's default curve (`VanillaMotion.standard`). Remix keeps
-/// ownership of rendering, pointer and keyboard behavior, accessibility
-/// semantics, and the loading/disabled interaction rules — this recipe never
-/// reimplements any of that.
+/// 150ms on the shared curve (`VanillaMotion.standard`). Remix keeps ownership
+/// of rendering, pointer and keyboard behavior, accessibility semantics, and
+/// the loading/disabled interaction rules — this recipe never reimplements any
+/// of that.
 ///
 /// `@MixWidget(target: RemixButton.new)` generates `VanillaButton` into
 /// `button.g.dart`: an adapter whose constructor is this function's
@@ -90,28 +90,28 @@ ButtonStyler vanillaButtonStyle({
       .merge(style);
 }
 
-/// Alpha applied to the primary and destructive fills while hovered or
-/// pressed: shadcn's `hover:bg-primary/90`.
+/// Alpha applied to the primary and destructive fills while hovered or pressed:
+/// the fill at 90%.
 ///
-/// There is no separate pressed step, as in shadcn: a press lands on the
-/// hover fill. A deeper press would also take the destructive fill under the
-/// 4.5:1 floor its white label needs.
+/// There is no separate pressed step: a press lands on the hover fill. A deeper
+/// press would also take the destructive fill under the 4.5:1 floor its white
+/// label needs.
 const _hoverAlpha = 0.9;
 
-/// Alpha applied to the secondary fill while hovered: `hover:bg-secondary/80`.
+/// Alpha applied to the secondary fill while hovered: the fill at 80%.
 const _secondaryHoverAlpha = 0.8;
 
 /// The dark theme's destructive fills.
 ///
-/// shadcn paints a dark destructive button at 60% (`dark:bg-destructive/60`):
-/// its dark `destructive` is a light red that reads as text on the page but
-/// cannot carry a white label as a solid fill. Hover moves to 70% rather than
-/// shadcn's 90%, which would measure about 3.5:1 against that label.
+/// A dark destructive button is painted at 60%: the dark `destructive` is a
+/// light red that reads as text on the page but cannot carry a white label as a
+/// solid fill. Hover moves to 70% rather than 90%, which would measure about
+/// 3.5:1 against that label.
 const _darkDestructiveAlpha = 0.6;
 const _darkDestructiveHoverAlpha = 0.7;
 
-/// The dark ghost hover, `dark:hover:bg-accent/50`: the dark `accent` at full
-/// strength would read as a raised control rather than a highlight.
+/// The dark ghost hover, `accent` at 50%: the dark `accent` at full strength
+/// would read as a raised control rather than a highlight.
 const _darkGhostHoverAlpha = 0.5;
 
 final _primaryHoverFill = vanillaTint(VanillaTokens.primary, _hoverAlpha);
@@ -135,6 +135,25 @@ final _ghostHoverFill = vanillaTint(
   dark: _darkGhostHoverAlpha,
 );
 
+/// The outline variant's fill: the page color on a light page, and `input` at
+/// 30% on a dark one, so a dark outline control on a raised surface reads as
+/// part of that surface rather than as a hole cut through it.
+final _outlineFill = vanillaByBrightness(
+  light: VanillaTokens.background,
+  dark: vanillaTint(VanillaTokens.input, _darkOutlineFillAlpha),
+);
+
+/// The outline variant under the pointer: `accent`, or `input` at 50% on a
+/// dark page.
+final _outlineHoverFill = vanillaByBrightness(
+  light: VanillaTokens.accent,
+  dark: vanillaTint(VanillaTokens.input, _darkOutlineHoverAlpha),
+);
+
+/// See [_outlineFill] and [_outlineHoverFill].
+const _darkOutlineFillAlpha = 0.3;
+const _darkOutlineHoverAlpha = 0.5;
+
 /// Opacity of the loading spinner, so it reads as secondary to the label.
 const _spinnerOpacity = 0.65;
 
@@ -144,12 +163,12 @@ const _spinnerDuration = Duration(milliseconds: 800);
 /// A fill that paints nothing, used by `ghost`.
 const _noFill = Color(0x00000000);
 
-/// Geometry for one [VanillaButtonSize]: shadcn's `h-8 px-3 gap-1.5`,
-/// `h-9 px-4 gap-2`, and `h-10 px-6 gap-2`.
+/// Geometry for one [VanillaButtonSize]: 32px tall with a 12px side inset and a
+/// 6px gap, 36px with 16 and 8, and 40px with 24 and 8.
 ///
 /// The label and the icon do not grow with the control. Every size sets its
-/// label in `textSm` and its icon at 16, as shadcn does, so a row of mixed
-/// sizes still reads as one typeface at one size.
+/// label in `textSm` and its icon at 16, so a row of mixed sizes still reads as
+/// one typeface at one size.
 typedef _VanillaButtonMetrics = ({
   double minHeight,
   double paddingX,
@@ -210,9 +229,11 @@ ButtonStyler _variantStyle(VanillaButtonVariant variant) => switch (variant) {
     hoverFill: _destructiveHoverFill(),
   ),
   .outline =>
-    _quiet(fill: VanillaTokens.background(), hoverFill: VanillaTokens.accent())
+    _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
         .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
-        .shadows(VanillaShadow.xs.box),
+        // In the effects layer rather than the decoration: the dark fill is
+        // translucent, and a decoration shadow would show through it.
+        .containerEffects(.behindContent(VanillaShadow.xs.effects)),
   .ghost => _quiet(fill: _noFill, hoverFill: _ghostHoverFill()),
 };
 
@@ -247,12 +268,12 @@ ButtonStyler _content(ButtonStyler style, Color foreground) => style
     .icon(.color(foreground))
     .spinner(.color(foreground));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// box without taking layout space, so focusing a control never reflows the
-/// row it sits in. The outline variant also turns its own border `ring`, and
-/// the destructive variant rings in its own red, as shadcn's do.
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the box
+/// without taking layout space, so focusing a control never reflows the row it
+/// sits in. The outline variant also turns its own border `ring`, and the
+/// destructive variant rings in its own red.
 ButtonStyler _focusVisibleStyle(VanillaButtonVariant variant) =>
     switch (variant) {
       .destructive => ButtonStyler().containerEffects(
@@ -271,7 +292,7 @@ ButtonStyler _focusVisibleStyle(VanillaButtonVariant variant) =>
       .ghost => ButtonStyler().containerEffects(vanillaFocusRing()),
     };
 
-/// The destructive focus ring: `ring-destructive/20`, `/40` in the dark.
+/// The destructive focus ring: `destructive` at 20%, 40% in the dark.
 const _destructiveRingAlpha = 0.2;
 const _darkDestructiveRingAlpha = 0.4;
 

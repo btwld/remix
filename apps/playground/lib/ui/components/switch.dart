@@ -31,9 +31,8 @@ SwitchStyler playgroundSwitchStyle({
       .size(_trackWidth, _trackHeight)
       .borderRadius(.all(_pill))
       .trackColor(_offTrack())
-      // A transparent outline, as shadcn's `border-transparent`: it holds the
-      // pixel the focus fragment turns `ring`, so focusing a switch never
-      // changes its size.
+      // A transparent outline: it holds the pixel the focus fragment turns
+      // `ring`, so focusing a switch never changes its size.
       .border(.color(_noEdge).width(PlaygroundStroke.hairline))
       // In the effects layer rather than the decoration: the dark off-track
       // is translucent, and a decoration shadow would show through it.
@@ -56,13 +55,12 @@ SwitchStyler playgroundSwitchStyle({
       .merge(style);
 }
 
-/// The track: shadcn's `w-8 h-[1.15rem]`, 32 by 18.4.
+/// The track: 32 by 18.4.
 ///
-/// The height is shadcn's own, off the four-pixel grid on purpose: it is the
-/// 16px thumb, the 1px outline above and below it, and a fifth of a pixel of
-/// air on each side, so the thumb reads as filling the track. The thumb's
-/// travel is the track's inner width less its own, 14px, which is shadcn's
-/// `translate-x-[calc(100%-2px)]`.
+/// The height is off the four-pixel grid on purpose: it is the 16px thumb, the
+/// 1px outline above and below it, and a fifth of a pixel of air on each side,
+/// so the thumb reads as filling the track. The thumb's travel is the track's
+/// inner width less its own, 14px.
 const _trackWidth = PlaygroundSpace.s8;
 const _trackHeight =
     PlaygroundSize.icon + 2 * (PlaygroundStroke.hairline + _thumbAir);
@@ -76,7 +74,7 @@ const _pill = Radius.circular(PlaygroundSize.pill);
 /// A color that paints nothing, for the resting outline.
 const _noEdge = Color(0x00000000);
 
-/// The off track: `input`, at 80% in the dark theme (`dark:bg-input/80`).
+/// The off track: `input`, at 80% in the dark theme.
 final _offTrack = playgroundTint(
   PlaygroundTokens.input,
   1,
@@ -101,7 +99,7 @@ final _onThumb = playgroundByBrightness(
   dark: PlaygroundTokens.primaryForeground,
 );
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
+/// The keyboard focus ring: a 3px band of `ring` at half strength, with
 /// the track's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the

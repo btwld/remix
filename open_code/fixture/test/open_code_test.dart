@@ -343,8 +343,8 @@ void main() {
       expect(step(theme, AcmeTokens.radiusLg), const Radius.circular(10));
       expect(step(theme, AcmeTokens.radiusXl), const Radius.circular(14));
 
-      // No step goes below zero, so a square theme squares every control.
-      // Only `xl` keeps its four pixels, as shadcn's `--radius-xl` does.
+      // No step goes below zero, so a square theme squares every control. Only
+      // `xl` keeps its four pixels.
       final square = theme.copyWith(radius: Radius.zero);
       expect(step(square, AcmeTokens.radiusSm), Radius.zero);
       expect(step(square, AcmeTokens.radiusMd), Radius.zero);
@@ -696,7 +696,7 @@ void main() {
           variant: AcmeButtonVariant.outline,
         );
 
-        expect(_background(spec), theme.data.background);
+        expect(_background(spec), _outlineFill(theme.data));
         _expectContent(spec, theme.data.foreground);
         expect(_border(spec), Border.all(color: theme.data.input, width: 1));
         expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
@@ -741,7 +741,7 @@ void main() {
   });
 
   group('acmeButtonStyle sizes', () {
-    // Heights, padding, gaps, and type per size are held to the shadcn spec
+    // Heights, padding, gaps, and type per size are held to the Vanilla spec
     // in registry_source/test/vanilla; this pins what every size shares.
     testWidgets('layout and spinner defaults are shared by every size', (
       tester,
@@ -817,7 +817,7 @@ void main() {
         }
       });
 
-      testWidgets('outline and ghost hover onto accent in ${theme.name}', (
+      testWidgets('outline and ghost hover onto a highlight in ${theme.name}', (
         tester,
       ) async {
         for (final variant in const [
@@ -837,10 +837,11 @@ void main() {
             states: const {WidgetState.pressed},
           );
 
-          // A dark ghost hovers onto half-strength accent, as shadcn's does.
-          final highlight =
-              variant == AcmeButtonVariant.ghost &&
-                  theme.data.brightness == Brightness.dark
+          // A dark ghost hovers onto half-strength accent, and a dark outline
+          // onto half-strength input.
+          final highlight = variant == AcmeButtonVariant.outline
+              ? _outlineHoverFill(theme.data)
+              : theme.data.brightness == Brightness.dark
               ? theme.data.accent.withValues(alpha: 0.5)
               : theme.data.accent;
           expect(
@@ -1508,7 +1509,7 @@ void main() {
 
   group('acmeCheckboxStyle sizes', () {
     const expected = <String, _CheckboxMetrics>{
-      'default': (box: 16.0, indicator: 14.0, gap: 8.0, labelSize: 14.0),
+      'default': (box: 16.0, indicator: 14.0, gap: 12.0, labelSize: 14.0),
     };
 
     for (final entry in expected.entries) {
@@ -1618,8 +1619,8 @@ void main() {
 
   group('acmeCheckboxStyle states', () {
     for (final theme in _themes) {
-      // No hover fill, as in shadcn: flipping its own state is a checkbox's
-      // feedback. Hovering must change neither the empty nor the checked box.
+      // No hover fill: flipping its own state is a checkbox's feedback.
+      // Hovering must change neither the empty nor the checked box.
       for (final selected in const [false, true]) {
         testWidgets(
           'hover leaves a ${selected ? 'checked' : 'empty'} box as it is in '
@@ -1748,7 +1749,7 @@ void main() {
       expect(_checkboxBackground(spec), const Color(0xFF7C3AED));
       expect(spec.spec.label.spec.style?.color, const Color(0xFFFFFF00));
       // Untouched recipe values survive.
-      expect(spec.spec.labelSpacing, 8);
+      expect(spec.spec.labelSpacing, 12);
       expect(spec.spec.indicator.spec.size, 14);
     });
 
@@ -1934,7 +1935,7 @@ void main() {
       for (final provider in tester.widgetList<StyleSpecProvider<CheckboxSpec>>(
         find.byType(StyleSpecProvider<CheckboxSpec>),
       )) {
-        expect(provider.spec.spec.labelSpacing, 8);
+        expect(provider.spec.spec.labelSpacing, 12);
       }
 
       await tester.tap(find.text('Code'));
@@ -1945,7 +1946,7 @@ void main() {
   });
 
   group('acmeTabBarStyle and acmeTabViewStyle', () {
-    // The list's height, inset, and surface are held to the shadcn spec in
+    // The list's height, inset, and surface are held to the Vanilla spec in
     // registry_source/test/vanilla; this pins the layout both looks share.
     for (final theme in _themes) {
       testWidgets('both lists hug their tabs without a rule in ${theme.name}', (
@@ -2002,7 +2003,7 @@ void main() {
   });
 
   group('acmeTabStyle states', () {
-    // Geometry and the resting and current colors are held to the shadcn spec
+    // Geometry and the resting and current colors are held to the Vanilla spec
     // in registry_source/test/vanilla; this pins how the states combine.
     for (final theme in _themes) {
       testWidgets('the current mark holds its space at rest in ${theme.name}', (
@@ -2610,8 +2611,7 @@ void main() {
           theme: theme.data,
         );
 
-        // shadcn's `animate-pulse bg-accent`: the block fades to half
-        // strength and back.
+        // An `accent` block that fades to half strength and back.
         expect(_boxBackground(spec.spec.container), theme.data.accent);
         expect(
           spec.spec.pulseColor,
@@ -2656,8 +2656,7 @@ void main() {
           theme: theme.data,
         );
 
-        // shadcn's `bg-primary/20`: the track is the same bar, not yet
-        // filled.
+        // `primary` at 20%: the track is the same bar, not yet filled.
         expect(
           _boxBackground(spec.spec.track),
           theme.data.primary.withValues(alpha: theme.data.primary.a * 0.2),
@@ -2823,7 +2822,7 @@ void main() {
         expect(series.marker!.spec.show, isTrue);
         expect(series.marker!.spec.borderColor, theme.data.background);
         expect(tooltip.backgroundColor, theme.data.background);
-        // shadcn's `ChartTooltipContent`: `border-border/50 px-2.5 py-1.5`.
+        // `border` at half strength, 10px at the sides and 6px above and below.
         expect(
           tooltip.border,
           BorderSide(
@@ -2851,7 +2850,7 @@ void main() {
         final label = slice.label!.spec.style!;
 
         expect(spec.spec.centerRadius, 32);
-        expect(spec.spec.centerColor, theme.data.background);
+        expect(spec.spec.centerColor, const Color(0x00000000));
         expect(spec.spec.sliceSpacing, 2);
         expect(spec.spec.selectedSliceRadiusOffset, 4);
         expect(slice.showLabel, isTrue);
@@ -2992,8 +2991,8 @@ void main() {
           const BorderRadius.all(Radius.circular(9999)),
         );
         expect(spec.spec.label.spec.style?.fontSize, entry.value.labelSize);
-        // shadcn's `text-muted-foreground`, which the shipped light theme
-        // darkens one step so that initials on `muted` clear 4.5:1.
+        // `mutedForeground`, which the shipped light theme sets dark enough
+        // that initials on `muted` clear 4.5:1.
         expect(spec.spec.label.spec.style?.color, theme.mutedForeground);
         expect(spec.spec.icon.spec.color, theme.mutedForeground);
         expect(
@@ -3015,7 +3014,7 @@ void main() {
   });
 
   group('acmeLinkStyle', () {
-    // Type, color, and the hover underline are held to the shadcn spec in
+    // Type, color, and the hover underline are held to the Vanilla spec in
     // registry_source/test/vanilla.
     testWidgets('focus-visible draws the ring every control draws', (
       tester,
@@ -3186,7 +3185,7 @@ void main() {
   });
 
   group('acmeIconButtonStyle', () {
-    // Squares and glyph sizes are held to the shadcn spec in
+    // Squares and glyph sizes are held to the Vanilla spec in
     // registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('filled variants dim their own fill in ${theme.name}', (
@@ -3243,7 +3242,7 @@ void main() {
         }
       });
 
-      testWidgets('outline and ghost hover onto accent in ${theme.name}', (
+      testWidgets('outline and ghost hover onto a highlight in ${theme.name}', (
         tester,
       ) async {
         for (final variant in const [
@@ -3265,17 +3264,20 @@ void main() {
           final outline = variant == AcmeIconButtonVariant.outline;
           expect(
             _boxBackground(idle.spec.container),
-            outline ? theme.data.background : const Color(0x00000000),
+            outline ? _outlineFill(theme.data) : const Color(0x00000000),
           );
           expect(idle.spec.icon.spec.color, theme.data.foreground);
           expect(
             _boxBorder(idle.spec.container),
             outline ? Border.all(color: theme.data.input, width: 1) : isNull,
           );
-          // A dark ghost hovers onto half-strength accent, as shadcn's does.
+          // A dark ghost hovers onto half-strength accent, and a dark outline
+          // onto half-strength input.
           expect(
             _boxBackground(hovered.spec.container),
-            !outline && theme.data.brightness == Brightness.dark
+            outline
+                ? _outlineHoverFill(theme.data)
+                : theme.data.brightness == Brightness.dark
                 ? theme.data.accent.withValues(alpha: 0.5)
                 : theme.data.accent,
           );
@@ -3400,7 +3402,7 @@ void main() {
   });
 
   group('acmeToggleStyle', () {
-    // Heights, padding, and the hover and on fills are held to the shadcn spec
+    // Heights, padding, and the hover and on fills are held to the Vanilla spec
     // in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('off is transparent with foreground content in '
@@ -3563,7 +3565,7 @@ void main() {
       final track = spec.spec.container.spec.constraints!;
       final thumb = spec.spec.thumb.spec.constraints!;
 
-      // shadcn's 32 x 18.4 track around a 16px thumb, inside a 1px outline.
+      // A 32 x 18.4 track around a 16px thumb, inside a 1px outline.
       expect(track, BoxConstraints.tight(const Size(32, 18.4)));
       expect(thumb, BoxConstraints.tight(const Size.square(16)));
       expect(thumb.maxHeight, lessThanOrEqualTo(track.maxHeight - 2));
@@ -3594,8 +3596,8 @@ void main() {
           ),
         );
         expect(_boxBackground(on.spec.container), theme.data.primary);
-        // The thumb has to stay visible on both tracks. shadcn keeps it the
-        // page color in the light theme and swaps it per state in the dark.
+        // The thumb has to stay visible on both tracks. It stays the page color
+        // in the light theme and swaps it per state in the dark.
         final offThumb = _boxBackground(off.spec.thumb)!;
         final onThumb = _boxBackground(on.spec.thumb)!;
         expect(offThumb, dark ? theme.data.foreground : theme.data.background);
@@ -3702,8 +3704,8 @@ void main() {
           states: const {WidgetState.selected},
         );
 
-        // The ring and the surface stay as they are, as shadcn's do; only
-        // the `primary` dot says an option is chosen.
+        // The ring and the surface stay as they are; only the `primary` dot
+        // says an option is chosen.
         for (final spec in [unchosen, chosen]) {
           expect(_boxBackground(spec.spec.container), _fieldFill(theme.data));
           expect(
@@ -3753,7 +3755,7 @@ void main() {
   });
 
   group('acmeSliderStyle', () {
-    // The thumb's size, outline, fill, and shadow are held to the shadcn spec
+    // The thumb's size, outline, fill, and shadow are held to the Vanilla spec
     // in registry_source/test/vanilla; this pins the rail and the range.
     for (final theme in _themes) {
       testWidgets('rail and range take their tokens in ${theme.name}', (
@@ -3789,7 +3791,7 @@ void main() {
         states: const {WidgetState.disabled},
       );
 
-      // A step wider than other controls' ring: shadcn's `ring-4`.
+      // A step wider than other controls' ring: 4px.
       expect(
         focused.spec.thumbFocusEffects?.outline,
         _focusRing(theme).copyWith(width: 4),
@@ -3832,7 +3834,7 @@ void main() {
   });
 
   group('acmeTextFieldStyle and acmeTextAreaStyle', () {
-    // Heights, insets, the surface, and the type are held to the shadcn spec
+    // Heights, insets, the surface, and the type are held to the Vanilla spec
     // in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('the four text roles take their tokens in ${theme.name}', (
@@ -4083,7 +4085,7 @@ void main() {
 
   group('acmeSidebarStyle', () {
     // The panel, the destination metrics, and the label type are held to the
-    // shadcn spec in registry_source/test/vanilla.
+    // Vanilla spec in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('the footer divider is the sidebar edge in ${theme.name}', (
         tester,
@@ -4342,14 +4344,14 @@ void main() {
       );
     });
 
-    testWidgets('the cells inset as shadcn\'s do', (tester) async {
+    testWidgets('the cells inset as the spec sets them', (tester) async {
       final spec = await _resolve(
         tester,
         acmeDataTableStyle(),
         theme: const AcmeThemeData.light(),
       );
-      // shadcn's `TableHead` insets from the sides only; `TableCell` and the
-      // selection column inset on every side, so their columns line up.
+      // A header cell insets from the sides only; a body cell and the selection
+      // column inset on every side, so their columns line up.
       expect(
         spec.spec.headerCell.spec.padding,
         const EdgeInsets.symmetric(horizontal: 8),
@@ -4530,7 +4532,7 @@ void main() {
       )!.boxShadow!.first;
 
       // A dialog is meant to stop the reader, so its lift is the heavier one:
-      // shadcn's `shadow-lg` against the popover's `shadow-md`.
+      // the `lg` shadow against the popover's `md`.
       expect(dialogShadow.blurRadius, greaterThan(popoverShadow.blurRadius));
       expect(dialogShadow.offset.dy, greaterThan(popoverShadow.offset.dy));
     });
@@ -4546,7 +4548,7 @@ void main() {
         expect(idleItem.label.spec.style?.color, theme.data.foreground);
         expect(idleItem.leadingIcon.spec.color, theme.data.mutedForeground);
         expect(idleItem.indicator.spec.size, 16);
-        expect(idleItem.indicator.spec.color, theme.data.mutedForeground);
+        expect(idleItem.indicator.spec.color, theme.data.popoverForeground);
 
         // Hover and focus have to agree: a menu is as often driven by the
         // arrow keys as by the pointer.
@@ -4575,6 +4577,12 @@ void main() {
           expect(
             item.indicator.spec.color,
             theme.data.accentForeground,
+            reason: '$states',
+          );
+          // The icons stay markers beside the label, highlighted or not.
+          expect(
+            item.leadingIcon.spec.color,
+            theme.data.mutedForeground,
             reason: '$states',
           );
           _expectReadable(
@@ -4757,7 +4765,7 @@ void main() {
 
   group('acmeAccordionStyle', () {
     // The trigger's inset and type, the chevron, and the hover underline are
-    // held to the shadcn spec in registry_source/test/vanilla.
+    // held to the Vanilla spec in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('a closed section is a titled rule in ${theme.name}', (
         tester,
@@ -5868,8 +5876,8 @@ const _themes = <({String name, AcmeThemeData data})>[
 Radius _radiusMd(AcmeThemeData theme) =>
     theme.tokens[AcmeTokens.radiusMd]! as Radius;
 
-/// shadcn's focus ring: a 3px band of `ring` at half strength, drawn outside
-/// the control with no offset.
+/// The focus ring: a 3px band of `ring` at half strength, drawn outside the
+/// control with no offset.
 BorderSide _focusRing(AcmeThemeData theme) => BorderSide(
   color: theme.ring.withValues(alpha: theme.ring.a * 0.5),
   width: 3,
@@ -5884,6 +5892,18 @@ Border _focusRingBorder(AcmeThemeData theme) => Border.fromBorderSide(
 Color _fieldFill(AcmeThemeData theme) => theme.input.withValues(
   alpha: theme.input.a * (theme.brightness == Brightness.dark ? 0.3 : 0),
 );
+
+/// An outline button's fill: the page color, or `input` at 30% in the dark.
+Color _outlineFill(AcmeThemeData theme) => theme.brightness == Brightness.dark
+    ? theme.input.withValues(alpha: theme.input.a * 0.3)
+    : theme.background;
+
+/// An outline button under the pointer: `accent`, or `input` at 50% in the
+/// dark.
+Color _outlineHoverFill(AcmeThemeData theme) =>
+    theme.brightness == Brightness.dark
+    ? theme.input.withValues(alpha: theme.input.a * 0.5)
+    : theme.accent;
 
 /// The destructive fill at rest: solid in the light theme, 60% in the dark.
 Color _destructiveFill(AcmeThemeData theme) => theme.destructive.withValues(

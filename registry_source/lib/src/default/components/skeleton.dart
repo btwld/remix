@@ -24,9 +24,8 @@ part 'skeleton.g.dart';
 /// )
 /// ```
 ///
-/// It is shadcn's skeleton: an `accent` block with `radiusMd` corners that
-/// pulses to half strength, as Tailwind's `animate-pulse` fades it, so a
-/// loading block reads as scenery rather than as content.
+/// It is an `accent` block with `radiusMd` corners that pulses to half
+/// strength, so a loading block reads as scenery rather than as content.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
@@ -49,8 +48,8 @@ final _pulse = vanillaTint(VanillaTokens.accent, _pulseAlpha);
 /// See [_pulse].
 const _pulseAlpha = 0.5;
 
-/// The length of one forward pulse leg; the reverse leg takes the same time,
-/// so one full pulse is Tailwind's two seconds.
+/// The length of one forward pulse leg; the reverse leg takes the same time, so
+/// one full pulse takes two seconds.
 ///
 /// Slow on purpose. A placeholder that pulses at interaction speed competes
 /// with the content arriving beside it.

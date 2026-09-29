@@ -29,13 +29,13 @@ part 'radio.g.dart';
 /// )
 /// ```
 ///
-/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot
-/// inside the ring, which is what tells the two controls apart at a glance
-/// even before their shapes register. The ring itself stays `input` whether
-/// or not the option is chosen, as shadcn's does; the dot carries the choice.
+/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot inside
+/// the ring, which is what tells the two controls apart at a glance even before
+/// their shapes register. The ring itself stays `input` whether or not the
+/// option is chosen; the dot carries the choice.
 ///
-/// There is no hover fragment, as in shadcn: choosing an option is the
-/// feedback, and the pointer cursor Remix sets says it can be chosen.
+/// There is no hover fragment: choosing an option is the feedback, and the
+/// pointer cursor Remix sets says it can be chosen.
 ///
 /// `RemixRadio` requires a `semanticLabel` because it renders no text of its
 /// own — the visible label beside it belongs to the caller's layout.
@@ -68,16 +68,16 @@ RadioStyler {{valuePrefix}}RadioStyle({
 /// A radius that rounds the ring and the dot into circles.
 const _circular = Radius.circular({{typePrefix}}Size.pill);
 
-/// The chosen dot: shadcn's `size-2`.
+/// The chosen dot: 8px across.
 const _dot = {{typePrefix}}Space.s2;
 
-/// The ring's fill: transparent, or `dark:bg-input/30`.
+/// The ring's fill: transparent, or `input` at 30% in the dark.
 final _fill = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: _darkFillAlpha);
 
 /// See [_fill].
 const _darkFillAlpha = 0.3;
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
+/// The keyboard focus ring: a 3px band of `ring` at half strength, with
 /// the circle's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the

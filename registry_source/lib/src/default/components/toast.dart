@@ -30,7 +30,7 @@ enum VanillaToastVariant {
 ///
 /// ```dart
 /// WidgetsApp(
-///   color: const Color(0xFFF8FAFC),
+///   color: const Color(0xFFFFFFFF),
 ///   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
@@ -67,18 +67,16 @@ ToastStyler vanillaToastStyle({
   ToastStyler style = const ToastStyler.create(),
 }) => _base().merge(_variantStyle(variant)).merge(style);
 
-/// The lift sonner gives every toast, which shadcn's `Toaster` keeps:
-/// `0 4px 12px` black at 10%. A toast floats over content that keeps
-/// scrolling beneath it, so it is heavier than a card's.
+/// The toast's lift: 4px down, a 12px blur, black at 10%. A toast floats over
+/// content that keeps scrolling beneath it, so it is heavier than a card's.
 final _shadow = BoxShadowMix(
   color: const Color(0x1A000000),
   offset: const Offset(0, 4),
   blurRadius: 12,
 );
 
-/// Surface, layout, and typography shared by both tones: shadcn's
-/// `Toaster`, which paints sonner's toast on the `popover` surface with the
-/// theme's `radius`.
+/// Surface, layout, and typography shared by both tones: the `popover` surface
+/// with the theme's `radius`.
 ToastStyler _base() => ToastStyler()
     .color(VanillaTokens.popover())
     .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))

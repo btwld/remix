@@ -16,7 +16,7 @@ import 'vanilla_spec.dart';
 /// a state paints exactly what rest paints, or paints its fill in the
 /// `border` color of the surface it sits on.
 ///
-/// Only the states shadcn styles are listed: a checkbox, a radio, and a
+/// Only the states the spec styles are listed: a checkbox, a radio, and a
 /// switch have no hover fill there, so none is required here.
 void main() {
   for (final entry in _cases) {

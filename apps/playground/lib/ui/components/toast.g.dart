@@ -15,7 +15,7 @@ part of 'toast.dart';
 ///
 /// ```dart
 /// WidgetsApp(
-///   color: const Color(0xFFF8FAFC),
+///   color: const Color(0xFFFFFFFF),
 ///   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),

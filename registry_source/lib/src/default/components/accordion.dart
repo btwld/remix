@@ -81,9 +81,10 @@ AccordionStyler vanillaAccordionStyle({
         .bottom(.color(VanillaTokens.border()).width(VanillaStroke.hairline)),
       ),
     )
-    // These *are* the forwarded shorthand, so they land on `trigger`: the row
-    // a reader clicks to open the section, shadcn's `py-4 gap-4` with no side
-    // inset, so the title lines up with the content above and below the list.
+    // These *are* the forwarded shorthand, so they land on `trigger`: the row a
+    // reader clicks to open the section, 16px above and below with a 16px gap
+    // and no side inset, so the title lines up with the content above and below
+    // the list.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .padding(.vertical(VanillaSpace.s4))
@@ -108,21 +109,20 @@ AccordionStyler vanillaAccordionStyle({
     .onDisabled(_disabledStyle())
     .merge(style);
 
-/// Hovering underlines the title, as shadcn's `hover:underline` does.
+/// Hovering underlines the title.
 AccordionStyler _hoverStyle() =>
     AccordionStyler().title(.decoration(TextDecoration.underline));
 
 /// The open section promotes its icons to `foreground`.
 ///
-/// shadcn marks an open section by turning its chevron; Remix renders the
-/// glyph it is given and does not rotate it, so the recipe marks the state
-/// with the icons' strength instead, and a caller who wants the turn passes
-/// the other chevron while the section is open.
+/// Remix renders the glyph it is given and does not rotate it, so the recipe
+/// marks the state with the icons' strength, and a caller who wants the turn
+/// passes the other chevron while the section is open.
 AccordionStyler _openStyle() => AccordionStyler()
     .leadingIcon(.color(VanillaTokens.foreground()))
     .trailingIcon(.color(VanillaTokens.foreground()));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// section without taking layout space, and the section's own border is

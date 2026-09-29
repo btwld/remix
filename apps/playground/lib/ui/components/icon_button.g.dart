@@ -10,7 +10,7 @@ part of 'icon_button.dart';
 ///
 /// Everything visual about an icon button lives in this function: geometry, the
 /// five variants, hover and press motion, and the hover/pressed/focus/disabled
-/// fragments. Every state change settles over 150ms on Tailwind's default curve
+/// fragments. Every state change settles over 150ms on the shared curve
 /// (`PlaygroundMotion.standard`). Remix keeps ownership of rendering, pointer and
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
@@ -96,8 +96,8 @@ class PlaygroundIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = PlaygroundIconButtonVariant.secondary;
 
-  /// Low emphasis on the page's own fill, with an `input` outline and a
-  /// slight lift.
+  /// Low emphasis: a quiet fill inside an `input` outline, with a slight
+  /// lift.
   const PlaygroundIconButton.outline({
     super.key,
     this.size = .medium,

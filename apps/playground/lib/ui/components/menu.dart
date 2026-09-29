@@ -35,10 +35,11 @@ MenuStyler playgroundMenuStyle({
   MenuStyler style = const MenuStyler.create(),
 }) => MenuStyler()
     .trigger(_triggerStyle())
-    // shadcn's `DropdownMenuContent`: `rounded-md border bg-popover p-1
-    // shadow-md`, at least 128px wide. The inset is split: the panel pads
-    // above and below, and each row takes the side inset as its own
-    // margin, which is what lets a separator run edge to edge.
+    // The panel: `popover` inside a `border` hairline, `radiusMd` corners,
+    // a 4px inset, the `md` shadow, and at least 128px wide. The inset is
+    // split: the panel pads above and below, and each row takes the side
+    // inset as its own margin, which is what lets a separator run edge to
+    // edge.
     .overlay(
       FlexBoxStyler()
           .direction(.vertical)
@@ -92,8 +93,8 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .onFocusVisible(.foregroundDecoration(playgroundFocusRingDecoration()))
     .onDisabled(MenuTriggerStyler().wrap(.opacity(PlaygroundOpacity.disabled)));
 
-/// One row, in every kind the menu can hold: shadcn's `DropdownMenuItem`,
-/// `px-2 py-1.5 rounded-sm text-sm`, 32px tall.
+/// One row, in every kind the menu can hold: 32px tall, with an 8px side inset,
+/// `radiusSm` corners, and `textSm`.
 ///
 /// `accent` is what makes the highlighted row visible, and it is applied on
 /// hover *and* on focus: a menu is as often driven by the arrow keys as by
@@ -125,21 +126,24 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
       .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
     )
     .indicator(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundSize.icon).color(PlaygroundTokens.popoverForeground()),
     )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
     .onDisabled(MenuItemStyler().wrap(.opacity(PlaygroundOpacity.disabled)));
 
 /// The row under the pointer or the keyboard cursor.
+///
+/// The label and the check mark follow the row onto `accentForeground`; the
+/// leading and trailing icons stay `mutedForeground`, so they keep reading as
+/// markers beside the label rather than as part of it.
 MenuItemStyler _highlighted() => MenuItemStyler()
     .color(PlaygroundTokens.accent())
     .label(.color(PlaygroundTokens.accentForeground()))
-    .leadingIcon(.color(PlaygroundTokens.accentForeground()))
-    .trailingIcon(.color(PlaygroundTokens.accentForeground()))
     .indicator(.color(PlaygroundTokens.accentForeground()));
 
-/// The rule between two groups of rows: shadcn's `-mx-1 my-1 h-px bg-border`.
+/// The rule between two groups of rows: a `border` hairline with 4px above and
+/// below.
 ///
 /// It runs edge to edge across the panel, which is why the panel's side inset
 /// lives on the rows rather than on the panel.

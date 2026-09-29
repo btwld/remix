@@ -12,11 +12,11 @@ part of 'popover.dart';
 /// dismiss-on-outside-tap behavior, focus, and the popover accessibility
 /// semantics; this recipe supplies only the floating panel's surface.
 ///
-/// A popover sits *over* arbitrary content, so its edge is doing real work:
-/// it is what tells a reader where the panel stops and the page resumes. That
-/// edge is a `border` hairline plus shadcn's `shadow-md`. The fill is
-/// `popover`, the surface every floating panel shares: the page color in the
-/// light theme and a step lighter than the page in the dark one.
+/// A popover sits *over* arbitrary content, so its edge is doing real work: it
+/// is what tells a reader where the panel stops and the page resumes. That edge
+/// is a `border` hairline plus the `md` shadow. The fill is `popover`, the
+/// surface every floating panel shares: the page color in the light theme and a
+/// step lighter than the page in the dark one.
 ///
 /// One composition trap worth knowing: `RemixPopover` opens on a tap of its
 /// own `child`, so a trigger that handles its own taps never lets the popover
@@ -42,8 +42,9 @@ part of 'popover.dart';
 ///
 /// ```dart
 /// VanillaPopover(
-///   popoverChild: filters,
-///   child: VanillaButton.outline(label: 'Filter'),
+///   style: PopoverStyler().width(360),
+///   popoverChild: const Text('A wider panel for a longer form.'),
+///   child: const Text('Details'),
 /// )
 /// ```
 class VanillaPopover extends StatelessWidget {

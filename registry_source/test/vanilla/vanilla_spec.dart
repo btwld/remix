@@ -10,8 +10,8 @@ import 'support.dart';
 /// `registry_source/specs/vanilla.md`.
 ///
 /// Each [SpecTarget] resolves one recipe, reads one property, and names the
-/// value shadcn gives it. `spec_conformance_test.dart` runs every target in
-/// both themes.
+/// reference value. `spec_conformance_test.dart` runs every target in both
+/// themes.
 ///
 /// A target belongs to the pull request that moves its recipe onto the spec
 /// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
@@ -36,7 +36,7 @@ final class SpecTarget {
   /// What is measured.
   final String property;
 
-  /// The shadcn file and classes the target comes from.
+  /// The reference file and classes the target comes from.
   final String source;
 
   /// The pull request that enforces this target.
@@ -98,7 +98,7 @@ Radius _radius(VanillaThemeData theme, RadiusToken step) =>
 BorderRadius _rounded(VanillaThemeData theme, RadiusToken step) =>
     BorderRadius.all(_radius(theme, step));
 
-/// shadcn's focus ring: a 3px band of `ring` at 50%, with no offset.
+/// The focus ring: a 3px band of `ring` at 50%, with no offset.
 BorderSide _focusRing(VanillaThemeData theme) =>
     BorderSide(color: tint(theme.ring, 0.5), width: 3);
 
@@ -108,6 +108,15 @@ Border _hairline(Color color) => Border.all(color: color, width: 1);
 /// A form control's fill: transparent, or `dark:bg-input/30`.
 Color _fieldFill(VanillaThemeData theme) =>
     tint(theme.input, _isDark(theme) ? 0.3 : 0);
+
+/// An outline button's fill, `bg-background dark:bg-input/30`.
+Color _outlineFill(VanillaThemeData theme) =>
+    _isDark(theme) ? tint(theme.input, 0.3) : theme.background;
+
+/// An outline button under the pointer, `hover:bg-accent
+/// dark:hover:bg-input/50`.
+Color _outlineHoverFill(VanillaThemeData theme) =>
+    _isDark(theme) ? tint(theme.input, 0.5) : theme.accent;
 
 /// The destructive fill at rest, `dark:bg-destructive/60`.
 Color _destructiveFill(VanillaThemeData theme) =>
@@ -241,24 +250,27 @@ final _buttonTargets = <SpecTarget>[
   _button(
     'outline fill',
     variant: .outline,
-    source: 'button.tsx: bg-background',
+    source: 'button.tsx: bg-background dark:bg-input/30',
     read: (spec) => _buttonDecoration(spec)?.color,
-    expected: (theme) => theme.background,
+    expected: _outlineFill,
   ),
   _button(
     'outline shadow',
     variant: .outline,
     source: 'button.tsx: shadow-xs',
-    read: (spec) => _buttonDecoration(spec)?.boxShadow,
-    expected: (_) => VanillaShadow.xs.shadows,
+    read: (spec) => (
+      _buttonDecoration(spec)?.boxShadow,
+      spec.spec.containerEffects?.behindContent?.shadows,
+    ),
+    expected: (_) => (null, _effectShadows(VanillaShadow.xs)),
   ),
   _button(
     'outline hover',
     variant: .outline,
     states: const {WidgetState.hovered},
-    source: 'button.tsx: hover:bg-accent',
+    source: 'button.tsx: hover:bg-accent dark:hover:bg-input/50',
     read: (spec) => _buttonDecoration(spec)?.color,
-    expected: (theme) => theme.accent,
+    expected: _outlineHoverFill,
   ),
   _button(
     'focus ring',
@@ -368,11 +380,29 @@ final _iconButtonTargets = <SpecTarget>[
     expected: (theme) => _hairline(theme.input),
   ),
   _iconButton(
+    'outline fill',
+    variant: .outline,
+    source: 'button.tsx: bg-background dark:bg-input/30',
+    read: (spec) => decorationOf(spec.spec.container)?.color,
+    expected: _outlineFill,
+  ),
+  _iconButton(
     'outline shadow',
     variant: .outline,
     source: 'button.tsx: shadow-xs',
-    read: (spec) => decorationOf(spec.spec.container)?.boxShadow,
-    expected: (_) => VanillaShadow.xs.shadows,
+    read: (spec) => (
+      decorationOf(spec.spec.container)?.boxShadow,
+      spec.spec.containerEffects?.behindContent?.shadows,
+    ),
+    expected: (_) => (null, _effectShadows(VanillaShadow.xs)),
+  ),
+  _iconButton(
+    'outline hover',
+    variant: .outline,
+    states: const {WidgetState.hovered},
+    source: 'button.tsx: hover:bg-accent dark:hover:bg-input/50',
+    read: (spec) => decorationOf(spec.spec.container)?.color,
+    expected: _outlineHoverFill,
   ),
   _iconButton(
     'focus ring',
@@ -1023,6 +1053,16 @@ final _checkboxTargets = <SpecTarget>[
     read: (spec) => spec.spec.indicator.spec.size,
     expected: (_) => 14.0,
   ),
+  _checkbox(
+    'label',
+    source: 'label.tsx: text-sm font-medium; checkbox demo: gap-3',
+    read: (spec) => (
+      spec.spec.label.spec.style?.fontSize,
+      spec.spec.label.spec.style?.fontWeight,
+      spec.spec.labelSpacing,
+    ),
+    expected: (_) => (14.0, FontWeight.w500, 12.0),
+  ),
 ];
 
 // -- radio --------------------------------------------------------------------
@@ -1497,8 +1537,8 @@ final _menuTargets = <SpecTarget>[
         spec.spec.containerEffects?.behindContent?.shadows,
       );
     },
-    // shadcn's `p-1` is split between the panel (above and below) and each
-    // row (either side), so a separator can run edge to edge.
+    // The panel's 4px inset is split between the panel (above and below) and
+    // each row (either side), so a separator can run edge to edge.
     expected: (theme) => (
       theme.popover,
       _rounded(theme, VanillaTokens.radiusMd),

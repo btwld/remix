@@ -14,12 +14,11 @@ part of 'disclosure.dart';
 /// expanded state; this recipe supplies the trigger row, the content inset,
 /// and the state fragments.
 ///
-/// It is the accordion's trigger without the accordion's frame: shadcn's
-/// `AccordionTrigger`, 16px above and below with no side inset, `textSm` at
-/// medium weight, underlined under the pointer. The accordion draws a rule
-/// under each section because its rows have neighbours to separate; a lone
-/// disclosure has none, so a frame would only box in whatever the caller
-/// already placed it inside.
+/// It is the accordion's trigger without the accordion's frame: 16px above and
+/// below with no side inset, `textSm` at medium weight, underlined under the
+/// pointer. The accordion draws a rule under each section because its rows have
+/// neighbours to separate; a lone disclosure has none, so a frame would only
+/// box in whatever the caller already placed it inside.
 ///
 /// The spec carries plain boxes (`trigger`, `content`), not text: the caller
 /// passes whole widgets for both. The recipe sets the trigger's type through a

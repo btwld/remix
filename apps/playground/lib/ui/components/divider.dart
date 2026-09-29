@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'divider.g.dart';
@@ -41,13 +42,10 @@ DividerStyler playgroundDividerStyle({
     .merge(_extent(orientation))
     .merge(style);
 
-/// Thickness of the rule.
-///
-/// One logical pixel, matching the hairline every bordered control draws, so
-/// a divider and a card edge do not read as two different weights.
-const _thickness = 1.0;
-
 /// Pins the cross-axis thickness and stretches along the main axis.
+///
+/// The rule is a hairline, the weight every bordered control draws, so a
+/// divider and a card edge do not read as two different weights.
 ///
 /// A `FractionallySizedBox` rather than an explicit width or height: the
 /// divider does not know how wide its parent is, and a fixed length would be
@@ -56,10 +54,10 @@ const _thickness = 1.0;
 DividerStyler _extent(Axis orientation) => switch (orientation) {
   .horizontal =>
     DividerStyler()
-        .height(_thickness)
+        .height(PlaygroundStroke.hairline)
         .wrap(.fractionallySizedBox(widthFactor: 1)),
   .vertical =>
     DividerStyler()
-        .width(_thickness)
+        .width(PlaygroundStroke.hairline)
         .wrap(.fractionallySizedBox(heightFactor: 1)),
 };

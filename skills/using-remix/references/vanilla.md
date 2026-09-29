@@ -1,15 +1,15 @@
 # Vanilla Reference
 
 Rules for the Vanilla preset that are easy to get wrong from a widget's name
-alone. Vanilla is the `remix_cli` default: shadcn/ui's default look
-(new-york style, neutral base color), editable the same way as Fortal. For
+alone. Vanilla is the `remix_cli` default: a neutral, minimal theme inspired
+by shadcn/ui, editable the same way as Fortal. For
 install commands, scope placement, and the preset chooser, see the
 [main skill](../SKILL.md).
 
 ## Tokens
 
-`<Prefix>Tokens` uses shadcn's CSS variable names (`card-foreground` is
-`cardForeground`):
+`<Prefix>Tokens` follows shadcn/ui's theme variable names (`card-foreground`
+is `cardForeground`), so values from those themes carry over:
 
 - `background`, `foreground`, `card`, `cardForeground`, `popover`,
   `popoverForeground`
@@ -41,8 +41,8 @@ color with `copyWith(primary: ...)`, and give it to `ring` too if focus rings
 should follow.
 
 `mutedForeground` clears 4.5:1 on `muted` as well as on `background` (the
-light theme darkens shadcn's `#737373` to `#707070` for this), so muted text
-may sit on a muted surface.
+light theme sets it at `#707070` for this), so muted text may sit on a muted
+surface.
 
 The dark theme's `destructive` is a light red: it reads as text on the page
 but cannot carry white text as a solid fill, so recipes paint dark
@@ -51,7 +51,7 @@ destructive fills at 60%.
 ## Scales and helpers
 
 `theme/scale.dart` holds the fixed scales as constants: `<Prefix>Space`
-(Tailwind's 4px grid, `s0_5` through `s16`), `<Prefix>Size` (control heights
+(a 4px grid, `s0_5` through `s16`), `<Prefix>Size` (control heights
 32/36/40, icon sizes, a few panel widths, `pill`), `<Prefix>Stroke`,
 `<Prefix>Opacity.disabled`, and `<Prefix>Motion.standard` (150ms,
 `Curves.fastOutSlowIn`). Spacing is deliberately not a token.
@@ -59,12 +59,12 @@ destructive fills at 60%.
 `theme/effects.dart` holds the shared helpers:
 
 - `<prefix>Tint(token, alpha, {dark})`: a token at a fraction of its own
-  opacity, as shadcn's `bg-primary/90`. Use it instead of
+  opacity. Use it instead of
   `Tokens.x().withValues(...)`, which records a directive that survives
   later merges.
 - `<prefix>ByBrightness(light:, dark:)`: one token in the light theme and
   another in the dark.
-- `<Prefix>Shadow.xs` to `.lg`: shadcn's shadow scale, as `.box` for a
+- `<Prefix>Shadow.xs` to `.lg`: the shadow scale, as `.box` for a
   styler's `shadows` or `.effects` for a `containerEffects` layer.
 - `<prefix>FocusRing()`, `<prefix>FocusRingDecoration()`, and
   `<prefix>FocusBorder()`: the 3px `ring` band at half strength, and a
@@ -100,13 +100,13 @@ families carry over.
   onto `muted` with `mutedForeground`. There is no selected border.
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
-  `filled` (the default) is shadcn's recessed pill list, `line` an underline.
+  `filled` (the default) is a recessed pill list, `line` an underline.
   Pass the same variant to the bar and to each tab.
 - **Toast** — style lives on the scope:
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)
   merges over it. `<Prefix>ToastVariant { neutral, destructive }`.
-- **Chart** — the palette is shadcn's gray ramp. Pie labels are off by
+- **Chart** — the palette is a gray ramp. Pie labels are off by
   default; when you turn them on, color each slice's label with
   `<prefix>PieSliceLabelColor(context, sliceColor)`.
 
@@ -135,7 +135,7 @@ code. See [Styling](styling.md) for general token and `Prop` mechanics.
 
 ## Updating an older install
 
-A theme installed before the shadcn move names `focusRing` and a single
+A theme installed before the current token set names `focusRing` and a single
 `radius` token. After `remix add theme --overwrite`, rename `focusRing` to
 `ring` in your own code, and replace `Tokens.radius` with a step (`radiusMd`
 for controls). Reinstall the component items with `--overwrite` to pick up

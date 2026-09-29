@@ -13,11 +13,10 @@ part of 'toggle_group.dart';
 /// multi-select rules, and the group accessibility semantics; this recipe
 /// owns the strip's layout and every option's appearance.
 ///
-/// The group is one control, as shadcn draws it: the options sit edge to edge
-/// with no gap, the strip is rounded and clipped as a whole, and the outline
-/// variant draws one outline around the strip rather than one per option.
-/// Each option carries the single toggle's states — `muted` under the
-/// pointer, `accent` while on.
+/// The group is drawn as one control: the options sit edge to edge with no gap,
+/// the strip is rounded and clipped as a whole, and the outline variant draws
+/// one outline around the strip rather than one per option. Each option carries
+/// the single toggle's states — `muted` under the pointer, `accent` while on.
 ///
 /// One recipe covers both, because `ToggleGroupSpec` carries the option's
 /// style as a field: the group's `item` is the default every

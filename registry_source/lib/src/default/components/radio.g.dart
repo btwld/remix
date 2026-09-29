@@ -27,13 +27,13 @@ part of 'radio.dart';
 /// )
 /// ```
 ///
-/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot
-/// inside the ring, which is what tells the two controls apart at a glance
-/// even before their shapes register. The ring itself stays `input` whether
-/// or not the option is chosen, as shadcn's does; the dot carries the choice.
+/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot inside
+/// the ring, which is what tells the two controls apart at a glance even before
+/// their shapes register. The ring itself stays `input` whether or not the
+/// option is chosen; the dot carries the choice.
 ///
-/// There is no hover fragment, as in shadcn: choosing an option is the
-/// feedback, and the pointer cursor Remix sets says it can be chosen.
+/// There is no hover fragment: choosing an option is the feedback, and the
+/// pointer cursor Remix sets says it can be chosen.
 ///
 /// `RemixRadio` requires a `semanticLabel` because it renders no text of its
 /// own — the visible label beside it belongs to the caller's layout.

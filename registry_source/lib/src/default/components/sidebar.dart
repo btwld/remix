@@ -34,11 +34,11 @@ part 'sidebar.g.dart';
 /// the tooltip: when the host collapses the panel to an icon rail, each
 /// destination's label appears in the application's own tooltip recipe.
 ///
-/// The panel is shadcn's sidebar: the `sidebar` surface, a step apart from
-/// the page, with a `sidebarBorder` edge. Destinations are 32px rows that sit
-/// on `sidebarAccent` while hovered or current, and the current one is set at
-/// medium weight. Everything shares one 8px inset, so labels, destinations,
-/// and the footer line up on one left edge.
+/// The panel is the `sidebar` surface, a step apart from the page, with a
+/// `sidebarBorder` edge. Destinations are 32px rows that sit on `sidebarAccent`
+/// while hovered or current, and the current one is set at medium weight.
+/// Everything shares one 8px inset, so labels, destinations, and the footer
+/// line up on one left edge.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:
@@ -72,10 +72,10 @@ SidebarStyler vanillaSidebarStyle({
         ),
       )
       .padding(.all(VanillaSpace.s2)),
-  // shadcn's `SidebarGroupLabel`: a 32px row of `textXs` at medium weight in
-  // `sidebarForeground` at 70%, inset like the destinations below it. It is
-  // the quietest text in the panel, so it reads as a heading for the
-  // destinations rather than as one of them.
+  // A section label is a 32px row of `textXs` at medium weight in
+  // `sidebarForeground` at 70%, inset like the destinations below it. It is the
+  // quietest text in the panel, so it reads as a heading for the destinations
+  // rather than as one of them.
   sectionLabel: TextStyler()
       .style(VanillaTokens.textXs.mix())
       .fontWeight(FontWeight.w500)
@@ -99,8 +99,8 @@ final _labelColor = vanillaTint(VanillaTokens.sidebarForeground, _labelAlpha);
 /// See [_labelColor].
 const _labelAlpha = 0.7;
 
-/// One destination: the application's own ghost toggle, retuned to shadcn's
-/// `SidebarMenuButton`.
+/// One destination: the application's own ghost toggle, retuned as a navigation
+/// row.
 ///
 /// A 32px row with an 8px inset on every side and an 8px gap, set in `textSm`
 /// at regular weight in `sidebarForeground`. Hovered and current rows sit on

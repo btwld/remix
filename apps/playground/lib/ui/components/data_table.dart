@@ -33,12 +33,12 @@ part 'data_table.g.dart';
 /// recipes that drift, or a table whose controls do not match the rest of the
 /// application.
 ///
-/// It is shadcn's table inside a frame: the page's `background` fill, a
-/// `border` hairline, and `radiusMd` corners around a header with no surface
-/// of its own. Header and body rows are separated by the same hairline, and
-/// the last body row drops it so the table does not draw a second line on top
-/// of its own bottom edge. A row under the pointer sits on `muted` at half
-/// strength and a selected row on `muted`, as shadcn's `TableRow` does.
+/// It is a table inside a frame: the page's `background` fill, a `border`
+/// hairline, and `radiusMd` corners around a header with no surface of its own.
+/// Header and body rows are separated by the same hairline, and the last body
+/// row drops it so the table does not draw a second line on top of its own
+/// bottom edge. A row under the pointer sits on `muted` at half strength and a
+/// selected row on `muted`.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
@@ -61,8 +61,8 @@ DataTableStyler playgroundDataTableStyle({
     // Without this the bottom row's rule would double up with the frame's own
     // edge, which reads as a two-pixel border on one side only.
     .lastBodyRow(.border(.bottom(.style(.none))))
-    // shadcn's `TableHead` insets its label from the sides only and takes its
-    // height from the row; `TableCell` insets on every side.
+    // A header cell insets its label from the sides only and takes its height
+    // from the row; a body cell insets on every side.
     .headerCell(.padding(.horizontal(PlaygroundSpace.s2)))
     .bodyCell(_cell())
     .selectionCell(_cell())
@@ -106,8 +106,7 @@ DataTableStyler playgroundDataTableStyle({
     .pageSizeSelect(playgroundSelectStyle())
     .merge(style);
 
-/// A row under the pointer: `muted` at half strength, shadcn's
-/// `hover:bg-muted/50`.
+/// A row under the pointer: `muted` at half strength.
 final _hoveredRow = playgroundTint(PlaygroundTokens.muted, _hoveredRowAlpha);
 
 /// See [_hoveredRow].
@@ -154,6 +153,6 @@ BorderSideMix _rule() => BorderSideMix(
 /// The rule under a row.
 BoxBorderMix _rowRule() => .bottom(_rule());
 
-/// One body cell's inset, shadcn's `p-2`, shared by the selection column so
-/// the columns line up regardless of what is in them.
+/// One body cell's 8px inset, shared by the selection column so the columns
+/// line up regardless of what is in them.
 BoxStyler _cell() => BoxStyler().padding(.all(PlaygroundSpace.s2));

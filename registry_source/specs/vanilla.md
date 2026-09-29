@@ -1,9 +1,9 @@
-# Vanilla: the shadcn/ui target
+# Vanilla spec
 
-Vanilla is Remix's default preset. Its look is shadcn/ui's default theme:
-style `new-york-v4`, base color `neutral`, on Tailwind v4. This file records the
-values Vanilla takes from shadcn, where they come from, and where Vanilla
-deliberately differs. The aim is "close, not perfect": the same palette, scale,
+Vanilla is Remix's default preset: a neutral, minimal theme inspired by
+shadcn/ui's default theme (style `new-york-v4`, base color `neutral`, on
+Tailwind v4). This file records the reference values Vanilla takes, where they
+come from, and where Vanilla deliberately differs. The aim is "close, not perfect": the same palette, scale,
 geometry, and states, rendered by Flutter rather than by a browser.
 
 ## Source
@@ -17,7 +17,7 @@ geometry, and states, rendered by Flutter rather than by a browser.
 | Utilities | Tailwind CSS v4.3.3 defaults (spacing, type scale, shadows, transition) |
 
 The canonical theme is the registry's `neutral` entry, not the docs site's own
-`app/globals.css`. shadcn authors colors in OKLCH; the hex values below are the
+`app/globals.css`. The reference authors colors in OKLCH; the hex values below are the
 sRGB conversions, rounded to the nearest 8-bit channel.
 
 ## How this is enforced
@@ -38,10 +38,10 @@ sRGB conversions, rounded to the nearest 8-bit channel.
 
 ## Tokens
 
-`VanillaTokens` names match shadcn's CSS variables (`card-foreground` is
-`cardForeground`). Light / dark:
+`VanillaTokens` names match the reference's CSS variables (`card-foreground`
+is `cardForeground`). Light / dark:
 
-| Token | Light | Dark | shadcn (light / dark) |
+| Token | Light | Dark | Reference (light / dark) |
 |---|---|---|---|
 | `background` | `#FFFFFF` | `#0A0A0A` | `oklch(1 0 0)` / `oklch(0.145 0 0)` |
 | `foreground` | `#0A0A0A` | `#FAFAFA` | `oklch(0.145 0 0)` / `oklch(0.985 0 0)` |
@@ -70,7 +70,7 @@ sRGB conversions, rounded to the nearest 8-bit channel.
 ## Scales
 
 **Radius.** One `radius` field, 10 (`--radius: 0.625rem`). The steps are
-derived as shadcn derives them, and never go below zero:
+derived from it, and never go below zero:
 
 | Token | Formula | Value |
 |---|---|---|
@@ -100,8 +100,9 @@ package is published, `fontFamily` and `monoFontFamily` default to null and
 the platform family renders.
 
 **Spacing.** Tailwind's 4px grid, as constants in `theme/scale.dart`:
-`VanillaSpace.s0_5` (2) through `s12` (48). Spacing is not a token: shadcn does
-not theme it, and arithmetic on an unresolved token cannot be written.
+`VanillaSpace.s0_5` (2) through `s12` (48). Spacing is not a token: the
+reference does not theme it, and arithmetic on an unresolved token cannot be
+written.
 
 **Control sizes.** `h-8`, `h-9`, `h-10`: 32, 36, 40. Icons `size-4` (16), with
 `size-3.5` (14) for check marks and `size-3` (12) beside `text-xs`.
@@ -134,10 +135,10 @@ the steps above. The source column names the file under
 |---|---|---|
 | Button | h 32/36/40; px 12/16/24; gap 6/8/8; `text-sm` w500 at every size; icon 16; radius md | `button.tsx` |
 | Button fills | primary, hover primary/90; secondary, hover secondary/80; destructive, hover /90 (dark: /60, hover /70); ghost hover accent (dark accent/50) | `button.tsx` |
-| Button outline | border `input`, fill `background`, `shadow-xs`, hover accent | `button.tsx` |
+| Button outline | border `input`; fill `background` (dark `input`/30); `shadow-xs`; hover `accent` (dark `input`/50) | `button.tsx` |
 | Icon button | 32/36/40 squares, icon 16, the button's fills | `button.tsx` (`icon-*` sizes) |
 | Link | `text-sm`, underline on hover | `button.tsx` (`link`) |
-| Badge | radius full; 1px border on every variant, transparent except outline; `text-xs` w500; px 8, py 2; icon 12 | `badge.tsx` |
+| Badge | radius full; 1px border on every variant, transparent except outline; `text-xs` w500; px 8, py 2 | `badge.tsx` |
 | Toggle | h 32/36/40, min-w equal to h; px 6/8/10; `text-sm` w500; hover muted + muted-fg; on accent + accent-fg; outline adds an `input` border | `toggle.tsx` |
 | Toggle group | items px 12, radius 0 inside a clipped md container, gap 0; outline adds the border | `toggle-group.tsx` |
 | Text field | h 36; px 12, py 4; border `input`, transparent fill, `shadow-xs`; `text-sm`; placeholder muted-fg | `input.tsx` |
@@ -145,8 +146,8 @@ the steps above. The source column names the file under
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
 | Select trigger | the text field's metrics, gap 8; chevron 16 at 50% | `select.tsx` |
 | Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128 | `select.tsx` |
-| Select item | h 32; pl 8, pr 32, py 6; radius sm; highlight accent | `select.tsx` |
-| Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 14; no hover fill | `checkbox.tsx` |
+| Select item | h 32; pl 8, pr 32, py 6; radius sm; highlight accent; check muted-fg | `select.tsx` |
+| Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 14; no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
 | Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary | `radio-group.tsx` |
 | Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border | `switch.tsx` |
 | Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover and focus | `slider.tsx` |
@@ -157,7 +158,7 @@ the steps above. The source column names the file under
 | Sidebar destination | h 32, p 8, gap 8, radius md; hover and current `sidebarAccent`, current w500 | `sidebar.tsx` (`SidebarMenuButton`) |
 | Sidebar label | h 32, px 8, `text-xs` w500, `sidebarForeground`/70, no tracking | `sidebar.tsx` (`SidebarGroupLabel`) |
 | Sidebar layout | collapsed width 48 | `sidebar.tsx` (`SIDEBAR_WIDTH_ICON`) |
-| Menu | content as the select's; items h 32, px 8, py 6, radius sm; label `text-sm` w500; separator full-bleed | `dropdown-menu.tsx` |
+| Menu | content as the select's; items h 32, px 8, py 6, radius sm; icons muted-fg even when highlighted; separator full-bleed | `dropdown-menu.tsx` |
 | Accordion, disclosure | trigger py 16, no px, `text-sm` w500, underline on hover; chevron 16 muted-fg; content pb 16 | `accordion.tsx` |
 | Card | `card` fill, border, radius xl, `shadow-sm`, p 24 | `card.tsx` |
 | Dialog | radius lg, border, `shadow-lg`, p 24, max-w 512; title `text-lg` w600; description `text-sm` muted-fg; gap 8 | `dialog.tsx` |
@@ -174,18 +175,17 @@ the steps above. The source column names the file under
 
 ## Deviations
 
-| Where | shadcn | Vanilla | Why |
+| Where | Reference | Vanilla | Why |
 |---|---|---|---|
 | `mutedForeground`, light | `#737373` | `#707070` | 4.54:1 on `muted`, so a muted caption on a muted surface clears the 4.5:1 text floor. `#737373` measures 4.35:1 there. |
-| Destructive fill, dark, hover | `/90` | `/70` | At 90% the light dark-theme red measures about 3.5:1 against its white label. Rest stays at shadcn's 60%. |
+| Destructive fill, dark, hover | `/90` | `/70` | At 90% the light dark-theme red measures about 3.5:1 against its white label. Rest stays at 60%. |
 | `destructiveForeground` | hardcoded `text-white` | a token, `#FFFFFF` | Keeps the pairing editable in one place. |
 | Pressed state | none | none | Vanilla dropped its old pressed step: a press lands on the hover fill. An 80% destructive fill would fail 4.5:1 with the new red. |
-| Outline button, dark | `bg-input/30`, hover `bg-input/50` | `background`, hover `accent` | One fill rule for both brightnesses; the difference is a few percent of lightness. |
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
-| Chart palette | gray ramp | gray ramp | shadcn's lightest series measures about 1.5:1 on the light page; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
+| Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
 | Font until `remix_ui_fonts` is published | Geist | platform family | `fontFamily` stays null so installs do not depend on an unpublished package. |

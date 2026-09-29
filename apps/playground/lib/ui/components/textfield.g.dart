@@ -13,9 +13,9 @@ part of 'textfield.dart';
 /// including announcing the error state. This recipe supplies the surface, the
 /// text colors, and the focus/error/disabled fragments.
 ///
-/// There is deliberately no hover fragment, as in shadcn: a text field's
-/// affordance is the I-beam cursor Remix already sets, and tinting the box on
-/// hover would only compete with the focus ring that follows a moment later.
+/// There is deliberately no hover fragment: a text field's affordance is the
+/// I-beam cursor Remix already sets, and tinting the box on hover would only
+/// compete with the focus ring that follows a moment later.
 ///
 /// One host requirement travels with it: `EditableText` asserts on an
 /// `Overlay` ancestor the moment the field takes focus, for its selection
@@ -275,9 +275,10 @@ class PlaygroundTextField extends StatelessWidget {
 /// The application's TextArea recipe.
 ///
 /// `RemixTextArea` is `RemixTextField` with multi-line defaults, and it shares
-/// the same styler, so this is the field's recipe with two changes: shadcn's
-/// taller resting box (`min-h-16 py-2`), and accessories pinned to the first
-/// line instead of floating in the middle of a growing one.
+/// the same styler, so this is the field's recipe with two changes: a taller
+/// resting box (at least 64px, with 8px above and below the text), and
+/// accessories pinned to the first line instead of floating in the middle of a
+/// growing one.
 ///
 /// [style] is merged **last**, exactly as it is for the single-line field.
 class PlaygroundTextArea extends StatelessWidget {

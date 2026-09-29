@@ -16,11 +16,11 @@ part of 'card.dart';
 /// decides how tall it is — an axis with nothing behind it would only be one
 /// more thing to keep consistent.
 ///
-/// It is shadcn's card: the `card` surface — the page color in the light
-/// theme and a step lighter than the page in the dark one — with a `border`
-/// hairline, large corners, a small shadow, and a 24px inset. `card` is one of
-/// the vocabulary's thirty-three tokens precisely so a theme can set cards
-/// apart from the page without touching this recipe.
+/// It is the `card` surface — the page color in the light theme and a step
+/// lighter than the page in the dark one — with a `border` hairline, large
+/// corners, a small shadow, and a 24px inset. `card` is one of the vocabulary's
+/// thirty-three tokens precisely so a theme can set cards apart from the page
+/// without touching this recipe.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:

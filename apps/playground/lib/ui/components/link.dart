@@ -14,12 +14,11 @@ part 'link.g.dart';
 /// that a link with no callback is a disabled link; this recipe supplies its
 /// type, its color, and its states.
 ///
-/// It is shadcn's link button: `textSm` at medium weight in `primary`,
-/// underlined while the pointer is on it, and ringed like every other control
-/// when it has keyboard focus. That suits a link standing on its own — "Forgot
-/// password?", "View all" — which is what shadcn's link variant is for. A
-/// link set inside running prose should stay identifiable without the
-/// pointer; give that call site an underline at rest through [style]:
+/// It is `textSm` at medium weight in `primary`, underlined while the pointer
+/// is on it, and ringed like every other control when it has keyboard focus.
+/// That suits a link standing on its own — "Forgot password?", "View all". A
+/// link set inside running prose should stay identifiable without the pointer;
+/// give that call site an underline at rest through [style]:
 ///
 /// ```dart
 /// PlaygroundLink(

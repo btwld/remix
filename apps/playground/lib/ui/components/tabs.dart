@@ -10,7 +10,7 @@ part 'tabs.g.dart';
 
 /// The looks this application offers for a tab strip.
 ///
-/// Both are shadcn's. Pass the same value to the bar and to each tab.
+/// Pass the same value to the bar and to each tab.
 enum PlaygroundTabsVariant {
   /// The default: a recessed `muted` list, with the current tab lifted onto
   /// the page color.
@@ -22,10 +22,9 @@ enum PlaygroundTabsVariant {
 
 /// The application's tab-strip recipe.
 ///
-/// The strip is shadcn's `TabsList`: 36px tall with a 3px inset, hugging its
-/// tabs. The [PlaygroundTabsVariant.filled] list is a recessed `muted` surface
-/// with large corners; the [PlaygroundTabsVariant.line] list has no surface of
-/// its own.
+/// The strip is 36px tall with a 3px inset, hugging its tabs. The
+/// [PlaygroundTabsVariant.filled] list is a recessed `muted` surface with large
+/// corners; the [PlaygroundTabsVariant.line] list has no surface of its own.
 ///
 /// The strip does not scroll. Tabs wider than the container are a layout
 /// decision, and the scroll view belongs **outside** the bar:
@@ -92,12 +91,12 @@ TabBarStyler playgroundTabBarStyle({
 /// ownership of rendering, selection, keyboard traversal, and the tab
 /// accessibility semantics — this recipe never reimplements any of that.
 ///
-/// It is shadcn's `TabsTrigger`: `textSm` at medium weight, 60% `foreground`
-/// until it is hovered or current (`mutedForeground` in the dark theme). In
-/// the filled list the current tab is lifted onto the page color with a small
-/// shadow — in the dark theme onto a faint `input` well with an `input`
-/// outline, since the dark page is darker than the list it would lift out of.
-/// In the line list the current tab is underlined in `foreground` instead.
+/// A tab is `textSm` at medium weight, 60% `foreground` until it is hovered or
+/// current (`mutedForeground` in the dark theme). In the filled list the
+/// current tab is lifted onto the page color with a small shadow — in the dark
+/// theme onto a faint `input` well with an `input` outline, since the dark page
+/// is darker than the list it would lift out of. In the line list the current
+/// tab is underlined in `foreground` instead.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
@@ -144,23 +143,22 @@ TabStyler playgroundTabStyle({
 
 /// The application's recipe for the panel a tab reveals.
 ///
-/// It exists so the panel carries the application's prefix and has one place
-/// to edit, and it earns that by owning the gap between the strip and the
-/// content: shadcn's `gap-2`.
+/// It exists so the panel carries the application's prefix and has one place to
+/// edit, and it earns that by owning the gap between the strip and the content:
+/// 8px.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler playgroundTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().padding(.top(PlaygroundSpace.s2)).merge(style);
 
-/// The list's inset around its tabs: shadcn's `p-[3px]`.
+/// The list's inset around its tabs.
 const _listInset = 3.0;
 
 /// An edge that paints nothing, holding an outline's space.
 const _noEdge = Color(0x00000000);
 
 /// A tab not yet chosen: 60% `foreground`, or `mutedForeground` in the dark
-/// theme (shadcn's `text-foreground/60 dark:text-muted-foreground`). Both
-/// clear 4.5:1 on the `muted` list.
+/// theme. Both clear 4.5:1 on the `muted` list.
 final _restingContent = playgroundByBrightness(
   light: playgroundTint(PlaygroundTokens.foreground, _restingAlpha),
   dark: PlaygroundTokens.mutedForeground,
@@ -170,7 +168,7 @@ final _restingContent = playgroundByBrightness(
 const _restingAlpha = 0.6;
 
 /// The current filled tab's surface: the page color, or `input` at 30% in the
-/// dark theme (`dark:data-[state=active]:bg-input/30`).
+/// dark theme.
 final _currentFill = playgroundByBrightness(
   light: PlaygroundTokens.background,
   dark: playgroundTint(PlaygroundTokens.input, _darkCurrentFillAlpha),
@@ -180,11 +178,12 @@ final _currentFill = playgroundByBrightness(
 const _darkCurrentFillAlpha = 0.3;
 
 /// The current filled tab's outline: none in the light theme, `input` in the
-/// dark one (`dark:data-[state=active]:border-input`).
+/// dark one.
 final _currentEdge = playgroundTint(PlaygroundTokens.input, 0, dark: 1);
 
-/// Layout, typography, and the resting content color shared by both looks:
-/// shadcn's `px-2 py-1 gap-1.5 text-sm font-medium`.
+/// Layout, typography, and the resting content color shared by both looks: an
+/// 8px side inset, 4px above and below, a 6px gap, and `textSm` at medium
+/// weight.
 ///
 /// A tab is the list's height less its inset on both sides, so it fills the
 /// list edge to edge.
@@ -233,7 +232,7 @@ TabStyler _current() => _content(PlaygroundTokens.foreground());
 TabStyler _content(Color foreground) =>
     TabStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// A *foreground* decoration rather than the box border: `TabSpec` has no
 /// `containerEffects` layer to paint an outline into, and Flutter insets a

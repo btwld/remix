@@ -15,7 +15,7 @@ enum PlaygroundThemeMode { system, light, dark }
 /// one, and only this layer moves. `PlaygroundThemeScope` turns an instance into the
 /// `MixScope` token map that every recipe resolves against.
 ///
-/// The shipped values are shadcn/ui's neutral theme. Two kinds of token are
+/// The shipped values are a neutral grayscale theme. Two kinds of token are
 /// derived rather than stored: the four radius steps come from [radius], and
 /// the text steps from [fontFamily] and [monoFontFamily], so one edit here
 /// moves a whole scale.
@@ -243,9 +243,9 @@ class PlaygroundThemeData {
 
   /// The base corner radius, which is [PlaygroundTokens.radiusLg].
   ///
-  /// The other steps sit a fixed distance from it, as shadcn's do: `sm` is
-  /// four pixels tighter, `md` two, and `xl` four pixels rounder. A step never
-  /// goes below zero, so `Radius.zero` squares every control.
+  /// The other steps sit a fixed distance from it: `sm` is four pixels tighter,
+  /// `md` two, and `xl` four pixels rounder. A step never goes below zero, so
+  /// `Radius.zero` squares every control.
   final Radius radius;
 
   /// Family for every text step except [PlaygroundTokens.textMono].

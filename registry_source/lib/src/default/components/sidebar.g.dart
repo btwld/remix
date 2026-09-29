@@ -30,11 +30,11 @@ part of 'sidebar.dart';
 /// the tooltip: when the host collapses the panel to an icon rail, each
 /// destination's label appears in the application's own tooltip recipe.
 ///
-/// The panel is shadcn's sidebar: the `sidebar` surface, a step apart from
-/// the page, with a `sidebarBorder` edge. Destinations are 32px rows that sit
-/// on `sidebarAccent` while hovered or current, and the current one is set at
-/// medium weight. Everything shares one 8px inset, so labels, destinations,
-/// and the footer line up on one left edge.
+/// The panel is the `sidebar` surface, a step apart from the page, with a
+/// `sidebarBorder` edge. Destinations are 32px rows that sit on `sidebarAccent`
+/// while hovered or current, and the current one is set at medium weight.
+/// Everything shares one 8px inset, so labels, destinations, and the footer
+/// line up on one left edge.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:

@@ -14,9 +14,9 @@ part 'slider.g.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The rail is `muted` and the range is `primary`, as shadcn's are. The thumb
-/// is a white disc with a `primary` outline and a small shadow, which keeps
-/// it a distinct handle on either page.
+/// The rail is `muted` and the range is `primary`. The thumb is a white disc
+/// with a `primary` outline and a small shadow, which keeps it a distinct
+/// handle on either page.
 ///
 /// `semanticFormatterCallback` is deliberately not forwarded to the generated
 /// `VanillaSlider`. Its type is
@@ -56,9 +56,9 @@ SliderStyler vanillaSliderStyle({
       .trackColor(VanillaTokens.muted())
       .rangeColor(VanillaTokens.primary())
       .thumbSize(const Size.square(VanillaSize.icon))
-      // White in both themes, as shadcn's `bg-white` is: the thumb is a
-      // physical-looking handle, and its `primary` outline and small shadow
-      // are what separate it from the range it sits on.
+      // White in both themes: the thumb is a physical-looking handle, and its
+      // `primary` outline and small shadow are what separate it from the range
+      // it sits on.
       .thumbColor(_thumbFill)
       .thumb(
         BoxStyler()
@@ -69,7 +69,7 @@ SliderStyler vanillaSliderStyle({
             .shadows(VanillaShadow.sm.box),
       )
       // A thumb is a grab target, so it answers the pointer with the same ring
-      // keyboard focus draws, shadcn's `hover:ring-4`.
+      // keyboard focus draws.
       .onHovered(SliderStyler().thumbEffects(_thumbRing()))
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
@@ -79,14 +79,14 @@ SliderStyler vanillaSliderStyle({
 /// A radius large enough to round the thumb into a circle.
 const _circular = Radius.circular(VanillaSize.pill);
 
-/// The thumb's fill: shadcn's `bg-white`, in both themes.
+/// The thumb's fill: white, in both themes.
 const _thumbFill = Color(0xFFFFFFFF);
 
-/// Width of the ring around a hovered or focused thumb: shadcn's `ring-4`, a
-/// step wider than other controls' because the thumb is a small target.
+/// Width of the ring around a hovered or focused thumb: 4px, a step wider than
+/// other controls' because the thumb is a small target.
 const _thumbRingWidth = 4.0;
 
-/// The rail's thickness, matching shadcn's `h-1.5`.
+/// The rail's thickness: 6px.
 ///
 /// One size, not a scale. A call site that needs another sets `.thickness(...)`
 /// through [style].

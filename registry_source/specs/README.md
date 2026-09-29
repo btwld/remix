@@ -1,6 +1,6 @@
 # Agent worksheets and shipped recipes
 
-[`vanilla.md`](vanilla.md) is separate: it records the shadcn/ui values the
+[`vanilla.md`](vanilla.md) is separate: it records the reference values the
 Vanilla preset is held to, and how they are enforced.
 
 ## Reconciled ownership

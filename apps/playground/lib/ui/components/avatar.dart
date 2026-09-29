@@ -18,12 +18,12 @@ part 'avatar.g.dart';
 /// the fill only ever shows in the fallback case. The recipe sets no
 /// alignment: Remix already centers whichever fallback it renders.
 ///
-/// The fallback is shadcn's: `textSm` in `mutedForeground`, a 16px icon.
-/// The shipped light theme darkens `mutedForeground` one step from shadcn's
-/// so that initials on the `muted` circle clear the 4.5:1 text floor.
+/// The fallback is `textSm` in `mutedForeground`, or a 16px icon. The shipped
+/// light theme sets `mutedForeground` dark enough that initials on the `muted`
+/// circle clear the 4.5:1 text floor.
 ///
-/// It is 32px across, shadcn's `size-8`; a call site that wants a profile
-/// header sets `.size(...)` through [style].
+/// It is 32px across; a call site that wants a profile header sets `.size(...)`
+/// through [style].
 ///
 /// The shape is a full circle rather than the theme's control radius. An
 /// avatar stands for a person or an organisation, and that is a circle in

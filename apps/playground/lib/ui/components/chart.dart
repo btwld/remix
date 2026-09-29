@@ -158,7 +158,10 @@ PieChartStyler playgroundPieChartStyle({
 }) => PieChartStyler()
     .frame(_chartFrameStyle())
     .centerRadius(centerRadius)
-    .centerColor(PlaygroundTokens.background())
+    // The hole shows whatever the chart sits on. A page-colored hole would read
+    // as a hole punched through a dark card, which is a step lighter than the
+    // page.
+    .centerColor(MixColors.transparent)
     .sliceSpacing(_sliceSpacing)
     .selectedSliceRadiusOffset(_selectedSliceOffset)
     .slice(
@@ -256,7 +259,7 @@ ChartTooltipStyler _chartTooltipStyle() =>
               .color(PlaygroundTokens.foreground()),
         );
 
-/// shadcn's `ChartTooltipContent`: `border-border/50`.
+/// The tooltip's outline: `border` at half strength.
 BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
   color: _tooltipBorderColor.resolve(context),
   width: PlaygroundStroke.hairline,
@@ -264,12 +267,12 @@ BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
 
 final _tooltipBorderColor = playgroundTint(PlaygroundTokens.border, 0.5);
 
-/// shadcn's `ChartTooltipContent`: `rounded-lg`.
+/// The tooltip's corners: `radiusLg`, at most 12px.
 BorderRadius _resolveTooltipRadius(BuildContext context) => BorderRadius.all(
   _clampedThemeRadius(context, PlaygroundTokens.radiusLg, _maxTooltipRadius),
 );
 
-/// shadcn's `ChartTooltipContent`: `px-2.5 py-1.5`.
+/// The tooltip's inset: 10px at the sides, 6px above and below.
 EdgeInsets _resolveTooltipPadding(BuildContext context) =>
     const EdgeInsets.symmetric(
       horizontal: PlaygroundSpace.s2_5,

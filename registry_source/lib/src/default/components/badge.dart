@@ -46,16 +46,15 @@ BadgeStyler vanillaBadgeStyle({
   BadgeStyler style = const BadgeStyler.create(),
 }) => _base().merge(_variantStyle(variant)).merge(style);
 
-/// A radius that rounds any badge into a pill: shadcn's `rounded-full`.
+/// A radius that rounds any badge into a pill.
 const _pill = Radius.circular(VanillaSize.pill);
 
 /// A fill that paints nothing, used by `outline` and by every other variant's
 /// outline.
 const _noFill = Color(0x00000000);
 
-/// The destructive fill, at 60% in the dark theme as shadcn paints it
-/// (`dark:bg-destructive/60`): the dark `destructive` is too light to carry
-/// a white label as a solid fill.
+/// The destructive fill, at 60% in the dark theme: the dark `destructive` is
+/// too light to carry a white label as a solid fill.
 final _destructiveFill = vanillaTint(
   VanillaTokens.destructive,
   1,
@@ -65,8 +64,8 @@ final _destructiveFill = vanillaTint(
 /// See [_destructiveFill].
 const _darkDestructiveAlpha = 0.6;
 
-/// Geometry and typography shared by every variant: shadcn's
-/// `rounded-full px-2 py-0.5 text-xs font-medium`.
+/// Geometry and typography shared by every variant: a pill with an 8px side
+/// inset and 2px above and below, set in `textXs` at medium weight.
 BadgeStyler _base() => BadgeStyler()
     .padding(
       .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s0_5),
@@ -96,9 +95,9 @@ BadgeStyler _variantStyle(VanillaBadgeVariant variant) => switch (variant) {
 
 /// One surface, one content color, and the outline.
 ///
-/// Every variant draws the same 1px outline, transparent unless the variant
-/// is `outline`, as shadcn's `border border-transparent` does: badges of
-/// different variants side by side then share one height and one text line.
+/// Every variant draws the same 1px outline, transparent unless the variant is
+/// `outline`: badges of different variants side by side then share one height
+/// and one text line.
 BadgeStyler _filled({
   required Color fill,
   required Color foreground,

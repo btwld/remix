@@ -13,14 +13,12 @@ part of 'progress.dart';
 ///
 /// One weight, not a scale. A progress bar has no size relationship to the
 /// controls around it — it spans its container and is read by length rather
-/// than by height — so the sizes this recipe used to offer were three numbers
-/// with nothing to anchor them. shadcn ships `h-2` and nothing else, and this
-/// is that bar. A call site that wants a different weight sets `.height(...)`
-/// through [style], which is one line and says what it means.
+/// than by height — so a size axis would be numbers with nothing to anchor
+/// them. It is an 8px bar; a call site that wants a different weight sets
+/// `.height(...)` through [style], which is one line and says what it means.
 ///
-/// The indicator is `primary` on a track of `primary` at 20%, as shadcn's
-/// `bg-primary/20` paints it: the track reads as the same bar, not yet
-/// filled, rather than as a separate surface.
+/// The indicator is `primary` on a track of `primary` at 20%: the track reads
+/// as the same bar, not yet filled, rather than as a separate surface.
 ///
 /// Both are fully rounded rather than sharing the theme's control radius. The
 /// theme radius is authored for 32-40px controls; on an 8px bar anything

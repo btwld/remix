@@ -39,16 +39,16 @@ SelectStyler playgroundSelectStyle({
       .merge(style);
 }
 
-/// The trigger's fill: the text field's, transparent or `dark:bg-input/30`.
+/// The trigger's fill: the text field's, transparent or `input` at 30% in the
+/// dark.
 final _triggerFill = playgroundTint(
   PlaygroundTokens.input,
   0,
   dark: _darkTriggerFillAlpha,
 );
 
-/// The dark trigger under the pointer, `dark:hover:bg-input/50`. A light
-/// trigger does not change on hover, as shadcn's does not: the chevron and
-/// the pointer cursor already say it opens.
+/// The dark trigger under the pointer, `input` at 50%. A light trigger does not
+/// change on hover: the chevron and the pointer cursor already say it opens.
 final _triggerHoverFill = playgroundTint(
   PlaygroundTokens.input,
   0,
@@ -58,8 +58,8 @@ final _triggerHoverFill = playgroundTint(
 const _darkTriggerFillAlpha = 0.3;
 const _darkTriggerHoverAlpha = 0.5;
 
-/// Opacity of the trigger's chevron, shadcn's `opacity-50`: it marks the
-/// control without competing with the value beside it.
+/// Opacity of the trigger's chevron, half strength: it marks the control
+/// without competing with the value beside it.
 const _chevronOpacity = 0.5;
 
 /// The tallest a panel gets before it scrolls.
@@ -68,8 +68,8 @@ const _chevronOpacity = 0.5;
 /// and takes its own dismissal affordances with it.
 const _panelMaxHeight = 320.0;
 
-/// The closed control: a field showing the current value and a chevron,
-/// shadcn's `h-9 px-3 py-2 gap-2`.
+/// The closed control: a field showing the current value and a chevron, 36px
+/// tall with a 12px side inset, 8px above and below, and an 8px gap.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .animate(PlaygroundMotion.standard)
     .direction(.horizontal)
@@ -104,8 +104,8 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     )
     .indicatorOpacity(_chevronOpacity)
     .onHovered(SelectTriggerStyler().color(_triggerHoverFill()))
-    // shadcn's 3px `ring` band at half strength, with the trigger's own
-    // outline turned `ring`.
+    // A 3px band of `ring` at half strength, with the trigger's own outline
+    // turned `ring`.
     .onFocusVisible(
       SelectTriggerStyler()
           .containerEffects(playgroundFocusRing())
@@ -117,8 +117,8 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
           .wrap(.opacity(PlaygroundOpacity.disabled)),
     );
 
-/// The floating panel the options live in: shadcn's `rounded-md border
-/// bg-popover p-1 shadow-md`.
+/// The floating panel the options live in: `popover` inside a `border`
+/// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow.
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(PlaygroundTokens.popover())
     .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
@@ -128,7 +128,8 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
     .maxHeight(_panelMaxHeight)
     .containerEffects(.behindContent(PlaygroundShadow.md.effects));
 
-/// One option row: shadcn's `py-1.5 pr-8 pl-2 rounded-sm`.
+/// One option row: 8px in from the leading edge, 32px from the trailing one,
+/// 6px above and below, with `radiusSm` corners.
 ///
 /// The trailing inset leaves room for the check mark Remix draws on the
 /// chosen option. `accent` marks the row under the pointer *and* the row the
@@ -154,9 +155,9 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
         PlaygroundTokens.textSm.mix(),
       ).color(PlaygroundTokens.popoverForeground()),
     )
-    .icon(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.popoverForeground()),
-    )
+    // The check mark on the chosen option stays `mutedForeground`, highlighted
+    // or not: it marks the row without competing with its label.
+    .icon(.size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
     .onDisabled(
@@ -166,5 +167,4 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
 /// The option under the pointer or the keyboard cursor.
 SelectMenuItemStyler _highlighted() => SelectMenuItemStyler()
     .color(PlaygroundTokens.accent())
-    .label(.color(PlaygroundTokens.accentForeground()))
-    .icon(.color(PlaygroundTokens.accentForeground()));
+    .label(.color(PlaygroundTokens.accentForeground()));

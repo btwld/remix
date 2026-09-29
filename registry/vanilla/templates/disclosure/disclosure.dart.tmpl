@@ -16,12 +16,11 @@ part 'disclosure.g.dart';
 /// expanded state; this recipe supplies the trigger row, the content inset,
 /// and the state fragments.
 ///
-/// It is the accordion's trigger without the accordion's frame: shadcn's
-/// `AccordionTrigger`, 16px above and below with no side inset, `textSm` at
-/// medium weight, underlined under the pointer. The accordion draws a rule
-/// under each section because its rows have neighbours to separate; a lone
-/// disclosure has none, so a frame would only box in whatever the caller
-/// already placed it inside.
+/// It is the accordion's trigger without the accordion's frame: 16px above and
+/// below with no side inset, `textSm` at medium weight, underlined under the
+/// pointer. The accordion draws a rule under each section because its rows have
+/// neighbours to separate; a lone disclosure has none, so a frame would only
+/// box in whatever the caller already placed it inside.
 ///
 /// The spec carries plain boxes (`trigger`, `content`), not text: the caller
 /// passes whole widgets for both. The recipe sets the trigger's type through a
@@ -102,12 +101,12 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
 /// disclosure's container is the trigger *plus* everything it revealed — a
 /// ring there claims the content is focused too, and grows with it.
 ///
-/// `foregroundDecoration` is what makes a trigger-only ring possible: it
-/// paints over the box's own bounds rather than beside them, so the ring
-/// takes no layout space and opening the section never reflows the page. A
-/// plain `.border(...)` would push the trigger's content in by two pixels the
-/// moment it took focus. The ring is shadcn's 3px `ring` band at half
-/// strength, stroked outside the trigger.
+/// `foregroundDecoration` is what makes a trigger-only ring possible: it paints
+/// over the box's own bounds rather than beside them, so the ring takes no
+/// layout space and opening the section never reflows the page. A plain
+/// `.border(...)` would push the trigger's content in by two pixels the moment
+/// it took focus. The ring is a 3px band of `ring` at half strength, stroked
+/// outside the trigger.
 DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
   .foregroundDecoration({{valuePrefix}}FocusRingDecoration()),
 );

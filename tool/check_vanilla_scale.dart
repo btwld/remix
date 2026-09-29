@@ -6,10 +6,9 @@
 ///
 /// Vanilla takes its spacing, sizes, and type from one scale
 /// (`registry_source/lib/src/default/theme/scale.dart` and the text steps in
-/// `theme_data.dart`), the way shadcn takes them from Tailwind. A literal such
-/// as `13` or `18.4` in a component is a value nobody else in the layer uses,
-/// and it is how the preset drifted out of rhythm before. This lists every
-/// such literal in `components/*.dart`.
+/// `theme_data.dart`). A literal such as `13` or `18.4` in a component is a
+/// value nobody else in the layer uses, and it is how the preset drifted out of
+/// rhythm before. This lists every such literal in `components/*.dart`.
 ///
 /// Values on the scale pass, as do fractions between zero and one (alphas,
 /// opacities, and ratios, which are not geometry) and duration arguments.

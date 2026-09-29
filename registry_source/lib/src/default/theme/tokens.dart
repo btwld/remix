@@ -8,9 +8,9 @@ import 'package:remix/remix.dart';
 /// from a `VanillaThemeData`. Editing, renaming, or adding a token here is a
 /// local change — nothing in Remix reads these names.
 ///
-/// The vocabulary is shadcn/ui's: every color token here has a CSS variable of
-/// the same name in shadcn's theme, so a value read off a shadcn theme drops
-/// straight into `VanillaThemeData`.
+/// The names follow the CSS variables of shadcn/ui's theme, which inspired
+/// Vanilla's look, so a value read off one of those themes drops straight into
+/// `VanillaThemeData`.
 ///
 /// ```dart
 /// ButtonStyler().color(VanillaTokens.primary());
@@ -57,9 +57,9 @@ abstract final class VanillaTokens {
 
   /// De-emphasized content color.
   ///
-  /// The shipped light theme darkens shadcn's value one step, from `#737373`
-  /// to `#707070`, so this clears the 4.5:1 text floor on [muted] as well as
-  /// on [background]: a muted caption inside a muted surface stays readable.
+  /// The shipped light theme sets it at `#707070`, a step darker than the usual
+  /// neutral gray, so it clears the 4.5:1 text floor on [muted] as well as on
+  /// [background]: a muted caption inside a muted surface stays readable.
   static const mutedForeground = ColorToken('vanilla.color.muted-foreground');
 
   /// Interaction surface for otherwise transparent controls: the hovered
@@ -78,7 +78,8 @@ abstract final class VanillaTokens {
 
   /// Content color used on top of a [destructive] fill.
   ///
-  /// shadcn hardcodes white here; a token keeps the pairing editable.
+  /// White in both shipped themes, and a token rather than a constant so the
+  /// pairing stays editable in one place.
   static const destructiveForeground = ColorToken(
     'vanilla.color.destructive-foreground',
   );
@@ -94,15 +95,15 @@ abstract final class VanillaTokens {
 
   /// Focus color: the keyboard focus ring and a focused control's border.
   ///
-  /// Recipes draw the ring at half strength, as shadcn's `ring-ring/50` does,
-  /// and turn a bordered control's outline to full strength. Give it a brand
-  /// color here and every control's focus treatment follows.
+  /// Recipes draw the ring at half strength and turn a bordered control's
+  /// outline to full strength. Give it a brand color here and every control's
+  /// focus treatment follows.
   static const ring = ColorToken('vanilla.color.ring');
 
   /// First categorical chart series color.
   ///
   /// Charts assign [chart1] through [chart5] to series in order; see [chart].
-  /// The shipped themes use shadcn's neutral ramp, the same five grays in both
+  /// The shipped themes use a neutral ramp, the same five grays in both
   /// brightnesses, so series are told apart by lightness rather than by hue.
   static const chart1 = ColorToken('vanilla.color.chart-1');
 
@@ -151,9 +152,8 @@ abstract final class VanillaTokens {
   /// The small corner radius: menu rows and select options.
   ///
   /// Every radius step is derived from the one `radius` value on
-  /// `VanillaThemeData`, the way shadcn derives `--radius-sm` through
-  /// `--radius-xl` from `--radius`, so changing that value rounds the whole
-  /// application consistently.
+  /// `VanillaThemeData`, so changing that value rounds the whole application
+  /// consistently.
   static const radiusSm = RadiusToken('vanilla.radius.sm');
 
   /// The control corner radius: buttons, fields, toggles. See [radiusSm].

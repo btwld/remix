@@ -42,11 +42,10 @@ enum VanillaToggleGroupSize {
 /// multi-select rules, and the group accessibility semantics; this recipe
 /// owns the strip's layout and every option's appearance.
 ///
-/// The group is one control, as shadcn draws it: the options sit edge to edge
-/// with no gap, the strip is rounded and clipped as a whole, and the outline
-/// variant draws one outline around the strip rather than one per option.
-/// Each option carries the single toggle's states — `muted` under the
-/// pointer, `accent` while on.
+/// The group is drawn as one control: the options sit edge to edge with no gap,
+/// the strip is rounded and clipped as a whole, and the outline variant draws
+/// one outline around the strip rather than one per option. Each option carries
+/// the single toggle's states — `muted` under the pointer, `accent` while on.
 ///
 /// One recipe covers both, because `ToggleGroupSpec` carries the option's
 /// style as a field: the group's `item` is the default every
@@ -77,8 +76,7 @@ ToggleGroupStyler vanillaToggleGroupStyle({
 /// A fill that paints nothing, the resting fill of every option.
 const _noFill = Color(0x00000000);
 
-/// The option height for one [VanillaToggleGroupSize]: shadcn's `h-8`, `h-9`,
-/// and `h-10`.
+/// The option height for one [VanillaToggleGroupSize]: 32, 36, or 40px.
 double _heightFor(VanillaToggleGroupSize size) => switch (size) {
   .small => VanillaSize.controlSm,
   .medium => VanillaSize.controlMd,
@@ -87,8 +85,8 @@ double _heightFor(VanillaToggleGroupSize size) => switch (size) {
 
 /// The outline variant's one outline around the strip.
 ///
-/// No `shadow-xs`, unlike shadcn's: the strip has no effects layer, and a
-/// decoration shadow under its transparent fill shows through as a gray wash.
+/// No shadow: the strip has no effects layer, and a decoration shadow under its
+/// transparent fill shows through as a gray wash.
 ToggleGroupStyler _groupOutline(VanillaToggleGroupVariant variant) =>
     switch (variant) {
       .ghost => ToggleGroupStyler(),
@@ -98,7 +96,7 @@ ToggleGroupStyler _groupOutline(VanillaToggleGroupVariant variant) =>
     };
 
 /// One option: the single toggle's off/hover/on/focus/disabled story, square
-/// and at shadcn's `px-3`.
+/// and with a 12px side inset.
 ToggleGroupItemStyler _itemStyle(
   double height,
   VanillaToggleGroupVariant variant,
@@ -136,7 +134,7 @@ ToggleGroupItemStyler _itemStyle(
 ToggleGroupItemStyler _content(Color foreground) =>
     ToggleGroupItemStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// A *foreground* decoration, because `ToggleGroupItemSpec` has no
 /// `containerEffects` layer to paint an outline into. It is stroked inside

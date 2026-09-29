@@ -12,12 +12,12 @@ part of 'toggle.dart';
 /// pointer and keyboard behavior, and the on/off semantics; this recipe owns
 /// the geometry and the off/hover/on/focus/disabled fragments.
 ///
-/// These are shadcn's states. A toggle that is on sits on `accent` in
-/// `accentForeground`; a ghost toggle under the pointer sits on `muted` in
-/// `mutedForeground`. In the shipped themes the two surfaces are the same
-/// gray, so "on" is told from "pointed at" by its full-strength content, and
-/// a toggle that is on stays on when hovered. An outline toggle hovers onto
-/// `accent` instead, and keeps its outline in every state.
+/// A toggle that is on sits on `accent` in `accentForeground`; a ghost toggle
+/// under the pointer sits on `muted` in `mutedForeground`. In the shipped
+/// themes the two surfaces are the same gray, so "on" is told from "pointed at"
+/// by its full-strength content, and a toggle that is on stays on when hovered.
+/// An outline toggle hovers onto `accent` instead, and keeps its outline in
+/// every state.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable

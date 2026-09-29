@@ -8,10 +8,9 @@ part of 'tabs.dart';
 
 /// The application's tab-strip recipe.
 ///
-/// The strip is shadcn's `TabsList`: 36px tall with a 3px inset, hugging its
-/// tabs. The [AcmeTabsVariant.filled] list is a recessed `muted` surface
-/// with large corners; the [AcmeTabsVariant.line] list has no surface of
-/// its own.
+/// The strip is 36px tall with a 3px inset, hugging its tabs. The
+/// [AcmeTabsVariant.filled] list is a recessed `muted` surface with large
+/// corners; the [AcmeTabsVariant.line] list has no surface of its own.
 ///
 /// The strip does not scroll. Tabs wider than the container are a layout
 /// decision, and the scroll view belongs **outside** the bar:
@@ -96,12 +95,12 @@ class AcmeTabBar extends StatelessWidget {
 /// ownership of rendering, selection, keyboard traversal, and the tab
 /// accessibility semantics — this recipe never reimplements any of that.
 ///
-/// It is shadcn's `TabsTrigger`: `textSm` at medium weight, 60% `foreground`
-/// until it is hovered or current (`mutedForeground` in the dark theme). In
-/// the filled list the current tab is lifted onto the page color with a small
-/// shadow — in the dark theme onto a faint `input` well with an `input`
-/// outline, since the dark page is darker than the list it would lift out of.
-/// In the line list the current tab is underlined in `foreground` instead.
+/// A tab is `textSm` at medium weight, 60% `foreground` until it is hovered or
+/// current (`mutedForeground` in the dark theme). In the filled list the
+/// current tab is lifted onto the page color with a small shadow — in the dark
+/// theme onto a faint `input` well with an `input` outline, since the dark page
+/// is darker than the list it would lift out of. In the line list the current
+/// tab is underlined in `foreground` instead.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
@@ -226,9 +225,9 @@ class AcmeTab extends StatelessWidget {
 
 /// The application's recipe for the panel a tab reveals.
 ///
-/// It exists so the panel carries the application's prefix and has one place
-/// to edit, and it earns that by owning the gap between the strip and the
-/// content: shadcn's `gap-2`.
+/// It exists so the panel carries the application's prefix and has one place to
+/// edit, and it earns that by owning the gap between the strip and the content:
+/// 8px.
 class AcmeTabView extends StatelessWidget {
   const AcmeTabView({
     super.key,

@@ -41,12 +41,12 @@ enum PlaygroundToggleSize {
 /// pointer and keyboard behavior, and the on/off semantics; this recipe owns
 /// the geometry and the off/hover/on/focus/disabled fragments.
 ///
-/// These are shadcn's states. A toggle that is on sits on `accent` in
-/// `accentForeground`; a ghost toggle under the pointer sits on `muted` in
-/// `mutedForeground`. In the shipped themes the two surfaces are the same
-/// gray, so "on" is told from "pointed at" by its full-strength content, and
-/// a toggle that is on stays on when hovered. An outline toggle hovers onto
-/// `accent` instead, and keeps its outline in every state.
+/// A toggle that is on sits on `accent` in `accentForeground`; a ghost toggle
+/// under the pointer sits on `muted` in `mutedForeground`. In the shipped
+/// themes the two surfaces are the same gray, so "on" is told from "pointed at"
+/// by its full-strength content, and a toggle that is on stays on when hovered.
+/// An outline toggle hovers onto `accent` instead, and keeps its outline in
+/// every state.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable
@@ -78,8 +78,8 @@ ToggleStyler playgroundToggleStyle({
 /// A fill that paints nothing, used while the toggle is off.
 const _noFill = Color(0x00000000);
 
-/// Geometry for one [PlaygroundToggleSize]: shadcn's `h-8 min-w-8 px-1.5`,
-/// `h-9 min-w-9 px-2`, and `h-10 min-w-10 px-2.5`.
+/// Geometry for one [PlaygroundToggleSize]: 32px with a 6px side inset, 36px with
+/// 8, and 40px with 10.
 ///
 /// The minimum width equals the height, so an icon-only toggle is square.
 typedef _PlaygroundToggleMetrics = ({double minHeight, double paddingX});
@@ -120,33 +120,33 @@ ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
         .icon(.size(PlaygroundSize.icon));
 
 /// The variant's outline and its hover.
-ToggleStyler _variantStyle(PlaygroundToggleVariant variant) =>
-    switch (variant) {
-      .ghost => ToggleStyler().onHovered(
-        _content(
-          PlaygroundTokens.mutedForeground(),
-        ).color(PlaygroundTokens.muted()),
-      ),
-      // No `shadow-xs`, unlike shadcn's: `ToggleSpec` has no effects layer, and
-      // a decoration shadow under a transparent control shows through it as a
-      // gray wash.
-      .outline =>
-        ToggleStyler()
-            .border(
-              .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
-            )
-            .onHovered(
-              _content(
-                PlaygroundTokens.accentForeground(),
-              ).color(PlaygroundTokens.accent()),
-            ),
-    };
+ToggleStyler _variantStyle(
+  PlaygroundToggleVariant variant,
+) => switch (variant) {
+  .ghost => ToggleStyler().onHovered(
+    _content(
+      PlaygroundTokens.mutedForeground(),
+    ).color(PlaygroundTokens.muted()),
+  ),
+  // No shadow: `ToggleSpec` has no effects layer, and a decoration shadow under
+  // a transparent control shows through it as a gray wash.
+  .outline =>
+    ToggleStyler()
+        .border(
+          .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+        )
+        .onHovered(
+          _content(
+            PlaygroundTokens.accentForeground(),
+          ).color(PlaygroundTokens.accent()),
+        ),
+};
 
 /// Applies one content color to the label and the icons.
 ToggleStyler _content(Color foreground) =>
     ToggleStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// A *foreground* decoration rather than the box border: `ToggleSpec` has no
 /// `containerEffects` layer to paint an outline into, and Flutter insets a

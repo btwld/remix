@@ -19,8 +19,8 @@ enum PlaygroundIconButtonVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis on the page's own fill, with an `input` outline and a
-  /// slight lift.
+  /// Low emphasis: a quiet fill inside an `input` outline, with a slight
+  /// lift.
   outline,
 
   /// Low emphasis with no fill and no border.
@@ -50,7 +50,7 @@ enum PlaygroundIconButtonSize {
 ///
 /// Everything visual about an icon button lives in this function: geometry, the
 /// five variants, hover and press motion, and the hover/pressed/focus/disabled
-/// fragments. Every state change settles over 150ms on Tailwind's default curve
+/// fragments. Every state change settles over 150ms on the shared curve
 /// (`PlaygroundMotion.standard`). Remix keeps ownership of rendering, pointer and
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
@@ -85,23 +85,23 @@ IconButtonStyler playgroundIconButtonStyle({
       .merge(style);
 }
 
-/// Alpha applied to the primary and destructive fills while hovered or
-/// pressed: shadcn's `hover:bg-primary/90`.
+/// Alpha applied to the primary and destructive fills while hovered or pressed:
+/// the fill at 90%.
 ///
-/// There is no separate pressed step, as in shadcn: a press lands on the
-/// hover fill. A deeper press would also take the destructive fill under the
-/// 4.5:1 floor its white glyph needs.
+/// There is no separate pressed step: a press lands on the hover fill. A deeper
+/// press would also take the destructive fill under the 4.5:1 floor its white
+/// glyph needs.
 const _hoverAlpha = 0.9;
 
-/// Alpha applied to the secondary fill while hovered: `hover:bg-secondary/80`.
+/// Alpha applied to the secondary fill while hovered: the fill at 80%.
 const _secondaryHoverAlpha = 0.8;
 
-/// The dark theme's destructive fills, at shadcn's 60% and a 70% hover. See
-/// the button recipe for why the hover stops short of shadcn's 90%.
+/// The dark theme's destructive fills, at 60% and a 70% hover. See the button
+/// recipe for why the hover stops short of 90%.
 const _darkDestructiveAlpha = 0.6;
 const _darkDestructiveHoverAlpha = 0.7;
 
-/// The dark ghost hover, `dark:hover:bg-accent/50`.
+/// The dark ghost hover, `accent` at 50%.
 const _darkGhostHoverAlpha = 0.5;
 
 final _primaryHoverFill = playgroundTint(PlaygroundTokens.primary, _hoverAlpha);
@@ -125,6 +125,25 @@ final _ghostHoverFill = playgroundTint(
   dark: _darkGhostHoverAlpha,
 );
 
+/// The outline variant's fill: the page color on a light page, and `input` at
+/// 30% on a dark one, so a dark outline control on a raised surface reads as
+/// part of that surface rather than as a hole cut through it.
+final _outlineFill = playgroundByBrightness(
+  light: PlaygroundTokens.background,
+  dark: playgroundTint(PlaygroundTokens.input, _darkOutlineFillAlpha),
+);
+
+/// The outline variant under the pointer: `accent`, or `input` at 50% on a
+/// dark page.
+final _outlineHoverFill = playgroundByBrightness(
+  light: PlaygroundTokens.accent,
+  dark: playgroundTint(PlaygroundTokens.input, _darkOutlineHoverAlpha),
+);
+
+/// See [_outlineFill] and [_outlineHoverFill].
+const _darkOutlineFillAlpha = 0.3;
+const _darkOutlineHoverAlpha = 0.5;
+
 /// Opacity of the loading spinner, so it reads as secondary to the icon.
 const _spinnerOpacity = 0.65;
 
@@ -134,8 +153,8 @@ const _spinnerDuration = Duration(milliseconds: 800);
 /// A fill that paints nothing, used by `ghost`.
 const _noFill = Color(0x00000000);
 
-/// The square's edge for one [PlaygroundIconButtonSize]: shadcn's `size-8`,
-/// `size-9`, and `size-10`. The glyph stays at 16 in every size.
+/// The square's edge for one [PlaygroundIconButtonSize]: 32, 36, or 40px, the
+/// button's heights. The glyph stays at 16 in every size.
 double _edgeFor(PlaygroundIconButtonSize size) => switch (size) {
   .small => PlaygroundSize.controlSm,
   .medium => PlaygroundSize.controlMd,
@@ -176,14 +195,13 @@ IconButtonStyler _variantStyle(PlaygroundIconButtonVariant variant) =>
         hoverFill: _destructiveHoverFill(),
       ),
       .outline =>
-        _quiet(
-              fill: PlaygroundTokens.background(),
-              hoverFill: PlaygroundTokens.accent(),
-            )
+        _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
             .border(
               .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
             )
-            .shadows(PlaygroundShadow.xs.box),
+            // In the effects layer rather than the decoration: the dark fill
+            // is translucent, and a decoration shadow would show through it.
+            .containerEffects(.behindContent(PlaygroundShadow.xs.effects)),
       .ghost => _quiet(fill: _noFill, hoverFill: _ghostHoverFill()),
     };
 
@@ -216,12 +234,12 @@ IconButtonStyler _quiet({required Color fill, required Color hoverFill}) {
 IconButtonStyler _content(IconButtonStyler style, Color foreground) =>
     style.icon(.color(foreground)).spinner(.color(foreground));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// box without taking layout space, so focusing a control never reflows the
-/// row it sits in. The outline variant also turns its own border `ring`, and
-/// the destructive variant rings in its own red, as shadcn's do.
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the box
+/// without taking layout space, so focusing a control never reflows the row it
+/// sits in. The outline variant also turns its own border `ring`, and the
+/// destructive variant rings in its own red.
 IconButtonStyler _focusVisibleStyle(PlaygroundIconButtonVariant variant) =>
     switch (variant) {
       .destructive => IconButtonStyler().containerEffects(
@@ -240,7 +258,7 @@ IconButtonStyler _focusVisibleStyle(PlaygroundIconButtonVariant variant) =>
       .ghost => IconButtonStyler().containerEffects(playgroundFocusRing()),
     };
 
-/// The destructive focus ring: `ring-destructive/20`, `/40` in the dark.
+/// The destructive focus ring: `destructive` at 20%, 40% in the dark.
 const _destructiveRingAlpha = 0.2;
 const _darkDestructiveRingAlpha = 0.4;
 

@@ -14,11 +14,11 @@ part 'dialog.g.dart';
 /// and barrier dismissal rules, and the dialog accessibility semantics; this
 /// recipe supplies the panel, the two text roles, and the action row.
 ///
-/// It is shadcn's dialog: the page's `background` fill with a `border`
-/// hairline, `radiusLg` corners, the heaviest shadow in the scale, a 24px
-/// inset, and at most 512px wide. The title is `textLg` semibold and set
-/// tight, the description `textSm` in `mutedForeground` 8px below it, and the
-/// decisions sit at the trailing edge 16px below that.
+/// It is the page's `background` fill with a `border` hairline, `radiusLg`
+/// corners, the heaviest shadow in the scale, a 24px inset, and at most 512px
+/// wide. The title is `textLg` semibold and set tight, the description `textSm`
+/// in `mutedForeground` 8px below it, and the decisions sit at the trailing
+/// edge 16px below that.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
@@ -34,9 +34,9 @@ DialogStyler playgroundDialogStyle({
     .shadows(PlaygroundShadow.lg.box)
     .title(
       .style(PlaygroundTokens.textLg.mix())
-          // shadcn's `leading-none`: the title sits on its own size, so the
-          // gap below it is the 8px the recipe says rather than 8 plus the
-          // line box's leading.
+          // A line height of 1: the title sits on its own size, so the gap
+          // below it is the 8px the recipe says rather than 8 plus the line
+          // box's leading.
           .height(1)
           .fontWeight(FontWeight.w600)
           .color(PlaygroundTokens.foreground())

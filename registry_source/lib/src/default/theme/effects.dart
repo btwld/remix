@@ -7,14 +7,14 @@ import 'tokens.dart';
 
 /// [token] at [alpha] of its own opacity, resolved from the active scope.
 ///
-/// This is shadcn's `bg-primary/90`: `vanillaTint(VanillaTokens.primary, 0.9)`.
-/// The alpha multiplies rather than replaces, because some tokens are already
-/// translucent — the dark theme's `border` is white at 10%, and half of it is
-/// white at 5%, not at 50%.
+/// `primary` at 90% is `vanillaTint(VanillaTokens.primary, 0.9)`. The alpha
+/// multiplies rather than replaces, because some tokens are already translucent
+/// — the dark theme's `border` is white at 10%, and half of it is white at 5%,
+/// not at 50%.
 ///
 /// [dark], when given, is the alpha used while a dark theme is active. It
-/// exists for the handful of fills shadcn lightens differently in the dark
-/// theme, such as `dark:bg-destructive/60`.
+/// exists for the handful of fills that sit at a different strength in the dark
+/// theme, such as the destructive fill at 60%.
 ///
 /// The obvious spelling would be `VanillaTokens.primary().withValues(...)`,
 /// but that records a Mix *directive*, and directives accumulate through
@@ -44,7 +44,7 @@ final _tints = <(ColorToken, double, double?), ContextToken<Color>>{};
 
 /// [light] while a light theme is active and [dark] while a dark one is.
 ///
-/// For the few places shadcn switches between two tokens rather than between
+/// For the few places a recipe switches between two tokens rather than between
 /// two strengths of one, such as a switch thumb that is `background` in the
 /// light theme and `foreground` in the dark. Either side may be a
 /// [vanillaTint]. Cached per pair, for the same reason [vanillaTint] is.
@@ -65,7 +65,7 @@ ContextToken<Color> vanillaByBrightness({
 final _byBrightness =
     <(MixToken<Color>, MixToken<Color>), ContextToken<Color>>{};
 
-/// shadcn's keyboard focus ring, `focus-visible:ring-[3px] ring-ring/50`.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// A 3px band of [color] at [alpha] (or [dark] in a dark theme), drawn
 /// outside the control with no offset, for a spec's Remix effects slot:
@@ -73,8 +73,8 @@ final _byBrightness =
 /// `thumbFocusEffects`. An outline takes no layout space, so focusing a
 /// control never reflows the row it sits in.
 ///
-/// A destructive control rings in its own color, as shadcn's does:
-/// `vanillaFocusRing(color: VanillaTokens.destructive, alpha: 0.2, dark: 0.4)`.
+/// A destructive control rings in its own color: `vanillaFocusRing(color:
+/// VanillaTokens.destructive, alpha: 0.2, dark: 0.4)`.
 RemixBoxEffectsMix vanillaFocusRing({
   ColorToken color = VanillaTokens.ring,
   double alpha = _ringAlpha,
@@ -114,17 +114,16 @@ BoxDecorationMix vanillaFocusRingDecoration({
   borderRadius: .all(radius ?? VanillaTokens.radiusMd()),
 );
 
-/// A focused control's own border, turned `ring`: shadcn's
-/// `focus-visible:border-ring`.
+/// A focused control's own border, turned `ring`.
 ///
 /// Only the color changes, so merge it over a control that already draws a
 /// border; one with no border would gain a hairline and shift its content.
 BoxBorderMix vanillaFocusBorder() => .all(.color(VanillaTokens.ring()));
 
-/// The strength of the focus ring, `ring-ring/50`.
+/// The strength of the focus ring: half of `ring`.
 const _ringAlpha = 0.5;
 
-/// shadcn's shadow scale, `shadow-xs` through `shadow-lg`.
+/// The shadow scale, from a barely-there `xs` to the `lg` of a dialog.
 ///
 /// Each level is one table of layers, handed out in the shapes recipes need:
 /// [box] for a styler's `shadows`, and [effects] for a Remix

@@ -12,10 +12,10 @@ part 'segmented_control.g.dart';
 ///
 /// A segmented control is one control divided into parts: the segments share a
 /// track, exactly one is chosen, and the chosen one is *lifted* out of the
-/// track rather than tinted on top of it. It is drawn as shadcn's filled tab
-/// list, so a segmented control and a tab strip on one page read as one family.
-/// Remix owns the rendering, the equal-width layout, the roving focus, and the
-/// group accessibility semantics.
+/// track rather than tinted on top of it. It is drawn as the filled tab list,
+/// so a segmented control and a tab strip on one page read as one family. Remix
+/// owns the rendering, the equal-width layout, the roving focus, and the group
+/// accessibility semantics.
 ///
 /// One recipe covers the track and the segments, because
 /// `SegmentedControlSpec` carries the segment's style as a field: the
@@ -44,8 +44,7 @@ SegmentedControlStyler vanillaSegmentedControlStyle({
       .merge(style);
 }
 
-/// Gap between the track edge and its segments, on every side: shadcn's
-/// `p-[3px]`.
+/// Gap between the track edge and its segments, on every side.
 const _trackInset = 3.0;
 
 /// A fill that paints nothing, used by an unchosen segment.
@@ -112,7 +111,7 @@ SegmentedControlItemStyler _content(Color foreground) =>
         .label(.color(foreground))
         .icon(.color(foreground));
 
-/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// segment without taking layout space, so focusing one never widens the

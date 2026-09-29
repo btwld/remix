@@ -6,10 +6,10 @@ import 'vanilla_spec.dart';
 /// Holds every Vanilla recipe to `registry_source/specs/vanilla.md`.
 ///
 /// Each target resolves one recipe under each shipped theme and compares one
-/// property with the value shadcn gives it. A target whose phase has not
-/// landed is skipped, with the phase in its name, so `flutter test` reports
-/// how much of the spec is still ahead. Run every target regardless with
-/// `flutter test --dart-define=VANILLA_SPEC_ALL=true test/vanilla`.
+/// property with its reference value. A target whose phase has not landed is
+/// skipped, with the phase in its name, so `flutter test` reports how much of
+/// the spec is still ahead. Run every target regardless with `flutter test
+/// --dart-define=VANILLA_SPEC_ALL=true test/vanilla`.
 void main() {
   const runAll = bool.fromEnvironment('VANILLA_SPEC_ALL');
 
@@ -46,7 +46,7 @@ void main() {
             expect(
               _unpacked(await target.actual(tester, theme.data)),
               _unpacked(target.expected(theme.data)),
-              reason: 'shadcn: ${target.source}',
+              reason: 'reference: ${target.source}',
             );
           },
           skip: !enforced,

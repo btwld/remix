@@ -23,9 +23,8 @@ part of 'skeleton.dart';
 /// )
 /// ```
 ///
-/// It is shadcn's skeleton: an `accent` block with `radiusMd` corners that
-/// pulses to half strength, as Tailwind's `animate-pulse` fades it, so a
-/// loading block reads as scenery rather than as content.
+/// It is an `accent` block with `radiusMd` corners that pulses to half
+/// strength, so a loading block reads as scenery rather than as content.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.

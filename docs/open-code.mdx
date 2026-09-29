@@ -28,7 +28,7 @@ Fortal preset does not add a `remix_fortal` dependency.
 
 | | `vanilla` | `fortal` |
 |---|---|---|
-| Design language | shadcn/ui's default look (new-york, neutral) | Radix Themes 3.3.0 parity surface |
+| Design language | Neutral and minimal, inspired by shadcn/ui | Radix Themes 3.3.0 parity surface |
 | Theme | 32 color tokens, a radius scale, and a type scale | 277 tokens, Radix color scales, scaling, radius, and panel modes |
 | Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable |
 | Best for | A house system you intend to shape | Starting from a complete Radix-like system |
@@ -572,10 +572,10 @@ Updated button.
 If you only want part of the upstream change, copy it out of the diff by hand.
 That is the intended workflow. The file is yours.
 
-### Moving a Vanilla install onto the shadcn theme
+### Moving an older Vanilla install onto the current theme
 
-The Vanilla preset now carries shadcn/ui's default theme (new-york, neutral).
-The recipes read new tokens, so update the theme together with the components:
+The Vanilla theme was rebuilt on a new token set. The recipes read the new
+tokens, so update the theme together with the components:
 
 ```bash
 remix add theme --diff
@@ -595,8 +595,8 @@ Then adjust any code of your own that read the old names:
   `muted`, so hover and selected surfaces stay distinct from outlines. A
   selected toggle no longer draws a `primary` outline.
 - There is no pressed step: a press lands on the hover fill.
-- `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is
-  shadcn's pill list; pass `variant: .line` to both for the underline strip.
+- `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is a
+  recessed pill list; pass `variant: .line` to both for the underline strip.
 - The root `UiThemeScope` now paints the page background and gives bare `Text`
   the theme's body run and bare `Icon`s its `foreground`, so remove any
   `ColoredBox` or `DefaultTextStyle` you added around the scope for that. A
@@ -821,7 +821,7 @@ final chart = SizedBox(
 ```
 
 The palette is `UiTokens.chart`: `chart1` to `chart5` in series order. The
-shipped values are shadcn's neutral gray ramp, the same five grays in both
+shipped values are a neutral gray ramp, the same five grays in both
 brightnesses, so series are told apart by lightness. Pie labels are off by
 default; a chart that turns them on colors each slice's label with
 `uiPieSliceLabelColor`, which picks `foreground` or `background` by contrast.

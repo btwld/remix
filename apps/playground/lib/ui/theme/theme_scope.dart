@@ -130,19 +130,18 @@ class PlaygroundThemeScope extends StatelessWidget {
 
 /// The text run a bare [Text] below the root scope inherits.
 ///
-/// shadcn sets the page's text on `body`: the theme's font, `foreground`, and
-/// the browser's default size, which its components render at `text-sm`. This
-/// is that run, so a `Text` with no style of its own reads as body copy in the
-/// theme's color in both brightnesses — instead of inheriting whatever the
-/// host set up, which in a dark theme is often dark text on a dark page.
+/// The theme's font at `textSm`, in `foreground`, so a `Text` with no style of
+/// its own reads as body copy in the theme's color in both brightnesses —
+/// instead of inheriting whatever the host set up, which in a dark theme is
+/// often dark text on a dark page.
 ///
 /// Recipes still set their own sizes and colors; this is only the fallback,
 /// and a nearer `DefaultTextStyle` wins through Flutter's normal inheritance.
 /// Place the scope *below* a Material or Cupertino host (in its `builder`) so
 /// the host's own text defaults do not sit between the two.
 ///
-/// A bare [Icon] takes `foreground` too, as an icon inherits the text color in
-/// shadcn; its size is left to the host.
+/// A bare [Icon] takes `foreground` too, the color of the text beside it; its
+/// size is left to the host.
 Widget _rootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
   required Widget child,
