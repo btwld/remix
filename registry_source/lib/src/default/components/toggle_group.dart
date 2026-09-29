@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle_group.g.dart';
@@ -70,9 +72,6 @@ const _gap = 4.0;
 /// Width of the outline every option draws, in every state.
 const _borderWidth = 1.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
 /// Opacity applied to an option while disabled.
 const _disabledOpacity = 0.5;
 
@@ -120,6 +119,7 @@ ToggleGroupItemStyler _itemStyle(
   VanillaToggleGroupVariant variant,
 ) {
   return _content(VanillaTokens.foreground())
+      .animate(VanillaMotion.standard)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)
@@ -146,7 +146,7 @@ ToggleGroupItemStyler _itemStyle(
             // told apart by colour alone is one a lot of people cannot read.
             .border(.all(_edge(VanillaTokens.primary()))),
       )
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle());
 }
 
@@ -164,23 +164,23 @@ BorderSideMix _edge(Color color) =>
 ToggleGroupItemStyler _content(Color foreground) =>
     ToggleGroupItemStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
 ///
 /// A *foreground* decoration rather than the box border: `ToggleGroupItemSpec`
 /// has no `containerEffects` layer to paint an outline into, and Flutter
 /// insets a container's content by its border widths — so adding a real border
-/// on focus would nudge the label.
-ToggleGroupItemStyler _focusVisibleStyle() =>
-    ToggleGroupItemStyler().foregroundDecoration(
-      BoxDecorationMix(
-        border: .all(
-          .color(
-            VanillaTokens.ring(),
-          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-        ),
-        borderRadius: .all(VanillaTokens.radiusMd()),
-      ),
-    );
+/// on focus would nudge the label. The outline variant also turns the
+/// option's own border `ring`.
+ToggleGroupItemStyler _focusVisibleStyle(VanillaToggleGroupVariant variant) {
+  final ring = ToggleGroupItemStyler().foregroundDecoration(
+    vanillaFocusRingDecoration(),
+  );
+
+  return switch (variant) {
+    .ghost => ring,
+    .outline => ring.border(vanillaFocusBorder()),
+  };
+}
 
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()

@@ -3,6 +3,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'radio.g.dart';
@@ -44,6 +45,7 @@ RadioStyler vanillaRadioStyle({
   RadioStyler style = const RadioStyler.create(),
 }) {
   return RadioStyler()
+      .animate(VanillaMotion.standard)
       .size(_diameter, _diameter)
       .alignment(.center)
       .borderRadius(.all(_circular))
@@ -62,8 +64,10 @@ RadioStyler vanillaRadioStyle({
               .color(VanillaTokens.mutedForeground()).width(_borderWidth),
             ),
       )
-      .onSelected(_selectedStyle())
+      // Before the selected fragment, so a chosen radio keeps its ring color
+      // while it also shows the focus ring.
       .onFocusVisible(_focusVisibleStyle())
+      .onSelected(_selectedStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
 }
@@ -86,12 +90,6 @@ const _borderWidth = 1.0;
 /// Thicker than the resting ring so a selected radio reads at a glance even
 /// where the dot is small.
 const _selectedBorderWidth = 1.5;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the control edge and its focus ring.
-const _focusRingOffset = 2.0;
 
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
@@ -121,18 +119,15 @@ RadioStyler _selectedStyle() => RadioStyler()
           .indicatorColor(_primaryHover()),
     );
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
+/// the circle's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// circle without taking layout space, so focusing a radio never reflows the
-/// row it sits in — and the recipe's own ring is already a border.
-RadioStyler _focusVisibleStyle() => RadioStyler().containerEffects(
-  .outline(
-    .color(
-      VanillaTokens.ring(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// row it sits in.
+RadioStyler _focusVisibleStyle() => RadioStyler()
+    .containerEffects(vanillaFocusRing())
+    .border(vanillaFocusBorder());
 
 /// Declared last so it wins over every other state fragment.
 ///

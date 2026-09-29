@@ -913,11 +913,9 @@ void main() {
         final effects = focused.spec.containerEffects;
 
         expect(effects, isNotNull);
-        expect(effects!.outline.color, theme.data.ring);
-        expect(effects.outline.width, 2);
-        expect(effects.outline.strokeAlign, BorderSide.strokeAlignInside);
+        expect(effects!.outline, _focusRing(theme.data));
         expect(effects.outline.style, BorderStyle.solid);
-        expect(effects.outlineOffset, 2);
+        expect(effects.outlineOffset, 0);
       });
     }
 
@@ -1698,11 +1696,9 @@ void main() {
         final effects = spec.spec.containerEffects;
 
         expect(effects, isNotNull);
-        expect(effects!.outline.color, theme.data.ring);
-        expect(effects.outline.width, 2);
-        expect(effects.outline.strokeAlign, BorderSide.strokeAlignInside);
+        expect(effects!.outline, _focusRing(theme.data));
         expect(effects.outline.style, BorderStyle.solid);
-        expect(effects.outlineOffset, 2);
+        expect(effects.outlineOffset, 0);
       });
     }
 
@@ -2150,11 +2146,7 @@ void main() {
         // label; `TabSpec` has no effects layer to paint an outline into.
         expect(
           _flexForegroundBorder(spec.spec.container),
-          Border.all(
-            color: theme.data.ring,
-            width: 2,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
+          _focusRingBorder(theme.data),
         );
       });
     }
@@ -3384,9 +3376,8 @@ void main() {
         states: const {WidgetState.focused, WidgetState.disabled},
       );
 
-      expect(focused.spec.containerEffects?.outline.color, theme.ring);
-      expect(focused.spec.containerEffects?.outline.width, 2);
-      expect(focused.spec.containerEffects?.outlineOffset, 2);
+      expect(focused.spec.containerEffects?.outline, _focusRing(theme));
+      expect(focused.spec.containerEffects?.outlineOffset, 0);
       expect(disabled.spec.containerEffects?.outline.style, BorderStyle.none);
       expect(
         disabled.widgetModifiers,
@@ -3585,11 +3576,7 @@ void main() {
       expect(_flexForegroundBorder(idle.spec.container), isNull);
       expect(
         _flexForegroundBorder(focused.spec.container),
-        Border.all(
-          color: theme.ring,
-          width: 2,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
+        _focusRingBorder(theme),
       );
       // And the ring genuinely does not move the label. Measured rather than
       // inferred: asserting *how* the ring is built only proves the mechanism
@@ -3756,8 +3743,7 @@ void main() {
         states: const {WidgetState.focused, WidgetState.disabled},
       );
 
-      expect(focused.spec.trackEffects?.outline.color, theme.ring);
-      expect(focused.spec.trackEffects?.outline.width, 2);
+      expect(focused.spec.trackEffects?.outline, _focusRing(theme));
       expect(disabled.spec.trackEffects?.outline.style, BorderStyle.none);
       expect(
         disabled.widgetModifiers,
@@ -3974,7 +3960,11 @@ void main() {
         states: const {WidgetState.disabled},
       );
 
-      expect(focused.spec.thumbFocusEffects?.outline.color, theme.ring);
+      // A step wider than other controls' ring: shadcn's `ring-4`.
+      expect(
+        focused.spec.thumbFocusEffects?.outline,
+        _focusRing(theme).copyWith(width: 4),
+      );
       expect(
         disabled.widgetModifiers,
         contains(
@@ -5493,10 +5483,7 @@ void main() {
       );
 
       expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
-      expect(focused.spec.containerEffects?.outline.color, theme.ring);
-      expect(focused.spec.containerEffects?.outline.width, 2);
-      // No offset, unlike the button's: sections stack directly on each other
-      // and an outward ring would cross into its neighbours.
+      expect(focused.spec.containerEffects?.outline, _focusRing(theme));
       expect(focused.spec.containerEffects?.outlineOffset ?? 0, 0);
     });
 
@@ -6131,6 +6118,18 @@ const _themes = <({String name, AcmeThemeData data})>[
 /// The control radius, the step every button-like recipe rounds to.
 Radius _radiusMd(AcmeThemeData theme) =>
     theme.tokens[AcmeTokens.radiusMd]! as Radius;
+
+/// shadcn's focus ring: a 3px band of `ring` at half strength, drawn outside
+/// the control with no offset.
+BorderSide _focusRing(AcmeThemeData theme) => BorderSide(
+  color: theme.ring.withValues(alpha: theme.ring.a * 0.5),
+  width: 3,
+);
+
+/// [_focusRing] as the foreground border of a control with no effects slot.
+Border _focusRingBorder(AcmeThemeData theme) => Border.fromBorderSide(
+  _focusRing(theme).copyWith(strokeAlign: BorderSide.strokeAlignOutside),
+);
 
 /// The destructive fill at rest: solid in the light theme, 60% in the dark.
 Color _destructiveFill(AcmeThemeData theme) => theme.destructive.withValues(

@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'textfield.g.dart';
@@ -96,12 +98,6 @@ const _labelSize = 13.0;
 /// Width of the field outline.
 const _borderWidth = 1.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the field edge and its focus ring.
-const _focusRingOffset = 2.0;
-
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
@@ -120,6 +116,7 @@ const _textSize = 14.0;
 /// Both recipes share this whole body; only the box's height and the
 /// accessory alignment differ between them.
 TextFieldStyler _base() => TextFieldStyler()
+    .animate(VanillaMotion.standard)
     .color(VanillaTokens.background())
     .border(.color(VanillaTokens.border()).width(_borderWidth))
     .borderRadius(.all(VanillaTokens.radiusMd()))
@@ -141,18 +138,15 @@ TextFieldStyler _base() => TextFieldStyler()
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
+/// the field's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// box without taking layout space, so focusing a field never reflows the form
-/// it sits in — and the field already has a border of its own.
-TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
-  .outline(
-    .color(
-      VanillaTokens.ring(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// it sits in.
+TextFieldStyler _focusVisibleStyle() => TextFieldStyler()
+    .containerEffects(vanillaFocusRing())
+    .border(vanillaFocusBorder());
 
 /// The invalid field: a `destructive` outline and a heavier helper line.
 ///
@@ -173,8 +167,25 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
       .border(.color(VanillaTokens.destructive()).width(_borderWidth))
       .helperText(
         .color(VanillaTokens.foreground()).fontWeight(FontWeight.w500),
+      )
+      // An invalid field that takes focus rings in its own red, as shadcn's
+      // `aria-invalid:ring-destructive/20` does, and keeps its red outline.
+      .onFocusVisible(
+        TextFieldStyler()
+            .containerEffects(
+              vanillaFocusRing(
+                color: VanillaTokens.destructive,
+                alpha: _errorRingAlpha,
+                dark: _darkErrorRingAlpha,
+              ),
+            )
+            .border(.color(VanillaTokens.destructive())),
       ),
 );
+
+/// The invalid field's focus ring: `ring-destructive/20`, `/40` in the dark.
+const _errorRingAlpha = 0.2;
+const _darkErrorRingAlpha = 0.4;
 
 /// Declared last so it wins over every other state fragment.
 ///

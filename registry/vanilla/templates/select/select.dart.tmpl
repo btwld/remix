@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'select.g.dart';
@@ -87,12 +89,6 @@ const _rowPaddingY = 6.0;
 /// replacing it, which is why the recipe sets both.
 const _placeholderOpacity = 1.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the trigger edge and its focus ring.
-const _focusRingOffset = 2.0;
-
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
@@ -115,6 +111,7 @@ const _textSize = 14.0;
 
 /// The closed control: a field showing the current value and a chevron.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
+    .animate({{typePrefix}}Motion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .mainAxisAlignment(.spaceBetween)
@@ -144,14 +141,12 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
           .icon(.color({{typePrefix}}Tokens.accentForeground()))
           .indicator(.color({{typePrefix}}Tokens.accentForeground())),
     )
+    // shadcn's 3px `ring` band at half strength, with the trigger's own
+    // outline turned `ring`.
     .onFocusVisible(
-      .containerEffects(
-        .outline(
-          .color(
-            {{typePrefix}}Tokens.ring(),
-          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-        ).outlineOffset(_focusRingOffset),
-      ),
+      SelectTriggerStyler()
+          .containerEffects({{valuePrefix}}FocusRing())
+          .border({{valuePrefix}}FocusBorder()),
     )
     .onDisabled(
       SelectTriggerStyler()
@@ -175,6 +170,7 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// on, because a select is as often driven by the keyboard as by the mouse.
 /// The chosen option is marked by its check icon, which Remix renders.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
+    .animate({{typePrefix}}Motion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(_rowHeight)

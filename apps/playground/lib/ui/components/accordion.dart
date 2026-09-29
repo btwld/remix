@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'accordion.g.dart';
@@ -69,6 +71,7 @@ part 'accordion.g.dart';
 AccordionStyler playgroundAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()
+    .animate(PlaygroundMotion.standard)
     // `container` has to be reached by name. `AccordionStyler` forwards its
     // box shorthand to `trigger`, so a bare `.border(...)` would outline the
     // clickable row rather than the section, and the rule between sections
@@ -129,13 +132,6 @@ const _iconSize = 16.0;
 /// Gap between the open panel's content and the rule below it.
 const _contentGap = 16.0;
 
-/// Width of the keyboard focus ring.
-///
-/// It carries no offset, unlike the button's. Sections stack directly on top
-/// of one another, so a ring pushed outward would cross into the section
-/// above and below it.
-const _focusRingWidth = 2.0;
-
 /// Opacity applied to the whole section while disabled.
 const _disabledOpacity = 0.5;
 
@@ -166,18 +162,13 @@ AccordionStyler _openStyle() =>
 AccordionStyler _icons(Color color) =>
     AccordionStyler().leadingIcon(.color(color)).trailingIcon(.color(color));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// section without taking layout space, and the section's own border is
 /// already carrying the rule between rows.
-AccordionStyler _focusVisibleStyle() => AccordionStyler().containerEffects(
-  .outline(
-    .color(
-      PlaygroundTokens.ring(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ),
-);
+AccordionStyler _focusVisibleStyle() =>
+    AccordionStyler().containerEffects(playgroundFocusRing());
 
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()

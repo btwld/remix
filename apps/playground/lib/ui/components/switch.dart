@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'switch.g.dart';
@@ -25,6 +27,7 @@ SwitchStyler playgroundSwitchStyle({
   SwitchStyler style = const SwitchStyler.create(),
 }) {
   return SwitchStyler()
+      .animate(PlaygroundMotion.standard)
       .size(_trackHeight * _trackRatio, _trackHeight)
       .padding(.all(_thumbInset))
       .borderRadius(.all(_pill))
@@ -65,12 +68,6 @@ const _pill = Radius.circular(999);
 /// Width of the track and thumb outlines.
 const _borderWidth = 1.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the track edge and its focus ring.
-const _focusRingOffset = 2.0;
-
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
@@ -86,21 +83,15 @@ const _trackHeight = 20.0;
 /// sides, so the two cannot drift apart.
 const _thumbSize = _trackHeight - _thumbInset * 2;
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
+/// the track's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// track without taking layout space, so focusing a switch never reflows the
 /// row it sits in.
-SwitchStyler _focusVisibleStyle() => SwitchStyler().trackEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: PlaygroundTokens.ring(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
-);
+SwitchStyler _focusVisibleStyle() => SwitchStyler()
+    .trackEffects(playgroundFocusRing())
+    .border(playgroundFocusBorder());
 
 /// Declared last so it wins over every other state fragment.
 ///

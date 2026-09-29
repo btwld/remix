@@ -8,12 +8,12 @@ part of 'icon_button.dart';
 
 /// The application's IconButton recipe.
 ///
-/// Everything visual about an icon button lives in this function: geometry,
-/// the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
-/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
-/// behavior, accessibility semantics, and the loading/disabled interaction
-/// rules — this recipe never reimplements any of that.
+/// Everything visual about an icon button lives in this function: geometry, the
+/// five variants, hover and press motion, and the hover/pressed/focus/disabled
+/// fragments. Every state change settles over 150ms on Tailwind's default curve
+/// (`VanillaMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// keyboard behavior, accessibility semantics, and the loading/disabled
+/// interaction rules — this recipe never reimplements any of that.
 ///
 /// It restates the button's metrics and dimming rather than sharing them.
 /// That is deliberate: the two components have separate update stories, and a

@@ -5,6 +5,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'checkbox.g.dart';
@@ -69,9 +70,11 @@ CheckboxStyler {{valuePrefix}}CheckboxStyle({
               .color({{typePrefix}}Tokens.mutedForeground()).width(_borderWidth),
             ),
       )
+      // Before the checked fragments, so a checked box keeps its `primary`
+      // outline while it also shows the ring.
+      .onFocusVisible(_focusVisibleStyle())
       .onSelected(checked)
       .onIndeterminate(checked)
-      .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
 }
@@ -125,12 +128,6 @@ final _boxRadius = ContextToken<Radius>((context) {
 /// Width of the box outline, in every state.
 const _borderWidth = 1.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the control edge and its focus ring.
-const _focusRingOffset = 2.0;
-
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
@@ -152,6 +149,7 @@ const _labelSize = 14.0;
 /// all while unchecked, so the only states that can show one set their own
 /// content color.
 CheckboxStyler _base() => CheckboxStyler()
+    .animate({{typePrefix}}Motion.standard)
     .size(_box, _box)
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
@@ -177,18 +175,15 @@ CheckboxStyler _checkedStyle() => _filled({{typePrefix}}Tokens.primary())
 CheckboxStyler _filled(Color fill) =>
     CheckboxStyler().color(fill).border(.color(fill).width(_borderWidth));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength, with
+/// the box's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// box without taking layout space, so focusing a checkbox never reflows the
 /// row it sits in.
-CheckboxStyler _focusVisibleStyle() => CheckboxStyler().containerEffects(
-  .outline(
-    .color(
-      {{typePrefix}}Tokens.ring(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+CheckboxStyler _focusVisibleStyle() => CheckboxStyler()
+    .containerEffects({{valuePrefix}}FocusRing())
+    .border({{valuePrefix}}FocusBorder());
 
 /// Declared last so it wins over every other state fragment.
 ///

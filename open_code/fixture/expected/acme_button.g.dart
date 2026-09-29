@@ -10,10 +10,11 @@ part of 'button.dart';
 ///
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
-/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
-/// behavior, accessibility semantics, and the loading/disabled interaction
-/// rules — this recipe never reimplements any of that.
+/// hover/pressed/focus/disabled fragments. Every state change settles over
+/// 150ms on Tailwind's default curve (`AcmeMotion.standard`). Remix keeps
+/// ownership of rendering, pointer and keyboard behavior, accessibility
+/// semantics, and the loading/disabled interaction rules — this recipe never
+/// reimplements any of that.
 ///
 /// `@MixWidget(target: RemixButton.new)` generates `AcmeButton` into
 /// `button.g.dart`: an adapter whose constructor is this function's

@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import 'scale.dart';
 import 'theme_scope.dart';
+import 'tokens.dart';
 
 /// [token] at [alpha] of its own opacity, resolved from the active scope.
 ///
@@ -40,6 +42,57 @@ ContextToken<Color> playgroundTint(
 );
 
 final _tints = <(ColorToken, double, double?), ContextToken<Color>>{};
+
+/// shadcn's keyboard focus ring, `focus-visible:ring-[3px] ring-ring/50`.
+///
+/// A 3px band of [color] at [alpha] (or [dark] in a dark theme), drawn
+/// outside the control with no offset, for a spec's Remix effects slot:
+/// `containerEffects`, a switch's `trackEffects`, or a slider's
+/// `thumbFocusEffects`. An outline takes no layout space, so focusing a
+/// control never reflows the row it sits in.
+///
+/// A destructive control rings in its own color, as shadcn's does:
+/// `playgroundFocusRing(color: PlaygroundTokens.destructive, alpha: 0.2, dark: 0.4)`.
+RemixBoxEffectsMix playgroundFocusRing({
+  ColorToken color = PlaygroundTokens.ring,
+  double alpha = _ringAlpha,
+  double? dark,
+  double width = PlaygroundStroke.ring,
+}) => RemixBoxEffectsMix(
+  outline: BorderSideMix(
+    color: playgroundTint(color, alpha, dark: dark)(),
+    width: width,
+  ),
+  outlineOffset: 0,
+);
+
+/// [playgroundFocusRing] as a foreground decoration, for the specs that have no
+/// effects slot: a toggle, a toggle group's items, a tab, a menu trigger.
+///
+/// The border is stroked outside the box, so the ring sits where the effects
+/// outline would and still takes no layout space. [radius] is the control's
+/// own corner radius, which the ring follows.
+BoxDecorationMix playgroundFocusRingDecoration({Radius? radius}) =>
+    BoxDecorationMix(
+      border: .all(
+        BorderSideMix(
+          color: playgroundTint(PlaygroundTokens.ring, _ringAlpha)(),
+          width: PlaygroundStroke.ring,
+          strokeAlign: BorderSide.strokeAlignOutside,
+        ),
+      ),
+      borderRadius: .all(radius ?? PlaygroundTokens.radiusMd()),
+    );
+
+/// A focused control's own border, turned `ring`: shadcn's
+/// `focus-visible:border-ring`.
+///
+/// Only the color changes, so merge it over a control that already draws a
+/// border; one with no border would gain a hairline and shift its content.
+BoxBorderMix playgroundFocusBorder() => .all(.color(PlaygroundTokens.ring()));
+
+/// The strength of the focus ring, `ring-ring/50`.
+const _ringAlpha = 0.5;
 
 /// shadcn's shadow scale, `shadow-xs` through `shadow-lg`.
 ///

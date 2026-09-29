@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'disclosure.g.dart';
@@ -62,6 +64,7 @@ part 'disclosure.g.dart';
 DisclosureStyler playgroundDisclosureStyle({
   DisclosureStyler style = const DisclosureStyler.create(),
 }) => DisclosureStyler()
+    .animate(PlaygroundMotion.standard)
     // These are the forwarded box shorthand, so they land on `trigger`: the
     // row a reader clicks to open the section.
     .width(double.infinity)
@@ -113,9 +116,6 @@ const _paddingY = 10.0;
 /// gets text touching it.
 const _contentGap = 8.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
 /// Opacity applied to the whole section while disabled.
 const _disabledOpacity = 0.5;
 
@@ -130,13 +130,10 @@ const _disabledOpacity = 0.5;
 /// paints over the box's own bounds rather than beside them, so the ring
 /// takes no layout space and opening the section never reflows the page. A
 /// plain `.border(...)` would push the trigger's content in by two pixels the
-/// moment it took focus.
+/// moment it took focus. The ring is shadcn's 3px `ring` band at half
+/// strength, stroked outside the trigger.
 DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
-  .foregroundDecoration(
-    BoxDecorationMix.border(
-      .color(PlaygroundTokens.ring()).width(_focusRingWidth),
-    ).borderRadius(.all(PlaygroundTokens.radiusMd())),
-  ),
+  .foregroundDecoration(playgroundFocusRingDecoration()),
 );
 
 /// Declared last so it wins over every other state fragment.

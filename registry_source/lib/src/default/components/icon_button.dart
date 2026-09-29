@@ -3,6 +3,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'icon_button.g.dart';
@@ -46,12 +47,12 @@ enum VanillaIconButtonSize {
 
 /// The application's IconButton recipe.
 ///
-/// Everything visual about an icon button lives in this function: geometry,
-/// the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
-/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
-/// behavior, accessibility semantics, and the loading/disabled interaction
-/// rules — this recipe never reimplements any of that.
+/// Everything visual about an icon button lives in this function: geometry, the
+/// five variants, hover and press motion, and the hover/pressed/focus/disabled
+/// fragments. Every state change settles over 150ms on Tailwind's default curve
+/// (`VanillaMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// keyboard behavior, accessibility semantics, and the loading/disabled
+/// interaction rules — this recipe never reimplements any of that.
 ///
 /// It restates the button's metrics and dimming rather than sharing them.
 /// That is deliberate: the two components have separate update stories, and a
@@ -78,7 +79,7 @@ IconButtonStyler vanillaIconButtonStyle({
 }) {
   return _base(_metricsFor(size))
       .merge(_variantStyle(variant))
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
@@ -112,12 +113,6 @@ final _destructiveHoverFill = vanillaTint(
   dark: _darkDestructiveHoverAlpha,
 );
 
-/// Hover and the other state changes.
-const _motionDuration = Duration(milliseconds: 100);
-
-/// Press is shorter than the base transition.
-const _pressedMotionDuration = Duration(milliseconds: 40);
-
 /// Opacity of the loading spinner, so it reads as secondary to the icon.
 const _spinnerOpacity = 0.65;
 
@@ -126,12 +121,6 @@ const _spinnerDuration = Duration(milliseconds: 800);
 
 /// Width of the outline the `outline` variant draws.
 const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the control edge and its focus ring.
-const _focusRingOffset = 2.0;
 
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
@@ -154,7 +143,7 @@ _VanillaIconButtonMetrics _metricsFor(VanillaIconButtonSize size) =>
 /// The box is square and centered, so the control's footprint does not change
 /// with the glyph inside it.
 IconButtonStyler _base(_VanillaIconButtonMetrics metrics) => IconButtonStyler()
-    .animate(AnimationConfig.easeOut(_motionDuration))
+    .animate(VanillaMotion.standard)
     .size(metrics.edge, metrics.edge)
     .alignment(.center)
     .borderRadius(.all(VanillaTokens.radiusMd()))
@@ -191,13 +180,10 @@ IconButtonStyler _filled({
   required Color fill,
   required Color foreground,
   required Color hoverFill,
-}) => _content(.color(fill), foreground)
-    .onHovered(.color(hoverFill))
-    .onPressed(
-      IconButtonStyler()
-          .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-          .color(hoverFill),
-    );
+}) => _content(
+  .color(fill),
+  foreground,
+).onHovered(.color(hoverFill)).onPressed(.color(hoverFill));
 
 /// A transparent variant: `accent` is what makes interaction visible.
 IconButtonStyler _quiet({required bool bordered}) {
@@ -218,9 +204,7 @@ IconButtonStyler _quiet({required bool bordered}) {
       // would paint the accent surface under the default foreground.
       .onPressed(
         _content(
-          IconButtonStyler()
-              .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-              .color(VanillaTokens.accent()),
+          .color(VanillaTokens.accent()),
           VanillaTokens.accentForeground(),
         ),
       );
@@ -230,18 +214,33 @@ IconButtonStyler _quiet({required bool bordered}) {
 IconButtonStyler _content(IconButtonStyler style, Color foreground) =>
     style.icon(.color(foreground)).spinner(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// box without taking layout space, so focusing a control never reflows the
-/// row it sits in.
-IconButtonStyler _focusVisibleStyle() => IconButtonStyler().containerEffects(
-  .outline(
-    .color(
-      VanillaTokens.ring(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// row it sits in. The outline variant also turns its own border `ring`, and
+/// the destructive variant rings in its own red, as shadcn's do.
+IconButtonStyler _focusVisibleStyle(VanillaIconButtonVariant variant) =>
+    switch (variant) {
+      .destructive => IconButtonStyler().containerEffects(
+        vanillaFocusRing(
+          color: VanillaTokens.destructive,
+          alpha: _destructiveRingAlpha,
+          dark: _darkDestructiveRingAlpha,
+        ),
+      ),
+      .outline =>
+        IconButtonStyler()
+            .containerEffects(vanillaFocusRing())
+            .border(vanillaFocusBorder()),
+      .primary ||
+      .secondary ||
+      .ghost => IconButtonStyler().containerEffects(vanillaFocusRing()),
+    };
+
+/// The destructive focus ring: `ring-destructive/20`, `/40` in the dark.
+const _destructiveRingAlpha = 0.2;
+const _darkDestructiveRingAlpha = 0.4;
 
 /// Declared last so it wins over every other state fragment.
 ///

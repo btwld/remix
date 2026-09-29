@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'segmented_control.g.dart';
@@ -60,13 +62,6 @@ const _segmentRadiusInset = _trackInset;
 /// Width of the chosen segment's outline.
 const _borderWidth = 1.0;
 
-/// Width of the keyboard focus ring.
-///
-/// It carries no offset, unlike the button's. Segments sit flush against each
-/// other inside a 3px track inset, so a ring pushed outward would cross into
-/// the neighbouring segment.
-const _focusRingWidth = 2.0;
-
 /// Opacity applied to a segment while disabled.
 const _disabledOpacity = 0.5;
 
@@ -101,6 +96,7 @@ const _iconSize = 16.0;
 /// surface and a heavier weight instead, and weight survives where a colour
 /// difference would not.
 SegmentedControlItemStyler _itemStyle() => _content(VanillaTokens.foreground())
+    .animate(VanillaMotion.standard)
     .color(_noFill)
     .alignment(.center)
     .minHeight(_minHeight)
@@ -146,19 +142,13 @@ SegmentedControlItemStyler _content(Color foreground) =>
         .label(.color(foreground))
         .icon(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// segment without taking layout space, so focusing one never widens the
 /// track.
 SegmentedControlItemStyler _focusVisibleStyle() =>
-    SegmentedControlItemStyler().containerEffects(
-      .outline(
-        .color(
-          VanillaTokens.ring(),
-        ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-      ),
-    );
+    SegmentedControlItemStyler().containerEffects(vanillaFocusRing());
 
 /// Declared last so it wins over every other state fragment.
 SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()

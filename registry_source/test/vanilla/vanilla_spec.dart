@@ -16,7 +16,7 @@ import 'support.dart';
 /// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
 /// checked once that phase is listed in [enforcedPhases]; until then it is
 /// reported as skipped, so the distance to the spec stays visible.
-const enforcedPhases = <String>{};
+const enforcedPhases = <String>{'E'};
 
 /// One measured property of one resolved recipe.
 final class SpecTarget {

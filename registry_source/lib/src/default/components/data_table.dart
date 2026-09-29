@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'checkbox.dart';
 import 'icon_button.dart';
@@ -49,7 +50,7 @@ DataTableStyler vanillaDataTableStyle({
     // The header sits on `muted` so a long table keeps its column names
     // legible while the body scrolls under them.
     .headerRow(.color(VanillaTokens.muted()).border(_rowRule()))
-    .bodyRow(.border(_rowRule()))
+    .bodyRow(BoxStyler().animate(VanillaMotion.standard).border(_rowRule()))
     // Without this the bottom row's rule would double up with the frame's own
     // edge, which reads as a two-pixel border on one side only.
     .lastBodyRow(.border(.bottom(.style(.none))))

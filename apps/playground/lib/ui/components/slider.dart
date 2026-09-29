@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'slider.g.dart';
@@ -49,6 +51,7 @@ SliderStyler playgroundSliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
+      .animate(PlaygroundMotion.standard)
       .thickness(_rail)
       .trackColor(PlaygroundTokens.muted())
       .rangeColor(PlaygroundTokens.primary())
@@ -78,11 +81,9 @@ const _circular = Radius.circular(999);
 /// Width of the thumb's outline.
 const _thumbBorderWidth = 2.0;
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the thumb edge and its focus ring.
-const _focusRingOffset = 2.0;
+/// Width of the ring around a focused thumb: shadcn's `ring-4`, a step
+/// wider than other controls' because the thumb is a small target.
+const _thumbRingWidth = 4.0;
 
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
@@ -107,14 +108,7 @@ const _thumb = _rail * _thumbRatio;
 /// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
 /// only while the slider has visible focus, which is the state a ring is for.
 SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: PlaygroundTokens.ring(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  playgroundFocusRing(width: _thumbRingWidth),
 );
 
 /// Declared last so it wins over every other state fragment.

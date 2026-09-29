@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'menu.g.dart';
@@ -80,9 +82,6 @@ const _iconSize = 16.0;
 /// Vertical space a divider claims between two groups of rows.
 const _dividerMargin = 4.0;
 
-/// Width of the keyboard focus ring on the trigger.
-const _focusRingWidth = 2.0;
-
 /// Opacity applied to a trigger or a row the reader cannot use.
 const _disabledOpacity = 0.5;
 
@@ -105,6 +104,7 @@ final _shadow = RemixBoxShadowMix(
 /// free to wrap a bare `Text`, and that caller must not end up with a
 /// keyboard-reachable control that shows nothing when it is reached.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
+    .animate(PlaygroundMotion.standard)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .crossAxisAlignment(.center)
@@ -123,18 +123,7 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
-    .onFocusVisible(
-      .foregroundDecoration(
-        BoxDecorationMix(
-          border: .all(
-            .color(
-              PlaygroundTokens.ring(),
-            ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-          ),
-          borderRadius: .all(PlaygroundTokens.radiusMd()),
-        ),
-      ),
-    )
+    .onFocusVisible(.foregroundDecoration(playgroundFocusRingDecoration()))
     .onDisabled(MenuTriggerStyler().wrap(.opacity(_disabledOpacity)));
 
 /// One row, in every kind the menu can hold.
@@ -144,6 +133,7 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
+    .animate(PlaygroundMotion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(_rowHeight)

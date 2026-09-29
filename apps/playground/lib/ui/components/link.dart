@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'link.g.dart';
@@ -44,9 +46,11 @@ LinkStyler playgroundLinkStyle({
     // Hover and keyboard focus both promote the underline to full strength
     // rather than adding one: an underline that appears on hover moves the
     // text's baseline box on some platforms, and a link that is only
-    // underlined while hovered is invisible to a keyboard user.
+    // underlined while hovered is invisible to a keyboard user. Focus also
+    // draws the ring every other control draws.
+    .animate(PlaygroundMotion.standard)
     .onHovered(_emphasized())
-    .onFocusVisible(_emphasized())
+    .onFocusVisible(_emphasized().containerEffects(playgroundFocusRing()))
     .onDisabled(_disabledStyle())
     .merge(style);
 
@@ -62,4 +66,6 @@ LinkStyler _emphasized() =>
 /// A link with no `onPressed` is disabled by Remix, which is the same meaning
 /// `onPressed: null` carries on every other Flutter control, so this fragment
 /// is also what a decorative link looks like.
-LinkStyler _disabledStyle() => LinkStyler().wrap(.opacity(_disabledOpacity));
+LinkStyler _disabledStyle() => LinkStyler()
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

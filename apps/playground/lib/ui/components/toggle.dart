@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle.g.dart';
@@ -69,16 +71,13 @@ ToggleStyler playgroundToggleStyle({
             // told apart by colour alone is one a lot of people cannot read.
             .border(.all(_edge(PlaygroundTokens.primary()))),
       )
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
 /// Width of the outline every toggle draws, in every state.
 const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
 
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
@@ -123,6 +122,7 @@ _PlaygroundToggleMetrics _metricsFor(PlaygroundToggleSize size) =>
 /// Layout, typography, and the off appearance shared by both variants.
 ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
     _content(PlaygroundTokens.foreground())
+        .animate(PlaygroundMotion.standard)
         .color(_noFill)
         .direction(.horizontal)
         .mainAxisSize(.min)
@@ -157,23 +157,24 @@ BorderSideMix _edge(Color color) =>
 ToggleStyler _content(Color foreground) =>
     ToggleStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
 ///
 /// A *foreground* decoration rather than the box border: `ToggleSpec` has no
 /// `containerEffects` layer to paint an outline into, and Flutter insets a
 /// container's content by its border widths — so adding a real border on
-/// focus would nudge the label. A foreground decoration paints over the
-/// control and takes no layout space, which is what a ring needs.
-ToggleStyler _focusVisibleStyle() => ToggleStyler().foregroundDecoration(
-  BoxDecorationMix(
-    border: .all(
-      .color(
-        PlaygroundTokens.ring(),
-      ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-    ),
-    borderRadius: .all(PlaygroundTokens.radiusMd()),
-  ),
-);
+/// focus would nudge the label. The decoration strokes outside the box, so
+/// the ring sits where an outline would and takes no layout space. The
+/// outline variant also turns its own border `ring`.
+ToggleStyler _focusVisibleStyle(PlaygroundToggleVariant variant) {
+  final ring = ToggleStyler().foregroundDecoration(
+    playgroundFocusRingDecoration(),
+  );
+
+  return switch (variant) {
+    .ghost => ring,
+    .outline => ring.border(playgroundFocusBorder()),
+  };
+}
 
 /// Declared last so it wins over every other state fragment.
 ///
