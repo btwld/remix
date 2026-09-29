@@ -1227,6 +1227,30 @@ void main() {
       );
     });
 
+    testWidgets('hover color is between fills during the transition', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      await _pumpInScope(
+        tester,
+        AcmeButton.primary(label: 'Go', onPressed: () {}),
+      );
+      await tester.pumpAndSettle();
+
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await tester.pump();
+      await pointer.moveTo(tester.getCenter(find.byType(AcmeButton)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      final mid = _background(_resolvedSpec(tester));
+      expect(mid, isNot(theme.primary));
+      expect(mid, isNot(theme.primary.withValues(alpha: 0.9)));
+    });
+
+
     testWidgets('focus is delegated to the supplied node', (tester) async {
       final focusNode = FocusNode(debugLabel: 'delegated');
       addTearDown(focusNode.dispose);
@@ -3238,6 +3262,36 @@ void main() {
       await tester.pumpAndSettle();
       expect(pressed, 1);
     });
+
+    testWidgets('hover color is between fills during the transition', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      await _pumpInScope(
+        tester,
+        AcmeIconButton.primary(
+          icon: _leading,
+          semanticLabel: 'Go',
+          onPressed: () {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await tester.pump();
+      await pointer.moveTo(tester.getCenter(find.byType(AcmeIconButton)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      final mid = _boxBackground(
+        _resolvedSpecOf<IconButtonSpec>(tester).spec.container,
+      );
+      expect(mid, isNot(theme.primary));
+      expect(mid, isNot(theme.primary.withValues(alpha: 0.9)));
+    });
+
 
     testWidgets('a loading icon button shows the Remix spinner', (
       tester,

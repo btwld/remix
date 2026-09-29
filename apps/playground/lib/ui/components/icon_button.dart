@@ -46,10 +46,11 @@ enum PlaygroundIconButtonSize {
 /// The application's IconButton recipe.
 ///
 /// Everything visual about an icon button lives in this function: geometry,
-/// the five variants, and the hover/pressed/focus/disabled fragments. Remix
-/// keeps ownership of rendering, pointer and keyboard behavior, accessibility
-/// semantics, and the loading/disabled interaction rules — this recipe never
-/// reimplements any of that.
+/// the five variants, hover and press motion, and the
+/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
+/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
+/// behavior, accessibility semantics, and the loading/disabled interaction
+/// rules — this recipe never reimplements any of that.
 ///
 /// It restates the button's metrics and dimming rather than sharing them.
 /// That is deliberate: the two components have separate update stories, and a
@@ -121,6 +122,12 @@ final _destructivePressedFill = _dimmed(
 );
 final _accentPressedFill = _dimmed(PlaygroundTokens.accent, _pressedAlpha);
 
+/// Hover and the other state changes.
+const _motionDuration = Duration(milliseconds: 100);
+
+/// Press is shorter than the base transition.
+const _pressedMotionDuration = Duration(milliseconds: 40);
+
 /// Opacity of the loading spinner, so it reads as secondary to the icon.
 const _spinnerOpacity = 0.65;
 
@@ -158,6 +165,7 @@ _PlaygroundIconButtonMetrics _metricsFor(PlaygroundIconButtonSize size) =>
 /// with the glyph inside it.
 IconButtonStyler _base(_PlaygroundIconButtonMetrics metrics) =>
     IconButtonStyler()
+        .animate(AnimationConfig.easeOut(_motionDuration))
         .size(metrics.edge, metrics.edge)
         .alignment(.center)
         .borderRadius(.all(PlaygroundTokens.radius()))
@@ -198,10 +206,13 @@ IconButtonStyler _filled({
   required Color foreground,
   required Color hoverFill,
   required Color pressedFill,
-}) => _content(
-  .color(fill),
-  foreground,
-).onHovered(.color(hoverFill)).onPressed(.color(pressedFill));
+}) => _content(.color(fill), foreground)
+    .onHovered(.color(hoverFill))
+    .onPressed(
+      IconButtonStyler()
+          .animate(AnimationConfig.easeOut(_pressedMotionDuration))
+          .color(pressedFill),
+    );
 
 /// A transparent variant: `accent` is what makes interaction visible.
 IconButtonStyler _quiet({required bool bordered}) {
@@ -222,7 +233,9 @@ IconButtonStyler _quiet({required bool bordered}) {
       // would paint the accent surface under the default foreground.
       .onPressed(
         _content(
-          .color(_accentPressedFill()),
+          IconButtonStyler()
+              .animate(AnimationConfig.easeOut(_pressedMotionDuration))
+              .color(_accentPressedFill()),
           PlaygroundTokens.accentForeground(),
         ),
       );

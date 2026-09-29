@@ -96,13 +96,24 @@ ButtonStyler _apply{{typePrefix}}ButtonStateStyles(
   {{typePrefix}}BaseButtonStateStyles stateStyles, {
   required double? pressedPaddingTop,
 }) {
-  var pressed = _apply{{typePrefix}}ButtonState(ButtonStyler(), stateStyles.pressed);
+  var pressed = _apply{{typePrefix}}ButtonState(
+    ButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
+    stateStyles.pressed,
+  );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _apply{{typePrefix}}ButtonState(base, stateStyles.idle)
-      .onHovered(_apply{{typePrefix}}ButtonState(ButtonStyler(), stateStyles.hovered))
+  return _apply{{typePrefix}}ButtonState(
+        base.animate({{valuePrefix}}BaseButtonRestMotion),
+        stateStyles.idle,
+      )
+      .onHovered(
+        _apply{{typePrefix}}ButtonState(
+          ButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
+          stateStyles.hovered,
+        ),
+      )
       .onPressed(pressed)
       .onDisabled(_apply{{typePrefix}}ButtonState(ButtonStyler(), stateStyles.disabled))
       .onFocusVisible(

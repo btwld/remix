@@ -9,8 +9,9 @@ part of 'button.dart';
 /// The application's Button recipe.
 ///
 /// Everything visual about a button lives in this function: geometry,
-/// typography, the five variants, and the hover/pressed/focus/disabled
-/// fragments. Remix keeps ownership of rendering, pointer and keyboard
+/// typography, the five variants, hover and press motion, and the
+/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
+/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
 /// behavior, accessibility semantics, and the loading/disabled interaction
 /// rules — this recipe never reimplements any of that.
 ///

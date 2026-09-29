@@ -11,6 +11,17 @@ import '../theme/theme.dart';
 /// defer an unknown size to a runtime throw.
 enum FortalBaseButtonSize { size1, size2, size3, size4 }
 
+/// Transition into hover and press, the same 40ms ease as `FortalCard`.
+final fortalBaseButtonActiveMotion = AnimationConfig.ease(
+  const Duration(milliseconds: 40),
+);
+
+/// Transition back to rest and into focus or disabled, the same 120ms ease as
+/// `FortalCard`.
+final fortalBaseButtonRestMotion = AnimationConfig.ease(
+  const Duration(milliseconds: 120),
+);
+
 /// Shared Radix BaseButton metrics used by Button and IconButton recipes.
 ({
   double height,
