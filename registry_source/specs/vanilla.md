@@ -95,9 +95,9 @@ Weights are 400, 500 (`font-medium`), and 600 (`font-semibold`).
 | `text3xl` | 30 / 36 |
 | `textMono` | 14 / 20 in `monoFontFamily` |
 
-**Font.** Geist and Geist Mono, from `package:remix_ui_fonts`. Until that
-package is published, `fontFamily` and `monoFontFamily` default to null and
-the platform family renders.
+**Font.** The platform family: `fontFamily` and `monoFontFamily` are null, so
+installs add no font package. The reference sets Geist; choosing a font per
+application is separate work.
 
 **Spacing.** Tailwind's 4px grid, as constants in `theme/scale.dart`:
 `VanillaSpace.s0_5` (2) through `s12` (48). Spacing is not a token: the
@@ -188,4 +188,4 @@ the steps above. The source column names the file under
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
-| Font until `remix_ui_fonts` is published | Geist | platform family | `fontFamily` stays null so installs do not depend on an unpublished package. |
+| Font | Geist | platform family | Installs add no font package; choosing a font per application is separate work. |

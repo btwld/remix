@@ -9,7 +9,7 @@ import 'package:registry_source/vanilla.dart';
 /// and vanishing in the dark theme. These pin the fix under the three hosts
 /// an application actually has.
 void main() {
-  // A family the test can see, standing in for Geist.
+  // A family the test can see, standing in for an application's font.
   final light = const VanillaThemeData.light().copyWith(fontFamily: 'Body');
   final dark = const VanillaThemeData.dark().copyWith(fontFamily: 'Body');
 
