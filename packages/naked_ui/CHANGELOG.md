@@ -1,3 +1,14 @@
+## 1.0.2
+
+### Fixes
+
+- Remove the inner `container: true` from the `NakedSelect` trigger's merged
+  semantics. On Flutter 3.44 the overlay made that folded-away node the menu's
+  traversal parent, so the platform received a node with no parent and the
+  macOS accessibility bridge dropped the update and could crash. The trigger
+  still announces one merged node with its label, value, button role, and
+  expanded state.
+
 ## 1.0.1
 
 ### Fixes
