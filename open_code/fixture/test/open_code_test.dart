@@ -1250,7 +1250,6 @@ void main() {
       expect(mid, isNot(theme.primary.withValues(alpha: 0.9)));
     });
 
-
     testWidgets('focus is delegated to the supplied node', (tester) async {
       final focusNode = FocusNode(debugLabel: 'delegated');
       addTearDown(focusNode.dispose);
@@ -3291,7 +3290,6 @@ void main() {
       expect(mid, isNot(theme.primary));
       expect(mid, isNot(theme.primary.withValues(alpha: 0.9)));
     });
-
 
     testWidgets('a loading icon button shows the Remix spinner', (
       tester,
