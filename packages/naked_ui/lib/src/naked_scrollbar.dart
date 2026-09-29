@@ -211,13 +211,17 @@ class _NakedRawScrollbarState extends RawScrollbarState<_NakedRawScrollbar> {
   void updateScrollbarPainter() {
     final textDirection = Directionality.of(context);
     final states = _states;
+    final showTrack = showScrollbar && (widget.trackVisibility ?? false);
     scrollbarPainter
       ..color = widget.thumbColorProperty?.resolve(states) ?? _defaultThumbColor
-      ..trackColor =
-          widget.trackColorProperty?.resolve(states) ?? const Color(0x00000000)
-      ..trackBorderColor =
-          widget.trackBorderColorProperty?.resolve(states) ??
-          const Color(0x00000000)
+      ..trackColor = showTrack
+          ? widget.trackColorProperty?.resolve(states) ??
+                const Color(0x00000000)
+          : const Color(0x00000000)
+      ..trackBorderColor = showTrack
+          ? widget.trackBorderColorProperty?.resolve(states) ??
+                const Color(0x00000000)
+          : const Color(0x00000000)
       ..textDirection = textDirection
       ..thickness = widget.thicknessProperty?.resolve(states) ?? 6
       ..radius = widget.radius
