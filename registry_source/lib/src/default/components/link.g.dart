@@ -9,19 +9,23 @@ part of 'link.dart';
 /// The application's Link recipe.
 ///
 /// Remix owns the link role, the destination, focus, activation, and the rule
-/// that a link with no callback is a disabled link; this recipe supplies only
-/// its color and its underline.
+/// that a link with no callback is a disabled link; this recipe supplies its
+/// type, its color, and its states.
 ///
-/// It sets no font size on purpose. A link is inline text, so it should take
-/// the size and weight of the paragraph around it — a fixed size here would
-/// make a link inside a heading render at body scale.
+/// It is shadcn's link button: `textSm` at medium weight in `primary`,
+/// underlined while the pointer is on it, and ringed like every other control
+/// when it has keyboard focus. That suits a link standing on its own — "Forgot
+/// password?", "View all" — which is what shadcn's link variant is for. A
+/// link set inside running prose should stay identifiable without the
+/// pointer; give that call site an underline at rest through [style]:
 ///
-/// The color is `foreground`, not `primary`. This theme's `primary` is a
-/// near-neutral fill color rather than a link hue, so a `primary` link would
-/// read as body text with no affordance at all. Underlining is what marks it,
-/// which also means the link is still identifiable without color — an
-/// application that has a brand link color changes the two `.color(...)` calls
-/// below.
+/// ```dart
+/// VanillaLink(
+///   label: 'terms of service',
+///   style: LinkStyler().label(.decoration(TextDecoration.underline)),
+///   onPressed: openTerms,
+/// )
+/// ```
 ///
 /// There is no pressed fragment. A link's press is over in the time it takes
 /// to navigate, and the destination arriving is the feedback — the same reason
@@ -30,7 +34,7 @@ part of 'link.dart';
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's hover color has to be
+/// by depth: an override that must beat the recipe's hover underline has to be
 /// declared as a hover fragment too (`LinkStyler().onHovered(...)`).
 class VanillaLink extends StatelessWidget {
   const VanillaLink({

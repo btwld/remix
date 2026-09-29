@@ -11,19 +11,23 @@ part 'link.g.dart';
 /// The application's Link recipe.
 ///
 /// Remix owns the link role, the destination, focus, activation, and the rule
-/// that a link with no callback is a disabled link; this recipe supplies only
-/// its color and its underline.
+/// that a link with no callback is a disabled link; this recipe supplies its
+/// type, its color, and its states.
 ///
-/// It sets no font size on purpose. A link is inline text, so it should take
-/// the size and weight of the paragraph around it — a fixed size here would
-/// make a link inside a heading render at body scale.
+/// It is shadcn's link button: `textSm` at medium weight in `primary`,
+/// underlined while the pointer is on it, and ringed like every other control
+/// when it has keyboard focus. That suits a link standing on its own — "Forgot
+/// password?", "View all" — which is what shadcn's link variant is for. A
+/// link set inside running prose should stay identifiable without the
+/// pointer; give that call site an underline at rest through [style]:
 ///
-/// The color is `foreground`, not `primary`. This theme's `primary` is a
-/// near-neutral fill color rather than a link hue, so a `primary` link would
-/// read as body text with no affordance at all. Underlining is what marks it,
-/// which also means the link is still identifiable without color — an
-/// application that has a brand link color changes the two `.color(...)` calls
-/// below.
+/// ```dart
+/// PlaygroundLink(
+///   label: 'terms of service',
+///   style: LinkStyler().label(.decoration(TextDecoration.underline)),
+///   onPressed: openTerms,
+/// )
+/// ```
 ///
 /// There is no pressed fragment. A link's press is over in the time it takes
 /// to navigate, and the destination arriving is the feedback — the same reason
@@ -32,34 +36,22 @@ part 'link.g.dart';
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's hover color has to be
+/// by depth: an override that must beat the recipe's hover underline has to be
 /// declared as a hover fragment too (`LinkStyler().onHovered(...)`).
 @MixWidget(target: RemixLink.new)
 LinkStyler playgroundLinkStyle({
   LinkStyler style = const LinkStyler.create(),
 }) => LinkStyler()
-    .label(
-      .color(PlaygroundTokens.foreground())
-          .decoration(TextDecoration.underline)
-          .decorationColor(PlaygroundTokens.border()),
-    )
-    // Hover and keyboard focus both promote the underline to full strength
-    // rather than adding one: an underline that appears on hover moves the
-    // text's baseline box on some platforms, and a link that is only
-    // underlined while hovered is invisible to a keyboard user. Focus also
-    // draws the ring every other control draws.
     .animate(PlaygroundMotion.standard)
-    .onHovered(_emphasized())
-    .onFocusVisible(_emphasized().containerEffects(playgroundFocusRing()))
+    .label(
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).fontWeight(FontWeight.w500).color(PlaygroundTokens.primary()),
+    )
+    .onHovered(.label(.decoration(TextDecoration.underline)))
+    .onFocusVisible(.containerEffects(playgroundFocusRing()))
     .onDisabled(_disabledStyle())
     .merge(style);
-
-/// Opacity applied to the whole link while disabled.
-const _disabledOpacity = 0.5;
-
-/// The underline at full strength, in the text's own color.
-LinkStyler _emphasized() =>
-    LinkStyler().label(.decorationColor(PlaygroundTokens.foreground()));
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -68,4 +60,4 @@ LinkStyler _emphasized() =>
 /// is also what a decorative link looks like.
 LinkStyler _disabledStyle() => LinkStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));

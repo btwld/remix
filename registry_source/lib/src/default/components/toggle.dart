@@ -13,7 +13,7 @@ enum VanillaToggleVariant {
   /// No fill and no border until the toggle is hovered or on.
   ghost,
 
-  /// A hairline `border`, so the control is visible while off.
+  /// An `input` outline, so the control is visible while off.
   outline,
 }
 
@@ -41,10 +41,12 @@ enum VanillaToggleSize {
 /// pointer and keyboard behavior, and the on/off semantics; this recipe owns
 /// the geometry and the off/hover/on/focus/disabled fragments.
 ///
-/// The on state is `accent`, the token whose whole job is "this transparent
-/// control is doing something", while hover is the quieter `muted`. Keeping
-/// them different is what lets a reader tell a toggle they are pointing at
-/// from one that is switched on.
+/// These are shadcn's states. A toggle that is on sits on `accent` in
+/// `accentForeground`; a ghost toggle under the pointer sits on `muted` in
+/// `mutedForeground`. In the shipped themes the two surfaces are the same
+/// gray, so "on" is told from "pointed at" by its full-strength content, and
+/// a toggle that is on stays on when hovered. An outline toggle hovers onto
+/// `accent` instead, and keeps its outline in every state.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable
@@ -61,61 +63,31 @@ ToggleStyler vanillaToggleStyle({
 }) {
   return _base(_metricsFor(size))
       .merge(_variantStyle(variant))
-      .onHovered(.color(VanillaTokens.muted()))
+      // After the variant's hover, so a toggle that is on stays on under the
+      // pointer.
       .onSelected(
-        _content(VanillaTokens.accentForeground())
-            .color(VanillaTokens.accent())
-            // The outline, not the fill, is what says "on". `muted` and
-            // `accent` are 1.155:1 apart in the light theme, so hover and on
-            // would otherwise be the same shade to most readers — and a state
-            // told apart by colour alone is one a lot of people cannot read.
-            .border(.all(_edge(VanillaTokens.primary()))),
+        _content(
+          VanillaTokens.accentForeground(),
+        ).color(VanillaTokens.accent()),
       )
       .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Width of the outline every toggle draws, in every state.
-const _borderWidth = 1.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
 /// A fill that paints nothing, used while the toggle is off.
 const _noFill = Color(0x00000000);
 
-/// Geometry and type scale for one [VanillaToggleSize].
-typedef _VanillaToggleMetrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
+/// Geometry for one [VanillaToggleSize]: shadcn's `h-8 min-w-8 px-1.5`,
+/// `h-9 min-w-9 px-2`, and `h-10 min-w-10 px-2.5`.
+///
+/// The minimum width equals the height, so an icon-only toggle is square.
+typedef _VanillaToggleMetrics = ({double minHeight, double paddingX});
 
 _VanillaToggleMetrics _metricsFor(VanillaToggleSize size) => switch (size) {
-  .small => (
-    minHeight: 32.0,
-    paddingX: 10.0,
-    gap: 6.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .medium => (
-    minHeight: 36.0,
-    paddingX: 12.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .large => (
-    minHeight: 40.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
-  ),
+  .small => (minHeight: VanillaSize.controlSm, paddingX: VanillaSpace.s1_5),
+  .medium => (minHeight: VanillaSize.controlMd, paddingX: VanillaSpace.s2),
+  .large => (minHeight: VanillaSize.controlLg, paddingX: VanillaSpace.s2_5),
 };
 
 /// Layout, typography, and the off appearance shared by both variants.
@@ -128,29 +100,30 @@ ToggleStyler _base(_VanillaToggleMetrics metrics) =>
         .mainAxisAlignment(.center)
         .crossAxisAlignment(.center)
         .minHeight(metrics.minHeight)
+        .minWidth(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
-        .spacing(metrics.gap)
+        .spacing(VanillaSpace.s2)
         .borderRadius(.all(VanillaTokens.radiusMd()))
-        .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-        .icon(.size(metrics.iconSize));
+        .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
+        .icon(.size(VanillaSize.icon));
 
-/// The outline is present in every state and every variant, and only its
-/// colour changes: Flutter insets a container's content by its border widths,
-/// so an outline that appeared on selection would nudge the label sideways.
-/// `ghost` simply paints its copy in nothing.
-ToggleStyler _variantStyle(VanillaToggleVariant variant) =>
-    ToggleStyler().border(
-      .all(
-        _edge(switch (variant) {
-          .ghost => _noFill,
-          .outline => VanillaTokens.border(),
-        }),
-      ),
-    );
-
-/// One outline side, at the width every state shares.
-BorderSideMix _edge(Color color) =>
-    BorderSideMix(color: color, width: _borderWidth);
+/// The variant's outline and its hover.
+ToggleStyler _variantStyle(VanillaToggleVariant variant) => switch (variant) {
+  .ghost => ToggleStyler().onHovered(
+    _content(VanillaTokens.mutedForeground()).color(VanillaTokens.muted()),
+  ),
+  // No `shadow-xs`, unlike shadcn's: `ToggleSpec` has no effects layer, and
+  // a decoration shadow under a transparent control shows through it as a
+  // gray wash.
+  .outline =>
+    ToggleStyler()
+        .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+        .onHovered(
+          _content(
+            VanillaTokens.accentForeground(),
+          ).color(VanillaTokens.accent()),
+        ),
+};
 
 /// Applies one content color to the label and the icons.
 ToggleStyler _content(Color foreground) =>
@@ -182,4 +155,4 @@ ToggleStyler _focusVisibleStyle(VanillaToggleVariant variant) {
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

@@ -16,7 +16,7 @@ import 'support.dart';
 /// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
 /// checked once that phase is listed in [enforcedPhases]; until then it is
 /// reported as skipped, so the distance to the spec stays visible.
-const enforcedPhases = <String>{'E'};
+const enforcedPhases = <String>{'E', 'F1'};
 
 /// One measured property of one resolved recipe.
 final class SpecTarget {
@@ -589,12 +589,14 @@ final _toggleTargets = <SpecTarget>[
     read: (spec) => flexDecorationOf(spec.spec.container)?.border,
     expected: (theme) => _hairline(theme.input),
   ),
+  // Deviation: no `shadow-xs`. `ToggleSpec` has no effects layer, and a
+  // decoration shadow under a transparent fill reads as a gray wash.
   _toggle(
-    'outline shadow',
+    'outline has no decoration shadow',
     variant: .outline,
-    source: 'toggle.tsx: outline, shadow-xs',
+    source: 'toggle.tsx: outline, shadow-xs (see specs/vanilla.md)',
     read: (spec) => flexDecorationOf(spec.spec.container)?.boxShadow,
-    expected: (_) => VanillaShadow.xs.shadows,
+    expected: (_) => anyOf(isNull, isEmpty),
   ),
   _toggle(
     'outline hover',
@@ -682,14 +684,14 @@ final _toggleGroupTargets = <SpecTarget>[
     expected: (_) => const EdgeInsets.symmetric(horizontal: 12),
   ),
   _toggleGroup(
-    'outline border and shadow sit on the group',
+    'outline border sits on the group',
     variant: .outline,
-    source: 'toggle-group.tsx: outline, border-input shadow-xs',
+    source: 'toggle-group.tsx: outline, border-input (see specs/vanilla.md)',
     read: (spec) => (
       flexDecorationOf(spec.spec.container)?.border,
       flexDecorationOf(spec.spec.container)?.boxShadow,
     ),
-    expected: (theme) => (_hairline(theme.input), VanillaShadow.xs.shadows),
+    expected: (theme) => (_hairline(theme.input), anyOf(isNull, isEmpty)),
   ),
 ];
 

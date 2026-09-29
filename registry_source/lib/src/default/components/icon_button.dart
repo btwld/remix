@@ -19,7 +19,8 @@ enum VanillaIconButtonVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis on the page's own fill, with an `input` outline and a
+  /// slight lift.
   outline,
 
   /// Low emphasis with no fill and no border.
@@ -54,10 +55,10 @@ enum VanillaIconButtonSize {
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
 ///
-/// It restates the button's metrics and dimming rather than sharing them.
-/// That is deliberate: the two components have separate update stories, and a
-/// shared table would make every change to one a change to the other. A
-/// five-line record is cheaper to duplicate than to couple.
+/// It restates the button's fills rather than sharing them. That is
+/// deliberate: the two components have separate update stories, and a shared
+/// table would make every change to one a change to the other. The scale and
+/// the tints they draw on are shared, through `VanillaSize` and `vanillaTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
@@ -77,31 +78,37 @@ IconButtonStyler vanillaIconButtonStyle({
   VanillaIconButtonSize size = .medium,
   IconButtonStyler style = const IconButtonStyler.create(),
 }) {
-  return _base(_metricsFor(size))
+  return _base(_edgeFor(size))
       .merge(_variantStyle(variant))
       .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Alpha applied to a variant's own fill while hovered or pressed.
+/// Alpha applied to the primary and destructive fills while hovered or
+/// pressed: shadcn's `hover:bg-primary/90`.
 ///
 /// There is no separate pressed step, as in shadcn: a press lands on the
 /// hover fill. A deeper press would also take the destructive fill under the
-/// 4.5:1 floor its white label needs.
+/// 4.5:1 floor its white glyph needs.
 const _hoverAlpha = 0.9;
 
-/// The dark theme's destructive fills.
-///
-/// shadcn paints a dark destructive button at 60% (`dark:bg-destructive/60`):
-/// its dark `destructive` is a light red that reads as text on the page but
-/// cannot carry a white label as a solid fill. Hover moves to 70% rather than
-/// shadcn's 90%, which would measure about 3.5:1 against that label.
+/// Alpha applied to the secondary fill while hovered: `hover:bg-secondary/80`.
+const _secondaryHoverAlpha = 0.8;
+
+/// The dark theme's destructive fills, at shadcn's 60% and a 70% hover. See
+/// the button recipe for why the hover stops short of shadcn's 90%.
 const _darkDestructiveAlpha = 0.6;
 const _darkDestructiveHoverAlpha = 0.7;
 
+/// The dark ghost hover, `dark:hover:bg-accent/50`.
+const _darkGhostHoverAlpha = 0.5;
+
 final _primaryHoverFill = vanillaTint(VanillaTokens.primary, _hoverAlpha);
-final _secondaryHoverFill = vanillaTint(VanillaTokens.secondary, _hoverAlpha);
+final _secondaryHoverFill = vanillaTint(
+  VanillaTokens.secondary,
+  _secondaryHoverAlpha,
+);
 final _destructiveFill = vanillaTint(
   VanillaTokens.destructive,
   1,
@@ -112,6 +119,11 @@ final _destructiveHoverFill = vanillaTint(
   _hoverAlpha,
   dark: _darkDestructiveHoverAlpha,
 );
+final _ghostHoverFill = vanillaTint(
+  VanillaTokens.accent,
+  1,
+  dark: _darkGhostHoverAlpha,
+);
 
 /// Opacity of the loading spinner, so it reads as secondary to the icon.
 const _spinnerOpacity = 0.65;
@@ -119,38 +131,30 @@ const _spinnerOpacity = 0.65;
 /// One full spinner revolution.
 const _spinnerDuration = Duration(milliseconds: 800);
 
-/// Width of the outline the `outline` variant draws.
-const _borderWidth = 1.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// A fill that paints nothing, used by `outline` and `ghost`.
+/// A fill that paints nothing, used by `ghost`.
 const _noFill = Color(0x00000000);
 
-/// Geometry for one [VanillaIconButtonSize].
-typedef _VanillaIconButtonMetrics = ({double edge, double iconSize});
-
-_VanillaIconButtonMetrics _metricsFor(VanillaIconButtonSize size) =>
-    switch (size) {
-      .small => (edge: 32.0, iconSize: 16.0),
-      .medium => (edge: 36.0, iconSize: 16.0),
-      .large => (edge: 40.0, iconSize: 18.0),
-    };
+/// The square's edge for one [VanillaIconButtonSize]: shadcn's `size-8`,
+/// `size-9`, and `size-10`. The glyph stays at 16 in every size.
+double _edgeFor(VanillaIconButtonSize size) => switch (size) {
+  .small => VanillaSize.controlSm,
+  .medium => VanillaSize.controlMd,
+  .large => VanillaSize.controlLg,
+};
 
 /// Layout and spinner defaults shared by every variant.
 ///
 /// The box is square and centered, so the control's footprint does not change
 /// with the glyph inside it.
-IconButtonStyler _base(_VanillaIconButtonMetrics metrics) => IconButtonStyler()
+IconButtonStyler _base(double edge) => IconButtonStyler()
     .animate(VanillaMotion.standard)
-    .size(metrics.edge, metrics.edge)
+    .size(edge, edge)
     .alignment(.center)
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    .icon(.size(metrics.iconSize))
+    .icon(.size(VanillaSize.icon))
     .spinner(
       .size(
-        metrics.iconSize,
+        VanillaSize.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -171,8 +175,14 @@ IconButtonStyler _variantStyle(VanillaIconButtonVariant variant) =>
         foreground: VanillaTokens.destructiveForeground(),
         hoverFill: _destructiveHoverFill(),
       ),
-      .outline => _quiet(bordered: true),
-      .ghost => _quiet(bordered: false),
+      .outline =>
+        _quiet(
+              fill: VanillaTokens.background(),
+              hoverFill: VanillaTokens.accent(),
+            )
+            .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+            .shadows(VanillaShadow.xs.box),
+      .ghost => _quiet(fill: _noFill, hoverFill: _ghostHoverFill()),
     };
 
 /// A solid variant: its own fill, dimmed while hovered or pressed.
@@ -185,29 +195,19 @@ IconButtonStyler _filled({
   foreground,
 ).onHovered(.color(hoverFill)).onPressed(.color(hoverFill));
 
-/// A transparent variant: `accent` is what makes interaction visible.
-IconButtonStyler _quiet({required bool bordered}) {
-  var style = _content(.color(_noFill), VanillaTokens.foreground());
-  if (bordered) {
-    style = style.border(.color(VanillaTokens.border()).width(_borderWidth));
-  }
+/// A quiet variant: `accent` under the pointer is what makes it interactive.
+IconButtonStyler _quiet({required Color fill, required Color hoverFill}) {
+  final highlighted = _content(
+    .color(hoverFill),
+    VanillaTokens.accentForeground(),
+  );
 
-  return style
-      .onHovered(
-        _content(
-          .color(VanillaTokens.accent()),
-          VanillaTokens.accentForeground(),
-        ),
-      )
+  return _content(.color(fill), VanillaTokens.foreground())
+      .onHovered(highlighted)
       // Content color is re-applied on press, not only on hover: a touch
       // device never reports hover, so a press that changed the fill alone
       // would paint the accent surface under the default foreground.
-      .onPressed(
-        _content(
-          .color(VanillaTokens.accent()),
-          VanillaTokens.accentForeground(),
-        ),
-      );
+      .onPressed(highlighted);
 }
 
 /// Applies one content color to the icon and the spinner.
@@ -249,4 +249,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 IconButtonStyler _disabledStyle() => IconButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

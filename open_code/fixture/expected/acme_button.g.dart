@@ -117,7 +117,8 @@ class AcmeButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = AcmeButtonVariant.secondary;
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis on the page's own fill, with an `input` outline and a
+  /// slight lift.
   const AcmeButton.outline({
     super.key,
     this.size = .medium,

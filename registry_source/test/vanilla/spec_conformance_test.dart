@@ -44,8 +44,8 @@ void main() {
           enforced ? theme.name : '${theme.name} (pending ${target.phase})',
           (tester) async {
             expect(
-              await target.actual(tester, theme.data),
-              target.expected(theme.data),
+              _unpacked(await target.actual(tester, theme.data)),
+              _unpacked(target.expected(theme.data)),
               reason: 'shadcn: ${target.source}',
             );
           },
@@ -55,3 +55,15 @@ void main() {
     });
   }
 }
+
+/// A record's fields as a list, so `expect` compares them deeply and applies
+/// any matcher among them; a record compares its fields with `==`, which
+/// holds for neither a list of shadows nor a matcher.
+Object? _unpacked(Object? value) => switch (value) {
+  (final a, final b) => [a, b],
+  (final a, final b, final c) => [a, b, c],
+  (final a, final b, final c, final d) => [a, b, c, d],
+  (final a, final b, final c, final d, final e) => [a, b, c, d, e],
+  (final a, final b, final c, final d, final e, final f) => [a, b, c, d, e, f],
+  _ => value,
+};

@@ -117,7 +117,8 @@ class VanillaButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = VanillaButtonVariant.secondary;
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis on the page's own fill, with an `input` outline and a
+  /// slight lift.
   const VanillaButton.outline({
     super.key,
     this.size = .medium,

@@ -3,6 +3,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'badge.g.dart';
@@ -15,7 +16,7 @@ enum PlaygroundBadgeVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis with a hairline `border` and no fill.
+  /// Low emphasis: no fill, with the `border` hairline around it.
   outline,
 
   /// Highest emphasis for a problem the reader must notice.
@@ -45,19 +46,11 @@ BadgeStyler playgroundBadgeStyle({
   BadgeStyler style = const BadgeStyler.create(),
 }) => _base().merge(_variantStyle(variant)).merge(style);
 
-/// Horizontal inset between the badge edge and its label.
-const _paddingX = 8.0;
+/// A radius that rounds any badge into a pill: shadcn's `rounded-full`.
+const _pill = Radius.circular(PlaygroundSize.pill);
 
-/// Vertical inset between the badge edge and its label.
-const _paddingY = 2.0;
-
-/// Label size, one step below body text so a badge reads as an annotation.
-const _labelSize = 12.0;
-
-/// Width of the outline the `outline` variant draws.
-const _borderWidth = 1.0;
-
-/// A fill that paints nothing, used by `outline`.
+/// A fill that paints nothing, used by `outline` and by every other variant's
+/// outline.
 const _noFill = Color(0x00000000);
 
 /// The destructive fill, at 60% in the dark theme as shadcn paints it
@@ -72,11 +65,17 @@ final _destructiveFill = playgroundTint(
 /// See [_destructiveFill].
 const _darkDestructiveAlpha = 0.6;
 
-/// Geometry and typography shared by every variant.
+/// Geometry and typography shared by every variant: shadcn's
+/// `rounded-full px-2 py-0.5 text-xs font-medium`.
 BadgeStyler _base() => BadgeStyler()
-    .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
-    .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .label(.fontSize(_labelSize).fontWeight(FontWeight.w500));
+    .padding(
+      .symmetric(
+        horizontal: PlaygroundSpace.s2,
+        vertical: PlaygroundSpace.s0_5,
+      ),
+    )
+    .borderRadius(.all(_pill))
+    .label(.style(PlaygroundTokens.textXs.mix()).fontWeight(FontWeight.w500));
 
 BadgeStyler _variantStyle(PlaygroundBadgeVariant variant) => switch (variant) {
   .primary => _filled(
@@ -94,9 +93,20 @@ BadgeStyler _variantStyle(PlaygroundBadgeVariant variant) => switch (variant) {
   .outline => _filled(
     fill: _noFill,
     foreground: PlaygroundTokens.foreground(),
-  ).border(.color(PlaygroundTokens.border()).width(_borderWidth)),
+    outline: PlaygroundTokens.border(),
+  ),
 };
 
-/// One surface and one content color.
-BadgeStyler _filled({required Color fill, required Color foreground}) =>
-    BadgeStyler().color(fill).label(.color(foreground));
+/// One surface, one content color, and the outline.
+///
+/// Every variant draws the same 1px outline, transparent unless the variant
+/// is `outline`, as shadcn's `border border-transparent` does: badges of
+/// different variants side by side then share one height and one text line.
+BadgeStyler _filled({
+  required Color fill,
+  required Color foreground,
+  Color outline = _noFill,
+}) => BadgeStyler()
+    .color(fill)
+    .border(.color(outline).width(PlaygroundStroke.hairline))
+    .label(.color(foreground));

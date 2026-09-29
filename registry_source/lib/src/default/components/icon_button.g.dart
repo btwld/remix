@@ -15,10 +15,10 @@ part of 'icon_button.dart';
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
 ///
-/// It restates the button's metrics and dimming rather than sharing them.
-/// That is deliberate: the two components have separate update stories, and a
-/// shared table would make every change to one a change to the other. A
-/// five-line record is cheaper to duplicate than to couple.
+/// It restates the button's fills rather than sharing them. That is
+/// deliberate: the two components have separate update stories, and a shared
+/// table would make every change to one a change to the other. The scale and
+/// the tints they draw on are shared, through `VanillaSize` and `vanillaTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
@@ -96,7 +96,8 @@ class VanillaIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = VanillaIconButtonVariant.secondary;
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis on the page's own fill, with an `input` outline and a
+  /// slight lift.
   const VanillaIconButton.outline({
     super.key,
     this.size = .medium,

@@ -71,17 +71,25 @@ RemixBoxEffectsMix vanillaFocusRing({
 /// The border is stroked outside the box, so the ring sits where the effects
 /// outline would and still takes no layout space. [radius] is the control's
 /// own corner radius, which the ring follows.
-BoxDecorationMix vanillaFocusRingDecoration({Radius? radius}) =>
-    BoxDecorationMix(
-      border: .all(
-        BorderSideMix(
-          color: vanillaTint(VanillaTokens.ring, _ringAlpha)(),
-          width: VanillaStroke.ring,
-          strokeAlign: BorderSide.strokeAlignOutside,
-        ),
-      ),
-      borderRadius: .all(radius ?? VanillaTokens.radiusMd()),
-    );
+///
+/// A control clipped by its container (a toggle group's option) would have
+/// that outside stroke cut off at the container's edge; pass [inset] to
+/// stroke the ring inside the control instead.
+BoxDecorationMix vanillaFocusRingDecoration({
+  Radius? radius,
+  bool inset = false,
+}) => BoxDecorationMix(
+  border: .all(
+    BorderSideMix(
+      color: vanillaTint(VanillaTokens.ring, _ringAlpha)(),
+      width: VanillaStroke.ring,
+      strokeAlign: inset
+          ? BorderSide.strokeAlignInside
+          : BorderSide.strokeAlignOutside,
+    ),
+  ),
+  borderRadius: .all(radius ?? VanillaTokens.radiusMd()),
+);
 
 /// A focused control's own border, turned `ring`: shadcn's
 /// `focus-visible:border-ring`.
@@ -97,8 +105,13 @@ const _ringAlpha = 0.5;
 ///
 /// Each level is one table of layers, handed out in the shapes recipes need:
 /// [box] for a styler's `shadows`, and [effects] for a Remix
-/// `containerEffects` layer. The two render the same shadow; which one a
-/// recipe uses depends only on the slot its spec offers.
+/// `containerEffects` layer.
+///
+/// They differ in one way that matters. Flutter paints a decoration shadow
+/// under the whole box, so behind a transparent or translucent fill it shows
+/// through as a gray wash; the effects layer cuts the box out of its shadows,
+/// as CSS does. Use [effects] for a control whose fill is not opaque, and
+/// [box] only under an opaque fill or where the spec has no effects slot.
 enum VanillaShadow {
   /// A barely-there lift for controls that sit on the page: an outline
   /// button, a text field.

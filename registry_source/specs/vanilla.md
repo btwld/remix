@@ -138,8 +138,8 @@ the steps above. The source column names the file under
 | Icon button | 32/36/40 squares, icon 16, the button's fills | `button.tsx` (`icon-*` sizes) |
 | Link | `text-sm`, underline on hover | `button.tsx` (`link`) |
 | Badge | radius full; 1px border on every variant, transparent except outline; `text-xs` w500; px 8, py 2; icon 12 | `badge.tsx` |
-| Toggle | h 32/36/40, min-w equal to h; px 6/8/10; `text-sm` w500; hover muted + muted-fg; on accent + accent-fg; outline adds `input` border + `shadow-xs` | `toggle.tsx` |
-| Toggle group | items px 12, radius 0 inside a clipped md container, gap 0; outline adds the border and `shadow-xs` | `toggle-group.tsx` |
+| Toggle | h 32/36/40, min-w equal to h; px 6/8/10; `text-sm` w500; hover muted + muted-fg; on accent + accent-fg; outline adds an `input` border | `toggle.tsx` |
+| Toggle group | items px 12, radius 0 inside a clipped md container, gap 0; outline adds the border | `toggle-group.tsx` |
 | Text field | h 36; px 12, py 4; border `input`, transparent fill, `shadow-xs`; `text-sm`; placeholder muted-fg | `input.tsx` |
 | Text area | min-h 64; px 12, py 8 | `textarea.tsx` |
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
@@ -184,6 +184,7 @@ the steps above. The source column names the file under
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
+| Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
 | Chart palette | gray ramp | gray ramp | shadcn's lightest series measures about 1.5:1 on the light page; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |

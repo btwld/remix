@@ -16,7 +16,8 @@ enum {{typePrefix}}ButtonVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis on the page's own fill, with an `input` outline and a
+  /// slight lift.
   outline,
 
   /// Low emphasis with no fill and no border.
@@ -89,12 +90,16 @@ ButtonStyler {{valuePrefix}}ButtonStyle({
       .merge(style);
 }
 
-/// Alpha applied to a variant's own fill while hovered or pressed.
+/// Alpha applied to the primary and destructive fills while hovered or
+/// pressed: shadcn's `hover:bg-primary/90`.
 ///
 /// There is no separate pressed step, as in shadcn: a press lands on the
 /// hover fill. A deeper press would also take the destructive fill under the
 /// 4.5:1 floor its white label needs.
 const _hoverAlpha = 0.9;
+
+/// Alpha applied to the secondary fill while hovered: `hover:bg-secondary/80`.
+const _secondaryHoverAlpha = 0.8;
 
 /// The dark theme's destructive fills.
 ///
@@ -105,8 +110,15 @@ const _hoverAlpha = 0.9;
 const _darkDestructiveAlpha = 0.6;
 const _darkDestructiveHoverAlpha = 0.7;
 
+/// The dark ghost hover, `dark:hover:bg-accent/50`: the dark `accent` at full
+/// strength would read as a raised control rather than a highlight.
+const _darkGhostHoverAlpha = 0.5;
+
 final _primaryHoverFill = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, _hoverAlpha);
-final _secondaryHoverFill = {{valuePrefix}}Tint({{typePrefix}}Tokens.secondary, _hoverAlpha);
+final _secondaryHoverFill = {{valuePrefix}}Tint(
+  {{typePrefix}}Tokens.secondary,
+  _secondaryHoverAlpha,
+);
 final _destructiveFill = {{valuePrefix}}Tint(
   {{typePrefix}}Tokens.destructive,
   1,
@@ -117,6 +129,11 @@ final _destructiveHoverFill = {{valuePrefix}}Tint(
   _hoverAlpha,
   dark: _darkDestructiveHoverAlpha,
 );
+final _ghostHoverFill = {{valuePrefix}}Tint(
+  {{typePrefix}}Tokens.accent,
+  1,
+  dark: _darkGhostHoverAlpha,
+);
 
 /// Opacity of the loading spinner, so it reads as secondary to the label.
 const _spinnerOpacity = 0.65;
@@ -124,42 +141,36 @@ const _spinnerOpacity = 0.65;
 /// One full spinner revolution.
 const _spinnerDuration = Duration(milliseconds: 800);
 
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// A fill that paints nothing, used by `outline` and `ghost`.
+/// A fill that paints nothing, used by `ghost`.
 const _noFill = Color(0x00000000);
 
-/// Geometry and type scale for one [{{typePrefix}}ButtonSize].
+/// Geometry for one [{{typePrefix}}ButtonSize]: shadcn's `h-8 px-3 gap-1.5`,
+/// `h-9 px-4 gap-2`, and `h-10 px-6 gap-2`.
+///
+/// The label and the icon do not grow with the control. Every size sets its
+/// label in `textSm` and its icon at 16, as shadcn does, so a row of mixed
+/// sizes still reads as one typeface at one size.
 typedef _{{typePrefix}}ButtonMetrics = ({
   double minHeight,
   double paddingX,
   double gap,
-  double labelSize,
-  double iconSize,
 });
 
 _{{typePrefix}}ButtonMetrics _metricsFor({{typePrefix}}ButtonSize size) => switch (size) {
   .small => (
-    minHeight: 32.0,
-    paddingX: 12.0,
-    gap: 6.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
+    minHeight: {{typePrefix}}Size.controlSm,
+    paddingX: {{typePrefix}}Space.s3,
+    gap: {{typePrefix}}Space.s1_5,
   ),
   .medium => (
-    minHeight: 36.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
+    minHeight: {{typePrefix}}Size.controlMd,
+    paddingX: {{typePrefix}}Space.s4,
+    gap: {{typePrefix}}Space.s2,
   ),
   .large => (
-    minHeight: 40.0,
-    paddingX: 20.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
+    minHeight: {{typePrefix}}Size.controlLg,
+    paddingX: {{typePrefix}}Space.s6,
+    gap: {{typePrefix}}Space.s2,
   ),
 };
 
@@ -174,11 +185,11 @@ ButtonStyler _base(_{{typePrefix}}ButtonMetrics metrics) => ButtonStyler()
     .padding(.horizontal(metrics.paddingX))
     .spacing(metrics.gap)
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-    .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-    .icon(.size(metrics.iconSize))
+    .label(.style({{typePrefix}}Tokens.textSm.mix()).fontWeight(FontWeight.w500))
+    .icon(.size({{typePrefix}}Size.icon))
     .spinner(
       .size(
-        metrics.iconSize,
+        {{typePrefix}}Size.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -198,8 +209,11 @@ ButtonStyler _variantStyle({{typePrefix}}ButtonVariant variant) => switch (varia
     foreground: {{typePrefix}}Tokens.destructiveForeground(),
     hoverFill: _destructiveHoverFill(),
   ),
-  .outline => _quiet(bordered: true),
-  .ghost => _quiet(bordered: false),
+  .outline =>
+    _quiet(fill: {{typePrefix}}Tokens.background(), hoverFill: {{typePrefix}}Tokens.accent())
+        .border(.color({{typePrefix}}Tokens.input()).width({{typePrefix}}Stroke.hairline))
+        .shadows({{typePrefix}}Shadow.xs.box),
+  .ghost => _quiet(fill: _noFill, hoverFill: _ghostHoverFill()),
 };
 
 /// A solid variant: its own fill, dimmed while hovered or pressed.
@@ -212,29 +226,19 @@ ButtonStyler _filled({
   foreground,
 ).onHovered(.color(hoverFill)).onPressed(.color(hoverFill));
 
-/// A transparent variant: `accent` is what makes interaction visible.
-ButtonStyler _quiet({required bool bordered}) {
-  var style = _content(.color(_noFill), {{typePrefix}}Tokens.foreground());
-  if (bordered) {
-    style = style.border(.color({{typePrefix}}Tokens.border()).width(1));
-  }
+/// A quiet variant: `accent` under the pointer is what makes it interactive.
+ButtonStyler _quiet({required Color fill, required Color hoverFill}) {
+  final highlighted = _content(
+    .color(hoverFill),
+    {{typePrefix}}Tokens.accentForeground(),
+  );
 
-  return style
-      .onHovered(
-        _content(
-          .color({{typePrefix}}Tokens.accent()),
-          {{typePrefix}}Tokens.accentForeground(),
-        ),
-      )
+  return _content(.color(fill), {{typePrefix}}Tokens.foreground())
+      .onHovered(highlighted)
       // Content color is re-applied on press, not only on hover: a touch
       // device never reports hover, so a press that changed the fill alone
       // would paint the accent surface under the default foreground.
-      .onPressed(
-        _content(
-          .color({{typePrefix}}Tokens.accent()),
-          {{typePrefix}}Tokens.accentForeground(),
-        ),
-      );
+      .onPressed(highlighted);
 }
 
 /// Applies one content color to the label, the icons, and the spinner.
@@ -278,4 +282,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity({{typePrefix}}Opacity.disabled));

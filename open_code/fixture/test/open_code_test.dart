@@ -688,18 +688,17 @@ void main() {
         },
       );
 
-      testWidgets('outline is transparent with a 1px border in ${theme.name}', (
-        tester,
-      ) async {
+      testWidgets('outline sits on the page with an input border in '
+          '${theme.name}', (tester) async {
         final spec = await _resolveStyle(
           tester,
           theme: theme.data,
           variant: AcmeButtonVariant.outline,
         );
 
-        expect(_background(spec), const Color(0x00000000));
+        expect(_background(spec), theme.data.background);
         _expectContent(spec, theme.data.foreground);
-        expect(_border(spec), Border.all(color: theme.data.border, width: 1));
+        expect(_border(spec), Border.all(color: theme.data.input, width: 1));
         expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
       });
 
@@ -742,57 +741,8 @@ void main() {
   });
 
   group('acmeButtonStyle sizes', () {
-    const expected = <AcmeButtonSize, _Metrics>{
-      AcmeButtonSize.small: (
-        minHeight: 32.0,
-        paddingX: 12.0,
-        gap: 6.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      AcmeButtonSize.medium: (
-        minHeight: 36.0,
-        paddingX: 16.0,
-        gap: 8.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      AcmeButtonSize.large: (
-        minHeight: 40.0,
-        paddingX: 20.0,
-        gap: 8.0,
-        labelSize: 16.0,
-        iconSize: 18.0,
-      ),
-    };
-
-    test('every size is covered', () {
-      expect(expected.keys, containsAll(AcmeButtonSize.values));
-      expect(expected, hasLength(AcmeButtonSize.values.length));
-    });
-
-    for (final entry in expected.entries) {
-      testWidgets('${entry.key.name} has its exact metrics', (tester) async {
-        final spec = await _resolveStyle(
-          tester,
-          size: entry.key,
-          theme: const AcmeThemeData.light(),
-        );
-        final metrics = entry.value;
-
-        expect(_minHeight(spec), metrics.minHeight);
-        expect(
-          _padding(spec),
-          EdgeInsets.symmetric(horizontal: metrics.paddingX),
-        );
-        expect(_spacing(spec), metrics.gap);
-        expect(spec.spec.label.spec.style?.fontSize, metrics.labelSize);
-        expect(spec.spec.label.spec.style?.fontWeight, FontWeight.w500);
-        expect(spec.spec.icon.spec.size, metrics.iconSize);
-        expect(spec.spec.spinner.spec.size, metrics.iconSize);
-      });
-    }
-
+    // Heights, padding, gaps, and type per size are held to the shadcn spec
+    // in registry_source/test/vanilla; this pins what every size shares.
     testWidgets('layout and spinner defaults are shared by every size', (
       tester,
     ) async {
@@ -834,7 +784,7 @@ void main() {
         final fills = <AcmeButtonVariant, Color>{
           AcmeButtonVariant.primary: theme.data.primary.withValues(alpha: 0.9),
           AcmeButtonVariant.secondary: theme.data.secondary.withValues(
-            alpha: 0.9,
+            alpha: 0.8,
           ),
           AcmeButtonVariant.destructive: _destructiveHoverFill(theme.data),
         };
@@ -887,15 +837,21 @@ void main() {
             states: const {WidgetState.pressed},
           );
 
+          // A dark ghost hovers onto half-strength accent, as shadcn's does.
+          final highlight =
+              variant == AcmeButtonVariant.ghost &&
+                  theme.data.brightness == Brightness.dark
+              ? theme.data.accent.withValues(alpha: 0.5)
+              : theme.data.accent;
           expect(
             _background(hovered),
-            theme.data.accent,
+            highlight,
             reason: '${variant.name} hovered',
           );
           _expectContent(hovered, theme.data.accentForeground);
           expect(
             _background(pressed),
-            theme.data.accent,
+            highlight,
             reason: '${variant.name} pressed',
           );
           _expectContent(pressed, theme.data.accentForeground);
@@ -1184,7 +1140,13 @@ void main() {
 
       final spec = _resolvedSpec(tester);
       expect(_minHeight(spec), 60);
-      expect(spec.spec.label.spec.style?.fontSize, 16);
+      // Every size sets its label in `textSm`; the large size shows through
+      // its padding instead.
+      expect(spec.spec.label.spec.style?.fontSize, 14);
+      expect(
+        spec.spec.container.spec.box?.spec.padding,
+        const EdgeInsets.symmetric(horizontal: 24),
+      );
       expect(_background(spec), const AcmeThemeData.light().destructive);
     });
 
@@ -2485,11 +2447,16 @@ void main() {
 
           expect(_boxBackground(spec.spec.container), entry.value.fill);
           expect(spec.spec.label.spec.style?.color, entry.value.content);
+          // Every variant draws the same 1px outline, transparent unless it
+          // is `outline`, so badges side by side share one height.
           expect(
             _boxBorder(spec.spec.container),
-            entry.key == AcmeBadgeVariant.outline
-                ? Border.all(color: theme.data.border, width: 1)
-                : isNull,
+            Border.all(
+              color: entry.key == AcmeBadgeVariant.outline
+                  ? theme.data.border
+                  : const Color(0x00000000),
+              width: 1,
+            ),
           );
           // The composited label has to stay readable on the page.
           final surface = Color.alphaBlend(
@@ -3043,43 +3010,21 @@ void main() {
   });
 
   group('acmeLinkStyle', () {
-    for (final theme in _themes) {
-      testWidgets('is underlined body text in ${theme.name}', (tester) async {
-        final spec = await _resolve(tester, acmeLinkStyle(), theme: theme.data);
-
-        expect(spec.spec.label.spec.style?.color, theme.data.foreground);
-        expect(
-          spec.spec.label.spec.style?.decoration,
-          TextDecoration.underline,
-        );
-        expect(spec.spec.label.spec.style?.decorationColor, theme.data.border);
-        // Inline text: the recipe must not pin a size, or a link inside a
-        // heading would render at body scale.
-        expect(spec.spec.label.spec.style?.fontSize, isNull);
-      });
-
-      testWidgets('hover and focus promote the underline in ${theme.name}', (
+    // Type, color, and the hover underline are held to the shadcn spec in
+    // registry_source/test/vanilla.
+    testWidgets('focus-visible draws the ring every control draws', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final spec = await _resolve(
         tester,
-      ) async {
-        for (final states in const [
-          {WidgetState.hovered},
-          {WidgetState.focused},
-        ]) {
-          final spec = await _resolve(
-            tester,
-            acmeLinkStyle(),
-            theme: theme.data,
-            states: states,
-          );
+        acmeLinkStyle(),
+        theme: theme,
+        states: const {WidgetState.focused},
+      );
 
-          expect(
-            spec.spec.label.spec.style?.decorationColor,
-            theme.data.foreground,
-            reason: '$states',
-          );
-        }
-      });
-    }
+      expect(spec.spec.containerEffects?.outline, _focusRing(theme));
+    });
 
     testWidgets('disabled fades the link', (tester) async {
       final spec = await _resolve(
@@ -3238,36 +3183,8 @@ void main() {
   });
 
   group('acmeIconButtonStyle', () {
-    const edges = <AcmeIconButtonSize, ({double edge, double iconSize})>{
-      AcmeIconButtonSize.small: (edge: 32, iconSize: 16),
-      AcmeIconButtonSize.medium: (edge: 36, iconSize: 16),
-      AcmeIconButtonSize.large: (edge: 40, iconSize: 18),
-    };
-
-    test('every size is covered', () {
-      expect(edges.keys, containsAll(AcmeIconButtonSize.values));
-    });
-
-    for (final entry in edges.entries) {
-      testWidgets('${entry.key} is a square with a centered glyph', (
-        tester,
-      ) async {
-        final spec = await _resolve(
-          tester,
-          acmeIconButtonStyle(size: entry.key),
-          theme: const AcmeThemeData.light(),
-        );
-
-        expect(
-          spec.spec.container.spec.constraints,
-          BoxConstraints.tight(Size.square(entry.value.edge)),
-        );
-        expect(spec.spec.container.spec.alignment, Alignment.center);
-        expect(spec.spec.icon.spec.size, entry.value.iconSize);
-        expect(spec.spec.spinner.spec.size, entry.value.iconSize);
-      });
-    }
-
+    // Squares and glyph sizes are held to the shadcn spec in
+    // registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('filled variants dim their own fill in ${theme.name}', (
         tester,
@@ -3279,7 +3196,7 @@ void main() {
           ),
           AcmeIconButtonVariant.secondary: (
             theme.data.secondary,
-            theme.data.secondary.withValues(alpha: 0.9),
+            theme.data.secondary.withValues(alpha: 0.8),
           ),
           AcmeIconButtonVariant.destructive: (
             _destructiveFill(theme.data),
@@ -3342,15 +3259,23 @@ void main() {
             states: const {WidgetState.hovered},
           );
 
-          expect(_boxBackground(idle.spec.container), const Color(0x00000000));
+          final outline = variant == AcmeIconButtonVariant.outline;
+          expect(
+            _boxBackground(idle.spec.container),
+            outline ? theme.data.background : const Color(0x00000000),
+          );
           expect(idle.spec.icon.spec.color, theme.data.foreground);
           expect(
             _boxBorder(idle.spec.container),
-            variant == AcmeIconButtonVariant.outline
-                ? Border.all(color: theme.data.border, width: 1)
-                : isNull,
+            outline ? Border.all(color: theme.data.input, width: 1) : isNull,
           );
-          expect(_boxBackground(hovered.spec.container), theme.data.accent);
+          // A dark ghost hovers onto half-strength accent, as shadcn's does.
+          expect(
+            _boxBackground(hovered.spec.container),
+            !outline && theme.data.brightness == Brightness.dark
+                ? theme.data.accent.withValues(alpha: 0.5)
+                : theme.data.accent,
+          );
           expect(hovered.spec.icon.spec.color, theme.data.accentForeground);
           expect(
             hovered.spec.spinner.spec.color,
@@ -3472,6 +3397,8 @@ void main() {
   });
 
   group('acmeToggleStyle', () {
+    // Heights, padding, and the hover and on fills are held to the shadcn spec
+    // in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('off is transparent with foreground content in '
           '${theme.name}', (tester) async {
@@ -3489,79 +3416,30 @@ void main() {
           );
           expect(spec.spec.label.spec.style?.color, theme.data.foreground);
           expect(spec.spec.icon.spec.color, theme.data.foreground);
-          // The outline is always there and only its colour changes, so the
-          // label never moves when the toggle is switched on.
           expect(
             _flexBorder(spec.spec.container),
-            Border.all(
-              color: variant == AcmeToggleVariant.outline
-                  ? theme.data.border
-                  : const Color(0x00000000),
-              width: 1,
-            ),
+            variant == AcmeToggleVariant.outline
+                ? Border.all(color: theme.data.input, width: 1)
+                : isNull,
             reason: variant.name,
           );
         }
       });
 
-      testWidgets('hover and on stay distinguishable in ${theme.name}', (
+      testWidgets('an on toggle stays on under the pointer in ${theme.name}', (
         tester,
       ) async {
-        final hovered = await _resolve(
+        final both = await _resolve(
           tester,
           acmeToggleStyle(),
           theme: theme.data,
-          states: const {WidgetState.hovered},
-        );
-        final on = await _resolve(
-          tester,
-          acmeToggleStyle(),
-          theme: theme.data,
-          states: const {WidgetState.selected},
+          states: const {WidgetState.hovered, WidgetState.selected},
         );
 
-        expect(
-          _flexDecoration(hovered.spec.container)?.color,
-          theme.data.muted,
-        );
-        expect(hovered.spec.label.spec.style?.color, theme.data.foreground);
-        expect(_flexDecoration(on.spec.container)?.color, theme.data.accent);
-        expect(on.spec.label.spec.style?.color, theme.data.accentForeground);
-        // `muted` and `accent` are 1.155:1 apart in the light theme, so the
-        // fill cannot be the difference. The outline is.
-        expect(
-          _flexBorder(on.spec.container),
-          Border.all(color: theme.data.primary, width: 1),
-        );
-        expect(
-          _flexBorder(hovered.spec.container)?.top.color,
-          isNot(theme.data.primary),
-        );
+        expect(_flexDecoration(both.spec.container)?.color, theme.data.accent);
+        expect(both.spec.label.spec.style?.color, theme.data.accentForeground);
       });
     }
-
-    testWidgets('sizes match the button scale', (tester) async {
-      const heights = <AcmeToggleSize, double>{
-        AcmeToggleSize.small: 32,
-        AcmeToggleSize.medium: 36,
-        AcmeToggleSize.large: 40,
-      };
-      expect(heights.keys, containsAll(AcmeToggleSize.values));
-
-      for (final entry in heights.entries) {
-        final spec = await _resolve(
-          tester,
-          acmeToggleStyle(size: entry.key),
-          theme: const AcmeThemeData.light(),
-        );
-
-        expect(
-          spec.spec.container.spec.box?.spec.constraints?.minHeight,
-          entry.value,
-          reason: entry.key.name,
-        );
-      }
-    });
 
     testWidgets('focus-visible rings without moving the label', (tester) async {
       const theme = AcmeThemeData.light();
@@ -4161,14 +4039,14 @@ void main() {
               reason: variant.name,
             );
             expect(item.label.spec.style?.color, theme.data.foreground);
+            // Options draw no outline of their own: the outline variant draws
+            // one around the whole group.
+            expect(_flexBorder(item.container), isNull, reason: variant.name);
             expect(
-              _flexBorder(item.container),
-              Border.all(
-                color: variant == AcmeToggleGroupVariant.outline
-                    ? theme.data.border
-                    : const Color(0x00000000),
-                width: 1,
-              ),
+              _flexBorder(group.spec.container),
+              variant == AcmeToggleGroupVariant.outline
+                  ? Border.all(color: theme.data.input, width: 1)
+                  : isNull,
               reason: variant.name,
             );
           }
@@ -5565,7 +5443,7 @@ void main() {
 
   group('the grouped controls cover every size they declare', () {
     const toggleGroup = <AcmeToggleGroupSize, ({double minHeight, double gap})>{
-      AcmeToggleGroupSize.small: (minHeight: 32, gap: 6),
+      AcmeToggleGroupSize.small: (minHeight: 32, gap: 8),
       AcmeToggleGroupSize.medium: (minHeight: 36, gap: 8),
       AcmeToggleGroupSize.large: (minHeight: 40, gap: 8),
     };
