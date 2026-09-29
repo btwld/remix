@@ -73,9 +73,12 @@ destructive fills at 60%.
 ## Scope
 
 The outermost `<Prefix>ThemeScope` paints the theme's `background` and gives
-bare `Text` the body run (`textSm` in `foreground`). Place it inside the
-host's `builder`, below `MaterialApp` or `WidgetsApp`, so the host's own text
-defaults do not sit between the two. A nested scope re-scopes tokens only.
+bare `Text` the body run (`textSm` in `foreground`) and bare `Icon`s the
+`foreground` color. Place it inside the host's `builder`, below `MaterialApp`
+or `WidgetsApp`, so the host's own text defaults do not sit between the two. A
+nested scope re-scopes tokens; if its theme has a different `foreground` (a
+region shown in the other brightness), it also recolors text and icons below
+it, but it never paints a background.
 
 ## Theme values
 

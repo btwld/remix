@@ -98,10 +98,30 @@ void main() {
     });
   }
 
-  testWidgets('a nested scope re-scopes tokens and leaves the page alone', (
+  testWidgets('a nested scope in the same theme leaves the page alone', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      VanillaThemeScope(
+        theme: light,
+        darkTheme: dark,
+        mode: .light,
+        child: const Directionality(
+          textDirection: TextDirection.ltr,
+          child: VanillaThemeScope(child: Text('probe')),
+        ),
+      ),
+    );
+
+    expectBodyRun(runOf(tester), light);
+    expect(find.byType(ColoredBox), findsOneWidget);
+  });
+
+  testWidgets('a nested scope in the other theme recolors text and icons', (
     tester,
   ) async {
     late Color innerForeground;
+    late Color? iconColor;
 
     await tester.pumpWidget(
       VanillaThemeScope(
@@ -115,6 +135,7 @@ void main() {
             child: Builder(
               builder: (context) {
                 innerForeground = VanillaTokens.foreground.resolve(context);
+                iconColor = IconTheme.of(context).color;
                 return const Text('probe');
               },
             ),
@@ -123,12 +144,37 @@ void main() {
       ),
     );
 
-    // The tokens follow the nested scope ...
+    // The tokens follow the nested scope, and so does the color of bare text
+    // and icons, or they would vanish on the surfaces its recipes paint ...
     expect(innerForeground, dark.foreground);
-    // ... but the text run and the background are the root's alone: a nested
-    // scope that reinstalled them would repaint whatever surface it sits on.
-    expectBodyRun(runOf(tester), light);
+    expect(iconColor, dark.foreground);
+    final run = runOf(tester);
+    expect(run.color, dark.foreground);
+    // ... but the rest of the run and the background stay the root's: a
+    // nested scope that reinstalled them would repaint whatever it sits on.
+    expect(run.fontSize, 14);
+    expect(run.fontFamily, 'Body');
     expect(find.byType(ColoredBox), findsOneWidget);
+  });
+
+  testWidgets('the root gives bare icons the foreground', (tester) async {
+    late Color? iconColor;
+
+    await tester.pumpWidget(
+      VanillaThemeScope(
+        theme: light,
+        darkTheme: dark,
+        mode: .dark,
+        child: Builder(
+          builder: (context) {
+            iconColor = IconTheme.of(context).color;
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+
+    expect(iconColor, dark.foreground);
   });
 
   testWidgets('a nearer DefaultTextStyle still wins', (tester) async {

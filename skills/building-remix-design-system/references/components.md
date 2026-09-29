@@ -116,8 +116,9 @@ set up every Remix design system the same way:
   tell "no scope" from "scope chose its default".
 - The outermost scope sets the page up: it paints the theme's background and
   installs a root `DefaultTextStyle` in the body text and foreground, so a bare
-  `Text` reads correctly in every mode. A nested scope re-scopes tokens only;
-  reinstalling either would repaint the surface it sits on.
+  `Text` reads correctly in every mode. A nested scope re-scopes tokens and,
+  when its foreground differs, recolors the inherited text run; it never
+  repaints the background or replaces the rest of the run.
 - `AcmeTheme.wrap` rebuilds the `MixScope` as well as itself (see §3).
 - `updateShouldNotify` compares every carried field; this is why theme data
   needs value equality.

@@ -598,8 +598,9 @@ Then adjust any code of your own that read the old names:
 - `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is
   shadcn's pill list; pass `variant: .line` to both for the underline strip.
 - The root `UiThemeScope` now paints the page background and gives bare `Text`
-  the theme's body run, so remove any `ColoredBox` or `DefaultTextStyle` you
-  added around the scope for that.
+  the theme's body run and bare `Icon`s its `foreground`, so remove any
+  `ColoredBox` or `DefaultTextStyle` you added around the scope for that. A
+  nested scope in the other brightness recolors the text and icons below it.
 
 ### The Remix drift notice
 

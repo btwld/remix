@@ -14,7 +14,9 @@ import 'tokens.dart';
 ///   styler resolved below this point sees them.
 ///
 /// The outermost scope also sets the page up: it paints the theme's
-/// `background` behind [child] and gives bare [Text] the theme's body run.
+/// `background` behind [child] and gives bare [Text] the theme's body run and
+/// bare [Icon]s its `foreground`. A nested scope whose theme has a different
+/// `foreground` recolors both for its subtree.
 /// Place it below the application host so those defaults apply:
 ///
 /// ```dart
@@ -100,15 +102,20 @@ class VanillaThemeScope extends StatelessWidget {
     final selected = useDark ? dark : base;
     final tokens = selected.tokens;
     Widget scoped = MixScope(tokens: tokens, child: child);
-    // Only the outermost scope sets the page up. A nested scope re-scopes
-    // tokens for its subtree and nothing more: reinstalling the root text run
-    // there would silently replace whatever `DefaultTextStyle` the subtree
-    // sits in, and a second background would paint over a card or a panel.
+    // Only the outermost scope sets the page up. A nested scope must not
+    // reinstall the root text run, which would silently replace whatever
+    // `DefaultTextStyle` the subtree sits in, nor paint a second background
+    // over a card or a panel. But a nested scope that switches to a theme with
+    // a different `foreground` (a region shown in the other brightness, say)
+    // recolors the run it inherits, so bare text and icons below it stay
+    // readable on the surfaces its own recipes paint.
     if (inherited == null) {
       scoped = ColoredBox(
         color: selected.background,
         child: _rootTextStyle(tokens: tokens, child: scoped),
       );
+    } else if (inherited.data.foreground != selected.foreground) {
+      scoped = _recolored(selected.foreground, scoped);
     }
 
     return VanillaTheme(
@@ -133,20 +140,34 @@ class VanillaThemeScope extends StatelessWidget {
 /// and a nearer `DefaultTextStyle` wins through Flutter's normal inheritance.
 /// Place the scope *below* a Material or Cupertino host (in its `builder`) so
 /// the host's own text defaults do not sit between the two.
+///
+/// A bare [Icon] takes `foreground` too, as an icon inherits the text color in
+/// shadcn; its size is left to the host.
 Widget _rootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
   required Widget child,
 }) {
   final body = tokens[VanillaTokens.textSm]! as TextStyle;
+  final foreground = tokens[VanillaTokens.foreground]! as Color;
 
   return DefaultTextStyle(
-    style: body.copyWith(
-      color: tokens[VanillaTokens.foreground]! as Color,
-      fontWeight: FontWeight.w400,
+    style: body.copyWith(color: foreground, fontWeight: FontWeight.w400),
+    child: IconTheme.merge(
+      data: IconThemeData(color: foreground),
+      child: child,
     ),
-    child: child,
   );
 }
+
+/// The inherited text run and icon theme, recolored to [foreground] and
+/// otherwise untouched.
+Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
+  style: TextStyle(color: foreground),
+  child: IconTheme.merge(
+    data: IconThemeData(color: foreground),
+    child: child,
+  ),
+);
 
 /// The inherited half of [VanillaThemeScope].
 ///
