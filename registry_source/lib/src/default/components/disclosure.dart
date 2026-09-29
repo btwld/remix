@@ -16,18 +16,17 @@ part 'disclosure.g.dart';
 /// expanded state; this recipe supplies the trigger row, the content inset,
 /// and the state fragments.
 ///
-/// It is deliberately frameless, unlike the card. The accordion is this
-/// component's stacked sibling and draws a rule under each section because
-/// its rows have neighbours to separate; a lone disclosure has none, so a
-/// frame would only box in whatever the caller already placed it inside.
-/// The trigger is styled as a self-contained row target instead — same
-/// padding, radius, and hover treatment as a menu row, because behaviorally
-/// that is what it is: a full-width thing you click.
+/// It is the accordion's trigger without the accordion's frame: shadcn's
+/// `AccordionTrigger`, 16px above and below with no side inset, `textSm` at
+/// medium weight, underlined under the pointer. The accordion draws a rule
+/// under each section because its rows have neighbours to separate; a lone
+/// disclosure has none, so a frame would only box in whatever the caller
+/// already placed it inside.
 ///
 /// The spec carries plain boxes (`trigger`, `content`), not text: the caller
-/// passes whole widgets for both, so their type belongs to the caller. The
-/// hover and open fills are `accent` and `muted`, which in the shipped themes
-/// are near-surface tints the `foreground` text keeps its contrast on.
+/// passes whole widgets for both. The recipe sets the trigger's type through a
+/// default text style instead, so a bare `Text` trigger takes it and a caller
+/// who styles their own text keeps theirs.
 ///
 /// Two constructor parameters are deliberately not forwarded to the generated
 /// `VanillaDisclosure`: `triggerBuilder` and `transitionBuilder`. Both
@@ -37,8 +36,8 @@ part 'disclosure.g.dart';
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state,
-/// not by depth: an override that must beat the open trigger's fill has to be
-/// declared with `.onExpanded(...)` too.
+/// not by depth: an override that must beat the hovered trigger has to be
+/// declared with `.onHovered(...)` too.
 @MixWidget(
   target: RemixDisclosure.new,
   widgetParameters: .only({
@@ -69,55 +68,32 @@ DisclosureStyler vanillaDisclosureStyle({
     // row a reader clicks to open the section.
     .width(double.infinity)
     .alignment(.centerLeft)
-    .minHeight(_triggerHeight)
-    .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
+    .padding(.vertical(VanillaSpace.s4))
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    // `content` has to be reached by name; a bare `.padding(...)` would inset
-    // the trigger instead. The horizontal inset matches the trigger's so the
-    // revealed content lines up under the trigger's own.
-    .content(
-      .padding(
-        .only(
-          left: _paddingX,
-          right: _paddingX,
-          top: _contentGap,
-          bottom: _contentGap,
+    .trigger(
+      BoxStyler().wrap(
+        .defaultText(
+          TextStyler()
+              .style(VanillaTokens.textSm.mix())
+              .fontWeight(FontWeight.w500)
+              .color(VanillaTokens.foreground()),
         ),
       ),
     )
-    .onHovered(DisclosureStyler().color(VanillaTokens.accent()))
-    // The open trigger keeps a fill after the pointer leaves, so a reader
-    // scanning the page can tell an open section from a closed one without
-    // touching it. `muted` rather than `accent`: the two must differ, or
-    // hovering a closed section would look identical to one that is open.
-    .onExpanded(DisclosureStyler().color(VanillaTokens.muted()))
+    // `content` has to be reached by name; a bare `.padding(...)` would inset
+    // the trigger instead. It has no side inset either, so the revealed
+    // content lines up under the trigger's own text.
+    .content(.padding(.only(bottom: VanillaSpace.s4)))
+    .onHovered(
+      DisclosureStyler().trigger(
+        BoxStyler().wrap(
+          .defaultText(TextStyler().decoration(TextDecoration.underline)),
+        ),
+      ),
+    )
     .onFocusVisible(_focusVisibleStyle())
     .onDisabled(_disabledStyle())
     .merge(style);
-
-/// Minimum height of the trigger row.
-///
-/// The accordion's 44px, not the menu row's 32: this row stands alone on the
-/// page rather than inside a dense list, so it keeps the full touch target.
-const _triggerHeight = 44.0;
-
-/// Horizontal inset inside the trigger, matched by the content.
-const _paddingX = 12.0;
-
-/// Vertical inset inside the trigger.
-const _paddingY = 10.0;
-
-/// Inset above and below the revealed content.
-///
-/// Both sides, not just the top. Without the bottom the last line of content
-/// sits hard against the container's own edge, which is invisible while the
-/// container is undecorated and obvious the moment it is not — the focus ring
-/// is drawn there, and a consumer who gives the container a fill or a border
-/// gets text touching it.
-const _contentGap = 8.0;
-
-/// Opacity applied to the whole section while disabled.
-const _disabledOpacity = 0.5;
 
 /// The keyboard focus ring, drawn on the trigger alone.
 ///
@@ -142,4 +118,4 @@ DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
 /// a focus ring reads as reachable.
 DisclosureStyler _disabledStyle() => DisclosureStyler()
     .trigger(.foregroundDecoration(BoxDecorationMix.border(.style(.none))))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

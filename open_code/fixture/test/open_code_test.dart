@@ -1945,32 +1945,38 @@ void main() {
   });
 
   group('acmeTabBarStyle and acmeTabViewStyle', () {
+    // The list's height, inset, and surface are held to the shadcn spec in
+    // registry_source/test/vanilla; this pins the layout both looks share.
     for (final theme in _themes) {
-      testWidgets('the strip carries one hairline in ${theme.name}', (
+      testWidgets('both lists hug their tabs without a rule in ${theme.name}', (
         tester,
       ) async {
-        final spec = await _resolveTabBar(tester, theme: theme.data);
-        final flex = spec.spec.container.spec.flex?.spec;
+        for (final variant in AcmeTabsVariant.values) {
+          final spec = await _resolveTabBar(
+            tester,
+            theme: theme.data,
+            variant: variant,
+          );
+          final flex = spec.spec.container.spec.flex?.spec;
 
-        expect(
-          _flexBorder(spec.spec.container),
-          Border(bottom: BorderSide(color: theme.data.border, width: 1)),
-        );
-        expect(flex?.direction, Axis.horizontal);
-        // Max, so the rule spans its container rather than stopping at the
-        // last tab.
-        expect(flex?.mainAxisSize, MainAxisSize.max);
-        expect(flex?.crossAxisAlignment, CrossAxisAlignment.end);
+          expect(flex?.direction, Axis.horizontal, reason: variant.name);
+          expect(flex?.mainAxisSize, MainAxisSize.min, reason: variant.name);
+          expect(
+            _flexBorder(spec.spec.container),
+            isNull,
+            reason: variant.name,
+          );
+        }
       });
     }
 
-    testWidgets('the panel is pushed clear of the strip', (tester) async {
+    testWidgets('the panel sits clear of the strip', (tester) async {
       final spec = await _resolveTabView(
         tester,
         theme: const AcmeThemeData.light(),
       );
 
-      expect(spec.spec.container.spec.padding, const EdgeInsets.only(top: 16));
+      expect(spec.spec.container.spec.padding, const EdgeInsets.only(top: 8));
     });
 
     testWidgets('both recipes take a caller style that merges last', (
@@ -1995,58 +2001,33 @@ void main() {
     });
   });
 
-  group('acmeTabStyle sizes', () {
-    const expected = <String, _Metrics>{
-      'default': (
-        minHeight: 36.0,
-        paddingX: 12.0,
-        gap: 8.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-    };
-
-    for (final entry in expected.entries) {
-      testWidgets('${entry.key} has its exact metrics', (tester) async {
-        final spec = await _resolveTab(
-          tester,
-          theme: const AcmeThemeData.light(),
-        );
-        final metrics = entry.value;
-        final box = spec.spec.container.spec.box?.spec;
-        final flex = spec.spec.container.spec.flex?.spec;
-
-        expect(box?.constraints?.minHeight, metrics.minHeight);
-        expect(
-          box?.padding,
-          EdgeInsets.symmetric(horizontal: metrics.paddingX),
-        );
-        expect(flex?.spacing, metrics.gap);
-        expect(spec.spec.label.spec.style?.fontSize, metrics.labelSize);
-        expect(spec.spec.label.spec.style?.fontWeight, FontWeight.w500);
-        expect(spec.spec.icon.spec.size, metrics.iconSize);
-      });
-    }
-  });
-
   group('acmeTabStyle states', () {
+    // Geometry and the resting and current colors are held to the shadcn spec
+    // in registry_source/test/vanilla; this pins how the states combine.
     for (final theme in _themes) {
-      testWidgets('an unselected tab is muted in ${theme.name}', (
+      testWidgets('the current mark holds its space at rest in ${theme.name}', (
         tester,
       ) async {
-        final spec = await _resolveTab(tester, theme: theme.data);
+        final filled = await _resolveTab(tester, theme: theme.data);
+        final line = await _resolveTab(
+          tester,
+          theme: theme.data,
+          variant: AcmeTabsVariant.line,
+        );
 
-        expect(spec.spec.label.spec.style?.color, theme.data.mutedForeground);
-        expect(spec.spec.icon.spec.color, theme.data.mutedForeground);
-        // The selected edge is already present, merely transparent, so
-        // selecting a tab repaints instead of reflowing the strip.
+        // Both marks are present at rest, merely transparent, so choosing a
+        // tab repaints instead of reflowing the strip.
         expect(
-          _flexBorder(spec.spec.container),
+          _flexBorder(filled.spec.container),
+          Border.all(color: const Color(0x00000000), width: 1),
+        );
+        expect(
+          _flexBorder(line.spec.container),
           const Border(bottom: BorderSide(color: Color(0x00000000), width: 2)),
         );
       });
 
-      testWidgets('hover promotes the content in ${theme.name}', (
+      testWidgets('hover promotes the content only in ${theme.name}', (
         tester,
       ) async {
         final spec = await _resolveTab(
@@ -2057,39 +2038,45 @@ void main() {
 
         expect(spec.spec.label.spec.style?.color, theme.data.foreground);
         expect(spec.spec.icon.spec.color, theme.data.foreground);
-        expect(_flexDecoration(spec.spec.container)?.color, theme.data.accent);
+        expect(_flexDecoration(spec.spec.container)?.color, isNull);
       });
 
-      testWidgets('the selected tab is marked in ${theme.name}', (
+      testWidgets('the line tab is underlined in ${theme.name}', (
         tester,
       ) async {
         final spec = await _resolveTab(
           tester,
           theme: theme.data,
-          states: const {WidgetState.selected},
+          variant: AcmeTabsVariant.line,
+          states: const {WidgetState.selected, WidgetState.hovered},
         );
 
         expect(spec.spec.label.spec.style?.color, theme.data.foreground);
         expect(
           _flexBorder(spec.spec.container),
-          Border(bottom: BorderSide(color: theme.data.primary, width: 2)),
+          Border(bottom: BorderSide(color: theme.data.foreground, width: 2)),
         );
       });
 
-      testWidgets('a hovered selected tab keeps both marks in ${theme.name}', (
+      testWidgets('a hovered current tab stays lifted in ${theme.name}', (
         tester,
       ) async {
-        final spec = await _resolveTab(
+        final current = await _resolveTab(
+          tester,
+          theme: theme.data,
+          states: const {WidgetState.selected},
+        );
+        final both = await _resolveTab(
           tester,
           theme: theme.data,
           states: const {WidgetState.selected, WidgetState.hovered},
         );
 
-        expect(_flexDecoration(spec.spec.container)?.color, theme.data.accent);
         expect(
-          _flexBorder(spec.spec.container),
-          Border(bottom: BorderSide(color: theme.data.primary, width: 2)),
+          _flexDecoration(both.spec.container)?.color,
+          _flexDecoration(current.spec.container)?.color,
         );
+        expect(_flexDecoration(both.spec.container)?.boxShadow, isNotEmpty);
       });
 
       testWidgets('focus-visible draws a ring that takes no space in '
@@ -3995,49 +3982,26 @@ void main() {
             _boxBackground(spec.spec.item.spec.container),
             const Color(0x00000000),
           );
-          // Every segment's label is `foreground`: `mutedForeground` on the
-          // `muted` track measures 4.35:1 in the light theme. The chosen
-          // segment is marked by its raised surface and a heavier weight.
+          // A segment not chosen reads as a tab not chosen: 60% `foreground`,
+          // or `mutedForeground` in the dark theme. Both clear 4.5:1 on the
+          // `muted` track.
+          final resting = spec.spec.item.spec.label.spec.style!.color!;
           expect(
-            spec.spec.item.spec.label.spec.style?.color,
-            theme.data.foreground,
+            resting,
+            theme.data.brightness == Brightness.dark
+                ? theme.data.mutedForeground
+                : theme.data.foreground.withValues(alpha: 0.6),
           );
-          expect(
-            spec.spec.item.spec.label.spec.style?.fontWeight,
-            FontWeight.w400,
+          _expectReadable(
+            resting,
+            theme.data.muted,
+            page: theme.data.background,
+            floor: 4.5,
+            reason: 'resting segment',
           );
         },
       );
     }
-
-    testWidgets('the segment radius is pulled in by the track inset', (
-      tester,
-    ) async {
-      const light = AcmeThemeData.light();
-      final cases = <Radius, Radius>{
-        // The shipped control radius, 8, leaves 5 once the 3px inset is
-        // taken off.
-        light.radius: const Radius.circular(5),
-        // A control radius smaller than the inset clamps at square rather
-        // than going negative.
-        const Radius.circular(4): Radius.zero,
-        Radius.zero: Radius.zero,
-      };
-
-      for (final entry in cases.entries) {
-        final spec = await _resolve(
-          tester,
-          acmeSegmentedControlStyle(),
-          theme: light.copyWith(radius: entry.key),
-        );
-
-        expect(
-          _boxBorderRadius(spec.spec.item.spec.container),
-          BorderRadius.all(entry.value),
-          reason: '${entry.key}',
-        );
-      }
-    });
 
     testWidgets('one recipe styles every option without a per-item styler', (
       tester,
@@ -4098,8 +4062,10 @@ void main() {
   });
 
   group('acmeSidebarStyle', () {
+    // The panel, the destination metrics, and the label type are held to the
+    // shadcn spec in registry_source/test/vanilla.
     for (final theme in _themes) {
-      testWidgets('the panel is the page plus one edge in ${theme.name}', (
+      testWidgets('the footer divider is the sidebar edge in ${theme.name}', (
         tester,
       ) async {
         final spec = await _resolve(
@@ -4108,21 +4074,9 @@ void main() {
           theme: theme.data,
         );
 
-        // The same choice the card makes: one surface token, and the hairline
-        // is what separates the panel from the content beside it.
-        expect(
-          _flexDecoration(spec.spec.container)?.color,
-          theme.data.background,
-        );
-        expect(
-          _flexBorder(spec.spec.container),
-          BorderDirectional(
-            end: BorderSide(color: theme.data.border, width: 1),
-          ),
-        );
         expect(
           _boxBorder(spec.spec.footer),
-          Border(top: BorderSide(color: theme.data.border, width: 1)),
+          Border(top: BorderSide(color: theme.data.sidebarBorder, width: 1)),
         );
       });
 
@@ -4133,35 +4087,35 @@ void main() {
           acmeSidebarStyle(),
           theme: theme.data,
         );
+        final label = spec.spec.sectionLabel.spec.style!;
+        final destination = spec.spec.destination.spec.label.spec.style!;
 
-        expect(
-          spec.spec.sectionLabel.spec.style?.color,
-          theme.data.mutedForeground,
-        );
-        expect(
-          spec.spec.destination.spec.label.spec.style?.color,
-          theme.data.foreground,
-        );
+        expect(destination.color, theme.data.sidebarForeground);
+        expect(label.fontSize, lessThan(destination.fontSize!));
         _expectReadable(
-          spec.spec.sectionLabel.spec.style!.color!,
+          label.color!,
           const Color(0x00000000),
-          page: theme.data.background,
+          page: theme.data.sidebar,
           floor: 4.5,
           reason: 'sidebar section label',
         );
       });
     }
 
-    testWidgets('a destination is the application toggle, widened', (
+    testWidgets('a destination is the application toggle, retuned', (
       tester,
     ) async {
       const theme = AcmeThemeData.light();
       final sidebar = await _resolve(tester, acmeSidebarStyle(), theme: theme);
-      final toggle = await _resolve(tester, acmeToggleStyle(), theme: theme);
+      final toggle = await _resolve(
+        tester,
+        acmeToggleStyle(size: AcmeToggleSize.small),
+        theme: theme,
+      );
 
       final destination = sidebar.spec.destination.spec.container.spec;
-      // The recipe reuses the ghost toggle rather than restating it, so the
-      // resting fill and the type scale come from the toggle's own recipe.
+      // The recipe reuses the small ghost toggle rather than restating it, so
+      // the resting fill and the type come from the toggle's own recipe.
       expect(
         destination.box?.spec.decoration,
         toggle.spec.container.spec.box?.spec.decoration,
@@ -4170,9 +4124,7 @@ void main() {
         sidebar.spec.destination.spec.label.spec.style?.fontSize,
         toggle.spec.label.spec.style?.fontSize,
       );
-      // What the sidebar does add: full panel width, leading content, and a
-      // 48px target rather than the toggle's 36.
-      expect(destination.box?.spec.constraints?.minHeight, 48);
+      // What the sidebar does add: full panel width and leading content.
       expect(destination.flex?.spec.mainAxisSize, MainAxisSize.max);
       expect(destination.flex?.spec.mainAxisAlignment, MainAxisAlignment.start);
     });
@@ -4803,6 +4755,8 @@ void main() {
   });
 
   group('acmeAccordionStyle', () {
+    // The trigger's inset and type, the chevron, and the hover underline are
+    // held to the shadcn spec in registry_source/test/vanilla.
     for (final theme in _themes) {
       testWidgets('a closed section is a titled rule in ${theme.name}', (
         tester,
@@ -4820,10 +4774,7 @@ void main() {
           Border(bottom: BorderSide(color: theme.data.border, width: 1)),
         );
         expect(spec.spec.title.spec.style?.color, theme.data.foreground);
-        expect(spec.spec.title.spec.style?.fontWeight, FontWeight.w500);
         expect(spec.spec.leadingIcon.spec.color, theme.data.mutedForeground);
-        expect(spec.spec.trailingIcon.spec.color, theme.data.mutedForeground);
-        expect(spec.spec.trigger.spec.box?.spec.constraints?.minHeight, 44);
       });
 
       testWidgets('open and hover stay distinguishable in ${theme.name}', (
@@ -4842,12 +4793,21 @@ void main() {
           states: const {WidgetState.selected},
         );
 
-        // Both promote the icons; only the open one moves the title's weight,
-        // which is what lets a reader find the open section without a pointer.
-        expect(hovered.spec.trailingIcon.spec.color, theme.data.foreground);
+        // Hover underlines the title; an open section promotes its icons,
+        // which is what lets a reader find it without a pointer.
+        expect(
+          hovered.spec.title.spec.style?.decoration,
+          TextDecoration.underline,
+        );
+        expect(
+          hovered.spec.trailingIcon.spec.color,
+          isNot(theme.data.foreground),
+        );
         expect(open.spec.trailingIcon.spec.color, theme.data.foreground);
-        expect(hovered.spec.title.spec.style?.fontWeight, FontWeight.w500);
-        expect(open.spec.title.spec.style?.fontWeight, FontWeight.w600);
+        expect(
+          open.spec.title.spec.style?.decoration,
+          isNot(TextDecoration.underline),
+        );
       });
     }
 
@@ -4883,54 +4843,49 @@ void main() {
   });
 
   group('acmeDisclosureStyle', () {
-    // `onExpanded` resolves through the live `NakedDisclosureState`, so the
-    // recipe can only be observed on a real widget — the same constraint the
+    // The recipe's hover fragment wraps the caller's trigger in a default
+    // text style, so it is observed on a real widget, the same constraint the
     // checkbox's `onIndeterminate` imposes on its probes.
     for (final theme in _themes) {
-      testWidgets('the trigger is a full-width row target in ${theme.name}', (
+      testWidgets(
+        'the trigger is a frameless full-width row in ${theme.name}',
+        (tester) async {
+          final spec = await _disclosureSpec(tester, theme: theme.data);
+
+          // Frameless on purpose: the accordion's rule separates neighbours,
+          // and a lone disclosure has none.
+          expect(_boxBorder(spec.spec.container), isNull);
+          expect(_boxBackground(spec.spec.trigger), isNull);
+          expect(
+            _boxBorderRadius(spec.spec.trigger),
+            BorderRadius.all(_radiusMd(theme.data)),
+          );
+          expect(
+            spec.spec.content.spec.padding,
+            const EdgeInsets.only(bottom: 16),
+          );
+        },
+      );
+
+      testWidgets('hovering underlines a bare text trigger in ${theme.name}', (
         tester,
       ) async {
-        final spec = await _disclosureSpec(tester, theme: theme.data);
+        await _disclosureSpec(tester, theme: theme.data, hovered: true);
+        final style = tester
+            .widget<RichText>(
+              find
+                  .descendant(
+                    of: find.byType(AcmeDisclosure),
+                    matching: find.byType(RichText),
+                  )
+                  .first,
+            )
+            .text
+            .style!;
 
-        // Frameless on purpose: the accordion's rule separates neighbours,
-        // and a lone disclosure has none. The trigger carries the geometry.
-        expect(_boxBorder(spec.spec.container), isNull);
-        expect(spec.spec.trigger.spec.constraints?.minHeight, 44);
-        expect(
-          _boxBorderRadius(spec.spec.trigger),
-          BorderRadius.all(_radiusMd(theme.data)),
-        );
-        expect(
-          spec.spec.content.spec.padding,
-          const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-        );
-        expect(_boxBackground(spec.spec.trigger), isNull);
-      });
-
-      testWidgets('hovering tints the trigger in ${theme.name}', (
-        tester,
-      ) async {
-        final spec = await _disclosureSpec(
-          tester,
-          theme: theme.data,
-          hovered: true,
-        );
-
-        expect(_boxBackground(spec.spec.trigger), theme.data.accent);
-      });
-
-      testWidgets('the open trigger holds a muted fill in ${theme.name}', (
-        tester,
-      ) async {
-        final spec = await _disclosureSpec(
-          tester,
-          theme: theme.data,
-          expanded: true,
-        );
-
-        // `muted` rather than `accent`: the two must differ, or hovering a
-        // closed section would look identical to one that is open.
-        expect(_boxBackground(spec.spec.trigger), theme.data.muted);
+        expect(style.decoration, TextDecoration.underline);
+        expect(style.fontWeight, FontWeight.w500);
+        expect(style.color, theme.data.foreground);
       });
     }
 
@@ -5897,14 +5852,6 @@ void main() {
 
 // -- helpers ----------------------------------------------------------------
 
-typedef _Metrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
-
 const _minHeights = <AcmeButtonSize, double>{
   AcmeButtonSize.small: 32.0,
   AcmeButtonSize.medium: 36.0,
@@ -6207,11 +6154,12 @@ Future<StyleSpec<DisclosureSpec>> _disclosureSpec(
 Future<StyleSpec<TabSpec>> _resolveTab(
   WidgetTester tester, {
   required AcmeThemeData theme,
+  AcmeTabsVariant variant = AcmeTabsVariant.filled,
   TabStyler? style,
   Set<WidgetState> states = const {},
 }) => _resolve(
   tester,
-  acmeTabStyle(style: style ?? const TabStyler.create()),
+  acmeTabStyle(variant: variant, style: style ?? const TabStyler.create()),
   theme: theme,
   states: states,
 );
@@ -6219,10 +6167,14 @@ Future<StyleSpec<TabSpec>> _resolveTab(
 Future<StyleSpec<TabBarSpec>> _resolveTabBar(
   WidgetTester tester, {
   required AcmeThemeData theme,
+  AcmeTabsVariant variant = AcmeTabsVariant.filled,
   TabBarStyler? style,
 }) => _resolve(
   tester,
-  acmeTabBarStyle(style: style ?? const TabBarStyler.create()),
+  acmeTabBarStyle(
+    variant: variant,
+    style: style ?? const TabBarStyler.create(),
+  ),
   theme: theme,
 );
 

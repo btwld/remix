@@ -68,7 +68,7 @@ class VanillaSidebarLayout extends StatefulWidget {
     this.header,
     this.compactBreakpoint = 720,
     this.sidebarWidth = 256,
-    this.collapsedWidth = 72,
+    this.collapsedWidth = 48,
     this.collapsed = false,
     this.compactOpen,
     this.onCompactOpenChanged,
@@ -201,14 +201,11 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
               // would shrink `width` by the border's own stroke width.
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: MixScope.tokenOf(
-                    VanillaTokens.background,
-                    dialogContext,
-                  ),
+                  color: MixScope.tokenOf(VanillaTokens.sidebar, dialogContext),
                   border: BorderDirectional(
                     end: BorderSide(
                       color: MixScope.tokenOf(
-                        VanillaTokens.border,
+                        VanillaTokens.sidebarBorder,
                         dialogContext,
                       ),
                     ),

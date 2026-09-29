@@ -34,66 +34,26 @@ part 'menu.g.dart';
 MenuStyler vanillaMenuStyle({MenuStyler style = const MenuStyler.create()}) =>
     MenuStyler()
         .trigger(_triggerStyle())
+        // shadcn's `DropdownMenuContent`: `rounded-md border bg-popover p-1
+        // shadow-md`, at least 128px wide. The inset is split: the panel pads
+        // above and below, and each row takes the side inset as its own
+        // margin, which is what lets a separator run edge to edge.
         .overlay(
           FlexBoxStyler()
               .direction(.vertical)
               .mainAxisSize(.min)
               .color(VanillaTokens.popover())
-              .border(.color(VanillaTokens.border()).width(_borderWidth))
+              .border(
+                .color(VanillaTokens.border()).width(VanillaStroke.hairline),
+              )
               .borderRadius(.all(VanillaTokens.radiusMd()))
-              .padding(.all(_panelPadding))
-              .minWidth(_panelMinWidth),
+              .padding(.vertical(VanillaSpace.s1))
+              .minWidth(VanillaSize.panelMinWidth),
         )
-        .containerEffects(.behindContent(.shadows([_shadow])))
+        .containerEffects(.behindContent(VanillaShadow.md.effects))
         .item(_itemStyle())
         .divider(_dividerStyle())
         .merge(style);
-
-/// Width of the panel and trigger outlines.
-const _borderWidth = 1.0;
-
-/// Inset between the panel edge and its rows.
-///
-/// Small: the rows carry their own padding, and this is only the gap that
-/// keeps a hovered row's fill from touching the panel's outline.
-const _panelPadding = 4.0;
-
-/// The narrowest a menu panel gets, so a one-word menu is still a target.
-const _panelMinWidth = 160.0;
-
-/// Horizontal inset inside a row.
-const _rowPaddingX = 8.0;
-
-/// Vertical inset inside a row.
-const _rowPaddingY = 6.0;
-
-/// Minimum height of a row.
-const _rowHeight = 32.0;
-
-/// Gap between a row's icons and its label.
-const _rowGap = 8.0;
-
-/// Label size, matching body copy.
-const _labelSize = 14.0;
-
-/// Size of a row's leading and trailing icons.
-const _iconSize = 16.0;
-
-/// Vertical space a divider claims between two groups of rows.
-const _dividerMargin = 4.0;
-
-/// Opacity applied to a trigger or a row the reader cannot use.
-const _disabledOpacity = 0.5;
-
-/// The lift that separates the panel from whatever it covers.
-///
-/// A shadow is nearly invisible on a dark page, so it is a *second* cue; the
-/// panel's outline is what has to carry the boundary in both themes.
-final _shadow = RemixBoxShadowMix(
-  color: const Color(0x1A000000),
-  offset: const Offset(0, 4),
-  blurRadius: 12,
-);
 
 /// The control that opens the menu.
 ///
@@ -108,25 +68,28 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .direction(.horizontal)
     .mainAxisSize(.min)
     .crossAxisAlignment(.center)
-    .minHeight(_rowHeight)
-    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
-    .spacing(_rowGap)
+    .minHeight(VanillaSize.controlSm)
+    .padding(
+      .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1_5),
+    )
+    .spacing(VanillaSpace.s2)
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .label(
-      .fontSize(
-        _labelSize,
+      .style(
+        VanillaTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
     )
-    .icon(.size(_iconSize).color(VanillaTokens.foreground()))
+    .icon(.size(VanillaSize.icon).color(VanillaTokens.foreground()))
     .onHovered(.color(VanillaTokens.accent()))
     // A trigger is keyboard-reachable whether or not it wraps a control that
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
     .onFocusVisible(.foregroundDecoration(vanillaFocusRingDecoration()))
-    .onDisabled(MenuTriggerStyler().wrap(.opacity(_disabledOpacity)));
+    .onDisabled(MenuTriggerStyler().wrap(.opacity(VanillaOpacity.disabled)));
 
-/// One row, in every kind the menu can hold.
+/// One row, in every kind the menu can hold: shadcn's `DropdownMenuItem`,
+/// `px-2 py-1.5 rounded-sm text-sm`, 32px tall.
 ///
 /// `accent` is what makes the highlighted row visible, and it is applied on
 /// hover *and* on focus: a menu is as often driven by the arrow keys as by
@@ -136,17 +99,26 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .animate(VanillaMotion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(_rowHeight)
-    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
-    .spacing(_rowGap)
-    .borderRadius(.all(VanillaTokens.radiusMd()))
-    .label(.fontSize(_labelSize).color(VanillaTokens.foreground()))
-    .leadingIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
-    .trailingIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
-    .indicator(.size(_iconSize).color(VanillaTokens.mutedForeground()))
+    .minHeight(VanillaSize.controlSm)
+    .margin(.horizontal(VanillaSpace.s1))
+    .padding(
+      .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1_5),
+    )
+    .spacing(VanillaSpace.s2)
+    .borderRadius(.all(VanillaTokens.radiusSm()))
+    .label(
+      .style(
+        VanillaTokens.textSm.mix(),
+      ).color(VanillaTokens.popoverForeground()),
+    )
+    .leadingIcon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
+    .trailingIcon(
+      .size(VanillaSize.icon).color(VanillaTokens.mutedForeground()),
+    )
+    .indicator(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(MenuItemStyler().wrap(.opacity(_disabledOpacity)));
+    .onDisabled(MenuItemStyler().wrap(.opacity(VanillaOpacity.disabled)));
 
 /// The row under the pointer or the keyboard cursor.
 MenuItemStyler _highlighted() => MenuItemStyler()
@@ -156,12 +128,12 @@ MenuItemStyler _highlighted() => MenuItemStyler()
     .trailingIcon(.color(VanillaTokens.accentForeground()))
     .indicator(.color(VanillaTokens.accentForeground()));
 
-/// The rule between two groups of rows.
+/// The rule between two groups of rows: shadcn's `-mx-1 my-1 h-px bg-border`.
 ///
-/// It stops short of the panel's edge on both sides, so it reads as
-/// separating the rows rather than cutting the panel in half.
+/// It runs edge to edge across the panel, which is why the panel's side inset
+/// lives on the rows rather than on the panel.
 DividerStyler _dividerStyle() => DividerStyler()
     .color(VanillaTokens.border())
-    .height(_borderWidth)
-    .margin(.symmetric(vertical: _dividerMargin))
+    .height(VanillaStroke.hairline)
+    .margin(.vertical(VanillaSpace.s1))
     .wrap(.fractionallySizedBox(widthFactor: 1));

@@ -16,7 +16,7 @@ import 'support.dart';
 /// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
 /// checked once that phase is listed in [enforcedPhases]; until then it is
 /// reported as skipped, so the distance to the spec stays visible.
-const enforcedPhases = <String>{'E', 'F1', 'F2'};
+const enforcedPhases = <String>{'E', 'F1', 'F2', 'F3'};
 
 /// One measured property of one resolved recipe.
 final class SpecTarget {
@@ -1255,15 +1255,18 @@ final _tabsTargets = <SpecTarget>[
   _target<TabSpec>(
     'tabs',
     'active tab',
-    source: 'tabs.tsx: data-[state=active]:bg-background shadow-sm',
+    source:
+        'tabs.tsx: data-[state=active]:bg-background dark:bg-input/30 shadow-sm',
     phase: 'F3',
     style: vanillaTabStyle,
     states: const {WidgetState.selected},
     read: (spec) => (
+      flexDecorationOf(spec.spec.container)?.color,
       flexDecorationOf(spec.spec.container)?.boxShadow,
       spec.spec.label.spec.style?.color,
     ),
-    expected: (theme) => (VanillaShadow.sm.shadows, theme.foreground),
+    expected: (theme) =>
+        (_currentTabFill(theme), VanillaShadow.sm.shadows, theme.foreground),
   ),
   _target<SegmentedControlSpec>(
     'segmented control',
@@ -1290,22 +1293,49 @@ final _tabsTargets = <SpecTarget>[
     style: vanillaSegmentedControlStyle,
     states: const {WidgetState.selected},
     read: (spec) {
-      final decoration = decorationOf(spec.spec.item.spec.container);
+      final item = spec.spec.item.spec;
+      final decoration = decorationOf(item.container);
       return (
         decoration?.borderRadius,
         decoration?.color,
-        decoration?.boxShadow,
+        item.containerEffects?.behindContent?.shadows,
         decoration?.border,
       );
     },
     expected: (theme) => (
       _rounded(theme, VanillaTokens.radiusMd),
-      theme.background,
-      VanillaShadow.sm.shadows,
-      paintsNoBorder,
+      _currentTabFill(theme),
+      _effectShadows(VanillaShadow.sm),
+      _isDark(theme) ? _hairline(theme.input) : paintsNoBorder,
     ),
   ),
+  _target<TabBarSpec>(
+    'tabs',
+    'line list',
+    source: 'tabs.tsx: TabsList variant=line, bg-transparent',
+    phase: 'F3',
+    style: () => vanillaTabBarStyle(variant: .line),
+    read: (spec) => flexDecorationOf(spec.spec.container)?.color,
+    expected: (_) => anyOf(isNull, const Color(0x00000000)),
+  ),
+  _target<TabSpec>(
+    'tabs',
+    'line underline',
+    source: 'tabs.tsx: variant=line, after:h-0.5 after:bg-foreground',
+    phase: 'F3',
+    style: () => vanillaTabStyle(variant: .line),
+    states: const {WidgetState.selected},
+    read: (spec) {
+      final border = flexDecorationOf(spec.spec.container)?.border;
+      return border is Border ? border.bottom : null;
+    },
+    expected: (theme) => BorderSide(color: theme.foreground, width: 2),
+  ),
 ];
+
+/// The current tab's surface: the page, or `dark:bg-input/30`.
+Color _currentTabFill(VanillaThemeData theme) =>
+    _isDark(theme) ? tint(theme.input, 0.3) : theme.background;
 
 // -- sidebar ------------------------------------------------------------------
 
@@ -1461,14 +1491,18 @@ final _menuTargets = <SpecTarget>[
         decoration?.color,
         decoration?.borderRadius,
         boxOf(overlay)?.padding,
+        boxOf(spec.spec.item.spec.container)?.margin,
         boxOf(overlay)?.constraints?.minWidth,
         spec.spec.containerEffects?.behindContent?.shadows,
       );
     },
+    // shadcn's `p-1` is split between the panel (above and below) and each
+    // row (either side), so a separator can run edge to edge.
     expected: (theme) => (
       theme.popover,
       _rounded(theme, VanillaTokens.radiusMd),
-      const EdgeInsets.all(4),
+      const EdgeInsets.symmetric(vertical: 4),
+      const EdgeInsets.symmetric(horizontal: 4),
       128.0,
       _effectShadows(VanillaShadow.md),
     ),

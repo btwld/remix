@@ -68,7 +68,7 @@ class {{typePrefix}}SidebarLayout extends StatefulWidget {
     this.header,
     this.compactBreakpoint = 720,
     this.sidebarWidth = 256,
-    this.collapsedWidth = 72,
+    this.collapsedWidth = 48,
     this.collapsed = false,
     this.compactOpen,
     this.onCompactOpenChanged,
@@ -201,14 +201,11 @@ class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayou
               // would shrink `width` by the border's own stroke width.
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: MixScope.tokenOf(
-                    {{typePrefix}}Tokens.background,
-                    dialogContext,
-                  ),
+                  color: MixScope.tokenOf({{typePrefix}}Tokens.sidebar, dialogContext),
                   border: BorderDirectional(
                     end: BorderSide(
                       color: MixScope.tokenOf(
-                        {{typePrefix}}Tokens.border,
+                        {{typePrefix}}Tokens.sidebarBorder,
                         dialogContext,
                       ),
                     ),

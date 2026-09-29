@@ -249,7 +249,6 @@ final _cases = <_Case>[
       WidgetState.focused,
     ],
     surface: _muted,
-    phase: 'F3',
     read: (spec) => _boxLook(
       spec.spec.item.spec.container,
       label: spec.spec.item.spec.label.spec.style,
@@ -380,7 +379,10 @@ final _cases = <_Case>[
         focused: states.contains(WidgetState.focused),
       );
 
-      return _boxLook(spec.spec.trigger, effects: spec.spec.containerEffects);
+      return [
+        ..._boxLook(spec.spec.trigger, effects: spec.spec.containerEffects),
+        spec.spec.trigger.widgetModifiers,
+      ];
     },
   ),
   _resolved<SidebarSpec>(

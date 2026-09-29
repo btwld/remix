@@ -14,18 +14,17 @@ part of 'disclosure.dart';
 /// expanded state; this recipe supplies the trigger row, the content inset,
 /// and the state fragments.
 ///
-/// It is deliberately frameless, unlike the card. The accordion is this
-/// component's stacked sibling and draws a rule under each section because
-/// its rows have neighbours to separate; a lone disclosure has none, so a
-/// frame would only box in whatever the caller already placed it inside.
-/// The trigger is styled as a self-contained row target instead — same
-/// padding, radius, and hover treatment as a menu row, because behaviorally
-/// that is what it is: a full-width thing you click.
+/// It is the accordion's trigger without the accordion's frame: shadcn's
+/// `AccordionTrigger`, 16px above and below with no side inset, `textSm` at
+/// medium weight, underlined under the pointer. The accordion draws a rule
+/// under each section because its rows have neighbours to separate; a lone
+/// disclosure has none, so a frame would only box in whatever the caller
+/// already placed it inside.
 ///
 /// The spec carries plain boxes (`trigger`, `content`), not text: the caller
-/// passes whole widgets for both, so their type belongs to the caller. The
-/// hover and open fills are `accent` and `muted`, which in the shipped themes
-/// are near-surface tints the `foreground` text keeps its contrast on.
+/// passes whole widgets for both. The recipe sets the trigger's type through a
+/// default text style instead, so a bare `Text` trigger takes it and a caller
+/// who styles their own text keeps theirs.
 ///
 /// Two constructor parameters are deliberately not forwarded to the generated
 /// `PlaygroundDisclosure`: `triggerBuilder` and `transitionBuilder`. Both
@@ -35,8 +34,8 @@ part of 'disclosure.dart';
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state,
-/// not by depth: an override that must beat the open trigger's fill has to be
-/// declared with `.onExpanded(...)` too.
+/// not by depth: an override that must beat the hovered trigger has to be
+/// declared with `.onHovered(...)` too.
 class PlaygroundDisclosure extends StatelessWidget {
   const PlaygroundDisclosure({
     super.key,

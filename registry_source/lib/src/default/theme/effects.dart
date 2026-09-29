@@ -46,11 +46,11 @@ final _tints = <(ColorToken, double, double?), ContextToken<Color>>{};
 ///
 /// For the few places shadcn switches between two tokens rather than between
 /// two strengths of one, such as a switch thumb that is `background` in the
-/// light theme and `foreground` in the dark. Cached per pair, for the same
-/// reason [vanillaTint] is.
+/// light theme and `foreground` in the dark. Either side may be a
+/// [vanillaTint]. Cached per pair, for the same reason [vanillaTint] is.
 ContextToken<Color> vanillaByBrightness({
-  required ColorToken light,
-  required ColorToken dark,
+  required MixToken<Color> light,
+  required MixToken<Color> dark,
 }) => _byBrightness.putIfAbsent(
   (light, dark),
   () => ContextToken<Color>(
@@ -62,7 +62,8 @@ ContextToken<Color> vanillaByBrightness({
   ),
 );
 
-final _byBrightness = <(ColorToken, ColorToken), ContextToken<Color>>{};
+final _byBrightness =
+    <(MixToken<Color>, MixToken<Color>), ContextToken<Color>>{};
 
 /// shadcn's keyboard focus ring, `focus-visible:ring-[3px] ring-ring/50`.
 ///

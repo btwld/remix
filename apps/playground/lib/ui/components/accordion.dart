@@ -77,90 +77,54 @@ AccordionStyler playgroundAccordionStyle({
     // clickable row rather than the section, and the rule between sections
     // would move with the panel as it opens.
     .container(
-      .border(.bottom(.color(PlaygroundTokens.border()).width(_borderWidth))),
+      .border(
+        .bottom(
+          .color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline),
+        ),
+      ),
     )
     // These *are* the forwarded shorthand, so they land on `trigger`: the row
-    // a reader clicks to open the section.
+    // a reader clicks to open the section, shadcn's `py-4 gap-4` with no side
+    // inset, so the title lines up with the content above and below the list.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(_triggerHeight)
-    .padding(.horizontal(_paddingX))
-    .spacing(_gap)
+    .padding(.vertical(PlaygroundSpace.s4))
+    .spacing(PlaygroundSpace.s4)
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .title(
-      .fontSize(
-        _titleSize,
+      .style(
+        PlaygroundTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
-    .leadingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
+    .leadingIcon(
+      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+    )
     // Both icons are markers, not the state: Remix renders whatever
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
-    .trailingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
-    .content(
-      .padding(.only(left: _paddingX, right: _paddingX, bottom: _contentGap)),
+    .trailingIcon(
+      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
     )
+    .content(.padding(.only(bottom: PlaygroundSpace.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
     .onDisabled(_disabledStyle())
     .merge(style);
 
-/// Width of the rule under each section.
-const _borderWidth = 1.0;
+/// Hovering underlines the title, as shadcn's `hover:underline` does.
+AccordionStyler _hoverStyle() =>
+    AccordionStyler().title(.decoration(TextDecoration.underline));
 
-/// Minimum height of the row a reader clicks to open a section.
-const _triggerHeight = 44.0;
-
-/// Gap between the icons and the title.
-const _gap = 8.0;
-
-/// Horizontal inset inside the row and its panel.
+/// The open section promotes its icons to `foreground`.
 ///
-/// The same 12 every other row-like surface in this layer uses — the table's
-/// cells, the select's trigger, the callout. Upstream shadcn leaves its
-/// accordion trigger flush because the item it sits in supplies the inset;
-/// nothing wraps this one, so flush would put the title hard against whatever
-/// contains it while the rule below still spans the full width.
-const _paddingX = 12.0;
-
-/// Title size, matching body copy: a section heading, not a page heading.
-const _titleSize = 14.0;
-
-/// Size of the leading and trailing icons.
-const _iconSize = 16.0;
-
-/// Gap between the open panel's content and the rule below it.
-const _contentGap = 16.0;
-
-/// Opacity applied to the whole section while disabled.
-const _disabledOpacity = 0.5;
-
-/// Hovering underlines the title and promotes the icons.
-///
-/// The icons alone were not enough: they move from `mutedForeground` to
-/// `foreground`, which at 16px is invisible next to a title that is already
-/// at full strength — a hovered row looked exactly like a resting one. The
-/// underline is what a reader actually sees, and it is what shadcn's own
-/// accordion trigger uses (`hover:underline`).
-///
-/// The title's *weight* stays out of it, because that is what the open state
-/// uses; leaving it here would erase the difference between "the pointer is
-/// here" and "this section is open".
-AccordionStyler _hoverStyle() => _icons(
-  PlaygroundTokens.foreground(),
-).title(.decoration(TextDecoration.underline));
-
-/// The open section: promoted icons *and* a heavier title.
-///
-/// The weight is what separates "open" from "the pointer is here" — the two
-/// states otherwise share the icon promotion, and a reader scanning a
-/// collapsed list needs to find the open one without moving the mouse.
-AccordionStyler _openStyle() =>
-    _icons(PlaygroundTokens.foreground()).title(.fontWeight(FontWeight.w600));
-
-/// Applies one color to both icons.
-AccordionStyler _icons(Color color) =>
-    AccordionStyler().leadingIcon(.color(color)).trailingIcon(.color(color));
+/// shadcn marks an open section by turning its chevron; Remix renders the
+/// glyph it is given and does not rotate it, so the recipe marks the state
+/// with the icons' strength instead, and a caller who wants the turn passes
+/// the other chevron while the section is open.
+AccordionStyler _openStyle() => AccordionStyler()
+    .leadingIcon(.color(PlaygroundTokens.foreground()))
+    .trailingIcon(.color(PlaygroundTokens.foreground()));
 
 /// The keyboard focus ring: shadcn's 3px `ring` band at half strength.
 ///
@@ -173,4 +137,4 @@ AccordionStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));

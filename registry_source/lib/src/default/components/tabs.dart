@@ -8,12 +8,24 @@ import '../theme/tokens.dart';
 
 part 'tabs.g.dart';
 
+/// The looks this application offers for a tab strip.
+///
+/// Both are shadcn's. Pass the same value to the bar and to each tab.
+enum VanillaTabsVariant {
+  /// The default: a recessed `muted` list, with the current tab lifted onto
+  /// the page color.
+  filled,
+
+  /// No list surface; the current tab is marked by a `foreground` underline.
+  line,
+}
+
 /// The application's tab-strip recipe.
 ///
-/// The strip is the rule the tabs sit on: one hairline along its bottom edge,
-/// in the same `border` token every other control outline uses. It spans its
-/// container rather than hugging the tabs, so the rule lines up with the card
-/// or page edge beside it.
+/// The strip is shadcn's `TabsList`: 36px tall with a 3px inset, hugging its
+/// tabs. The [VanillaTabsVariant.filled] list is a recessed `muted` surface
+/// with large corners; the [VanillaTabsVariant.line] list has no surface of
+/// its own.
 ///
 /// The strip does not scroll. Tabs wider than the container are a layout
 /// decision, and the scroll view belongs **outside** the bar:
@@ -38,9 +50,10 @@ part 'tabs.g.dart';
 ///   selectedTabId: tab,
 ///   onChanged: (id) => setState(() => tab = id),
 ///   child: Column(
+///     crossAxisAlignment: CrossAxisAlignment.start,
 ///     children: [
 ///       VanillaTabBar(
-///         child: Row(children: [
+///         child: Row(mainAxisSize: MainAxisSize.min, children: [
 ///           VanillaTab(tabId: 'account', label: 'Account'),
 ///           VanillaTab(tabId: 'billing', label: 'Billing'),
 ///         ]),
@@ -53,13 +66,24 @@ part 'tabs.g.dart';
 /// ```
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler vanillaTabBarStyle({
+  VanillaTabsVariant variant = .filled,
   TabBarStyler style = const TabBarStyler.create(),
-}) => TabBarStyler()
-    .direction(.horizontal)
-    .mainAxisSize(.max)
-    .crossAxisAlignment(.end)
-    .border(.bottom(.color(VanillaTokens.border()).width(_barBorderWidth)))
-    .merge(style);
+}) {
+  final list = TabBarStyler()
+      .direction(.horizontal)
+      .mainAxisSize(.min)
+      .crossAxisAlignment(.center)
+      .height(VanillaSize.controlMd)
+      .padding(.all(_listInset));
+
+  return switch (variant) {
+    .filled =>
+      list
+          .color(VanillaTokens.muted())
+          .borderRadius(.all(VanillaTokens.radiusLg())),
+    .line => list,
+  }.merge(style);
+}
 
 /// The application's Tab recipe.
 ///
@@ -68,14 +92,17 @@ TabBarStyler vanillaTabBarStyle({
 /// ownership of rendering, selection, keyboard traversal, and the tab
 /// accessibility semantics — this recipe never reimplements any of that.
 ///
-/// The selected tab is marked by its trailing edge. That edge is present in
-/// every state and merely transparent when unselected, so selecting a tab
-/// paints two pixels instead of reflowing the whole strip.
+/// It is shadcn's `TabsTrigger`: `textSm` at medium weight, 60% `foreground`
+/// until it is hovered or current (`mutedForeground` in the dark theme). In
+/// the filled list the current tab is lifted onto the page color with a small
+/// shadow — in the dark theme onto a faint `input` well with an `input`
+/// outline, since the dark page is darker than the list it would lift out of.
+/// In the line list the current tab is underlined in `foreground` instead.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's selected underline has to
-/// be declared as a selected fragment too (`TabStyler().onSelected(...)`).
+/// by depth: an override that must beat the recipe's current tab has to be
+/// declared as a selected fragment too (`TabStyler().onSelected(...)`).
 ///
 /// `builder` is deliberately not forwarded to the generated
 /// `VanillaTab`. Its type is `ValueWidgetBuilder<NakedTabState>`, and
@@ -100,11 +127,17 @@ TabBarStyler vanillaTabBarStyle({
     'semanticLabel',
   }),
 )
-TabStyler vanillaTabStyle({TabStyler style = const TabStyler.create()}) {
+TabStyler vanillaTabStyle({
+  VanillaTabsVariant variant = .filled,
+  TabStyler style = const TabStyler.create(),
+}) {
   return _base()
-      .onHovered(_activeContent().color(VanillaTokens.accent()))
-      .onSelected(_selectedStyle())
-      .onFocusVisible(_focusVisibleStyle())
+      .merge(switch (variant) {
+        .filled => _filled(),
+        .line => _line(),
+      })
+      .onHovered(_current())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
@@ -113,77 +146,84 @@ TabStyler vanillaTabStyle({TabStyler style = const TabStyler.create()}) {
 ///
 /// It exists so the panel carries the application's prefix and has one place
 /// to edit, and it earns that by owning the gap between the strip and the
-/// content: without it the panel's first line sits directly on the hairline.
+/// content: shadcn's `gap-2`.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler vanillaTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
-}) => TabViewStyler().padding(.top(_panelGap)).merge(style);
+}) => TabViewStyler().padding(.top(VanillaSpace.s2)).merge(style);
 
-/// Width of the strip's hairline.
-const _barBorderWidth = 1.0;
+/// The list's inset around its tabs: shadcn's `p-[3px]`.
+const _listInset = 3.0;
 
-/// Width of the edge that marks the selected tab.
-///
-/// Twice the strip's hairline so the mark reads as a deliberate indicator
-/// rather than a thicker piece of the same rule.
-const _selectedEdgeWidth = 2.0;
-
-/// An edge that paints nothing, holding the selected mark's space.
+/// An edge that paints nothing, holding an outline's space.
 const _noEdge = Color(0x00000000);
 
-/// Gap between the strip and the panel it reveals.
-const _panelGap = 16.0;
+/// A tab not yet chosen: 60% `foreground`, or `mutedForeground` in the dark
+/// theme (shadcn's `text-foreground/60 dark:text-muted-foreground`). Both
+/// clear 4.5:1 on the `muted` list.
+final _restingContent = vanillaByBrightness(
+  light: vanillaTint(VanillaTokens.foreground, _restingAlpha),
+  dark: VanillaTokens.mutedForeground,
+);
 
-/// Opacity applied to the whole tab while disabled.
-const _disabledOpacity = 0.5;
+/// See [_restingContent].
+const _restingAlpha = 0.6;
 
-/// The tab's resting height, matching shadcn's `h-9` on its tab list and the
-/// button beside it.
+/// The current filled tab's surface: the page color, or `input` at 30% in the
+/// dark theme (`dark:data-[state=active]:bg-input/30`).
+final _currentFill = vanillaByBrightness(
+  light: VanillaTokens.background,
+  dark: vanillaTint(VanillaTokens.input, _darkCurrentFillAlpha),
+);
+
+/// See [_currentFill].
+const _darkCurrentFillAlpha = 0.3;
+
+/// The current filled tab's outline: none in the light theme, `input` in the
+/// dark one (`dark:data-[state=active]:border-input`).
+final _currentEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
+
+/// Layout, typography, and the resting content color shared by both looks:
+/// shadcn's `px-2 py-1 gap-1.5 text-sm font-medium`.
 ///
-/// One size, not a scale. A call site that needs another sets `.minHeight(...)`
-/// through [style].
-const _minHeight = 36.0;
-
-/// Horizontal inset inside a tab.
-const _paddingX = 12.0;
-
-/// Gap between a tab's icon and its label.
-const _gap = 8.0;
-
-/// Label size, matching body copy.
-const _labelSize = 14.0;
-
-/// Size of a tab's leading icon.
-const _iconSize = 16.0;
-
-/// Layout, typography, and the unselected content color.
-///
-/// An unselected tab is a destination, not the current one, so it uses
-/// `mutedForeground`; hover and selection both promote it to `foreground`.
-TabStyler _base() => _content(VanillaTokens.mutedForeground())
+/// A tab is the list's height less its inset on both sides, so it fills the
+/// list edge to edge.
+TabStyler _base() => _content(_restingContent())
     .animate(VanillaMotion.standard)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
     .crossAxisAlignment(.center)
-    .minHeight(_minHeight)
-    .padding(.horizontal(_paddingX))
-    .spacing(_gap)
-    .border(.bottom(.color(_noEdge).width(_selectedEdgeWidth)))
-    .label(.fontSize(_labelSize).fontWeight(FontWeight.w500))
-    .icon(.size(_iconSize));
+    .minHeight(VanillaSize.controlMd - 2 * _listInset)
+    .padding(.symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1))
+    .spacing(VanillaSpace.s1_5)
+    .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
+    .icon(.size(VanillaSize.icon));
 
-/// The selected tab: full-strength content and the `primary` edge.
+/// The filled look: a transparent outline at rest, so the dark theme's
+/// current outline paints a pixel it already owns, and the lifted surface once
+/// current.
+TabStyler _filled() => TabStyler()
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    .border(.all(.color(_noEdge).width(VanillaStroke.hairline)))
+    .onSelected(
+      _current()
+          .color(_currentFill())
+          .border(.all(.color(_currentEdge())))
+          .shadows(VanillaShadow.sm.box),
+    );
+
+/// The line look: an underline under the current tab.
 ///
-/// It sets no fill on purpose. Variant fragments apply in declaration order
-/// and only overwrite what they name, so leaving `color` alone here is what
-/// lets a hovered selected tab keep the hover fill *and* the selected edge.
-TabStyler _selectedStyle() => _activeContent().border(
-  .bottom(.color(VanillaTokens.primary()).width(_selectedEdgeWidth)),
-);
+/// The underline's space is held at rest in a transparent edge, so choosing a
+/// tab paints two pixels instead of reflowing the strip. It has no corner
+/// radius: Flutter cannot round a box whose edges differ.
+TabStyler _line() => TabStyler()
+    .border(.bottom(.color(_noEdge).width(VanillaStroke.indicator)))
+    .onSelected(_current().border(.bottom(.color(VanillaTokens.foreground()))));
 
-/// The content color shared by the hovered and selected tabs.
-TabStyler _activeContent() => _content(VanillaTokens.foreground());
+/// The content color of a hovered or current tab.
+TabStyler _current() => _content(VanillaTokens.foreground());
 
 /// Applies one content color to the label and the icons.
 TabStyler _content(Color foreground) =>
@@ -196,8 +236,15 @@ TabStyler _content(Color foreground) =>
 /// container's content by its border widths — so adding a real border on
 /// focus would nudge the label. The decoration strokes outside the tab and
 /// takes no layout space.
-TabStyler _focusVisibleStyle() =>
-    TabStyler().foregroundDecoration(vanillaFocusRingDecoration());
+TabStyler _focusVisibleStyle(VanillaTabsVariant variant) =>
+    TabStyler().foregroundDecoration(
+      vanillaFocusRingDecoration(
+        radius: switch (variant) {
+          .filled => null,
+          .line => Radius.zero,
+        },
+      ),
+    );
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -206,4 +253,4 @@ TabStyler _focusVisibleStyle() =>
 /// ring reads as reachable.
 TabStyler _disabledStyle() => TabStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));
