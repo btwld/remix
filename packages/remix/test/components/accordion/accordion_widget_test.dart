@@ -938,30 +938,20 @@ void main() {
 
       testWidgets('keeps the panel state when the flag flips', (tester) async {
         final controller = RemixAccordionController<String>();
-        var disableAnimations = false;
-        late StateSetter rebuild;
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              rebuild = setState;
-
-              return _reducedMotion(
-                _accordion(controller, child: const _PanelProbe()),
-                disableAnimations: disableAnimations,
-              );
-            },
-          ),
+        final setReduced = await _pumpFlippable(
+          tester,
+          _accordion(controller, child: const _PanelProbe()),
         );
 
         controller.open('item');
         await tester.pumpAndSettle();
         final original = tester.state(find.byType(_PanelProbe));
 
-        rebuild(() => disableAnimations = true);
+        setReduced(true);
         await tester.pumpAndSettle();
         expect(tester.state(find.byType(_PanelProbe)), same(original));
 
-        rebuild(() => disableAnimations = false);
+        setReduced(false);
         await tester.pumpAndSettle();
         expect(tester.state(find.byType(_PanelProbe)), same(original));
       });
@@ -990,25 +980,12 @@ void main() {
         tester,
       ) async {
         final controller = RemixAccordionController<String>();
-        var disableAnimations = false;
-        late StateSetter rebuild;
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              rebuild = setState;
-
-              return _reducedMotion(
-                _accordion(controller),
-                disableAnimations: disableAnimations,
-              );
-            },
-          ),
-        );
+        final setReduced = await _pumpFlippable(tester, _accordion(controller));
 
         await tester.tap(find.text('Title'));
         await tester.pump(const Duration(milliseconds: 50));
 
-        rebuild(() => disableAnimations = true);
+        setReduced(true);
         await tester.pump();
 
         expect(tester.hasRunningAnimations, isTrue);
@@ -1023,25 +1000,15 @@ void main() {
         'motion turns on',
         (tester) async {
           final controller = RemixAccordionController<String>();
-          var disableAnimations = false;
-          late StateSetter rebuild;
-          await tester.pumpRemixApp(
-            StatefulBuilder(
-              builder: (context, setState) {
-                rebuild = setState;
-
-                return _reducedMotion(
-                  _accordion(controller),
-                  disableAnimations: disableAnimations,
-                );
-              },
-            ),
+          final setReduced = await _pumpFlippable(
+            tester,
+            _accordion(controller),
           );
 
           controller.open('item');
           await tester.pumpAndSettle();
 
-          rebuild(() => disableAnimations = true);
+          setReduced(true);
           await tester.pump();
 
           await tester.tap(find.text('Title'));
@@ -1075,6 +1042,27 @@ class _PanelProbe extends StatefulWidget {
 class _PanelProbeState extends State<_PanelProbe> {
   @override
   Widget build(BuildContext context) => const Text('Panel');
+}
+
+/// Pumps [child] under a `disableAnimations` override that starts off and
+/// returns a setter for it.
+Future<void Function(bool)> _pumpFlippable(
+  WidgetTester tester,
+  Widget child,
+) async {
+  var disableAnimations = false;
+  late StateSetter rebuild;
+  await tester.pumpRemixApp(
+    StatefulBuilder(
+      builder: (context, setState) {
+        rebuild = setState;
+
+        return _reducedMotion(child, disableAnimations: disableAnimations);
+      },
+    ),
+  );
+
+  return (value) => rebuild(() => disableAnimations = value);
 }
 
 Widget _reducedMotion(Widget child, {required bool disableAnimations}) {

@@ -903,49 +903,36 @@ void main() {
       return host;
     }
 
-    testWidgets('a barrier tap closes the dialog in one frame', (tester) async {
-      final host = await pumpReducedMotionHost(tester);
+    for (final (name, dismiss)
+        in <(String, Future<void> Function(WidgetTester))>[
+          ('a barrier tap', (tester) => tester.tapAt(const Offset(10, 10))),
+          (
+            'Escape',
+            (tester) => tester.sendKeyEvent(LogicalKeyboardKey.escape),
+          ),
+        ]) {
+      testWidgets('$name closes the dialog in one frame', (tester) async {
+        final host = await pumpReducedMotionHost(tester);
 
-      var closed = false;
-      showNakedDialog<void>(
-        context: host,
-        barrierColor: Colors.black54,
-        barrierDismissible: true,
-        builder: (_) => const Center(child: Text('Dialog Content')),
-      ).then((_) => closed = true);
-      // Settle so the close starts from a fully open dialog.
-      await tester.pumpAndSettle();
+        var closed = false;
+        showNakedDialog<void>(
+          context: host,
+          barrierColor: Colors.black54,
+          barrierDismissible: true,
+          builder: (_) => const Center(child: Text('Dialog Content')),
+        ).then((_) => closed = true);
+        // Settle so the close starts from a fully open dialog.
+        await tester.pumpAndSettle();
 
-      expect(find.text('Dialog Content'), findsOneWidget);
+        expect(find.text('Dialog Content'), findsOneWidget);
 
-      await tester.tapAt(const Offset(10, 10));
-      await tester.pump();
+        await dismiss(tester);
+        await tester.pump();
 
-      expect(find.text('Dialog Content'), findsNothing);
-      expect(closed, isTrue);
-    });
-
-    testWidgets('Escape closes the dialog in one frame', (tester) async {
-      final host = await pumpReducedMotionHost(tester);
-
-      var closed = false;
-      showNakedDialog<void>(
-        context: host,
-        barrierColor: Colors.black54,
-        barrierDismissible: true,
-        builder: (_) => const Center(child: Text('Dialog Content')),
-      ).then((_) => closed = true);
-      // Settle so the close starts from a fully open dialog.
-      await tester.pumpAndSettle();
-
-      expect(find.text('Dialog Content'), findsOneWidget);
-
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump();
-
-      expect(find.text('Dialog Content'), findsNothing);
-      expect(closed, isTrue);
-    });
+        expect(find.text('Dialog Content'), findsNothing);
+        expect(closed, isTrue);
+      });
+    }
 
     testWidgets('opens and closes the dialog in one frame', (tester) async {
       late BuildContext host;

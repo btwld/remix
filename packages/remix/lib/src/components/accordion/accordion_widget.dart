@@ -317,11 +317,9 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     bool isExpanded,
     Widget panel,
   ) {
-    // The switcher stays mounted under reduced motion so the panel keeps its
-    // state when the flag flips. A zero duration lands the next switch in
-    // this frame. The switcher fixes a child's exit duration when that child
-    // enters, so a panel opened with motion on would still animate its close;
-    // the layout drops outgoing children instead.
+    // The switcher stays mounted so the panel keeps its state when the flag
+    // flips. It fixes a child's exit duration when that child enters, so the
+    // reduced layout also drops outgoing children.
     final reducedMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 
     return AnimatedSwitcher(
