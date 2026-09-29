@@ -28,9 +28,9 @@ const _harness = 'tool/registry_consumer_cli.dart';
 
 /// Deliberate source edits, keyed by `consumer/item`.
 const _customized = <String, String>{
-  'apps/playground/theme':
-      'an indigo primary and matching focus ring, so the dogfood proves a '
-      'theme-wide value change survives a reinstall',
+  'apps/playground/icons':
+      'an app-owned icon alias the home page uses, so the dogfood proves an '
+      'app edit survives a reinstall',
 };
 
 /// Expected items per consumer; null means the entire default registry.

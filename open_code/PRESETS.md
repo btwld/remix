@@ -110,8 +110,9 @@ compares the complete output trees, including unexpected or missing files.
 
 ## Repository consumers
 
-- `apps/playground`: full Vanilla catalog, prefix `Playground`; its indigo
-  theme customization is declared in the dogfood checker.
+- `apps/playground`: full Vanilla catalog, prefix `Playground`, on the stock
+  theme; its one deliberate customization, an app-owned `PlaygroundIcons.back`
+  alias in `icons`, is declared in the dogfood checker.
 - `apps/demo`: non-Agent Fortal review catalog, prefix `Fortal`.
 - `apps/dashboard`: full Fortal catalog including Agent surfaces and recipes,
   prefix `Ui`. Workspace → Chat demonstrates the eight surfaces together.

@@ -29,4 +29,10 @@ abstract final class PlaygroundIcons {
 
   /// Represents the dashboard overview destination.
   static const IconData dashboard = RemixIcons.dashboard;
+
+  /// Returns from a component preview to the index.
+  ///
+  /// An app-owned alias added on top of the installed catalog. The dogfood
+  /// check declares it as this app's deliberate edit to `icons`.
+  static const IconData back = RemixIcons.arrowLeft;
 }
