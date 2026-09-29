@@ -92,7 +92,7 @@ CalloutStyler _base() => CalloutStyler()
     .crossAxisAlignment(.start)
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
     .spacing(_gap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .text(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
     .icon(.size(_iconSize).wrap(.translate(x: 0, y: _iconOffsetY)));
 

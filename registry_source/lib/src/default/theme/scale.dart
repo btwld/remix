@@ -1,0 +1,99 @@
+import 'package:remix/remix.dart';
+
+/// Spacing steps on shadcn's four-pixel grid, named by Tailwind step.
+///
+/// `s2` is `p-2`, 8px; `s1_5` is `gap-1.5`, 6px. Recipes take every padding,
+/// gap, and margin from here, so a layout reads as one rhythm and a value off
+/// the grid stands out in review.
+///
+/// These are plain constants rather than tokens on purpose. shadcn does not
+/// theme spacing, and arithmetic on an unresolved token (half a gap, a gap
+/// minus a border) cannot be written until the token resolves.
+abstract final class VanillaSpace {
+  /// 2px.
+  static const double s0_5 = 2;
+
+  /// 4px.
+  static const double s1 = 4;
+
+  /// 6px.
+  static const double s1_5 = 6;
+
+  /// 8px.
+  static const double s2 = 8;
+
+  /// 10px.
+  static const double s2_5 = 10;
+
+  /// 12px.
+  static const double s3 = 12;
+
+  /// 14px.
+  static const double s3_5 = 14;
+
+  /// 16px.
+  static const double s4 = 16;
+
+  /// 20px.
+  static const double s5 = 20;
+
+  /// 24px.
+  static const double s6 = 24;
+
+  /// 32px.
+  static const double s8 = 32;
+
+  /// 40px.
+  static const double s10 = 40;
+
+  /// 48px.
+  static const double s12 = 48;
+}
+
+/// Control heights and icon sizes shared across recipes.
+abstract final class VanillaSize {
+  /// A small control: shadcn's `h-8`.
+  static const double controlSm = 32;
+
+  /// The default control: shadcn's `h-9`.
+  static const double controlMd = 36;
+
+  /// A large control: shadcn's `h-10`.
+  static const double controlLg = 40;
+
+  /// A small glyph beside `xs` text: shadcn's `size-3`.
+  static const double iconXs = 12;
+
+  /// A check or indicator glyph: shadcn's `size-3.5`.
+  static const double iconSm = 14;
+
+  /// The default glyph: shadcn's `size-4`.
+  static const double icon = 16;
+}
+
+/// Stroke widths.
+abstract final class VanillaStroke {
+  /// A border or a separator.
+  static const double hairline = 1;
+
+  /// A selection mark: the line under the current tab.
+  static const double indicator = 2;
+
+  /// The keyboard focus ring: shadcn's `ring-[3px]`.
+  static const double ring = 3;
+}
+
+/// Opacities shared across recipes.
+abstract final class VanillaOpacity {
+  /// A disabled control fades to half strength, and keeps its colors.
+  static const double disabled = 0.5;
+}
+
+/// Motion shared across recipes.
+abstract final class VanillaMotion {
+  /// Every state change: 150ms on `Curves.fastOutSlowIn`, which is
+  /// Tailwind's default transition curve, `cubic-bezier(0.4, 0, 0.2, 1)`.
+  static const standard = CurveAnimationConfig.fastOutSlowIn(
+    Duration(milliseconds: 150),
+  );
+}

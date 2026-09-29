@@ -122,7 +122,7 @@ const _textSize = 14.0;
 TextFieldStyler _base() => TextFieldStyler()
     .color({{typePrefix}}Tokens.background())
     .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
-    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .padding(.horizontal(_paddingX))
     .spacing(_accessoryGap)
     .text(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
@@ -149,26 +149,24 @@ TextFieldStyler _base() => TextFieldStyler()
 TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
   .outline(
     .color(
-      {{typePrefix}}Tokens.focusRing(),
+      {{typePrefix}}Tokens.ring(),
     ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ).outlineOffset(_focusRingOffset),
 );
 
-/// The invalid field: a `destructive` outline and a `destructive` helper line.
+/// The invalid field: a `destructive` outline and a heavier helper line.
 ///
 /// Spelled with `variant` rather than one of the `on…` helpers because Mix
 /// ships no `onError`; the state itself is a standard `WidgetState` that
 /// `RemixTextField` drives from its own `error` flag.
 ///
-/// The text stays readable. `destructive` is a fill color chosen to sit under
-/// `destructiveForeground`, and on the dark theme's page it measures 4.1:1 —
-/// under the 4.5:1 WCAG floor for body copy. So the outline carries the tone,
-/// where the floor is 3:1, and the message that explains the problem is set in
-/// `foreground` and made a little heavier. Remix announces the error to
-/// assistive technology either way.
+/// The outline carries the tone, and the message that explains the problem
+/// is set in `foreground` and made a little heavier. Remix announces the
+/// error to assistive technology either way.
 ///
-/// A theme with a dedicated danger *text* step would put it on the helper
-/// line here; this vocabulary has twenty tokens and no such step.
+/// Of this vocabulary's thirty-three tokens, `destructive` is the one that
+/// means danger, and the shipped themes keep it above the 4.5:1 text floor on
+/// the page, so a helper line in `destructive` is a one-line change here.
 TextFieldStyler _errorStyle() => TextFieldStyler().variant(
   ContextVariant.widgetState(.error),
   TextFieldStyler()

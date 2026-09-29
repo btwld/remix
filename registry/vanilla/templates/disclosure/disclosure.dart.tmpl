@@ -68,7 +68,7 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
     .alignment(.centerLeft)
     .minHeight(_triggerHeight)
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
-    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     // `content` has to be reached by name; a bare `.padding(...)` would inset
     // the trigger instead. The horizontal inset matches the trigger's so the
     // revealed content lines up under the trigger's own.
@@ -134,8 +134,8 @@ const _disabledOpacity = 0.5;
 DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
   .foregroundDecoration(
     BoxDecorationMix.border(
-      .color({{typePrefix}}Tokens.focusRing()).width(_focusRingWidth),
-    ).borderRadius(.all({{typePrefix}}Tokens.radius())),
+      .color({{typePrefix}}Tokens.ring()).width(_focusRingWidth),
+    ).borderRadius(.all({{typePrefix}}Tokens.radiusMd())),
   ),
 );
 

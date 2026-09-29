@@ -23,12 +23,13 @@ void main() {
       // places to edit for one added token.
       expect(tokens.keys.toSet(), <MixToken<Object?>>{
         ...PlaygroundTokens.colors,
-        PlaygroundTokens.radius,
+        ...PlaygroundTokens.radii,
+        ...PlaygroundTokens.textStyles,
       });
       for (final token in PlaygroundTokens.colors) {
         expect(tokens[token], isA<Color>(), reason: token.name);
       }
-      expect(tokens[PlaygroundTokens.radius], data.radius);
+      expect(tokens[PlaygroundTokens.radiusLg], data.radius);
     }
   });
 
@@ -41,7 +42,8 @@ void main() {
 
     expect(light.primary, const Color(0xFF171717));
     expect(light.primaryForeground, const Color(0xFFFAFAFA));
-    expect(light.focusRing, const Color(0xFF737373));
+    expect(light.ring, const Color(0xFFA1A1A1));
+    expect(light.radius, const Radius.circular(10));
   });
 
   testWidgets('the scope resolves tokens for stylers below it', (tester) async {

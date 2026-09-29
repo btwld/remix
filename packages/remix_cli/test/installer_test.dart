@@ -248,6 +248,8 @@ registries:
       );
 
       expect(writer.paths, [
+        'lib/ui/theme/effects.dart',
+        'lib/ui/theme/scale.dart',
         'lib/ui/theme/theme_data.dart',
         'lib/ui/theme/theme_scope.dart',
         'lib/ui/theme/tokens.dart',

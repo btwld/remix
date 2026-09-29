@@ -1,0 +1,100 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'theme_scope.dart';
+
+/// [token] at [alpha] of its own opacity, resolved from the active scope.
+///
+/// This is shadcn's `bg-primary/90`: `{{valuePrefix}}Tint({{typePrefix}}Tokens.primary, 0.9)`.
+/// The alpha multiplies rather than replaces, because some tokens are already
+/// translucent — the dark theme's `border` is white at 10%, and half of it is
+/// white at 5%, not at 50%.
+///
+/// [dark], when given, is the alpha used while a dark theme is active. It
+/// exists for the handful of fills shadcn lightens differently in the dark
+/// theme, such as `dark:bg-destructive/60`.
+///
+/// The obvious spelling would be `{{typePrefix}}Tokens.primary().withValues(...)`,
+/// but that records a Mix *directive*, and directives accumulate through
+/// every later merge: a caller who replaced the fill would still get this
+/// alpha applied on top of their own color. A `ContextToken` does the
+/// arithmetic during resolution instead, so a state fragment holds one plain
+/// color that a caller can replace outright.
+///
+/// Tokens are cached per argument set, because `ContextToken` equality is
+/// resolver identity: building a fresh one per call would make two identical
+/// recipes compare unequal.
+ContextToken<Color> {{valuePrefix}}Tint(
+  ColorToken token,
+  double alpha, {
+  double? dark,
+}) => _tints.putIfAbsent(
+  (token, alpha, dark),
+  () => ContextToken<Color>((context) {
+    final color = token.resolve(context);
+    final isDark = {{typePrefix}}Theme.maybeOf(context)?.brightness == Brightness.dark;
+
+    return color.withValues(alpha: color.a * (isDark ? dark ?? alpha : alpha));
+  }),
+);
+
+final _tints = <(ColorToken, double, double?), ContextToken<Color>>{};
+
+/// shadcn's shadow scale, `shadow-xs` through `shadow-lg`.
+///
+/// Each level is one table of layers, handed out in the two shapes recipes
+/// need: [box] for a decoration's `shadows`, and [effects] for a Remix
+/// `containerEffects` layer. The two render the same shadow; which one a
+/// recipe uses depends only on the slot its spec offers.
+enum {{typePrefix}}Shadow {
+  /// A barely-there lift for controls that sit on the page: an outline
+  /// button, a text field.
+  xs([(y: 1, blur: 2, spread: 0, alpha: 0.05)]),
+
+  /// A card or a raised segment.
+  sm([
+    (y: 1, blur: 3, spread: 0, alpha: 0.1),
+    (y: 1, blur: 2, spread: -1, alpha: 0.1),
+  ]),
+
+  /// A floating panel: a menu, a select's options, a popover.
+  md([
+    (y: 4, blur: 6, spread: -1, alpha: 0.1),
+    (y: 2, blur: 4, spread: -2, alpha: 0.1),
+  ]),
+
+  /// A surface that interrupts: a dialog, a toast.
+  lg([
+    (y: 10, blur: 15, spread: -3, alpha: 0.1),
+    (y: 4, blur: 6, spread: -4, alpha: 0.1),
+  ]);
+
+  const {{typePrefix}}Shadow(this._layers);
+
+  final List<({double y, double blur, double spread, double alpha})> _layers;
+
+  /// This level as decoration shadows.
+  List<BoxShadowMix> get box => [
+    for (final layer in _layers)
+      BoxShadowMix(
+        color: _black(layer.alpha),
+        offset: Offset(0, layer.y),
+        blurRadius: layer.blur,
+        spreadRadius: layer.spread,
+      ),
+  ];
+
+  /// This level as a Remix effects layer, for a `containerEffects` slot.
+  RemixBoxEffectLayerMix get effects => .shadows([
+    for (final layer in _layers)
+      RemixBoxShadowMix(
+        color: _black(layer.alpha),
+        offset: Offset(0, layer.y),
+        blurRadius: layer.blur,
+        spreadRadius: layer.spread,
+      ),
+  ]);
+
+  static Color _black(double alpha) =>
+      const Color(0xFF000000).withValues(alpha: alpha);
+}

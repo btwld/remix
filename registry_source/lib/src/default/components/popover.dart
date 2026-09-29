@@ -52,7 +52,7 @@ PopoverStyler vanillaPopoverStyle({
 }) => PopoverStyler()
     .color(VanillaTokens.background())
     .border(.color(VanillaTokens.border()).width(_borderWidth))
-    .borderRadius(.all(VanillaTokens.radius()))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
     .padding(.all(_padding))
     .shadow(_shadow)
     .merge(style);

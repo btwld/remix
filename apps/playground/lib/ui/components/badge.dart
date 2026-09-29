@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
 part 'badge.g.dart';
@@ -59,10 +60,22 @@ const _borderWidth = 1.0;
 /// A fill that paints nothing, used by `outline`.
 const _noFill = Color(0x00000000);
 
+/// The destructive fill, at 60% in the dark theme as shadcn paints it
+/// (`dark:bg-destructive/60`): the dark `destructive` is too light to carry
+/// a white label as a solid fill.
+final _destructiveFill = playgroundTint(
+  PlaygroundTokens.destructive,
+  1,
+  dark: _darkDestructiveAlpha,
+);
+
+/// See [_destructiveFill].
+const _darkDestructiveAlpha = 0.6;
+
 /// Geometry and typography shared by every variant.
 BadgeStyler _base() => BadgeStyler()
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(.fontSize(_labelSize).fontWeight(FontWeight.w500));
 
 BadgeStyler _variantStyle(PlaygroundBadgeVariant variant) => switch (variant) {
@@ -75,7 +88,7 @@ BadgeStyler _variantStyle(PlaygroundBadgeVariant variant) => switch (variant) {
     foreground: PlaygroundTokens.secondaryForeground(),
   ),
   .destructive => _filled(
-    fill: PlaygroundTokens.destructive(),
+    fill: _destructiveFill(),
     foreground: PlaygroundTokens.destructiveForeground(),
   ),
   .outline => _filled(

@@ -34,7 +34,7 @@ SegmentedControlStyler playgroundSegmentedControlStyle({
       // chosen segment is `background`, so it reads as sitting on top of the
       // page rather than painted onto the track.
       .color(PlaygroundTokens.muted())
-      .borderRadius(.all(PlaygroundTokens.radius()))
+      .borderRadius(.all(PlaygroundTokens.radiusMd()))
       .padding(.all(_trackInset))
       .mainAxisSize(.min)
       .spacing(_segmentGap)
@@ -133,7 +133,7 @@ _itemStyle() => _content(PlaygroundTokens.foreground())
 /// identity: rebuilding one per call would make two identical recipes compare
 /// unequal.
 final _segmentRadius = ContextToken<Radius>((context) {
-  final radius = PlaygroundTokens.radius.resolve(context);
+  final radius = PlaygroundTokens.radiusMd.resolve(context);
 
   return Radius.elliptical(
     (radius.x - _segmentRadiusInset).clamp(0.0, double.infinity),
@@ -156,7 +156,7 @@ SegmentedControlItemStyler _focusVisibleStyle() =>
     SegmentedControlItemStyler().containerEffects(
       .outline(
         .color(
-          PlaygroundTokens.focusRing(),
+          PlaygroundTokens.ring(),
         ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
       ),
     );

@@ -37,7 +37,7 @@ MenuStyler vanillaMenuStyle({MenuStyler style = const MenuStyler.create()}) =>
               .mainAxisSize(.min)
               .color(VanillaTokens.background())
               .border(.color(VanillaTokens.border()).width(_borderWidth))
-              .borderRadius(.all(VanillaTokens.radius()))
+              .borderRadius(.all(VanillaTokens.radiusMd()))
               .padding(.all(_panelPadding))
               .minWidth(_panelMinWidth),
         )
@@ -110,7 +110,7 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .minHeight(_rowHeight)
     .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_rowGap)
-    .borderRadius(.all(VanillaTokens.radius()))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
     .label(
       .fontSize(
         _labelSize,
@@ -127,10 +127,10 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
         BoxDecorationMix(
           border: .all(
             .color(
-              VanillaTokens.focusRing(),
+              VanillaTokens.ring(),
             ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
           ),
-          borderRadius: .all(VanillaTokens.radius()),
+          borderRadius: .all(VanillaTokens.radiusMd()),
         ),
       ),
     )
@@ -148,7 +148,7 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .minHeight(_rowHeight)
     .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_rowGap)
-    .borderRadius(.all(VanillaTokens.radius()))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
     .label(.fontSize(_labelSize).color(VanillaTokens.foreground()))
     .leadingIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
     .trailingIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))

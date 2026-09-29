@@ -26,7 +26,7 @@ DialogStyler vanillaDialogStyle({
 }) => DialogStyler()
     .color(VanillaTokens.background())
     .border(.color(VanillaTokens.border()).width(_borderWidth))
-    .borderRadius(.all(VanillaTokens.radius()))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
     .padding(.all(_padding))
     .maxWidth(_maxWidth)
     .shadow(_shadow)

@@ -24,7 +24,7 @@ TooltipStyler playgroundTooltipStyle({
   TooltipStyler style = const TooltipStyler.create(),
 }) => TooltipStyler()
     .color(PlaygroundTokens.foreground())
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
     .label(.fontSize(_labelSize).color(PlaygroundTokens.background()))
     .waitDuration(_waitDuration)

@@ -58,6 +58,8 @@ export 'recipes/message_recipe.dart';
 export 'recipes/permission_recipe.dart';
 export 'recipes/plan_recipe.dart';
 export 'recipes/transcript_recipe.dart';
+export 'theme/effects.dart';
+export 'theme/scale.dart';
 export 'theme/theme_data.dart';
 export 'theme/theme_scope.dart';
 export 'theme/tokens.dart';

@@ -208,8 +208,10 @@ class VanillaBarChart extends StatelessWidget {
 ///
 /// A positive [centerRadius] creates a donut. Labels stay hidden by default;
 /// a caller-owned legend keeps category names readable with any custom
-/// palette. Give the generated [VanillaPieChart] a bounded width and
-/// height because charts have no intrinsic size.
+/// palette. [showLabels] draws them in `background`, which a gray palette
+/// cannot carry on every slice: pair it with [vanillaPieSliceLabelColor].
+/// Give the generated [VanillaPieChart] a bounded width and height because
+/// charts have no intrinsic size.
 ///
 /// [style] merges last, so one call site can replace any part of the recipe.
 class VanillaPieChart extends StatelessWidget {

@@ -92,7 +92,7 @@ CalloutStyler _base() => CalloutStyler()
     .crossAxisAlignment(.start)
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
     .spacing(_gap)
-    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .text(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
     .icon(.size(_iconSize).wrap(.translate(x: 0, y: _iconOffsetY)));
 

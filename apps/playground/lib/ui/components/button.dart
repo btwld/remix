@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
 part 'button.g.dart';
@@ -86,45 +87,37 @@ ButtonStyler playgroundButtonStyle({
       .merge(style);
 }
 
-/// Alpha applied to a variant's own fill while hovered.
+/// Alpha applied to a variant's own fill while hovered or pressed.
+///
+/// There is no separate pressed step, as in shadcn: a press lands on the
+/// hover fill. A deeper press would also take the destructive fill under the
+/// 4.5:1 floor its white label needs.
 const _hoverAlpha = 0.9;
 
-/// Alpha applied to the active fill while pressed.
-const _pressedAlpha = 0.8;
-
-/// A fill derived from [source] at [alpha], resolved from the active scope.
+/// The dark theme's destructive fills.
 ///
-/// The obvious spelling would be `PlaygroundTokens.primary().withValues(alpha: 0.9)`,
-/// but that records a Mix *directive*, and directives accumulate through every
-/// later merge. A caller who replaced the hover fill would still get this
-/// recipe's alpha applied on top of their own color. A `ContextToken` does the
-/// arithmetic during resolution instead, so each state fragment holds one
-/// plain color that a caller can replace outright.
-///
-/// Declared as top-level finals because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-ContextToken<Color> _dimmed(ColorToken source, double alpha) =>
-    ContextToken<Color>(
-      (context) => source.resolve(context).withValues(alpha: alpha),
-    );
+/// shadcn paints a dark destructive button at 60% (`dark:bg-destructive/60`):
+/// its dark `destructive` is a light red that reads as text on the page but
+/// cannot carry a white label as a solid fill. Hover moves to 70% rather than
+/// shadcn's 90%, which would measure about 3.5:1 against that label.
+const _darkDestructiveAlpha = 0.6;
+const _darkDestructiveHoverAlpha = 0.7;
 
-final _primaryHoverFill = _dimmed(PlaygroundTokens.primary, _hoverAlpha);
-final _primaryPressedFill = _dimmed(PlaygroundTokens.primary, _pressedAlpha);
-final _secondaryHoverFill = _dimmed(PlaygroundTokens.secondary, _hoverAlpha);
-final _secondaryPressedFill = _dimmed(
+final _primaryHoverFill = playgroundTint(PlaygroundTokens.primary, _hoverAlpha);
+final _secondaryHoverFill = playgroundTint(
   PlaygroundTokens.secondary,
-  _pressedAlpha,
-);
-final _destructiveHoverFill = _dimmed(
-  PlaygroundTokens.destructive,
   _hoverAlpha,
 );
-final _destructivePressedFill = _dimmed(
+final _destructiveFill = playgroundTint(
   PlaygroundTokens.destructive,
-  _pressedAlpha,
+  1,
+  dark: _darkDestructiveAlpha,
 );
-final _accentPressedFill = _dimmed(PlaygroundTokens.accent, _pressedAlpha);
+final _destructiveHoverFill = playgroundTint(
+  PlaygroundTokens.destructive,
+  _hoverAlpha,
+  dark: _darkDestructiveHoverAlpha,
+);
 
 /// Hover and the other state changes.
 const _motionDuration = Duration(milliseconds: 100);
@@ -194,7 +187,7 @@ ButtonStyler _base(_PlaygroundButtonMetrics metrics) => ButtonStyler()
     .minHeight(metrics.minHeight)
     .padding(.horizontal(metrics.paddingX))
     .spacing(metrics.gap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
     .icon(.size(metrics.iconSize))
     .spinner(
@@ -209,36 +202,32 @@ ButtonStyler _variantStyle(PlaygroundButtonVariant variant) =>
         fill: PlaygroundTokens.primary(),
         foreground: PlaygroundTokens.primaryForeground(),
         hoverFill: _primaryHoverFill(),
-        pressedFill: _primaryPressedFill(),
       ),
       .secondary => _filled(
         fill: PlaygroundTokens.secondary(),
         foreground: PlaygroundTokens.secondaryForeground(),
         hoverFill: _secondaryHoverFill(),
-        pressedFill: _secondaryPressedFill(),
       ),
       .destructive => _filled(
-        fill: PlaygroundTokens.destructive(),
+        fill: _destructiveFill(),
         foreground: PlaygroundTokens.destructiveForeground(),
         hoverFill: _destructiveHoverFill(),
-        pressedFill: _destructivePressedFill(),
       ),
       .outline => _quiet(bordered: true),
       .ghost => _quiet(bordered: false),
     };
 
-/// A solid variant: its own fill, dimmed on hover and further on press.
+/// A solid variant: its own fill, dimmed while hovered or pressed.
 ButtonStyler _filled({
   required Color fill,
   required Color foreground,
   required Color hoverFill,
-  required Color pressedFill,
 }) => _content(.color(fill), foreground)
     .onHovered(.color(hoverFill))
     .onPressed(
       ButtonStyler()
           .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-          .color(pressedFill),
+          .color(hoverFill),
     );
 
 /// A transparent variant: `accent` is what makes interaction visible.
@@ -262,7 +251,7 @@ ButtonStyler _quiet({required bool bordered}) {
         _content(
           ButtonStyler()
               .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-              .color(_accentPressedFill()),
+              .color(PlaygroundTokens.accent()),
           PlaygroundTokens.accentForeground(),
         ),
       );
@@ -282,7 +271,7 @@ ButtonStyler _content(ButtonStyler style, Color foreground) => style
 ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
   .outline(
     .color(
-      PlaygroundTokens.focusRing(),
+      PlaygroundTokens.ring(),
     ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ).outlineOffset(_focusRingOffset),
 );

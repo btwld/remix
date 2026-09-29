@@ -480,6 +480,8 @@ void _writeInstalledUi(Directory app) {
     'theme/tokens.dart',
     'theme/theme_data.dart',
     'theme/theme_scope.dart',
+    'theme/scale.dart',
+    'theme/effects.dart',
     'models/activity_item.dart',
     'models/plan_item.dart',
     'models/statuses.dart',

@@ -26,7 +26,7 @@ DialogStyler playgroundDialogStyle({
 }) => DialogStyler()
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(.all(_padding))
     .maxWidth(_maxWidth)
     .shadow(_shadow)

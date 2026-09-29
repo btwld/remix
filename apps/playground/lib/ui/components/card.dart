@@ -17,9 +17,9 @@ part 'card.g.dart';
 /// more thing to keep consistent.
 ///
 /// The fill is `background`, the same token the page uses, so a card is told
-/// apart by its outline rather than by a second surface color. That is
-/// deliberate: it keeps the token vocabulary at twenty names, and a theme
-/// that wants a distinct card surface changes this one line.
+/// apart by its outline rather than by a second surface color. The theme's
+/// thirty-three tokens do include a `card` surface, a step lighter than the
+/// page in the dark theme; pointing this one line at it lifts every card.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:
@@ -36,7 +36,7 @@ CardStyler playgroundCardStyle({
 }) => CardStyler()
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(.all(_padding))
     .merge(style);
 

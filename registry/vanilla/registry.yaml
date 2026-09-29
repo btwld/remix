@@ -5,6 +5,10 @@ items:
     dependencies:
       remix: ^1.0.0-beta.10
     files:
+      - source: templates/theme/effects.dart.tmpl
+        target: "@ui/theme/effects.dart"
+      - source: templates/theme/scale.dart.tmpl
+        target: "@ui/theme/scale.dart"
       - source: templates/theme/theme_data.dart.tmpl
         target: "@ui/theme/theme_data.dart"
       - source: templates/theme/theme_scope.dart.tmpl
@@ -15,6 +19,8 @@ items:
       - theme/tokens.dart
       - theme/theme_data.dart
       - theme/theme_scope.dart
+      - theme/scale.dart
+      - theme/effects.dart
 
   icons:
     registryDependencies:

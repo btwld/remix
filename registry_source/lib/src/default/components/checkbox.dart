@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
 part 'checkbox.g.dart';
@@ -94,37 +95,26 @@ CheckboxStyler vanillaCheckboxGroupItemStyle({
 /// Alpha applied to the checked fill while hovered.
 const _hoverAlpha = 0.9;
 
-/// The checked fill, dimmed, resolved from the active scope.
-///
-/// The obvious spelling would be `VanillaTokens.primary().withValues(alpha: 0.9)`,
-/// but that records a Mix *directive*, and directives accumulate through every
-/// later merge. A caller who replaced the hover fill would still get this
-/// recipe's alpha applied on top of their own color. A `ContextToken` does the
-/// arithmetic during resolution instead, so the state fragment holds one plain
-/// color that a caller can replace outright.
-///
-/// Declared as a top-level final because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-final _primaryHoverFill = ContextToken<Color>(
-  (context) =>
-      VanillaTokens.primary.resolve(context).withValues(alpha: _hoverAlpha),
-);
+/// The checked fill, dimmed. See `vanillaTint` for why this is a token rather
+/// than a color with an alpha directive.
+final _primaryHoverFill = vanillaTint(VanillaTokens.primary, _hoverAlpha);
 
 /// The largest corner radius a checkbox box may take.
 ///
-/// `VanillaTokens.radius` is authored for 32-40px controls. Applied
+/// `VanillaTokens.radiusMd` is authored for 32-40px controls. Applied
 /// unclamped to a 16px box, a pill radius draws a circle, which reads as a
 /// radio button. Clamping rather than hardcoding keeps the theme in charge in
 /// the other direction, so `radius: Radius.zero` still yields square
 /// checkboxes.
 const _maxBoxRadius = 4.0;
 
-/// The theme's corner radius, clamped to [_maxBoxRadius]. See
-/// [_primaryHoverFill] for why this is a top-level final rather than a
-/// per-call closure.
+/// The theme's corner radius, clamped to [_maxBoxRadius].
+///
+/// Declared as a top-level final because `ContextToken` equality is resolver
+/// identity: rebuilding one per call would make two identical recipes compare
+/// unequal.
 final _boxRadius = ContextToken<Radius>((context) {
-  final radius = VanillaTokens.radius.resolve(context);
+  final radius = VanillaTokens.radiusMd.resolve(context);
 
   return Radius.elliptical(
     math.min(radius.x, _maxBoxRadius),
@@ -195,7 +185,7 @@ CheckboxStyler _filled(Color fill) =>
 CheckboxStyler _focusVisibleStyle() => CheckboxStyler().containerEffects(
   .outline(
     .color(
-      VanillaTokens.focusRing(),
+      VanillaTokens.ring(),
     ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ).outlineOffset(_focusRingOffset),
 );

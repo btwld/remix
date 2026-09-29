@@ -174,7 +174,7 @@ AccordionStyler _icons(Color color) =>
 AccordionStyler _focusVisibleStyle() => AccordionStyler().containerEffects(
   .outline(
     .color(
-      VanillaTokens.focusRing(),
+      VanillaTokens.ring(),
     ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ),
 );

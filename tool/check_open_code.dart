@@ -221,7 +221,13 @@ const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
-  themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
+  themeFiles: [
+    'tokens.dart',
+    'theme_data.dart',
+    'theme_scope.dart',
+    'scale.dart',
+    'effects.dart',
+  ],
   generatedSnapshots: _generatedSnapshots,
   nonGeneratedItems: {'sidebar_layout', 'dashboard_shell', 'dashboard_demo'},
   itemFileOverrides: {

@@ -123,7 +123,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .spacing(_gap)
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
     // The placeholder is not a value: it has to read as the quieter of
     // the two, or a select with nothing chosen looks answered.
@@ -148,7 +148,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
       .containerEffects(
         .outline(
           .color(
-            PlaygroundTokens.focusRing(),
+            PlaygroundTokens.ring(),
           ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
         ).outlineOffset(_focusRingOffset),
       ),
@@ -163,7 +163,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(.all(_panelPadding))
     .minWidth(_panelMinWidth)
     .maxHeight(_panelMaxHeight)
@@ -180,7 +180,7 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     .minHeight(_rowHeight)
     .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_gap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
     .icon(.size(_iconSize).color(PlaygroundTokens.foreground()))
     .onHovered(_highlighted())

@@ -128,7 +128,7 @@ ToggleGroupItemStyler _itemStyle(
       .minHeight(metrics.minHeight)
       .padding(.horizontal(metrics.paddingX))
       .spacing(metrics.gap)
-      .borderRadius(.all(PlaygroundTokens.radius()))
+      .borderRadius(.all(PlaygroundTokens.radiusMd()))
       .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
       .icon(.size(metrics.iconSize))
       // The outline is present in every state and every variant, and only its
@@ -175,10 +175,10 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
       BoxDecorationMix(
         border: .all(
           .color(
-            PlaygroundTokens.focusRing(),
+            PlaygroundTokens.ring(),
           ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
         ),
-        borderRadius: .all(PlaygroundTokens.radius()),
+        borderRadius: .all(PlaygroundTokens.radiusMd()),
       ),
     );
 

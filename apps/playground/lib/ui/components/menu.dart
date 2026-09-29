@@ -38,7 +38,7 @@ MenuStyler playgroundMenuStyle({
           .mainAxisSize(.min)
           .color(PlaygroundTokens.background())
           .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-          .borderRadius(.all(PlaygroundTokens.radius()))
+          .borderRadius(.all(PlaygroundTokens.radiusMd()))
           .padding(.all(_panelPadding))
           .minWidth(_panelMinWidth),
     )
@@ -111,7 +111,7 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .minHeight(_rowHeight)
     .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_rowGap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(
       .fontSize(
         _labelSize,
@@ -128,10 +128,10 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
         BoxDecorationMix(
           border: .all(
             .color(
-              PlaygroundTokens.focusRing(),
+              PlaygroundTokens.ring(),
             ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
           ),
-          borderRadius: .all(PlaygroundTokens.radius()),
+          borderRadius: .all(PlaygroundTokens.radiusMd()),
         ),
       ),
     )
@@ -149,7 +149,7 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .minHeight(_rowHeight)
     .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_rowGap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(.fontSize(_labelSize).color(PlaygroundTokens.foreground()))
     .leadingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
     .trailingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))

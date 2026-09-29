@@ -27,6 +27,44 @@ List<Color> resolveVanillaChartPalette(BuildContext context) =>
       for (final token in VanillaTokens.chart) token.resolve(context),
     ]);
 
+/// The label color that reads on a pie slice filled with [slice].
+///
+/// The shipped palette is a gray ramp, so no one label color reads on every
+/// slice: `background` vanishes on the lightest gray and `foreground` on the
+/// darkest. This returns whichever of the two contrasts more with [slice].
+///
+/// Pie labels are off by default. A chart that turns them on sets each
+/// slice's label color from this, next to the fill the slice is drawn in:
+///
+/// ```dart
+/// final palette = resolveVanillaChartPalette(context);
+///
+/// PieSlice(
+///   id: 'mobile',
+///   label: 'Mobile',
+///   value: 64,
+///   style: PieSliceStyler().label(
+///     TextStyler().color(vanillaPieSliceLabelColor(context, palette[0])),
+///   ),
+/// )
+/// ```
+Color vanillaPieSliceLabelColor(BuildContext context, Color slice) {
+  final foreground = VanillaTokens.foreground.resolve(context);
+  final background = VanillaTokens.background.resolve(context);
+
+  return _contrast(foreground, slice) >= _contrast(background, slice)
+      ? foreground
+      : background;
+}
+
+/// WCAG contrast ratio between two opaque colors.
+double _contrast(Color a, Color b) {
+  final lighter = math.max(a.computeLuminance(), b.computeLuminance());
+  final darker = math.min(a.computeLuminance(), b.computeLuminance());
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 /// The application's line and area chart recipe.
 ///
 /// `mix_chart` owns the data model, rendering, interaction, and semantics.
@@ -98,8 +136,10 @@ BarChartStyler vanillaBarChartStyle({
 ///
 /// A positive [centerRadius] creates a donut. Labels stay hidden by default;
 /// a caller-owned legend keeps category names readable with any custom
-/// palette. Give the generated [VanillaPieChart] a bounded width and
-/// height because charts have no intrinsic size.
+/// palette. [showLabels] draws them in `background`, which a gray palette
+/// cannot carry on every slice: pair it with [vanillaPieSliceLabelColor].
+/// Give the generated [VanillaPieChart] a bounded width and height because
+/// charts have no intrinsic size.
 ///
 /// [style] merges last, so one call site can replace any part of the recipe.
 @MixWidget(target: PieChart.new)
@@ -223,7 +263,7 @@ BorderRadius _resolveBarRadius(BuildContext context) =>
     BorderRadius.all(_clampedThemeRadius(context, _maxBarRadius));
 
 Radius _clampedThemeRadius(BuildContext context, double maximum) {
-  final radius = VanillaTokens.radius.resolve(context);
+  final radius = VanillaTokens.radiusMd.resolve(context);
 
   return Radius.elliptical(
     math.min(radius.x, maximum),

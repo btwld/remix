@@ -37,7 +37,7 @@ SkeletonStyler playgroundSkeletonStyle({
     .container(
       BoxStyler()
           .color(PlaygroundTokens.muted())
-          .borderRadius(.all(PlaygroundTokens.radius())),
+          .borderRadius(.all(PlaygroundTokens.radiusMd())),
     )
     .pulseColor(PlaygroundTokens.accent())
     .duration(_pulseDuration)

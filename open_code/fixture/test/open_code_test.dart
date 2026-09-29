@@ -225,25 +225,40 @@ void main() {
       const theme = AcmeThemeData.light();
 
       expect(theme.background, const Color(0xFFFFFFFF));
-      expect(theme.foreground, const Color(0xFF171717));
+      expect(theme.foreground, const Color(0xFF0A0A0A));
+      expect(theme.card, const Color(0xFFFFFFFF));
+      expect(theme.cardForeground, const Color(0xFF0A0A0A));
+      expect(theme.popover, const Color(0xFFFFFFFF));
+      expect(theme.popoverForeground, const Color(0xFF0A0A0A));
       expect(theme.primary, const Color(0xFF171717));
       expect(theme.primaryForeground, const Color(0xFFFAFAFA));
       expect(theme.secondary, const Color(0xFFF5F5F5));
       expect(theme.secondaryForeground, const Color(0xFF171717));
       expect(theme.muted, const Color(0xFFF5F5F5));
-      expect(theme.mutedForeground, const Color(0xFF737373));
-      expect(theme.accent, const Color(0xFFE5E5E5));
+      expect(theme.mutedForeground, const Color(0xFF707070));
+      expect(theme.accent, const Color(0xFFF5F5F5));
       expect(theme.accentForeground, const Color(0xFF171717));
-      expect(theme.destructive, const Color(0xFFB91C1C));
+      expect(theme.destructive, const Color(0xFFE7000B));
       expect(theme.destructiveForeground, const Color(0xFFFFFFFF));
       expect(theme.border, const Color(0xFFE5E5E5));
-      expect(theme.focusRing, const Color(0xFF737373));
-      expect(theme.chart1, const Color(0xFF2563EB));
-      expect(theme.chart2, const Color(0xFFC2410C));
-      expect(theme.chart3, const Color(0xFF047857));
-      expect(theme.chart4, const Color(0xFF7E22CE));
-      expect(theme.chart5, const Color(0xFFBE123C));
-      expect(theme.radius, const Radius.circular(8));
+      expect(theme.input, const Color(0xFFE5E5E5));
+      expect(theme.ring, const Color(0xFFA1A1A1));
+      expect(theme.chart1, const Color(0xFFD4D4D4));
+      expect(theme.chart2, const Color(0xFF737373));
+      expect(theme.chart3, const Color(0xFF525252));
+      expect(theme.chart4, const Color(0xFF404040));
+      expect(theme.chart5, const Color(0xFF262626));
+      expect(theme.sidebar, const Color(0xFFFAFAFA));
+      expect(theme.sidebarForeground, const Color(0xFF0A0A0A));
+      expect(theme.sidebarPrimary, const Color(0xFF171717));
+      expect(theme.sidebarPrimaryForeground, const Color(0xFFFAFAFA));
+      expect(theme.sidebarAccent, const Color(0xFFF5F5F5));
+      expect(theme.sidebarAccentForeground, const Color(0xFF171717));
+      expect(theme.sidebarBorder, const Color(0xFFE5E5E5));
+      expect(theme.sidebarRing, const Color(0xFFA1A1A1));
+      expect(theme.radius, const Radius.circular(10));
+      expect(theme.fontFamily, isNull);
+      expect(theme.monoFontFamily, isNull);
     });
 
     test('dark carries the declared palette', () {
@@ -251,40 +266,129 @@ void main() {
 
       expect(theme.background, const Color(0xFF0A0A0A));
       expect(theme.foreground, const Color(0xFFFAFAFA));
-      expect(theme.primary, const Color(0xFFFAFAFA));
+      expect(theme.card, const Color(0xFF171717));
+      expect(theme.cardForeground, const Color(0xFFFAFAFA));
+      expect(theme.popover, const Color(0xFF171717));
+      expect(theme.popoverForeground, const Color(0xFFFAFAFA));
+      expect(theme.primary, const Color(0xFFE5E5E5));
       expect(theme.primaryForeground, const Color(0xFF171717));
       expect(theme.secondary, const Color(0xFF262626));
       expect(theme.secondaryForeground, const Color(0xFFFAFAFA));
       expect(theme.muted, const Color(0xFF262626));
-      expect(theme.mutedForeground, const Color(0xFFA3A3A3));
-      expect(theme.accent, const Color(0xFF404040));
+      expect(theme.mutedForeground, const Color(0xFFA1A1A1));
+      expect(theme.accent, const Color(0xFF262626));
       expect(theme.accentForeground, const Color(0xFFFAFAFA));
-      expect(theme.destructive, const Color(0xFFDC2626));
+      expect(theme.destructive, const Color(0xFFFF6467));
       expect(theme.destructiveForeground, const Color(0xFFFFFFFF));
-      expect(theme.border, const Color(0xFF404040));
-      expect(theme.focusRing, const Color(0xFFA3A3A3));
-      expect(theme.chart1, const Color(0xFF60A5FA));
-      expect(theme.chart2, const Color(0xFFFB923C));
-      expect(theme.chart3, const Color(0xFF34D399));
-      expect(theme.chart4, const Color(0xFFC084FC));
-      expect(theme.chart5, const Color(0xFFFB7185));
-      expect(theme.radius, const Radius.circular(8));
+      expect(theme.border, const Color(0x1AFFFFFF));
+      expect(theme.input, const Color(0x26FFFFFF));
+      expect(theme.ring, const Color(0xFF737373));
+      expect(theme.chart1, const Color(0xFFD4D4D4));
+      expect(theme.chart2, const Color(0xFF737373));
+      expect(theme.chart3, const Color(0xFF525252));
+      expect(theme.chart4, const Color(0xFF404040));
+      expect(theme.chart5, const Color(0xFF262626));
+      expect(theme.sidebar, const Color(0xFF171717));
+      expect(theme.sidebarForeground, const Color(0xFFFAFAFA));
+      expect(theme.sidebarPrimary, const Color(0xFF1447E6));
+      expect(theme.sidebarPrimaryForeground, const Color(0xFFFAFAFA));
+      expect(theme.sidebarAccent, const Color(0xFF262626));
+      expect(theme.sidebarAccentForeground, const Color(0xFFFAFAFA));
+      expect(theme.sidebarBorder, const Color(0x1AFFFFFF));
+      expect(theme.sidebarRing, const Color(0xFF737373));
+      expect(theme.radius, const Radius.circular(10));
+      expect(theme.fontFamily, isNull);
+      expect(theme.monoFontFamily, isNull);
     });
 
     test('every declared token has a value and nothing else is exported', () {
       for (final theme in const [AcmeThemeData.light(), AcmeThemeData.dark()]) {
         final tokens = theme.tokens;
 
-        expect(AcmeTokens.colors, hasLength(19));
-        expect(tokens, hasLength(AcmeTokens.colors.length + 1));
+        expect(AcmeTokens.colors, hasLength(32));
+        expect(AcmeTokens.radii, hasLength(4));
+        expect(AcmeTokens.textStyles, hasLength(8));
+        expect(
+          tokens,
+          hasLength(
+            AcmeTokens.colors.length +
+                AcmeTokens.radii.length +
+                AcmeTokens.textStyles.length,
+          ),
+        );
         expect(tokens.keys.toSet(), <MixToken<Object?>>{
           ...AcmeTokens.colors,
-          AcmeTokens.radius,
+          ...AcmeTokens.radii,
+          ...AcmeTokens.textStyles,
         });
         for (final token in AcmeTokens.colors) {
           expect(tokens[token], isA<Color>(), reason: token.name);
         }
-        expect(tokens[AcmeTokens.radius], theme.radius);
+        for (final token in AcmeTokens.radii) {
+          expect(tokens[token], isA<Radius>(), reason: token.name);
+        }
+        for (final token in AcmeTokens.textStyles) {
+          expect(tokens[token], isA<TextStyle>(), reason: token.name);
+        }
+      }
+    });
+
+    test('the radius scale steps from the one radius value', () {
+      Radius step(AcmeThemeData theme, RadiusToken token) =>
+          theme.tokens[token]! as Radius;
+      const theme = AcmeThemeData.light();
+
+      expect(step(theme, AcmeTokens.radiusSm), const Radius.circular(6));
+      expect(step(theme, AcmeTokens.radiusMd), const Radius.circular(8));
+      expect(step(theme, AcmeTokens.radiusLg), const Radius.circular(10));
+      expect(step(theme, AcmeTokens.radiusXl), const Radius.circular(14));
+
+      // No step goes below zero, so a square theme squares every control.
+      // Only `xl` keeps its four pixels, as shadcn's `--radius-xl` does.
+      final square = theme.copyWith(radius: Radius.zero);
+      expect(step(square, AcmeTokens.radiusSm), Radius.zero);
+      expect(step(square, AcmeTokens.radiusMd), Radius.zero);
+      expect(step(square, AcmeTokens.radiusLg), Radius.zero);
+      expect(step(square, AcmeTokens.radiusXl), const Radius.circular(4));
+    });
+
+    test('the type scale pairs each size with its line height', () {
+      const expected = <String, (double, double)>{
+        'xs': (12, 16),
+        'sm': (14, 20),
+        'base': (16, 24),
+        'lg': (18, 28),
+        'xl': (20, 28),
+        '2xl': (24, 32),
+        '3xl': (30, 36),
+        'mono': (14, 20),
+      };
+      final theme = const AcmeThemeData.light().copyWith(
+        fontFamily: 'Body',
+        monoFontFamily: 'Code',
+      );
+
+      expect(AcmeTokens.textStyles, hasLength(expected.length));
+      for (final token in AcmeTokens.textStyles) {
+        final step = token.name.split('.').last;
+        final (size, lineHeight) = expected[step]!;
+        final style = theme.tokens[token]! as TextStyle;
+
+        expect(style.fontSize, size, reason: step);
+        expect(style.height! * size, closeTo(lineHeight, 1e-9), reason: step);
+        expect(
+          style.leadingDistribution,
+          TextLeadingDistribution.even,
+          reason: step,
+        );
+        expect(
+          style.fontFamily,
+          step == 'mono' ? 'Code' : 'Body',
+          reason: step,
+        );
+        // Weight and color are the recipe's to choose.
+        expect(style.fontWeight, isNull, reason: step);
+        expect(style.color, isNull, reason: step);
       }
     });
 
@@ -295,7 +399,7 @@ void main() {
         () => tokens[AcmeTokens.background] = const Color(0xFF00FF00),
         throwsUnsupportedError,
       );
-      expect(() => tokens.remove(AcmeTokens.radius), throwsUnsupportedError);
+      expect(() => tokens.remove(AcmeTokens.radiusMd), throwsUnsupportedError);
       expect(() => tokens.clear(), throwsUnsupportedError);
     });
   });
@@ -334,22 +438,42 @@ void main() {
       final probes = <AcmeThemeData>[
         light.copyWith(background: const Color(0xFF000001)),
         light.copyWith(foreground: const Color(0xFF000002)),
-        light.copyWith(primary: const Color(0xFF000003)),
-        light.copyWith(primaryForeground: const Color(0xFF000004)),
-        light.copyWith(secondary: const Color(0xFF000005)),
-        light.copyWith(secondaryForeground: const Color(0xFF000006)),
-        light.copyWith(muted: const Color(0xFF000007)),
-        light.copyWith(mutedForeground: const Color(0xFF000008)),
-        light.copyWith(accent: const Color(0xFF000009)),
-        light.copyWith(accentForeground: const Color(0xFF00000A)),
-        light.copyWith(destructive: const Color(0xFF00000B)),
-        light.copyWith(destructiveForeground: const Color(0xFF00000C)),
-        light.copyWith(border: const Color(0xFF00000D)),
-        light.copyWith(focusRing: const Color(0xFF00000E)),
+        light.copyWith(card: const Color(0xFF000003)),
+        light.copyWith(cardForeground: const Color(0xFF000004)),
+        light.copyWith(popover: const Color(0xFF000005)),
+        light.copyWith(popoverForeground: const Color(0xFF000006)),
+        light.copyWith(primary: const Color(0xFF000007)),
+        light.copyWith(primaryForeground: const Color(0xFF000008)),
+        light.copyWith(secondary: const Color(0xFF000009)),
+        light.copyWith(secondaryForeground: const Color(0xFF00000A)),
+        light.copyWith(muted: const Color(0xFF00000B)),
+        light.copyWith(mutedForeground: const Color(0xFF00000C)),
+        light.copyWith(accent: const Color(0xFF00000D)),
+        light.copyWith(accentForeground: const Color(0xFF00000E)),
+        light.copyWith(destructive: const Color(0xFF00000F)),
+        light.copyWith(destructiveForeground: const Color(0xFF000010)),
+        light.copyWith(border: const Color(0xFF000011)),
+        light.copyWith(input: const Color(0xFF000012)),
+        light.copyWith(ring: const Color(0xFF000013)),
+        light.copyWith(chart1: const Color(0xFF000014)),
+        light.copyWith(chart2: const Color(0xFF000015)),
+        light.copyWith(chart3: const Color(0xFF000016)),
+        light.copyWith(chart4: const Color(0xFF000017)),
+        light.copyWith(chart5: const Color(0xFF000018)),
+        light.copyWith(sidebar: const Color(0xFF000019)),
+        light.copyWith(sidebarForeground: const Color(0xFF00001A)),
+        light.copyWith(sidebarPrimary: const Color(0xFF00001B)),
+        light.copyWith(sidebarPrimaryForeground: const Color(0xFF00001C)),
+        light.copyWith(sidebarAccent: const Color(0xFF00001D)),
+        light.copyWith(sidebarAccentForeground: const Color(0xFF00001E)),
+        light.copyWith(sidebarBorder: const Color(0xFF00001F)),
+        light.copyWith(sidebarRing: const Color(0xFF000020)),
         light.copyWith(radius: const Radius.circular(1)),
+        light.copyWith(fontFamily: 'Probe'),
+        light.copyWith(monoFontFamily: 'ProbeMono'),
       ];
 
-      expect(probes, hasLength(15));
+      expect(probes, hasLength(AcmeTokens.colors.length + 3));
       for (final probe in probes) {
         expect(probe, isNot(light));
       }
@@ -473,7 +597,7 @@ void main() {
       final buildsAfterFirst = builds;
 
       await tester.pumpWidget(app(const AcmeThemeData.dark()));
-      expect(primary, const Color(0xFFFAFAFA));
+      expect(primary, const Color(0xFFE5E5E5));
       expect(builds, greaterThan(buildsAfterFirst));
     });
 
@@ -495,7 +619,7 @@ void main() {
                 _Probe((probeContext) {
                   capturedTheme = AcmeTheme.maybeOf(probeContext);
                   capturedPrimary = AcmeTokens.primary.resolve(probeContext);
-                  capturedRadius = AcmeTokens.radius.resolve(probeContext);
+                  capturedRadius = AcmeTokens.radiusMd.resolve(probeContext);
                 }),
               );
             }),
@@ -511,7 +635,7 @@ void main() {
       await tester.pumpWidget(_host(captured!));
 
       expect(capturedTheme, const AcmeThemeData.dark());
-      expect(capturedPrimary, const Color(0xFFFAFAFA));
+      expect(capturedPrimary, const Color(0xFFE5E5E5));
       expect(capturedRadius, const Radius.circular(8));
     });
   });
@@ -530,7 +654,7 @@ void main() {
         expect(_background(spec), theme.data.primary);
         _expectContent(spec, theme.data.primaryForeground);
         expect(_border(spec), isNull);
-        expect(_borderRadius(spec), BorderRadius.all(theme.data.radius));
+        expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
       });
 
       testWidgets('secondary resolves its fill and content in ${theme.name}', (
@@ -545,7 +669,7 @@ void main() {
         expect(_background(spec), theme.data.secondary);
         _expectContent(spec, theme.data.secondaryForeground);
         expect(_border(spec), isNull);
-        expect(_borderRadius(spec), BorderRadius.all(theme.data.radius));
+        expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
       });
 
       testWidgets(
@@ -557,10 +681,10 @@ void main() {
             variant: AcmeButtonVariant.destructive,
           );
 
-          expect(_background(spec), theme.data.destructive);
+          expect(_background(spec), _destructiveFill(theme.data));
           _expectContent(spec, theme.data.destructiveForeground);
           expect(_border(spec), isNull);
-          expect(_borderRadius(spec), BorderRadius.all(theme.data.radius));
+          expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
         },
       );
 
@@ -576,7 +700,7 @@ void main() {
         expect(_background(spec), const Color(0x00000000));
         _expectContent(spec, theme.data.foreground);
         expect(_border(spec), Border.all(color: theme.data.border, width: 1));
-        expect(_borderRadius(spec), BorderRadius.all(theme.data.radius));
+        expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
       });
 
       testWidgets('ghost is transparent and borderless in ${theme.name}', (
@@ -591,7 +715,7 @@ void main() {
         expect(_background(spec), const Color(0x00000000));
         _expectContent(spec, theme.data.foreground);
         expect(_border(spec), isNull);
-        expect(_borderRadius(spec), BorderRadius.all(theme.data.radius));
+        expect(_borderRadius(spec), BorderRadius.all(_radiusMd(theme.data)));
       });
     }
 
@@ -708,9 +832,11 @@ void main() {
         tester,
       ) async {
         final fills = <AcmeButtonVariant, Color>{
-          AcmeButtonVariant.primary: theme.data.primary,
-          AcmeButtonVariant.secondary: theme.data.secondary,
-          AcmeButtonVariant.destructive: theme.data.destructive,
+          AcmeButtonVariant.primary: theme.data.primary.withValues(alpha: 0.9),
+          AcmeButtonVariant.secondary: theme.data.secondary.withValues(
+            alpha: 0.9,
+          ),
+          AcmeButtonVariant.destructive: _destructiveHoverFill(theme.data),
         };
 
         for (final entry in fills.entries) {
@@ -729,12 +855,13 @@ void main() {
 
           expect(
             _background(hovered),
-            entry.value.withValues(alpha: 0.9),
+            entry.value,
             reason: '${entry.key.name} hovered',
           );
+          // No separate pressed step: a press lands on the hover fill.
           expect(
             _background(pressed),
-            entry.value.withValues(alpha: 0.8),
+            entry.value,
             reason: '${entry.key.name} pressed',
           );
         }
@@ -768,9 +895,10 @@ void main() {
           _expectContent(hovered, theme.data.accentForeground);
           expect(
             _background(pressed),
-            theme.data.accent.withValues(alpha: 0.8),
+            theme.data.accent,
             reason: '${variant.name} pressed',
           );
+          _expectContent(pressed, theme.data.accentForeground);
         }
       });
 
@@ -785,7 +913,7 @@ void main() {
         final effects = focused.spec.containerEffects;
 
         expect(effects, isNotNull);
-        expect(effects!.outline.color, theme.data.focusRing);
+        expect(effects!.outline.color, theme.data.ring);
         expect(effects.outline.width, 2);
         expect(effects.outline.strokeAlign, BorderSide.strokeAlignInside);
         expect(effects.outline.style, BorderStyle.solid);
@@ -833,7 +961,7 @@ void main() {
       expect(disabled.spec.containerEffects?.outline.style, BorderStyle.none);
     });
 
-    testWidgets('pressed wins over hovered', (tester) async {
+    testWidgets('pressed while hovered keeps the hover fill', (tester) async {
       const theme = AcmeThemeData.light();
       final both = await _resolveStyle(
         tester,
@@ -841,7 +969,7 @@ void main() {
         states: const {WidgetState.hovered, WidgetState.pressed},
       );
 
-      expect(_background(both), theme.primary.withValues(alpha: 0.8));
+      expect(_background(both), theme.primary.withValues(alpha: 0.9));
     });
 
     testWidgets('disabled wins over focus-visible', (tester) async {
@@ -907,13 +1035,14 @@ void main() {
       final branded = const AcmeThemeData.light().copyWith(
         primary: const Color(0xFF4F46E5),
         primaryForeground: const Color(0xFFFFFFFF),
-        radius: const Radius.circular(2),
+        radius: const Radius.circular(4),
       );
 
       final spec = await _resolveStyle(tester, theme: branded);
 
       expect(_background(spec), const Color(0xFF4F46E5));
       expect(_labelColor(spec), const Color(0xFFFFFFFF));
+      // A button rounds to the `md` step, two pixels inside the base radius.
       expect(_borderRadius(spec), const BorderRadius.all(Radius.circular(2)));
     });
 
@@ -1503,12 +1632,12 @@ void main() {
     ) async {
       const light = AcmeThemeData.light();
       final cases = <Radius, Radius>{
-        // The shipped themes ask for 8, which a 16-20px box cannot wear.
+        // The shipped control radius is 8, which a 16-20px box cannot wear.
         light.radius: const Radius.circular(4),
         // A pill theme would otherwise draw a circle, which reads as a radio.
         const Radius.circular(999): const Radius.circular(4),
-        // A theme asking for less than the cap still wins.
-        const Radius.circular(2): const Radius.circular(2),
+        // A theme whose control radius is under the cap still wins.
+        const Radius.circular(5): const Radius.circular(3),
         Radius.zero: Radius.zero,
       };
 
@@ -1569,7 +1698,7 @@ void main() {
         final effects = spec.spec.containerEffects;
 
         expect(effects, isNotNull);
-        expect(effects!.outline.color, theme.data.focusRing);
+        expect(effects!.outline.color, theme.data.ring);
         expect(effects.outline.width, 2);
         expect(effects.outline.strokeAlign, BorderSide.strokeAlignInside);
         expect(effects.outline.style, BorderStyle.solid);
@@ -2022,7 +2151,7 @@ void main() {
         expect(
           _flexForegroundBorder(spec.spec.container),
           Border.all(
-            color: theme.data.focusRing,
+            color: theme.data.ring,
             width: 2,
             strokeAlign: BorderSide.strokeAlignInside,
           ),
@@ -2306,7 +2435,7 @@ void main() {
         );
         expect(
           _boxBorderRadius(spec.spec.container),
-          BorderRadius.all(theme.data.radius),
+          BorderRadius.all(_radiusMd(theme.data)),
         );
         expect(box.padding, const EdgeInsets.all(24));
       });
@@ -2347,7 +2476,7 @@ void main() {
           content: theme.data.secondaryForeground,
         ),
         AcmeBadgeVariant.destructive: (
-          fill: theme.data.destructive,
+          fill: _destructiveFill(theme.data),
           content: theme.data.destructiveForeground,
         ),
         AcmeBadgeVariant.outline: (
@@ -2543,7 +2672,7 @@ void main() {
         expect(spec.spec.pulseColor, theme.data.accent);
         expect(
           _boxBorderRadius(spec.spec.container),
-          BorderRadius.all(theme.data.radius),
+          BorderRadius.all(_radiusMd(theme.data)),
         );
         expect(spec.spec.duration, const Duration(milliseconds: 1000));
       });
@@ -2654,17 +2783,47 @@ void main() {
           theme.data.chart5,
         ]);
         expect(palette.toSet(), hasLength(palette.length));
-        for (final color in palette) {
-          expect(
-            _contrastRatio(color, theme.data.background),
-            greaterThanOrEqualTo(4.5),
-            reason: '${theme.name}: $color',
-          );
-        }
         expect(
           () => palette.add(const Color(0xFF000000)),
           throwsUnsupportedError,
         );
+      });
+
+      // The palette is a gray ramp, so no one label color reads on every
+      // slice. The helper picks whichever of `foreground` and `background`
+      // reads on the slice it is given.
+      testWidgets('every slice gets a readable label in ${theme.name}', (
+        tester,
+      ) async {
+        late List<Color> palette;
+        late List<Color> labels;
+
+        await tester.pumpWidget(
+          AcmeThemeScope(
+            theme: theme.data,
+            child: _host(
+              _Probe((context) {
+                palette = resolveAcmeChartPalette(context);
+                labels = [
+                  for (final slice in palette)
+                    acmePieSliceLabelColor(context, slice),
+                ];
+              }),
+            ),
+          ),
+        );
+
+        for (var index = 0; index < palette.length; index++) {
+          expect(
+            labels[index],
+            anyOf(theme.data.foreground, theme.data.background),
+          );
+          expect(
+            _contrastRatio(labels[index], palette[index]),
+            greaterThanOrEqualTo(4.5),
+            reason: '${theme.name}: ${palette[index]}',
+          );
+        }
       });
     }
 
@@ -3121,10 +3280,19 @@ void main() {
       testWidgets('filled variants dim their own fill in ${theme.name}', (
         tester,
       ) async {
-        final fills = <AcmeIconButtonVariant, Color>{
-          AcmeIconButtonVariant.primary: theme.data.primary,
-          AcmeIconButtonVariant.secondary: theme.data.secondary,
-          AcmeIconButtonVariant.destructive: theme.data.destructive,
+        final fills = <AcmeIconButtonVariant, (Color, Color)>{
+          AcmeIconButtonVariant.primary: (
+            theme.data.primary,
+            theme.data.primary.withValues(alpha: 0.9),
+          ),
+          AcmeIconButtonVariant.secondary: (
+            theme.data.secondary,
+            theme.data.secondary.withValues(alpha: 0.9),
+          ),
+          AcmeIconButtonVariant.destructive: (
+            _destructiveFill(theme.data),
+            _destructiveHoverFill(theme.data),
+          ),
         };
 
         for (final entry in fills.entries) {
@@ -3146,15 +3314,18 @@ void main() {
             states: const {WidgetState.pressed},
           );
 
-          expect(_boxBackground(idle.spec.container), entry.value);
+          final (rest, dimmed) = entry.value;
+
+          expect(_boxBackground(idle.spec.container), rest);
           expect(
             _boxBackground(hovered.spec.container),
-            entry.value.withValues(alpha: 0.9),
+            dimmed,
             reason: '${entry.key} hovered',
           );
+          // No separate pressed step: a press lands on the hover fill.
           expect(
             _boxBackground(pressed.spec.container),
-            entry.value.withValues(alpha: 0.8),
+            dimmed,
             reason: '${entry.key} pressed',
           );
         }
@@ -3213,7 +3384,7 @@ void main() {
         states: const {WidgetState.focused, WidgetState.disabled},
       );
 
-      expect(focused.spec.containerEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.containerEffects?.outline.color, theme.ring);
       expect(focused.spec.containerEffects?.outline.width, 2);
       expect(focused.spec.containerEffects?.outlineOffset, 2);
       expect(disabled.spec.containerEffects?.outline.style, BorderStyle.none);
@@ -3415,7 +3586,7 @@ void main() {
       expect(
         _flexForegroundBorder(focused.spec.container),
         Border.all(
-          color: theme.focusRing,
+          color: theme.ring,
           width: 2,
           strokeAlign: BorderSide.strokeAlignInside,
         ),
@@ -3585,7 +3756,7 @@ void main() {
         states: const {WidgetState.focused, WidgetState.disabled},
       );
 
-      expect(focused.spec.trackEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.trackEffects?.outline.color, theme.ring);
       expect(focused.spec.trackEffects?.outline.width, 2);
       expect(disabled.spec.trackEffects?.outline.style, BorderStyle.none);
       expect(
@@ -3803,7 +3974,7 @@ void main() {
         states: const {WidgetState.disabled},
       );
 
-      expect(focused.spec.thumbFocusEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.thumbFocusEffects?.outline.color, theme.ring);
       expect(
         disabled.widgetModifiers,
         contains(
@@ -4052,11 +4223,12 @@ void main() {
     ) async {
       const light = AcmeThemeData.light();
       final cases = <Radius, Radius>{
-        // The shipped 8 leaves 5 once the 3px inset is taken off.
+        // The shipped control radius, 8, leaves 5 once the 3px inset is
+        // taken off.
         light.radius: const Radius.circular(5),
-        // A radius smaller than the inset clamps at square rather than going
-        // negative.
-        const Radius.circular(2): Radius.zero,
+        // A control radius smaller than the inset clamps at square rather
+        // than going negative.
+        const Radius.circular(4): Radius.zero,
         Radius.zero: Radius.zero,
       };
 
@@ -4534,7 +4706,7 @@ void main() {
         );
         expect(
           _boxBorderRadius(popover.spec.container),
-          BorderRadius.all(theme.data.radius),
+          BorderRadius.all(_radiusMd(theme.data)),
         );
       });
 
@@ -4935,7 +5107,7 @@ void main() {
         expect(spec.spec.trigger.spec.constraints?.minHeight, 44);
         expect(
           _boxBorderRadius(spec.spec.trigger),
-          BorderRadius.all(theme.data.radius),
+          BorderRadius.all(_radiusMd(theme.data)),
         );
         expect(
           spec.spec.content.spec.padding,
@@ -5321,7 +5493,7 @@ void main() {
       );
 
       expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
-      expect(focused.spec.containerEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.containerEffects?.outline.color, theme.ring);
       expect(focused.spec.containerEffects?.outline.width, 2);
       // No offset, unlike the button's: sections stack directly on each other
       // and an outward ring would cross into its neighbours.
@@ -5955,6 +6127,19 @@ const _themes = <({String name, AcmeThemeData data})>[
   (name: 'light', data: AcmeThemeData.light()),
   (name: 'dark', data: AcmeThemeData.dark()),
 ];
+
+/// The control radius, the step every button-like recipe rounds to.
+Radius _radiusMd(AcmeThemeData theme) =>
+    theme.tokens[AcmeTokens.radiusMd]! as Radius;
+
+/// The destructive fill at rest: solid in the light theme, 60% in the dark.
+Color _destructiveFill(AcmeThemeData theme) => theme.destructive.withValues(
+  alpha: theme.brightness == Brightness.dark ? 0.6 : 1,
+);
+
+/// The destructive fill while hovered or pressed: 90%, or 70% in the dark.
+Color _destructiveHoverFill(AcmeThemeData theme) => theme.destructive
+    .withValues(alpha: theme.brightness == Brightness.dark ? 0.7 : 0.9);
 
 /// Two arbitrary glyphs; the fixture bundles no icon font, and `find.byIcon`
 /// matches on [IconData] rather than on rendered pixels.

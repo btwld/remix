@@ -34,7 +34,7 @@ SegmentedControlStyler vanillaSegmentedControlStyle({
       // chosen segment is `background`, so it reads as sitting on top of the
       // page rather than painted onto the track.
       .color(VanillaTokens.muted())
-      .borderRadius(.all(VanillaTokens.radius()))
+      .borderRadius(.all(VanillaTokens.radiusMd()))
       .padding(.all(_trackInset))
       .mainAxisSize(.min)
       .spacing(_segmentGap)
@@ -132,7 +132,7 @@ SegmentedControlItemStyler _itemStyle() => _content(VanillaTokens.foreground())
 /// identity: rebuilding one per call would make two identical recipes compare
 /// unequal.
 final _segmentRadius = ContextToken<Radius>((context) {
-  final radius = VanillaTokens.radius.resolve(context);
+  final radius = VanillaTokens.radiusMd.resolve(context);
 
   return Radius.elliptical(
     (radius.x - _segmentRadiusInset).clamp(0.0, double.infinity),
@@ -155,7 +155,7 @@ SegmentedControlItemStyler _focusVisibleStyle() =>
     SegmentedControlItemStyler().containerEffects(
       .outline(
         .color(
-          VanillaTokens.focusRing(),
+          VanillaTokens.ring(),
         ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
       ),
     );

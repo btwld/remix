@@ -49,7 +49,7 @@ final AcmeThemeData brandTheme = const AcmeThemeData.light().copyWith(
   accent: const Color(0xFFE0E7FF),
   accentForeground: const Color(0xFF312E81),
   border: const Color(0xFFC7D2FE),
-  focusRing: const Color(0xFF4F46E5),
+  ring: const Color(0xFF4F46E5),
   radius: const Radius.circular(12),
 );
 

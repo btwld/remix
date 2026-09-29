@@ -24,7 +24,7 @@ TooltipStyler {{valuePrefix}}TooltipStyle({
   TooltipStyler style = const TooltipStyler.create(),
 }) => TooltipStyler()
     .color({{typePrefix}}Tokens.foreground())
-    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
     .label(.fontSize(_labelSize).color({{typePrefix}}Tokens.background()))
     .waitDuration(_waitDuration)

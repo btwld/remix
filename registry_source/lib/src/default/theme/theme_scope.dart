@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import 'theme_data.dart';
+import 'tokens.dart';
 
 /// Installs a [VanillaThemeData] for a subtree.
 ///
@@ -11,6 +12,22 @@ import 'theme_data.dart';
 ///   [VanillaTheme.of];
 /// * a `MixScope` carrying the same values keyed by `VanillaTokens`, so every Mix
 ///   styler resolved below this point sees them.
+///
+/// The outermost scope also sets the page up: it paints the theme's
+/// `background` behind [child] and gives bare [Text] the theme's body run.
+/// Place it below the application host so those defaults apply:
+///
+/// ```dart
+/// WidgetsApp(
+///   color: const Color(0xFFFFFFFF),
+///   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+///     settings: settings,
+///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+///   ),
+///   builder: (context, child) => VanillaThemeScope(child: child!),
+///   home: const HomePage(),
+/// )
+/// ```
 ///
 /// Each supplied theme replaces the values for its appearance. An empty nested
 /// scope inherits the parent pair and selection; individual tokens do not merge.
@@ -81,15 +98,54 @@ class VanillaThemeScope extends StatelessWidget {
                   Brightness.dark,
           };
     final selected = useDark ? dark : base;
+    final tokens = selected.tokens;
+    Widget scoped = MixScope(tokens: tokens, child: child);
+    // Only the outermost scope sets the page up. A nested scope re-scopes
+    // tokens for its subtree and nothing more: reinstalling the root text run
+    // there would silently replace whatever `DefaultTextStyle` the subtree
+    // sits in, and a second background would paint over a card or a panel.
+    if (inherited == null) {
+      scoped = ColoredBox(
+        color: selected.background,
+        child: _rootTextStyle(tokens: tokens, child: scoped),
+      );
+    }
 
     return VanillaTheme(
       data: selected,
       baseTheme: base,
       darkTheme: dark,
       useDarkTheme: useDark,
-      child: MixScope(tokens: selected.tokens, child: child),
+      child: scoped,
     );
   }
+}
+
+/// The text run a bare [Text] below the root scope inherits.
+///
+/// shadcn sets the page's text on `body`: the theme's font, `foreground`, and
+/// the browser's default size, which its components render at `text-sm`. This
+/// is that run, so a `Text` with no style of its own reads as body copy in the
+/// theme's color in both brightnesses — instead of inheriting whatever the
+/// host set up, which in a dark theme is often dark text on a dark page.
+///
+/// Recipes still set their own sizes and colors; this is only the fallback,
+/// and a nearer `DefaultTextStyle` wins through Flutter's normal inheritance.
+/// Place the scope *below* a Material or Cupertino host (in its `builder`) so
+/// the host's own text defaults do not sit between the two.
+Widget _rootTextStyle({
+  required Map<MixToken<Object?>, Object> tokens,
+  required Widget child,
+}) {
+  final body = tokens[VanillaTokens.textSm]! as TextStyle;
+
+  return DefaultTextStyle(
+    style: body.copyWith(
+      color: tokens[VanillaTokens.foreground]! as Color,
+      fontWeight: FontWeight.w400,
+    ),
+    child: child,
+  );
 }
 
 /// The inherited half of [VanillaThemeScope].

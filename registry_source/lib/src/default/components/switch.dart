@@ -94,7 +94,7 @@ const _thumbSize = _trackHeight - _thumbInset * 2;
 SwitchStyler _focusVisibleStyle() => SwitchStyler().trackEffects(
   RemixBoxEffectsMix(
     outline: BorderSideMix(
-      color: VanillaTokens.focusRing(),
+      color: VanillaTokens.ring(),
       width: _focusRingWidth,
       strokeAlign: BorderSide.strokeAlignInside,
     ),

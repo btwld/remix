@@ -130,7 +130,7 @@ ToggleStyler _base(_{{typePrefix}}ToggleMetrics metrics) =>
         .minHeight(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
         .spacing(metrics.gap)
-        .borderRadius(.all({{typePrefix}}Tokens.radius()))
+        .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
         .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
         .icon(.size(metrics.iconSize));
 
@@ -167,10 +167,10 @@ ToggleStyler _focusVisibleStyle() => ToggleStyler().foregroundDecoration(
   BoxDecorationMix(
     border: .all(
       .color(
-        {{typePrefix}}Tokens.focusRing(),
+        {{typePrefix}}Tokens.ring(),
       ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
     ),
-    borderRadius: .all({{typePrefix}}Tokens.radius()),
+    borderRadius: .all({{typePrefix}}Tokens.radiusMd()),
   ),
 );
 

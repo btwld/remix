@@ -107,7 +107,7 @@ const _thumb = _rail * _thumbRatio;
 SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
   RemixBoxEffectsMix(
     outline: BorderSideMix(
-      color: VanillaTokens.focusRing(),
+      color: VanillaTokens.ring(),
       width: _focusRingWidth,
       strokeAlign: BorderSide.strokeAlignInside,
     ),

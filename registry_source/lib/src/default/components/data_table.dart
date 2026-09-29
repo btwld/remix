@@ -146,7 +146,7 @@ const _maxFrameRadius = _headerHeight / 2;
 /// equality is resolver identity: rebuilding one per call would make two
 /// identical recipes compare unequal.
 final _frameRadius = ContextToken<Radius>((context) {
-  final radius = VanillaTokens.radius.resolve(context);
+  final radius = VanillaTokens.radiusMd.resolve(context);
 
   return Radius.elliptical(
     math.min(radius.x, _maxFrameRadius),

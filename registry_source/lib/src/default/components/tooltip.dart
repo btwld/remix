@@ -24,7 +24,7 @@ TooltipStyler vanillaTooltipStyle({
   TooltipStyler style = const TooltipStyler.create(),
 }) => TooltipStyler()
     .color(VanillaTokens.foreground())
-    .borderRadius(.all(VanillaTokens.radius()))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
     .label(.fontSize(_labelSize).color(VanillaTokens.background()))
     .waitDuration(_waitDuration)

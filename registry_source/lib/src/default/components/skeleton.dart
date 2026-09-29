@@ -37,7 +37,7 @@ SkeletonStyler vanillaSkeletonStyle({
     .container(
       BoxStyler()
           .color(VanillaTokens.muted())
-          .borderRadius(.all(VanillaTokens.radius())),
+          .borderRadius(.all(VanillaTokens.radiusMd())),
     )
     .pulseColor(VanillaTokens.accent())
     .duration(_pulseDuration)

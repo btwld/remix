@@ -52,7 +52,7 @@ PopoverStyler playgroundPopoverStyle({
 }) => PopoverStyler()
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(.all(_padding))
     .shadow(_shadow)
     .merge(style);

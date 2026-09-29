@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
 part 'radio.g.dart';
@@ -70,22 +71,9 @@ RadioStyler {{valuePrefix}}RadioStyle({
 /// Alpha applied to the selected ring while hovered.
 const _hoverAlpha = 0.9;
 
-/// The selected ring color, dimmed, resolved from the active scope.
-///
-/// The obvious spelling would be `{{typePrefix}}Tokens.primary().withValues(alpha: 0.9)`,
-/// but that records a Mix *directive*, and directives accumulate through every
-/// later merge. A caller who replaced the hover color would still get this
-/// recipe's alpha applied on top of their own. A `ContextToken` does the
-/// arithmetic during resolution instead, so the state fragment holds one plain
-/// color that a caller can replace outright.
-///
-/// Declared as a top-level final because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-final _primaryHover = ContextToken<Color>(
-  (context) =>
-      {{typePrefix}}Tokens.primary.resolve(context).withValues(alpha: _hoverAlpha),
-);
+/// The selected ring color, dimmed. See `{{valuePrefix}}Tint` for why this is a token
+/// rather than a color with an alpha directive.
+final _primaryHover = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, _hoverAlpha);
 
 /// A radius large enough to round any radio in this scale into a circle.
 const _circular = Radius.circular(999);
@@ -141,7 +129,7 @@ RadioStyler _selectedStyle() => RadioStyler()
 RadioStyler _focusVisibleStyle() => RadioStyler().containerEffects(
   .outline(
     .color(
-      {{typePrefix}}Tokens.focusRing(),
+      {{typePrefix}}Tokens.ring(),
     ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ).outlineOffset(_focusRingOffset),
 );
