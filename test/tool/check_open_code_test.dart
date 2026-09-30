@@ -147,6 +147,27 @@ void main() {
     });
   });
 
+  test('--icon-library swaps the icon package in the Vanilla contract', () {
+    final options = checker.parseConsumerCheckOptions([
+      '--source',
+      'checkout',
+      '--item',
+      'icons',
+      '--icon-library',
+      'lucide',
+    ])!;
+    expect(options.item, 'icons');
+    expect(options.iconLibrary, 'lucide');
+
+    for (final arguments in [
+      ['--icon-library', 'missing'],
+      ['--icon-library', 'lucide', '--icon-library', 'lucide'],
+      ['--source', 'checkout', '--preset', 'fortal', '--item', 'icons'],
+    ]) {
+      expect(checker.parseConsumerCheckOptions(arguments), isNull);
+    }
+  });
+
   test('explicit item inventories support grouped non-generated recipes', () {
     expect(
       checker.registryItemInventoryForTest(

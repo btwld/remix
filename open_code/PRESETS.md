@@ -51,6 +51,10 @@ registries:
     revision: "<resolved-full-commit-sha>"
 ```
 
+`remix.yaml` may also set `iconLibrary: remix|lucide`. Icon placeholders are
+resolved at install. Publish the CLI that understands those placeholders
+before publishing a registry that contains them.
+
 The index exposes `vanilla` and `fortal`; `default` was the name an earlier
 prerelease used for `vanilla` and is not a preset any registry serves.
 Installed type names and token IDs use the consumer prefix, for example

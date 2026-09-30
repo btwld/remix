@@ -24,6 +24,8 @@ final class RegistryGraph {
   Future<String> template(RegistryItem item, RegistryFile file) =>
       _owners[item.name]!.template(file);
 
+  RegistryReader reader(RegistryItem item) => _owners[item.name]!;
+
   static Future<RegistryGraph> resolve(
     ProjectConfig config,
     List<String> requested,

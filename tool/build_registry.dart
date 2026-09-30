@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
+import '../packages/remix_cli/lib/src/directive_sort.dart';
 import '../packages/remix_cli/lib/src/registry.dart';
+import '../packages/remix_cli/lib/src/icon_registry.dart';
 
 /// Derives the remote registry presets from analyzer-checked Dart source.
 ///
@@ -61,7 +63,9 @@ void main(List<String> arguments) {
   }
   if (check) {
     final distribution = index.parent;
-    final expected = {'index.yaml', ...presetSpecs.keys};
+    // The choice tables are shared by every preset and are read by the CLI
+    // alongside the generated catalogs.
+    final expected = {'index.yaml', 'icons.yaml', ...presetSpecs.keys};
     final unexpected = distribution
         .listSync()
         .map((entry) => p.basename(entry.path))
@@ -431,7 +435,7 @@ const defaultPreset = PresetSpec(
     FileItemSpec(
       name: 'icons',
       file: 'icons.dart',
-      packages: {'remix_ui_icons'},
+      packages: const {},
       registryDependencies: ['theme'],
       exports: ['icons.dart'],
     ),
@@ -443,10 +447,9 @@ const defaultPreset = PresetSpec(
     'build_runner',
     'mix_generator',
     'mix_chart',
-    'remix_ui_icons',
     'remix_ui_fonts',
   },
-  detectedPackages: ['mix_chart', 'remix_ui_icons', 'remix_ui_fonts'],
+  detectedPackages: ['mix_chart', 'remix_ui_fonts'],
   // A layout, not a styled component: `sidebar_layout` composes an installed
   // Sidebar through a `Widget`-typed field, so its source never imports
   // components/sidebar.dart and import inference alone would miss it.
@@ -605,7 +608,7 @@ const fortalPreset = PresetSpec(
       templatePath: 'templates/icons/icons.dart.tmpl',
       target: '@ui/icons.dart',
       registryDependencies: ['theme'],
-      packages: {'remix_ui_icons'},
+      packages: const {},
       exports: ['icons.dart'],
     ),
   ],
@@ -618,9 +621,8 @@ const fortalPreset = PresetSpec(
     'build_runner',
     'mix_generator',
     'mix_chart',
-    'remix_ui_icons',
   },
-  detectedPackages: ['mix_chart', 'remix_ui_icons'],
+  detectedPackages: ['mix_chart'],
   composedRegistryDependencies: {
     'sidebar_layout': ['sidebar'],
   },
@@ -846,13 +848,8 @@ const fortalAgentExtension = PresetSpec(
   ],
   copiedItems: [],
   ignoredSourceFiles: {},
-  floorPackages: {
-    'mix_annotations',
-    'build_runner',
-    'mix_generator',
-    'remix_ui_icons',
-  },
-  detectedPackages: ['remix_ui_icons'],
+  floorPackages: {'mix_annotations', 'build_runner', 'mix_generator'},
+  detectedPackages: const [],
   composedRegistryDependencies: {},
 );
 
@@ -890,13 +887,8 @@ const defaultAgentExtension = PresetSpec(
   ],
   copiedItems: [],
   ignoredSourceFiles: {},
-  floorPackages: {
-    'mix_annotations',
-    'build_runner',
-    'mix_generator',
-    'remix_ui_icons',
-  },
-  detectedPackages: ['remix_ui_icons'],
+  floorPackages: {'mix_annotations', 'build_runner', 'mix_generator'},
+  detectedPackages: const [],
   composedRegistryDependencies: {},
 );
 
@@ -999,6 +991,8 @@ final class PresetBuilder {
     required this.sourceRoot,
     required this.defaultRegistryRoot,
     required this.outputRoot,
+    this.iconPlaceholders = false,
+    this.icons,
   });
 
   factory PresetBuilder.forRepository(
@@ -1006,6 +1000,7 @@ final class PresetBuilder {
     PresetSpec spec = fortalPreset,
   }) {
     final registryRoot = Directory(p.join(repositoryRoot.path, 'registry'));
+    final iconFile = File(p.join(registryRoot.path, 'icons.yaml'));
     return PresetBuilder(
       spec: spec,
       sourceRoot: Directory(
@@ -1013,6 +1008,10 @@ final class PresetBuilder {
       ),
       defaultRegistryRoot: Directory(p.join(registryRoot.path, 'vanilla')),
       outputRoot: Directory(p.join(registryRoot.path, spec.name)),
+      iconPlaceholders: true,
+      icons: iconFile.existsSync()
+          ? IconRegistry.parse(iconFile.readAsStringSync())
+          : null,
     );
   }
 
@@ -1020,6 +1019,12 @@ final class PresetBuilder {
   final Directory sourceRoot;
   final Directory defaultRegistryRoot;
   final Directory outputRoot;
+
+  /// When set, icon references become `{{icon:…}}` placeholders. The
+  /// repository build turns this on. Tests that derive a catalog into a
+  /// temporary directory leave it off.
+  final bool iconPlaceholders;
+  final IconRegistry? icons;
 
   PresetOutput derive() {
     if (!sourceRoot.existsSync()) {
@@ -1784,7 +1789,7 @@ final class PresetBuilder {
           RegExp('(?<![A-Za-z0-9_])${behavior.valueWord}(?=[A-Z])'),
           (_) => spec.valueWord,
         );
-    return _sortDirectives(path, rewritten);
+    return sortDirectives(path, rewritten);
   }
 
   /// Rebase each mapped relative directive from authored to installed paths.
@@ -1846,7 +1851,7 @@ final class PresetBuilder {
           .replaceAll(sourceTypeWord, spec.typeWord)
           .replaceAll(sourceValueWord, spec.valueWord);
     }
-    return _sortDirectives(sourcePath, rewritten);
+    return sortDirectives(sourcePath, rewritten);
   }
 
   /// Swaps the preset's own naming for the consumer prefix placeholders.
@@ -1855,16 +1860,63 @@ final class PresetBuilder {
   /// not reverse exactly means the source says the preset's name somewhere the
   /// consumer's prefix does not belong.
   String _templateFor(String path, String source) {
-    final template = source
+    var template = source
         .replaceAll(spec.typeWord, '{{typePrefix}}')
         .replaceAll(spec.valueWord, '{{valuePrefix}}');
+    template = _iconTemplate(path, template);
     final roundTrip = template
         .replaceAll('{{typePrefix}}', spec.typeWord)
-        .replaceAll('{{valuePrefix}}', spec.valueWord);
+        .replaceAll('{{valuePrefix}}', spec.valueWord)
+        .replaceAll(
+          '{{icon:import}}',
+          "import 'package:remix_ui_icons/remix_ui_icons.dart';",
+        )
+        .replaceAllMapped(
+          RegExp(r'\{\{icon:([A-Za-z0-9_]+)\}\}'),
+          (match) => 'RemixIcons.${match.group(1)!}',
+        );
     if (roundTrip != source) {
       throw StateError('$path did not survive the template round trip.');
     }
     return template;
+  }
+
+  /// Replaces the authoring icon package with registry placeholders.  The
+  /// canonical names in icons.yaml are deliberately the Remix names, so the
+  /// same template can be rendered for Remix or another supported library.
+  String _iconTemplate(String path, String source) {
+    if (!iconPlaceholders) return source;
+    final hasIconImport = source.contains(
+      "package:remix_ui_icons/remix_ui_icons.dart",
+    );
+    final hasIconUse = source.contains('RemixIcons.');
+    if (!hasIconImport && !hasIconUse) return source;
+    final table = icons;
+    if (table == null) {
+      throw StateError('$path uses icons but no icon table was provided.');
+    }
+    var rewritten = source.replaceAllMapped(
+      RegExp(r'\bRemixIcons\.([A-Za-z0-9_]+)'),
+      (match) {
+        final name = match.group(1)!;
+        if (table.constant(name, 'remix') != name) {
+          throw StateError('$path uses unmapped RemixIcons.$name.');
+        }
+        return '{{icon:$name}}';
+      },
+    );
+    if (rewritten.contains('RemixIcons')) {
+      throw StateError(
+        '$path mentions bare RemixIcons; use a mapped glyph or an alias.',
+      );
+    }
+    if (hasIconImport) {
+      rewritten = rewritten.replaceFirst(
+        "import 'package:remix_ui_icons/remix_ui_icons.dart';",
+        '{{icon:import}}',
+      );
+    }
+    return rewritten;
   }
 
   /// Infers one item's registry dependencies from its relative imports.
@@ -2056,46 +2108,6 @@ final _importPattern = RegExp(
   r'''^\s*import\s+['"]([^'"]+)['"]''',
   multiLine: true,
 );
-
-/// Re-sorts a file's single-line import block into `dart:`, `package:`, and
-/// relative groups, one blank line apart, the way `directives_ordering` reads
-/// it. Anything else inside the block is refused rather than moved.
-String _sortDirectives(String path, String source) {
-  final lines = source.split('\n');
-  final indexes = [
-    for (var i = 0; i < lines.length; i++)
-      if (lines[i].startsWith('import ')) i,
-  ];
-  if (indexes.isEmpty) return source;
-  final block = lines.sublist(indexes.first, indexes.last + 1);
-  if (block.any(
-    (line) => !line.startsWith('import ') && line.trim().isNotEmpty,
-  )) {
-    throw FormatException('$path: imports must be single-line and contiguous.');
-  }
-  String uri(String line) => _importPattern.firstMatch(line)!.group(1)!;
-  final imports = block.where((line) => line.startsWith('import ')).toList();
-  final groups = [
-    for (final test in [
-      (String u) => u.startsWith('dart:'),
-      (String u) => u.startsWith('package:'),
-      (String u) => !u.startsWith('dart:') && !u.startsWith('package:'),
-    ])
-      imports.where((line) => test(uri(line))).toList()
-        ..sort((a, b) => uri(a).compareTo(uri(b))),
-  ];
-  final sorted = <String>[];
-  for (final group in groups) {
-    if (group.isEmpty) continue;
-    if (sorted.isNotEmpty) sorted.add('');
-    sorted.addAll(group);
-  }
-  return [
-    ...lines.sublist(0, indexes.first),
-    ...sorted,
-    ...lines.sublist(indexes.last + 1),
-  ].join('\n');
-}
 
 final _directivePattern = RegExp(
   r'''^\s*(import|export|part)\s+['"]([^'"]+)['"]''',

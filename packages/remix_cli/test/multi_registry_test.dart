@@ -126,6 +126,27 @@ void main() {
     },
   );
 
+  test('registry update keeps the icon library choice', () async {
+    final config = File('${root.path}/remix.yaml');
+    config.writeAsStringSync(
+      config.readAsStringSync().replaceFirst(
+        RegExp(r'^preset: .*\n', multiLine: true),
+        'preset: vanilla\niconLibrary: lucide\n',
+      ),
+    );
+
+    await installer.registry(
+      const RegistryOptions(
+        action: RegistryAction.update,
+        namespace: '@company',
+        ref: 'v2',
+      ),
+    );
+
+    final updated = parseConfig(config.readAsStringSync(), root);
+    expect(updated.iconLibrary, 'lucide');
+  });
+
   test(
     'two registries install; update, diff and overwrite are independent of CLI version',
     () async {

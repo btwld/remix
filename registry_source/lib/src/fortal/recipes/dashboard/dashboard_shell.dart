@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../../dashboard/dashboard_shell_base.dart';
 import '../../components/icon_button.dart';
@@ -7,7 +8,6 @@ import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/text.dart';
 import '../../components/textfield.dart';
-import '../../icons.dart';
 import '../../theme/theme.dart';
 
 const _headerHeight = 64.0;
@@ -89,10 +89,10 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
       sidebarHeaderStyle: sidebarHeaderStyle,
       topBarStyle: topBarStyle,
       titleStyle: fortalTextStyle(size: .size4, weight: .bold),
-      menuIcon: FortalIcons.hamburgerMenu,
-      searchIcon: FortalIcons.magnifyingGlass,
-      backwardIcon: FortalIcons.doubleArrowLeft,
-      forwardIcon: FortalIcons.doubleArrowRight,
+      menuIcon: RemixIcons.hamburgerMenu,
+      searchIcon: RemixIcons.magnifyingGlass,
+      backwardIcon: RemixIcons.doubleArrowLeft,
+      forwardIcon: RemixIcons.doubleArrowRight,
       layoutBuilder:
           (
             context, {

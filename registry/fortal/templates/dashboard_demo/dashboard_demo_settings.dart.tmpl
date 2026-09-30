@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import '../../components/button.dart';
 import '../../components/callout.dart';
@@ -120,7 +120,7 @@ class _{{typePrefix}}DashboardSettingsPageState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const {{typePrefix}}Callout(
-                icon: RemixIcons.magicWand,
+                icon: {{icon:magicWand}},
                 text: 'Changes are deterministic and remain local to the demo.',
               ),
               const SizedBox(height: 16),
@@ -257,5 +257,5 @@ class _Text extends StatelessWidget {
 
 void _toast(BuildContext context, String title) => showRemixToast(
   context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
+  RemixToastData(title: title, icon: {{icon:checkCircled}}),
 );

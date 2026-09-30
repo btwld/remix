@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import 'base_button.dart';
 import '../theme/theme.dart';
+import 'base_button.dart';
 
 part 'icon_button.g.dart';
 

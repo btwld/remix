@@ -41,3 +41,24 @@ dart run remix_cli:remix add @acme/button
 The registry must offer the project's preset, or `registry add` fails. Install
 a design-system registry's items instead of, not alongside, the official
 items that own the same files (`theme`, the components it replaces).
+
+## Choose an icon library
+
+Registry templates resolve icon placeholders from an optional `remix.yaml`
+setting:
+
+```yaml
+iconLibrary: lucide # remix (default) or lucide
+```
+
+The CLI adds `lucide_flutter` instead of `remix_ui_icons` when it is selected.
+The choice applies at install. To switch an installed project, change the
+setting and reinstall the items that use icons:
+
+```bash
+remix add dashboard_demo --diff
+remix add dashboard_demo --overwrite
+```
+
+Icons referenced in application code are not rewritten. The CLI that
+resolves these placeholders ships before a registry that uses them.

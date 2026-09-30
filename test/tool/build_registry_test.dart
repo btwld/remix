@@ -135,7 +135,15 @@ void main() {
       final template = output.files[entry.key]!;
       final rendered = template
           .replaceAll('{{typePrefix}}', 'Fortal')
-          .replaceAll('{{valuePrefix}}', 'fortal');
+          .replaceAll('{{valuePrefix}}', 'fortal')
+          .replaceAll(
+            '{{icon:import}}',
+            "import 'package:remix_ui_icons/remix_ui_icons.dart';",
+          )
+          .replaceAllMapped(
+            RegExp(r'\{\{icon:([A-Za-z0-9_]+)\}\}'),
+            (match) => 'RemixIcons.${match.group(1)!}',
+          );
 
       expect(rendered, entry.value, reason: entry.key);
       expect(template, isNot(contains('Fortal')), reason: entry.key);

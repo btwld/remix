@@ -61,7 +61,12 @@ void main() {
       'transcript',
     ]);
     expect(items['support']['registryDependencies'], ['theme']);
-    expect(items['support']['dependencies']['remix_ui_icons'], isNotNull);
+    // The icon package is chosen at install from icons.yaml, so the item
+    // catalog no longer names remix_ui_icons.
+    expect(
+      items['support']['dependencies']?.containsKey('remix_ui_icons'),
+      isNot(true),
+    );
     expect(items['support']['exports'], isNull);
     expect(items['models']['exports'], contains('models/statuses.dart'));
     expect(

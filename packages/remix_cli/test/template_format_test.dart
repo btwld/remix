@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/icon_registry.dart';
 import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
+
+import 'checkout_registry.dart';
 
 /// The prefix templates are rendered with before they are formatted.
 ///
@@ -51,6 +54,10 @@ void main() {
       },
     );
     const renderer = TemplateRenderer();
+    final distribution = findCheckoutRegistry();
+    final icons = IconRegistry.parse(
+      File(p.join(distribution.path, 'icons.yaml')).readAsStringSync(),
+    );
 
     final sources = <String, File>{};
     final staging = Directory.systemTemp.createTempSync('remix_tmpl_format_');
@@ -77,6 +84,7 @@ void main() {
           valuePrefix: relative.startsWith('agent${p.separator}')
               ? 'agent'
               : config.valuePrefix,
+          icons: icons,
         ),
       );
       sources[name] = template;

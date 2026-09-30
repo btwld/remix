@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
+import 'icon_registry.dart';
 import 'registry_source.dart';
 
 const projectConfigFileName = 'remix.yaml';
@@ -17,18 +18,22 @@ const supportedProjectSchema = 3;
 /// rather than rejected at runtime.
 final class ProjectConfig {
   ProjectConfig({
-    required Directory packageRoot,
+    required this.packageRoot,
     required this.prefix,
     required this.preset,
     required this.uiPath,
     required this.defaultRegistry,
     required Map<String, RegistrySource> registries,
+    this.iconLibrary = defaultIconLibrary,
   }) : registries = Map.unmodifiable(registries) {
     _validatePrefix(prefix);
     _validateUiPath(packageRoot, uiPath);
     // A third-party registry names its own presets, so only the shape is
     // checked here; the registry itself rejects a preset it does not carry.
     _validatePresetName(preset);
+    if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(iconLibrary)) {
+      throw const FormatException('iconLibrary must be a lowercase name.');
+    }
     validateNamespace(defaultRegistry);
     for (final namespace in this.registries.keys) {
       validateNamespace(namespace);
@@ -60,14 +65,16 @@ final class ProjectConfig {
         'and is left alone; review it afterwards with add --diff.',
       );
     }
-    _requireExactKeys(document, {
-      'schema',
-      'prefix',
-      'preset',
-      'paths',
-      'defaultRegistry',
-      'registries',
-    }, 'configuration');
+    _requireExactKeys(
+      document,
+      {'schema', 'prefix', 'preset', 'paths', 'defaultRegistry', 'registries'},
+      'configuration',
+      optional: {'iconLibrary'},
+    );
+    final iconLibrary = document['iconLibrary'] ?? defaultIconLibrary;
+    if (iconLibrary is! String) {
+      throw const FormatException('iconLibrary must be a string.');
+    }
     final prefix = document['prefix'];
     if (prefix is! String) {
       throw const FormatException('remix.yaml prefix must be a string.');
@@ -118,27 +125,50 @@ final class ProjectConfig {
       uiPath: uiPath,
       defaultRegistry: defaultRegistry,
       registries: sources,
+      iconLibrary: iconLibrary,
     );
   }
 
   final String prefix;
   final String preset;
+  final Directory packageRoot;
   final String uiPath;
   final String defaultRegistry;
   final Map<String, RegistrySource> registries;
+  final String iconLibrary;
 
   int get schema => supportedProjectSchema;
+
+  /// A copy with the given registries or icon library replaced.
+  ProjectConfig copyWith({
+    Map<String, RegistrySource>? registries,
+    String? iconLibrary,
+  }) => ProjectConfig(
+    packageRoot: packageRoot,
+    prefix: prefix,
+    preset: preset,
+    uiPath: uiPath,
+    defaultRegistry: defaultRegistry,
+    registries: registries ?? this.registries,
+    iconLibrary: iconLibrary ?? this.iconLibrary,
+  );
 
   String get valuePrefix =>
       '${prefix.substring(0, 1).toLowerCase()}${prefix.substring(1)}';
 
   String encode() {
-    final buffer =
-        StringBuffer('schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n')
-          ..writeln('preset: ${_encodeYamlScalar(preset)}')
-          ..writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}')
-          ..writeln('defaultRegistry: ${jsonEncode(defaultRegistry)}')
-          ..writeln('registries:');
+    final buffer = StringBuffer(
+      'schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n',
+    )..writeln('preset: ${_encodeYamlScalar(preset)}');
+    // Keep the default encoding byte-compatible with schema-3 files written
+    // before iconLibrary existed; only a non-default library is written.
+    if (iconLibrary != defaultIconLibrary) {
+      buffer.writeln('iconLibrary: ${_encodeYamlScalar(iconLibrary)}');
+    }
+    buffer
+      ..writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}')
+      ..writeln('defaultRegistry: ${jsonEncode(defaultRegistry)}')
+      ..writeln('registries:');
     for (final entry in registries.entries) {
       final source = entry.value;
       buffer
@@ -322,13 +352,18 @@ String _encodeYamlScalar(String value) {
   return parsed is String && parsed == value ? value : jsonEncode(value);
 }
 
-void _requireExactKeys(YamlMap map, Set<String> expected, String location) {
+void _requireExactKeys(
+  YamlMap map,
+  Set<String> expected,
+  String location, {
+  Set<String> optional = const {},
+}) {
   final keys = map.keys.whereType<String>().toSet();
   if (keys.length != map.length) {
     throw FormatException('$location keys must be strings.');
   }
   final missing = expected.difference(keys);
-  final unknown = keys.difference(expected);
+  final unknown = keys.difference({...expected, ...optional});
   if (missing.isNotEmpty) {
     throw FormatException('$location is missing ${missing.join(', ')}.');
   }

@@ -2,8 +2,8 @@
 // FortalTextField/FortalTextArea constructors, so they must be visible from
 // this library even though nothing here references them directly.
 import 'package:flutter/gestures.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 

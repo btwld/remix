@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import '../../components/accordion.dart';
 import '../../components/avatar.dart';
@@ -195,7 +195,7 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
           cell: (variant, size) => {{typePrefix}}IconButton(
             variant: variant,
             size: size,
-            icon: RemixIcons.plus,
+            icon: {{icon:plus}},
             semanticLabel: 'Add item',
             onPressed: () => _toast(context, 'Item added'),
           ),
@@ -213,7 +213,7 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
             variant: variant,
             size: size,
             selected: _selected,
-            icon: RemixIcons.fontBold,
+            icon: {{icon:fontBold}},
             label: 'Bold',
             onChanged: (value) => setState(() => _selected = value),
           ),
@@ -230,7 +230,7 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
             const {{typePrefix}}Button(label: 'Disabled', enabled: false),
             {{typePrefix}}Button(label: 'Saving', loading: true, onPressed: () {}),
             const {{typePrefix}}IconButton(
-              icon: RemixIcons.heart,
+              icon: {{icon:heart}},
               semanticLabel: 'Disabled favorite',
               enabled: false,
             ),
@@ -270,7 +270,7 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
           width: 300,
           child: {{typePrefix}}TextField(
             hintText: 'Type something…',
-            leading: Icon(RemixIcons.magnifyingGlass, size: 16),
+            leading: Icon({{icon:magnifyingGlass}}, size: 16),
           ),
         ),
       ),
@@ -335,17 +335,17 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
             items: const [
               RemixToggleGroupItem(
                 value: 'left',
-                icon: RemixIcons.alignLeft,
+                icon: {{icon:alignLeft}},
                 semanticLabel: 'Left',
               ),
               RemixToggleGroupItem(
                 value: 'center',
-                icon: RemixIcons.alignCenterHorizontally,
+                icon: {{icon:alignCenterHorizontally}},
                 semanticLabel: 'Center',
               ),
               RemixToggleGroupItem(
                 value: 'right',
-                icon: RemixIcons.alignRight,
+                icon: {{icon:alignRight}},
                 semanticLabel: 'Right',
               ),
             ],
@@ -491,7 +491,7 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             {{typePrefix}}Avatar(label: 'RF'),
-            {{typePrefix}}Avatar(icon: RemixIcons.person),
+            {{typePrefix}}Avatar(icon: {{icon:person}}),
           ],
         ),
       ),
@@ -528,8 +528,8 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
                 child: {{typePrefix}}Callout(
                   variant: variant,
                   icon: variant == {{typePrefix}}CalloutVariant.destructive
-                      ? RemixIcons.exclamationTriangle
-                      : RemixIcons.infoCircled,
+                      ? {{icon:exclamationTriangle}}
+                      : {{icon:infoCircled}},
                   text: 'A helpful ${_enumLabel(variant)} callout.',
                 ),
               ),
@@ -613,7 +613,7 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
             if (_spinnersRunning)
               const {{typePrefix}}Spinner(semanticsLabel: 'Loading example')
             else
-              const Icon(RemixIcons.check, size: 16),
+              const Icon({{icon:check}}, size: 16),
           ],
         ),
       ),
@@ -729,7 +729,7 @@ class _DefaultGalleryOverlaysPageState
           child: {{typePrefix}}Menu<String>(
             trigger: const RemixMenuTrigger(
               label: 'Open menu',
-              icon: RemixIcons.dotsHorizontal,
+              icon: {{icon:dotsHorizontal}},
             ),
             items: [
               const RemixMenuItem(value: 'duplicate', label: 'Duplicate'),
@@ -812,12 +812,12 @@ class _DefaultGalleryNavigationPageState
                     RemixSidebarDestination(
                       value: 'overview',
                       label: 'Overview',
-                      icon: RemixIcons.dashboard,
+                      icon: {{icon:dashboard}},
                     ),
                     RemixSidebarDestination(
                       value: 'activity',
                       label: 'Activity',
-                      icon: RemixIcons.activityLog,
+                      icon: {{icon:activityLog}},
                     ),
                   ],
                 ),
@@ -827,7 +827,7 @@ class _DefaultGalleryNavigationPageState
                     RemixSidebarDestination(
                       value: 'settings',
                       label: 'Settings',
-                      icon: RemixIcons.mixerHorizontal,
+                      icon: {{icon:mixerHorizontal}},
                     ),
                   ],
                 ),
@@ -1154,5 +1154,5 @@ String _enumLabel(Enum value) {
 
 void _toast(BuildContext context, String title) => showRemixToast(
   context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
+  RemixToastData(title: title, icon: {{icon:checkCircled}}),
 );

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import '../../components/avatar.dart';
 import '../../components/badge.dart';
@@ -52,7 +52,7 @@ class _DefaultDashboardCustomersPageState
       description: 'Manage customer access, plans, and account status.',
       action: {{typePrefix}}Button(
         label: 'Add customer',
-        leadingIcon: RemixIcons.plus,
+        leadingIcon: {{icon:plus}},
         onPressed: () => _toast(context, 'Customer invitation started'),
       ),
       children: [
@@ -62,7 +62,7 @@ class _DefaultDashboardCustomersPageState
               width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
               child: {{typePrefix}}TextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(RemixIcons.magnifyingGlass, size: 18),
+                leading: const Icon({{icon:magnifyingGlass}}, size: 18),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
@@ -94,7 +94,7 @@ class _DefaultDashboardCustomersPageState
                           context,
                           RemixToastData(
                             title: '${_selectedIds.length} customers archived',
-                            icon: RemixIcons.checkCircled,
+                            icon: {{icon:checkCircled}},
                             action: const RemixToastAction(
                               label: 'Undo',
                               onPressed: _noop,
@@ -198,7 +198,7 @@ class _DefaultDashboardOrdersPageState
       description: 'Review transactions and fulfillment status.',
       action: {{typePrefix}}Button(
         label: 'Export',
-        leadingIcon: RemixIcons.download,
+        leadingIcon: {{icon:download}},
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
@@ -364,8 +364,8 @@ List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>> _orderColumns(
 Widget _actions(BuildContext context, String value) => {{typePrefix}}Menu<String>(
   trigger: RemixMenuTrigger.builder(
     label: 'More',
-    icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) => const Icon(RemixIcons.dotsHorizontal, size: 18),
+    icon: {{icon:dotsHorizontal}},
+    builder: (_, _, _) => const Icon({{icon:dotsHorizontal}}, size: 18),
   ),
   items: const [
     RemixMenuItem(value: 'view', label: 'View'),
@@ -432,7 +432,7 @@ class _Empty extends StatelessWidget {
     padding: const EdgeInsets.all(32),
     child: Column(
       children: [
-        const Icon(RemixIcons.magnifyingGlass, size: 24),
+        const Icon({{icon:magnifyingGlass}}, size: 24),
         const SizedBox(height: 8),
         _Text(title, emphasized: true),
         const SizedBox(height: 4),
@@ -467,6 +467,6 @@ class _Text extends StatelessWidget {
 
 void _toast(BuildContext context, String title) => showRemixToast(
   context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
+  RemixToastData(title: title, icon: {{icon:checkCircled}}),
 );
 void _noop() {}

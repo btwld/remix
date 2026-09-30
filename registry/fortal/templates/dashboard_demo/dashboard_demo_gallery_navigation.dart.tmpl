@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_text.dart';
@@ -76,12 +76,12 @@ class _SidebarDemoState extends State<_SidebarDemo> {
         RemixSidebarDestination(
           value: 'overview',
           label: 'Overview',
-          icon: RemixIcons.dashboard,
+          icon: {{icon:dashboard}},
         ),
         RemixSidebarDestination(
           value: 'activity',
           label: 'Activity',
-          icon: RemixIcons.activityLog,
+          icon: {{icon:activityLog}},
         ),
       ],
     ),
@@ -91,7 +91,7 @@ class _SidebarDemoState extends State<_SidebarDemo> {
         RemixSidebarDestination(
           value: 'settings',
           label: 'Settings',
-          icon: RemixIcons.mixerHorizontal,
+          icon: {{icon:mixerHorizontal}},
         ),
       ],
     ),

@@ -238,10 +238,10 @@ const _defaultPreset = _PresetContract(
     'dashboard_demo': _defaultDashboardFiles,
   },
   focusedClosures: {
+    'icons': ['theme', 'icons'],
     'dashboard_shell': [
       'theme',
       'icon_button',
-      'icons',
       'toggle',
       'tooltip',
       'sidebar',
@@ -265,7 +265,6 @@ const _defaultPreset = _PresetContract(
       'card',
       'chart',
       'icon_button',
-      'icons',
       'toggle',
       'tooltip',
       'sidebar',
@@ -355,7 +354,6 @@ const _fortalPreset = _PresetContract(
       'theme',
       'base_button',
       'icon_button',
-      'icons',
       'typography',
       'text',
       'toggle',
@@ -382,7 +380,6 @@ const _fortalPreset = _PresetContract(
       'chart',
       'base_button',
       'icon_button',
-      'icons',
       'typography',
       'text',
       'toggle',
@@ -464,6 +461,9 @@ const _baseImportPackages = <String>[
   'remix_ui_icons',
 ];
 
+/// The package each `iconLibrary` in `registry/icons.yaml` installs.
+const _iconPackages = {'remix': 'remix_ui_icons', 'lucide': 'lucide_flutter'};
+
 final class _PresetContract {
   const _PresetContract({
     required this.name,
@@ -494,6 +494,28 @@ final class _PresetContract {
 
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
+
+  /// This contract with `remix_ui_icons` replaced by [iconLibrary]'s package.
+  _PresetContract withIconLibrary(String iconLibrary) {
+    if (iconLibrary == 'remix') return this;
+    List<String> swap(List<String> packages) => [
+      for (final package in packages)
+        package == 'remix_ui_icons' ? _iconPackages[iconLibrary]! : package,
+    ];
+    return _PresetContract(
+      name: name,
+      fixtureDirectory: fixtureDirectory,
+      registryItems: registryItems,
+      themeFiles: themeFiles,
+      nonGeneratedItems: nonGeneratedItems,
+      generatedSnapshots: generatedSnapshots,
+      sharedItems: sharedItems,
+      itemFileOverrides: itemFileOverrides,
+      focusedClosures: focusedClosures,
+      requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
+      allowedImportPackages: swap(allowedImportPackages),
+    );
+  }
 
   List<String> focusedUiFiles(String item) => [
     'ui.dart',
@@ -543,6 +565,7 @@ final class ConsumerCheckOptions {
     required this.source,
     required this.hostedCli,
     required this.item,
+    this.iconLibrary = 'remix',
   });
 
   final bool keep;
@@ -550,6 +573,9 @@ final class ConsumerCheckOptions {
   final RemixSource source;
   final bool hostedCli;
   final String? item;
+
+  /// The `iconLibrary` written to the fresh app's remix.yaml before install.
+  final String iconLibrary;
 }
 
 ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
@@ -559,6 +585,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var preset = _defaultPreset;
   var source = RemixSource.both;
   var hostedCli = false;
+  var iconLibrary = 'remix';
   String? item;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
@@ -575,10 +602,19 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     if (argument == '--item') {
       if (item != null || index + 1 >= arguments.length) return null;
       final selected = arguments[++index];
-      if (selected != 'dashboard_demo' && selected != 'dashboard_shell') {
+      if (selected != 'dashboard_demo' &&
+          selected != 'dashboard_shell' &&
+          selected != 'icons') {
         return null;
       }
       item = selected;
+      continue;
+    }
+    if (argument == '--icon-library') {
+      if (iconLibrary != 'remix' || index + 1 >= arguments.length) return null;
+      final selected = arguments[++index];
+      if (!_iconPackages.containsKey(selected)) return null;
+      iconLibrary = selected;
       continue;
     }
     if (argument == '--preset') {
@@ -608,12 +644,14 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   if (hostedCli && source != RemixSource.hosted) return null;
   if (item != null && source != RemixSource.checkout) return null;
+  if (item == 'icons' && preset.name != 'vanilla') return null;
   return ConsumerCheckOptions(
     keep: keep,
     preset: preset.name,
     source: source,
     hostedCli: hostedCli,
     item: item,
+    iconLibrary: iconLibrary,
   );
 }
 
@@ -623,7 +661,8 @@ Future<void> main(List<String> arguments) async {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
       '[--preset vanilla|fortal] [--source both|hosted|checkout] '
-      '[--item dashboard_demo|dashboard_shell (requires --source checkout)] '
+      '[--item dashboard_demo|dashboard_shell|icons (requires --source '
+      'checkout; icons is vanilla)] [--icon-library remix|lucide] '
       '[--hosted-cli (requires --source hosted)] [--keep]',
     );
     exitCode = 64;
@@ -634,7 +673,8 @@ Future<void> main(List<String> arguments) async {
   final failure = await _run(
     repositoryRoot,
     keep: parsed.keep,
-    preset: _presetByName(parsed.preset),
+    preset: _presetByName(parsed.preset).withIconLibrary(parsed.iconLibrary),
+    iconLibrary: parsed.iconLibrary,
     source: parsed.source,
     hostedCli: parsed.hostedCli,
     item: parsed.item,
@@ -652,6 +692,7 @@ Future<_Failure?> _run(
   required RemixSource source,
   required bool hostedCli,
   required String? item,
+  required String iconLibrary,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -693,6 +734,7 @@ Future<_Failure?> _run(
       source: source,
       hostedCli: hostedCli,
       item: item,
+      iconLibrary: iconLibrary,
     );
     if (checkFailure != null) {
       return _retainedFailure(parent, checkFailure);
@@ -745,6 +787,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required RemixSource source,
   required bool hostedCli,
   required String? item,
+  required String iconLibrary,
 }) async {
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
@@ -818,6 +861,7 @@ Future<_Failure?> _checkInTemporaryApp({
     environment: environment,
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
+  _writeIconLibrary(app, iconLibrary);
 
   if (item != null) {
     return _checkFocusedItem(
@@ -1123,6 +1167,18 @@ _Failure? _applyFocusedFixture({
   return null;
 }
 
+/// Sets `iconLibrary` in the fresh app's remix.yaml; the default is left out.
+void _writeIconLibrary(Directory app, String iconLibrary) {
+  if (iconLibrary == 'remix') return;
+  final file = File('${app.path}/remix.yaml');
+  file.writeAsStringSync(
+    file.readAsStringSync().replaceFirstMapped(
+      RegExp(r'^preset: .*\n', multiLine: true),
+      (match) => '${match[0]}iconLibrary: $iconLibrary\n',
+    ),
+  );
+}
+
 _Failure? _verifyFocusedDependencies(
   Directory app, {
   required _PresetContract preset,
@@ -1134,17 +1190,19 @@ _Failure? _verifyFocusedDependencies(
   final runtime = sections['dependencies'] ?? const <String, Object?>{};
   final development = sections['dev_dependencies'] ?? const <String, Object?>{};
   // Every focused install still resolves the preset's theme, and with it the
-  // theme's packages; only the chart package follows the item.
+  // theme's packages. The chart package follows the item, and the icon alias
+  // alone installs no generated component.
   final runtimeExpected = {
     'flutter',
     for (final package in preset.requiredRuntimeDependencies)
-      if (package != 'mix_chart' || item == 'dashboard_demo') package,
+      if ((package != 'mix_chart' || item == 'dashboard_demo') &&
+          (package != 'mix_annotations' || item != 'icons'))
+        package,
   };
   final developmentExpected = {
     'flutter_test',
     'remix_cli',
-    'build_runner',
-    'mix_generator',
+    if (item != 'icons') ...['build_runner', 'mix_generator'],
   };
   final problems = <String>[];
   _expectExactKeys(runtime, runtimeExpected, 'runtime', problems);

@@ -681,8 +681,9 @@ Section placement is enforced, because the installed source lives under your
 |---|---|
 | `remix`, `mix_annotations` | `dependencies` |
 | `mix_chart` | `dependencies` when `chart` is installed |
-| `remix_ui_icons` | `dependencies` when `icons` is installed |
+| `remix_ui_icons` | `dependencies` when an installed item uses icons (the default `iconLibrary`) |
 | `remix_ui_fonts` | `dependencies` with the Vanilla preset's `theme` |
+| `lucide_flutter` | `dependencies` instead of `remix_ui_icons` when `iconLibrary: lucide` is selected |
 | `build_runner`, `mix_generator` | either (build-time only) |
 
 A runtime package declared only under `dev_dependencies` fails **before** any
@@ -848,10 +849,20 @@ Edit the tokens in `UiThemeData` for a design-system change.
 Pass `palette` or `style` for a one-chart override. The UI barrel does not
 re-export `mix_chart`.
 
-`remix add icons` also declares `remix_ui_icons` and gives you a small alias
-surface to evolve with the application. Import
-`package:remix_ui_icons/remix_ui_icons.dart` directly whenever you need the
-complete 318-icon catalog; static `RemixIcons` references remain tree-shakable.
+`remix add icons` installs a small app-owned alias surface. Registry templates
+resolve the `iconLibrary` in `remix.yaml` to either `RemixIcons` (the default)
+or `LucideIcons`, and add the selected package. To switch an existing
+install, change `iconLibrary` and reinstall the items that use icons, reviewing
+first:
+
+```shell
+remix add dashboard_demo --diff
+remix add dashboard_demo --overwrite
+```
+
+Icons you reference in your own code stay as you wrote them. Import
+`package:remix_ui_icons/remix_ui_icons.dart` directly when you need the
+complete 318-icon catalog.
 
 Some Remix widgets are behavioral and carry no style, so the registry has
 nothing to render for them. `RemixCheckboxGroup`, `RemixRadioGroup`,

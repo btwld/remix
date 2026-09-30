@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+{{icon:import}}
 
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/text.dart';
 import '../../components/textfield.dart';
-import '../../icons.dart';
 import '../../theme/theme.dart';
 import 'dashboard_shell_base.dart';
 
@@ -89,10 +89,10 @@ class {{typePrefix}}DashboardShell<T extends Object> extends StatelessWidget {
       sidebarHeaderStyle: sidebarHeaderStyle,
       topBarStyle: topBarStyle,
       titleStyle: {{valuePrefix}}TextStyle(size: .size4, weight: .bold),
-      menuIcon: {{typePrefix}}Icons.hamburgerMenu,
-      searchIcon: {{typePrefix}}Icons.magnifyingGlass,
-      backwardIcon: {{typePrefix}}Icons.doubleArrowLeft,
-      forwardIcon: {{typePrefix}}Icons.doubleArrowRight,
+      menuIcon: {{icon:hamburgerMenu}},
+      searchIcon: {{icon:magnifyingGlass}},
+      backwardIcon: {{icon:doubleArrowLeft}},
+      forwardIcon: {{icon:doubleArrowRight}},
       layoutBuilder:
           (
             context, {

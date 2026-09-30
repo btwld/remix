@@ -41,6 +41,13 @@ its full commit SHA. It checks that your preset exists in that branch and
 writes `remix.yaml`. If the branch is not published, initialization fails and
 creates no files.
 
+An optional `iconLibrary` (`remix` or `lucide`) lives in that same schema 3
+file. Templates carry icon
+placeholders, resolved at install; to switch an installed project, change the
+setting and reinstall the affected items with `add --diff`, then `--overwrite`.
+A CLI that understands the placeholders has to ship before a registry that
+uses them.
+
 Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
 `--prefix`/`--ui-path` to control naming and location:
 

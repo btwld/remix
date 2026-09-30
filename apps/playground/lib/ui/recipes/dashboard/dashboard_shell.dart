@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
-import '../../icons.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_shell_base.dart';
 
@@ -85,10 +85,10 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
           .fontSize(18)
           .fontWeight(FontWeight.w600)
           .color(PlaygroundTokens.foreground()),
-      menuIcon: PlaygroundIcons.hamburgerMenu,
-      searchIcon: PlaygroundIcons.magnifyingGlass,
-      backwardIcon: PlaygroundIcons.doubleArrowLeft,
-      forwardIcon: PlaygroundIcons.doubleArrowRight,
+      menuIcon: RemixIcons.hamburgerMenu,
+      searchIcon: RemixIcons.magnifyingGlass,
+      backwardIcon: RemixIcons.doubleArrowLeft,
+      forwardIcon: RemixIcons.doubleArrowRight,
       layoutBuilder:
           (
             context, {

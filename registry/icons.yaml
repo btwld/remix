@@ -1,0 +1,63 @@
+schema: 1
+libraries:
+  remix:
+    dependency:
+      remix_ui_icons: ^0.1.0
+    import: package:remix_ui_icons/remix_ui_icons.dart
+    class: RemixIcons
+  lucide:
+    dependency:
+      lucide_flutter: ^1.47.0
+    import: package:lucide_flutter/lucide_flutter.dart
+    class: LucideIcons
+icons:
+  activityLog: {remix: activityLog, lucide: activity}
+  alignCenterHorizontally: {remix: alignCenterHorizontally, lucide: alignCenterHorizontal}
+  alignLeft: {remix: alignLeft, lucide: alignLeft}
+  alignRight: {remix: alignRight, lucide: alignRight}
+  arrowUp: {remix: arrowUp, lucide: arrowUp}
+  barChart: {remix: barChart, lucide: barChart3}
+  bell: {remix: bell, lucide: bell}
+  box: {remix: box, lucide: box}
+  chatBubble: {remix: chatBubble, lucide: messageCircle}
+  check: {remix: check, lucide: check}
+  checkCircled: {remix: checkCircled, lucide: circleCheck}
+  chevronDown: {remix: chevronDown, lucide: chevronDown}
+  chevronUp: {remix: chevronUp, lucide: chevronUp}
+  circle: {remix: circle, lucide: circle}
+  circleBackslash: {remix: circleBackslash, lucide: circleSlash}
+  code: {remix: code, lucide: code}
+  copy: {remix: copy, lucide: copy}
+  cross2: {remix: cross2, lucide: x}
+  crossCircled: {remix: crossCircled, lucide: circleX}
+  cursorArrow: {remix: cursorArrow, lucide: mousePointer2}
+  dashboard: {remix: dashboard, lucide: layoutDashboard}
+  dotFilled: {remix: dotFilled, lucide: dot}
+  dotsHorizontal: {remix: dotsHorizontal, lucide: ellipsis}
+  doubleArrowLeft: {remix: doubleArrowLeft, lucide: chevronsLeft}
+  doubleArrowRight: {remix: doubleArrowRight, lucide: chevronsRight}
+  download: {remix: download, lucide: download}
+  exclamationTriangle: {remix: exclamationTriangle, lucide: triangleAlert}
+  fontBold: {remix: fontBold, lucide: bold}
+  fontSize: {remix: fontSize, lucide: type}
+  gear: {remix: gear, lucide: settings}
+  group: {remix: group, lucide: group}
+  hamburgerMenu: {remix: hamburgerMenu, lucide: menu}
+  heart: {remix: heart, lucide: heart}
+  infoCircled: {remix: infoCircled, lucide: info}
+  input: {remix: input, lucide: formInput}
+  laptop: {remix: laptop, lucide: laptop}
+  lockClosed: {remix: lockClosed, lucide: lock}
+  magicWand: {remix: magicWand, lucide: wandSparkles}
+  magnifyingGlass: {remix: magnifyingGlass, lucide: search}
+  mixerHorizontal: {remix: mixerHorizontal, lucide: slidersHorizontal}
+  mobile: {remix: mobile, lucide: smartphone}
+  moon: {remix: moon, lucide: moon}
+  person: {remix: person, lucide: user}
+  plus: {remix: plus, lucide: plus}
+  reload: {remix: reload, lucide: rotateCcw}
+  square: {remix: square, lucide: square}
+  stack: {remix: stack, lucide: layers}
+  sun: {remix: sun, lucide: sun}
+  table: {remix: table, lucide: table}
+  update: {remix: update, lucide: loaderCircle}

@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../../dashboard/dashboard_shell_base.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
-import '../../icons.dart';
 import '../../theme/tokens.dart';
 
 const _headerHeight = 64.0;
@@ -85,10 +85,10 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
           .fontSize(18)
           .fontWeight(FontWeight.w600)
           .color(VanillaTokens.foreground()),
-      menuIcon: VanillaIcons.hamburgerMenu,
-      searchIcon: VanillaIcons.magnifyingGlass,
-      backwardIcon: VanillaIcons.doubleArrowLeft,
-      forwardIcon: VanillaIcons.doubleArrowRight,
+      menuIcon: RemixIcons.hamburgerMenu,
+      searchIcon: RemixIcons.magnifyingGlass,
+      backwardIcon: RemixIcons.doubleArrowLeft,
+      forwardIcon: RemixIcons.doubleArrowRight,
       layoutBuilder:
           (
             context, {

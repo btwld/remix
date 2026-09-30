@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/text.dart';
 import '../../components/textfield.dart';
-import '../../icons.dart';
 import '../../theme/theme.dart';
 import 'dashboard_shell_base.dart';
 
@@ -87,10 +87,10 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
       sidebarHeaderStyle: sidebarHeaderStyle,
       topBarStyle: topBarStyle,
       titleStyle: uiTextStyle(size: .size4, weight: .bold),
-      menuIcon: UiIcons.hamburgerMenu,
-      searchIcon: UiIcons.magnifyingGlass,
-      backwardIcon: UiIcons.doubleArrowLeft,
-      forwardIcon: UiIcons.doubleArrowRight,
+      menuIcon: RemixIcons.hamburgerMenu,
+      searchIcon: RemixIcons.magnifyingGlass,
+      backwardIcon: RemixIcons.doubleArrowLeft,
+      forwardIcon: RemixIcons.doubleArrowRight,
       layoutBuilder:
           (
             context, {

@@ -306,4 +306,7 @@ final class _GitHubRegistry implements RegistryReader {
   @override
   Future<String> template(RegistryFile file) async =>
       _sources._read((await _catalogUri).resolve(file.source));
+
+  @override
+  Future<String> icons() => _sources._read(_root.resolve('icons.yaml'));
 }

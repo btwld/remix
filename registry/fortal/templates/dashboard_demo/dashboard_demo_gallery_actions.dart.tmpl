@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_ui.dart';
@@ -35,7 +35,7 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
                 context,
                 const RemixToastData(
                   title: 'Button pressed',
-                  icon: RemixIcons.checkCircled,
+                  icon: {{icon:checkCircled}},
                 ),
               ),
               label: 'Button',
@@ -57,10 +57,10 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
                 context,
                 const RemixToastData(
                   title: 'Item added',
-                  icon: RemixIcons.checkCircled,
+                  icon: {{icon:checkCircled}},
                 ),
               ),
-              icon: RemixIcons.plus,
+              icon: {{icon:plus}},
             ),
           ),
         ),
@@ -74,7 +74,7 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
               variant: variant,
               size: size,
               selected: _selected,
-              icon: RemixIcons.fontBold,
+              icon: {{icon:fontBold}},
               label: 'Bold',
               onChanged: (value) => setState(() => _selected = value),
             ),
@@ -98,7 +98,7 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
                 enabled: false,
                 semanticLabel: 'Disabled favorite',
                 onPressed: () {},
-                icon: RemixIcons.heart,
+                icon: {{icon:heart}},
               ),
             ],
           ),

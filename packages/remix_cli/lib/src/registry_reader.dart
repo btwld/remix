@@ -12,4 +12,7 @@ abstract interface class RegistryReader {
 
   /// The template source for [file], resolved against this registry's root.
   Future<String> template(RegistryFile file);
+
+  /// The registry-wide icon table, `icons.yaml`, independent of any preset.
+  Future<String> icons();
 }
