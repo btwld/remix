@@ -51,10 +51,13 @@ void main() {
       expect(snapshotFiles(root), before);
 
       final remixRoot = Directory(p.join('..', 'remix')).absolute.path;
+      final fontsRoot = Directory(p.join('..', 'remix_ui_fonts')).absolute.path;
       File(p.join(root.path, 'pubspec_overrides.yaml')).writeAsStringSync('''
 dependency_overrides:
   remix:
     path: ${jsonEncode(remixRoot)}
+  remix_ui_fonts:
+    path: ${jsonEncode(fontsRoot)}
 ''');
       await installer.add(
         const AddOptions(items: ['button'], mode: AddMode.write),

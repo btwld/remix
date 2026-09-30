@@ -782,7 +782,7 @@ Future<_Failure?> _checkInTemporaryApp({
     return _Failure('packages/remix is missing from this checkout.');
   }
   final startsWithCheckout = source == RemixSource.checkout;
-  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource);
+  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource, preset);
 
   // Hosted mode never falls back to the checkout. A missing release must fail
   // the release check, even when checkout validation already passed.
@@ -894,7 +894,7 @@ Future<_Failure?> _checkInTemporaryApp({
     repositoryRoot: repositoryRoot,
     expected: {
       if (!hostedCli) 'remix_cli': cliRoot,
-      if (startsWithCheckout) 'remix': remixSource,
+      if (startsWithCheckout) ..._checkoutPackages(remixSource, preset),
     },
   );
   if (installedCheckoutFailure != null) return installedCheckoutFailure;
@@ -919,7 +919,7 @@ Future<_Failure?> _checkInTemporaryApp({
   if (installedVerification != null) return installedVerification;
   if (source != RemixSource.both) return null;
 
-  _writeCheckoutOverride(app, remixSource);
+  _writeCheckoutOverride(app, remixSource, preset);
 
   final overrideGet = await _runProcess(
     sdk.flutter,
@@ -937,10 +937,10 @@ Future<_Failure?> _checkInTemporaryApp({
   final currentCheckoutFailure = _verifyCheckoutPackages(
     packages: currentPackages,
     repositoryRoot: repositoryRoot,
-    expected: {'remix_cli': cliRoot, 'remix': remixSource},
+    expected: {'remix_cli': cliRoot, ..._checkoutPackages(remixSource, preset)},
   );
   if (currentCheckoutFailure != null) return currentCheckoutFailure;
-  _step('Current-source override resolves only Remix and remix_cli locally.');
+  _step('Current-source override resolves only the checkout packages locally.');
 
   for (final relative in preset.generatedAppFiles) {
     final generated = File('${app.path}/$relative');
@@ -1062,7 +1062,7 @@ Future<_Failure?> _checkFocusedItem({
   final checkoutFailure = _verifyCheckoutPackages(
     packages: packageConfig as Map<String, String>,
     repositoryRoot: repositoryRoot,
-    expected: {'remix_cli': cliRoot, 'remix': remixSource},
+    expected: {'remix_cli': cliRoot, ..._checkoutPackages(remixSource, preset)},
   );
   if (checkoutFailure != null) return checkoutFailure;
 
@@ -1215,12 +1215,30 @@ Future<_Failure?> _checkIndependentItems({
   return null;
 }
 
-void _writeCheckoutOverride(Directory app, Directory remixSource) {
+/// The checkout packages a preset's install resolves locally: Remix, and the
+/// fonts package when the preset's theme depends on it.
+Map<String, Directory> _checkoutPackages(
+  Directory remixSource,
+  _PresetContract preset,
+) => {
+  'remix': remixSource,
+  if (preset.requiredRuntimeDependencies.contains('remix_ui_fonts'))
+    'remix_ui_fonts': Directory('${remixSource.parent.path}/remix_ui_fonts'),
+};
+
+void _writeCheckoutOverride(
+  Directory app,
+  Directory remixSource,
+  _PresetContract preset,
+) {
+  final overrides = [
+    for (final entry in _checkoutPackages(remixSource, preset).entries)
+      '  ${entry.key}:\n    path: ${jsonEncode(entry.value.path)}',
+  ].join('\n');
   File('${app.path}/pubspec_overrides.yaml').writeAsStringSync('''
 # Created in a guarded temporary app by tool/check_open_code.dart.
 dependency_overrides:
-  remix:
-    path: ${jsonEncode(remixSource.path)}
+$overrides
 ''');
 }
 
