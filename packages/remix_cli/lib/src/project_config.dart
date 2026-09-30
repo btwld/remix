@@ -6,6 +6,7 @@ import 'package:yaml/yaml.dart';
 
 import 'icon_registry.dart';
 import 'registry_source.dart';
+import 'yaml_fields.dart';
 
 const projectConfigFileName = 'remix.yaml';
 const supportedProjectSchema = 3;
@@ -65,10 +66,17 @@ final class ProjectConfig {
         'and is left alone; review it afterwards with add --diff.',
       );
     }
-    _requireExactKeys(
+    requireYamlKeys(
       document,
-      {'schema', 'prefix', 'preset', 'paths', 'defaultRegistry', 'registries'},
       'configuration',
+      required: {
+        'schema',
+        'prefix',
+        'preset',
+        'paths',
+        'defaultRegistry',
+        'registries',
+      },
       optional: {'iconLibrary'},
     );
     final iconLibrary = document['iconLibrary'] ?? defaultIconLibrary;
@@ -87,7 +95,7 @@ final class ProjectConfig {
     if (paths is! YamlMap) {
       throw const FormatException('remix.yaml paths must be a map.');
     }
-    _requireExactKeys(paths, {'ui'}, 'paths');
+    requireYamlKeys(paths, 'paths', required: {'ui'});
     final uiPath = paths['ui'];
     if (uiPath is! String) {
       throw const FormatException('remix.yaml paths.ui must be a string.');
@@ -103,12 +111,11 @@ final class ProjectConfig {
       if (entry.key is! String || entry.value is! YamlMap)
         throw const FormatException('Invalid registry source.');
       final value = entry.value as YamlMap;
-      _requireExactKeys(value, {
-        'repository',
-        'path',
-        'ref',
-        'revision',
-      }, 'registry source');
+      requireYamlKeys(
+        value,
+        'registry source',
+        required: {'repository', 'path', 'ref', 'revision'},
+      );
       if (value.values.any((v) => v is! String))
         throw const FormatException('Registry source fields must be strings.');
       sources[entry.key as String] = RegistrySource(
@@ -350,26 +357,6 @@ String _encodeYamlScalar(String value) {
     return jsonEncode(value);
   }
   return parsed is String && parsed == value ? value : jsonEncode(value);
-}
-
-void _requireExactKeys(
-  YamlMap map,
-  Set<String> expected,
-  String location, {
-  Set<String> optional = const {},
-}) {
-  final keys = map.keys.whereType<String>().toSet();
-  if (keys.length != map.length) {
-    throw FormatException('$location keys must be strings.');
-  }
-  final missing = expected.difference(keys);
-  final unknown = keys.difference({...expected, ...optional});
-  if (missing.isNotEmpty) {
-    throw FormatException('$location is missing ${missing.join(', ')}.');
-  }
-  if (unknown.isNotEmpty) {
-    throw FormatException('$location has unknown keys: ${unknown.join(', ')}.');
-  }
 }
 
 const _dartReservedWords = <String>{

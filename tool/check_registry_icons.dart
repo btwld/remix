@@ -6,17 +6,14 @@ import 'package:pub_semver/pub_semver.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 
-/// Checks the shared icon table before the installer consumes it.
-///
-/// Parsing rejects a constant claimed by two canonical names. Every mapped
-/// constant must also exist in that library's package.
+/// Checks that every constant in the shared icon table exists in its library's
+/// package, resolved from the workspace or the pub cache.
 void main() {
+  // Parsing already requires every icon to map in every library, the default
+  // library to be present, and no constant to be claimed twice.
   final icons = IconRegistry.parse(
     File('registry/icons.yaml').readAsStringSync(),
   );
-  if (!icons.libraries.containsKey(defaultIconLibrary)) {
-    throw StateError('icons.yaml must define $defaultIconLibrary.');
-  }
   for (final library in icons.libraries.entries) {
     final package = library.value.dependencies.keys.single;
     final constants = _packageConstants(
@@ -24,10 +21,7 @@ void main() {
       library.value.dependencies[package]!,
     );
     for (final icon in icons.icons.entries) {
-      final name = icon.value[library.key];
-      if (name == null || name.isEmpty) {
-        throw StateError('${icon.key} has no ${library.key} icon mapping.');
-      }
+      final name = icon.value[library.key]!;
       if (!constants.contains(name)) {
         throw StateError('${library.key} has no icon constant $name.');
       }

@@ -1,6 +1,8 @@
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
+import 'yaml_fields.dart';
+
 /// The icon library a project uses when `remix.yaml` names none. Its
 /// constants are also the canonical names in `icons.yaml`.
 const defaultIconLibrary = 'remix';
@@ -13,65 +15,78 @@ final class IconRegistry {
   final Map<String, Map<String, String>> icons;
 
   factory IconRegistry.parse(String source) {
-    final document = loadYaml(source);
-    if (document is! YamlMap ||
-        document['schema'] != 1 ||
-        document['libraries'] is! YamlMap ||
-        document['icons'] is! YamlMap) {
-      throw const FormatException(
-        'Invalid icons.yaml; expected schema 1, libraries, and icons.',
+    final Object? document;
+    try {
+      document = loadYaml(source);
+    } on YamlException catch (error) {
+      throw FormatException('Invalid icons.yaml: $error');
+    }
+    final root = yamlMap(document, 'icons.yaml');
+    requireYamlKeys(
+      root,
+      'icons.yaml',
+      required: {'schema', 'libraries', 'icons'},
+    );
+    if (root['schema'] != 1) {
+      throw FormatException(
+        'Unsupported icons.yaml schema ${root['schema']}; remix_cli supports 1.',
       );
     }
+
     final libraries = <String, IconLibrary>{};
-    for (final entry in (document['libraries'] as YamlMap).entries) {
-      final value = entry.value;
-      if (entry.key is! String ||
-          value is! YamlMap ||
-          value['import'] is! String ||
-          value['class'] is! String) {
-        throw const FormatException('Invalid icons.yaml library.');
+    for (final entry in yamlMap(root['libraries'], 'libraries').nodes.entries) {
+      final name = yamlString(entry.key.value, 'library name');
+      final label = 'libraries.$name';
+      final value = yamlMap(entry.value, label);
+      requireYamlKeys(
+        value,
+        label,
+        required: {'dependency', 'import', 'class'},
+      );
+      final dependencies = yamlConstraints(
+        value['dependency'],
+        '$label.dependency',
+      );
+      if (dependencies.length != 1) {
+        throw FormatException('$label.dependency must name one package.');
       }
-      libraries[entry.key as String] = IconLibrary(
-        import: value['import'] as String,
-        className: value['class'] as String,
-        dependencies: _dependencies(value['dependency'], 'icons.yaml'),
+      libraries[name] = IconLibrary(
+        import: yamlString(value['import'], '$label.import'),
+        className: yamlString(value['class'], '$label.class'),
+        dependencies: dependencies,
       );
     }
+    if (!libraries.containsKey(defaultIconLibrary)) {
+      throw FormatException('icons.yaml must define $defaultIconLibrary.');
+    }
+
     final icons = <String, Map<String, String>>{};
     // Two canonical icons must not render as the same glyph in any library.
     final claimed = <String, Map<String, String>>{};
-    for (final entry in (document['icons'] as YamlMap).entries) {
-      if (entry.key is! String || entry.value is! YamlMap) {
-        throw const FormatException('Invalid icons.yaml icon mapping.');
-      }
-      final canonical = entry.key as String;
+    for (final entry in yamlMap(root['icons'], 'icons').nodes.entries) {
+      final canonical = yamlString(entry.key.value, 'icon name');
+      final label = 'icons.$canonical';
+      final value = yamlMap(entry.value, label);
+      requireYamlKeys(value, label, required: libraries.keys.toSet());
       final mapping = <String, String>{};
-      for (final mapped in (entry.value as YamlMap).entries) {
-        if (mapped.key is! String || mapped.value is! String) {
-          throw const FormatException('Invalid icons.yaml icon mapping.');
-        }
-        final library = mapped.key as String;
-        final constant = mapped.value as String;
+      for (final library in libraries.keys) {
+        final constant = yamlString(value[library], '$label.$library');
         if (library == defaultIconLibrary && constant != canonical) {
-          throw FormatException(
-            'icons.yaml $defaultIconLibrary name for $canonical must be '
-            '$canonical.',
-          );
+          throw FormatException('$label.$library must be $canonical.');
         }
-        final taken = claimed.putIfAbsent(library, () => {});
-        final previous = taken[constant];
+        final previous = claimed.putIfAbsent(library, () => {})[constant];
         if (previous != null) {
           throw FormatException(
             'icons.yaml maps $library.$constant to both $previous and '
             '$canonical.',
           );
         }
-        taken[constant] = canonical;
+        claimed[library]![constant] = canonical;
         mapping[library] = constant;
       }
-      icons[canonical] = mapping;
+      icons[canonical] = Map.unmodifiable(mapping);
     }
-    return IconRegistry._(libraries, icons);
+    return IconRegistry._(Map.unmodifiable(libraries), Map.unmodifiable(icons));
   }
 
   IconLibrary library(String name) =>
@@ -96,22 +111,4 @@ final class IconLibrary {
   final String import;
   final String className;
   final Map<String, VersionConstraint> dependencies;
-}
-
-Map<String, VersionConstraint> _dependencies(Object? value, String file) {
-  if (value is! YamlMap) {
-    throw FormatException('$file dependency must be a map.');
-  }
-  final result = <String, VersionConstraint>{};
-  for (final entry in value.entries) {
-    if (entry.key is! String || entry.value is! String) {
-      throw FormatException(
-        '$file dependency names and constraints must be strings.',
-      );
-    }
-    result[entry.key as String] = VersionConstraint.parse(
-      entry.value as String,
-    );
-  }
-  return result;
 }

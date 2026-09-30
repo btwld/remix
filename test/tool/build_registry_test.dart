@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
 void main() {
@@ -128,22 +129,18 @@ void main() {
   });
 
   test('every authored template round-trips and removes Fortal names', () {
-    final output = PresetBuilder.forRepository(Directory.current).derive();
+    final builder = PresetBuilder.forRepository(Directory.current);
+    final output = builder.derive();
 
     expect(output.sourceByTemplate, isNotEmpty);
     for (final entry in output.sourceByTemplate.entries) {
       final template = output.files[entry.key]!;
-      final rendered = template
-          .replaceAll('{{typePrefix}}', 'Fortal')
-          .replaceAll('{{valuePrefix}}', 'fortal')
-          .replaceAll(
-            '{{icon:import}}',
-            "import 'package:remix_ui_icons/remix_ui_icons.dart';",
-          )
-          .replaceAllMapped(
-            RegExp(r'\{\{icon:([A-Za-z0-9_]+)\}\}'),
-            (match) => 'RemixIcons.${match.group(1)!}',
-          );
+      final rendered = const TemplateRenderer().render(
+        template,
+        typePrefix: 'Fortal',
+        valuePrefix: 'fortal',
+        icons: builder.icons,
+      );
 
       expect(rendered, entry.value, reason: entry.key);
       expect(template, isNot(contains('Fortal')), reason: entry.key);

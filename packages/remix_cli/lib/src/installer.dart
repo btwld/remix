@@ -337,15 +337,11 @@ final class Installer {
 
     final exports = [for (final item in items) ...item.exports];
     final proposedBarrel = updateManagedBarrel(currentBarrel, exports);
-    final requirements = _collectRequirements(items);
-    for (final table in iconTables.values) {
-      final dependency = table.library(config.iconLibrary).dependencies;
-      for (final entry in dependency.entries) {
-        requirements.add(
-          _DependencyRequirement(entry.key, entry.value, dev: false),
-        );
-      }
-    }
+    final requirements = _collectRequirements(items, [
+      // The chosen icon package, once per registry whose templates used it.
+      for (final table in iconTables.values)
+        table.library(config.iconLibrary).dependencies,
+    ]);
     final pubspec = File(p.join(root.path, 'pubspec.yaml'));
     final missingDependencies = _inspectDependencies(
       pubspec.readAsStringSync(),
@@ -893,7 +889,13 @@ void _validateInstallStates(
   }
 }
 
-List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
+/// Every item's dependencies, plus [extra] runtime dependencies, merged by
+/// package: constraints intersect, and a package is dev-only when every
+/// source says so.
+List<_DependencyRequirement> _collectRequirements(
+  List<RegistryItem> items, [
+  List<Map<String, VersionConstraint>> extra = const [],
+]) {
   final requirements = <String, _DependencyRequirement>{};
   void add(String name, VersionConstraint constraint, {required bool dev}) {
     final previous = requirements[name];
@@ -920,7 +922,12 @@ List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
       add(entry.key, entry.value, dev: true);
     }
   }
-  return requirements.values.toList();
+  for (final dependencies in extra) {
+    for (final entry in dependencies.entries) {
+      add(entry.key, entry.value, dev: false);
+    }
+  }
+  return List.unmodifiable(requirements.values);
 }
 
 List<_DependencyRequirement> _inspectDependencies(

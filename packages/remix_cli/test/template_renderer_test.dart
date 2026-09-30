@@ -78,18 +78,79 @@ void {{valuePrefix}}ButtonStyle() {}
     );
   });
 
-  test('icons.yaml rejects a constant claimed by two names', () {
-    expect(
-      () => IconRegistry.parse('''
+  group('icons.yaml', () {
+    String table({String lucide = '{remix: update, lucide: loaderCircle}'}) =>
+        '''
 schema: 1
 libraries:
-  remix: {dependency: {}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
-  lucide: {dependency: {}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
+  remix: {dependency: {remix_ui_icons: ^0.1.0}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
 icons:
-  reload: {remix: reload, lucide: refreshCw}
-  update: {remix: update, lucide: refreshCw}
-'''),
-      throwsFormatException,
+  reload: {remix: reload, lucide: rotateCcw}
+  update: $lucide
+''';
+
+    Matcher failsWith(String message) => throwsA(
+      isA<FormatException>().having(
+        (error) => error.message,
+        'message',
+        contains(message),
+      ),
+    );
+
+    test('parses a complete table', () {
+      final icons = IconRegistry.parse(table());
+      expect(icons.library('lucide').className, 'LucideIcons');
+      expect(icons.constant('update', 'lucide'), 'loaderCircle');
+    });
+
+    test('rejects a constant claimed by two names', () {
+      expect(
+        () => IconRegistry.parse(
+          table(lucide: '{remix: update, lucide: rotateCcw}'),
+        ),
+        failsWith('maps lucide.rotateCcw to both reload and update'),
+      );
+    });
+
+    test('names the field that is missing, unknown, or malformed', () {
+      expect(
+        () => IconRegistry.parse(table(lucide: '{remix: update}')),
+        failsWith('icons.update is missing lucide'),
+      );
+      expect(
+        () => IconRegistry.parse(
+          table(lucide: '{remix: update, lucide: x, material: y}'),
+        ),
+        failsWith('icons.update has unknown keys: material'),
+      );
+      expect(
+        () => IconRegistry.parse(
+          table(lucide: '{remix: renamed, lucide: loaderCircle}'),
+        ),
+        failsWith('icons.update.remix must be update'),
+      );
+      expect(
+        () => IconRegistry.parse(
+          table().replaceFirst('{lucide_flutter: ^1.47.0}', '{}'),
+        ),
+        failsWith('libraries.lucide.dependency must name one package'),
+      );
+    });
+  });
+
+  test('leaves a template without icons exactly as authored', () {
+    // Relative imports out of directives_ordering order stay put: only a
+    // substituted icon import triggers a re-sort.
+    const source = '''
+import 'package:remix/remix.dart';
+
+import 'base_button.dart';
+import '../theme/theme.dart';
+''';
+    expect(
+      renderer.render(source, typePrefix: 'Ui', valuePrefix: 'ui'),
+      source,
     );
   });
 

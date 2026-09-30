@@ -5,8 +5,9 @@ import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/directive_sort.dart';
-import '../packages/remix_cli/lib/src/registry.dart';
 import '../packages/remix_cli/lib/src/icon_registry.dart';
+import '../packages/remix_cli/lib/src/registry.dart';
+import '../packages/remix_cli/lib/src/template_renderer.dart';
 
 /// Derives the remote registry presets from analyzer-checked Dart source.
 ///
@@ -1864,59 +1865,49 @@ final class PresetBuilder {
         .replaceAll(spec.typeWord, '{{typePrefix}}')
         .replaceAll(spec.valueWord, '{{valuePrefix}}');
     template = _iconTemplate(path, template);
-    final roundTrip = template
-        .replaceAll('{{typePrefix}}', spec.typeWord)
-        .replaceAll('{{valuePrefix}}', spec.valueWord)
-        .replaceAll(
-          '{{icon:import}}',
-          "import 'package:remix_ui_icons/remix_ui_icons.dart';",
-        )
-        .replaceAllMapped(
-          RegExp(r'\{\{icon:([A-Za-z0-9_]+)\}\}'),
-          (match) => 'RemixIcons.${match.group(1)!}',
-        );
+    final roundTrip = const TemplateRenderer().render(
+      template,
+      typePrefix: spec.typeWord,
+      valuePrefix: spec.valueWord,
+      icons: icons,
+    );
     if (roundTrip != source) {
       throw StateError('$path did not survive the template round trip.');
     }
     return template;
   }
 
-  /// Replaces the authoring icon package with registry placeholders.  The
-  /// canonical names in icons.yaml are deliberately the Remix names, so the
-  /// same template can be rendered for Remix or another supported library.
+  /// Replaces the authoring icon library with registry placeholders. The
+  /// canonical names in icons.yaml are the default library's names, so the
+  /// same template renders for that library or any other the table maps.
   String _iconTemplate(String path, String source) {
     if (!iconPlaceholders) return source;
-    final hasIconImport = source.contains(
-      "package:remix_ui_icons/remix_ui_icons.dart",
-    );
-    final hasIconUse = source.contains('RemixIcons.');
-    if (!hasIconImport && !hasIconUse) return source;
     final table = icons;
     if (table == null) {
-      throw StateError('$path uses icons but no icon table was provided.');
+      if (source.contains('remix_ui_icons')) {
+        throw StateError('$path uses icons but no icon table was provided.');
+      }
+      return source;
     }
+    final authoring = table.library(defaultIconLibrary);
+    final importDirective = "import '${authoring.import}';";
     var rewritten = source.replaceAllMapped(
-      RegExp(r'\bRemixIcons\.([A-Za-z0-9_]+)'),
+      RegExp('\\b${RegExp.escape(authoring.className)}\\.([A-Za-z0-9_]+)'),
       (match) {
-        final name = match.group(1)!;
-        if (table.constant(name, 'remix') != name) {
-          throw StateError('$path uses unmapped RemixIcons.$name.');
+        final name = match[1]!;
+        if (!table.icons.containsKey(name)) {
+          throw StateError('$path uses unmapped ${match[0]}.');
         }
-        return '{{icon:$name}}';
+        return iconToken(name);
       },
     );
-    if (rewritten.contains('RemixIcons')) {
+    if (rewritten.contains(authoring.className)) {
       throw StateError(
-        '$path mentions bare RemixIcons; use a mapped glyph or an alias.',
+        '$path mentions bare ${authoring.className}; use a mapped glyph or '
+        'an alias.',
       );
     }
-    if (hasIconImport) {
-      rewritten = rewritten.replaceFirst(
-        "import 'package:remix_ui_icons/remix_ui_icons.dart';",
-        '{{icon:import}}',
-      );
-    }
-    return rewritten;
+    return rewritten.replaceFirst(importDirective, iconImportToken);
   }
 
   /// Infers one item's registry dependencies from its relative imports.
