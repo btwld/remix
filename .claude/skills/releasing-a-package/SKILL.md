@@ -83,6 +83,12 @@ files on purpose, and a checker fails on each one that drifts.
   version leaves the old caret range (any minor bump while the package is
   0.x). `tool/check_version_alignment.dart` fails until the floor matches.
 
+**`remix_ui_icons` only — the icon table:**
+
+- `registry/icons.yaml` — the `remix` library's `remix_ui_icons` dependency
+  must floor at the new version. `tool/check_version_alignment.dart` fails
+  until it does.
+
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
 It runs `melos version` plus `tool/sync_registry_remix.dart` and
