@@ -73,6 +73,15 @@ files on purpose, and a checker fails on each one that drifts.
 - `packages/remix_cli/lib/src/version.dart` — `remixCliVersion`, same version
   as the pubspec
 
+**`remix_ui_fonts` only — the Vanilla theme floor:**
+
+- `registry/vanilla/registry.yaml` — the `theme` item's `remix_ui_fonts`
+  constraint must floor at the new version. Edit it, then run
+  `dart run tool/build_registry.dart`. Also move the melos shared constraint
+  in the root `pubspec.yaml` and `registry_source/pubspec.yaml` when the new
+  version leaves the old caret range (any minor bump while the package is
+  0.x). `tool/check_version_alignment.dart` fails until the floor matches.
+
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
 It runs `melos version` plus `tool/sync_registry_remix.dart` and

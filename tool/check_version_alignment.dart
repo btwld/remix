@@ -3,36 +3,34 @@ import 'dart:io';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-/// Published Remix manifest whose version owns the registry floor.
-const _remixPubspecPath = 'packages/remix/pubspec.yaml';
-
-/// The registry file whose `remix` constraint must floor at the released
-/// `remix` version.
+/// The registry file whose package constraints must floor at the versions of
+/// the workspace packages they name.
 const _registryPath = 'registry/vanilla/registry.yaml';
+
+/// A workspace package the registry pins, and how to repair a drifted floor.
+typedef _Pinned = ({String package, String fix});
+
+/// Every workspace package a registry item depends on. `remix_ui_fonts` is
+/// declared by the Vanilla theme item, which sets its type in Geist.
+const _pinned = <_Pinned>[
+  (package: 'remix', fix: 'Run `dart run tool/sync_registry_remix.dart`.'),
+  (
+    package: 'remix_ui_fonts',
+    fix:
+        'Set the theme item\'s remix_ui_fonts constraint in '
+        '$_registryPath to the new version, then run '
+        '`dart run tool/build_registry.dart`.',
+  ),
+];
 
 void main() {
   final workspaceRoot = Directory.current.absolute;
   final failures = <String>[];
-  final remixPubspec = File('${workspaceRoot.path}/$_remixPubspecPath');
-  Version? remixVersion;
-  if (!remixPubspec.existsSync()) {
-    failures.add('$_remixPubspecPath is missing');
-  } else {
-    final pubspec = loadYaml(remixPubspec.readAsStringSync()) as YamlMap;
-    final declared = pubspec['version'];
-    if (declared is! String) {
-      failures.add('remix does not declare a version');
-    } else {
-      try {
-        remixVersion = Version.parse(declared);
-      } on FormatException {
-        failures.add('remix declares an unparseable version "$declared"');
-      }
+  for (final pinned in _pinned) {
+    final version = _packageVersion(workspaceRoot, pinned.package, failures);
+    if (version != null) {
+      _checkRegistryFloor(workspaceRoot, pinned, version, failures);
     }
-  }
-
-  if (remixVersion != null) {
-    _checkRegistryFloor(workspaceRoot, remixVersion, failures);
   }
 
   if (failures.isEmpty) return;
@@ -44,7 +42,31 @@ void main() {
   exitCode = 1;
 }
 
-/// Holds the remote registry constraint to the released `remix`.
+Version? _packageVersion(
+  Directory workspaceRoot,
+  String package,
+  List<String> failures,
+) {
+  final path = 'packages/$package/pubspec.yaml';
+  final file = File('${workspaceRoot.path}/$path');
+  if (!file.existsSync()) {
+    failures.add('$path is missing');
+    return null;
+  }
+  final declared = (loadYaml(file.readAsStringSync()) as YamlMap)['version'];
+  if (declared is! String) {
+    failures.add('$package does not declare a version');
+    return null;
+  }
+  try {
+    return Version.parse(declared);
+  } on FormatException {
+    failures.add('$package declares an unparseable version "$declared"');
+    return null;
+  }
+}
+
+/// Holds the remote registry constraint on [pinned] to its released version.
 ///
 /// The registry is data, not a pubspec dependency, so `melos version` never
 /// rewrites it. Left alone, `remix: ^1.0.0-beta.7` would keep admitting every
@@ -57,9 +79,11 @@ void main() {
 /// hand-run bump drift the two apart with no failure to stop it.
 void _checkRegistryFloor(
   Directory workspaceRoot,
-  Version remixVersion,
+  _Pinned pinned,
+  Version version,
   List<String> failures,
 ) {
+  final package = pinned.package;
   final registryFile = File('${workspaceRoot.path}/$_registryPath');
   if (!registryFile.existsSync()) {
     failures.add('$_registryPath is missing');
@@ -79,12 +103,12 @@ void _checkRegistryFloor(
   for (final entry in items.entries) {
     final dependencies = (entry.value as YamlMap)['dependencies'];
     if (dependencies is! YamlMap) continue;
-    final constraint = dependencies['remix'];
+    final constraint = dependencies[package];
     if (constraint is String) declaring['${entry.key}'] = constraint;
   }
   if (declaring.length != 1) {
     failures.add(
-      'the registry declares remix in ${declaring.length} items '
+      'the registry declares $package in ${declaring.length} items '
       '(${declaring.keys.join(', ')}); exactly one item must declare it so '
       'there is a single constraint to keep aligned',
     );
@@ -98,7 +122,7 @@ void _checkRegistryFloor(
     constraint = VersionConstraint.parse(declared);
   } on FormatException {
     failures.add(
-      '$_registryPath item $item declares an unparseable remix '
+      '$_registryPath item $item declares an unparseable $package '
       'constraint "$declared"',
     );
     return;
@@ -107,23 +131,22 @@ void _checkRegistryFloor(
   final floor = constraint is VersionRange ? constraint.min : null;
   if (floor == null) {
     failures.add(
-      '$_registryPath item $item declares remix "$declared", which has no '
+      '$_registryPath item $item declares $package "$declared", which has no '
       'lower bound. The floor is what records the tested version, so the '
       'constraint must name one.',
     );
     return;
   }
-  if (floor != remixVersion) {
+  if (floor != version) {
     failures.add(
-      '$_registryPath item $item declares remix "$declared", flooring at '
-      '$floor, but packages/remix is $remixVersion. '
-      'Run `dart run tool/sync_registry_remix.dart`.',
+      '$_registryPath item $item declares $package "$declared", flooring at '
+      '$floor, but packages/$package is $version. ${pinned.fix}',
     );
     return;
   }
 
   stdout.writeln(
-    'Registry floor aligned: remote item $item declares remix "$declared" '
-    'against remix $remixVersion.',
+    'Registry floor aligned: remote item $item declares $package '
+    '"$declared" against $package $version.',
   );
 }
