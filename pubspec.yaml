@@ -6,6 +6,8 @@ environment:
 dev_dependencies:
   melos: ^8.5.0
   flutter_lints: ^6.0.0
+  # Read by tool/check_registry_icons.dart; keep within registry/icons.yaml.
+  lucide_flutter: ^1.47.0
   build_runner: ^2.10.1
   pub_semver: ^2.2.0
   test: ^1.31.0

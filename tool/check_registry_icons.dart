@@ -3,11 +3,12 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
+import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 
 /// Checks that every constant in the shared icon table exists in its library's
-/// package, resolved from the workspace or the pub cache.
+/// package, as the workspace resolves it.
 void main() {
   // Parsing already requires every icon to map in every library, the default
   // library to be present, and no constant to be claimed twice.
@@ -54,82 +55,37 @@ Set<String> _packageConstants(String package, VersionConstraint constraint) {
   return names;
 }
 
+/// The `lib/` directory of [package] as the workspace resolved it.
+///
+/// Every icon library's package is a workspace member or a root dev
+/// dependency, so it is always in the root package config, and its resolved
+/// version must satisfy the table's constraint.
 String _packageLib(String package, VersionConstraint constraint) {
-  final configured = _packageConfigLib(package);
-  if (configured != null) return configured;
-  final cached = _cachedLib(package, constraint);
-  if (cached != null) return cached;
-  final added = Process.runSync(Platform.resolvedExecutable, [
-    'pub',
-    'cache',
-    'add',
-    '$package:$constraint',
-  ]);
-  if (added.exitCode != 0) {
-    throw StateError(
-      'Could not cache $package $constraint.\n${added.stdout}${added.stderr}',
-    );
+  final configFile = File('.dart_tool/package_config.json');
+  if (!configFile.existsSync()) {
+    throw StateError('Run `dart run melos bootstrap` before this check.');
   }
-  final after = _cachedLib(package, constraint);
-  if (after == null) {
-    throw StateError('$package $constraint was not found in the pub cache.');
-  }
-  return after;
-}
-
-String? _packageConfigLib(String package) {
-  const configs = [
-    '.dart_tool/package_config.json',
-    'registry_source/.dart_tool/package_config.json',
-  ];
-  for (final relative in configs) {
-    final resolved = _libFromPackageConfig(File(relative), package);
-    if (resolved != null) return resolved;
-  }
-  final workspace = Directory('packages/$package/lib');
-  if (workspace.existsSync()) return workspace.path;
-  return null;
-}
-
-String? _libFromPackageConfig(File configFile, String package) {
-  if (!configFile.existsSync()) return null;
   final config = jsonDecode(configFile.readAsStringSync()) as Map;
   for (final entry in config['packages'] as List) {
     if (entry is! Map || entry['name'] != package) continue;
     var root = configFile.absolute.uri.resolve(entry['rootUri'] as String);
-    if (!root.path.endsWith('/')) {
-      root = root.replace(path: '${root.path}/');
+    if (!root.path.endsWith('/')) root = root.replace(path: '${root.path}/');
+    final pubspec =
+        loadYaml(File.fromUri(root.resolve('pubspec.yaml')).readAsStringSync())
+            as YamlMap;
+    final version = Version.parse(pubspec['version'] as String);
+    if (!constraint.allows(version)) {
+      throw StateError(
+        'The workspace resolves $package $version, outside the icon table\'s '
+        '$constraint. Move the root dev_dependency or the table together.',
+      );
     }
     return p.normalize(
       root.resolve(entry['packageUri'] as String? ?? 'lib/').toFilePath(),
     );
   }
-  return null;
-}
-
-String? _cachedLib(String package, VersionConstraint constraint) {
-  final cache =
-      Platform.environment['PUB_CACHE'] ??
-      p.join(Platform.environment['HOME'] ?? '', '.pub-cache');
-  final hosted = Directory(p.join(cache, 'hosted', 'pub.dev'));
-  if (!hosted.existsSync()) return null;
-  Version? best;
-  String? bestPath;
-  for (final directory in hosted.listSync().whereType<Directory>()) {
-    final name = p.basename(directory.path);
-    final separator = name.lastIndexOf('-');
-    if (separator <= 0 || name.substring(0, separator) != package) continue;
-    final Version version;
-    try {
-      version = Version.parse(name.substring(separator + 1));
-    } on FormatException {
-      continue;
-    }
-    if (!constraint.allows(version)) continue;
-    if (best == null || version > best) {
-      best = version;
-      bestPath = p.join(directory.path, 'lib');
-    }
-  }
-  return bestPath;
+  throw StateError(
+    '$package is not resolved in the workspace. Add it to the root '
+    'dev_dependencies so this check can read its constants.',
+  );
 }
