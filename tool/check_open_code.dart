@@ -871,7 +871,10 @@ Future<_Failure?> _checkInTemporaryApp({
     ..._requiredDevDependencies,
     if (hostedCli) 'remix_cli',
   ]) {
-    if (startsWithCheckout && package == 'remix') continue;
+    if (startsWithCheckout &&
+        _checkoutPackages(remixSource, preset).containsKey(package)) {
+      continue;
+    }
     final root = installedPackages[package];
     if (root == null || !_isHostedCachePath(root)) {
       return _Failure(
