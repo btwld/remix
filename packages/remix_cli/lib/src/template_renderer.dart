@@ -7,12 +7,12 @@ const iconImportToken = '{{icon:import}}';
 /// The placeholder for [canonical]'s constant in the chosen icon library.
 String iconToken(String canonical) => '{{icon:$canonical}}';
 
-/// Resolves a registry template for one application: its prefixes and its
-/// icon library. The registry build renders its own templates back through
-/// this to prove each one reverses to the authored source.
 final _iconPattern = RegExp(r'\{\{icon:([^{}]+)\}\}');
 final _anyToken = RegExp(r'\{\{[^\n{}]*\}\}');
 
+/// Resolves a registry template for one application: its prefixes and its
+/// icon library. The registry build renders its own templates back through
+/// this to prove each one reverses to the authored source.
 final class TemplateRenderer {
   const TemplateRenderer();
 

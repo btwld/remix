@@ -1907,7 +1907,25 @@ final class PresetBuilder {
         'an alias.',
       );
     }
-    return rewritten.replaceFirst(importDirective, iconImportToken);
+    rewritten = rewritten.replaceFirst(importDirective, iconImportToken);
+    // The installer swaps the import token for the chosen library's import,
+    // so a file with icon constants must carry that token itself, and must
+    // not reach the package any other way (an alias or an export), which no
+    // library switch could rewrite.
+    final package = authoring.dependencies.keys.single;
+    if (rewritten.contains('package:$package/')) {
+      throw StateError(
+        '$path reaches $package other than by `$importDirective`; import it '
+        'exactly that way so the installer can swap the library.',
+      );
+    }
+    if (rewritten.contains('{{icon:') && !rewritten.contains(iconImportToken)) {
+      throw StateError(
+        '$path uses ${authoring.className} without `$importDirective`; '
+        'import it in this file so the installer can swap the library.',
+      );
+    }
+    return rewritten;
   }
 
   /// Infers one item's registry dependencies from its relative imports.

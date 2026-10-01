@@ -304,9 +304,10 @@ melos:
       steps:
         - dart run tool/check_open_code.dart --source checkout --item icons --icon-library lucide
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo --icon-library lucide
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --icon-library lucide
       description: >-
-        Install the icon alias and the dashboard under lucide; the full Vanilla
-        run already covers the default library
+        Install the icon alias and both presets' dashboards under lucide; the
+        full preset runs already cover the default library
 
     ci:coverage:check:
       run: dart run tool/check_ci_coverage.dart

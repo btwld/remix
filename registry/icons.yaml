@@ -12,7 +12,7 @@ libraries:
     class: LucideIcons
 icons:
   activityLog: {remix: activityLog, lucide: activity}
-  alignCenterHorizontally: {remix: alignCenterHorizontally, lucide: alignCenterHorizontal}
+  alignCenterHorizontally: {remix: alignCenterHorizontally, lucide: alignCenter}
   alignLeft: {remix: alignLeft, lucide: alignLeft}
   alignRight: {remix: alignRight, lucide: alignRight}
   arrowUp: {remix: arrowUp, lucide: arrowUp}
@@ -25,7 +25,7 @@ icons:
   chevronDown: {remix: chevronDown, lucide: chevronDown}
   chevronUp: {remix: chevronUp, lucide: chevronUp}
   circle: {remix: circle, lucide: circle}
-  circleBackslash: {remix: circleBackslash, lucide: circleSlash}
+  circleBackslash: {remix: circleBackslash, lucide: ban}
   code: {remix: code, lucide: code}
   copy: {remix: copy, lucide: copy}
   cross2: {remix: cross2, lucide: x}

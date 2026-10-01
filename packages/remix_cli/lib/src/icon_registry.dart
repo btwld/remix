@@ -36,6 +36,12 @@ final class IconRegistry {
     final libraries = <String, IconLibrary>{};
     for (final entry in yamlMap(root['libraries'], 'libraries').nodes.entries) {
       final name = yamlString(entry.key.value, 'library name');
+      if (!packageNamePattern.hasMatch(name)) {
+        throw FormatException(
+          'icons.yaml library $name must be a lowercase name, as '
+          'iconLibrary is in remix.yaml.',
+        );
+      }
       final label = 'libraries.$name';
       final value = yamlMap(entry.value, label);
       requireYamlKeys(

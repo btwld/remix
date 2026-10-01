@@ -32,8 +32,10 @@ final class ProjectConfig {
     // A third-party registry names its own presets, so only the shape is
     // checked here; the registry itself rejects a preset it does not carry.
     _validatePresetName(preset);
-    if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(iconLibrary)) {
-      throw const FormatException('iconLibrary must be a lowercase name.');
+    if (!packageNamePattern.hasMatch(iconLibrary)) {
+      throw const FormatException(
+        'remix.yaml iconLibrary must be a lowercase name.',
+      );
     }
     validateNamespace(defaultRegistry);
     for (final namespace in this.registries.keys) {
@@ -81,7 +83,7 @@ final class ProjectConfig {
     );
     final iconLibrary = document['iconLibrary'] ?? defaultIconLibrary;
     if (iconLibrary is! String) {
-      throw const FormatException('iconLibrary must be a string.');
+      throw const FormatException('remix.yaml iconLibrary must be a string.');
     }
     final prefix = document['prefix'];
     if (prefix is! String) {

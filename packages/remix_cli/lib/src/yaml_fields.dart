@@ -41,13 +41,15 @@ void requireYamlKeys(
   if (keys.length != map.length) {
     throw FormatException('$label keys must be strings.');
   }
-  final missing = required.difference(keys);
-  if (missing.isNotEmpty) {
-    throw FormatException('$label is missing ${missing.join(', ')}.');
-  }
+  // Unknown keys first: a misspelled required key is also a missing one, and
+  // the typo is the more useful thing to name.
   final unknown = keys.difference({...required, ...optional});
   if (unknown.isNotEmpty) {
     throw FormatException('$label has unknown keys: ${unknown.join(', ')}.');
+  }
+  final missing = required.difference(keys);
+  if (missing.isNotEmpty) {
+    throw FormatException('$label is missing ${missing.join(', ')}.');
   }
 }
 

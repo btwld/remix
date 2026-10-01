@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import '../../packages/remix_cli/lib/src/icon_registry.dart';
 import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
@@ -233,6 +234,97 @@ void main() {
         ),
       ),
     );
+  });
+
+  group('icon placeholders', () {
+    final icons = IconRegistry.parse('''
+schema: 1
+libraries:
+  remix: {dependency: {remix_ui_icons: ^0.1.0}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
+icons:
+  bell: {remix: bell, lucide: bell}
+''');
+
+    PresetBuilder builderWithButton(String body) {
+      final builder = _fixtureBuilder(sandbox, icons: icons);
+      _write(builder.sourceRoot, 'components/button.dart', body);
+      return builder;
+    }
+
+    Matcher failsWith(String message) => throwsA(
+      isA<StateError>().having(
+        (error) => error.message,
+        'message',
+        allOf(contains('components/button.dart'), contains(message)),
+      ),
+    );
+
+    const header = '''import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+''';
+    const footer = '''
+import '../theme/theme.dart';
+
+part 'button.g.dart';
+
+void fortalButtonStyle() {}
+''';
+
+    test('turn the import and each constant into tokens', () {
+      // Authored imports are sorted, so the icon import sits in the package
+      // group and the rendered template reverses to it exactly.
+      final output = builderWithButton(
+        '''${header}import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+$footer
+const icon = RemixIcons.bell;
+''',
+      ).derive();
+      final template = output.files.values.singleWhere(
+        (source) =>
+            source.contains('fortalButtonStyle') ||
+            source.contains('{{valuePrefix}}ButtonStyle'),
+      );
+      expect(template, contains('{{icon:import}}'));
+      expect(template, contains('const icon = {{icon:bell}};'));
+      expect(template, isNot(contains('remix_ui_icons')));
+    });
+
+    test('refuse an icon the table does not map', () {
+      expect(
+        builderWithButton(
+          '''${header}import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+$footer
+const icon = RemixIcons.notMapped;
+''',
+        ).derive,
+        failsWith('unmapped RemixIcons.notMapped'),
+      );
+    });
+
+    test('refuse a constant without the icon import in the same file', () {
+      expect(
+        builderWithButton('''$header$footer
+const icon = RemixIcons.bell;
+''').derive,
+        failsWith('without'),
+      );
+    });
+
+    test('refuse an aliased icon import', () {
+      expect(
+        builderWithButton(
+          '''${header}import 'package:remix_ui_icons/remix_ui_icons.dart' as glyphs;
+
+$footer
+const icon = glyphs.RemixIcons.bell;
+''',
+        ).derive,
+        failsWith('other than by'),
+      );
+    });
   });
 
   test('refuses every package import outside the installed boundary', () {
@@ -929,15 +1021,18 @@ const _fortalFixture = PresetSpec(
 PresetBuilder _emptyBuilder(
   Directory root, {
   PresetSpec spec = _fortalFixture,
+  IconRegistry? icons,
 }) => PresetBuilder(
   spec: spec,
   sourceRoot: Directory(p.join(root.path, 'source')),
   defaultRegistryRoot: Directory(p.join(root.path, 'default')),
   outputRoot: Directory(p.join(root.path, 'output')),
+  iconPlaceholders: icons != null,
+  icons: icons,
 );
 
-PresetBuilder _fixtureBuilder(Directory root) {
-  final builder = _emptyBuilder(root);
+PresetBuilder _fixtureBuilder(Directory root, {IconRegistry? icons}) {
+  final builder = _emptyBuilder(root, icons: icons);
   _write(builder.sourceRoot, 'theme/theme.dart', "export 'tokens.dart';\n");
   _write(
     builder.sourceRoot,

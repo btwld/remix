@@ -5,6 +5,8 @@ import 'package:remix_cli/src/icon_registry.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
+import 'checkout_registry.dart';
+
 void main() {
   const renderer = TemplateRenderer();
 
@@ -42,7 +44,7 @@ void {{valuePrefix}}ButtonStyle() {}
 
   test('resolves icon placeholders to the selected library', () {
     final icons = IconRegistry.parse(
-      File('../../registry/icons.yaml').readAsStringSync(),
+      File('${findCheckoutRegistry().path}/icons.yaml').readAsStringSync(),
     );
     const source = "{{icon:import}}\nicon: {{icon:bell}},\n";
 
@@ -171,5 +173,93 @@ class Example {}
       lessThan(sorted.indexOf('package:remix')),
     );
     expect(sorted, contains('class Example {}'));
+  });
+
+  group('icon placeholders', () {
+    final icons = IconRegistry.parse(
+      File('${findCheckoutRegistry().path}/icons.yaml').readAsStringSync(),
+    );
+
+    test('the swapped import lands in sorted order', () {
+      const source = '''
+import 'package:flutter/widgets.dart';
+{{icon:import}}
+import 'package:remix/remix.dart';
+
+const icon = {{icon:bell}};
+''';
+      final lucide = renderer.render(
+        source,
+        typePrefix: 'Ui',
+        valuePrefix: 'ui',
+        icons: icons,
+        iconLibrary: 'lucide',
+      );
+      expect(lucide, '''
+import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
+import 'package:remix/remix.dart';
+
+const icon = LucideIcons.bell;
+''');
+    });
+
+    test(
+      'fail without a table, for an unknown icon, or an unknown library',
+      () {
+        String render(String source, {IconRegistry? table, String? library}) =>
+            renderer.render(
+              source,
+              typePrefix: 'Ui',
+              valuePrefix: 'ui',
+              icons: table,
+              iconLibrary: library ?? 'remix',
+            );
+
+        expect(() => render('{{icon:bell}}'), throwsFormatException);
+        expect(
+          () => render('{{icon:notAnIcon}}', table: icons),
+          throwsFormatException,
+        );
+        expect(
+          () => render('{{icon:bell}}', table: icons, library: 'material'),
+          throwsFormatException,
+        );
+      },
+    );
+  });
+
+  test('keeps a trailing comment with its import while sorting', () {
+    const source = '''
+import 'package:remix/remix.dart'; // ignore: unused_import
+import 'dart:math';
+
+class Example {}
+''';
+    expect(sortDirectives('template', source), '''
+import 'dart:math';
+
+import 'package:remix/remix.dart'; // ignore: unused_import
+
+class Example {}
+''');
+  });
+
+  test('refuses an import after the import block', () {
+    const source = '''
+import 'package:remix/remix.dart';
+// A comment that ends the block.
+import 'dart:math';
+''';
+    expect(
+      () => sortDirectives('template', source),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains("move `import 'dart:math';`"),
+        ),
+      ),
+    );
   });
 }

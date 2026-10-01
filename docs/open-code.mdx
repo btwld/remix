@@ -851,13 +851,15 @@ re-export `mix_chart`.
 
 `remix add icons` installs a small app-owned alias surface. Registry templates
 resolve the `iconLibrary` in `remix.yaml` to either `RemixIcons` (the default)
-or `LucideIcons`, and add the selected package. To switch an existing
-install, change `iconLibrary` and reinstall the items that use icons, reviewing
-first:
+or `LucideIcons`, and add the selected package. Four items use icons:
+`icons`, `dashboard_shell`, `dashboard_demo`, and `support`. To switch an
+existing install, change `iconLibrary`, then reinstall every one of those you
+have installed in one command, reviewing first (`--overwrite` replaces only
+the items you name, so one left out keeps the old library):
 
 ```shell
-remix add dashboard_demo --diff
-remix add dashboard_demo --overwrite
+remix add icons dashboard_shell dashboard_demo support --diff
+remix add icons dashboard_shell dashboard_demo support --overwrite
 ```
 
 Icons you reference in your own code stay as you wrote them. Import

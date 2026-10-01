@@ -586,6 +586,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var source = RemixSource.both;
   var hostedCli = false;
   var iconLibrary = 'remix';
+  var sawIconLibrary = false;
   String? item;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
@@ -611,7 +612,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
       continue;
     }
     if (argument == '--icon-library') {
-      if (iconLibrary != 'remix' || index + 1 >= arguments.length) return null;
+      if (sawIconLibrary || index + 1 >= arguments.length) return null;
+      sawIconLibrary = true;
       final selected = arguments[++index];
       if (!_iconPackages.containsKey(selected)) return null;
       iconLibrary = selected;

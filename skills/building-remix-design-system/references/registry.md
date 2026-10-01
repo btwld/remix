@@ -99,7 +99,7 @@ provenance out of shipped source (they belong in `specs/` and the ADR).
 - `package:mix_annotations/mix_annotations.dart` in files with a generated
   part;
 - any other package the item declares under `dependencies`, as the official
-  Vanilla catalog does for `remix_ui_icons` and `mix_chart` (declare
+  Vanilla catalog does for `mix_chart` (declare
   `naked_ui` with the constraint `remix` uses when a component needs behavior
   Remix does not wrap);
 - relative imports of files the same item or its dependencies install.
@@ -107,11 +107,18 @@ provenance out of shipped source (they belong in `specs/` and the ADR).
 **Fonts, icons, and assets.** The CLI writes Dart files into the UI folder
 and adds package dependencies; it cannot add `fonts:` or `assets:` to a
 consumer's pubspec. Ship icons and fonts as a pub package an item declares
-(Vanilla's `icons` item declares `remix_ui_icons`), or document the
+(Vanilla's `theme` item declares `remix_ui_fonts`; icon packages come from
+`icons.yaml`, below), or document the
 consumer's pubspec step in the README. Record the choice in the ADR.
 
 **No literal `{{`** anywhere in source; the CLI rejects any placeholder other
-than the two it renders.
+than the ones it renders: `{{typePrefix}}`, `{{valuePrefix}}`,
+`{{icon:import}}`, and `{{icon:<name>}}`. The icon pair resolves through
+`icons.yaml` beside `index.yaml` (`schema: 1`, `libraries` with each
+library's `dependency`, `import`, and `class`, and `icons` mapping every
+canonical name to a constant in every library). A template with an icon
+constant also carries `{{icon:import}}` in its import block; the CLI adds the
+chosen library's package.
 
 ## 4. Derivation
 
@@ -331,6 +338,6 @@ it should install only `@acme/*` items.
 | --- | --- |
 | A preset other than `vanilla` or `fortal` | `registry add` fails: the project's preset must exist in every registry |
 | Private repositories, GitHub Enterprise, HTTP or local registries | publish publicly; test through pushed branches |
-| Placeholders other than `{{typePrefix}}` / `{{valuePrefix}}` | installation fails with an unsupported-token error |
+| Placeholders other than `{{typePrefix}}`, `{{valuePrefix}}`, and `{{icon:…}}` | installation fails with an unsupported-token error |
 | Changing a consumer's `defaultRegistry` from the CLI | consumers name items explicitly: `add @acme/button` |
 | An offline cache | installs need network access to github.com |

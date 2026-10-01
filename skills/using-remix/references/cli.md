@@ -52,12 +52,14 @@ iconLibrary: lucide # remix (default) or lucide
 ```
 
 The CLI adds `lucide_flutter` instead of `remix_ui_icons` when it is selected.
-The choice applies at install. To switch an installed project, change the
-setting and reinstall the items that use icons:
+The choice applies at install. Four items use icons (`icons`,
+`dashboard_shell`, `dashboard_demo`, `support`). To switch an installed
+project, change the setting and reinstall every one of them you have, in one
+command; `--overwrite` rewrites only the items named:
 
 ```bash
-remix add dashboard_demo --diff
-remix add dashboard_demo --overwrite
+remix add icons dashboard_shell dashboard_demo support --diff
+remix add icons dashboard_shell dashboard_demo support --overwrite
 ```
 
 Icons referenced in application code are not rewritten. The CLI that

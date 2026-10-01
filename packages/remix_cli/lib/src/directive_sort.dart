@@ -1,11 +1,15 @@
 final _importUri = RegExp(r'''^\s*import\s+['"]([^'"]+)['"]''');
 
+/// A statement's last line: `;`, optionally followed by a line comment.
+final _terminated = RegExp(r';\s*(//.*)?$');
+
 /// Re-sorts a file's leading import block into `dart:`, `package:`, and
 /// relative groups, one blank line apart, the way `directives_ordering` reads
 /// it.
 ///
-/// A multi-line import stays one statement. Anything else inside the block is
-/// refused rather than moved. The registry build and the installer share this
+/// A multi-line import stays one statement, and a trailing `//` comment stays
+/// with its import. An import after the block ends is refused rather than
+/// left behind unsorted. The registry build and the installer share this
 /// so a rendered icon import lands where `directives_ordering` expects it.
 String sortDirectives(String path, String source) {
   final lines = source.split('\n');
@@ -23,7 +27,7 @@ String sortDirectives(String path, String source) {
     }
     if (!line.startsWith('import ')) break;
     final statement = <String>[line];
-    while (!statement.last.trimRight().endsWith(';')) {
+    while (!_terminated.hasMatch(statement.last.trimRight())) {
       index++;
       if (index >= lines.length || lines[index].trim().isEmpty) {
         throw FormatException(
@@ -37,6 +41,13 @@ String sortDirectives(String path, String source) {
     end = index;
   }
   if (statements.isEmpty) return source;
+  final stray = lines.skip(end).where((line) => line.startsWith('import '));
+  if (stray.isNotEmpty) {
+    throw FormatException(
+      '$path: imports must be contiguous; move `${stray.first}` into the '
+      'import block.',
+    );
+  }
 
   String uri(List<String> statement) =>
       _importUri.firstMatch(statement.first)!.group(1)!;

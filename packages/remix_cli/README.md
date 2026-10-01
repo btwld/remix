@@ -124,7 +124,8 @@ initialization.
 
 Schema 3 projects may also set `iconLibrary: remix|lucide`; omitting it keeps
 Remix icons. It applies when items are installed; after changing it, reinstall
-the affected items with `add --diff`, then `add --overwrite`.
+every installed item that uses icons (`icons`, `dashboard_shell`,
+`dashboard_demo`, `support`) in one `add --diff`, then `add --overwrite`.
 
 ### Fortal as owned source
 
