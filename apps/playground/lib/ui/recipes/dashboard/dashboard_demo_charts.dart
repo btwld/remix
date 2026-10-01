@@ -314,6 +314,16 @@ ChartAxis playgroundDashboardNumericAxis({
   maxIncluded: false,
 );
 
+/// The chart style for a [playgroundDashboardNumericAxis]: that axis already has
+/// room past each end, so its value labels are left on their gridlines rather
+/// than pulled inward to fit.
+LineChartStyler playgroundDashboardLineStyle() =>
+    LineChartStyler().yAxis(ChartAxisStyler().fitInside(false));
+
+/// See [playgroundDashboardLineStyle].
+BarChartStyler playgroundDashboardBarStyle() =>
+    BarChartStyler().yAxis(ChartAxisStyler().fitInside(false));
+
 const playgroundDashboardWeekdays = [
   'Mon',
   'Tue',

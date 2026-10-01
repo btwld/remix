@@ -579,6 +579,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
         ],
         xAxis: registryDashboardWeekdayAxis(),
         yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
+        style: registryDashboardLineStyle(),
       ),
       .linePatterns => VanillaLineChart(
         showMarkers: true,
@@ -616,6 +617,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
         ],
         xAxis: registryDashboardWeekdayAxis(),
         yAxis: registryDashboardNumericAxis(max: 50),
+        style: registryDashboardLineStyle(),
       ),
       .stepGaps => VanillaLineChart(
         showMarkers: true,
@@ -638,6 +640,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
         ],
         xAxis: registryDashboardWeekdayAxis(),
         yAxis: registryDashboardNumericAxis(max: 40),
+        style: registryDashboardLineStyle(),
       ),
       .viewportLabels => VanillaLineChart(
         showMarkers: true,
@@ -660,26 +663,31 @@ class _VanillaDashboardCharts extends StatelessWidget {
         ],
         xAxis: registryDashboardWeekdayAxis(),
         yAxis: registryDashboardNumericAxis(max: 50),
+        style: registryDashboardLineStyle(),
       ),
       .groupedBars => VanillaBarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: registryDashboardGroupedBars(),
         yAxis: registryDashboardNumericAxis(max: 60),
+        style: registryDashboardBarStyle(),
       ),
       .stackedBars => VanillaBarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: registryDashboardStackedBars(),
         yAxis: registryDashboardNumericAxis(max: 60),
+        style: registryDashboardBarStyle(),
       ),
       .floatingBars => VanillaBarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: registryDashboardFloatingBars(),
         yAxis: registryDashboardNumericAxis(max: 40),
+        style: registryDashboardBarStyle(),
       ),
       .trackedBars => VanillaBarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
         groups: registryDashboardTrackedBars(),
         yAxis: registryDashboardNumericAxis(max: 70),
+        style: registryDashboardBarStyle(),
       ),
       .trafficPie => VanillaPieChart(
         style: _pieRing(),

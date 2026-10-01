@@ -144,6 +144,7 @@ Widget _revenueCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Car
           // Round steps, with room past each end so the end labels sit on
           // their gridlines.
           yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
+          style: {{valuePrefix}}DashboardLineStyle(),
         ),
       ),
     ],
@@ -182,6 +183,7 @@ Widget _customerChartCard() => {{typePrefix}}Card(
           // Customers peak at 44; see the revenue chart above for why the
           // maximum is pinned to a whole number of intervals.
           yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
+          style: {{valuePrefix}}DashboardBarStyle(),
         ),
       ),
     ],

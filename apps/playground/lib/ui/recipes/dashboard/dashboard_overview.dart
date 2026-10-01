@@ -144,6 +144,7 @@ Widget _revenueCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
           // Round steps, with room past each end so the end labels sit on
           // their gridlines.
           yAxis: playgroundDashboardNumericAxis(max: 100, interval: 20),
+          style: playgroundDashboardLineStyle(),
         ),
       ),
     ],
@@ -182,6 +183,7 @@ Widget _customerChartCard() => PlaygroundCard(
           // Customers peak at 44; see the revenue chart above for why the
           // maximum is pinned to a whole number of intervals.
           yAxis: playgroundDashboardNumericAxis(max: 50),
+          style: playgroundDashboardBarStyle(),
         ),
       ),
     ],

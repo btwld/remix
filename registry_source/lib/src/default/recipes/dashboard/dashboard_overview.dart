@@ -144,6 +144,7 @@ Widget _revenueCard(RegistryDashboardSampleData data) => VanillaCard(
           // Round steps, with room past each end so the end labels sit on
           // their gridlines.
           yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
+          style: registryDashboardLineStyle(),
         ),
       ),
     ],
@@ -182,6 +183,7 @@ Widget _customerChartCard() => VanillaCard(
           // Customers peak at 44; see the revenue chart above for why the
           // maximum is pinned to a whole number of intervals.
           yAxis: registryDashboardNumericAxis(max: 50),
+          style: registryDashboardBarStyle(),
         ),
       ),
     ],

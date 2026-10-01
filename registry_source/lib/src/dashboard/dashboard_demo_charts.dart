@@ -310,6 +310,16 @@ ChartAxis registryDashboardNumericAxis({
   maxIncluded: false,
 );
 
+/// The chart style for a [registryDashboardNumericAxis]: that axis already has
+/// room past each end, so its value labels are left on their gridlines rather
+/// than pulled inward to fit.
+LineChartStyler registryDashboardLineStyle() =>
+    LineChartStyler().yAxis(ChartAxisStyler().fitInside(false));
+
+/// See [registryDashboardLineStyle].
+BarChartStyler registryDashboardBarStyle() =>
+    BarChartStyler().yAxis(ChartAxisStyler().fitInside(false));
+
 const registryDashboardWeekdays = [
   'Mon',
   'Tue',
