@@ -38,16 +38,7 @@ class NakedMenuState extends NakedState {
       NakedState.maybeControllerOf<NakedMenuState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedMenuState &&
-        statesEqual(other) &&
-        other.isOpen == isOpen;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, isOpen);
+  List<Object?> get props => [...super.props, isOpen];
 }
 
 /// Immutable view passed to [NakedMenuItem] builders.
@@ -75,16 +66,7 @@ class NakedMenuItemState<T> extends NakedState {
       NakedState.maybeControllerOf<NakedMenuItemState<S>>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedMenuItemState<T> &&
-        statesEqual(other) &&
-        other.value == value;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, value);
+  List<Object?> get props => [...super.props, value];
 }
 
 /// Internal scope provided by [NakedMenu] to its overlay subtree.

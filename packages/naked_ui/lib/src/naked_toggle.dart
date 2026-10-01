@@ -33,16 +33,7 @@ class NakedToggleState extends NakedState {
       NakedState.maybeControllerOf<NakedToggleState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedToggleState &&
-        statesEqual(other) &&
-        other.isToggled == isToggled;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, isToggled);
+  List<Object?> get props => [...super.props, isToggled];
 }
 
 /// Immutable view passed to [NakedToggleOption.builder].
@@ -70,16 +61,7 @@ class NakedToggleOptionState<T> extends NakedState {
       NakedState.maybeControllerOf<NakedToggleOptionState<S>>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedToggleOptionState<T> &&
-        statesEqual(other) &&
-        other.value == value;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, value);
+  List<Object?> get props => [...super.props, value];
 }
 
 /// A headless binary toggle control without visuals.

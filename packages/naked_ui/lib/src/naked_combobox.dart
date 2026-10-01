@@ -30,18 +30,7 @@ class NakedComboboxState<T extends Object> extends NakedState {
   });
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedComboboxState<T> &&
-        statesEqual(other) &&
-        other.isOpen == isOpen &&
-        other.value == value &&
-        other.text == text;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, isOpen, value, text);
+  List<Object?> get props => [...super.props, isOpen, value, text];
 
   /// Returns the nearest [NakedComboboxState] of the requested type.
   static NakedComboboxState<S> of<S extends Object>(BuildContext context) =>
@@ -79,17 +68,7 @@ class NakedComboboxOptionState<T extends Object> extends NakedState {
   });
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedComboboxOptionState<T> &&
-        statesEqual(other) &&
-        other.value == value &&
-        other.isHighlighted == isHighlighted;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, value, isHighlighted);
+  List<Object?> get props => [...super.props, value, isHighlighted];
 
   /// Returns the nearest [NakedComboboxOptionState] of the requested type.
   static NakedComboboxOptionState<S> of<S extends Object>(

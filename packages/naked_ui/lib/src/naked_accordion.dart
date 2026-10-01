@@ -72,27 +72,14 @@ class NakedAccordionGroupState extends NakedState {
       NakedState.maybeControllerOf<NakedAccordionGroupState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedAccordionGroupState &&
-        statesEqual(other) &&
-        other.expandedCount == expandedCount &&
-        other.canExpandMore == canExpandMore &&
-        other.canCollapseMore == canCollapseMore &&
-        other.minExpanded == minExpanded &&
-        other.maxExpanded == maxExpanded;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    statesHashCode,
+  List<Object?> get props => [
+    ...super.props,
     expandedCount,
     canExpandMore,
     canCollapseMore,
     minExpanded,
     maxExpanded,
-  );
+  ];
 }
 
 /// Immutable state exposed to [NakedAccordion] builders.
@@ -135,20 +122,13 @@ class NakedAccordionItemState<T> extends NakedState {
       NakedState.maybeControllerOf<NakedAccordionItemState<S>>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedAccordionItemState<T> &&
-        statesEqual(other) &&
-        other.value == value &&
-        other.isExpanded == isExpanded &&
-        other.canCollapse == canCollapse &&
-        other.canExpand == canExpand;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(statesHashCode, value, isExpanded, canCollapse, canExpand);
+  List<Object?> get props => [
+    ...super.props,
+    value,
+    isExpanded,
+    canCollapse,
+    canExpand,
+  ];
 }
 
 /// Maintains accordion expansion state without imposing visuals.

@@ -111,28 +111,8 @@ class NakedSliderState extends NakedState {
       visualPercentageOf(percentageAt(index));
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedSliderState &&
-        statesEqual(other) &&
-        listEquals(other.values, values) &&
-        other.min == min &&
-        other.max == max &&
-        other.step == step &&
-        other.minSpacing == minSpacing &&
-        other.orientation == orientation &&
-        other.inverted == inverted &&
-        other.textDirection == textDirection &&
-        other.isDragging == isDragging &&
-        other.activeThumbIndex == activeThumbIndex &&
-        other.focusedThumbIndex == focusedThumbIndex;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    statesHashCode,
-    Object.hashAll(values),
+  List<Object?> get props => [
+    ...super.props,
     min,
     max,
     step,
@@ -143,7 +123,8 @@ class NakedSliderState extends NakedState {
     isDragging,
     activeThumbIndex,
     focusedThumbIndex,
-  );
+    values,
+  ];
 }
 
 /// A headless, controlled, arbitrary multi-thumb slider.

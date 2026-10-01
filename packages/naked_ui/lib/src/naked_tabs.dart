@@ -77,14 +77,7 @@ class NakedTabState extends NakedState {
       NakedState.maybeControllerOf<NakedTabState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedTabState && statesEqual(other) && other.tabId == tabId;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, tabId);
+  List<Object?> get props => [...super.props, tabId];
 }
 
 /// A headless tab group without visuals.

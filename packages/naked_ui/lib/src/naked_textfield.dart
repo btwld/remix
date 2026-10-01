@@ -56,18 +56,7 @@ class NakedTextFieldState extends NakedState {
   bool get isEmpty => !hasText;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedTextFieldState &&
-        statesEqual(other) &&
-        other.text == text &&
-        other.hasText == hasText &&
-        other.isReadOnly == isReadOnly;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, text, hasText, isReadOnly);
+  List<Object?> get props => [...super.props, text, hasText, isReadOnly];
 }
 
 /// Headless, builder-first text input built on [EditableText].

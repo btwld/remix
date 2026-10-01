@@ -30,16 +30,7 @@ class NakedLinkState extends NakedState {
       NakedState.maybeControllerOf<NakedLinkState>(context);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is NakedLinkState &&
-        statesEqual(other) &&
-        other.linkUrl == linkUrl;
-  }
-
-  @override
-  int get hashCode => Object.hash(statesHashCode, linkUrl);
+  List<Object?> get props => [...super.props, linkUrl];
 }
 
 /// A headless Link with caller-owned activation and no launcher dependency.
