@@ -1,10 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
 import 'package:remix/remix.dart';
 
 import 'support.dart';
-import 'vanilla_spec.dart';
 
 /// Every interactive state a recipe declares has to show.
 ///
@@ -13,8 +14,10 @@ import 'vanilla_spec.dart';
 /// `border`), so a hovered row looked like a resting one and a selected toggle
 /// needed a primary outline to be seen at all. This resolves each interactive
 /// recipe at rest and in each state it styles, in both themes, and fails when
-/// a state paints exactly what rest paints, or paints its fill in the
-/// `border` color of the surface it sits on.
+/// a state paints exactly what rest paints, or when its fill, laid on the
+/// surface it sits on, is within [_minimumContrast] of the rest fill or of the
+/// `border` hairline. Near-collisions the reference itself makes are listed in
+/// [_accepted] with the reason they are kept.
 ///
 /// Only the states the spec styles are listed: a checkbox, a radio, and a
 /// switch have no hover fill there, so none is required here.
@@ -22,36 +25,43 @@ void main() {
   for (final entry in _cases) {
     group(entry.name, () {
       for (final theme in vanillaThemes) {
-        final enforced =
-            entry.phase == null || enforcedPhases.contains(entry.phase);
+        testWidgets(theme.name, (tester) async {
+          final rest = await entry.look(tester, theme.data, const {});
+          final surface = entry.surface(theme.data);
+          final border = Color.alphaBlend(theme.data.border, surface);
+          final restFill = Color.alphaBlend(
+            rest.first as Color? ?? const Color(0x00000000),
+            surface,
+          );
 
-        testWidgets(
-          enforced ? theme.name : '${theme.name} (pending ${entry.phase})',
-          (tester) async {
-            final rest = await entry.look(tester, theme.data, const {});
-            final surface = entry.surface(theme.data);
-            final border = Color.alphaBlend(theme.data.border, surface);
+          for (final state in entry.states) {
+            final look = await entry.look(tester, theme.data, {state});
 
-            for (final state in entry.states) {
-              final look = await entry.look(tester, theme.data, {state});
-
-              expect(
-                look,
-                isNot(equals(rest)),
-                reason: '${state.name} paints exactly what rest paints',
-              );
-              final fill = look.first as Color?;
-              if (fill != null && fill != rest.first) {
-                expect(
-                  Color.alphaBlend(fill, surface),
-                  isNot(border),
-                  reason: '${state.name} fills in the border color',
-                );
+            expect(
+              look,
+              isNot(equals(rest)),
+              reason: '${state.name} paints exactly what rest paints',
+            );
+            final fill = look.first as Color?;
+            if (fill == null || fill == rest.first) continue;
+            final shown = Color.alphaBlend(fill, surface);
+            for (final (against, color) in [
+              ('rest', restFill),
+              ('border', border),
+            ]) {
+              final key = '${entry.name}|${theme.name}|${state.name}|$against';
+              final ratio = _contrast(shown, color);
+              if (ratio >= _minimumContrast || _accepted.containsKey(key)) {
+                continue;
               }
+              fail(
+                '${state.name} fill is ${ratio.toStringAsFixed(3)}:1 against '
+                'the $against color; list `$key` in _accepted with a reason '
+                'if the reference does the same',
+              );
             }
-          },
-          skip: !enforced,
-        );
+          }
+        });
       }
     });
   }
@@ -64,7 +74,6 @@ final class _Case {
     required this.states,
     required this.look,
     this.surface = _page,
-    this.phase,
   });
 
   final String name;
@@ -83,9 +92,56 @@ final class _Case {
 
   /// The surface the recipe sits on.
   final Color Function(VanillaThemeData theme) surface;
+}
 
-  /// The pull request that makes this case pass, while it does not yet.
-  final String? phase;
+/// The least contrast a state's fill may have against the rest fill or the
+/// border hairline. Far below the 3:1 non-text floor on purpose: the
+/// reference's own hover fills sit near 1.09:1, and this catches a state that
+/// is barely different from what is already there, not one that is quiet.
+const _minimumContrast = 1.05;
+
+/// Near-collisions the reference makes too, keyed
+/// `case|theme|state|rest or border`, with the reason each is kept.
+const _accepted = <String, String>{
+  'button secondary|light|hovered|rest':
+      'hover:bg-secondary/80 over secondary; the label and pointer carry it.',
+  'icon button secondary|light|hovered|rest':
+      'hover:bg-secondary/80 over secondary, as the button.',
+  'toggle ghost|dark|hovered|border':
+      'dark accent (#262626) sits next to the border tone, as in the reference.',
+  'toggle outline|dark|hovered|border': 'dark accent next to border, as above.',
+  'toggle group ghost item|dark|hovered|border':
+      'dark accent next to border, as above.',
+  'data table row|light|hovered|rest':
+      'hover:bg-muted/50 on the page; the reference keeps rows quiet.',
+  'data table row|dark|selected|border':
+      'dark muted (#262626) next to the border tone, as in the reference.',
+  'sidebar destination|light|hovered|rest':
+      'sidebar-accent (#F5F5F5) on sidebar (#FAFAFA), as in the reference.',
+  'sidebar destination|light|selected|rest':
+      'the hover surface again; the current row also sets medium weight.',
+  'button secondary|light|pressed|rest':
+      'a press lands on the hover fill: Vanilla has no pressed step.',
+  'icon button secondary|light|pressed|rest': 'as the button.',
+  'button secondary|dark|hovered|border':
+      'dark secondary at 80% sits next to the border tone, as in the reference.',
+  'icon button secondary|dark|hovered|border': 'as the button.',
+  'toggle ghost|dark|selected|border':
+      'the selected fill is dark accent, next to the border tone.',
+  'toggle outline|dark|selected|border': 'as the ghost toggle.',
+  'toggle group outline item|dark|hovered|border': 'as the toggles.',
+  'toggle group outline item|dark|selected|border': 'as the toggles.',
+  'toggle group ghost item|dark|selected|border': 'as the toggles.',
+  'button secondary|dark|pressed|border':
+      'a press lands on the hover fill, which sits next to the border tone.',
+  'icon button secondary|dark|pressed|border': 'as the button.',
+};
+
+/// The WCAG contrast ratio of two opaque colors.
+double _contrast(Color a, Color b) {
+  final la = a.computeLuminance();
+  final lb = b.computeLuminance();
+  return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
 }
 
 Color _page(VanillaThemeData theme) => theme.background;
@@ -103,12 +159,10 @@ _Case _resolved<S extends Spec<S>>(
   required List<WidgetState> states,
   required List<Object?> Function(StyleSpec<S> spec) read,
   Color Function(VanillaThemeData theme) surface = _page,
-  String? phase,
 }) => _Case(
   name,
   states: states,
   surface: surface,
-  phase: phase,
   look: (tester, theme, active) async =>
       read(await resolveVanilla(tester, style(), theme: theme, states: active)),
 );
@@ -229,6 +283,8 @@ final _cases = <_Case>[
   _resolved<TabSpec>(
     'tab',
     style: vanillaTabStyle,
+    // A filled tab sits on the recessed `muted` list, not the page.
+    surface: _muted,
     states: const [
       WidgetState.hovered,
       WidgetState.selected,
@@ -404,7 +460,6 @@ final _cases = <_Case>[
     'data table row',
     style: vanillaDataTableStyle,
     states: const [WidgetState.hovered, WidgetState.selected],
-    phase: 'F5',
     read: (spec) => _boxLook(spec.spec.bodyRow),
   ),
 ];

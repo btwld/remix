@@ -138,7 +138,9 @@ class {{typePrefix}}ThemeScope extends StatelessWidget {
 /// Recipes still set their own sizes and colors; this is only the fallback,
 /// and a nearer `DefaultTextStyle` wins through Flutter's normal inheritance.
 /// Place the scope *below* a Material or Cupertino host (in its `builder`) so
-/// the host's own text defaults do not sit between the two.
+/// the host's own text defaults do not sit between the two. A `Material`
+/// below the scope (a `Scaffold`, a `Card`) sets its own text style from the
+/// host's `ThemeData`, so give that `ThemeData` the scope's brightness.
 ///
 /// A bare [Icon] takes `foreground` too, the color of the text beside it; its
 /// size is left to the host.
