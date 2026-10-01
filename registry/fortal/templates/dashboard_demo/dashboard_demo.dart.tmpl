@@ -86,7 +86,11 @@ class {{typePrefix}}DashboardDemo extends StatefulWidget {
 }
 
 class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark => _dark ?? ({{typePrefix}}Theme.maybeOf(context)?.isDark ?? false);
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +163,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     );
     if (!widget.builtInChrome) return demo;
     return {{typePrefix}}Scope(
-      mode: _dark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
+      mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
       child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
     );
   }
@@ -167,9 +171,9 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   List<Widget> _chromeActions() => [
     {{typePrefix}}IconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const {{typePrefix}}Popover(
       semanticLabel: 'Notifications',
@@ -210,7 +214,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
             children: [
               const {{typePrefix}}Text('Theme settings', size: .size4, weight: .bold),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Indigo'),
               _settingLine('Gray color', 'Slate'),
               _settingLine('Radius', 'Medium'),

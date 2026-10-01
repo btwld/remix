@@ -79,7 +79,12 @@ class VanillaDashboardDemo extends StatefulWidget {
 }
 
 class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark =>
+      _dark ?? (VanillaTheme.maybeOf(context)?.brightness == Brightness.dark);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +157,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return VanillaThemeScope(
-      mode: _dark ? VanillaThemeMode.dark : VanillaThemeMode.light,
+      mode: _isDark ? VanillaThemeMode.dark : VanillaThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: VanillaTokens.background.resolve(context),
@@ -165,9 +170,9 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
   List<Widget> _chromeActions() => [
     VanillaIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const VanillaPopover(
       semanticLabel: 'Notifications',
@@ -208,7 +213,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
                 style: _textStyle(size: 16, weight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Neutral'),
               _settingLine('Radius', 'Medium'),
               _settingLine('Density', 'Comfortable'),

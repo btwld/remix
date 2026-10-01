@@ -15,8 +15,9 @@ part 'dialog.g.dart';
 /// recipe supplies the panel, the two text roles, and the action row.
 ///
 /// It is the page's `background` fill with a `border` hairline, `radiusLg`
-/// corners, the heaviest shadow in the scale, a 24px inset, and at most 512px
-/// wide. The title is `textLg` semibold and set tight, the description `textSm`
+/// corners, the heaviest shadow in the scale, and a 24px inset. The panel is
+/// centered in the viewport with 16px to spare on every side, and fills the
+/// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
 /// in `mutedForeground` 8px below it, and the decisions sit at the trailing
 /// edge 16px below that.
 ///
@@ -26,11 +27,19 @@ part 'dialog.g.dart';
 DialogStyler playgroundDialogStyle({
   DialogStyler style = const DialogStyler.create(),
 }) => DialogStyler()
+    // A dialog route hands its page the whole viewport; without the wrap the
+    // panel would take all of it. The padding leaves room at the edges, and
+    // the alignment lets the panel keep its own size.
+    .wrap(
+      .padding(.all(PlaygroundSpace.s4))
+          .align(alignment: .center)
+          .orderOfModifiers([PaddingModifier, AlignModifier]),
+    )
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
     .borderRadius(.all(PlaygroundTokens.radiusLg()))
     .padding(.all(PlaygroundSpace.s6))
-    .maxWidth(PlaygroundSize.dialogMaxWidth)
+    .width(PlaygroundSize.dialogMaxWidth)
     .shadows(PlaygroundShadow.lg.box)
     .title(
       .style(PlaygroundTokens.textLg.mix())

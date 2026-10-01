@@ -49,6 +49,18 @@ void main() {
             .selectedValue,
         Brightness.dark,
       );
+      // The dashboard itself follows the preview into the dark theme.
+      final toggles = tester.widgetList<PlaygroundIconButton>(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is PlaygroundIconButton &&
+              widget.key == const ValueKey('dashboard-appearance-toggle'),
+        ),
+      );
+      expect(toggles, isNotEmpty);
+      expect(toggles.map((toggle) => toggle.semanticLabel).toSet(), {
+        'Use light appearance',
+      });
 
       await tester.tap(
         find.descendant(

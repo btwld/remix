@@ -15,8 +15,9 @@ part 'dialog.g.dart';
 /// recipe supplies the panel, the two text roles, and the action row.
 ///
 /// It is the page's `background` fill with a `border` hairline, `radiusLg`
-/// corners, the heaviest shadow in the scale, a 24px inset, and at most 512px
-/// wide. The title is `textLg` semibold and set tight, the description `textSm`
+/// corners, the heaviest shadow in the scale, and a 24px inset. The panel is
+/// centered in the viewport with 16px to spare on every side, and fills the
+/// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
 /// in `mutedForeground` 8px below it, and the decisions sit at the trailing
 /// edge 16px below that.
 ///
@@ -26,11 +27,19 @@ part 'dialog.g.dart';
 DialogStyler vanillaDialogStyle({
   DialogStyler style = const DialogStyler.create(),
 }) => DialogStyler()
+    // A dialog route hands its page the whole viewport; without the wrap the
+    // panel would take all of it. The padding leaves room at the edges, and
+    // the alignment lets the panel keep its own size.
+    .wrap(
+      .padding(.all(VanillaSpace.s4))
+          .align(alignment: .center)
+          .orderOfModifiers([PaddingModifier, AlignModifier]),
+    )
     .color(VanillaTokens.background())
     .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
     .borderRadius(.all(VanillaTokens.radiusLg()))
     .padding(.all(VanillaSpace.s6))
-    .maxWidth(VanillaSize.dialogMaxWidth)
+    .width(VanillaSize.dialogMaxWidth)
     .shadows(VanillaShadow.lg.box)
     .title(
       .style(VanillaTokens.textLg.mix())

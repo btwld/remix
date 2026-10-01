@@ -102,7 +102,8 @@ const _labelAlpha = 0.7;
 /// One destination: the application's own ghost toggle, retuned as a navigation
 /// row.
 ///
-/// A 32px row with an 8px inset on every side and an 8px gap, set in `textSm`
+/// A 32px row, 8px in from the sides and 6px from the top and bottom so the
+/// 20px `textSm` line fills it, with an 8px gap, set in `textSm`
 /// at regular weight in `sidebarForeground`. Hovered and current rows sit on
 /// `sidebarAccent`; the current one is also set at medium weight, which is
 /// what tells it from a hovered row in the shipped themes, where the two
@@ -116,7 +117,12 @@ ToggleStyler _destinationStyle() {
   return vanillaToggleStyle(variant: .ghost, size: .small)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start))
       .minHeight(VanillaSize.controlSm)
-      .padding(.all(VanillaSpace.s2))
+      // The reference is `h-8 p-2`: CSS fixes the height and lets the line
+      // overrun the padding. Flutter lays the line out inside the padding, so
+      // 6px vertically is what keeps the row at 32.
+      .padding(
+        .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1_5),
+      )
       .spacing(VanillaSpace.s2)
       .label(
         .fontWeight(FontWeight.w400).color(VanillaTokens.sidebarForeground()),

@@ -99,11 +99,11 @@ Weights are 400, 500 (`font-medium`), and 600 (`font-semibold`).
 `VanillaThemeData.light()` and `.dark()` set `fontFamily` to
 `RemixFonts.geist` and `monoFontFamily` to `RemixFonts.geistMono`, so the
 installed `theme` item declares `remix_ui_fonts` and every Vanilla install
-carries the fonts. A theme built with the generative constructor, or one whose
-families are set to null, leaves the family to the platform.
+carries the fonts. A null `fontFamily` leaves the family to the platform, and
+a null `monoFontFamily` uses `fontFamily`.
 
 **Spacing.** Tailwind's 4px grid, as constants in `theme/scale.dart`:
-`VanillaSpace.s0_5` (2) through `s12` (48). Spacing is not a token: the
+`VanillaSpace.s0_5` (2) through `s16` (64). Spacing is not a token: the
 reference does not theme it, and arithmetic on an unresolved token cannot be
 written.
 
@@ -158,7 +158,7 @@ the steps above. The source column names the file under
 | Tabs (line) | transparent list; active tab marked by a 2px `foreground` underline | `tabs.tsx` (`variant=line`) |
 | Segmented control | styled as the filled tab list | `tabs.tsx` |
 | Sidebar | `sidebar` fill, `sidebarBorder` edge; content p 8, section gap 16 | `sidebar.tsx` |
-| Sidebar destination | h 32, p 8, gap 8, radius md; hover and current `sidebarAccent`, current w500 | `sidebar.tsx` (`SidebarMenuButton`) |
+| Sidebar destination | h 32, px 8, py 6 (see Deviations), gap 8, radius md; hover and current `sidebarAccent`, current w500 | `sidebar.tsx` (`SidebarMenuButton`) |
 | Sidebar label | h 32, px 8, `text-xs` w500, `sidebarForeground`/70, no tracking | `sidebar.tsx` (`SidebarGroupLabel`) |
 | Sidebar layout | collapsed width 48 | `sidebar.tsx` (`SIDEBAR_WIDTH_ICON`) |
 | Menu | content as the select's; items h 32, px 8, py 6, radius sm; icons muted-fg even when highlighted; separator full-bleed | `dropdown-menu.tsx` |
@@ -188,7 +188,10 @@ the steps above. The source column names the file under
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
-| Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
+| Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
+| Focus ring | `ring/50`, 3px | `ring` at 50%, 3px | Matches the reference, which is below the 3:1 non-text floor: about 1.5:1 on the light page and 1.85:1 on the dark. The old Vanilla `focusRing` cleared 3:1. Raise the band's alpha in the recipes, or darken `ring`, where focus visibility matters more than matching. |
+| Callout, destructive | description at `destructive/90` | one text color for the whole callout | `CalloutSpec` has a single text role, so the description cannot take its own color. |
+| Sidebar destination padding | `h-8 p-2` | 32 min height, 8px across and 6px down | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside it, so `p-2` would make a 36px row. |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
 | Font | Geist and Geist Mono | Geist and Geist Mono from `remix_ui_fonts` | Matches; recorded because the fonts are static files (Geist 400, 500, 600, 700; Geist Mono 400, 500) rather than shadcn's variable fonts. Vanilla uses 400, 500, and 600. |

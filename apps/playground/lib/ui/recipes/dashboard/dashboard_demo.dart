@@ -80,7 +80,13 @@ class PlaygroundDashboardDemo extends StatefulWidget {
 }
 
 class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark =>
+      _dark ??
+      (PlaygroundTheme.maybeOf(context)?.brightness == Brightness.dark);
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +159,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return PlaygroundThemeScope(
-      mode: _dark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
+      mode: _isDark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: PlaygroundTokens.background.resolve(context),
@@ -166,9 +172,9 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
   List<Widget> _chromeActions() => [
     PlaygroundIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const PlaygroundPopover(
       semanticLabel: 'Notifications',
@@ -209,7 +215,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
                 style: _textStyle(size: 16, weight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Neutral'),
               _settingLine('Radius', 'Medium'),
               _settingLine('Density', 'Comfortable'),

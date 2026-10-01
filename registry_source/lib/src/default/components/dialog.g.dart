@@ -13,8 +13,9 @@ part of 'dialog.dart';
 /// recipe supplies the panel, the two text roles, and the action row.
 ///
 /// It is the page's `background` fill with a `border` hairline, `radiusLg`
-/// corners, the heaviest shadow in the scale, a 24px inset, and at most 512px
-/// wide. The title is `textLg` semibold and set tight, the description `textSm`
+/// corners, the heaviest shadow in the scale, and a 24px inset. The panel is
+/// centered in the viewport with 16px to spare on every side, and fills the
+/// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
 /// in `mutedForeground` 8px below it, and the decisions sit at the trailing
 /// edge 16px below that.
 ///

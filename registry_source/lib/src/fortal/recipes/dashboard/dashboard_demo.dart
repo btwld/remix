@@ -86,7 +86,11 @@ class FortalDashboardDemo extends StatefulWidget {
 }
 
 class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark => _dark ?? (FortalTheme.maybeOf(context)?.isDark ?? false);
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +163,7 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return FortalScope(
-      mode: _dark ? FortalThemeMode.dark : FortalThemeMode.light,
+      mode: _isDark ? FortalThemeMode.dark : FortalThemeMode.light,
       child: RemixToastScope(style: fortalToastStyle(), child: demo),
     );
   }
@@ -167,9 +171,9 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
   List<Widget> _chromeActions() => [
     FortalIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const FortalPopover(
       semanticLabel: 'Notifications',
@@ -210,7 +214,7 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
             children: [
               const FortalText('Theme settings', size: .size4, weight: .bold),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Indigo'),
               _settingLine('Gray color', 'Slate'),
               _settingLine('Radius', 'Medium'),

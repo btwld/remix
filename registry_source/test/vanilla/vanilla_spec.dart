@@ -1431,9 +1431,10 @@ final _sidebarTargets = <SpecTarget>[
         flexDecorationOf(container)?.borderRadius,
       );
     },
+    // 6 + the 20px textSm line + 6 is the 32 the reference fixes with h-8.
     expected: (theme) => (
       32.0,
-      const EdgeInsets.all(8),
+      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       8.0,
       _rounded(theme, VanillaTokens.radiusMd),
     ),
