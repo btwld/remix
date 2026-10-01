@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
+import '../packages/remix_cli/lib/src/icon_registry.dart';
+
 /// The registry file whose package constraints must floor at the versions of
 /// the workspace packages they name.
 const _registryPath = 'registry/vanilla/registry.yaml';
@@ -32,6 +34,8 @@ void main() {
       _checkRegistryFloor(workspaceRoot, pinned, version, failures);
     }
   }
+  final icons = _packageVersion(workspaceRoot, 'remix_ui_icons', failures);
+  if (icons != null) _checkIconTableFloor(workspaceRoot, icons, failures);
 
   if (failures.isEmpty) return;
 
@@ -148,5 +152,46 @@ void _checkRegistryFloor(
   stdout.writeln(
     'Registry floor aligned: remote item $item declares $package '
     '"$declared" against $package $version.',
+  );
+}
+
+/// The icon table that pins the default library's package for every item.
+const _iconTablePath = 'registry/icons.yaml';
+
+/// Holds the icon table's `remix_ui_icons` constraint to the released
+/// package, for the same reason as [_checkRegistryFloor]: the table is data
+/// that no version bump rewrites.
+void _checkIconTableFloor(
+  Directory workspaceRoot,
+  Version version,
+  List<String> failures,
+) {
+  final file = File('${workspaceRoot.path}/$_iconTablePath');
+  if (!file.existsSync()) {
+    failures.add('$_iconTablePath is missing');
+    return;
+  }
+  final IconRegistry table;
+  try {
+    table = IconRegistry.parse(file.readAsStringSync());
+  } on FormatException catch (error) {
+    failures.add(error.message);
+    return;
+  }
+  final constraint = table
+      .library(defaultIconLibrary)
+      .dependencies['remix_ui_icons'];
+  final floor = constraint is VersionRange ? constraint.min : null;
+  if (floor != version) {
+    failures.add(
+      '$_iconTablePath pins remix_ui_icons "$constraint", but '
+      'packages/remix_ui_icons is $version. Set the '
+      '$defaultIconLibrary library\'s dependency to the new version.',
+    );
+    return;
+  }
+  stdout.writeln(
+    'Icon table floor aligned: $_iconTablePath declares remix_ui_icons '
+    '"$constraint" against remix_ui_icons $version.',
   );
 }

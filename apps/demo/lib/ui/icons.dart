@@ -3,7 +3,6 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 /// Application-owned aliases for the icons used by this UI layer.
 ///
-/// The complete 318-glyph catalog remains available through [RemixIcons].
 /// Add, rename, or remove aliases here as the application vocabulary evolves.
 abstract final class FortalIcons {
   /// Confirms a successful or selected action.

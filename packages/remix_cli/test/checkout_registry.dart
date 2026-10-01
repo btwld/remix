@@ -60,6 +60,9 @@ final class CheckoutRegistry implements RegistryReader {
   Future<String> template(RegistryFile file) async =>
       _readUri((await _catalogUri).resolve(file.source));
 
+  @override
+  Future<String> icons() => _readUri(distribution.uri.resolve('icons.yaml'));
+
   Future<String> _readUri(Uri uri) {
     final file = File.fromUri(uri);
     if (!file.existsSync()) {

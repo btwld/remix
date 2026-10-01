@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import '../../components/button.dart';
 import '../../components/card.dart';
@@ -226,7 +226,7 @@ Widget _activityCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Ca
           padding: const EdgeInsets.symmetric(vertical: 9),
           child: Row(
             children: [
-              const Icon(RemixIcons.activityLog, size: 16),
+              const Icon({{icon:activityLog}}, size: 16),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(

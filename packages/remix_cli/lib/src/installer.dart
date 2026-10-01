@@ -11,8 +11,10 @@ import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
 import 'registry.dart';
-import 'registry_source.dart';
+import 'icon_registry.dart';
 import 'registry_graph.dart';
+import 'registry_reader.dart';
+import 'registry_source.dart';
 import 'template_renderer.dart';
 
 const managedExportsStart = '// remix_cli:exports:start';
@@ -189,14 +191,7 @@ final class Installer {
     }
     await _sources.open(source, config.preset).catalog();
     sources[namespace] = source;
-    final updated = ProjectConfig(
-      packageRoot: root,
-      prefix: config.prefix,
-      preset: config.preset,
-      uiPath: config.uiPath,
-      defaultRegistry: config.defaultRegistry,
-      registries: sources,
-    );
+    final updated = config.copyWith(registries: sources);
     _fileWriter.write(file, updated.encode());
     _writeOut(
       '$namespace pinned to ${source.revision}. Installed source was not changed.',
@@ -303,6 +298,7 @@ final class Installer {
         )
         .toList();
     final rendered = <String, String>{};
+    final iconTables = <RegistryReader, IconRegistry>{};
     final filesByItem = <String, List<String>>{};
     for (final item in items) {
       final targets = <String>[];
@@ -312,10 +308,18 @@ final class Installer {
         if (rendered.containsKey(relative)) {
           throw FormatException('Multiple registry files target $relative.');
         }
+        final source = await graph.template(item, registryFile);
+        final owner = graph.reader(item);
+        IconRegistry? icons;
+        if (source.contains('{{icon:')) {
+          icons = iconTables[owner] ??= IconRegistry.parse(await owner.icons());
+        }
         rendered[relative] = _renderer.render(
-          await graph.template(item, registryFile),
+          source,
           typePrefix: config.prefix,
           valuePrefix: config.valuePrefix,
+          icons: icons,
+          iconLibrary: config.iconLibrary,
         );
         targets.add(relative);
       }
@@ -333,7 +337,11 @@ final class Installer {
 
     final exports = [for (final item in items) ...item.exports];
     final proposedBarrel = updateManagedBarrel(currentBarrel, exports);
-    final requirements = _collectRequirements(items);
+    final requirements = _collectRequirements(items, [
+      // The chosen icon package, once per registry whose templates used it.
+      for (final table in iconTables.values)
+        table.library(config.iconLibrary).dependencies,
+    ]);
     final pubspec = File(p.join(root.path, 'pubspec.yaml'));
     final missingDependencies = _inspectDependencies(
       pubspec.readAsStringSync(),
@@ -881,7 +889,13 @@ void _validateInstallStates(
   }
 }
 
-List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
+/// Every item's dependencies, plus [extra] runtime dependencies, merged by
+/// package: constraints intersect, and a package is dev-only when every
+/// source says so.
+List<_DependencyRequirement> _collectRequirements(
+  List<RegistryItem> items, [
+  List<Map<String, VersionConstraint>> extra = const [],
+]) {
   final requirements = <String, _DependencyRequirement>{};
   void add(String name, VersionConstraint constraint, {required bool dev}) {
     final previous = requirements[name];
@@ -906,6 +920,11 @@ List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
     }
     for (final entry in item.devDependencies.entries) {
       add(entry.key, entry.value, dev: true);
+    }
+  }
+  for (final dependencies in extra) {
+    for (final entry in dependencies.entries) {
+      add(entry.key, entry.value, dev: false);
     }
   }
   return List.unmodifiable(requirements.values);

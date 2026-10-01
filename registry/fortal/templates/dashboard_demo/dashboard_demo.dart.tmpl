@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import '../../components/badge.dart';
 import '../../components/button.dart';
@@ -171,7 +171,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   List<Widget> _chromeActions() => [
     {{typePrefix}}IconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      icon: _isDark ? {{icon:sun}} : {{icon:moon}},
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
@@ -198,7 +198,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         ),
       ),
       child: {{typePrefix}}IconButton.ghost(
-        icon: RemixIcons.bell,
+        icon: {{icon:bell}},
         semanticLabel: 'Open notifications',
       ),
     ),
@@ -224,7 +224,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         ),
       ),
       child: const {{typePrefix}}IconButton.ghost(
-        icon: RemixIcons.gear,
+        icon: {{icon:gear}},
         semanticLabel: 'Open theme settings',
       ),
     ),
@@ -290,7 +290,7 @@ class _{{typePrefix}}Account extends StatelessWidget {
       {{typePrefix}}Menu<String>(
         trigger: const RemixMenuTrigger(
           label: 'Ada Chen',
-          icon: RemixIcons.person,
+          icon: {{icon:person}},
         ),
         items: const [
           RemixMenuItem(value: 'account', label: 'Account settings'),
@@ -729,7 +729,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(RemixIcons.box, size: 20),
+              Icon({{icon:box}}, size: 20),
               SizedBox(height: 6),
               {{typePrefix}}Text('No data yet', size: .size1),
             ],

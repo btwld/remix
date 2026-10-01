@@ -41,6 +41,14 @@ its full commit SHA. It checks that your preset exists in that branch and
 writes `remix.yaml`. If the branch is not published, initialization fails and
 creates no files.
 
+An optional `iconLibrary` (`remix` or `lucide`) lives in that same schema 3
+file. Templates carry icon placeholders, resolved at install; to switch an
+installed project, change the setting and reinstall every installed item that
+uses icons with `add --diff`, then `--overwrite`, naming them all in one
+command.
+A CLI that understands the placeholders has to ship before a registry that
+uses them.
+
 Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
 `--prefix`/`--ui-path` to control naming and location:
 
@@ -231,15 +239,22 @@ Path rules the CLI enforces before writing anything:
 
 ### Templates
 
-A template is ordinary Dart with two placeholders:
+A template is ordinary Dart with these placeholders:
 
 | placeholder | becomes | example |
 | --- | --- | --- |
 | `{{typePrefix}}` | the project's `prefix` | `AcmeButton` |
 | `{{valuePrefix}}` | its lower-camel form | `acmeButtonStyle` |
+| `{{icon:import}}` | the chosen icon library's import | `import 'package:lucide_flutter/lucide_flutter.dart';` |
+| `{{icon:<name>}}` | that library's constant for `<name>` | `LucideIcons.bell` |
 
-Any other `{{...}}` token is rejected — an unresolved placeholder is a
-registry bug, not something to install.
+Icon placeholders resolve through the registry's `icons.yaml`, published beside
+`index.yaml`: `libraries` names each library's package, import, and class,
+and `icons` maps every canonical name (the `remix` library's constant) to its
+constant in every library. A template that uses `{{icon:<name>}}` also carries
+`{{icon:import}}` in its import block, and the CLI adds the chosen library's
+package for it. Any other `{{...}}` token is rejected — an unresolved
+placeholder is a registry bug, not something to install.
 
 ### Two invariants worth knowing before you design items
 

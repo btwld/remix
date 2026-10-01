@@ -26,8 +26,6 @@ items:
   icons:
     registryDependencies:
       - theme
-    dependencies:
-      remix_ui_icons: ^0.1.0
     files:
       - source: templates/icons/icons.dart.tmpl
         target: "@ui/icons.dart"
@@ -253,7 +251,6 @@ items:
       - transcript_recipe
     dependencies:
       mix_chart: ^0.0.1-beta.3
-      remix_ui_icons: ^0.1.0
     files:
       - source: templates/dashboard_demo/dashboard_sample_data.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_sample_data.dart"
@@ -288,7 +285,6 @@ items:
     registryDependencies:
       - theme
       - icon_button
-      - icons
       - sidebar
       - sidebar_layout
       - textfield
@@ -775,8 +771,6 @@ items:
   support:
     registryDependencies:
       - theme
-    dependencies:
-      remix_ui_icons: ^0.1.0
     files:
       - source: templates/agent/support/disclosure.dart.tmpl
         target: "@ui/support/disclosure.dart"

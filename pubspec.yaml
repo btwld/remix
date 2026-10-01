@@ -6,6 +6,8 @@ environment:
 dev_dependencies:
   melos: ^8.5.0
   flutter_lints: ^6.0.0
+  # Read by tool/check_registry_icons.dart; keep within registry/icons.yaml.
+  lucide_flutter: ^1.47.0
   build_runner: ^2.10.1
   pub_semver: ^2.2.0
   test: ^1.31.0
@@ -174,6 +176,7 @@ melos:
       steps:
         - dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
         - dart run tool/build_registry.dart --check
+        - dart run tool/check_registry_icons.dart
       description: Test preset derivation and fail on committed registry drift
 
     open-code:dogfood:check:
@@ -240,6 +243,7 @@ melos:
         - ci:flutter
         - ci:open-code:vanilla
         - ci:open-code:fortal
+        - ci:open-code:icons
       description: >-
         Verify generated sources, docs, Fortal parity, tests, and the
         open-code consumer boundary
@@ -295,6 +299,15 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout
       description: Install every Fortal-preset item against the Remix checkout
+
+    ci:open-code:icons:
+      steps:
+        - dart run tool/check_open_code.dart --source checkout --item icons --icon-library lucide
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_demo --icon-library lucide
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --icon-library lucide
+      description: >-
+        Install the icon alias and both presets' dashboards under lucide; the
+        full preset runs already cover the default library
 
     ci:coverage:check:
       run: dart run tool/check_ci_coverage.dart

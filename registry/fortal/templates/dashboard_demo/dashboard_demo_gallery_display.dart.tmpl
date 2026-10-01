@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_text.dart';
@@ -168,7 +168,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                 if (_spinnersRunning)
                   {{typePrefix}}Spinner(size: size, semanticsLabel: 'Loading example')
                 else
-                  const Icon(RemixIcons.check, size: 16),
+                  const Icon({{icon:check}}, size: 16),
             ],
           ),
         ),

@@ -80,9 +80,11 @@ them at publish time. Four names are easy to confuse:
   registry wrote it. Tell consumers to install only `@acme/*` items.
 - **Public github.com only.** There is no private, enterprise, HTTP, or local
   registry, so every test of catalog changes goes through a pushed branch.
-- **Templates are Dart with two placeholders**: `{{typePrefix}}` (the
-  consumer's prefix, `Shop`) and `{{valuePrefix}}` (its lower-camel form,
-  `shop`). Any other `{{...}}` fails installation.
+- **Templates are Dart with placeholders**: `{{typePrefix}}` (the
+  consumer's prefix, `Shop`), `{{valuePrefix}}` (its lower-camel form,
+  `shop`), and the icon pair `{{icon:import}}` / `{{icon:<name>}}`, which
+  resolve through the registry's `icons.yaml` to the consumer's
+  `iconLibrary`. Any other `{{...}}` fails installation.
 - **Consumers generate code.** A template's `part '*.g.dart'` is produced by
   the consumer's `build_runner`, declared in the catalog's `generated` list.
 

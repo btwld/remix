@@ -122,6 +122,11 @@ configuration is refused instead of silently rewriting an existing project.
 The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
+Schema 3 projects may also set `iconLibrary: remix|lucide`; omitting it keeps
+Remix icons. It applies when items are installed; after changing it, reinstall
+every installed item that uses icons (`icons`, `dashboard_shell`,
+`dashboard_demo`, `support`) in one `add --diff`, then `add --overwrite`.
+
 ### Fortal as owned source
 
 With `preset: fortal`, `add button` installs the full local theme layer,

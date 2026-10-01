@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_ui.dart';
@@ -39,7 +39,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
               variant: variant,
               size: size,
               hintText: 'Type something…',
-              leading: const Icon(RemixIcons.magnifyingGlass, size: 16),
+              leading: const Icon({{icon:magnifyingGlass}}, size: 16),
             ),
           ),
         ),
@@ -114,17 +114,17 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
               items: const [
                 RemixToggleGroupItem(
                   value: 'left',
-                  icon: RemixIcons.alignLeft,
+                  icon: {{icon:alignLeft}},
                   semanticLabel: 'Left',
                 ),
                 RemixToggleGroupItem(
                   value: 'center',
-                  icon: RemixIcons.alignCenterHorizontally,
+                  icon: {{icon:alignCenterHorizontally}},
                   semanticLabel: 'Center',
                 ),
                 RemixToggleGroupItem(
                   value: 'right',
-                  icon: RemixIcons.alignRight,
+                  icon: {{icon:alignRight}},
                   semanticLabel: 'Right',
                 ),
               ],

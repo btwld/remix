@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 /// The four navigation groups shared with the repository dashboard showcase.
 enum {{typePrefix}}DashboardDemoSection {
@@ -19,51 +19,51 @@ enum {{typePrefix}}DashboardDemoPage {
   overview(
     {{typePrefix}}DashboardDemoSection.workspace,
     'Overview',
-    RemixIcons.dashboard,
+    {{icon:dashboard}},
   ),
-  chat({{typePrefix}}DashboardDemoSection.workspace, 'Chat', RemixIcons.chatBubble),
-  customers({{typePrefix}}DashboardDemoSection.data, 'Customers', RemixIcons.group),
-  orders({{typePrefix}}DashboardDemoSection.data, 'Orders', RemixIcons.table),
+  chat({{typePrefix}}DashboardDemoSection.workspace, 'Chat', {{icon:chatBubble}}),
+  customers({{typePrefix}}DashboardDemoSection.data, 'Customers', {{icon:group}}),
+  orders({{typePrefix}}DashboardDemoSection.data, 'Orders', {{icon:table}}),
   settings(
     {{typePrefix}}DashboardDemoSection.manage,
     'Settings',
-    RemixIcons.mixerHorizontal,
+    {{icon:mixerHorizontal}},
   ),
   charts(
     // Keep this destination expanded at every generated preset prefix.
     {{typePrefix}}DashboardDemoSection.components,
     'Charts',
-    RemixIcons.barChart,
+    {{icon:barChart}},
   ),
   actions(
     {{typePrefix}}DashboardDemoSection.components,
     'Actions',
-    RemixIcons.cursorArrow,
+    {{icon:cursorArrow}},
   ),
   forms(
     {{typePrefix}}DashboardDemoSection.components,
     'Forms & Inputs',
-    RemixIcons.input,
+    {{icon:input}},
   ),
   dataDisplay(
     {{typePrefix}}DashboardDemoSection.components,
     'Data Display',
-    RemixIcons.table,
+    {{icon:table}},
   ),
   overlays(
     {{typePrefix}}DashboardDemoSection.components,
     'Overlays',
-    RemixIcons.stack,
+    {{icon:stack}},
   ),
   navigation(
     {{typePrefix}}DashboardDemoSection.components,
     'Navigation',
-    RemixIcons.hamburgerMenu,
+    {{icon:hamburgerMenu}},
   ),
   typography(
     {{typePrefix}}DashboardDemoSection.components,
     'Typography',
-    RemixIcons.fontSize,
+    {{icon:fontSize}},
   );
 
   const {{typePrefix}}DashboardDemoPage(this.section, this.label, this.icon);

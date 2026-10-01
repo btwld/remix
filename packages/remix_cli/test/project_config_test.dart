@@ -203,4 +203,37 @@ registries:
       expect(reparsed.uiPath, uiPath, reason: encoded);
     }
   });
+
+  test('iconLibrary is optional and omitted at its default', () {
+    const body = '''
+schema: 3
+prefix: Acme
+preset: vanilla
+paths:
+  ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "btwld/remix"
+    path: "registry"
+    ref: "registry-stable"
+    revision: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+''';
+    final defaults = ProjectConfig.parse(body, packageRoot: root);
+    expect(defaults.iconLibrary, 'remix');
+    expect(defaults.encode(), isNot(contains('iconLibrary')));
+
+    final chosen = ProjectConfig.parse(
+      body.replaceFirst(
+        'preset: vanilla\n',
+        'preset: vanilla\niconLibrary: lucide\n',
+      ),
+      packageRoot: root,
+    );
+    expect(chosen.iconLibrary, 'lucide');
+    final encoded = chosen.encode();
+    expect(encoded, contains('iconLibrary: lucide'));
+    final roundTrip = ProjectConfig.parse(encoded, packageRoot: root);
+    expect(roundTrip.iconLibrary, 'lucide');
+  });
 }

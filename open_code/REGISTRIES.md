@@ -10,6 +10,7 @@ Repeating initialization preserves the existing configuration and pin.
 schema: 3
 prefix: Ui
 preset: fortal
+iconLibrary: remix # optional: remix (default) or lucide
 paths:
   ui: lib/ui
 defaultRegistry: "@remix"
@@ -20,6 +21,10 @@ registries:
     ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
+
+The optional `iconLibrary` is resolved when templates are installed.
+Registries publish `icons.yaml` beside their preset catalogs; the CLI must
+ship support for that table before a registry begins using its placeholders.
 
 `ref` records the requested branch, tag, or SHA. `revision` is the immutable
 commit used for every index, catalog, and template read. Commit `remix.yaml`;

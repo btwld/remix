@@ -76,6 +76,14 @@ jobs:
       - uses: ./.github/actions/setup-workspace
       - run: dart run melos run ci:open-code:${{ matrix.preset }}
 
+  open-code-icons:
+    name: Open-code Lucide icons
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-workspace
+      - run: dart run melos run ci:open-code:icons
+
   cli-windows:
     name: Verify the CLI with the Windows Flutter SDK
     runs-on: windows-latest

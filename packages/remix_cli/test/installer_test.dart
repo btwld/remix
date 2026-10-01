@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
+import 'package:remix_cli/src/registry.dart';
 import 'package:test/test.dart';
 
 import 'checkout_registry.dart';
@@ -960,12 +961,7 @@ packages:
             uiPath: 'lib/ui',
           ),
         );
-        final remixUiIcons =
-            catalog
-                .resolve(item)
-                .any(
-                  (entry) => entry.dependencies.containsKey('remix_ui_icons'),
-                )
+        final remixUiIcons = await _itemUsesRemixIcons(catalog, item)
             ? '0.1.0'
             : null;
         final mixChart =
@@ -1854,6 +1850,20 @@ Future<void> installButton(Directory root) async {
 String fakeToolchainDart(Directory root) => Platform.isWindows
     ? p.join(root.path, 'bin', 'cache', 'dart-sdk', 'bin', 'dart.exe')
     : p.join(root.path, 'bin', 'dart');
+
+/// True when [item] or a dependency still names remix icons, either as a
+/// catalog dependency or as an `{{icon:}}` placeholder the installer resolves
+/// from icons.yaml.
+Future<bool> _itemUsesRemixIcons(RegistryCatalog catalog, String item) async {
+  final registry = CheckoutRegistry(findCheckoutRegistry(), 'vanilla');
+  for (final entry in catalog.resolve(item)) {
+    if (entry.dependencies.containsKey('remix_ui_icons')) return true;
+    for (final file in entry.files) {
+      if ((await registry.template(file)).contains('{{icon:')) return true;
+    }
+  }
+  return false;
+}
 
 RecordingProcessRunner happyRunner(
   Directory root, {

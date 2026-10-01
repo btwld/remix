@@ -6,6 +6,7 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../packages/remix_cli/lib/src/registry.dart';
+import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
 /// The Agent extension: `registry_source/lib/src/agent` deriving into a preset's
@@ -61,7 +62,12 @@ void main() {
       'transcript',
     ]);
     expect(items['support']['registryDependencies'], ['theme']);
-    expect(items['support']['dependencies']['remix_ui_icons'], isNotNull);
+    // The icon package is chosen at install from icons.yaml, so the item
+    // catalog no longer names remix_ui_icons.
+    expect(
+      items['support']['dependencies']?.containsKey('remix_ui_icons'),
+      isNot(true),
+    );
     expect(items['support']['exports'], isNull);
     expect(items['models']['exports'], contains('models/statuses.dart'));
     expect(
@@ -100,15 +106,14 @@ void main() {
     final output = builder.derive();
     for (final entry in output.sourceByTemplate.entries) {
       final template = output.files[entry.key]!;
-      expect(
-        template
-            .replaceAll('{{typePrefix}}', 'Agent')
-            .replaceAll('{{valuePrefix}}', 'agent'),
-        entry.value,
+      String render(String prefix) => const TemplateRenderer().render(
+        template,
+        typePrefix: prefix,
+        valuePrefix: prefix.toLowerCase(),
+        icons: builder.icons,
       );
-      final rendered = template
-          .replaceAll('{{typePrefix}}', 'Acme')
-          .replaceAll('{{valuePrefix}}', 'acme');
+      expect(render('Agent'), entry.value);
+      final rendered = render('Acme');
       expect(rendered, isNot(contains('package:remix_agent/')));
       expect(rendered, isNot(contains('../style/')));
       // Prefixable identifiers and family names remain legal. A lowercase

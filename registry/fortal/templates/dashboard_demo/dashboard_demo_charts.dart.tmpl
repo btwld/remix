@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
+{{icon:import}}
 
 import 'dashboard_sample_data.dart';
 
@@ -244,10 +244,10 @@ List<PieSlice> {{valuePrefix}}DashboardChannelSlices({bool badges = false}) {
     ('other', 'Other', 8.0),
   ];
   const icons = [
-    RemixIcons.mobile,
-    RemixIcons.laptop,
-    RemixIcons.dashboard,
-    RemixIcons.activityLog,
+    {{icon:mobile}},
+    {{icon:laptop}},
+    {{icon:dashboard}},
+    {{icon:activityLog}},
   ];
   return [
     for (final (index, value) in source.indexed)

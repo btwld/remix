@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/registry.dart';
+import 'package:remix_cli/src/icon_registry.dart';
 import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
@@ -10,6 +11,9 @@ import 'checkout_registry.dart';
 
 void main() {
   final distribution = findCheckoutRegistry();
+  final icons = IconRegistry.parse(
+    File(p.join(distribution.path, 'icons.yaml')).readAsStringSync(),
+  );
 
   test('every committed preset tree is reachable through the index', () {
     final onDisk = distribution
@@ -288,6 +292,7 @@ items:
           source,
           typePrefix: prefix.type,
           valuePrefix: prefix.value,
+          icons: icons,
         );
         expect(
           rendered,
@@ -693,6 +698,7 @@ items:
           source,
           typePrefix: prefix.type,
           valuePrefix: prefix.value,
+          icons: icons,
         );
         final reason = '${entry.key}/${prefix.type}';
 
