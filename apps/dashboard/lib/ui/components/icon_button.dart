@@ -82,16 +82,22 @@ IconButtonStyler _applyUiIconButtonStateStyles(
   required double? pressedPaddingTop,
 }) {
   var pressed = _applyUiIconButtonState(
-    IconButtonStyler(),
+    IconButtonStyler().animate(uiBaseButtonActiveMotion),
     stateStyles.pressed,
   );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _applyUiIconButtonState(base, stateStyles.idle)
+  return _applyUiIconButtonState(
+        base.animate(uiBaseButtonRestMotion),
+        stateStyles.idle,
+      )
       .onHovered(
-        _applyUiIconButtonState(IconButtonStyler(), stateStyles.hovered),
+        _applyUiIconButtonState(
+          IconButtonStyler().animate(uiBaseButtonActiveMotion),
+          stateStyles.hovered,
+        ),
       )
       .onPressed(pressed)
       .onDisabled(

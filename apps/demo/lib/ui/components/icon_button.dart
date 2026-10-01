@@ -87,16 +87,22 @@ IconButtonStyler _applyFortalIconButtonStateStyles(
   required double? pressedPaddingTop,
 }) {
   var pressed = _applyFortalIconButtonState(
-    IconButtonStyler(),
+    IconButtonStyler().animate(fortalBaseButtonActiveMotion),
     stateStyles.pressed,
   );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _applyFortalIconButtonState(base, stateStyles.idle)
+  return _applyFortalIconButtonState(
+        base.animate(fortalBaseButtonRestMotion),
+        stateStyles.idle,
+      )
       .onHovered(
-        _applyFortalIconButtonState(IconButtonStyler(), stateStyles.hovered),
+        _applyFortalIconButtonState(
+          IconButtonStyler().animate(fortalBaseButtonActiveMotion),
+          stateStyles.hovered,
+        ),
       )
       .onPressed(pressed)
       .onDisabled(

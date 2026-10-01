@@ -95,13 +95,24 @@ ButtonStyler _applyUiButtonStateStyles(
   UiBaseButtonStateStyles stateStyles, {
   required double? pressedPaddingTop,
 }) {
-  var pressed = _applyUiButtonState(ButtonStyler(), stateStyles.pressed);
+  var pressed = _applyUiButtonState(
+    ButtonStyler().animate(uiBaseButtonActiveMotion),
+    stateStyles.pressed,
+  );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _applyUiButtonState(base, stateStyles.idle)
-      .onHovered(_applyUiButtonState(ButtonStyler(), stateStyles.hovered))
+  return _applyUiButtonState(
+        base.animate(uiBaseButtonRestMotion),
+        stateStyles.idle,
+      )
+      .onHovered(
+        _applyUiButtonState(
+          ButtonStyler().animate(uiBaseButtonActiveMotion),
+          stateStyles.hovered,
+        ),
+      )
       .onPressed(pressed)
       .onDisabled(_applyUiButtonState(ButtonStyler(), stateStyles.disabled))
       .onFocusVisible(

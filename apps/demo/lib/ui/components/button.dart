@@ -96,13 +96,24 @@ ButtonStyler _applyFortalButtonStateStyles(
   FortalBaseButtonStateStyles stateStyles, {
   required double? pressedPaddingTop,
 }) {
-  var pressed = _applyFortalButtonState(ButtonStyler(), stateStyles.pressed);
+  var pressed = _applyFortalButtonState(
+    ButtonStyler().animate(fortalBaseButtonActiveMotion),
+    stateStyles.pressed,
+  );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _applyFortalButtonState(base, stateStyles.idle)
-      .onHovered(_applyFortalButtonState(ButtonStyler(), stateStyles.hovered))
+  return _applyFortalButtonState(
+        base.animate(fortalBaseButtonRestMotion),
+        stateStyles.idle,
+      )
+      .onHovered(
+        _applyFortalButtonState(
+          ButtonStyler().animate(fortalBaseButtonActiveMotion),
+          stateStyles.hovered,
+        ),
+      )
       .onPressed(pressed)
       .onDisabled(_applyFortalButtonState(ButtonStyler(), stateStyles.disabled))
       .onFocusVisible(

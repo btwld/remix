@@ -11,6 +11,17 @@ import '../theme/theme.dart';
 /// defer an unknown size to a runtime throw.
 enum UiBaseButtonSize { size1, size2, size3, size4 }
 
+/// Transition into hover and press, the same 40ms ease as `UiCard`.
+final uiBaseButtonActiveMotion = AnimationConfig.ease(
+  const Duration(milliseconds: 40),
+);
+
+/// Transition back to rest and into focus or disabled, the same 120ms ease as
+/// `UiCard`.
+final uiBaseButtonRestMotion = AnimationConfig.ease(
+  const Duration(milliseconds: 120),
+);
+
 /// Shared Radix BaseButton metrics used by Button and IconButton recipes.
 ({
   double height,

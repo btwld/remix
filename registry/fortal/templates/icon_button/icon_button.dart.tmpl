@@ -87,16 +87,22 @@ IconButtonStyler _apply{{typePrefix}}IconButtonStateStyles(
   required double? pressedPaddingTop,
 }) {
   var pressed = _apply{{typePrefix}}IconButtonState(
-    IconButtonStyler(),
+    IconButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
     stateStyles.pressed,
   );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _apply{{typePrefix}}IconButtonState(base, stateStyles.idle)
+  return _apply{{typePrefix}}IconButtonState(
+        base.animate({{valuePrefix}}BaseButtonRestMotion),
+        stateStyles.idle,
+      )
       .onHovered(
-        _apply{{typePrefix}}IconButtonState(IconButtonStyler(), stateStyles.hovered),
+        _apply{{typePrefix}}IconButtonState(
+          IconButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
+          stateStyles.hovered,
+        ),
       )
       .onPressed(pressed)
       .onDisabled(

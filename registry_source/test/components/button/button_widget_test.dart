@@ -175,14 +175,14 @@ void main() {
 
             FocusManager.instance.highlightStrategy =
                 FocusHighlightStrategy.alwaysTraditional;
-            await tester.pump();
+            await tester.pumpAndSettle();
 
             expect(focusNode.hasFocus, isTrue);
             expect(resolved.containerEffects?.outline.width, 2);
 
             FocusManager.instance.highlightStrategy =
                 FocusHighlightStrategy.alwaysTouch;
-            await tester.pump();
+            await tester.pumpAndSettle();
 
             expect(focusNode.hasFocus, isTrue);
             expect(resolved.containerEffects?.outline.width ?? 0, 0);
