@@ -284,6 +284,26 @@ void main() {
 
       // mix_chart draws each slice 80px wide whatever box it is given, so a
       // donut whose hole plus ring outgrows half its box is clipped.
+      testWidgets('value axis end labels sit on their gridlines', (
+        tester,
+      ) async {
+        await _pumpOverview(tester, preset: preset, width: 1280);
+
+        // The revenue axis labels 0 to 100 in steps of 20. On their
+        // gridlines they are evenly spaced; an end label pulled in off its
+        // value shortens the gap beside it.
+        final centers = [
+          for (final label in const ['100', '80', '60', '40', '20', '0'])
+            tester.getCenter(find.text(label).first).dy,
+        ];
+        final gaps = [
+          for (var i = 1; i < centers.length; i++) centers[i] - centers[i - 1],
+        ];
+        for (final gap in gaps) {
+          expect(gap, closeTo(gaps[2], 1), reason: 'gaps: $gaps');
+        }
+      });
+
       testWidgets('every pie fits inside its chart box', (tester) async {
         await _pumpOverview(tester, preset: preset, width: 1280);
         final overviewPies = _expectPiesFit(tester);

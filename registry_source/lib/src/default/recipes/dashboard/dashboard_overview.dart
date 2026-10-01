@@ -3,6 +3,7 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../../dashboard/dashboard_demo_charts.dart';
 import '../../../dashboard/dashboard_overview_base.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
 import '../../components/card.dart';
@@ -140,10 +141,9 @@ Widget _revenueCard(RegistryDashboardSampleData data) => VanillaCard(
             maxIncluded: false,
             labelFormatter: (value) => _pointLabel(data.revenue, value),
           ),
-          // An explicit max that is a whole number of intervals: the top
-          // gridline label and the axis maximum then coincide instead of
-          // rendering two labels at almost the same height.
-          yAxis: ChartAxis.numeric(min: 0, max: 100, interval: 20),
+          // Round steps, with room past each end so the end labels sit on
+          // their gridlines.
+          yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
         ),
       ),
     ],
@@ -181,7 +181,7 @@ Widget _customerChartCard() => VanillaCard(
           ],
           // Customers peak at 44; see the revenue chart above for why the
           // maximum is pinned to a whole number of intervals.
-          yAxis: ChartAxis.numeric(min: 0, max: 50, interval: 10),
+          yAxis: registryDashboardNumericAxis(max: 50),
         ),
       ),
     ],
@@ -270,7 +270,9 @@ Widget _ordersCard(
         key: const ValueKey('dashboard-records-table'),
         semanticLabel: 'Recent customer orders',
         rows: data.records,
-        minimumWidth: 560,
+        // Fits the half-width card at a 1280px desktop with the sidebar open;
+        // narrower than this, the table scrolls sideways.
+        minimumWidth: 400,
         columns: _recordColumns,
       ),
     ],
@@ -316,7 +318,7 @@ final _recordColumns = <RemixDataTableColumn<RegistryDashboardRecord>>[
   RemixDataTableColumn(
     id: 'id',
     label: 'Record',
-    width: const FixedColumnWidth(120),
+    width: const FixedColumnWidth(96),
     cellBuilder: (_, record) => _cell(record.id, emphasized: true),
   ),
   RemixDataTableColumn(
@@ -328,13 +330,13 @@ final _recordColumns = <RemixDataTableColumn<RegistryDashboardRecord>>[
   RemixDataTableColumn(
     id: 'status',
     label: 'Status',
-    width: const FixedColumnWidth(130),
+    width: const FixedColumnWidth(104),
     cellBuilder: (_, record) => _cell(record.status),
   ),
   RemixDataTableColumn(
     id: 'amount',
     label: 'Amount',
-    width: const FixedColumnWidth(110),
+    width: const FixedColumnWidth(96),
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (_, record) => _cell(record.amount, emphasized: true),
   ),

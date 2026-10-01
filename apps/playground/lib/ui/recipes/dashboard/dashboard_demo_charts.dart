@@ -293,16 +293,26 @@ ChartAxis playgroundDashboardWeekdayAxis() => ChartAxis.numeric(
   },
 );
 
-/// A value axis on round steps.
+/// A value axis on round steps, from [min] to [max], with half a step of room
+/// at each end.
 ///
 /// Give every chart one, with [max] a whole number of [interval]s: an axis
 /// left to the data ends on the data's own extremes, and labels them beside
-/// the nearest round step, where the two labels collide.
+/// the nearest round step, where the two labels collide. The room keeps the
+/// [min] and [max] labels on their gridlines: flush against the plot's edge,
+/// the chart pulls an end label inward, off the value it names. The padded
+/// bounds are not labels themselves.
 ChartAxis playgroundDashboardNumericAxis({
   double min = 0,
   double max = 70,
   double interval = 10,
-}) => ChartAxis.numeric(min: min, max: max, interval: interval);
+}) => ChartAxis.numeric(
+  min: min - interval / 2,
+  max: max + interval / 2,
+  interval: interval,
+  minIncluded: false,
+  maxIncluded: false,
+);
 
 const playgroundDashboardWeekdays = [
   'Mon',

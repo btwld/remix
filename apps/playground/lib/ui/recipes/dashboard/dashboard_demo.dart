@@ -251,7 +251,9 @@ class _PlaygroundBreadcrumb extends StatelessWidget {
       Flexible(
         child: StyledText(
           page.section.label,
-          style: _textStyle(muted: true).maxLines(1).softWrap(false),
+          style: _textStyle(
+            muted: true,
+          ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
       const Padding(
@@ -264,7 +266,7 @@ class _PlaygroundBreadcrumb extends StatelessWidget {
           style: _textStyle(
             size: 16,
             weight: FontWeight.w600,
-          ).maxLines(1).softWrap(false),
+          ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
     ],
