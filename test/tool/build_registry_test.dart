@@ -143,6 +143,36 @@ void main() {
     }
   });
 
+  test('nested shared theme files retain their template and target paths', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(
+      builder.sourceRoot,
+      'theme/theme.dart',
+      "export 'tokens.dart';\nexport 'generated/nested.dart';\n",
+    );
+    _write(
+      builder.sourceRoot,
+      'theme/generated/nested.dart',
+      'const FortalNested = true;\n',
+    );
+
+    final output = builder.derive();
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    final files = (items['theme'] as YamlMap)['files'] as YamlList;
+    expect(
+      files.any(
+        (file) =>
+            file['source'] == 'templates/theme/generated/nested.dart.tmpl' &&
+            file['target'] == '@ui/theme/generated/nested.dart',
+      ),
+      isTrue,
+    );
+    expect(
+      output.files['templates/theme/generated/nested.dart.tmpl'],
+      'const {{typePrefix}}Nested = true;\n',
+    );
+  });
+
   test('registry dependencies and package floors are inferred', () {
     final output = PresetBuilder.forRepository(Directory.current).derive();
     final document = loadYaml(output.files['registry.yaml']!) as YamlMap;
