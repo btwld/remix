@@ -18,10 +18,8 @@ handling, focus management, accessibility semantics, and the loading/disabled
 interaction rules. The installed file only decides what things look like.
 
 <Info>
-`remix_cli` has not been published. The hosted installation commands below
-apply after its first release. Until then, use the checkout installation
-described in the CLI README. The CLI has its own version and release schedule.
-Fortal preset does not add a `remix_fortal` dependency.
+`remix_cli` has its own version and release schedule.
+The Fortal preset does not add a `remix_fortal` dependency.
 </Info>
 
 ## Choose a preset
@@ -40,23 +38,7 @@ vocabularies are different.
 
 ## Install
 
-Before the first release, add the CLI from a checkout:
-
-```bash
-dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
-```
-
-Until Remix beta.10 is published, add this temporary `pubspec_overrides.yaml`
-to the application. Replace the path with your checkout:
-
-```yaml
-dependency_overrides:
-  remix:
-    path: /path/to/remix/packages/remix
-```
-
-After both releases are available, remove this override and use the hosted
-installation below. Both presets require Remix `^1.0.0-beta.10`.
+Both presets require Remix `^1.0.0-beta.10`, which `add` declares for you.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
