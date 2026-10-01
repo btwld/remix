@@ -74,8 +74,10 @@ entry point, theme scope, routes, authentication, and persistence.
 
 Installed Dart imports the public `remix` API, not `registry_source`.
 `mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
-that use them. Items with generated parts declare the generation dependencies;
-the consumer generates its own adapters rather than copying authoring outputs.
+that use them. Vanilla's `theme` also declares `remix_ui_fonts`, because its
+themes set the type in Geist and Geist Mono; Fortal pins no font family. Items
+with generated parts declare the generation dependencies; the consumer generates
+its own adapters rather than copying authoring outputs.
 
 When installed source uses `@MixableSpec`, the CLI enables the supported
 spec-styler builder in the consumer's `build.yaml`. A new builder is scoped to
@@ -110,8 +112,9 @@ compares the complete output trees, including unexpected or missing files.
 
 ## Repository consumers
 
-- `apps/playground`: full Vanilla catalog, prefix `Playground`; its indigo
-  theme customization is declared in the dogfood checker.
+- `apps/playground`: full Vanilla catalog, prefix `Playground`, on the stock
+  theme; its one deliberate customization, an app-owned `PlaygroundIcons.back`
+  alias in `icons`, is declared in the dogfood checker.
 - `apps/demo`: non-Agent Fortal review catalog, prefix `Fortal`.
 - `apps/dashboard`: full Fortal catalog including Agent surfaces and recipes,
   prefix `Ui`. Workspace → Chat demonstrates the eight surfaces together.

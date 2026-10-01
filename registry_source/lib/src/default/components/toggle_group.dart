@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle_group.g.dart';
@@ -13,7 +15,8 @@ enum VanillaToggleGroupVariant {
   /// No fill and no border until an option is hovered or on.
   ghost,
 
-  /// A hairline `border` around every option, so the set is visible while off.
+  /// An `input` outline around the whole group, so the set is visible while
+  /// off.
   outline,
 }
 
@@ -39,6 +42,11 @@ enum VanillaToggleGroupSize {
 /// multi-select rules, and the group accessibility semantics; this recipe
 /// owns the strip's layout and every option's appearance.
 ///
+/// The group is drawn as one control: the options sit edge to edge with no gap,
+/// the strip is rounded and clipped as a whole, and the outline variant draws
+/// one outline around the strip rather than one per option. Each option carries
+/// the single toggle's states — `muted` under the pointer, `accent` while on.
+///
 /// One recipe covers both, because `ToggleGroupSpec` carries the option's
 /// style as a field: the group's `item` is the default every
 /// `RemixToggleGroupItem` resolves against. That is what makes an option in a
@@ -56,133 +64,88 @@ ToggleGroupStyler vanillaToggleGroupStyle({
 }) => ToggleGroupStyler()
     .direction(.horizontal)
     .mainAxisSize(.min)
-    .spacing(_gap)
-    .item(_itemStyle(_metricsFor(size), variant))
+    .spacing(0)
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    // The clip is what rounds the first and last options: they are square, and
+    // the strip's corners cut them.
+    .clipBehavior(Clip.antiAlias)
+    .merge(_groupOutline(variant))
+    .item(_itemStyle(_heightFor(size), variant))
     .merge(style);
 
-/// Gap between adjacent options.
-///
-/// Present rather than zero: the options are separate controls that happen to
-/// sit together, not segments of one control. A segmented control is the
-/// component for the latter.
-const _gap = 4.0;
-
-/// Width of the outline every option draws, in every state.
-const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Opacity applied to an option while disabled.
-const _disabledOpacity = 0.5;
-
-/// A colour that paints nothing, used for the `ghost` outline and for the
-/// resting fill.
+/// A fill that paints nothing, the resting fill of every option.
 const _noFill = Color(0x00000000);
 
-/// Geometry and type scale for one [VanillaToggleGroupSize].
-typedef _VanillaToggleGroupMetrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
+/// The option height for one [VanillaToggleGroupSize]: 32, 36, or 40px.
+double _heightFor(VanillaToggleGroupSize size) => switch (size) {
+  .small => VanillaSize.controlSm,
+  .medium => VanillaSize.controlMd,
+  .large => VanillaSize.controlLg,
+};
 
-_VanillaToggleGroupMetrics _metricsFor(VanillaToggleGroupSize size) =>
-    switch (size) {
-      .small => (
-        minHeight: 32.0,
-        paddingX: 10.0,
-        gap: 6.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      .medium => (
-        minHeight: 36.0,
-        paddingX: 12.0,
-        gap: 8.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      .large => (
-        minHeight: 40.0,
-        paddingX: 16.0,
-        gap: 8.0,
-        labelSize: 16.0,
-        iconSize: 18.0,
+/// The outline variant's one outline around the strip.
+///
+/// No shadow: the strip has no effects layer, and a decoration shadow under its
+/// transparent fill shows through as a gray wash.
+ToggleGroupStyler _groupOutline(VanillaToggleGroupVariant variant) =>
+    switch (variant) {
+      .ghost => ToggleGroupStyler(),
+      .outline => ToggleGroupStyler().border(
+        .color(VanillaTokens.input()).width(VanillaStroke.hairline),
       ),
     };
 
-/// One option: the same off/hover/on/focus/disabled story a lone toggle tells.
+/// One option: the single toggle's off/hover/on/focus/disabled story, square
+/// and with a 12px side inset.
 ToggleGroupItemStyler _itemStyle(
-  _VanillaToggleGroupMetrics metrics,
+  double height,
   VanillaToggleGroupVariant variant,
 ) {
   return _content(VanillaTokens.foreground())
+      .animate(VanillaMotion.standard)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)
       .mainAxisAlignment(.center)
       .crossAxisAlignment(.center)
-      .minHeight(metrics.minHeight)
-      .padding(.horizontal(metrics.paddingX))
-      .spacing(metrics.gap)
-      .borderRadius(.all(VanillaTokens.radius()))
-      .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-      .icon(.size(metrics.iconSize))
-      // The outline is present in every state and every variant, and only its
-      // colour changes: Flutter insets a container's content by its border
-      // widths, so an outline that appeared on selection would nudge the label
-      // sideways. `ghost` simply paints its copy in nothing.
-      .border(.all(_edge(_variantEdge(variant))))
-      .onHovered(.color(VanillaTokens.muted()))
+      .minHeight(height)
+      .padding(.horizontal(VanillaSpace.s3))
+      .spacing(VanillaSpace.s2)
+      .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
+      .icon(.size(VanillaSize.icon))
+      .onHovered(switch (variant) {
+        .ghost => _content(
+          VanillaTokens.mutedForeground(),
+        ).color(VanillaTokens.muted()),
+        .outline => _content(
+          VanillaTokens.accentForeground(),
+        ).color(VanillaTokens.accent()),
+      })
       .onSelected(
-        _content(VanillaTokens.accentForeground())
-            .color(VanillaTokens.accent())
-            // The outline, not the fill, is what says "on". `muted` and
-            // `accent` are 1.155:1 apart in the light theme, so hover and on
-            // would otherwise be the same shade to most readers — and a state
-            // told apart by colour alone is one a lot of people cannot read.
-            .border(.all(_edge(VanillaTokens.primary()))),
+        _content(
+          VanillaTokens.accentForeground(),
+        ).color(VanillaTokens.accent()),
       )
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle());
 }
 
-/// The resting outline colour for one variant.
-Color _variantEdge(VanillaToggleGroupVariant variant) => switch (variant) {
-  .ghost => _noFill,
-  .outline => VanillaTokens.border(),
-};
-
-/// One outline side, at the width every state shares.
-BorderSideMix _edge(Color color) =>
-    BorderSideMix(color: color, width: _borderWidth);
-
 /// Applies one content color to the label and the icons.
 ToggleGroupItemStyler _content(Color foreground) =>
     ToggleGroupItemStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// A *foreground* decoration rather than the box border: `ToggleGroupItemSpec`
-/// has no `containerEffects` layer to paint an outline into, and Flutter
-/// insets a container's content by its border widths — so adding a real border
-/// on focus would nudge the label.
+/// A *foreground* decoration, because `ToggleGroupItemSpec` has no
+/// `containerEffects` layer to paint an outline into. It is stroked inside
+/// the option rather than outside: the strip clips its options, and an
+/// outside ring on the first or last option would be cut off at its edge.
 ToggleGroupItemStyler _focusVisibleStyle() =>
     ToggleGroupItemStyler().foregroundDecoration(
-      BoxDecorationMix(
-        border: .all(
-          .color(
-            VanillaTokens.focusRing(),
-          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-        ),
-        borderRadius: .all(VanillaTokens.radius()),
-      ),
+      vanillaFocusRingDecoration(radius: Radius.zero, inset: true),
     );
 
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

@@ -23,10 +23,8 @@ part of 'skeleton.dart';
 /// )
 /// ```
 ///
-/// The pulse runs between `muted` and `accent`, the theme's two neutral
-/// surfaces, so a loading block reads as scenery rather than as content. Both
-/// tokens shift with light and dark, and a theme that wants a stronger pulse
-/// only widens the gap between them.
+/// It is an `accent` block with `radiusMd` corners that pulses to half
+/// strength, so a loading block reads as scenery rather than as content.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.

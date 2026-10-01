@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playground/ui/ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 /// Covers the application-owned theme this app installs from the default
 /// registry preset.
@@ -23,25 +24,29 @@ void main() {
       // places to edit for one added token.
       expect(tokens.keys.toSet(), <MixToken<Object?>>{
         ...PlaygroundTokens.colors,
-        PlaygroundTokens.radius,
+        ...PlaygroundTokens.radii,
+        ...PlaygroundTokens.textStyles,
       });
       for (final token in PlaygroundTokens.colors) {
         expect(tokens[token], isA<Color>(), reason: token.name);
       }
-      expect(tokens[PlaygroundTokens.radius], data.radius);
+      expect(tokens[PlaygroundTokens.radiusLg], data.radius);
     }
   });
 
-  test('the declared indigo customization is still here', () {
-    // `tool/check_open_code_dogfood.dart` records this app's indigo primary and
-    // matching focus ring as a deliberate edit, and it does fail if the theme
-    // ever matches the template again, so a plain reinstall is already caught.
-    // What it cannot see is *which* edit: any custom color satisfies it. These
-    // are the values themselves, and the tie between the ring and the primary.
+  test('the theme is the stock Vanilla template', () {
+    // This app declares no theme edit, so the dogfood check already requires
+    // the installed theme to match the template byte for byte. These are the
+    // stock values themselves, which also fail if the check is ever taught to
+    // allow a theme edit here.
     const light = PlaygroundThemeData.light();
 
-    expect(light.primary, const Color(0xFF4F46E5));
-    expect(light.focusRing, light.primary);
+    expect(light.primary, const Color(0xFF171717));
+    expect(light.primaryForeground, const Color(0xFFFAFAFA));
+    expect(light.ring, const Color(0xFFA1A1A1));
+    expect(light.radius, const Radius.circular(10));
+    expect(light.fontFamily, RemixFonts.geist);
+    expect(light.monoFontFamily, RemixFonts.geistMono);
   });
 
   testWidgets('the scope resolves tokens for stylers below it', (tester) async {
@@ -62,8 +67,8 @@ void main() {
     // styler that resolves below it reads the Mix side, not the inherited one.
     expect(
       MixScope.tokenOf(PlaygroundTokens.primary, inner),
-      const Color(0xFF4F46E5),
+      const Color(0xFF171717),
     );
-    expect(PlaygroundTheme.of(inner).primary, const Color(0xFF4F46E5));
+    expect(PlaygroundTheme.of(inner).primary, const Color(0xFF171717));
   });
 }

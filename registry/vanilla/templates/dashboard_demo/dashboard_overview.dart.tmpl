@@ -129,12 +129,15 @@ Widget _revenueCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Car
           semanticsLabel: 'Seven-day net revenue',
           showMarkers: true,
           series: [_revenueSeries(data.revenue)],
+          // Half a step of room at each end keeps the first and last labels
+          // and markers off the plot's edges, where a marker is cut in half
+          // and a label is pushed into its neighbor.
           xAxis: ChartAxis.numeric(
-            min: 0,
-            max: data.revenue.length > 1
-                ? (data.revenue.length - 1).toDouble()
-                : 1,
+            min: -0.5,
+            max: data.revenue.length > 1 ? data.revenue.length - 0.5 : 1.5,
             interval: 1,
+            minIncluded: false,
+            maxIncluded: false,
             labelFormatter: (value) => _pointLabel(data.revenue, value),
           ),
           // An explicit max that is a whole number of intervals: the top
@@ -197,6 +200,9 @@ Widget _fulfillmentCard() => {{typePrefix}}Card(
         height: 220,
         child: {{typePrefix}}PieChart(
           centerRadius: 44,
+          // mix_chart draws each slice 80px wide in any box; this ring stops
+          // the donut at 88px, 80% of the way to the edge of its 220px box.
+          style: PieChartStyler().slice(PieSliceStyler().radius(44)),
           semanticsLabel: 'Current order status',
           slices: [
             PieSlice(id: 'fulfilled', label: 'Fulfilled', value: 72),

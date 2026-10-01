@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'callout.g.dart';
@@ -13,7 +14,7 @@ part 'callout.g.dart';
 /// token vocabulary to serve one component. An application that needs them
 /// adds the tokens and one more enum value here.
 enum PlaygroundCalloutVariant {
-  /// A neutral aside on a `muted` surface.
+  /// A neutral aside on the `card` surface.
   neutral,
 
   /// A problem the reader has to act on.
@@ -26,21 +27,15 @@ enum PlaygroundCalloutVariant {
 /// something about the surrounding page. Remix owns the layout and the icon
 /// slot; this recipe owns the surface, the outline, and the content colors.
 ///
+/// It is the `card` surface inside a `border` hairline with `radiusLg` corners,
+/// a 16px by 12px inset, and the icon 12px from `textSm` prose. The icon takes
+/// the text's color, so the tone is set in one place. The destructive tone
+/// keeps the neutral surface and outline and sets its text in `destructive`,
+/// which clears 4.5:1 on `card` in both shipped themes; a solid `destructive`
+/// fill would read as a pressed button rather than as a notice.
+///
 /// There are no interaction fragments. A callout is not a control — anything
 /// actionable inside it is a separate button or link with its own recipe.
-///
-/// The destructive tone paints no fill. A tinted danger surface would need a
-/// `destructive`-derived background this theme does not define, and a solid
-/// `destructive` fill would read as a pressed button rather than as a notice;
-/// the outline and the icon carry the meaning instead.
-///
-/// Both tones set their sentence in `foreground`, which is why the text color
-/// lives in [_base] rather than in either tone. `destructive` is a fill color
-/// chosen to sit under `destructiveForeground`, not a text color: on the dark
-/// theme's page it measures 4.1:1, under the 4.5:1 WCAG floor for body copy.
-/// The border and the glyph are non-text, where the floor is 3:1, so they are
-/// where the tone shows. A theme that adds a dedicated danger *text* step
-/// would move the text color back into [_variantStyle].
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable
@@ -58,68 +53,35 @@ CalloutStyler playgroundCalloutStyle({
   CalloutStyler style = const CalloutStyler.create(),
 }) => _base().merge(_variantStyle(variant)).merge(style);
 
-/// Inset between the callout edge and its content.
-const _paddingX = 16.0;
-
-/// See [_paddingX].
-const _paddingY = 12.0;
-
-/// Gap between the icon and the text.
-const _gap = 8.0;
-
-/// Text size, matching body copy: a callout is prose, not a label.
-const _textSize = 14.0;
-
-/// Size of the leading icon, one step up so it aligns with the first line.
-const _iconSize = 16.0;
-
-/// Optical offset that aligns the icon with the first line's visible glyphs.
+/// Optical offset that aligns the icon with the first line's visible glyphs:
+/// 2px down.
 ///
 /// The row stays top-aligned for multi-line prose. Font line boxes reserve
 /// leading around their visible glyphs, so an icon at the line-box origin
 /// looks high even though both layout bounds start together.
-const _iconOffsetY = 2.0;
+const _iconOffsetY = PlaygroundSpace.s0_5;
 
-/// Width of the callout outline.
-const _borderWidth = 1.0;
-
-/// A fill that paints nothing, used by `destructive`.
-const _noFill = Color(0x00000000);
-
-/// Layout and typography shared by both tones.
+/// Layout, surface, and typography shared by both tones.
 CalloutStyler _base() => CalloutStyler()
     .direction(.horizontal)
     .crossAxisAlignment(.start)
-    .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
-    .spacing(_gap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
-    .text(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
-    .icon(.size(_iconSize).wrap(.translate(x: 0, y: _iconOffsetY)));
+    .padding(
+      .symmetric(horizontal: PlaygroundSpace.s4, vertical: PlaygroundSpace.s3),
+    )
+    .spacing(PlaygroundSpace.s3)
+    .color(PlaygroundTokens.card())
+    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .borderRadius(.all(PlaygroundTokens.radiusLg()))
+    .text(.style(PlaygroundTokens.textSm.mix()))
+    .icon(.size(PlaygroundSize.icon).wrap(.translate(x: 0, y: _iconOffsetY)));
 
+/// The tone: one content color for the sentence and its glyph.
 CalloutStyler _variantStyle(PlaygroundCalloutVariant variant) =>
-    switch (variant) {
-      .neutral => _toned(
-        fill: PlaygroundTokens.muted(),
-        outline: PlaygroundTokens.border(),
-        icon: PlaygroundTokens.mutedForeground(),
-      ),
-      .destructive => _toned(
-        fill: _noFill,
-        outline: PlaygroundTokens.destructive(),
-        icon: PlaygroundTokens.destructive(),
-      ),
-    };
+    _content(switch (variant) {
+      .neutral => PlaygroundTokens.cardForeground(),
+      .destructive => PlaygroundTokens.destructive(),
+    });
 
-/// One surface, one outline, and the glyph color.
-///
-/// The icon carries the tone in both cases: the glyph is a marker and the
-/// sentence is the message, so neutral dims the glyph while destructive
-/// colors it.
-CalloutStyler _toned({
-  required Color fill,
-  required Color outline,
-  required Color icon,
-}) => CalloutStyler()
-    .color(fill)
-    .border(.color(outline).width(_borderWidth))
-    .icon(.color(icon));
+/// Applies one content color to the text and the icon.
+CalloutStyler _content(Color color) =>
+    CalloutStyler().text(.color(color)).icon(.color(color));

@@ -421,6 +421,8 @@ const defaultPreset = PresetSpec(
         'theme/tokens.dart',
         'theme/theme_data.dart',
         'theme/theme_scope.dart',
+        'theme/scale.dart',
+        'theme/effects.dart',
       ],
     ),
   ],
@@ -442,8 +444,9 @@ const defaultPreset = PresetSpec(
     'mix_generator',
     'mix_chart',
     'remix_ui_icons',
+    'remix_ui_fonts',
   },
-  detectedPackages: ['mix_chart', 'remix_ui_icons'],
+  detectedPackages: ['mix_chart', 'remix_ui_icons', 'remix_ui_fonts'],
   // A layout, not a styled component: `sidebar_layout` composes an installed
   // Sidebar through a `Widget`-typed field, so its source never imports
   // components/sidebar.dart and import inference alone would miss it.

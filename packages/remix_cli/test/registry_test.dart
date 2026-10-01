@@ -233,7 +233,7 @@ items:
       r'^\s+required this\.',
       multiLine: true,
     ).allMatches(await registry.template(themeData)).length;
-    expect(tokenCount, 20);
+    expect(tokenCount, 33);
 
     // Two templates state that size in prose, and templates are copied verbatim
     // into consumer source. `chart1`-`chart5` were added for the chart item and
@@ -245,6 +245,7 @@ items:
       18: 'eighteen',
       19: 'nineteen',
       20: 'twenty',
+      33: 'thirty-three',
     };
     final expected = spellings[tokenCount];
     expect(expected, isNotNull, reason: 'spell $tokenCount in `spellings`');
@@ -759,6 +760,7 @@ items:
       'mix_annotations',
       'mix_chart',
       'remix_ui_icons',
+      'remix_ui_fonts',
     };
     final directive = RegExp(r'''(?:import|export|part)\s+['"]([^'"]+)['"]''');
 

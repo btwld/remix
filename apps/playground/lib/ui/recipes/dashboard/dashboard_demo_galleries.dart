@@ -894,9 +894,9 @@ class _DefaultGalleryNavigationPageState
             children: [
               PlaygroundAccordion<String>(
                 value: 'details',
-                title: 'What is Fortal?',
+                title: 'What is Playground?',
                 child: _Text(
-                  'A Radix-inspired theme and component system for Flutter.',
+                  'A neutral starter theme, installed as source you own.',
                 ),
               ),
               PlaygroundAccordion<String>(
@@ -1123,7 +1123,7 @@ class _Code extends StatelessWidget {
       child: StyledText(
         value,
         style: TextStyler()
-            .fontFamily('monospace')
+            .style(PlaygroundTokens.textMono.mix())
             .fontSize(13)
             .color(PlaygroundTokens.foreground()),
       ),

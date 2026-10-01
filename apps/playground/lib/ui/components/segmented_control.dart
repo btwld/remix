@@ -2,17 +2,20 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'segmented_control.g.dart';
 
 /// The application's SegmentedControl recipe.
 ///
-/// A segmented control is one control divided into parts, which is what
-/// separates it from a toggle group: the segments share a track, exactly one
-/// is chosen, and the chosen one is *lifted* out of the track rather than
-/// tinted on top of it. Remix owns the rendering, the equal-width layout, the
-/// roving focus, and the group accessibility semantics.
+/// A segmented control is one control divided into parts: the segments share a
+/// track, exactly one is chosen, and the chosen one is *lifted* out of the
+/// track rather than tinted on top of it. It is drawn as the filled tab list,
+/// so a segmented control and a tab strip on one page read as one family. Remix
+/// owns the rendering, the equal-width layout, the roving focus, and the group
+/// accessibility semantics.
 ///
 /// One recipe covers the track and the segments, because
 /// `SegmentedControlSpec` carries the segment's style as a field: the
@@ -30,14 +33,13 @@ SegmentedControlStyler playgroundSegmentedControlStyle({
   SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
   return SegmentedControlStyler()
-      // The track is `muted`, the recessed surface the segments sit in. The
-      // chosen segment is `background`, so it reads as sitting on top of the
-      // page rather than painted onto the track.
+      // The track is the filled tab list: `muted`, with large corners and a
+      // 3px inset. The chosen segment is lifted onto the page color.
       .color(PlaygroundTokens.muted())
-      .borderRadius(.all(PlaygroundTokens.radius()))
+      .borderRadius(.all(PlaygroundTokens.radiusLg()))
       .padding(.all(_trackInset))
       .mainAxisSize(.min)
-      .spacing(_segmentGap)
+      .spacing(0)
       .item(_itemStyle())
       .merge(style);
 }
@@ -45,101 +47,65 @@ SegmentedControlStyler playgroundSegmentedControlStyle({
 /// Gap between the track edge and its segments, on every side.
 const _trackInset = 3.0;
 
-/// Gap between adjacent segments.
-///
-/// Zero: the segments are parts of one control, and a visible gap would make
-/// them read as separate buttons that happen to share a background.
-const _segmentGap = 0.0;
-
-/// How much tighter a segment's corners are than the track's.
-///
-/// A segment inset by [_trackInset] on every side needs a correspondingly
-/// smaller radius, or its corners stand proud of the track's.
-const _segmentRadiusInset = _trackInset;
-
-/// Width of the chosen segment's outline.
-const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-///
-/// It carries no offset, unlike the button's. Segments sit flush against each
-/// other inside a 3px track inset, so a ring pushed outward would cross into
-/// the neighbouring segment.
-const _focusRingWidth = 2.0;
-
-/// Opacity applied to a segment while disabled.
-const _disabledOpacity = 0.5;
-
 /// A fill that paints nothing, used by an unchosen segment.
 const _noFill = Color(0x00000000);
 
-/// A segment's height.
+/// An edge that paints nothing, holding the chosen segment's outline space.
+const _noEdge = Color(0x00000000);
+
+/// An unchosen segment's content: 60% `foreground`, or `mutedForeground` in
+/// the dark theme, exactly as an unchosen tab's. Both clear 4.5:1 on the
+/// `muted` track.
+final _restingContent = playgroundByBrightness(
+  light: playgroundTint(PlaygroundTokens.foreground, _restingAlpha),
+  dark: PlaygroundTokens.mutedForeground,
+);
+
+/// See [_restingContent].
+const _restingAlpha = 0.6;
+
+/// The chosen segment's surface: the page color, or `input` at 30% in the
+/// dark theme, as the current tab's.
+final _chosenFill = playgroundByBrightness(
+  light: PlaygroundTokens.background,
+  dark: playgroundTint(PlaygroundTokens.input, _darkChosenFillAlpha),
+);
+
+/// See [_chosenFill].
+const _darkChosenFillAlpha = 0.3;
+
+/// The chosen segment's outline: none in the light theme, `input` in the dark
+/// one, as the current tab's.
+final _chosenEdge = playgroundTint(PlaygroundTokens.input, 0, dark: 1);
+
+/// One segment: the filled tab, edge to edge in the track.
 ///
-/// One size, not a scale. Thirty is not arbitrary: a segment is inset inside
-/// the track by [_trackInset] on both sides, so the *track* lands on 36 — the
-/// same height as the button and field beside it.
-const _minHeight = 30.0;
-
-/// Horizontal inset inside a segment.
-const _paddingX = 12.0;
-
-/// Gap between a segment's icon and its label.
-const _gap = 8.0;
-
-/// Label size, matching body copy.
-const _labelSize = 14.0;
-
-/// Size of a segment's leading icon.
-const _iconSize = 16.0;
-
-/// One segment: quiet until chosen, then lifted onto its own surface.
-///
-/// Every segment's label is `foreground`, chosen or not. The tempting
-/// spelling is `mutedForeground` until chosen, but that pairing measures
-/// 4.35:1 on the `muted` track in the light theme — under the 4.5:1 WCAG
-/// floor for text this size. The chosen segment is marked by its raised
-/// surface and a heavier weight instead, and weight survives where a colour
-/// difference would not.
-SegmentedControlItemStyler
-_itemStyle() => _content(PlaygroundTokens.foreground())
+/// Its height is the track's 36px less the inset on both sides, so the track
+/// lands on the height of the button and field beside it.
+SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
+    .animate(PlaygroundMotion.standard)
     .color(_noFill)
     .alignment(.center)
-    .minHeight(_minHeight)
-    .padding(.horizontal(_paddingX))
-    .spacing(_gap)
-    .borderRadius(.all(_segmentRadius()))
-    .label(.fontSize(_labelSize).fontWeight(FontWeight.w400))
-    .icon(.size(_iconSize))
-    // Hover tints the surface rather than the label: the label is already at
-    // full strength, and a second text colour would compete with the chosen
-    // segment for "this is the current section".
-    .onHovered(.color(PlaygroundTokens.accent()))
-    // Three cues, because the fill alone is not one: `background` on a
-    // `muted` track measures 1.09:1 in the light theme, so a reader looking
-    // for "which section am I in" would be reading a 1.09:1 difference and a
-    // font weight. The outline is what actually draws the segment.
+    .minHeight(PlaygroundSize.controlMd - 2 * _trackInset)
+    .padding(
+      .symmetric(horizontal: PlaygroundSpace.s2, vertical: PlaygroundSpace.s1),
+    )
+    .spacing(PlaygroundSpace.s1_5)
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
+    .border(.color(_noEdge).width(PlaygroundStroke.hairline))
+    .label(.style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500))
+    .icon(.size(PlaygroundSize.icon))
+    .onHovered(_content(PlaygroundTokens.foreground()))
     .onSelected(
-      SegmentedControlItemStyler()
-          .color(PlaygroundTokens.background())
-          .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-          .label(.fontWeight(FontWeight.w500)),
+      _content(PlaygroundTokens.foreground())
+          .color(_chosenFill())
+          .border(.color(_chosenEdge()))
+          // In the effects layer rather than the decoration: the dark chosen
+          // fill is translucent, and a decoration shadow would show through.
+          .containerEffects(.behindContent(PlaygroundShadow.sm.effects)),
     )
     .onFocusVisible(_focusVisibleStyle())
     .onDisabled(_disabledStyle());
-
-/// The track's radius, pulled in by the inset the segments sit behind.
-///
-/// Declared as a top-level final because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-final _segmentRadius = ContextToken<Radius>((context) {
-  final radius = PlaygroundTokens.radius.resolve(context);
-
-  return Radius.elliptical(
-    (radius.x - _segmentRadiusInset).clamp(0.0, double.infinity),
-    (radius.y - _segmentRadiusInset).clamp(0.0, double.infinity),
-  );
-});
 
 /// Applies one content color to the label and the icons.
 SegmentedControlItemStyler _content(Color foreground) =>
@@ -147,21 +113,15 @@ SegmentedControlItemStyler _content(Color foreground) =>
         .label(.color(foreground))
         .icon(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// segment without taking layout space, so focusing one never widens the
 /// track.
 SegmentedControlItemStyler _focusVisibleStyle() =>
-    SegmentedControlItemStyler().containerEffects(
-      .outline(
-        .color(
-          PlaygroundTokens.focusRing(),
-        ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-      ),
-    );
+    SegmentedControlItemStyler().containerEffects(playgroundFocusRing());
 
 /// Declared last so it wins over every other state fragment.
 SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));

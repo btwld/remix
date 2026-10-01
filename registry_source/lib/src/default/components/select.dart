@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'select.g.dart';
@@ -37,37 +39,28 @@ SelectStyler vanillaSelectStyle({
       .merge(style);
 }
 
-/// Width of the trigger and panel outlines.
-const _borderWidth = 1.0;
+/// The trigger's fill: the text field's, transparent or `input` at 30% in the
+/// dark.
+final _triggerFill = vanillaTint(
+  VanillaTokens.input,
+  0,
+  dark: _darkTriggerFillAlpha,
+);
 
-/// Horizontal inset inside the trigger.
-///
-/// Flat across the sizes, matching the text field this trigger is styled
-/// after — see that recipe for why a field's gutter does not grow the way a
-/// button's padding does.
-const _paddingX = 12.0;
+/// The dark trigger under the pointer, `input` at 50%. A light trigger does not
+/// change on hover: the chevron and the pointer cursor already say it opens.
+final _triggerHoverFill = vanillaTint(
+  VanillaTokens.input,
+  0,
+  dark: _darkTriggerHoverAlpha,
+);
 
-/// Horizontal inset inside an option row.
-///
-/// The menu's row inset, not the trigger's. The trigger is a field and takes
-/// a field's gutter; an option row is a row in a floating list, and this
-/// recipe claims above that its panel matches the menu's. Sharing the
-/// trigger's 12 here broke that claim in the only place a reader would
-/// notice: a menu and a select opened side by side had their labels on
-/// different left edges.
-const _rowPaddingX = 8.0;
+const _darkTriggerFillAlpha = 0.3;
+const _darkTriggerHoverAlpha = 0.5;
 
-/// Gap between a row's text and its icons.
-const _gap = 8.0;
-
-/// Size of the trigger's chevron and an option's check mark.
-const _iconSize = 16.0;
-
-/// Inset between the panel edge and its rows.
-const _panelPadding = 4.0;
-
-/// The narrowest a panel gets, so a one-word list is still a target.
-const _panelMinWidth = 160.0;
+/// Opacity of the trigger's chevron, half strength: it marks the control
+/// without competing with the value beside it.
+const _chevronOpacity = 0.5;
 
 /// The tallest a panel gets before it scrolls.
 ///
@@ -75,120 +68,91 @@ const _panelMinWidth = 160.0;
 /// and takes its own dismissal affordances with it.
 const _panelMaxHeight = 320.0;
 
-/// Minimum height of one option row.
-const _rowHeight = 32.0;
-
-/// Vertical inset inside an option row.
-const _rowPaddingY = 6.0;
-
-/// Opacity of the placeholder, on top of its `mutedForeground` color.
-///
-/// Remix multiplies this into the placeholder's own color rather than
-/// replacing it, which is why the recipe sets both.
-const _placeholderOpacity = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the trigger edge and its focus ring.
-const _focusRingOffset = 2.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// The lift that separates the panel from whatever it covers.
-final _shadow = RemixBoxShadowMix(
-  color: const Color(0x1A000000),
-  offset: const Offset(0, 4),
-  blurRadius: 12,
-);
-
-/// The trigger's resting height, matching shadcn's `h-9` and the text field
-/// this trigger is styled after.
-///
-/// One size, not a scale. A call site that needs another sets
-/// `.minHeight(...)` through [style].
-const _minHeight = 36.0;
-
-/// Label, placeholder and option size, matching body copy.
-const _textSize = 14.0;
-
-/// The closed control: a field showing the current value and a chevron.
+/// The closed control: a field showing the current value and a chevron, 36px
+/// tall with a 12px side inset, 8px above and below, and an 8px gap.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
+    .animate(VanillaMotion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .mainAxisAlignment(.spaceBetween)
-    .minHeight(_minHeight)
-    .padding(.horizontal(_paddingX))
-    .spacing(_gap)
-    .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(_borderWidth))
-    .borderRadius(.all(VanillaTokens.radius()))
-    .label(.fontSize(_textSize).color(VanillaTokens.foreground()))
-    // The placeholder is not a value: it has to read as the quieter of
-    // the two, or a select with nothing chosen looks answered.
-    .placeholder(.fontSize(_textSize).color(VanillaTokens.mutedForeground()))
-    .placeholderOpacity(_placeholderOpacity)
-    .icon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
-    .indicator(.size(_iconSize).color(VanillaTokens.mutedForeground()))
-    // The content moves with the surface. Tinting the box alone would
-    // leave the placeholder at `mutedForeground` on `accent`, which is
-    // 3.76:1 in the light theme — under the 4.5:1 floor for text this
-    // size, and only while the pointer is on it, which is the worst kind
-    // of contrast bug to notice.
-    .onHovered(
-      SelectTriggerStyler()
-          .color(VanillaTokens.accent())
-          .label(.color(VanillaTokens.accentForeground()))
-          .placeholder(.color(VanillaTokens.accentForeground()))
-          .icon(.color(VanillaTokens.accentForeground()))
-          .indicator(.color(VanillaTokens.accentForeground())),
+    .minHeight(VanillaSize.controlMd)
+    .padding(.symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s2))
+    .spacing(VanillaSpace.s2)
+    .color(_triggerFill())
+    .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    // In the effects layer rather than the decoration: the fill is
+    // transparent, and a decoration shadow would show through it.
+    .containerEffects(.behindContent(VanillaShadow.xs.effects))
+    .label(.style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()))
+    // The placeholder is not a value: it has to read as the quieter of the
+    // two, or a select with nothing chosen looks answered.
+    .placeholder(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
     )
+    .icon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
+    .indicator(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
+    .indicatorOpacity(_chevronOpacity)
+    .onHovered(SelectTriggerStyler().color(_triggerHoverFill()))
+    // A 3px band of `ring` at half strength, with the trigger's own outline
+    // turned `ring`.
     .onFocusVisible(
-      .containerEffects(
-        .outline(
-          .color(
-            VanillaTokens.focusRing(),
-          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-        ).outlineOffset(_focusRingOffset),
-      ),
+      SelectTriggerStyler()
+          .containerEffects(vanillaFocusRing())
+          .border(vanillaFocusBorder()),
     )
     .onDisabled(
       SelectTriggerStyler()
           .containerEffects(.outline(.style(.none)))
-          .wrap(.opacity(_disabledOpacity)),
+          .wrap(.opacity(VanillaOpacity.disabled)),
     );
 
-/// The floating panel the options live in.
+/// The floating panel the options live in: `popover` inside a `border`
+/// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow.
 SelectContentStyler _contentStyle() => SelectContentStyler()
-    .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(_borderWidth))
-    .borderRadius(.all(VanillaTokens.radius()))
-    .padding(.all(_panelPadding))
-    .minWidth(_panelMinWidth)
+    .color(VanillaTokens.popover())
+    .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    .padding(.all(VanillaSpace.s1))
+    .minWidth(VanillaSize.panelMinWidth)
     .maxHeight(_panelMaxHeight)
-    .containerEffects(.behindContent(.shadows([_shadow])));
+    .containerEffects(.behindContent(VanillaShadow.md.effects));
 
-/// One option row.
+/// One option row: 8px in from the leading edge, 32px from the trailing one,
+/// 6px above and below, with `radiusSm` corners.
 ///
-/// `accent` marks the row under the pointer *and* the row the arrow keys are
-/// on, because a select is as often driven by the keyboard as by the mouse.
-/// The chosen option is marked by its check icon, which Remix renders.
+/// The trailing inset leaves room for the check mark Remix draws on the
+/// chosen option. `accent` marks the row under the pointer *and* the row the
+/// arrow keys are on, because a select is as often driven by the keyboard as
+/// by the mouse.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
+    .animate(VanillaMotion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(_rowHeight)
-    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
-    .spacing(_gap)
-    .borderRadius(.all(VanillaTokens.radius()))
-    .label(.fontSize(_textSize).color(VanillaTokens.foreground()))
-    .icon(.size(_iconSize).color(VanillaTokens.foreground()))
+    .minHeight(VanillaSize.controlSm)
+    .padding(
+      .only(
+        left: VanillaSpace.s2,
+        right: VanillaSpace.s8,
+        top: VanillaSpace.s1_5,
+        bottom: VanillaSpace.s1_5,
+      ),
+    )
+    .spacing(VanillaSpace.s2)
+    .borderRadius(.all(VanillaTokens.radiusSm()))
+    .label(
+      .style(
+        VanillaTokens.textSm.mix(),
+      ).color(VanillaTokens.popoverForeground()),
+    )
+    // The check mark on the chosen option stays `mutedForeground`, highlighted
+    // or not: it marks the row without competing with its label.
+    .icon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(SelectMenuItemStyler().wrap(.opacity(_disabledOpacity)));
+    .onDisabled(SelectMenuItemStyler().wrap(.opacity(VanillaOpacity.disabled)));
 
 /// The option under the pointer or the keyboard cursor.
 SelectMenuItemStyler _highlighted() => SelectMenuItemStyler()
     .color(VanillaTokens.accent())
-    .label(.color(VanillaTokens.accentForeground()))
-    .icon(.color(VanillaTokens.accentForeground()));
+    .label(.color(VanillaTokens.accentForeground()));

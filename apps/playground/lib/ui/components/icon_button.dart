@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'icon_button.g.dart';
@@ -17,7 +19,8 @@ enum PlaygroundIconButtonVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis: a quiet fill inside an `input` outline, with a slight
+  /// lift.
   outline,
 
   /// Low emphasis with no fill and no border.
@@ -45,17 +48,17 @@ enum PlaygroundIconButtonSize {
 
 /// The application's IconButton recipe.
 ///
-/// Everything visual about an icon button lives in this function: geometry,
-/// the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
-/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
-/// behavior, accessibility semantics, and the loading/disabled interaction
-/// rules — this recipe never reimplements any of that.
+/// Everything visual about an icon button lives in this function: geometry, the
+/// five variants, hover and press motion, and the hover/pressed/focus/disabled
+/// fragments. Every state change settles over 150ms on the shared curve
+/// (`PlaygroundMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// keyboard behavior, accessibility semantics, and the loading/disabled
+/// interaction rules — this recipe never reimplements any of that.
 ///
-/// It restates the button's metrics and dimming rather than sharing them.
-/// That is deliberate: the two components have separate update stories, and a
-/// shared table would make every change to one a change to the other. A
-/// five-line record is cheaper to duplicate than to couple.
+/// It restates the button's fills rather than sharing them. That is
+/// deliberate: the two components have separate update stories, and a shared
+/// table would make every change to one a change to the other. The scale and
+/// the tints they draw on are shared, through `PlaygroundSize` and `playgroundTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
@@ -75,58 +78,71 @@ IconButtonStyler playgroundIconButtonStyle({
   PlaygroundIconButtonSize size = .medium,
   IconButtonStyler style = const IconButtonStyler.create(),
 }) {
-  return _base(_metricsFor(size))
+  return _base(_edgeFor(size))
       .merge(_variantStyle(variant))
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Alpha applied to a variant's own fill while hovered.
+/// Alpha applied to the primary and destructive fills while hovered or pressed:
+/// the fill at 90%.
+///
+/// There is no separate pressed step: a press lands on the hover fill. A deeper
+/// press would also take the destructive fill under the 4.5:1 floor its white
+/// glyph needs.
 const _hoverAlpha = 0.9;
 
-/// Alpha applied to the active fill while pressed.
-const _pressedAlpha = 0.8;
+/// Alpha applied to the secondary fill while hovered: the fill at 80%.
+const _secondaryHoverAlpha = 0.8;
 
-/// A fill derived from [source] at [alpha], resolved from the active scope.
-///
-/// The obvious spelling would be `PlaygroundTokens.primary().withValues(alpha: 0.9)`,
-/// but that records a Mix *directive*, and directives accumulate through every
-/// later merge. A caller who replaced the hover fill would still get this
-/// recipe's alpha applied on top of their own color. A `ContextToken` does the
-/// arithmetic during resolution instead, so each state fragment holds one
-/// plain color that a caller can replace outright.
-///
-/// Declared as top-level finals because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-ContextToken<Color> _dimmed(ColorToken source, double alpha) =>
-    ContextToken<Color>(
-      (context) => source.resolve(context).withValues(alpha: alpha),
-    );
+/// The dark theme's destructive fills, at 60% and a 70% hover. See the button
+/// recipe for why the hover stops short of 90%.
+const _darkDestructiveAlpha = 0.6;
+const _darkDestructiveHoverAlpha = 0.7;
 
-final _primaryHoverFill = _dimmed(PlaygroundTokens.primary, _hoverAlpha);
-final _primaryPressedFill = _dimmed(PlaygroundTokens.primary, _pressedAlpha);
-final _secondaryHoverFill = _dimmed(PlaygroundTokens.secondary, _hoverAlpha);
-final _secondaryPressedFill = _dimmed(
+/// The dark ghost hover, `accent` at 50%.
+const _darkGhostHoverAlpha = 0.5;
+
+final _primaryHoverFill = playgroundTint(PlaygroundTokens.primary, _hoverAlpha);
+final _secondaryHoverFill = playgroundTint(
   PlaygroundTokens.secondary,
-  _pressedAlpha,
+  _secondaryHoverAlpha,
 );
-final _destructiveHoverFill = _dimmed(
+final _destructiveFill = playgroundTint(
+  PlaygroundTokens.destructive,
+  1,
+  dark: _darkDestructiveAlpha,
+);
+final _destructiveHoverFill = playgroundTint(
   PlaygroundTokens.destructive,
   _hoverAlpha,
+  dark: _darkDestructiveHoverAlpha,
 );
-final _destructivePressedFill = _dimmed(
-  PlaygroundTokens.destructive,
-  _pressedAlpha,
+final _ghostHoverFill = playgroundTint(
+  PlaygroundTokens.accent,
+  1,
+  dark: _darkGhostHoverAlpha,
 );
-final _accentPressedFill = _dimmed(PlaygroundTokens.accent, _pressedAlpha);
 
-/// Hover and the other state changes.
-const _motionDuration = Duration(milliseconds: 100);
+/// The outline variant's fill: the page color on a light page, and `input` at
+/// 30% on a dark one, so a dark outline control on a raised surface reads as
+/// part of that surface rather than as a hole cut through it.
+final _outlineFill = playgroundByBrightness(
+  light: PlaygroundTokens.background,
+  dark: playgroundTint(PlaygroundTokens.input, _darkOutlineFillAlpha),
+);
 
-/// Press is shorter than the base transition.
-const _pressedMotionDuration = Duration(milliseconds: 40);
+/// The outline variant under the pointer: `accent`, or `input` at 50% on a
+/// dark page.
+final _outlineHoverFill = playgroundByBrightness(
+  light: PlaygroundTokens.accent,
+  dark: playgroundTint(PlaygroundTokens.input, _darkOutlineHoverAlpha),
+);
+
+/// See [_outlineFill] and [_outlineHoverFill].
+const _darkOutlineFillAlpha = 0.3;
+const _darkOutlineHoverAlpha = 0.5;
 
 /// Opacity of the loading spinner, so it reads as secondary to the icon.
 const _spinnerOpacity = 0.65;
@@ -134,47 +150,32 @@ const _spinnerOpacity = 0.65;
 /// One full spinner revolution.
 const _spinnerDuration = Duration(milliseconds: 800);
 
-/// Width of the outline the `outline` variant draws.
-const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the control edge and its focus ring.
-const _focusRingOffset = 2.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// A fill that paints nothing, used by `outline` and `ghost`.
+/// A fill that paints nothing, used by `ghost`.
 const _noFill = Color(0x00000000);
 
-/// Geometry for one [PlaygroundIconButtonSize].
-typedef _PlaygroundIconButtonMetrics = ({double edge, double iconSize});
-
-_PlaygroundIconButtonMetrics _metricsFor(PlaygroundIconButtonSize size) =>
-    switch (size) {
-      .small => (edge: 32.0, iconSize: 16.0),
-      .medium => (edge: 36.0, iconSize: 16.0),
-      .large => (edge: 40.0, iconSize: 18.0),
-    };
+/// The square's edge for one [PlaygroundIconButtonSize]: 32, 36, or 40px, the
+/// button's heights. The glyph stays at 16 in every size.
+double _edgeFor(PlaygroundIconButtonSize size) => switch (size) {
+  .small => PlaygroundSize.controlSm,
+  .medium => PlaygroundSize.controlMd,
+  .large => PlaygroundSize.controlLg,
+};
 
 /// Layout and spinner defaults shared by every variant.
 ///
 /// The box is square and centered, so the control's footprint does not change
 /// with the glyph inside it.
-IconButtonStyler _base(_PlaygroundIconButtonMetrics metrics) =>
-    IconButtonStyler()
-        .animate(AnimationConfig.easeOut(_motionDuration))
-        .size(metrics.edge, metrics.edge)
-        .alignment(.center)
-        .borderRadius(.all(PlaygroundTokens.radius()))
-        .icon(.size(metrics.iconSize))
-        .spinner(
-          .size(
-            metrics.iconSize,
-          ).opacity(_spinnerOpacity).duration(_spinnerDuration),
-        );
+IconButtonStyler _base(double edge) => IconButtonStyler()
+    .animate(PlaygroundMotion.standard)
+    .size(edge, edge)
+    .alignment(.center)
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
+    .icon(.size(PlaygroundSize.icon))
+    .spinner(
+      .size(
+        PlaygroundSize.icon,
+      ).opacity(_spinnerOpacity).duration(_spinnerDuration),
+    );
 
 IconButtonStyler _variantStyle(PlaygroundIconButtonVariant variant) =>
     switch (variant) {
@@ -182,81 +183,84 @@ IconButtonStyler _variantStyle(PlaygroundIconButtonVariant variant) =>
         fill: PlaygroundTokens.primary(),
         foreground: PlaygroundTokens.primaryForeground(),
         hoverFill: _primaryHoverFill(),
-        pressedFill: _primaryPressedFill(),
       ),
       .secondary => _filled(
         fill: PlaygroundTokens.secondary(),
         foreground: PlaygroundTokens.secondaryForeground(),
         hoverFill: _secondaryHoverFill(),
-        pressedFill: _secondaryPressedFill(),
       ),
       .destructive => _filled(
-        fill: PlaygroundTokens.destructive(),
+        fill: _destructiveFill(),
         foreground: PlaygroundTokens.destructiveForeground(),
         hoverFill: _destructiveHoverFill(),
-        pressedFill: _destructivePressedFill(),
       ),
-      .outline => _quiet(bordered: true),
-      .ghost => _quiet(bordered: false),
+      .outline =>
+        _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
+            .border(
+              .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+            )
+            // In the effects layer rather than the decoration: the dark fill
+            // is translucent, and a decoration shadow would show through it.
+            .containerEffects(.behindContent(PlaygroundShadow.xs.effects)),
+      .ghost => _quiet(fill: _noFill, hoverFill: _ghostHoverFill()),
     };
 
-/// A solid variant: its own fill, dimmed on hover and further on press.
+/// A solid variant: its own fill, dimmed while hovered or pressed.
 IconButtonStyler _filled({
   required Color fill,
   required Color foreground,
   required Color hoverFill,
-  required Color pressedFill,
-}) => _content(.color(fill), foreground)
-    .onHovered(.color(hoverFill))
-    .onPressed(
-      IconButtonStyler()
-          .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-          .color(pressedFill),
-    );
+}) => _content(
+  .color(fill),
+  foreground,
+).onHovered(.color(hoverFill)).onPressed(.color(hoverFill));
 
-/// A transparent variant: `accent` is what makes interaction visible.
-IconButtonStyler _quiet({required bool bordered}) {
-  var style = _content(.color(_noFill), PlaygroundTokens.foreground());
-  if (bordered) {
-    style = style.border(.color(PlaygroundTokens.border()).width(_borderWidth));
-  }
+/// A quiet variant: `accent` under the pointer is what makes it interactive.
+IconButtonStyler _quiet({required Color fill, required Color hoverFill}) {
+  final highlighted = _content(
+    .color(hoverFill),
+    PlaygroundTokens.accentForeground(),
+  );
 
-  return style
-      .onHovered(
-        _content(
-          .color(PlaygroundTokens.accent()),
-          PlaygroundTokens.accentForeground(),
-        ),
-      )
+  return _content(.color(fill), PlaygroundTokens.foreground())
+      .onHovered(highlighted)
       // Content color is re-applied on press, not only on hover: a touch
       // device never reports hover, so a press that changed the fill alone
       // would paint the accent surface under the default foreground.
-      .onPressed(
-        _content(
-          IconButtonStyler()
-              .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-              .color(_accentPressedFill()),
-          PlaygroundTokens.accentForeground(),
-        ),
-      );
+      .onPressed(highlighted);
 }
 
 /// Applies one content color to the icon and the spinner.
 IconButtonStyler _content(IconButtonStyler style, Color foreground) =>
     style.icon(.color(foreground)).spinner(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// box without taking layout space, so focusing a control never reflows the
-/// row it sits in.
-IconButtonStyler _focusVisibleStyle() => IconButtonStyler().containerEffects(
-  .outline(
-    .color(
-      PlaygroundTokens.focusRing(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the box
+/// without taking layout space, so focusing a control never reflows the row it
+/// sits in. The outline variant also turns its own border `ring`, and the
+/// destructive variant rings in its own red.
+IconButtonStyler _focusVisibleStyle(PlaygroundIconButtonVariant variant) =>
+    switch (variant) {
+      .destructive => IconButtonStyler().containerEffects(
+        playgroundFocusRing(
+          color: PlaygroundTokens.destructive,
+          alpha: _destructiveRingAlpha,
+          dark: _darkDestructiveRingAlpha,
+        ),
+      ),
+      .outline =>
+        IconButtonStyler()
+            .containerEffects(playgroundFocusRing())
+            .border(playgroundFocusBorder()),
+      .primary ||
+      .secondary ||
+      .ghost => IconButtonStyler().containerEffects(playgroundFocusRing()),
+    };
+
+/// The destructive focus ring: `destructive` at 20%, 40% in the dark.
+const _destructiveRingAlpha = 0.2;
+const _darkDestructiveRingAlpha = 0.4;
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -265,4 +269,4 @@ IconButtonStyler _focusVisibleStyle() => IconButtonStyler().containerEffects(
 /// draws a focus ring reads as actionable.
 IconButtonStyler _disabledStyle() => IconButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));

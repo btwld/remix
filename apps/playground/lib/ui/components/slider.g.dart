@@ -12,9 +12,9 @@ part of 'slider.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The rail is `muted` and the range is `primary`, the same pairing the
-/// progress bar uses — a slider is a progress bar you can grab, and reading
-/// them as one family is worth more than distinguishing them by color.
+/// The rail is `muted` and the range is `primary`. The thumb is a white disc
+/// with a `primary` outline and a small shadow, which keeps it a distinct
+/// handle on either page.
 ///
 /// `semanticFormatterCallback` is deliberately not forwarded to the generated
 /// `PlaygroundSlider`. Its type is

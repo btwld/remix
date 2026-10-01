@@ -208,8 +208,15 @@ class PlaygroundBarChart extends StatelessWidget {
 ///
 /// A positive [centerRadius] creates a donut. Labels stay hidden by default;
 /// a caller-owned legend keeps category names readable with any custom
-/// palette. Give the generated [PlaygroundPieChart] a bounded width and
-/// height because charts have no intrinsic size.
+/// palette. [showLabels] draws them in `background`, which a gray palette
+/// cannot carry on every slice: pair it with [playgroundPieSliceLabelColor].
+/// Give the generated [PlaygroundPieChart] a bounded width and height because
+/// charts have no intrinsic size.
+///
+/// The pie does not scale to that box: mix_chart draws each slice 80px wide
+/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
+/// clipped in a box less than twice that. Set the ring to fit the box:
+/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
 ///
 /// [style] merges last, so one call site can replace any part of the recipe.
 class PlaygroundPieChart extends StatelessWidget {

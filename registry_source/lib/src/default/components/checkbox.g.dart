@@ -10,7 +10,7 @@ part of 'checkbox.dart';
 ///
 /// Everything visual about a checkbox lives in this function: the box
 /// geometry, the indicator, the label, and the
-/// hover/checked/indeterminate/focus/disabled fragments. Remix keeps
+/// checked/indeterminate/focus/disabled fragments. Remix keeps
 /// ownership of rendering, the tristate transition, pointer and keyboard
 /// behavior, the minimum tap target, and the checkbox accessibility
 /// semantics — this recipe never reimplements any of that.
@@ -41,9 +41,10 @@ part of 'checkbox.dart';
 /// the recipe's checked fill has to be declared as a selected fragment too
 /// (`CheckboxStyler().onSelected(...)`).
 ///
-/// There is deliberately no pressed fragment. A button needs one because
-/// nothing else about it changes on tap; a checkbox flips its own state, and
-/// that is the feedback.
+/// There is deliberately no hover or pressed fragment. A button needs them
+/// because nothing else about it changes on tap; a checkbox flips its own
+/// state, and that is the feedback. The pointer cursor Remix sets says it can
+/// be clicked.
 class VanillaCheckbox extends StatelessWidget {
   const VanillaCheckbox({
     super.key,

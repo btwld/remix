@@ -894,9 +894,9 @@ class _DefaultGalleryNavigationPageState
             children: [
               {{typePrefix}}Accordion<String>(
                 value: 'details',
-                title: 'What is Fortal?',
+                title: 'What is {{typePrefix}}?',
                 child: _Text(
-                  'A Radix-inspired theme and component system for Flutter.',
+                  'A neutral starter theme, installed as source you own.',
                 ),
               ),
               {{typePrefix}}Accordion<String>(
@@ -1121,7 +1121,7 @@ class _Code extends StatelessWidget {
       child: StyledText(
         value,
         style: TextStyler()
-            .fontFamily('monospace')
+            .style({{typePrefix}}Tokens.textMono.mix())
             .fontSize(13)
             .color({{typePrefix}}Tokens.foreground()),
       ),

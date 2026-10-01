@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'accordion.g.dart';
@@ -69,117 +71,66 @@ part 'accordion.g.dart';
 AccordionStyler vanillaAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()
+    .animate(VanillaMotion.standard)
     // `container` has to be reached by name. `AccordionStyler` forwards its
     // box shorthand to `trigger`, so a bare `.border(...)` would outline the
     // clickable row rather than the section, and the rule between sections
     // would move with the panel as it opens.
     .container(
-      .border(.bottom(.color(VanillaTokens.border()).width(_borderWidth))),
+      .border(
+        .bottom(.color(VanillaTokens.border()).width(VanillaStroke.hairline)),
+      ),
     )
-    // These *are* the forwarded shorthand, so they land on `trigger`: the row
-    // a reader clicks to open the section.
+    // These *are* the forwarded shorthand, so they land on `trigger`: the row a
+    // reader clicks to open the section, 16px above and below with a 16px gap
+    // and no side inset, so the title lines up with the content above and below
+    // the list.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(_triggerHeight)
-    .padding(.horizontal(_paddingX))
-    .spacing(_gap)
+    .padding(.vertical(VanillaSpace.s4))
+    .spacing(VanillaSpace.s4)
+    .borderRadius(.all(VanillaTokens.radiusMd()))
     .title(
-      .fontSize(
-        _titleSize,
+      .style(
+        VanillaTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
     )
-    .leadingIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
+    .leadingIcon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
     // Both icons are markers, not the state: Remix renders whatever
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
-    .trailingIcon(.size(_iconSize).color(VanillaTokens.mutedForeground()))
-    .content(
-      .padding(.only(left: _paddingX, right: _paddingX, bottom: _contentGap)),
+    .trailingIcon(
+      .size(VanillaSize.icon).color(VanillaTokens.mutedForeground()),
     )
+    .content(.padding(.only(bottom: VanillaSpace.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
     .onDisabled(_disabledStyle())
     .merge(style);
 
-/// Width of the rule under each section.
-const _borderWidth = 1.0;
+/// Hovering underlines the title.
+AccordionStyler _hoverStyle() =>
+    AccordionStyler().title(.decoration(TextDecoration.underline));
 
-/// Minimum height of the row a reader clicks to open a section.
-const _triggerHeight = 44.0;
-
-/// Gap between the icons and the title.
-const _gap = 8.0;
-
-/// Horizontal inset inside the row and its panel.
+/// The open section promotes its icons to `foreground`.
 ///
-/// The same 12 every other row-like surface in this layer uses — the table's
-/// cells, the select's trigger, the callout. Upstream shadcn leaves its
-/// accordion trigger flush because the item it sits in supplies the inset;
-/// nothing wraps this one, so flush would put the title hard against whatever
-/// contains it while the rule below still spans the full width.
-const _paddingX = 12.0;
+/// Remix renders the glyph it is given and does not rotate it, so the recipe
+/// marks the state with the icons' strength, and a caller who wants the turn
+/// passes the other chevron while the section is open.
+AccordionStyler _openStyle() => AccordionStyler()
+    .leadingIcon(.color(VanillaTokens.foreground()))
+    .trailingIcon(.color(VanillaTokens.foreground()));
 
-/// Title size, matching body copy: a section heading, not a page heading.
-const _titleSize = 14.0;
-
-/// Size of the leading and trailing icons.
-const _iconSize = 16.0;
-
-/// Gap between the open panel's content and the rule below it.
-const _contentGap = 16.0;
-
-/// Width of the keyboard focus ring.
-///
-/// It carries no offset, unlike the button's. Sections stack directly on top
-/// of one another, so a ring pushed outward would cross into the section
-/// above and below it.
-const _focusRingWidth = 2.0;
-
-/// Opacity applied to the whole section while disabled.
-const _disabledOpacity = 0.5;
-
-/// Hovering underlines the title and promotes the icons.
-///
-/// The icons alone were not enough: they move from `mutedForeground` to
-/// `foreground`, which at 16px is invisible next to a title that is already
-/// at full strength — a hovered row looked exactly like a resting one. The
-/// underline is what a reader actually sees, and it is what shadcn's own
-/// accordion trigger uses (`hover:underline`).
-///
-/// The title's *weight* stays out of it, because that is what the open state
-/// uses; leaving it here would erase the difference between "the pointer is
-/// here" and "this section is open".
-AccordionStyler _hoverStyle() => _icons(
-  VanillaTokens.foreground(),
-).title(.decoration(TextDecoration.underline));
-
-/// The open section: promoted icons *and* a heavier title.
-///
-/// The weight is what separates "open" from "the pointer is here" — the two
-/// states otherwise share the icon promotion, and a reader scanning a
-/// collapsed list needs to find the open one without moving the mouse.
-AccordionStyler _openStyle() =>
-    _icons(VanillaTokens.foreground()).title(.fontWeight(FontWeight.w600));
-
-/// Applies one color to both icons.
-AccordionStyler _icons(Color color) =>
-    AccordionStyler().leadingIcon(.color(color)).trailingIcon(.color(color));
-
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// section without taking layout space, and the section's own border is
 /// already carrying the rule between rows.
-AccordionStyler _focusVisibleStyle() => AccordionStyler().containerEffects(
-  .outline(
-    .color(
-      VanillaTokens.focusRing(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ),
-);
+AccordionStyler _focusVisibleStyle() =>
+    AccordionStyler().containerEffects(vanillaFocusRing());
 
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

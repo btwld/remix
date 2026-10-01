@@ -27,16 +27,20 @@ part of 'radio.dart';
 /// )
 /// ```
 ///
-/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot
-/// inside the ring, which is what tells the two controls apart at a glance
-/// even before their shapes register.
+/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot inside
+/// the ring, which is what tells the two controls apart at a glance even before
+/// their shapes register. The ring itself stays `input` whether or not the
+/// option is chosen; the dot carries the choice.
+///
+/// There is no hover fragment: choosing an option is the feedback, and the
+/// pointer cursor Remix sets says it can be chosen.
 ///
 /// `RemixRadio` requires a `semanticLabel` because it renders no text of its
 /// own — the visible label beside it belongs to the caller's layout.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's selected ring has to be
+/// by depth: an override that must beat the recipe's chosen dot has to be
 /// declared as a selected fragment too (`RadioStyler().onSelected(...)`).
 class VanillaRadio<T> extends StatelessWidget {
   const VanillaRadio({

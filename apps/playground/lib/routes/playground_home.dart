@@ -44,6 +44,7 @@ class PlaygroundHome extends StatelessWidget {
                                   PlaygroundButton(
                                     variant: .outline,
                                     label: 'Back',
+                                    leadingIcon: PlaygroundIcons.back,
                                     onPressed: () => Navigator.pop(context),
                                   ),
                                   const SizedBox(width: 16),

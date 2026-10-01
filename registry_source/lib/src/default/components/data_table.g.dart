@@ -26,10 +26,12 @@ part of 'data_table.dart';
 /// recipes that drift, or a table whose controls do not match the rest of the
 /// application.
 ///
-/// The frame is the card's: `background` fill, `border` hairline, the theme
-/// radius. Header and body rows are separated by the same hairline, and the
-/// last body row drops it so the table does not draw a second line on top of
-/// its own bottom edge.
+/// It is a table inside a frame: the page's `background` fill, a `border`
+/// hairline, and `radiusMd` corners around a header with no surface of its own.
+/// Header and body rows are separated by the same hairline, and the last body
+/// row drops it so the table does not draw a second line on top of its own
+/// bottom edge. A row under the pointer sits on `muted` at half strength and a
+/// selected row on `muted`.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.

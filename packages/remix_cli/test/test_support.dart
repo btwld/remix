@@ -74,12 +74,16 @@ void writeRequiredPubspec(
   String mixAnnotations = '^2.2.0-beta.1',
   String? mixChart,
   String? remixUiIcons,
+  String? remixUiFonts = '^0.1.0',
   String buildRunner = '^2.10.1',
   String mixGenerator = '^2.2.0-beta.3',
 }) {
   final remixUiIconsDependency = remixUiIcons == null
       ? ''
       : '  remix_ui_icons: $remixUiIcons\n';
+  final remixUiFontsDependency = remixUiFonts == null
+      ? ''
+      : '  remix_ui_fonts: $remixUiFonts\n';
   final mixChartDependency = mixChart == null ? '' : '  mix_chart: $mixChart\n';
   File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync('''name: consumer
 environment:
@@ -89,7 +93,7 @@ dependencies:
     sdk: flutter
   remix: ${remix ?? registryRemixConstraint}
   mix_annotations: $mixAnnotations
-$mixChartDependency${remixUiIconsDependency}dev_dependencies:
+$mixChartDependency$remixUiIconsDependency${remixUiFontsDependency}dev_dependencies:
   build_runner: $buildRunner
   mix_generator: $mixGenerator
 ''');
@@ -101,12 +105,17 @@ void writeRequiredLock(
   String mixAnnotations = '2.2.0-beta.1',
   String? mixChart,
   String? remixUiIcons,
+  String? remixUiFonts = '0.1.0',
   String buildRunner = '2.10.1',
   String mixGenerator = '2.2.0-beta.3',
 }) {
   final remixUiIconsPackage = remixUiIcons == null
       ? ''
       : '  remix_ui_icons:\n    version: "$remixUiIcons"\n';
+  // The Vanilla theme sets its type in Geist, so a Vanilla install locks it.
+  final remixUiFontsPackage = remixUiFonts == null
+      ? ''
+      : '  remix_ui_fonts:\n    version: "$remixUiFonts"\n';
   final mixChartPackage = mixChart == null
       ? ''
       : '  mix_chart:\n    version: "$mixChart"\n';
@@ -115,7 +124,7 @@ void writeRequiredLock(
     version: "${remix ?? registryRemixFloor}"
   mix_annotations:
     version: "$mixAnnotations"
-$mixChartPackage${remixUiIconsPackage}  build_runner:
+$mixChartPackage$remixUiIconsPackage${remixUiFontsPackage}  build_runner:
     version: "$buildRunner"
   mix_generator:
     version: "$mixGenerator"

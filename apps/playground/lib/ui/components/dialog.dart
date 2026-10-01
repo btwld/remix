@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'dialog.g.dart';
@@ -12,11 +14,12 @@ part 'dialog.g.dart';
 /// and barrier dismissal rules, and the dialog accessibility semantics; this
 /// recipe supplies the panel, the two text roles, and the action row.
 ///
-/// It is a popover with a title: the same `background` fill, `border`
-/// hairline, and lift, sized wider and padded more because a dialog holds a
-/// decision rather than a control. The two are deliberately separate files —
-/// they have separate update stories, and sharing a surface helper would make
-/// every change to one a change to the other.
+/// It is the page's `background` fill with a `border` hairline, `radiusLg`
+/// corners, the heaviest shadow in the scale, and a 24px inset. The panel is
+/// centered in the viewport with 16px to spare on every side, and fills the
+/// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
+/// in `mutedForeground` 8px below it, and the decisions sit at the trailing
+/// edge 16px below that.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
@@ -24,20 +27,34 @@ part 'dialog.g.dart';
 DialogStyler playgroundDialogStyle({
   DialogStyler style = const DialogStyler.create(),
 }) => DialogStyler()
+    // A dialog route hands its page the whole viewport; without the wrap the
+    // panel would take all of it. The padding leaves room at the edges, and
+    // the alignment lets the panel keep its own size.
+    .wrap(
+      .padding(.all(PlaygroundSpace.s4))
+          .align(alignment: .center)
+          .orderOfModifiers([PaddingModifier, AlignModifier]),
+    )
     .color(PlaygroundTokens.background())
-    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
-    .padding(.all(_padding))
-    .maxWidth(_maxWidth)
-    .shadow(_shadow)
+    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .borderRadius(.all(PlaygroundTokens.radiusLg()))
+    .padding(.all(PlaygroundSpace.s6))
+    .width(PlaygroundSize.dialogMaxWidth)
+    .shadows(PlaygroundShadow.lg.box)
     .title(
-      .fontSize(_titleSize)
+      .style(PlaygroundTokens.textLg.mix())
+          // A line height of 1: the title sits on its own size, so the gap
+          // below it is the 8px the recipe says rather than 8 plus the line
+          // box's leading.
+          .height(1)
           .fontWeight(FontWeight.w600)
           .color(PlaygroundTokens.foreground())
-          .wrap(.padding(.only(bottom: _titleDescriptionGap))),
+          .wrap(.padding(.only(bottom: PlaygroundSpace.s2))),
     )
     .description(
-      .fontSize(_descriptionSize).color(PlaygroundTokens.mutedForeground()),
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).color(PlaygroundTokens.mutedForeground()),
     )
     // The actions sit at the trailing edge, which is where a reader looks for
     // the decision once they have read the description.
@@ -45,40 +62,7 @@ DialogStyler playgroundDialogStyle({
       FlexBoxStyler()
           .direction(.horizontal)
           .mainAxisAlignment(.end)
-          .spacing(_actionGap)
-          .margin(.top(_actionsMarginTop)),
+          .spacing(PlaygroundSpace.s2)
+          .margin(.top(PlaygroundSpace.s4)),
     )
     .merge(style);
-
-/// Width of the panel outline.
-const _borderWidth = 1.0;
-
-/// Inset between the panel edge and its content.
-const _padding = 24.0;
-
-/// The widest a dialog gets before its lines become hard to scan.
-const _maxWidth = 420.0;
-
-/// Title size: the one thing in the dialog that has to be read first.
-const _titleSize = 18.0;
-
-/// Description size, matching body copy.
-const _descriptionSize = 14.0;
-
-/// Space between the title and its description.
-const _titleDescriptionGap = 6.0;
-
-/// Space between the dialog body and its decisions.
-const _actionsMarginTop = 16.0;
-
-/// Gap between the action buttons.
-const _actionGap = 8.0;
-
-/// The lift that separates the panel from the page behind the barrier.
-///
-/// Heavier than a popover's, because a dialog is meant to stop the reader.
-final _shadow = BoxShadowMix(
-  color: const Color(0x26000000),
-  offset: const Offset(0, 8),
-  blurRadius: 24,
-);

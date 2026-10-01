@@ -2,18 +2,20 @@
 name: releasing-a-package
 description: >-
   Use when cutting a release of a package in the Remix monorepo — naked_ui,
-  remix, remix_cli, or remix_ui_icons. Covers choosing the next version,
-  every file that must move with a version bump, the contract checkers that
-  fail when one is missed, the release pull request, and the tag that triggers
-  publishing. Also trigger when a `Contract checks` CI job fails on a release
-  pull request, or when asked what the next version of a package should be.
+  remix, remix_cli, remix_ui_icons, or remix_ui_fonts. Covers choosing the
+  next version, every file that must move with a version bump, the contract
+  checkers that fail when one is missed, the release pull request, and the tag
+  that triggers publishing. Also trigger when a `Contract checks` CI job fails
+  on a release pull request, or when asked what the next version of a package
+  should be.
 ---
 
 # Releasing a package
 
-Four packages publish from this monorepo and are **versioned independently**:
-`remix`, `naked_ui`, `remix_cli`, `remix_ui_icons`. `registry_source/` is
-private authoring source and is never published as a package.
+Five packages publish from this monorepo and are **versioned independently**:
+`remix`, `naked_ui`, `remix_cli`, `remix_ui_icons`, `remix_ui_fonts`.
+`registry_source/` is private authoring source and is never published as a
+package.
 
 Publishing is tag-triggered. A version bump never publishes anything on its
 own — merging the release PR and then pushing the tag does.
@@ -70,6 +72,16 @@ files on purpose, and a checker fails on each one that drifts.
 
 - `packages/remix_cli/lib/src/version.dart` — `remixCliVersion`, same version
   as the pubspec
+
+**`remix_ui_fonts` only — the Vanilla theme floor:**
+
+- `registry/vanilla/registry.yaml` — the `theme` item's `remix_ui_fonts`
+  constraint must floor at the new version. Edit it, then run
+  `dart run tool/build_registry.dart`. Also move the melos shared constraint
+  in the root `pubspec.yaml`, and the constraint in
+  `registry_source/pubspec.yaml` and `apps/playground/pubspec.yaml`, when the new
+  version leaves the old caret range (any minor bump while the package is
+  0.x). `tool/check_version_alignment.dart` fails until the floor matches.
 
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
@@ -129,6 +141,7 @@ publishing" configuration. A mismatched tag fails OIDC auth.
 | `naked_ui` | `naked_ui-v<version>` |
 | `remix_cli` | `remix_cli-v<version>` |
 | `remix_ui_icons` | `remix_ui_icons-v<version>` |
+| `remix_ui_fonts` | `remix_ui_fonts-v<version>` |
 
 ```bash
 git checkout main && git pull
@@ -150,6 +163,12 @@ Rules that have already cost a release here:
   pub.dev tag pattern must be `naked_ui-v{{version}}` before the first release
   from this monorepo, or the job authenticates against the old pattern and
   fails.
+- `remix_ui_fonts` 0.1.0 is published by hand first, from a clean checkout of
+  the release commit (`dart pub publish` in `packages/remix_ui_fonts`); pub.dev
+  offers automated publishing only for an existing package. After that,
+  enable automated publishing for it with the tag pattern
+  `remix_ui_fonts-v{{version}}`; every later release follows the tag flow
+  above.
 - A `remix_cli` release additionally requires `registry-stable` to resolve and
   pass the hosted check; its publish job gates on
   `melos run open-code:release:check` against hosted packages.

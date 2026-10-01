@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'radio.g.dart';
@@ -27,124 +29,63 @@ part 'radio.g.dart';
 /// )
 /// ```
 ///
-/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot
-/// inside the ring, which is what tells the two controls apart at a glance
-/// even before their shapes register.
+/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot inside
+/// the ring, which is what tells the two controls apart at a glance even before
+/// their shapes register. The ring itself stays `input` whether or not the
+/// option is chosen; the dot carries the choice.
+///
+/// There is no hover fragment: choosing an option is the feedback, and the
+/// pointer cursor Remix sets says it can be chosen.
 ///
 /// `RemixRadio` requires a `semanticLabel` because it renders no text of its
 /// own — the visible label beside it belongs to the caller's layout.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's selected ring has to be
+/// by depth: an override that must beat the recipe's chosen dot has to be
 /// declared as a selected fragment too (`RadioStyler().onSelected(...)`).
 @MixWidget(target: RemixRadio.new)
 RadioStyler playgroundRadioStyle({
   RadioStyler style = const RadioStyler.create(),
 }) {
   return RadioStyler()
-      .size(_diameter, _diameter)
+      .animate(PlaygroundMotion.standard)
+      .size(PlaygroundSize.icon, PlaygroundSize.icon)
       .alignment(.center)
       .borderRadius(.all(_circular))
-      .color(PlaygroundTokens.background())
-      .border(.color(PlaygroundTokens.border()).width(_borderWidth))
+      .color(_fill())
+      .border(.color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline))
+      // In the effects layer rather than the decoration: the ring is
+      // transparent, and a decoration shadow would show through it.
+      .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
       .indicator(BoxStyler().size(_dot, _dot).borderRadius(.all(_circular)))
-      // The ring has to survive the hover fill. `accent` on `border` is
-      // 1.09:1 in the shipped light theme, so tinting the disc alone erased
-      // the outline and left a hovered empty radio reading as a filled one —
-      // the opposite of what it means. Darkening the ring is what keeps the
-      // circle a circle.
-      .onHovered(
-        RadioStyler()
-            .color(PlaygroundTokens.accent())
-            .border(
-              .color(PlaygroundTokens.mutedForeground()).width(_borderWidth),
-            ),
-      )
-      .onSelected(_selectedStyle())
       .onFocusVisible(_focusVisibleStyle())
+      .onSelected(RadioStyler().indicatorColor(PlaygroundTokens.primary()))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Alpha applied to the selected ring while hovered.
-const _hoverAlpha = 0.9;
+/// A radius that rounds the ring and the dot into circles.
+const _circular = Radius.circular(PlaygroundSize.pill);
 
-/// The selected ring color, dimmed, resolved from the active scope.
-///
-/// The obvious spelling would be `PlaygroundTokens.primary().withValues(alpha: 0.9)`,
-/// but that records a Mix *directive*, and directives accumulate through every
-/// later merge. A caller who replaced the hover color would still get this
-/// recipe's alpha applied on top of their own. A `ContextToken` does the
-/// arithmetic during resolution instead, so the state fragment holds one plain
-/// color that a caller can replace outright.
-///
-/// Declared as a top-level final because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-final _primaryHover = ContextToken<Color>(
-  (context) =>
-      PlaygroundTokens.primary.resolve(context).withValues(alpha: _hoverAlpha),
-);
+/// The chosen dot: 8px across.
+const _dot = PlaygroundSpace.s2;
 
-/// A radius large enough to round any radio in this scale into a circle.
-const _circular = Radius.circular(999);
+/// The ring's fill: transparent, or `input` at 30% in the dark.
+final _fill = playgroundTint(PlaygroundTokens.input, 0, dark: _darkFillAlpha);
 
-/// Width of the ring, in every state.
-const _borderWidth = 1.0;
+/// See [_fill].
+const _darkFillAlpha = 0.3;
 
-/// Width of the ring once the option is chosen.
-///
-/// Thicker than the resting ring so a selected radio reads at a glance even
-/// where the dot is small.
-const _selectedBorderWidth = 1.5;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the control edge and its focus ring.
-const _focusRingOffset = 2.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// The circle's diameter, matching shadcn's `h-4 w-4` and the checkbox beside
-/// it — the two are chosen from the same list and must not differ in weight.
-const _diameter = 16.0;
-
-/// The chosen dot.
-const _dot = 6.0;
-
-/// The chosen option: a `primary` ring around a `primary` dot.
-///
-/// The surface stays `background` rather than filling with `primary`. A filled
-/// circle would be a checkbox's mark; leaving the middle open is what makes
-/// the dot the thing the eye lands on.
-RadioStyler _selectedStyle() => RadioStyler()
-    .border(.color(PlaygroundTokens.primary()).width(_selectedBorderWidth))
-    .indicatorColor(PlaygroundTokens.primary())
-    // Declared inside the selected fragment so a hovered, chosen radio dims
-    // its own ring. The top-level hover fragment tints the *surface*, which is
-    // the right feedback while unchosen and the wrong one once the ring is
-    // carrying the meaning.
-    .onHovered(
-      RadioStyler()
-          .border(.color(_primaryHover()).width(_selectedBorderWidth))
-          .indicatorColor(_primaryHover()),
-    );
-
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength, with
+/// the circle's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// circle without taking layout space, so focusing a radio never reflows the
-/// row it sits in — and the recipe's own ring is already a border.
-RadioStyler _focusVisibleStyle() => RadioStyler().containerEffects(
-  .outline(
-    .color(
-      PlaygroundTokens.focusRing(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// row it sits in.
+RadioStyler _focusVisibleStyle() => RadioStyler()
+    .containerEffects(playgroundFocusRing())
+    .border(playgroundFocusBorder());
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -153,4 +94,4 @@ RadioStyler _focusVisibleStyle() => RadioStyler().containerEffects(
 /// focus ring reads as actionable.
 RadioStyler _disabledStyle() => RadioStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));

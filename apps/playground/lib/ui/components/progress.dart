@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'progress.g.dart';
@@ -13,14 +15,12 @@ part 'progress.g.dart';
 ///
 /// One weight, not a scale. A progress bar has no size relationship to the
 /// controls around it — it spans its container and is read by length rather
-/// than by height — so the sizes this recipe used to offer were three numbers
-/// with nothing to anchor them. shadcn ships `h-2` and nothing else, and this
-/// is that bar. A call site that wants a different weight sets `.height(...)`
-/// through [style], which is one line and says what it means.
+/// than by height — so a size axis would be numbers with nothing to anchor
+/// them. It is an 8px bar; a call site that wants a different weight sets
+/// `.height(...)` through [style], which is one line and says what it means.
 ///
-/// The track is `muted` and the indicator is `primary`: the same pairing the
-/// checked checkbox uses, so "how far along" reads in the accent the rest of
-/// the application already uses for state.
+/// The indicator is `primary` on a track of `primary` at 20%: the track reads
+/// as the same bar, not yet filled, rather than as a separate surface.
 ///
 /// Both are fully rounded rather than sharing the theme's control radius. The
 /// theme radius is authored for 32-40px controls; on an 8px bar anything
@@ -47,12 +47,18 @@ ProgressStyler playgroundProgressStyle({
     .height(_thickness)
     .borderRadius(.all(_radius))
     .clipBehavior(Clip.antiAlias)
-    .track(_bar().width(double.infinity).color(PlaygroundTokens.muted()))
+    .track(_bar().width(double.infinity).color(_track()))
     .indicator(_bar().color(PlaygroundTokens.primary()))
     .merge(style);
 
-/// The bar's weight, matching shadcn's `h-2`.
-const _thickness = 8.0;
+/// The track: `primary` at 20%.
+final _track = playgroundTint(PlaygroundTokens.primary, _trackAlpha);
+
+/// See [_track].
+const _trackAlpha = 0.2;
+
+/// The bar's weight: 8px.
+const _thickness = PlaygroundSpace.s2;
 
 /// Half of [_thickness], which is what makes each end a semicircle.
 const _radius = Radius.circular(_thickness / 2);

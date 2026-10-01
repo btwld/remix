@@ -248,6 +248,8 @@ registries:
       );
 
       expect(writer.paths, [
+        'lib/ui/theme/effects.dart',
+        'lib/ui/theme/scale.dart',
         'lib/ui/theme/theme_data.dart',
         'lib/ui/theme/theme_scope.dart',
         'lib/ui/theme/tokens.dart',
@@ -277,6 +279,7 @@ registries:
         'pub',
         'add',
         'remix@$registryRemixConstraint',
+        'remix_ui_fonts@^0.1.0',
         'mix_annotations@^2.2.0-beta.1',
         'dev:build_runner@^2.10.1',
         'dev:mix_generator@^2.2.0-beta.3',
@@ -450,6 +453,8 @@ environment:
 packages:
   mix_annotations:
     version: "2.2.0-beta.1"
+  remix_ui_fonts:
+    version: "0.1.0"
   build_runner:
     version: "2.10.1"
   mix_generator:
@@ -1162,6 +1167,7 @@ dependencies:
   flutter:
     sdk: flutter
 $declaration  mix_annotations: ^2.2.0-beta.1
+  remix_ui_fonts: ^0.1.0
 dev_dependencies:
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
@@ -1457,6 +1463,7 @@ dependencies:
     sdk: flutter
   remix: $registryRemixConstraint
   mix_annotations: ^2.2.0-beta.1
+  remix_ui_fonts: ^0.1.0
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');

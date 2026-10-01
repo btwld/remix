@@ -79,7 +79,12 @@ class {{typePrefix}}DashboardDemo extends StatefulWidget {
 }
 
 class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark =>
+      _dark ?? ({{typePrefix}}Theme.maybeOf(context)?.brightness == Brightness.dark);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +157,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     );
     if (!widget.builtInChrome) return demo;
     return {{typePrefix}}ThemeScope(
-      mode: _dark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
+      mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: {{typePrefix}}Tokens.background.resolve(context),
@@ -165,9 +170,9 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   List<Widget> _chromeActions() => [
     {{typePrefix}}IconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const {{typePrefix}}Popover(
       semanticLabel: 'Notifications',
@@ -208,7 +213,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
                 style: _textStyle(size: 16, weight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Neutral'),
               _settingLine('Radius', 'Medium'),
               _settingLine('Density', 'Comfortable'),
@@ -571,7 +576,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
       ),
       .linePatterns => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -608,6 +613,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
       ),
       .stepGaps => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -629,6 +635,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
       ),
       .viewportLabels => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -650,18 +657,22 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
       ),
       .groupedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: {{valuePrefix}}DashboardGroupedBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
       ),
       .stackedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: {{valuePrefix}}DashboardStackedBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
       ),
       .floatingBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: {{valuePrefix}}DashboardFloatingBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
       ),
       .trackedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
@@ -669,12 +680,14 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 70),
       ),
       .trafficPie => {{typePrefix}}PieChart(
+        style: _pieRing(),
         semanticsLabel: 'Traffic share by device',
         slices: {{valuePrefix}}DashboardChannelSlices(),
         valueFormatter: (value) => '${value.toInt()}%',
       ),
       .interactivePie => {{typePrefix}}PieChart(
         centerRadius: 40,
+        style: _pieRing(40),
         semanticsLabel: 'Product mix',
         slices: {{valuePrefix}}DashboardProductSlices(),
         selectedSliceIds: {?selected},
@@ -683,6 +696,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
       ),
       .badgePie => {{typePrefix}}PieChart(
         centerRadius: 34,
+        style: _pieRing(34),
         semanticsLabel: 'Device traffic with badge markers',
         slices: {{valuePrefix}}DashboardChannelSlices(badges: true),
       ),
@@ -691,6 +705,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         children: [
           {{typePrefix}}PieChart(
             centerRadius: 52,
+            style: _pieRing(52),
             semanticsLabel: 'No channel data',
             slices: {{valuePrefix}}DashboardEmptySlices(),
           ),
@@ -707,6 +722,17 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
     },
   );
 }
+
+/// How far every pie on the charts page reaches: 80% of the way to the edge of
+/// its 240px box, where Recharts puts a pie by default.
+///
+/// mix_chart draws each slice 80px wide whatever the box, so a donut left at
+/// that default spills out of the box by the width of its hole.
+const _pieRadius = 96.0;
+
+/// A pie ring that ends at [_pieRadius] around a hole of [centerRadius].
+PieChartStyler _pieRing([double centerRadius = 0]) =>
+    PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
 Widget _chartCard(String title, String description, Widget chart) =>
     {{typePrefix}}Card(

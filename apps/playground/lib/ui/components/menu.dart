@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'menu.g.dart';
@@ -18,10 +20,11 @@ part 'menu.g.dart';
 /// `submenuItem` fall back to it unless a recipe says otherwise. Setting only
 /// `item` is what keeps a menu looking like one list rather than four.
 ///
-/// The panel is the same `background` fill and `border` hairline the popover
-/// uses. The two files are deliberately separate — the components have
-/// separate update stories — but the values are meant to match, so a menu and
-/// a popover anchored to adjacent buttons do not read as two systems.
+/// The panel is the same `popover` fill and `border` hairline the popover and
+/// the select's options use. The files are deliberately separate — the
+/// components have separate update stories — but the values are meant to
+/// match, so a menu and a popover anchored to adjacent buttons do not read as
+/// two systems.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
@@ -32,69 +35,27 @@ MenuStyler playgroundMenuStyle({
   MenuStyler style = const MenuStyler.create(),
 }) => MenuStyler()
     .trigger(_triggerStyle())
+    // The panel: `popover` inside a `border` hairline, `radiusMd` corners,
+    // a 4px inset, the `md` shadow, and at least 128px wide. The inset is
+    // split: the panel pads above and below, and each row takes the side
+    // inset as its own margin, which is what lets a separator run edge to
+    // edge.
     .overlay(
       FlexBoxStyler()
           .direction(.vertical)
           .mainAxisSize(.min)
-          .color(PlaygroundTokens.background())
-          .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-          .borderRadius(.all(PlaygroundTokens.radius()))
-          .padding(.all(_panelPadding))
-          .minWidth(_panelMinWidth),
+          .color(PlaygroundTokens.popover())
+          .border(
+            .color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline),
+          )
+          .borderRadius(.all(PlaygroundTokens.radiusMd()))
+          .padding(.vertical(PlaygroundSpace.s1))
+          .minWidth(PlaygroundSize.panelMinWidth),
     )
-    .containerEffects(.behindContent(.shadows([_shadow])))
+    .containerEffects(.behindContent(PlaygroundShadow.md.effects))
     .item(_itemStyle())
     .divider(_dividerStyle())
     .merge(style);
-
-/// Width of the panel and trigger outlines.
-const _borderWidth = 1.0;
-
-/// Inset between the panel edge and its rows.
-///
-/// Small: the rows carry their own padding, and this is only the gap that
-/// keeps a hovered row's fill from touching the panel's outline.
-const _panelPadding = 4.0;
-
-/// The narrowest a menu panel gets, so a one-word menu is still a target.
-const _panelMinWidth = 160.0;
-
-/// Horizontal inset inside a row.
-const _rowPaddingX = 8.0;
-
-/// Vertical inset inside a row.
-const _rowPaddingY = 6.0;
-
-/// Minimum height of a row.
-const _rowHeight = 32.0;
-
-/// Gap between a row's icons and its label.
-const _rowGap = 8.0;
-
-/// Label size, matching body copy.
-const _labelSize = 14.0;
-
-/// Size of a row's leading and trailing icons.
-const _iconSize = 16.0;
-
-/// Vertical space a divider claims between two groups of rows.
-const _dividerMargin = 4.0;
-
-/// Width of the keyboard focus ring on the trigger.
-const _focusRingWidth = 2.0;
-
-/// Opacity applied to a trigger or a row the reader cannot use.
-const _disabledOpacity = 0.5;
-
-/// The lift that separates the panel from whatever it covers.
-///
-/// A shadow is nearly invisible on a dark page, so it is a *second* cue; the
-/// panel's outline is what has to carry the boundary in both themes.
-final _shadow = RemixBoxShadowMix(
-  color: const Color(0x1A000000),
-  offset: const Offset(0, 4),
-  blurRadius: 12,
-);
 
 /// The control that opens the menu.
 ///
@@ -105,73 +66,89 @@ final _shadow = RemixBoxShadowMix(
 /// free to wrap a bare `Text`, and that caller must not end up with a
 /// keyboard-reachable control that shows nothing when it is reached.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
+    .animate(PlaygroundMotion.standard)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .crossAxisAlignment(.center)
-    .minHeight(_rowHeight)
-    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
-    .spacing(_rowGap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
+    .minHeight(PlaygroundSize.controlSm)
+    .padding(
+      .symmetric(
+        horizontal: PlaygroundSpace.s2,
+        vertical: PlaygroundSpace.s1_5,
+      ),
+    )
+    .spacing(PlaygroundSpace.s2)
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(
-      .fontSize(
-        _labelSize,
+      .style(
+        PlaygroundTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
-    .icon(.size(_iconSize).color(PlaygroundTokens.foreground()))
+    .icon(.size(PlaygroundSize.icon).color(PlaygroundTokens.foreground()))
     .onHovered(.color(PlaygroundTokens.accent()))
     // A trigger is keyboard-reachable whether or not it wraps a control that
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
-    .onFocusVisible(
-      .foregroundDecoration(
-        BoxDecorationMix(
-          border: .all(
-            .color(
-              PlaygroundTokens.focusRing(),
-            ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-          ),
-          borderRadius: .all(PlaygroundTokens.radius()),
-        ),
-      ),
-    )
-    .onDisabled(MenuTriggerStyler().wrap(.opacity(_disabledOpacity)));
+    .onFocusVisible(.foregroundDecoration(playgroundFocusRingDecoration()))
+    .onDisabled(MenuTriggerStyler().wrap(.opacity(PlaygroundOpacity.disabled)));
 
-/// One row, in every kind the menu can hold.
+/// One row, in every kind the menu can hold: 32px tall, with an 8px side inset,
+/// `radiusSm` corners, and `textSm`.
 ///
 /// `accent` is what makes the highlighted row visible, and it is applied on
 /// hover *and* on focus: a menu is as often driven by the arrow keys as by
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
+    .animate(PlaygroundMotion.standard)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(_rowHeight)
-    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
-    .spacing(_rowGap)
-    .borderRadius(.all(PlaygroundTokens.radius()))
-    .label(.fontSize(_labelSize).color(PlaygroundTokens.foreground()))
-    .leadingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
-    .trailingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
-    .indicator(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
+    .minHeight(PlaygroundSize.controlSm)
+    .margin(.horizontal(PlaygroundSpace.s1))
+    .padding(
+      .symmetric(
+        horizontal: PlaygroundSpace.s2,
+        vertical: PlaygroundSpace.s1_5,
+      ),
+    )
+    .spacing(PlaygroundSpace.s2)
+    .borderRadius(.all(PlaygroundTokens.radiusSm()))
+    .label(
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).color(PlaygroundTokens.popoverForeground()),
+    )
+    .leadingIcon(
+      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+    )
+    .trailingIcon(
+      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+    )
+    .indicator(
+      .size(PlaygroundSize.icon).color(PlaygroundTokens.popoverForeground()),
+    )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(MenuItemStyler().wrap(.opacity(_disabledOpacity)));
+    .onDisabled(MenuItemStyler().wrap(.opacity(PlaygroundOpacity.disabled)));
 
 /// The row under the pointer or the keyboard cursor.
+///
+/// The label and the check mark follow the row onto `accentForeground`; the
+/// leading and trailing icons stay `mutedForeground`, so they keep reading as
+/// markers beside the label rather than as part of it.
 MenuItemStyler _highlighted() => MenuItemStyler()
     .color(PlaygroundTokens.accent())
     .label(.color(PlaygroundTokens.accentForeground()))
-    .leadingIcon(.color(PlaygroundTokens.accentForeground()))
-    .trailingIcon(.color(PlaygroundTokens.accentForeground()))
     .indicator(.color(PlaygroundTokens.accentForeground()));
 
-/// The rule between two groups of rows.
+/// The rule between two groups of rows: a `border` hairline with 4px above and
+/// below.
 ///
-/// It stops short of the panel's edge on both sides, so it reads as
-/// separating the rows rather than cutting the panel in half.
+/// It runs edge to edge across the panel, which is why the panel's side inset
+/// lives on the rows rather than on the panel.
 DividerStyler _dividerStyle() => DividerStyler()
     .color(PlaygroundTokens.border())
-    .height(_borderWidth)
-    .margin(.symmetric(vertical: _dividerMargin))
+    .height(PlaygroundStroke.hairline)
+    .margin(.vertical(PlaygroundSpace.s1))
     .wrap(.fractionallySizedBox(widthFactor: 1));

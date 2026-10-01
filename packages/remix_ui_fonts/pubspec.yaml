@@ -1,0 +1,55 @@
+name: remix_ui_fonts
+description: Open-licensed fonts, bundled for offline use, for Flutter applications built with Remix UI.
+repository: https://github.com/btwld/remix
+issue_tracker: https://github.com/btwld/remix/issues
+license: BSD-3-Clause
+resolution: workspace
+topics:
+  - fonts
+  - flutter
+  - typography
+  - design-system
+  - remix
+
+version: 0.1.0
+
+# Consumer floor, matching the published Remix packages.
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  crypto: ^3.0.7
+  flutter_test:
+    sdk: flutter
+  yaml: ^3.1.3
+
+# One directory per upstream font project under lib/fonts/, each with its own
+# license and fonts.lock.json. Consumers reference a family as
+# `packages/remix_ui_fonts/<family>`; see `RemixFonts`.
+flutter:
+  # Flutter adds these to an app's license page; its LICENSE file only covers
+  # this package's code.
+  licenses:
+    - lib/fonts/geist/OFL.txt
+  fonts:
+    - family: Geist
+      fonts:
+        - asset: lib/fonts/geist/Geist-Regular.ttf
+          weight: 400
+        - asset: lib/fonts/geist/Geist-Medium.ttf
+          weight: 500
+        - asset: lib/fonts/geist/Geist-SemiBold.ttf
+          weight: 600
+        - asset: lib/fonts/geist/Geist-Bold.ttf
+          weight: 700
+    - family: GeistMono
+      fonts:
+        - asset: lib/fonts/geist/GeistMono-Regular.ttf
+          weight: 400
+        - asset: lib/fonts/geist/GeistMono-Medium.ttf
+          weight: 500

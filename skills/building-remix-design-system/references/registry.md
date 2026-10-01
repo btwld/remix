@@ -20,7 +20,7 @@ use a system named "Acme" registered as `@acme`.
 acme-design-system/            public github.com repository
   source/                      authoring package: analyzed and tested, never published
     pubspec.yaml
-    lib/theme/                 tokens.dart, theme_data.dart, theme_scope.dart
+    lib/theme/                 tokens.dart, theme_data.dart, theme_scope.dart, and any scale or helper files
     lib/components/            one recipe per component (+ its .g.dart part)
     test/
   specs/

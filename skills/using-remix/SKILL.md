@@ -18,7 +18,7 @@ description: >-
 # Using Remix
 
 Build accessible Flutter interfaces with Remix behavior plus a hand-written
-style, the compact Vanilla starter preset, or Fortal's Radix Themes-inspired
+style, the neutral Vanilla starter preset, or Fortal's Radix Themes-inspired
 preset. To build a reusable design system for other applications and
 publish it as a Remix registry, use `building-remix-design-system`;
 restyling this application's own installed source stays here.
@@ -45,7 +45,7 @@ screen, with a nested themed scope) rather than adding Fortal.
 | Need | Source and API |
 | --- | --- |
 | No generated source or codegen wanted | base `remix`; hand-write `Remix*` widgets and `*Styler`s |
-| A compact, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>ThemeScope`/`<Prefix>Tokens` |
+| A neutral, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>ThemeScope`/`<Prefix>Tokens` |
 | Ready-made Radix Themes-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Scope` plus prefixed `<Prefix>*` widgets |
 | Own brand in one app, want editable tokens and recipes | Vanilla, then customize — see [Customize installed source](#customize-installed-source) |
 

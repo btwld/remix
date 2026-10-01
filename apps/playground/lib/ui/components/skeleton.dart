@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
 part 'skeleton.g.dart';
@@ -23,10 +24,8 @@ part 'skeleton.g.dart';
 /// )
 /// ```
 ///
-/// The pulse runs between `muted` and `accent`, the theme's two neutral
-/// surfaces, so a loading block reads as scenery rather than as content. Both
-/// tokens shift with light and dark, and a theme that wants a stronger pulse
-/// only widens the gap between them.
+/// It is an `accent` block with `radiusMd` corners that pulses to half
+/// strength, so a loading block reads as scenery rather than as content.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
@@ -36,14 +35,21 @@ SkeletonStyler playgroundSkeletonStyle({
 }) => SkeletonStyler()
     .container(
       BoxStyler()
-          .color(PlaygroundTokens.muted())
-          .borderRadius(.all(PlaygroundTokens.radius())),
+          .color(PlaygroundTokens.accent())
+          .borderRadius(.all(PlaygroundTokens.radiusMd())),
     )
-    .pulseColor(PlaygroundTokens.accent())
+    .pulseColor(_pulse())
     .duration(_pulseDuration)
     .merge(style);
 
-/// The length of one forward pulse leg; the reverse leg takes the same time.
+/// The far end of the pulse: `accent` at half strength.
+final _pulse = playgroundTint(PlaygroundTokens.accent, _pulseAlpha);
+
+/// See [_pulse].
+const _pulseAlpha = 0.5;
+
+/// The length of one forward pulse leg; the reverse leg takes the same time, so
+/// one full pulse takes two seconds.
 ///
 /// Slow on purpose. A placeholder that pulses at interaction speed competes
 /// with the content arriving beside it.

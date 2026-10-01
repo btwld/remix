@@ -11,6 +11,8 @@ library;
 export 'src/default/icons.dart';
 
 /// THEME
+export 'src/default/theme/effects.dart';
+export 'src/default/theme/scale.dart';
 export 'src/default/theme/theme_data.dart';
 export 'src/default/theme/theme_scope.dart';
 export 'src/default/theme/tokens.dart';

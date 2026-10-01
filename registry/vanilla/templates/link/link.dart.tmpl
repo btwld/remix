@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'link.g.dart';
@@ -9,19 +11,22 @@ part 'link.g.dart';
 /// The application's Link recipe.
 ///
 /// Remix owns the link role, the destination, focus, activation, and the rule
-/// that a link with no callback is a disabled link; this recipe supplies only
-/// its color and its underline.
+/// that a link with no callback is a disabled link; this recipe supplies its
+/// type, its color, and its states.
 ///
-/// It sets no font size on purpose. A link is inline text, so it should take
-/// the size and weight of the paragraph around it — a fixed size here would
-/// make a link inside a heading render at body scale.
+/// It is `textSm` at medium weight in `primary`, underlined while the pointer
+/// is on it, and ringed like every other control when it has keyboard focus.
+/// That suits a link standing on its own — "Forgot password?", "View all". A
+/// link set inside running prose should stay identifiable without the pointer;
+/// give that call site an underline at rest through [style]:
 ///
-/// The color is `foreground`, not `primary`. This theme's `primary` is a
-/// near-neutral fill color rather than a link hue, so a `primary` link would
-/// read as body text with no affordance at all. Underlining is what marks it,
-/// which also means the link is still identifiable without color — an
-/// application that has a brand link color changes the two `.color(...)` calls
-/// below.
+/// ```dart
+/// {{typePrefix}}Link(
+///   label: 'terms of service',
+///   style: LinkStyler().label(.decoration(TextDecoration.underline)),
+///   onPressed: openTerms,
+/// )
+/// ```
 ///
 /// There is no pressed fragment. A link's press is over in the time it takes
 /// to navigate, and the destination arriving is the feedback — the same reason
@@ -30,35 +35,27 @@ part 'link.g.dart';
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's hover color has to be
+/// by depth: an override that must beat the recipe's hover underline has to be
 /// declared as a hover fragment too (`LinkStyler().onHovered(...)`).
 @MixWidget(target: RemixLink.new)
 LinkStyler {{valuePrefix}}LinkStyle({LinkStyler style = const LinkStyler.create()}) =>
     LinkStyler()
+        .animate({{typePrefix}}Motion.standard)
         .label(
-          .color({{typePrefix}}Tokens.foreground())
-              .decoration(TextDecoration.underline)
-              .decorationColor({{typePrefix}}Tokens.border()),
+          .style(
+            {{typePrefix}}Tokens.textSm.mix(),
+          ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.primary()),
         )
-        // Hover and keyboard focus both promote the underline to full strength
-        // rather than adding one: an underline that appears on hover moves the
-        // text's baseline box on some platforms, and a link that is only
-        // underlined while hovered is invisible to a keyboard user.
-        .onHovered(_emphasized())
-        .onFocusVisible(_emphasized())
+        .onHovered(.label(.decoration(TextDecoration.underline)))
+        .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
         .onDisabled(_disabledStyle())
         .merge(style);
-
-/// Opacity applied to the whole link while disabled.
-const _disabledOpacity = 0.5;
-
-/// The underline at full strength, in the text's own color.
-LinkStyler _emphasized() =>
-    LinkStyler().label(.decorationColor({{typePrefix}}Tokens.foreground()));
 
 /// Declared last so it wins over every other state fragment.
 ///
 /// A link with no `onPressed` is disabled by Remix, which is the same meaning
 /// `onPressed: null` carries on every other Flutter control, so this fragment
 /// is also what a decorative link looks like.
-LinkStyler _disabledStyle() => LinkStyler().wrap(.opacity(_disabledOpacity));
+LinkStyler _disabledStyle() => LinkStyler()
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity({{typePrefix}}Opacity.disabled));

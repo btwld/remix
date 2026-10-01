@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import 'theme_data.dart';
+import 'tokens.dart';
 
 /// Installs a [PlaygroundThemeData] for a subtree.
 ///
@@ -11,6 +12,24 @@ import 'theme_data.dart';
 ///   [PlaygroundTheme.of];
 /// * a `MixScope` carrying the same values keyed by `PlaygroundTokens`, so every Mix
 ///   styler resolved below this point sees them.
+///
+/// The outermost scope also sets the page up: it paints the theme's
+/// `background` behind [child] and gives bare [Text] the theme's body run and
+/// bare [Icon]s its `foreground`. A nested scope whose theme has a different
+/// `foreground` recolors both for its subtree.
+/// Place it below the application host so those defaults apply:
+///
+/// ```dart
+/// WidgetsApp(
+///   color: const Color(0xFFFFFFFF),
+///   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+///     settings: settings,
+///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+///   ),
+///   builder: (context, child) => PlaygroundThemeScope(child: child!),
+///   home: const HomePage(),
+/// )
+/// ```
 ///
 /// Each supplied theme replaces the values for its appearance. An empty nested
 /// scope inherits the parent pair and selection; individual tokens do not merge.
@@ -81,16 +100,73 @@ class PlaygroundThemeScope extends StatelessWidget {
                   Brightness.dark,
           };
     final selected = useDark ? dark : base;
+    final tokens = selected.tokens;
+    Widget scoped = MixScope(tokens: tokens, child: child);
+    // Only the outermost scope sets the page up. A nested scope must not
+    // reinstall the root text run, which would silently replace whatever
+    // `DefaultTextStyle` the subtree sits in, nor paint a second background
+    // over a card or a panel. But a nested scope that switches to a theme with
+    // a different `foreground` (a region shown in the other brightness, say)
+    // recolors the run it inherits, so bare text and icons below it stay
+    // readable on the surfaces its own recipes paint.
+    if (inherited == null) {
+      scoped = ColoredBox(
+        color: selected.background,
+        child: _rootTextStyle(tokens: tokens, child: scoped),
+      );
+    } else if (inherited.data.foreground != selected.foreground) {
+      scoped = _recolored(selected.foreground, scoped);
+    }
 
     return PlaygroundTheme(
       data: selected,
       baseTheme: base,
       darkTheme: dark,
       useDarkTheme: useDark,
-      child: MixScope(tokens: selected.tokens, child: child),
+      child: scoped,
     );
   }
 }
+
+/// The text run a bare [Text] below the root scope inherits.
+///
+/// The theme's font at `textSm`, in `foreground`, so a `Text` with no style of
+/// its own reads as body copy in the theme's color in both brightnesses —
+/// instead of inheriting whatever the host set up, which in a dark theme is
+/// often dark text on a dark page.
+///
+/// Recipes still set their own sizes and colors; this is only the fallback,
+/// and a nearer `DefaultTextStyle` wins through Flutter's normal inheritance.
+/// Place the scope *below* a Material or Cupertino host (in its `builder`) so
+/// the host's own text defaults do not sit between the two.
+///
+/// A bare [Icon] takes `foreground` too, the color of the text beside it; its
+/// size is left to the host.
+Widget _rootTextStyle({
+  required Map<MixToken<Object?>, Object> tokens,
+  required Widget child,
+}) {
+  final body = tokens[PlaygroundTokens.textSm]! as TextStyle;
+  final foreground = tokens[PlaygroundTokens.foreground]! as Color;
+
+  return DefaultTextStyle(
+    style: body.copyWith(color: foreground, fontWeight: FontWeight.w400),
+    child: IconTheme.merge(
+      data: IconThemeData(color: foreground),
+      child: child,
+    ),
+  );
+}
+
+/// The inherited text run and icon theme, recolored to [foreground] and
+/// otherwise untouched.
+Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
+  style: TextStyle(color: foreground),
+  child: IconTheme.merge(
+    data: IconThemeData(color: foreground),
+    child: child,
+  ),
+);
 
 /// The inherited half of [PlaygroundThemeScope].
 ///

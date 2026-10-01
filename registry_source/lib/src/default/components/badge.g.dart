@@ -51,7 +51,7 @@ class VanillaBadge extends StatelessWidget {
     this.labelBuilder,
   }) : variant = VanillaBadgeVariant.secondary;
 
-  /// Low emphasis with a hairline `border` and no fill.
+  /// Low emphasis: no fill, with the `border` hairline around it.
   const VanillaBadge.outline({
     super.key,
     this.style = const BadgeStyler.create(),

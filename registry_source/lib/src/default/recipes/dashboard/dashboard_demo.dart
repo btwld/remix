@@ -79,7 +79,12 @@ class VanillaDashboardDemo extends StatefulWidget {
 }
 
 class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark =>
+      _dark ?? (VanillaTheme.maybeOf(context)?.brightness == Brightness.dark);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +157,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return VanillaThemeScope(
-      mode: _dark ? VanillaThemeMode.dark : VanillaThemeMode.light,
+      mode: _isDark ? VanillaThemeMode.dark : VanillaThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: VanillaTokens.background.resolve(context),
@@ -165,9 +170,9 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
   List<Widget> _chromeActions() => [
     VanillaIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const VanillaPopover(
       semanticLabel: 'Notifications',
@@ -208,7 +213,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
                 style: _textStyle(size: 16, weight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Neutral'),
               _settingLine('Radius', 'Medium'),
               _settingLine('Density', 'Comfortable'),
@@ -571,7 +576,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
-        yAxis: registryDashboardNumericAxis(max: 100),
+        yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
       ),
       .linePatterns => VanillaLineChart(
         showMarkers: true,
@@ -608,6 +613,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 50),
       ),
       .stepGaps => VanillaLineChart(
         showMarkers: true,
@@ -629,6 +635,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 40),
       ),
       .viewportLabels => VanillaLineChart(
         showMarkers: true,
@@ -650,18 +657,22 @@ class _VanillaDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: registryDashboardWeekdayAxis(),
+        yAxis: registryDashboardNumericAxis(max: 50),
       ),
       .groupedBars => VanillaBarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: registryDashboardGroupedBars(),
+        yAxis: registryDashboardNumericAxis(max: 60),
       ),
       .stackedBars => VanillaBarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: registryDashboardStackedBars(),
+        yAxis: registryDashboardNumericAxis(max: 60),
       ),
       .floatingBars => VanillaBarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: registryDashboardFloatingBars(),
+        yAxis: registryDashboardNumericAxis(max: 40),
       ),
       .trackedBars => VanillaBarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
@@ -669,12 +680,14 @@ class _VanillaDashboardCharts extends StatelessWidget {
         yAxis: registryDashboardNumericAxis(max: 70),
       ),
       .trafficPie => VanillaPieChart(
+        style: _pieRing(),
         semanticsLabel: 'Traffic share by device',
         slices: registryDashboardChannelSlices(),
         valueFormatter: (value) => '${value.toInt()}%',
       ),
       .interactivePie => VanillaPieChart(
         centerRadius: 40,
+        style: _pieRing(40),
         semanticsLabel: 'Product mix',
         slices: registryDashboardProductSlices(),
         selectedSliceIds: {?selected},
@@ -683,6 +696,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
       ),
       .badgePie => VanillaPieChart(
         centerRadius: 34,
+        style: _pieRing(34),
         semanticsLabel: 'Device traffic with badge markers',
         slices: registryDashboardChannelSlices(badges: true),
       ),
@@ -691,6 +705,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
         children: [
           VanillaPieChart(
             centerRadius: 52,
+            style: _pieRing(52),
             semanticsLabel: 'No channel data',
             slices: registryDashboardEmptySlices(),
           ),
@@ -707,6 +722,17 @@ class _VanillaDashboardCharts extends StatelessWidget {
     },
   );
 }
+
+/// How far every pie on the charts page reaches: 80% of the way to the edge of
+/// its 240px box, where Recharts puts a pie by default.
+///
+/// mix_chart draws each slice 80px wide whatever the box, so a donut left at
+/// that default spills out of the box by the width of its hole.
+const _pieRadius = 96.0;
+
+/// A pie ring that ends at [_pieRadius] around a hole of [centerRadius].
+PieChartStyler _pieRing([double centerRadius = 0]) =>
+    PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
 Widget _chartCard(String title, String description, Widget chart) =>
     VanillaCard(

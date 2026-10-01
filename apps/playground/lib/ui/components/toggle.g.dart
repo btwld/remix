@@ -12,10 +12,12 @@ part of 'toggle.dart';
 /// pointer and keyboard behavior, and the on/off semantics; this recipe owns
 /// the geometry and the off/hover/on/focus/disabled fragments.
 ///
-/// The on state is `accent`, the token whose whole job is "this transparent
-/// control is doing something", while hover is the quieter `muted`. Keeping
-/// them different is what lets a reader tell a toggle they are pointing at
-/// from one that is switched on.
+/// A toggle that is on sits on `accent` in `accentForeground`; a ghost toggle
+/// under the pointer sits on `muted` in `mutedForeground`. In the shipped
+/// themes the two surfaces are the same gray, so "on" is told from "pointed at"
+/// by its full-strength content, and a toggle that is on stays on when hovered.
+/// An outline toggle hovers onto `accent` instead, and keeps its outline in
+/// every state.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable
@@ -61,7 +63,7 @@ class PlaygroundToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = PlaygroundToggleVariant.ghost;
 
-  /// A hairline `border`, so the control is visible while off.
+  /// An `input` outline, so the control is visible while off.
   const PlaygroundToggle.outline({
     super.key,
     this.size = .medium,

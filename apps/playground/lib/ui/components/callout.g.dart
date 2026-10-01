@@ -12,21 +12,15 @@ part of 'callout.dart';
 /// something about the surrounding page. Remix owns the layout and the icon
 /// slot; this recipe owns the surface, the outline, and the content colors.
 ///
+/// It is the `card` surface inside a `border` hairline with `radiusLg` corners,
+/// a 16px by 12px inset, and the icon 12px from `textSm` prose. The icon takes
+/// the text's color, so the tone is set in one place. The destructive tone
+/// keeps the neutral surface and outline and sets its text in `destructive`,
+/// which clears 4.5:1 on `card` in both shipped themes; a solid `destructive`
+/// fill would read as a pressed button rather than as a notice.
+///
 /// There are no interaction fragments. A callout is not a control — anything
 /// actionable inside it is a separate button or link with its own recipe.
-///
-/// The destructive tone paints no fill. A tinted danger surface would need a
-/// `destructive`-derived background this theme does not define, and a solid
-/// `destructive` fill would read as a pressed button rather than as a notice;
-/// the outline and the icon carry the meaning instead.
-///
-/// Both tones set their sentence in `foreground`, which is why the text color
-/// lives in [_base] rather than in either tone. `destructive` is a fill color
-/// chosen to sit under `destructiveForeground`, not a text color: on the dark
-/// theme's page it measures 4.1:1, under the 4.5:1 WCAG floor for body copy.
-/// The border and the glyph are non-text, where the floor is 3:1, so they are
-/// where the tone shows. A theme that adds a dedicated danger *text* step
-/// would move the text color back into [_variantStyle].
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable
@@ -48,7 +42,7 @@ class PlaygroundCallout extends StatelessWidget {
     this.child,
   });
 
-  /// A neutral aside on a `muted` surface.
+  /// A neutral aside on the `card` surface.
   const PlaygroundCallout.neutral({
     super.key,
     this.style = const CalloutStyler.create(),

@@ -4,7 +4,7 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the compact `vanilla` preset or the Radix Themes-inspired `fortal`
+Choose the neutral `vanilla` preset or the Radix Themes-inspired `fortal`
 preset at initialization. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
@@ -202,6 +202,8 @@ lib/ui/
     tokens.dart
     theme_data.dart
     theme_scope.dart
+    scale.dart
+    effects.dart
   components/
     button.dart
     button.g.dart
@@ -321,9 +323,11 @@ final chart = SizedBox(
 ```
 
 Charts have no intrinsic height, so give line and bar charts a bounded height
-and pie charts a bounded size. The palette is the theme's `chart1` to
-`chart5` tokens: edit them in `theme/theme_data.dart` to restyle every chart,
-or pass `palette` or a chart `style` for one instance.
+and pie charts a bounded size. A pie does not scale to its box: each slice
+ring is 80px wide unless the chart's `style` sets `PieSliceStyler().radius`,
+so size a donut's ring to fit. The palette is the theme's `chart1` to `chart5`
+tokens, a neutral gray ramp: edit them in `theme/theme_data.dart` to restyle
+every chart, or pass `palette` or a chart `style` for one instance.
 
 `RemixCheckboxGroup`, `RemixRadioGroup`, `RemixTabs`, and
 `RemixAccordionGroup` are behavioral and carry no style, so the registry has
@@ -365,8 +369,9 @@ preserved. An incompatible resolved dependency fails before authored-source
 writes.
 
 Section placement is checked but never rewritten. Packages the installed source
-imports at runtime (`remix`, `mix_annotations`, `mix_chart` for `chart`, and
-`remix_ui_icons` for `icons`) must be declared under
+imports at runtime (`remix`, `mix_annotations`, `mix_chart` for `chart`,
+`remix_ui_icons` for `icons`, and `remix_ui_fonts` for the Vanilla `theme`)
+must be declared under
 `dependencies`; build-only packages (`build_runner`, `mix_generator`) may sit in
 either section. Declaring the same package in both sections is rejected. A
 misplaced declaration fails before any process runs or file is written, and the

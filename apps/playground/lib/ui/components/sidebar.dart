@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'toggle.dart';
 import 'tooltip.dart';
@@ -32,9 +34,11 @@ part 'sidebar.g.dart';
 /// the tooltip: when the host collapses the panel to an icon rail, each
 /// destination's label appears in the application's own tooltip recipe.
 ///
-/// The panel fill is `background`, the same token the page uses, and the
-/// trailing hairline in `border` is what separates the two — the same choice
-/// the card recipe makes, for the same reason.
+/// The panel is the `sidebar` surface, a step apart from the page, with a
+/// `sidebarBorder` edge. Destinations are 32px rows that sit on `sidebarAccent`
+/// while hovered or current, and the current one is set at medium weight.
+/// Everything shares one 8px inset, so labels, destinations, and the footer
+/// line up on one left edge.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:
@@ -52,83 +56,93 @@ SidebarStyler playgroundSidebarStyle({
   SidebarStyler style = const SidebarStyler.create(),
 }) => SidebarStyler(
   container: FlexBoxStyler()
-      .color(PlaygroundTokens.background())
-      .border(.end(.color(PlaygroundTokens.border()).width(_borderWidth))),
+      .color(PlaygroundTokens.sidebar())
+      .border(
+        .end(
+          .color(
+            PlaygroundTokens.sidebarBorder(),
+          ).width(PlaygroundStroke.hairline),
+        ),
+      ),
   content: FlexBoxStyler()
-      .padding(
-        .symmetric(horizontal: _contentPaddingX, vertical: _contentPaddingY),
-      )
-      .spacing(_sectionGap),
+      .padding(.all(PlaygroundSpace.s2))
+      .spacing(PlaygroundSpace.s4),
   footer: BoxStyler()
-      .border(.top(.color(PlaygroundTokens.border()).width(_borderWidth)))
-      .padding(.all(_contentPaddingX)),
-  // A section label names the group below it. It is deliberately the
-  // quietest text in the panel: `mutedForeground` at the smallest size, so
-  // it reads as a heading for the destinations rather than as one of them.
+      .border(
+        .top(
+          .color(
+            PlaygroundTokens.sidebarBorder(),
+          ).width(PlaygroundStroke.hairline),
+        ),
+      )
+      .padding(.all(PlaygroundSpace.s2)),
+  // A section label is a 32px row of `textXs` at medium weight in
+  // `sidebarForeground` at 70%, inset like the destinations below it. It is the
+  // quietest text in the panel, so it reads as a heading for the destinations
+  // rather than as one of them.
   sectionLabel: TextStyler()
-      .color(PlaygroundTokens.mutedForeground())
-      .fontSize(_sectionLabelSize)
+      .style(PlaygroundTokens.textXs.mix())
       .fontWeight(FontWeight.w500)
-      .letterSpacing(_sectionLabelTracking)
+      .color(_labelColor())
       .wrap(
         .padding(
           .symmetric(
-            horizontal: _sectionLabelPaddingX,
-            vertical: _sectionLabelPaddingY,
+            horizontal: PlaygroundSpace.s2,
+            vertical: PlaygroundSpace.s2,
           ),
         ),
       ),
-  destinations: FlexBoxStyler().spacing(_destinationGap),
-  // The application's own toggle, stretched to the panel width and pinned to
-  // a comfortable target height. `ghost` is the right weight here: a column
-  // of outlined destinations would draw more lines than the panel has room
-  // for, and selection already reads through the `accent` fill.
-  destination: playgroundToggleStyle(variant: .ghost, size: .medium)
-      .minHeight(_destinationMinHeight)
-      .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
+  destinations: FlexBoxStyler().spacing(PlaygroundSpace.s1),
+  destination: _destinationStyle(),
   // A collapsed rail shows each destination's label in the application's own
   // tooltip, so it reads like every other tooltip in the app.
   tooltip: playgroundTooltipStyle(),
 ).merge(style);
 
-/// Width of the panel's trailing edge and the footer's top divider.
-const _borderWidth = 1.0;
+/// The section label's color: `sidebarForeground` at 70%, which clears 4.5:1
+/// on the `sidebar` surface in both themes.
+final _labelColor = playgroundTint(
+  PlaygroundTokens.sidebarForeground,
+  _labelAlpha,
+);
 
-/// Horizontal inset of the scrolling destination region.
-const _contentPaddingX = 12.0;
+/// See [_labelColor].
+const _labelAlpha = 0.7;
 
-/// Vertical inset of the scrolling destination region.
-const _contentPaddingY = 16.0;
-
-/// Gap between adjacent sections.
-const _sectionGap = 16.0;
-
-/// Gap between adjacent destinations inside one section.
+/// One destination: the application's own ghost toggle, retuned as a navigation
+/// row.
 ///
-/// Much tighter than [_sectionGap]: destinations in a section are one list,
-/// and the whitespace is what tells a reader where that list ends.
-const _destinationGap = 2.0;
+/// A 32px row, 8px in from the sides and 6px from the top and bottom so the
+/// 20px `textSm` line fills it, with an 8px gap, set in `textSm`
+/// at regular weight in `sidebarForeground`. Hovered and current rows sit on
+/// `sidebarAccent`; the current one is also set at medium weight, which is
+/// what tells it from a hovered row in the shipped themes, where the two
+/// share a surface.
+ToggleStyler _destinationStyle() {
+  final highlighted = ToggleStyler()
+      .color(PlaygroundTokens.sidebarAccent())
+      .label(.color(PlaygroundTokens.sidebarAccentForeground()))
+      .icon(.color(PlaygroundTokens.sidebarAccentForeground()));
 
-/// Type scale for a section label.
-const _sectionLabelSize = 12.0;
-
-/// Extra tracking on a section label, which small uppercase-ish headings need
-/// to stay legible.
-const _sectionLabelTracking = 0.4;
-
-/// Horizontal inset of a section label.
-///
-/// Two pixels narrower than the destination's own `padding`, so the label's
-/// first glyph sits over the destination text below it rather than over the
-/// destination's edge.
-const _sectionLabelPaddingX = 10.0;
-
-/// Vertical inset of a section label.
-const _sectionLabelPaddingY = 6.0;
-
-/// Minimum height of one destination.
-///
-/// Taller than the 36px `medium` toggle it is built from: a destination is a
-/// primary navigation target, often reached on a touch screen, and this is
-/// the one place in this layer that meets the 48px guidance outright.
-const _destinationMinHeight = 48.0;
+  return playgroundToggleStyle(variant: .ghost, size: .small)
+      .container(.mainAxisSize(.max).mainAxisAlignment(.start))
+      .minHeight(PlaygroundSize.controlSm)
+      // The reference is `h-8 p-2`: CSS fixes the height and lets the line
+      // overrun the padding. Flutter lays the line out inside the padding, so
+      // 6px vertically is what keeps the row at 32.
+      .padding(
+        .symmetric(
+          horizontal: PlaygroundSpace.s2,
+          vertical: PlaygroundSpace.s1_5,
+        ),
+      )
+      .spacing(PlaygroundSpace.s2)
+      .label(
+        .fontWeight(
+          FontWeight.w400,
+        ).color(PlaygroundTokens.sidebarForeground()),
+      )
+      .icon(.color(PlaygroundTokens.sidebarForeground()))
+      .onHovered(highlighted)
+      .onSelected(highlighted.label(.fontWeight(FontWeight.w500)));
+}

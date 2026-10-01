@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "https://github.com/vercel/geist-font",
+    "tag": "v1.7.2",
+    "commit": "a73329da8fc62afc917f796555202e4997f79b7c",
+    "releaseAsset": "https://github.com/vercel/geist-font/releases/download/v1.7.2/geist-font-v1.7.2.zip",
+    "releaseAssetSha256": "7fc800d2ac6b92844895196e5041aca55d814c15db70c44f79b3b83ab82b04e2",
+    "license": "OFL-1.1"
+  },
+  "license": {
+    "path": "lib/fonts/geist/OFL.txt",
+    "source": "geist-font/OFL.txt",
+    "sha256": "c683bfbcc7e087f5d37a54ef628f10387c451a83ddc459b151403a164ac46c90"
+  },
+  "fonts": [
+    {
+      "path": "lib/fonts/geist/Geist-Regular.ttf",
+      "family": "Geist",
+      "weight": 400,
+      "source": "geist-font/Geist/ttf/Geist-Regular.ttf",
+      "sha256": "5c8968eafb98a4c4f47033daf29e38e284a6f2a82eb017d171ab040fe7c4b615"
+    },
+    {
+      "path": "lib/fonts/geist/Geist-Medium.ttf",
+      "family": "Geist",
+      "weight": 500,
+      "source": "geist-font/Geist/ttf/Geist-Medium.ttf",
+      "sha256": "0090e004725f6f64b841715b4167920580f883fcf9b67fc6d744089103fec101"
+    },
+    {
+      "path": "lib/fonts/geist/Geist-SemiBold.ttf",
+      "family": "Geist",
+      "weight": 600,
+      "source": "geist-font/Geist/ttf/Geist-SemiBold.ttf",
+      "sha256": "612ec98df33935354f39e81e54101656961ab6e5549f64b63eb57868ba7bab8d"
+    },
+    {
+      "path": "lib/fonts/geist/Geist-Bold.ttf",
+      "family": "Geist",
+      "weight": 700,
+      "source": "geist-font/Geist/ttf/Geist-Bold.ttf",
+      "sha256": "e866b423b755233cae8bce6a37519f6fe630be9772fa08fc3114bff15bc8580f"
+    },
+    {
+      "path": "lib/fonts/geist/GeistMono-Regular.ttf",
+      "family": "GeistMono",
+      "weight": 400,
+      "source": "geist-font/GeistMono/ttf/GeistMono-Regular.ttf",
+      "sha256": "42d8ad2e610238e64e8abfcde3037c63f7850a73928742b7ab7229d897bcb155"
+    },
+    {
+      "path": "lib/fonts/geist/GeistMono-Medium.ttf",
+      "family": "GeistMono",
+      "weight": 500,
+      "source": "geist-font/GeistMono/ttf/GeistMono-Medium.ttf",
+      "sha256": "90b15711dc3779b2e64e8aff5228154dd019a90bce4947549c4a8a8a43f2ac25"
+    }
+  ]
+}

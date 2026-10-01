@@ -80,7 +80,13 @@ class PlaygroundDashboardDemo extends StatefulWidget {
 }
 
 class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
-  bool _dark = false;
+  /// The appearance the toggle chose, or null to follow the scope this demo
+  /// is placed in.
+  bool? _dark;
+
+  bool get _isDark =>
+      _dark ??
+      (PlaygroundTheme.maybeOf(context)?.brightness == Brightness.dark);
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +159,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return PlaygroundThemeScope(
-      mode: _dark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
+      mode: _isDark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: PlaygroundTokens.background.resolve(context),
@@ -166,9 +172,9 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
   List<Widget> _chromeActions() => [
     PlaygroundIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
-      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_dark),
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_isDark),
     ),
     const PlaygroundPopover(
       semanticLabel: 'Notifications',
@@ -209,7 +215,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
                 style: _textStyle(size: 16, weight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
-              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
               _settingLine('Accent color', 'Neutral'),
               _settingLine('Radius', 'Medium'),
               _settingLine('Density', 'Comfortable'),
@@ -583,7 +589,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
-        yAxis: playgroundDashboardNumericAxis(max: 100),
+        yAxis: playgroundDashboardNumericAxis(max: 100, interval: 20),
       ),
       .linePatterns => PlaygroundLineChart(
         showMarkers: true,
@@ -620,6 +626,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
+        yAxis: playgroundDashboardNumericAxis(max: 50),
       ),
       .stepGaps => PlaygroundLineChart(
         showMarkers: true,
@@ -641,6 +648,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
+        yAxis: playgroundDashboardNumericAxis(max: 40),
       ),
       .viewportLabels => PlaygroundLineChart(
         showMarkers: true,
@@ -662,18 +670,22 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
           ),
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
+        yAxis: playgroundDashboardNumericAxis(max: 50),
       ),
       .groupedBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: playgroundDashboardGroupedBars(),
+        yAxis: playgroundDashboardNumericAxis(max: 60),
       ),
       .stackedBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: playgroundDashboardStackedBars(),
+        yAxis: playgroundDashboardNumericAxis(max: 60),
       ),
       .floatingBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: playgroundDashboardFloatingBars(),
+        yAxis: playgroundDashboardNumericAxis(max: 40),
       ),
       .trackedBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
@@ -681,12 +693,14 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         yAxis: playgroundDashboardNumericAxis(max: 70),
       ),
       .trafficPie => PlaygroundPieChart(
+        style: _pieRing(),
         semanticsLabel: 'Traffic share by device',
         slices: playgroundDashboardChannelSlices(),
         valueFormatter: (value) => '${value.toInt()}%',
       ),
       .interactivePie => PlaygroundPieChart(
         centerRadius: 40,
+        style: _pieRing(40),
         semanticsLabel: 'Product mix',
         slices: playgroundDashboardProductSlices(),
         selectedSliceIds: {?selected},
@@ -695,6 +709,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
       ),
       .badgePie => PlaygroundPieChart(
         centerRadius: 34,
+        style: _pieRing(34),
         semanticsLabel: 'Device traffic with badge markers',
         slices: playgroundDashboardChannelSlices(badges: true),
       ),
@@ -703,6 +718,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         children: [
           PlaygroundPieChart(
             centerRadius: 52,
+            style: _pieRing(52),
             semanticsLabel: 'No channel data',
             slices: playgroundDashboardEmptySlices(),
           ),
@@ -719,6 +735,17 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
     },
   );
 }
+
+/// How far every pie on the charts page reaches: 80% of the way to the edge of
+/// its 240px box, where Recharts puts a pie by default.
+///
+/// mix_chart draws each slice 80px wide whatever the box, so a donut left at
+/// that default spills out of the box by the width of its hole.
+const _pieRadius = 96.0;
+
+/// A pie ring that ends at [_pieRadius] around a hole of [centerRadius].
+PieChartStyler _pieRing([double centerRadius = 0]) =>
+    PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
 Widget _chartCard(String title, String description, Widget chart) =>
     PlaygroundCard(

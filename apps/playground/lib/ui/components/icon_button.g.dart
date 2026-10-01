@@ -8,17 +8,17 @@ part of 'icon_button.dart';
 
 /// The application's IconButton recipe.
 ///
-/// Everything visual about an icon button lives in this function: geometry,
-/// the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
-/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
-/// behavior, accessibility semantics, and the loading/disabled interaction
-/// rules — this recipe never reimplements any of that.
+/// Everything visual about an icon button lives in this function: geometry, the
+/// five variants, hover and press motion, and the hover/pressed/focus/disabled
+/// fragments. Every state change settles over 150ms on the shared curve
+/// (`PlaygroundMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// keyboard behavior, accessibility semantics, and the loading/disabled
+/// interaction rules — this recipe never reimplements any of that.
 ///
-/// It restates the button's metrics and dimming rather than sharing them.
-/// That is deliberate: the two components have separate update stories, and a
-/// shared table would make every change to one a change to the other. A
-/// five-line record is cheaper to duplicate than to couple.
+/// It restates the button's fills rather than sharing them. That is
+/// deliberate: the two components have separate update stories, and a shared
+/// table would make every change to one a change to the other. The scale and
+/// the tints they draw on are shared, through `PlaygroundSize` and `playgroundTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
@@ -96,7 +96,8 @@ class PlaygroundIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = PlaygroundIconButtonVariant.secondary;
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis: a quiet fill inside an `input` outline, with a slight
+  /// lift.
   const PlaygroundIconButton.outline({
     super.key,
     this.size = .medium,

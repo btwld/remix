@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'card.g.dart';
@@ -16,10 +18,11 @@ part 'card.g.dart';
 /// decides how tall it is — an axis with nothing behind it would only be one
 /// more thing to keep consistent.
 ///
-/// The fill is `background`, the same token the page uses, so a card is told
-/// apart by its outline rather than by a second surface color. That is
-/// deliberate: it keeps the token vocabulary at twenty names, and a theme
-/// that wants a distinct card surface changes this one line.
+/// It is the `card` surface — the page color in the light theme and a step
+/// lighter than the page in the dark one — with a `border` hairline, large
+/// corners, a small shadow, and a 24px inset. `card` is one of the vocabulary's
+/// thirty-three tokens precisely so a theme can set cards apart from the page
+/// without touching this recipe.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:
@@ -34,14 +37,9 @@ part 'card.g.dart';
 CardStyler playgroundCardStyle({
   CardStyler style = const CardStyler.create(),
 }) => CardStyler()
-    .color(PlaygroundTokens.background())
-    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .borderRadius(.all(PlaygroundTokens.radius()))
-    .padding(.all(_padding))
+    .color(PlaygroundTokens.card())
+    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .borderRadius(.all(PlaygroundTokens.radiusXl()))
+    .shadows(PlaygroundShadow.sm.box)
+    .padding(.all(PlaygroundSpace.s6))
     .merge(style);
-
-/// Width of the card outline.
-const _borderWidth = 1.0;
-
-/// Inset between the card edge and its content.
-const _padding = 24.0;

@@ -221,7 +221,16 @@ const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
-  themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
+  themeFiles: [
+    'tokens.dart',
+    'theme_data.dart',
+    'theme_scope.dart',
+    'scale.dart',
+    'effects.dart',
+  ],
+  // Vanilla's theme sets its type in Geist, so every install carries the fonts.
+  requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
+  allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
   generatedSnapshots: _generatedSnapshots,
   nonGeneratedItems: {'sidebar_layout', 'dashboard_shell', 'dashboard_demo'},
   itemFileOverrides: {
@@ -434,7 +443,10 @@ const _fortalPreset = _PresetContract(
   },
 );
 
-const _requiredRuntimeDependencies = <String>[
+/// The hosted packages every preset's installed application declares. A preset
+/// that ships more, as Vanilla ships its fonts, extends this in its own
+/// [_PresetContract].
+const _baseRuntimeDependencies = <String>[
   'remix',
   'mix_annotations',
   'mix_chart',
@@ -442,7 +454,9 @@ const _requiredRuntimeDependencies = <String>[
 ];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
 const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
-const _allowedImportPackages = <String>[
+
+/// The packages installed source may import: Flutter and the runtime set.
+const _baseImportPackages = <String>[
   'flutter',
   'remix',
   'mix_annotations',
@@ -461,6 +475,8 @@ final class _PresetContract {
     this.sharedItems = const {},
     this.itemFileOverrides = const {},
     this.focusedClosures = const {},
+    this.requiredRuntimeDependencies = _baseRuntimeDependencies,
+    this.allowedImportPackages = _baseImportPackages,
   });
 
   final String name;
@@ -472,6 +488,12 @@ final class _PresetContract {
   final Map<String, List<String>> sharedItems;
   final Map<String, List<String>> itemFileOverrides;
   final Map<String, List<String>> focusedClosures;
+
+  /// Hosted runtime dependencies the CLI must add to the consumer, exactly.
+  final List<String> requiredRuntimeDependencies;
+
+  /// Packages the installed `lib/ui` source may import.
+  final List<String> allowedImportPackages;
 
   List<String> focusedUiFiles(String item) => [
     'ui.dart',
@@ -760,7 +782,7 @@ Future<_Failure?> _checkInTemporaryApp({
     return _Failure('packages/remix is missing from this checkout.');
   }
   final startsWithCheckout = source == RemixSource.checkout;
-  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource);
+  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource, preset);
 
   // Hosted mode never falls back to the checkout. A missing release must fail
   // the release check, even when checkout validation already passed.
@@ -814,7 +836,7 @@ Future<_Failure?> _checkInTemporaryApp({
   final independent = await _checkIndependentItems(
     sdk: sdk,
     app: app,
-    preset: preset.name,
+    preset: preset,
     environment: environment,
   );
   if (independent != null) return independent;
@@ -836,6 +858,7 @@ Future<_Failure?> _checkInTemporaryApp({
 
   final dependencyFailure = _verifyInstalledDependencies(
     app,
+    preset: preset,
     hostedCli: hostedCli,
   );
   if (dependencyFailure != null) return dependencyFailure;
@@ -844,11 +867,14 @@ Future<_Failure?> _checkInTemporaryApp({
   if (installedConfig is _Failure) return installedConfig;
   final installedPackages = installedConfig as Map<String, String>;
   for (final package in [
-    ..._requiredRuntimeDependencies,
+    ...preset.requiredRuntimeDependencies,
     ..._requiredDevDependencies,
     if (hostedCli) 'remix_cli',
   ]) {
-    if (startsWithCheckout && package == 'remix') continue;
+    if (startsWithCheckout &&
+        _checkoutPackages(remixSource, preset).containsKey(package)) {
+      continue;
+    }
     final root = installedPackages[package];
     if (root == null || !_isHostedCachePath(root)) {
       return _Failure(
@@ -871,7 +897,7 @@ Future<_Failure?> _checkInTemporaryApp({
     repositoryRoot: repositoryRoot,
     expected: {
       if (!hostedCli) 'remix_cli': cliRoot,
-      if (startsWithCheckout) 'remix': remixSource,
+      if (startsWithCheckout) ..._checkoutPackages(remixSource, preset),
     },
   );
   if (installedCheckoutFailure != null) return installedCheckoutFailure;
@@ -896,7 +922,7 @@ Future<_Failure?> _checkInTemporaryApp({
   if (installedVerification != null) return installedVerification;
   if (source != RemixSource.both) return null;
 
-  _writeCheckoutOverride(app, remixSource);
+  _writeCheckoutOverride(app, remixSource, preset);
 
   final overrideGet = await _runProcess(
     sdk.flutter,
@@ -914,10 +940,10 @@ Future<_Failure?> _checkInTemporaryApp({
   final currentCheckoutFailure = _verifyCheckoutPackages(
     packages: currentPackages,
     repositoryRoot: repositoryRoot,
-    expected: {'remix_cli': cliRoot, 'remix': remixSource},
+    expected: {'remix_cli': cliRoot, ..._checkoutPackages(remixSource, preset)},
   );
   if (currentCheckoutFailure != null) return currentCheckoutFailure;
-  _step('Current-source override resolves only Remix and remix_cli locally.');
+  _step('Current-source override resolves only the checkout packages locally.');
 
   for (final relative in preset.generatedAppFiles) {
     final generated = File('${app.path}/$relative');
@@ -998,7 +1024,7 @@ Future<_Failure?> _checkFocusedItem({
   final expected = preset.focusedUiFiles(item).toSet();
   final inventoryProblems = <String>[
     ..._focusedInventoryProblems(expected: expected, found: found),
-    ..._installedReferenceProblems(uiRoot, expected),
+    ..._installedReferenceProblems(uiRoot, expected, preset),
   ];
   if (inventoryProblems.isNotEmpty) {
     return _Failure(
@@ -1027,7 +1053,11 @@ Future<_Failure?> _checkFocusedItem({
   }
   _step('Focused $item inventory matches its explicit dependency closure.');
 
-  final dependencyFailure = _verifyFocusedDependencies(app, item: item);
+  final dependencyFailure = _verifyFocusedDependencies(
+    app,
+    preset: preset,
+    item: item,
+  );
   if (dependencyFailure != null) return dependencyFailure;
 
   final packageConfig = _readPackageConfig(app);
@@ -1035,7 +1065,7 @@ Future<_Failure?> _checkFocusedItem({
   final checkoutFailure = _verifyCheckoutPackages(
     packages: packageConfig as Map<String, String>,
     repositoryRoot: repositoryRoot,
-    expected: {'remix_cli': cliRoot, 'remix': remixSource},
+    expected: {'remix_cli': cliRoot, ..._checkoutPackages(remixSource, preset)},
   );
   if (checkoutFailure != null) return checkoutFailure;
 
@@ -1093,18 +1123,22 @@ _Failure? _applyFocusedFixture({
   return null;
 }
 
-_Failure? _verifyFocusedDependencies(Directory app, {required String item}) {
+_Failure? _verifyFocusedDependencies(
+  Directory app, {
+  required _PresetContract preset,
+  required String item,
+}) {
   final sections = _dependencySections(
     File('${app.path}/pubspec.yaml').readAsStringSync(),
   );
   final runtime = sections['dependencies'] ?? const <String, Object?>{};
   final development = sections['dev_dependencies'] ?? const <String, Object?>{};
+  // Every focused install still resolves the preset's theme, and with it the
+  // theme's packages; only the chart package follows the item.
   final runtimeExpected = {
     'flutter',
-    'remix',
-    'mix_annotations',
-    'remix_ui_icons',
-    if (item == 'dashboard_demo') 'mix_chart',
+    for (final package in preset.requiredRuntimeDependencies)
+      if (package != 'mix_chart' || item == 'dashboard_demo') package,
   };
   final developmentExpected = {
     'flutter_test',
@@ -1127,7 +1161,7 @@ _Failure? _verifyFocusedDependencies(Directory app, {required String item}) {
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
-  required String preset,
+  required _PresetContract preset,
   required Map<String, String> environment,
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
@@ -1152,7 +1186,7 @@ Future<_Failure?> _checkIndependentItems({
         '--prefix',
         'Solo',
         '--preset',
-        preset,
+        preset.name,
       ],
       ['run', 'remix_cli:remix', 'add', item],
     ]) {
@@ -1174,7 +1208,7 @@ Future<_Failure?> _checkIndependentItems({
               file.path.substring(ui.path.length + 1).replaceAll('\\', '/'),
         )
         .toSet();
-    final problems = _installedReferenceProblems(ui, files);
+    final problems = _installedReferenceProblems(ui, files, preset);
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
     _step(
@@ -1184,12 +1218,30 @@ Future<_Failure?> _checkIndependentItems({
   return null;
 }
 
-void _writeCheckoutOverride(Directory app, Directory remixSource) {
+/// The checkout packages a preset's install resolves locally: Remix, and the
+/// fonts package when the preset's theme depends on it.
+Map<String, Directory> _checkoutPackages(
+  Directory remixSource,
+  _PresetContract preset,
+) => {
+  'remix': remixSource,
+  if (preset.requiredRuntimeDependencies.contains('remix_ui_fonts'))
+    'remix_ui_fonts': Directory('${remixSource.parent.path}/remix_ui_fonts'),
+};
+
+void _writeCheckoutOverride(
+  Directory app,
+  Directory remixSource,
+  _PresetContract preset,
+) {
+  final overrides = [
+    for (final entry in _checkoutPackages(remixSource, preset).entries)
+      '  ${entry.key}:\n    path: ${jsonEncode(entry.value.path)}',
+  ].join('\n');
   File('${app.path}/pubspec_overrides.yaml').writeAsStringSync('''
 # Created in a guarded temporary app by tool/check_open_code.dart.
 dependency_overrides:
-  remix:
-    path: ${jsonEncode(remixSource.path)}
+$overrides
 ''');
 }
 
@@ -1455,6 +1507,7 @@ _Failure? _verifyFixtureContract(
 
 _Failure? _verifyInstalledDependencies(
   Directory app, {
+  required _PresetContract preset,
   required bool hostedCli,
 }) {
   final sections = _dependencySections(
@@ -1466,7 +1519,7 @@ _Failure? _verifyInstalledDependencies(
 
   _expectExactKeys(
     runtime,
-    {'flutter', ..._requiredRuntimeDependencies},
+    {'flutter', ...preset.requiredRuntimeDependencies},
     'runtime',
     problems,
   );
@@ -1477,7 +1530,7 @@ _Failure? _verifyInstalledDependencies(
     problems,
   );
   for (final package in [
-    ..._requiredRuntimeDependencies,
+    ...preset.requiredRuntimeDependencies,
     ..._requiredDevDependencies,
   ]) {
     final declaration = runtime[package] ?? development[package];
@@ -1571,7 +1624,11 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
     }
   }
   problems.addAll(
-    _installedReferenceProblems(uiRoot, preset.installedUiFiles.toSet()),
+    _installedReferenceProblems(
+      uiRoot,
+      preset.installedUiFiles.toSet(),
+      preset,
+    ),
   );
 
   if (problems.isEmpty) return null;
@@ -1584,6 +1641,7 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
 List<String> _installedReferenceProblems(
   Directory uiRoot,
   Set<String> installedUiFiles,
+  _PresetContract preset,
 ) {
   final directive = RegExp(
     r'''^\s*(?:import|export|part(?:\s+of)?)\s+([^;]+);''',
@@ -1605,6 +1663,7 @@ List<String> _installedReferenceProblems(
           uri,
           from: relative,
           installedUiFiles: installedUiFiles,
+          allowedPackages: preset.allowedImportPackages,
         );
         if (problem != null) problems.add('$relative: $problem');
       }
@@ -1617,11 +1676,12 @@ String? _referenceProblem(
   String uri, {
   required String from,
   required Set<String> installedUiFiles,
+  required List<String> allowedPackages,
 }) {
   if (uri.startsWith('dart:')) return null;
   if (uri.startsWith('package:')) {
     final package = uri.substring('package:'.length).split('/').first;
-    if (_allowedImportPackages.contains(package)) return null;
+    if (allowedPackages.contains(package)) return null;
     return 'imports package:$package, which is outside the registry contract';
   }
   if (uri.contains(':')) return 'uses the non-relative URI `$uri`';
@@ -1874,6 +1934,10 @@ String? registryCoverageProblem(
 /// Returns installed inventory/import errors for focused regression tests.
 String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
     _verifyInstalledUi(app, _presetByName(preset))?.message;
+
+/// Returns the hosted runtime dependencies a preset's installed app declares.
+List<String> requiredRuntimeDependenciesForTest(String preset) =>
+    _presetByName(preset).requiredRuntimeDependencies;
 
 /// Returns the explicit-or-conventional file inventory for focused tests.
 List<String> registryItemInventoryForTest(

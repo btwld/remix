@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'data_list.g.dart';
@@ -13,9 +14,9 @@ part 'data_list.g.dart';
 /// label-column alignment, and the accessibility semantics; this recipe
 /// supplies the two text roles and the spacing between them.
 ///
-/// The label is `mutedForeground` and the value is `foreground`, which is the
-/// pairing that makes a list scannable: the eye lands on the answers, and the
-/// questions stay legible without competing.
+/// Both roles are body text, `textSm`. The label is `mutedForeground` and the
+/// value is `foreground`, which is the pairing that makes a list scannable: the
+/// eye lands on the answers, and the questions stay legible without competing.
 ///
 /// It takes no size and no variant. A data list is typography and spacing, and
 /// both are decided by the page it sits on — a caller who wants a denser block
@@ -36,27 +37,19 @@ part 'data_list.g.dart';
 DataListStyler {{valuePrefix}}DataListStyle({
   DataListStyler style = const DataListStyler.create(),
 }) => DataListStyler()
-    .label(.fontSize(_textSize).color({{typePrefix}}Tokens.mutedForeground()))
-    .value(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
-    .rowSpacing(_rowSpacing)
-    .columnSpacing(_columnSpacing)
-    .labelValueSpacing(_labelValueSpacing)
+    .label(
+      .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
+    )
+    .value(.style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.foreground()))
+    // One pair from the next, 12px; side by side, 24px; a label from its own
+    // value, 8px.
+    .rowSpacing({{typePrefix}}Space.s3)
+    .columnSpacing({{typePrefix}}Space.s6)
+    .labelValueSpacing({{typePrefix}}Space.s2)
     // A floor rather than a fixed width: the labels line up into a column,
     // but a long one is still allowed to be as long as it needs to be.
     .minLabelWidth(_minLabelWidth)
     .merge(style);
-
-/// Text size for both roles, matching body copy.
-const _textSize = 14.0;
-
-/// Gap between one pair and the next.
-const _rowSpacing = 12.0;
-
-/// Gap between two pairs sitting side by side.
-const _columnSpacing = 24.0;
-
-/// Gap between a label and its own value.
-const _labelValueSpacing = 8.0;
 
 /// The narrowest the label column gets, so short labels still line their
 /// values up instead of leaving a ragged edge.

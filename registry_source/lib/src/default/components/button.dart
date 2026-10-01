@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'button.g.dart';
@@ -14,7 +16,8 @@ enum VanillaButtonVariant {
   /// Medium emphasis: a solid `secondary` fill.
   secondary,
 
-  /// Low emphasis with a hairline `border`.
+  /// Low emphasis: a quiet fill inside an `input` outline, with a slight
+  /// lift.
   outline,
 
   /// Low emphasis with no fill and no border.
@@ -43,10 +46,11 @@ enum VanillaButtonSize {
 ///
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Hover settles over 100ms and
-/// press over 40ms. Remix keeps ownership of rendering, pointer and keyboard
-/// behavior, accessibility semantics, and the loading/disabled interaction
-/// rules — this recipe never reimplements any of that.
+/// hover/pressed/focus/disabled fragments. Every state change settles over
+/// 150ms on the shared curve (`VanillaMotion.standard`). Remix keeps ownership
+/// of rendering, pointer and keyboard behavior, accessibility semantics, and
+/// the loading/disabled interaction rules — this recipe never reimplements any
+/// of that.
 ///
 /// `@MixWidget(target: RemixButton.new)` generates `VanillaButton` into
 /// `button.g.dart`: an adapter whose constructor is this function's
@@ -81,50 +85,74 @@ ButtonStyler vanillaButtonStyle({
 }) {
   return _base(_metricsFor(size))
       .merge(_variantStyle(variant))
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Alpha applied to a variant's own fill while hovered.
+/// Alpha applied to the primary and destructive fills while hovered or pressed:
+/// the fill at 90%.
+///
+/// There is no separate pressed step: a press lands on the hover fill. A deeper
+/// press would also take the destructive fill under the 4.5:1 floor its white
+/// label needs.
 const _hoverAlpha = 0.9;
 
-/// Alpha applied to the active fill while pressed.
-const _pressedAlpha = 0.8;
+/// Alpha applied to the secondary fill while hovered: the fill at 80%.
+const _secondaryHoverAlpha = 0.8;
 
-/// A fill derived from [source] at [alpha], resolved from the active scope.
+/// The dark theme's destructive fills.
 ///
-/// The obvious spelling would be `VanillaTokens.primary().withValues(alpha: 0.9)`,
-/// but that records a Mix *directive*, and directives accumulate through every
-/// later merge. A caller who replaced the hover fill would still get this
-/// recipe's alpha applied on top of their own color. A `ContextToken` does the
-/// arithmetic during resolution instead, so each state fragment holds one
-/// plain color that a caller can replace outright.
-///
-/// Declared as top-level finals because `ContextToken` equality is resolver
-/// identity: rebuilding one per call would make two identical recipes compare
-/// unequal.
-ContextToken<Color> _dimmed(ColorToken source, double alpha) =>
-    ContextToken<Color>(
-      (context) => source.resolve(context).withValues(alpha: alpha),
-    );
+/// A dark destructive button is painted at 60%: the dark `destructive` is a
+/// light red that reads as text on the page but cannot carry a white label as a
+/// solid fill. Hover moves to 70% rather than 90%, which would measure about
+/// 3.5:1 against that label.
+const _darkDestructiveAlpha = 0.6;
+const _darkDestructiveHoverAlpha = 0.7;
 
-final _primaryHoverFill = _dimmed(VanillaTokens.primary, _hoverAlpha);
-final _primaryPressedFill = _dimmed(VanillaTokens.primary, _pressedAlpha);
-final _secondaryHoverFill = _dimmed(VanillaTokens.secondary, _hoverAlpha);
-final _secondaryPressedFill = _dimmed(VanillaTokens.secondary, _pressedAlpha);
-final _destructiveHoverFill = _dimmed(VanillaTokens.destructive, _hoverAlpha);
-final _destructivePressedFill = _dimmed(
-  VanillaTokens.destructive,
-  _pressedAlpha,
+/// The dark ghost hover, `accent` at 50%: the dark `accent` at full strength
+/// would read as a raised control rather than a highlight.
+const _darkGhostHoverAlpha = 0.5;
+
+final _primaryHoverFill = vanillaTint(VanillaTokens.primary, _hoverAlpha);
+final _secondaryHoverFill = vanillaTint(
+  VanillaTokens.secondary,
+  _secondaryHoverAlpha,
 );
-final _accentPressedFill = _dimmed(VanillaTokens.accent, _pressedAlpha);
+final _destructiveFill = vanillaTint(
+  VanillaTokens.destructive,
+  1,
+  dark: _darkDestructiveAlpha,
+);
+final _destructiveHoverFill = vanillaTint(
+  VanillaTokens.destructive,
+  _hoverAlpha,
+  dark: _darkDestructiveHoverAlpha,
+);
+final _ghostHoverFill = vanillaTint(
+  VanillaTokens.accent,
+  1,
+  dark: _darkGhostHoverAlpha,
+);
 
-/// Hover and the other state changes.
-const _motionDuration = Duration(milliseconds: 100);
+/// The outline variant's fill: the page color on a light page, and `input` at
+/// 30% on a dark one, so a dark outline control on a raised surface reads as
+/// part of that surface rather than as a hole cut through it.
+final _outlineFill = vanillaByBrightness(
+  light: VanillaTokens.background,
+  dark: vanillaTint(VanillaTokens.input, _darkOutlineFillAlpha),
+);
 
-/// Press is shorter than the base transition.
-const _pressedMotionDuration = Duration(milliseconds: 40);
+/// The outline variant under the pointer: `accent`, or `input` at 50% on a
+/// dark page.
+final _outlineHoverFill = vanillaByBrightness(
+  light: VanillaTokens.accent,
+  dark: vanillaTint(VanillaTokens.input, _darkOutlineHoverAlpha),
+);
+
+/// See [_outlineFill] and [_outlineHoverFill].
+const _darkOutlineFillAlpha = 0.3;
+const _darkOutlineHoverAlpha = 0.5;
 
 /// Opacity of the loading spinner, so it reads as secondary to the label.
 const _spinnerOpacity = 0.65;
@@ -132,54 +160,42 @@ const _spinnerOpacity = 0.65;
 /// One full spinner revolution.
 const _spinnerDuration = Duration(milliseconds: 800);
 
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the control edge and its focus ring.
-const _focusRingOffset = 2.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// A fill that paints nothing, used by `outline` and `ghost`.
+/// A fill that paints nothing, used by `ghost`.
 const _noFill = Color(0x00000000);
 
-/// Geometry and type scale for one [VanillaButtonSize].
+/// Geometry for one [VanillaButtonSize]: 32px tall with a 12px side inset and a
+/// 6px gap, 36px with 16 and 8, and 40px with 24 and 8.
+///
+/// The label and the icon do not grow with the control. Every size sets its
+/// label in `textSm` and its icon at 16, so a row of mixed sizes still reads as
+/// one typeface at one size.
 typedef _VanillaButtonMetrics = ({
   double minHeight,
   double paddingX,
   double gap,
-  double labelSize,
-  double iconSize,
 });
 
 _VanillaButtonMetrics _metricsFor(VanillaButtonSize size) => switch (size) {
   .small => (
-    minHeight: 32.0,
-    paddingX: 12.0,
-    gap: 6.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
+    minHeight: VanillaSize.controlSm,
+    paddingX: VanillaSpace.s3,
+    gap: VanillaSpace.s1_5,
   ),
   .medium => (
-    minHeight: 36.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
+    minHeight: VanillaSize.controlMd,
+    paddingX: VanillaSpace.s4,
+    gap: VanillaSpace.s2,
   ),
   .large => (
-    minHeight: 40.0,
-    paddingX: 20.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
+    minHeight: VanillaSize.controlLg,
+    paddingX: VanillaSpace.s6,
+    gap: VanillaSpace.s2,
   ),
 };
 
 /// Layout, typography, and spinner defaults shared by every variant.
 ButtonStyler _base(_VanillaButtonMetrics metrics) => ButtonStyler()
-    .animate(AnimationConfig.easeOut(_motionDuration))
+    .animate(VanillaMotion.standard)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
@@ -187,12 +203,12 @@ ButtonStyler _base(_VanillaButtonMetrics metrics) => ButtonStyler()
     .minHeight(metrics.minHeight)
     .padding(.horizontal(metrics.paddingX))
     .spacing(metrics.gap)
-    .borderRadius(.all(VanillaTokens.radius()))
-    .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-    .icon(.size(metrics.iconSize))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
+    .icon(.size(VanillaSize.icon))
     .spinner(
       .size(
-        metrics.iconSize,
+        VanillaSize.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -201,63 +217,49 @@ ButtonStyler _variantStyle(VanillaButtonVariant variant) => switch (variant) {
     fill: VanillaTokens.primary(),
     foreground: VanillaTokens.primaryForeground(),
     hoverFill: _primaryHoverFill(),
-    pressedFill: _primaryPressedFill(),
   ),
   .secondary => _filled(
     fill: VanillaTokens.secondary(),
     foreground: VanillaTokens.secondaryForeground(),
     hoverFill: _secondaryHoverFill(),
-    pressedFill: _secondaryPressedFill(),
   ),
   .destructive => _filled(
-    fill: VanillaTokens.destructive(),
+    fill: _destructiveFill(),
     foreground: VanillaTokens.destructiveForeground(),
     hoverFill: _destructiveHoverFill(),
-    pressedFill: _destructivePressedFill(),
   ),
-  .outline => _quiet(bordered: true),
-  .ghost => _quiet(bordered: false),
+  .outline =>
+    _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
+        .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+        // In the effects layer rather than the decoration: the dark fill is
+        // translucent, and a decoration shadow would show through it.
+        .containerEffects(.behindContent(VanillaShadow.xs.effects)),
+  .ghost => _quiet(fill: _noFill, hoverFill: _ghostHoverFill()),
 };
 
-/// A solid variant: its own fill, dimmed on hover and further on press.
+/// A solid variant: its own fill, dimmed while hovered or pressed.
 ButtonStyler _filled({
   required Color fill,
   required Color foreground,
   required Color hoverFill,
-  required Color pressedFill,
-}) => _content(.color(fill), foreground)
-    .onHovered(.color(hoverFill))
-    .onPressed(
-      ButtonStyler()
-          .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-          .color(pressedFill),
-    );
+}) => _content(
+  .color(fill),
+  foreground,
+).onHovered(.color(hoverFill)).onPressed(.color(hoverFill));
 
-/// A transparent variant: `accent` is what makes interaction visible.
-ButtonStyler _quiet({required bool bordered}) {
-  var style = _content(.color(_noFill), VanillaTokens.foreground());
-  if (bordered) {
-    style = style.border(.color(VanillaTokens.border()).width(1));
-  }
+/// A quiet variant: `accent` under the pointer is what makes it interactive.
+ButtonStyler _quiet({required Color fill, required Color hoverFill}) {
+  final highlighted = _content(
+    .color(hoverFill),
+    VanillaTokens.accentForeground(),
+  );
 
-  return style
-      .onHovered(
-        _content(
-          .color(VanillaTokens.accent()),
-          VanillaTokens.accentForeground(),
-        ),
-      )
+  return _content(.color(fill), VanillaTokens.foreground())
+      .onHovered(highlighted)
       // Content color is re-applied on press, not only on hover: a touch
       // device never reports hover, so a press that changed the fill alone
       // would paint the accent surface under the default foreground.
-      .onPressed(
-        _content(
-          ButtonStyler()
-              .animate(AnimationConfig.easeOut(_pressedMotionDuration))
-              .color(_accentPressedFill()),
-          VanillaTokens.accentForeground(),
-        ),
-      );
+      .onPressed(highlighted);
 }
 
 /// Applies one content color to the label, the icons, and the spinner.
@@ -266,18 +268,33 @@ ButtonStyler _content(ButtonStyler style, Color foreground) => style
     .icon(.color(foreground))
     .spinner(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// box without taking layout space, so focusing a button never reflows the
-/// row it sits in.
-ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
-  .outline(
-    .color(
-      VanillaTokens.focusRing(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the box
+/// without taking layout space, so focusing a control never reflows the row it
+/// sits in. The outline variant also turns its own border `ring`, and the
+/// destructive variant rings in its own red.
+ButtonStyler _focusVisibleStyle(VanillaButtonVariant variant) =>
+    switch (variant) {
+      .destructive => ButtonStyler().containerEffects(
+        vanillaFocusRing(
+          color: VanillaTokens.destructive,
+          alpha: _destructiveRingAlpha,
+          dark: _darkDestructiveRingAlpha,
+        ),
+      ),
+      .outline =>
+        ButtonStyler()
+            .containerEffects(vanillaFocusRing())
+            .border(vanillaFocusBorder()),
+      .primary ||
+      .secondary ||
+      .ghost => ButtonStyler().containerEffects(vanillaFocusRing()),
+    };
+
+/// The destructive focus ring: `destructive` at 20%, 40% in the dark.
+const _destructiveRingAlpha = 0.2;
+const _darkDestructiveRingAlpha = 0.4;
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -286,4 +303,4 @@ ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

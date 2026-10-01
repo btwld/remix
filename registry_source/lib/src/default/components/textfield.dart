@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'textfield.g.dart';
@@ -18,11 +20,9 @@ part 'textfield.g.dart';
 /// including announcing the error state. This recipe supplies the surface, the
 /// text colors, and the focus/error/disabled fragments.
 ///
-/// There is deliberately no hover fragment, unlike the select trigger this
-/// otherwise matches. A select is a button that opens something, so it has to
-/// say "I am pressable"; a text field's affordance is the I-beam cursor Remix
-/// already sets, and tinting the box on hover would only compete with the
-/// focus ring that follows a moment later.
+/// There is deliberately no hover fragment: a text field's affordance is the
+/// I-beam cursor Remix already sets, and tinting the box on hover would only
+/// compete with the focus ring that follows a moment later.
 ///
 /// One host requirement travels with it: `EditableText` asserts on an
 /// `Overlay` ancestor the moment the field takes focus, for its selection
@@ -39,7 +39,10 @@ TextFieldStyler vanillaTextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(_minHeight)
+      .minHeight(VanillaSize.controlMd)
+      .padding(
+        .symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s1),
+      )
       // A single line sits on the field's centre line; the accessories go with
       // it.
       .crossAxisAlignment(.center)
@@ -50,8 +53,9 @@ TextFieldStyler vanillaTextFieldStyle({
 ///
 /// `RemixTextArea` is `RemixTextField` with multi-line defaults, and it shares
 /// the same styler, so this is the field's recipe with two changes: a taller
-/// resting box, and accessories pinned to the first line instead of floating
-/// in the middle of a growing one.
+/// resting box (at least 64px, with 8px above and below the text), and
+/// accessories pinned to the first line instead of floating in the middle of a
+/// growing one.
 ///
 /// [style] is merged **last**, exactly as it is for the single-line field.
 @MixWidget(target: RemixTextArea.new)
@@ -59,100 +63,63 @@ TextFieldStyler vanillaTextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(_minHeight * _textAreaLines)
-      .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
+      .minHeight(VanillaSpace.s16)
+      .padding(
+        .symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s2),
+      )
       .crossAxisAlignment(.start)
       .merge(style);
 }
 
-/// Resting height of a text area, as a multiple of one field's height.
-///
-/// `RemixTextArea` defaults to `minLines: 2`, so anything less would let the
-/// box grow the moment a second line arrives.
-const _textAreaLines = 2.5;
+/// The field's fill: transparent on a light page, and `input` at 30% on a dark
+/// one, so a dark field reads as a well rather than a hole.
+final _fill = vanillaTint(VanillaTokens.input, 0, dark: _darkFillAlpha);
 
-/// Horizontal inset between the field edge and its content.
-///
-/// Flat across the sizes, unlike the button's 12/16/20. A button's padding is
-/// what gives its label room to breathe, so it grows with the control; a
-/// field's is the gutter before the text cursor, and a wider gutter at a
-/// larger size just moves the caret away from the edge the reader clicked.
-/// The select trigger uses the same value for the same reason.
-const _paddingX = 12.0;
-
-/// Vertical inset, used only by the text area: a single-line field centres its
-/// content instead.
-const _paddingY = 10.0;
-
-/// Gap between the field and its leading or trailing accessory.
-const _accessoryGap = 8.0;
-
-/// Gap between the label, the field, and the helper line.
-const _stackGap = 6.0;
-
-/// Label size, one step below the value it names.
-const _labelSize = 13.0;
-
-/// Width of the field outline.
-const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Distance between the field edge and its focus ring.
-const _focusRingOffset = 2.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
-/// The field's resting height, matching shadcn's `h-9` and the button beside
-/// it — a field and the button that submits it sit in the same row.
-///
-/// One size, not a scale. A call site that needs another sets `.minHeight(...)`
-/// through [style].
-const _minHeight = 36.0;
-
-/// Value and placeholder size, matching body copy.
-const _textSize = 14.0;
+/// See [_fill].
+const _darkFillAlpha = 0.3;
 
 /// The surface, the four text roles, and every state fragment.
 ///
-/// Both recipes share this whole body; only the box's height and the
-/// accessory alignment differ between them.
+/// Both recipes share this whole body; only the box's height, its vertical
+/// inset, and the accessory alignment differ between them.
 TextFieldStyler _base() => TextFieldStyler()
-    .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(_borderWidth))
-    .borderRadius(.all(VanillaTokens.radius()))
-    .padding(.horizontal(_paddingX))
-    .spacing(_accessoryGap)
-    .text(.fontSize(_textSize).color(VanillaTokens.foreground()))
+    .animate(VanillaMotion.standard)
+    .color(_fill())
+    .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    // In the effects layer rather than the decoration: the fill is
+    // transparent, and a decoration shadow would show through it.
+    .containerEffects(.behindContent(VanillaShadow.xs.effects))
+    .spacing(VanillaSpace.s2)
+    .text(.style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()))
     // The placeholder is not the value: it has to read as the quieter of the
     // two, or an empty field looks filled in.
-    .hintText(.fontSize(_textSize).color(VanillaTokens.mutedForeground()))
+    .hintText(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
+    )
     .cursorColor(VanillaTokens.foreground())
     .label(
-      .fontSize(
-        _labelSize,
+      .style(
+        VanillaTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
     )
-    .helperText(.fontSize(_labelSize).color(VanillaTokens.mutedForeground()))
-    .layout(.direction(.vertical).spacing(_stackGap))
+    .helperText(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
+    )
+    .layout(.direction(.vertical).spacing(VanillaSpace.s2))
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength, with the
+/// field's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// box without taking layout space, so focusing a field never reflows the form
-/// it sits in — and the field already has a border of its own.
-TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
-  .outline(
-    .color(
-      VanillaTokens.focusRing(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
-);
+/// it sits in.
+TextFieldStyler _focusVisibleStyle() => TextFieldStyler()
+    .containerEffects(vanillaFocusRing())
+    .border(vanillaFocusBorder());
 
 /// The invalid field: a `destructive` outline and a `destructive` helper line.
 ///
@@ -160,23 +127,34 @@ TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
 /// ships no `onError`; the state itself is a standard `WidgetState` that
 /// `RemixTextField` drives from its own `error` flag.
 ///
-/// The text stays readable. `destructive` is a fill color chosen to sit under
-/// `destructiveForeground`, and on the dark theme's page it measures 4.1:1 —
-/// under the 4.5:1 WCAG floor for body copy. So the outline carries the tone,
-/// where the floor is 3:1, and the message that explains the problem is set in
-/// `foreground` and made a little heavier. Remix announces the error to
+/// Of this vocabulary's thirty-three tokens, `destructive` is the one that
+/// means danger, and the shipped themes keep it above the 4.5:1 text floor on
+/// the page — 4.8:1 in the light theme and 6.9:1 in the dark — so the message
+/// that explains the problem is set in it. Remix announces the error to
 /// assistive technology either way.
-///
-/// A theme with a dedicated danger *text* step would put it on the helper
-/// line here; this vocabulary has twenty tokens and no such step.
 TextFieldStyler _errorStyle() => TextFieldStyler().variant(
   ContextVariant.widgetState(.error),
   TextFieldStyler()
-      .border(.color(VanillaTokens.destructive()).width(_borderWidth))
-      .helperText(
-        .color(VanillaTokens.foreground()).fontWeight(FontWeight.w500),
+      .border(.color(VanillaTokens.destructive()))
+      .helperText(.color(VanillaTokens.destructive()))
+      // An invalid field that takes focus rings in its own red and keeps its
+      // red outline.
+      .onFocusVisible(
+        TextFieldStyler()
+            .containerEffects(
+              vanillaFocusRing(
+                color: VanillaTokens.destructive,
+                alpha: _errorRingAlpha,
+                dark: _darkErrorRingAlpha,
+              ),
+            )
+            .border(.color(VanillaTokens.destructive())),
       ),
 );
+
+/// The invalid field's focus ring: `destructive` at 20%, 40% in the dark.
+const _errorRingAlpha = 0.2;
+const _darkErrorRingAlpha = 0.4;
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -185,4 +163,4 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
 /// editable.
 TextFieldStyler _disabledStyle() => TextFieldStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(VanillaOpacity.disabled));

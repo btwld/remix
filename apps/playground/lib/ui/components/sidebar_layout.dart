@@ -68,7 +68,7 @@ class PlaygroundSidebarLayout extends StatefulWidget {
     this.header,
     this.compactBreakpoint = 720,
     this.sidebarWidth = 256,
-    this.collapsedWidth = 72,
+    this.collapsedWidth = 48,
     this.collapsed = false,
     this.compactOpen,
     this.onCompactOpenChanged,
@@ -203,13 +203,13 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: MixScope.tokenOf(
-                    PlaygroundTokens.background,
+                    PlaygroundTokens.sidebar,
                     dialogContext,
                   ),
                   border: BorderDirectional(
                     end: BorderSide(
                       color: MixScope.tokenOf(
-                        PlaygroundTokens.border,
+                        PlaygroundTokens.sidebarBorder,
                         dialogContext,
                       ),
                     ),

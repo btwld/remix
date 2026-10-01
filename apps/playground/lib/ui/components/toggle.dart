@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/effects.dart';
+import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle.g.dart';
@@ -11,7 +13,7 @@ enum PlaygroundToggleVariant {
   /// No fill and no border until the toggle is hovered or on.
   ghost,
 
-  /// A hairline `border`, so the control is visible while off.
+  /// An `input` outline, so the control is visible while off.
   outline,
 }
 
@@ -39,10 +41,12 @@ enum PlaygroundToggleSize {
 /// pointer and keyboard behavior, and the on/off semantics; this recipe owns
 /// the geometry and the off/hover/on/focus/disabled fragments.
 ///
-/// The on state is `accent`, the token whose whole job is "this transparent
-/// control is doing something", while hover is the quieter `muted`. Keeping
-/// them different is what lets a reader tell a toggle they are pointing at
-/// from one that is switched on.
+/// A toggle that is on sits on `accent` in `accentForeground`; a ghost toggle
+/// under the pointer sits on `muted` in `mutedForeground`. In the shipped
+/// themes the two surfaces are the same gray, so "on" is told from "pointed at"
+/// by its full-strength content, and a toggle that is on stays on when hovered.
+/// An outline toggle hovers onto `accent` instead, and keeps its outline in
+/// every state.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. Because [variant] is a non-nullable
@@ -59,121 +63,107 @@ ToggleStyler playgroundToggleStyle({
 }) {
   return _base(_metricsFor(size))
       .merge(_variantStyle(variant))
-      .onHovered(.color(PlaygroundTokens.muted()))
+      // After the variant's hover, so a toggle that is on stays on under the
+      // pointer.
       .onSelected(
-        _content(PlaygroundTokens.accentForeground())
-            .color(PlaygroundTokens.accent())
-            // The outline, not the fill, is what says "on". `muted` and
-            // `accent` are 1.155:1 apart in the light theme, so hover and on
-            // would otherwise be the same shade to most readers — and a state
-            // told apart by colour alone is one a lot of people cannot read.
-            .border(.all(_edge(PlaygroundTokens.primary()))),
+        _content(
+          PlaygroundTokens.accentForeground(),
+        ).color(PlaygroundTokens.accent()),
       )
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(_focusVisibleStyle(variant))
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Width of the outline every toggle draws, in every state.
-const _borderWidth = 1.0;
-
-/// Width of the keyboard focus ring.
-const _focusRingWidth = 2.0;
-
-/// Opacity applied to the whole control while disabled.
-const _disabledOpacity = 0.5;
-
 /// A fill that paints nothing, used while the toggle is off.
 const _noFill = Color(0x00000000);
 
-/// Geometry and type scale for one [PlaygroundToggleSize].
-typedef _PlaygroundToggleMetrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
+/// Geometry for one [PlaygroundToggleSize]: 32px with a 6px side inset, 36px with
+/// 8, and 40px with 10.
+///
+/// The minimum width equals the height, so an icon-only toggle is square.
+typedef _PlaygroundToggleMetrics = ({double minHeight, double paddingX});
 
 _PlaygroundToggleMetrics _metricsFor(PlaygroundToggleSize size) =>
     switch (size) {
       .small => (
-        minHeight: 32.0,
-        paddingX: 10.0,
-        gap: 6.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
+        minHeight: PlaygroundSize.controlSm,
+        paddingX: PlaygroundSpace.s1_5,
       ),
       .medium => (
-        minHeight: 36.0,
-        paddingX: 12.0,
-        gap: 8.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
+        minHeight: PlaygroundSize.controlMd,
+        paddingX: PlaygroundSpace.s2,
       ),
       .large => (
-        minHeight: 40.0,
-        paddingX: 16.0,
-        gap: 8.0,
-        labelSize: 16.0,
-        iconSize: 18.0,
+        minHeight: PlaygroundSize.controlLg,
+        paddingX: PlaygroundSpace.s2_5,
       ),
     };
 
 /// Layout, typography, and the off appearance shared by both variants.
 ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
     _content(PlaygroundTokens.foreground())
+        .animate(PlaygroundMotion.standard)
         .color(_noFill)
         .direction(.horizontal)
         .mainAxisSize(.min)
         .mainAxisAlignment(.center)
         .crossAxisAlignment(.center)
         .minHeight(metrics.minHeight)
+        .minWidth(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
-        .spacing(metrics.gap)
-        .borderRadius(.all(PlaygroundTokens.radius()))
-        .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-        .icon(.size(metrics.iconSize));
+        .spacing(PlaygroundSpace.s2)
+        .borderRadius(.all(PlaygroundTokens.radiusMd()))
+        .label(
+          .style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500),
+        )
+        .icon(.size(PlaygroundSize.icon));
 
-/// The outline is present in every state and every variant, and only its
-/// colour changes: Flutter insets a container's content by its border widths,
-/// so an outline that appeared on selection would nudge the label sideways.
-/// `ghost` simply paints its copy in nothing.
-ToggleStyler _variantStyle(PlaygroundToggleVariant variant) =>
-    ToggleStyler().border(
-      .all(
-        _edge(switch (variant) {
-          .ghost => _noFill,
-          .outline => PlaygroundTokens.border(),
-        }),
-      ),
-    );
-
-/// One outline side, at the width every state shares.
-BorderSideMix _edge(Color color) =>
-    BorderSideMix(color: color, width: _borderWidth);
+/// The variant's outline and its hover.
+ToggleStyler _variantStyle(
+  PlaygroundToggleVariant variant,
+) => switch (variant) {
+  .ghost => ToggleStyler().onHovered(
+    _content(
+      PlaygroundTokens.mutedForeground(),
+    ).color(PlaygroundTokens.muted()),
+  ),
+  // No shadow: `ToggleSpec` has no effects layer, and a decoration shadow under
+  // a transparent control shows through it as a gray wash.
+  .outline =>
+    ToggleStyler()
+        .border(
+          .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+        )
+        .onHovered(
+          _content(
+            PlaygroundTokens.accentForeground(),
+          ).color(PlaygroundTokens.accent()),
+        ),
+};
 
 /// Applies one content color to the label and the icons.
 ToggleStyler _content(Color foreground) =>
     ToggleStyler().label(.color(foreground)).icon(.color(foreground));
 
-/// The keyboard focus ring.
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// A *foreground* decoration rather than the box border: `ToggleSpec` has no
 /// `containerEffects` layer to paint an outline into, and Flutter insets a
 /// container's content by its border widths — so adding a real border on
-/// focus would nudge the label. A foreground decoration paints over the
-/// control and takes no layout space, which is what a ring needs.
-ToggleStyler _focusVisibleStyle() => ToggleStyler().foregroundDecoration(
-  BoxDecorationMix(
-    border: .all(
-      .color(
-        PlaygroundTokens.focusRing(),
-      ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-    ),
-    borderRadius: .all(PlaygroundTokens.radius()),
-  ),
-);
+/// focus would nudge the label. The decoration strokes outside the box, so
+/// the ring sits where an outline would and takes no layout space. The
+/// outline variant also turns its own border `ring`.
+ToggleStyler _focusVisibleStyle(PlaygroundToggleVariant variant) {
+  final ring = ToggleStyler().foregroundDecoration(
+    playgroundFocusRingDecoration(),
+  );
+
+  return switch (variant) {
+    .ghost => ring,
+    .outline => ring.border(playgroundFocusBorder()),
+  };
+}
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -182,4 +172,4 @@ ToggleStyler _focusVisibleStyle() => ToggleStyler().foregroundDecoration(
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(_disabledOpacity));
+    .wrap(.opacity(PlaygroundOpacity.disabled));

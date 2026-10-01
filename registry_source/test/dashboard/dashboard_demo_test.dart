@@ -282,6 +282,23 @@ void main() {
         }
       });
 
+      // mix_chart draws each slice 80px wide whatever box it is given, so a
+      // donut whose hole plus ring outgrows half its box is clipped.
+      testWidgets('every pie fits inside its chart box', (tester) async {
+        await _pumpOverview(tester, preset: preset, width: 1280);
+        final overviewPies = _expectPiesFit(tester);
+
+        await _pumpDashboard(
+          tester,
+          preset: preset,
+          initialPage: RegistryDashboardDemoPage.charts,
+          height: 4000,
+        );
+        final chartsPies = _expectPiesFit(tester);
+
+        expect(overviewPies + chartsPies, 5);
+      });
+
       testWidgets('customer state survives navigation', (tester) async {
         await _pumpDashboard(
           tester,
@@ -470,6 +487,33 @@ void main() {
       );
     }
   });
+}
+
+/// Checks that the outermost edge of every pie on screen, with a selected
+/// slice pulled out, stays inside the box the pie is laid out in, and returns
+/// how many pies it checked.
+int _expectPiesFit(WidgetTester tester) {
+  // The adapter is private to mix_chart; it is where the resolved spec lands.
+  final adapters = find.byWidgetPredicate(
+    (widget) => widget.runtimeType.toString() == 'FlPieChartAdapter',
+  );
+
+  for (final element in adapters.evaluate()) {
+    final spec = (element.widget as dynamic).spec as PieChartSpec;
+    final outer =
+        (spec.centerRadius ?? 0) +
+        (spec.slice?.spec.radius ?? 80) +
+        (spec.selectedSliceRadiusOffset ?? 8);
+    final box = (element.renderObject! as RenderBox).size;
+
+    expect(
+      outer,
+      lessThanOrEqualTo(box.shortestSide / 2),
+      reason: 'a pie reaching $outer px in a $box box',
+    );
+  }
+
+  return adapters.evaluate().length;
 }
 
 Future<void> _pumpOverview(

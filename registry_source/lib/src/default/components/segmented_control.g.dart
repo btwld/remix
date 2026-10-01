@@ -8,11 +8,12 @@ part of 'segmented_control.dart';
 
 /// The application's SegmentedControl recipe.
 ///
-/// A segmented control is one control divided into parts, which is what
-/// separates it from a toggle group: the segments share a track, exactly one
-/// is chosen, and the chosen one is *lifted* out of the track rather than
-/// tinted on top of it. Remix owns the rendering, the equal-width layout, the
-/// roving focus, and the group accessibility semantics.
+/// A segmented control is one control divided into parts: the segments share a
+/// track, exactly one is chosen, and the chosen one is *lifted* out of the
+/// track rather than tinted on top of it. It is drawn as the filled tab list,
+/// so a segmented control and a tab strip on one page read as one family. Remix
+/// owns the rendering, the equal-width layout, the roving focus, and the group
+/// accessibility semantics.
 ///
 /// One recipe covers the track and the segments, because
 /// `SegmentedControlSpec` carries the segment's style as a field: the
