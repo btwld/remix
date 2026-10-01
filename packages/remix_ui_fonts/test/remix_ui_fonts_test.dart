@@ -9,7 +9,9 @@ import 'package:yaml/yaml.dart';
 const _fontsDirectory = 'lib/fonts';
 
 /// A `flutter: fonts:` entry declared in the pubspec.
-typedef _Declared = ({String family, int weight});
+typedef _Declared = ({String family, int weight, String style});
+
+bool _isFont(String path) => path.endsWith('.ttf') || path.endsWith('.otf');
 
 String _sha256(String path) =>
     sha256.convert(File(path).readAsBytesSync()).toString();
@@ -27,7 +29,14 @@ void main() {
         font['asset'] as String: (
           family: family['family'] as String,
           weight: font['weight'] as int,
+          style: font['style'] as String? ?? 'normal',
         ),
+  };
+  final licenses = {
+    for (final path
+        in ((pubspec['flutter'] as YamlMap)['licenses'] as YamlList?) ??
+            const [])
+      path as String,
   };
 
   // One directory per upstream font project, each with its own lock.
@@ -44,7 +53,17 @@ void main() {
     expect(projects, isNotEmpty);
   });
 
-  test('each family declares a weight at most once', () {
+  test('every declared font lives in a font project directory', () {
+    for (final asset in declared.keys) {
+      expect(
+        projects.any((project) => asset.startsWith('$project/')),
+        isTrue,
+        reason: '$asset is outside lib/fonts/<project>/',
+      );
+    }
+  });
+
+  test('each family declares a weight and style at most once', () {
     final seen = <_Declared>{};
     for (final font in declared.values) {
       expect(seen.add(font), isTrue, reason: '$font is declared twice');
@@ -78,13 +97,22 @@ void main() {
             .whereType<File>()
             .map((file) => file.path)
             .toSet();
-        final fonts = files.where((path) => path.endsWith('.ttf')).toSet();
+        final fonts = files.where(_isFont).toSet();
 
         expect(
           fonts,
           declared.keys.where((asset) => asset.startsWith('$project/')).toSet(),
         );
         expect(files.difference(fonts), {lockPath, license});
+      });
+
+      test('lists its license for the app license page', () {
+        final license = (lock!['license'] as Map<String, Object?>)['path'];
+        expect(
+          licenses,
+          contains(license),
+          reason: 'add $license to flutter: licenses in pubspec.yaml',
+        );
       });
 
       test('matches its lock byte for byte', () {
@@ -99,9 +127,13 @@ void main() {
           final path = font['path'] as String;
           expect(_sha256(path), font['sha256'], reason: '$path drifted');
           expect(
-            (family: font['family'], weight: font['weight']),
+            (
+              family: font['family'],
+              weight: font['weight'],
+              style: font['style'] ?? 'normal',
+            ),
             declared[path],
-            reason: '$path family or weight differs from the pubspec',
+            reason: '$path family, weight, or style differs from the pubspec',
           );
         }
         final license = lock['license'] as Map<String, Object?>;

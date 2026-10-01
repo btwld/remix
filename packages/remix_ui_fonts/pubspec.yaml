@@ -32,6 +32,10 @@ dev_dependencies:
 # license and fonts.lock.json. Consumers reference a family as
 # `packages/remix_ui_fonts/<family>`; see `RemixFonts`.
 flutter:
+  # Flutter adds these to an app's license page; its LICENSE file only covers
+  # this package's code.
+  licenses:
+    - lib/fonts/geist/OFL.txt
   fonts:
     - family: Geist
       fonts:

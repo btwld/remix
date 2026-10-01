@@ -78,7 +78,8 @@ files on purpose, and a checker fails on each one that drifts.
 - `registry/vanilla/registry.yaml` — the `theme` item's `remix_ui_fonts`
   constraint must floor at the new version. Edit it, then run
   `dart run tool/build_registry.dart`. Also move the melos shared constraint
-  in the root `pubspec.yaml` and `registry_source/pubspec.yaml` when the new
+  in the root `pubspec.yaml`, and the constraint in
+  `registry_source/pubspec.yaml` and `apps/playground/pubspec.yaml`, when the new
   version leaves the old caret range (any minor bump while the package is
   0.x). `tool/check_version_alignment.dart` fails until the floor matches.
 

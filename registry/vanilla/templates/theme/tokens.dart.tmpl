@@ -198,8 +198,8 @@ abstract final class {{typePrefix}}Tokens {
 
   /// Every color token this layer defines, in declaration order.
   ///
-  /// `{{typePrefix}}ThemeData` builds its scope map from this list, so a token added here
-  /// and to `{{typePrefix}}ThemeData` cannot be forgotten in the scope.
+  /// The installed-app fixture checks that `{{typePrefix}}ThemeData`'s scope map
+  /// resolves every entry, so a token added here and forgotten there fails.
   static const colors = <ColorToken>[
     background,
     foreground,

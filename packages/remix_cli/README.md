@@ -369,8 +369,9 @@ preserved. An incompatible resolved dependency fails before authored-source
 writes.
 
 Section placement is checked but never rewritten. Packages the installed source
-imports at runtime (`remix`, `mix_annotations`, `mix_chart` for `chart`, and
-`remix_ui_icons` for `icons`) must be declared under
+imports at runtime (`remix`, `mix_annotations`, `mix_chart` for `chart`,
+`remix_ui_icons` for `icons`, and `remix_ui_fonts` for the Vanilla `theme`)
+must be declared under
 `dependencies`; build-only packages (`build_runner`, `mix_generator`) may sit in
 either section. Declaring the same package in both sections is rejected. A
 misplaced declaration fails before any process runs or file is written, and the

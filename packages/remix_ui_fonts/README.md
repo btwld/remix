@@ -31,14 +31,17 @@ dependency declares, so each family adds its files to your app's size.
 
 ## Adding a font
 
-Each upstream font project gets one directory under `lib/fonts/`:
+In the [btwld/remix](https://github.com/btwld/remix) repository, each upstream
+font project gets one directory under `lib/fonts/`:
 
 1. Copy the unmodified static `.ttf` files and the upstream license into
    `lib/fonts/<project>/`.
 2. Write `lib/fonts/<project>/fonts.lock.json` with the upstream repository,
    tag, commit, release asset, license, and a SHA-256 for every file. Follow
    `lib/fonts/geist/fonts.lock.json`.
-3. Declare each family in `pubspec.yaml`, one entry per weight.
+3. Declare each family in `pubspec.yaml`, one entry per weight (and style),
+   and list the license under `flutter: licenses` so it reaches the app's
+   license page.
 4. Add a `RemixFonts` constant, a row in the table above, and a section in
    `THIRD_PARTY_NOTICES.md`.
 

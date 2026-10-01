@@ -202,8 +202,8 @@ abstract final class PlaygroundTokens {
 
   /// Every color token this layer defines, in declaration order.
   ///
-  /// `PlaygroundThemeData` builds its scope map from this list, so a token added here
-  /// and to `PlaygroundThemeData` cannot be forgotten in the scope.
+  /// The installed-app fixture checks that `PlaygroundThemeData`'s scope map
+  /// resolves every entry, so a token added here and forgotten there fails.
   static const colors = <ColorToken>[
     background,
     foreground,

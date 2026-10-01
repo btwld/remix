@@ -135,7 +135,7 @@ melos:
 
     version:align:check:
       run: dart run tool/check_version_alignment.dart
-      description: Verify the remote registry floors at the Remix version
+      description: Verify the registry's remix and remix_ui_fonts floors match the packages
 
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
@@ -278,7 +278,8 @@ melos:
         - test:flutter
       description: Every Flutter package test suite
 
-    # Fresh consumers use checkout Remix and hosted supporting packages.
+    # Fresh consumers use checkout Remix (and remix_ui_fonts for Vanilla) with
+    # hosted supporting packages.
     # The release check separately requires the published Remix version.
     ci:open-code:vanilla:
       steps:

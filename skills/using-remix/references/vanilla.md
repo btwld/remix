@@ -33,7 +33,9 @@ use `radiusMd`, dialogs and callouts `radiusLg`, cards `radiusXl`, menu rows
 `radiusSm`. The text steps carry the family, size, and line height only; set
 weight and color in the recipe. `fontFamily` and `monoFontFamily` default to
 Geist and Geist Mono from `remix_ui_fonts`, which `theme` adds to your
-`dependencies`; set either to null to leave the family to the platform.
+`dependencies`. Set `fontFamily` to null in the constructors (`copyWith`
+cannot clear it) to leave the family to the platform; a null `monoFontFamily`
+uses `fontFamily`.
 
 `accent` is the interaction surface for otherwise transparent controls (the
 hovered ghost button, the highlighted menu row, the toggle that is on), not a
@@ -137,7 +139,10 @@ code. See [Styling](styling.md) for general token and `Prop` mechanics.
 ## Updating an older install
 
 A theme installed before the current token set names `focusRing` and a single
-`radius` token. After `remix add theme --overwrite`, rename `focusRing` to
-`ring` in your own code, and replace `Tokens.radius` with a step (`radiusMd`
-for controls). Reinstall the component items with `--overwrite` to pick up
-the new recipes, and check `--diff` first on any you have edited.
+`radius` token. `--overwrite` replaces only the items named, so reinstall the
+theme together with every installed Vanilla item in one command (check
+`--diff` first on any you have edited); an item left out still reads the old
+names and stops compiling. Then rename `focusRing` to `ring` in your own code,
+replace `Tokens.radius` with a step (`radiusMd` for controls), and give a
+hand-built `ThemeData` the new required colors (`card`, `popover`, `input`,
+`ring`, and the `sidebar*` set), or start from `.light().copyWith(...)`.

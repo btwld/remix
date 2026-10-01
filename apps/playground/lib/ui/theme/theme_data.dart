@@ -24,9 +24,10 @@ enum PlaygroundThemeMode { system, light, dark }
 class PlaygroundThemeData {
   /// Creates a theme with an explicit value for every color and the radius.
   ///
-  /// [fontFamily] and [monoFontFamily] may be null, which leaves the family to
-  /// whatever the platform text stack picks. [PlaygroundThemeData.light] and
-  /// [PlaygroundThemeData.dark] set them to Geist and Geist Mono.
+  /// A null [fontFamily] leaves the family to whatever the platform text stack
+  /// picks, and a null [monoFontFamily] uses [fontFamily].
+  /// [PlaygroundThemeData.light] and [PlaygroundThemeData.dark] set them to Geist and
+  /// Geist Mono.
   const PlaygroundThemeData({
     this.brightness = Brightness.light,
     required this.background,
@@ -253,13 +254,13 @@ class PlaygroundThemeData {
   /// Family for every text step except [PlaygroundTokens.textMono].
   ///
   /// The shipped themes use [RemixFonts.geist]. Null leaves the family to the
-  /// platform text stack.
+  /// platform text stack; [copyWith] cannot clear it, so change the
+  /// constructor instead.
   final String? fontFamily;
 
   /// Family for [PlaygroundTokens.textMono].
   ///
-  /// The shipped themes use [RemixFonts.geistMono]. Null leaves the family to
-  /// the platform text stack.
+  /// The shipped themes use [RemixFonts.geistMono]. Null uses [fontFamily].
   final String? monoFontFamily;
 
   /// This theme's values keyed by the token that resolves them.

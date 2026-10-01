@@ -574,17 +574,24 @@ That is the intended workflow. The file is yours.
 
 ### Moving an older Vanilla install onto the current theme
 
-The Vanilla theme was rebuilt on a new token set. The recipes read the new
-tokens, so update the theme together with the components:
+The Vanilla theme was rebuilt on a new token set. Every recipe reads the new
+tokens, and `--overwrite` replaces only the items you name, so update the theme
+together with **every** Vanilla item you have installed, in one command:
 
 ```bash
-remix add theme --diff
-remix add theme --overwrite
-remix add button --overwrite
+remix add theme button card dialog tabs --diff
+remix add theme button card dialog tabs --overwrite
 ```
+
+List your own installed items in place of the example ones. An item left out
+still reads the old token names and stops compiling once the theme changes.
 
 Then adjust any code of your own that read the old names:
 
+- `UiThemeData` gained thirteen required colors (`card`, `popover`, `input`,
+  `ring`, and eight `sidebar*` colors) and lost `focusRing`. A theme you build
+  with the constructor needs the new arguments; start from
+  `UiThemeData.light().copyWith(...)` instead.
 - `UiTokens.focusRing` is `UiTokens.ring`. Recipes draw the ring at half
   strength, 3px wide with no offset, and turn a bordered control's outline
   `ring` while it has focus.
@@ -595,6 +602,11 @@ Then adjust any code of your own that read the old names:
   `muted`, so hover and selected surfaces stay distinct from outlines. A
   selected toggle no longer draws a `primary` outline.
 - There is no pressed step: a press lands on the hover fill.
+- In the dark theme, destructive buttons and badges paint `destructive` at
+  60% rather than solid.
+- `UiSidebarLayout` collapses to 48px (was 72); the dashboard shell keeps its
+  own 72px rail.
+- Tooltips open as the pointer arrives (no 500ms delay).
 - `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is a
   recessed pill list; pass `variant: .line` to both for the underline strip.
 - The shipped themes set `fontFamily` and `monoFontFamily` to Geist and Geist
