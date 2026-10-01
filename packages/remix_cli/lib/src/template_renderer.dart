@@ -42,7 +42,8 @@ final class TemplateRenderer {
     final unresolved = _anyToken.firstMatch(rendered);
     if (unresolved != null) {
       throw FormatException(
-        'Template contains unsupported token ${unresolved[0]}.',
+        'Template contains unsupported token ${unresolved[0]}. The registry '
+        'may need a newer remix_cli; upgrade it and try again.',
       );
     }
     // The library's import replaces the placeholder in place; re-sort so it

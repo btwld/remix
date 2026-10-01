@@ -12,7 +12,9 @@ final _terminated = RegExp(r';\s*(//.*)?$');
 /// left behind unsorted. The registry build and the installer share this
 /// so a rendered icon import lands where `directives_ordering` expects it.
 String sortDirectives(String path, String source) {
-  final lines = source.split('\n');
+  // Keep a CRLF file CRLF: the separators this adds use the file's endings.
+  final eol = source.contains('\r\n') ? '\r\n' : '\n';
+  final lines = source.split(eol);
   final start = lines.indexWhere((line) => line.startsWith('import '));
   if (start < 0) return source;
 
@@ -73,5 +75,5 @@ String sortDirectives(String path, String source) {
     ...lines.sublist(0, start),
     ...sorted,
     ...lines.sublist(end),
-  ].join('\n');
+  ].join(eol);
 }
