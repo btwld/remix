@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "family",
+    "nameStatus",
+    "version",
+    "status",
+    "counts",
+    "packs",
+    "releaseApproval",
+    "icons"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nameStatus": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "counts": {
+      "type": "object"
+    },
+    "packs": {
+      "type": "object"
+    },
+    "releaseApproval": {
+      "type": "object"
+    },
+    "icons": {
+      "type": "array",
+      "minItems": 48,
+      "maxItems": 48,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "category",
+          "legacyGroup",
+          "stage",
+          "pairModel",
+          "meaning",
+          "keywords",
+          "aliases",
+          "rtlPolicy",
+          "example",
+          "availability",
+          "provenance",
+          "review"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "enum": [
+              "navigation",
+              "actions",
+              "content",
+              "people-communication",
+              "status-security",
+              "system-data",
+              "media",
+              "commerce-location"
+            ]
+          },
+          "legacyGroup": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stage": {
+            "enum": [
+              "baseline",
+              "pilot-addition"
+            ]
+          },
+          "pairModel": {
+            "enum": [
+              "weight",
+              "silhouette"
+            ]
+          },
+          "meaning": {
+            "type": "string",
+            "minLength": 10
+          },
+          "keywords": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "aliases": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "rtlPolicy": {
+            "const": "literal-no-automatic-mirroring"
+          },
+          "example": {
+            "type": "string",
+            "minLength": 1
+          },
+          "availability": {
+            "const": {
+              "angular": {
+                "appearances": [
+                  "outline",
+                  "filled"
+                ],
+                "opticalSizes": [
+                  12,
+                  16,
+                  24
+                ]
+              }
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "required": [
+              "method",
+              "source",
+              "externalArtworkUsed"
+            ],
+            "properties": {
+              "method": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "externalArtworkUsed": {
+                "const": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "review": {
+            "type": "object",
+            "required": [
+              "technical",
+              "optical",
+              "recognition",
+              "independentApproval",
+              "note",
+              "exceptions"
+            ],
+            "oneOf": [
+              {
+                "required": [
+                  "usage"
+                ],
+                "not": {
+                  "required": [
+                    "usageRestriction"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "usageRestriction"
+                ],
+                "not": {
+                  "required": [
+                    "usage"
+                  ]
+                }
+              }
+            ],
+            "properties": {
+              "usage": {
+                "type": "string",
+                "minLength": 1
+              },
+              "usageRestriction": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "icon": "info",
+    "nativeSize": 12,
+    "markToFrame": 1.0,
+    "target": 1.0,
+    "status": "meets-authored-region-target"
+  },
+  {
+    "icon": "info",
+    "nativeSize": 16,
+    "markToFrame": 1.5,
+    "target": 1.5,
+    "status": "meets-authored-region-target"
+  },
+  {
+    "icon": "info",
+    "nativeSize": 24,
+    "markToFrame": 2.0,
+    "target": 2.0,
+    "status": "meets-authored-region-target"
+  },
+  {
+    "icon": "help",
+    "nativeSize": 12,
+    "markToFrame": 1.0,
+    "target": 1.0,
+    "status": "meets-authored-region-target"
+  },
+  {
+    "icon": "help",
+    "nativeSize": 16,
+    "markToFrame": 1.5,
+    "target": 1.5,
+    "status": "meets-authored-region-target"
+  },
+  {
+    "icon": "help",
+    "nativeSize": 24,
+    "markToFrame": 2.0,
+    "target": 2.0,
+    "status": "meets-authored-region-target"
+  }
+]

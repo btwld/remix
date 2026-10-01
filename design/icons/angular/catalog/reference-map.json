@@ -1,0 +1,247 @@
+{
+  "status": "No external SVGs imported; catalog mapping deferred until intended reference is identified.",
+  "requestedReference": "idea icons (unresolved)",
+  "references": [],
+  "icons": [
+    {
+      "id": "home",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "menu",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "more",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "search",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "grid",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "arrow-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "arrow-right",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "arrow-up",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "arrow-down",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "arrow-up-right",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "chevron-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevron-right",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevron-up",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevron-down",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "plus",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "minus",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "check",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "close",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "edit",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "copy",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "trash",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "refresh",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "filter",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "sliders",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "upload",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "download",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "save",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "file",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "folder",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "link",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "bookmark",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "star",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "calendar",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "user",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "chat",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "bell",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "warning",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "info",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "help",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "lock",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "shield",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "gear",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "terminal",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "branch",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "chart",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "play",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "pause",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "focus",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    }
+  ]
+}

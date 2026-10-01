@@ -1,0 +1,4622 @@
+{
+  "documentType": "proposal-not-a-shipped-icon-manifest",
+  "date": "2026-09-24",
+  "workingFamilyName": "Vector UI (name not locked)",
+  "scopeNote": "120 is a planning target, not a measured market requirement or an 80% coverage claim. All 33 current IDs are retained. No new paths are supplied by this plan.",
+  "counts": {
+    "baseline": 33,
+    "pilotAdditions": 15,
+    "pilotTotal": 48,
+    "coreAdditionsAfterPilot": 72,
+    "proposedCoreTotal": 120,
+    "existingDrawings": 198,
+    "targetAngularDrawings": 720
+  },
+  "calibrationIcons": [
+    "home",
+    "search",
+    "plus",
+    "arrow-right",
+    "user",
+    "file",
+    "calendar",
+    "sliders",
+    "warning",
+    "link",
+    "branch",
+    "star"
+  ],
+  "pilotAdditions": [
+    "arrow-left",
+    "arrow-up",
+    "arrow-down",
+    "chevron-left",
+    "chevron-right",
+    "chevron-up",
+    "chevron-down",
+    "minus",
+    "edit",
+    "save",
+    "refresh",
+    "filter",
+    "gear",
+    "info",
+    "help"
+  ],
+  "categoryCounts": {
+    "navigation": 20,
+    "actions": 20,
+    "content": 18,
+    "people-communication": 12,
+    "status-security": 12,
+    "system-data": 18,
+    "media": 12,
+    "commerce-location": 8
+  },
+  "icons": [
+    {
+      "id": "home",
+      "label": "Home",
+      "category": "navigation",
+      "legacyGroup": "Navigation",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "more",
+      "label": "More",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "category": "navigation",
+      "legacyGroup": "Navigation",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "grid",
+      "label": "Grid",
+      "category": "navigation",
+      "legacyGroup": "Navigation",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "arrow-left",
+      "label": "Arrow left",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "arrow-right",
+      "label": "Arrow right",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "arrow-up",
+      "label": "Arrow up",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "arrow-down",
+      "label": "Arrow down",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "arrow-up-right",
+      "label": "Arrow up right",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chevron-left",
+      "label": "Chevron left",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chevron-right",
+      "label": "Chevron right",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chevron-up",
+      "label": "Chevron up",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chevron-down",
+      "label": "Chevron down",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "external-link",
+      "label": "External link",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Candidate arrow with an enclosing container; distinguish from the existing bare Arrow up right before approval.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "expand",
+      "label": "Expand",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Candidate opposing corners/arrows; must be distinguishable from Focus.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "collapse",
+      "label": "Collapse",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Must form a coherent pair with Expand without becoming an opposite semantic under RTL.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "sidebar",
+      "label": "Sidebar",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "layout",
+      "label": "Layout",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Candidate layout panel arrangement; verify it is not visually redundant with Grid or Sidebar.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "compass",
+      "label": "Compass",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Application shell, navigation rail, menus, and search.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "plus",
+      "label": "Plus",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "minus",
+      "label": "Minus",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "check",
+      "label": "Check",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "close",
+      "label": "Close",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "edit",
+      "label": "Edit",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "copy",
+      "label": "Copy",
+      "category": "actions",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "trash",
+      "label": "Trash",
+      "category": "actions",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "undo",
+      "label": "Undo",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Historical action reversal, not Back navigation.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "redo",
+      "label": "Redo",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Historical action replay, not Forward navigation.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "refresh",
+      "label": "Refresh",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Reload/retry motif; do not confuse with Undo or a continuous-sync state.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "filter",
+      "label": "Filter",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Candidate funnel metaphor for filtering. Do not treat as a name-only duplicate of Sliders.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "sliders",
+      "label": "Sliders",
+      "category": "actions",
+      "legacyGroup": "Navigation",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Keep as the adjustment-controls symbol. Settings/adjust/filters remain search keywords, not universal API aliases.",
+      "pairModel": "silhouette",
+      "searchKeywords": [
+        "settings",
+        "adjust",
+        "filters"
+      ],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "sort-ascending",
+      "label": "Sort ascending",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "sort-descending",
+      "label": "Sort descending",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "upload",
+      "label": "Upload",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "download",
+      "label": "Download",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "share",
+      "label": "Share",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "save",
+      "label": "Save",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Candidate disk/save motif; validate recognition and distinguish from Bookmark before inclusion.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "drag-handle",
+      "label": "Drag handle",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "move",
+      "label": "Move",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Command bars, forms, list controls, and file actions.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "folder",
+      "label": "Folder",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "folder-open",
+      "label": "Folder open",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "clipboard",
+      "label": "Clipboard",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "archive",
+      "label": "Archive",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "attachment",
+      "label": "Attachment",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "link",
+      "label": "Link",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "link-off",
+      "label": "Link off",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "bookmark",
+      "label": "Bookmark",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Save/reference motif; do not automatically map the same product meaning as Star.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "star",
+      "label": "Star",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Five-point favorite motif; distinct from focus and from bookmark semantics in the application.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "clock",
+      "label": "Clock",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "tag",
+      "label": "Tag",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "image",
+      "label": "Image",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "file-plus",
+      "label": "File plus",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "folder-plus",
+      "label": "Folder plus",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "table",
+      "label": "Table",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "list",
+      "label": "List",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "File browser, content rows, saved items, and scheduling.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "category": "people-communication",
+      "legacyGroup": "People",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "users",
+      "label": "Users",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "user-plus",
+      "label": "User plus",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "category": "people-communication",
+      "legacyGroup": "People",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chat-dots",
+      "label": "Chat dots",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Candidate conversation/activity motif; keep semantically necessary details only.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "mail",
+      "label": "Mail",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "inbox",
+      "label": "Inbox",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "send",
+      "label": "Send",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "bell",
+      "label": "Bell",
+      "category": "people-communication",
+      "legacyGroup": "People",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "bell-off",
+      "label": "Bell off",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "phone",
+      "label": "Phone",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "video-call",
+      "label": "Video call",
+      "category": "people-communication",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Account area, collaboration, inbox, and notification center.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "category": "status-security",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Retain documented micro-size exception and visible-label requirement; do not record as an unrestricted 12 px pass.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "info",
+      "label": "Info",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "help",
+      "label": "Help",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "check-circle",
+      "label": "Check circle",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "error-circle",
+      "label": "Error circle",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Labeled error state, not a small unlabeled destructive action.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "lock",
+      "label": "Lock",
+      "category": "status-security",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "unlock",
+      "label": "Unlock",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "shield",
+      "label": "Shield",
+      "category": "status-security",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "shield-check",
+      "label": "Shield check",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Protection/verification motif; status text must state what was actually verified.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "key",
+      "label": "Key",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "eye",
+      "label": "Eye",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "eye-off",
+      "label": "Eye off",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Validation, access controls, labeled alerts, and help.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "gear",
+      "label": "Gear",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "pilot-to-48",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Candidate distinct settings metaphor. Do not replace Sliders or change existing search/API behavior silently.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "terminal",
+      "label": "Terminal",
+      "category": "system-data",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "category": "system-data",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Existing workflow/version-control motif; test exact intended meaning in context.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "pilot-candidate-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chart",
+      "label": "Chart",
+      "category": "system-data",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Keep existing public ID; a future chart-bar alias must be explicit and nonbreaking.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chart-line",
+      "label": "Chart line",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "chart-pie",
+      "label": "Chart pie",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "database",
+      "label": "Database",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "server",
+      "label": "Server",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "cloud-off",
+      "label": "Cloud off",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "wifi",
+      "label": "Wifi",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "wifi-off",
+      "label": "Wifi off",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "monitor",
+      "label": "Monitor",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "smartphone",
+      "label": "Smartphone",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "globe",
+      "label": "Globe",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "code",
+      "label": "Code",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "plug",
+      "label": "Plug",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "power",
+      "label": "Power",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Settings, diagnostics, data management, and developer tools.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "play",
+      "label": "Play",
+      "category": "media",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "silhouette",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "pause",
+      "label": "Pause",
+      "category": "media",
+      "legacyGroup": "Actions",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "stop",
+      "label": "Stop",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "skip-forward",
+      "label": "Skip forward",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "skip-back",
+      "label": "Skip back",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "volume",
+      "label": "Volume",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "volume-off",
+      "label": "Volume off",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "microphone",
+      "label": "Microphone",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "microphone-off",
+      "label": "Microphone off",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "camera",
+      "label": "Camera",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "focus",
+      "label": "Focus",
+      "category": "media",
+      "legacyGroup": "System",
+      "stage": "baseline-33",
+      "artworkStatus": "existing-v0.4.1-not-revalidated-optically-in-this-plan",
+      "priorityEvidence": "Current supplied set",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Existing bracketed target. Requires specific product label; not Expand or Star.",
+      "pairModel": "weight",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "inventory-only-verified",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "crop",
+      "label": "Crop",
+      "category": "media",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Playback, capture, and image controls.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "shopping-cart",
+      "label": "Shopping cart",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "shopping-bag",
+      "label": "Shopping bag",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "credit-card",
+      "label": "Credit card",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "receipt",
+      "label": "Receipt",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "package",
+      "label": "Package",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "map",
+      "label": "Map",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "map-pin",
+      "label": "Map pin",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "no-automatic-mirroring",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    },
+    {
+      "id": "location-arrow",
+      "label": "Location arrow",
+      "category": "commerce-location",
+      "legacyGroup": null,
+      "stage": "proposed-core-to-120",
+      "artworkStatus": "not-drawn",
+      "priorityEvidence": "Planning hypothesis; target-screen frequency not measured",
+      "proposedContext": "Optional commerce and location screens; confirm product need before drawing.",
+      "semanticNote": "Confirm the intended metaphor and distinguish it from its nearest neighbors before drawing.",
+      "pairModel": "to-design",
+      "searchKeywords": [],
+      "apiAliases": [],
+      "rtlPolicy": "needs-context-review",
+      "targetAngular": {
+        "variants": [
+          "outline",
+          "filled"
+        ],
+        "opticalSizes": [
+          12,
+          16,
+          24
+        ]
+      },
+      "roundedStatus": "deferred-not-drawn",
+      "coverageReference": {
+        "lucide": null,
+        "heroicons": null,
+        "phosphor": null,
+        "mappingStatus": "not-yet-reviewed"
+      },
+      "review": {
+        "technical": "not-run",
+        "optical": "requires-release-signoff",
+        "context": "not-user-tested"
+      }
+    }
+  ]
+}

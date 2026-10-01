@@ -1,0 +1,22 @@
+# Development dependency closure captured from the validated CPython 3.13 environment.
+# No versions were upgraded. Update deliberately, then rerun all evidence.
+attrs==26.1.0
+cairocffi==1.7.1
+cairosvg==2.8.2
+cffi==2.0.0
+cssselect2==0.9.0
+defusedxml==0.7.1
+greenlet==3.5.1
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+numpy==2.3.5
+pillow==12.3.0
+playwright==1.57.0
+pycparser==3.0
+pyee==13.0.1
+referencing==0.37.0
+rpds-py==2026.5.1
+shapely==2.1.2
+tinycss2==1.5.1
+typing-extensions==4.16.0
+webencodings==0.5.1

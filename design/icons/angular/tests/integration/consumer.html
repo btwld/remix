@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Angular package consumer</title><style>button{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:#d7ff00;color:#111}svg{display:block}</style></head><body><h1>Isolated import smoke test</h1><button id="settings" aria-label="Adjust view"></button><button id="favorite" aria-label="Favorite" aria-pressed="false"></button><div id="info"></div><script type="module">
+import sliders from '../../packages/web/icons/sliders.mjs';
+import star from '../../packages/web/icons/star.mjs';
+import {iconSvg} from '../../packages/web/index.mjs';
+document.getElementById('settings').innerHTML=sliders({size:16});
+const favorite=document.getElementById('favorite');favorite.innerHTML=star({size:24});
+favorite.addEventListener('click',()=>{const active=favorite.getAttribute('aria-pressed')!=='true';favorite.setAttribute('aria-pressed',active);favorite.innerHTML=star({size:24,appearance:active?'filled':'outline'});});
+document.getElementById('info').innerHTML=iconSvg('info',{title:'Information',size:16});
+window.__CONSUMER_READY__=true;
+</script></body></html>

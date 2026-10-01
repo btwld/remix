@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "warning-visible-label",
+      "icon": "warning",
+      "pack": "angular",
+      "status": "inherited-restriction-owner-review-pending",
+      "owner": null,
+      "reviewer": null,
+      "reason": "Retain the stronger inherited labeling rule without silently approving or redrawing the locked geometry.",
+      "sizes": {
+        "12": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "d9d01bee7f8a4fe661d57aa621344b624ca4ecd78e9cf99fe06c1741199ec0d7",
+            "exceptionIds": [
+              "warning-gap-12"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "08e261fd0b04e6a36ab85c8884347a95bb3c826dc6951bd9ba4129b42bb560e6",
+            "exceptionIds": []
+          }
+        },
+        "16": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "25208022afec19c70a90e9e5d37d56368da7b2df774027c719bb6fa8c564bcf5",
+            "exceptionIds": [
+              "warning-gap-16"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "43979e5c0d923bbf75381a5267f32f65355482fd93f20a62c92c757ed7912ffe",
+            "exceptionIds": [
+              "warning-filled-punctuation-16"
+            ]
+          }
+        },
+        "24": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "2387cc9c7e37ce8e2d3230061aa5be1858a86f7c39aacc442dbdb02b7dcb806b",
+            "exceptionIds": [
+              "warning-gap-24"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "a538654374507fdbe1ece22a1f7f3b21dbf3c06138600c9c30c9f4229dc62be3",
+            "exceptionIds": [
+              "warning-filled-punctuation-24"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

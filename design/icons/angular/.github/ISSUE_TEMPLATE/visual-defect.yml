@@ -1,0 +1,17 @@
+name: Visual defect
+description: Report spacing, weight, clipping, or unclear meaning.
+title: "[visual] "
+body:
+  - type: input
+    id: icon
+    attributes:
+      label: Icon, appearance, optical master, display size
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What looks wrong in the actual interface?
+      description: Include browser, pixel density, background, label, and a native-size screenshot.
+    validations:
+      required: true
