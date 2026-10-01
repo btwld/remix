@@ -262,4 +262,30 @@ import 'dart:math';
       ),
     );
   });
+
+  test('keeps CRLF line endings while sorting', () {
+    const source =
+        "import 'package:remix/remix.dart';\r\nimport 'dart:math';\r\n\r\nclass Example {}\r\n";
+    expect(
+      sortDirectives('template', source),
+      "import 'dart:math';\r\n\r\nimport 'package:remix/remix.dart';\r\n\r\nclass Example {}\r\n",
+    );
+  });
+
+  test('names a remix_cli upgrade for an unknown token', () {
+    expect(
+      () => renderer.render(
+        '{{future:token}}',
+        typePrefix: 'Ui',
+        valuePrefix: 'ui',
+      ),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('newer remix_cli'),
+        ),
+      ),
+    );
+  });
 }

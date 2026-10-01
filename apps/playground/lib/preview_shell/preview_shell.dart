@@ -118,6 +118,10 @@ class _ViewportFrame extends StatelessWidget {
     );
 
     // Note: the theme scope is applied by the component registry wrapper.
+    // Routes pushed on the root navigator (dialogs, the compact sidebar
+    // sheet) open over the whole playground window rather than this frame.
+    // In an application they cover the app, which is what the frame stands
+    // for, so this is left as is.
     return Stack(
       children: [
         frame,

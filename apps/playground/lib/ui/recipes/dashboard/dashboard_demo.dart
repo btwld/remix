@@ -251,7 +251,9 @@ class _PlaygroundBreadcrumb extends StatelessWidget {
       Flexible(
         child: StyledText(
           page.section.label,
-          style: _textStyle(muted: true).maxLines(1).softWrap(false),
+          style: _textStyle(
+            muted: true,
+          ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
       const Padding(
@@ -264,7 +266,7 @@ class _PlaygroundBreadcrumb extends StatelessWidget {
           style: _textStyle(
             size: 16,
             weight: FontWeight.w600,
-          ).maxLines(1).softWrap(false),
+          ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
     ],
@@ -590,6 +592,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
         yAxis: playgroundDashboardNumericAxis(max: 100, interval: 20),
+        style: playgroundDashboardLineStyle(),
       ),
       .linePatterns => PlaygroundLineChart(
         showMarkers: true,
@@ -627,6 +630,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
         yAxis: playgroundDashboardNumericAxis(max: 50),
+        style: playgroundDashboardLineStyle(),
       ),
       .stepGaps => PlaygroundLineChart(
         showMarkers: true,
@@ -649,6 +653,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
         yAxis: playgroundDashboardNumericAxis(max: 40),
+        style: playgroundDashboardLineStyle(),
       ),
       .viewportLabels => PlaygroundLineChart(
         showMarkers: true,
@@ -671,26 +676,31 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         ],
         xAxis: playgroundDashboardWeekdayAxis(),
         yAxis: playgroundDashboardNumericAxis(max: 50),
+        style: playgroundDashboardLineStyle(),
       ),
       .groupedBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: playgroundDashboardGroupedBars(),
         yAxis: playgroundDashboardNumericAxis(max: 60),
+        style: playgroundDashboardBarStyle(),
       ),
       .stackedBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: playgroundDashboardStackedBars(),
         yAxis: playgroundDashboardNumericAxis(max: 60),
+        style: playgroundDashboardBarStyle(),
       ),
       .floatingBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: playgroundDashboardFloatingBars(),
         yAxis: playgroundDashboardNumericAxis(max: 40),
+        style: playgroundDashboardBarStyle(),
       ),
       .trackedBars => PlaygroundBarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
         groups: playgroundDashboardTrackedBars(),
         yAxis: playgroundDashboardNumericAxis(max: 70),
+        style: playgroundDashboardBarStyle(),
       ),
       .trafficPie => PlaygroundPieChart(
         style: _pieRing(),

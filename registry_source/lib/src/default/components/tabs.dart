@@ -167,11 +167,23 @@ final _restingContent = vanillaByBrightness(
 /// See [_restingContent].
 const _restingAlpha = 0.6;
 
-/// The current filled tab's surface: the page color, or `input` at 30% in the
-/// dark theme.
+/// The current filled tab's surface: the page color, or `input` at 30% laid
+/// over the `muted` list in the dark theme.
+///
+/// The dark fill is blended here rather than painted translucent: the tab's
+/// shadow is a decoration shadow, which Flutter paints under the whole box,
+/// so it would show through a translucent fill and darken it. Tabs have no
+/// effects layer to move the shadow to.
 final _currentFill = vanillaByBrightness(
   light: VanillaTokens.background,
-  dark: vanillaTint(VanillaTokens.input, _darkCurrentFillAlpha),
+  dark: _darkCurrentFill,
+);
+
+final _darkCurrentFill = ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    vanillaTint(VanillaTokens.input, _darkCurrentFillAlpha).resolve(context),
+    VanillaTokens.muted.resolve(context),
+  ),
 );
 
 /// See [_currentFill].

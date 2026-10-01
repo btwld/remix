@@ -12,12 +12,6 @@ import 'support.dart';
 /// Each [SpecTarget] resolves one recipe, reads one property, and names the
 /// reference value. `spec_conformance_test.dart` runs every target in both
 /// themes.
-///
-/// A target belongs to the pull request that moves its recipe onto the spec
-/// (`E` for the interaction layer, `F1`–`F5` for the component sweep). It is
-/// checked once that phase is listed in [enforcedPhases]; until then it is
-/// reported as skipped, so the distance to the spec stays visible.
-const enforcedPhases = <String>{'E', 'F1', 'F2', 'F3', 'F4', 'F5'};
 
 /// One measured property of one resolved recipe.
 final class SpecTarget {
@@ -25,7 +19,6 @@ final class SpecTarget {
     required this.component,
     required this.property,
     required this.source,
-    required this.phase,
     required this.actual,
     required this.expected,
   });
@@ -39,25 +32,18 @@ final class SpecTarget {
   /// The reference file and classes the target comes from.
   final String source;
 
-  /// The pull request that enforces this target.
-  final String phase;
-
   /// Resolves the recipe under a theme and reads the property.
   final Future<Object?> Function(WidgetTester tester, VanillaThemeData theme)
   actual;
 
   /// The target value, or a matcher, under a theme.
   final Object? Function(VanillaThemeData theme) expected;
-
-  /// Whether [phase] has landed.
-  bool get isEnforced => enforcedPhases.contains(phase);
 }
 
 SpecTarget _target<S extends Spec<S>>(
   String component,
   String property, {
   required String source,
-  required String phase,
   required Style<S> Function() style,
   Set<WidgetState> states = const {},
   required Object? Function(StyleSpec<S> spec) read,
@@ -66,7 +52,6 @@ SpecTarget _target<S extends Spec<S>>(
   component: component,
   property: property,
   source: source,
-  phase: phase,
   actual: (tester, theme) async =>
       read(await resolveVanilla(tester, style(), theme: theme, states: states)),
   expected: expected,
@@ -76,7 +61,6 @@ SpecTarget _pumped<S extends Spec<S>>(
   String component,
   String property, {
   required String source,
-  required String phase,
   required Widget Function() widget,
   required Object? Function(StyleSpec<S> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -84,7 +68,6 @@ SpecTarget _pumped<S extends Spec<S>>(
   component: component,
   property: property,
   source: source,
-  phase: phase,
   actual: (tester, theme) async =>
       read(await pumpedSpec<S>(tester, widget(), theme: theme)),
   expected: expected,
@@ -129,7 +112,6 @@ SpecTarget _button(
   VanillaButtonVariant variant = .primary,
   VanillaButtonSize size = .medium,
   Set<WidgetState> states = const {},
-  String phase = 'F1',
   String source = 'button.tsx',
   required Object? Function(StyleSpec<ButtonSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -137,7 +119,6 @@ SpecTarget _button(
   'button',
   property,
   source: source,
-  phase: phase,
   style: () => vanillaButtonStyle(variant: variant, size: size),
   states: states,
   read: read,
@@ -275,7 +256,6 @@ final _buttonTargets = <SpecTarget>[
   _button(
     'focus ring',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'button.tsx: focus-visible:ring-[3px] ring-ring/50',
     read: (spec) => spec.spec.containerEffects?.outline,
     expected: _focusRing,
@@ -283,7 +263,6 @@ final _buttonTargets = <SpecTarget>[
   _button(
     'focus ring has no offset',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'button.tsx: focus-visible:ring-[3px]',
     read: (spec) => spec.spec.containerEffects?.outlineOffset,
     expected: (_) => 0.0,
@@ -292,14 +271,12 @@ final _buttonTargets = <SpecTarget>[
     'outline focus border',
     variant: .outline,
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'button.tsx: focus-visible:border-ring',
     read: (spec) => _buttonDecoration(spec)?.border,
     expected: (theme) => _hairline(theme.ring),
   ),
   _button(
     'transition',
-    phase: 'E',
     source: 'button.tsx: transition-all (150ms ease)',
     read: (spec) => spec.animation,
     expected: (_) => VanillaMotion.standard,
@@ -313,7 +290,6 @@ SpecTarget _iconButton(
   VanillaIconButtonVariant variant = .primary,
   VanillaIconButtonSize size = .medium,
   Set<WidgetState> states = const {},
-  String phase = 'F1',
   required String source,
   required Object? Function(StyleSpec<IconButtonSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -321,7 +297,6 @@ SpecTarget _iconButton(
   'icon button',
   property,
   source: source,
-  phase: phase,
   style: () => vanillaIconButtonStyle(variant: variant, size: size),
   states: states,
   read: read,
@@ -407,14 +382,12 @@ final _iconButtonTargets = <SpecTarget>[
   _iconButton(
     'focus ring',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'button.tsx: focus-visible:ring-[3px] ring-ring/50',
     read: (spec) => spec.spec.containerEffects?.outline,
     expected: _focusRing,
   ),
   _iconButton(
     'transition',
-    phase: 'E',
     source: 'button.tsx: transition-all',
     read: (spec) => spec.animation,
     expected: (_) => VanillaMotion.standard,
@@ -426,7 +399,6 @@ final _iconButtonTargets = <SpecTarget>[
 SpecTarget _link(
   String property, {
   Set<WidgetState> states = const {},
-  String phase = 'F1',
   required String source,
   required Object? Function(StyleSpec<LinkSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -434,7 +406,6 @@ SpecTarget _link(
   'link',
   property,
   source: source,
-  phase: phase,
   style: vanillaLinkStyle,
   states: states,
   read: read,
@@ -481,7 +452,6 @@ SpecTarget _badge(
   'badge',
   property,
   source: source,
-  phase: 'F1',
   style: () => vanillaBadgeStyle(variant: variant),
   read: read,
   expected: expected,
@@ -537,7 +507,6 @@ SpecTarget _toggle(
   VanillaToggleVariant variant = .ghost,
   VanillaToggleSize size = .medium,
   Set<WidgetState> states = const {},
-  String phase = 'F1',
   required String source,
   required Object? Function(StyleSpec<ToggleSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -545,7 +514,6 @@ SpecTarget _toggle(
   'toggle',
   property,
   source: source,
-  phase: phase,
   style: () => vanillaToggleStyle(variant: variant, size: size),
   states: states,
   read: read,
@@ -647,7 +615,6 @@ final _toggleTargets = <SpecTarget>[
   _toggle(
     'focus ring',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'toggle.tsx: focus-visible:ring-[3px] ring-ring/50',
     read: (spec) {
       final border = flexForegroundOf(spec.spec.container)?.border;
@@ -661,7 +628,6 @@ final _toggleTargets = <SpecTarget>[
   ),
   _toggle(
     'transition',
-    phase: 'E',
     source: 'toggle.tsx: transition-[color,box-shadow]',
     read: (spec) => spec.animation,
     expected: (_) => VanillaMotion.standard,
@@ -681,7 +647,6 @@ SpecTarget _toggleGroup(
   'toggle group',
   property,
   source: source,
-  phase: 'F1',
   style: () => vanillaToggleGroupStyle(variant: variant),
   states: states,
   read: read,
@@ -736,7 +701,6 @@ SpecTarget _textField(
   String property, {
   bool area = false,
   Set<WidgetState> states = const {},
-  String phase = 'F2',
   required String source,
   required Object? Function(StyleSpec<TextFieldSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -744,7 +708,6 @@ SpecTarget _textField(
   area ? 'text area' : 'text field',
   property,
   source: source,
-  phase: phase,
   style: area ? vanillaTextAreaStyle : vanillaTextFieldStyle,
   states: states,
   read: read,
@@ -845,7 +808,6 @@ final _textFieldTargets = <SpecTarget>[
   _textField(
     'focus ring',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'input.tsx: focus-visible:ring-[3px] ring-ring/50',
     read: (spec) => spec.spec.containerEffects?.outline,
     expected: _focusRing,
@@ -853,7 +815,6 @@ final _textFieldTargets = <SpecTarget>[
   _textField(
     'focus border',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'input.tsx: focus-visible:border-ring',
     read: (spec) => decorationOf(spec.spec.container)?.border,
     expected: (theme) => _hairline(theme.ring),
@@ -865,7 +826,6 @@ final _textFieldTargets = <SpecTarget>[
 SpecTarget _select(
   String property, {
   Set<WidgetState> states = const {},
-  String phase = 'F2',
   required String source,
   required Object? Function(StyleSpec<SelectSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -873,7 +833,6 @@ SpecTarget _select(
   'select',
   property,
   source: source,
-  phase: phase,
   style: vanillaSelectStyle,
   states: states,
   read: read,
@@ -981,7 +940,6 @@ final _selectTargets = <SpecTarget>[
   _select(
     'trigger focus ring',
     states: const {WidgetState.focused},
-    phase: 'E',
     source: 'select.tsx: focus-visible:ring-[3px] ring-ring/50',
     read: (spec) => spec.spec.trigger.spec.containerEffects?.outline,
     expected: _focusRing,
@@ -993,7 +951,6 @@ final _selectTargets = <SpecTarget>[
 SpecTarget _checkbox(
   String property, {
   bool selected = false,
-  String phase = 'F2',
   required String source,
   required Object? Function(StyleSpec<CheckboxSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -1001,7 +958,6 @@ SpecTarget _checkbox(
   'checkbox',
   property,
   source: source,
-  phase: phase,
   widget: () =>
       VanillaCheckbox(selected: selected, label: 'Probe', onChanged: (_) {}),
   read: read,
@@ -1077,7 +1033,6 @@ SpecTarget _radio(
   'radio',
   property,
   source: source,
-  phase: 'F2',
   style: vanillaRadioStyle,
   states: states,
   read: read,
@@ -1134,7 +1089,6 @@ SpecTarget _switch(
   'switch',
   property,
   source: source,
-  phase: 'F2',
   style: vanillaSwitchStyle,
   states: states,
   read: read,
@@ -1196,7 +1150,6 @@ SpecTarget _slider(
   'slider',
   property,
   source: source,
-  phase: 'F2',
   style: vanillaSliderStyle,
   states: states,
   read: read,
@@ -1246,7 +1199,6 @@ final _tabsTargets = <SpecTarget>[
     'tabs',
     'list',
     source: 'tabs.tsx: TabsList h-9 p-[3px] rounded-lg bg-muted',
-    phase: 'F3',
     style: vanillaTabBarStyle,
     read: (spec) {
       final box = boxOf(spec.spec.container);
@@ -1268,7 +1220,6 @@ final _tabsTargets = <SpecTarget>[
     'tabs',
     'tab',
     source: 'tabs.tsx: TabsTrigger rounded-md px-2 py-1 gap-1.5 text-sm',
-    phase: 'F3',
     style: vanillaTabStyle,
     read: (spec) => (
       boxOf(spec.spec.container)?.padding,
@@ -1287,7 +1238,6 @@ final _tabsTargets = <SpecTarget>[
     'tabs',
     'inactive label',
     source: 'tabs.tsx: text-foreground/60 dark:text-muted-foreground',
-    phase: 'F3',
     style: vanillaTabStyle,
     read: (spec) => spec.spec.label.spec.style?.color,
     expected: (theme) =>
@@ -1298,7 +1248,6 @@ final _tabsTargets = <SpecTarget>[
     'active tab',
     source:
         'tabs.tsx: data-[state=active]:bg-background dark:bg-input/30 shadow-sm',
-    phase: 'F3',
     style: vanillaTabStyle,
     states: const {WidgetState.selected},
     read: (spec) => (
@@ -1313,7 +1262,6 @@ final _tabsTargets = <SpecTarget>[
     'segmented control',
     'track',
     source: 'tabs.tsx: TabsList p-[3px] rounded-lg bg-muted',
-    phase: 'F3',
     style: vanillaSegmentedControlStyle,
     read: (spec) => (
       spec.spec.container.spec.padding,
@@ -1330,7 +1278,6 @@ final _tabsTargets = <SpecTarget>[
     'segmented control',
     'chosen segment',
     source: 'tabs.tsx: rounded-md data-[state=active]:bg-background shadow-sm',
-    phase: 'F3',
     style: vanillaSegmentedControlStyle,
     states: const {WidgetState.selected},
     read: (spec) {
@@ -1345,7 +1292,7 @@ final _tabsTargets = <SpecTarget>[
     },
     expected: (theme) => (
       _rounded(theme, VanillaTokens.radiusMd),
-      _currentTabFill(theme),
+      _chosenSegmentFill(theme),
       _effectShadows(VanillaShadow.sm),
       _isDark(theme) ? _hairline(theme.input) : paintsNoBorder,
     ),
@@ -1354,7 +1301,6 @@ final _tabsTargets = <SpecTarget>[
     'tabs',
     'line list',
     source: 'tabs.tsx: TabsList variant=line, bg-transparent',
-    phase: 'F3',
     style: () => vanillaTabBarStyle(variant: .line),
     read: (spec) => flexDecorationOf(spec.spec.container)?.color,
     expected: (_) => anyOf(isNull, const Color(0x00000000)),
@@ -1363,7 +1309,6 @@ final _tabsTargets = <SpecTarget>[
     'tabs',
     'line underline',
     source: 'tabs.tsx: variant=line, after:h-0.5 after:bg-foreground',
-    phase: 'F3',
     style: () => vanillaTabStyle(variant: .line),
     states: const {WidgetState.selected},
     read: (spec) {
@@ -1375,8 +1320,16 @@ final _tabsTargets = <SpecTarget>[
 ];
 
 /// The current tab's surface: the page, or `dark:bg-input/30`.
-Color _currentTabFill(VanillaThemeData theme) =>
+/// `input` at 30% is pre-blended over the `muted` list in the dark theme, so
+/// the decoration shadow cannot show through it (see Deviations).
+/// The chosen segment keeps `input` at 30% translucent: its shadow is in the
+/// effects layer, which does not show through the fill.
+Color _chosenSegmentFill(VanillaThemeData theme) =>
     _isDark(theme) ? tint(theme.input, 0.3) : theme.background;
+
+Color _currentTabFill(VanillaThemeData theme) => _isDark(theme)
+    ? Color.alphaBlend(tint(theme.input, 0.3), theme.muted)
+    : theme.background;
 
 // -- sidebar ------------------------------------------------------------------
 
@@ -1390,7 +1343,6 @@ SpecTarget _sidebar(
   'sidebar',
   property,
   source: source,
-  phase: 'F3',
   style: vanillaSidebarStyle,
   states: states,
   read: read,
@@ -1496,7 +1448,6 @@ final _sidebarTargets = <SpecTarget>[
     component: 'sidebar layout',
     property: 'collapsed width',
     source: 'sidebar.tsx: SIDEBAR_WIDTH_ICON = 3rem',
-    phase: 'F3',
     actual: (tester, theme) async => const VanillaSidebarLayout(
       sidebar: SizedBox.shrink(),
       body: SizedBox.shrink(),
@@ -1516,7 +1467,6 @@ SpecTarget _menu(
   'menu',
   property,
   source: source,
-  phase: 'F3',
   style: vanillaMenuStyle,
   read: read,
   expected: expected,
@@ -1575,7 +1525,6 @@ final _accordionTargets = <SpecTarget>[
     'accordion',
     'trigger',
     source: 'accordion.tsx: AccordionTrigger py-4 text-sm font-medium',
-    phase: 'F3',
     style: vanillaAccordionStyle,
     read: (spec) => (
       boxOf(spec.spec.trigger)?.padding,
@@ -1589,7 +1538,6 @@ final _accordionTargets = <SpecTarget>[
     'accordion',
     'chevron',
     source: 'accordion.tsx: ChevronDownIcon size-4 text-muted-foreground',
-    phase: 'F3',
     style: vanillaAccordionStyle,
     read: (spec) =>
         (spec.spec.trailingIcon.spec.size, spec.spec.trailingIcon.spec.color),
@@ -1599,7 +1547,6 @@ final _accordionTargets = <SpecTarget>[
     'accordion',
     'underline on hover',
     source: 'accordion.tsx: hover:underline',
-    phase: 'F3',
     style: vanillaAccordionStyle,
     states: const {WidgetState.hovered},
     read: (spec) => spec.spec.title.spec.style?.decoration,
@@ -1609,7 +1556,6 @@ final _accordionTargets = <SpecTarget>[
     'accordion',
     'content',
     source: 'accordion.tsx: AccordionContent pt-0 pb-4',
-    phase: 'F3',
     style: vanillaAccordionStyle,
     read: (spec) => spec.spec.content.spec.padding,
     expected: (_) => const EdgeInsets.only(bottom: 16),
@@ -1618,7 +1564,6 @@ final _accordionTargets = <SpecTarget>[
     component: 'disclosure',
     property: 'trigger',
     source: 'accordion.tsx: AccordionTrigger py-4, no px',
-    phase: 'F3',
     actual: (tester, theme) async {
       final spec = await interactedSpec<DisclosureSpec>(
         tester,
@@ -1645,7 +1590,6 @@ final _surfaceTargets = <SpecTarget>[
     'card',
     'surface',
     source: 'card.tsx: rounded-xl border bg-card py-6 shadow-sm',
-    phase: 'F4',
     style: vanillaCardStyle,
     read: (spec) {
       final decoration = decorationOf(spec.spec.container);
@@ -1669,7 +1613,6 @@ final _surfaceTargets = <SpecTarget>[
     'dialog',
     'panel',
     source: 'dialog.tsx: rounded-lg border p-6 shadow-lg sm:max-w-lg',
-    phase: 'F4',
     style: vanillaDialogStyle,
     read: (spec) {
       final box = spec.spec.container.spec;
@@ -1692,7 +1635,6 @@ final _surfaceTargets = <SpecTarget>[
     'dialog',
     'title and description',
     source: 'dialog.tsx: text-lg font-semibold; text-sm text-muted-foreground',
-    phase: 'F4',
     style: vanillaDialogStyle,
     read: (spec) => (
       spec.spec.title.spec.style?.fontSize,
@@ -1706,7 +1648,6 @@ final _surfaceTargets = <SpecTarget>[
     'popover',
     'panel',
     source: 'popover.tsx: w-72 rounded-md border bg-popover p-4 shadow-md',
-    phase: 'F4',
     style: vanillaPopoverStyle,
     read: (spec) {
       final box = spec.spec.container.spec;
@@ -1733,7 +1674,6 @@ final _surfaceTargets = <SpecTarget>[
     'toast',
     'surface',
     source: 'sonner.tsx: --normal-bg popover, --border-radius radius',
-    phase: 'F4',
     style: vanillaToastStyle,
     read: (spec) {
       final decoration = flexDecorationOf(spec.spec.container);
@@ -1763,7 +1703,6 @@ final _surfaceTargets = <SpecTarget>[
     'tooltip',
     'bubble',
     source: 'tooltip.tsx: rounded-md px-3 py-1.5 text-xs',
-    phase: 'F4',
     style: vanillaTooltipStyle,
     read: (spec) => (
       decorationOf(spec.spec.container)?.borderRadius,
@@ -1780,7 +1719,6 @@ final _surfaceTargets = <SpecTarget>[
     'tooltip',
     'delay',
     source: 'tooltip.tsx: delayDuration = 0',
-    phase: 'F4',
     style: vanillaTooltipStyle,
     read: (spec) => spec.spec.waitDuration,
     expected: (_) => Duration.zero,
@@ -1789,7 +1727,6 @@ final _surfaceTargets = <SpecTarget>[
     'callout',
     'surface',
     source: 'alert.tsx: rounded-lg border px-4 py-3 gap-x-3 bg-card',
-    phase: 'F4',
     style: vanillaCalloutStyle,
     read: (spec) => (
       flexDecorationOf(spec.spec.container)?.borderRadius,
@@ -1808,7 +1745,6 @@ final _surfaceTargets = <SpecTarget>[
     'callout',
     'destructive text',
     source: 'alert.tsx: destructive, text-destructive',
-    phase: 'F4',
     style: () => vanillaCalloutStyle(variant: .destructive),
     read: (spec) => spec.spec.text.spec.style?.color,
     expected: (theme) => theme.destructive,
@@ -1822,7 +1758,6 @@ final _displayTargets = <SpecTarget>[
     'data table',
     'header',
     source: 'table.tsx: TableHead h-10 px-2 font-medium text-foreground',
-    phase: 'F5',
     style: vanillaDataTableStyle,
     read: (spec) => (
       decorationOf(spec.spec.headerRow)?.color,
@@ -1843,7 +1778,6 @@ final _displayTargets = <SpecTarget>[
     'data table',
     'cells',
     source: 'table.tsx: TableCell p-2',
-    phase: 'F5',
     style: vanillaDataTableStyle,
     read: (spec) => spec.spec.bodyCell.spec.padding,
     expected: (_) => const EdgeInsets.all(8),
@@ -1852,7 +1786,6 @@ final _displayTargets = <SpecTarget>[
     'data table',
     'row hover',
     source: 'table.tsx: TableRow hover:bg-muted/50',
-    phase: 'F5',
     style: vanillaDataTableStyle,
     states: const {WidgetState.hovered},
     read: (spec) => decorationOf(spec.spec.bodyRow)?.color,
@@ -1862,7 +1795,6 @@ final _displayTargets = <SpecTarget>[
     'data table',
     'selected row',
     source: 'table.tsx: TableRow data-[state=selected]:bg-muted',
-    phase: 'F5',
     style: vanillaDataTableStyle,
     states: const {WidgetState.selected},
     read: (spec) => decorationOf(spec.spec.bodyRow)?.color,
@@ -1872,7 +1804,6 @@ final _displayTargets = <SpecTarget>[
     'avatar',
     'fallback',
     source: 'avatar.tsx: size-8; AvatarFallback bg-muted text-muted-foreground',
-    phase: 'F5',
     style: vanillaAvatarStyle,
     read: (spec) => (
       spec.spec.container.spec.constraints,
@@ -1891,7 +1822,6 @@ final _displayTargets = <SpecTarget>[
     'skeleton',
     'pulse',
     source: 'skeleton.tsx: animate-pulse rounded-md bg-accent',
-    phase: 'F5',
     style: vanillaSkeletonStyle,
     read: (spec) => (
       decorationOf(spec.spec.container)?.color,
@@ -1908,7 +1838,6 @@ final _displayTargets = <SpecTarget>[
     'progress',
     'track',
     source: 'progress.tsx: bg-primary/20',
-    phase: 'F5',
     style: vanillaProgressStyle,
     read: (spec) => decorationOf(spec.spec.track)?.color,
     expected: (theme) => tint(theme.primary, 0.2),
@@ -1919,7 +1848,6 @@ final _displayTargets = <SpecTarget>[
     source:
         'chart.tsx: ChartTooltipContent rounded-lg border-border/50 '
         'px-2.5 py-1.5 text-xs',
-    phase: 'F5',
     style: vanillaLineChartStyle,
     read: (spec) {
       final tooltip = spec.spec.tooltip!.spec;
@@ -1941,7 +1869,6 @@ final _displayTargets = <SpecTarget>[
     'chart',
     'axis labels',
     source: 'chart.tsx: text-xs',
-    phase: 'F5',
     style: vanillaLineChartStyle,
     read: (spec) => spec.spec.axis!.spec.label!.spec.style?.fontSize,
     expected: (_) => 12.0,
@@ -1950,7 +1877,6 @@ final _displayTargets = <SpecTarget>[
     'spinner',
     'size',
     source: 'spinner.tsx: size-4',
-    phase: 'F5',
     style: vanillaSpinnerStyle,
     read: (spec) => spec.spec.size,
     expected: (_) => 16.0,

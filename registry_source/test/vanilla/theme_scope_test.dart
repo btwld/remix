@@ -47,6 +47,33 @@ void main() {
       expectBodyRun(runOf(tester), theme);
     });
 
+    testWidgets('$name text in a Scaffold follows the Material theme', (
+      tester,
+    ) async {
+      // A `Material` sets its own text style from the host's `ThemeData`, so
+      // a Scaffold's text follows that theme, not the scope's body run. The
+      // docs say to give the host the scope's brightness; with it, the text
+      // reads on the theme's page.
+      final host = ThemeData(brightness: theme.brightness);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: host,
+          builder: (context, child) => VanillaThemeScope(
+            theme: light,
+            darkTheme: dark,
+            mode: name == 'light' ? .light : .dark,
+            child: child!,
+          ),
+          home: const Scaffold(body: Text('probe')),
+        ),
+      );
+
+      final style = runOf(tester);
+      expect(style.color, host.textTheme.bodyMedium!.color);
+      final contrast = _contrast(style.color!, theme.background);
+      expect(contrast, greaterThan(4.5), reason: 'contrast $contrast');
+    });
+
     testWidgets('$name text under a WidgetsApp', (tester) async {
       await tester.pumpWidget(
         WidgetsApp(
@@ -195,4 +222,12 @@ void main() {
     expect(runOf(tester).fontSize, 30);
     expect(runOf(tester).color, const Color(0xFF123456));
   });
+}
+
+/// The WCAG contrast ratio of two opaque colors.
+double _contrast(Color a, Color b) {
+  final la = a.computeLuminance();
+  final lb = b.computeLuminance();
+  final (high, low) = la > lb ? (la, lb) : (lb, la);
+  return (high + 0.05) / (low + 0.05);
 }

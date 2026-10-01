@@ -594,6 +594,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
+        style: {{valuePrefix}}DashboardLineStyle(),
       ),
       .linePatterns => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -631,6 +632,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
+        style: {{valuePrefix}}DashboardLineStyle(),
       ),
       .stepGaps => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -653,6 +655,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
+        style: {{valuePrefix}}DashboardLineStyle(),
       ),
       .viewportLabels => {{typePrefix}}LineChart(
         showMarkers: true,
@@ -675,26 +678,31 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         ],
         xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
+        style: {{valuePrefix}}DashboardLineStyle(),
       ),
       .groupedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly actual and planned revenue',
         groups: {{valuePrefix}}DashboardGroupedBars(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
+        style: {{valuePrefix}}DashboardBarStyle(),
       ),
       .stackedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly product and services revenue',
         groups: {{valuePrefix}}DashboardStackedBars(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
+        style: {{valuePrefix}}DashboardBarStyle(),
       ),
       .floatingBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly floating inventory changes',
         groups: {{valuePrefix}}DashboardFloatingBars(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
+        style: {{valuePrefix}}DashboardBarStyle(),
       ),
       .trackedBars => {{typePrefix}}BarChart(
         semanticsLabel: 'Monthly revenue against full-scale tracks',
         groups: {{valuePrefix}}DashboardTrackedBars(),
         yAxis: {{valuePrefix}}DashboardNumericAxis(max: 70),
+        style: {{valuePrefix}}DashboardBarStyle(),
       ),
       .trafficPie => {{typePrefix}}PieChart(
         style: _pieRing(),
