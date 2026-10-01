@@ -13,6 +13,7 @@ export 'naked_scrollbar.dart';
 export 'naked_select.dart';
 export 'naked_slider.dart';
 export 'naked_tabs.dart';
+export 'naked_text_magnifier.dart';
 export 'naked_textfield.dart';
 export 'naked_toast.dart';
 export 'naked_toggle.dart';

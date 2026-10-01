@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart'
+    show CupertinoDynamicColor, CupertinoTheme, CupertinoThemeData;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,138 @@ int _semanticTextOccurrences(WidgetTester tester, String text) {
 
 void main() {
   group('RemixTextField', () {
+    group('Selection handles', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        testWidgets(
+          'shows draggable handles after selecting text on $platform',
+          (tester) async {
+            debugDefaultTargetPlatformOverride = platform;
+            try {
+              final controller = TextEditingController(text: 'hello world');
+              addTearDown(controller.dispose);
+              await tester.pumpRemixApp(
+                SizedBox(
+                  width: 300,
+                  child: RemixTextField(controller: controller),
+                ),
+              );
+
+              final editable = find.byType(EditableText);
+              final textStart =
+                  tester.getTopLeft(editable) + const Offset(24, 12);
+              await tester.longPressAt(textStart);
+              await tester.pumpAndSettle();
+
+              final handles = find.byKey(
+                const ValueKey('remix-text-selection-handle'),
+              );
+              expect(handles, findsNWidgets(2));
+              final selectionBeforeDrag = controller.selection;
+
+              await tester.drag(handles.last, const Offset(48, 0));
+              await tester.pump();
+              expect(controller.selection, isNot(selectionBeforeDrag));
+            } finally {
+              debugDefaultTargetPlatformOverride = null;
+            }
+          },
+        );
+      }
+
+      testWidgets('keeps caller controls and disabled selection', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixTextField(selectionControls: emptyTextSelectionControls),
+        );
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .selectionControls,
+          same(emptyTextSelectionControls),
+        );
+
+        await tester.pumpRemixApp(
+          const RemixTextField(enableInteractiveSelection: false),
+        );
+        expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText))
+              .selectionControls,
+          isNull,
+        );
+      });
+
+      testWidgets('uses caller-resolved dark high-contrast selection colors', (
+        tester,
+      ) async {
+        const cursor = CupertinoDynamicColor.withBrightnessAndContrast(
+          color: Color(0xFF112233),
+          darkColor: Color(0xFF445566),
+          highContrastColor: Color(0xFF778899),
+          darkHighContrastColor: Color(0xFFAABBCC),
+        );
+        const selection = CupertinoDynamicColor.withBrightnessAndContrast(
+          color: Color(0x33112233),
+          darkColor: Color(0x33445566),
+          highContrastColor: Color(0x33778899),
+          darkHighContrastColor: Color(0x33AABBCC),
+        );
+        final controller = TextEditingController(text: 'hello world');
+        addTearDown(controller.dispose);
+        await tester.pumpRemixApp(
+          MediaQuery(
+            data: const MediaQueryData(
+              platformBrightness: Brightness.dark,
+              highContrast: true,
+            ),
+            child: CupertinoTheme(
+              data: const CupertinoThemeData(brightness: Brightness.dark),
+              child: Builder(
+                builder: (context) => DefaultSelectionStyle(
+                  cursorColor: cursor.resolveFrom(context),
+                  selectionColor: selection.resolveFrom(context),
+                  child: SizedBox(
+                    width: 300,
+                    child: RemixTextField(controller: controller),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        final editable = find.byType(EditableText);
+        await tester.tap(editable);
+        await tester.pump();
+        expect(
+          tester.widget<EditableText>(editable).cursorColor.toARGB32(),
+          const Color(0xFFAABBCC).toARGB32(),
+        );
+        expect(
+          tester.widget<EditableText>(editable).selectionColor?.toARGB32(),
+          const Color(0x33AABBCC).toARGB32(),
+        );
+
+        await tester.longPressAt(
+          tester.getTopLeft(editable) + const Offset(24, 12),
+        );
+        await tester.pumpAndSettle();
+        final handles = find.byKey(
+          const ValueKey('remix-text-selection-handle'),
+        );
+        expect(handles, findsNWidgets(2));
+        final stem = find.descendant(
+          of: handles.first,
+          matching: find.byType(ColoredBox),
+        );
+        expect(
+          tester.widget<ColoredBox>(stem).color.toARGB32(),
+          const Color(0xFFAABBCC).toARGB32(),
+        );
+      });
+    });
+
     group('Basic Rendering', () {
       testWidgets('renders with default style', (tester) async {
         await tester.pumpRemixApp(const RemixTextField());
