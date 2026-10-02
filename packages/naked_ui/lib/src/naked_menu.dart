@@ -752,10 +752,6 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
     _registeredNode = triggers == null ? null : node;
   }
 
-  void _traverseBar({required bool forward}) {
-    _menubar?.triggers.move(effectiveFocusNode, forward: forward);
-  }
-
   @override
   void dispose() {
     final node = _registeredNode;
@@ -883,22 +879,6 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
             ),
           ),
         );
-        if (menubar != null) {
-          // The overlay is outside the bar's subtree, so bar traversal is
-          // re-bound here. Home/End are left to the menu's own bindings.
-          final direction = Directionality.of(context);
-          panel = Shortcuts(
-            shortcuts: NakedIntentActions.menubar.traversalShortcuts(direction),
-            child: Actions(
-              actions: NakedIntentActions.menubar.traversalActions(
-                onNext: () => _traverseBar(forward: true),
-                onPrevious: () => _traverseBar(forward: false),
-              ),
-              child: panel,
-            ),
-          );
-        }
-
         return AnchoredOverlay(
           info: info,
           positioning: widget.positioning,

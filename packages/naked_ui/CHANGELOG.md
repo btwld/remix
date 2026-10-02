@@ -25,6 +25,9 @@
   before every close, including Escape on the trigger, an ancestor scroll, and
   a view resize. These used to close the overlay without calling
   `onOpenChanged`.
+- Remove the duplicate horizontal traversal binding from menubar overlays.
+  `OverlayPortal` preserves the bar ancestry, while menu panels retain their
+  own Home/End bindings; arrow traversal behavior is unchanged.
 
 ### Evaluated and skipped
 
