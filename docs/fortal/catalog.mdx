@@ -499,13 +499,20 @@ Radix `Popover.Content` · recipe `registry_source/lib/src/fortal/components/pop
 
 Radix `Tooltip` · recipe `registry_source/lib/src/fortal/components/tooltip.dart`
 
-**Other defaults:** `arrow: true`, `collisionPadding: 10`, `delayMilliseconds: 200`, `disableHoverableContent: false`, `maxWidth: 360`, `sideOffset: 4`
+**Other defaults:** `collisionPadding: 0`, `delayMilliseconds: 200`, `sideOffset: 0`
 
-**States:** `closed`, `delayedOpen`, `triggerHovered`, `focused`, `touch`, `escape`
+**States:** `closed`, `delayedOpen`, `triggerHovered`, `touch`
 
 **Flutter differences:**
 
-- OverlayPositionConfig and resolved OverlayPlacement drive a CustomPaint arrow after collision resolution; width constraints use logical pixels.
+- RawTooltip owns hover and touch triggers, animation, and overlay lifetime; tooltipKey supports command-triggered showing and onOpenChanged reports visibility after the frame.
+- OverlayPositionConfig provides collision-aware placement. Fortal renders no arrow, applies no default maximum width, and does not expose resolved OverlayPlacement to tooltip content.
+
+**Not covered:**
+
+- Controlled open and per-instance dismissal are unavailable; RawTooltip exposes no per-instance dismiss method.
+- Opening on keyboard focus and Escape dismissal are unavailable on the supported Flutter SDK floor.
+- disableHoverableContent is omitted to preserve the Flutter 3.41 floor; RawTooltip.ignorePointer requires Flutter 3.44.
 
 ## Feedback
 

@@ -3387,21 +3387,16 @@
       "parity": "mapped",
       "enums": {},
       "defaults": {
-        "maxWidth": 360,
         "delayMilliseconds": 200,
-        "sideOffset": 4,
-        "collisionPadding": 10,
-        "disableHoverableContent": false,
-        "arrow": true
+        "sideOffset": 0,
+        "collisionPadding": 0
       },
       "supportedStyleProps": [],
       "states": [
         "closed",
         "delayedOpen",
         "triggerHovered",
-        "focused",
-        "touch",
-        "escape"
+        "touch"
       ],
       "sourceFiles": [
         "src/components/tooltip.props.tsx",
@@ -3414,7 +3409,8 @@
         ".rt-TooltipArrow"
       ],
       "flutterExceptions": [
-        "OverlayPositionConfig and resolved OverlayPlacement drive a CustomPaint arrow after collision resolution; width constraints use logical pixels."
+        "RawTooltip owns hover and touch triggers, animation, and overlay lifetime; tooltipKey supports command-triggered showing and onOpenChanged reports visibility after the frame.",
+        "OverlayPositionConfig provides collision-aware placement. Fortal renders no arrow, applies no default maximum width, and does not expose resolved OverlayPlacement to tooltip content."
       ],
       "coverage": {
         "enums": [],
@@ -3422,9 +3418,7 @@
           "closed",
           "delayedOpen",
           "triggerHovered",
-          "focused",
-          "touch",
-          "escape"
+          "touch"
         ],
         "tests": [
           "test/components/tooltip/tooltip_widget_test.dart",
@@ -3453,11 +3447,13 @@
         "closed",
         "delayedOpen",
         "triggerHovered",
-        "focused",
-        "touch",
-        "escape"
+        "touch"
       ],
-      "deferredCapabilities": [],
+      "deferredCapabilities": [
+        "Controlled open and per-instance dismissal are unavailable; RawTooltip exposes no per-instance dismiss method.",
+        "Opening on keyboard focus and Escape dismissal are unavailable on the supported Flutter SDK floor.",
+        "disableHoverableContent is omitted to preserve the Flutter 3.41 floor; RawTooltip.ignorePointer requires Flutter 3.44."
+      ],
       "visualMapping": {
         "color": "FortalScope.accent",
         "radius": "FortalScope.radius",

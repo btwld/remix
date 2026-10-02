@@ -155,8 +155,11 @@ routes and require a caller-provided `Navigator`; toasts require a
   `RemixDialog` also takes `scrollable` (default `false`).
 - **showRemixAlertDialog** — requires a nonempty, localized `semanticLabel`;
   the barrier is non-dismissible by default.
-- **RemixTooltip** — has controlled `open`/`onOpenChanged` in addition to
-  hover/long-press behavior. Its resolved `TooltipStyler.label(...)` spec is
+- **RemixTooltip** — uses `RawTooltip` for hover and touch behavior.
+  `onOpenChanged` reports visibility after the frame; pass a
+  `GlobalKey<RawTooltipState>` as `tooltipKey` to call `ensureTooltipVisible()`.
+  Controlled `open`, focus-open, and tooltip Escape dismissal are unavailable
+  on the supported SDK floor. Its resolved `TooltipStyler.label(...)` spec is
   applied through `DefaultTextStyle`, so ordinary descendant `Text` widgets
   inside an arbitrary `tooltipChild` inherit the custom label style without
   requiring a single `Text` child. Base default `waitDuration` is 300ms; the
