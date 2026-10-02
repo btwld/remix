@@ -21,7 +21,9 @@
 ### Fixes
 
 - Defer `NakedTooltip.onOpenChanged` notifications until after the current
-  frame, so consumers can safely call `setState` from the callback.
+  frame, so consumers can safely call `setState` from the callback. Pending
+  notifications are discarded when the tooltip is removed, and replacing
+  `tooltipKey` reports closure before the new raw tooltip can open.
 - `NakedTextMagnifier` now updates its position and focal point when its
   notifier, size, magnification scale, or vertical shift changes, without
   waiting for the notifier's next update.
@@ -69,8 +71,8 @@
 
 ### Docs
 
-- Document `NakedTooltip` as built on `RawTooltip`. The 1.0 Flutter 3.41
-  requirement is tied to the raw tooltip APIs it uses.
+- Document `NakedTooltip` as built on `RawMenuAnchor`. The 1.0 Flutter 3.41
+  requirement was originally tied to `RawTooltip`; the tooltip no longer uses it.
 
 ## 1.0.2
 

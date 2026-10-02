@@ -374,6 +374,13 @@ void main() {
       expect(RawTooltip.dismissAllToolTips(), isTrue);
       await tester.pumpAndSettle();
       expect(changes, [true, false]);
+
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+      expect(changes, [true, false, true]);
+      RawTooltip.dismissAllToolTips();
+      await tester.pumpAndSettle();
+      expect(changes, [true, false, true, false]);
     });
 
     testWidgets('defers visibility notifications until after build', (
@@ -400,6 +407,74 @@ void main() {
       expect(find.text('Deferred'), findsOneWidget);
       expect(rebuilds, 1);
       expect(tester.takeException(), isNull);
+
+      RawTooltip.dismissAllToolTips();
+      await tester.pumpAndSettle();
+      expect(rebuilds, 2);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('does not deliver pending notifications after removal', (
+      WidgetTester tester,
+    ) async {
+      final tooltipKey = GlobalKey<RawTooltipState>();
+      final changes = <bool>[];
+      await tester.pumpMaterialWidget(
+        NakedTooltip(
+          tooltipKey: tooltipKey,
+          onOpenChanged: changes.add,
+          triggerMode: TooltipTriggerMode.manual,
+          animationStyle: AnimationStyle.noAnimation,
+          overlayBuilder: (context, animation) => const Text('Removed'),
+          child: const SizedBox(width: 100, height: 40),
+        ),
+      );
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+      expect(changes, [true]);
+
+      RawTooltip.dismissAllToolTips();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      expect(changes, [true]);
+    });
+
+    testWidgets('reports closure and reopening when tooltipKey changes', (
+      WidgetTester tester,
+    ) async {
+      var tooltipKey = GlobalKey<RawTooltipState>();
+      final changes = <bool>[];
+      late StateSetter rebuild;
+      await tester.pumpMaterialWidget(
+        StatefulBuilder(
+          builder: (context, setState) {
+            rebuild = setState;
+            return NakedTooltip(
+              tooltipKey: tooltipKey,
+              onOpenChanged: changes.add,
+              triggerMode: TooltipTriggerMode.manual,
+              animationStyle: AnimationStyle.noAnimation,
+              overlayBuilder: (context, animation) => const Text('Replaced'),
+              child: const SizedBox(width: 100, height: 40),
+            );
+          },
+        ),
+      );
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+      expect(changes, [true]);
+
+      rebuild(() => tooltipKey = GlobalKey<RawTooltipState>());
+      await tester.pumpAndSettle();
+      expect(find.text('Replaced'), findsNothing);
+      expect(changes, [true, false]);
+
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+      expect(find.text('Replaced'), findsOneWidget);
+      expect(changes, [true, false, true]);
+      RawTooltip.dismissAllToolTips();
+      await tester.pumpAndSettle();
     });
 
     group('Hoverable content', () {

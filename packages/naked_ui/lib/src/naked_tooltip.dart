@@ -56,6 +56,7 @@ class NakedTooltip extends StatefulWidget {
   /// Reports the visible state after the raw tooltip's animation changes.
   ///
   /// This is a notification only. Visibility is owned by [RawTooltip].
+  /// Notifications arrive after the frame and stop when this widget is disposed.
   final ValueChanged<bool>? onOpenChanged;
 
   /// The semantic label attached to the trigger.
@@ -105,6 +106,18 @@ class NakedTooltip extends StatefulWidget {
 }
 
 class _NakedTooltipState extends State<NakedTooltip> {
+  bool _visible = false;
+
+  void _reportVisibility(bool visible) {
+    if (_visible == visible) return;
+    _visible = visible;
+    // The overlay can first report visibility during build. Deliver from the
+    // owner so closing survives overlay removal, but not tooltip disposal.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) widget.onOpenChanged?.call(visible);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
@@ -119,7 +132,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
       tooltipBuilder: (context, animation) => _NakedTooltipOverlay(
         animation: animation,
         overlayBuilder: widget.overlayBuilder,
-        onOpenChanged: widget.onOpenChanged,
+        onOpenChanged: _reportVisibility,
         excludeSemantics: widget.excludeSemantics,
         excludeOverlaySemantics: widget.excludeOverlaySemantics,
         semanticLabel: widget.semanticLabel,
@@ -180,7 +193,7 @@ class _NakedTooltipOverlay extends StatefulWidget {
 
   final Animation<double> animation;
   final TooltipComponentBuilder overlayBuilder;
-  final ValueChanged<bool>? onOpenChanged;
+  final ValueChanged<bool> onOpenChanged;
   final bool excludeSemantics;
   final bool? excludeOverlaySemantics;
   final String? semanticLabel;
@@ -190,32 +203,12 @@ class _NakedTooltipOverlay extends StatefulWidget {
 }
 
 class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
-  bool? _pendingVisibility;
-  bool _notificationScheduled = false;
-  bool? _lastNotified;
-
   void _handleStatusChanged(AnimationStatus status) {
     if (status.isDismissed) {
-      _deferVisibility(false);
+      widget.onOpenChanged(false);
     } else if (status == AnimationStatus.forward) {
-      _deferVisibility(true);
+      widget.onOpenChanged(true);
     }
-  }
-
-  void _deferVisibility(bool visible) {
-    if (widget.onOpenChanged == null) return;
-    if (_lastNotified == visible && _pendingVisibility == null) return;
-    _pendingVisibility = visible;
-    if (_notificationScheduled) return;
-    _notificationScheduled = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _notificationScheduled = false;
-      final next = _pendingVisibility;
-      _pendingVisibility = null;
-      if (next == null || _lastNotified == next) return;
-      _lastNotified = next;
-      widget.onOpenChanged?.call(next);
-    });
   }
 
   @override
@@ -224,7 +217,7 @@ class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
     widget.animation.addStatusListener(_handleStatusChanged);
     if (widget.animation.status == AnimationStatus.forward ||
         widget.animation.status == AnimationStatus.completed) {
-      _deferVisibility(true);
+      widget.onOpenChanged(true);
     }
   }
 
@@ -240,6 +233,8 @@ class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
   @override
   void dispose() {
     widget.animation.removeStatusListener(_handleStatusChanged);
+    // Replacing the raw tooltip's key removes its overlay without reversing.
+    widget.onOpenChanged(false);
     super.dispose();
   }
 
