@@ -5,9 +5,10 @@ import 'package:flutter/widgets.dart';
 
 /// Headless text magnifier built on [RawMagnifier].
 ///
-/// Positioning follows the Android loupe rules: the lens tracks the gesture
-/// along the current line, stays on screen, and animates only when the caret
-/// jumps between lines. Visuals come from [decoration].
+/// [RawMagnifier] paints the lens using [size], [magnificationScale], and
+/// [decoration]. This widget adds Android loupe positioning: the lens tracks
+/// the gesture along the current line, stays on screen, and animates when the
+/// caret jumps between lines.
 class NakedTextMagnifier extends StatefulWidget {
   static final TextMagnifierConfiguration _defaultMobileConfiguration =
       configuration();
@@ -29,7 +30,7 @@ class NakedTextMagnifier extends StatefulWidget {
   /// Lens size. Does not include decoration shadows.
   final Size size;
 
-  /// How far the lens zooms. `1` is no magnification.
+  /// How far the lens zooms. Defaults to `1.25`; `1` is no magnification.
   final double magnificationScale;
 
   /// Shape, shadows, and opacity of the lens.
@@ -107,9 +108,16 @@ class _NakedTextMagnifierState extends State<NakedTextMagnifier> {
   @override
   void didUpdateWidget(NakedTextMagnifier oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.magnifierInfo != widget.magnifierInfo) {
+    final infoChanged = oldWidget.magnifierInfo != widget.magnifierInfo;
+    if (infoChanged) {
       oldWidget.magnifierInfo.removeListener(_position);
       widget.magnifierInfo.addListener(_position);
+    }
+    if (infoChanged ||
+        oldWidget.size != widget.size ||
+        oldWidget.magnificationScale != widget.magnificationScale ||
+        oldWidget.verticalFocalPointShift != widget.verticalFocalPointShift) {
+      _position();
     }
   }
 

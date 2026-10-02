@@ -46,6 +46,123 @@ void main() {
     );
   });
 
+  testWidgets('repositions when the magnifier info notifier is replaced', (
+    tester,
+  ) async {
+    final oldInfo = ValueNotifier<MagnifierInfo>(
+      const MagnifierInfo(
+        globalGesturePosition: Offset(100, 80),
+        caretRect: Rect.fromLTWH(100, 80, 2, 20),
+        fieldBounds: Rect.fromLTWH(0, 40, 200, 120),
+        currentLineBoundaries: Rect.fromLTWH(0, 80, 200, 20),
+      ),
+    );
+    final newInfo = ValueNotifier<MagnifierInfo>(
+      const MagnifierInfo(
+        globalGesturePosition: Offset(180, 120),
+        caretRect: Rect.fromLTWH(180, 120, 2, 20),
+        fieldBounds: Rect.fromLTWH(0, 40, 200, 120),
+        currentLineBoundaries: Rect.fromLTWH(0, 120, 200, 20),
+      ),
+    );
+    addTearDown(oldInfo.dispose);
+    addTearDown(newInfo.dispose);
+
+    await tester.pumpWidget(
+      _magnifierHost(NakedTextMagnifier(magnifierInfo: oldInfo)),
+    );
+    expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(60, 28));
+
+    await tester.pumpWidget(
+      _magnifierHost(NakedTextMagnifier(magnifierInfo: newInfo)),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(120, 68));
+
+    newInfo.value = const MagnifierInfo(
+      globalGesturePosition: Offset(100, 120),
+      caretRect: Rect.fromLTWH(100, 120, 2, 20),
+      fieldBounds: Rect.fromLTWH(0, 40, 200, 120),
+      currentLineBoundaries: Rect.fromLTWH(0, 120, 200, 20),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(60, 68));
+  });
+
+  for (final configuration in [
+    (
+      name: 'size',
+      size: const Size(120, 60),
+      scale: 1.25,
+      shift: 22.0,
+      position: const Offset(80, 0),
+      focalPoint: const Offset(35, 0),
+    ),
+    (
+      name: 'scale',
+      size: const Size(80, 40),
+      scale: 2.5,
+      shift: 22.0,
+      position: const Offset(120, 0),
+      focalPoint: const Offset(6, 10),
+    ),
+    (
+      name: 'vertical shift',
+      size: const Size(80, 40),
+      scale: 1.25,
+      shift: 46.0,
+      position: const Offset(120, 0),
+      focalPoint: const Offset(15, 10),
+    ),
+  ]) {
+    testWidgets('updates clamped geometry when ${configuration.name} changes', (
+      tester,
+    ) async {
+      final info = ValueNotifier<MagnifierInfo>(
+        const MagnifierInfo(
+          globalGesturePosition: Offset(180, 20),
+          caretRect: Rect.fromLTWH(180, 20, 2, 20),
+          fieldBounds: Rect.fromLTWH(150, 0, 50, 120),
+          currentLineBoundaries: Rect.fromLTWH(150, 20, 50, 20),
+        ),
+      );
+      addTearDown(info.dispose);
+
+      await tester.pumpWidget(
+        _magnifierHost(NakedTextMagnifier(magnifierInfo: info)),
+      );
+      expect(
+        tester.getTopLeft(find.byType(RawMagnifier)),
+        const Offset(120, 0),
+      );
+      expect(
+        tester.widget<RawMagnifier>(find.byType(RawMagnifier)).focalPointOffset,
+        const Offset(15, 10),
+      );
+
+      await tester.pumpWidget(
+        _magnifierHost(
+          NakedTextMagnifier(
+            magnifierInfo: info,
+            size: configuration.size,
+            magnificationScale: configuration.scale,
+            verticalFocalPointShift: configuration.shift,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getTopLeft(find.byType(RawMagnifier)),
+        configuration.position,
+      );
+      expect(
+        tester.widget<RawMagnifier>(find.byType(RawMagnifier)).focalPointOffset,
+        configuration.focalPoint,
+      );
+    });
+  }
+
   testWidgets('adaptive configuration is disabled on desktop', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     try {
@@ -117,4 +234,13 @@ void main() {
       },
     );
   }
+}
+
+Widget _magnifierHost(NakedTextMagnifier magnifier) {
+  return MaterialApp(
+    home: MediaQuery(
+      data: const MediaQueryData(size: Size(200, 200)),
+      child: Scaffold(body: Stack(children: [magnifier])),
+    ),
+  );
 }

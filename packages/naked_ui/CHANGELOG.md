@@ -2,6 +2,9 @@
 
 ### Fixes
 
+- `NakedTextMagnifier` now updates its position and focal point when its
+  notifier, size, magnification scale, or vertical shift changes, without
+  waiting for the notifier's next update.
 - A controlled `NakedSelect` (`open` + `onOpenChanged`) now asks its owner
   before every close, including Escape on the trigger, an ancestor scroll, and
   a view resize. These used to close the overlay without calling
