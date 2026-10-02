@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'base/overlay_base.dart';
 import 'naked_button.dart';
-import 'utilities/anchored_overlay_shell.dart';
+import 'utilities/anchored_overlay.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
@@ -343,33 +343,53 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
   T? get _effectiveValue => widget.value;
   bool get _isEnabled => widget.enabled && widget.onChanged != null;
 
-  bool get _isControlled => widget.open != null;
+  /// The open state the owner asked for, or null when uncontrolled.
+  bool? get _controlledOpen =>
+      widget.open == null ? null : _isEnabled && widget.open!;
 
   void _requestOpen(bool open) {
-    if (!_isEnabled && open) return;
-    if (_isControlled) {
-      if (widget.open != open) widget.onOpenChanged?.call(open);
-      return;
-    }
-    if (open == _menuController.isOpen) return;
+    if (open == _menuController.isOpen || (open && !_isEnabled)) return;
     open ? _menuController.open() : _menuController.close();
   }
 
   void _toggle() => _requestOpen(!_menuController.isOpen);
 
+  // Every open and close, including the ones RawMenuAnchor starts itself
+  // (Escape on the trigger, ancestor scroll, view resize), arrives here. A
+  // request that disagrees with the controlled state goes to the owner.
+  void _handleOpenRequested(Offset? position, VoidCallback showOverlay) {
+    if (_controlledOpen == false) {
+      if (_isEnabled) widget.onOpenChanged?.call(true);
+      return;
+    }
+    final onOpenRequested = widget.onOpenRequested;
+    onOpenRequested == null
+        ? showOverlay()
+        : onOpenRequested(position, showOverlay);
+  }
+
+  void _handleCloseRequested(VoidCallback hideOverlay) {
+    if (_controlledOpen == true) {
+      widget.onOpenChanged?.call(false);
+      return;
+    }
+    final onCloseRequested = widget.onCloseRequested;
+    onCloseRequested == null ? hideOverlay() : onCloseRequested(hideOverlay);
+  }
+
   void _scheduleControlledSync() {
-    if (!_isControlled) return;
+    if (_controlledOpen == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_isControlled) return;
-      final shouldOpen = _isEnabled && widget.open!;
-      if (shouldOpen == _menuController.isOpen) return;
+      if (!mounted) return;
+      final shouldOpen = _controlledOpen;
+      if (shouldOpen == null || shouldOpen == _menuController.isOpen) return;
       shouldOpen ? _menuController.open() : _menuController.close();
     });
   }
 
   void _handleOpen() {
     handleOpen(widget.onOpen);
-    if (!_isControlled) widget.onOpenChanged?.call(true);
+    if (_controlledOpen == null) widget.onOpenChanged?.call(true);
     if (mounted) setState(() {});
   }
 
@@ -379,7 +399,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
       onCanceled: widget.onCanceled,
       triggerFocusNode: widget.triggerFocusNode,
     );
-    if (!_isControlled) widget.onOpenChanged?.call(false);
+    if (_controlledOpen == null) widget.onOpenChanged?.call(false);
     if (mounted) setState(() {});
   }
 
@@ -428,40 +448,42 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     _scheduleControlledSync();
     final semanticsValue = widget.semanticValue ?? _effectiveValue?.toString();
 
-    Widget selectWidget = AnchoredOverlayShell(
+    Widget selectWidget = RawMenuAnchor(
       controller: _menuController,
+      childFocusNode: widget.triggerFocusNode,
+      consumeOutsideTaps: widget.consumeOutsideTaps,
+      onOpen: _handleOpen,
+      onClose: _handleClose,
+      onOpenRequested: _handleOpenRequested,
+      onCloseRequested: _handleCloseRequested,
+      useRootOverlay: widget.useRootOverlay,
       overlayBuilder: (context, info) {
-        return Semantics(
-          role: SemanticsRole.menu,
-          container: true,
-          explicitChildNodes: true,
-          // Preserve a child boundary while transitions hide option semantics.
+        return AnchoredOverlay(
+          info: info,
+          positioning: widget.positioning,
+          closeOnTapOutside: widget.closeOnClickOutside,
           child: Semantics(
+            role: SemanticsRole.menu,
             container: true,
             explicitChildNodes: true,
-            child: _NakedSelectScope<T>(
-              close: () => _requestOpen(false),
-              closeOnSelect: widget.closeOnSelect,
-              enabled: _isEnabled,
-              onChanged: _handleSelection,
-              value: _effectiveValue,
-              child: Builder(
-                builder: (context) => widget.overlayBuilder(context, info),
+            // Preserve a child boundary while transitions hide option semantics.
+            child: Semantics(
+              container: true,
+              explicitChildNodes: true,
+              child: _NakedSelectScope<T>(
+                close: () => _requestOpen(false),
+                closeOnSelect: widget.closeOnSelect,
+                enabled: _isEnabled,
+                onChanged: _handleSelection,
+                value: _effectiveValue,
+                child: Builder(
+                  builder: (context) => widget.overlayBuilder(context, info),
+                ),
               ),
             ),
           ),
         );
       },
-      onOpen: _handleOpen,
-      onClose: _handleClose,
-      onOpenRequested: widget.onOpenRequested,
-      onCloseRequested: widget.onCloseRequested,
-      onDismissRequested: () => _requestOpen(false),
-      consumeOutsideTaps: widget.consumeOutsideTaps,
-      useRootOverlay: widget.useRootOverlay,
-      closeOnClickOutside: widget.closeOnClickOutside,
-      triggerFocusNode: widget.triggerFocusNode,
-      positioning: widget.positioning,
       child: NakedButton(
         onPressed: _isEnabled ? _toggle : null,
         enabled: _isEnabled,
