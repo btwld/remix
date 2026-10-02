@@ -3,9 +3,11 @@ import 'package:flutter/widgets.dart';
 
 /// Headless scrollbar built on [RawScrollbar].
 ///
-/// Colors and thickness resolve against hovered and dragged states. When a
-/// color property is null, the scrollbar uses [RawScrollbar]'s thumb color and
-/// a transparent track.
+/// [RawScrollbar] owns scrolling, painting, fading, hit testing, and thumb
+/// gestures. This widget adds stateful thumb, track, border, and thickness
+/// styling, plus hover and drag callbacks. Colors and thickness resolve
+/// against hovered and dragged states. When a color property is null, the
+/// scrollbar uses [RawScrollbar]'s thumb color and a transparent track.
 class NakedScrollbar extends StatelessWidget {
   /// Creates a scrollbar over [child].
   const NakedScrollbar({
@@ -209,7 +211,7 @@ class _NakedRawScrollbarState extends RawScrollbarState<_NakedRawScrollbar> {
 
   @override
   void updateScrollbarPainter() {
-    final textDirection = Directionality.of(context);
+    super.updateScrollbarPainter();
     final states = _states;
     final showTrack = showScrollbar && (widget.trackVisibility ?? false);
     scrollbarPainter
@@ -222,21 +224,7 @@ class _NakedRawScrollbarState extends RawScrollbarState<_NakedRawScrollbar> {
           ? widget.trackBorderColorProperty?.resolve(states) ??
                 const Color(0x00000000)
           : const Color(0x00000000)
-      ..textDirection = textDirection
-      ..thickness = widget.thicknessProperty?.resolve(states) ?? 6
-      ..radius = widget.radius
-      ..trackRadius = widget.trackRadius
-      ..shape = widget.shape
-      ..padding = (widget.padding ?? MediaQuery.paddingOf(context)).resolve(
-        textDirection,
-      )
-      ..mainAxisMargin = widget.mainAxisMargin
-      ..crossAxisMargin = widget.crossAxisMargin
-      ..minLength = widget.minThumbLength
-      ..minOverscrollLength =
-          widget.minOverscrollLength ?? widget.minThumbLength
-      ..scrollbarOrientation = widget.scrollbarOrientation
-      ..ignorePointer = !enableGestures;
+      ..thickness = widget.thicknessProperty?.resolve(states) ?? 6;
   }
 
   @override
