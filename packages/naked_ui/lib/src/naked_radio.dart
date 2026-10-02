@@ -33,10 +33,12 @@ class NakedRadioState<T> extends NakedState {
       NakedState.maybeControllerOf<NakedRadioState<S>>(context);
 }
 
-/// A headless radio without visuals.
+/// A headless radio built on Flutter's [RawRadio] without visuals.
 ///
-/// Must be placed under a [RadioGroup]. The builder receives a [NakedRadioState]
-/// with the radio value, group value, and interaction states.
+/// [RawRadio] owns selection, focus, hover, semantics, gestures, and registration
+/// with [RadioGroup]. This widget adds a [NakedRadioState] builder, semantic
+/// label/exclusion, interaction callbacks, a hit-testable child boundary, and
+/// the group-wide enabled adapter in [NakedRadioGroup].
 ///
 /// ```dart
 /// RadioGroup<String>(
