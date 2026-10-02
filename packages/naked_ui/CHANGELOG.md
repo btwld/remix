@@ -14,6 +14,10 @@
 
 - Defer `NakedTooltip.onOpenChanged` notifications until after the current
   frame, so consumers can safely call `setState` from the callback.
+- Clarify `NakedCombobox`'s direct `RawAutocomplete` composition and retain
+  its lifecycle callbacks. Flutter issue #191928 still allows a pending async
+  result to reopen the options after Escape; the adapter reports that reopen
+  accurately and does not add a second visibility state machine.
 - `NakedTextMagnifier` now updates its position and focal point when its
   notifier, size, magnification scale, or vertical shift changes, without
   waiting for the notifier's next update.
