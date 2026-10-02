@@ -85,16 +85,6 @@ class AnchoredOverlayShell extends StatelessWidget {
     target?.requestFocus();
   }
 
-  void _moveFocus({required bool forward}) {
-    final current = FocusManager.instance.primaryFocus;
-    if (current == null) return;
-    if (forward) {
-      current.nextFocus();
-    } else {
-      current.previousFocus();
-    }
-  }
-
   void _dismiss() {
     final callback = onDismissRequested;
     if (callback == null) {
@@ -155,8 +145,6 @@ class AnchoredOverlayShell extends StatelessWidget {
                   child: Actions(
                     actions: NakedIntentActions.menu.actions(
                       onDismiss: _dismiss,
-                      onNextFocus: () => _moveFocus(forward: true),
-                      onPreviousFocus: () => _moveFocus(forward: false),
                       onFirstFocus: () => _focusBoundary(last: false),
                       onLastFocus: () => _focusBoundary(last: true),
                     ),

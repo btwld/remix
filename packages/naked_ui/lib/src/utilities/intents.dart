@@ -137,43 +137,19 @@ class _MenuIntentActions {
 
   Map<Type, Action<Intent>> actions({
     required VoidCallback onDismiss,
-    VoidCallback? onNextFocus,
-    VoidCallback? onPreviousFocus,
-    VoidCallback? onFirstFocus,
-    VoidCallback? onLastFocus,
-  }) {
-    final map = <Type, Action<Intent>>{
-      DismissIntent: CallbackAction<DismissIntent>(
-        onInvoke: (_) => onDismiss(),
-      ),
-    };
-
-    if (onNextFocus != null) {
-      map[NextFocusIntent] = CallbackAction<NextFocusIntent>(
-        onInvoke: (_) => onNextFocus(),
-      );
-    }
-
-    if (onPreviousFocus != null) {
-      map[PreviousFocusIntent] = CallbackAction<PreviousFocusIntent>(
-        onInvoke: (_) => onPreviousFocus(),
-      );
-    }
-
-    if (onFirstFocus != null) {
-      map[_FirstFocusIntent] = CallbackAction<_FirstFocusIntent>(
-        onInvoke: (_) => onFirstFocus(),
-      );
-    }
-
-    if (onLastFocus != null) {
-      map[_LastFocusIntent] = CallbackAction<_LastFocusIntent>(
-        onInvoke: (_) => onLastFocus(),
-      );
-    }
-
-    return map;
-  }
+    required VoidCallback onFirstFocus,
+    required VoidCallback onLastFocus,
+  }) => {
+    DismissIntent: CallbackAction<DismissIntent>(onInvoke: (_) => onDismiss()),
+    NextFocusIntent: NextFocusAction(),
+    PreviousFocusIntent: PreviousFocusAction(),
+    _FirstFocusIntent: CallbackAction<_FirstFocusIntent>(
+      onInvoke: (_) => onFirstFocus(),
+    ),
+    _LastFocusIntent: CallbackAction<_LastFocusIntent>(
+      onInvoke: (_) => onLastFocus(),
+    ),
+  };
 }
 
 // Intent helpers for menu bars

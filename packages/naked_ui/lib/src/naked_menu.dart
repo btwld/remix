@@ -8,7 +8,7 @@ import 'base/overlay_base.dart';
 import 'mixins/naked_mixins.dart';
 import 'naked_button.dart';
 import 'naked_menubar.dart';
-import 'utilities/anchored_overlay_shell.dart';
+import 'utilities/anchored_overlay.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
@@ -361,7 +361,6 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   final GlobalKey _overlayKey = GlobalKey();
   Timer? _hoverTimer;
   bool _focusFirstOnOpen = false;
-  bool _restoreFocusOnClose = false;
   late _NakedMenuScope<T> _parentMenu;
 
   MenuController get _controller => widget.controller ?? _internalController;
@@ -390,14 +389,12 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
     _controller.open();
   }
 
-  void _close({required bool restoreFocus}) {
+  void _close() {
     _cancelHoverTimer();
-    _restoreFocusOnClose = restoreFocus;
     _controller.close();
   }
 
-  void _toggle() =>
-      _controller.isOpen ? _close(restoreFocus: true) : _open(focusFirst: true);
+  void _toggle() => _controller.isOpen ? _close() : _open(focusFirst: true);
 
   void _scheduleHoverOpen() {
     _cancelHoverTimer();
@@ -409,7 +406,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   void _scheduleHoverClose() {
     _cancelHoverTimer();
     _hoverTimer = Timer(widget.hoverDelay, () {
-      if (mounted) _close(restoreFocus: false);
+      if (mounted) _close();
     });
   }
 
@@ -432,8 +429,11 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   void _handleClose() {
     if (mounted) setState(() {});
     widget.onClose?.call();
-    if (_restoreFocusOnClose) _focusNode.requestFocus();
-    _restoreFocusOnClose = false;
+    // Focus still inside the closing overlay would otherwise be lost.
+    final overlayContext = _overlayKey.currentContext;
+    if (overlayContext != null && FocusScope.of(overlayContext).hasFocus) {
+      _focusNode.requestFocus();
+    }
     _focusFirstOnOpen = false;
   }
 
@@ -459,7 +459,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
     ),
     _CloseSubmenuIntent: CallbackAction<_CloseSubmenuIntent>(
       onInvoke: (_) {
-        _close(restoreFocus: true);
+        _close();
         return null;
       },
     ),
@@ -469,7 +469,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   void didUpdateWidget(covariant NakedMenuSubmenu<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.enabled && _controller.isOpen) {
-      _close(restoreFocus: false);
+      _close();
     }
   }
 
@@ -516,33 +516,34 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
       ),
     );
 
-    return AnchoredOverlayShell(
+    return RawMenuAnchor(
       controller: _controller,
-      triggerFocusNode: _focusNode,
-      consumeOutsideTaps: false,
-      closeOnClickOutside: true,
-      positioning: widget.positioning,
+      childFocusNode: _focusNode,
       onOpen: _handleOpen,
       onClose: _handleClose,
-      onDismissRequested: () => _close(restoreFocus: true),
       overlayBuilder: (context, info) {
-        return Shortcuts(
-          shortcuts: _shortcuts(direction),
-          child: Actions(
-            actions: _actions,
-            child: MouseRegion(
-              key: _overlayKey,
-              onEnter: (_) => _cancelHoverTimer(),
-              child: Semantics(
-                role: SemanticsRole.menu,
-                container: true,
-                explicitChildNodes: true,
-                child: _NakedMenuScope<T>(
-                  onSelected: _parentMenu.onSelected,
-                  controller: _controller,
-                  rootController: _parentMenu.rootController,
-                  child: Builder(
-                    builder: (context) => widget.overlayBuilder(context, info),
+        return AnchoredOverlay(
+          info: info,
+          positioning: widget.positioning,
+          child: Shortcuts(
+            shortcuts: _shortcuts(direction),
+            child: Actions(
+              actions: _actions,
+              child: MouseRegion(
+                key: _overlayKey,
+                onEnter: (_) => _cancelHoverTimer(),
+                child: Semantics(
+                  role: SemanticsRole.menu,
+                  container: true,
+                  explicitChildNodes: true,
+                  child: _NakedMenuScope<T>(
+                    onSelected: _parentMenu.onSelected,
+                    controller: _controller,
+                    rootController: _parentMenu.rootController,
+                    child: Builder(
+                      builder: (context) =>
+                          widget.overlayBuilder(context, info),
+                    ),
                   ),
                 ),
               ),
@@ -850,8 +851,17 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         ? button
         : Semantics(expanded: _isOpen, child: button);
 
-    return AnchoredOverlayShell(
+    return RawMenuAnchor(
       controller: widget.controller,
+      childFocusNode: triggerFocusNode,
+      consumeOutsideTaps: widget.consumeOutsideTaps,
+      onOpen: _handleOpen,
+      onClose: _handleClose,
+      onOpenRequested:
+          widget.onOpenRequested ?? (_, showOverlay) => showOverlay(),
+      onCloseRequested:
+          widget.onCloseRequested ?? (hideOverlay) => hideOverlay(),
+      useRootOverlay: widget.useRootOverlay,
       overlayBuilder: (context, info) {
         Widget panel = Semantics(
           role: SemanticsRole.menu,
@@ -889,17 +899,13 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
           );
         }
 
-        return panel;
+        return AnchoredOverlay(
+          info: info,
+          positioning: widget.positioning,
+          closeOnTapOutside: widget.closeOnClickOutside,
+          child: panel,
+        );
       },
-      onOpen: _handleOpen,
-      onClose: _handleClose,
-      onOpenRequested: widget.onOpenRequested,
-      onCloseRequested: widget.onCloseRequested,
-      consumeOutsideTaps: widget.consumeOutsideTaps,
-      useRootOverlay: widget.useRootOverlay,
-      closeOnClickOutside: widget.closeOnClickOutside,
-      triggerFocusNode: triggerFocusNode,
-      positioning: widget.positioning,
       child: menuChild,
     );
   }
