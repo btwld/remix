@@ -200,10 +200,6 @@ Future<T?> showNakedDialog<T>({
             final Widget content = builder(routeContext);
             Widget wrapped = FocusTraversalGroup(child: content);
 
-            if (barrierDismissible) {
-              wrapped = _withDialogDismissShortcut(routeContext, wrapped);
-            }
-
             return themes.wrap(wrapped);
           },
       barrierDismissible: barrierDismissible,
