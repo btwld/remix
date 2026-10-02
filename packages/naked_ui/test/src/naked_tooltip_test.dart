@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
@@ -31,6 +30,26 @@ void main() {
         );
 
         expect(find.text('Tooltip'), findsNothing);
+      });
+
+      testWidgets('an empty semantic label does not suppress visual content', (
+        WidgetTester tester,
+      ) async {
+        final tooltipKey = GlobalKey<RawTooltipState>();
+        await tester.pumpMaterialWidget(
+          NakedTooltip(
+            tooltipKey: tooltipKey,
+            semanticLabel: '',
+            triggerMode: TooltipTriggerMode.manual,
+            animationStyle: AnimationStyle.noAnimation,
+            overlayBuilder: (context, animation) => const Text('Visual'),
+            child: const Text('Trigger'),
+          ),
+        );
+
+        expect(tooltipKey.currentState?.ensureTooltipVisible(), isTrue);
+        await tester.pumpAndSettle();
+        expect(find.text('Visual'), findsOneWidget);
       });
     });
 
@@ -293,6 +312,41 @@ void main() {
         await tester.pumpAndSettle();
         await gesture.removePointer();
       });
+
+      testWidgets('overlay descendants receive resolved placement', (
+        WidgetTester tester,
+      ) async {
+        final tooltipKey = GlobalKey<RawTooltipState>();
+        OverlayPlacement? placement;
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: NakedTooltip(
+              tooltipKey: tooltipKey,
+              triggerMode: TooltipTriggerMode.manual,
+              animationStyle: AnimationStyle.noAnimation,
+              positioning: const OverlayPositionConfig(
+                side: OverlaySide.bottom,
+                alignment: OverlayAlignment.center,
+                collisionPadding: EdgeInsets.all(8),
+              ),
+              overlayBuilder: (context, animation) => Builder(
+                builder: (context) {
+                  placement = OverlayPlacement.of(context);
+                  return const SizedBox(width: 160, height: 100);
+                },
+              ),
+              child: const SizedBox(width: 100, height: 40),
+            ),
+          ),
+        );
+        expect(tooltipKey.currentState?.ensureTooltipVisible(), isTrue);
+        await tester.pumpAndSettle();
+
+        expect(placement, isNotNull);
+        expect(placement!.side, OverlaySide.top);
+        expect(placement!.wasFlipped, isTrue);
+      });
     });
 
     group('Animation', () {
@@ -331,153 +385,56 @@ void main() {
       });
     });
 
-    group('Controlled visibility', () {
-      testWidgets('hover only requests open when the owner rejects it', (
-        WidgetTester tester,
-      ) async {
-        const triggerKey = Key('controlled-trigger');
-        final requests = <bool>[];
-        await tester.pumpMaterialWidget(
-          NakedTooltip(
-            open: false,
-            onOpenChanged: requests.add,
-            hoverDelay: Duration.zero,
-            overlayBuilder: (context, animation) => const Text('Controlled'),
-            child: const SizedBox(key: triggerKey, width: 100, height: 40),
-          ),
-        );
+    testWidgets('reports animation visibility and supports command show', (
+      WidgetTester tester,
+    ) async {
+      final tooltipKey = GlobalKey<RawTooltipState>();
+      final changes = <bool>[];
+      await tester.pumpMaterialWidget(
+        NakedTooltip(
+          tooltipKey: tooltipKey,
+          onOpenChanged: changes.add,
+          triggerMode: TooltipTriggerMode.manual,
+          animationStyle: AnimationStyle.noAnimation,
+          overlayBuilder: (context, animation) => const Text('Commanded'),
+          child: const SizedBox(width: 100, height: 40),
+        ),
+      );
 
-        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
-        await mouse.addPointer();
-        await mouse.moveTo(tester.getCenter(find.byKey(triggerKey)));
-        await tester.pumpAndSettle();
+      expect(tooltipKey.currentState?.ensureTooltipVisible(), isTrue);
+      await tester.pumpAndSettle();
+      expect(find.text('Commanded'), findsOneWidget);
+      expect(changes, [true]);
 
-        expect(requests, [true]);
-        expect(find.text('Controlled'), findsNothing);
-        await mouse.removePointer();
-      });
+      expect(RawTooltip.dismissAllToolTips(), isTrue);
+      await tester.pumpAndSettle();
+      expect(changes, [true, false]);
+    });
 
-      testWidgets('owner changes are the controlled source of truth', (
-        WidgetTester tester,
-      ) async {
-        var open = false;
-        late StateSetter setOwnerState;
-        await tester.pumpMaterialWidget(
-          StatefulBuilder(
-            builder: (context, setState) {
-              setOwnerState = setState;
-
-              return NakedTooltip(
-                open: open,
-                onOpenChanged: (next) => setState(() => open = next),
-                animationStyle: AnimationStyle.noAnimation,
-                overlayBuilder: (context, animation) => const Text('Owned'),
-                child: const SizedBox(width: 100, height: 40),
-              );
-            },
-          ),
-        );
-
-        setOwnerState(() => open = true);
-        await tester.pumpAndSettle();
-        expect(find.text('Owned'), findsOneWidget);
-
-        setOwnerState(() => open = false);
-        await tester.pumpAndSettle();
-        expect(find.text('Owned'), findsNothing);
-      });
-
-      testWidgets('a rejected close request leaves the tooltip open', (
-        WidgetTester tester,
-      ) async {
-        const triggerKey = Key('reject-close-trigger');
-        final requests = <bool>[];
-        await tester.pumpMaterialWidget(
-          NakedTooltip(
-            open: true,
-            onOpenChanged: requests.add,
-            dismissDelay: Duration.zero,
+    testWidgets('defers visibility notifications until after build', (
+      WidgetTester tester,
+    ) async {
+      final tooltipKey = GlobalKey<RawTooltipState>();
+      var rebuilds = 0;
+      await tester.pumpMaterialWidget(
+        StatefulBuilder(
+          builder: (context, setState) => NakedTooltip(
+            tooltipKey: tooltipKey,
+            triggerMode: TooltipTriggerMode.manual,
             animationStyle: AnimationStyle.noAnimation,
-            overlayBuilder: (context, animation) => const Text('Still open'),
-            child: const SizedBox(key: triggerKey, width: 100, height: 40),
+            onOpenChanged: (_) => setState(() => rebuilds++),
+            overlayBuilder: (context, animation) => const Text('Deferred'),
+            child: const SizedBox(width: 100, height: 40),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
 
-        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
-        await mouse.addPointer();
-        await mouse.moveTo(tester.getCenter(find.byKey(triggerKey)));
-        await tester.pump();
-        await mouse.moveTo(const Offset(-1000, -1000));
-        await tester.pumpAndSettle();
+      expect(tooltipKey.currentState?.ensureTooltipVisible(), isTrue);
+      await tester.pumpAndSettle();
 
-        expect(requests, [false]);
-        expect(find.text('Still open'), findsOneWidget);
-        await mouse.removePointer();
-      });
-
-      testWidgets('switching to uncontrolled preserves the accepted state', (
-        WidgetTester tester,
-      ) async {
-        bool? controlledOpen = true;
-        late StateSetter setOwnerState;
-        await tester.pumpMaterialWidget(
-          StatefulBuilder(
-            builder: (context, setState) {
-              setOwnerState = setState;
-
-              return NakedTooltip(
-                open: controlledOpen,
-                animationStyle: AnimationStyle.noAnimation,
-                overlayBuilder: (context, animation) => const Text('Preserved'),
-                child: const SizedBox(width: 100, height: 40),
-              );
-            },
-          ),
-        );
-        await tester.pumpAndSettle();
-        expect(find.text('Preserved'), findsOneWidget);
-
-        setOwnerState(() => controlledOpen = null);
-        await tester.pumpAndSettle();
-        expect(find.text('Preserved'), findsOneWidget);
-
-        await tester.tapAt(const Offset(10, 10));
-        await tester.pumpAndSettle();
-        expect(find.text('Preserved'), findsNothing);
-      });
-
-      testWidgets('Escape dismisses even when tap dismissal is disabled', (
-        WidgetTester tester,
-      ) async {
-        var open = true;
-        final focusNode = FocusNode();
-        addTearDown(focusNode.dispose);
-        await tester.pumpMaterialWidget(
-          StatefulBuilder(
-            builder: (context, setState) => NakedTooltip(
-              open: open,
-              onOpenChanged: (next) => setState(() => open = next),
-              enableTapToDismiss: false,
-              animationStyle: AnimationStyle.noAnimation,
-              overlayBuilder: (context, animation) => const Text('Escape me'),
-              child: Focus(
-                focusNode: focusNode,
-                child: const SizedBox(width: 100, height: 40),
-              ),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        focusNode.requestFocus();
-        await tester.pump();
-
-        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-        await tester.pumpAndSettle();
-
-        expect(open, isFalse);
-        expect(find.text('Escape me'), findsNothing);
-      });
+      expect(find.text('Deferred'), findsOneWidget);
+      expect(rebuilds, 1);
+      expect(tester.takeException(), isNull);
     });
 
     group('Hoverable content', () {
@@ -519,74 +476,6 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Hoverable'), findsNothing);
         await mouse.removePointer();
-      });
-
-      testWidgets('disableHoverableContent closes over the overlay', (
-        WidgetTester tester,
-      ) async {
-        const triggerKey = Key('nonhoverable-trigger');
-        const overlayKey = Key('nonhoverable-overlay');
-        await tester.pumpMaterialWidget(
-          NakedTooltip(
-            hoverDelay: Duration.zero,
-            dismissDelay: const Duration(milliseconds: 50),
-            disableHoverableContent: true,
-            animationStyle: AnimationStyle.noAnimation,
-            overlayBuilder: (context, animation) => const SizedBox(
-              key: overlayKey,
-              width: 120,
-              height: 40,
-              child: Text('Not hoverable'),
-            ),
-            child: const SizedBox(key: triggerKey, width: 100, height: 40),
-          ),
-        );
-
-        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
-        await mouse.addPointer();
-        await mouse.moveTo(tester.getCenter(find.byKey(triggerKey)));
-        await tester.pumpAndSettle();
-        await mouse.moveTo(tester.getCenter(find.byKey(overlayKey)));
-        await tester.pump(const Duration(milliseconds: 75));
-        await tester.pumpAndSettle();
-
-        expect(find.text('Not hoverable'), findsNothing);
-        await mouse.removePointer();
-      });
-    });
-
-    group('Resolved placement', () {
-      testWidgets('overlay descendants receive collision-resolved placement', (
-        WidgetTester tester,
-      ) async {
-        OverlayPlacement? placement;
-        await tester.pumpMaterialWidget(
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: NakedTooltip(
-              open: true,
-              animationStyle: AnimationStyle.noAnimation,
-              positioning: const OverlayPositionConfig(
-                side: OverlaySide.bottom,
-                alignment: OverlayAlignment.center,
-                collisionPadding: EdgeInsets.all(8),
-              ),
-              overlayBuilder: (context, animation) => Builder(
-                builder: (context) {
-                  placement = OverlayPlacement.of(context);
-
-                  return const SizedBox(width: 160, height: 100);
-                },
-              ),
-              child: const SizedBox(width: 100, height: 40),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(placement, isNotNull);
-        expect(placement!.side, OverlaySide.top);
-        expect(placement!.wasFlipped, isTrue);
       });
     });
   });

@@ -338,46 +338,45 @@ void main() {
     },
   );
 
-  testWidgets(
-    'tooltip resumes after motion and closes on Escape and expansion',
-    (tester) async {
-      final key = GlobalKey<_HostState>();
-      await tester.pumpWidget(_Host(key: key));
-      final gesture = await tester.createGesture(
-        kind: ui.PointerDeviceKind.mouse,
-      );
-      await gesture.addPointer(location: Offset.zero);
-      addTearDown(gesture.removePointer);
-      key.currentState!.focus.requestFocus();
-      await tester.pump();
-      key.currentState!.update(collapsed: true);
-      await tester.pump();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(_openTooltips(tester), isEmpty);
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(_openTooltips(tester), isEmpty);
-      await tester.pump(const Duration(milliseconds: 16));
-      await tester.pump(const Duration(milliseconds: 301));
-      await tester.pump();
-      expect(_openTooltips(tester), hasLength(1));
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump();
-      expect(_openTooltips(tester), isEmpty);
-      await gesture.moveTo(const Offset(700, 500));
-      await tester.pump(const Duration(milliseconds: 150));
-      await gesture.moveTo(tester.getCenter(find.byIcon(Icons.home)));
-      await tester.pump(const Duration(milliseconds: 301));
-      await tester.pump();
-      expect(_openTooltips(tester), hasLength(1));
-      key.currentState!.update(collapsed: false);
-      await tester.pump();
-      await tester.pump();
-      expect(_openTooltips(tester), isEmpty);
-      await tester.pump(const Duration(milliseconds: 250));
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('tooltip opens after motion and closes when expansion starts', (
+    tester,
+  ) async {
+    final key = GlobalKey<_HostState>();
+    await tester.pumpWidget(_Host(key: key));
+    final gesture = await tester.createGesture(
+      kind: ui.PointerDeviceKind.mouse,
+    );
+    await gesture.addPointer(location: Offset.zero);
+    addTearDown(gesture.removePointer);
+    key.currentState!.focus.requestFocus();
+    await tester.pump();
+    key.currentState!.update(collapsed: true);
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 16));
+    await tester.pump(const Duration(milliseconds: 301));
+    await tester.pump();
+    await gesture.moveTo(const Offset(700, 500));
+    await tester.pump(const Duration(milliseconds: 150));
+    await gesture.moveTo(tester.getCenter(find.byIcon(Icons.home)));
+    await tester.pump(const Duration(milliseconds: 301));
+    await tester.pump();
+    expect(
+      find.byKey(const ValueKey(('sidebar-tooltip-content', 'home'))),
+      findsOneWidget,
+    );
+    key.currentState!.update(collapsed: false);
+    await tester.pump();
+    await tester.pump();
+    expect(
+      find.byKey(const ValueKey(('sidebar-tooltip-content', 'home'))),
+      findsNothing,
+    );
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets(
     'reduced motion settles on the next frame including mid-transition',
@@ -551,14 +550,20 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 1600));
     await tester.pump();
-    expect(_openTooltips(tester), hasLength(1));
+    expect(
+      find.byKey(const ValueKey(('sidebar-tooltip-content', 'home'))),
+      findsOneWidget,
+    );
     await touch.up();
     key.currentState!.update(includeHome: false);
     await tester.pump();
     await tester.pump(const Duration(seconds: 2));
     expect(find.byIcon(Icons.home), findsNothing);
     expect(find.text('Overview'), findsNothing);
-    expect(_openTooltips(tester), isEmpty);
+    expect(
+      find.byKey(const ValueKey(('sidebar-tooltip-content', 'home'))),
+      findsNothing,
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -607,10 +612,6 @@ void main() {
     expect(tester.takeException().toString(), contains('require an Overlay'));
   });
 }
-
-Iterable<RemixTooltip> _openTooltips(WidgetTester tester) => tester
-    .widgetList<RemixTooltip>(find.byType(RemixTooltip))
-    .where((tooltip) => tooltip.open == true);
 
 class _Host extends StatefulWidget {
   const _Host({super.key, this.initiallyCollapsed = false, this.rtl = false});

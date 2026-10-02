@@ -1,3 +1,10 @@
+## Unreleased
+
+- **BREAKING**: `RemixTooltip` now follows Flutter's `RawTooltip`; remove
+  controlled `open` usage and use `tooltipKey` for command-triggered showing.
+  `onOpenChanged` is notification-only, and focus-open and Escape dismissal
+  remain SDK limitations on the supported floor.
+
 ## 1.0.0-beta.10
 
 - Styled text fields now draw Remix selection handles on touch platforms; the

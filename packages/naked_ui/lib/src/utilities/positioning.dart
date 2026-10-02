@@ -121,7 +121,7 @@ class OverlayPlacement {
   /// Returns the resolved placement that most tightly encloses [context].
   static OverlayPlacement of(BuildContext context) {
     final scope = context
-        .dependOnInheritedWidgetOfExactType<_OverlayPlacementScope>();
+        .dependOnInheritedWidgetOfExactType<OverlayPlacementScope>();
     assert(scope != null, 'OverlayPlacement.of() called outside an overlay.');
 
     return scope!.placement;
@@ -129,7 +129,7 @@ class OverlayPlacement {
 
   /// Returns the nearest resolved placement, if one exists.
   static OverlayPlacement? maybeOf(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<_OverlayPlacementScope>()
+      .dependOnInheritedWidgetOfExactType<OverlayPlacementScope>()
       ?.placement;
 
   @override
@@ -147,13 +147,17 @@ class OverlayPlacement {
       Object.hash(side, alignment, offset, wasFlipped, wasShifted);
 }
 
-class _OverlayPlacementScope extends InheritedWidget {
-  const _OverlayPlacementScope({required this.placement, required super.child});
+/// Internal inherited bridge used by overlay adapters that do their own
+/// positioning while Flutter owns the overlay portal.
+class OverlayPlacementScope extends InheritedWidget {
+  /// Creates the internal placement scope.
+  const OverlayPlacementScope({required this.placement, required super.child});
 
+  /// The resolved placement exposed to descendants.
   final OverlayPlacement placement;
 
   @override
-  bool updateShouldNotify(_OverlayPlacementScope oldWidget) =>
+  bool updateShouldNotify(OverlayPlacementScope oldWidget) =>
       placement != oldWidget.placement;
 }
 
@@ -239,7 +243,7 @@ class _OverlayPositionerState extends State<OverlayPositioner> {
         textDirection: Directionality.of(context),
         onPlacement: _reportPlacement,
       ),
-      child: _OverlayPlacementScope(placement: _placement, child: widget.child),
+      child: OverlayPlacementScope(placement: _placement, child: widget.child),
     );
   }
 }

@@ -9,7 +9,7 @@ part 'tooltip.g.dart';
 /// The application's Tooltip recipe.
 ///
 /// Remix owns the rendering, the overlay, the anchor positioning, and the
-/// hover and focus timing; this recipe supplies the bubble and the three
+/// hover and touch timing; this recipe supplies the bubble and the three
 /// durations that decide when it appears and how long it stays.
 ///
 /// It is the one floating surface here that does *not* use `background`. A

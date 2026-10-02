@@ -1,7 +1,19 @@
 ## Unreleased
 
+### Breaking changes
+
+- `NakedTooltip` now uses Flutter's `RawTooltip` for trigger handling,
+  animation, hoverable content, and dismissal. Its former controlled `open`,
+  `useRootOverlay`, and `disableHoverableContent` parameters were removed;
+  `onOpenChanged` is now a visibility notification and `tooltipKey` supports
+  command-triggered showing. Focus-open and Escape dismissal remain known SDK
+  gaps on the Flutter 3.41 floor. Overlay descendants continue to receive the
+  resolved collision placement through `OverlayPlacement.of`.
+
 ### Fixes
 
+- Defer `NakedTooltip.onOpenChanged` notifications until after the current
+  frame, so consumers can safely call `setState` from the callback.
 - `NakedTextMagnifier` now updates its position and focal point when its
   notifier, size, magnification scale, or vertical shift changes, without
   waiting for the notifier's next update.
@@ -14,8 +26,8 @@
 
 - `Expansible` hard-wires a clipped height animation and would drop
   `reverseDuration`.
-- `RawTooltip` still has no controlled open state, hoverable content, or
-  `useRootOverlay`.
+- `RawTooltip` still has no per-instance dismiss API, open-state callback,
+  focus-open trigger, or Escape dismissal on the Flutter 3.41 floor.
 - `showRawDialog` needs Flutter 3.44 and only adds native-window dialogs.
 
 ## 1.1.0

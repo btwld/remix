@@ -3,13 +3,13 @@ part of 'tooltip.dart';
 /// A trigger widget that shows styled overlay content in a tooltip.
 ///
 /// [tooltipChild] is rendered inside the tooltip overlay. [child] is the
-/// widget users hover, focus, or long-press to reveal the tooltip.
+/// widget users hover, tap, or long-press to reveal the tooltip.
 class RemixTooltip extends StatelessWidget {
   const RemixTooltip({
     super.key,
     required this.tooltipChild,
     required this.child,
-    this.open,
+    this.tooltipKey,
     this.onOpenChanged,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
@@ -29,10 +29,10 @@ class RemixTooltip extends StatelessWidget {
   /// The child widget that will trigger the tooltip.
   final Widget child;
 
-  /// Controlled visibility, or null for hover/focus/touch-managed visibility.
-  final bool? open;
+  /// A key whose state can call [RawTooltipState.ensureTooltipVisible].
+  final GlobalKey<RawTooltipState>? tooltipKey;
 
-  /// Requests a visibility change; controlled callers must accept it in [open].
+  /// Reports the visible state after the raw tooltip's animation changes.
   final ValueChanged<bool>? onOpenChanged;
 
   /// The semantic label for the tooltip.
@@ -50,7 +50,7 @@ class RemixTooltip extends StatelessWidget {
       styleSpec: styleSpec,
       builder: (context, spec) {
         return NakedTooltip(
-          open: open,
+          tooltipKey: tooltipKey,
           onOpenChanged: onOpenChanged,
           overlayBuilder: (context, info) => Box(
             styleSpec: spec.container,
@@ -76,30 +76,7 @@ class RemixTooltip extends StatelessWidget {
               spec.dismissDuration ?? const Duration(milliseconds: 100),
           positioning: positioning,
           semanticLabel: tooltipSemantics,
-          child: Focus(
-            canRequestFocus: false,
-            skipTraversal: true,
-            includeSemantics: false,
-            onKeyEvent: (_, event) {
-              // A controlled, closed tooltip must not swallow a containing
-              // drawer/menu's dismissal shortcut in NakedTooltip's handler.
-              // Match NakedTooltip's binding so modified Escape is untouched.
-              if (open == false &&
-                  event is KeyDownEvent &&
-                  const SingleActivator(
-                    LogicalKeyboardKey.escape,
-                  ).accepts(event, HardwareKeyboard.instance)) {
-                const intent = DismissIntent();
-                final action = Actions.maybeFind<DismissIntent>(context);
-                if (action != null && action.isEnabled(intent)) {
-                  Actions.invoke(context, intent);
-                  return KeyEventResult.handled;
-                }
-              }
-              return KeyEventResult.ignored;
-            },
-            child: child,
-          ),
+          child: child,
         );
       },
     );

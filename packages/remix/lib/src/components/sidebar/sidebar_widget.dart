@@ -649,39 +649,7 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatefulWidget {
 
 class _RemixSidebarDestinationState<T extends Object>
     extends State<_RemixSidebarDestinationWidget<T>> {
-  bool _tooltipOpen = false;
-  bool _hovered = false;
-  bool _focused = false;
-  Timer? _resumeTooltip;
-
   bool get _canShow => widget.tooltipsEnabled && !widget.motion.isAnimating;
-
-  @override
-  void didUpdateWidget(_RemixSidebarDestinationWidget<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!_canShow) {
-      _resumeTooltip?.cancel();
-      _tooltipOpen = false;
-    } else if ((!oldWidget.tooltipsEnabled || oldWidget.motion.isAnimating) &&
-        (_hovered || _focused)) {
-      _resumeTooltip?.cancel();
-      _resumeTooltip = Timer(
-        widget.tooltipStyle.spec.waitDuration ??
-            const Duration(milliseconds: 300),
-        () {
-          if (mounted && _canShow && (_hovered || _focused)) {
-            setState(() => _tooltipOpen = true);
-          }
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _resumeTooltip?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -718,38 +686,21 @@ class _RemixSidebarDestinationState<T extends Object>
         ),
       ),
     );
-    // The wrapper stays mounted in overlay hosts in both presentations, so
-    // toggling label/tooltip visibility cannot replace the focused button.
     if (Overlay.maybeOf(context) == null) return button;
-    return MouseRegion(
-      onEnter: (_) => _hovered = true,
-      onExit: (_) {
-        _hovered = false;
-        if (!_focused) _resumeTooltip?.cancel();
-      },
-      child: Focus(
-        canRequestFocus: false,
-        skipTraversal: true,
-        includeSemantics: false,
-        onFocusChange: (value) {
-          _focused = value;
-          if (!value && !_hovered) _resumeTooltip?.cancel();
-        },
-        child: RemixTooltip(
-          open: _canShow && _tooltipOpen,
-          onOpenChanged: (value) {
-            if (!value) _resumeTooltip?.cancel();
-            final next = _canShow && value;
-            if (next != _tooltipOpen) setState(() => _tooltipOpen = next);
-          },
-          // The button already owns the accessible name. Suppress the
-          // duplicate tooltip name that Flutter web appends to button labels.
-          tooltipChild: ExcludeSemantics(child: Text(data.label)),
-          positioning: widget.tooltipPositioning,
-          style: _SidebarTooltipStyler(widget.tooltipStyle),
-          child: button,
+    if (!_canShow) return button;
+    return RemixTooltip(
+      key: ValueKey(('sidebar-tooltip', data.value)),
+      // The button already owns the accessible name. Suppress the duplicate
+      // tooltip name that Flutter web appends to button labels.
+      tooltipChild: ExcludeSemantics(
+        child: Text(
+          data.label,
+          key: ValueKey(('sidebar-tooltip-content', data.value)),
         ),
       ),
+      positioning: widget.tooltipPositioning,
+      style: _SidebarTooltipStyler(widget.tooltipStyle),
+      child: button,
     );
   }
 
