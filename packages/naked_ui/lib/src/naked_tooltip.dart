@@ -6,8 +6,7 @@ import 'utilities/positioning.dart';
 ///
 /// [RawTooltip] owns trigger handling, delays, feedback, animation, hoverable
 /// content, and overlay lifetime. This widget supplies the headless overlay
-/// builder, the package's collision-aware positioning, resolved
-/// [OverlayPlacement] for overlay descendants, and optional semantics
+/// builder, the package's collision-aware positioning, and optional semantics
 /// filtering. [overlayBuilder] keeps Naked UI's shipped name for
 /// [RawTooltip.tooltipBuilder], and [semanticLabel] keeps its shipped name for
 /// [RawTooltip.semanticsTooltip].
@@ -106,46 +105,8 @@ class NakedTooltip extends StatefulWidget {
 }
 
 class _NakedTooltipState extends State<NakedTooltip> {
-  late OverlayPlacement _placement = _initialPlacement(widget.positioning);
-  OverlayPlacement? _pendingPlacement;
-  bool _hasReportedPlacement = false;
-
-  static OverlayPlacement _initialPlacement(OverlayPositionConfig config) =>
-      OverlayPlacement(
-        side: config.side,
-        alignment: config.alignment,
-        offset: Offset.zero,
-        wasFlipped: false,
-        wasShifted: false,
-      );
-
   @override
-  void didUpdateWidget(covariant NakedTooltip oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.positioning.side != oldWidget.positioning.side ||
-        widget.positioning.alignment != oldWidget.positioning.alignment) {
-      _placement = _initialPlacement(widget.positioning);
-      _hasReportedPlacement = false;
-    }
-  }
-
-  void _reportPlacement(OverlayPlacement placement) {
-    if ((_hasReportedPlacement && placement == _placement) ||
-        placement == _pendingPlacement) {
-      return;
-    }
-    _pendingPlacement = placement;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final next = _pendingPlacement;
-      _pendingPlacement = null;
-      if (next == null) return;
-      _hasReportedPlacement = true;
-      if (next != _placement) setState(() => _placement = next);
-    });
-  }
-
-  Widget _buildRawTooltip(BuildContext context) {
+  Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
     final rawTooltip = RawTooltip(
       key: widget.tooltipKey,
@@ -177,20 +138,15 @@ class _NakedTooltipState extends State<NakedTooltip> {
           widget.positioning,
           textDirection,
         );
-        _reportPlacement(placement);
         return placement.offset;
       },
       child: widget.child,
     );
 
-    final result = widget.excludeSemantics
+    return widget.excludeSemantics
         ? ExcludeSemantics(child: rawTooltip)
         : rawTooltip;
-    return OverlayPlacementScope(placement: _placement, child: result);
   }
-
-  @override
-  Widget build(BuildContext context) => _buildRawTooltip(context);
 }
 
 OverlayPlacement _resolvePlacement(
@@ -234,36 +190,31 @@ class _NakedTooltipOverlay extends StatefulWidget {
 }
 
 class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
-  final List<bool> _pendingVisibility = <bool>[];
+  bool? _pendingVisibility;
   bool _notificationScheduled = false;
   bool? _lastNotified;
 
   void _handleStatusChanged(AnimationStatus status) {
     if (status.isDismissed) {
-      _queueVisibility(false);
+      _deferVisibility(false);
     } else if (status == AnimationStatus.forward) {
-      _queueVisibility(true);
+      _deferVisibility(true);
     }
   }
 
-  void _queueVisibility(bool visible) {
+  void _deferVisibility(bool visible) {
     if (widget.onOpenChanged == null) return;
-    final previous = _pendingVisibility.isEmpty
-        ? _lastNotified
-        : _pendingVisibility.last;
-    if (previous == visible) return;
-    _pendingVisibility.add(visible);
+    if (_lastNotified == visible && _pendingVisibility == null) return;
+    _pendingVisibility = visible;
     if (_notificationScheduled) return;
     _notificationScheduled = true;
-    final callback = widget.onOpenChanged;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _notificationScheduled = false;
-      while (_pendingVisibility.isNotEmpty) {
-        final next = _pendingVisibility.removeAt(0);
-        if (_lastNotified == next) continue;
-        _lastNotified = next;
-        callback?.call(next);
-      }
+      final next = _pendingVisibility;
+      _pendingVisibility = null;
+      if (next == null || _lastNotified == next) return;
+      _lastNotified = next;
+      widget.onOpenChanged?.call(next);
     });
   }
 
@@ -273,7 +224,7 @@ class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
     widget.animation.addStatusListener(_handleStatusChanged);
     if (widget.animation.status == AnimationStatus.forward ||
         widget.animation.status == AnimationStatus.completed) {
-      _queueVisibility(true);
+      _deferVisibility(true);
     }
   }
 

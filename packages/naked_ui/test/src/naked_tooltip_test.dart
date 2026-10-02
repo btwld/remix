@@ -312,41 +312,6 @@ void main() {
         await tester.pumpAndSettle();
         await gesture.removePointer();
       });
-
-      testWidgets('overlay descendants receive resolved placement', (
-        WidgetTester tester,
-      ) async {
-        final tooltipKey = GlobalKey<RawTooltipState>();
-        OverlayPlacement? placement;
-        await tester.pumpMaterialWidget(
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: NakedTooltip(
-              tooltipKey: tooltipKey,
-              triggerMode: TooltipTriggerMode.manual,
-              animationStyle: AnimationStyle.noAnimation,
-              positioning: const OverlayPositionConfig(
-                side: OverlaySide.bottom,
-                alignment: OverlayAlignment.center,
-                collisionPadding: EdgeInsets.all(8),
-              ),
-              overlayBuilder: (context, animation) => Builder(
-                builder: (context) {
-                  placement = OverlayPlacement.of(context);
-                  return const SizedBox(width: 160, height: 100);
-                },
-              ),
-              child: const SizedBox(width: 100, height: 40),
-            ),
-          ),
-        );
-        expect(tooltipKey.currentState?.ensureTooltipVisible(), isTrue);
-        await tester.pumpAndSettle();
-
-        expect(placement, isNotNull);
-        expect(placement!.side, OverlaySide.top);
-        expect(placement!.wasFlipped, isTrue);
-      });
     });
 
     group('Animation', () {

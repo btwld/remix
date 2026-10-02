@@ -105,8 +105,8 @@ is a known regression until the SDK provides a focus trigger. Escape dismissal
 is likewise deferred until the SDK exposes it on `RawTooltip`.
 
 The tooltip no longer exposes controlled `open`, `useRootOverlay`, or
-`disableHoverableContent` parameters. Overlay content can read the resolved
-collision placement with `OverlayPlacement.of(context)`.
+`disableHoverableContent` parameters. Use `OverlayPositioner` when custom
+overlay content needs to read a resolved collision placement.
 
 ## Fortal widgets
 

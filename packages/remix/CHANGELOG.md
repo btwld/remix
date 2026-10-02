@@ -3,7 +3,9 @@
 - **BREAKING**: `RemixTooltip` now follows Flutter's `RawTooltip`; remove
   controlled `open` usage and use `tooltipKey` for command-triggered showing.
   `onOpenChanged` is notification-only, and focus-open and Escape dismissal
-  remain SDK limitations on the supported floor.
+  remain SDK limitations on the supported floor. Tooltip content no longer
+  receives an `OverlayPlacement` scope; use `OverlayPositioner` for custom
+  content that needs resolved placement.
 
 ## 1.0.0-beta.10
 

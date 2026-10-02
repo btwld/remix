@@ -7,17 +7,21 @@
   `useRootOverlay`, and `disableHoverableContent` parameters were removed;
   `onOpenChanged` is now a visibility notification and `tooltipKey` supports
   command-triggered showing. Focus-open and Escape dismissal remain known SDK
-  gaps on the Flutter 3.41 floor. Overlay descendants continue to receive the
-  resolved collision placement through `OverlayPlacement.of`.
+  gaps on the Flutter 3.41 floor. Tooltip content no longer receives an
+  `OverlayPlacement` scope; use `OverlayPositioner` for content that needs the
+  resolved placement.
+
+### Changed
+
+- Clarify `NakedCombobox`'s direct `RawAutocomplete` composition and retain
+  its lifecycle callbacks. Flutter issue #191928 still allows a pending async
+  result to reopen the options after Escape; the adapter reports that reopen
+  accurately and does not add a second visibility state machine.
 
 ### Fixes
 
 - Defer `NakedTooltip.onOpenChanged` notifications until after the current
   frame, so consumers can safely call `setState` from the callback.
-- Clarify `NakedCombobox`'s direct `RawAutocomplete` composition and retain
-  its lifecycle callbacks. Flutter issue #191928 still allows a pending async
-  result to reopen the options after Escape; the adapter reports that reopen
-  accurately and does not add a second visibility state machine.
 - `NakedTextMagnifier` now updates its position and focal point when its
   notifier, size, magnification scale, or vertical shift changes, without
   waiting for the notifier's next update.
@@ -65,8 +69,8 @@
 
 ### Docs
 
-- Document `NakedTooltip` as built on `RawMenuAnchor`. The 1.0 Flutter 3.41
-  requirement was originally tied to `RawTooltip`; the tooltip no longer uses it.
+- Document `NakedTooltip` as built on `RawTooltip`. The 1.0 Flutter 3.41
+  requirement is tied to the raw tooltip APIs it uses.
 
 ## 1.0.2
 
