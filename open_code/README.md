@@ -19,7 +19,10 @@ the same installed source; see
 ## Install the CLI in a project
 
 The CLI has not been published. The hosted commands below apply after its
-first release. Until then, use the checkout command in this section.
+first release. Until then, use the checkout command in this section. For the
+short global `remix` command, use
+[Git activation](../packages/remix_cli/README.md#activate-an-unreleased-cli-from-git),
+which resolves the CLI independently of a local workspace lockfile.
 
 Use a project-local development dependency so the application's lockfile pins
 the CLI version; `remix.yaml` separately pins registry content:
