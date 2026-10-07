@@ -383,6 +383,34 @@ void main() {
       expect(changes, [true, false, true, false]);
     });
 
+    testWidgets('reports a reopen within the same frame without animation', (
+      WidgetTester tester,
+    ) async {
+      final tooltipKey = GlobalKey<RawTooltipState>();
+      final changes = <bool>[];
+      await tester.pumpMaterialWidget(
+        NakedTooltip(
+          tooltipKey: tooltipKey,
+          onOpenChanged: changes.add,
+          triggerMode: TooltipTriggerMode.manual,
+          animationStyle: AnimationStyle.noAnimation,
+          overlayBuilder: (context, animation) => const Text('Reopened'),
+          child: const SizedBox(width: 100, height: 40),
+        ),
+      );
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+
+      // The overlay stays mounted, so its animation jumps from dismissed
+      // straight to completed without a forward status.
+      RawTooltip.dismissAllToolTips();
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Reopened'), findsOneWidget);
+      expect(changes, [true, false, true]);
+    });
+
     testWidgets('defers visibility notifications until after build', (
       WidgetTester tester,
     ) async {
