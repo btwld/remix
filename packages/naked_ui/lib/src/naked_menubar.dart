@@ -178,6 +178,40 @@ class _NakedMenubarState extends State<NakedMenubar> {
     _triggers.focusEdge(last: last);
   }
 
+  Widget _buildBarContents(TextDirection direction, bool isOpen) {
+    Widget body = FocusTraversalGroup(
+      policy: ReadingOrderTraversalPolicy(),
+      child: Shortcuts(
+        shortcuts: NakedIntentActions.menubar.barShortcuts(direction),
+        child: Actions(
+          actions: NakedIntentActions.menubar.barActions(
+            onNext: () => _moveFocus(forward: true),
+            onPrevious: () => _moveFocus(forward: false),
+            onFirst: () => _focusEdge(last: false),
+            onLast: () => _focusEdge(last: true),
+          ),
+          child: NakedMenubarScope(
+            controller: _controller,
+            isOpen: isOpen,
+            openOnHover: widget.openOnHover,
+            triggers: _triggers,
+            child: widget.child,
+          ),
+        ),
+      ),
+    );
+
+    body = Semantics(
+      role: SemanticsRole.menuBar,
+      container: true,
+      explicitChildNodes: true,
+      label: widget.semanticLabel,
+      child: body,
+    );
+
+    return widget.excludeSemantics ? ExcludeSemantics(child: body) : body;
+  }
+
   @override
   Widget build(BuildContext context) {
     final direction = Directionality.of(context);
@@ -188,42 +222,7 @@ class _NakedMenubarState extends State<NakedMenubar> {
         builder: (context) {
           final isOpen = MenuController.maybeIsOpenOf(context) ?? false;
           _reportOpen(isOpen);
-
-          Widget body = FocusTraversalGroup(
-            policy: ReadingOrderTraversalPolicy(),
-            child: Shortcuts(
-              shortcuts: NakedIntentActions.menubar.barShortcuts(direction),
-              child: Actions(
-                actions: NakedIntentActions.menubar.barActions(
-                  onNext: () => _moveFocus(forward: true),
-                  onPrevious: () => _moveFocus(forward: false),
-                  onFirst: () => _focusEdge(last: false),
-                  onLast: () => _focusEdge(last: true),
-                ),
-                child: NakedMenubarScope(
-                  controller: _controller,
-                  isOpen: isOpen,
-                  openOnHover: widget.openOnHover,
-                  triggers: _triggers,
-                  child: widget.child,
-                ),
-              ),
-            ),
-          );
-
-          body = Semantics(
-            role: SemanticsRole.menuBar,
-            container: true,
-            explicitChildNodes: true,
-            label: widget.semanticLabel,
-            child: body,
-          );
-
-          if (widget.excludeSemantics) {
-            body = ExcludeSemantics(child: body);
-          }
-
-          return body;
+          return _buildBarContents(direction, isOpen);
         },
       ),
     );

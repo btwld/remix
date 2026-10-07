@@ -147,9 +147,12 @@ class OverlayPlacement {
       Object.hash(side, alignment, offset, wasFlipped, wasShifted);
 }
 
+/// Internal inherited bridge used by overlay adapters that do their own
+/// positioning while Flutter owns the overlay portal.
 class _OverlayPlacementScope extends InheritedWidget {
   const _OverlayPlacementScope({required this.placement, required super.child});
 
+  /// The resolved placement exposed to descendants.
   final OverlayPlacement placement;
 
   @override

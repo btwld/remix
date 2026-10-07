@@ -1,11 +1,50 @@
 ## Unreleased
 
+### Breaking changes
+
+- `NakedTooltip` now uses Flutter's `RawTooltip` for trigger handling,
+  animation, hoverable content, and dismissal. Its former controlled `open`,
+  `useRootOverlay`, and `disableHoverableContent` parameters were removed;
+  `onOpenChanged` is now a visibility notification and `tooltipKey` supports
+  command-triggered showing. Focus-open and Escape dismissal remain known SDK
+  gaps on the Flutter 3.41 floor. Tooltip content no longer receives an
+  `OverlayPlacement` scope; use `OverlayPositioner` for content that needs the
+  resolved placement.
+
+### Changed
+
+- Clarify `NakedCombobox`'s direct `RawAutocomplete` composition and retain
+  its lifecycle callbacks. Flutter issue #191928 still allows a pending async
+  result to reopen the options after Escape; the adapter reports that reopen
+  accurately and does not add a second visibility state machine.
+
+### Fixes
+
+- Preserve `NakedTooltip` animation defaults for partial `AnimationStyle`
+  values, honor reverse curves (including the flipped-forward default), and
+  apply later style updates without resetting visibility, focus, or the raw
+  tooltip's state.
+- Defer `NakedTooltip.onOpenChanged` notifications until after the current
+  frame, so consumers can safely call `setState` from the callback. Pending
+  notifications are discarded when the tooltip is removed, and replacing
+  `tooltipKey` reports closure before the new raw tooltip can open.
+- `NakedTextMagnifier` now updates its position and focal point when its
+  notifier, size, magnification scale, or vertical shift changes, without
+  waiting for the notifier's next update.
+- A controlled `NakedSelect` (`open` + `onOpenChanged`) now asks its owner
+  before every close, including Escape on the trigger, an ancestor scroll, and
+  a view resize. These used to close the overlay without calling
+  `onOpenChanged`.
+- Remove the duplicate horizontal traversal binding from menubar overlays.
+  `OverlayPortal` preserves the bar ancestry, while menu panels retain their
+  own Home/End bindings; arrow traversal behavior is unchanged.
+
 ### Evaluated and skipped
 
 - `Expansible` hard-wires a clipped height animation and would drop
   `reverseDuration`.
-- `RawTooltip` still has no controlled open state, hoverable content, or
-  `useRootOverlay`.
+- `RawTooltip` still has no per-instance dismiss API, open-state callback,
+  focus-open trigger, or Escape dismissal on the Flutter 3.41 floor.
 - `showRawDialog` needs Flutter 3.44 and only adds native-window dialogs.
 
 ## 1.1.0

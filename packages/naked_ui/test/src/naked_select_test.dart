@@ -118,6 +118,69 @@ void main() {
       expect(find.text('Apple'), findsOneWidget);
     });
 
+    testWidgets('controlled Escape on the trigger requests close', (
+      tester,
+    ) async {
+      final requests = <bool>[];
+      final triggerFocusNode = FocusNode();
+      addTearDown(triggerFocusNode.dispose);
+      await tester.pumpMaterialWidget(
+        Center(
+          child: NakedSelect<String>(
+            onChanged: (_) {},
+            open: true,
+            onOpenChanged: requests.add,
+            triggerFocusNode: triggerFocusNode,
+            builder: (context, state, child) => const Text('Select option'),
+            overlayBuilder: (context, info) => const NakedSelectOption<String>(
+              value: 'apple',
+              child: Text('Apple'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      triggerFocusNode.requestFocus();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+
+      expect(requests, [false]);
+      expect(find.text('Apple'), findsOneWidget);
+    });
+
+    testWidgets('controlled ancestor scroll requests close', (tester) async {
+      final requests = <bool>[];
+      await tester.pumpMaterialWidget(
+        ListView(
+          children: [
+            // Keeps the trigger in the viewport after the drag.
+            const SizedBox(height: 200),
+            NakedSelect<String>(
+              onChanged: (_) {},
+              open: true,
+              onOpenChanged: requests.add,
+              builder: (context, state, child) => const Text('Select option'),
+              overlayBuilder: (context, info) =>
+                  const NakedSelectOption<String>(
+                    value: 'apple',
+                    child: Text('Apple'),
+                  ),
+            ),
+            const SizedBox(height: 3000),
+          ],
+        ),
+      );
+      await tester.pump();
+
+      await tester.drag(find.text('Select option'), const Offset(0, -50));
+      await tester.pumpAndSettle();
+
+      expect(requests, contains(false));
+      expect(find.text('Apple'), findsOneWidget);
+    });
+
     testWidgets(
       'renders trigger and menu when opened',
       (WidgetTester tester) async {

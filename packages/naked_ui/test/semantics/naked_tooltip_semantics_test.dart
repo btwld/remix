@@ -166,12 +166,13 @@ void main() {
       tester,
     ) async {
       final handle = tester.ensureSemantics();
+      final tooltipKey = GlobalKey<RawTooltipState>();
 
       try {
         await tester.pumpWidget(
           _buildTestApp(
             NakedTooltip(
-              open: true,
+              tooltipKey: tooltipKey,
               semanticLabel: 'Show connection help',
               excludeOverlaySemantics: false,
               animationStyle: AnimationStyle.noAnimation,
@@ -188,6 +189,7 @@ void main() {
             ),
           ),
         );
+        tooltipKey.currentState?.ensureTooltipVisible();
         await tester.pumpAndSettle();
 
         final trigger = _nodesWithLabel(tester, 'Show status').single;
@@ -213,12 +215,13 @@ void main() {
         'keeps overlay semantics when the trigger tooltip label is $description',
         (tester) async {
           final handle = tester.ensureSemantics();
+          final tooltipKey = GlobalKey<RawTooltipState>();
 
           try {
             await tester.pumpWidget(
               _buildTestApp(
                 NakedTooltip(
-                  open: true,
+                  tooltipKey: tooltipKey,
                   semanticLabel: semanticLabel,
                   animationStyle: AnimationStyle.noAnimation,
                   overlayBuilder: (context, animation) =>
@@ -231,6 +234,7 @@ void main() {
                 ),
               ),
             );
+            tooltipKey.currentState?.ensureTooltipVisible();
             await tester.pumpAndSettle();
 
             final trigger = _nodesWithLabel(tester, 'Show status').single;
@@ -245,12 +249,13 @@ void main() {
 
     testWidgets('can explicitly exclude an unlabeled overlay', (tester) async {
       final handle = tester.ensureSemantics();
+      final tooltipKey = GlobalKey<RawTooltipState>();
 
       try {
         await tester.pumpWidget(
           _buildTestApp(
             NakedTooltip(
-              open: true,
+              tooltipKey: tooltipKey,
               excludeOverlaySemantics: true,
               animationStyle: AnimationStyle.noAnimation,
               overlayBuilder: (context, animation) =>
@@ -263,6 +268,7 @@ void main() {
             ),
           ),
         );
+        tooltipKey.currentState?.ensureTooltipVisible();
         await tester.pumpAndSettle();
 
         expect(_nodesWithLabel(tester, 'Show status'), hasLength(1));
@@ -276,16 +282,16 @@ void main() {
       tester,
     ) async {
       final handle = tester.ensureSemantics();
+      final tooltipKey = GlobalKey<RawTooltipState>();
 
       try {
         await tester.pumpWidget(
           _buildTestApp(
             NakedTooltip(
-              open: true,
+              tooltipKey: tooltipKey,
               semanticLabel: 'Show connection help',
               excludeSemantics: true,
               excludeOverlaySemantics: false,
-              useRootOverlay: true,
               animationStyle: AnimationStyle.noAnimation,
               overlayBuilder: (context, animation) =>
                   const Text('Connection status'),
@@ -297,6 +303,7 @@ void main() {
             ),
           ),
         );
+        tooltipKey.currentState?.ensureTooltipVisible();
         await tester.pumpAndSettle();
 
         expect(_nodesWithLabel(tester, 'Show status'), isEmpty);

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
 import 'naked_button.dart';
-import 'utilities/anchored_overlay_shell.dart';
+import 'utilities/anchored_overlay.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
@@ -354,26 +354,53 @@ class _NakedPopoverState extends State<NakedPopover>
     super.dispose();
   }
 
+  /// Replaces [info]'s anchor rect with the [NakedPopover.anchorKey] widget's
+  /// rect in the overlay's coordinate space, when there is one.
+  RawMenuOverlayInfo _anchoredInfo(
+    BuildContext overlayContext,
+    RawMenuOverlayInfo info,
+  ) {
+    final anchorBox = widget.anchorKey?.currentContext?.findRenderObject();
+    final overlayBox = Overlay.maybeOf(
+      overlayContext,
+      rootOverlay: widget.useRootOverlay,
+    )?.context.findRenderObject();
+    if (anchorBox is! RenderBox || overlayBox is! RenderBox) return info;
+    final topLeft = anchorBox.localToGlobal(Offset.zero, ancestor: overlayBox);
+
+    return RawMenuOverlayInfo(
+      anchorRect: topLeft & anchorBox.size,
+      overlaySize: info.overlaySize,
+      tapRegionGroupId: info.tapRegionGroupId,
+      position: info.position,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final childFocusNode = _extractChildFocusNode();
     final returnNode =
         widget.triggerFocusNode ?? childFocusNode ?? _internalTriggerNode;
 
-    final result = AnchoredOverlayShell(
+    final result = RawMenuAnchor(
       controller: _menuController,
-      triggerFocusNode: returnNode,
-      positioningAnchorKey: widget.anchorKey,
+      childFocusNode: returnNode,
       consumeOutsideTaps: widget.consumeOutsideTaps,
       onOpen: _handleOpen,
       onClose: _handleClose,
-      onOpenRequested: widget.onOpenRequested ?? (_, show) => show(),
-      onCloseRequested: widget.onCloseRequested ?? (hide) => hide(),
+      onOpenRequested:
+          widget.onOpenRequested ?? (_, showOverlay) => showOverlay(),
+      onCloseRequested:
+          widget.onCloseRequested ?? (hideOverlay) => hideOverlay(),
       useRootOverlay: widget.useRootOverlay,
-      closeOnClickOutside: true,
-      positioning: widget.positioning,
       overlayBuilder: (context, info) {
-        return widget.popoverBuilder(context, info);
+        final anchored = _anchoredInfo(context, info);
+
+        return AnchoredOverlay(
+          info: anchored,
+          positioning: widget.positioning,
+          child: widget.popoverBuilder(context, anchored),
+        );
       },
       child: _buildTrigger(returnNode, childFocusNode),
     );
