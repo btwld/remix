@@ -31,7 +31,7 @@ The complete documentation covers detailed component APIs and examples, guides a
 - NakedMenu — anchored menu with checkbox/radio items + recursive submenus
 - NakedMenubar — menu bar that closes sibling menus and moves with the arrow keys
 - NakedDialog — normal and alert dialog semantics + modal focus trap
-- NakedTooltip — RawTooltip behavior with hoverable content, collision-aware positioning, and visibility notifications
+- NakedTooltip — hover, focus, and touch tooltip on RawTooltip with hoverable content and collision-aware positioning
 - NakedPopover — anchored, dismissible overlay with optional separate anchor
 - NakedToastScope — queued, nonmodal toasts with status/alert semantics
 
