@@ -249,15 +249,16 @@ class _SelectIntentActions {
   Map<ShortcutActivator, Intent> get shortcuts => _selectShortcuts;
 
   Map<Type, Action<Intent>> actions({
-    required VoidCallback onDismiss,
+    VoidCallback? onDismiss,
     VoidCallback? onOpenOverlay,
     VoidCallback? onPageUp,
     VoidCallback? onPageDown,
   }) {
     final map = <Type, Action<Intent>>{
-      DismissIntent: CallbackAction<DismissIntent>(
-        onInvoke: (_) => onDismiss(),
-      ),
+      if (onDismiss != null)
+        DismissIntent: CallbackAction<DismissIntent>(
+          onInvoke: (_) => onDismiss(),
+        ),
     };
 
     if (onOpenOverlay != null) {

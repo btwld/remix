@@ -297,6 +297,11 @@ class NakedSelect<T> extends StatefulWidget {
   /// When null, [NakedSelect] manages its own open state. When non-null, user
   /// interactions request changes through [onOpenChanged] and the visible
   /// overlay follows this value.
+  ///
+  /// Closes that [RawMenuAnchor] starts itself also arrive as requests: Escape
+  /// on the trigger, a view resize, and an ancestor scroll, which requests
+  /// once when scrolling starts and again when it ends. Changes the owner
+  /// makes to this value are not echoed through [onOpenChanged].
   final bool? open;
 
   /// Called when a controlled or observed open-state change is requested.
@@ -305,10 +310,15 @@ class NakedSelect<T> extends StatefulWidget {
   /// Called when the select closes without a selection.
   final VoidCallback? onCanceled;
 
-  /// Open/close interceptors.
+  /// Intercepts open requests so callers can coordinate custom transitions.
+  ///
+  /// For a controlled select, this runs once the owner has set [open] to true.
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
 
   /// Intercepts close requests so callers can coordinate custom transitions.
+  ///
+  /// For a controlled select, this runs once the owner has set [open] to
+  /// false.
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
 
   /// Whether outside taps on the trigger are consumed.
@@ -370,7 +380,9 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
     if (_controlledOpen == true) {
-      widget.onOpenChanged?.call(false);
+      // Flutter 3.41 and 3.47 also send close requests to anchors that are
+      // not open, such as this select while an enclosing anchor opens it.
+      if (_menuController.isOpen) widget.onOpenChanged?.call(false);
       return;
     }
     final onCloseRequested = widget.onCloseRequested;
@@ -534,7 +546,8 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
       shortcuts: NakedIntentActions.select.shortcuts,
       child: Actions(
         actions: NakedIntentActions.select.actions(
-          onDismiss: () => _requestOpen(false),
+          // While closed, leave Escape to enclosing dismiss actions.
+          onDismiss: _isOpen ? () => _requestOpen(false) : null,
           onOpenOverlay: _isEnabled ? () => _requestOpen(true) : null,
           onPageUp: _handlePageUp,
           onPageDown: _handlePageDown,

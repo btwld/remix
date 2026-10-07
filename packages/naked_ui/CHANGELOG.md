@@ -46,9 +46,11 @@
   notifier, size, magnification scale, or vertical shift changes, without
   waiting for the notifier's next update.
 - A controlled `NakedSelect` (`open` + `onOpenChanged`) now asks its owner
-  before every close, including Escape on the trigger, an ancestor scroll, and
-  a view resize. These used to close the overlay without calling
-  `onOpenChanged`.
+  before every close, including Escape on the trigger, an ancestor scroll
+  (once when scrolling starts and once when it ends), and a view resize. These
+  used to close the overlay without calling `onOpenChanged`.
+- Escape on a closed `NakedSelect` trigger now reaches an enclosing dismiss
+  action, such as the `NakedPopover` around it. 1.1.0 consumed it.
 - Remove the duplicate horizontal traversal binding from menubar overlays.
   `OverlayPortal` preserves the bar ancestry, while menu panels retain their
   own Home/End bindings; arrow traversal behavior is unchanged.
