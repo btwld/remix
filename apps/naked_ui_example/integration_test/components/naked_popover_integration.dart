@@ -1,4 +1,5 @@
 import 'package:naked_ui_example/api/naked_popover.0.dart' as popover_example;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,22 +43,35 @@ void main() {
       expect(find.text('Popover Content'), findsNothing);
     });
 
-    testWidgets('popover responds to hover interactions', (tester) async {
+    testWidgets('popover trigger reports hover state', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: popover_example.PopoverExample()),
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: NakedPopover(
+                popoverBuilder: (context, info) =>
+                    const Text('Popover Content'),
+                builder: (context, state, child) =>
+                    Text(state.isHovered ? 'Hovered' : 'Idle'),
+              ),
+            ),
+          ),
         ),
       );
-      await tester.pumpAndSettle();
+      expect(find.text('Idle'), findsOneWidget);
 
-      // Find the popover trigger
-      final triggerFinder = find.text('Show Popover');
-      expect(triggerFinder, findsOneWidget);
-
-      // Popover is click-triggered; verify it opens on tap
-      await tester.tap(triggerFinder);
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(find.text('Idle')));
       await tester.pumpAndSettle();
-      expect(find.text('Popover Content'), findsOneWidget);
+      expect(find.text('Hovered'), findsOneWidget);
+      // Hover alone does not open a popover.
+      expect(find.text('Popover Content'), findsNothing);
+
+      await mouse.moveTo(Offset.zero);
+      await tester.pumpAndSettle();
+      expect(find.text('Idle'), findsOneWidget);
     });
 
     testWidgets('popover handles keyboard activation', (tester) async {
@@ -92,49 +106,76 @@ void main() {
       );
     });
 
-    testWidgets('popover positioning works correctly', (tester) async {
+    testWidgets('popover sits below the trigger with its side offset', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(body: popover_example.PopoverExample()),
+          home: Scaffold(body: Center(child: popover_example.PopoverExample())),
         ),
       );
       await tester.pumpAndSettle();
-
-      // Find the popover trigger
-      final triggerFinder = find.text('Show Popover');
-      expect(triggerFinder, findsOneWidget);
-
-      // Open popover
-      await tester.tap(triggerFinder);
+      await tester.tap(find.text('Show Popover'));
       await tester.pumpAndSettle();
 
-      // Verify popover is positioned correctly (it should be visible on screen)
-      final popoverFinder = find.byType(NakedPopover);
-      expect(popoverFinder, findsWidgets);
-
-      // Verify the popover content is accessible
-      final contentFinder = find.textContaining('');
-      expect(contentFinder, findsWidgets);
+      // The example uses side: bottom, alignment: center, sideOffset: 8.
+      final trigger = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Show Popover'),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+      final panel = tester.getRect(
+        find.ancestor(
+          of: find.text('Popover Content'),
+          matching: find.byType(popover_example.PopoverMenu),
+        ),
+      );
+      expect(panel.top, moreOrLessEquals(trigger.bottom + 8, epsilon: 0.5));
+      expect(
+        panel.center.dx,
+        moreOrLessEquals(trigger.center.dx, epsilon: 0.5),
+      );
     });
 
-    testWidgets('popover handles focus management', (tester) async {
+    testWidgets('popover closes from its content and from Escape', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(body: popover_example.PopoverExample()),
+          home: Scaffold(body: Center(child: popover_example.PopoverExample())),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Open popover
-      final triggerFinder = find.text('Show Popover');
-      await tester.tap(triggerFinder);
+      await tester.tap(find.text('Show Popover'));
       await tester.pumpAndSettle();
+      expect(
+        tester.getSemantics(find.text('Show Popover')),
+        isSemantics(isButton: true, hasExpandedState: true, isExpanded: true),
+      );
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+      expect(find.text('Popover Content'), findsNothing);
 
-      // Test focus/interaction within popover - tap the Close button inside overlay
-      if (find.text('Close').evaluate().isNotEmpty) {
-        await tester.tap(find.text('Close'));
-        await tester.pumpAndSettle();
-      }
+      await tester.tap(find.text('Show Popover'));
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Popover Content'), findsNothing);
+      expect(
+        tester.getSemantics(find.text('Show Popover')),
+        isSemantics(
+          isButton: true,
+          hasExpandedState: true,
+          isExpanded: false,
+          isFocused: true,
+        ),
+      );
+      semantics.dispose();
     });
   });
 }

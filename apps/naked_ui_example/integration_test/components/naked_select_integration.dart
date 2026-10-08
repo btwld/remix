@@ -1,5 +1,6 @@
 import 'package:naked_ui_example/api/naked_select.0.dart' as select_example;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:naked_ui/naked_ui.dart';
@@ -27,6 +28,122 @@ void main() {
       expect(find.text('Apple'), findsOneWidget);
       expect(find.text('Banana'), findsOneWidget);
       expect(find.text('Orange'), findsOneWidget);
+
+      // Escape closes it and the trigger reports collapsed.
+      final semantics = tester.ensureSemantics();
+      expect(
+        tester.getSemantics(find.text('Choose fruit...')),
+        isSemantics(isButton: true, hasExpandedState: true, isExpanded: true),
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Apple'), findsNothing);
+      expect(
+        tester.getSemantics(find.text('Choose fruit...')),
+        isSemantics(isButton: true, hasExpandedState: true, isExpanded: false),
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('Escape returns focus to the trigger', (tester) async {
+      final triggerFocusNode = FocusNode();
+      addTearDown(triggerFocusNode.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: _fruitSelect(triggerFocusNode: triggerFocusNode),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Fruit'));
+      await tester.pumpAndSettle();
+      expect(triggerFocusNode.hasFocus, isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Apple'), findsNothing);
+      expect(triggerFocusNode.hasFocus, isTrue);
+    });
+
+    testWidgets('a controlled select opens and closes through its owner', (
+      tester,
+    ) async {
+      final requests = <bool>[];
+      var open = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: StatefulBuilder(
+                builder: (context, setState) => _fruitSelect(
+                  open: open,
+                  onOpenChanged: (value) {
+                    requests.add(value);
+                    setState(() => open = value);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Fruit'));
+      await tester.pumpAndSettle();
+      expect(requests, [true]);
+      expect(find.text('Apple'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(requests, [true, false]);
+      expect(find.text('Apple'), findsNothing);
+    });
+
+    testWidgets('a select inside a popover closes before the popover', (
+      tester,
+    ) async {
+      var open = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: NakedPopover(
+                popoverBuilder: (context, info) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Popover content'),
+                    // Owner state lives outside the popover builder.
+                    StatefulBuilder(
+                      builder: (context, setState) => _fruitSelect(
+                        open: open,
+                        onOpenChanged: (value) => setState(() => open = value),
+                      ),
+                    ),
+                  ],
+                ),
+                child: const Text('Open popover'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open popover'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Fruit'));
+      await tester.pumpAndSettle();
+      expect(find.text('Apple'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Apple'), findsNothing);
+      expect(find.text('Popover content'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Popover content'), findsNothing);
     });
 
     testWidgets('single selection mode works correctly', (tester) async {
@@ -292,3 +409,26 @@ void main() {
     });
   });
 }
+
+Widget _fruitSelect({
+  bool? open,
+  ValueChanged<bool>? onOpenChanged,
+  FocusNode? triggerFocusNode,
+}) => NakedSelect<String>(
+  open: open,
+  onOpenChanged: onOpenChanged,
+  triggerFocusNode: triggerFocusNode,
+  onChanged: (_) {},
+  builder: (context, state, child) =>
+      const Padding(padding: EdgeInsets.all(12), child: Text('Fruit')),
+  overlayBuilder: (context, info) => const ColoredBox(
+    color: Colors.white,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        NakedSelectOption<String>(value: 'apple', child: Text('Apple')),
+        NakedSelectOption<String>(value: 'banana', child: Text('Banana')),
+      ],
+    ),
+  ),
+);

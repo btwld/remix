@@ -12,6 +12,15 @@ void main() {
 
   group('NakedButton Integration Tests', () {
     testWidgets('button responds to all interaction types', (tester) async {
+      // The example reports a press with debugPrint (#235 removed its
+      // Material SnackBar host), so capture what it prints.
+      final printed = <String>[];
+      final originalDebugPrint = debugPrint;
+      debugPrint = (String? message, {int? wrapWidth}) {
+        if (message != null) printed.add(message);
+      };
+      addTearDown(() => debugPrint = originalDebugPrint);
+
       // Use the actual example app
       await tester.pumpWidget(const button_example.MyApp());
       await tester.pumpAndSettle();
@@ -20,14 +29,13 @@ void main() {
       expect(buttonFinder, findsOneWidget);
 
       // Keyboard activation: focus the button via traversal (naked
-      // components do not focus on tap), then Enter must fire onPressed —
-      // the example app shows a snackbar.
+      // components do not focus on tap), then Enter must fire onPressed.
       FocusScope.of(tester.element(buttonFinder)).nextFocus();
       await tester.pump();
       expect(tester.hasPrimaryFocusOn(buttonFinder), isTrue);
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pump();
-      expect(find.text('Button pressed!'), findsOneWidget);
+      expect(printed, ['Button pressed!']);
       await tester.pumpAndSettle();
 
       // Test tap interaction
