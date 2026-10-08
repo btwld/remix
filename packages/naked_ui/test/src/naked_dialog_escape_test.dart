@@ -26,17 +26,20 @@ void main() {
     return context;
   }
 
-  Widget content() => Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextButton(
-          autofocus: true,
-          onPressed: () {},
-          child: const Text('Inside'),
-        ),
-        const SizedBox(width: 200, child: TextField()),
-      ],
+  Widget content() => Material(
+    type: MaterialType.transparency,
+    child: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextButton(
+            autofocus: true,
+            onPressed: () {},
+            child: const Text('Inside'),
+          ),
+          const SizedBox(width: 200, child: TextField()),
+        ],
+      ),
     ),
   );
 
@@ -51,6 +54,7 @@ void main() {
           context: context,
           barrierColor: Colors.black54,
           semanticLabel: 'Alert',
+          barrierLabel: 'Dismiss',
           barrierDismissible: true,
           builder: (_) => content(),
         ),
@@ -120,4 +124,45 @@ void main() {
     await tester.pumpAndSettle();
     expect(await result, 'done');
   });
+
+  testWidgets(
+    'Escape closes an open nested NakedPopover before dismissing the dialog',
+    (tester) async {
+      final context = await pumpHost(tester);
+      final popoverController = MenuController();
+      final result = showNakedDialog<String>(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => Material(
+          type: MaterialType.transparency,
+          child: Center(
+            child: NakedPopover(
+              controller: popoverController,
+              popoverBuilder: (context, info) => const Text('Popover Panel'),
+              child: NakedButton(
+                autofocus: true,
+                onPressed: popoverController.open,
+                child: const Text('Open Popover'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Open Popover'));
+      await tester.pumpAndSettle();
+      expect(find.text('Popover Panel'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Popover Panel'), findsNothing);
+      expect(find.text('Open Popover'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Open Popover'), findsNothing);
+      expect(await result, isNull);
+    },
+  );
 }

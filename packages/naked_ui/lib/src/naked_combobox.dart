@@ -229,6 +229,8 @@ class _OverlayLifecycleState extends State<_OverlayLifecycle> {
 /// - Highlight cannot be set programmatically or by hover.
 /// - The options view is pinned to the field width and opens [optionsViewOpenDirection]
 ///   (`down`, `up`, or `mostSpace`). [OverlayPositionConfig] does not apply.
+/// - On Flutter 3.41, a selection-only caret change after picking an option
+///   can reopen the options list.
 ///
 /// [SemanticsRole.comboBox] is not used: on Flutter 3.41 debug semantics throw
 /// `Missing checks for role` for that role.
@@ -378,7 +380,14 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   FutureOr<Iterable<T>> _optionsBuilder(TextEditingValue value) {
     if (!widget.enabled) return const Iterable.empty();
 
-    return widget.optionsBuilder(value);
+    final result = widget.optionsBuilder(value);
+    if (result is Future<Iterable<T>>) {
+      return result.then(
+        (options) => mounted ? options : Completer<Iterable<T>>().future,
+      );
+    }
+
+    return result;
   }
 
   Widget _buildFieldView(
@@ -433,7 +442,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         role: SemanticsRole.list,
         container: true,
         explicitChildNodes: true,
-        child: widget.overlayBuilder(context, options),
+        child: ExcludeFocus(child: widget.overlayBuilder(context, options)),
       ),
     ),
   );

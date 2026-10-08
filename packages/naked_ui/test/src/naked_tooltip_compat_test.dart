@@ -226,7 +226,190 @@ void main() {
       );
       expect(triggerPlacement, isNull);
     });
+
+    testWidgets('sideOffset positions the overlay at the exact pixel offset', (
+      tester,
+    ) async {
+      final tooltipKey = GlobalKey<RawTooltipState>();
+      await tester.pumpMaterialWidget(
+        Center(
+          child: NakedTooltip(
+            tooltipKey: tooltipKey,
+            triggerMode: TooltipTriggerMode.manual,
+            animationStyle: AnimationStyle.noAnimation,
+            positioning: const OverlayPositionConfig(
+              side: OverlaySide.bottom,
+              alignment: OverlayAlignment.center,
+              sideOffset: 14,
+            ),
+            overlayBuilder: (context, animation) =>
+                const SizedBox(width: 60, height: 20, child: Text('OffsetTip')),
+            child: const SizedBox(key: _triggerKey, width: 100, height: 40),
+          ),
+        ),
+      );
+      tooltipKey.currentState!.ensureTooltipVisible();
+      await tester.pumpAndSettle();
+
+      final triggerRect = tester.getRect(find.byKey(_triggerKey));
+      final tipRect = tester.getRect(find.text('OffsetTip'));
+      expect(tipRect.top - triggerRect.bottom, 14);
+    });
   });
+
+  group('1.2.0 Audit Regressions', () {
+    testWidgets(
+      'Tabbing from tooltip A to tooltip B keeps B open after A dismissDelay elapses',
+      (tester) async {
+        final focusA = FocusNode(debugLabel: 'A');
+        final focusB = FocusNode(debugLabel: 'B');
+        addTearDown(focusA.dispose);
+        addTearDown(focusB.dispose);
+
+        await tester.pumpMaterialWidget(
+          Row(
+            children: [
+              NakedTooltip(
+                hoverDelay: Duration.zero,
+                dismissDelay: const Duration(milliseconds: 100),
+                animationStyle: AnimationStyle.noAnimation,
+                overlayBuilder: (context, animation) => const Text('Tip A'),
+                child: Focus(
+                  focusNode: focusA,
+                  child: const SizedBox(
+                    width: 80,
+                    height: 40,
+                    child: Text('A'),
+                  ),
+                ),
+              ),
+              NakedTooltip(
+                hoverDelay: Duration.zero,
+                dismissDelay: const Duration(milliseconds: 100),
+                animationStyle: AnimationStyle.noAnimation,
+                overlayBuilder: (context, animation) => const Text('Tip B'),
+                child: Focus(
+                  focusNode: focusB,
+                  child: const SizedBox(
+                    width: 80,
+                    height: 40,
+                    child: Text('B'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+
+        focusA.requestFocus();
+        await tester.pumpAndSettle();
+        expect(find.text('Tip A'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(focusB.hasFocus, isTrue);
+        expect(find.text('Tip B'), findsOneWidget);
+
+        // Advance past tooltip A's 100ms dismissDelay.
+        await tester.pump(const Duration(milliseconds: 150));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Tip B'), findsOneWidget);
+        expect(find.text('Tip A'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'Escape from focusable overlay content closes tooltip and does not reopen when focus returns to trigger',
+      (tester) async {
+        final triggerFocus = FocusNode(debugLabel: 'trigger');
+        final contentFocus = FocusNode(debugLabel: 'content');
+        addTearDown(triggerFocus.dispose);
+        addTearDown(contentFocus.dispose);
+
+        await tester.pumpMaterialWidget(
+          Center(
+            child: NakedTooltip(
+              hoverDelay: Duration.zero,
+              dismissDelay: Duration.zero,
+              animationStyle: AnimationStyle.noAnimation,
+              overlayBuilder: (context, animation) => Focus(
+                focusNode: contentFocus,
+                child: const SizedBox(
+                  width: 80,
+                  height: 30,
+                  child: Text('Focusable Tip'),
+                ),
+              ),
+              child: Focus(focusNode: triggerFocus, child: _trigger),
+            ),
+          ),
+        );
+
+        triggerFocus.requestFocus();
+        await tester.pumpAndSettle();
+        expect(find.text('Focusable Tip'), findsOneWidget);
+
+        contentFocus.requestFocus();
+        await tester.pump();
+        expect(contentFocus.hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(find.text('Focusable Tip'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'toggling deprecated useRootOverlay preserves trigger child state via KeyedSubtree',
+      (tester) async {
+        var useRoot = false;
+        late StateSetter setHostState;
+
+        await tester.pumpMaterialWidget(
+          StatefulBuilder(
+            builder: (context, setState) {
+              setHostState = setState;
+              // ignore: deprecated_member_use_from_same_package
+              return NakedTooltip(
+                useRootOverlay: useRoot,
+                overlayBuilder: (context, animation) => const Text('Tip'),
+                child: const _StatefulCounterTrigger(),
+              );
+            },
+          ),
+        );
+
+        await tester.tap(find.text('Count: 0'));
+        await tester.pump();
+        expect(find.text('Count: 1'), findsOneWidget);
+
+        setHostState(() => useRoot = true);
+        await tester.pump();
+        expect(find.text('Count: 1'), findsOneWidget);
+      },
+    );
+  });
+}
+
+class _StatefulCounterTrigger extends StatefulWidget {
+  const _StatefulCounterTrigger();
+
+  @override
+  State<_StatefulCounterTrigger> createState() =>
+      _StatefulCounterTriggerState();
+}
+
+class _StatefulCounterTriggerState extends State<_StatefulCounterTrigger> {
+  int _count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => setState(() => _count++),
+      child: Text('Count: $_count'),
+    );
+  }
 }
 
 const _trigger = SizedBox(key: _triggerKey, width: 100, height: 40);

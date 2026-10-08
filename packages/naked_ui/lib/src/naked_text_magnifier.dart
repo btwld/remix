@@ -102,7 +102,7 @@ class _NakedTextMagnifierState extends State<NakedTextMagnifier> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _position();
+    _position(animate: false);
   }
 
   @override
@@ -117,7 +117,7 @@ class _NakedTextMagnifierState extends State<NakedTextMagnifier> {
         oldWidget.size != widget.size ||
         oldWidget.magnificationScale != widget.magnificationScale ||
         oldWidget.verticalFocalPointShift != widget.verticalFocalPointShift) {
-      _position();
+      _position(animate: false);
     }
   }
 
@@ -128,7 +128,7 @@ class _NakedTextMagnifierState extends State<NakedTextMagnifier> {
     super.dispose();
   }
 
-  void _position() {
+  void _position({bool animate = true}) {
     final info = widget.magnifierInfo.value;
     final screenRect = Offset.zero & MediaQuery.sizeOf(context);
     final size = widget.size;
@@ -165,7 +165,9 @@ class _NakedTextMagnifierState extends State<NakedTextMagnifier> {
     );
 
     Timer? lineJump = _lineJumpTimer;
-    if (_magnifierPosition != null && position.dy != _magnifierPosition!.dy) {
+    if (animate &&
+        _magnifierPosition != null &&
+        position.dy != _magnifierPosition!.dy) {
       _lineJumpTimer?.cancel();
       lineJump = Timer(widget.lineJumpDuration, () {
         if (!mounted) return;

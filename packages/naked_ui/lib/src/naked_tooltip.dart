@@ -173,6 +173,9 @@ class NakedTooltip extends StatefulWidget {
 }
 
 class _NakedTooltipState extends State<NakedTooltip> {
+  static final Set<_NakedTooltipState> _mountedTooltips =
+      <_NakedTooltipState>{};
+
   final _childKey = GlobalKey();
   final _internalTooltipKey = GlobalKey<RawTooltipState>();
   bool _visible = false;
@@ -249,6 +252,12 @@ class _NakedTooltipState extends State<NakedTooltip> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _mountedTooltips.add(this);
+  }
+
+  @override
   void didUpdateWidget(covariant NakedTooltip oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.tooltipKey != oldWidget.tooltipKey) {
@@ -271,6 +280,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
 
   @override
   void dispose() {
+    _mountedTooltips.remove(this);
     _focusTimer?.cancel();
     super.dispose();
   }
@@ -278,12 +288,28 @@ class _NakedTooltipState extends State<NakedTooltip> {
   void _show() => _tooltipKey.currentState?.ensureTooltipVisible();
 
   // RawTooltip cannot close a single tooltip, so this closes every open one.
+  // Snapshot any other actively held or hovered tooltips and restore them.
   void _dismiss() {
     _heldByFocus = false;
+    final toRestore = <(_NakedTooltipState, bool)>[
+      for (final tooltip in _mountedTooltips)
+        if (!identical(tooltip, this) &&
+            !tooltip._usesLegacyTooltip &&
+            tooltip._visible &&
+            (tooltip._heldByFocus ||
+                tooltip._triggerHovered ||
+                tooltip._contentHovered))
+          (tooltip, tooltip._heldByFocus),
+    ];
     RawTooltip.dismissAllToolTips();
+    for (final (tooltip, wasHeldByFocus) in toRestore) {
+      if (wasHeldByFocus) tooltip._heldByFocus = true;
+      tooltip._show();
+    }
   }
 
   void _handleFocusChange(bool focused) {
+    if (focused == _focusWithin) return;
     _focusWithin = focused;
     _focusTimer?.cancel();
     _focusTimer = null;
@@ -360,7 +386,10 @@ class _NakedTooltipState extends State<NakedTooltip> {
   void _reportVisibility(bool visible) {
     if (_visible == visible) return;
     _visible = visible;
-    if (!visible) _heldByFocus = false;
+    if (!visible) {
+      _heldByFocus = false;
+      _contentHovered = false;
+    }
     // The overlay can first report visibility during build. Deliver from the
     // owner so closing survives overlay removal, but not tooltip disposal.
     WidgetsBinding.instance.addPostFrameCallback((_) {

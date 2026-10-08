@@ -248,6 +248,18 @@ class _NakedRawScrollbarState extends RawScrollbarState<_NakedRawScrollbar> {
   }
 
   @override
+  void didUpdateWidget(covariant _NakedRawScrollbar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!enableGestures && _hovered) {
+      _hovered = false;
+      updateScrollbarPainter();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onHoverChange?.call(false);
+      });
+    }
+  }
+
+  @override
   void handleHoverExit(PointerExitEvent event) {
     super.handleHoverExit(event);
     _setHovered(false);

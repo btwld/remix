@@ -774,9 +774,24 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
     handleClose(
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
-      triggerFocusNode: widget.triggerFocusNode,
+      triggerFocusNode: (_menubar?.controller.isOpen ?? false)
+          ? null
+          : widget.triggerFocusNode,
     );
     if (mounted) setState(() {});
+  }
+
+  void _handleCloseRequested(VoidCallback hideOverlay) {
+    if (!widget.controller.isOpen) {
+      hideOverlay();
+      return;
+    }
+    final onCloseRequested = widget.onCloseRequested;
+    if (onCloseRequested != null) {
+      onCloseRequested(hideOverlay);
+    } else {
+      hideOverlay();
+    }
   }
 
   void _handleSelection(T value) {
@@ -855,8 +870,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
       onClose: _handleClose,
       onOpenRequested:
           widget.onOpenRequested ?? (_, showOverlay) => showOverlay(),
-      onCloseRequested:
-          widget.onCloseRequested ?? (hideOverlay) => hideOverlay(),
+      onCloseRequested: _handleCloseRequested,
       useRootOverlay: widget.useRootOverlay,
       overlayBuilder: (context, info) {
         Widget panel = Semantics(

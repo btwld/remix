@@ -54,6 +54,23 @@
 - Remove the duplicate horizontal traversal binding from menubar overlays.
   `OverlayPortal` preserves the bar ancestry, while menu panels retain their
   own Home/End bindings; arrow traversal behavior is unchanged.
+- Guard `NakedMenu` and `NakedPopover` `onCloseRequested` callbacks against
+  closed anchors on Flutter 3.41 and 3.47, and avoid restoring focus to a
+  closing menubar trigger when a sibling menu in the same `NakedMenubar` is
+  already open.
+- Bind Escape directly on dismissible `showNakedDialog` routes so custom
+  `WidgetsApp` shortcut maps that omit `DismissIntent` still dismiss
+  dialogs on Escape while respecting `PopScope`.
+- Wrap `NakedCombobox` options overlays in `ExcludeFocus` (matching Flutter
+  3.47) so Tab from an open combobox moves focus to the next focusable widget on
+  Flutter 3.41 and 3.44, and guard async `optionsBuilder` completions after
+  unmount on Flutter 3.41.
+- Preserve other actively focused or hovered `NakedTooltip` overlays when a
+  blurred tooltip's `dismissDelay` runs `RawTooltip.dismissAllToolTips()`, and
+  reset hover/focus state cleanly on Escape or overlay removal.
+- Reset `NakedScrollbar` hover state when `interactive` becomes `false` while
+  hovered, and snap `NakedTextMagnifier` immediately on widget property updates
+  instead of animating as a line jump.
 
 ### Evaluated and skipped
 

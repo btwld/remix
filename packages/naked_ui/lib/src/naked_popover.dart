@@ -376,6 +376,19 @@ class _NakedPopoverState extends State<NakedPopover>
     );
   }
 
+  void _handleCloseRequested(VoidCallback hideOverlay) {
+    if (!_menuController.isOpen) {
+      hideOverlay();
+      return;
+    }
+    final onCloseRequested = widget.onCloseRequested;
+    if (onCloseRequested != null) {
+      onCloseRequested(hideOverlay);
+    } else {
+      hideOverlay();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final childFocusNode = _extractChildFocusNode();
@@ -390,8 +403,7 @@ class _NakedPopoverState extends State<NakedPopover>
       onClose: _handleClose,
       onOpenRequested:
           widget.onOpenRequested ?? (_, showOverlay) => showOverlay(),
-      onCloseRequested:
-          widget.onCloseRequested ?? (hideOverlay) => hideOverlay(),
+      onCloseRequested: _handleCloseRequested,
       useRootOverlay: widget.useRootOverlay,
       overlayBuilder: (context, info) {
         final anchored = _anchoredInfo(context, info);

@@ -76,17 +76,37 @@ void main() {
     await tester.pumpWidget(
       _magnifierHost(NakedTextMagnifier(magnifierInfo: newInfo)),
     );
-    await tester.pumpAndSettle();
+    // Widget property / notifier replacement snaps immediately without a line-jump animation.
+    expect(
+      tester
+          .widget<AnimatedPositioned>(find.byType(AnimatedPositioned))
+          .duration,
+      Duration.zero,
+    );
     expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(120, 68));
 
+    // Notifier value update on a new line animates with lineJumpDuration.
     newInfo.value = const MagnifierInfo(
-      globalGesturePosition: Offset(100, 120),
-      caretRect: Rect.fromLTWH(100, 120, 2, 20),
-      fieldBounds: Rect.fromLTWH(0, 40, 200, 120),
-      currentLineBoundaries: Rect.fromLTWH(0, 120, 200, 20),
+      globalGesturePosition: Offset(100, 140),
+      caretRect: Rect.fromLTWH(100, 140, 2, 20),
+      fieldBounds: Rect.fromLTWH(0, 40, 200, 140),
+      currentLineBoundaries: Rect.fromLTWH(0, 140, 200, 20),
+    );
+    await tester.pump();
+    expect(
+      tester
+          .widget<AnimatedPositioned>(find.byType(AnimatedPositioned))
+          .duration,
+      const Duration(milliseconds: 70),
     );
     await tester.pumpAndSettle();
-    expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(60, 68));
+    expect(
+      tester
+          .widget<AnimatedPositioned>(find.byType(AnimatedPositioned))
+          .duration,
+      Duration.zero,
+    );
+    expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(60, 88));
   });
 
   for (final configuration in [
