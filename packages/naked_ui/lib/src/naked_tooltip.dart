@@ -269,12 +269,20 @@ class _NakedTooltipState extends State<NakedTooltip> {
         widget.positioning.alignment != oldWidget.positioning.alignment) {
       _placement = _initialPlacement(widget.positioning);
     }
-    // 1.1.0 kept the last accepted state when a controlled tooltip became
-    // uncontrolled. The RawTooltip path starts closed, so reopen it.
-    if (oldWidget.open == true && !_usesLegacyTooltip) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !_usesLegacyTooltip) _show();
-      });
+    if (oldWidget.open != null && widget.open == null && _usesLegacyTooltip) {
+      _visible = oldWidget.open!;
+    }
+    if (_usesLegacy(oldWidget) && !_usesLegacyTooltip) {
+      // 1.1.0 kept the last accepted state when a controlled tooltip became
+      // uncontrolled. The RawTooltip path starts closed, so reopen it.
+      if (oldWidget.open == true) {
+        _visible = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && !_usesLegacyTooltip) _show();
+        });
+      } else if (_visible) {
+        _reportVisibility(false);
+      }
     }
   }
 
@@ -397,15 +405,20 @@ class _NakedTooltipState extends State<NakedTooltip> {
     });
   }
 
-  bool get _usesLegacyTooltip =>
+  static bool _usesLegacy(NakedTooltip widget) =>
       widget.open != null ||
       widget.useRootOverlay ||
       widget.disableHoverableContent;
 
+  bool get _usesLegacyTooltip => _usesLegacy(widget);
+
   Widget _buildLegacyTooltip(Widget child) => LegacyNakedTooltip(
     overlayBuilder: widget.overlayBuilder,
     open: widget.open,
-    onOpenChanged: widget.onOpenChanged,
+    onOpenChanged: (open) {
+      if (widget.open == null) _visible = open;
+      widget.onOpenChanged?.call(open);
+    },
     hoverDelay: widget.hoverDelay,
     touchDelay: widget.touchDelay,
     dismissDelay: widget.dismissDelay,
@@ -437,7 +450,8 @@ class _NakedTooltipState extends State<NakedTooltip> {
       // RawTooltip treats an empty semantics label as "no tooltip". Preserve
       // NakedTooltip's ability to show visual content without a label.
       semanticsTooltip:
-          widget.excludeSemantics || widget.semanticLabel?.isEmpty == true
+          widget.excludeSemantics ||
+              widget.semanticLabel?.trim().isEmpty == true
           ? null
           : widget.semanticLabel,
       tooltipBuilder: (context, animation) {

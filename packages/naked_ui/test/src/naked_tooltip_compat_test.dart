@@ -389,6 +389,83 @@ void main() {
         expect(find.text('Count: 1'), findsOneWidget);
       },
     );
+
+    testWidgets(
+      'transitioning from open legacy tooltip to RawTooltip reports onOpenChanged(false)',
+      (tester) async {
+        var useRoot = true;
+        late StateSetter setHostState;
+        final focus = FocusNode();
+        addTearDown(focus.dispose);
+        final changes = <bool>[];
+
+        await tester.pumpMaterialWidget(
+          StatefulBuilder(
+            builder: (context, setState) {
+              setHostState = setState;
+              // ignore: deprecated_member_use_from_same_package
+              return NakedTooltip(
+                useRootOverlay: useRoot,
+                hoverDelay: Duration.zero,
+                dismissDelay: Duration.zero,
+                onOpenChanged: changes.add,
+                overlayBuilder: (context, animation) => const Text('LegacyTip'),
+                child: Focus(focusNode: focus, child: _trigger),
+              );
+            },
+          ),
+        );
+
+        focus.requestFocus();
+        await tester.pumpAndSettle();
+        expect(find.text('LegacyTip'), findsOneWidget);
+        expect(changes, [true]);
+
+        // Switch from legacy path (useRootOverlay: true) to RawTooltip path.
+        setHostState(() => useRoot = false);
+        await tester.pumpAndSettle();
+
+        expect(find.text('LegacyTip'), findsNothing);
+        expect(changes, [true, false]);
+      },
+    );
+
+    testWidgets(
+      'Escape reaches an enclosing dismiss action when LegacyNakedTooltip is closed',
+      (tester) async {
+        final focus = FocusNode();
+        addTearDown(focus.dispose);
+        var dismissed = 0;
+
+        await tester.pumpMaterialWidget(
+          Actions(
+            actions: {
+              DismissIntent: CallbackAction<DismissIntent>(
+                onInvoke: (_) => dismissed++,
+              ),
+            },
+            child: Center(
+              // ignore: deprecated_member_use_from_same_package
+              child: NakedTooltip(
+                useRootOverlay: true,
+                // Focus does not open before Escape is pressed.
+                hoverDelay: const Duration(seconds: 10),
+                overlayBuilder: (context, animation) => const Text('LegacyTip'),
+                child: Focus(focusNode: focus, child: _trigger),
+              ),
+            ),
+          ),
+        );
+
+        focus.requestFocus();
+        await tester.pump();
+        expect(find.text('LegacyTip'), findsNothing);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        expect(dismissed, 1);
+      },
+    );
   });
 }
 

@@ -109,6 +109,53 @@ void main() {
     expect(tester.getTopLeft(find.byType(RawMagnifier)), const Offset(60, 88));
   });
 
+  testWidgets(
+    'cancels an in-progress line-jump animation when configuration updates',
+    (tester) async {
+      final info = ValueNotifier<MagnifierInfo>(
+        const MagnifierInfo(
+          globalGesturePosition: Offset(100, 80),
+          caretRect: Rect.fromLTWH(100, 80, 2, 20),
+          fieldBounds: Rect.fromLTWH(0, 40, 200, 140),
+          currentLineBoundaries: Rect.fromLTWH(0, 80, 200, 20),
+        ),
+      );
+      addTearDown(info.dispose);
+
+      await tester.pumpWidget(
+        _magnifierHost(NakedTextMagnifier(magnifierInfo: info)),
+      );
+
+      // Trigger a line jump so lineJump is active and the timer is running.
+      info.value = const MagnifierInfo(
+        globalGesturePosition: Offset(100, 140),
+        caretRect: Rect.fromLTWH(100, 140, 2, 20),
+        fieldBounds: Rect.fromLTWH(0, 40, 200, 140),
+        currentLineBoundaries: Rect.fromLTWH(0, 140, 200, 20),
+      );
+      await tester.pump();
+      expect(
+        tester
+            .widget<AnimatedPositioned>(find.byType(AnimatedPositioned))
+            .duration,
+        const Duration(milliseconds: 70),
+      );
+
+      // Updating widget configuration mid-jump should snap immediately and clear lineJump.
+      await tester.pumpWidget(
+        _magnifierHost(
+          NakedTextMagnifier(magnifierInfo: info, size: const Size(120, 60)),
+        ),
+      );
+      expect(
+        tester
+            .widget<AnimatedPositioned>(find.byType(AnimatedPositioned))
+            .duration,
+        Duration.zero,
+      );
+    },
+  );
+
   for (final configuration in [
     (
       name: 'size',

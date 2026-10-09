@@ -89,6 +89,7 @@ class AnchoredOverlay extends StatelessWidget {
                   autofocus: true,
                   canRequestFocus: true,
                   skipTraversal: true,
+                  includeSemantics: false,
                   child: child,
                 ),
               ),

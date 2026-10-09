@@ -216,7 +216,7 @@ class _NakedMenubarState extends State<NakedMenubar> {
   Widget build(BuildContext context) {
     final direction = Directionality.of(context);
 
-    Widget bar = RawMenuAnchorGroup(
+    return RawMenuAnchorGroup(
       controller: _controller,
       child: Builder(
         builder: (context) {
@@ -226,7 +226,5 @@ class _NakedMenubarState extends State<NakedMenubar> {
         },
       ),
     );
-
-    return bar;
   }
 }

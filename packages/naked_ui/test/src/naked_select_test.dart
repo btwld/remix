@@ -902,6 +902,44 @@ void main() {
       await tester.pump();
       expect(find.text('Apple'), findsNothing);
     });
+
+    testWidgets(
+      'does not invoke onCloseRequested when closed inside a closing ancestor overlay',
+      (WidgetTester tester) async {
+        var selectCloseRequests = 0;
+        final popoverController = MenuController();
+
+        await tester.pumpMaterialWidget(
+          NakedPopover(
+            controller: popoverController,
+            popoverBuilder: (context, info) => NakedSelect<String>(
+              onChanged: (_) {},
+              onCloseRequested: (hideOverlay) {
+                selectCloseRequests++;
+                hideOverlay();
+              },
+              builder: (context, state, child) => const Text('Select option'),
+              overlayBuilder: (context, info) =>
+                  const NakedSelectOption<String>(
+                    value: 'apple',
+                    child: Text('Apple'),
+                  ),
+            ),
+            child: const Text('Open Popover'),
+          ),
+        );
+
+        popoverController.open();
+        await tester.pumpAndSettle();
+        expect(find.text('Select option'), findsOneWidget);
+
+        // Close the ancestor popover while the nested select is still closed.
+        popoverController.close();
+        await tester.pumpAndSettle();
+
+        expect(selectCloseRequests, 0);
+      },
+    );
   });
 
   group('Cursor', () {

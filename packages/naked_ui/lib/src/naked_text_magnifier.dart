@@ -165,8 +165,10 @@ class _NakedTextMagnifierState extends State<NakedTextMagnifier> {
     );
 
     Timer? lineJump = _lineJumpTimer;
-    if (animate &&
-        _magnifierPosition != null &&
+    if (!animate) {
+      _lineJumpTimer?.cancel();
+      lineJump = null;
+    } else if (_magnifierPosition != null &&
         position.dy != _magnifierPosition!.dy) {
       _lineJumpTimer?.cancel();
       lineJump = Timer(widget.lineJumpDuration, () {

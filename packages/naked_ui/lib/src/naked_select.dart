@@ -379,14 +379,21 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
   }
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
-    if (_controlledOpen == true) {
-      // Flutter 3.41 and 3.47 also send close requests to anchors that are
-      // not open, such as this select while an enclosing anchor opens it.
-      if (_menuController.isOpen) widget.onOpenChanged?.call(false);
+    // Flutter 3.41 and 3.47 also send close requests to anchors that are
+    // not open, such as this select while an enclosing anchor opens or closes.
+    if (!_menuController.isOpen) {
+      hideOverlay();
       return;
     }
-    final onCloseRequested = widget.onCloseRequested;
-    onCloseRequested == null ? hideOverlay() : onCloseRequested(hideOverlay);
+    if (_controlledOpen == true) {
+      widget.onOpenChanged?.call(false);
+      return;
+    }
+    handleCloseRequested(
+      controller: _menuController,
+      onCloseRequested: widget.onCloseRequested,
+      hideOverlay: hideOverlay,
+    );
   }
 
   void _scheduleControlledSync() {

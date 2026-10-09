@@ -157,8 +157,8 @@ class _MenuIntentActions {
 class _MenubarIntentActions {
   const _MenubarIntentActions();
 
-  /// Left/right (direction-aware) move between bar triggers.
-  Map<ShortcutActivator, Intent> traversalShortcuts(TextDirection direction) {
+  /// Left/right (direction-aware) and Home/End move between bar triggers.
+  Map<ShortcutActivator, Intent> barShortcuts(TextDirection direction) {
     final nextKey = direction == TextDirection.ltr
         ? LogicalKeyboardKey.arrowRight
         : LogicalKeyboardKey.arrowLeft;
@@ -169,14 +169,6 @@ class _MenubarIntentActions {
     return <ShortcutActivator, Intent>{
       SingleActivator(nextKey): _MenubarNextIntent(),
       SingleActivator(previousKey): _MenubarPreviousIntent(),
-    };
-  }
-
-  /// Bar traversal plus Home/End. Overlay panels use [traversalShortcuts] so
-  /// Home/End still move inside the open menu.
-  Map<ShortcutActivator, Intent> barShortcuts(TextDirection direction) {
-    return <ShortcutActivator, Intent>{
-      ...traversalShortcuts(direction),
       SingleActivator(LogicalKeyboardKey.home): _FirstFocusIntent(),
       SingleActivator(LogicalKeyboardKey.end): _LastFocusIntent(),
     };
@@ -189,21 +181,6 @@ class _MenubarIntentActions {
         SingleActivator(LogicalKeyboardKey.arrowUp): _OpenOverlayIntent(),
       };
 
-  /// Actions for [traversalShortcuts].
-  Map<Type, Action<Intent>> traversalActions({
-    required VoidCallback onNext,
-    required VoidCallback onPrevious,
-  }) {
-    return <Type, Action<Intent>>{
-      _MenubarNextIntent: CallbackAction<_MenubarNextIntent>(
-        onInvoke: (_) => onNext(),
-      ),
-      _MenubarPreviousIntent: CallbackAction<_MenubarPreviousIntent>(
-        onInvoke: (_) => onPrevious(),
-      ),
-    };
-  }
-
   /// Actions for [barShortcuts].
   Map<Type, Action<Intent>> barActions({
     required VoidCallback onNext,
@@ -212,7 +189,12 @@ class _MenubarIntentActions {
     required VoidCallback onLast,
   }) {
     return <Type, Action<Intent>>{
-      ...traversalActions(onNext: onNext, onPrevious: onPrevious),
+      _MenubarNextIntent: CallbackAction<_MenubarNextIntent>(
+        onInvoke: (_) => onNext(),
+      ),
+      _MenubarPreviousIntent: CallbackAction<_MenubarPreviousIntent>(
+        onInvoke: (_) => onPrevious(),
+      ),
       _FirstFocusIntent: CallbackAction<_FirstFocusIntent>(
         onInvoke: (_) => onFirst(),
       ),

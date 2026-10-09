@@ -210,4 +210,23 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
   void markSelectionMade() {
     _selectionMadeDuringSession = true;
   }
+
+  /// Forwards [hideOverlay] to [onCloseRequested] only while [controller] is
+  /// open, ignoring close requests sent to already-closed anchors.
+  @protected
+  void handleCloseRequested({
+    required MenuController controller,
+    required RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+    required VoidCallback hideOverlay,
+  }) {
+    if (!controller.isOpen) {
+      hideOverlay();
+      return;
+    }
+    if (onCloseRequested != null) {
+      onCloseRequested(hideOverlay);
+    } else {
+      hideOverlay();
+    }
+  }
 }

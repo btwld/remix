@@ -238,7 +238,7 @@ void main() {
             await tester.pumpAndSettle();
 
             final trigger = _nodesWithLabel(tester, 'Show status').single;
-            expect(trigger.getSemanticsData().tooltip.trim(), isEmpty);
+            expect(trigger.getSemanticsData().tooltip, isEmpty);
             expect(_nodesWithLabel(tester, 'Connection status'), hasLength(1));
           } finally {
             handle.dispose();

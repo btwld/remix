@@ -385,6 +385,19 @@ class _LegacyNakedTooltipState extends State<LegacyNakedTooltip>
 
   void _dismiss() => _requestOpen(false);
 
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    // Leave Escape to enclosing dismiss actions while the tooltip is closed.
+    if ((!_desiredOpen && !_menuController.isOpen) ||
+        !const SingleActivator(
+          LogicalKeyboardKey.escape,
+        ).accepts(event, HardwareKeyboard.instance)) {
+      return KeyEventResult.ignored;
+    }
+    _dismiss();
+
+    return KeyEventResult.handled;
+  }
+
   Widget _buildOverlay(BuildContext context, RawMenuOverlayInfo info) {
     Widget result = widget.overlayBuilder(context, _animation);
     final excludeOverlaySemantics =
@@ -438,7 +451,11 @@ class _LegacyNakedTooltipState extends State<LegacyNakedTooltip>
   @override
   Widget build(BuildContext context) {
     Widget trigger = Semantics(
-      tooltip: widget.excludeSemantics ? null : widget.semanticLabel,
+      tooltip:
+          widget.excludeSemantics ||
+              widget.semanticLabel?.trim().isEmpty == true
+          ? null
+          : widget.semanticLabel,
       child: widget.child,
     );
     trigger = Focus(
@@ -446,6 +463,7 @@ class _LegacyNakedTooltipState extends State<LegacyNakedTooltip>
       skipTraversal: true,
       includeSemantics: false,
       onFocusChange: _handleFocusChange,
+      onKeyEvent: _handleKeyEvent,
       child: trigger,
     );
     trigger = MouseRegion(
@@ -456,10 +474,6 @@ class _LegacyNakedTooltipState extends State<LegacyNakedTooltip>
         onPointerDown: _handlePointerDown,
         child: trigger,
       ),
-    );
-    trigger = CallbackShortcuts(
-      bindings: {const SingleActivator(LogicalKeyboardKey.escape): _dismiss},
-      child: trigger,
     );
 
     Widget result = RawMenuAnchor(

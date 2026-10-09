@@ -536,13 +536,18 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
                   role: SemanticsRole.menu,
                   container: true,
                   explicitChildNodes: true,
-                  child: _NakedMenuScope<T>(
-                    onSelected: _parentMenu.onSelected,
-                    controller: _controller,
-                    rootController: _parentMenu.rootController,
-                    child: Builder(
-                      builder: (context) =>
-                          widget.overlayBuilder(context, info),
+                  // Preserve a child boundary while transitions hide item semantics.
+                  child: Semantics(
+                    container: true,
+                    explicitChildNodes: true,
+                    child: _NakedMenuScope<T>(
+                      onSelected: _parentMenu.onSelected,
+                      controller: _controller,
+                      rootController: _parentMenu.rootController,
+                      child: Builder(
+                        builder: (context) =>
+                            widget.overlayBuilder(context, info),
+                      ),
                     ),
                   ),
                 ),
@@ -782,16 +787,11 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
   }
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
-    if (!widget.controller.isOpen) {
-      hideOverlay();
-      return;
-    }
-    final onCloseRequested = widget.onCloseRequested;
-    if (onCloseRequested != null) {
-      onCloseRequested(hideOverlay);
-    } else {
-      hideOverlay();
-    }
+    handleCloseRequested(
+      controller: widget.controller,
+      onCloseRequested: widget.onCloseRequested,
+      hideOverlay: hideOverlay,
+    );
   }
 
   void _handleSelection(T value) {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+import 'base/overlay_base.dart';
 import 'mixins/naked_mixins.dart';
 import 'naked_button.dart';
 import 'utilities/anchored_overlay.dart';
@@ -157,7 +158,7 @@ class NakedPopover extends StatefulWidget {
 }
 
 class _NakedPopoverState extends State<NakedPopover>
-    with WidgetStatesMixin<NakedPopover> {
+    with WidgetStatesMixin<NakedPopover>, OverlayStateMixin<NakedPopover> {
   // ignore: dispose-fields
   final _internalMenuController = MenuController();
 
@@ -377,16 +378,11 @@ class _NakedPopoverState extends State<NakedPopover>
   }
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
-    if (!_menuController.isOpen) {
-      hideOverlay();
-      return;
-    }
-    final onCloseRequested = widget.onCloseRequested;
-    if (onCloseRequested != null) {
-      onCloseRequested(hideOverlay);
-    } else {
-      hideOverlay();
-    }
+    handleCloseRequested(
+      controller: _menuController,
+      onCloseRequested: widget.onCloseRequested,
+      hideOverlay: hideOverlay,
+    );
   }
 
   @override
