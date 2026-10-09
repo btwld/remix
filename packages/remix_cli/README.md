@@ -4,9 +4,9 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the compact `vanilla` preset, the Radix Themes-inspired `fortal`
-preset, or the initial IBM Carbon-inspired `carbon` slice at initialization.
-Remix remains the behavior dependency; the
+Choose the compact `vanilla` preset or the Radix Themes-inspired `fortal`
+preset from the official registry. A separate public registry can supply its
+own preset, such as Carbon. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
 
@@ -63,7 +63,8 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-All three presets require Remix `^1.0.0-beta.10`. Before that release is available,
+Vanilla, Fortal, and the separate Carbon registry require Remix
+`^1.0.0-beta.10`. Before that release is available,
 add this `pubspec_overrides.yaml` to the application:
 
 ```yaml
@@ -123,6 +124,24 @@ configuration is refused instead of silently rewriting an existing project.
 The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
+The CLI knows the default source for Carbon, a separate public registry:
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset carbon
+```
+
+This selects `@carbon` at `btwld/flutter-carbon/registry` and its `stable`
+ref. Vanilla and Fortal still select the official `@remix` registry. Other
+presets require `--registry` and `--repository`; those options also override
+a known preset's default. They are required together. `--path` defaults to
+`registry`; for an explicit repository, `--ref` defaults to its default
+branch. The CLI validates the selected preset at the resolved full commit SHA
+before writing configuration. It records only that source as
+`defaultRegistry`, so bare item names use it. A later `init` cannot repoint an
+existing source; use `registry update` for a new ref and an explicit migration
+for a new repository, path, or namespace. See the
+[registry guide](../../docs/guides/registries.mdx).
+
 ### Fortal as owned source
 
 With `preset: fortal`, `add button` installs the full local theme layer,
@@ -167,6 +186,8 @@ prefix produces `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
 `acmeButtonStyle`. Select `AcmeTheme.white`, `.g10`, `.g90`, or `.g100` on the
 scope. This slice has no icon button, charts, icons, Agent surfaces, or
 dashboard recipes.
+The repository and its `stable` ref must be public and promoted before the
+hosted command can succeed.
 
 ## Add a component
 

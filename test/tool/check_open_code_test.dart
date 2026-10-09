@@ -66,8 +66,8 @@ void main() {
       expect(options.item, isNull);
     });
 
-    test('every preset can select an explicit source', () {
-      for (final preset in ['vanilla', 'fortal', 'carbon']) {
+    test('both official presets can select an explicit source', () {
+      for (final preset in ['vanilla', 'fortal']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
             '--preset',
@@ -145,7 +145,7 @@ void main() {
           '--source',
           'checkout',
           '--preset',
-          'carbon',
+          'unsupported',
           '--item',
           'dashboard_demo',
         ],
@@ -223,14 +223,6 @@ void main() {
     expect(checker.fixtureContractProblem(fixture, preset: 'fortal'), isNull);
   });
 
-  test('the Carbon fixture is a minimal pre-install contract', () {
-    final fixture = Directory(
-      '${Directory.current.path}/open_code/carbon_fixture',
-    );
-
-    expect(checker.fixtureContractProblem(fixture, preset: 'carbon'), isNull);
-  });
-
   group('registry coverage', () {
     test('the checkout catalog and the checker agree', () {
       expect(checker.registryCoverageProblem(Directory.current), isNull);
@@ -241,34 +233,6 @@ void main() {
         checker.registryCoverageProblem(Directory.current, preset: 'fortal'),
         isNull,
       );
-    });
-
-    test('the Carbon catalog contains only its foundation and button', () {
-      expect(
-        checker.registryCoverageProblem(Directory.current, preset: 'carbon'),
-        isNull,
-      );
-      expect(checker.installedInventoryForTest(preset: 'carbon'), {
-        'ui.dart',
-        'theme/theme.dart',
-        'theme/theme_data.dart',
-        'theme/theme_scope.dart',
-        'theme/layer.dart',
-        'theme/layout.dart',
-        'theme/motion.dart',
-        'theme/token_types.dart',
-        'theme/type.dart',
-        'theme/generated/carbon_component_tokens.dart',
-        'theme/generated/carbon_layout.dart',
-        'theme/generated/carbon_motion.dart',
-        'theme/generated/carbon_palette.dart',
-        'theme/generated/carbon_source_manifest.dart',
-        'theme/generated/carbon_themes.dart',
-        'theme/generated/carbon_tokens.dart',
-        'theme/generated/carbon_type.dart',
-        'components/button.dart',
-        'components/button.g.dart',
-      });
     });
 
     test('an item the checker never installs is reported', () {
@@ -419,20 +383,6 @@ import 'package:flutter/widgets.dart'
       expect(problem, contains('imports package:unexpected_package'));
       expect(problem, contains('`../../outside.dart` escapes lib/ui'));
     });
-
-    test('Carbon passes without Agent, chart, icon, or build config files', () {
-      final app = Directory('${sandbox.path}/carbon_app');
-      _writeCarbonInstalledUi(app);
-
-      expect(checker.installedUiProblem(app, preset: 'carbon'), isNull);
-      expect(checker.installedDependencyProblem(app, preset: 'carbon'), isNull);
-
-      File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
-      expect(
-        checker.installedUiProblem(app, preset: 'carbon'),
-        contains('carbon unexpectedly created a consumer build.yaml'),
-      );
-    });
   });
 
   test('retained failure reporting includes the temporary directory', () {
@@ -444,31 +394,6 @@ import 'package:flutter/widgets.dart'
       ),
     );
   });
-}
-
-void _writeCarbonInstalledUi(Directory app) {
-  for (final relative in checker.installedInventoryForTest(preset: 'carbon')) {
-    final file = File('${app.path}/lib/ui/$relative');
-    file.parent.createSync(recursive: true);
-    file.writeAsStringSync('library;\n');
-  }
-  File('${app.path}/pubspec.yaml')
-    ..parent.createSync(recursive: true)
-    ..writeAsStringSync('''
-name: carbon_consumer
-dependencies:
-  flutter:
-    sdk: flutter
-  remix: ^1.0.0-beta.10
-  mix_annotations: ^2.2.0-beta.1
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  remix_cli:
-    path: /tmp/remix_cli
-  build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
-''');
 }
 
 void _writeValidFixture(Directory fixture) {

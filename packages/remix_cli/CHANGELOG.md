@@ -1,5 +1,9 @@
 ## Unreleased
 
+- `remix init` accepts an explicit public GitHub source and pins its preset
+  before writing configuration. CLI-known defaults select the official
+  `@remix` source for Vanilla/Fortal and the separate `@carbon` source at
+  `btwld/flutter-carbon` for Carbon; custom sources can override either.
 - **Breaking.** `remix.yaml` schema 3 is the only readable configuration.
   Schemas 1 and 2 named no registry and read from a catalog frozen inside the
   CLI; both that catalog and `remix registry migrate` are gone. A project still

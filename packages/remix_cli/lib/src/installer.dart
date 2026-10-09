@@ -24,6 +24,27 @@ $managedExportsStart
 $managedExportsEnd
 ''';
 
+// Only Remix-supported defaults live here. Each repository's index.yaml still
+// decides whether it actually provides the requested preset at the pinned SHA.
+const _knownPresetSources =
+    <String, ({String namespace, String repository, String ref})>{
+      'vanilla': (
+        namespace: '@remix',
+        repository: officialRepository,
+        ref: officialStableRef,
+      ),
+      'fortal': (
+        namespace: '@remix',
+        repository: officialRepository,
+        ref: officialStableRef,
+      ),
+      'carbon': (
+        namespace: '@carbon',
+        repository: 'btwld/flutter-carbon',
+        ref: 'stable',
+      ),
+    };
+
 /// Runs the CLI against [installer].
 ///
 /// Shared with the consumer harness so a new command reaches it automatically
@@ -88,6 +109,15 @@ final class Installer {
   final TemplateRenderer _renderer = const TemplateRenderer();
 
   Future<void> initialize(InitOptions options) async {
+    if ((options.registry == null) != (options.repository == null) ||
+        (options.registry == null &&
+            (options.path != null || options.ref != null))) {
+      throw const FormatException(
+        'Custom init requires --registry and --repository together; '
+        '--path and --ref require both.',
+      );
+    }
+    if (options.registry != null) validateNamespace(options.registry!);
     final root = validateFlutterPackageRoot(projectRoot);
     validateProjectSettings(
       root,
@@ -115,6 +145,19 @@ final class Installer {
           'and UI path.',
         );
       }
+      if (options.registry != null) {
+        final previous = existing.registries[existing.defaultRegistry]!;
+        if (existing.defaultRegistry != options.registry ||
+            previous.repository != options.repository ||
+            (options.path != null && previous.path != options.path) ||
+            (options.ref != null && previous.ref != options.ref)) {
+          throw const FormatException(
+            'Existing remix.yaml does not match the requested registry '
+            'source. Use registry update for ref changes; source migrations '
+            'require explicit reinitialization.',
+          );
+        }
+      }
       writeConfig = false;
     }
 
@@ -125,15 +168,34 @@ final class Installer {
     }
 
     if (writeConfig) {
-      final source = await _sources.latestOfficial();
+      final knownSource = _knownPresetSources[options.preset];
+      if (options.registry == null && knownSource == null) {
+        throw FormatException(
+          'No default registry for preset ${options.preset}; pass '
+          '--registry @name and --repository owner/repo.',
+        );
+      }
+      final namespace = options.registry ?? knownSource!.namespace;
+      final source = options.registry != null
+          ? await _sources.resolve(
+              repository: options.repository!,
+              path: options.path ?? 'registry',
+              ref: options.ref,
+            )
+          : knownSource!.namespace == '@remix'
+          ? await _sources.latestOfficial()
+          : await _sources.resolve(
+              repository: knownSource.repository,
+              ref: knownSource.ref,
+            );
       await _sources.open(source, options.preset).catalog();
       final requested = ProjectConfig(
         packageRoot: root,
         prefix: options.prefix,
         preset: options.preset,
         uiPath: options.uiPath,
-        defaultRegistry: '@remix',
-        registries: {'@remix': source},
+        defaultRegistry: namespace,
+        registries: {namespace: source},
       );
       _fileWriter.write(configFile, requested.encode());
     }

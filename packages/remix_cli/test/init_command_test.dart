@@ -46,6 +46,19 @@ void main() {
     );
   });
 
+  test('Fortal keeps the official default registry', () async {
+    await installer.initialize(
+      const InitOptions(prefix: 'Ui', preset: 'fortal', uiPath: 'lib/ui'),
+    );
+    final config = ProjectConfig.parse(
+      File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
+      packageRoot: root,
+    );
+    expect(config.defaultRegistry, '@remix');
+    expect(config.registries['@remix']!.repository, officialRepository);
+    expect(config.registries['@remix']!.ref, officialStableRef);
+  });
+
   for (final schema in [1, 2]) {
     test(
       'init refuses a prerelease schema $schema project untouched',
@@ -240,6 +253,288 @@ registries:
     );
   });
 
+  test('custom init pins Carbon as the only default registry', () async {
+    final requests = <Uri>[];
+    final custom = Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      sources: _customSources(requests: requests),
+    );
+
+    final code = await runRemixCli(
+      [
+        'init',
+        '--prefix',
+        'Acme',
+        '--preset',
+        'carbon',
+        '--registry',
+        '@carbon',
+        '--repository',
+        'example/carbon-registry',
+        '--ref',
+        'stable',
+      ],
+      writeOut: output.add,
+      writeError: fail,
+      onInit: custom.initialize,
+    );
+
+    expect(code, successExitCode);
+    final config = ProjectConfig.parse(
+      File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
+      packageRoot: root,
+    );
+    expect(config.preset, 'carbon');
+    expect(config.prefix, 'Acme');
+    expect(config.defaultRegistry, '@carbon');
+    expect(config.registries.keys, ['@carbon']);
+    expect(config.registries['@carbon']!.repository, 'example/carbon-registry');
+    expect(config.registries['@carbon']!.ref, 'stable');
+    expect(config.registries['@carbon']!.revision, 'c' * 40);
+    expect(requests.map((uri) => uri.host), contains('api.github.com'));
+    expect(
+      requests.where((uri) => uri.host == 'raw.githubusercontent.com'),
+      everyElement(predicate<Uri>((uri) => uri.path.contains('c' * 40))),
+    );
+  });
+
+  test(
+    'an explicit source can introduce a preset unknown to the CLI',
+    () async {
+      final custom = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: _customSources(preset: 'acme'),
+      );
+
+      expect(
+        await runRemixCli(
+          [
+            'init',
+            '--preset',
+            'acme',
+            '--registry',
+            '@acme',
+            '--repository',
+            'example/carbon-registry',
+            '--ref',
+            'stable',
+          ],
+          writeOut: output.add,
+          writeError: fail,
+          onInit: custom.initialize,
+        ),
+        successExitCode,
+      );
+      final config = ProjectConfig.parse(
+        File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
+        packageRoot: root,
+      );
+      expect(config.preset, 'acme');
+      expect(config.defaultRegistry, '@acme');
+      expect(config.registries.keys, ['@acme']);
+      expect(config.registries['@acme']!.revision, 'c' * 40);
+    },
+  );
+
+  test('an explicit source overrides the known Vanilla default', () async {
+    final custom = Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      sources: _customSources(preset: 'vanilla'),
+    );
+
+    await custom.initialize(
+      const InitOptions(
+        prefix: 'Ui',
+        preset: 'vanilla',
+        uiPath: 'lib/ui',
+        registry: '@acme',
+        repository: 'example/carbon-registry',
+        ref: 'stable',
+      ),
+    );
+    final config = ProjectConfig.parse(
+      File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
+      packageRoot: root,
+    );
+    expect(config.defaultRegistry, '@acme');
+    expect(config.registries.keys, ['@acme']);
+    expect(config.registries['@acme']!.repository, 'example/carbon-registry');
+    expect(config.registries['@acme']!.revision, 'c' * 40);
+  });
+
+  test(
+    'known Carbon preset selects its separate registry automatically',
+    () async {
+      final requests = <Uri>[];
+      final carbon = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: _customSources(requests: requests),
+      );
+
+      expect(
+        await runRemixCli(
+          ['init', '--prefix', 'Acme', '--preset', 'carbon'],
+          writeOut: output.add,
+          writeError: fail,
+          onInit: carbon.initialize,
+        ),
+        successExitCode,
+      );
+      final config = ProjectConfig.parse(
+        File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
+        packageRoot: root,
+      );
+      expect(config.preset, 'carbon');
+      expect(config.defaultRegistry, '@carbon');
+      expect(config.registries.keys, ['@carbon']);
+      expect(config.registries['@carbon']!.repository, 'btwld/flutter-carbon');
+      expect(config.registries['@carbon']!.path, 'registry');
+      expect(config.registries['@carbon']!.ref, 'stable');
+      expect(config.registries['@carbon']!.revision, 'c' * 40);
+      expect(
+        requests.map((uri) => uri.path),
+        contains('/repos/btwld/flutter-carbon/commits/stable'),
+      );
+      expect(
+        requests.where((uri) => uri.host == 'raw.githubusercontent.com'),
+        everyElement(predicate<Uri>((uri) => uri.path.contains('c' * 40))),
+      );
+
+      final before = snapshotFiles(root);
+      final offline = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: GitHubSources(
+          transport: (_) async => fail('re-init went online'),
+        ),
+      );
+      await offline.initialize(
+        const InitOptions(prefix: 'Acme', preset: 'carbon', uiPath: 'lib/ui'),
+      );
+      expect(snapshotFiles(root), before);
+    },
+  );
+
+  test('known Carbon source failure leaves project untouched', () async {
+    final before = snapshotFiles(root);
+    final carbon = Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      sources: _customSources(missingRef: true),
+    );
+
+    await expectLater(
+      carbon.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'carbon', uiPath: 'lib/ui'),
+      ),
+      throwsFormatException,
+    );
+    expect(snapshotFiles(root), before);
+    expect(output, isEmpty);
+  });
+
+  test(
+    'matching custom init is offline and mismatched source is untouched',
+    () async {
+      final custom = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: _customSources(),
+      );
+      const options = InitOptions(
+        prefix: 'Acme',
+        preset: 'carbon',
+        uiPath: 'lib/ui',
+        registry: '@carbon',
+        repository: 'example/carbon-registry',
+        ref: 'stable',
+      );
+      await custom.initialize(options);
+      final before = snapshotFiles(root);
+      final offline = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: GitHubSources(
+          transport: (_) async => fail('re-init went online'),
+        ),
+      );
+      await offline.initialize(options);
+      expect(output.last, 'Remix is already initialized.');
+      expect(snapshotFiles(root), before);
+
+      for (final mismatch in [
+        const InitOptions(
+          prefix: 'Acme',
+          preset: 'carbon',
+          uiPath: 'lib/ui',
+          registry: '@other',
+          repository: 'example/carbon-registry',
+        ),
+        const InitOptions(
+          prefix: 'Acme',
+          preset: 'carbon',
+          uiPath: 'lib/ui',
+          registry: '@carbon',
+          repository: 'example/other',
+        ),
+        const InitOptions(
+          prefix: 'Acme',
+          preset: 'carbon',
+          uiPath: 'lib/ui',
+          registry: '@carbon',
+          repository: 'example/carbon-registry',
+          path: 'elsewhere',
+        ),
+        const InitOptions(
+          prefix: 'Acme',
+          preset: 'carbon',
+          uiPath: 'lib/ui',
+          registry: '@carbon',
+          repository: 'example/carbon-registry',
+          ref: 'next',
+        ),
+      ]) {
+        await expectLater(offline.initialize(mismatch), throwsFormatException);
+        expect(snapshotFiles(root), before);
+      }
+    },
+  );
+
+  test('custom init failures leave no configuration or barrel', () async {
+    for (final sources in [
+      _customSources(
+        index: 'schema: 1\npresets:\n  vanilla: vanilla/registry.yaml\n',
+      ),
+      _customSources(missingRef: true),
+      _customSources(failNetwork: true),
+    ]) {
+      final before = snapshotFiles(root);
+      final custom = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: sources,
+      );
+      await expectLater(
+        custom.initialize(
+          const InitOptions(
+            prefix: 'Acme',
+            preset: 'carbon',
+            uiPath: 'lib/ui',
+            registry: '@carbon',
+            repository: 'example/carbon-registry',
+            ref: 'stable',
+          ),
+        ),
+        throwsFormatException,
+      );
+      expect(snapshotFiles(root), before);
+    }
+  });
+
   test('rejects an unknown preset without partial initialization', () async {
     final before = snapshotFiles(root);
 
@@ -247,7 +542,13 @@ registries:
       installer.initialize(
         const InitOptions(prefix: 'Ui', preset: 'missing', uiPath: 'lib/ui'),
       ),
-      throwsFormatException,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('--registry @name and --repository owner/repo'),
+        ),
+      ),
     );
 
     expect(snapshotFiles(root), before);
@@ -397,3 +698,41 @@ paths:
     );
   });
 }
+
+GitHubSources _customSources({
+  List<Uri>? requests,
+  String preset = 'carbon',
+  String? index,
+  bool missingRef = false,
+  bool failNetwork = false,
+}) => GitHubSources(
+  transport: (uri) async {
+    requests?.add(uri);
+    if (failNetwork) throw const SocketException('offline');
+    if (uri.path == '/repos/example/carbon-registry' ||
+        uri.path == '/repos/btwld/flutter-carbon') {
+      return const RegistryResponse(200, '{"default_branch":"stable"}');
+    }
+    if (uri.path == '/repos/example/carbon-registry/commits/stable' ||
+        uri.path == '/repos/btwld/flutter-carbon/commits/stable') {
+      if (missingRef) return const RegistryResponse(404, 'missing');
+      return RegistryResponse(200, '{"sha":"${'c' * 40}"}');
+    }
+    if (uri.path.endsWith('/registry/index.yaml')) {
+      return RegistryResponse(
+        200,
+        index ?? 'schema: 1\npresets:\n  $preset: $preset/registry.yaml\n',
+      );
+    }
+    if (uri.path.endsWith('/registry/$preset/registry.yaml')) {
+      return const RegistryResponse(200, '''schema: 2
+items:
+  theme:
+    files:
+      - source: templates/theme.dart.tmpl
+        target: "@ui/theme.dart"
+''');
+    }
+    return const RegistryResponse(404, 'missing');
+  },
+);

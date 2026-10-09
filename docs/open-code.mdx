@@ -21,7 +21,9 @@ interaction rules. The installed file only decides what things look like.
 `remix_cli` has not been published. The hosted installation commands below
 apply after its first release. Until then, use the checkout installation
 described in the CLI README. The CLI has its own version and release schedule.
-Fortal preset does not add a `remix_fortal` dependency.
+The standalone Carbon registry's `stable` ref has not yet been promoted, so
+its bare `--preset carbon` command is not available to consumers yet. Fortal
+preset does not add a `remix_fortal` dependency.
 </Info>
 
 ## Choose a preset
@@ -245,7 +247,7 @@ registries:
 | `schema` | `3` | The only readable schema. Schemas 1–2 shipped in earlier prereleases and named no registry; such a project is reinitialized, not migrated. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
 | `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla`, `fortal`, or `carbon` at `init`. |
-| `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
+| `defaultRegistry` | `@remix` for Vanilla/Fortal; `@carbon` for Carbon | Configured namespace for bare item names. |
 | `registries` | official GitHub source | Each namespace records repository, path, requested ref and full commit revision. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
@@ -394,9 +396,10 @@ use `--overwrite` only when you want the new authored file wholesale.
 
 ## The Carbon preset
 
-Carbon begins as a deliberately narrow remote-registry slice: its complete
-theme foundation and `button`. Initialize it and install Button with the same
-pinned-source workflow:
+Carbon begins as a deliberately narrow standalone registry: its complete
+theme foundation and `button`. The CLI selects `@carbon` at
+`btwld/flutter-carbon` when you initialize; it pins that source's commit before
+installing Button:
 
 ```bash
 remix init --prefix Acme --preset carbon
@@ -410,9 +413,10 @@ secondary, tertiary, ghost, and danger treatments; its default 48 px height can
 be overridden directly or inherited from `AcmeLayoutScope`.
 
 This preset intentionally does not claim catalog parity yet. It contains no
-icon button, chart, icons, Agent surface, or dashboard item. The generated
-distribution is derived from `registry_source/lib/src/carbon` and published
-beside the other presets; the CLI does not bundle a second Carbon catalog.
+icon button, chart, icons, Agent surface, or dashboard item. Its authored
+source, generated distribution, and release gate live in the separate
+[`btwld/flutter-carbon`](https://github.com/btwld/flutter-carbon) repository;
+the CLI does not bundle a Carbon catalog.
 
 ## Application host and appearance
 
@@ -740,10 +744,10 @@ components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
-The `carbon` catalog is intentionally smaller: it contains `theme` and
-`button` only. Adding Button installs both, generates `AcmeButton`, and exposes
-the four Carbon theme maps through `AcmeScope`. Carbon does not inherit the
-Vanilla/Fortal catalog merely because the item names share one registry index.
+The separate `carbon` catalog is intentionally smaller: it contains `theme`
+and `button` only. Adding Button installs both, generates `AcmeButton`, and
+exposes the four Carbon theme maps through `AcmeScope`. Carbon does not inherit
+the official Vanilla/Fortal catalog merely because item names overlap.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the

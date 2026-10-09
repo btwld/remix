@@ -156,15 +156,13 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
         - dart run tool/check_open_code.dart --preset fortal --source checkout
-        - dart run tool/check_open_code.dart --preset carbon --source checkout
-      description: Install every item from all presets against the Remix checkout
+      description: Install every official preset item against the Remix checkout
 
     open-code:release:check:
       steps:
         - dart run tool/check_open_code.dart --source hosted
         - dart run tool/check_open_code.dart --preset fortal --source hosted
-        - dart run tool/check_open_code.dart --preset carbon --source hosted
-      description: Verify every preset against the required published Remix release
+      description: Verify both official presets against the required published Remix release
 
     open-code:registry:build:
       run: dart run tool/build_registry.dart
@@ -175,10 +173,6 @@ melos:
         - dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
         - dart run tool/build_registry.dart --check
       description: Test preset derivation and fail on committed registry drift
-
-    carbon:tokens:check:
-      run: npm --prefix registry_source/tool/carbon run tokens:verify
-      description: Verify Carbon token output is deterministic and matches its pinned provenance
 
     open-code:dogfood:check:
       run: dart run tool/check_open_code_dogfood.dart
@@ -227,7 +221,7 @@ melos:
     # tool/check_ci_coverage.dart fails when the two drift, and runs inside
     # `ci:checks` so it cannot be forgotten.
     #
-    # Group by cost, not by theme. The three open-code presets are separate
+    # Group by cost, not by theme. The two official open-code presets are separate
     # steps because they are slow and independent.
     ci:
       steps:
@@ -237,7 +231,6 @@ melos:
         - ci:flutter
         - ci:open-code:vanilla
         - ci:open-code:fortal
-        - ci:open-code:carbon
       description: >-
         Verify generated sources, docs, Fortal parity, tests, and the
         open-code consumer boundary
@@ -260,10 +253,9 @@ melos:
     ci:codegen:
       steps:
         - generate:check
-        - carbon:tokens:check
         - format:check
       description: >-
-        Regenerate Remix sources, then fail on generated, token, or formatting drift
+        Regenerate Remix sources, then fail on generated or formatting drift
 
     ci:cli:
       steps:
@@ -292,11 +284,6 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout
       description: Install every Fortal-preset item against the Remix checkout
-
-    ci:open-code:carbon:
-      steps:
-        - dart run tool/check_open_code.dart --preset carbon --source checkout
-      description: Install the Carbon preset slice against the Remix checkout
 
     ci:coverage:check:
       run: dart run tool/check_ci_coverage.dart

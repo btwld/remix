@@ -15,7 +15,7 @@ Six words carry the whole system.
 | --- | --- |
 | **Registry** | A public GitHub repository holding a directory of component source. |
 | **Namespace** | The name your project gives a registry, like `@remix`. Commands and dependencies use it to say which registry they mean. |
-| **Preset** | One design language inside a registry — `vanilla` or `fortal` officially. A project picks exactly one. |
+| **Preset** | One design language inside a registry — `vanilla` or `fortal` officially, or a preset supplied by your chosen registry. A project picks exactly one. |
 | **Catalog** | The `registry.yaml` for one preset. It lists items. |
 | **Item** | One installable unit: its templates, its dependencies, what it exports. |
 | **Pin** | The exact commit your project reads from, recorded in `remix.yaml`. |
@@ -67,10 +67,32 @@ registries:
 
 Commit `remix.yaml`. There is no separate lockfile.
 
-`init` registers the official registry under the namespace `@remix` and makes
-it `defaultRegistry`, so bare names like `add button` install from it. Keep
-that name: other registries can depend on official items as `@remix/theme`,
-and those dependencies resolve through your project's `@remix`.
+For `vanilla` and `fortal`, `init` registers the official registry under the
+namespace `@remix` and makes it `defaultRegistry`, so bare names like
+`add button` install from it. Other registries can depend on official items as
+`@remix/theme` only when the project has explicitly registered `@remix` and
+the official registry offers the project's selected preset.
+
+The CLI also knows the default source for Carbon, which remains a separate
+registry rather than an official `@remix` catalog. Once
+`btwld/flutter-carbon` publishes its `stable` ref, initialize it with:
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset carbon
+dart run remix_cli:remix add button
+```
+
+The CLI maps `carbon` to `@carbon` at `btwld/flutter-carbon/registry`, resolves
+`stable` to a full commit SHA, verifies that repository's index lists
+`carbon`, and records only `@carbon` as the default source. Bare `add button`
+then reads that pinned Carbon catalog. The CLI ships defaults only for
+Vanilla, Fortal, and Carbon; another preset requires explicit `--registry`
+and `--repository` at initialization. Those options also override a known
+preset's default source. `--path` defaults to `registry`; without `--ref`, an
+explicit repository uses its default branch. A later `init` cannot silently
+change an existing source: use `registry update @carbon` to move its pin.
+Changing its repository, path, or namespace requires an explicit migration or
+reinitialization.
 
 `add` resolves the item's full dependency graph, renders every template, checks
 your `pubspec.yaml`, and only then writes. Your edits to already-installed
@@ -163,21 +185,22 @@ presets:
 This trips people up, so it is worth being precise:
 
 - A **namespace** (`@acme`) identifies *your registry* inside a consuming
-  project. Your registry files do not declare it; the consumer types it in
-  `registry add`. Pick one and tell consumers to use it, because any catalog
+  project. Your registry files do not declare it; the consumer selects it at
+  `init` or `registry add` (a CLI-known preset can choose its default). Pick
+  one and tell consumers to use it, because any catalog
   that depends on your items names it too.
-- A **preset** (`vanilla`) identifies *a design language*. The consuming
-  project selects exactly one, at `remix init`, and it stays fixed.
+- A **preset** (`vanilla`, `carbon`, or another registry-defined name)
+  identifies *a design language*. The consuming project selects exactly one,
+  at `remix init`, and it stays fixed.
 
 `remix registry add` validates your registry against the preset the project
 **already** selected. So **every registry a project uses must offer that
-project's preset.** Publishing only a `acme` preset means no project that
-initialized against the official registry can add you — `remix init` always
-resolves the official registry, which has no `acme`.
-
-Until a preset can be introduced by a third-party registry, publish under a
-preset name the consuming projects already use — `vanilla` here. Your
-namespace is what keeps your items distinct, not your preset name.
+project's preset.** To introduce a new preset without a CLI-shipped default,
+consumers initialize directly from your registry with `--registry` and
+`--repository`. Carbon already has such a default lookup in the CLI.
+To serve an existing Vanilla project as an additional source, offer `vanilla`
+in your index and let it use `registry add`. A registry dependency never
+registers another source automatically.
 
 ### The catalog
 
@@ -268,7 +291,7 @@ code is installed from.
 ### Publish and consume
 
 Commit the `registry/` directory and push it to the ref your consumers follow.
-A consumer with a `vanilla` project then registers you and installs:
+A consumer with an existing `vanilla` project then registers you and installs:
 
 ```shell
 dart run remix_cli:remix init                 # selects vanilla
@@ -286,6 +309,18 @@ commit. Namespaces match `^@[a-z][a-z0-9_-]*$`.
 
 Bare item names resolve through `defaultRegistry`; `@acme/button` names yours
 explicitly.
+
+If your registry owns a different preset, the consumer initializes directly
+from it instead of initializing from `@remix` first:
+
+```shell
+dart run remix_cli:remix init --preset acme \
+  --registry @acme --repository your-org/your-repo --ref stable
+dart run remix_cli:remix add button
+```
+
+That project records only `@acme` initially. Another source can be registered
+later with `registry add` only if it also offers the `acme` preset.
 
 ### Choose the ref consumers follow
 

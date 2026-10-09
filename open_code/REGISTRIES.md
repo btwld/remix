@@ -1,10 +1,12 @@
 # Pinned GitHub registries
 
-Registry publication is independent of CLI releases. New projects use schema 3;
-`init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
-its full commit SHA. It validates the selected preset. No published
-`registry-stable` branch means initialization fails without creating files.
-Repeating initialization preserves the existing configuration and pin.
+Registry publication is independent of CLI releases. New projects use schema 3.
+For `vanilla` and `fortal`, `init` resolves the `registry-stable` branch of
+`conceptadev/remix`; for `carbon`, the CLI selects `btwld/flutter-carbon` at
+`stable` under `@carbon`. It stores the selected source's full commit SHA and
+validates that its index offers the preset. An unpublished ref fails without
+creating files. Repeating initialization preserves the existing configuration
+and pin. Other presets require explicit `--registry` and `--repository`.
 
 ```yaml
 schema: 3
@@ -105,7 +107,10 @@ dart run tool/build_registry.dart --check
 dart run tool/check_dependency_constraints.dart
 ```
 
-Commit the entire `registry/` output; it is the only catalog the CLI reads.
+Commit the entire `registry/` output for the official Vanilla/Fortal source;
+Carbon's catalog is authored and published in the separate
+[`btwld/flutter-carbon`](https://github.com/btwld/flutter-carbon) repository.
+The CLI reads only the configured, pinned source.
 The root `registry/index.yaml` uses schema 1 and maps presets to relative
 catalog paths. Catalog schema 2 permits qualified dependencies; schema 1
 remains readable and permits only local dependency names.
@@ -131,6 +136,7 @@ require promoting `registry-stable`, not a new CLI release.
 ## Vanilla preset naming
 
 New projects select `vanilla` when `--preset` is omitted. The official remote
-index exposes only `vanilla` and `fortal`; `default` is not a remote alias.
+index exposes only `vanilla` and `fortal`. Carbon is a CLI-known default source,
+not an official `@remix` catalog entry; `default` is not a remote alias.
 A project reinitialized from schema 1 or 2 records `vanilla` in its place. The
 internal authoring directory remains `registry_source/lib/src/default/`.

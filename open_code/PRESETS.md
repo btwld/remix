@@ -5,22 +5,21 @@ migration, and independent registry releases.
 
 ## Current implementation
 
-The GitHub distribution provides three presets: `vanilla`, `fortal`, and the
-initial `carbon` vertical slice. All registry manifests
-and all templates are derived from analyzer-checked Dart by
-`tool/build_registry.dart`; none of the templates are hand-authored.
+The official Remix GitHub distribution provides `vanilla` and `fortal`.
+Their manifests and templates are derived from analyzer-checked Dart by
+`tool/build_registry.dart`; none are hand-authored. The initial `carbon`
+vertical slice is independently authored and published by
+[`btwld/flutter-carbon`](https://github.com/btwld/flutter-carbon).
 
 ```text
 registry_source/                 one private workspace package
   lib/src/default/              Vanilla theme, components, Agent recipes
   lib/src/fortal/               Fortal theme, components, Agent recipes
-  lib/src/carbon/               Carbon theme foundation and Button
   lib/src/agent/                shared Agent behavior, models, support
   lib/src/dashboard/            shared dashboard composition
 registry/
   vanilla/                     derived registry.yaml and templates/
   fortal/                      derived registry.yaml and templates/
-  carbon/                      derived registry.yaml and templates/
 ```
 
 The accepted [registry-source ADR](../registry_source/docs/adr/fortal/0002-registry-source.md)
@@ -54,8 +53,10 @@ registries:
     revision: "<resolved-full-commit-sha>"
 ```
 
-The index exposes `vanilla`, `fortal`, and `carbon`; `default` was the name an earlier
-prerelease used for `vanilla` and is not a preset any registry serves.
+The official index exposes `vanilla` and `fortal`. The Carbon repository's own
+index exposes `carbon`, and the CLI knows its default `@carbon` source.
+`default` was the name an earlier prerelease used for `vanilla` and is not a
+preset either registry serves.
 Installed type names and token IDs use the consumer prefix, for example
 `AcmeButton` and `acme.accent.9`.
 `Fortal` is an authoring prefix, not a required installed prefix; the review
@@ -81,9 +82,9 @@ that use them. Items with generated parts declare the generation dependencies;
 the consumer generates its own adapters rather than copying authoring outputs.
 
 Carbon currently exposes only `theme` and `button`. Its installed source uses
-the consumer prefix, includes the four official Carbon theme maps, and has no
-Agent, chart, icon, or dashboard items. It remains a preset in the same pinned
-GitHub distribution rather than a bundled CLI exception.
+the consumer prefix, includes the four Carbon theme maps, and has no Agent,
+chart, icon, or dashboard items. Its source and publication gate live in the
+separate Carbon repository, not the official `@remix` catalog.
 
 When installed source uses `@MixableSpec`, the CLI enables the supported
 spec-styler builder in the consumer's `build.yaml`. A new builder is scoped to
@@ -95,9 +96,9 @@ diff show proposed changes without writing them.
 
 ## Authoring and derivation
 
-Edit Dart under `registry_source/lib/src/`, never `.tmpl` output. Vanilla uses
-the authoring word `Vanilla`, Fortal uses `Fortal`, Carbon uses `Carbide`, and
-shared behavior uses `Agent`. The builder checks prefix round trips and rewrites shared Agent
+Edit official Dart under `registry_source/lib/src/`, never `.tmpl` output.
+Vanilla uses the authoring word `Vanilla`, Fortal uses `Fortal`, and shared
+behavior uses `Agent`. The builder checks prefix round trips and rewrites shared Agent
 imports to their installed relative paths. Relative source imports determine
 registry dependencies; generated parts determine adapter targets.
 
@@ -111,9 +112,9 @@ dart run melos run open-code:registry:build
 dart run melos run open-code:registry:check
 ```
 
-The build command derives all three presets. The check runs builder tests and
+The build command derives both official presets. The check runs builder tests and
 compares the complete output trees, including unexpected or missing files.
-`--preset vanilla`, `--preset fortal`, or `--preset carbon` selects one preset when invoking
+`--preset vanilla` or `--preset fortal` selects one preset when invoking
 `tool/build_registry.dart` directly.
 
 ## Repository consumers
@@ -137,8 +138,9 @@ dart run melos run ci
 
 CI includes analysis, clean generation, formatting, registry derivation,
 parity, docs, package tests, installed-source comparisons, and fresh checkout
-consumers for all three presets. Passing checkout checks does not establish hosted
-release installability.
+consumers for both official presets. Passing checkout checks does not establish
+hosted release installability. The separate Carbon repository runs its own
+consumer gate.
 
 [RELEASING.md](RELEASING.md) describes package dry-runs, hosted runtime checks,
 CLI publication, and verification of published registry assets. Discontinuing

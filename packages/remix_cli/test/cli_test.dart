@@ -115,6 +115,8 @@ void main() {
     expect(received!.prefix, 'Ui');
     expect(received!.preset, 'vanilla');
     expect(received!.uiPath, 'lib/ui');
+    expect(received!.registry, isNull);
+    expect(received!.repository, isNull);
 
     await runRemixCli(
       [
@@ -125,6 +127,14 @@ void main() {
         'default',
         '--ui-path',
         'lib/design_system',
+        '--registry',
+        '@carbon',
+        '--repository',
+        'example/carbon-registry',
+        '--path',
+        'registry',
+        '--ref',
+        'stable',
       ],
       writeOut: fail,
       writeError: fail,
@@ -133,7 +143,35 @@ void main() {
     expect(received!.prefix, 'Acme');
     expect(received!.preset, 'default');
     expect(received!.uiPath, 'lib/design_system');
+    expect(received!.registry, '@carbon');
+    expect(received!.repository, 'example/carbon-registry');
+    expect(received!.path, 'registry');
+    expect(received!.ref, 'stable');
   });
+
+  test(
+    'init rejects incomplete custom source options before dispatch',
+    () async {
+      for (final arguments in [
+        ['--registry', '@carbon'],
+        ['--repository', 'example/carbon-registry'],
+        ['--path', 'registry'],
+        ['--ref', 'stable'],
+      ]) {
+        var dispatched = false;
+        final errors = <String>[];
+        final code = await runRemixCli(
+          ['init', ...arguments],
+          writeOut: fail,
+          writeError: errors.add,
+          onInit: (_) async => dispatched = true,
+        );
+        expect(code, usageExitCode, reason: '$arguments');
+        expect(dispatched, isFalse, reason: '$arguments');
+        expect(errors.join('\n'), contains('require'), reason: '$arguments');
+      }
+    },
+  );
 
   test('add dispatches one item and mode', () async {
     AddOptions? received;

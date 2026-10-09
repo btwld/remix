@@ -7,13 +7,14 @@ This example is installed by `remix_cli`. It gives an application editable
 theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
-The registry trees live in `registry/vanilla/`, `registry/fortal/`, and
-`registry/carbon/`: the CLI
-ships no catalog of its own, and there is no second registry copy under
+The official registry trees live in `registry/vanilla/` and
+`registry/fortal/`; Carbon's tree lives in the separate
+[`btwld/flutter-carbon`](https://github.com/btwld/flutter-carbon) repository.
+The CLI ships no catalog of its own, and there is no second registry copy under
 `open_code/`. `open_code/fixture/` proves the Vanilla preset, while
 `open_code/fortal_fixture/` proves Fortal with every generated widget and
-known Radix Themes 3.3.0 color values. `open_code/carbon_fixture/` proves the
-Carbon theme-and-button slice. A behavioral package can be styled from
+known Radix Themes 3.3.0 color values. The Carbon repository owns its own
+consumer smoke. A behavioral package can be styled from
 the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
@@ -59,6 +60,9 @@ The `fortal` preset contains that complete surface plus `base_button`, `code`,
 
 The `carbon` preset is deliberately smaller: it contains the complete Carbon
 theme foundation and `button`, with no icon, chart, Agent, or dashboard items.
+The CLI selects its separate `@carbon` source at `btwld/flutter-carbon` when a
+project initializes with `--preset carbon`. That bare command requires the
+separate registry's `stable` ref and a released CLI; neither is published yet.
 
 `chart` is the one optional extension outside the core Remix component
 surface. It builds directly on `mix_chart`, installs no Fortal code, and
@@ -354,8 +358,9 @@ checkout CLI with prefix `Acme`, adds every item, and verifies generation,
 analysis, and consumer tests against checkout Remix.
 
 After Remix is published, run `fvm dart run melos run open-code:release:check`
-to verify all three presets with hosted Remix. The direct checker defaults to both
-sources. Select `--source checkout` or `--source hosted` for one source.
+to verify both official presets with hosted Remix. The separate Carbon
+repository owns its consumer gate. The direct checker defaults to both sources.
+Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.
 

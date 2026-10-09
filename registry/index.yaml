@@ -2,4 +2,3 @@ schema: 1
 presets:
   vanilla: vanilla/registry.yaml
   fortal: fortal/registry.yaml
-  carbon: carbon/registry.yaml

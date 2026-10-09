@@ -346,6 +346,74 @@ void main() {
     );
   });
 
+  test('custom init makes an independent preset the default source', () async {
+    final consumer = createFlutterPackage();
+    addTearDown(() => consumer.deleteSync(recursive: true));
+    writeRequiredPubspec(consumer);
+    fixture.company['theme'] = item('theme');
+    fixture.company['button'] = item('company', ['theme']);
+    final guided = Installer(
+      projectRoot: consumer,
+      writeOut: output.add,
+      sources: fixture.resolver,
+      processRunner: happyRunner(consumer, runRealGit: true),
+    );
+    Future<int> run(List<String> arguments) => runRemixCli(
+      arguments,
+      writeOut: output.add,
+      writeError: fail,
+      onInit: guided.initialize,
+      onAdd: guided.add,
+      onRegistry: guided.registry,
+    );
+
+    expect(
+      await run([
+        'init',
+        '--preset',
+        'carbon',
+        '--registry',
+        '@carbon',
+        '--repository',
+        'owner/company',
+        '--path',
+        'nested/registry',
+        '--ref',
+        'stable',
+      ]),
+      successExitCode,
+    );
+    final config = parseConfig(null, consumer);
+    expect(config.preset, 'carbon');
+    expect(config.defaultRegistry, '@carbon');
+    expect(config.registries.keys, ['@carbon']);
+    expect(config.registries['@carbon']!.revision, 'b' * 40);
+
+    final initialized = snapshotFiles(consumer);
+    expect(await run(['add', 'button', '--dry-run']), successExitCode);
+    expect(snapshotFiles(consumer), initialized);
+    expect(await run(['add', 'button', '--diff']), successExitCode);
+    expect(snapshotFiles(consumer), initialized);
+    expect(await run(['add', 'button']), successExitCode);
+    final installed = File('${consumer.path}/lib/ui/company.dart');
+    expect(installed.readAsStringSync(), contains('revision one'));
+    expect(output.join('\n'), contains('@carbon/theme -> @carbon/button'));
+
+    expect(
+      await run(['registry', 'update', '@carbon', '--ref', 'v2']),
+      successExitCode,
+    );
+    expect(
+      parseConfig(null, consumer).registries['@carbon']!.revision,
+      'c' * 40,
+    );
+    expect(installed.readAsStringSync(), contains('revision one'));
+    expect(await run(['add', 'button', '--diff']), successExitCode);
+    expect(installed.readAsStringSync(), contains('revision one'));
+    expect(await run(['add', 'button', '--overwrite']), successExitCode);
+    expect(installed.readAsStringSync(), contains('revision two'));
+  });
+
   test(
     'drift guidance on a pinned project names the pin, not the CLI',
     () async {
@@ -583,7 +651,7 @@ final class FixtureRegistries {
       if (uri.path.endsWith('index.yaml'))
         return const RegistryResponse(
           200,
-          'schema: 1\npresets:\n  vanilla: vanilla/registry.yaml\n  fortal: fortal/registry.yaml\n  "true": vanilla/registry.yaml',
+          'schema: 1\npresets:\n  vanilla: vanilla/registry.yaml\n  fortal: fortal/registry.yaml\n  carbon: carbon/registry.yaml\n  "true": vanilla/registry.yaml',
         );
       if (uri.path.endsWith('registry.yaml'))
         return RegistryResponse(

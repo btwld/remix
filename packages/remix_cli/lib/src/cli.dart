@@ -23,11 +23,19 @@ final class InitOptions {
     required this.prefix,
     required this.preset,
     required this.uiPath,
+    this.registry,
+    this.repository,
+    this.path,
+    this.ref,
   });
 
   final String prefix;
   final String preset;
   final String uiPath;
+  final String? registry;
+  final String? repository;
+  final String? path;
+  final String? ref;
 }
 
 enum AddMode { write, dryRun, diff, overwrite }
@@ -153,8 +161,16 @@ final class _InitCommand extends Command<int> {
   _InitCommand(this._handler) {
     argParser
       ..addOption('prefix', defaultsTo: 'Ui')
-      ..addOption('preset', defaultsTo: 'vanilla')
-      ..addOption('ui-path', defaultsTo: 'lib/ui');
+      ..addOption(
+        'preset',
+        defaultsTo: 'vanilla',
+        help: 'Preset name; vanilla, fortal, and carbon have default sources.',
+      )
+      ..addOption('ui-path', defaultsTo: 'lib/ui')
+      ..addOption('registry', help: 'Default registry namespace, e.g. @carbon.')
+      ..addOption('repository', help: 'Public GitHub owner/repository.')
+      ..addOption('path', help: 'Registry directory in the repository.')
+      ..addOption('ref', help: 'Branch, tag, or commit to pin.');
   }
 
   final InitHandler? _handler;
@@ -170,6 +186,16 @@ final class _InitCommand extends Command<int> {
     if (argResults!.rest.isNotEmpty) {
       usageException('init accepts no positional arguments.');
     }
+    final registry = argResults!.option('registry');
+    final repository = argResults!.option('repository');
+    if ((registry == null) != (repository == null)) {
+      usageException('init requires --registry and --repository together.');
+    }
+    if (registry == null &&
+        (argResults!.option('path') != null ||
+            argResults!.option('ref') != null)) {
+      usageException('init --path and --ref require a custom registry.');
+    }
     final handler = _handler;
     if (handler == null) {
       throw StateError('The init command is not available.');
@@ -179,6 +205,10 @@ final class _InitCommand extends Command<int> {
         prefix: argResults!.option('prefix')!,
         preset: argResults!.option('preset')!,
         uiPath: argResults!.option('ui-path')!,
+        registry: registry,
+        repository: repository,
+        path: argResults!.option('path'),
+        ref: argResults!.option('ref'),
       ),
     );
     return successExitCode;

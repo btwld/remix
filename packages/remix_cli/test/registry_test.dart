@@ -101,22 +101,6 @@ void main() {
     expect(source, isNot(contains('remix_fortal')));
   });
 
-  test('Carbon button resolves exactly through its theme', () async {
-    final registry = CheckoutRegistry(distribution, 'carbon');
-    final catalog = await registry.catalog();
-
-    expect(catalog.preset, 'carbon');
-    expect(catalog.resolve('button').map((item) => item.name), [
-      'theme',
-      'button',
-    ]);
-
-    final button = catalog.items['button']!;
-    final source = await registry.template(button.files.single);
-    expect(source, contains('{{typePrefix}}Button'));
-    expect(source, contains('{{valuePrefix}}ButtonStyle'));
-  });
-
   group('resolveAll', () {
     test('orders several roots with each shared dependency once', () async {
       final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();

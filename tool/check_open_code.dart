@@ -2,7 +2,7 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset vanilla|fortal|carbon]
+/// dart run tool/check_open_code.dart [--preset vanilla|fortal]
 ///     [--source both|hosted|checkout] [--item dashboard_demo|dashboard_shell]
 ///     [--hosted-cli] [--keep]
 /// ```
@@ -114,8 +114,6 @@ const _standardRuntimeDependencies = <String>[
   'mix_chart',
   'remix_ui_icons',
 ];
-
-const _carbonRuntimeDependencies = <String>['remix', 'mix_annotations'];
 
 const _generatorDependencies = <String>['build_runner', 'mix_generator'];
 
@@ -453,33 +451,6 @@ const _fortalPreset = _PresetContract(
   },
 );
 
-const _carbonPreset = _PresetContract(
-  name: 'carbon',
-  fixtureDirectory: 'carbon_fixture',
-  registryItems: ['button'],
-  themeFiles: [
-    'generated/carbon_component_tokens.dart',
-    'generated/carbon_layout.dart',
-    'generated/carbon_motion.dart',
-    'generated/carbon_palette.dart',
-    'generated/carbon_source_manifest.dart',
-    'generated/carbon_themes.dart',
-    'generated/carbon_tokens.dart',
-    'generated/carbon_type.dart',
-    'layer.dart',
-    'layout.dart',
-    'motion.dart',
-    'theme.dart',
-    'theme_data.dart',
-    'theme_scope.dart',
-    'token_types.dart',
-    'type.dart',
-  ],
-  runtimeDependencies: _carbonRuntimeDependencies,
-  devDependencies: _generatorDependencies,
-  independentRegistryItems: ['button'],
-);
-
 const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
 
 final class _PresetContract {
@@ -610,8 +581,6 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
           preset = _defaultPreset;
         case 'fortal':
           preset = _fortalPreset;
-        case 'carbon':
-          preset = _carbonPreset;
         default:
           return null;
       }
@@ -645,7 +614,7 @@ Future<void> main(List<String> arguments) async {
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset vanilla|fortal|carbon] [--source both|hosted|checkout] '
+      '[--preset vanilla|fortal] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell (requires --source checkout)] '
       '[--hosted-cli (requires --source hosted)] [--keep]',
     );
@@ -1925,12 +1894,7 @@ bool _sameBytes(List<int> left, List<int> right) {
 _PresetContract _presetByName(String name) => switch (name) {
   'vanilla' => _defaultPreset,
   'fortal' => _fortalPreset,
-  'carbon' => _carbonPreset,
-  _ => throw ArgumentError.value(
-    name,
-    'preset',
-    'must be vanilla, fortal, or carbon',
-  ),
+  _ => throw ArgumentError.value(name, 'preset', 'must be vanilla or fortal'),
 };
 
 /// Returns the fixture contract error for focused regression tests.

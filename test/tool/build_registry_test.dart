@@ -143,61 +143,34 @@ void main() {
     }
   });
 
-  test('Carbon derives only theme and button with collision-free prefixes', () {
-    expect(presetSpecs, contains('carbon'));
-    expect(presetSpecs['carbon'], [carbonPreset]);
-
-    final output = PresetBuilder.forRepository(
-      Directory.current,
-      spec: carbonPreset,
-    ).derive();
-    final document = loadYaml(output.files['registry.yaml']!) as YamlMap;
-    final items = document['items'] as YamlMap;
-
-    expect(items.keys, ['theme', 'button']);
-    final theme = items['theme'] as YamlMap;
-    final button = items['button'] as YamlMap;
-    expect((theme['dependencies'] as YamlMap).keys, ['remix']);
-    final themeTargets = <String>{
-      for (final file in theme['files'] as YamlList) file['target'] as String,
-    };
-    expect(
-      themeTargets,
-      containsAll({
-        '@ui/theme/generated/carbon_component_tokens.dart',
-        '@ui/theme/generated/carbon_layout.dart',
-        '@ui/theme/generated/carbon_motion.dart',
-        '@ui/theme/generated/carbon_palette.dart',
-        '@ui/theme/generated/carbon_source_manifest.dart',
-        '@ui/theme/generated/carbon_themes.dart',
-        '@ui/theme/generated/carbon_tokens.dart',
-        '@ui/theme/generated/carbon_type.dart',
-      }),
+  test('nested shared theme files retain their template and target paths', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(
+      builder.sourceRoot,
+      'theme/theme.dart',
+      "export 'tokens.dart';\nexport 'generated/nested.dart';\n",
     );
-    expect(themeTargets.where((path) => path.endsWith('.g.dart')), isEmpty);
-    expect(_strings(button['registryDependencies']), ['theme']);
-    expect((button['dependencies'] as YamlMap).keys, ['mix_annotations']);
-    expect((button['devDependencies'] as YamlMap).keys, [
-      'build_runner',
-      'mix_generator',
-    ]);
-    expect(_strings(button['generated']), ['@ui/components/button.g.dart']);
-
-    final template = output.files['templates/button/button.dart.tmpl']!;
-    expect(template, contains('enum {{typePrefix}}ButtonKind'));
-    expect(template, contains('{{valuePrefix}}ButtonStyle'));
-    expect(template, contains('IBM Carbon Design'));
-    expect(template, contains('SPDX-License-Identifier: Apache-2.0'));
-    expect(
-      output
-          .files['templates/theme/generated/carbon_source_manifest.dart.tmpl'],
-      contains('IBM Carbon Design System'),
+    _write(
+      builder.sourceRoot,
+      'theme/generated/nested.dart',
+      'const FortalNested = true;\n',
     );
-    expect(output.files.values, everyElement(isNot(contains('Carbide'))));
-    expect(output.files.values, everyElement(isNot(contains('carbide'))));
-    expect(output.files.keys, isNot(anyElement(contains('agent'))));
-    expect(output.files.keys, isNot(anyElement(contains('chart'))));
-    expect(output.files.keys, isNot(anyElement(contains('icons'))));
+
+    final output = builder.derive();
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    final files = (items['theme'] as YamlMap)['files'] as YamlList;
+    expect(
+      files.any(
+        (file) =>
+            file['source'] == 'templates/theme/generated/nested.dart.tmpl' &&
+            file['target'] == '@ui/theme/generated/nested.dart',
+      ),
+      isTrue,
+    );
+    expect(
+      output.files['templates/theme/generated/nested.dart.tmpl'],
+      'const {{typePrefix}}Nested = true;\n',
+    );
   });
 
   test('registry dependencies and package floors are inferred', () {

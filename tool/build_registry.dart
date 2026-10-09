@@ -810,34 +810,6 @@ const fortalPreset = PresetSpec(
   behavior: agentBehavior,
 );
 
-/// The initial IBM Carbon registry slice as application-owned source.
-///
-/// `Carbide` is deliberately an authoring-only word. The builder replaces it
-/// with the consumer's selected prefix while retaining Carbon's domain name in
-/// token keys, provenance, and documentation.
-const carbonPreset = PresetSpec(
-  name: 'carbon',
-  sourceRoot: 'registry_source/lib/src/carbon',
-  sourcePackage: 'registry_source',
-  typeWord: 'Carbide',
-  valueWord: 'carbide',
-  componentDirectory: 'components',
-  sharedItems: [
-    SharedItemSpec(
-      name: 'theme',
-      directory: 'theme',
-      requiredFile: 'theme/theme.dart',
-      packages: {'remix'},
-      exports: ['theme/theme.dart'],
-    ),
-  ],
-  copiedItems: [],
-  ignoredSourceFiles: {},
-  floorPackages: {'remix', 'mix_annotations', 'build_runner', 'mix_generator'},
-  detectedPackages: [],
-  composedRegistryDependencies: {},
-);
-
 /// Agent behavior merged into the Fortal preset. The Fortal spec owns the
 /// tree; this extension only derives into `templates/agent/`.
 const fortalAgentExtension = PresetSpec(
@@ -932,7 +904,6 @@ const defaultAgentExtension = PresetSpec(
 const presetSpecs = <String, List<PresetSpec>>{
   'vanilla': [defaultPreset, defaultAgentExtension],
   'fortal': [fortalPreset, fortalAgentExtension],
-  'carbon': [carbonPreset],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {
