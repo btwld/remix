@@ -58,6 +58,8 @@ void main() {
       final textStyle = TextStyleMix(fontSize: 14);
 
       expect(CardStyler().color(color), CardStyler.color(color));
+      expect(AppBarStyler().color(color), AppBarStyler.color(color));
+      expect(AppBarStyler().toolbarHeight(64), AppBarStyler.toolbarHeight(64));
       expect(
         AccordionStyler().titleColor(color),
         AccordionStyler.title(TextStyler.color(color)),

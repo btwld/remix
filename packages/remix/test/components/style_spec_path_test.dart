@@ -45,6 +45,20 @@ void main() {
       expect(find.byType(RemixProgress), findsOneWidget);
     });
 
+    testWidgets('app bar', (tester) async {
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 400,
+          child: RemixAppBar(
+            title: 'Orders',
+            styleSpec: AppBarSpec(toolbarHeight: 48),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.getSize(find.byType(RemixAppBar)).height, 48);
+    });
+
     testWidgets('callout', (tester) async {
       await tester.pumpRemixApp(
         const RemixCallout(text: 'hi', styleSpec: CalloutSpec()),

@@ -13,6 +13,10 @@ void main() {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(
+                  width: 400,
+                  child: RemixAppBar(title: 'Material free'),
+                ),
                 const RemixSpinner(),
                 RemixCheckbox(
                   selected: true,

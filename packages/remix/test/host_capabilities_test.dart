@@ -62,6 +62,37 @@ void main() {
       expect(selected, 'overview');
     });
 
+    testWidgets('app bars need no Material, Overlay, or Navigator', (
+      tester,
+    ) async {
+      var pressed = false;
+      await tester.pumpWidget(
+        _widgetsHost(
+          SizedBox(
+            width: 400,
+            child: RemixAppBar(
+              title: 'Orders',
+              actions: [
+                RemixButton(
+                  label: 'Export',
+                  style: _buttonStyle(),
+                  onPressed: () => pressed = true,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Orders'), findsOneWidget);
+      expect(find.byType(Overlay), findsNothing);
+      expect(find.byType(Navigator), findsNothing);
+
+      await tester.tap(find.text('Export'));
+      await tester.pump();
+      expect(pressed, isTrue);
+    });
+
     group('caller-owned Overlay', () {
       testWidgets('opens a menu without a Navigator', (tester) async {
         await tester.pumpWidget(
