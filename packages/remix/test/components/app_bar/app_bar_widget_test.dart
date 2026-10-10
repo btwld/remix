@@ -161,6 +161,30 @@ void main() {
       expect(style.style.fontSize, 21);
       expect(style.maxLines, 1);
     });
+
+    testWidgets(
+      'clamps negative spacing and toolbarHeight from overshooting lerp to 0',
+      (tester) async {
+        final overshotSpec = const AppBarSpec(
+          toolbarHeight: 0,
+          spacing: 0,
+        ).lerp(const AppBarSpec(toolbarHeight: 56, spacing: 12), -0.2);
+
+        await tester.pumpWidget(
+          _host(
+            RemixAppBar(
+              leading: _target('Back'),
+              title: 'Orders',
+              actions: [_target('Settings')],
+              styleSpec: overshotSpec,
+            ),
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+        expect(tester.getSize(find.byType(RemixAppBar)), const Size(400, 0));
+      },
+    );
   });
 
   group('RemixAppBar safe area', () {
@@ -290,6 +314,28 @@ void main() {
       semantics.dispose();
     });
 
+    testWidgets('a multi-text custom title merges into one heading node', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _host(
+          const RemixAppBar(
+            titleChild: Row(
+              children: [Text('Workspace'), Text(' / '), Text('Orders')],
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Workspace\n / \nOrders')),
+        isSemantics(label: 'Workspace\n / \nOrders', isHeader: true),
+      );
+
+      semantics.dispose();
+    });
+
     testWidgets('leading, title, and actions stay separate and in order', (
       tester,
     ) async {
@@ -311,6 +357,41 @@ void main() {
           .where((label) => label.isNotEmpty)
           .toList();
       expect(labels, ['Back', 'Orders', 'Settings']);
+
+      semantics.dispose();
+    });
+
+    testWidgets('meets labeled tap target and text contrast guidelines', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _host(
+          RemixAppBar(
+            leading: Semantics(
+              button: true,
+              label: 'Back',
+              onTap: () {},
+              child: const SizedBox.square(dimension: 48),
+            ),
+            title: 'Orders',
+            actions: [
+              Semantics(
+                button: true,
+                label: 'Settings',
+                onTap: () {},
+                child: const SizedBox.square(dimension: 48),
+              ),
+            ],
+            style: AppBarStyler()
+                .color(const Color(0xFFFFFFFF))
+                .title(TextStyler().color(const Color(0xFF111111))),
+          ),
+        ),
+      );
+
+      await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+      await expectLater(tester, meetsGuideline(textContrastGuideline));
 
       semantics.dispose();
     });

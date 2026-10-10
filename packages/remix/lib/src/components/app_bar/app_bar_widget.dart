@@ -72,10 +72,13 @@ class RemixAppBar extends StatelessWidget {
   /// Optional custom title content, such as a breadcrumb.
   ///
   /// It inherits the [AppBarSpec.title] text style. Without [title], its own
-  /// semantics name the heading.
+  /// semantics are merged to name the heading. When [title] is also set,
+  /// [title] replaces [titleChild]'s semantics, so interactive controls in
+  /// [titleChild] require omitting [title].
   final Widget? titleChild;
 
-  /// Widgets at the end of the toolbar, laid out in a row.
+  /// Widgets at the end of the toolbar, laid out in an intrinsic-width
+  /// horizontal row ([MainAxisSize.min]).
   final List<Widget> actions;
 
   /// Optional content below the toolbar, such as a `RemixTabBar` or a search
@@ -160,15 +163,17 @@ class RemixAppBar extends StatelessWidget {
 
     final titleStyle = _titleStyle(spec.title);
 
-    return Semantics(
-      header: true,
-      headingLevel: headingLevel,
-      namesRoute: namesRoute ?? _platformNamesRoute(),
-      label: text,
-      excludeSemantics: text != null,
-      child: custom == null
-          ? StyledText(text!, styleSpec: titleStyle)
-          : RemixDefaultContentStyle(text: titleStyle, child: custom),
+    return MergeSemantics(
+      child: Semantics(
+        header: true,
+        headingLevel: headingLevel,
+        namesRoute: namesRoute ?? _platformNamesRoute(),
+        label: text,
+        excludeSemantics: text != null,
+        child: custom == null
+            ? StyledText(text!, styleSpec: titleStyle)
+            : RemixDefaultContentStyle(text: titleStyle, child: custom),
+      ),
     );
   }
 
@@ -184,7 +189,7 @@ class RemixAppBar extends StatelessWidget {
       styleSpec: styleSpec,
       builder: (context, spec) {
         final middle = _buildTitle(spec);
-        final gap = middle == null ? 0.0 : spec.spacing ?? 0;
+        final gap = middle == null ? 0.0 : math.max(0.0, spec.spacing ?? 0);
         final leadingWidget = leading;
 
         // NavigationToolbar adds its middle spacing even without a leading
@@ -218,7 +223,10 @@ class RemixAppBar extends StatelessWidget {
             // NavigationToolbar fills its constraints, so it needs a fixed
             // height.
             SizedBox(
-              height: spec.toolbarHeight ?? _defaultToolbarHeight,
+              height: math.max(
+                0.0,
+                spec.toolbarHeight ?? _defaultToolbarHeight,
+              ),
               child: Box(styleSpec: spec.toolbar, child: toolbar),
             ),
             if (bottom case final bottom?)

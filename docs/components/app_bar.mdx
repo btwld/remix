@@ -165,7 +165,7 @@ class _AccountPageState extends State<AccountPage> {
 ## Title and semantics
 
 - The title is a heading. `title` is its accessible name and its visible text
-- `titleChild` replaces the visible title, for example with a breadcrumb, and inherits the title text style; with `title` set, the heading keeps `title` as its name and hides the parts
+- `titleChild` replaces the visible title, for example with a breadcrumb, and inherits the title text style; without `title`, its semantics merge to name the heading, while setting `title` replaces `titleChild`'s own semantics (`excludeSemantics: true`), so interactive controls in `titleChild` require omitting `title`
 - On Android, Fuchsia, Linux, and Windows the title also names the enclosing route, so screen readers announce it when the route opens; `namesRoute` overrides that convention
 - `headingLevel` sets the heading level from 1 to 6, used on the web
 - Leading, title, and actions are separate semantics nodes, read in that order, also when `centerTitle` is true
@@ -189,9 +189,9 @@ own.
 | `spacing` | Gap between the leading widget, the title, and the actions |
 
 Box methods such as `color`, `padding`, and `border` on the styler apply to
-`container`. The actions row is always horizontal and sized to its content.
-A border on `container` adds to the bar's height; a border on `toolbar` sits
-inside `toolbarHeight`, as CSS's `border-box` does.
+`container`. The actions row is laid out in an intrinsic-width horizontal row
+(`MainAxisSize.min`). A border on `container` adds to the bar's height; a
+border on `toolbar` sits inside `toolbarHeight`, as CSS's `border-box` does.
 
 <CodeGroup title="Fluent styling" defaultLanguage="dart">
 ```dart
