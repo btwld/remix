@@ -28,7 +28,7 @@ class PlaygroundTooltip extends StatelessWidget {
     this.style = const TooltipStyler.create(),
     required this.tooltipChild,
     required this.child,
-    this.open,
+    this.tooltipKey,
     this.onOpenChanged,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
@@ -40,7 +40,7 @@ class PlaygroundTooltip extends StatelessWidget {
 
   final Widget child;
 
-  final bool? open;
+  final GlobalKey<RawTooltipState>? tooltipKey;
 
   final ValueChanged<bool>? onOpenChanged;
 
@@ -55,7 +55,7 @@ class PlaygroundTooltip extends StatelessWidget {
       style: playgroundTooltipStyle(style: this.style),
       tooltipChild: this.tooltipChild,
       child: this.child,
-      open: this.open,
+      tooltipKey: this.tooltipKey,
       onOpenChanged: this.onOpenChanged,
       tooltipSemantics: this.tooltipSemantics,
       positioning: this.positioning,

@@ -90,17 +90,17 @@ class _TriggerButton extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Controlled visibility
+## Imperative visibility
 
-`RemixTooltip` and `FortalTooltip` accept `open` and `onOpenChanged`.
-Leave `open` null for automatic hover, keyboard-focus, and touch behavior.
-When `open` is a boolean, interaction requests a change through
-`onOpenChanged`; the owner must update `open` to accept it. Changing visibility
-keeps the trigger mounted and preserves its focus.
+`RemixTooltip` and `FortalTooltip` accept `tooltipKey` (`GlobalKey<RawTooltipState>?`)
+and `onOpenChanged`. Tooltips open automatically on hover, keyboard focus, and
+touch long-press. Pass a `tooltipKey` to show the tooltip on command via
+`tooltipKey.currentState?.ensureTooltipVisible()`, and use `onOpenChanged` to
+observe when the tooltip's visible state changes.
 
-A controlled, closed tooltip delegates unmodified Escape to an enabled enclosing
+A closed tooltip delegates unmodified Escape to an enabled enclosing
 `DismissIntent` action, allowing a containing drawer or menu to dismiss.
-An open tooltip handles Escape by requesting closure.
+An open tooltip handles Escape by closing the tooltip while preserving trigger focus.
 
 ## Fortal widgets
 
@@ -148,7 +148,7 @@ RemixTooltip remixTooltipConstructor({
   Key? key,
   required Widget tooltipChild,
   required Widget child,
-  bool? open,
+  GlobalKey<RawTooltipState>? tooltipKey,
   ValueChanged<bool>? onOpenChanged,
   String? tooltipSemantics,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
@@ -182,13 +182,13 @@ Optional. The style spec for the tooltip.
 
 **Required**. The child widget that will trigger the tooltip.
 
-#### `open` → `bool?`
+#### `tooltipKey` → `GlobalKey<RawTooltipState>?`
 
-Optional. Controlled visibility, or null for hover/focus/touch-managed visibility.
+Optional. Key for imperative control via `RawTooltipState.ensureTooltipVisible`.
 
 #### `onOpenChanged` → `ValueChanged<bool>?`
 
-Optional. Requests a visibility change; controlled callers must accept it in `open`.
+Optional. Called when the tooltip's visible state changes.
 
 #### `tooltipSemantics` → `String?`
 
@@ -273,6 +273,6 @@ Applies a matrix transformation to the component.
 
 Sets the widget modifier.
 
-#### `call({Key? key, required Widget tooltipChild, required Widget child, bool? open, ValueChanged<bool>? onOpenChanged, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig()})`
+#### `call({Key? key, required Widget tooltipChild, required Widget child, GlobalKey<RawTooltipState>? tooltipKey, ValueChanged<bool>? onOpenChanged, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig()})`
 
 Creates a `RemixTooltip` widget with this style applied.
