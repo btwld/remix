@@ -1283,13 +1283,15 @@ Future<_Failure?> _checkIndependentItems({
   return null;
 }
 
-/// The checkout packages a preset's install resolves locally: Remix, and the
-/// fonts package when the preset's theme depends on it.
+/// The checkout packages a preset's install resolves locally: Remix, its
+/// workspace primitive package `naked_ui`, and the fonts package when the
+/// preset's theme depends on it.
 Map<String, Directory> _checkoutPackages(
   Directory remixSource,
   _PresetContract preset,
 ) => {
   'remix': remixSource,
+  'naked_ui': Directory('${remixSource.parent.path}/naked_ui'),
   if (preset.requiredRuntimeDependencies.contains('remix_ui_fonts'))
     'remix_ui_fonts': Directory('${remixSource.parent.path}/remix_ui_fonts'),
 };
