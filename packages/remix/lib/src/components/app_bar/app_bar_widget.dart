@@ -72,9 +72,9 @@ class RemixAppBar extends StatelessWidget {
   /// Optional custom title content, such as a breadcrumb.
   ///
   /// It inherits the [AppBarSpec.title] text style. Without [title], its own
-  /// semantics are merged to name the heading. When [title] is also set,
-  /// [title] replaces [titleChild]'s semantics, so interactive controls in
-  /// [titleChild] require omitting [title].
+  /// semantics are preserved, including independently actionable controls.
+  /// When [title] is also set, [title] replaces [titleChild]'s semantics, so
+  /// interactive controls in [titleChild] require omitting [title].
   final Widget? titleChild;
 
   /// Widgets at the end of the toolbar, laid out in an intrinsic-width
@@ -163,17 +163,15 @@ class RemixAppBar extends StatelessWidget {
 
     final titleStyle = _titleStyle(spec.title);
 
-    return MergeSemantics(
-      child: Semantics(
-        header: true,
-        headingLevel: headingLevel,
-        namesRoute: namesRoute ?? _platformNamesRoute(),
-        label: text,
-        excludeSemantics: text != null,
-        child: custom == null
-            ? StyledText(text!, styleSpec: titleStyle)
-            : RemixDefaultContentStyle(text: titleStyle, child: custom),
-      ),
+    return Semantics(
+      header: true,
+      headingLevel: headingLevel,
+      namesRoute: namesRoute ?? _platformNamesRoute(),
+      label: text,
+      excludeSemantics: text != null,
+      child: custom == null
+          ? StyledText(text!, styleSpec: titleStyle)
+          : RemixDefaultContentStyle(text: titleStyle, child: custom),
     );
   }
 

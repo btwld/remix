@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -332,6 +334,125 @@ void main() {
         tester.getSemantics(find.bySemanticsLabel('Workspace\n / \nOrders')),
         isSemantics(label: 'Workspace\n / \nOrders', isHeader: true),
       );
+
+      semantics.dispose();
+    });
+
+    testWidgets('custom title actions stay independently accessible', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final activated = <String>[];
+
+      await tester.pumpWidget(
+        _host(
+          RemixAppBar(
+            titleChild: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final label in ['Workspace', 'Orders'])
+                  Semantics(
+                    button: true,
+                    child: GestureDetector(
+                      onTap: () => activated.add(label),
+                      child: Text(label),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final workspace = tester.getSemantics(find.bySemanticsLabel('Workspace'));
+      final orders = tester.getSemantics(find.bySemanticsLabel('Orders'));
+      expect(workspace.id, isNot(orders.id));
+      expect(
+        workspace.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
+      );
+      expect(orders.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+
+      tester.semantics.performAction(
+        find.semantics.byLabel('Workspace'),
+        SemanticsAction.tap,
+      );
+      expect(activated, ['Workspace']);
+      tester.semantics.performAction(
+        find.semantics.byLabel('Orders'),
+        SemanticsAction.tap,
+      );
+      expect(activated, ['Workspace', 'Orders']);
+
+      semantics.dispose();
+    });
+
+    testWidgets('custom title preserves Remix link and button behavior', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final ordersFocusNode = FocusNode();
+      addTearDown(ordersFocusNode.dispose);
+      final activated = <String>[];
+
+      await tester.pumpWidget(
+        _host(
+          RemixAppBar(
+            titleChild: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RemixLink(
+                  label: 'Home',
+                  enableFeedback: false,
+                  onPressed: () => activated.add('Home'),
+                ),
+                RemixLink(
+                  label: 'Orders',
+                  focusNode: ordersFocusNode,
+                  enableFeedback: false,
+                  onPressed: () => activated.add('Orders'),
+                ),
+                const RemixLink(label: 'Disabled'),
+                RemixButton(
+                  label: 'Refresh',
+                  enableFeedback: false,
+                  onPressed: () => activated.add('Refresh'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final nodeIds = <int>{};
+      for (final label in ['Home', 'Orders', 'Refresh']) {
+        final node = tester.getSemantics(find.bySemanticsLabel(label));
+        final data = node.getSemanticsData();
+        nodeIds.add(node.id);
+        expect(data.flagsCollection.isLink, label != 'Refresh');
+        expect(data.flagsCollection.isButton, label == 'Refresh');
+        expect(data.hasAction(SemanticsAction.tap), isTrue);
+        tester.semantics.performAction(
+          find.semantics.byLabel(label),
+          SemanticsAction.tap,
+        );
+      }
+      expect(nodeIds, hasLength(3));
+      expect(activated, ['Home', 'Orders', 'Refresh']);
+
+      final disabled = tester
+          .getSemantics(find.bySemanticsLabel('Disabled'))
+          .getSemanticsData();
+      expect(disabled.flagsCollection.isLink, isFalse);
+      expect(disabled.hasAction(SemanticsAction.tap), isFalse);
+
+      ordersFocusNode.requestFocus();
+      await tester.pump();
+      expect(ordersFocusNode.hasFocus, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      expect(activated, ['Home', 'Orders', 'Refresh', 'Orders']);
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      expect(activated, ['Home', 'Orders', 'Refresh', 'Orders']);
 
       semantics.dispose();
     });
