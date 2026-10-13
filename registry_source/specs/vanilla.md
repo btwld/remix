@@ -108,7 +108,7 @@ reference does not theme it, and arithmetic on an unresolved token cannot be
 written.
 
 **Control sizes.** `h-8`, `h-9`, `h-10`: 32, 36, 40. Icons `size-4` (16), with
-`size-3.5` (14) for check marks and `size-3` (12) beside `text-xs`.
+`size-3.5` (14) for sort indicators and `size-3` (12) beside `text-xs`.
 
 **Shadows.** `VanillaShadow` in `theme/effects.dart`, black at the given alpha:
 
@@ -186,7 +186,7 @@ the steps above. The source column names the file under
 | Pressed state | none | none | Vanilla dropped its old pressed step: a press lands on the hover fill. An 80% destructive fill would fail 4.5:1 with the new red. |
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
-| Checkbox check mark | `size-3.5` (14) | 10 (`VanillaSpace.s2_5`) | The reference sizes a 24×24 Lucide SVG whose check fills two-thirds of the viewBox (~9.3px); Remix draws an edge-to-edge 9×9 Radix path (`RemixPathGlyph.thickCheck`), which touches the 1px border at 14 and matches the reference's painted mark at 10. |
+| Checkbox check mark | `size-3.5` (14) | 10 | The reference sizes a padded 24×24 Lucide icon; Remix draws an edge-to-edge 9×9 path, which matches the painted mark at 10. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
