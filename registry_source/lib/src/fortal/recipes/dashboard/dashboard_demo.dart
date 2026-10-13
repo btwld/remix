@@ -162,7 +162,7 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
       },
     );
     if (!widget.builtInChrome) return demo;
-    return FortalScope(
+    return FortalTheme(
       mode: _isDark ? FortalThemeMode.dark : FortalThemeMode.light,
       child: RemixToastScope(style: fortalToastStyle(), child: demo),
     );

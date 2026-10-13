@@ -91,7 +91,7 @@ installed adapters inside them.
 
 `init` creates `remix.yaml` and a managed barrel at `lib/ui/ui.dart`. The
 default prefix is `Ui`; `--prefix Acme` produces names such as
-`AcmeThemeScope`, `AcmeButton`, and `acmeButtonStyle`. A different source root
+`AcmeTheme`, `AcmeButton`, and `acmeButtonStyle`. A different source root
 can be chosen once with `--ui-path`. The preset also is chosen once: existing
 projects default to `vanilla`, and changing a configured preset is refused.
 
@@ -103,7 +103,7 @@ dart run remix_cli:remix add button
 ```
 
 This installs the full Fortal theme and recipe as prefixed local source:
-`AcmeScope`, `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. It also installs
+`AcmeTheme`, `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. It also installs
 the shared `base_button.dart` implementation used by Button and IconButton.
 No installed identifier is named Fortal, and the consumer does not declare
 direct `mix`, `naked_ui`, or `remix_fortal` dependencies. `remix` owns behavior;
@@ -236,7 +236,7 @@ dart run build_runner build \
 Theme-wide changes use `copyWith`:
 
 ```dart
-AcmeThemeScope(
+AcmeTheme(
   theme: const AcmeThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     primaryForeground: const Color(0xFFFFFFFF),

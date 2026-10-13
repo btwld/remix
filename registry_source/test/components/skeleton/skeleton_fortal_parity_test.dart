@@ -42,7 +42,7 @@ Future<({SkeletonSpec spec, Color grayA3, Color grayA4})> _resolve(
 }) async {
   late ({SkeletonSpec spec, Color grayA3, Color grayA4}) result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: Builder(
         builder: (context) {

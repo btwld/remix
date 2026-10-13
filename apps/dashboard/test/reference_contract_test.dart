@@ -362,7 +362,7 @@ void main() {
           settings: const ThemeSettings(),
           onChanged: (_) {},
           child: MaterialApp(
-            builder: (context, child) => UiScope(child: child!),
+            builder: (context, child) => UiTheme(child: child!),
             home: const Scaffold(body: ThemePanel()),
           ),
         ),
@@ -464,7 +464,7 @@ void main() {
 Future<void> _pumpPage(WidgetTester tester, Widget page) {
   return tester.pumpWidget(
     MaterialApp(
-      builder: (context, child) => UiScope(child: child!),
+      builder: (context, child) => UiTheme(child: child!),
       home: Scaffold(body: page),
     ),
   );

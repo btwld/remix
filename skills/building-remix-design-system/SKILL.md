@@ -127,7 +127,7 @@ validates in a scratch application.
 
 Build `tokens.dart`, `theme_data.dart`, and `theme_scope.dart` in Vanilla's
 shape (`references/components.md` §1): token identities and fixed scales, concrete values per
-mode with value equality, and a scope taking `theme`, `darkTheme`, and `mode`.
+mode with value equality, and a theme widget taking `theme`, `darkTheme`, and `mode`.
 Put shared recipe helpers beside them, as Vanilla's
 `effects.dart` does.
 Record every value's source in `specs/tokens.yaml` and test the Dart values

@@ -14,5 +14,5 @@ class AppAccentScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      UiScope(accent: accent, hasBackground: false, child: child);
+      UiTheme(accent: accent, hasBackground: false, child: child);
 }

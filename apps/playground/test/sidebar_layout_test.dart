@@ -32,7 +32,7 @@ Future<void> _pump(
   // needs a Navigator and an Overlay above the layout.
   await tester.pumpWidget(
     MaterialApp(
-      home: PlaygroundThemeScope(mode: PlaygroundThemeMode.light, child: child),
+      home: PlaygroundTheme(mode: PlaygroundThemeMode.light, child: child),
     ),
   );
   await tester.pumpAndSettle();
@@ -85,7 +85,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: PlaygroundThemeScope(
+        home: PlaygroundTheme(
           mode: PlaygroundThemeMode.light,
           child: build(open: true),
         ),
@@ -97,7 +97,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: PlaygroundThemeScope(
+        home: PlaygroundTheme(
           mode: PlaygroundThemeMode.light,
           child: build(open: false),
         ),

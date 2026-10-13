@@ -196,7 +196,7 @@ Future<StyleSpec<CheckboxSpec>> _resolveCheckboxStyle(
   late StyleSpec<CheckboxSpec> resolved;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: MaterialApp(
         home: Builder(

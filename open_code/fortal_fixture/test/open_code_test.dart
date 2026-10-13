@@ -26,7 +26,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('every generated Fortal widget builds below AcmeScope', (
+  testWidgets('every generated Fortal widget builds below AcmeTheme', (
     tester,
   ) async {
     final cases = _generatedWidgetCases();
@@ -63,7 +63,7 @@ Widget _host(Widget child) {
       settings: settings,
       pageBuilder: (context, _, _) => builder(context),
     ),
-    builder: (context, navigator) => AcmeScope(child: navigator!),
+    builder: (context, navigator) => AcmeTheme(child: navigator!),
     home: Center(child: SizedBox(width: 640, height: 480, child: child)),
   );
 }

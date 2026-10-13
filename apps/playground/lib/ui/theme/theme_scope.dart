@@ -8,7 +8,7 @@ import 'tokens.dart';
 ///
 /// Two things are installed together on purpose:
 ///
-/// * [PlaygroundTheme], so application code can read the raw values through
+/// * an inherited theme so application code can read the raw values through
 ///   [PlaygroundTheme.of];
 /// * a `MixScope` carrying the same values keyed by `PlaygroundTokens`, so every Mix
 ///   styler resolved below this point sees them.
@@ -26,18 +26,18 @@ import 'tokens.dart';
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (context, child) => PlaygroundThemeScope(child: child!),
+///   builder: (context, child) => PlaygroundTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
 ///
 /// Each supplied theme replaces the values for its appearance. An empty nested
 /// scope inherits the parent pair and selection; individual tokens do not merge.
-class PlaygroundThemeScope extends StatelessWidget {
+class PlaygroundTheme extends StatelessWidget {
   /// A root follows the system and supplies both preset defaults.
   /// A custom theme without [darkTheme] is used in both modes.
   /// Nested scopes inherit the configured pair and active selection.
-  const PlaygroundThemeScope({
+  const PlaygroundTheme({
     super.key,
     this.theme,
     this.darkTheme,
@@ -59,6 +59,30 @@ class PlaygroundThemeScope extends StatelessWidget {
   /// The subtree that resolves against the selected theme.
   final Widget child;
 
+  /// The closest [PlaygroundThemeData], or `null` when no [PlaygroundTheme] is
+  /// installed.
+  static PlaygroundThemeData? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_PlaygroundInheritedTheme>()
+      ?.data;
+
+  /// The closest [PlaygroundThemeData].
+  ///
+  /// Throws when no [PlaygroundTheme] is installed above [context]; use
+  /// [maybeOf] when absence is a valid state.
+  static PlaygroundThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+
+    throw FlutterError.fromParts([
+      ErrorSummary('No PlaygroundTheme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the UI theme, but no '
+        'PlaygroundTheme was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     // `mode: system` needs a platform brightness. A scope mounted above any
@@ -76,7 +100,7 @@ class PlaygroundThemeScope extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     final inherited = context
-        .dependOnInheritedWidgetOfExactType<PlaygroundTheme>();
+        .dependOnInheritedWidgetOfExactType<_PlaygroundInheritedTheme>();
     final base =
         theme ??
         inherited?.baseTheme ??
@@ -118,7 +142,7 @@ class PlaygroundThemeScope extends StatelessWidget {
       scoped = _recolored(selected.foreground, scoped);
     }
 
-    return PlaygroundTheme(
+    return _PlaygroundInheritedTheme(
       data: selected,
       baseTheme: base,
       darkTheme: dark,
@@ -170,16 +194,13 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
   ),
 );
 
-/// The inherited half of [PlaygroundThemeScope].
+/// The inherited half of [PlaygroundTheme].
 ///
-/// Prefer [PlaygroundThemeScope]; this is public because `PlaygroundTheme.of` is how widgets
-/// read theme values that are not expressed as Mix styles, and because
-/// `InheritedTheme.wrap` has to be able to rebuild it across a route
-/// boundary.
-class PlaygroundTheme extends InheritedTheme {
-  /// Creates the inherited theme holding [data].
-  const PlaygroundTheme({
-    super.key,
+/// Kept private so callers always mount [PlaygroundTheme], which installs the
+/// matching `MixScope` alongside the inherited data, while
+/// `InheritedTheme.wrap` can still rebuild both across a route boundary.
+class _PlaygroundInheritedTheme extends InheritedTheme {
+  const _PlaygroundInheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
@@ -202,28 +223,6 @@ class PlaygroundTheme extends InheritedTheme {
   /// Whether the dark half of the configured pair is currently selected.
   bool get usesDarkTheme => useDarkTheme ?? data.brightness == Brightness.dark;
 
-  /// The closest [PlaygroundThemeData], or `null` when no scope is installed.
-  static PlaygroundThemeData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<PlaygroundTheme>()?.data;
-
-  /// The closest [PlaygroundThemeData].
-  ///
-  /// Throws when no [PlaygroundThemeScope] is installed above [context]; use
-  /// [maybeOf] when absence is a valid state.
-  static PlaygroundThemeData of(BuildContext context) {
-    final data = maybeOf(context);
-    if (data != null) return data;
-
-    throw FlutterError.fromParts([
-      ErrorSummary('No PlaygroundTheme found.'),
-      ErrorDescription(
-        '${context.widget.runtimeType} tried to read the UI theme, but no '
-        'PlaygroundThemeScope was found above it.',
-      ),
-      context.describeElement('The context used was'),
-    ]);
-  }
-
   /// Rebuilds the theme *and* its Mix scope for a captured subtree.
   ///
   /// `InheritedTheme.capture` only carries `InheritedTheme`s across a route
@@ -232,7 +231,7 @@ class PlaygroundTheme extends InheritedTheme {
   /// token values that recipes actually resolve.
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return PlaygroundTheme(
+    return _PlaygroundInheritedTheme(
       data: data,
       baseTheme: baseTheme,
       darkTheme: darkTheme,
@@ -242,7 +241,7 @@ class PlaygroundTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(PlaygroundTheme oldWidget) =>
+  bool updateShouldNotify(_PlaygroundInheritedTheme oldWidget) =>
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||

@@ -11,7 +11,7 @@ void main() {
     bool collapsed = false;
     late StateSetter update;
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: Align(
             alignment: Alignment.topLeft,
@@ -47,7 +47,7 @@ void main() {
     (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: MaterialApp(
             home: Align(
               alignment: Alignment.topLeft,
@@ -119,7 +119,7 @@ void main() {
       late double railPadding;
       late double expandedPadding;
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           scaling: scaling,
           child: MaterialApp(
             home: Directionality(

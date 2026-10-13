@@ -11,7 +11,7 @@ void main() {
   testWidgets('uses rounded fading leaves for the Fortal spinner', (
     tester,
   ) async {
-    final expectedRadius = await resolveInFortalScope(
+    final expectedRadius = await resolveInFortalTheme(
       tester,
       (context) => fortalSpinnerStyle().resolve(context).spec.leafRadius!,
     );

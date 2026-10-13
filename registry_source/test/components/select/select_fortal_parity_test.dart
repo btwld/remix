@@ -317,7 +317,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: Scaffold(
             body: FortalSelect<String>(
@@ -362,7 +362,7 @@ Future<SelectSpec> _resolve(
 }) async {
   late SelectSpec resolved;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       radius: radius,
@@ -432,7 +432,7 @@ _tokens(WidgetTester tester, {Brightness brightness = .light}) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: WidgetsApp(
         color: Colors.black,

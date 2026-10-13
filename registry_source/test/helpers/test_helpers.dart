@@ -7,7 +7,7 @@ import 'package:registry_source/fortal.dart';
 ///
 /// Dart `package:` imports only reach `lib/`, so test helpers cannot be shared
 /// across packages. This copy differs in exactly one way that matters: it wraps
-/// every pump in [FortalScope], because Fortal recipes resolve Fortal tokens.
+/// every pump in [FortalTheme], because Fortal recipes resolve Fortal tokens.
 extension WidgetTesterHelpers on WidgetTester {
   /// Pumps a Fortal widget in the Material interoperability test harness.
   ///
@@ -19,7 +19,7 @@ extension WidgetTesterHelpers on WidgetTester {
     TextDirection textDirection = TextDirection.ltr,
   }) async {
     await pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: Directionality(
             textDirection: textDirection,
@@ -40,12 +40,12 @@ extension WidgetTesterHelpers on WidgetTester {
   }
 }
 
-/// Resolves a value against a `BuildContext` inside a default [FortalScope].
+/// Resolves a value against a `BuildContext` inside a default [FortalTheme].
 ///
 /// Use this for assertions on token or style resolution that need no scope
 /// configuration. Suites that vary the accent, brightness, radius, or widget
 /// states keep their own richer local resolver.
-Future<T> resolveInFortalScope<T>(
+Future<T> resolveInFortalTheme<T>(
   WidgetTester tester,
   T Function(BuildContext context) resolve,
 ) async {

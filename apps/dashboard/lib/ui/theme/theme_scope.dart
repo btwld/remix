@@ -18,7 +18,7 @@ import 'tokens.dart';
 /// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
 /// through Flutter's normal inheritance.
 ///
-/// Only the outermost [UiScope] installs this. A nested scope re-scopes
+/// Only the outermost [UiTheme] installs this. A nested scope re-scopes
 /// tokens for its subtree and nothing more: upstream, `.radix-themes` inside
 /// another `.radix-themes` still inherits `color` and the font properties from
 /// its parent chain, and a nested scope that reinstalled the root run here
@@ -44,7 +44,7 @@ Widget _uiRootTextStyle({
 
 /// Widget that provides Ui design tokens to its subtree via [MixScope].
 ///
-/// Place [UiScope] below the application host so its text defaults apply.
+/// Place [UiTheme] below the application host so its text defaults apply.
 /// For a routed app, wrap the navigator in the host's builder. This also keeps
 /// [UiTokens] available to routes and dialogs.
 ///
@@ -55,12 +55,12 @@ Widget _uiRootTextStyle({
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (_, child) => UiScope(child: child!),
+///   builder: (_, child) => UiTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
-class UiScope extends StatelessWidget {
-  const UiScope({
+class UiTheme extends StatelessWidget {
+  const UiTheme({
     super.key,
     this.theme,
     this.darkTheme,
@@ -92,6 +92,23 @@ class UiScope extends StatelessWidget {
   final List<Type>? orderOfModifiers;
   final Widget child;
 
+  /// Returns the closest resolved Ui theme.
+  static UiThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+    throw FlutterError.fromParts([
+      ErrorSummary('No UiTheme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the Ui theme, but no UiTheme was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
+  /// Returns the closest resolved Ui theme, if one is available.
+  static UiThemeData? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_UiInheritedTheme>()?.data;
+
   @override
   Widget build(BuildContext context) {
     final view = View.maybeOf(context);
@@ -105,7 +122,8 @@ class UiScope extends StatelessWidget {
   }
 
   Widget _build(BuildContext context) {
-    final inherited = context.dependOnInheritedWidgetOfExactType<UiTheme>();
+    final inherited = context
+        .dependOnInheritedWidgetOfExactType<_UiInheritedTheme>();
     final parent = inherited?.data;
     final baseParent = inherited?.baseTheme ?? parent;
     final darkParent = inherited?.darkTheme ?? parent;
@@ -163,7 +181,7 @@ class UiScope extends StatelessWidget {
       );
     }
 
-    return UiTheme(
+    return _UiInheritedTheme(
       data: data,
       baseTheme: base,
       darkTheme: dark,
@@ -191,10 +209,9 @@ UiThemeData _resolveUiTheme(UiThemeConfig config, {UiThemeData? parent}) {
   );
 }
 
-/// Makes the active [UiThemeData] available to descendants.
-class UiTheme extends InheritedTheme {
-  const UiTheme({
-    super.key,
+/// The inherited half of [UiTheme].
+class _UiInheritedTheme extends InheritedTheme {
+  const _UiInheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
@@ -210,23 +227,6 @@ class UiTheme extends InheritedTheme {
   bool get usesDarkTheme => useDarkTheme ?? data.isDark;
   final List<Type>? orderOfModifiers;
 
-  /// Returns the closest resolved Ui theme.
-  static UiThemeData of(BuildContext context) {
-    final data = maybeOf(context);
-    if (data != null) return data;
-    throw FlutterError.fromParts([
-      ErrorSummary('No UiTheme found.'),
-      ErrorDescription(
-        '${context.widget.runtimeType} tried to read the Ui theme, but no UiScope was found above it.',
-      ),
-      context.describeElement('The context used was'),
-    ]);
-  }
-
-  /// Returns the closest resolved Ui theme, if one is available.
-  static UiThemeData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<UiTheme>()?.data;
-
   /// Rebuilds only the theme and its Mix tokens.
   ///
   /// The captured subtree's text run is *not* synthesized here.
@@ -235,7 +235,7 @@ class UiTheme extends InheritedTheme {
   /// across to the new route; installing the Radix root run alongside it would
   /// overwrite that capture with a value the source context never had.
   @override
-  Widget wrap(BuildContext context, Widget child) => UiTheme(
+  Widget wrap(BuildContext context, Widget child) => _UiInheritedTheme(
     data: data,
     baseTheme: baseTheme,
     darkTheme: darkTheme,
@@ -249,7 +249,7 @@ class UiTheme extends InheritedTheme {
   );
 
   @override
-  bool updateShouldNotify(UiTheme oldWidget) =>
+  bool updateShouldNotify(_UiInheritedTheme oldWidget) =>
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||

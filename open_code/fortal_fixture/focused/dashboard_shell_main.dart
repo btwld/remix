@@ -15,7 +15,7 @@ class AcmeShellApp extends StatelessWidget {
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => builder(context),
     ),
-    home: const AcmeScope(child: AcmeShellHost()),
+    home: const AcmeTheme(child: AcmeShellHost()),
   );
 }
 

@@ -59,11 +59,11 @@ void main() {
     },
   );
 
-  testWidgets('fortal textfield disabled soft renders under FortalScope', (
+  testWidgets('fortal textfield disabled soft renders under FortalTheme', (
     tester,
   ) async {
     await tester.pumpRemixApp(
-      FortalScope(
+      FortalTheme(
         child: FortalTextField.soft(
           enabled: false,
           controller: TextEditingController(text: 'disabled'),

@@ -288,7 +288,7 @@ lib/ui/
 ├── theme/
 │   ├── tokens.dart             # token and scale surface the recipe reads
 │   ├── theme_data.dart         # light() / dark() / copyWith()
-│   ├── theme_scope.dart        # inherited scope
+│   ├── theme_scope.dart        # inherited theme widget and lookup
 │   └── effects.dart            # tints, shadows, focus ring
 └── components/
     ├── button.dart             # the recipe — yours to edit
@@ -352,7 +352,7 @@ remix init --prefix Acme --preset fortal
 remix add button
 ```
 
-The application receives `AcmeScope`, `AcmeTokens`, `AcmeButton`, and
+The application receives `AcmeTheme`, `AcmeTokens`, `AcmeButton`, and
 `acmeButtonStyle`; no installed identifier is named Fortal. Button brings its
 shared `base_button` recipe, while the theme arrives as a complete local layer:
 
@@ -374,9 +374,9 @@ lib/ui/
     └── button.g.dart
 ```
 
-Place `AcmeScope` below the application host. For a routed `WidgetsApp`, wrap
-the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
-inherit its tokens and text defaults. The scope example lives in
+Place `AcmeTheme` below the application host. For a routed `WidgetsApp`, wrap
+the child of `WidgetsApp.builder` with `AcmeTheme`. Routes and dialogs then
+inherit its tokens and text defaults. The theme example lives in
 `lib/ui/theme/theme_scope.dart`.
 
 These are application files, not forwarding wrappers around a package. The
@@ -396,19 +396,19 @@ use `--overwrite` only when you want the new authored file wholesale.
 ## Application host and appearance
 
 Open Code documentation and runnable examples use `WidgetsApp`. For a routed
-application, install the generated theme scope in `WidgetsApp.builder` and pass
-its `child` through. That child is the Navigator; keeping the scope above it
+application, install the generated theme widget in `WidgetsApp.builder` and pass
+its `child` through. That child is the Navigator; keeping the theme above it
 makes the active theme available to routes, dialogs, and overlays. See the
 [complete routed host example](/fortal#scope-placement).
 
-The generated scopes expose `theme`, `darkTheme`, and `mode`. A root without
+The generated theme widgets expose `theme`, `darkTheme`, and `mode`. A root without
 arguments supplies the preset's light and dark defaults and follows the system.
-A nested scope inherits its parent's configured pair and active selection.
+A nested theme inherits its parent's configured pair and active selection.
 
-| Preset | Scope | Theme values and modes |
+| Preset | Theme widget | Theme values and modes |
 | --- | --- | --- |
-| `vanilla` | `AcmeThemeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
-| `fortal` | `AcmeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
+| `vanilla` | `AcmeTheme` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
+| `fortal` | `AcmeTheme` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
 
 Use your configured prefix in place of `Acme`. The same parameters apply to
 both presets:
@@ -416,7 +416,7 @@ both presets:
 {/* dart-excerpt: illustrative Acme prefix */}
 
 ```dart
-AcmeThemeScope(
+AcmeTheme(
   theme: const AcmeThemeData.light(),
   darkTheme: const AcmeThemeData.dark(),
   mode: AcmeThemeMode.system,
@@ -424,7 +424,7 @@ AcmeThemeScope(
 )
 ```
 
-For Fortal, use `AcmeScope` in that example. Its theme constructors also accept
+For Fortal, its `AcmeTheme` and `AcmeThemeData` constructors also accept
 accent, gray, radius, scaling, panel background, and background visibility.
 Set shared design options on both appearances when customizing the pair.
 
@@ -439,20 +439,20 @@ explicitly select another mode from the inherited pair.
 Supplying only `darkTheme` retains the inherited or generated light theme and
 does not force dark mode. Supplying neither retains both preset defaults.
 
-Generated scopes take a `child`. Keep `WidgetsApp.builder` above the Navigator
-and use its child; no scope-specific builder constructor is required. To read
+Generated themes take a `child`. Keep `WidgetsApp.builder` above the Navigator
+and use its child; no builder constructor is required. To read
 the newly installed theme while building, put Flutter's `Builder` below the
-scope and use that callback's context.
+theme and use that callback's context.
 
 The [downloadable tutorial apps](/tutorials/settings-screen) show the same API
 in both presets. Their generated theme files are editable application source;
 regeneration still preserves existing authored files unless you explicitly use
 `--overwrite`. The CLI installs the theme layer, not a complete app host or
 appearance picker. Selection controls and persistence belong to the application.
-The dashboard is a reference consumer of the same scope behavior.
+The dashboard is a reference consumer of the same theme behavior.
 
-The theme API has a hard cutoff: scope constructors accept `theme`, `darkTheme`,
-and `mode`. The default scope's `data` parameter, FortalScope's `brightness`
+The theme API has a hard cutoff: theme constructors accept `theme`, `darkTheme`,
+and `mode`. The default theme's `data` parameter, FortalTheme's `brightness`
 parameter, and the config `createScope` shortcut have been removed. Use `theme`
 for a fixed theme and `mode` for appearance selection. Direct Fortal design
 options such as `accent` still override the supplied theme values.
@@ -462,14 +462,14 @@ options such as `accent` still override the supplied theme values.
 **Edit the recipe:** change it for the whole app, permanently. It is your file.
 
 **Retheme a subtree:** one `copyWith` restyles every button beneath it, because
-the recipe reads tokens and the scope decides what tokens resolve to:
+the recipe reads tokens and the theme decides what tokens resolve to:
 
 ```dart
 import 'package:flutter/widgets.dart';
 
 import 'ui/ui.dart';
 
-Widget rounded(Widget child) => UiThemeScope(
+Widget rounded(Widget child) => UiTheme(
   theme: const UiThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     radius: const Radius.circular(999),
@@ -612,7 +612,7 @@ Then adjust any code of your own that read the old names:
   Mono from `remix_ui_fonts`, which `remix add theme` adds to your
   `dependencies`. To keep another family, change those two fields in
   `theme_data.dart` or pass them to `copyWith`.
-- The root `UiThemeScope` now paints the page background and gives bare `Text`
+- The root `UiTheme` now paints the page background and gives bare `Text`
   the theme's body run and bare `Icon`s its `foreground`, so remove any
   `ColoredBox` or `DefaultTextStyle` you added around the scope for that. A
   nested scope in the other brightness recolors the text and icons below it.
@@ -705,10 +705,10 @@ depends on it:
 
 `theme` installs `tokens.dart`, `theme_data.dart`, `theme_scope.dart`,
 and `effects.dart`, giving you `UiTokens` (including the fixed spacing, size,
-stroke, opacity, and motion scales), `UiThemeData`, `UiThemeScope`, and the shared tint, shadow,
-and focus-ring helpers the recipes draw on. It also adds `remix_ui_fonts`, the
-package that bundles Geist and Geist Mono, which the shipped themes set the
-text steps in. Every component item
+stroke, opacity, and motion scales), `UiThemeData`, `UiTheme`, and the shared
+tint, shadow, and focus-ring helpers the recipes draw on. It also adds
+`remix_ui_fonts`, the package that bundles Geist and Geist Mono, which the
+shipped themes set the text steps in. Every component item
 installs one authored file plus its generated adapter under
 `components/<item>.dart`. Five items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over

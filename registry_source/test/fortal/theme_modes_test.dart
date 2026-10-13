@@ -24,7 +24,7 @@ void main() {
   ) async {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-    await tester.pumpWidget(FortalScope(child: host(probe())));
+    await tester.pumpWidget(FortalTheme(child: host(probe())));
     expect(active.brightness, Brightness.light);
     expect(
       background,
@@ -44,7 +44,7 @@ void main() {
   ) async {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-    await tester.pumpWidget(host(FortalScope(mode: .light, child: probe())));
+    await tester.pumpWidget(host(FortalTheme(mode: .light, child: probe())));
     expect(active.brightness, Brightness.light);
     expect(
       background,
@@ -64,7 +64,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       host(
-        FortalScope(
+        FortalTheme(
           theme: const FortalThemeData.light(),
           mode: .dark,
           child: probe(),
@@ -83,7 +83,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       host(
-        FortalScope(
+        FortalTheme(
           darkTheme: const FortalThemeData.dark(),
           mode: .light,
           child: probe(),
@@ -97,7 +97,7 @@ void main() {
     );
     await tester.pumpWidget(
       host(
-        FortalScope(
+        FortalTheme(
           darkTheme: const FortalThemeData.dark(),
           mode: .dark,
           child: probe(),
@@ -116,11 +116,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         host(
-          FortalScope(
+          FortalTheme(
             mode: .dark,
             child: MediaQuery(
               data: const MediaQueryData(platformBrightness: Brightness.light),
-              child: FortalScope(child: probe()),
+              child: FortalTheme(child: probe()),
             ),
           ),
         ),
@@ -139,11 +139,11 @@ void main() {
     // Deliberately reversed brightness values identify the supplied pair.
     await tester.pumpWidget(
       host(
-        FortalScope(
+        FortalTheme(
           theme: const FortalThemeData.dark(),
           darkTheme: const FortalThemeData.light(),
           mode: .light,
-          child: FortalScope(mode: .dark, child: probe()),
+          child: FortalTheme(mode: .dark, child: probe()),
         ),
       ),
     );
@@ -160,7 +160,7 @@ void main() {
     late Widget captured;
     await tester.pumpWidget(
       host(
-        FortalScope(
+        FortalTheme(
           theme: const FortalThemeData.dark(),
           darkTheme: const FortalThemeData.light(),
           mode: .light,
@@ -168,7 +168,7 @@ void main() {
             builder: (context) {
               captured = InheritedTheme.captureAll(
                 context,
-                FortalScope(mode: .dark, child: probe()),
+                FortalTheme(mode: .dark, child: probe()),
               );
               return const SizedBox.shrink();
             },
@@ -198,7 +198,7 @@ void main() {
               settings: settings,
               pageBuilder: (context, _, _) => builder(context),
             ),
-            builder: (context, child) => FortalScope(mode: mode, child: child!),
+            builder: (context, child) => FortalTheme(mode: mode, child: child!),
             home: Builder(
               builder: (context) {
                 pageContext = context;
@@ -246,7 +246,7 @@ void main() {
     ]) {
       await tester.pumpWidget(
         host(
-          FortalScope(
+          FortalTheme(
             theme: light,
             darkTheme: dark,
             mode: mode,
@@ -277,7 +277,7 @@ void main() {
           color: const Color(0xFFFFFFFF),
           textStyle: textStyle,
           builder: (context, _) => scopeInBuilder
-              ? const FortalScope(mode: .light, child: Text('sample'))
+              ? const FortalTheme(mode: .light, child: Text('sample'))
               : const Text('sample'),
         );
     TextStyle rendered() =>
@@ -285,11 +285,11 @@ void main() {
     final foreground = resolveFortalTokens(
       const FortalThemeData.light(),
     ).gray.scale.step(12);
-    await tester.pumpWidget(FortalScope(mode: .light, child: app()));
+    await tester.pumpWidget(FortalTheme(mode: .light, child: app()));
     expect(rendered().color, foreground);
     expect(rendered().fontSize, 16);
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         mode: .light,
         child: app(textStyle: override),
       ),

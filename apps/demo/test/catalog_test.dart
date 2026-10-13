@@ -104,7 +104,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: FortalScope(child: Builder(builder: entry.value)),
+          home: FortalTheme(child: Builder(builder: entry.value)),
         ),
       );
       // Not pumpAndSettle: Spinner and Skeleton animate indefinitely, so a

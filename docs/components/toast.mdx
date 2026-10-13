@@ -38,7 +38,7 @@ class App extends StatelessWidget {
         ),
       // Theme and toast scopes belong in `builder`, above the Navigator, so
       // every route, including dialogs, can reach them.
-      builder: (context, child) => FortalScope(
+      builder: (context, child) => FortalTheme(
         child: Overlay.wrap(
           child: RemixToastScope(style: fortalToastStyle(), child: child!),
         ),

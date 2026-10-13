@@ -108,7 +108,7 @@ void main() {
       ),
     ]) {
       await tester.pumpRemixApp(
-        FortalScope(scaling: .percent110, child: widget),
+        FortalTheme(scaling: .percent110, child: widget),
       );
       expect(
         tester.getSize(find.byIcon(Icons.star)).width,

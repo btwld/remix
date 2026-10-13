@@ -1,6 +1,6 @@
 import 'package:remix/remix.dart';
 
-import 'theme_scope.dart' show UiScope;
+import 'theme_scope.dart' show UiTheme;
 
 /// Design tokens for the Ui UI system (powered by Radix Colors).
 ///
@@ -12,7 +12,7 @@ import 'theme_scope.dart' show UiScope;
 /// ButtonStyler().color(UiTokens.accent9())
 /// ```
 ///
-/// Must be used within [UiScope] to resolve actual values.
+/// Must be used within [UiTheme] to resolve actual values.
 class UiTokens {
   // ============================================================================
   // BACKGROUND AND SURFACE COLORS

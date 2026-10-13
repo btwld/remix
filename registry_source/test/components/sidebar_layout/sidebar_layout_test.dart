@@ -11,7 +11,7 @@ const _bodyKey = ValueKey('body');
 const _headerKey = ValueKey('header');
 
 /// Pumps [layout] inside a resizable [width] harness with a real [Navigator]
-/// (via [MaterialApp]) and [FortalScope], so `showRemixDialog` and Fortal
+/// (via [MaterialApp]) and [FortalTheme], so `showRemixDialog` and Fortal
 /// token resolution both work. [width] changes propagate through
 /// [StatefulBuilder] so tests can cross the compact breakpoint mid-test.
 Future<StateSetter> _pump(
@@ -22,7 +22,7 @@ Future<StateSetter> _pump(
 }) async {
   late StateSetter setState;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       child: MaterialApp(
         // `builder` wraps the Navigator itself, unlike `home`, which is only
         // the initial route's content. `showRemixDialog` pushes a sibling
@@ -70,7 +70,7 @@ void main() {
     addTearDown(open.dispose);
     final requests = <bool>[];
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: ValueListenableBuilder<bool>(
             valueListenable: open,
@@ -110,7 +110,7 @@ void main() {
     final present = ValueNotifier<bool>(true);
     addTearDown(present.dispose);
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: ValueListenableBuilder<bool>(
             valueListenable: present,
@@ -163,7 +163,7 @@ void main() {
   ) async {
     final width = ValueNotifier<double>(900);
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: ValueListenableBuilder<double>(
             valueListenable: width,
@@ -194,7 +194,7 @@ void main() {
   ) async {
     final collapsed = ValueNotifier<bool>(false);
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: ValueListenableBuilder<bool>(
             valueListenable: collapsed,
@@ -342,7 +342,7 @@ void main() {
       late BuildContext scopeContext;
       final width = ValueNotifier<double>(900);
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: MaterialApp(
             home: ValueListenableBuilder<double>(
               valueListenable: width,
@@ -404,7 +404,7 @@ void main() {
       final width = ValueNotifier<double>(500);
       late BuildContext scopeContext;
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: MaterialApp(
             home: ValueListenableBuilder<double>(
               valueListenable: width,
@@ -473,7 +473,7 @@ void main() {
     final width = ValueNotifier<double>(500);
     late BuildContext scopeContext;
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           navigatorKey: rootNavigatorKey,
           home: ValueListenableBuilder<double>(

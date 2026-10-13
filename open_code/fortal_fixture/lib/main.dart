@@ -20,7 +20,7 @@ class AcmeApp extends StatelessWidget {
             builder(context),
       ),
       debugShowCheckedModeBanner: false,
-      home: const AcmeScope(
+      home: const AcmeTheme(
         child: Center(
           child: AcmeCard(
             child: Column(

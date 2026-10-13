@@ -323,7 +323,7 @@ Future<CardSpec> _resolve(
 }) async {
   late CardSpec result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       scaling: scaling,
       child: WidgetsApp(
@@ -368,7 +368,7 @@ _tokens(WidgetTester tester) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

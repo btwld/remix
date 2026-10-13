@@ -177,7 +177,7 @@ Future<AccordionSpec> _resolve(
 }) async {
   late AccordionSpec result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       scaling: scaling,
       child: WidgetsApp(
@@ -200,7 +200,7 @@ Future<AccordionSpec> _resolve(
 Future<({Color gray6, Color accent6})> _tokens(WidgetTester tester) async {
   late ({Color gray6, Color accent6}) result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

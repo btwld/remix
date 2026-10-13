@@ -11,7 +11,7 @@ void main() {
     late Map<FortalCheckboxVariant, Color?> resolvedColors;
 
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: WidgetStateProvider(
             states: const {WidgetState.disabled},

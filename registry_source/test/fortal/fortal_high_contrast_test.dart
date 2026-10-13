@@ -518,7 +518,7 @@ Future<T> _resolveFortalStyle<T>(
   late T style;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       accent: accent,
       mode: brightness == Brightness.dark ? .dark : .light,
       radius: radius,

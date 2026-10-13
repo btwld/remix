@@ -66,7 +66,7 @@ void main() {
       const slotWidth = 110.0;
       const slotHeight = 48.0;
       await tester.pumpWidget(
-        const FortalScope(
+        const FortalTheme(
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: Align(
@@ -138,7 +138,7 @@ Future<BadgeSpec> _resolve(
 }) async {
   late BadgeSpec result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       scaling: scaling,
       radius: radius,
@@ -179,7 +179,7 @@ _tokens(WidgetTester tester) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

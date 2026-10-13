@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 
 import '../../ui/ui.dart';
 
-Widget _scope(BuildContext context, Widget child) => PlaygroundThemeScope(
+Widget _scope(BuildContext context, Widget child) => PlaygroundTheme(
   mode: Theme.of(context).brightness == Brightness.dark
       ? PlaygroundThemeMode.dark
       : PlaygroundThemeMode.light,

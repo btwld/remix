@@ -175,7 +175,7 @@ _resolveBaseButtons(
   resolved;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) => WidgetStateProvider(

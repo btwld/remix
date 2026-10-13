@@ -516,7 +516,7 @@ void main() {
                   outsideError = error;
                 }
               }),
-              AcmeThemeScope(
+              AcmeTheme(
                 theme: const AcmeThemeData.dark(),
                 child: _Probe((context) {
                   insideMaybe = AcmeTheme.maybeOf(context);
@@ -549,7 +549,7 @@ void main() {
 
       await tester.pumpWidget(
         _host(
-          AcmeThemeScope(
+          AcmeTheme(
             theme: const AcmeThemeData.light(),
             child: Column(
               children: [
@@ -557,7 +557,7 @@ void main() {
                   outerTheme = AcmeTheme.of(context);
                   outerPrimary = AcmeTokens.primary.resolve(context);
                 }),
-                AcmeThemeScope(
+                AcmeTheme(
                   theme: inner,
                   child: _Probe((context) {
                     innerTheme = AcmeTheme.of(context);
@@ -582,14 +582,32 @@ void main() {
       expect(afterPrimary, const Color(0xFF171717));
     });
 
-    test('updateShouldNotify follows value equality', () {
-      const child = SizedBox.shrink();
-      const light = AcmeTheme(data: AcmeThemeData.light(), child: child);
-      const sameLight = AcmeTheme(data: AcmeThemeData.light(), child: child);
-      const dark = AcmeTheme(data: AcmeThemeData.dark(), child: child);
+    testWidgets('updateShouldNotify follows value equality', (tester) async {
+      var builds = 0;
+      final probe = _Probe((context) {
+        AcmeTheme.of(context);
+        builds += 1;
+      });
 
-      expect(light.updateShouldNotify(sameLight), isFalse);
-      expect(light.updateShouldNotify(dark), isTrue);
+      await tester.pumpWidget(
+        _host(AcmeTheme(theme: const AcmeThemeData.light(), child: probe)),
+      );
+      expect(builds, 1);
+
+      await tester.pumpWidget(
+        _host(
+          AcmeTheme(
+            theme: const AcmeThemeData.light().copyWith(),
+            child: probe,
+          ),
+        ),
+      );
+      expect(builds, 1);
+
+      await tester.pumpWidget(
+        _host(AcmeTheme(theme: const AcmeThemeData.dark(), child: probe)),
+      );
+      expect(builds, 2);
     });
 
     testWidgets('replacing the theme rebuilds dependents and tokens', (
@@ -599,7 +617,7 @@ void main() {
       late Color primary;
 
       Widget app(AcmeThemeData data) => _host(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: data,
           child: _Probe((context) {
             builds += 1;
@@ -627,7 +645,7 @@ void main() {
 
       await tester.pumpWidget(
         _host(
-          AcmeThemeScope(
+          AcmeTheme(
             theme: const AcmeThemeData.dark(),
             child: _Probe((context) {
               captured ??= InheritedTheme.captureAll(
@@ -1922,7 +1940,7 @@ void main() {
       Set<String> values = const {'design'};
 
       await tester.pumpWidget(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
@@ -2734,7 +2752,7 @@ void main() {
         late List<Color> palette;
 
         await tester.pumpWidget(
-          AcmeThemeScope(
+          AcmeTheme(
             theme: theme.data,
             child: _host(
               _Probe((context) => palette = resolveAcmeChartPalette(context)),
@@ -2766,7 +2784,7 @@ void main() {
         late List<Color> labels;
 
         await tester.pumpWidget(
-          AcmeThemeScope(
+          AcmeTheme(
             theme: theme.data,
             child: _host(
               _Probe((context) {
@@ -2801,7 +2819,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: theme,
           child: _host(
             _Probe((context) => palette = resolveAcmeChartPalette(context)),
@@ -3741,7 +3759,7 @@ void main() {
       String? chosen = 'free';
 
       await tester.pumpWidget(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
@@ -4047,7 +4065,7 @@ void main() {
       String? weight = 'bold';
 
       await tester.pumpWidget(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
@@ -4408,7 +4426,7 @@ void main() {
       Set<Object> selected = const {};
 
       await tester.pumpWidget(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
@@ -6011,7 +6029,7 @@ Future<void> _pumpInScope(
   AcmeThemeData theme = const AcmeThemeData.light(),
 }) {
   return tester.pumpWidget(
-    AcmeThemeScope(
+    AcmeTheme(
       theme: theme,
       child: _host(Center(child: child)),
     ),
@@ -6084,7 +6102,7 @@ Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
 
   late StyleSpec<S> resolved;
   await tester.pumpWidget(
-    AcmeThemeScope(
+    AcmeTheme(
       theme: theme,
       child: _host(
         WidgetStateProvider(
@@ -6235,7 +6253,7 @@ Future<void> _pumpTabs(
   AcmeThemeData theme = const AcmeThemeData.light(),
 }) {
   return tester.pumpWidget(
-    AcmeThemeScope(
+    AcmeTheme(
       theme: theme,
       child: _host(
         RemixTabs(

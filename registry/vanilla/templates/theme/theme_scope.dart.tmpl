@@ -8,7 +8,7 @@ import 'tokens.dart';
 ///
 /// Two things are installed together on purpose:
 ///
-/// * [{{typePrefix}}Theme], so application code can read the raw values through
+/// * an inherited theme so application code can read the raw values through
 ///   [{{typePrefix}}Theme.of];
 /// * a `MixScope` carrying the same values keyed by `{{typePrefix}}Tokens`, so every Mix
 ///   styler resolved below this point sees them.
@@ -26,18 +26,18 @@ import 'tokens.dart';
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (context, child) => {{typePrefix}}ThemeScope(child: child!),
+///   builder: (context, child) => {{typePrefix}}Theme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
 ///
 /// Each supplied theme replaces the values for its appearance. An empty nested
 /// scope inherits the parent pair and selection; individual tokens do not merge.
-class {{typePrefix}}ThemeScope extends StatelessWidget {
+class {{typePrefix}}Theme extends StatelessWidget {
   /// A root follows the system and supplies both preset defaults.
   /// A custom theme without [darkTheme] is used in both modes.
   /// Nested scopes inherit the configured pair and active selection.
-  const {{typePrefix}}ThemeScope({
+  const {{typePrefix}}Theme({
     super.key,
     this.theme,
     this.darkTheme,
@@ -59,6 +59,30 @@ class {{typePrefix}}ThemeScope extends StatelessWidget {
   /// The subtree that resolves against the selected theme.
   final Widget child;
 
+  /// The closest [{{typePrefix}}ThemeData], or `null` when no [{{typePrefix}}Theme] is
+  /// installed.
+  static {{typePrefix}}ThemeData? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_{{typePrefix}}InheritedTheme>()
+      ?.data;
+
+  /// The closest [{{typePrefix}}ThemeData].
+  ///
+  /// Throws when no [{{typePrefix}}Theme] is installed above [context]; use
+  /// [maybeOf] when absence is a valid state.
+  static {{typePrefix}}ThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+
+    throw FlutterError.fromParts([
+      ErrorSummary('No {{typePrefix}}Theme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the UI theme, but no '
+        '{{typePrefix}}Theme was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     // `mode: system` needs a platform brightness. A scope mounted above any
@@ -76,7 +100,7 @@ class {{typePrefix}}ThemeScope extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     final inherited = context
-        .dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>();
+        .dependOnInheritedWidgetOfExactType<_{{typePrefix}}InheritedTheme>();
     final base =
         theme ??
         inherited?.baseTheme ??
@@ -118,7 +142,7 @@ class {{typePrefix}}ThemeScope extends StatelessWidget {
       scoped = _recolored(selected.foreground, scoped);
     }
 
-    return {{typePrefix}}Theme(
+    return _{{typePrefix}}InheritedTheme(
       data: selected,
       baseTheme: base,
       darkTheme: dark,
@@ -170,16 +194,13 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
   ),
 );
 
-/// The inherited half of [{{typePrefix}}ThemeScope].
+/// The inherited half of [{{typePrefix}}Theme].
 ///
-/// Prefer [{{typePrefix}}ThemeScope]; this is public because `{{typePrefix}}Theme.of` is how widgets
-/// read theme values that are not expressed as Mix styles, and because
-/// `InheritedTheme.wrap` has to be able to rebuild it across a route
-/// boundary.
-class {{typePrefix}}Theme extends InheritedTheme {
-  /// Creates the inherited theme holding [data].
-  const {{typePrefix}}Theme({
-    super.key,
+/// Kept private so callers always mount [{{typePrefix}}Theme], which installs the
+/// matching `MixScope` alongside the inherited data, while
+/// `InheritedTheme.wrap` can still rebuild both across a route boundary.
+class _{{typePrefix}}InheritedTheme extends InheritedTheme {
+  const _{{typePrefix}}InheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
@@ -202,28 +223,6 @@ class {{typePrefix}}Theme extends InheritedTheme {
   /// Whether the dark half of the configured pair is currently selected.
   bool get usesDarkTheme => useDarkTheme ?? data.brightness == Brightness.dark;
 
-  /// The closest [{{typePrefix}}ThemeData], or `null` when no scope is installed.
-  static {{typePrefix}}ThemeData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>()?.data;
-
-  /// The closest [{{typePrefix}}ThemeData].
-  ///
-  /// Throws when no [{{typePrefix}}ThemeScope] is installed above [context]; use
-  /// [maybeOf] when absence is a valid state.
-  static {{typePrefix}}ThemeData of(BuildContext context) {
-    final data = maybeOf(context);
-    if (data != null) return data;
-
-    throw FlutterError.fromParts([
-      ErrorSummary('No {{typePrefix}}Theme found.'),
-      ErrorDescription(
-        '${context.widget.runtimeType} tried to read the UI theme, but no '
-        '{{typePrefix}}ThemeScope was found above it.',
-      ),
-      context.describeElement('The context used was'),
-    ]);
-  }
-
   /// Rebuilds the theme *and* its Mix scope for a captured subtree.
   ///
   /// `InheritedTheme.capture` only carries `InheritedTheme`s across a route
@@ -232,7 +231,7 @@ class {{typePrefix}}Theme extends InheritedTheme {
   /// token values that recipes actually resolve.
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return {{typePrefix}}Theme(
+    return _{{typePrefix}}InheritedTheme(
       data: data,
       baseTheme: baseTheme,
       darkTheme: darkTheme,
@@ -242,7 +241,7 @@ class {{typePrefix}}Theme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify({{typePrefix}}Theme oldWidget) =>
+  bool updateShouldNotify(_{{typePrefix}}InheritedTheme oldWidget) =>
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||

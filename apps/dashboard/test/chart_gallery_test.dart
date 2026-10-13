@@ -323,7 +323,7 @@ void main() {
 
     Future<List<Offset>> pumpAt(double width) async {
       await tester.pumpWidget(
-        UiScope(
+        UiTheme(
           child: MaterialApp(
             home: Align(
               alignment: Alignment.topLeft,
@@ -361,7 +361,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      const UiScope(child: MaterialApp(home: ChartsPage())),
+      const UiTheme(child: MaterialApp(home: ChartsPage())),
     );
 
     Rect card(String title) => tester.getRect(

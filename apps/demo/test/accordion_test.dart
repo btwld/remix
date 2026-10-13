@@ -10,7 +10,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: FortalScope(child: Builder(builder: buildAvatarUseCase)),
+        home: FortalTheme(child: Builder(builder: buildAvatarUseCase)),
       ),
     );
 

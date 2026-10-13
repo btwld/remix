@@ -147,7 +147,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: FortalScope(
+        home: FortalTheme(
           child: Center(
             child: FortalSegmentedControl<String>(
               orientation: Axis.vertical,
@@ -315,7 +315,7 @@ _resolve(
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: WidgetStateStyleOverride(
         states: states,

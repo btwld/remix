@@ -619,11 +619,8 @@ Future<void> _pump(
   );
 
   await tester.pumpWidget(switch (preset) {
-    .defaultPreset => VanillaThemeScope(
-      mode: VanillaThemeMode.light,
-      child: app,
-    ),
-    .fortal => FortalScope(child: app),
+    .defaultPreset => VanillaTheme(mode: VanillaThemeMode.light, child: app),
+    .fortal => FortalTheme(child: app),
   });
   await tester.pump();
 }

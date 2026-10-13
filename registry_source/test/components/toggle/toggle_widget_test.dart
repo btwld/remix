@@ -166,7 +166,7 @@ void main() {
       ) async {
         FocusManager.instance.highlightStrategy =
             FocusHighlightStrategy.alwaysTraditional;
-        final focusRingColor = await resolveInFortalScope(
+        final focusRingColor = await resolveInFortalTheme(
           tester,
           (context) => MixScope.tokenOf(FortalTokens.focusA8, context),
         );

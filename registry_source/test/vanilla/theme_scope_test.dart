@@ -34,7 +34,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(brightness: hostBrightness),
-          builder: (context, child) => VanillaThemeScope(
+          builder: (context, child) => VanillaTheme(
             theme: light,
             darkTheme: dark,
             mode: name == 'light' ? .light : .dark,
@@ -58,7 +58,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: host,
-          builder: (context, child) => VanillaThemeScope(
+          builder: (context, child) => VanillaTheme(
             theme: light,
             darkTheme: dark,
             mode: name == 'light' ? .light : .dark,
@@ -78,7 +78,7 @@ void main() {
       await tester.pumpWidget(
         WidgetsApp(
           color: const Color(0xFF000000),
-          builder: (context, _) => VanillaThemeScope(
+          builder: (context, _) => VanillaTheme(
             theme: light,
             darkTheme: dark,
             mode: name == 'light' ? .light : .dark,
@@ -92,7 +92,7 @@ void main() {
 
     testWidgets('$name text with no host at all', (tester) async {
       await tester.pumpWidget(
-        VanillaThemeScope(
+        VanillaTheme(
           theme: light,
           darkTheme: dark,
           mode: name == 'light' ? .light : .dark,
@@ -108,7 +108,7 @@ void main() {
 
     testWidgets('the $name root paints its background', (tester) async {
       await tester.pumpWidget(
-        VanillaThemeScope(
+        VanillaTheme(
           theme: light,
           darkTheme: dark,
           mode: name == 'light' ? .light : .dark,
@@ -129,13 +129,13 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      VanillaThemeScope(
+      VanillaTheme(
         theme: light,
         darkTheme: dark,
         mode: .light,
         child: const Directionality(
           textDirection: TextDirection.ltr,
-          child: VanillaThemeScope(child: Text('probe')),
+          child: VanillaTheme(child: Text('probe')),
         ),
       ),
     );
@@ -151,13 +151,13 @@ void main() {
     late Color? iconColor;
 
     await tester.pumpWidget(
-      VanillaThemeScope(
+      VanillaTheme(
         theme: light,
         darkTheme: dark,
         mode: .light,
         child: Directionality(
           textDirection: TextDirection.ltr,
-          child: VanillaThemeScope(
+          child: VanillaTheme(
             mode: .dark,
             child: Builder(
               builder: (context) {
@@ -188,7 +188,7 @@ void main() {
     late Color? iconColor;
 
     await tester.pumpWidget(
-      VanillaThemeScope(
+      VanillaTheme(
         theme: light,
         darkTheme: dark,
         mode: .dark,
@@ -206,7 +206,7 @@ void main() {
 
   testWidgets('a nearer DefaultTextStyle still wins', (tester) async {
     await tester.pumpWidget(
-      VanillaThemeScope(
+      VanillaTheme(
         theme: light,
         mode: .light,
         child: const Directionality(

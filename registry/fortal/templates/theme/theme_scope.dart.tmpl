@@ -18,7 +18,7 @@ import 'tokens.dart';
 /// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
 /// through Flutter's normal inheritance.
 ///
-/// Only the outermost [{{typePrefix}}Scope] installs this. A nested scope re-scopes
+/// Only the outermost [{{typePrefix}}Theme] installs this. A nested scope re-scopes
 /// tokens for its subtree and nothing more: upstream, `.radix-themes` inside
 /// another `.radix-themes` still inherits `color` and the font properties from
 /// its parent chain, and a nested scope that reinstalled the root run here
@@ -44,7 +44,7 @@ Widget _{{valuePrefix}}RootTextStyle({
 
 /// Widget that provides {{typePrefix}} design tokens to its subtree via [MixScope].
 ///
-/// Place [{{typePrefix}}Scope] below the application host so its text defaults apply.
+/// Place [{{typePrefix}}Theme] below the application host so its text defaults apply.
 /// For a routed app, wrap the navigator in the host's builder. This also keeps
 /// [{{typePrefix}}Tokens] available to routes and dialogs.
 ///
@@ -55,12 +55,12 @@ Widget _{{valuePrefix}}RootTextStyle({
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (_, child) => {{typePrefix}}Scope(child: child!),
+///   builder: (_, child) => {{typePrefix}}Theme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
-class {{typePrefix}}Scope extends StatelessWidget {
-  const {{typePrefix}}Scope({
+class {{typePrefix}}Theme extends StatelessWidget {
+  const {{typePrefix}}Theme({
     super.key,
     this.theme,
     this.darkTheme,
@@ -92,6 +92,23 @@ class {{typePrefix}}Scope extends StatelessWidget {
   final List<Type>? orderOfModifiers;
   final Widget child;
 
+  /// Returns the closest resolved {{typePrefix}} theme.
+  static {{typePrefix}}ThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+    throw FlutterError.fromParts([
+      ErrorSummary('No {{typePrefix}}Theme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the {{typePrefix}} theme, but no {{typePrefix}}Theme was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
+  /// Returns the closest resolved {{typePrefix}} theme, if one is available.
+  static {{typePrefix}}ThemeData? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_{{typePrefix}}InheritedTheme>()?.data;
+
   @override
   Widget build(BuildContext context) {
     final view = View.maybeOf(context);
@@ -105,7 +122,8 @@ class {{typePrefix}}Scope extends StatelessWidget {
   }
 
   Widget _build(BuildContext context) {
-    final inherited = context.dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>();
+    final inherited = context
+        .dependOnInheritedWidgetOfExactType<_{{typePrefix}}InheritedTheme>();
     final parent = inherited?.data;
     final baseParent = inherited?.baseTheme ?? parent;
     final darkParent = inherited?.darkTheme ?? parent;
@@ -163,7 +181,7 @@ class {{typePrefix}}Scope extends StatelessWidget {
       );
     }
 
-    return {{typePrefix}}Theme(
+    return _{{typePrefix}}InheritedTheme(
       data: data,
       baseTheme: base,
       darkTheme: dark,
@@ -194,10 +212,9 @@ class {{typePrefix}}Scope extends StatelessWidget {
   );
 }
 
-/// Makes the active [{{typePrefix}}ThemeData] available to descendants.
-class {{typePrefix}}Theme extends InheritedTheme {
-  const {{typePrefix}}Theme({
-    super.key,
+/// The inherited half of [{{typePrefix}}Theme].
+class _{{typePrefix}}InheritedTheme extends InheritedTheme {
+  const _{{typePrefix}}InheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
@@ -213,23 +230,6 @@ class {{typePrefix}}Theme extends InheritedTheme {
   bool get usesDarkTheme => useDarkTheme ?? data.isDark;
   final List<Type>? orderOfModifiers;
 
-  /// Returns the closest resolved {{typePrefix}} theme.
-  static {{typePrefix}}ThemeData of(BuildContext context) {
-    final data = maybeOf(context);
-    if (data != null) return data;
-    throw FlutterError.fromParts([
-      ErrorSummary('No {{typePrefix}}Theme found.'),
-      ErrorDescription(
-        '${context.widget.runtimeType} tried to read the {{typePrefix}} theme, but no {{typePrefix}}Scope was found above it.',
-      ),
-      context.describeElement('The context used was'),
-    ]);
-  }
-
-  /// Returns the closest resolved {{typePrefix}} theme, if one is available.
-  static {{typePrefix}}ThemeData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>()?.data;
-
   /// Rebuilds only the theme and its Mix tokens.
   ///
   /// The captured subtree's text run is *not* synthesized here.
@@ -238,7 +238,7 @@ class {{typePrefix}}Theme extends InheritedTheme {
   /// across to the new route; installing the Radix root run alongside it would
   /// overwrite that capture with a value the source context never had.
   @override
-  Widget wrap(BuildContext context, Widget child) => {{typePrefix}}Theme(
+  Widget wrap(BuildContext context, Widget child) => _{{typePrefix}}InheritedTheme(
     data: data,
     baseTheme: baseTheme,
     darkTheme: darkTheme,
@@ -252,7 +252,7 @@ class {{typePrefix}}Theme extends InheritedTheme {
   );
 
   @override
-  bool updateShouldNotify({{typePrefix}}Theme oldWidget) =>
+  bool updateShouldNotify(_{{typePrefix}}InheritedTheme oldWidget) =>
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||

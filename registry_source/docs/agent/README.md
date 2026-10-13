@@ -24,7 +24,7 @@ replacement point; visual color and size still come from host styles.
 
 A `MixScope` is not an Agent requirement. Add one only when the host's own
 styles resolve scoped Mix tokens. The catalog's Composer uses the installed
-`UiThemeScope` for its light and dark tokens; the other demos use local styles.
+`UiTheme` for its light and dark tokens; the other demos use local styles.
 
 ## Install
 

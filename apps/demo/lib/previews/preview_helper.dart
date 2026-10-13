@@ -10,7 +10,7 @@ Widget createRemixPreview(Widget child) {
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => builder(context),
     ),
-    builder: (context, navigator) => FortalScope(child: navigator!),
+    builder: (context, navigator) => FortalTheme(child: navigator!),
     home: ColoredBox(
       color: const Color(0xFFFAFAFA),
       child: Center(child: child),

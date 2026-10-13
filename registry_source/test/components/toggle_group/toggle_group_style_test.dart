@@ -6,7 +6,7 @@ import 'package:registry_source/fortal.dart';
 void main() {
   testWidgets('Fortal recipe resolves in a Fortal scope', (tester) async {
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: MaterialApp(
           home: FortalToggleGroup<String>(
             items: const [
@@ -141,7 +141,7 @@ Future<StyleSpec<ToggleGroupSpec>> _resolveFortalToggleGroupStyle(
   late StyleSpec<ToggleGroupSpec> resolved;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       child: MaterialApp(
         home: WidgetStateProvider(
           states: states,

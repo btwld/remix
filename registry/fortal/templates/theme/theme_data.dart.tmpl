@@ -5,7 +5,7 @@ import 'package:remix/remix.dart';
 
 import 'computed.dart';
 import 'radix_colors.dart' as radix;
-import 'theme_scope.dart' show {{typePrefix}}Scope;
+import 'theme_scope.dart' show {{typePrefix}}Theme;
 import 'tokens.dart';
 
 /// Available accent colors matching Radix Themes names.
@@ -70,7 +70,7 @@ enum {{typePrefix}}Scaling {
 /// a nested scope inherits its parent's selection when mode is omitted.
 enum {{typePrefix}}ThemeMode { system, light, dark }
 
-/// Partial theme values applied by a [{{typePrefix}}Scope].
+/// Partial theme values applied by a [{{typePrefix}}Theme].
 @immutable
 class {{typePrefix}}ThemeConfig {
   const {{typePrefix}}ThemeConfig({
@@ -245,7 +245,7 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   );
 }
 
-/// Builds the token map for a {{typePrefix}} scope. Used by [{{typePrefix}}Scope].
+/// Builds the token map for a {{typePrefix}} scope. Used by [{{typePrefix}}Theme].
 Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}ThemeData theme) {
   final tokens = resolve{{typePrefix}}Tokens(theme);
   final scaling = theme.scaling.factor;

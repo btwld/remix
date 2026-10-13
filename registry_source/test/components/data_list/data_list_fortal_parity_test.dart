@@ -10,7 +10,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           MaterialApp(
-            builder: (_, child) => FortalScope(child: child!),
+            builder: (_, child) => FortalTheme(child: child!),
             home: Center(
               child: SizedBox(
                 width: 500,
@@ -82,7 +82,7 @@ Future<({DataListSpec spec, Color grayA11, Color gray12})> _resolve(
 }) async {
   late ({DataListSpec spec, Color grayA11, Color gray12}) result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: Builder(
         builder: (context) {

@@ -15,7 +15,7 @@ void main() {
       late Color accentA5;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           accent: .red,
           child: Builder(
             builder: (context) {
@@ -66,7 +66,7 @@ void main() {
       for (final entry in expectedSizes.entries) {
         late RadioSpec spec;
         await tester.pumpWidget(
-          FortalScope(
+          FortalTheme(
             child: Builder(
               builder: (context) {
                 spec = fortalRadioStyle(size: entry.key).build(context).spec;
@@ -305,7 +305,7 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
   late _FortalTokenSnapshot snapshot;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: MaterialApp(
         home: Builder(

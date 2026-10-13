@@ -10,7 +10,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     await tester.pumpWidget(
       MaterialApp(
-        home: FortalScope(child: Builder(builder: buildRemixDisclosureUseCase)),
+        home: FortalTheme(child: Builder(builder: buildRemixDisclosureUseCase)),
       ),
     );
 
@@ -38,7 +38,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: FortalScope(
+        home: FortalTheme(
           child: Builder(builder: buildDisclosureCatalogUseCase),
         ),
       ),

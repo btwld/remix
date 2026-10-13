@@ -212,7 +212,7 @@ void main() {
       };
 
       for (final entry in expected.entries) {
-        final resolved = await resolveInFortalScope(
+        final resolved = await resolveInFortalTheme(
           tester,
           (context) => fortalIconButtonStyle(size: entry.key).build(context),
         );
@@ -229,15 +229,15 @@ void main() {
     });
 
     testWidgets('button recipes round loading-spinner leaves', (tester) async {
-      final expectedRadius = await resolveInFortalScope(
+      final expectedRadius = await resolveInFortalTheme(
         tester,
         (context) => fortalSpinnerStyle().build(context).spec.leafRadius,
       );
-      final button = await resolveInFortalScope(
+      final button = await resolveInFortalTheme(
         tester,
         (context) => fortalButtonStyle().build(context),
       );
-      final iconButton = await resolveInFortalScope(
+      final iconButton = await resolveInFortalTheme(
         tester,
         (context) => fortalIconButtonStyle().build(context),
       );
@@ -261,7 +261,7 @@ void main() {
       };
 
       for (final entry in expectedCheckbox.entries) {
-        final resolved = await resolveInFortalScope(
+        final resolved = await resolveInFortalTheme(
           tester,
           (context) => fortalCheckboxStyle(size: entry.key).build(context),
         );
@@ -276,7 +276,7 @@ void main() {
       }
 
       for (final entry in expectedRadio.entries) {
-        final resolved = await resolveInFortalScope(
+        final resolved = await resolveInFortalTheme(
           tester,
           (context) => fortalRadioStyle(size: entry.key).build(context),
         );
@@ -307,7 +307,7 @@ void main() {
       };
 
       for (final entry in expected.entries) {
-        final resolved = await resolveInFortalScope(
+        final resolved = await resolveInFortalTheme(
           tester,
           (context) => fortalSwitchStyle(size: entry.key).build(context),
         );
@@ -343,7 +343,7 @@ void main() {
       };
 
       for (final entry in progressHeights.entries) {
-        final resolved = await resolveInFortalScope(
+        final resolved = await resolveInFortalTheme(
           tester,
           (context) => fortalProgressStyle(size: entry.key).build(context),
         );
@@ -359,7 +359,7 @@ void main() {
       }
 
       for (final entry in spinnerSizes.entries) {
-        final resolved = await resolveInFortalScope(
+        final resolved = await resolveInFortalTheme(
           tester,
           (context) => fortalSpinnerStyle(size: entry.key).build(context),
         );
@@ -382,7 +382,7 @@ void main() {
 
       for (final variant in FortalTextFieldVariant.values) {
         for (final entry in expectedHeights.entries) {
-          final resolved = await resolveInFortalScope(
+          final resolved = await resolveInFortalTheme(
             tester,
             (context) => fortalTextFieldStyle(
               variant: variant,

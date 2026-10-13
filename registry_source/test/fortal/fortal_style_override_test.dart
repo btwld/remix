@@ -94,7 +94,7 @@ Future<T> _resolve<T>(
 }) async {
   late T value;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       child: MaterialApp(
         home: WidgetStateProvider(
           states: states,

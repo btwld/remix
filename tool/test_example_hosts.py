@@ -28,43 +28,43 @@ class ExampleHostPolicyTest(unittest.TestCase):
 
     def test_rejects_removed_scope_parameters_but_allows_theme_data(self):
         for source in [
-            'AcmeThemeScope(data: theme, child: screen)',
-            'AcmeThemeScope(child: screen, data: theme)',
-            'AcmeThemeScope (child: screen, data: theme)',
-            'FortalScope(brightness: Brightness.dark, child: screen)',
-            'AcmeScope(lightTheme: theme, child: screen)',
-            'const {{typePrefix}}ThemeScope({this.data, required this.child});',
+            'AcmeTheme(data: theme, child: screen)',
+            'AcmeTheme(child: screen, data: theme)',
+            'AcmeTheme (child: screen, data: theme)',
+            'FortalTheme(brightness: Brightness.dark, child: screen)',
+            'AcmeTheme(lightTheme: theme, child: screen)',
+            'const {{typePrefix}}Theme({this.data, required this.child});',
             'config.createScope(child: screen)',
             'FortalThemeData.dark().createScope(child: screen)',
             'FortalThemeConfig? appearance; appearance.createScope(child: screen)',
             'class FortalThemeConfig { Widget createScope({required Widget child}) => child; }',
-            'AcmeThemeScope({AcmeThemeData? data, required Widget child});',
+            'AcmeTheme({AcmeThemeData? data, required Widget child});',
         ]:
             with self.subTest(source=source):
                 self.assertTrue(violations('example.dart', source))
         self.assertEqual(violations('example.dart',
-            'FortalScope(theme: FortalThemeConfig(brightness: Brightness.dark), child: screen)'), [])
+            'FortalTheme(theme: FortalThemeConfig(brightness: Brightness.dark), child: screen)'), [])
 
     def test_comments_strings_and_unrelated_scopes(self):
         self.assertTrue(violations('example.dart',
-            'FortalScope(/* mode */ brightness: Brightness.dark, child: screen)'))
+            'FortalTheme(/* mode */ brightness: Brightness.dark, child: screen)'))
         self.assertTrue(violations('example.dart',
-            'FortalScope createScope({required Widget child}) => FortalScope(child: child);'))
+            'FortalTheme createScope({required Widget child}) => FortalTheme(child: child);'))
         self.assertEqual(violations('example.dart',
             'AccountScope(data: account, child: screen)'), [])
         self.assertEqual(violations('example.dart',
             "final sample = 'MaterialApp(home: screen)'; // MaterialApp()"), [])
         self.assertTrue(violations('example.dart',
-            "FortalScope(child: Text('), brightness: ignored'), /* nested /* ) */ */ brightness: .dark)"))
+            "FortalTheme(child: Text('), brightness: ignored'), /* nested /* ) */ */ brightness: .dark)"))
         self.assertEqual(violations('example.dart',
             'class FortalThemeData {} service.createScope(child: screen)'), [])
         self.assertTrue(violations('example.dart',
-            'class BrandThemeData {} BrandScope.named(lightTheme: theme)', {'BrandScope'}))
+            'class BrandThemeData {} BrandTheme.named(lightTheme: theme)', {'BrandTheme'}))
 
     def test_comparisons_and_callbacks_do_not_hide_arguments(self):
         for expression in ['count < 2 ? a : b', '() => screen', 'Map<String, Widget>()']:
             self.assertTrue(violations('example.dart',
-                f'FortalScope(child: {expression}, brightness: .dark)'))
+                f'FortalTheme(child: {expression}, brightness: .dark)'))
 
     def test_consumer_tests_and_archive_tests_are_checked(self):
         with tempfile.TemporaryDirectory() as directory:

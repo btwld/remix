@@ -52,7 +52,7 @@ void main() {
   testWidgets('the scope resolves tokens for stylers below it', (tester) async {
     late BuildContext inner;
     await tester.pumpWidget(
-      PlaygroundThemeScope(
+      PlaygroundTheme(
         mode: PlaygroundThemeMode.light,
         child: Builder(
           builder: (context) {

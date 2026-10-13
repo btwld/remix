@@ -159,7 +159,7 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const UiScope(child: MaterialApp(home: SettingsPage())),
+        child: const UiTheme(child: MaterialApp(home: SettingsPage())),
       ),
     );
     final wideName = field('Name');
@@ -172,7 +172,7 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const UiScope(child: MaterialApp(home: SettingsPage())),
+        child: const UiTheme(child: MaterialApp(home: SettingsPage())),
       ),
     );
     final stackedName = field('Name');
@@ -192,7 +192,7 @@ void main() {
 
       Future<List<Rect>> pumpAt(double width) async {
         await tester.pumpWidget(
-          UiScope(
+          UiTheme(
             child: MaterialApp(
               home: Align(
                 alignment: Alignment.topLeft,
@@ -233,7 +233,7 @@ Future<List<Rect>> _pumpOverview(
   addTearDown(tester.view.resetDevicePixelRatio);
 
   await tester.pumpWidget(
-    UiScope(
+    UiTheme(
       child: MaterialApp(home: OverviewPage(onViewOrders: () {})),
     ),
   );

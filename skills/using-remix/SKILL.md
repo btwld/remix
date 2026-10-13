@@ -4,7 +4,7 @@ description: >-
   Builds Flutter UI with the Remix component library: hand-styled `Remix*`
   widgets or an app-installed Vanilla or Fortal preset (`remix_cli`,
   `remix.yaml`, generated `<Prefix>Button`,
-  `<Prefix>ThemeScope`/`<Prefix>Scope`). Use when setting up or updating
+  `<Prefix>Theme`). Use when setting up or updating
   preset items and registry pins, placing the theme scope, wiring overlays,
   dialogs, and toasts, choosing or styling components with stylers,
   variants, and tokens, restyling this app's installed recipes and theme, or
@@ -45,8 +45,8 @@ screen, with a nested themed scope) rather than adding Fortal.
 | Need | Source and API |
 | --- | --- |
 | No generated source or codegen wanted | base `remix`; hand-write `Remix*` widgets and `*Styler`s |
-| A neutral, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>ThemeScope`/`<Prefix>Tokens` |
-| Ready-made Radix Themes-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Scope` plus prefixed `<Prefix>*` widgets |
+| A neutral, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>Theme`/`<Prefix>Tokens` |
+| Ready-made Radix Themes-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Theme` plus prefixed `<Prefix>*` widgets |
 | Own brand in one app, want editable tokens and recipes | Vanilla, then customize — see [Customize installed source](#customize-installed-source) |
 
 Both presets install editable application source, not a package dependency:
@@ -102,10 +102,10 @@ a file at the `lib/` root, such as `lib/main.dart`. A file nested deeper
 needs `package:<app>/ui/ui.dart` (or the equivalent relative path) instead,
 substituting the configured `--ui-path` if it is not `lib/ui`.
 
-| Preset | Scope class | Theme values and mode | Generated widget | Recipe function | Tokens |
+| Preset | Theme class | Theme values and mode | Generated widget | Recipe function | Tokens |
 | --- | --- | --- | --- | --- | --- |
-| Vanilla | `<Prefix>ThemeScope` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
-| Fortal | `<Prefix>Scope` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
+| Vanilla | `<Prefix>Theme` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
+| Fortal | `<Prefix>Theme` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
 
 The prefix is independent of the preset; read both from `remix.yaml` and
 substitute. Examples in this skill use `Ui` for Vanilla and `Fortal` for
@@ -113,13 +113,13 @@ Fortal.
 
 ## Place the theme scope
 
-Both presets' generated scope takes `theme`, `darkTheme`, `mode`, and
+Both presets' generated theme takes `theme`, `darkTheme`, `mode`, and
 `child`; Fortal's also takes `accent`, `gray`, `panelBackground`, `radius`,
 `scaling`, `hasBackground`, `orderOfModifiers`. Do not pass `data`,
 `brightness`, `lightTheme`, or `createScope` — the constructors don't accept
 them.
 
-Install the scope in `WidgetsApp.builder`, above the Navigator, so pushed
+Install the theme in `WidgetsApp.builder`, above the Navigator, so pushed
 routes, dialogs, and overlays inherit it:
 
 ```dart
@@ -132,7 +132,7 @@ Widget app(Widget home) => WidgetsApp(
     settings: settings,
     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
   ),
-  builder: (context, child) => FortalScope(
+  builder: (context, child) => FortalTheme(
     theme: const FortalThemeData.light(),
     darkTheme: const FortalThemeData.dark(),
     mode: FortalThemeMode.system,
@@ -143,7 +143,7 @@ Widget app(Widget home) => WidgetsApp(
 ```
 
 For the Vanilla preset the builder is
-`(context, child) => UiThemeScope(child: child!)`, with the same optional
+`(context, child) => UiTheme(child: child!)`, with the same optional
 `theme`/`darkTheme`/`mode` (`UiThemeData`, `UiThemeMode`). Vanilla widgets
 take their Remix widget's parameters (`UiButton.primary(label: ...,
 onPressed: ...)`); their variants and sizes are the enums in the installed
@@ -160,10 +160,10 @@ assuming Fortal's families — see [Vanilla](references/vanilla.md).
   pair.
 - The app owns mode preference and persistence. `mode: .system` reacts to
   platform brightness changes; no brightness observer is needed.
-- The outermost Fortal scope also sets a courtesy `DefaultTextStyle` for bare
+- The outermost Fortal theme also sets a courtesy `DefaultTextStyle` for bare
   Flutter `Text` (Radix `text3`, `gray-12`, regular weight, no pinned font
   family) — a fallback for ordinary text, not the source of Fortal
-  typography's own token defaults. A nested scope re-scopes tokens only and
+  typography's own token defaults. A nested theme re-scopes tokens only and
   does not restate that fallback.
 
 ## Customize installed source
@@ -181,7 +181,7 @@ Installed source has three levels of override, in order of scope:
   import 'package:flutter/widgets.dart';
   import 'ui/ui.dart';
 
-  Widget rethemed(Widget child) => UiThemeScope(
+  Widget rethemed(Widget child) => UiTheme(
     theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)),
     child: child,
   );
@@ -191,7 +191,7 @@ Installed source has three levels of override, in order of scope:
   import 'package:flutter/widgets.dart';
   import 'ui/ui.dart';
 
-  Widget rethemed(Widget child) => FortalScope(accent: .red, child: child);
+  Widget rethemed(Widget child) => FortalTheme(accent: .red, child: child);
   ```
 
 - **App-wide** — edit `lib/ui/components/<item>.dart` or `lib/ui/theme/*`
@@ -207,7 +207,7 @@ overlay-host wrapper.
 | UI | Caller must provide |
 | --- | --- |
 | Ordinary widgets | Normal inherited Flutter services for that subtree |
-| Generated widgets or recipes | The preset's scope plus normal Flutter services |
+| Generated widgets or recipes | The preset's theme scope plus normal Flutter services |
 | Menu, select, popover, tooltip | An `Overlay`; use `Overlay.wrap` when no navigator is needed |
 | Text field / text area once focused | An `Overlay` for selection handles; a routed `WidgetsApp` provides one, a builder-only host needs `Overlay.wrap` |
 | `showRemixDialog`/`showRemixAlertDialog` | A caller-owned `Navigator` |
@@ -218,7 +218,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
-Widget builder(BuildContext context, Widget? child) => FortalScope(
+Widget builder(BuildContext context, Widget? child) => FortalTheme(
   child: Overlay.wrap(
     child: RemixToastScope(style: fortalToastStyle(), child: child!),
   ),

@@ -1354,7 +1354,7 @@ Future<void> _pump(
   ),
 }) => tester.pumpWidget(
   MaterialApp(
-    home: FortalScope(
+    home: FortalTheme(
       scaling: scaling,
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Scaffold(
@@ -1412,7 +1412,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {
@@ -1443,7 +1443,7 @@ Future<Color> _resolveToken(
 }) async {
   late Color result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {

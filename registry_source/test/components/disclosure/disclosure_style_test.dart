@@ -136,7 +136,7 @@ Future<DisclosureSpec> _resolve(
 }) async {
   late DisclosureSpec result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,
