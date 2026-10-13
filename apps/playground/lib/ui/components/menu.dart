@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'menu.g.dart';
@@ -46,11 +45,13 @@ MenuStyler playgroundMenuStyle({
           .mainAxisSize(.min)
           .color(PlaygroundTokens.popover())
           .border(
-            .color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline),
+            .color(
+              PlaygroundTokens.border(),
+            ).width(PlaygroundTokens.strokeHairline),
           )
           .borderRadius(.all(PlaygroundTokens.radiusMd()))
-          .padding(.vertical(PlaygroundSpace.s1))
-          .minWidth(PlaygroundSize.panelMinWidth),
+          .padding(.vertical(PlaygroundTokens.s1))
+          .minWidth(PlaygroundTokens.panelMinWidth),
     )
     .containerEffects(.behindContent(PlaygroundShadow.md.effects))
     .item(_itemStyle())
@@ -66,32 +67,34 @@ MenuStyler playgroundMenuStyle({
 /// free to wrap a bare `Text`, and that caller must not end up with a
 /// keyboard-reachable control that shows nothing when it is reached.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .crossAxisAlignment(.center)
-    .minHeight(PlaygroundSize.controlSm)
+    .minHeight(PlaygroundTokens.controlSm)
     .padding(
       .symmetric(
-        horizontal: PlaygroundSpace.s2,
-        vertical: PlaygroundSpace.s1_5,
+        horizontal: PlaygroundTokens.s2,
+        vertical: PlaygroundTokens.s1_5,
       ),
     )
-    .spacing(PlaygroundSpace.s2)
+    .spacing(PlaygroundTokens.s2)
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(
       .style(
         PlaygroundTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
-    .icon(.size(PlaygroundSize.icon).color(PlaygroundTokens.foreground()))
+    .icon(.size(PlaygroundTokens.icon).color(PlaygroundTokens.foreground()))
     .onHovered(.color(PlaygroundTokens.accent()))
     // A trigger is keyboard-reachable whether or not it wraps a control that
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
     .onFocusVisible(.foregroundDecoration(playgroundFocusRingDecoration()))
-    .onDisabled(MenuTriggerStyler().wrap(.opacity(PlaygroundOpacity.disabled)));
+    .onDisabled(
+      MenuTriggerStyler().wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+    );
 
 /// One row, in every kind the menu can hold: 32px tall, with an 8px side inset,
 /// `radiusSm` corners, and `textSm`.
@@ -101,18 +104,18 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(PlaygroundSize.controlSm)
-    .margin(.horizontal(PlaygroundSpace.s1))
+    .minHeight(PlaygroundTokens.controlSm)
+    .margin(.horizontal(PlaygroundTokens.s1))
     .padding(
       .symmetric(
-        horizontal: PlaygroundSpace.s2,
-        vertical: PlaygroundSpace.s1_5,
+        horizontal: PlaygroundTokens.s2,
+        vertical: PlaygroundTokens.s1_5,
       ),
     )
-    .spacing(PlaygroundSpace.s2)
+    .spacing(PlaygroundTokens.s2)
     .borderRadius(.all(PlaygroundTokens.radiusSm()))
     .label(
       .style(
@@ -120,17 +123,19 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
       ).color(PlaygroundTokens.popoverForeground()),
     )
     .leadingIcon(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
     .trailingIcon(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
     .indicator(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.popoverForeground()),
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.popoverForeground()),
     )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(MenuItemStyler().wrap(.opacity(PlaygroundOpacity.disabled)));
+    .onDisabled(
+      MenuItemStyler().wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+    );
 
 /// The row under the pointer or the keyboard cursor.
 ///
@@ -149,6 +154,6 @@ MenuItemStyler _highlighted() => MenuItemStyler()
 /// lives on the rows rather than on the panel.
 DividerStyler _dividerStyle() => DividerStyler()
     .color(PlaygroundTokens.border())
-    .height(PlaygroundStroke.hairline)
-    .margin(.vertical(PlaygroundSpace.s1))
+    .height(PlaygroundTokens.strokeHairline)
+    .margin(.vertical(PlaygroundTokens.s1))
     .wrap(.fractionallySizedBox(widthFactor: 1));

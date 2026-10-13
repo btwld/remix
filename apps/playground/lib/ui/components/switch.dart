@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'switch.g.dart';
@@ -27,13 +26,13 @@ SwitchStyler playgroundSwitchStyle({
   SwitchStyler style = const SwitchStyler.create(),
 }) {
   return SwitchStyler()
-      .animate(PlaygroundMotion.standard)
+      .animate(PlaygroundTokens.motion)
       .size(_trackWidth, _trackHeight)
       .borderRadius(.all(_pill))
       .trackColor(_offTrack())
       // A transparent outline: it holds the pixel the focus fragment turns
       // `ring`, so focusing a switch never changes its size.
-      .border(.color(_noEdge).width(PlaygroundStroke.hairline))
+      .border(.color(_noEdge).width(PlaygroundTokens.strokeHairline))
       // In the effects layer rather than the decoration: the dark off-track
       // is translucent, and a decoration shadow would show through it.
       .trackEffects(
@@ -41,7 +40,7 @@ SwitchStyler playgroundSwitchStyle({
       )
       .thumb(
         BoxStyler()
-            .size(PlaygroundSize.icon, PlaygroundSize.icon)
+            .size(PlaygroundTokens.icon, PlaygroundTokens.icon)
             .borderRadius(.all(_pill))
             .color(_offThumb()),
       )
@@ -61,15 +60,15 @@ SwitchStyler playgroundSwitchStyle({
 /// 1px outline above and below it, and a fifth of a pixel of air on each side,
 /// so the thumb reads as filling the track. The thumb's travel is the track's
 /// inner width less its own, 14px.
-const _trackWidth = PlaygroundSpace.s8;
+const _trackWidth = PlaygroundTokens.s8;
 const _trackHeight =
-    PlaygroundSize.icon + 2 * (PlaygroundStroke.hairline + _thumbAir);
+    PlaygroundTokens.icon + 2 * (PlaygroundTokens.strokeHairline + _thumbAir);
 
 /// See [_trackHeight].
 const _thumbAir = 0.2;
 
 /// A radius large enough to round the track and the thumb.
-const _pill = Radius.circular(PlaygroundSize.pill);
+const _pill = Radius.circular(PlaygroundTokens.pill);
 
 /// A color that paints nothing, for the resting outline.
 const _noEdge = Color(0x00000000);
@@ -116,4 +115,4 @@ SwitchStyler _focusVisibleStyle() => SwitchStyler()
 /// draws a focus ring reads as actionable.
 SwitchStyler _disabledStyle() => SwitchStyler()
     .trackEffects(RemixBoxEffectsMix.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

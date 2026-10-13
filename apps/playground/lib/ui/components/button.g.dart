@@ -11,7 +11,7 @@ part of 'button.dart';
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
 /// hover/pressed/focus/disabled fragments. Every state change settles over
-/// 150ms on the shared curve (`PlaygroundMotion.standard`). Remix keeps ownership
+/// 150ms on the shared curve (`PlaygroundTokens.motion`). Remix keeps ownership
 /// of rendering, pointer and keyboard behavior, accessibility semantics, and
 /// the loading/disabled interaction rules — this recipe never reimplements any
 /// of that.

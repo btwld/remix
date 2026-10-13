@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'accordion.g.dart';
@@ -71,14 +70,16 @@ part 'accordion.g.dart';
 AccordionStyler vanillaAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     // `container` has to be reached by name. `AccordionStyler` forwards its
     // box shorthand to `trigger`, so a bare `.border(...)` would outline the
     // clickable row rather than the section, and the rule between sections
     // would move with the panel as it opens.
     .container(
       .border(
-        .bottom(.color(VanillaTokens.border()).width(VanillaStroke.hairline)),
+        .bottom(
+          .color(VanillaTokens.border()).width(VanillaTokens.strokeHairline),
+        ),
       ),
     )
     // These *are* the forwarded shorthand, so they land on `trigger`: the row a
@@ -87,22 +88,24 @@ AccordionStyler vanillaAccordionStyle({
     // the list.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .padding(.vertical(VanillaSpace.s4))
-    .spacing(VanillaSpace.s4)
+    .padding(.vertical(VanillaTokens.s4))
+    .spacing(VanillaTokens.s4)
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .title(
       .style(
         VanillaTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
     )
-    .leadingIcon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
+    .leadingIcon(
+      .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
+    )
     // Both icons are markers, not the state: Remix renders whatever
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
     .trailingIcon(
-      .size(VanillaSize.icon).color(VanillaTokens.mutedForeground()),
+      .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
-    .content(.padding(.only(bottom: VanillaSpace.s4)))
+    .content(.padding(.only(bottom: VanillaTokens.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
@@ -133,4 +136,4 @@ AccordionStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

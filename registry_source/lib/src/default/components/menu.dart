@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'menu.g.dart';
@@ -45,11 +44,13 @@ MenuStyler vanillaMenuStyle({MenuStyler style = const MenuStyler.create()}) =>
               .mainAxisSize(.min)
               .color(VanillaTokens.popover())
               .border(
-                .color(VanillaTokens.border()).width(VanillaStroke.hairline),
+                .color(
+                  VanillaTokens.border(),
+                ).width(VanillaTokens.strokeHairline),
               )
               .borderRadius(.all(VanillaTokens.radiusMd()))
-              .padding(.vertical(VanillaSpace.s1))
-              .minWidth(VanillaSize.panelMinWidth),
+              .padding(.vertical(VanillaTokens.s1))
+              .minWidth(VanillaTokens.panelMinWidth),
         )
         .containerEffects(.behindContent(VanillaShadow.md.effects))
         .item(_itemStyle())
@@ -65,29 +66,31 @@ MenuStyler vanillaMenuStyle({MenuStyler style = const MenuStyler.create()}) =>
 /// free to wrap a bare `Text`, and that caller must not end up with a
 /// keyboard-reachable control that shows nothing when it is reached.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .crossAxisAlignment(.center)
-    .minHeight(VanillaSize.controlSm)
+    .minHeight(VanillaTokens.controlSm)
     .padding(
-      .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1_5),
+      .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s1_5),
     )
-    .spacing(VanillaSpace.s2)
+    .spacing(VanillaTokens.s2)
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .label(
       .style(
         VanillaTokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
     )
-    .icon(.size(VanillaSize.icon).color(VanillaTokens.foreground()))
+    .icon(.size(VanillaTokens.icon).color(VanillaTokens.foreground()))
     .onHovered(.color(VanillaTokens.accent()))
     // A trigger is keyboard-reachable whether or not it wraps a control that
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
     .onFocusVisible(.foregroundDecoration(vanillaFocusRingDecoration()))
-    .onDisabled(MenuTriggerStyler().wrap(.opacity(VanillaOpacity.disabled)));
+    .onDisabled(
+      MenuTriggerStyler().wrap(.opacity(VanillaTokens.disabledOpacity)),
+    );
 
 /// One row, in every kind the menu can hold: 32px tall, with an 8px side inset,
 /// `radiusSm` corners, and `textSm`.
@@ -97,29 +100,33 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(VanillaSize.controlSm)
-    .margin(.horizontal(VanillaSpace.s1))
+    .minHeight(VanillaTokens.controlSm)
+    .margin(.horizontal(VanillaTokens.s1))
     .padding(
-      .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1_5),
+      .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s1_5),
     )
-    .spacing(VanillaSpace.s2)
+    .spacing(VanillaTokens.s2)
     .borderRadius(.all(VanillaTokens.radiusSm()))
     .label(
       .style(
         VanillaTokens.textSm.mix(),
       ).color(VanillaTokens.popoverForeground()),
     )
-    .leadingIcon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
-    .trailingIcon(
-      .size(VanillaSize.icon).color(VanillaTokens.mutedForeground()),
+    .leadingIcon(
+      .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
-    .indicator(.size(VanillaSize.icon).color(VanillaTokens.popoverForeground()))
+    .trailingIcon(
+      .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
+    )
+    .indicator(
+      .size(VanillaTokens.icon).color(VanillaTokens.popoverForeground()),
+    )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(MenuItemStyler().wrap(.opacity(VanillaOpacity.disabled)));
+    .onDisabled(MenuItemStyler().wrap(.opacity(VanillaTokens.disabledOpacity)));
 
 /// The row under the pointer or the keyboard cursor.
 ///
@@ -138,6 +145,6 @@ MenuItemStyler _highlighted() => MenuItemStyler()
 /// lives on the rows rather than on the panel.
 DividerStyler _dividerStyle() => DividerStyler()
     .color(VanillaTokens.border())
-    .height(VanillaStroke.hairline)
-    .margin(.vertical(VanillaSpace.s1))
+    .height(VanillaTokens.strokeHairline)
+    .margin(.vertical(VanillaTokens.s1))
     .wrap(.fractionallySizedBox(widthFactor: 1));

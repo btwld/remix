@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle.g.dart';
@@ -87,23 +86,23 @@ typedef _PlaygroundToggleMetrics = ({double minHeight, double paddingX});
 _PlaygroundToggleMetrics _metricsFor(PlaygroundToggleSize size) =>
     switch (size) {
       .small => (
-        minHeight: PlaygroundSize.controlSm,
-        paddingX: PlaygroundSpace.s1_5,
+        minHeight: PlaygroundTokens.controlSm,
+        paddingX: PlaygroundTokens.s1_5,
       ),
       .medium => (
-        minHeight: PlaygroundSize.controlMd,
-        paddingX: PlaygroundSpace.s2,
+        minHeight: PlaygroundTokens.controlMd,
+        paddingX: PlaygroundTokens.s2,
       ),
       .large => (
-        minHeight: PlaygroundSize.controlLg,
-        paddingX: PlaygroundSpace.s2_5,
+        minHeight: PlaygroundTokens.controlLg,
+        paddingX: PlaygroundTokens.s2_5,
       ),
     };
 
 /// Layout, typography, and the off appearance shared by both variants.
 ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
     _content(PlaygroundTokens.foreground())
-        .animate(PlaygroundMotion.standard)
+        .animate(PlaygroundTokens.motion)
         .color(_noFill)
         .direction(.horizontal)
         .mainAxisSize(.min)
@@ -112,12 +111,12 @@ ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
         .minHeight(metrics.minHeight)
         .minWidth(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
-        .spacing(PlaygroundSpace.s2)
+        .spacing(PlaygroundTokens.s2)
         .borderRadius(.all(PlaygroundTokens.radiusMd()))
         .label(
           .style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500),
         )
-        .icon(.size(PlaygroundSize.icon));
+        .icon(.size(PlaygroundTokens.icon));
 
 /// The variant's outline and its hover.
 ToggleStyler _variantStyle(
@@ -133,7 +132,9 @@ ToggleStyler _variantStyle(
   .outline =>
     ToggleStyler()
         .border(
-          .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+          .color(
+            PlaygroundTokens.input(),
+          ).width(PlaygroundTokens.strokeHairline),
         )
         .onHovered(
           _content(
@@ -172,4 +173,4 @@ ToggleStyler _focusVisibleStyle(PlaygroundToggleVariant variant) {
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'slider.g.dart';
@@ -51,11 +50,11 @@ SliderStyler {{valuePrefix}}SliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
-      .animate({{typePrefix}}Motion.standard)
+      .animate({{typePrefix}}Tokens.motion)
       .thickness(_rail)
       .trackColor({{typePrefix}}Tokens.muted())
       .rangeColor({{typePrefix}}Tokens.primary())
-      .thumbSize(const Size.square({{typePrefix}}Size.icon))
+      .thumbSize(const Size.square({{typePrefix}}Tokens.icon))
       // White in both themes: the thumb is a physical-looking handle, and its
       // `primary` outline and small shadow are what separate it from the range
       // it sits on.
@@ -64,7 +63,9 @@ SliderStyler {{valuePrefix}}SliderStyle({
         BoxStyler()
             .borderRadius(.all(_circular))
             .border(
-              .color({{typePrefix}}Tokens.primary()).width({{typePrefix}}Stroke.hairline),
+              .color(
+                {{typePrefix}}Tokens.primary(),
+              ).width({{typePrefix}}Tokens.strokeHairline),
             )
             .shadows({{typePrefix}}Shadow.sm.box),
       )
@@ -77,7 +78,7 @@ SliderStyler {{valuePrefix}}SliderStyle({
 }
 
 /// A radius large enough to round the thumb into a circle.
-const _circular = Radius.circular({{typePrefix}}Size.pill);
+const _circular = Radius.circular({{typePrefix}}Tokens.pill);
 
 /// The thumb's fill: white, in both themes.
 const _thumbFill = Color(0xFFFFFFFF);
@@ -90,7 +91,7 @@ const _thumbRingWidth = 4.0;
 ///
 /// One size, not a scale. A call site that needs another sets `.thickness(...)`
 /// through [style].
-const _rail = {{typePrefix}}Space.s1_5;
+const _rail = {{typePrefix}}Tokens.s1_5;
 
 /// The ring around a hovered or focused thumb.
 RemixBoxEffectsMix _thumbRing() => {{valuePrefix}}FocusRing(width: _thumbRingWidth);
@@ -108,4 +109,4 @@ SliderStyler _focusVisibleStyle() =>
 /// ring to clear because the focus effects are already conditional on focus.
 SliderStyler _disabledStyle() => SliderStyler()
     .thumbEffects(RemixBoxEffectsMix.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

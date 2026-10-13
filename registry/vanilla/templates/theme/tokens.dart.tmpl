@@ -1,16 +1,18 @@
 import 'package:remix/remix.dart';
 
-/// Semantic design tokens owned by the application.
+/// Semantic design tokens and scale constants owned by the application.
 ///
 /// Remix ships no theme, so the names below are the application's vocabulary,
 /// not a Remix contract. A [MixToken] is only an identity: the concrete value
-/// comes from whichever `MixScope` is active, which `{{typePrefix}}ThemeScope` installs
-/// from a `{{typePrefix}}ThemeData`. Editing, renaming, or adding a token here is a
-/// local change — nothing in Remix reads these names.
+/// comes from whichever `MixScope` is active, which `{{typePrefix}}Theme` installs
+/// from a `{{typePrefix}}ThemeData`. Spacing, size, stroke, opacity, and motion steps
+/// are plain constants on the same class so every recipe reads from one place.
+/// Editing, renaming, or adding a member here is a local change — nothing in
+/// Remix reads these names.
 ///
-/// The names follow the CSS variables of shadcn/ui's theme, which inspired
-/// {{typePrefix}}'s look, so a value read off one of those themes drops straight into
-/// `{{typePrefix}}ThemeData`.
+/// The color, radius, and text names follow the CSS variables of shadcn/ui's
+/// theme, which inspired {{typePrefix}}'s look, so a value read off one of those
+/// themes drops straight into `{{typePrefix}}ThemeData`.
 ///
 /// ```dart
 /// ButtonStyler().color({{typePrefix}}Tokens.primary());
@@ -249,4 +251,113 @@ abstract final class {{typePrefix}}Tokens {
     text3xl,
     textMono,
   ];
+
+  // ---------------------------------------------------------------------------
+  // Spacing steps on a four-pixel grid (`s2` is two steps, 8px; `s1_5` is 6px).
+  //
+  // Plain constants rather than tokens on purpose: spacing does not vary by
+  // theme, and arithmetic on an unresolved token (half a gap, a gap minus a
+  // border) cannot be written until the token resolves.
+  // ---------------------------------------------------------------------------
+
+  /// 2px.
+  static const double s0_5 = 2;
+
+  /// 4px.
+  static const double s1 = 4;
+
+  /// 6px.
+  static const double s1_5 = 6;
+
+  /// 8px.
+  static const double s2 = 8;
+
+  /// 10px.
+  static const double s2_5 = 10;
+
+  /// 12px.
+  static const double s3 = 12;
+
+  /// 14px.
+  static const double s3_5 = 14;
+
+  /// 16px.
+  static const double s4 = 16;
+
+  /// 20px.
+  static const double s5 = 20;
+
+  /// 24px.
+  static const double s6 = 24;
+
+  /// 32px.
+  static const double s8 = 32;
+
+  /// 40px.
+  static const double s10 = 40;
+
+  /// 48px.
+  static const double s12 = 48;
+
+  /// 64px.
+  static const double s16 = 64;
+
+  // ---------------------------------------------------------------------------
+  // Control heights, icon sizes, panel widths, and pill radius.
+  // ---------------------------------------------------------------------------
+
+  /// A small control.
+  static const double controlSm = 32;
+
+  /// The default control.
+  static const double controlMd = 36;
+
+  /// A large control.
+  static const double controlLg = 40;
+
+  /// A small glyph beside `xs` text.
+  static const double iconXs = 12;
+
+  /// A small indicator glyph.
+  static const double iconSm = 14;
+
+  /// The default glyph.
+  static const double icon = 16;
+
+  /// The narrowest a floating list gets, so a one-word menu is still a target.
+  static const double panelMinWidth = 128;
+
+  /// A popover's width.
+  static const double popoverWidth = 288;
+
+  /// A toast's width.
+  static const double toastWidth = 356;
+
+  /// The widest a dialog gets.
+  static const double dialogMaxWidth = 512;
+
+  /// A corner radius that rounds any control into a pill or a circle.
+  static const double pill = 9999;
+
+  // ---------------------------------------------------------------------------
+  // Stroke widths, opacity, and motion.
+  // ---------------------------------------------------------------------------
+
+  /// A border or a separator.
+  static const double strokeHairline = 1;
+
+  /// A selection mark: the line under the current tab.
+  static const double strokeIndicator = 2;
+
+  /// The keyboard focus ring stroke width.
+  static const double strokeRing = 3;
+
+  /// A disabled control fades to half strength, and keeps its colors.
+  static const double disabledOpacity = 0.5;
+
+  /// Every state change: 150ms on `Curves.fastOutSlowIn`, `cubic-bezier(0.4, 0,
+  /// 0.2, 1)`, the curve the web's standard transitions use.
+  static const motion = CurveAnimationConfig.fastOutSlowIn(
+    Duration(milliseconds: 150),
+  );
 }

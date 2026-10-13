@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-import 'scale.dart';
 import 'theme_scope.dart';
 import 'tokens.dart';
 
@@ -80,7 +79,7 @@ RemixBoxEffectsMix playgroundFocusRing({
   ColorToken color = PlaygroundTokens.ring,
   double alpha = _ringAlpha,
   double? dark,
-  double width = PlaygroundStroke.ring,
+  double width = PlaygroundTokens.strokeRing,
 }) => RemixBoxEffectsMix(
   outline: BorderSideMix(
     color: playgroundTint(color, alpha, dark: dark)(),
@@ -106,7 +105,7 @@ BoxDecorationMix playgroundFocusRingDecoration({
   border: .all(
     BorderSideMix(
       color: playgroundTint(PlaygroundTokens.ring, _ringAlpha)(),
-      width: PlaygroundStroke.ring,
+      width: PlaygroundTokens.strokeRing,
       strokeAlign: inset
           ? BorderSide.strokeAlignInside
           : BorderSide.strokeAlignOutside,

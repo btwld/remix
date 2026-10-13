@@ -6,13 +6,11 @@ import '../../tool/check_vanilla_scale.dart' as checker;
 
 void main() {
   const scaleSource = '''
-abstract final class VanillaSpace {
+abstract final class VanillaTokens {
   static const double s1 = 4;
   static const double s1_5 = 6;
   static const double s2 = 8;
-}
-abstract final class VanillaStroke {
-  static const double hairline = 1;
+  static const double strokeHairline = 1;
 }
 ''';
   const themeDataSource = '''
@@ -74,7 +72,7 @@ const raw = r'17';
 const multi = """
   21
 """;
-final text2xl = VanillaSpace.s1_5;
+final text2xl = VanillaTokens.s1_5;
 '''),
       isEmpty,
     );

@@ -5,7 +5,7 @@
 /// ```
 ///
 /// Vanilla takes its spacing, sizes, and type from one scale
-/// (`registry_source/lib/src/default/theme/scale.dart` and the text steps in
+/// (`registry_source/lib/src/default/theme/tokens.dart` and the text steps in
 /// `theme_data.dart`). A literal such as `13` or `18.4` in a component is a
 /// value nobody else in the layer uses, and it is how the preset drifted out of
 /// rhythm before. This lists every such literal in `components/*.dart`.
@@ -24,7 +24,7 @@ import 'dart:io';
 const componentsPath = 'registry_source/lib/src/default/components';
 
 /// The scale constants.
-const scalePath = 'registry_source/lib/src/default/theme/scale.dart';
+const scalePath = 'registry_source/lib/src/default/theme/tokens.dart';
 
 /// The theme data, which declares the text steps.
 const themeDataPath = 'registry_source/lib/src/default/theme/theme_data.dart';
@@ -215,8 +215,8 @@ List<String> compareWithAllowlist(
     if (found.length > limit) {
       problems.add(
         'off the scale: ${found.join(', ')} '
-        '(${found.length} found, $limit allowed). Use a VanillaSpace, '
-        'VanillaSize, VanillaStroke, or text token value instead.',
+        '(${found.length} found, $limit allowed). Use a VanillaTokens '
+        'scale constant or text token value instead.',
       );
     }
   }

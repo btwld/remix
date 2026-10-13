@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'disclosure.g.dart';
@@ -62,12 +61,12 @@ part 'disclosure.g.dart';
 DisclosureStyler vanillaDisclosureStyle({
   DisclosureStyler style = const DisclosureStyler.create(),
 }) => DisclosureStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     // These are the forwarded box shorthand, so they land on `trigger`: the
     // row a reader clicks to open the section.
     .width(double.infinity)
     .alignment(.centerLeft)
-    .padding(.vertical(VanillaSpace.s4))
+    .padding(.vertical(VanillaTokens.s4))
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .trigger(
       BoxStyler().wrap(
@@ -82,7 +81,7 @@ DisclosureStyler vanillaDisclosureStyle({
     // `content` has to be reached by name; a bare `.padding(...)` would inset
     // the trigger instead. It has no side inset either, so the revealed
     // content lines up under the trigger's own text.
-    .content(.padding(.only(bottom: VanillaSpace.s4)))
+    .content(.padding(.only(bottom: VanillaTokens.s4)))
     .onHovered(
       DisclosureStyler().trigger(
         BoxStyler().wrap(
@@ -117,4 +116,4 @@ DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
 /// a focus ring reads as reachable.
 DisclosureStyler _disabledStyle() => DisclosureStyler()
     .trigger(.foregroundDecoration(BoxDecorationMix.border(.style(.none))))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

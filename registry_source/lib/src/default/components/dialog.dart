@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'dialog.g.dart';
@@ -31,15 +30,15 @@ DialogStyler vanillaDialogStyle({
     // panel would take all of it. The padding leaves room at the edges, and
     // the alignment lets the panel keep its own size.
     .wrap(
-      .padding(.all(VanillaSpace.s4))
+      .padding(.all(VanillaTokens.s4))
           .align(alignment: .center)
           .orderOfModifiers([PaddingModifier, AlignModifier]),
     )
     .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(VanillaTokens.radiusLg()))
-    .padding(.all(VanillaSpace.s6))
-    .width(VanillaSize.dialogMaxWidth)
+    .padding(.all(VanillaTokens.s6))
+    .width(VanillaTokens.dialogMaxWidth)
     .shadows(VanillaShadow.lg.box)
     .title(
       .style(VanillaTokens.textLg.mix())
@@ -49,7 +48,7 @@ DialogStyler vanillaDialogStyle({
           .height(1)
           .fontWeight(FontWeight.w600)
           .color(VanillaTokens.foreground())
-          .wrap(.padding(.only(bottom: VanillaSpace.s2))),
+          .wrap(.padding(.only(bottom: VanillaTokens.s2))),
     )
     .description(
       .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
@@ -60,7 +59,7 @@ DialogStyler vanillaDialogStyle({
       FlexBoxStyler()
           .direction(.horizontal)
           .mainAxisAlignment(.end)
-          .spacing(VanillaSpace.s2)
-          .margin(.top(VanillaSpace.s4)),
+          .spacing(VanillaTokens.s2)
+          .margin(.top(VanillaTokens.s4)),
     )
     .merge(style);

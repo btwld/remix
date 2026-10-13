@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'icon_button.g.dart';
@@ -51,14 +50,14 @@ enum VanillaIconButtonSize {
 /// Everything visual about an icon button lives in this function: geometry, the
 /// five variants, hover and press motion, and the hover/pressed/focus/disabled
 /// fragments. Every state change settles over 150ms on the shared curve
-/// (`VanillaMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// (`VanillaTokens.motion`). Remix keeps ownership of rendering, pointer and
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
 ///
 /// It restates the button's fills rather than sharing them. That is
 /// deliberate: the two components have separate update stories, and a shared
 /// table would make every change to one a change to the other. The scale and
-/// the tints they draw on are shared, through `VanillaSize` and `vanillaTint`.
+/// the tints they draw on are shared, through `VanillaTokens` and `vanillaTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
@@ -156,9 +155,9 @@ const _noFill = Color(0x00000000);
 /// The square's edge for one [VanillaIconButtonSize]: 32, 36, or 40px, the
 /// button's heights. The glyph stays at 16 in every size.
 double _edgeFor(VanillaIconButtonSize size) => switch (size) {
-  .small => VanillaSize.controlSm,
-  .medium => VanillaSize.controlMd,
-  .large => VanillaSize.controlLg,
+  .small => VanillaTokens.controlSm,
+  .medium => VanillaTokens.controlMd,
+  .large => VanillaTokens.controlLg,
 };
 
 /// Layout and spinner defaults shared by every variant.
@@ -166,14 +165,14 @@ double _edgeFor(VanillaIconButtonSize size) => switch (size) {
 /// The box is square and centered, so the control's footprint does not change
 /// with the glyph inside it.
 IconButtonStyler _base(double edge) => IconButtonStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .size(edge, edge)
     .alignment(.center)
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    .icon(.size(VanillaSize.icon))
+    .icon(.size(VanillaTokens.icon))
     .spinner(
       .size(
-        VanillaSize.icon,
+        VanillaTokens.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -196,7 +195,9 @@ IconButtonStyler _variantStyle(VanillaIconButtonVariant variant) =>
       ),
       .outline =>
         _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
-            .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+            .border(
+              .color(VanillaTokens.input()).width(VanillaTokens.strokeHairline),
+            )
             // In the effects layer rather than the decoration: the dark fill
             // is translucent, and a decoration shadow would show through it.
             .containerEffects(.behindContent(VanillaShadow.xs.effects)),
@@ -267,4 +268,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 IconButtonStyler _disabledStyle() => IconButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'toggle.dart';
 import 'tooltip.dart';
@@ -59,19 +58,23 @@ SidebarStyler vanillaSidebarStyle({
       .color(VanillaTokens.sidebar())
       .border(
         .end(
-          .color(VanillaTokens.sidebarBorder()).width(VanillaStroke.hairline),
+          .color(
+            VanillaTokens.sidebarBorder(),
+          ).width(VanillaTokens.strokeHairline),
         ),
       ),
   content: FlexBoxStyler()
-      .padding(.all(VanillaSpace.s2))
-      .spacing(VanillaSpace.s4),
+      .padding(.all(VanillaTokens.s2))
+      .spacing(VanillaTokens.s4),
   footer: BoxStyler()
       .border(
         .top(
-          .color(VanillaTokens.sidebarBorder()).width(VanillaStroke.hairline),
+          .color(
+            VanillaTokens.sidebarBorder(),
+          ).width(VanillaTokens.strokeHairline),
         ),
       )
-      .padding(.all(VanillaSpace.s2)),
+      .padding(.all(VanillaTokens.s2)),
   // A section label is a 32px row of `textXs` at medium weight in
   // `sidebarForeground` at 70%, inset like the destinations below it. It is the
   // quietest text in the panel, so it reads as a heading for the destinations
@@ -82,10 +85,10 @@ SidebarStyler vanillaSidebarStyle({
       .color(_labelColor())
       .wrap(
         .padding(
-          .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s2),
+          .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s2),
         ),
       ),
-  destinations: FlexBoxStyler().spacing(VanillaSpace.s1),
+  destinations: FlexBoxStyler().spacing(VanillaTokens.s1),
   destination: _destinationStyle(),
   // A collapsed rail shows each destination's label in the application's own
   // tooltip, so it reads like every other tooltip in the app.
@@ -116,14 +119,14 @@ ToggleStyler _destinationStyle() {
 
   return vanillaToggleStyle(variant: .ghost, size: .small)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start))
-      .minHeight(VanillaSize.controlSm)
+      .minHeight(VanillaTokens.controlSm)
       // The reference is `h-8 p-2`: CSS fixes the height and lets the line
       // overrun the padding. Flutter lays the line out inside the padding, so
       // 6px vertically is what keeps the row at 32.
       .padding(
-        .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1_5),
+        .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s1_5),
       )
-      .spacing(VanillaSpace.s2)
+      .spacing(VanillaTokens.s2)
       .label(
         .fontWeight(FontWeight.w400).color(VanillaTokens.sidebarForeground()),
       )

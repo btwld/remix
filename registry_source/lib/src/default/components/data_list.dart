@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'data_list.g.dart';
@@ -43,9 +42,9 @@ DataListStyler vanillaDataListStyle({
     .value(.style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()))
     // One pair from the next, 12px; side by side, 24px; a label from its own
     // value, 8px.
-    .rowSpacing(VanillaSpace.s3)
-    .columnSpacing(VanillaSpace.s6)
-    .labelValueSpacing(VanillaSpace.s2)
+    .rowSpacing(VanillaTokens.s3)
+    .columnSpacing(VanillaTokens.s6)
+    .labelValueSpacing(VanillaTokens.s2)
     // A floor rather than a fixed width: the labels line up into a column,
     // but a long one is still allowed to be as long as it needs to be.
     .minLabelWidth(_minLabelWidth)

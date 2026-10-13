@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'toggle.dart';
 import 'tooltip.dart';
@@ -59,19 +58,23 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
       .color({{typePrefix}}Tokens.sidebar())
       .border(
         .end(
-          .color({{typePrefix}}Tokens.sidebarBorder()).width({{typePrefix}}Stroke.hairline),
+          .color(
+            {{typePrefix}}Tokens.sidebarBorder(),
+          ).width({{typePrefix}}Tokens.strokeHairline),
         ),
       ),
   content: FlexBoxStyler()
-      .padding(.all({{typePrefix}}Space.s2))
-      .spacing({{typePrefix}}Space.s4),
+      .padding(.all({{typePrefix}}Tokens.s2))
+      .spacing({{typePrefix}}Tokens.s4),
   footer: BoxStyler()
       .border(
         .top(
-          .color({{typePrefix}}Tokens.sidebarBorder()).width({{typePrefix}}Stroke.hairline),
+          .color(
+            {{typePrefix}}Tokens.sidebarBorder(),
+          ).width({{typePrefix}}Tokens.strokeHairline),
         ),
       )
-      .padding(.all({{typePrefix}}Space.s2)),
+      .padding(.all({{typePrefix}}Tokens.s2)),
   // A section label is a 32px row of `textXs` at medium weight in
   // `sidebarForeground` at 70%, inset like the destinations below it. It is the
   // quietest text in the panel, so it reads as a heading for the destinations
@@ -82,10 +85,10 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
       .color(_labelColor())
       .wrap(
         .padding(
-          .symmetric(horizontal: {{typePrefix}}Space.s2, vertical: {{typePrefix}}Space.s2),
+          .symmetric(horizontal: {{typePrefix}}Tokens.s2, vertical: {{typePrefix}}Tokens.s2),
         ),
       ),
-  destinations: FlexBoxStyler().spacing({{typePrefix}}Space.s1),
+  destinations: FlexBoxStyler().spacing({{typePrefix}}Tokens.s1),
   destination: _destinationStyle(),
   // A collapsed rail shows each destination's label in the application's own
   // tooltip, so it reads like every other tooltip in the app.
@@ -116,14 +119,14 @@ ToggleStyler _destinationStyle() {
 
   return {{valuePrefix}}ToggleStyle(variant: .ghost, size: .small)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start))
-      .minHeight({{typePrefix}}Size.controlSm)
+      .minHeight({{typePrefix}}Tokens.controlSm)
       // The reference is `h-8 p-2`: CSS fixes the height and lets the line
       // overrun the padding. Flutter lays the line out inside the padding, so
       // 6px vertically is what keeps the row at 32.
       .padding(
-        .symmetric(horizontal: {{typePrefix}}Space.s2, vertical: {{typePrefix}}Space.s1_5),
+        .symmetric(horizontal: {{typePrefix}}Tokens.s2, vertical: {{typePrefix}}Tokens.s1_5),
       )
-      .spacing({{typePrefix}}Space.s2)
+      .spacing({{typePrefix}}Tokens.s2)
       .label(
         .fontWeight(FontWeight.w400).color({{typePrefix}}Tokens.sidebarForeground()),
       )

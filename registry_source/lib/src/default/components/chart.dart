@@ -6,7 +6,6 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'chart.g.dart';
@@ -262,7 +261,7 @@ ChartTooltipStyler _chartTooltipStyle() =>
 /// The tooltip's outline: `border` at half strength.
 BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
   color: _tooltipBorderColor.resolve(context),
-  width: VanillaStroke.hairline,
+  width: VanillaTokens.strokeHairline,
 );
 
 final _tooltipBorderColor = vanillaTint(VanillaTokens.border, 0.5);
@@ -275,8 +274,8 @@ BorderRadius _resolveTooltipRadius(BuildContext context) => BorderRadius.all(
 /// The tooltip's inset: 10px at the sides, 6px above and below.
 EdgeInsets _resolveTooltipPadding(BuildContext context) =>
     const EdgeInsets.symmetric(
-      horizontal: VanillaSpace.s2_5,
-      vertical: VanillaSpace.s1_5,
+      horizontal: VanillaTokens.s2_5,
+      vertical: VanillaTokens.s1_5,
     );
 
 BorderRadius _resolveBarRadius(BuildContext context) => BorderRadius.all(

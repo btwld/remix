@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'card.g.dart';
@@ -38,8 +37,10 @@ CardStyler playgroundCardStyle({
   CardStyler style = const CardStyler.create(),
 }) => CardStyler()
     .color(PlaygroundTokens.card())
-    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusXl()))
     .shadows(PlaygroundShadow.sm.box)
-    .padding(.all(PlaygroundSpace.s6))
+    .padding(.all(PlaygroundTokens.s6))
     .merge(style);

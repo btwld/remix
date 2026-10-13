@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'divider.g.dart';
@@ -54,10 +53,10 @@ DividerStyler {{valuePrefix}}DividerStyle({
 DividerStyler _extent(Axis orientation) => switch (orientation) {
   .horizontal =>
     DividerStyler()
-        .height({{typePrefix}}Stroke.hairline)
+        .height({{typePrefix}}Tokens.strokeHairline)
         .wrap(.fractionallySizedBox(widthFactor: 1)),
   .vertical =>
     DividerStyler()
-        .width({{typePrefix}}Stroke.hairline)
+        .width({{typePrefix}}Tokens.strokeHairline)
         .wrap(.fractionallySizedBox(heightFactor: 1)),
 };

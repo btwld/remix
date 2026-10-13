@@ -166,9 +166,9 @@ remix add button --dry-run
 ```
 Items: theme -> button
 Dependencies: remix@^1.0.0-beta.10, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
-theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/scale.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
+theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 button: missing; lib/ui/components/button.dart
-Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/scale.dart, theme/effects.dart, components/button.dart
+Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart
 Generated: lib/ui/components/button.g.dart
 ```
 
@@ -286,10 +286,9 @@ FormatException: Existing remix.yaml does not match the requested prefix, preset
 lib/ui/
 ├── ui.dart                     # managed barrel — CLI owns the marker block
 ├── theme/
-│   ├── tokens.dart             # token surface the recipe reads
+│   ├── tokens.dart             # token and scale surface the recipe reads
 │   ├── theme_data.dart         # light() / dark() / copyWith()
 │   ├── theme_scope.dart        # inherited scope
-│   ├── scale.dart              # spacing, sizes, strokes, motion
 │   └── effects.dart            # tints, shadows, focus ring
 └── components/
     ├── button.dart             # the recipe — yours to edit
@@ -705,8 +704,8 @@ The official registry is deliberately small, and every item after `theme`
 depends on it:
 
 `theme` installs `tokens.dart`, `theme_data.dart`, `theme_scope.dart`,
-`scale.dart`, and `effects.dart`, giving you `UiTokens`, `UiThemeData`,
-`UiThemeScope`, the fixed spacing and size scales, and the shared tint, shadow,
+and `effects.dart`, giving you `UiTokens` (including the fixed spacing, size,
+stroke, opacity, and motion scales), `UiThemeData`, `UiThemeScope`, and the shared tint, shadow,
 and focus-ring helpers the recipes draw on. It also adds `remix_ui_fonts`, the
 package that bundles Geist and Geist Mono, which the shipped themes set the
 text steps in. Every component item

@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'progress.g.dart';
@@ -58,7 +57,7 @@ final _track = playgroundTint(PlaygroundTokens.primary, _trackAlpha);
 const _trackAlpha = 0.2;
 
 /// The bar's weight: 8px.
-const _thickness = PlaygroundSpace.s2;
+const _thickness = PlaygroundTokens.s2;
 
 /// Half of [_thickness], which is what makes each end a semicircle.
 const _radius = Radius.circular(_thickness / 2);

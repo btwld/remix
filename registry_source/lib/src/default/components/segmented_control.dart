@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'segmented_control.g.dart';
@@ -83,15 +82,17 @@ final _chosenEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
 /// Its height is the track's 36px less the inset on both sides, so the track
 /// lands on the height of the button and field beside it.
 SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .color(_noFill)
-    .minHeight(VanillaSize.controlMd - 2 * _trackInset)
-    .padding(.symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1))
-    .spacing(VanillaSpace.s1_5)
+    .minHeight(VanillaTokens.controlMd - 2 * _trackInset)
+    .padding(
+      .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s1),
+    )
+    .spacing(VanillaTokens.s1_5)
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    .border(.color(_noEdge).width(VanillaStroke.hairline))
+    .border(.color(_noEdge).width(VanillaTokens.strokeHairline))
     .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size(VanillaSize.icon))
+    .icon(.size(VanillaTokens.icon))
     .onHovered(_content(VanillaTokens.foreground()))
     .onSelected(
       _content(VanillaTokens.foreground())
@@ -121,4 +122,4 @@ SegmentedControlItemStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

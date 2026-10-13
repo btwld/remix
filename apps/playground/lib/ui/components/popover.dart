@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'popover.g.dart';
@@ -54,12 +53,14 @@ PopoverStyler playgroundPopoverStyle({
   PopoverStyler style = const PopoverStyler.create(),
 }) => PopoverStyler()
     .color(PlaygroundTokens.popover())
-    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     // 288px: a popover holds a short form or a few lines, and a fixed width
     // keeps it from resizing as that content changes. A call site with wider
     // content sets `.width(...)` through [style].
-    .width(PlaygroundSize.popoverWidth)
-    .padding(.all(PlaygroundSpace.s4))
+    .width(PlaygroundTokens.popoverWidth)
+    .padding(.all(PlaygroundTokens.s4))
     .shadows(PlaygroundShadow.md.box)
     .merge(style);

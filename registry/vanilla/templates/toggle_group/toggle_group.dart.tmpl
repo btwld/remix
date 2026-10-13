@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle_group.g.dart';
@@ -78,9 +77,9 @@ const _noFill = Color(0x00000000);
 
 /// The option height for one [{{typePrefix}}ToggleGroupSize]: 32, 36, or 40px.
 double _heightFor({{typePrefix}}ToggleGroupSize size) => switch (size) {
-  .small => {{typePrefix}}Size.controlSm,
-  .medium => {{typePrefix}}Size.controlMd,
-  .large => {{typePrefix}}Size.controlLg,
+  .small => {{typePrefix}}Tokens.controlSm,
+  .medium => {{typePrefix}}Tokens.controlMd,
+  .large => {{typePrefix}}Tokens.controlLg,
 };
 
 /// The outline variant's one outline around the strip.
@@ -91,7 +90,7 @@ ToggleGroupStyler _groupOutline({{typePrefix}}ToggleGroupVariant variant) =>
     switch (variant) {
       .ghost => ToggleGroupStyler(),
       .outline => ToggleGroupStyler().border(
-        .color({{typePrefix}}Tokens.input()).width({{typePrefix}}Stroke.hairline),
+        .color({{typePrefix}}Tokens.input()).width({{typePrefix}}Tokens.strokeHairline),
       ),
     };
 
@@ -102,17 +101,17 @@ ToggleGroupItemStyler _itemStyle(
   {{typePrefix}}ToggleGroupVariant variant,
 ) {
   return _content({{typePrefix}}Tokens.foreground())
-      .animate({{typePrefix}}Motion.standard)
+      .animate({{typePrefix}}Tokens.motion)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)
       .mainAxisAlignment(.center)
       .crossAxisAlignment(.center)
       .minHeight(height)
-      .padding(.horizontal({{typePrefix}}Space.s3))
-      .spacing({{typePrefix}}Space.s2)
+      .padding(.horizontal({{typePrefix}}Tokens.s3))
+      .spacing({{typePrefix}}Tokens.s2)
       .label(.style({{typePrefix}}Tokens.textSm.mix()).fontWeight(FontWeight.w500))
-      .icon(.size({{typePrefix}}Size.icon))
+      .icon(.size({{typePrefix}}Tokens.icon))
       .onHovered(switch (variant) {
         .ghost => _content(
           {{typePrefix}}Tokens.mutedForeground(),
@@ -148,4 +147,4 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

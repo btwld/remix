@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'slider.g.dart';
@@ -51,11 +50,11 @@ SliderStyler playgroundSliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
-      .animate(PlaygroundMotion.standard)
+      .animate(PlaygroundTokens.motion)
       .thickness(_rail)
       .trackColor(PlaygroundTokens.muted())
       .rangeColor(PlaygroundTokens.primary())
-      .thumbSize(const Size.square(PlaygroundSize.icon))
+      .thumbSize(const Size.square(PlaygroundTokens.icon))
       // White in both themes: the thumb is a physical-looking handle, and its
       // `primary` outline and small shadow are what separate it from the range
       // it sits on.
@@ -66,7 +65,7 @@ SliderStyler playgroundSliderStyle({
             .border(
               .color(
                 PlaygroundTokens.primary(),
-              ).width(PlaygroundStroke.hairline),
+              ).width(PlaygroundTokens.strokeHairline),
             )
             .shadows(PlaygroundShadow.sm.box),
       )
@@ -79,7 +78,7 @@ SliderStyler playgroundSliderStyle({
 }
 
 /// A radius large enough to round the thumb into a circle.
-const _circular = Radius.circular(PlaygroundSize.pill);
+const _circular = Radius.circular(PlaygroundTokens.pill);
 
 /// The thumb's fill: white, in both themes.
 const _thumbFill = Color(0xFFFFFFFF);
@@ -92,7 +91,7 @@ const _thumbRingWidth = 4.0;
 ///
 /// One size, not a scale. A call site that needs another sets `.thickness(...)`
 /// through [style].
-const _rail = PlaygroundSpace.s1_5;
+const _rail = PlaygroundTokens.s1_5;
 
 /// The ring around a hovered or focused thumb.
 RemixBoxEffectsMix _thumbRing() => playgroundFocusRing(width: _thumbRingWidth);
@@ -110,4 +109,4 @@ SliderStyler _focusVisibleStyle() =>
 /// ring to clear because the focus effects are already conditional on focus.
 SliderStyler _disabledStyle() => SliderStyler()
     .thumbEffects(RemixBoxEffectsMix.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'radio.g.dart';
@@ -49,12 +48,12 @@ RadioStyler vanillaRadioStyle({
   RadioStyler style = const RadioStyler.create(),
 }) {
   return RadioStyler()
-      .animate(VanillaMotion.standard)
-      .size(VanillaSize.icon, VanillaSize.icon)
+      .animate(VanillaTokens.motion)
+      .size(VanillaTokens.icon, VanillaTokens.icon)
       .alignment(.center)
       .borderRadius(.all(_circular))
       .color(_fill())
-      .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+      .border(.color(VanillaTokens.input()).width(VanillaTokens.strokeHairline))
       // In the effects layer rather than the decoration: the ring is
       // transparent, and a decoration shadow would show through it.
       .containerEffects(.behindContent(VanillaShadow.xs.effects))
@@ -66,10 +65,10 @@ RadioStyler vanillaRadioStyle({
 }
 
 /// A radius that rounds the ring and the dot into circles.
-const _circular = Radius.circular(VanillaSize.pill);
+const _circular = Radius.circular(VanillaTokens.pill);
 
 /// The chosen dot: 8px across.
-const _dot = VanillaSpace.s2;
+const _dot = VanillaTokens.s2;
 
 /// The ring's fill: transparent, or `input` at 30% in the dark.
 final _fill = vanillaTint(VanillaTokens.input, 0, dark: _darkFillAlpha);
@@ -94,4 +93,4 @@ RadioStyler _focusVisibleStyle() => RadioStyler()
 /// focus ring reads as actionable.
 RadioStyler _disabledStyle() => RadioStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

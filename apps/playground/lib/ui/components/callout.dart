@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'callout.g.dart';
@@ -59,21 +58,26 @@ CalloutStyler playgroundCalloutStyle({
 /// The row stays top-aligned for multi-line prose. Font line boxes reserve
 /// leading around their visible glyphs, so an icon at the line-box origin
 /// looks high even though both layout bounds start together.
-const _iconOffsetY = PlaygroundSpace.s0_5;
+const _iconOffsetY = PlaygroundTokens.s0_5;
 
 /// Layout, surface, and typography shared by both tones.
 CalloutStyler _base() => CalloutStyler()
     .direction(.horizontal)
     .crossAxisAlignment(.start)
     .padding(
-      .symmetric(horizontal: PlaygroundSpace.s4, vertical: PlaygroundSpace.s3),
+      .symmetric(
+        horizontal: PlaygroundTokens.s4,
+        vertical: PlaygroundTokens.s3,
+      ),
     )
-    .spacing(PlaygroundSpace.s3)
+    .spacing(PlaygroundTokens.s3)
     .color(PlaygroundTokens.card())
-    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusLg()))
     .text(.style(PlaygroundTokens.textSm.mix()))
-    .icon(.size(PlaygroundSize.icon).wrap(.translate(x: 0, y: _iconOffsetY)));
+    .icon(.size(PlaygroundTokens.icon).wrap(.translate(x: 0, y: _iconOffsetY)));
 
 /// The tone: one content color for the sentence and its glyph.
 CalloutStyler _variantStyle(PlaygroundCalloutVariant variant) =>

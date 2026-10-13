@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'checkbox.g.dart';
@@ -113,7 +112,7 @@ final _boxRadius = ContextToken<Radius>((context) {
 /// Sized for Remix's edge-to-edge 9×9 path; a call site passing a padded
 /// `IconData` (`checkedIcon`) can widen `.indicator(.size(...))` through
 /// `style`.
-const _indicator = {{typePrefix}}Space.s2_5;
+const _indicator = {{typePrefix}}Tokens.s2_5;
 
 /// The unchecked box's fill: transparent, or `input` at 30% in the dark.
 final _fill = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: _darkFillAlpha);
@@ -131,17 +130,17 @@ const _darkFillAlpha = 0.3;
 /// The label is a form label, set like the text field's: `textSm` at medium
 /// weight, 12px from the box.
 CheckboxStyler _base() => CheckboxStyler()
-    .animate({{typePrefix}}Motion.standard)
-    .size({{typePrefix}}Size.icon, {{typePrefix}}Size.icon)
+    .animate({{typePrefix}}Tokens.motion)
+    .size({{typePrefix}}Tokens.icon, {{typePrefix}}Tokens.icon)
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
     .color(_fill())
-    .border(.color({{typePrefix}}Tokens.input()).width({{typePrefix}}Stroke.hairline))
+    .border(.color({{typePrefix}}Tokens.input()).width({{typePrefix}}Tokens.strokeHairline))
     // In the effects layer rather than the decoration: the empty box is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects))
     .indicator(.size(_indicator))
-    .labelSpacing({{typePrefix}}Space.s3)
+    .labelSpacing({{typePrefix}}Tokens.s3)
     .label(
       .style(
         {{typePrefix}}Tokens.textSm.mix(),
@@ -175,4 +174,4 @@ CheckboxStyler _focusVisibleStyle() => CheckboxStyler()
 /// draws a focus ring reads as actionable.
 CheckboxStyler _disabledStyle() => CheckboxStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

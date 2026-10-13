@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'card.g.dart';
@@ -37,8 +36,10 @@ part 'card.g.dart';
 CardStyler {{valuePrefix}}CardStyle({CardStyler style = const CardStyler.create()}) =>
     CardStyler()
         .color({{typePrefix}}Tokens.card())
-        .border(.color({{typePrefix}}Tokens.border()).width({{typePrefix}}Stroke.hairline))
+        .border(
+          .color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline),
+        )
         .borderRadius(.all({{typePrefix}}Tokens.radiusXl()))
         .shadows({{typePrefix}}Shadow.sm.box)
-        .padding(.all({{typePrefix}}Space.s6))
+        .padding(.all({{typePrefix}}Tokens.s6))
         .merge(style);
