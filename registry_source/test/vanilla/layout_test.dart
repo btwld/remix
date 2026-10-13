@@ -115,4 +115,36 @@ void main() {
 
     expect(panelOf(tester, 'Overview').height, 32);
   });
+
+  testWidgets('a segmented control stays 36px tall inside a taller row', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      host(
+        Center(
+          child: SizedBox(
+            height: 56,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                VanillaSegmentedControl<String>(
+                  items: const [
+                    RemixSegmentedControlItem(value: 'today', label: 'Today'),
+                    RemixSegmentedControlItem(value: 'tasks', label: 'Tasks'),
+                  ],
+                  selectedValue: 'today',
+                  onChanged: (_) {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester.getSize(find.byType(VanillaSegmentedControl<String>)).height,
+      36,
+    );
+  });
 }

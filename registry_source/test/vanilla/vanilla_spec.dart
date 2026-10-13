@@ -1005,9 +1005,9 @@ final _checkboxTargets = <SpecTarget>[
   _checkbox(
     'check mark',
     selected: true,
-    source: 'checkbox.tsx: CheckIcon size-3.5',
+    source: 'checkbox.tsx: CheckIcon size-3.5 (see Deviations)',
     read: (spec) => spec.spec.indicator.spec.size,
-    expected: (_) => 14.0,
+    expected: (_) => 10.0,
   ),
   _checkbox(
     'label',

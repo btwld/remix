@@ -115,11 +115,13 @@ final _fill = playgroundTint(PlaygroundTokens.input, 0, dark: _darkFillAlpha);
 const _darkFillAlpha = 0.3;
 
 /// The unchecked box, the indicator geometry, and the label: a 16px box with
-/// 4px corners, an `input` outline, and the `xs` shadow, and a 14px check.
+/// 4px corners, an `input` outline, and the `xs` shadow, and a 10px check.
 ///
 /// The indicator gets a size but no color here: Remix renders no indicator at
 /// all while unchecked, so the only states that can show one set their own
-/// content color.
+/// content color. 10px (`PlaygroundSpace.s2_5`) sizes Remix's edge-to-edge 9x9
+/// check path to the same painted mark as a 14px 24x24 Lucide check icon,
+/// leaving 2px of breathing room inside the 1px border.
 ///
 /// The label is a form label, set like the text field's: `textSm` at medium
 /// weight, 12px from the box.
@@ -133,7 +135,7 @@ CheckboxStyler _base() => CheckboxStyler()
     // In the effects layer rather than the decoration: the empty box is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
-    .indicator(.size(PlaygroundSize.iconSm))
+    .indicator(.size(PlaygroundSpace.s2_5))
     .labelSpacing(PlaygroundSpace.s3)
     .label(
       .style(

@@ -85,7 +85,6 @@ final _chosenEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
 SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
     .animate(VanillaMotion.standard)
     .color(_noFill)
-    .alignment(.center)
     .minHeight(VanillaSize.controlMd - 2 * _trackInset)
     .padding(.symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1))
     .spacing(VanillaSpace.s1_5)
