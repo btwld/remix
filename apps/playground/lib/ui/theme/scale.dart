@@ -67,7 +67,7 @@ abstract final class PlaygroundSize {
   /// A small glyph beside `xs` text.
   static const double iconXs = 12;
 
-  /// A check or indicator glyph.
+  /// A small indicator glyph.
   static const double iconSm = 14;
 
   /// The default glyph.

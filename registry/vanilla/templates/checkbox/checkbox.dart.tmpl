@@ -108,6 +108,13 @@ final _boxRadius = ContextToken<Radius>((context) {
   );
 });
 
+/// The check or dash drawn inside the box: 10px across.
+///
+/// Sized for Remix's edge-to-edge 9×9 path; a call site passing a padded
+/// `IconData` (`checkedIcon`) can widen `.indicator(.size(...))` through
+/// `style`.
+const _indicator = {{typePrefix}}Space.s2_5;
+
 /// The unchecked box's fill: transparent, or `input` at 30% in the dark.
 final _fill = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: _darkFillAlpha);
 
@@ -115,13 +122,11 @@ final _fill = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: _darkFill
 const _darkFillAlpha = 0.3;
 
 /// The unchecked box, the indicator geometry, and the label: a 16px box with
-/// 4px corners, an `input` outline, and the `xs` shadow, and a 10px check.
+/// 4px corners, an `input` outline, the `xs` shadow, and a 10px check.
 ///
 /// The indicator gets a size but no color here: Remix renders no indicator at
 /// all while unchecked, so the only states that can show one set their own
-/// content color. 10px (`{{typePrefix}}Space.s2_5`) sizes Remix's edge-to-edge 9x9
-/// check path to the same painted mark as a 14px 24x24 Lucide check icon,
-/// leaving 2px of breathing room inside the 1px border.
+/// content color.
 ///
 /// The label is a form label, set like the text field's: `textSm` at medium
 /// weight, 12px from the box.
@@ -135,7 +140,7 @@ CheckboxStyler _base() => CheckboxStyler()
     // In the effects layer rather than the decoration: the empty box is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects))
-    .indicator(.size({{typePrefix}}Space.s2_5))
+    .indicator(.size(_indicator))
     .labelSpacing({{typePrefix}}Space.s3)
     .label(
       .style(
