@@ -150,7 +150,7 @@ the steps above. The source column names the file under
 | Select trigger | the text field's metrics, gap 8; chevron 16 at 50% | `select.tsx` |
 | Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128 | `select.tsx` |
 | Select item | h 32; pl 8, pr 32, py 6; radius sm; highlight accent; check muted-fg | `select.tsx` |
-| Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 14; no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
+| Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
 | Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary | `radio-group.tsx` |
 | Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border | `switch.tsx` |
 | Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover and focus | `slider.tsx` |
@@ -186,6 +186,7 @@ the steps above. The source column names the file under
 | Pressed state | none | none | Vanilla dropped its old pressed step: a press lands on the hover fill. An 80% destructive fill would fail 4.5:1 with the new red. |
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
+| Checkbox check mark | `size-3.5` (14) | 10 (`VanillaSpace.s2_5`) | The reference sizes a 24×24 Lucide SVG whose check fills two-thirds of the viewBox (~9.3px); Remix draws an edge-to-edge 9×9 Radix path (`RemixPathGlyph.thickCheck`), which touches the 1px border at 14 and matches the reference's painted mark at 10. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |

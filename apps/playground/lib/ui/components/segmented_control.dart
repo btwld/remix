@@ -85,7 +85,6 @@ final _chosenEdge = playgroundTint(PlaygroundTokens.input, 0, dark: 1);
 SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
     .animate(PlaygroundMotion.standard)
     .color(_noFill)
-    .alignment(.center)
     .minHeight(PlaygroundSize.controlMd - 2 * _trackInset)
     .padding(
       .symmetric(horizontal: PlaygroundSpace.s2, vertical: PlaygroundSpace.s1),

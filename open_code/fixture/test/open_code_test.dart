@@ -1525,7 +1525,7 @@ void main() {
 
   group('acmeCheckboxStyle sizes', () {
     const expected = <String, _CheckboxMetrics>{
-      'default': (box: 16.0, indicator: 14.0, gap: 12.0, labelSize: 14.0),
+      'default': (box: 16.0, indicator: 10.0, gap: 12.0, labelSize: 14.0),
     };
 
     for (final entry in expected.entries) {
@@ -1766,7 +1766,7 @@ void main() {
       expect(spec.spec.label.spec.style?.color, const Color(0xFFFFFF00));
       // Untouched recipe values survive.
       expect(spec.spec.labelSpacing, 12);
-      expect(spec.spec.indicator.spec.size, 14);
+      expect(spec.spec.indicator.spec.size, 10);
     });
 
     testWidgets('an idle override does not reach the checked fragment', (
