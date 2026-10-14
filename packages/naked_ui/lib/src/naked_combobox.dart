@@ -220,13 +220,17 @@ class _OverlayLifecycleState extends State<_OverlayLifecycle> {
 ///
 /// The caller owns the field and the options panel. Keyboard highlight, Enter
 /// to select, Escape to dismiss, async option staleness, and result
-/// announcements come from [RawAutocomplete].
+/// announcements come from [RawAutocomplete]. This widget adds public state
+/// snapshots, selected-value tracking, semantic wrappers, and mount/unmount
+/// notifications because [RawAutocomplete] exposes no visibility callbacks.
 ///
 /// Limitations inherited from [RawAutocomplete]:
 /// - There is no controlled `open` flag.
 /// - Highlight cannot be set programmatically or by hover.
 /// - The options view is pinned to the field width and opens [optionsViewOpenDirection]
 ///   (`down`, `up`, or `mostSpace`). [OverlayPositionConfig] does not apply.
+/// - On Flutter 3.41, a selection-only caret change after picking an option
+///   can reopen the options list.
 ///
 /// [SemanticsRole.comboBox] is not used: on Flutter 3.41 debug semantics throw
 /// `Missing checks for role` for that role.
@@ -263,11 +267,13 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   /// Supplies the options for the current field value.
   final AutocompleteOptionsBuilder<T> optionsBuilder;
 
-  /// Builds the text field. Forward [controller], [focusNode], and the submit
-  /// callback so selection and filtering stay in sync.
+  /// Builds the text field. This maps to [RawAutocomplete.fieldViewBuilder].
+  /// Forward [controller], [focusNode], and the submit callback so selection
+  /// and filtering stay in sync.
   final NakedComboboxFieldBuilder<T> fieldBuilder;
 
-  /// Builds the options panel.
+  /// Builds the options panel. This maps to
+  /// [RawAutocomplete.optionsViewBuilder].
   ///
   /// Place [NakedComboboxOption] widgets inside. The second argument is the
   /// latest result from [optionsBuilder].
@@ -374,8 +380,72 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   FutureOr<Iterable<T>> _optionsBuilder(TextEditingValue value) {
     if (!widget.enabled) return const Iterable.empty();
 
-    return widget.optionsBuilder(value);
+    final result = widget.optionsBuilder(value);
+    if (result is Future<Iterable<T>>) {
+      return result.then(
+        (options) => mounted ? options : Completer<Iterable<T>>().future,
+      );
+    }
+
+    return result;
   }
+
+  Widget _buildFieldView(
+    BuildContext context,
+    TextEditingController controller,
+    FocusNode focusNode,
+    VoidCallback onFieldSubmitted,
+  ) {
+    _attachField(controller, focusNode);
+    final state = NakedComboboxState<T>(
+      states: {
+        if (!widget.enabled) WidgetState.disabled,
+        if (_focused) WidgetState.focused,
+      },
+      isOpen: _isOpen,
+      value: _value,
+      text: controller.text,
+    );
+
+    final field = NakedStateScopeBuilder<NakedComboboxState<T>>(
+      value: state,
+      builder: (context, state, _) => widget.fieldBuilder(
+        context,
+        state,
+        controller,
+        focusNode,
+        onFieldSubmitted,
+      ),
+    );
+
+    if (widget.semanticLabel == null) return field;
+    return Semantics(
+      container: true,
+      label: widget.semanticLabel,
+      child: field,
+    );
+  }
+
+  Widget _buildOptionsView(
+    BuildContext context,
+    AutocompleteOnSelected<T> onSelected,
+    Iterable<T> options,
+  ) => _OverlayLifecycle(
+    onMount: _handleMount,
+    onUnmount: _handleUnmount,
+    child: _NakedComboboxScope<T>(
+      options: options,
+      onSelected: onSelected,
+      enabled: widget.enabled,
+      value: _value,
+      child: Semantics(
+        role: SemanticsRole.list,
+        container: true,
+        explicitChildNodes: true,
+        child: ExcludeFocus(child: widget.overlayBuilder(context, options)),
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -387,55 +457,8 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       focusNode: widget.focusNode,
       initialValue: widget.initialValue,
       onSelected: _handleSelected,
-      fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-        _attachField(controller, focusNode);
-        final state = NakedComboboxState<T>(
-          states: {
-            if (!widget.enabled) WidgetState.disabled,
-            if (_focused) WidgetState.focused,
-          },
-          isOpen: _isOpen,
-          value: _value,
-          text: controller.text,
-        );
-
-        final field = NakedStateScopeBuilder<NakedComboboxState<T>>(
-          value: state,
-          builder: (context, state, _) => widget.fieldBuilder(
-            context,
-            state,
-            controller,
-            focusNode,
-            onFieldSubmitted,
-          ),
-        );
-
-        if (widget.semanticLabel == null) return field;
-
-        return Semantics(
-          container: true,
-          label: widget.semanticLabel,
-          child: field,
-        );
-      },
-      optionsViewBuilder: (context, onSelected, options) {
-        return _OverlayLifecycle(
-          onMount: _handleMount,
-          onUnmount: _handleUnmount,
-          child: _NakedComboboxScope<T>(
-            options: options,
-            onSelected: onSelected,
-            enabled: widget.enabled,
-            value: _value,
-            child: Semantics(
-              role: SemanticsRole.list,
-              container: true,
-              explicitChildNodes: true,
-              child: widget.overlayBuilder(context, options),
-            ),
-          ),
-        );
-      },
+      fieldViewBuilder: _buildFieldView,
+      optionsViewBuilder: _buildOptionsView,
     );
 
     if (widget.excludeSemantics) {
