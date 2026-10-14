@@ -32,15 +32,28 @@ Widget _fortalRootTextStyle({
   required Widget child,
 }) {
   final root = tokens[FortalTokens.text3]! as TextStyle;
+  final foreground = tokens[FortalTokens.gray12]! as Color;
 
   return DefaultTextStyle(
     style: root.copyWith(
-      color: tokens[FortalTokens.gray12]! as Color,
+      color: foreground,
       fontWeight: tokens[FortalTokens.fontWeightRegular]! as FontWeight,
     ),
-    child: child,
+    child: IconTheme.merge(
+      data: IconThemeData(color: foreground),
+      child: child,
+    ),
   );
 }
+
+Widget _fortalRecolored(Color foreground, Widget child) =>
+    DefaultTextStyle.merge(
+      style: TextStyle(color: foreground),
+      child: IconTheme.merge(
+        data: IconThemeData(color: foreground),
+        child: child,
+      ),
+    );
 
 /// Widget that provides Fortal design tokens to its subtree via [MixScope].
 ///
@@ -163,6 +176,14 @@ class FortalTheme extends StatelessWidget {
           };
     final data = useDark ? dark : base;
     final tokens = buildFortalScopeTokens(data);
+    final foreground = tokens[FortalTokens.gray12]! as Color;
+    Widget scoped = child;
+    if (parent == null) {
+      scoped = _fortalRootTextStyle(tokens: tokens, child: scoped);
+    } else if (parent.brightness != data.brightness ||
+        parent.gray != data.gray) {
+      scoped = _fortalRecolored(foreground, scoped);
+    }
     Widget result = MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
@@ -170,9 +191,7 @@ class FortalTheme extends StatelessWidget {
       // run: a scope nested for its accent or scaling must leave the current
       // run alone, while a root scope with `hasBackground: false` still
       // establishes it.
-      child: parent == null
-          ? _fortalRootTextStyle(tokens: tokens, child: child)
-          : child,
+      child: scoped,
     );
     if (data.hasBackground) {
       result = ColoredBox(

@@ -100,19 +100,26 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 ## Layout and dashboard recipes
 
+[app_bar.mdx](https://github.com/btwld/remix/blob/main/docs/components/app_bar.mdx) ·
+[sidebar.mdx](https://github.com/btwld/remix/blob/main/docs/components/sidebar.mdx)
+
 Both presets also ship layout items beyond the core component set:
 
-- **sidebar** — `RemixSidebar<T>`; its styler has a generic `call<T>()`
-  builder. The Fortal item additionally depends on `text`.
-- **sidebar_layout** — a plain shell with no spec or generated adapter; it
-  composes an installed `sidebar` into a row above its compact breakpoint and
-  a start-edge sheet below it.
-- **dashboard_shell** — a grouped recipe combining `sidebar`/`sidebar_layout`
-  with host-owned navigation, page content, search, and brand/account/action
-  slots. No generated adapter; does not install charts, tables, or agent
-  surfaces itself.
-- **dashboard_demo** — a large composite recipe that pulls in most other
-  items to build a runnable example dashboard; see
+- **app_bar** — `RemixAppBar`: provides slots for leading widgets, title headings,
+  actions, and bottom content. By default, `safeArea` is enabled (`true`). Wrap
+  the page body below in `MediaQuery.removePadding(removeTop: true)`. The Fortal
+  recipe requires the `text` item.
+- **sidebar** — `RemixSidebar<T>`: provides vertical navigation sections and
+  collapsible panels. Its styler includes a generic `call<T>()` builder. The
+  Fortal recipe requires the `text` item.
+- **sidebar_layout** — layout shell pairing an installed `sidebar` with page content.
+  Displays an inline row above the compact breakpoint and a modal start-edge sheet
+  below it. Contains no generated adapter.
+- **dashboard_shell** — compound recipe combining `app_bar`, `sidebar`, and
+  `sidebar_layout`. Provides slots for brand, search, page title (or custom
+  `headerTitle`), account, and header actions. Contains no generated adapter.
+- **dashboard_demo** — showcase recipe assembling component galleries and
+  dashboard screens into a runnable demo; see
   [Reference showcases](reference-showcases.md) for how its `GalleryMatrix`
   widget is provenanced.
 
@@ -216,6 +223,8 @@ routes and require a caller-provided `Navigator`; toasts require a
   and `state.isExpanded`.
 
 ## Typography
+
+[link.mdx](https://github.com/btwld/remix/blob/main/docs/components/link.mdx)
 
 `FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` exist only in
 the Fortal preset. `RemixLink` is base Remix — the Vanilla preset also ships

@@ -32,15 +32,27 @@ Widget _uiRootTextStyle({
   required Widget child,
 }) {
   final root = tokens[UiTokens.text3]! as TextStyle;
+  final foreground = tokens[UiTokens.gray12]! as Color;
 
   return DefaultTextStyle(
     style: root.copyWith(
-      color: tokens[UiTokens.gray12]! as Color,
+      color: foreground,
       fontWeight: tokens[UiTokens.fontWeightRegular]! as FontWeight,
     ),
-    child: child,
+    child: IconTheme.merge(
+      data: IconThemeData(color: foreground),
+      child: child,
+    ),
   );
 }
+
+Widget _uiRecolored(Color foreground, Widget child) => DefaultTextStyle.merge(
+  style: TextStyle(color: foreground),
+  child: IconTheme.merge(
+    data: IconThemeData(color: foreground),
+    child: child,
+  ),
+);
 
 /// Widget that provides Ui design tokens to its subtree via [MixScope].
 ///
@@ -163,6 +175,14 @@ class UiTheme extends StatelessWidget {
           };
     final data = useDark ? dark : base;
     final tokens = buildUiScopeTokens(data);
+    final foreground = tokens[UiTokens.gray12]! as Color;
+    Widget scoped = child;
+    if (parent == null) {
+      scoped = _uiRootTextStyle(tokens: tokens, child: scoped);
+    } else if (parent.brightness != data.brightness ||
+        parent.gray != data.gray) {
+      scoped = _uiRecolored(foreground, scoped);
+    }
     Widget result = MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
@@ -170,9 +190,7 @@ class UiTheme extends StatelessWidget {
       // run: a scope nested for its accent or scaling must leave the current
       // run alone, while a root scope with `hasBackground: false` still
       // establishes it.
-      child: parent == null
-          ? _uiRootTextStyle(tokens: tokens, child: child)
-          : child,
+      child: scoped,
     );
     if (data.hasBackground) {
       result = ColoredBox(

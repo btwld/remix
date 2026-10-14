@@ -815,6 +815,7 @@ const _componentSurfaces =
     <String, ({List<String> widgets, List<String> types})>{
       'icons': (widgets: [], types: []),
       'accordion': (widgets: ['Accordion'], types: []),
+      'app_bar': (widgets: ['AppBar'], types: []),
       'avatar': (widgets: ['Avatar'], types: []),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),

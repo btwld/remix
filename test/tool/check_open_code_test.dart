@@ -476,6 +476,7 @@ dev_dependencies:
 const _registryItems = <String>[
   'icons',
   'accordion',
+  'app_bar',
   'avatar',
   'badge',
   'button',

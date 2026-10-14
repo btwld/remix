@@ -100,7 +100,9 @@ void main() {
           onSearchChanged: queries.add,
         );
         await tester.enterText(find.byType(EditableText), 'orders');
+        await tester.pump();
         expect(queries.last, 'orders');
+        expect(find.bySemanticsLabel('Search…'), findsOneWidget);
       });
 
       testWidgets('custom header title replaces the visible fallback', (

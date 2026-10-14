@@ -1,3 +1,7 @@
+## Unreleased
+
+- **FEAT**: Add RemixAppBar, AppBarStyler, and AppBarSpec for page headers and top toolbars.
+
 ## 1.0.0-beta.10
 
 - Styled text fields now draw Remix selection handles on touch platforms; the

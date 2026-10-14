@@ -112,6 +112,13 @@ families carry over.
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)
   merges over it. `<Prefix>ToastVariant { neutral, destructive }`.
+- **AppBar** — `VanillaAppBar` (`<Prefix>AppBar`) provides no variants or sizes.
+  Its toolbar row height is 64px (`VanillaTokens.s16`, exposed as
+  `<prefix>AppBarToolbarHeight`), which includes the bottom hairline border.
+  Use this constant to align adjacent headers such as a sidebar brand row.
+- **SidebarLayout** — `VanillaSidebarLayout` (`<Prefix>SidebarLayout`) defaults to
+  a `collapsedWidth` of 48. In contrast, `VanillaDashboardShell`
+  (`<Prefix>DashboardShell`) defaults to 72.
 - **Chart** — the palette is a gray ramp. Pie labels are off by
   default; when you turn them on, color each slice's label with
   `<prefix>PieSliceLabelColor(context, sliceColor)`.

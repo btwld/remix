@@ -256,6 +256,7 @@ void main() {
             'Menu',
           ],
           RegistryDashboardDemoPage.navigation: [
+            'App bar',
             'Sidebar',
             'Tabs',
             'Disclosure',

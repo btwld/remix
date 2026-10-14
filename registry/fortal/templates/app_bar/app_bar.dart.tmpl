@@ -1,0 +1,33 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'text.dart';
+
+part 'app_bar.g.dart';
+
+/// Creates the default [AppBarStyler] for the {{typePrefix}} app bar.
+///
+/// Configures a solid panel surface, a `space9` toolbar height with an inset
+/// bottom border, `space4` horizontal padding, and bold `size4` title
+/// typography.
+///
+/// Merges [style] after the default styling to allow caller overrides.
+@MixWidget(target: RemixAppBar.new)
+AppBarStyler {{valuePrefix}}AppBarStyle({
+  AppBarStyler style = const AppBarStyler.create(),
+}) => AppBarStyler(
+  container: BoxStyler().color({{typePrefix}}Tokens.colorPanelSolid()),
+  toolbar: BoxStyler()
+      .padding(.horizontal({{typePrefix}}Tokens.space4()))
+      .border(
+        .bottom(
+          .color({{typePrefix}}Tokens.grayA6()).width({{typePrefix}}Tokens.borderWidth1()),
+        ),
+      ),
+  title: {{valuePrefix}}TextStyle(size: .size4, weight: .bold),
+  actions: FlexBoxStyler().spacing({{typePrefix}}Tokens.space3()),
+  toolbarHeight: {{typePrefix}}Tokens.space9(),
+  spacing: {{typePrefix}}Tokens.space3(),
+).merge(style);

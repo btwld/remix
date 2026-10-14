@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../components/accordion.dart';
+import '../../components/app_bar.dart';
 import '../../components/avatar.dart';
 import '../../components/badge.dart';
 import '../../components/button.dart';
@@ -789,8 +790,40 @@ class _DefaultGalleryNavigationPageState
   Widget build(BuildContext context) => DefaultGalleryPage(
     title: 'Navigation',
     intro:
-        'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
+        'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
     sections: [
+      _Section(
+        label: 'App bar',
+        description:
+            'A page header with a leading button, a title heading, and actions.',
+        child: VanillaAppBar(
+          // A sample inside a card: it neither touches the screen edge nor
+          // names the page.
+          safeArea: false,
+          namesRoute: false,
+          leading: VanillaIconButton.ghost(
+            size: .large,
+            icon: RemixIcons.hamburgerMenu,
+            semanticLabel: 'Open navigation',
+            onPressed: () => _toast(context, 'Navigation is the caller\'s'),
+          ),
+          title: 'Orders',
+          actions: [
+            VanillaIconButton.ghost(
+              size: .large,
+              icon: RemixIcons.magnifyingGlass,
+              semanticLabel: 'Search orders',
+              onPressed: () => _toast(context, 'Search orders'),
+            ),
+            VanillaIconButton.ghost(
+              size: .large,
+              icon: RemixIcons.bell,
+              semanticLabel: 'Notifications',
+              onPressed: () => _toast(context, 'No new notifications'),
+            ),
+          ],
+        ),
+      ),
       _Section(
         label: 'Sidebar',
         description:

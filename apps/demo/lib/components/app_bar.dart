@@ -16,7 +16,7 @@ class AppBarExample extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     body: Align(
       alignment: Alignment.topCenter,
-      child: RemixAppBar(
+      child: FortalAppBar(
         leading: FortalIconButton.ghost(
           icon: Icons.arrow_back,
           semanticLabel: 'Back',

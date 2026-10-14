@@ -13,8 +13,14 @@ class GalleryNavigationPage extends StatelessWidget {
   Widget build(BuildContext context) => GalleryPage(
     title: 'Navigation',
     intro:
-        'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
+        'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
     sections: [
+      const GallerySection(
+        label: 'App bar',
+        description:
+            'A Fortal page header with a leading button, a title heading, and actions.',
+        child: _AppBarDemo(),
+      ),
       const GallerySection(
         label: 'Sidebar',
         description:
@@ -56,6 +62,39 @@ class GalleryNavigationPage extends StatelessWidget {
           cellBuilder: (_, variant, size) =>
               _AccordionDemo(variant: variant, size: size),
         ),
+      ),
+    ],
+  );
+}
+
+class _AppBarDemo extends StatelessWidget {
+  const _AppBarDemo();
+
+  @override
+  Widget build(BuildContext context) => UiAppBar(
+    // A sample inside a card: it neither touches the screen edge nor names
+    // the page.
+    safeArea: false,
+    namesRoute: false,
+    leading: UiIconButton.ghost(
+      size: .size3,
+      icon: Icons.menu,
+      semanticLabel: 'Open navigation',
+      onPressed: () {},
+    ),
+    title: 'Orders',
+    actions: [
+      UiIconButton.ghost(
+        size: .size3,
+        icon: Icons.search,
+        semanticLabel: 'Search orders',
+        onPressed: () {},
+      ),
+      UiIconButton.ghost(
+        size: .size3,
+        icon: Icons.notifications_none,
+        semanticLabel: 'Notifications',
+        onPressed: () {},
       ),
     ],
   );

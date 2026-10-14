@@ -68,6 +68,55 @@ Widget _layout({
 }
 
 void main() {
+  testWidgets('the body does not reserve the top inset under a header', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.padding = const FakeViewPadding(top: 24);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPadding);
+
+    await _pump(
+      tester,
+      FortalSidebarLayout(
+        header: const FortalAppBar(title: 'Orders'),
+        sidebar: const SizedBox(key: _sidebarKey),
+        body: ListView(children: const [SizedBox(key: _bodyKey, height: 40)]),
+      ),
+      width: 1000,
+    );
+
+    final bar = tester.getRect(find.byType(FortalAppBar));
+    expect(bar.top, 0);
+    expect(bar.height, 64 + 24);
+    expect(tester.getRect(find.byKey(_bodyKey)).top, bar.bottom);
+  });
+
+  testWidgets('the column beside the sidebar ignores the start inset', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.padding = const FakeViewPadding(left: 44);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPadding);
+
+    await _pump(
+      tester,
+      const FortalSidebarLayout(
+        sidebarWidth: 256,
+        header: FortalAppBar(title: 'Orders'),
+        sidebar: SizedBox(key: _sidebarKey),
+        body: SizedBox(key: _bodyKey),
+      ),
+      width: 1000,
+    );
+
+    // The app bar's toolbar inset is 16 from the column's start edge, not
+    // 16 plus the 44 the sidebar already keeps clear of.
+    expect(tester.getTopLeft(find.text('Orders')).dx, 256 + 16);
+    expect(MediaQuery.paddingOf(tester.element(find.byKey(_bodyKey))).left, 0);
+  });
+
   testWidgets('controlled dismissal waits for the host to close', (
     tester,
   ) async {

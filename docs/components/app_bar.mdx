@@ -211,6 +211,28 @@ final style = AppBarStyler()
 ```
 </CodeGroup>
 
+## Fortal recipe
+
+`FortalAppBar` is the Fortal-themed app bar generated from `fortalAppBarStyle`.
+It configures a solid panel background, a 64px (`space9`) toolbar height with an
+inset bottom border, `space4` horizontal padding, and bold `size4` title
+typography. The toolbar height and border match the sidebar header in
+`FortalDashboardShell` to ensure horizontal alignment across scaling levels.
+
+<CodeGroup title="Fortal app bar" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'ui/ui.dart';
+
+FortalAppBar buildHeader({required VoidCallback onExport}) => FortalAppBar(
+  title: 'Orders',
+  actions: [
+    FortalButton(label: 'Export', onPressed: onExport),
+  ],
+);
+```
+</CodeGroup>
+
 ## Constructor
 
 <CodeGroup title="Public API" defaultLanguage="dart">

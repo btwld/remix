@@ -160,11 +160,11 @@ assuming Fortal's families — see [Vanilla](references/vanilla.md).
   pair.
 - The app owns mode preference and persistence. `mode: .system` reacts to
   platform brightness changes; no brightness observer is needed.
-- The outermost Fortal theme also sets a courtesy `DefaultTextStyle` for bare
-  Flutter `Text` (Radix `text3`, `gray-12`, regular weight, no pinned font
-  family) — a fallback for ordinary text, not the source of Fortal
-  typography's own token defaults. A nested theme re-scopes tokens only and
-  does not restate that fallback.
+- The outermost `FortalTheme` sets fallback `DefaultTextStyle` and `IconTheme`
+  styles using `gray12` and `text3` (16px, regular weight). Fortal components
+  resolve styling from active tokens instead of this fallback. A nested theme
+  updates tokens for its subtree; when `brightness` or `gray` changes, it
+  recolors `DefaultTextStyle` and `IconTheme` to the new `gray12`.
 
 ## Customize installed source
 

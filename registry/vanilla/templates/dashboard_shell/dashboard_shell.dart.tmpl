@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
+import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
@@ -9,12 +10,10 @@ import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_shell_base.dart';
 
-const _headerHeight = 64.0;
-
-/// A reusable default-preset dashboard shell.
+/// A dashboard shell styled with the {{typePrefix}} preset.
 ///
-/// The host owns navigation values and page state. Supply [onSearchChanged]
-/// only when the host has real search behavior; otherwise no field is shown.
+/// The host manages navigation values and page state. Provide [onSearchChanged]
+/// to display the search field.
 class {{typePrefix}}DashboardShell<T extends Object> extends StatelessWidget {
   const {{typePrefix}}DashboardShell({
     super.key,
@@ -57,13 +56,18 @@ class {{typePrefix}}DashboardShell<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topBarStyle = BoxStyler()
-        .height(_headerHeight)
+    // The brand row lines up with the app bar beside it: the same toolbar
+    // height, surface, and bottom hairline as the `app_bar` recipe.
+    final sidebarHeaderStyle = BoxStyler()
+        .height({{valuePrefix}}AppBarToolbarHeight)
         .alignment(AlignmentDirectional.centerStart)
-        .padding(.horizontal(16))
+        .padding(.horizontal({{typePrefix}}Tokens.s3))
         .color({{typePrefix}}Tokens.background())
-        .border(.bottom(.color({{typePrefix}}Tokens.border()).width(1)));
-    final sidebarHeaderStyle = topBarStyle.padding(.horizontal(12));
+        .border(
+          .bottom(
+            .color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline),
+          ),
+        );
     return {{typePrefix}}DashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
@@ -80,11 +84,6 @@ class {{typePrefix}}DashboardShell<T extends Object> extends StatelessWidget {
       initiallyCollapsed: initiallyCollapsed,
       onCollapsedChanged: onCollapsedChanged,
       sidebarHeaderStyle: sidebarHeaderStyle,
-      topBarStyle: topBarStyle,
-      titleStyle: TextStyler()
-          .fontSize(18)
-          .fontWeight(FontWeight.w600)
-          .color({{typePrefix}}Tokens.foreground()),
       menuIcon: {{icon:hamburgerMenu}},
       searchIcon: {{icon:magnifyingGlass}},
       backwardIcon: {{icon:doubleArrowLeft}},
@@ -144,6 +143,19 @@ class {{typePrefix}}DashboardShell<T extends Object> extends StatelessWidget {
             footer: footer,
             semanticLabel: semanticLabel,
           ),
+      appBarBuilder:
+          (
+            context, {
+            required leading,
+            required title,
+            required titleChild,
+            required actions,
+          }) => {{typePrefix}}AppBar(
+            leading: leading,
+            title: title,
+            titleChild: titleChild,
+            actions: actions,
+          ),
       iconButtonBuilder:
           (
             context, {
@@ -168,6 +180,7 @@ class {{typePrefix}}DashboardShell<T extends Object> extends StatelessWidget {
           }) => {{typePrefix}}TextField(
             key: key,
             hintText: hintText,
+            semanticLabel: hintText,
             leading: leading,
             onChanged: onChanged,
           ),

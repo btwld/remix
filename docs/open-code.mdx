@@ -725,7 +725,7 @@ tint, shadow, and focus-ring helpers the recipes draw on. It also adds
 `remix_ui_fonts`, the package that bundles Geist and Geist Mono, which the
 shipped themes set the text steps in. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`. Five items differ: `icons` installs app-owned
+`components/<item>.dart`. Eight items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
 `mix_chart`; `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
@@ -735,8 +735,11 @@ and a collapsed rail labels it with a tooltip. `toast` pulls in `button`
 and `icon_button` for its action and close control. `sidebar_layout` is a
 layout with no `Spec` or generated adapter; it pulls in `sidebar` to compose
 into its row and compact sheet. `dashboard_shell` composes those existing
-primitives into a host-controlled responsive shell. It installs no charts,
-tables, sample data, routes, or application entry point.
+primitives, with `app_bar` as its page header (`title`, an optional `Widget?`
+`headerTitle` to override the default `Text(title)` in the app bar, and
+`headerActions`), into a host-controlled responsive shell (`collapsedWidth`
+defaults to `72` vs `48` on standalone `UiSidebarLayout`). It installs no
+charts, tables, sample data, routes, or application entry point.
 `dashboard_demo` adds the full twelve-destination reference application:
 Overview, Chat, Customers, Orders, Settings, Charts, Actions, Forms & Inputs,
 Data Display, Overlays, Navigation, and Typography. Product content and
@@ -755,6 +758,7 @@ The installer rejects older resolved versions before it writes source.
 |---|---|---|
 | `icons` | `UiIcons` | — |
 | `accordion` | `UiAccordion` | — |
+| `app_bar` | `UiAppBar` | — |
 | `avatar` | `UiAvatar` | — |
 | `badge` | `UiBadge` | variant |
 | `button` | `UiButton` | variant, size |

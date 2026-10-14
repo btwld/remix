@@ -2,19 +2,18 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../../dashboard/dashboard_shell_base.dart';
+import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
-import 'dashboard_shell_base.dart';
 
-const _headerHeight = 64.0;
-
-/// A reusable default-preset dashboard shell.
+/// A dashboard shell styled with the Playground preset.
 ///
-/// The host owns navigation values and page state. Supply [onSearchChanged]
-/// only when the host has real search behavior; otherwise no field is shown.
+/// The host manages navigation values and page state. Provide [onSearchChanged]
+/// to display the search field.
 class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
   const PlaygroundDashboardShell({
     super.key,
@@ -57,14 +56,21 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topBarStyle = BoxStyler()
-        .height(_headerHeight)
+    // The brand row lines up with the app bar beside it: the same toolbar
+    // height, surface, and bottom hairline as the `app_bar` recipe.
+    final sidebarHeaderStyle = BoxStyler()
+        .height(playgroundAppBarToolbarHeight)
         .alignment(AlignmentDirectional.centerStart)
-        .padding(.horizontal(16))
+        .padding(.horizontal(PlaygroundTokens.s3))
         .color(PlaygroundTokens.background())
-        .border(.bottom(.color(PlaygroundTokens.border()).width(1)));
-    final sidebarHeaderStyle = topBarStyle.padding(.horizontal(12));
-    return PlaygroundDashboardShellBase<T>(
+        .border(
+          .bottom(
+            .color(
+              PlaygroundTokens.border(),
+            ).width(PlaygroundTokens.strokeHairline),
+          ),
+        );
+    return RegistryDashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected,
@@ -80,11 +86,6 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
       initiallyCollapsed: initiallyCollapsed,
       onCollapsedChanged: onCollapsedChanged,
       sidebarHeaderStyle: sidebarHeaderStyle,
-      topBarStyle: topBarStyle,
-      titleStyle: TextStyler()
-          .fontSize(18)
-          .fontWeight(FontWeight.w600)
-          .color(PlaygroundTokens.foreground()),
       menuIcon: RemixIcons.hamburgerMenu,
       searchIcon: RemixIcons.magnifyingGlass,
       backwardIcon: RemixIcons.doubleArrowLeft,
@@ -144,6 +145,19 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
             footer: footer,
             semanticLabel: semanticLabel,
           ),
+      appBarBuilder:
+          (
+            context, {
+            required leading,
+            required title,
+            required titleChild,
+            required actions,
+          }) => PlaygroundAppBar(
+            leading: leading,
+            title: title,
+            titleChild: titleChild,
+            actions: actions,
+          ),
       iconButtonBuilder:
           (
             context, {
@@ -168,6 +182,7 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
           }) => PlaygroundTextField(
             key: key,
             hintText: hintText,
+            semanticLabel: hintText,
             leading: leading,
             onChanged: onChanged,
           ),
@@ -176,7 +191,7 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
 }
 
 final class _PlaygroundDashboardLayoutControls
-    implements PlaygroundDashboardLayoutControls {
+    implements RegistryDashboardLayoutControls {
   const _PlaygroundDashboardLayoutControls(this.scope);
 
   final PlaygroundSidebarLayoutScope scope;

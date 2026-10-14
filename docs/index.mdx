@@ -62,6 +62,7 @@ Remix composes inside your Flutter host. It does not require a `MaterialApp`,
 | Widgets styled by the [Fortal preset](/fortal) | The preset's token scope, plus the widget's normal Flutter services |
 | Menu, select, popover, and tooltip | An `Overlay`; use `Overlay.wrap` when no `Navigator` is needed |
 | `showRemixDialog` and `showRemixAlertDialog` | A caller-owned `Navigator` above the invoking context |
+| Toast (`showRemixToast`) | A `RemixToastScope` above the invoking context |
 
 For a portal-based interface without routing, provide an overlay:
 

@@ -69,6 +69,22 @@ items:
     exports:
       - recipes/answer_recipe.dart
 
+  app_bar:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/app_bar/app_bar.dart.tmpl
+        target: "@ui/components/app_bar.dart"
+    generated:
+      - "@ui/components/app_bar.g.dart"
+    exports:
+      - components/app_bar.dart
+
   avatar:
     registryDependencies:
       - theme
@@ -202,6 +218,7 @@ items:
       - activity_recipe
       - answer
       - answer_recipe
+      - app_bar
       - avatar
       - badge
       - button
@@ -281,6 +298,7 @@ items:
   dashboard_shell:
     registryDependencies:
       - theme
+      - app_bar
       - icon_button
       - sidebar
       - sidebar_layout
