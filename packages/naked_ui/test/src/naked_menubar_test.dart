@@ -296,6 +296,151 @@ void main() {
     expect(edit.isOpen, isTrue);
     expect(file.isOpen, isFalse);
   });
+
+  testWidgets('Home and End move across bar triggers', (tester) async {
+    final a = MenuController();
+    final b = MenuController();
+    final c = MenuController();
+    final nodeA = FocusNode(debugLabel: 'a');
+    final nodeC = FocusNode(debugLabel: 'c');
+    addTearDown(nodeA.dispose);
+    addTearDown(nodeC.dispose);
+
+    await tester.pumpMaterialWidget(
+      NakedMenubar(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _menu(
+              label: 'A',
+              item: 'A-item',
+              controller: a,
+              triggerFocusNode: nodeA,
+            ),
+            _menu(label: 'B', item: 'B-item', controller: b),
+            _menu(
+              label: 'C',
+              item: 'C-item',
+              controller: c,
+              triggerFocusNode: nodeC,
+            ),
+          ],
+        ),
+      ),
+    );
+    nodeA.requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.end);
+    await tester.pump();
+    expect(nodeC.hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.home);
+    await tester.pump();
+    expect(nodeA.hasFocus, isTrue);
+  });
+
+  testWidgets(
+    'closed bar menus do not receive onCloseRequested when a sibling opens',
+    (tester) async {
+      final file = MenuController();
+      final edit = MenuController();
+      final calls = <String>[];
+      Widget menuWithClose(String label, MenuController controller) =>
+          NakedMenu<String>(
+            controller: controller,
+            onCloseRequested: (hide) {
+              calls.add('$label(open=${controller.isOpen})');
+              hide();
+            },
+            builder: (context, state, child) =>
+                Padding(padding: const EdgeInsets.all(8), child: Text(label)),
+            overlayBuilder: (context, info) => NakedMenu.Item<String>(
+              value: label,
+              child: Text('$label-item'),
+            ),
+          );
+
+      await tester.pumpMaterialWidget(
+        NakedMenubar(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              menuWithClose('File', file),
+              menuWithClose('Edit', edit),
+            ],
+          ),
+        ),
+      );
+      await tester.tap(find.text('File'));
+      await tester.pumpAndSettle();
+      expect(calls.where((c) => c.endsWith('(open=false)')), isEmpty);
+
+      file.close();
+      edit.close();
+      await tester.pumpAndSettle();
+      expect(calls.where((c) => c.endsWith('(open=false)')), isEmpty);
+    },
+  );
+
+  testWidgets(
+    'animated onCloseRequested in a bar does not close a newly opened menu or steal focus when switching siblings',
+    (tester) async {
+      final file = MenuController();
+      final edit = MenuController();
+      final fileNode = FocusNode(debugLabel: 'file');
+      final editNode = FocusNode(debugLabel: 'edit');
+      addTearDown(fileNode.dispose);
+      addTearDown(editNode.dispose);
+
+      Widget animatedMenu(
+        String label,
+        MenuController controller,
+        FocusNode triggerFocusNode,
+      ) => NakedMenu<String>(
+        controller: controller,
+        triggerFocusNode: triggerFocusNode,
+        onCloseRequested: (hide) =>
+            Future<void>.delayed(const Duration(milliseconds: 50), hide),
+        builder: (context, state, child) =>
+            Padding(padding: const EdgeInsets.all(8), child: Text(label)),
+        overlayBuilder: (context, info) =>
+            NakedMenu.Item<String>(value: label, child: Text('$label-item')),
+      );
+
+      await tester.pumpMaterialWidget(
+        NakedMenubar(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              animatedMenu('File', file, fileNode),
+              animatedMenu('Edit', edit, editNode),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('File'));
+      await tester.pumpAndSettle();
+      expect(file.isOpen, isTrue);
+      expect(find.text('File-item'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+      expect(edit.isOpen, isTrue);
+      expect(file.isOpen, isFalse);
+      expect(fileNode.hasFocus, isFalse);
+
+      // Closing the last open menu in the bar still restores focus to its trigger.
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+      expect(edit.isOpen, isFalse);
+      expect(editNode.hasFocus, isTrue);
+    },
+  );
 }
 
 Widget _menu({

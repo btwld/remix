@@ -671,6 +671,345 @@ void main() {
         expect(onMenuCloseCalled, true);
       },
     );
+
+    group('Audit Regression Tests (1.2.0)', () {
+      testWidgets(
+        'hover-opened submenu: Escape returns focus to submenu trigger',
+        (tester) async {
+          final controller = MenuController();
+          final submenuFocus = FocusNode(debugLabel: 'submenu');
+          addTearDown(submenuFocus.dispose);
+
+          await tester.pumpMaterialWidget(
+            Align(
+              alignment: Alignment.topLeft,
+              child: NakedMenu<String>(
+                controller: controller,
+                builder: (context, state, child) => const Text('Open'),
+                overlayBuilder: (context, info) => NakedMenuSubmenu<String>(
+                  focusNode: submenuFocus,
+                  overlayBuilder: _submenuContent,
+                  child: const SizedBox(
+                    width: 120,
+                    height: 30,
+                    child: Text('More'),
+                  ),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: const Offset(700, 500));
+          addTearDown(mouse.removePointer);
+          await mouse.moveTo(tester.getCenter(find.text('More')));
+          await tester.pump(const Duration(milliseconds: 150));
+          await tester.pumpAndSettle();
+          expect(find.text('Child item'), findsOneWidget);
+          expect(submenuFocus.hasFocus, isFalse);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(find.text('Child item'), findsNothing);
+          expect(submenuFocus.hasFocus, isTrue);
+        },
+      );
+
+      testWidgets('submenu closing with focus elsewhere does not steal focus', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final submenuFocus = FocusNode(debugLabel: 'submenu');
+        final elsewhere = FocusNode(debugLabel: 'elsewhere');
+        addTearDown(submenuFocus.dispose);
+        addTearDown(elsewhere.dispose);
+
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                NakedMenu<String>(
+                  controller: controller,
+                  builder: (context, state, child) => const Text('Open'),
+                  overlayBuilder: (context, info) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const NakedMenuItem<String>(
+                        value: 'a',
+                        child: SizedBox(
+                          width: 120,
+                          height: 30,
+                          child: Text('A'),
+                        ),
+                      ),
+                      NakedMenuSubmenu<String>(
+                        focusNode: submenuFocus,
+                        overlayBuilder: _submenuContent,
+                        child: const SizedBox(
+                          width: 120,
+                          height: 30,
+                          child: Text('More'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 400),
+                Focus(focusNode: elsewhere, child: const Text('Elsewhere')),
+              ],
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer(location: const Offset(700, 500));
+        addTearDown(mouse.removePointer);
+        await mouse.moveTo(tester.getCenter(find.text('More')));
+        await tester.pump(const Duration(milliseconds: 150));
+        await tester.pumpAndSettle();
+        expect(find.text('Child item'), findsOneWidget);
+
+        elsewhere.requestFocus();
+        await tester.pump();
+        await mouse.moveTo(tester.getCenter(find.text('A')));
+        await tester.pump(const Duration(milliseconds: 150));
+        await tester.pumpAndSettle();
+        expect(find.text('Child item'), findsNothing);
+        expect(elsewhere.hasFocus, isTrue);
+      });
+
+      testWidgets('Arrow Down and Up move through items and wrap', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final focused = <String>[];
+        Widget item(String value) => NakedMenuItem<String>(
+          value: value,
+          builder: (context, state, child) {
+            if (state.isFocused && (focused.isEmpty || focused.last != value)) {
+              focused.add(value);
+            }
+            return child!;
+          },
+          child: SizedBox(height: 30, width: 100, child: Text(value)),
+        );
+
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.topLeft,
+            child: NakedMenu<String>(
+              controller: controller,
+              builder: (context, state, child) => const Text('Open'),
+              overlayBuilder: (context, info) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [item('one'), item('two'), item('three')],
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+        expect(focused, ['one', 'two']);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+        await tester.pump();
+        expect(focused.last, 'three');
+      });
+
+      testWidgets(
+        'closeOnClickOutside false keeps the menu open on outside tap',
+        (tester) async {
+          final controller = MenuController();
+          await tester.pumpMaterialWidget(
+            Align(
+              alignment: Alignment.topLeft,
+              child: NakedMenu<String>(
+                controller: controller,
+                closeOnClickOutside: false,
+                builder: (context, state, child) => const Text('Open'),
+                overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                  value: 'x',
+                  child: SizedBox(height: 30, width: 100, child: Text('X')),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          await tester.tapAt(const Offset(700, 500));
+          await tester.pumpAndSettle();
+          expect(controller.isOpen, isTrue);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(controller.isOpen, isFalse);
+        },
+      );
+
+      testWidgets('onCloseRequested sees Escape, outside tap, and selection', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        var requests = 0;
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.topLeft,
+            child: NakedMenu<String>(
+              controller: controller,
+              onCloseRequested: (hide) {
+                requests++;
+                hide();
+              },
+              builder: (context, state, child) => const Text('Open'),
+              overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                value: 'x',
+                child: SizedBox(height: 30, width: 100, child: Text('X')),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(requests, 1);
+
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.tapAt(const Offset(700, 500));
+        await tester.pumpAndSettle();
+        expect(requests, 2);
+
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('X'));
+        await tester.pumpAndSettle();
+        expect(requests, 3);
+        expect(controller.isOpen, isFalse);
+      });
+
+      testWidgets('submenu opens to the right of its trigger by default', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.topLeft,
+            child: NakedMenu<String>(
+              controller: controller,
+              builder: (context, state, child) => const Text('Open'),
+              overlayBuilder: (context, info) => const NakedMenuSubmenu<String>(
+                overlayBuilder: _submenuContent,
+                child: SizedBox(width: 120, height: 30, child: Text('More')),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('More'));
+        await tester.pumpAndSettle();
+        final trigger = tester.getRect(find.text('More'));
+        final child = tester.getRect(find.text('Child item'));
+        expect(child.left, greaterThanOrEqualTo(trigger.right));
+      });
+
+      testWidgets('onOpenRequested can defer showing the overlay', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        VoidCallback? show;
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.topLeft,
+            child: NakedMenu<String>(
+              controller: controller,
+              onOpenRequested: (position, showOverlay) => show = showOverlay,
+              builder: (context, state, child) => const Text('Open'),
+              overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                value: 'x',
+                child: SizedBox(height: 30, width: 100, child: Text('X')),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(find.text('X'), findsNothing);
+        show!();
+        await tester.pumpAndSettle();
+        expect(find.text('X'), findsOneWidget);
+      });
+
+      testWidgets('useRootOverlay mounts the panel in the root overlay', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        OverlayState? nearest;
+        OverlayState? root;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Overlay(
+                initialEntries: [
+                  OverlayEntry(
+                    builder: (context) => Align(
+                      alignment: Alignment.topLeft,
+                      child: Builder(
+                        builder: (context) {
+                          nearest = Overlay.of(context);
+                          root = Overlay.of(context, rootOverlay: true);
+                          return NakedMenu<String>(
+                            controller: controller,
+                            useRootOverlay: true,
+                            builder: (context, state, child) =>
+                                const Text('Open'),
+                            overlayBuilder: (context, info) =>
+                                const NakedMenuItem<String>(
+                                  value: 'x',
+                                  child: SizedBox(
+                                    height: 30,
+                                    width: 100,
+                                    child: Text('X'),
+                                  ),
+                                ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(nearest, isNot(same(root)));
+        final innerTheatre = nearest!.context.findRenderObject();
+        RenderObject? parent = tester.renderObject(find.text('X'));
+        var inInner = false;
+        while (parent != null) {
+          if (identical(parent, innerTheatre)) inInner = true;
+          parent = parent.parent;
+        }
+        expect(inInner, isFalse);
+      });
+    });
   });
 
   // NakedMenuItem functionality is tested as part of NakedMenu tests above
