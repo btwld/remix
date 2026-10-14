@@ -98,11 +98,11 @@ def violations(name, text, scopes=None):
     source = ''.join(lines)
     stream = list(tokens(source))
     values = [t[0] for t in stream]
-    # A theme data declaration establishes its generated scope prefix.
-    for value in values:
-        if value.endswith('ThemeData'):
-            prefix = value[:-9]
-            if prefix and prefix != 'Icon':
+    # A theme data/config class declaration establishes its generated scope prefix.
+    for index, value in enumerate(values):
+        if index and values[index - 1] == 'class' and value.endswith(('ThemeData', 'ThemeConfig')):
+            prefix = value[:-9] if value.endswith('ThemeData') else value[:-11]
+            if prefix:
                 scopes.update({prefix + 'Theme', prefix + 'Scope', prefix + 'ThemeScope'})
     failures = []
     config_receivers = {'config', 'theme'}

@@ -299,5 +299,6 @@ component_patterns_analysis.md
 /.cursor
 **/.venv/
 
-# Local design review output
+# Local design review output and disposable agent worktrees
 .impeccable/
+.claude/worktrees/

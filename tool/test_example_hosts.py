@@ -58,8 +58,12 @@ class ExampleHostPolicyTest(unittest.TestCase):
             "FortalTheme(child: Text('), brightness: ignored'), /* nested /* ) */ */ brightness: .dark)"))
         self.assertEqual(violations('example.dart',
             'class FortalThemeData {} service.createScope(child: screen)'), [])
+        self.assertEqual(violations('example.dart',
+            'CupertinoTheme(data: const CupertinoThemeData(), child: screen)'), [])
+        self.assertEqual(violations('example.dart',
+            'ButtonTheme(data: const ButtonThemeData(), child: screen)'), [])
         self.assertTrue(violations('example.dart',
-            'class BrandThemeData {} BrandTheme.named(lightTheme: theme)', {'BrandTheme'}))
+            'class BrandThemeData {} BrandTheme.named(lightTheme: theme)'))
 
     def test_comparisons_and_callbacks_do_not_hide_arguments(self):
         for expression in ['count < 2 ? a : b', '() => screen', 'Map<String, Widget>()']:
