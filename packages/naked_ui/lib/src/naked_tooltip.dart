@@ -1,102 +1,155 @@
+// The deprecated parameters are read here to route them to the 1.1.0
+// implementation.
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'legacy_naked_tooltip.dart';
 import 'utilities/positioning.dart';
 
-/// Provides controlled or uncontrolled tooltip behavior without visual style.
+const _defaultTooltipAnimationStyle = AnimationStyle(
+  curve: Curves.fastOutSlowIn,
+  duration: Duration(milliseconds: 150),
+  reverseDuration: Duration(milliseconds: 75),
+);
+
+/// A headless tooltip built on Flutter's [RawTooltip].
 ///
-/// Tooltips open from hover, focus, or the configured touch [triggerMode]. By
-/// default the pointer can move from the trigger into the tooltip without
-/// dismissing it. Set [disableHoverableContent] when content hover should not
-/// preserve visibility.
+/// [RawTooltip] manages trigger handling, delays, feedback, animation,
+/// hoverable content, and overlay lifetime. This widget provides the headless
+/// overlay builder, collision-aware positioning, and optional semantics
+/// filtering. [overlayBuilder] maps to [RawTooltip.tooltipBuilder], and
+/// [semanticLabel] maps to [RawTooltip.semanticsTooltip].
 ///
-/// [open] and [onOpenChanged] form a standard controlled contract. When [open]
-/// is non-null, user input only requests changes; the overlay follows the value
-/// accepted by the owner.
+/// Pass a [GlobalKey] to [tooltipKey] to show the tooltip imperatively via
+/// [RawTooltipState.ensureTooltipVisible]. [onOpenChanged] reports the visible
+/// state of the animation and does not control visibility.
 ///
-/// The overlay is positioned with [OverlayPositionConfig]. Its descendants can
-/// read the collision-resolved result through [OverlayPlacement.of], including
-/// the final side after a flip.
+/// Setting any of the deprecated [open], [useRootOverlay], or
+/// [disableHoverableContent] parameters uses the legacy 1.1.0 implementation.
+/// These parameters will be removed in 2.0.0.
 class NakedTooltip extends StatefulWidget {
   /// Creates a headless tooltip.
   const NakedTooltip({
     super.key,
     required this.child,
     required this.overlayBuilder,
+    this.tooltipKey,
+    @Deprecated(
+      'Use tooltipKey to show on command and onOpenChanged to observe '
+      'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
+      'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+    )
     this.open,
     this.onOpenChanged,
     this.hoverDelay = Duration.zero,
     this.touchDelay = const Duration(milliseconds: 1500),
     this.dismissDelay = const Duration(milliseconds: 100),
+    @Deprecated(
+      'RawTooltip keeps the tooltip visible while its content is hovered. '
+      'Setting this runs the naked_ui 1.1.0 implementation. '
+      'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+    )
     this.disableHoverableContent = false,
     this.enableTapToDismiss = true,
     this.triggerMode = TooltipTriggerMode.longPress,
     this.enableFeedback = true,
     this.onTriggered,
-    this.animationStyle = const AnimationStyle(
-      curve: Curves.fastOutSlowIn,
-      duration: Duration(milliseconds: 150),
-      reverseDuration: Duration(milliseconds: 75),
-    ),
+    this.animationStyle = _defaultTooltipAnimationStyle,
     this.positioning = const OverlayPositionConfig(),
+    @Deprecated(
+      'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
+      '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+    )
     this.useRootOverlay = false,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.excludeOverlaySemantics,
-  });
+  }) : assert(
+         tooltipKey == null ||
+             (open == null && !useRootOverlay && !disableHoverableContent),
+         'tooltipKey has no effect with the deprecated open, '
+         'useRootOverlay, or disableHoverableContent parameters.',
+       );
 
   /// The widget that triggers the tooltip.
   final Widget child;
 
-  /// Builds the tooltip content displayed in the overlay.
+  /// The builder that creates the tooltip overlay content.
   ///
-  /// The animation runs from zero to one while opening and reverses while
+  /// The animation runs from `0.0` to `1.0` while opening and reverses while
   /// closing.
   final TooltipComponentBuilder overlayBuilder;
 
-  /// Whether the tooltip is open when controlled, or null when uncontrolled.
+  /// A key for imperative control via [RawTooltipState.ensureTooltipVisible].
+  final GlobalKey<RawTooltipState>? tooltipKey;
+
+  /// Whether the tooltip is open when controlled, or `null` when uncontrolled.
+  @Deprecated(
+    'Use tooltipKey to show on command and onOpenChanged to observe '
+    'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
+    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
   final bool? open;
 
-  /// Called when user input requests a visibility change.
+  /// A callback invoked when the tooltip visible state changes.
+  ///
+  /// [RawTooltip] owns visibility. Notifications arrive after the current
+  /// frame and stop when this widget is disposed.
+  ///
+  /// When the deprecated [open] parameter is non-null, this callback requests a
+  /// state change that the caller applies by updating [open].
   final ValueChanged<bool>? onOpenChanged;
 
-  /// The semantic tooltip text attached to the trigger.
+  /// The semantic label attached to the trigger.
   final String? semanticLabel;
 
-  /// Side, alignment, offset, and collision configuration for the overlay.
+  /// The side, alignment, offset, and collision configuration for the overlay.
   final OverlayPositionConfig positioning;
 
   /// The delay before mouse hover requests the tooltip to open.
   final Duration hoverDelay;
 
-  /// How long a touch-triggered tooltip remains open after activation ends.
+  /// The duration a touch-triggered tooltip remains open after activation ends.
   final Duration touchDelay;
 
   /// The delay before pointer exit requests the tooltip to close.
   final Duration dismissDelay;
 
   /// Whether hovering the overlay content does not preserve visibility.
+  @Deprecated(
+    'RawTooltip keeps the tooltip visible while its content is hovered. '
+    'Setting this runs the naked_ui 1.1.0 implementation. '
+    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
   final bool disableHoverableContent;
 
-  /// Whether tapping outside an open tooltip requests dismissal.
+  /// Whether tapping outside an open tooltip dismisses it.
   final bool enableTapToDismiss;
 
-  /// How non-hover pointer input triggers the tooltip.
+  /// The trigger mode for non-hover pointer input.
   final TooltipTriggerMode triggerMode;
 
   /// Whether touch activation provides platform feedback.
   final bool enableFeedback;
 
-  /// Called when tap or long-press input triggers the tooltip.
+  /// A callback invoked when tap or long-press input triggers the tooltip.
   final TooltipTriggeredCallback? onTriggered;
 
   /// The show and hide curves and durations.
+  ///
+  /// Missing durations default to 150ms for showing and 75ms for hiding.
+  /// The reverse curve defaults to the flipped show curve.
   final AnimationStyle animationStyle;
 
   /// Whether the tooltip is inserted into the root overlay.
+  @Deprecated(
+    'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
+    '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
   final bool useRootOverlay;
 
   /// Whether to hide the trigger and overlay subtrees from the semantics tree.
@@ -104,370 +157,441 @@ class NakedTooltip extends StatefulWidget {
 
   /// Whether to hide the visual overlay subtree from the semantics tree.
   ///
-  /// When null, the overlay is excluded only when a non-empty [semanticLabel]
-  /// is exposed on the trigger. Set this to true to always exclude the overlay
-  /// or false to always include independently meaningful custom content.
+  /// When `null`, the overlay is excluded only when the trigger exposes a
+  /// non-empty [semanticLabel]. Set to `true` to always exclude the overlay,
+  /// or `false` to always include it.
   ///
   /// [excludeSemantics] takes precedence and hides the entire tooltip.
   final bool? excludeOverlaySemantics;
 
   @override
-  State<NakedTooltip> createState() {
-    assert(!hoverDelay.isNegative, 'hoverDelay must not be negative');
-    assert(!touchDelay.isNegative, 'touchDelay must not be negative');
-    assert(!dismissDelay.isNegative, 'dismissDelay must not be negative');
-
-    return _NakedTooltipState();
-  }
+  State<NakedTooltip> createState() => _NakedTooltipState();
 }
 
-class _NakedTooltipState extends State<NakedTooltip>
-    with SingleTickerProviderStateMixin {
-  final MenuController _menuController = MenuController();
+class _NakedTooltipState extends State<NakedTooltip> {
+  static final Set<_NakedTooltipState> _mountedTooltips =
+      <_NakedTooltipState>{};
 
-  Timer? _showTimer;
-  Timer? _hideTimer;
-  Timer? _touchTimer;
-  LongPressGestureRecognizer? _longPressRecognizer;
-  TapGestureRecognizer? _tapRecognizer;
+  final _childKey = GlobalKey();
+  final _internalTooltipKey = GlobalKey<RawTooltipState>();
+  bool _visible = false;
+  CurvedAnimation? _rawAnimation;
 
-  late final AnimationController _animationController;
-  late CurvedAnimation _animation;
-
-  bool _uncontrolledOpen = false;
+  // RawTooltip has no focus trigger, Escape binding, or placement callback.
+  // The fields below keep naked_ui 1.1.0's focus, Escape, and placement
+  // behavior on top of it.
+  Timer? _focusTimer;
+  bool _focusWithin = false;
   bool _triggerHovered = false;
   bool _contentHovered = false;
-  bool _focusWithin = false;
-  int _transitionGeneration = 0;
+  // Focus is holding the tooltip open; mouse exits must not close it.
+  bool _heldByFocus = false;
+  late OverlayPlacement _placement = _initialPlacement(widget.positioning);
+  OverlayPlacement? _pendingPlacement;
 
-  bool get _isControlled => widget.open != null;
+  GlobalKey<RawTooltipState> get _tooltipKey =>
+      widget.tooltipKey ?? _internalTooltipKey;
 
-  bool get _desiredOpen => widget.open ?? _uncontrolledOpen;
+  static OverlayPlacement _initialPlacement(OverlayPositionConfig config) =>
+      OverlayPlacement(
+        side: config.side,
+        alignment: config.alignment,
+        offset: Offset.zero,
+        wasFlipped: false,
+        wasShifted: false,
+      );
 
-  Duration get _forwardDuration =>
-      widget.animationStyle.duration ?? const Duration(milliseconds: 150);
+  AnimationStyle get _animationStyle {
+    final style = widget.animationStyle;
+    final curve = style.curve ?? _defaultTooltipAnimationStyle.curve!;
+    return _defaultTooltipAnimationStyle.copyWith(
+      curve: curve,
+      reverseCurve: style.reverseCurve ?? curve.flipped,
+      duration: style.duration,
+      reverseDuration: style.reverseDuration,
+    );
+  }
 
-  Duration get _reverseDuration =>
-      widget.animationStyle.reverseDuration ?? const Duration(milliseconds: 75);
+  void _syncAnimationStyle() {
+    final animation = _rawAnimation;
+    if (animation == null) return;
+    final style = _animationStyle;
+    animation
+      ..curve = style.curve!
+      ..reverseCurve = style.reverseCurve;
+    if (animation.parent case AnimationController controller) {
+      controller
+        ..duration = style.duration
+        ..reverseDuration = style.reverseDuration;
+    }
+  }
 
-  Curve get _forwardCurve =>
-      widget.animationStyle.curve ?? Curves.fastOutSlowIn;
-
-  Curve get _reverseCurve =>
-      widget.animationStyle.reverseCurve ?? _forwardCurve.flipped;
+  void _captureRawAnimation(Animation<double> animation) {
+    // Flutter 3.41–3.47 caches these settings and ignores reverseCurve.
+    // Update the supplied animation through its public properties; RawTooltip
+    // still drives and disposes it and its controller, even when hidden.
+    if (animation is! CurvedAnimation || animation == _rawAnimation) return;
+    _rawAnimation = animation;
+    final controller = animation.parent;
+    final startedWith = controller is AnimationController
+        ? controller.duration
+        : null;
+    _syncAnimationStyle();
+    // RawTooltip may have created the controller, and started this show,
+    // before the latest style reached it. Rerun the show from its current
+    // value at the new pace.
+    if (controller is AnimationController &&
+        controller.status == AnimationStatus.forward &&
+        controller.duration != startedWith) {
+      controller.forward();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: _forwardDuration,
-      reverseDuration: _reverseDuration,
-      vsync: this,
-    );
-    _animation = _createAnimation();
-    if (_desiredOpen) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _desiredOpen) _applyDesiredOpen();
-      });
-    }
+    _mountedTooltips.add(this);
   }
-
-  CurvedAnimation _createAnimation() => CurvedAnimation(
-    parent: _animationController,
-    curve: _forwardCurve,
-    reverseCurve: _reverseCurve,
-  );
 
   @override
   void didUpdateWidget(covariant NakedTooltip oldWidget) {
     super.didUpdateWidget(oldWidget);
-    assert(!widget.hoverDelay.isNegative, 'hoverDelay must not be negative');
-    assert(!widget.touchDelay.isNegative, 'touchDelay must not be negative');
-    assert(
-      !widget.dismissDelay.isNegative,
-      'dismissDelay must not be negative',
-    );
-    if (widget.animationStyle != oldWidget.animationStyle) {
-      _animationController
-        ..duration = _forwardDuration
-        ..reverseDuration = _reverseDuration;
-      _animation.dispose();
-      _animation = _createAnimation();
+    if (widget.tooltipKey != oldWidget.tooltipKey) {
+      _rawAnimation = null;
+    } else if (widget.animationStyle != oldWidget.animationStyle) {
+      _syncAnimationStyle();
     }
-    if (widget.open != oldWidget.open && widget.open != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _applyDesiredOpen();
-      });
-    } else if (oldWidget.open != null && widget.open == null) {
-      _uncontrolledOpen = oldWidget.open!;
+    if (widget.positioning.side != oldWidget.positioning.side ||
+        widget.positioning.alignment != oldWidget.positioning.alignment) {
+      _placement = _initialPlacement(widget.positioning);
     }
-    if (widget.disableHoverableContent && !oldWidget.disableHoverableContent) {
-      _contentHovered = false;
-      _scheduleHoverClose();
+    if (oldWidget.open != null && widget.open == null && _usesLegacyTooltip) {
+      _visible = oldWidget.open!;
     }
-  }
-
-  void _cancelTimers() {
-    _showTimer?.cancel();
-    _hideTimer?.cancel();
-    _touchTimer?.cancel();
-    _showTimer = null;
-    _hideTimer = null;
-    _touchTimer = null;
-  }
-
-  void _cancelShowTimer() {
-    _showTimer?.cancel();
-    _showTimer = null;
-  }
-
-  void _cancelHideTimer() {
-    _hideTimer?.cancel();
-    _hideTimer = null;
-  }
-
-  void _requestOpen(bool value) {
-    if (_desiredOpen == value) return;
-    widget.onOpenChanged?.call(value);
-    if (!mounted) return;
-    if (_isControlled) return;
-    _uncontrolledOpen = value;
-    _applyDesiredOpen();
-  }
-
-  void _applyDesiredOpen() {
-    final generation = ++_transitionGeneration;
-    if (_desiredOpen) {
-      _cancelHideTimer();
-      if (!_menuController.isOpen) _menuController.open();
-      _animationController.forward();
-
-      return;
-    }
-
-    _cancelShowTimer();
-    () async {
-      await _animationController.reverse();
-      if (!mounted || generation != _transitionGeneration || _desiredOpen) {
-        return;
+    if (_usesLegacy(oldWidget) && !_usesLegacyTooltip) {
+      // 1.1.0 kept the last accepted state when a controlled tooltip became
+      // uncontrolled. The RawTooltip path starts closed, so reopen it.
+      if (oldWidget.open == true) {
+        _visible = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && !_usesLegacyTooltip) _show();
+        });
+      } else if (_visible) {
+        _reportVisibility(false);
       }
-      if (_menuController.isOpen) _menuController.close();
-    }();
-  }
-
-  void _scheduleHoverOpen() {
-    _cancelHideTimer();
-    _touchTimer?.cancel();
-    _touchTimer = null;
-    if (_desiredOpen || _showTimer?.isActive == true) return;
-    if (widget.hoverDelay == Duration.zero) {
-      _requestOpen(true);
-
-      return;
     }
-    _showTimer = Timer(widget.hoverDelay, () {
-      _showTimer = null;
-      if (mounted && (_triggerHovered || _focusWithin)) _requestOpen(true);
-    });
-  }
-
-  void _scheduleHoverClose() {
-    _cancelShowTimer();
-    if (_triggerHovered || _focusWithin || _contentHovered) return;
-    if (!_desiredOpen || _hideTimer?.isActive == true) return;
-    if (widget.dismissDelay == Duration.zero) {
-      _requestOpen(false);
-
-      return;
-    }
-    _hideTimer = Timer(widget.dismissDelay, () {
-      _hideTimer = null;
-      if (mounted && !_triggerHovered && !_focusWithin && !_contentHovered) {
-        _requestOpen(false);
-      }
-    });
-  }
-
-  void _handleTriggerEnter(PointerEnterEvent event) {
-    _triggerHovered = true;
-    _scheduleHoverOpen();
-  }
-
-  void _handleTriggerExit(PointerExitEvent event) {
-    _triggerHovered = false;
-    _scheduleHoverClose();
-  }
-
-  void _handleContentEnter(PointerEnterEvent event) {
-    if (widget.disableHoverableContent) return;
-    _contentHovered = true;
-    _cancelHideTimer();
-  }
-
-  void _handleContentExit(PointerExitEvent event) {
-    if (widget.disableHoverableContent) return;
-    _contentHovered = false;
-    _scheduleHoverClose();
-  }
-
-  void _handleFocusChange(bool focused) {
-    _focusWithin = focused;
-    if (focused) {
-      _scheduleHoverOpen();
-    } else {
-      _scheduleHoverClose();
-    }
-  }
-
-  void _scheduleTouchClose() {
-    _touchTimer?.cancel();
-    _touchTimer = Timer(widget.touchDelay, () {
-      _touchTimer = null;
-      if (mounted && !_triggerHovered && !_contentHovered && !_focusWithin) {
-        _requestOpen(false);
-      }
-    });
-  }
-
-  void _handleTap() {
-    if (widget.enableFeedback) Feedback.forTap(context);
-    widget.onTriggered?.call();
-    _requestOpen(true);
-    _scheduleTouchClose();
-  }
-
-  void _handleLongPress() {
-    if (widget.enableFeedback) Feedback.forLongPress(context);
-    widget.onTriggered?.call();
-    _requestOpen(true);
-  }
-
-  void _handleLongPressEnd() => _scheduleTouchClose();
-
-  void _handlePointerDown(PointerDownEvent event) {
-    const supportedDevices = <PointerDeviceKind>{
-      PointerDeviceKind.invertedStylus,
-      PointerDeviceKind.stylus,
-      PointerDeviceKind.touch,
-      PointerDeviceKind.unknown,
-      PointerDeviceKind.trackpad,
-    };
-    switch (widget.triggerMode) {
-      case TooltipTriggerMode.manual:
-        break;
-      case TooltipTriggerMode.longPress:
-        final recognizer = _longPressRecognizer ??= LongPressGestureRecognizer(
-          debugOwner: this,
-          supportedDevices: supportedDevices,
-        );
-        recognizer
-          ..onLongPress = _handleLongPress
-          ..onLongPressUp = _handleLongPressEnd
-          ..onLongPressCancel = _scheduleHoverClose
-          ..addPointer(event);
-      case TooltipTriggerMode.tap:
-        final recognizer = _tapRecognizer ??= TapGestureRecognizer(
-          debugOwner: this,
-          supportedDevices: supportedDevices,
-        );
-        recognizer
-          ..onTap = _handleTap
-          ..onTapCancel = _scheduleHoverClose
-          ..addPointer(event);
-    }
-  }
-
-  void _dismiss() => _requestOpen(false);
-
-  Widget _buildOverlay(BuildContext context, RawMenuOverlayInfo info) {
-    Widget result = widget.overlayBuilder(context, _animation);
-    final excludeOverlaySemantics =
-        widget.excludeSemantics ||
-        (widget.excludeOverlaySemantics ??
-            (widget.semanticLabel?.trim().isNotEmpty ?? false));
-    if (excludeOverlaySemantics) {
-      result = ExcludeSemantics(child: result);
-    }
-    result = MouseRegion(
-      opaque: false,
-      onEnter: _handleContentEnter,
-      onExit: _handleContentExit,
-      child: result,
-    );
-    result = TapRegion(
-      groupId: info.tapRegionGroupId,
-      onTapOutside: widget.enableTapToDismiss ? (_) => _dismiss() : null,
-      child: result,
-    );
-    result = CallbackShortcuts(
-      bindings: {const SingleActivator(LogicalKeyboardKey.escape): _dismiss},
-      child: result,
-    );
-
-    return OverlayPositioner(
-      targetRect: info.anchorRect,
-      positioning: widget.positioning,
-      child: result,
-    );
   }
 
   @override
   void dispose() {
-    _transitionGeneration++;
-    _cancelTimers();
-    _longPressRecognizer
-      ?..onLongPress = null
-      ..onLongPressUp = null
-      ..onLongPressCancel = null
-      ..dispose();
-    _tapRecognizer
-      ?..onTap = null
-      ..onTapCancel = null
-      ..dispose();
-    _animation.dispose();
-    _animationController.dispose();
+    _mountedTooltips.remove(this);
+    _focusTimer?.cancel();
+    super.dispose();
+  }
+
+  void _show() => _tooltipKey.currentState?.ensureTooltipVisible();
+
+  // RawTooltip cannot close a single tooltip, so this closes every open one.
+  // Snapshot any other actively held or hovered tooltips and restore them.
+  void _dismiss() {
+    _heldByFocus = false;
+    final toRestore = <(_NakedTooltipState, bool)>[
+      for (final tooltip in _mountedTooltips)
+        if (!identical(tooltip, this) &&
+            !tooltip._usesLegacyTooltip &&
+            tooltip._visible &&
+            (tooltip._heldByFocus ||
+                tooltip._triggerHovered ||
+                tooltip._contentHovered))
+          (tooltip, tooltip._heldByFocus),
+    ];
+    RawTooltip.dismissAllToolTips();
+    for (final (tooltip, wasHeldByFocus) in toRestore) {
+      if (wasHeldByFocus) tooltip._heldByFocus = true;
+      tooltip._show();
+    }
+  }
+
+  void _handleFocusChange(bool focused) {
+    if (focused == _focusWithin) return;
+    _focusWithin = focused;
+    _focusTimer?.cancel();
+    _focusTimer = null;
+    if (focused) {
+      if (_visible || widget.hoverDelay == Duration.zero) {
+        _holdForFocus();
+      } else {
+        _focusTimer = Timer(widget.hoverDelay, _holdForFocus);
+      }
+    } else {
+      _heldByFocus = false;
+      if (widget.dismissDelay == Duration.zero) {
+        _closeForBlur();
+      } else {
+        _focusTimer = Timer(widget.dismissDelay, _closeForBlur);
+      }
+    }
+  }
+
+  void _holdForFocus() {
+    _focusTimer = null;
+    if (!mounted || !_focusWithin) return;
+    _heldByFocus = true;
+    // Also cancels a dismissal RawTooltip has already scheduled.
+    _show();
+  }
+
+  void _closeForBlur() {
+    _focusTimer = null;
+    if (!mounted || _focusWithin || _triggerHovered || _contentHovered) return;
+    if (_visible) _dismiss();
+  }
+
+  void _handlePointerExit() {
+    // These regions sit inside RawTooltip's, so they see the exit first, in
+    // hit-test order. RawTooltip then schedules, or with a zero dismissDelay
+    // performs, its own dismissal. Reopen afterwards while focus holds it.
+    if (!_heldByFocus || !_focusWithin) return;
+    scheduleMicrotask(() {
+      if (!mounted || !_focusWithin) return;
+      _heldByFocus = true;
+      _show();
+    });
+  }
+
+  static const _escapeActivator = SingleActivator(LogicalKeyboardKey.escape);
+
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    // Leave Escape to enclosing dismiss actions while the tooltip is closed.
+    if (!_visible ||
+        !_escapeActivator.accepts(event, HardwareKeyboard.instance)) {
+      return KeyEventResult.ignored;
+    }
+    _dismiss();
+
+    return KeyEventResult.handled;
+  }
+
+  void _reportPlacement(OverlayPlacement placement) {
+    // Resolved during layout, so descendants see it from the next frame.
+    if (placement == _placement || placement == _pendingPlacement) return;
+    final scheduled = _pendingPlacement != null;
+    _pendingPlacement = placement;
+    if (scheduled) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final next = _pendingPlacement;
+      _pendingPlacement = null;
+      if (mounted && next != null && next != _placement) {
+        setState(() => _placement = next);
+      }
+    });
+  }
+
+  void _reportVisibility(bool visible) {
+    if (_visible == visible) return;
+    _visible = visible;
+    if (!visible) {
+      _heldByFocus = false;
+      _contentHovered = false;
+    }
+    // The overlay can first report visibility during build. Deliver from the
+    // owner so closing survives overlay removal, but not tooltip disposal.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) widget.onOpenChanged?.call(visible);
+    });
+  }
+
+  static bool _usesLegacy(NakedTooltip widget) =>
+      widget.open != null ||
+      widget.useRootOverlay ||
+      widget.disableHoverableContent;
+
+  bool get _usesLegacyTooltip => _usesLegacy(widget);
+
+  Widget _buildLegacyTooltip(Widget child) => LegacyNakedTooltip(
+    overlayBuilder: widget.overlayBuilder,
+    open: widget.open,
+    onOpenChanged: (open) {
+      if (widget.open == null) _visible = open;
+      widget.onOpenChanged?.call(open);
+    },
+    hoverDelay: widget.hoverDelay,
+    touchDelay: widget.touchDelay,
+    dismissDelay: widget.dismissDelay,
+    disableHoverableContent: widget.disableHoverableContent,
+    enableTapToDismiss: widget.enableTapToDismiss,
+    triggerMode: widget.triggerMode,
+    enableFeedback: widget.enableFeedback,
+    onTriggered: widget.onTriggered,
+    animationStyle: widget.animationStyle,
+    positioning: widget.positioning,
+    useRootOverlay: widget.useRootOverlay,
+    semanticLabel: widget.semanticLabel,
+    excludeSemantics: widget.excludeSemantics,
+    excludeOverlaySemantics: widget.excludeOverlaySemantics,
+    child: child,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    // Keep the trigger's state when a deprecated parameter switches between
+    // the RawTooltip path and the 1.1.0 implementation.
+    final child = KeyedSubtree(key: _childKey, child: widget.child);
+    if (_usesLegacyTooltip) return _buildLegacyTooltip(child);
+
+    final textDirection = Directionality.of(context);
+    final animationStyle = _animationStyle;
+    Widget result = RawTooltip(
+      key: _tooltipKey,
+      // RawTooltip treats an empty semantics label as "no tooltip". Preserve
+      // NakedTooltip's ability to show visual content without a label.
+      semanticsTooltip:
+          widget.excludeSemantics ||
+              widget.semanticLabel?.trim().isEmpty == true
+          ? null
+          : widget.semanticLabel,
+      tooltipBuilder: (context, animation) {
+        _captureRawAnimation(animation);
+        return OverlayPlacementScope(
+          placement: _placement,
+          child: MouseRegion(
+            opaque: false,
+            onEnter: (_) => _contentHovered = true,
+            onExit: (_) {
+              _contentHovered = false;
+              _handlePointerExit();
+            },
+            child: _NakedTooltipOverlay(
+              animation: animation,
+              overlayBuilder: widget.overlayBuilder,
+              onOpenChanged: _reportVisibility,
+              excludeSemantics: widget.excludeSemantics,
+              excludeOverlaySemantics: widget.excludeOverlaySemantics,
+              semanticLabel: widget.semanticLabel,
+            ),
+          ),
+        );
+      },
+      hoverDelay: widget.hoverDelay,
+      touchDelay: widget.touchDelay,
+      dismissDelay: widget.dismissDelay,
+      enableTapToDismiss: widget.enableTapToDismiss,
+      triggerMode: widget.triggerMode,
+      enableFeedback: widget.enableFeedback,
+      onTriggered: widget.onTriggered,
+      animationStyle: animationStyle,
+      positionDelegate: (position) {
+        final placement = _resolvePlacement(
+          position,
+          widget.positioning,
+          textDirection,
+        );
+        _reportPlacement(placement);
+
+        return placement.offset;
+      },
+      child: MouseRegion(
+        opaque: false,
+        onEnter: (_) => _triggerHovered = true,
+        onExit: (_) {
+          _triggerHovered = false;
+          _handlePointerExit();
+        },
+        child: child,
+      ),
+    );
+    // Outside RawTooltip, so the overlay content shares this focus ancestry
+    // and Escape from either the trigger or the content reaches it.
+    result = Focus(
+      canRequestFocus: false,
+      skipTraversal: true,
+      includeSemantics: false,
+      onFocusChange: _handleFocusChange,
+      onKeyEvent: _handleKeyEvent,
+      child: result,
+    );
+
+    return widget.excludeSemantics ? ExcludeSemantics(child: result) : result;
+  }
+}
+
+OverlayPlacement _resolvePlacement(
+  TooltipPositionContext context,
+  OverlayPositionConfig positioning,
+  TextDirection textDirection,
+) {
+  final targetRect = Rect.fromCenter(
+    center: context.target,
+    width: context.targetSize.width,
+    height: context.targetSize.height,
+  );
+  return resolveOverlayPlacement(
+    targetRect: targetRect,
+    overlaySize: context.tooltipSize,
+    boundsSize: context.overlaySize,
+    positioning: positioning,
+    textDirection: textDirection,
+  );
+}
+
+class _NakedTooltipOverlay extends StatefulWidget {
+  const _NakedTooltipOverlay({
+    required this.animation,
+    required this.overlayBuilder,
+    required this.onOpenChanged,
+    required this.excludeSemantics,
+    required this.excludeOverlaySemantics,
+    required this.semanticLabel,
+  });
+
+  final Animation<double> animation;
+  final TooltipComponentBuilder overlayBuilder;
+  final ValueChanged<bool> onOpenChanged;
+  final bool excludeSemantics;
+  final bool? excludeOverlaySemantics;
+  final String? semanticLabel;
+
+  @override
+  State<_NakedTooltipOverlay> createState() => _NakedTooltipOverlayState();
+}
+
+class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
+  // A zero-duration show on a still-mounted overlay jumps from dismissed
+  // straight to completed, so any status but dismissed means visible.
+  void _handleStatusChanged(AnimationStatus status) =>
+      widget.onOpenChanged(!status.isDismissed);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.animation.addStatusListener(_handleStatusChanged);
+    if (!widget.animation.isDismissed) widget.onOpenChanged(true);
+  }
+
+  @override
+  void didUpdateWidget(covariant _NakedTooltipOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.animation != oldWidget.animation) {
+      oldWidget.animation.removeStatusListener(_handleStatusChanged);
+      widget.animation.addStatusListener(_handleStatusChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.animation.removeStatusListener(_handleStatusChanged);
+    // Replacing the raw tooltip's key removes its overlay without reversing.
+    widget.onOpenChanged(false);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget trigger = Semantics(
-      tooltip: widget.excludeSemantics ? null : widget.semanticLabel,
-      child: widget.child,
-    );
-    trigger = Focus(
-      canRequestFocus: false,
-      skipTraversal: true,
-      includeSemantics: false,
-      onFocusChange: _handleFocusChange,
-      child: trigger,
-    );
-    trigger = MouseRegion(
-      onEnter: _handleTriggerEnter,
-      onExit: _handleTriggerExit,
-      child: Listener(
-        behavior: HitTestBehavior.opaque,
-        onPointerDown: _handlePointerDown,
-        child: trigger,
-      ),
-    );
-    trigger = CallbackShortcuts(
-      bindings: {const SingleActivator(LogicalKeyboardKey.escape): _dismiss},
-      child: trigger,
-    );
-
-    Widget result = RawMenuAnchor(
-      controller: _menuController,
-      useRootOverlay: widget.useRootOverlay,
-      consumeOutsideTaps: false,
-      onOpenRequested: (_, showOverlay) => showOverlay(),
-      onCloseRequested: (hideOverlay) => hideOverlay(),
-      overlayBuilder: _buildOverlay,
-      child: trigger,
-    );
-
-    if (widget.excludeSemantics) result = ExcludeSemantics(child: result);
-
-    return result;
+    final child = widget.overlayBuilder(context, widget.animation);
+    final excludeOverlaySemantics =
+        widget.excludeSemantics ||
+        (widget.excludeOverlaySemantics ??
+            (widget.semanticLabel?.trim().isNotEmpty ?? false));
+    return excludeOverlaySemantics ? ExcludeSemantics(child: child) : child;
   }
 }
