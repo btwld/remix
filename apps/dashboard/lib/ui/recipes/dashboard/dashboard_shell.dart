@@ -2,20 +2,20 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../../../dashboard/dashboard_shell_base.dart';
 import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/theme.dart';
+import 'dashboard_shell_base.dart';
 
-/// A dashboard shell styled with the Fortal preset.
+/// A dashboard shell styled with the Ui preset.
 ///
 /// The host manages navigation values and page state. Provide [onSearchChanged]
 /// to display the search field.
-class FortalDashboardShell<T extends Object> extends StatelessWidget {
-  const FortalDashboardShell({
+class UiDashboardShell<T extends Object> extends StatelessWidget {
+  const UiDashboardShell({
     super.key,
     required this.sections,
     required this.selectedValue,
@@ -59,16 +59,14 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
     // The brand row lines up with the app bar beside it: the same toolbar
     // height, surface, and bottom edge as the `app_bar` recipe.
     final sidebarHeaderStyle = BoxStyler()
-        .height(FortalTokens.space9())
+        .height(UiTokens.space9())
         .alignment(AlignmentDirectional.centerStart)
-        .padding(.horizontal(FortalTokens.space2()))
-        .color(FortalTokens.colorPanelSolid())
+        .padding(.horizontal(UiTokens.space2()))
+        .color(UiTokens.colorPanelSolid())
         .border(
-          .bottom(
-            .color(FortalTokens.grayA6()).width(FortalTokens.borderWidth1()),
-          ),
+          .bottom(.color(UiTokens.grayA6()).width(UiTokens.borderWidth1())),
         );
-    return RegistryDashboardShellBase<T>(
+    return UiDashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected,
@@ -95,7 +93,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
             required body,
             required sidebarBuilder,
             required headerBuilder,
-          }) => FortalSidebarLayout(
+          }) => UiSidebarLayout(
             compactBreakpoint: compactBreakpoint,
             sidebarWidth: sidebarWidth,
             collapsedWidth: collapsedWidth,
@@ -103,17 +101,13 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
             sidebar: Builder(
               builder: (context) => sidebarBuilder(
                 context,
-                _FortalDashboardLayoutControls(
-                  FortalSidebarLayoutScope.of(context),
-                ),
+                _UiDashboardLayoutControls(UiSidebarLayoutScope.of(context)),
               ),
             ),
             header: Builder(
               builder: (context) => headerBuilder(
                 context,
-                _FortalDashboardLayoutControls(
-                  FortalSidebarLayoutScope.of(context),
-                ),
+                _UiDashboardLayoutControls(UiSidebarLayoutScope.of(context)),
               ),
             ),
             body: body,
@@ -128,7 +122,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
             required header,
             required footer,
             required semanticLabel,
-          }) => FortalSidebar<T>(
+          }) => UiSidebar<T>(
             key: const ValueKey('dashboard-sidebar'),
             collapsed: collapsed,
             panelPadding: MediaQuery.paddingOf(context),
@@ -148,7 +142,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
             required title,
             required titleChild,
             required actions,
-          }) => FortalAppBar(
+          }) => UiAppBar(
             leading: leading,
             title: title,
             titleChild: titleChild,
@@ -161,7 +155,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
             required icon,
             required semanticLabel,
             required onPressed,
-          }) => FortalIconButton.ghost(
+          }) => UiIconButton.ghost(
             key: key,
             size: .size3,
             icon: icon,
@@ -175,7 +169,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
             required hintText,
             required leading,
             required onChanged,
-          }) => FortalTextField.surface(
+          }) => UiTextField.surface(
             key: key,
             size: .size2,
             hintText: hintText,
@@ -187,11 +181,10 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
   }
 }
 
-final class _FortalDashboardLayoutControls
-    implements RegistryDashboardLayoutControls {
-  const _FortalDashboardLayoutControls(this.scope);
+final class _UiDashboardLayoutControls implements UiDashboardLayoutControls {
+  const _UiDashboardLayoutControls(this.scope);
 
-  final FortalSidebarLayoutScope scope;
+  final UiSidebarLayoutScope scope;
 
   @override
   bool get isCompact => scope.isCompact;
