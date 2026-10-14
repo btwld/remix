@@ -41,11 +41,6 @@ unstyled and backward compatible.
 
 ## Install project-locally
 
-`remix_cli` is not yet published. Hosted commands apply after its first release.
-Until then, install from a local checkout or
-[activate the CLI from Git](#activate-an-unreleased-cli-from-git) to use the
-global `remix` command.
-
 The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
 the dependency fails during version solving.
 
@@ -64,19 +59,10 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.10`. Before that release is available,
-add this `pubspec_overrides.yaml` to the application:
+Both presets require Remix `^1.0.0-beta.10`, which `add` declares for you.
 
-```yaml
-dependency_overrides:
-  remix:
-    path: /path/to/remix/packages/remix
-```
-
-Replace the path with your checkout. Remove the override after beta.10 is
-published and run `flutter pub get` to use hosted Remix.
-
-After publication, activate the package globally:
+Global activation is convenient for experiments. Registry content remains
+pinned per project in `remix.yaml`:
 
 ```shell
 dart pub global activate remix_cli
@@ -88,8 +74,7 @@ version; `add` reports when your resolved `remix` is newer than that one.
 
 ### Activate an unreleased CLI from Git
 
-To use the global `remix` command before publication, activate the package from
-Git:
+To activate an unreleased revision from Git:
 
 ```shell
 dart pub global activate --source git https://github.com/btwld/remix.git \

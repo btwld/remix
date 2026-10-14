@@ -1,103 +1,60 @@
-## Unreleased
-
-- Adds `app_bar` to both presets: a page-header recipe backed by `RemixAppBar`
-  with a generated `<Prefix>AppBar` adapter (`fortal` also pulls in `text`).
-- Adds `dashboard_shell` to both presets: a host-controlled responsive shell
-  under `lib/ui/recipes/dashboard/` composing `sidebar`, `sidebar_layout`,
-  `app_bar`, `icon_button`, `textfield`, and `icons` with no generated adapter.
-- Adds `dashboard_demo` to both presets: the full twelve-destination reference
-  dashboard (`<Prefix>DashboardDemo` and `<Prefix>DashboardOverview`) under
-  `lib/ui/recipes/dashboard/`.
-- **Breaking.** `remix.yaml` schema 3 is the only readable configuration.
-  Schemas 1 and 2 named no registry and read from a catalog frozen inside the
-  CLI; both that catalog and `remix registry migrate` are gone. A project still
-  on an earlier schema deletes `remix.yaml` and runs `remix init` to pin a
-  registry; installed source and generated adapters are untouched. The registry
-  index (schema 1) and catalog (schema 2) formats are unchanged.
-- Item names are qualified with their registry namespace in every `add`,
-  `--dry-run` and `--diff` report, since every project now names its sources.
-
-- Generate `theme`, `darkTheme`, and `mode` scope parameters for both presets, including light/dark defaults and live system appearance. **Breaking:** remove the default scope `data` parameter; use `theme`.
-- Restructure the internal registry source layer behind one `RegistrySources`
-  seam and a `RegistryReader` port. No `remix.yaml`, registry index, or catalog
-  schema change from this restructuring; `lib/src` is not a supported
-  programmatic API. See `open_code/REGISTRY_PORT.md`.
-- Document registries, pinning, and publishing your own registry at
-  `docs/guides/registries.mdx`.
-
-- Name the active starter preset `vanilla` and select it by default.
-
-- Publish catalogs independently under `registry/` with a versioned preset
-  index and schema-2 namespaced dependencies.
-- Initialize schema-3 projects from the CI-promoted `registry-stable`
-  branch, pinned to full commits. Add explicit registry registration and
-  pin updates.
-- Resolve cross-registry dependency graphs before writes; reject cycles,
-  conflicting targets and incompatible package requirements while preserving
-  application-owned source and installed generated adapters.
-- Diff and overwrite remain explicit source-review actions.
-
 ## 0.1.0
 
-- `remix add` accepts several items in one invocation, as in
-  `remix add button card dialog`. The batch resolves to a single ordered
-  install, so a shared dependency is written once and the dependency
-  resolution, formatting, code generation, and analysis steps each run once
-  for the whole batch instead of once per item. `--overwrite` applies to every
-  requested item and still never to a dependency pulled in behind one. An
-  unknown or repeated item fails before any write. Single-item invocations are
-  unchanged.
+Initial release of `remix_cli`: a command-line tool that installs editable Remix
+design-system source into Flutter applications. Requires Flutter 3.44 (Dart 3.12)
+or later.
 
-- Adds `sidebar_layout` to both presets: an open-code shell layout, not a
-  styled component, that rows an installed `sidebar` beside a header and body
-  above its compact breakpoint, and presents it as a start-edge sheet below
-  it. It has no `Spec` and installs no generated adapter.
+### Projects and registries
 
-- `sidebar` in both presets labels collapsed icon-rail destinations with the
-  application's `tooltip` recipe, so adding it also installs `tooltip`. The
-  Fortal recipe also narrows its navigation padding as the rail collapses.
-- Adds a `toast` item to both presets. Its action and close control are the
-  application's own `button` and `icon_button` recipes, so adding it installs
-  both. It needs the Remix release that ships `RemixToastScope`.
+- `remix init` writes a schema 3 `remix.yaml` configuration file. The file sets
+  the component prefix, preset (`vanilla` by default, or `fortal`), UI path, and
+  pins the official `@remix` registry to a `registry-stable` commit.
+- Repeating `remix init` with matching options is safe. The command rejects
+  conflicting configurations without modifying existing files.
+- `remix registry add` adds an external GitHub registry. `remix registry update`
+  advances a pinned registry to its latest commit.
+- The CLI resolves all registries in a single dependency graph before writing
+  files. It rejects cycles, conflicting target paths, and incompatible package
+  requirements.
+- Optional `iconLibrary: remix|lucide` selects the icon package for installed
+  components. Registry templates resolve icon placeholders from `icons.yaml`.
+  Omitting the key defaults to Remix icons.
+- The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 
-- Require Remix `^1.0.0-beta.10` for the generated adapters and `mix_chart`
-  `^0.0.1-beta.3` for the optional chart recipe. CI checks
-  both presets with checkout Remix. Publication requires the hosted check.
+### Installing items
 
-- Adds the `fortal` preset as application-owned source derived from the
-  repository's analyzed Radix Themes 3.3.0 implementation. It installs a
-  prefixed 277-token theme and full component catalog without a
-  `remix_fortal`, direct `mix`, or direct `naked_ui` dependency.
-- Adds a preset axis to `remix init`. New configurations use schema 2 and
-  record `preset: default`; schema 1 configurations remain compatible and
-  read as the default preset.
-- Initial project-local CLI for installing editable Remix UI source.
-- Uses the Flutter SDK and its Dart executable on Windows. CI verifies installation with the real SDK.
-- Supports explicit, glob, and nested workspace members through Pub's resolved package configuration.
-- Rejects reserved runtime prefixes before writing source and prints command help once.
-- Preserves spaces and special characters in generation filters. Each filter selects one generated file.
-- Bundles theme plus a registry item for every styled component surface in
-  `remix`: accordion, avatar, badge, button, callout, card,
-  checkbox, data_list,
-  data_table, dialog, disclosure, divider, icon_button, link, menu, popover,
-  progress, radio, segmented_control, select, skeleton, slider,
-  spinner, switch, tabs, textfield, toggle, toggle_group, and tooltip.
-- Add a default `sidebar` recipe backed by `RemixSidebar` in beta.8.
-  Destinations use the application's `toggle` recipe.
-- Adds an opt-in `icons` seam backed by `remix_ui_icons` for application-owned
-  glyph aliases.
-- Adds an optional `chart` item backed directly by `mix_chart`. One editable
-  recipe generates line, bar, and pie adapters without depending on Fortal.
-  Its palette reads the default theme's `chart1` to `chart5` tokens, which
-  clear 4.5:1 against the page in both shipped themes.
-- Keeps already-installed registry adapters in a focused generation run so a
-  new dependency cannot invalidate build_runner's graph and remove them.
-- Every item depends on `theme`. `data_table` also depends on `checkbox`,
-  `icon_button`, and `select`, because its selection column, pager, and
-  page-size control are those components; `add data_table` installs all four.
-  `sidebar` also depends on `toggle`, because a destination is one; `add
-  sidebar` installs both.
-- `add` reports when the resolved `remix` is newer than the version this
-  registry snapshot was authored against. The install still completes;
-  `--dry-run` and `--diff` never print it, because they stop before
-  `flutter pub get`.
+- `remix add` installs requested components and shared dependencies in a single
+  batch. Dependency resolution, code generation, formatting, and analysis each run
+  once per batch.
+- Unknown or duplicate items cause the command to fail before writing files.
+- `remix add` adds missing compatible dependencies to `pubspec.yaml` and preserves
+  existing dependency declarations. Misplaced or duplicate entries cause the
+  command to fail before execution, reporting the package name and target section.
+- Code generation runs only for declared adapters and preserves existing
+  adapters. New dependencies cannot remove previously generated code.
+- Enables Mix's spec-styler builder only when installed components require it.
+- Inspection and overwrite flags:
+  - `--dry-run` previews planned changes.
+  - `--diff` compares local component source against pinned registry source.
+  - `--overwrite` replaces authored files for requested items without modifying
+    shared dependencies.
+- `remix add` warns when the resolved `remix` version is newer than the version
+  recorded in the registry snapshot.
+- Uses the Flutter SDK's Dart executable on Windows.
+- Supports explicit, glob, and nested workspace members in monorepos.
+
+### Presets
+
+- `vanilla`: a neutral, shadcn-style theme set in Geist from `remix_ui_fonts`,
+  with light and dark themes and a component recipe for every styled Remix
+  surface.
+- `fortal`: application-owned source derived from Radix Themes 3.3.0, with a
+  prefixed token theme, the full component catalog, and no direct dependency on
+  `remix_fortal`, `mix`, or `naked_ui`.
+- Both presets generate `theme`, `darkTheme`, and `mode` scope parameters that
+  follow the system appearance by default.
+- Both presets include `app_bar`, `sidebar`, `sidebar_layout`, `toast`,
+  `dashboard_shell`, `dashboard_demo`, an opt-in `icons` seam, an optional `chart`
+  component backed by `mix_chart`, and unstyled Agent items with opt-in
+  `<component>_recipe` stylers.
+- Generated adapters require Remix `^1.0.0-beta.10`.

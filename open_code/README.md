@@ -18,11 +18,6 @@ the same installed source; see
 
 ## Install the CLI in a project
 
-`remix_cli` is not yet published. Hosted commands apply after its first release.
-Until then, use the checkout command below. For the global `remix` command, use
-[Git activation](../packages/remix_cli/README.md#activate-an-unreleased-cli-from-git).
-Git activation resolves dependencies independently of local workspace lockfiles.
-
 Use a project-local development dependency to pin the CLI version in the
 application lockfile. `remix.yaml` pins registry content separately:
 
@@ -64,7 +59,9 @@ generates `AcmeLineChart`, `AcmeBarChart`, and `AcmePieChart` from one editable
 recipe.
 
 To run an unreleased build, contributors can point the development dependency
-at a checkout or staged package:
+at a checkout or staged package (or use
+[Git activation](../packages/remix_cli/README.md#activate-an-unreleased-cli-from-git)
+for the global `remix` command):
 
 ```shell
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
