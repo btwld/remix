@@ -293,7 +293,7 @@ _resolve(
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: WidgetStateProvider(

@@ -22,7 +22,7 @@ void main() {
           late TextStyle accordionText2;
 
           await tester.pumpWidget(
-            FortalScope(
+            FortalTheme(
               mode: .light,
               scaling: scaling,
               radius: radius,
@@ -118,7 +118,7 @@ void main() {
     late Color gray9;
 
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         mode: .light,
         accent: .gray,
         gray: .slate,

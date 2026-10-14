@@ -203,7 +203,7 @@ dart run remix_cli:remix init --prefix Fortal --preset fortal
 dart run remix_cli:remix add button
 ```
 
-It copies `FortalScope`, the token system, `fortal*Style()` recipes, and the
+It copies `FortalTheme`, the token system, `fortal*Style()` recipes, and the
 components you add into your application.
 
 See the [Fortal documentation](docs/fortal/catalog.mdx) to get

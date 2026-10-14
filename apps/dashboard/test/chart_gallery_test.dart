@@ -323,8 +323,13 @@ void main() {
 
     Future<List<Offset>> pumpAt(double width) async {
       await tester.pumpWidget(
-        UiScope(
-          child: MaterialApp(
+        UiTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: Align(
               alignment: Alignment.topLeft,
               child: SizedBox(width: width, child: const AnalyticsCharts()),
@@ -361,7 +366,16 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      const UiScope(child: MaterialApp(home: ChartsPage())),
+      UiTheme(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
+          home: const ChartsPage(),
+        ),
+      ),
     );
 
     Rect card(String title) => tester.getRect(

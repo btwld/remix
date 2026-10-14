@@ -11,8 +11,13 @@ void main() {
     late Map<FortalCheckboxVariant, Color?> resolvedColors;
 
     await tester.pumpWidget(
-      FortalScope(
-        child: MaterialApp(
+      FortalTheme(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: WidgetStateProvider(
             states: const {WidgetState.disabled},
             child: Builder(

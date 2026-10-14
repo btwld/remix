@@ -8,7 +8,7 @@ import 'tokens.dart';
 ///
 /// Two things are installed together on purpose:
 ///
-/// * [VanillaTheme], so application code can read the raw values through
+/// * an inherited theme so application code can read the raw values through
 ///   [VanillaTheme.of];
 /// * a `MixScope` carrying the same values keyed by `VanillaTokens`, so every Mix
 ///   styler resolved below this point sees them.
@@ -26,18 +26,18 @@ import 'tokens.dart';
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (context, child) => VanillaThemeScope(child: child!),
+///   builder: (context, child) => VanillaTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
 ///
 /// Each supplied theme replaces the values for its appearance. An empty nested
 /// scope inherits the parent pair and selection; individual tokens do not merge.
-class VanillaThemeScope extends StatelessWidget {
+class VanillaTheme extends StatelessWidget {
   /// A root follows the system and supplies both preset defaults.
   /// A custom theme without [darkTheme] is used in both modes.
   /// Nested scopes inherit the configured pair and active selection.
-  const VanillaThemeScope({
+  const VanillaTheme({
     super.key,
     this.theme,
     this.darkTheme,
@@ -59,6 +59,30 @@ class VanillaThemeScope extends StatelessWidget {
   /// The subtree that resolves against the selected theme.
   final Widget child;
 
+  /// The closest [VanillaThemeData], or `null` when no [VanillaTheme] is
+  /// installed.
+  static VanillaThemeData? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_VanillaInheritedTheme>()
+      ?.data;
+
+  /// The closest [VanillaThemeData].
+  ///
+  /// Throws when no [VanillaTheme] is installed above [context]; use
+  /// [maybeOf] when absence is a valid state.
+  static VanillaThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+
+    throw FlutterError.fromParts([
+      ErrorSummary('No VanillaTheme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the UI theme, but no '
+        'VanillaTheme was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     // `mode: system` needs a platform brightness. A scope mounted above any
@@ -76,7 +100,7 @@ class VanillaThemeScope extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     final inherited = context
-        .dependOnInheritedWidgetOfExactType<VanillaTheme>();
+        .dependOnInheritedWidgetOfExactType<_VanillaInheritedTheme>();
     final base =
         theme ??
         inherited?.baseTheme ??
@@ -118,7 +142,7 @@ class VanillaThemeScope extends StatelessWidget {
       scoped = _recolored(selected.foreground, scoped);
     }
 
-    return VanillaTheme(
+    return _VanillaInheritedTheme(
       data: selected,
       baseTheme: base,
       darkTheme: dark,
@@ -170,16 +194,13 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
   ),
 );
 
-/// The inherited half of [VanillaThemeScope].
+/// The inherited half of [VanillaTheme].
 ///
-/// Prefer [VanillaThemeScope]; this is public because `VanillaTheme.of` is how widgets
-/// read theme values that are not expressed as Mix styles, and because
-/// `InheritedTheme.wrap` has to be able to rebuild it across a route
-/// boundary.
-class VanillaTheme extends InheritedTheme {
-  /// Creates the inherited theme holding [data].
-  const VanillaTheme({
-    super.key,
+/// Kept private so callers always mount [VanillaTheme], which installs the
+/// matching `MixScope` alongside the inherited data, while
+/// `InheritedTheme.wrap` can still rebuild both across a route boundary.
+class _VanillaInheritedTheme extends InheritedTheme {
+  const _VanillaInheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
@@ -202,28 +223,6 @@ class VanillaTheme extends InheritedTheme {
   /// Whether the dark half of the configured pair is currently selected.
   bool get usesDarkTheme => useDarkTheme ?? data.brightness == Brightness.dark;
 
-  /// The closest [VanillaThemeData], or `null` when no scope is installed.
-  static VanillaThemeData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<VanillaTheme>()?.data;
-
-  /// The closest [VanillaThemeData].
-  ///
-  /// Throws when no [VanillaThemeScope] is installed above [context]; use
-  /// [maybeOf] when absence is a valid state.
-  static VanillaThemeData of(BuildContext context) {
-    final data = maybeOf(context);
-    if (data != null) return data;
-
-    throw FlutterError.fromParts([
-      ErrorSummary('No VanillaTheme found.'),
-      ErrorDescription(
-        '${context.widget.runtimeType} tried to read the UI theme, but no '
-        'VanillaThemeScope was found above it.',
-      ),
-      context.describeElement('The context used was'),
-    ]);
-  }
-
   /// Rebuilds the theme *and* its Mix scope for a captured subtree.
   ///
   /// `InheritedTheme.capture` only carries `InheritedTheme`s across a route
@@ -232,7 +231,7 @@ class VanillaTheme extends InheritedTheme {
   /// token values that recipes actually resolve.
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return VanillaTheme(
+    return _VanillaInheritedTheme(
       data: data,
       baseTheme: baseTheme,
       darkTheme: darkTheme,
@@ -242,7 +241,7 @@ class VanillaTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(VanillaTheme oldWidget) =>
+  bool updateShouldNotify(_VanillaInheritedTheme oldWidget) =>
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||

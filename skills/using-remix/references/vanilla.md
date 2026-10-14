@@ -73,16 +73,16 @@ spacing (`s0_5` through `s16`, a 4px grid), sizes (`controlSm`/`controlMd`/`cont
   `<prefix>FocusBorder()`: the 3px `ring` band at half strength, and a
   bordered control's outline turned `ring`.
 
-## Scope
+## Theme scope
 
-The outermost `<Prefix>ThemeScope` paints the theme's `background` and gives
+The outermost `<Prefix>Theme` paints the theme's `background` and gives
 bare `Text` the body run (`textSm` in `foreground`) and bare `Icon`s the
 `foreground` color. Place it inside the host's `builder`, below `MaterialApp`
 or `WidgetsApp`, so the host's own text defaults do not sit between the two.
 A Material widget below the scope (`Scaffold`, `Material`, `Card`) sets its
 own text style from the host's `ThemeData`, so give that `ThemeData` the
 scope's brightness, or style that text with the theme's tokens. A
-nested scope re-scopes tokens; if its theme has a different `foreground` (a
+nested `<Prefix>Theme` re-scopes tokens; if its theme has a different `foreground` (a
 region shown in the other brightness), it also recolors text and icons below
 it, but it never paints a background.
 

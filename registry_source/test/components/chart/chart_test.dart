@@ -15,7 +15,7 @@ void main() {
       late List<Color> publicPalette;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           accent: .orange,
           mode: .dark,
           child: Builder(
@@ -50,7 +50,7 @@ void main() {
       late StyleSpec<PieChartSpec> resolved;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           accent: .indigo,
           child: Builder(
             builder: (context) {
@@ -74,7 +74,7 @@ void main() {
       late StyleSpec<BarChartSpec> resolved;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: Builder(
             builder: (context) {
               resolved = fortalBarChartStyle(palette: palette).build(context);
@@ -94,7 +94,7 @@ void main() {
       late double expectedOffset;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: Builder(
             builder: (context) {
               expectedOffset = MixScope.tokenOf(FortalTokens.space2, context);
@@ -141,8 +141,13 @@ void main() {
 
     testWidgets('render through the mix_chart widgets', (tester) async {
       await tester.pumpWidget(
-        FortalScope(
-          child: MaterialApp(
+        FortalTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: Column(
               children: [
                 SizedBox(

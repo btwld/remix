@@ -38,12 +38,12 @@ parallel component library inside the example.
 
 ## Theme and contrast
 
-Keep one correctly placed outer `FortalScope` around the showcase's Navigator
+Keep one correctly placed outer `FortalTheme` around the showcase's Navigator
 and Overlay, following the [scope placement guidance](../SKILL.md#place-the-theme-scope)
 in the main skill. Resolve showcase chrome from `FortalTokens` or other
 active Mix tokens rather than choosing parallel hard-coded palette values.
 
-Use a nested `FortalScope(accent: ..., hasBackground: false)` when a product
+Use a nested `FortalTheme(accent: ..., hasBackground: false)` when a product
 concept carries a semantic accent. Let it inherit brightness, gray, radius,
 scaling, and panel settings from the outer scope. Do not encode semantic
 meaning by inventing component variants or hard-coding palette values.
@@ -115,7 +115,7 @@ actual constructor, defaults, or public axes.
 - Run the showcase in each supported brightness and with representative accent,
   gray, radius, and scaling settings. Nested accent scopes must inherit all
   unrelated settings.
-- Confirm overlay and route content remains below the outer `FortalScope` and
+- Confirm overlay and route content remains below the outer `FortalTheme` and
   has the required caller-owned `Overlay` or `Navigator`.
 
 The app is reference-quality when readers can distinguish library API,

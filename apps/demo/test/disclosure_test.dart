@@ -1,6 +1,6 @@
 import 'package:demo/components/disclosure.dart';
 import 'package:demo/helpers/catalog.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:demo/ui/ui.dart';
@@ -9,8 +9,11 @@ void main() {
   testWidgets('Remix use case opens and closes its content', (tester) async {
     final semantics = tester.ensureSemantics();
     await tester.pumpWidget(
-      MaterialApp(
-        home: FortalScope(child: Builder(builder: buildRemixDisclosureUseCase)),
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        builder: (_, _) => const FortalTheme(
+          child: Builder(builder: buildRemixDisclosureUseCase),
+        ),
       ),
     );
 
@@ -37,8 +40,9 @@ void main() {
     addTearDown(tester.view.reset);
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: FortalScope(
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        builder: (_, _) => const FortalTheme(
           child: Builder(builder: buildDisclosureCatalogUseCase),
         ),
       ),

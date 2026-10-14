@@ -317,15 +317,18 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      FortalScope(
-        child: MaterialApp(
-          home: Scaffold(
-            body: FortalSelect<String>(
-              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              items: const [RemixSelectItem(value: 'a', label: 'Apple')],
-              selectedValue: 'a',
-              onChanged: (_) {},
-            ),
+      FortalTheme(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
+          home: FortalSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+            items: const [RemixSelectItem(value: 'a', label: 'Apple')],
+            selectedValue: 'a',
+            onChanged: (_) {},
           ),
         ),
       ),
@@ -362,7 +365,7 @@ Future<SelectSpec> _resolve(
 }) async {
   late SelectSpec resolved;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       radius: radius,
@@ -432,7 +435,7 @@ _tokens(WidgetTester tester, {Brightness brightness = .light}) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: WidgetsApp(
         color: Colors.black,

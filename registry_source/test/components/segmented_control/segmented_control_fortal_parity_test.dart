@@ -146,8 +146,13 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: FortalScope(
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
+        home: FortalTheme(
           child: Center(
             child: FortalSegmentedControl<String>(
               orientation: Axis.vertical,
@@ -315,7 +320,7 @@ _resolve(
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: WidgetStateStyleOverride(
         states: states,

@@ -8,7 +8,7 @@ void main() {
   testWidgets('default style constrains the popover to 480 pixels', (
     tester,
   ) async {
-    final resolved = await resolveInFortalScope(
+    final resolved = await resolveInFortalTheme(
       tester,
       (context) => fortalPopoverStyle().build(context),
     );

@@ -29,7 +29,7 @@ class _FortalButtonComprehensiveTestState
         pageBuilder: (context, animation, secondaryAnimation) =>
             builder(context),
       ),
-      builder: (context, child) => FortalScope(
+      builder: (context, child) => FortalTheme(
         accent: _accent,
         gray: _gray,
         mode: _brightness == Brightness.dark ? .dark : .light,
@@ -393,7 +393,7 @@ class _AccentShowcaseSection extends StatelessWidget {
       runSpacing: 8,
       children: popularAccents.map((accentColor) {
         // Create temporary scope to show the accent
-        return FortalScope(
+        return FortalTheme(
           accent: accentColor,
           gray: FortalGrayColor.slate,
 

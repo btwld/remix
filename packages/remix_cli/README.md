@@ -131,14 +131,14 @@ every installed item that uses icons (`icons`, `dashboard_shell`,
 
 With `preset: fortal`, `add button` installs the full local theme layer,
 `base_button.dart`, `button.dart`, and the generated adapter. The configured
-prefix replaces Fortal throughout: `--prefix Acme` creates `AcmeScope`,
+prefix replaces Fortal throughout: `--prefix Acme` creates `AcmeTheme`,
 `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. The installed application
 does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
 the Radix color data, tokens, recipes, and instance overrides as ordinary app
 source.
 
-Place `AcmeScope` below the application host. For a routed `WidgetsApp`, wrap
-the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
+Place `AcmeTheme` below the application host. For a routed `WidgetsApp`, wrap
+the child of `WidgetsApp.builder` with `AcmeTheme`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
 
@@ -149,8 +149,8 @@ With no configuration, roots use the generated light/dark pair and follow the
 system. Nested scopes inherit the pair and active selection. A custom `theme`
 without `darkTheme` is used in both modes; supplying `darkTheme` alone keeps the
 base default. Both presets generate `AcmeThemeData.light()`, `.dark()`, and
-`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeThemeScope` for default and
-`AcmeScope` for Fortal, with your configured prefix.
+`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeTheme` for both presets,
+with your configured prefix.
 
 Place the scope in `WidgetsApp.builder` above the Navigator. The CLI installs
 theme files, not a complete app host or appearance picker. See the
@@ -252,7 +252,7 @@ dart run remix_cli:remix add dashboard_demo
 ```
 
 `dashboard_demo` installs `UiDashboardDemo`, `UiDashboardOverview`, the
-reusable shell, and all twelve destinations from the Fortal reference
+usable shell, and all twelve destinations from the Fortal reference
 dashboard. Product pages and gallery categories match across presets while
 their specimens use each preset's native variants. The overview's four
 metrics, revenue series, and recent records live in editable
@@ -260,8 +260,8 @@ metrics, revenue series, and recent records live in editable
 pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
 
 The host supplies its Flutter application, directionality, brand, and theme
-scope. Default uses `UiThemeScope(theme: UiThemeData.light(), child: ...)`;
-Fortal uses `UiScope(child: ...)`. The installer does not rewrite `main.dart`,
+scope. Default uses `UiTheme(theme: UiThemeData.light(), child: ...)`;
+Fortal uses `UiTheme(child: ...)`. The installer does not rewrite `main.dart`,
 routes, authentication, persistence, or search behavior. Pass a real
 `onSearchChanged` callback to show search; omit it to remove the field.
 

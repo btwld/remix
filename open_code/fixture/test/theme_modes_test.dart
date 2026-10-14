@@ -24,7 +24,7 @@ void main() {
   ) async {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-    await tester.pumpWidget(AcmeThemeScope(child: host(probe())));
+    await tester.pumpWidget(AcmeTheme(child: host(probe())));
     expect(active.brightness, Brightness.light);
     expect(background, const Color(0xFFFFFFFF));
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
@@ -38,7 +38,7 @@ void main() {
   ) async {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-    await tester.pumpWidget(host(AcmeThemeScope(mode: .light, child: probe())));
+    await tester.pumpWidget(host(AcmeTheme(mode: .light, child: probe())));
     expect(active.brightness, Brightness.light);
     expect(background, const Color(0xFFFFFFFF));
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
@@ -52,7 +52,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       host(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.light(),
           mode: .dark,
           child: probe(),
@@ -68,7 +68,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       host(
-        AcmeThemeScope(
+        AcmeTheme(
           darkTheme: const AcmeThemeData.dark(),
           mode: .light,
           child: probe(),
@@ -79,7 +79,7 @@ void main() {
     expect(background, const Color(0xFFFFFFFF));
     await tester.pumpWidget(
       host(
-        AcmeThemeScope(
+        AcmeTheme(
           darkTheme: const AcmeThemeData.dark(),
           mode: .dark,
           child: probe(),
@@ -95,11 +95,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         host(
-          AcmeThemeScope(
+          AcmeTheme(
             mode: .dark,
             child: MediaQuery(
               data: const MediaQueryData(platformBrightness: Brightness.light),
-              child: AcmeThemeScope(child: probe()),
+              child: AcmeTheme(child: probe()),
             ),
           ),
         ),
@@ -115,11 +115,11 @@ void main() {
     // Deliberately reversed brightness values identify the supplied pair.
     await tester.pumpWidget(
       host(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.dark(),
           darkTheme: const AcmeThemeData.light(),
           mode: .light,
-          child: AcmeThemeScope(mode: .dark, child: probe()),
+          child: AcmeTheme(mode: .dark, child: probe()),
         ),
       ),
     );
@@ -133,7 +133,7 @@ void main() {
     late Widget captured;
     await tester.pumpWidget(
       host(
-        AcmeThemeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.dark(),
           darkTheme: const AcmeThemeData.light(),
           mode: .light,
@@ -141,7 +141,7 @@ void main() {
             builder: (context) {
               captured = InheritedTheme.captureAll(
                 context,
-                AcmeThemeScope(mode: .dark, child: probe()),
+                AcmeTheme(mode: .dark, child: probe()),
               );
               return const SizedBox.shrink();
             },
@@ -168,8 +168,7 @@ void main() {
               settings: settings,
               pageBuilder: (context, _, _) => builder(context),
             ),
-            builder: (context, child) =>
-                AcmeThemeScope(mode: mode, child: child!),
+            builder: (context, child) => AcmeTheme(mode: mode, child: child!),
             home: Builder(
               builder: (context) {
                 pageContext = context;
@@ -211,12 +210,7 @@ void main() {
     ]) {
       await tester.pumpWidget(
         host(
-          AcmeThemeScope(
-            theme: light,
-            darkTheme: dark,
-            mode: mode,
-            child: probe(),
-          ),
+          AcmeTheme(theme: light, darkTheme: dark, mode: mode, child: probe()),
         ),
       );
       expect(

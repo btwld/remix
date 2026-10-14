@@ -156,7 +156,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       },
     );
     if (!widget.builtInChrome) return demo;
-    return {{typePrefix}}ThemeScope(
+    return {{typePrefix}}Theme(
       mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(

@@ -26,7 +26,7 @@ void main() {
     await tester.pumpWidget(
       WidgetsApp(
         color: const Color(0xFFFFFFFF),
-        builder: (_, _) => UiScope(child: answer),
+        builder: (_, _) => UiTheme(child: answer),
       ),
     );
     final copy = find.byWidgetPredicate(
@@ -138,7 +138,7 @@ Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
   await tester.pumpWidget(
     WidgetsApp(
       color: const Color(0xFFFFFFFF),
-      builder: (_, _) => UiScope(child: child),
+      builder: (_, _) => UiTheme(child: child),
     ),
   );
   return result;

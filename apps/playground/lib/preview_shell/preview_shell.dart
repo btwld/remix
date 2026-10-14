@@ -37,7 +37,7 @@ class _PreviewShellState extends State<PreviewShell> {
         // that resolves its scope inside PreviewShell leaves nothing here.
         // Pinned light on purpose — the light/dark control below it drives the
         // preview, not the toolbar around it.
-        PlaygroundThemeScope(
+        PlaygroundTheme(
           mode: PlaygroundThemeMode.light,
           child: ControlsBar(
             brightness: _brightness,

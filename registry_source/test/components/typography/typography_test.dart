@@ -1353,13 +1353,16 @@ Future<void> _pump(
     color: Colors.purple,
   ),
 }) => tester.pumpWidget(
-  MaterialApp(
-    home: FortalScope(
+  WidgetsApp(
+    color: const Color(0xFFFFFFFF),
+    pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+      settings: settings,
+      pageBuilder: (context, _, _) => builder(context),
+    ),
+    home: FortalTheme(
       scaling: scaling,
       mode: brightness == Brightness.dark ? .dark : .light,
-      child: Scaffold(
-        body: DefaultTextStyle(style: ambient, child: child),
-      ),
+      child: DefaultTextStyle(style: ambient, child: child),
     ),
   ),
 );
@@ -1412,7 +1415,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {
@@ -1443,7 +1446,7 @@ Future<Color> _resolveToken(
 }) async {
   late Color result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {

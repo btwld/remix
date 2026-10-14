@@ -55,7 +55,7 @@ Future<void> _pump(
   await tester.pumpWidget(
     WidgetsApp(
       color: const Color(0xFF0A0A0A),
-      builder: (_, _) => AcmeThemeScope(
+      builder: (_, _) => AcmeTheme(
         theme: theme,
         child: Overlay.wrap(
           child: DefaultTextStyle(

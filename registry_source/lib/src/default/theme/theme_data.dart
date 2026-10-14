@@ -13,7 +13,7 @@ enum VanillaThemeMode { system, light, dark }
 /// The concrete values behind [VanillaTokens] for one brightness.
 ///
 /// This is application-owned data: change a hex value, add a field, or drop
-/// one, and only this layer moves. `VanillaThemeScope` turns an instance into the
+/// one, and only this layer moves. `VanillaTheme` turns an instance into the
 /// `MixScope` token map that every recipe resolves against.
 ///
 /// The shipped values are a neutral grayscale theme set in Geist and Geist

@@ -32,7 +32,7 @@ import 'entries/tooltip_entry.dart';
 // resolves the scope inside the shell therefore follows its light/dark
 // control; one that resolves it above follows the real platform.
 Widget _scope(BuildContext context, Widget child) =>
-    PlaygroundThemeScope(mode: PlaygroundThemeMode.system, child: child);
+    PlaygroundTheme(mode: PlaygroundThemeMode.system, child: child);
 
 final Map<String, WidgetBuilder> components = {
   'dashboard_shell': (context) => PreviewShell(

@@ -4,11 +4,11 @@
     {
       "id": 1,
       "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with a green accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalScope(accent: .green), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses dart run remix_cli:remix init --prefix Fortal --preset fortal and adds the required items.",
+      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalTheme(accent: .green), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses dart run remix_cli:remix init --prefix Fortal --preset fortal and adds the required items.",
       "files": [],
       "expectations": [
         "Uses the Fortal preset and its owned ui/ui.dart barrel, importing remix only if base Remix types are used.",
-        "Places the UI below FortalScope with the green accent.",
+        "Places the UI below FortalTheme with the green accent.",
         "Uses FortalTextField, FortalCheckbox, FortalButton, and a named FortalSelect variant without redundant item styling."
       ]
     },
@@ -48,12 +48,12 @@
     {
       "id": 5,
       "prompt": "Can I call showRemixDialog from a subtree that does not have MixScope? I only need a plain Remix dialog, not Fortal tokens.",
-      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the installed Fortal preset and an ambient FortalScope so FortalTokens can resolve.",
+      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the installed Fortal preset and an ambient FortalTheme so FortalTokens can resolve.",
       "files": [],
       "expectations": [
         "States that showRemixDialog works without MixScope.",
         "States that token and modifier-order cloning occurs only when a current MixScope exists.",
-        "Distinguishes plain Remix dialog hosting from Fortal content, which needs the installed Fortal preset and FortalScope."
+        "Distinguishes plain Remix dialog hosting from Fortal content, which needs the installed Fortal preset and FortalTheme."
       ]
     },
     {
@@ -80,11 +80,11 @@
     },
     {
       "id": 8,
-      "prompt": "My Fortal screen opens menus and pushes a Fortal-styled dialog route on a routed WidgetsApp. Where should FortalScope go?",
-      "expected_output": "Places FortalScope in WidgetsApp.builder, wrapping the builder's child so the scope sits above the Navigator, so routed content, dialogs, and overlays inherit the same tokens and courtesy text default. Explains this preserves both Fortal tokens and the courtesy bare-Text fallback, and does not invent a Remix-owned app or scaffold wrapper.",
+      "prompt": "My Fortal screen opens menus and pushes a Fortal-styled dialog route on a routed WidgetsApp. Where should FortalTheme go?",
+      "expected_output": "Places FortalTheme in WidgetsApp.builder, wrapping the builder's child so the scope sits above the Navigator, so routed content, dialogs, and overlays inherit the same tokens and courtesy text default. Explains this preserves both Fortal tokens and the courtesy bare-Text fallback, and does not invent a Remix-owned app or scaffold wrapper.",
       "files": [],
       "expectations": [
-        "Places FortalScope inside WidgetsApp.builder around the builder's child.",
+        "Places FortalTheme inside WidgetsApp.builder around the builder's child.",
         "Explains that the scope sits above the Navigator so routes, dialogs, and overlays inherit it.",
         "Does not invent a Remix app, scaffold, or overlay-host wrapper, and does not reach for a Material application host."
       ]
@@ -92,11 +92,11 @@
     {
       "id": 9,
       "prompt": "Build a Fortal action menu in a WidgetsApp without routing, then explain what changes if I call showRemixAlertDialog from the same feature.",
-      "expected_output": "Uses a caller-owned Overlay (such as Overlay.wrap) for the menu without requiring a Navigator, keeps the content below FortalScope, and explains that showRemixAlertDialog pushes a route and therefore needs a caller-owned Navigator plus a nonempty semanticLabel; it does not add a Remix-owned overlay host or app wrapper.",
+      "expected_output": "Uses a caller-owned Overlay (such as Overlay.wrap) for the menu without requiring a Navigator, keeps the content below FortalTheme, and explains that showRemixAlertDialog pushes a route and therefore needs a caller-owned Navigator plus a nonempty semanticLabel; it does not add a Remix-owned overlay host or app wrapper.",
       "files": [],
       "expectations": [
         "Uses a caller-owned Overlay such as Overlay.wrap for the menu without requiring routing.",
-        "Keeps Fortal content below FortalScope.",
+        "Keeps Fortal content below FortalTheme.",
         "Explains that showRemixAlertDialog additionally needs a Navigator and nonempty semanticLabel without inventing Remix host wrappers."
       ]
     },
@@ -114,12 +114,12 @@
     {
       "id": 11,
       "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use Radix-like colors or Fortal tokens. Style a primary button from scratch.",
-      "expected_output": "Chooses base Remix rather than initializing the Fortal preset, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalScope or Fortal tokens.",
+      "expected_output": "Chooses base Remix rather than initializing the Fortal preset, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalTheme or Fortal tokens.",
       "files": [],
       "expectations": [
         "Uses RemixButton with a custom ButtonStyler and interaction states.",
         "Imports remix without initializing the Fortal preset.",
-        "Does not add FortalScope, Fortal tokens, or Radix-like defaults."
+        "Does not add FortalTheme, Fortal tokens, or Radix-like defaults."
       ]
     },
     {
@@ -158,13 +158,13 @@
     {
       "id": 15,
       "prompt": "Audit a Fortal reference dashboard that mixes realistic product screens with an exhaustive variant-by-size gallery. How should wrappers, highContrast, accent scopes, and the matrix layout be organized so the example stays canonical?",
-      "expected_output": "Separates product-example policy from coverage-gallery policy: small app-owned wrappers only for repeated product concepts, direct Fortal widgets in gallery cells, highContrast only where meaningful product content needs it while matrices preserve defaults, and nested FortalScope(accent: ..., hasBackground: false) for semantic accents while inheriting unrelated theme settings. Keeps the Navigator and Overlay under one correctly placed outer FortalScope and builds showcase chrome from active tokens rather than a parallel hard-coded palette. Derives matrix axes from the public enum values with typed row/column builders, uses the unnamed runtime-variant constructor in cells, notes that GalleryMatrix itself is an app-owned widget from the dashboard_demo recipe rather than a library API, and recommends Mix GridBox for the two-dimensional layout with tests for Cartesian coverage, semantics, builder-trigger interaction, and theme inheritance.",
+      "expected_output": "Separates product-example policy from coverage-gallery policy: small app-owned wrappers only for repeated product concepts, direct Fortal widgets in gallery cells, highContrast only where meaningful product content needs it while matrices preserve defaults, and nested FortalTheme(accent: ..., hasBackground: false) for semantic accents while inheriting unrelated theme settings. Keeps the Navigator and Overlay under one correctly placed outer FortalTheme and builds showcase chrome from active tokens rather than a parallel hard-coded palette. Derives matrix axes from the public enum values with typed row/column builders, uses the unnamed runtime-variant constructor in cells, notes that GalleryMatrix itself is an app-owned widget from the dashboard_demo recipe rather than a library API, and recommends Mix GridBox for the two-dimensional layout with tests for Cartesian coverage, semantics, builder-trigger interaction, and theme inheritance.",
       "files": [],
       "expectations": [
         "Separates product-wrapper policy from direct component coverage in the gallery.",
         "Uses highContrast selectively for meaningful product content while preserving defaults in matrices.",
-        "Uses nested FortalScope accent overrides with hasBackground false and inherited unrelated theme settings.",
-        "Keeps routes and overlays under a correctly placed outer FortalScope and resolves showcase chrome from active tokens.",
+        "Uses nested FortalTheme accent overrides with hasBackground false and inherited unrelated theme settings.",
+        "Keeps routes and overlays under a correctly placed outer FortalTheme and resolves showcase chrome from active tokens.",
         "Derives typed matrix axes from the public enum values.",
         "Uses the unnamed runtime-variant constructor in gallery cells.",
         "Uses Mix GridBox for the two-dimensional layout.",
@@ -186,11 +186,11 @@
     {
       "id": 17,
       "prompt": "This is a fresh Flutter app with no Remix dependency yet. Set it up with Remix's default preset and build a primary action button styled from the starter theme.",
-      "expected_output": "Runs flutter pub add dev:remix_cli then remix init with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiThemeScope (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
+      "expected_output": "Runs flutter pub add dev:remix_cli then remix init with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiTheme (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
       "files": [],
       "expectations": [
         "Runs remix init without --preset, explaining the default is the vanilla preset with the Ui prefix.",
-        "Wraps the app in UiThemeScope inside WidgetsApp.builder, above the Navigator.",
+        "Wraps the app in UiTheme inside WidgetsApp.builder, above the Navigator.",
         "Uses a named UiButton variant constructor and does not initialize the Fortal preset."
       ]
     },
@@ -209,10 +209,10 @@
     {
       "id": 19,
       "prompt": "Add light/dark mode support to a Fortal-themed app: default to the system setting, but let the user force light or dark from a settings screen.",
-      "expected_output": "Keeps a persisted FortalThemeMode preference, initially .system, and passes theme, darkTheme, and mode to FortalScope inside WidgetsApp.builder. Explains that .system reacts to platform brightness changes automatically and that only the preference persistence and the System/Light/Dark choice are the app's responsibility. Does not use brightness, lightTheme, or the removed createScope shortcut.",
+      "expected_output": "Keeps a persisted FortalThemeMode preference, initially .system, and passes theme, darkTheme, and mode to FortalTheme inside WidgetsApp.builder. Explains that .system reacts to platform brightness changes automatically and that only the preference persistence and the System/Light/Dark choice are the app's responsibility. Does not use brightness, lightTheme, or the removed createScope shortcut.",
       "files": [],
       "expectations": [
-        "Passes theme, darkTheme, and mode to FortalScope, not brightness or lightTheme.",
+        "Passes theme, darkTheme, and mode to FortalTheme, not brightness or lightTheme.",
         "Defaults the persisted preference to FortalThemeMode.system and updates it from a settings screen.",
         "Does not use the removed createScope config shortcut."
       ]
@@ -220,10 +220,10 @@
     {
       "id": 20,
       "prompt": "Add app-wide toast notifications (for example 'Draft saved') to a Fortal app that also pushes dialogs and routes.",
-      "expected_output": "Places one RemixToastScope inside WidgetsApp.builder, wrapped in Overlay.wrap, below FortalScope and above the Navigator, so every route including dialogs can reach it, and styles it with style: fortalToastStyle() so toasts use the Fortal recipe. Calls showRemixToast(context, RemixToastData(title: 'Draft saved')) from an event callback in feature code. Does not use the generated FortalToast widget for runtime toasts and does not invent a Remix-owned scaffold or a separate overlay host.",
+      "expected_output": "Places one RemixToastScope inside WidgetsApp.builder, wrapped in Overlay.wrap, below FortalTheme and above the Navigator, so every route including dialogs can reach it, and styles it with style: fortalToastStyle() so toasts use the Fortal recipe. Calls showRemixToast(context, RemixToastData(title: 'Draft saved')) from an event callback in feature code. Does not use the generated FortalToast widget for runtime toasts and does not invent a Remix-owned scaffold or a separate overlay host.",
       "files": [],
       "expectations": [
-        "Places one RemixToastScope inside WidgetsApp.builder, wrapped in Overlay.wrap, below FortalScope.",
+        "Places one RemixToastScope inside WidgetsApp.builder, wrapped in Overlay.wrap, below FortalTheme.",
         "Styles the scope with fortalToastStyle() rather than using FortalToast for runtime toasts.",
         "Calls showRemixToast with RemixToastData(title: ...) from feature code rather than building a custom overlay.",
         "Does not invent a Remix app or scaffold wrapper for toasts."
@@ -243,12 +243,12 @@
     {
       "id": 22,
       "prompt": "Our app uses the Vanilla preset. Give the app a brand indigo primary color everywhere buttons and other primary-emphasis controls appear.",
-      "expected_output": "Sets the brand color via UiThemeScope(theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)), ...), not an accent: parameter — the Vanilla scope has no accent: parameter, since accent is the interaction surface for otherwise transparent controls, not a brand hue. Explains that copyWith derives a changed theme and every recipe reading UiTokens.primary() picks it up.",
+      "expected_output": "Sets the brand color via UiTheme(theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)), ...), not an accent: parameter — the Vanilla scope has no accent: parameter, since accent is the interaction surface for otherwise transparent controls, not a brand hue. Explains that copyWith derives a changed theme and every recipe reading UiTokens.primary() picks it up.",
       "files": [],
       "expectations": [
         "Sets the brand color with UiThemeData.light().copyWith(primary: ...) passed to the scope's theme.",
         "Explains that the Vanilla scope has no accent: parameter and that accent means something different (interaction surface for transparent controls).",
-        "Does not invent a nonexistent UiThemeScope accent parameter."
+        "Does not invent a nonexistent UiTheme accent parameter."
       ]
     },
     {
@@ -276,11 +276,11 @@
     {
       "id": 25,
       "prompt": "This project's remix.yaml has prefix: Ui and preset: fortal. Add a primary action button to a screen.",
-      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal, the generated scope class follows Fortal's <Prefix>Scope shape (UiScope) and the button is UiButton, not UiThemeScope or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiScope ancestor.",
+      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal and the prefix is Ui, the generated theme class is UiTheme and the button is UiButton (with Fortal's solid/soft/surface/outline/ghost/classic variants), not FortalTheme or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiTheme ancestor.",
       "files": [],
       "expectations": [
         "Reads prefix and preset independently from remix.yaml rather than assuming Ui always means Vanilla.",
-        "Uses UiScope and UiButton, not UiThemeScope or FortalButton.",
+        "Uses UiTheme and UiButton.solid, not FortalTheme or FortalButton.",
         "Does not assume the Fortal preset always uses the Fortal prefix."
       ]
     },

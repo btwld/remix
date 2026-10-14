@@ -43,12 +43,12 @@ class _DashboardAppState extends State<DashboardApp> {
           pageBuilder: (context, animation, secondaryAnimation) =>
               builder(context),
         ),
-        // UiScope goes *below* WidgetsApp and *above* the Navigator.
+        // UiTheme goes *below* WidgetsApp and *above* the Navigator.
         //
         // `builder` wraps the whole Navigator, so this placement reaches
         // pushed routes and dialogs. A nearer DefaultTextStyle retains its
         // normal priority through Flutter's inheritance.
-        builder: (context, child) => UiScope(
+        builder: (context, child) => UiTheme(
           key: const ValueKey('dashboard-fortal-scope'),
           accent: _settings.accentColor,
           gray: _settings.grayColor,
@@ -59,7 +59,7 @@ class _DashboardAppState extends State<DashboardApp> {
           // RemixToastScope sits above the Navigator, in its own Overlay, so
           // showRemixToast() works from every route, including dialogs and
           // the compact navigation sheet. It inherits the live Fortal tokens
-          // UiScope publishes above.
+          // UiTheme publishes above.
           //
           // WidgetsApp has no `scrollBehavior`, so the behavior MaterialApp
           // used to install is applied explicitly here.

@@ -29,7 +29,7 @@ application code.
 
 ## Quick Start
 
-Wrap your app with `FortalScope` to provide the design tokens, then use the
+Wrap your app with `FortalTheme` to provide the design tokens, then use the
 `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed
 constructor with `variant:` when the choice is dynamic:
 
@@ -40,7 +40,7 @@ import 'ui/ui.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FortalScope(
+    return FortalTheme(
       child: WidgetsApp(
         color: const Color(0xFFFFFFFF),
         builder: (_, _) => Center(
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-`FortalScope` is a `MixScope`. The outermost one also establishes the Radix
+`FortalTheme` is a `MixScope`. The outermost one also establishes the Radix
 theme root's `text3` at `gray-12` run as a courtesy `DefaultTextStyle` for bare
 Flutter `Text`. Fortal typography does not depend on that inherited run:
 unsized `FortalText`, `FortalCode`, `FortalKbd`, and `FortalLink` resolve their
@@ -77,7 +77,7 @@ final app = WidgetsApp(
     settings: settings,
     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
   ),
-  builder: (context, child) => FortalScope(child: child!),
+  builder: (context, child) => FortalTheme(child: child!),
   home: const Center(child: FortalText('Themed')),
 );
 ```
@@ -92,13 +92,13 @@ typography is the foreground of transparent, non-accent `FortalCode.ghost`.
 
 ## Light, dark, and system appearance
 
-`FortalScope` supplies light and dark preset defaults and follows the system at
+`FortalTheme` supplies light and dark preset defaults and follows the system at
 the root. Nested scopes inherit the configured pair and active selection.
 Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
 `.dark`. `mode: .system` follows live platform brightness changes.
 
 ```dart
-FortalScope(
+FortalTheme(
   theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
   darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
   mode: FortalThemeMode.system,
@@ -111,7 +111,7 @@ Supplying only `theme` makes it the fallback for both modes. Supplying only
 such as `accent` apply to both appearances. Appearance selection uses `mode`;
 the scope no longer accepts a `brightness` parameter.
 
-Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
+Installed Fortal source uses your prefix: `AcmeTheme`, `AcmeThemeData`, and
 `AcmeThemeMode` expose the same behavior. No Material application host is needed.
 
 ## Customizing Fortal styles

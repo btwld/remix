@@ -259,13 +259,13 @@ Future<void> _pump(
     home: Align(alignment: Alignment.topLeft, child: content),
   );
   await tester.pumpWidget(switch (preset) {
-    .defaultPreset => VanillaThemeScope(
+    .defaultPreset => VanillaTheme(
       mode: brightness == Brightness.light
           ? VanillaThemeMode.light
           : VanillaThemeMode.dark,
       child: app,
     ),
-    .fortal => FortalScope(
+    .fortal => FortalTheme(
       mode: brightness == Brightness.light
           ? FortalThemeMode.light
           : FortalThemeMode.dark,

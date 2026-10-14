@@ -1,6 +1,6 @@
 import 'package:remix/remix.dart';
 
-import 'theme_scope.dart' show FortalScope;
+import 'theme_scope.dart' show FortalTheme;
 
 /// Design tokens for the Fortal UI system (powered by Radix Colors).
 ///
@@ -12,7 +12,7 @@ import 'theme_scope.dart' show FortalScope;
 /// ButtonStyler().color(FortalTokens.accent9())
 /// ```
 ///
-/// Must be used within [FortalScope] to resolve actual values.
+/// Must be used within [FortalTheme] to resolve actual values.
 class FortalTokens {
   // ============================================================================
   // BACKGROUND AND SURFACE COLORS

@@ -53,16 +53,16 @@
   "source": [
     {
       "preset": "default",
-      "main_sha256": "483ac622b3f6ead7e69997044ff2872f1201ba1ae4ea06c4ef741b0269243547",
+      "main_sha256": "a4f28113cdaccc9096ad136542b72573e9cf24b35c94a36c938917f9df31130c",
       "test_sha256": "c480e6f5b025bad32d236dc22ae66403e45ab946953a0f2d70b78f7b533b4d92"
     },
     {
       "preset": "fortal",
-      "main_sha256": "a91813b55f594f6941a3970fb5305d3da211ba1708eaa1efddcacfcd36e696c6",
+      "main_sha256": "2729f655ffd1beb4c2f2f3b3ab8da97b27ffafbaf607ec76c4015799db0cfe97",
       "test_sha256": "37b7be5ce79290a951544184372a618b969f5ba5f3af27da4bacf0932f50701f"
     }
   ],
-  "archive_sha256": "08f242b5f82ccd248600d93c218d0b8c0d5071a5cea7cc1a4e1abf26b456c1c2",
+  "archive_sha256": "d251fd36f18da93d0962f992e21c3d2128e24399fbebb2906af2a7c1e9c0684a",
   "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
   "validation": {
     "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",

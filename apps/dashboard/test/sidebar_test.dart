@@ -327,9 +327,14 @@ Future<void> _pumpSidebar(
 
 Future<void> _pumpPage(WidgetTester tester, Widget page) {
   return tester.pumpWidget(
-    MaterialApp(
-      builder: (context, child) => UiScope(child: child!),
-      home: Scaffold(body: page),
+    WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, _, _) => builder(context),
+      ),
+      builder: (context, child) => UiTheme(child: child!),
+      home: page,
     ),
   );
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
@@ -7,23 +7,29 @@ import 'package:registry_source/fortal.dart';
 ///
 /// Dart `package:` imports only reach `lib/`, so test helpers cannot be shared
 /// across packages. This copy differs in exactly one way that matters: it wraps
-/// every pump in [FortalScope], because Fortal recipes resolve Fortal tokens.
+/// every pump in [FortalTheme], because Fortal recipes resolve Fortal tokens.
 extension WidgetTesterHelpers on WidgetTester {
-  /// Pumps a Fortal widget in the Material interoperability test harness.
+  /// Pumps a Fortal widget in a `WidgetsApp` test harness with a `Navigator`
+  /// and `Overlay`.
   ///
-  /// `MaterialApp` and `Scaffold` are conveniences here, not Remix host
-  /// requirements. Host-contract tests should provide only the capability under
-  /// test, such as `Overlay.wrap` or a caller-owned `Navigator`.
+  /// Host-contract tests that verify minimal host requirements should provide
+  /// only the capability under test, such as `Overlay.wrap` or a caller-owned
+  /// `Navigator`.
   Future<void> pumpRemixApp(
     Widget widget, {
     TextDirection textDirection = TextDirection.ltr,
   }) async {
     await pumpWidget(
-      FortalScope(
-        child: MaterialApp(
+      FortalTheme(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: Directionality(
             textDirection: textDirection,
-            child: Scaffold(body: Center(child: widget)),
+            child: Center(child: widget),
           ),
         ),
       ),
@@ -40,12 +46,12 @@ extension WidgetTesterHelpers on WidgetTester {
   }
 }
 
-/// Resolves a value against a `BuildContext` inside a default [FortalScope].
+/// Resolves a value against a `BuildContext` inside a default [FortalTheme].
 ///
 /// Use this for assertions on token or style resolution that need no scope
 /// configuration. Suites that vary the accent, brightness, radius, or widget
 /// states keep their own richer local resolver.
-Future<T> resolveInFortalScope<T>(
+Future<T> resolveInFortalTheme<T>(
   WidgetTester tester,
   T Function(BuildContext context) resolve,
 ) async {

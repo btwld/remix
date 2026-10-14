@@ -41,13 +41,13 @@ anchors them to tokens: an unsized soft Code resolves
 `0.95 × 0.95 × text3`, and an unsized Kbd resolves `0.75 × text3`. Pass an
 explicit `size:` to select another token size.
 
-The outermost `FortalScope` still establishes the Radix root run as a courtesy
+The outermost `FortalTheme` still establishes the Radix root run as a courtesy
 `DefaultTextStyle` for bare Flutter `Text`. Under `WidgetsApp`, put the scope in `builder:` so that fallback reaches routes and
 raw overlays; see [scope placement](/fortal#scope-placement). A nearer
 `DefaultTextStyle` can replace the run for bare text, but never changes Fortal
 typography metrics.
 
-A nested `FortalScope` re-scopes tokens without restating the courtesy
+A nested `FortalTheme` re-scopes tokens without restating the courtesy
 bare-`Text` run. Fortal typography re-resolves against the nested gray and
 scaling tokens, while ordinary Flutter text keeps its nearest inherited style.
 
@@ -75,7 +75,7 @@ class TypographyExample extends StatelessWidget {
         Row(
           spacing: 10,
           children: [
-            FortalCode.soft('FortalScope', size: FortalTextSize.size2),
+            FortalCode.soft('FortalTheme', size: FortalTextSize.size2),
             FortalKbd.classic(
               '⌘K',
               size: FortalTextSize.size2,
@@ -108,7 +108,7 @@ Every family accepts the same scale and flow controls.
 line, which is what a table cell or a row with a fixed-width neighbour needs.
 
 `FortalText` and `FortalHeading` use neutral `gray-12` unless `accent: true`
-takes the surrounding `FortalScope` accent at `accent-a11`; adding
+takes the surrounding `FortalTheme` accent at `accent-a11`; adding
 `highContrast: true` promotes it to `accent-12`. `highContrast` alone leaves
 the neutral color unchanged — the same gate Radix puts behind
 `[data-accent-color]`.
@@ -295,7 +295,7 @@ in the package's checked-in parity contract and verified in CI.
   breaker; `softWrap` and `truncate` map the `wrap`/`nowrap` pair.
 - **No responsive prop objects.** Rebuild with the value your Flutter layout
   picks instead of passing a breakpoint map.
-- **No per-instance colour prop.** Re-scope `FortalScope.accent` around the
+- **No per-instance colour prop.** Re-scope `FortalTheme.accent` around the
   subtree rather than colouring one run.
 - **`FortalCode` is a box, not an inline span.** Radix renders `code` inline
   inside a text run; a Flutter box is a sibling widget, so a Code inside a

@@ -26,8 +26,7 @@ void main() {
     await tester.pumpWidget(
       WidgetsApp(
         color: const Color(0xFFFFFFFF),
-        builder: (_, _) =>
-            AcmeThemeScope(mode: AcmeThemeMode.light, child: answer),
+        builder: (_, _) => AcmeTheme(mode: AcmeThemeMode.light, child: answer),
       ),
     );
     final copy = find.byWidgetPredicate(
@@ -141,8 +140,7 @@ Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
   await tester.pumpWidget(
     WidgetsApp(
       color: const Color(0xFFFFFFFF),
-      builder: (_, _) =>
-          AcmeThemeScope(mode: AcmeThemeMode.light, child: child),
+      builder: (_, _) => AcmeTheme(mode: AcmeThemeMode.light, child: child),
     ),
   );
   return result;

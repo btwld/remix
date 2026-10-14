@@ -163,7 +163,7 @@ void main() {
       late Color accent12;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: WidgetsApp(
             color: const Color(0xFFFFFFFF),
             builder: (context, child) {
@@ -193,7 +193,7 @@ void main() {
       late Color accent12;
 
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: WidgetsApp(
             color: const Color(0xFFFFFFFF),
             builder: (context, child) {

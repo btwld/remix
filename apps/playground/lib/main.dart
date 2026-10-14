@@ -34,7 +34,7 @@ class _App extends StatelessWidget {
             builder(context),
       ),
       builder: (context, child) =>
-          PlaygroundThemeScope(mode: PlaygroundThemeMode.light, child: child!),
+          PlaygroundTheme(mode: PlaygroundThemeMode.light, child: child!),
       home: builder != null
           ? Builder(builder: builder)
           : const PlaygroundHome(),

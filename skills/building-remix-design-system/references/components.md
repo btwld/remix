@@ -120,11 +120,11 @@ class AcmeThemeData {
 **`theme_scope.dart` — installation.** Match Vanilla's contract so consumers
 set up every Remix design system the same way:
 
-- `AcmeThemeScope({theme, darkTheme, mode, child})`. `mode` selects between
+- `AcmeTheme({theme, darkTheme, mode, child})`. `mode` selects between
   the pair; `system` reads `MediaQuery.maybePlatformBrightnessOf`, and a scope
   mounted above any `MediaQuery` supplies one with `MediaQuery.fromView`. An
   empty nested scope inherits the parent's pair and selection.
-- It installs `AcmeTheme` (an `InheritedTheme`) and
+- It installs a private `_AcmeInheritedTheme` (an `InheritedTheme`) and
   `MixScope(tokens: selected.tokens, child: child)` together.
 - `AcmeTheme.of(context)` throws a `FlutterError` naming the missing scope;
   `AcmeTheme.maybeOf(context)` returns null. Provide both: only `maybeOf` can
@@ -134,7 +134,7 @@ set up every Remix design system the same way:
   `Text` reads correctly in every mode. A nested scope re-scopes tokens and,
   when its foreground differs, recolors the inherited text run; it never
   repaints the background or replaces the rest of the run.
-- `AcmeTheme.wrap` rebuilds the `MixScope` as well as itself (see §3).
+- `_AcmeInheritedTheme.wrap` rebuilds the `MixScope` as well as itself (see §3).
 - `updateShouldNotify` compares every carried field; this is why theme data
   needs value equality.
 - Consumers place the scope inside `WidgetsApp.builder`, above the Navigator.
@@ -399,7 +399,7 @@ approximations: <every deviation from the source>
 ## 5. Tests
 
 In the authoring package, pumping a `WidgetsApp` whose `builder` installs
-`AcmeThemeScope`, the placement the README documents:
+`AcmeTheme`, the placement the README documents:
 
 - every variant × size builds in every theme mode;
 - measured default geometry (`tester.getSize(...)`), with and without an

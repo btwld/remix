@@ -18,7 +18,7 @@ import 'tokens.dart';
 /// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
 /// through Flutter's normal inheritance.
 ///
-/// Only the outermost [FortalScope] installs this. A nested scope re-scopes
+/// Only the outermost [FortalTheme] installs this. A nested scope re-scopes
 /// tokens for its subtree and nothing more: upstream, `.radix-themes` inside
 /// another `.radix-themes` still inherits `color` and the font properties from
 /// its parent chain, and a nested scope that reinstalled the root run here
@@ -44,7 +44,7 @@ Widget _fortalRootTextStyle({
 
 /// Widget that provides Fortal design tokens to its subtree via [MixScope].
 ///
-/// Place [FortalScope] below the application host so its text defaults apply.
+/// Place [FortalTheme] below the application host so its text defaults apply.
 /// For a routed app, wrap the navigator in the host's builder. This also keeps
 /// [FortalTokens] available to routes and dialogs.
 ///
@@ -55,12 +55,12 @@ Widget _fortalRootTextStyle({
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (_, child) => FortalScope(child: child!),
+///   builder: (_, child) => FortalTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
-class FortalScope extends StatelessWidget {
-  const FortalScope({
+class FortalTheme extends StatelessWidget {
+  const FortalTheme({
     super.key,
     this.theme,
     this.darkTheme,
@@ -92,6 +92,23 @@ class FortalScope extends StatelessWidget {
   final List<Type>? orderOfModifiers;
   final Widget child;
 
+  /// Returns the closest resolved Fortal theme.
+  static FortalThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+    throw FlutterError.fromParts([
+      ErrorSummary('No FortalTheme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the Fortal theme, but no FortalTheme was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
+  /// Returns the closest resolved Fortal theme, if one is available.
+  static FortalThemeData? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_FortalInheritedTheme>()?.data;
+
   @override
   Widget build(BuildContext context) {
     final view = View.maybeOf(context);
@@ -105,7 +122,8 @@ class FortalScope extends StatelessWidget {
   }
 
   Widget _build(BuildContext context) {
-    final inherited = context.dependOnInheritedWidgetOfExactType<FortalTheme>();
+    final inherited = context
+        .dependOnInheritedWidgetOfExactType<_FortalInheritedTheme>();
     final parent = inherited?.data;
     final baseParent = inherited?.baseTheme ?? parent;
     final darkParent = inherited?.darkTheme ?? parent;
@@ -163,7 +181,7 @@ class FortalScope extends StatelessWidget {
       );
     }
 
-    return FortalTheme(
+    return _FortalInheritedTheme(
       data: data,
       baseTheme: base,
       darkTheme: dark,
@@ -194,10 +212,9 @@ FortalThemeData _resolveFortalTheme(
   );
 }
 
-/// Makes the active [FortalThemeData] available to descendants.
-class FortalTheme extends InheritedTheme {
-  const FortalTheme({
-    super.key,
+/// The inherited half of [FortalTheme].
+class _FortalInheritedTheme extends InheritedTheme {
+  const _FortalInheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
@@ -213,23 +230,6 @@ class FortalTheme extends InheritedTheme {
   bool get usesDarkTheme => useDarkTheme ?? data.isDark;
   final List<Type>? orderOfModifiers;
 
-  /// Returns the closest resolved Fortal theme.
-  static FortalThemeData of(BuildContext context) {
-    final data = maybeOf(context);
-    if (data != null) return data;
-    throw FlutterError.fromParts([
-      ErrorSummary('No FortalTheme found.'),
-      ErrorDescription(
-        '${context.widget.runtimeType} tried to read the Fortal theme, but no FortalScope was found above it.',
-      ),
-      context.describeElement('The context used was'),
-    ]);
-  }
-
-  /// Returns the closest resolved Fortal theme, if one is available.
-  static FortalThemeData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<FortalTheme>()?.data;
-
   /// Rebuilds only the theme and its Mix tokens.
   ///
   /// The captured subtree's text run is *not* synthesized here.
@@ -238,7 +238,7 @@ class FortalTheme extends InheritedTheme {
   /// across to the new route; installing the Radix root run alongside it would
   /// overwrite that capture with a value the source context never had.
   @override
-  Widget wrap(BuildContext context, Widget child) => FortalTheme(
+  Widget wrap(BuildContext context, Widget child) => _FortalInheritedTheme(
     data: data,
     baseTheme: baseTheme,
     darkTheme: darkTheme,
@@ -252,7 +252,7 @@ class FortalTheme extends InheritedTheme {
   );
 
   @override
-  bool updateShouldNotify(FortalTheme oldWidget) =>
+  bool updateShouldNotify(_FortalInheritedTheme oldWidget) =>
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||

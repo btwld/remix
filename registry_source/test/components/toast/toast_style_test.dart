@@ -28,7 +28,7 @@ void main() {
               'resolves $variant $size $intent in ${brightness.name}',
               (tester) async {
                 await tester.pumpRemixApp(
-                  FortalScope(
+                  FortalTheme(
                     mode: brightness == Brightness.dark ? .dark : .light,
                     child: FortalToast(
                       variant: variant,

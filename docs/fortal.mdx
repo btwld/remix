@@ -44,7 +44,7 @@ barrel from application code.
 
 ## Quick Start
 
-Wrap your app with `FortalScope` to provide the design tokens, then use the
+Wrap your app with `FortalTheme` to provide the design tokens, then use the
 `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed
 constructor with `variant:` when the choice is dynamic:
 
@@ -55,7 +55,7 @@ import 'ui/ui.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FortalScope(
+    return FortalTheme(
       child: WidgetsApp(
         color: Colors.white,
         builder: (_, _) => Center(
@@ -70,13 +70,13 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-`FortalScope` is a `MixScope`, so it satisfies the theme-scope row of Remix's
+`FortalTheme` is a `MixScope`, so it satisfies the theme-scope row of Remix's
 [host capabilities](/#host-capabilities) table. Place it above your app widget so
 that overlay and route content inherits the tokens.
 
 ## Scope placement
 
-The **outermost** `FortalScope` provides the design tokens and establishes a
+The **outermost** `FortalTheme` provides the design tokens and establishes a
 courtesy `DefaultTextStyle` for bare Flutter `Text`: the Radix theme root run —
 `text3` (16px, 1.5 line height, 0 letter spacing) at `gray-12`, regular weight,
 with no pinned font family. This is analogous to Material's `bodyMedium`; it is
@@ -90,7 +90,7 @@ scaling changes apply to the subtree, while ordinary Flutter text keeps its
 nearest inherited style.
 
 Use `WidgetsApp` for the application host. For an application with routes, put
-`FortalScope` in `builder`, above the Navigator, so pushed routes and dialogs
+`FortalTheme` in `builder`, above the Navigator, so pushed routes and dialogs
 inherit the same tokens and text style:
 
 ```dart
@@ -108,7 +108,7 @@ class MyApp extends StatelessWidget {
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => builder(context),
         ),
-      builder: (context, child) => FortalScope(child: child!),
+      builder: (context, child) => FortalTheme(child: child!),
       home: const Center(child: FortalText('Themed')),
     );
   }
@@ -116,7 +116,7 @@ class MyApp extends StatelessWidget {
 ```
 
 For app-wide toasts, wrap the Navigator in `Overlay.wrap` and
-`RemixToastScope` inside this builder, below `FortalScope`. See the
+`RemixToastScope` inside this builder, below `FortalTheme`. See the
 [toast scope example](/components/toast).
 
 The root run is only a fallback for bare Flutter `Text`, and it follows
@@ -135,7 +135,7 @@ blend into surrounding text without inheriting that run's metrics.
 
 ## Light, dark, and system appearance
 
-`FortalScope` supplies light and dark preset defaults and follows the system at
+`FortalTheme` supplies light and dark preset defaults and follows the system at
 the root. Nested scopes inherit the configured pair and active selection.
 Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
 `.dark`. `mode: .system` follows live platform brightness changes.
@@ -144,7 +144,7 @@ Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
 import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
-Widget withAppearance(Widget child) => FortalScope(
+Widget withAppearance(Widget child) => FortalTheme(
   theme: const FortalThemeConfig(
     accent: FortalAccentColor.indigo,
     brightness: Brightness.light,
@@ -168,7 +168,7 @@ A default WidgetsApp also preserves the text defaults of a scope above it. An
 explicit WidgetsApp `textStyle` overrides those outer defaults; a scope inside
 the builder establishes its defaults below the app’s text style.
 
-Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
+Installed Fortal source uses your prefix: `AcmeTheme`, `AcmeThemeData`, and
 `AcmeThemeMode` expose the same behavior. No Material application host is needed.
 
 ## Customizing Fortal Styles

@@ -147,7 +147,7 @@ the accent instead of hard-coding palette values:
 import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
-Widget deleteButton(VoidCallback delete) => FortalScope(
+Widget deleteButton(VoidCallback delete) => FortalTheme(
   accent: .red,
   child: FortalButton.solid(label: 'Delete', onPressed: delete),
 );

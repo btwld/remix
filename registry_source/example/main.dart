@@ -11,7 +11,7 @@ class FortalExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalScope(
+    return FortalTheme(
       accent: .blue,
       gray: .slate,
       mode: .light,
@@ -72,7 +72,7 @@ class _FortalExampleScreenState extends State<FortalExampleScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         const FortalCode.soft(
-                          'FortalScope',
+                          'FortalTheme',
                           size: FortalTextSize.size2,
                         ),
                         const FortalKbd.classic(

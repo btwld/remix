@@ -9,8 +9,13 @@ void main() {
       'horizontal single-value layout preserves intrinsic bounds: $value',
       (tester) async {
         await tester.pumpWidget(
-          MaterialApp(
-            builder: (_, child) => FortalScope(child: child!),
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
+            builder: (_, child) => FortalTheme(child: child!),
             home: Center(
               child: SizedBox(
                 width: 500,
@@ -82,7 +87,7 @@ Future<({DataListSpec spec, Color grayA11, Color gray12})> _resolve(
 }) async {
   late ({DataListSpec spec, Color grayA11, Color gray12}) result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: Builder(
         builder: (context) {

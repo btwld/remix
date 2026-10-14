@@ -464,8 +464,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -573,8 +573,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -719,8 +719,8 @@
         "arbitrary child content"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -825,8 +825,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -937,8 +937,8 @@
         "interactive card behavior"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1072,8 +1072,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1210,8 +1210,8 @@
         "layout auto versus fixed: RenderTable always negotiates one shared column map"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "not exposed by Radix Table",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1319,8 +1319,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1428,8 +1428,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1570,8 +1570,8 @@
         "compositional items"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1714,8 +1714,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1812,8 +1812,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -1930,8 +1930,8 @@
         "animation controls"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2063,8 +2063,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2212,8 +2212,8 @@
         "independent trigger/content variants"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2362,8 +2362,8 @@
         "inversion"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2451,8 +2451,8 @@
         "child overlay"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2582,8 +2582,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2752,8 +2752,8 @@
         "tab-bar justification"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2885,8 +2885,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -2956,7 +2956,7 @@
       ],
       "visualMapping": {
         "color": "fixed gray alpha tokens",
-        "radius": "FortalScope.radius",
+        "radius": "FortalTheme.radius",
         "highContrast": "not exposed by Radix Skeleton",
         "variant": "not exposed by Radix Skeleton",
         "size": "caller constraints or child geometry"
@@ -3086,7 +3086,7 @@
       ],
       "visualMapping": {
         "color": "fixed surface and gray roles",
-        "radius": "FortalScope.radius",
+        "radius": "FortalTheme.radius",
         "highContrast": "not exposed by Radix SegmentedControl",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -3223,8 +3223,8 @@
         "responsive size, radius, and resize objects"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "not exposed by Radix TextArea",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -3459,8 +3459,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -3571,8 +3571,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "direct fortalXStyle recipe",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -3665,8 +3665,8 @@
         "Radix Collapsible.Content forceMount has no NakedDisclosure equivalent."
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
       }
@@ -3784,8 +3784,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -3923,8 +3923,8 @@
       ],
       "deferredCapabilities": [],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius",
         "highContrast": "generated Fortal constructor",
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
@@ -4102,10 +4102,10 @@
         "responsive size, weight, align, trim, and wrap objects",
         "pretty and balance text wrapping",
         "leading trim",
-        "per-instance color prop: callers re-scope FortalScope.accent"
+        "per-instance color prop: callers re-scope FortalTheme.accent"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent through accent: true",
+        "color": "FortalTheme.accent through accent: true",
         "radius": "not exposed by Radix Text",
         "highContrast": "generated Fortal constructor",
         "variant": "not exposed by Radix Text",
@@ -4290,10 +4290,10 @@
         "responsive size, weight, align, trim, and wrap objects",
         "pretty and balance text wrapping",
         "leading trim",
-        "per-instance color prop: callers re-scope FortalScope.accent"
+        "per-instance color prop: callers re-scope FortalTheme.accent"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent through accent: true",
+        "color": "FortalTheme.accent through accent: true",
         "radius": "not exposed by Radix Heading",
         "highContrast": "FortalHeading constructor",
         "variant": "not exposed by Radix Heading",
@@ -4474,13 +4474,13 @@
         "asChild element polymorphism",
         "responsive size and wrap objects",
         "pretty and balance text wrapping",
-        "per-instance color prop: callers re-scope FortalScope.accent",
+        "per-instance color prop: callers re-scope FortalTheme.accent",
         "inline flow inside a surrounding text run",
         "actionable Code hover, filter, and ::selection treatments"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius through the resolved radius factor",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius through the resolved radius factor",
         "highContrast": "FortalCode constructor",
         "variant": "FortalCode constructor",
         "size": "FortalCode constructor"
@@ -4612,7 +4612,7 @@
       ],
       "visualMapping": {
         "color": "fixed gray roles",
-        "radius": "FortalScope.radius through the resolved radius factor",
+        "radius": "FortalTheme.radius through the resolved radius factor",
         "highContrast": "not exposed by Radix Kbd",
         "variant": "FortalKbd constructor",
         "size": "FortalKbd constructor"
@@ -4821,15 +4821,15 @@
         "responsive size, weight, trim, and wrap objects",
         "pretty and balance text wrapping",
         "leading trim",
-        "per-instance color prop: callers re-scope FortalScope.accent",
+        "per-instance color prop: callers re-scope FortalTheme.accent",
         "text-underline-offset",
         "the coarse-pointer active tap highlight",
         "the transparent underline when the only child is a non-ghost Code",
         "URL launching: onPressed owns navigation"
       ],
       "visualMapping": {
-        "color": "FortalScope.accent",
-        "radius": "FortalScope.radius through the resolved radius factor",
+        "color": "FortalTheme.accent",
+        "radius": "FortalTheme.radius through the resolved radius factor",
         "highContrast": "FortalLink constructor",
         "variant": "not exposed by Radix Link",
         "size": "FortalLink constructor"
@@ -6477,8 +6477,8 @@
     }
   },
   "visualMapping": {
-    "color": "FortalScope.accent",
-    "radius": "FortalScope.radius",
+    "color": "FortalTheme.accent",
+    "radius": "FortalTheme.radius",
     "highContrast": "generated Fortal constructor where supported; direct fortalXStyle recipe otherwise",
     "variant": "generated Fortal constructor",
     "size": "generated Fortal constructor"

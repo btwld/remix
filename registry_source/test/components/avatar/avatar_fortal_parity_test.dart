@@ -76,9 +76,14 @@ void main() {
     ) async {
       for (final (size, dimension, _) in metrics) {
         await tester.pumpWidget(
-          FortalScope(
+          FortalTheme(
             mode: .light,
-            child: MaterialApp(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
               home: FortalAvatar(size: size, icon: Icons.person),
             ),
           ),
@@ -92,9 +97,14 @@ void main() {
 
         double? builderSize;
         await tester.pumpWidget(
-          FortalScope(
+          FortalTheme(
             mode: .light,
-            child: MaterialApp(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
               home: FortalAvatar(
                 size: size,
                 icon: Icons.person,
@@ -194,7 +204,7 @@ Future<AvatarSpec> _resolve(
 }) async {
   late AvatarSpec resolved;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       scaling: scaling,
       radius: radius,
@@ -231,7 +241,7 @@ _tokens(WidgetTester tester) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

@@ -40,7 +40,7 @@ class AcmeGalleryApp extends StatelessWidget {
 /// Theme-wide customization.
 ///
 /// One `copyWith` restyles every recipe in its section: the recipes read
-/// `AcmeTokens`, and `AcmeThemeScope` decides what those tokens resolve to. A
+/// `AcmeTokens`, and `AcmeTheme` decides what those tokens resolve to. A
 /// moderate radius keeps large surfaces readable; the one-instance button
 /// below demonstrates a full pill without turning cards and dialogs into one.
 final AcmeThemeData brandTheme = const AcmeThemeData.light().copyWith(
@@ -101,7 +101,7 @@ class AcmeGallery extends StatelessWidget {
   }
 }
 
-/// One `AcmeThemeScope` and everything the Button recipe can do inside it.
+/// One `AcmeTheme` and everything the Button recipe can do inside it.
 class AcmeThemeSection extends StatefulWidget {
   /// Creates a section rendering [data].
   const AcmeThemeSection({
@@ -157,7 +157,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
         ? (viewportWidth - _galleryMaxWidth) / 2
         : _galleryInset;
 
-    return AcmeThemeScope(
+    return AcmeTheme(
       theme: data,
       child: ColoredBox(
         color: data.background,

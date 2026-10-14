@@ -21,7 +21,7 @@ void main() {
     late FortalThemeData data;
 
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         child: Builder(
           builder: (context) {
             data = FortalTheme.of(context);
@@ -54,7 +54,7 @@ void main() {
         late TextStyle root;
         late Color gray12;
         await tester.pumpWidget(
-          FortalScope(
+          FortalTheme(
             mode: brightness == Brightness.dark ? .dark : .light,
             scaling: scaling,
             child: Builder(
@@ -87,7 +87,7 @@ void main() {
     await tester.pumpWidget(
       DefaultTextStyle(
         style: const TextStyle(fontSize: 40),
-        child: const FortalScope(
+        child: const FortalTheme(
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: Text('courtesy'),
@@ -113,7 +113,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const FortalScope(
+      const FortalTheme(
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: DefaultTextStyle(
@@ -150,7 +150,7 @@ void main() {
     // Accent and scaling are the two reasons a real subtree re-scopes; neither
     // is a reason to restate the run the surrounding page already set.
     await tester.pumpWidget(
-      const FortalScope(
+      const FortalTheme(
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: DefaultTextStyle(
@@ -160,7 +160,7 @@ void main() {
               letterSpacing: 2,
               color: Color(0xFF00FF00),
             ),
-            child: FortalScope(
+            child: FortalTheme(
               accent: .red,
               scaling: .percent110,
               child: Column(
@@ -197,7 +197,7 @@ void main() {
     late FortalThemeData inner;
 
     await tester.pumpWidget(
-      FortalScope(
+      FortalTheme(
         accent: .red,
         gray: .mauve,
         mode: .dark,
@@ -205,7 +205,7 @@ void main() {
         child: Builder(
           builder: (context) {
             outer = FortalTheme.of(context);
-            return FortalScope(
+            return FortalTheme(
               scaling: .percent110,
               child: Builder(
                 builder: (context) {
@@ -308,20 +308,20 @@ Future<({Color accent, Color gray12, TextStyle text})> _captureThemes(
   );
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       accent: .red,
       child: ambient == null
           ? probe
           : DefaultTextStyle(
               style: ambient,
-              child: FortalScope(scaling: .percent110, child: probe),
+              child: FortalTheme(scaling: .percent110, child: probe),
             ),
     ),
   );
 
   final captured = InheritedTheme.capture(
     from: sourceContext,
-    to: tester.element(find.byType(FortalScope).first),
+    to: tester.element(find.byType(FortalTheme).first),
   );
   late ({Color accent, Color gray12, TextStyle text}) result;
   await tester.pumpWidget(
@@ -373,7 +373,7 @@ _captureRecipeTokens(
   result;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: Builder(

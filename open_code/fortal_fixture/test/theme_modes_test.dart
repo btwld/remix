@@ -24,7 +24,7 @@ void main() {
   ) async {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-    await tester.pumpWidget(AcmeScope(child: host(probe())));
+    await tester.pumpWidget(AcmeTheme(child: host(probe())));
     expect(active.brightness, Brightness.light);
     expect(
       background,
@@ -44,7 +44,7 @@ void main() {
   ) async {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-    await tester.pumpWidget(host(AcmeScope(mode: .light, child: probe())));
+    await tester.pumpWidget(host(AcmeTheme(mode: .light, child: probe())));
     expect(active.brightness, Brightness.light);
     expect(
       background,
@@ -64,7 +64,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       host(
-        AcmeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.light(),
           mode: .dark,
           child: probe(),
@@ -83,7 +83,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       host(
-        AcmeScope(
+        AcmeTheme(
           darkTheme: const AcmeThemeData.dark(),
           mode: .light,
           child: probe(),
@@ -97,7 +97,7 @@ void main() {
     );
     await tester.pumpWidget(
       host(
-        AcmeScope(
+        AcmeTheme(
           darkTheme: const AcmeThemeData.dark(),
           mode: .dark,
           child: probe(),
@@ -116,11 +116,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         host(
-          AcmeScope(
+          AcmeTheme(
             mode: .dark,
             child: MediaQuery(
               data: const MediaQueryData(platformBrightness: Brightness.light),
-              child: AcmeScope(child: probe()),
+              child: AcmeTheme(child: probe()),
             ),
           ),
         ),
@@ -139,11 +139,11 @@ void main() {
     // Deliberately reversed brightness values identify the supplied pair.
     await tester.pumpWidget(
       host(
-        AcmeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.dark(),
           darkTheme: const AcmeThemeData.light(),
           mode: .light,
-          child: AcmeScope(mode: .dark, child: probe()),
+          child: AcmeTheme(mode: .dark, child: probe()),
         ),
       ),
     );
@@ -160,7 +160,7 @@ void main() {
     late Widget captured;
     await tester.pumpWidget(
       host(
-        AcmeScope(
+        AcmeTheme(
           theme: const AcmeThemeData.dark(),
           darkTheme: const AcmeThemeData.light(),
           mode: .light,
@@ -168,7 +168,7 @@ void main() {
             builder: (context) {
               captured = InheritedTheme.captureAll(
                 context,
-                AcmeScope(mode: .dark, child: probe()),
+                AcmeTheme(mode: .dark, child: probe()),
               );
               return const SizedBox.shrink();
             },
@@ -198,7 +198,7 @@ void main() {
               settings: settings,
               pageBuilder: (context, _, _) => builder(context),
             ),
-            builder: (context, child) => AcmeScope(mode: mode, child: child!),
+            builder: (context, child) => AcmeTheme(mode: mode, child: child!),
             home: Builder(
               builder: (context) {
                 pageContext = context;
@@ -246,7 +246,7 @@ void main() {
     ]) {
       await tester.pumpWidget(
         host(
-          AcmeScope(theme: light, darkTheme: dark, mode: mode, child: probe()),
+          AcmeTheme(theme: light, darkTheme: dark, mode: mode, child: probe()),
         ),
       );
       expect(
@@ -272,7 +272,7 @@ void main() {
           color: const Color(0xFFFFFFFF),
           textStyle: textStyle,
           builder: (context, _) => scopeInBuilder
-              ? const AcmeScope(mode: .light, child: Text('sample'))
+              ? const AcmeTheme(mode: .light, child: Text('sample'))
               : const Text('sample'),
         );
     TextStyle rendered() =>
@@ -280,11 +280,11 @@ void main() {
     final foreground = resolveAcmeTokens(
       const AcmeThemeData.light(),
     ).gray.scale.step(12);
-    await tester.pumpWidget(AcmeScope(mode: .light, child: app()));
+    await tester.pumpWidget(AcmeTheme(mode: .light, child: app()));
     expect(rendered().color, foreground);
     expect(rendered().fontSize, 16);
     await tester.pumpWidget(
-      AcmeScope(
+      AcmeTheme(
         mode: .light,
         child: app(textStyle: override),
       ),

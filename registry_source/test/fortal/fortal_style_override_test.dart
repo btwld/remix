@@ -94,8 +94,13 @@ Future<T> _resolve<T>(
 }) async {
   late T value;
   await tester.pumpWidget(
-    FortalScope(
-      child: MaterialApp(
+    FortalTheme(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
         home: WidgetStateProvider(
           states: states,
           child: Builder(

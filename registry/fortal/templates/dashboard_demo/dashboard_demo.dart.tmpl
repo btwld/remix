@@ -162,7 +162,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       },
     );
     if (!widget.builtInChrome) return demo;
-    return {{typePrefix}}Scope(
+    return {{typePrefix}}Theme(
       mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
       child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
     );

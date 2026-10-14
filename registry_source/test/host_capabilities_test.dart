@@ -5,9 +5,9 @@ import 'package:registry_source/fortal.dart';
 
 /// The Remix-side host contract (no ambient `Overlay`/`Navigator` required) is
 /// covered by `packages/remix/test/host_capabilities_test.dart`. This suite only
-/// checks that `FortalScope` is a working `MixScope` in the same positions.
+/// checks that `FortalTheme` is a working `MixScope` in the same positions.
 void main() {
-  group('FortalScope host capabilities', () {
+  group('FortalTheme host capabilities', () {
     testWidgets('ordinary Fortal widgets need no Overlay or Navigator', (
       tester,
     ) async {
@@ -44,7 +44,7 @@ void main() {
 }
 
 Widget _fortalHost(Widget child) {
-  return FortalScope(
+  return FortalTheme(
     mode: .light,
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
@@ -54,7 +54,7 @@ Widget _fortalHost(Widget child) {
 }
 
 Widget _fortalOverlayHost(Widget child) {
-  return FortalScope(
+  return FortalTheme(
     mode: .light,
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),

@@ -129,6 +129,12 @@ final _retiredApis = <(RegExp, String)>[
   ),
   (
     RegExp(
+      r'\b(?:Vanilla|Ui|Acme|Playground)ThemeScope\b|\b(?:Fortal|Ui|Acme)Scope\b',
+    ),
+    'retired theme scope class; use <Prefix>Theme',
+  ),
+  (
+    RegExp(
       r'\b(?:Vanilla|Ui|Acme|Playground)(?:Space|Size|Stroke|Opacity|Motion)\b',
     ),
     'retired scale helper class; use <Prefix>Tokens',
@@ -235,8 +241,10 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
     'stale component backgroundColor alias claim',
   ),
   (
-    RegExp(r'ThemeScope\s*\(\s*data\s*:'),
-    'retired theme scope data argument; use theme',
+    RegExp(
+      r'(?:Vanilla|Ui|Acme|Playground|Fortal)Theme(?:Scope)?\s*\(\s*data\s*:',
+    ),
+    'retired theme data argument; use theme',
   ),
 ];
 
@@ -798,12 +806,12 @@ void _checkFortalScopeTopology(Directory workspaceRoot, List<String> failures) {
     return;
   }
   final topology = RegExp(
-    r'return\s+FortalScope\s*\(\s*child:\s*WidgetsApp\s*\(',
+    r'return\s+FortalTheme\s*\(\s*child:\s*WidgetsApp\s*\(',
     dotAll: true,
   );
   if (!topology.hasMatch(page.readAsStringSync())) {
     failures.add(
-      '$relativePath must place the root FortalScope above WidgetsApp.',
+      '$relativePath must place the root FortalTheme above WidgetsApp.',
     );
   }
 }

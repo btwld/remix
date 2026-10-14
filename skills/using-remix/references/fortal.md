@@ -37,7 +37,7 @@ Widget styled(VoidCallback save) => RemixButton(
 );
 ```
 
-Fortal preset styles resolve `FortalTokens`, so a `FortalScope` ancestor is
+Fortal preset styles resolve `FortalTokens`, so a `FortalTheme` ancestor is
 required. Every variant has a matching named constructor; reserve the
 unnamed constructor's `variant:` parameter for runtime-selected values.
 Generic presets infer their type from required values and item lists, so
@@ -87,7 +87,7 @@ Rules that matter when writing code:
 
 ## Scope and theme config
 
-`FortalScope` takes `theme`, `darkTheme`, `mode`, `accent`, `gray`,
+`FortalTheme` takes `theme`, `darkTheme`, `mode`, `accent`, `gray`,
 `panelBackground`, `radius`, `scaling`, `hasBackground`, `orderOfModifiers`,
 and `child` — see [theme selection](../SKILL.md#place-the-theme-scope) for
 the shared `theme`/`darkTheme`/`mode` rules. `FortalThemeConfig` is the
@@ -100,7 +100,7 @@ import 'ui/ui.dart';
 const brand = FortalThemeConfig(accent: .green, gray: .sage);
 
 Widget branded(FortalThemeMode mode, Widget child) =>
-    FortalScope(theme: brand, darkTheme: brand, mode: mode, child: child);
+    FortalTheme(theme: brand, darkTheme: brand, mode: mode, child: child);
 ```
 
 Leave `brightness` unset on `brand` itself: the scope fills it per slot,

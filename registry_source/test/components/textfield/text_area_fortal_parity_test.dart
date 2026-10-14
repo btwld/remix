@@ -235,7 +235,7 @@ _resolve(
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: WidgetStateProvider(
@@ -272,7 +272,7 @@ Future<({TextFieldSpec spec, Color accent8, Color accent12})>
 _resolveTextFieldSoft(WidgetTester tester) async {
   late ({TextFieldSpec spec, Color accent8, Color accent12}) result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       child: WidgetStateProvider(
         states: const {WidgetState.focused},
         child: Builder(

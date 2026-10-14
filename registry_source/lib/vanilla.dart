@@ -1,7 +1,7 @@
 /// Vanilla: the compact default preset theme and widget catalog for Remix.
 ///
 /// Vanilla is built on [package:remix](https://pub.dev/packages/remix). It adds
-/// a token scope ([VanillaThemeScope]), the `vanilla*Style()` recipes, and a
+/// a token scope ([VanillaTheme]), the `vanilla*Style()` recipes, and a
 /// matching catalog of ready-made `Vanilla*` widgets. It does not re-export
 /// `remix`; add `package:remix/remix.dart` alongside this import when you need
 /// the base widgets or stylers.

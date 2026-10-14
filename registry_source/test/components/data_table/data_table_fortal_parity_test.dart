@@ -235,7 +235,7 @@ void main() {
       // the table hands them unresolved styles through Mix inheritance and
       // each control resolves against its own states.
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: WidgetsApp(
             color: Colors.black,
             builder: (context, child) => Align(
@@ -298,7 +298,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: WidgetsApp(
             color: Colors.black,
             builder: (context, child) => Align(
@@ -380,7 +380,7 @@ void main() {
       late Color? inherited;
       late Color gray12;
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           child: WidgetsApp(
             color: Colors.black,
             builder: (context, child) {
@@ -425,7 +425,7 @@ Future<void> _pumpSelectableTable(
   FortalScaling scaling = .percent100,
 }) async {
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       scaling: scaling,
       child: WidgetsApp(
         color: Colors.black,
@@ -461,7 +461,7 @@ Future<DataTableSpec> _resolve(
 }) async {
   late DataTableSpec result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: WidgetsApp(
@@ -510,7 +510,7 @@ _tokens(WidgetTester tester) async {
   })
   result;
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

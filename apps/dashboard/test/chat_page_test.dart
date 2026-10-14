@@ -327,7 +327,7 @@ void main() {
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    final scope = tester.widget<UiScope>(find.byType(UiScope));
+    final scope = tester.widget<UiTheme>(find.byType(UiTheme));
     expect(scope.mode, UiThemeMode.dark);
     expect(scope.accent, UiAccentColor.jade);
     expect(scope.gray, UiGrayColor.sage);

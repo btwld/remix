@@ -159,7 +159,16 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const UiScope(child: MaterialApp(home: SettingsPage())),
+        child: UiTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
+            home: const SettingsPage(),
+          ),
+        ),
       ),
     );
     final wideName = field('Name');
@@ -172,7 +181,16 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const UiScope(child: MaterialApp(home: SettingsPage())),
+        child: UiTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
+            home: const SettingsPage(),
+          ),
+        ),
       ),
     );
     final stackedName = field('Name');
@@ -192,8 +210,13 @@ void main() {
 
       Future<List<Rect>> pumpAt(double width) async {
         await tester.pumpWidget(
-          UiScope(
-            child: MaterialApp(
+          UiTheme(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
               home: Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(width: width, child: const AnalyticsCharts()),
@@ -233,8 +256,15 @@ Future<List<Rect>> _pumpOverview(
   addTearDown(tester.view.resetDevicePixelRatio);
 
   await tester.pumpWidget(
-    UiScope(
-      child: MaterialApp(home: OverviewPage(onViewOrders: () {})),
+    UiTheme(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
+        home: OverviewPage(onViewOrders: () {}),
+      ),
     ),
   );
   return [

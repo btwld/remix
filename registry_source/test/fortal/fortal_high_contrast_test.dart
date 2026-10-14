@@ -518,11 +518,16 @@ Future<T> _resolveFortalStyle<T>(
   late T style;
 
   await tester.pumpWidget(
-    FortalScope(
+    FortalTheme(
       accent: accent,
       mode: brightness == Brightness.dark ? .dark : .light,
       radius: radius,
-      child: MaterialApp(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
         home: WidgetStateProvider(
           states: states,
           child: Builder(

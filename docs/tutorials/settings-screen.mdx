@@ -131,7 +131,7 @@ class AcmeApp extends StatelessWidget {
       builder: (_, _) => Overlay(
         initialEntries: [
           OverlayEntry(
-            builder: (_) => const AcmeThemeScope(
+            builder: (_) => const AcmeTheme(
               theme: AcmeThemeData.light(),
               child: HomePage(),
             ),
@@ -296,8 +296,8 @@ available as `fortal_demo/lib/main.dart` in the download.
 </Accordion>
 </Accordions>
 
-The Fortal example uses `AcmeScope` and `AcmeButton.solid`, rather than
-`AcmeThemeScope` and `AcmeButton.primary`. Keep its complete host configuration.
+The Fortal example uses `AcmeTheme` with a violet accent and `AcmeButton.solid`,
+rather than `AcmeButton.primary`. Keep its complete host configuration.
 Do not apply the Vanilla preset's Button metrics edit to Fortal.
 
 ![The Fortal settings screen in dark mode](/assets/remix-cli-tutorial/fortal-dark.jpg)

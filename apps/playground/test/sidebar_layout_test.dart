@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playground/ui/ui.dart';
 
@@ -10,12 +10,21 @@ import 'package:playground/ui/ui.dart';
 /// imports the installed mirror, so before this it was never built.
 /// The compact sheet's own barrier, matched by the label the layout gives it.
 ///
-/// `ModalBarrier` alone will not do: the host route MaterialApp pushes for
+/// `ModalBarrier` alone will not do: the host route WidgetsApp pushes for
 /// `home` always has one, so a bare type finder reports a sheet that is not
 /// there.
 final _sheetBarrier = find.byWidgetPredicate(
   (widget) =>
       widget is ModalBarrier && widget.semanticsLabel == 'Close navigation',
+);
+
+Widget _host(Widget child) => WidgetsApp(
+  color: const Color(0xFFFFFFFF),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, _, _) => builder(context),
+  ),
+  home: PlaygroundTheme(mode: PlaygroundThemeMode.light, child: child),
 );
 
 Future<void> _pump(
@@ -28,13 +37,9 @@ Future<void> _pump(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
 
-  // MaterialApp, not WidgetsApp: the compact sheet is a pushed route, so this
-  // needs a Navigator and an Overlay above the layout.
-  await tester.pumpWidget(
-    MaterialApp(
-      home: PlaygroundThemeScope(mode: PlaygroundThemeMode.light, child: child),
-    ),
-  );
+  // WidgetsApp with a pageRouteBuilder and home provides the Navigator and
+  // Overlay the compact sheet route pushes onto.
+  await tester.pumpWidget(_host(child));
   await tester.pumpAndSettle();
 }
 
@@ -83,26 +88,12 @@ void main() {
     await _pump(tester, build(open: false), size: const Size(500, 800));
     expect(find.text('nav'), findsNothing);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: PlaygroundThemeScope(
-          mode: PlaygroundThemeMode.light,
-          child: build(open: true),
-        ),
-      ),
-    );
+    await tester.pumpWidget(_host(build(open: true)));
     await tester.pumpAndSettle();
     expect(find.text('nav'), findsOneWidget);
     expect(_sheetBarrier, findsOneWidget);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: PlaygroundThemeScope(
-          mode: PlaygroundThemeMode.light,
-          child: build(open: false),
-        ),
-      ),
-    );
+    await tester.pumpWidget(_host(build(open: false)));
     await tester.pumpAndSettle();
     expect(find.text('nav'), findsNothing);
     expect(_sheetBarrier, findsNothing);

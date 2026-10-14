@@ -14,7 +14,7 @@ class AcmeIconsApp extends StatelessWidget {
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => builder(context),
     ),
-    home: const AcmeThemeScope(
+    home: const AcmeTheme(
       mode: AcmeThemeMode.light,
       child: Directionality(
         textDirection: TextDirection.ltr,

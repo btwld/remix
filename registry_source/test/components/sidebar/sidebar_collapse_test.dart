@@ -11,8 +11,13 @@ void main() {
     bool collapsed = false;
     late StateSetter update;
     await tester.pumpWidget(
-      FortalScope(
-        child: MaterialApp(
+      FortalTheme(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: Align(
             alignment: Alignment.topLeft,
             child: StatefulBuilder(
@@ -47,8 +52,13 @@ void main() {
     (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
-        FortalScope(
-          child: MaterialApp(
+        FortalTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: Align(
               alignment: Alignment.topLeft,
               child: SizedBox(
@@ -119,9 +129,14 @@ void main() {
       late double railPadding;
       late double expandedPadding;
       await tester.pumpWidget(
-        FortalScope(
+        FortalTheme(
           scaling: scaling,
-          child: MaterialApp(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: Directionality(
               textDirection: TextDirection.rtl,
               child: MediaQuery(

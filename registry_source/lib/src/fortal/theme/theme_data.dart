@@ -5,7 +5,7 @@ import 'package:remix/remix.dart';
 
 import 'computed.dart';
 import 'radix_colors.dart' as radix;
-import 'theme_scope.dart' show FortalScope;
+import 'theme_scope.dart' show FortalTheme;
 import 'tokens.dart';
 
 /// Available accent colors matching Radix Themes names.
@@ -70,7 +70,7 @@ enum FortalScaling {
 /// a nested scope inherits its parent's selection when mode is omitted.
 enum FortalThemeMode { system, light, dark }
 
-/// Partial theme values applied by a [FortalScope].
+/// Partial theme values applied by a [FortalTheme].
 @immutable
 class FortalThemeConfig {
   const FortalThemeConfig({
@@ -245,7 +245,7 @@ class FortalThemeData extends FortalThemeConfig {
   );
 }
 
-/// Builds the token map for a Fortal scope. Used by [FortalScope].
+/// Builds the token map for a Fortal scope. Used by [FortalTheme].
 Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
   final tokens = resolveFortalTokens(theme);
   final scaling = theme.scaling.factor;

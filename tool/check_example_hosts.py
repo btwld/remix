@@ -5,8 +5,9 @@ import os
 import zipfile
 
 # Known public examples plus names discovered from theme declarations/configuration.
-DEFAULT_SCOPES = {'FortalScope', 'AcmeScope', 'AcmeThemeScope',
-                  'GeneratedScope', 'GeneratedThemeScope'}
+DEFAULT_SCOPES = {'VanillaTheme', 'FortalTheme', 'UiTheme', 'AcmeTheme',
+                  'GeneratedTheme', 'FortalScope', 'AcmeScope',
+                  'AcmeThemeScope', 'GeneratedScope', 'GeneratedThemeScope'}
 IDENTIFIER = re.compile(r'[A-Za-z_$][\w$]*')
 REMOVED = {'data': 'theme', 'brightness': 'mode', 'lightTheme': 'theme'}
 
@@ -90,7 +91,7 @@ def violations(name, text, scopes=None):
         elif '```' in match[2]:
             doc_code = not doc_code
             lines.append('\n')
-        elif doc_code or re.search(r'\b(?:MaterialApp|\w*Scope)(?:\.\w+)?\s*\(', match[2]):
+        elif doc_code or re.search(r'\b(?:MaterialApp|\w*(?:Scope|Theme))(?:\.\w+)?\s*\(', match[2]):
             lines.append(match[1] + '   ' + match[2] + ('\n' if line.endswith('\n') else ''))
         else:
             lines.append('\n' if line.endswith('\n') else '')
@@ -101,7 +102,8 @@ def violations(name, text, scopes=None):
     for value in values:
         if value.endswith('ThemeData'):
             prefix = value[:-9]
-            scopes.update({prefix + 'Scope', prefix + 'ThemeScope'})
+            if prefix and prefix != 'Icon':
+                scopes.update({prefix + 'Theme', prefix + 'Scope', prefix + 'ThemeScope'})
     failures = []
     config_receivers = {'config', 'theme'}
     config_ranges = []
@@ -189,7 +191,7 @@ def check_hosts(root):
                 config = (Path(parent) / 'remix.yaml').read_text()
                 match = re.search(r'(?m)^\s*prefix:\s*[\"\']?(\w+)', config)
                 if match:
-                    scopes.update({match[1] + 'Scope', match[1] + 'ThemeScope'})
+                    scopes.update({match[1] + 'Theme', match[1] + 'Scope', match[1] + 'ThemeScope'})
             for filename in files:
                 path = Path(parent) / filename
                 if path.suffix not in {'.dart', '.md', '.mdx', '.tmpl'}:
@@ -197,7 +199,7 @@ def check_hosts(root):
                 content = path.read_text()
                 sources.append((str(path.relative_to(root)), content))
                 for prefix in re.findall(r'\bclass\s+(\w+)ThemeData\b', content):
-                    scopes.update({prefix + 'Scope', prefix + 'ThemeScope'})
+                    scopes.update({prefix + 'Theme', prefix + 'Scope', prefix + 'ThemeScope'})
     archive = root / 'docs/assets/remix-cli-tutorial/sample-projects.zip'
     with zipfile.ZipFile(archive) as source:
         for name in source.namelist():

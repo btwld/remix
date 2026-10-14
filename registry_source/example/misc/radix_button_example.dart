@@ -18,7 +18,7 @@ class FortalButtonExampleApp extends StatelessWidget {
         pageBuilder: (context, animation, secondaryAnimation) =>
             builder(context),
       ),
-      builder: (context, child) => FortalScope(
+      builder: (context, child) => FortalTheme(
         accent: FortalAccentColor.indigo,
         gray: FortalGrayColor.slate,
         mode: .light,

@@ -5,7 +5,7 @@ import 'package:remix/remix.dart';
 
 import 'computed.dart';
 import 'radix_colors.dart' as radix;
-import 'theme_scope.dart' show UiScope;
+import 'theme_scope.dart' show UiTheme;
 import 'tokens.dart';
 
 /// Available accent colors matching Radix Themes names.
@@ -70,7 +70,7 @@ enum UiScaling {
 /// a nested scope inherits its parent's selection when mode is omitted.
 enum UiThemeMode { system, light, dark }
 
-/// Partial theme values applied by a [UiScope].
+/// Partial theme values applied by a [UiTheme].
 @immutable
 class UiThemeConfig {
   const UiThemeConfig({
@@ -245,7 +245,7 @@ class UiThemeData extends UiThemeConfig {
   );
 }
 
-/// Builds the token map for a Ui scope. Used by [UiScope].
+/// Builds the token map for a Ui scope. Used by [UiTheme].
 Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
   final tokens = resolveUiTokens(theme);
   final scaling = theme.scaling.factor;

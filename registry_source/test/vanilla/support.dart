@@ -37,7 +37,7 @@ Future<StyleSpec<S>> resolveVanilla<S extends Spec<S>>(
 
   late StyleSpec<S> resolved;
   await tester.pumpWidget(
-    VanillaThemeScope(
+    VanillaTheme(
       theme: theme,
       child: hostOf(
         WidgetStateProvider(
@@ -63,7 +63,7 @@ Future<StyleSpec<S>> pumpedSpec<S extends Spec<S>>(
   required VanillaThemeData theme,
 }) async {
   await tester.pumpWidget(
-    VanillaThemeScope(
+    VanillaTheme(
       theme: theme,
       child: hostOf(Center(child: widget)),
     ),
@@ -95,7 +95,7 @@ Future<StyleSpec<S>> interactedSpec<S extends Spec<S>>(
   addTearDown(focusNode.dispose);
 
   await tester.pumpWidget(
-    VanillaThemeScope(
+    VanillaTheme(
       theme: theme,
       child: hostOf(Center(child: build(focusNode))),
     ),

@@ -13,7 +13,7 @@ void main() {
       settings: settings,
       pageBuilder: (context, _, _) => builder(context),
     ),
-    builder: (context, navigator) => VanillaThemeScope(child: navigator!),
+    builder: (context, navigator) => VanillaTheme(child: navigator!),
     home: home,
   );
 
