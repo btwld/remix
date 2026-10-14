@@ -92,15 +92,16 @@ class _TriggerButton extends StatelessWidget {
 
 ## Imperative visibility
 
-`RemixTooltip` and `FortalTooltip` accept `tooltipKey` (`GlobalKey<RawTooltipState>?`)
-and `onOpenChanged`. Tooltips open automatically on hover, keyboard focus, and
-touch long-press. Pass a `tooltipKey` to show the tooltip on command via
-`tooltipKey.currentState?.ensureTooltipVisible()`, and use `onOpenChanged` to
-observe when the tooltip's visible state changes.
+`RemixTooltip` and `FortalTooltip` open automatically on hover, keyboard focus,
+and touch long-press.
 
-A closed tooltip delegates unmodified Escape to an enabled enclosing
-`DismissIntent` action, allowing a containing drawer or menu to dismiss.
-An open tooltip handles Escape by closing the tooltip while preserving trigger focus.
+To show a tooltip imperatively, pass a `GlobalKey<RawTooltipState>` to
+`tooltipKey` and call `tooltipKey.currentState?.ensureTooltipVisible()`. Use
+`onOpenChanged` to observe visibility changes.
+
+When closed, the tooltip delegates the Escape key to enclosing `DismissIntent`
+actions, allowing a parent drawer or menu to close. When open, pressing Escape
+closes the tooltip and keeps focus on the trigger.
 
 ## Fortal widgets
 
@@ -180,15 +181,15 @@ Optional. The style spec for the tooltip.
 
 #### `child` → `Widget`
 
-**Required**. The child widget that will trigger the tooltip.
+**Required**. The child widget that triggers the tooltip.
 
 #### `tooltipKey` → `GlobalKey<RawTooltipState>?`
 
-Optional. Key for imperative control via `RawTooltipState.ensureTooltipVisible`.
+Optional. A key for imperative control via `RawTooltipState.ensureTooltipVisible`.
 
 #### `onOpenChanged` → `ValueChanged<bool>?`
 
-Optional. Called when the tooltip's visible state changes.
+Optional. A callback invoked when the tooltip visible state changes.
 
 #### `tooltipSemantics` → `String?`
 
@@ -196,7 +197,7 @@ Optional. The semantic label for the tooltip.
 
 #### `positioning` → `OverlayPositionConfig`
 
-Optional. Overlay positioning configuration.
+Optional. The overlay positioning configuration.
 
 
 ### Style Methods
@@ -211,39 +212,39 @@ Sets the tooltip label style.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
-Sets container padding
+Sets the container padding.
 
 #### `margin(EdgeInsetsGeometryMix value)`
 
-Sets container margin
+Sets the container margin.
 
 #### `alignment(Alignment value)`
 
-Sets container alignment
+Sets the container alignment.
 
 #### `color(Color value)`
 
-Sets container background color
+Sets the container background color.
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
-Sets container border radius
+Sets the container border radius.
 
 #### `decoration(DecorationMix value)`
 
-Sets container decoration
+Sets the container decoration.
 
 #### `waitDuration(Duration value)`
 
-Sets the wait duration before showing tooltip
+Sets the wait duration before showing the tooltip.
 
 #### `showDuration(Duration value)`
 
-Maps to touch long-press wait (`NakedTooltip.touchDelay`), not hover dismiss.
+Sets the touch long-press wait duration (`NakedTooltip.touchDelay`).
 
 #### `dismissDuration(Duration value)`
 
-Maps to hover-exit dismiss grace (`NakedTooltip.dismissDelay`).
+Sets the hover-exit dismiss delay (`NakedTooltip.dismissDelay`).
 
 #### `wrap(WidgetModifierConfig value)`
 
