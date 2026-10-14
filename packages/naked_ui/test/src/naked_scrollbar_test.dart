@@ -179,4 +179,113 @@ void main() {
     expect(painter().thickness, 6);
     expect(hovers, [true, false]);
   });
+
+  testWidgets(
+    'clears hover state and notifies onHoverChange(false) when interactive becomes false while hovered',
+    (tester) async {
+      const idle = Color(0xFF0000FF);
+      const hovered = Color(0xFF00FF00);
+      final hovers = <bool>[];
+      var interactive = true;
+      late StateSetter setHostState;
+
+      await tester.pumpMaterialWidget(
+        StatefulBuilder(
+          builder: (context, setState) {
+            setHostState = setState;
+            return list(
+              thumbVisibility: true,
+              interactive: interactive,
+              onHoverChange: hovers.add,
+              thumbColor: WidgetStateProperty.resolveWith(
+                (states) =>
+                    states.contains(WidgetState.hovered) ? hovered : idle,
+              ),
+            );
+          },
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      ScrollbarPainter painter() => tester
+          .renderObjectList<RenderCustomPaint>(find.byType(CustomPaint))
+          .map((render) => render.foregroundPainter)
+          .whereType<ScrollbarPainter>()
+          .single;
+
+      final onThumb =
+          tester.getTopRight(find.byType(NakedScrollbar)) -
+          const Offset(3, -20);
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer();
+      addTearDown(gesture.removePointer);
+      await gesture.moveTo(onThumb);
+      await tester.pumpAndSettle();
+      expect(painter().color, hovered);
+      expect(hovers, [true]);
+
+      setHostState(() => interactive = false);
+      await tester.pumpAndSettle();
+      expect(painter().color, idle);
+      expect(hovers, [true, false]);
+    },
+  );
+
+  testWidgets(
+    'forwards all geometry and appearance properties to ScrollbarPainter',
+    (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+
+      await tester.pumpMaterialWidget(
+        SizedBox(
+          height: 200,
+          width: 120,
+          child: NakedScrollbar(
+            controller: controller,
+            thumbVisibility: true,
+            trackVisibility: true,
+            thumbColor: const WidgetStatePropertyAll(Color(0xFF112233)),
+            trackColor: const WidgetStatePropertyAll(Color(0xFF445566)),
+            trackBorderColor: const WidgetStatePropertyAll(Color(0xFF778899)),
+            thickness: const WidgetStatePropertyAll(10),
+            radius: const Radius.circular(4),
+            trackRadius: const Radius.circular(6),
+            minThumbLength: 28,
+            mainAxisMargin: 5,
+            crossAxisMargin: 3,
+            minOverscrollLength: 12,
+            padding: const EdgeInsets.all(2),
+            scrollbarOrientation: ScrollbarOrientation.left,
+            child: ListView.builder(
+              controller: controller,
+              itemCount: 40,
+              itemBuilder: (context, index) =>
+                  SizedBox(height: 40, child: Text('Item $index')),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final painter = tester
+          .renderObjectList<RenderCustomPaint>(find.byType(CustomPaint))
+          .map((render) => render.foregroundPainter)
+          .whereType<ScrollbarPainter>()
+          .single;
+
+      expect(painter.color, const Color(0xFF112233));
+      expect(painter.trackColor, const Color(0xFF445566));
+      expect(painter.trackBorderColor, const Color(0xFF778899));
+      expect(painter.thickness, 10);
+      expect(painter.radius, const Radius.circular(4));
+      expect(painter.trackRadius, const Radius.circular(6));
+      expect(painter.minLength, 28);
+      expect(painter.mainAxisMargin, 5);
+      expect(painter.crossAxisMargin, 3);
+      expect(painter.minOverscrollLength, 12);
+      expect(painter.padding, const EdgeInsets.all(2));
+      expect(painter.scrollbarOrientation, ScrollbarOrientation.left);
+    },
+  );
 }
