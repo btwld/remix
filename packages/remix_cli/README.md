@@ -41,10 +41,10 @@ unstyled and backward compatible.
 
 ## Install project-locally
 
-The CLI has not been published. The hosted commands below apply after its
-first release. Until then, use the project-local checkout command in this
-section, or [activate an unreleased CLI from Git](#activate-an-unreleased-cli-from-git)
-for the short `remix` command.
+`remix_cli` is not yet published. Hosted commands apply after its first release.
+Until then, install from a local checkout or
+[activate the CLI from Git](#activate-an-unreleased-cli-from-git) to use the
+global `remix` command.
 
 The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
 the dependency fails during version solving.
@@ -76,7 +76,7 @@ dependency_overrides:
 Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
-After the CLI is published, global activation is also available:
+After publication, activate the package globally:
 
 ```shell
 dart pub global activate remix_cli
@@ -88,8 +88,8 @@ version; `add` reports when your resolved `remix` is newer than that one.
 
 ### Activate an unreleased CLI from Git
 
-To use the short `remix` command before publication, activate the package
-directly from the repository:
+To use the global `remix` command before publication, activate the package from
+Git:
 
 ```shell
 dart pub global activate --source git https://github.com/btwld/remix.git \
@@ -97,26 +97,24 @@ dart pub global activate --source git https://github.com/btwld/remix.git \
 remix --help
 ```
 
-Put Pub's `bin` directory on `PATH` if the activation output asks for it.
-Replace `main` with a full commit SHA when the CLI revision must be
-reproducible. Run activation again to update a branch-based install. The
-CLI revision and the registry commit in each application's `remix.yaml`
-are independent; activating a newer CLI does not advance that registry pin.
+Add Pub's `bin` directory to `PATH` if prompted. To pin a specific revision,
+replace `main` with a full commit SHA. Run the activation command again to update
+a branch-based install. The CLI revision is independent of the registry commit in
+`remix.yaml`. Activating a newer CLI does not advance that registry pin.
 
-Git activation resolves the CLI's runtime dependencies independently of a
-local Remix checkout. Global activation with `--source path` instead uses
-the live checkout, including its `resolution: workspace`. It can update
-the monorepo's lockfile to match the active SDK. If that lockfile is later
-restored or changed, even `remix --help` can fail before the CLI starts:
+Git activation resolves CLI dependencies independently of a local checkout. In
+contrast, `--source path` activates the live checkout using its
+`resolution: workspace` configuration. That command can update the monorepo
+lockfile to match your active Dart SDK. If you later restore or change that
+lockfile, `remix` commands fail before the CLI starts:
 
 ```text
 The current activation of `remix_cli` cannot resolve to the same set of dependencies.
 ```
 
-To recover the global command, run the Git activation above. This replaces
-the path activation without changing the checkout's manifest or lockfile.
-For development against local CLI edits, use the project-local path
-dependency described earlier.
+To recover the global command, run the Git activation command above. This
+replaces the path activation without modifying checkout manifests or lockfiles.
+To test local CLI edits, use a project-local path dependency instead.
 
 ## Initialize a project
 
