@@ -127,7 +127,6 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// arrow keys are on, because a select is as often driven by the keyboard as
 /// by the mouse.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
-    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(VanillaTokens.controlSm)

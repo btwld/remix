@@ -118,7 +118,7 @@ ToggleStyler _destinationStyle() {
       .label(.color(VanillaTokens.sidebarAccentForeground()))
       .icon(.color(VanillaTokens.sidebarAccentForeground()));
 
-  return vanillaToggleStyle(variant: .ghost, size: .small)
+  final resolved = vanillaToggleStyle(variant: .ghost, size: .small)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start))
       .minHeight(VanillaTokens.controlSm)
       // The reference is `h-8 p-2`: CSS fixes the height and lets the line
@@ -134,4 +134,12 @@ ToggleStyler _destinationStyle() {
       .icon(.color(VanillaTokens.sidebarForeground()))
       .onHovered(highlighted)
       .onSelected(highlighted.label(.fontWeight(FontWeight.w500)));
+
+  return ToggleStyler.create(
+    container: resolved.$container,
+    label: resolved.$label,
+    icon: resolved.$icon,
+    variants: resolved.$variants,
+    modifier: resolved.$modifier,
+  );
 }

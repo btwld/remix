@@ -19,7 +19,14 @@ import '../../components/typography.dart';
 enum _Appearance { light, dark, system }
 
 class {{typePrefix}}DashboardSettingsPage extends StatefulWidget {
-  const {{typePrefix}}DashboardSettingsPage({super.key});
+  const {{typePrefix}}DashboardSettingsPage({
+    super.key,
+    this.darkMode,
+    this.onDarkModeChanged,
+  });
+
+  final bool? darkMode;
+  final ValueChanged<bool?>? onDarkModeChanged;
 
   @override
   State<{{typePrefix}}DashboardSettingsPage> createState() =>
@@ -33,6 +40,14 @@ class _{{typePrefix}}DashboardSettingsPageState
   String _language = 'en';
   _Appearance _appearance = .system;
   double _radius = 8;
+
+  _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
+      ? _appearance
+      : switch (widget.darkMode) {
+          false => .light,
+          true => .dark,
+          null => .system,
+        };
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -130,13 +145,20 @@ class _{{typePrefix}}DashboardSettingsPageState
                 alignment: Alignment.centerLeft,
                 child: {{typePrefix}}SegmentedControl<_Appearance>(
                   semanticLabel: 'Color mode',
-                  selectedValue: _appearance,
+                  selectedValue: _resolvedAppearance,
                   items: const [
                     RemixSegmentedControlItem(value: .light, label: 'Light'),
                     RemixSegmentedControlItem(value: .dark, label: 'Dark'),
                     RemixSegmentedControlItem(value: .system, label: 'System'),
                   ],
-                  onChanged: (value) => setState(() => _appearance = value),
+                  onChanged: (value) {
+                    setState(() => _appearance = value);
+                    widget.onDarkModeChanged?.call(switch (value) {
+                      .light => false,
+                      .dark => true,
+                      .system => null,
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 16),

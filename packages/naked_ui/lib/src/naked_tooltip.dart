@@ -312,6 +312,20 @@ class _NakedTooltipState extends State<NakedTooltip> {
     }
   }
 
+  void _dismissStaleTooltips() {
+    for (final tooltip in _mountedTooltips.toList()) {
+      if (!identical(tooltip, this) &&
+          !tooltip._usesLegacyTooltip &&
+          tooltip._visible &&
+          !tooltip._heldByFocus &&
+          !tooltip._triggerHovered &&
+          !tooltip._contentHovered) {
+        tooltip._dismiss();
+        break;
+      }
+    }
+  }
+
   void _handleFocusChange(bool focused) {
     if (focused == _focusWithin) return;
     _focusWithin = focused;
@@ -351,7 +365,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
     // These regions sit inside RawTooltip's, so they see the exit first, in
     // hit-test order. RawTooltip then schedules, or with a zero dismissDelay
     // performs, its own dismissal. Reopen afterwards while focus holds it.
-    if (!_heldByFocus || !_focusWithin) return;
+    if (!_focusWithin) return;
     scheduleMicrotask(() {
       if (!mounted || !_focusWithin) return;
       _heldByFocus = true;
@@ -490,15 +504,19 @@ class _NakedTooltipState extends State<NakedTooltip> {
 
         return placement.offset;
       },
-      child: MouseRegion(
-        opaque: false,
-        onEnter: (_) => _triggerHovered = true,
-        onExit: (_) {
-          _triggerHovered = false;
-          _handlePointerExit();
-        },
-        child: child,
-      ),
+      child: child,
+    );
+    result = MouseRegion(
+      opaque: false,
+      onEnter: (_) {
+        _triggerHovered = true;
+        _dismissStaleTooltips();
+      },
+      onExit: (_) {
+        _triggerHovered = false;
+        _handlePointerExit();
+      },
+      child: result,
     );
     // Outside RawTooltip, so the overlay content shares this focus ancestry
     // and Escape from either the trigger or the content reaches it.

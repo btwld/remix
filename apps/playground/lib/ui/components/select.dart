@@ -144,7 +144,6 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// arrow keys are on, because a select is as often driven by the keyboard as
 /// by the mouse.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
-    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(PlaygroundTokens.controlSm)

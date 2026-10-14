@@ -8,21 +8,12 @@ import '../../../dashboard/dashboard_demo_chat.dart';
 import '../../../dashboard/dashboard_demo_charts.dart';
 import '../../../dashboard/dashboard_demo_content.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
-import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
-import '../../components/checkbox.dart';
-import '../../components/data_table.dart';
-import '../../components/disclosure.dart';
 import '../../components/icon_button.dart';
-import '../../components/link.dart';
 import '../../components/menu.dart';
 import '../../components/popover.dart';
-import '../../components/progress.dart';
-import '../../components/switch.dart';
-import '../../components/tabs.dart';
-import '../../components/textfield.dart';
 import '../../components/toast.dart';
 import '../activity_recipe.dart';
 import '../answer_recipe.dart';
@@ -49,7 +40,7 @@ import 'dashboard_shell.dart';
 class VanillaDashboardDemo extends StatefulWidget {
   const VanillaDashboardDemo({
     super.key,
-    this.brand = const Text('Northstar'),
+    this.brand = const _VanillaBrand(),
     this.account,
     this.headerActions = const [],
     this.onSearchChanged,
@@ -82,6 +73,17 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
   /// The appearance the toggle chose, or null to follow the scope this demo
   /// is placed in.
   bool? _dark;
+  Brightness? _ambientBrightness;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final ambient = VanillaTheme.maybeOf(context)?.brightness;
+    if (_ambientBrightness != null && ambient != _ambientBrightness) {
+      _dark = null;
+    }
+    _ambientBrightness = ambient;
+  }
 
   bool get _isDark =>
       _dark ?? (VanillaTheme.maybeOf(context)?.brightness == Brightness.dark);
@@ -139,7 +141,10 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
         ),
         .customers => DefaultDashboardCustomersPage(globalQuery: query),
         .orders => DefaultDashboardOrdersPage(globalQuery: query),
-        .settings => const DefaultDashboardSettingsPage(),
+        .settings => DefaultDashboardSettingsPage(
+          darkMode: _dark,
+          onDarkModeChanged: (value) => setState(() => _dark = value),
+        ),
         .actions => const DefaultGalleryActionsPage(),
         .forms => const DefaultGalleryFormsPage(),
         .dataDisplay => const DefaultGalleryDisplayPage(),
@@ -148,9 +153,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
         .typography => const DefaultGalleryTypographyPage(),
         _ => RegistryDashboardDemoContent(
           page: page,
-          searchQuery: query,
           kit: kit,
-          onSelected: onSelected,
           data: widget.data,
         ),
       },
@@ -174,26 +177,35 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
-    const VanillaPopover(
+    VanillaPopover(
       semanticLabel: 'Notifications',
       popoverChild: SizedBox(
         width: 280,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Notifications'),
-              SizedBox(height: 8),
-              Text('Order ORD-1047 requires review.'),
-              SizedBox(height: 6),
-              Text('Three customer invitations are pending.'),
+              StyledText(
+                'Notifications',
+                style: _textStyle(weight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              StyledText(
+                'Order ORD-1047 requires review.',
+                style: _textStyle(size: 13),
+              ),
+              const SizedBox(height: 6),
+              StyledText(
+                'Three customer invitations are pending.',
+                style: _textStyle(size: 13, muted: true),
+              ),
             ],
           ),
         ),
       ),
-      child: VanillaIconButton.ghost(
+      child: const VanillaIconButton.ghost(
         icon: RemixIcons.bell,
         semanticLabel: 'Open notifications',
       ),
@@ -239,6 +251,18 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
   );
 }
 
+class _VanillaBrand extends StatelessWidget {
+  const _VanillaBrand();
+
+  @override
+  Widget build(BuildContext context) => StyledText(
+    'Northstar',
+    style: _textStyle(
+      weight: FontWeight.w600,
+    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+  );
+}
+
 class _VanillaBreadcrumb extends StatelessWidget {
   const _VanillaBreadcrumb({required this.page});
   final RegistryDashboardDemoPage page;
@@ -254,9 +278,9 @@ class _VanillaBreadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Text('/'),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: StyledText('/', style: _textStyle(muted: true)),
       ),
       Flexible(
         child: StyledText(
@@ -312,227 +336,8 @@ final class _VanillaDashboardDemoKit implements RegistryDashboardDemoKit {
   );
 
   @override
-  Widget section(String title, String description, Widget child) => VanillaCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        StyledText(title, style: _textStyle(size: 17, weight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        StyledText(description, style: _textStyle(muted: true, size: 13)),
-        const SizedBox(height: 16),
-        child,
-      ],
-    ),
-  );
-
-  @override
-  Widget surface(Widget child) => VanillaCard(child: child);
-
-  @override
-  Widget text(String value, {bool emphasized = false, bool muted = false}) =>
-      StyledText(
-        value,
-        style: _textStyle(
-          weight: emphasized ? FontWeight.w600 : FontWeight.w400,
-          muted: muted,
-        ),
-      );
-
-  @override
-  Widget button(String label, {int emphasis = 0, VoidCallback? onPressed}) =>
-      switch (emphasis) {
-        1 => VanillaButton.secondary(label: label, onPressed: onPressed),
-        2 => VanillaButton.outline(label: label, onPressed: onPressed),
-        3 => VanillaButton.ghost(label: label, onPressed: onPressed),
-        4 => VanillaButton.destructive(label: label, onPressed: onPressed),
-        _ => VanillaButton.primary(label: label, onPressed: onPressed),
-      };
-
-  @override
-  Widget badge(String label, {int emphasis = 0}) => switch (emphasis) {
-    1 => VanillaBadge.secondary(label: label),
-    2 => VanillaBadge.outline(label: label),
-    3 => VanillaBadge.destructive(label: label),
-    _ => VanillaBadge.primary(label: label),
-  };
-
-  @override
-  Widget textField({
-    required String hintText,
-    ValueChanged<String>? onChanged,
-  }) => VanillaTextField(hintText: hintText, onChanged: onChanged);
-
-  @override
-  Widget checkbox({
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) => VanillaCheckbox(
-    selected: value,
-    semanticLabel: 'Receive account alerts',
-    onChanged: (next) => onChanged(next ?? false),
-  );
-
-  @override
-  Widget switchControl({
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) => VanillaSwitch(
-    selected: value,
-    semanticLabel: 'Toggle setting',
-    onChanged: onChanged,
-  );
-
-  @override
-  Widget progress(double value) => VanillaProgress(
-    value: value,
-    semanticsLabel: 'Completion',
-    semanticsValue: '${(value * 100).round()} percent',
-  );
-
-  @override
   Widget charts(RegistryDashboardSampleData data) =>
       _VanillaDashboardCharts(data: data);
-
-  @override
-  Widget records({required bool orders, required String query}) {
-    final rows = registryDashboardSampleData.records.where((record) {
-      if (query.isEmpty) return true;
-      return record.id.toLowerCase().contains(query) ||
-          record.customer.toLowerCase().contains(query) ||
-          record.status.toLowerCase().contains(query);
-    }).toList();
-    return VanillaDataTable<RegistryDashboardRecord>(
-      semanticLabel: orders ? 'Orders' : 'Customers',
-      rows: rows,
-      minimumWidth: 620,
-      columns: [
-        RemixDataTableColumn(
-          id: orders ? 'order' : 'customer',
-          label: orders ? 'Order' : 'Customer',
-          width: const FlexColumnWidth(2),
-          cellBuilder: (_, record) =>
-              text(orders ? record.id : record.customer, emphasized: true),
-        ),
-        RemixDataTableColumn(
-          id: 'status',
-          label: 'Status',
-          width: const FixedColumnWidth(140),
-          cellBuilder: (_, record) => badge(record.status, emphasis: 1),
-        ),
-        RemixDataTableColumn(
-          id: orders ? 'amount' : 'plan',
-          label: orders ? 'Amount' : 'Plan',
-          width: const FixedColumnWidth(120),
-          cellBuilder: (_, record) =>
-              text(orders ? record.amount : _planFor(record.id)),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget overlays(VoidCallback onAction) => Wrap(
-    spacing: 12,
-    runSpacing: 12,
-    children: [
-      VanillaPopover(
-        semanticLabel: 'Invite teammates',
-        popoverChild: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              text('Invite teammates', emphasized: true),
-              const SizedBox(height: 8),
-              text('Share this workspace with collaborators.', muted: true),
-              const SizedBox(height: 12),
-              button('Copy invite link', onPressed: onAction),
-            ],
-          ),
-        ),
-        child: const VanillaButton.outline(label: 'Open popover'),
-      ),
-      button('Show toast', emphasis: 1, onPressed: onAction),
-      button('Open menu', emphasis: 3, onPressed: onAction),
-    ],
-  );
-
-  @override
-  Widget navigation() => const _VanillaNavigationDemo();
-
-  @override
-  Widget typography(VoidCallback onAction) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      StyledText(
-        'Build products with owned source',
-        style: _textStyle(size: 24, weight: FontWeight.w700),
-      ),
-      const SizedBox(height: 8),
-      StyledText(
-        'Body copy inherits the application theme and remains editable.',
-        style: _textStyle(),
-      ),
-      const SizedBox(height: 12),
-      VanillaLink(label: 'Interactive link', onPressed: onAction),
-      const SizedBox(height: 12),
-      DecoratedBox(
-        decoration: BoxDecoration(
-          color: VanillaTokens.muted(),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: StyledText('remix add dashboard_demo', style: _textStyle()),
-        ),
-      ),
-    ],
-  );
-}
-
-class _VanillaNavigationDemo extends StatefulWidget {
-  const _VanillaNavigationDemo();
-
-  @override
-  State<_VanillaNavigationDemo> createState() => _VanillaNavigationDemoState();
-}
-
-class _VanillaNavigationDemoState extends State<_VanillaNavigationDemo> {
-  String _selected = 'overview';
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      RemixTabs(
-        selectedTabId: _selected,
-        onChanged: (value) => setState(() => _selected = value),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            VanillaTabBar(
-              child: Row(
-                children: [
-                  VanillaTab(tabId: 'overview', label: 'Overview'),
-                  VanillaTab(tabId: 'activity', label: 'Activity'),
-                ],
-              ),
-            ),
-            VanillaTabView(tabId: 'overview', child: Text('Overview content')),
-            VanillaTabView(tabId: 'activity', child: Text('Activity content')),
-          ],
-        ),
-      ),
-      const SizedBox(height: 12),
-      const VanillaDisclosure(
-        trigger: Text('What is the dashboard demo?'),
-        content: Text(
-          'A complete, editable reference app installed into your project.',
-        ),
-      ),
-    ],
-  );
 }
 
 class _VanillaDashboardCharts extends StatelessWidget {
@@ -719,12 +524,20 @@ class _VanillaDashboardCharts extends StatelessWidget {
             semanticsLabel: 'No channel data',
             slices: registryDashboardEmptySlices(),
           ),
-          const Column(
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(RemixIcons.box, size: 20),
-              SizedBox(height: 6),
-              Text('No data yet'),
+              StyledIcon(
+                icon: RemixIcons.box,
+                style: IconStyler()
+                    .size(20)
+                    .color(VanillaTokens.mutedForeground()),
+              ),
+              const SizedBox(height: 6),
+              StyledText(
+                'No data yet',
+                style: _textStyle(size: 12, muted: true),
+              ),
             ],
           ),
         ],
@@ -771,13 +584,6 @@ TextStyler _textStyle({
     .color(
       muted ? VanillaTokens.mutedForeground() : VanillaTokens.foreground(),
     );
-
-String _planFor(String id) => switch (id) {
-  'ORD-1048' => 'Enterprise',
-  'ORD-1047' => 'Pro',
-  'ORD-1046' => 'Pro',
-  _ => 'Starter',
-};
 
 RegistryDashboardAgentStyles _vanillaAgentStyles() {
   final message = vanillaAgentMessageRecipe();

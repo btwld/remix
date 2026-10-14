@@ -100,7 +100,6 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
-    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(VanillaTokens.controlSm)

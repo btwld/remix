@@ -8,25 +8,14 @@ import '../../../dashboard/dashboard_demo_chat.dart';
 import '../../../dashboard/dashboard_demo_charts.dart';
 import '../../../dashboard/dashboard_demo_content.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
-import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
-import '../../components/checkbox.dart';
-import '../../components/code.dart';
-import '../../components/data_table.dart';
-import '../../components/disclosure.dart';
 import '../../components/heading.dart';
 import '../../components/icon_button.dart';
-import '../../components/kbd.dart';
-import '../../components/link.dart';
 import '../../components/menu.dart';
 import '../../components/popover.dart';
-import '../../components/progress.dart';
-import '../../components/switch.dart';
-import '../../components/tabs.dart';
 import '../../components/text.dart';
-import '../../components/textfield.dart';
 import '../../components/toast.dart';
 import '../../theme/theme.dart';
 import '../activity_recipe.dart';
@@ -56,7 +45,13 @@ import 'dashboard_shell.dart';
 class FortalDashboardDemo extends StatefulWidget {
   const FortalDashboardDemo({
     super.key,
-    this.brand = const Text('Northstar'),
+    this.brand = const FortalText(
+      'Northstar',
+      size: .size3,
+      weight: .bold,
+      softWrap: false,
+      truncate: true,
+    ),
     this.account,
     this.headerActions = const [],
     this.onSearchChanged,
@@ -89,6 +84,17 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
   /// The appearance the toggle chose, or null to follow the scope this demo
   /// is placed in.
   bool? _dark;
+  bool? _ambientIsDark;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final ambient = FortalTheme.maybeOf(context)?.isDark;
+    if (_ambientIsDark != null && ambient != _ambientIsDark) {
+      _dark = null;
+    }
+    _ambientIsDark = ambient;
+  }
 
   bool get _isDark => _dark ?? (FortalTheme.maybeOf(context)?.isDark ?? false);
 
@@ -145,7 +151,10 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
         ),
         .customers => FortalDashboardCustomersPage(globalQuery: query),
         .orders => FortalDashboardOrdersPage(globalQuery: query),
-        .settings => const FortalDashboardSettingsPage(),
+        .settings => FortalDashboardSettingsPage(
+          darkMode: _dark,
+          onDarkModeChanged: (value) => setState(() => _dark = value),
+        ),
         .actions => const GalleryActionsPage(),
         .forms => const GalleryFormsPage(),
         .dataDisplay => const GalleryDisplayPage(),
@@ -154,9 +163,7 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
         .typography => const GalleryTypographyPage(),
         _ => RegistryDashboardDemoContent(
           page: page,
-          searchQuery: query,
           kit: kit,
-          onSelected: onSelected,
           data: widget.data,
         ),
       },
@@ -259,7 +266,7 @@ class _FortalBreadcrumb extends StatelessWidget {
       ),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Text('/'),
+        child: FortalText('/', size: .size2, highContrast: false),
       ),
       Flexible(
         child: FortalText(
@@ -319,235 +326,8 @@ final class _FortalDashboardDemoKit implements RegistryDashboardDemoKit {
   );
 
   @override
-  Widget section(String title, String description, Widget child) =>
-      FortalCard.surface(
-        size: .size2,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            FortalHeading(title, headingLevel: 2, size: .size4),
-            const SizedBox(height: 4),
-            FortalText(description, size: .size2, highContrast: false),
-            const SizedBox(height: 16),
-            child,
-          ],
-        ),
-      );
-
-  @override
-  Widget surface(Widget child) =>
-      FortalCard.surface(size: .size2, child: child);
-
-  @override
-  Widget text(String value, {bool emphasized = false, bool muted = false}) =>
-      FortalText(
-        value,
-        size: .size2,
-        weight: emphasized ? .bold : .regular,
-        highContrast: !muted,
-      );
-
-  @override
-  Widget button(String label, {int emphasis = 0, VoidCallback? onPressed}) =>
-      switch (emphasis) {
-        1 => FortalButton.soft(label: label, onPressed: onPressed),
-        2 => FortalButton.outline(label: label, onPressed: onPressed),
-        3 => FortalButton.ghost(label: label, onPressed: onPressed),
-        4 => FortalButton.classic(label: label, onPressed: onPressed),
-        _ => FortalButton.solid(label: label, onPressed: onPressed),
-      };
-
-  @override
-  Widget badge(String label, {int emphasis = 0}) => switch (emphasis) {
-    1 => FortalBadge.soft(label: label),
-    2 => FortalBadge.surface(label: label),
-    3 => FortalBadge.outline(label: label),
-    _ => FortalBadge.solid(label: label),
-  };
-
-  @override
-  Widget textField({
-    required String hintText,
-    ValueChanged<String>? onChanged,
-  }) => FortalTextField(hintText: hintText, onChanged: onChanged);
-
-  @override
-  Widget checkbox({
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) => FortalCheckbox(
-    selected: value,
-    semanticLabel: 'Receive account alerts',
-    onChanged: (next) => onChanged(next ?? false),
-  );
-
-  @override
-  Widget switchControl({
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) => FortalSwitch(
-    selected: value,
-    semanticLabel: 'Toggle setting',
-    onChanged: onChanged,
-  );
-
-  @override
-  Widget progress(double value) => FortalProgress(
-    value: value,
-    semanticsLabel: 'Completion',
-    semanticsValue: '${(value * 100).round()} percent',
-  );
-
-  @override
   Widget charts(RegistryDashboardSampleData data) =>
       _FortalDashboardCharts(data: data);
-
-  @override
-  Widget records({required bool orders, required String query}) {
-    final rows = registryDashboardSampleData.records.where((record) {
-      if (query.isEmpty) return true;
-      return record.id.toLowerCase().contains(query) ||
-          record.customer.toLowerCase().contains(query) ||
-          record.status.toLowerCase().contains(query);
-    }).toList();
-    return FortalDataTable<RegistryDashboardRecord>.surface(
-      semanticLabel: orders ? 'Orders' : 'Customers',
-      rows: rows,
-      minimumWidth: 620,
-      columns: [
-        RemixDataTableColumn(
-          id: orders ? 'order' : 'customer',
-          label: orders ? 'Order' : 'Customer',
-          width: const FlexColumnWidth(2),
-          cellBuilder: (_, record) =>
-              text(orders ? record.id : record.customer, emphasized: true),
-        ),
-        RemixDataTableColumn(
-          id: 'status',
-          label: 'Status',
-          width: const FixedColumnWidth(140),
-          cellBuilder: (_, record) => badge(record.status, emphasis: 1),
-        ),
-        RemixDataTableColumn(
-          id: orders ? 'amount' : 'plan',
-          label: orders ? 'Amount' : 'Plan',
-          width: const FixedColumnWidth(120),
-          cellBuilder: (_, record) =>
-              text(orders ? record.amount : _planFor(record.id)),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget overlays(VoidCallback onAction) => Wrap(
-    spacing: 12,
-    runSpacing: 12,
-    children: [
-      FortalPopover(
-        semanticLabel: 'Invite teammates',
-        popoverChild: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              text('Invite teammates', emphasized: true),
-              const SizedBox(height: 8),
-              text('Share this workspace with collaborators.', muted: true),
-              const SizedBox(height: 12),
-              button('Copy invite link', onPressed: onAction),
-            ],
-          ),
-        ),
-        child: const FortalButton.outline(label: 'Open popover'),
-      ),
-      button('Show toast', emphasis: 1, onPressed: onAction),
-      button('Open menu', emphasis: 3, onPressed: onAction),
-    ],
-  );
-
-  @override
-  Widget navigation() => const _FortalNavigationDemo();
-
-  @override
-  Widget typography(VoidCallback onAction) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const FortalHeading(
-        'Build products with owned source',
-        headingLevel: 2,
-        size: .size6,
-      ),
-      const SizedBox(height: 8),
-      const FortalText(
-        'Body copy inherits the application theme and remains editable.',
-        size: .size3,
-      ),
-      const SizedBox(height: 12),
-      FortalLink('Interactive link', onPressed: onAction),
-      const SizedBox(height: 12),
-      const Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: [
-          FortalCode('remix add dashboard_demo'),
-          FortalKbd('⌘'),
-          FortalKbd('K'),
-        ],
-      ),
-    ],
-  );
-}
-
-class _FortalNavigationDemo extends StatefulWidget {
-  const _FortalNavigationDemo();
-
-  @override
-  State<_FortalNavigationDemo> createState() => _FortalNavigationDemoState();
-}
-
-class _FortalNavigationDemoState extends State<_FortalNavigationDemo> {
-  String _selected = 'overview';
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      RemixTabs(
-        selectedTabId: _selected,
-        onChanged: (value) => setState(() => _selected = value),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            FortalTabBar(
-              child: Row(
-                children: [
-                  FortalTab(tabId: 'overview', label: 'Overview'),
-                  FortalTab(tabId: 'activity', label: 'Activity'),
-                ],
-              ),
-            ),
-            FortalTabView(
-              tabId: 'overview',
-              child: FortalText('Overview content'),
-            ),
-            FortalTabView(
-              tabId: 'activity',
-              child: FortalText('Activity content'),
-            ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 12),
-      const FortalDisclosure.surface(
-        trigger: FortalText('What is the dashboard demo?'),
-        content: FortalText(
-          'A complete, editable reference app installed into your project.',
-        ),
-      ),
-    ],
-  );
 }
 
 class _FortalDashboardCharts extends StatelessWidget {
@@ -773,13 +553,6 @@ Widget _chartCard(String title, String description, Widget chart) =>
         ],
       ),
     );
-
-String _planFor(String id) => switch (id) {
-  'ORD-1048' => 'Enterprise',
-  'ORD-1047' => 'Pro',
-  'ORD-1046' => 'Pro',
-  _ => 'Starter',
-};
 
 RegistryDashboardAgentStyles _fortalAgentStyles() {
   final message = fortalAgentMessageRecipe();

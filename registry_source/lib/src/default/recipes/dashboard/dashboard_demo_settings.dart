@@ -18,7 +18,14 @@ import '../../theme/tokens.dart';
 enum _Appearance { light, dark, system }
 
 class DefaultDashboardSettingsPage extends StatefulWidget {
-  const DefaultDashboardSettingsPage({super.key});
+  const DefaultDashboardSettingsPage({
+    super.key,
+    this.darkMode,
+    this.onDarkModeChanged,
+  });
+
+  final bool? darkMode;
+  final ValueChanged<bool?>? onDarkModeChanged;
 
   @override
   State<DefaultDashboardSettingsPage> createState() =>
@@ -32,6 +39,14 @@ class _DefaultDashboardSettingsPageState
   String _language = 'en';
   _Appearance _appearance = .system;
   double _radius = 8;
+
+  _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
+      ? _appearance
+      : switch (widget.darkMode) {
+          false => .light,
+          true => .dark,
+          null => .system,
+        };
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -129,13 +144,20 @@ class _DefaultDashboardSettingsPageState
                 alignment: Alignment.centerLeft,
                 child: VanillaSegmentedControl<_Appearance>(
                   semanticLabel: 'Color mode',
-                  selectedValue: _appearance,
+                  selectedValue: _resolvedAppearance,
                   items: const [
                     RemixSegmentedControlItem(value: .light, label: 'Light'),
                     RemixSegmentedControlItem(value: .dark, label: 'Dark'),
                     RemixSegmentedControlItem(value: .system, label: 'System'),
                   ],
-                  onChanged: (value) => setState(() => _appearance = value),
+                  onChanged: (value) {
+                    setState(() => _appearance = value);
+                    widget.onDarkModeChanged?.call(switch (value) {
+                      .light => false,
+                      .dark => true,
+                      .system => null,
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 16),

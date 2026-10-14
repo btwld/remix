@@ -306,6 +306,43 @@ void main() {
       semantics.dispose();
     });
 
+    testWidgets(
+      'header controls do not merge semantics with header brand or footer text',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        await tester.pumpRemixApp(
+          SizedBox(
+            height: 400,
+            child: RemixSidebar<String>(
+              header: Row(
+                children: [
+                  const Expanded(child: Text('Northstar')),
+                  RemixIconButton(
+                    icon: Icons.chevron_left,
+                    semanticLabel: 'Collapse navigation',
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              sections: _sections,
+              selectedValue: 'overview',
+              onSelected: (_) {},
+              footer: const Text('Workspace account'),
+              semanticLabel: 'Primary navigation',
+            ),
+          ),
+        );
+
+        expect(
+          tester.getSemantics(find.bySemanticsLabel('Collapse navigation')),
+          isSemantics(label: 'Collapse navigation', isButton: true),
+        );
+        expect(find.bySemanticsLabel('Northstar'), findsOneWidget);
+        expect(find.bySemanticsLabel('Workspace account'), findsOneWidget);
+        semantics.dispose();
+      },
+    );
+
     testWidgets('root and item disabled states remove activation', (
       tester,
     ) async {

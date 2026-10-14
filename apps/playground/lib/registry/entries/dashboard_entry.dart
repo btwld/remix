@@ -7,12 +7,6 @@ Widget buildDashboardExample(BuildContext context) {
   final dark = Theme.of(context).brightness == Brightness.dark;
   return PlaygroundTheme(
     mode: dark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
-    child: ColoredBox(
-      color: dark ? const Color(0xFF111827) : const Color(0xFFF8FAFC),
-      child: const PlaygroundDashboardDemo(
-        brand: Text('Northstar'),
-        account: Text('Workspace account'),
-      ),
-    ),
+    child: const PlaygroundDashboardDemo(),
   );
 }

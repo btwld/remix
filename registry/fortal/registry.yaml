@@ -244,6 +244,7 @@ items:
       - activity_recipe
       - answer
       - answer_recipe
+      - app_bar
       - avatar
       - badge
       - button
@@ -255,6 +256,7 @@ items:
       - composer
       - composer_recipe
       - dashboard_shell
+      - data_list
       - data_table
       - dialog
       - disclosure
@@ -277,6 +279,7 @@ items:
       - radio
       - segmented_control
       - select
+      - sidebar
       - skeleton
       - slider
       - spinner
@@ -285,7 +288,9 @@ items:
       - text
       - textfield
       - toast
+      - toggle
       - toggle_group
+      - tooltip
       - transcript
       - transcript_recipe
       - typography

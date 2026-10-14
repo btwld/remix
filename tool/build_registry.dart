@@ -2113,7 +2113,7 @@ String _relative(File file, Directory root) =>
     p.posix.joinAll(p.split(p.relative(file.path, from: root.path)));
 
 final _importPattern = RegExp(
-  r'''^\s*import\s+['"]([^'"]+)['"]''',
+  r'''^\s*(?:import|export)\s+['"]([^'"]+)['"]''',
   multiLine: true,
 );
 

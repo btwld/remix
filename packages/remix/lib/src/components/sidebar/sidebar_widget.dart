@@ -487,13 +487,21 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
                 styleSpec: container,
                 children: [
                   if (header case final header?)
-                    Box(styleSpec: spec.header, child: header),
+                    Semantics(
+                      container: true,
+                      explicitChildNodes: true,
+                      child: Box(styleSpec: spec.header, child: header),
+                    ),
                   if (hasBoundedHeight)
                     Expanded(child: SingleChildScrollView(child: landmark))
                   else
                     landmark,
                   if (footer case final footer?)
-                    Box(styleSpec: spec.footer, child: footer),
+                    Semantics(
+                      container: true,
+                      explicitChildNodes: true,
+                      child: Box(styleSpec: spec.footer, child: footer),
+                    ),
                 ],
               );
             },

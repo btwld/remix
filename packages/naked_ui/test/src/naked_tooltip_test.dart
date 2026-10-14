@@ -545,6 +545,53 @@ void main() {
         expect(find.text('Hoverable'), findsNothing);
         await mouse.removePointer();
       });
+
+      testWidgets(
+        'hovering another tooltip trigger immediately dismisses a stale hover tooltip',
+        (WidgetTester tester) async {
+          const triggerA = Key('trigger-a');
+          const triggerB = Key('trigger-b');
+          await tester.pumpMaterialWidget(
+            Column(
+              children: [
+                NakedTooltip(
+                  hoverDelay: Duration.zero,
+                  dismissDelay: const Duration(milliseconds: 500),
+                  animationStyle: AnimationStyle.noAnimation,
+                  overlayBuilder: (context, animation) =>
+                      const Text('Tooltip A'),
+                  child: const SizedBox(key: triggerA, width: 100, height: 40),
+                ),
+                NakedTooltip(
+                  hoverDelay: Duration.zero,
+                  dismissDelay: const Duration(milliseconds: 500),
+                  animationStyle: AnimationStyle.noAnimation,
+                  overlayBuilder: (context, animation) =>
+                      const Text('Tooltip B'),
+                  child: const SizedBox(key: triggerB, width: 100, height: 40),
+                ),
+              ],
+            ),
+          );
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer();
+          await mouse.moveTo(tester.getCenter(find.byKey(triggerA)));
+          await tester.pumpAndSettle();
+          expect(find.text('Tooltip A'), findsOneWidget);
+          expect(find.text('Tooltip B'), findsNothing);
+
+          // Move directly onto trigger B before trigger A's 500ms dismissDelay expires.
+          await mouse.moveTo(tester.getCenter(find.byKey(triggerB)));
+          await tester.pump();
+
+          expect(find.text('Tooltip A'), findsNothing);
+          expect(find.text('Tooltip B'), findsOneWidget);
+          await mouse.removePointer();
+        },
+      );
     });
   });
 }
