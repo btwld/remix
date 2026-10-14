@@ -6,35 +6,19 @@ import '../theme/tokens.dart';
 
 part 'app_bar.g.dart';
 
-/// The app bar's toolbar row height, 64px, including its bottom hairline.
+/// The height of the Playground app bar toolbar row, including its bottom hairline.
 ///
-/// Anything that has to line up with the bar, such as a sidebar's brand row
-/// beside it, reads this value. It lives here rather than in the theme so
-/// installing `app_bar` never requires reinstalling `theme`.
+/// Adjacent components that align with the app bar, such as the sidebar brand
+/// row, use this value.
 const playgroundAppBarToolbarHeight = PlaygroundTokens.s16;
 
-/// The application's App Bar recipe.
+/// Creates the default [AppBarStyler] for the Playground app bar.
 ///
-/// An app bar is the row across the top of a page: an optional Back or menu
-/// button, the page title, and the page's actions. Remix owns the layout, the
-/// heading semantics, and the top safe area; this recipe owns the surface,
-/// the row height, the insets, and the title type.
+/// Configures a `background` surface, a [playgroundAppBarToolbarHeight] toolbar row
+/// with an inset bottom hairline border, horizontal padding, semibold `textLg`
+/// title text, and 12px spacing between elements.
 ///
-/// It takes no variant and no size. The bar is the `background` surface. Its
-/// toolbar row is [playgroundAppBarToolbarHeight] (64px) tall including a `border`
-/// hairline along its bottom edge, inset 16px from both sides, with a 12px
-/// gap between the leading button, the title, and the actions, and between
-/// the actions themselves. The title is `textLg` at semibold weight in
-/// `foreground`.
-///
-/// The hairline belongs to the row rather than the surface so it sits inside
-/// the 64px, as CSS's `h-16 border-b` does, instead of adding a pixel below
-/// it. That keeps the bar exactly as tall as anything built the same way
-/// beside it, such as a sidebar's brand row with the same height and edge.
-/// Content in the bar's `bottom` slot brings its own edge.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
+/// Merges [style] after the default styling to allow caller overrides:
 ///
 /// ```dart
 /// PlaygroundAppBar(

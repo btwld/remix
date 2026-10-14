@@ -213,18 +213,11 @@ final style = AppBarStyler()
 
 ## Fortal recipe
 
-The public `FortalAppBar` wrapper is produced by Mix code generation. Its
-recipe paints the solid panel surface, sets a `space9` toolbar row (64 logical
-pixels at 100% scaling) with a bottom edge border inside it, insets the row by
-`space4`, and separates the leading button, the title, and the actions by
-`space3`. The title uses the bold `size4` text step.
-
-A sidebar header built with the same `space9` height and edge lines up with
-the bar under every scaling setting, which is how the `dashboard_shell` item
-pairs them.
-
-App bar is a Fortal extension, not a Radix Themes parity family, so it is
-intentionally absent from the generated Radix parity catalog.
+`FortalAppBar` is the Fortal-themed app bar generated from `fortalAppBarStyle`.
+It configures a solid panel background, a 64px (`space9`) toolbar height with an
+inset bottom border, `space4` horizontal padding, and bold `size4` title
+typography. The toolbar height and border match the sidebar header in
+`FortalDashboardShell` to ensure horizontal alignment across scaling levels.
 
 <CodeGroup title="Fortal app bar" defaultLanguage="dart">
 ```dart

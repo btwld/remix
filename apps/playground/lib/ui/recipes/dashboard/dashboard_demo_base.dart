@@ -2,86 +2,86 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-/// The four navigation groups shared with the repository dashboard showcase.
-enum PlaygroundDashboardDemoSection {
+/// The navigation groups shared across dashboard showcase presets.
+enum RegistryDashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
   manage('Manage'),
   components('Components');
 
-  const PlaygroundDashboardDemoSection(this.label);
+  const RegistryDashboardDemoSection(this.label);
 
   final String label;
 }
 
-/// Every destination in the full dashboard demo.
-enum PlaygroundDashboardDemoPage {
+/// The navigation destinations in the dashboard demo.
+enum RegistryDashboardDemoPage {
   overview(
-    PlaygroundDashboardDemoSection.workspace,
+    RegistryDashboardDemoSection.workspace,
     'Overview',
     RemixIcons.dashboard,
   ),
-  chat(PlaygroundDashboardDemoSection.workspace, 'Chat', RemixIcons.chatBubble),
-  customers(PlaygroundDashboardDemoSection.data, 'Customers', RemixIcons.group),
-  orders(PlaygroundDashboardDemoSection.data, 'Orders', RemixIcons.table),
+  chat(RegistryDashboardDemoSection.workspace, 'Chat', RemixIcons.chatBubble),
+  customers(RegistryDashboardDemoSection.data, 'Customers', RemixIcons.group),
+  orders(RegistryDashboardDemoSection.data, 'Orders', RemixIcons.table),
   settings(
-    PlaygroundDashboardDemoSection.manage,
+    RegistryDashboardDemoSection.manage,
     'Settings',
     RemixIcons.mixerHorizontal,
   ),
   charts(
     // Keep this destination expanded at every generated preset prefix.
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Charts',
     RemixIcons.barChart,
   ),
   actions(
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Actions',
     RemixIcons.cursorArrow,
   ),
   forms(
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Forms & Inputs',
     RemixIcons.input,
   ),
   dataDisplay(
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Data Display',
     RemixIcons.table,
   ),
   overlays(
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Overlays',
     RemixIcons.stack,
   ),
   navigation(
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Navigation',
     RemixIcons.hamburgerMenu,
   ),
   typography(
-    PlaygroundDashboardDemoSection.components,
+    RegistryDashboardDemoSection.components,
     'Typography',
     RemixIcons.fontSize,
   );
 
-  const PlaygroundDashboardDemoPage(this.section, this.label, this.icon);
+  const RegistryDashboardDemoPage(this.section, this.label, this.icon);
 
-  final PlaygroundDashboardDemoSection section;
+  final RegistryDashboardDemoSection section;
   final String label;
   final IconData icon;
 }
 
-/// Stable screen inventory shared by both presets and parity tests.
-const playgroundDashboardDemoSectionIds = {
-  PlaygroundDashboardDemoPage.overview: [
+/// The section identifiers for each page in the dashboard demo.
+const registryDashboardDemoSectionIds = {
+  RegistryDashboardDemoPage.overview: [
     'metrics',
     'analytics',
     'activity',
     'recent-orders',
   ],
-  PlaygroundDashboardDemoPage.chat: [
+  RegistryDashboardDemoPage.chat: [
     'starters',
     'transcript',
     'plan',
@@ -91,31 +91,31 @@ const playgroundDashboardDemoSectionIds = {
     'answer',
     'composer',
   ],
-  PlaygroundDashboardDemoPage.customers: [
+  RegistryDashboardDemoPage.customers: [
     'search',
     'selection-actions',
     'customer-table',
   ],
-  PlaygroundDashboardDemoPage.orders: ['status-filters', 'order-table'],
-  PlaygroundDashboardDemoPage.settings: [
+  RegistryDashboardDemoPage.orders: ['status-filters', 'order-table'],
+  RegistryDashboardDemoPage.settings: [
     'profile',
     'preferences',
     'appearance',
     'danger-zone',
   ],
-  PlaygroundDashboardDemoPage.charts: [
+  RegistryDashboardDemoPage.charts: [
     // All three chart families remain distinct parity sections.
     'line-area',
     'bar-charts',
     'pie-donut',
   ],
-  PlaygroundDashboardDemoPage.actions: [
+  RegistryDashboardDemoPage.actions: [
     'button',
     'icon-button',
     'toggle',
     'states',
   ],
-  PlaygroundDashboardDemoPage.forms: [
+  RegistryDashboardDemoPage.forms: [
     'text-field',
     'text-area',
     'segmented-control',
@@ -128,7 +128,7 @@ const playgroundDashboardDemoSectionIds = {
     'slider',
     'states',
   ],
-  PlaygroundDashboardDemoPage.dataDisplay: [
+  RegistryDashboardDemoPage.dataDisplay: [
     'avatar',
     'badge',
     'card',
@@ -139,20 +139,20 @@ const playgroundDashboardDemoSectionIds = {
     'spinner',
     'divider',
   ],
-  PlaygroundDashboardDemoPage.overlays: [
+  RegistryDashboardDemoPage.overlays: [
     // Compound overlays share one ordered gallery contract.
     'dialog',
     'popover',
     'tooltip',
     'menu',
   ],
-  PlaygroundDashboardDemoPage.navigation: [
+  RegistryDashboardDemoPage.navigation: [
     'sidebar',
     'tabs',
     'disclosure',
     'accordion',
   ],
-  PlaygroundDashboardDemoPage.typography: [
+  RegistryDashboardDemoPage.typography: [
     'text-scale',
     'weights',
     'heading-level-size',
@@ -164,8 +164,8 @@ const playgroundDashboardDemoSectionIds = {
   ],
 };
 
-/// Deterministic behaviors exercised by the parity fixture suite.
-const playgroundDashboardDemoInteractionIds = <String>[
+/// The interaction identifiers exercised by the parity test suite.
+const registryDashboardDemoInteractionIds = <String>[
   'navigate-and-retain-page-state',
   'search-local-and-global',
   'sort-select-bulk-undo-paginate',
@@ -175,14 +175,14 @@ const playgroundDashboardDemoInteractionIds = <String>[
   'appearance-notifications-theme-account',
 ];
 
-/// The complete sidebar inventory used by the presets.
-final playgroundDashboardDemoSections =
-    <RemixSidebarSection<PlaygroundDashboardDemoPage>>[
-      for (final section in PlaygroundDashboardDemoSection.values)
+/// The sidebar sections and destinations for the dashboard demo.
+final registryDashboardDemoSections =
+    <RemixSidebarSection<RegistryDashboardDemoPage>>[
+      for (final section in RegistryDashboardDemoSection.values)
         RemixSidebarSection(
           label: section.label,
           destinations: [
-            for (final page in PlaygroundDashboardDemoPage.values)
+            for (final page in RegistryDashboardDemoPage.values)
               if (page.section == section)
                 RemixSidebarDestination(
                   value: page,
@@ -193,52 +193,50 @@ final playgroundDashboardDemoSections =
         ),
     ];
 
-typedef PlaygroundDashboardDemoShellBuilder =
+typedef RegistryDashboardDemoShellBuilder =
     Widget Function(
       BuildContext context, {
-      required List<RemixSidebarSection<PlaygroundDashboardDemoPage>> sections,
-      required PlaygroundDashboardDemoPage selectedValue,
-      required ValueChanged<PlaygroundDashboardDemoPage> onSelected,
+      required List<RemixSidebarSection<RegistryDashboardDemoPage>> sections,
+      required RegistryDashboardDemoPage selectedValue,
+      required ValueChanged<RegistryDashboardDemoPage> onSelected,
       required Widget body,
       required String title,
       required ValueChanged<String> onSearchChanged,
     });
 
-typedef PlaygroundDashboardDemoPageBuilder =
+typedef RegistryDashboardDemoPageBuilder =
     Widget Function(
       BuildContext context,
-      PlaygroundDashboardDemoPage page,
+      RegistryDashboardDemoPage page,
       String searchQuery,
-      ValueChanged<PlaygroundDashboardDemoPage> onSelected,
+      ValueChanged<RegistryDashboardDemoPage> onSelected,
     );
 
-/// Preset-neutral navigation and state for the full dashboard demo.
+/// Shared state and navigation for the dashboard demo.
 ///
-/// Pages live in an [IndexedStack] so interactive controls and the chat draft
-/// keep their state while visitors compare other destinations.
-class PlaygroundDashboardDemoBase extends StatefulWidget {
-  const PlaygroundDashboardDemoBase({
+/// Displays pages in an [IndexedStack] to preserve state across navigation.
+class RegistryDashboardDemoBase extends StatefulWidget {
+  const RegistryDashboardDemoBase({
     super.key,
     required this.shellBuilder,
     required this.pageBuilder,
-    this.initialPage = PlaygroundDashboardDemoPage.overview,
+    this.initialPage = RegistryDashboardDemoPage.overview,
   });
 
-  final PlaygroundDashboardDemoShellBuilder shellBuilder;
-  final PlaygroundDashboardDemoPageBuilder pageBuilder;
-  final PlaygroundDashboardDemoPage initialPage;
+  final RegistryDashboardDemoShellBuilder shellBuilder;
+  final RegistryDashboardDemoPageBuilder pageBuilder;
+  final RegistryDashboardDemoPage initialPage;
 
   @override
-  State<PlaygroundDashboardDemoBase> createState() =>
-      _PlaygroundDashboardDemoBaseState();
+  State<RegistryDashboardDemoBase> createState() =>
+      _RegistryDashboardDemoBaseState();
 }
 
-class _PlaygroundDashboardDemoBaseState
-    extends State<PlaygroundDashboardDemoBase> {
-  late PlaygroundDashboardDemoPage _selected = widget.initialPage;
+class _RegistryDashboardDemoBaseState extends State<RegistryDashboardDemoBase> {
+  late RegistryDashboardDemoPage _selected = widget.initialPage;
   String _searchQuery = '';
 
-  void _select(PlaygroundDashboardDemoPage page) {
+  void _select(RegistryDashboardDemoPage page) {
     if (_selected == page) return;
     setState(() => _selected = page);
   }
@@ -246,7 +244,7 @@ class _PlaygroundDashboardDemoBaseState
   @override
   Widget build(BuildContext context) => widget.shellBuilder(
     context,
-    sections: playgroundDashboardDemoSections,
+    sections: registryDashboardDemoSections,
     selectedValue: _selected,
     onSelected: _select,
     title: _selected.label,
@@ -256,16 +254,16 @@ class _PlaygroundDashboardDemoBaseState
       key: const ValueKey('dashboard-demo-pages'),
       index: _selected.index,
       children: [
-        for (final page in PlaygroundDashboardDemoPage.values)
+        for (final page in RegistryDashboardDemoPage.values)
           widget.pageBuilder(context, page, _searchQuery, _select),
       ],
     ),
   );
 }
 
-/// Responsive scrolling frame shared by the product and component pages.
-class PlaygroundDashboardDemoPageFrame extends StatelessWidget {
-  const PlaygroundDashboardDemoPageFrame({
+/// A responsive scroll container for dashboard demo pages.
+class RegistryDashboardDemoPageFrame extends StatelessWidget {
+  const RegistryDashboardDemoPageFrame({
     super.key,
     required this.header,
     required this.children,

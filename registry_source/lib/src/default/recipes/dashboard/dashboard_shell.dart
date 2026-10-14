@@ -10,10 +10,10 @@ import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 
-/// A reusable default-preset dashboard shell.
+/// A dashboard shell styled with the Vanilla preset.
 ///
-/// The host owns navigation values and page state. Supply [onSearchChanged]
-/// only when the host has real search behavior; otherwise no field is shown.
+/// The host manages navigation values and page state. Provide [onSearchChanged]
+/// to display the search field.
 class VanillaDashboardShell<T extends Object> extends StatelessWidget {
   const VanillaDashboardShell({
     super.key,

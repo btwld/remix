@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
-/// The four navigation groups shared with the repository dashboard showcase.
+/// The navigation groups shared across dashboard showcase presets.
 enum {{typePrefix}}DashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
@@ -14,7 +14,7 @@ enum {{typePrefix}}DashboardDemoSection {
   final String label;
 }
 
-/// Every destination in the full dashboard demo.
+/// The navigation destinations in the dashboard demo.
 enum {{typePrefix}}DashboardDemoPage {
   overview(
     {{typePrefix}}DashboardDemoSection.workspace,
@@ -73,7 +73,7 @@ enum {{typePrefix}}DashboardDemoPage {
   final IconData icon;
 }
 
-/// Stable screen inventory shared by both presets and parity tests.
+/// The section identifiers for each page in the dashboard demo.
 const {{valuePrefix}}DashboardDemoSectionIds = {
   {{typePrefix}}DashboardDemoPage.overview: [
     'metrics',
@@ -164,7 +164,7 @@ const {{valuePrefix}}DashboardDemoSectionIds = {
   ],
 };
 
-/// Deterministic behaviors exercised by the parity fixture suite.
+/// The interaction identifiers exercised by the parity test suite.
 const {{valuePrefix}}DashboardDemoInteractionIds = <String>[
   'navigate-and-retain-page-state',
   'search-local-and-global',
@@ -175,7 +175,7 @@ const {{valuePrefix}}DashboardDemoInteractionIds = <String>[
   'appearance-notifications-theme-account',
 ];
 
-/// The complete sidebar inventory used by the presets.
+/// The sidebar sections and destinations for the dashboard demo.
 final {{valuePrefix}}DashboardDemoSections =
     <RemixSidebarSection<{{typePrefix}}DashboardDemoPage>>[
       for (final section in {{typePrefix}}DashboardDemoSection.values)
@@ -212,10 +212,9 @@ typedef {{typePrefix}}DashboardDemoPageBuilder =
       ValueChanged<{{typePrefix}}DashboardDemoPage> onSelected,
     );
 
-/// Preset-neutral navigation and state for the full dashboard demo.
+/// Shared state and navigation for the dashboard demo.
 ///
-/// Pages live in an [IndexedStack] so interactive controls and the chat draft
-/// keep their state while visitors compare other destinations.
+/// Displays pages in an [IndexedStack] to preserve state across navigation.
 class {{typePrefix}}DashboardDemoBase extends StatefulWidget {
   const {{typePrefix}}DashboardDemoBase({
     super.key,
@@ -262,7 +261,7 @@ class _{{typePrefix}}DashboardDemoBaseState extends State<{{typePrefix}}Dashboar
   );
 }
 
-/// Responsive scrolling frame shared by the product and component pages.
+/// A responsive scroll container for dashboard demo pages.
 class {{typePrefix}}DashboardDemoPageFrame extends StatelessWidget {
   const {{typePrefix}}DashboardDemoPageFrame({
     super.key,

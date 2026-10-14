@@ -15,36 +15,21 @@ const _navigationSemanticLabel = 'Navigation';
 /// scrim stays reachable on narrow screens.
 const _compactSheetBarrierGutter = 56.0;
 
-/// Application shell layout pairing a [sidebar] with a [body].
+/// A layout widget that pairs a [sidebar] with a [body].
 ///
-/// A layout, not a styled component: it owns no `Spec`, ships no generated
-/// adapter, and paints nothing of its own beyond the compact sheet's panel
-/// surface. [sidebar] is expected to be an already-configured `Sidebar`
-/// (or any widget) that renders its own collapsed/expanded content; this
-/// widget only decides where that content sits.
+/// At or above [compactBreakpoint] width, the layout displays [sidebar] in a
+/// row beside an expanded column containing [header] and [body]. The sidebar
+/// animates width transitions between [collapsedWidth] and [sidebarWidth]
+/// based on [collapsed].
 ///
-/// At or above [compactBreakpoint] logical pixels of available width, the
-/// layout renders a row: [sidebar] at [collapsedWidth] or [sidebarWidth]
-/// (matching [collapsed]), animated over 200ms with an ease-in-out curve —
-/// the same timing `RemixSidebar` uses by default — next to an expanded
-/// column holding the optional [header] above [body].
+/// Below [compactBreakpoint] width, the layout hides the inline sidebar and
+/// presents it inside a modal sheet pinned to the start edge. The sheet is
+/// controlled through [VanillaSidebarLayoutScope] or the [compactOpen] property.
 ///
-/// Below [compactBreakpoint], [sidebar] is hidden from the row entirely and
-/// instead presented as a full-height sheet pinned to the layout's *start*
-/// edge (end edge in RTL), opened and closed through
-/// [VanillaSidebarLayoutScope]. The sheet is a [showRemixDialog]
-/// route, which supplies the barrier, Escape-to-dismiss, and focus
-/// containment; this widget only positions the sheet's content and supplies
-/// its panel surface.
-///
-/// [compactOpen] and [onCompactOpenChanged] make the sheet's open state
-/// controlled. Leave [compactOpen] null to let the layout manage it, still
-/// observing changes through [onCompactOpenChanged] if supplied.
-///
-/// A controlled [compactOpen] is the single source of truth: a barrier tap,
-/// Escape, or a back gesture requests closure through [onCompactOpenChanged].
-/// The host must set [compactOpen] to `false` to dismiss it. Crossing back
-/// above [compactBreakpoint] hides the sheet and requests a closed state.
+/// When [compactOpen] is `null`, the layout manages sheet visibility
+/// internally. When [compactOpen] is non-null, the host controls visibility and
+/// must update [compactOpen] to `false` when [onCompactOpenChanged] requests
+/// dismissal.
 ///
 /// ```dart
 /// VanillaSidebarLayout(
@@ -76,42 +61,41 @@ class VanillaSidebarLayout extends StatefulWidget {
        assert(sidebarWidth > 0),
        assert(collapsedWidth > 0 && collapsedWidth <= sidebarWidth);
 
-  /// The navigation panel. Rendered inline while wide, and inside the
-  /// compact sheet while narrow.
+  /// The navigation sidebar widget.
+  ///
+  /// Rendered inline in wide layouts and inside a modal sheet in compact layouts.
   final Widget sidebar;
 
-  /// The page content, always visible.
+  /// The primary content widget displayed alongside or below the sidebar.
   final Widget body;
 
-  /// Optional fixed content above [body], in both presentations, usually a
-  /// `VanillaAppBar`.
+  /// The optional header widget displayed above [body].
   ///
-  /// When present, the header is responsible for keeping clear of the top
-  /// inset, as an app bar does by default, and [body] lays out with no top
-  /// inset of its own.
+  /// When present, the header handles top safe-area insets, and [body] removes
+  /// its top padding to avoid duplicate insets.
   final Widget? header;
 
   /// The available-width threshold, in logical pixels, below which the
   /// layout switches to its compact presentation.
   final double compactBreakpoint;
 
-  /// The wide-mode panel width when [collapsed] is false.
+  /// The sidebar width in wide mode when [collapsed] is `false`.
   final double sidebarWidth;
 
-  /// The wide-mode panel width when [collapsed] is true.
+  /// The sidebar width in wide mode when [collapsed] is `true`.
   final double collapsedWidth;
 
-  /// Whether the wide-mode panel renders at [collapsedWidth] instead of
-  /// [sidebarWidth]. The host toggles this; [sidebar] itself decides how its
-  /// own content responds.
+  /// Whether the sidebar renders at [collapsedWidth] instead of [sidebarWidth].
   final bool collapsed;
 
-  /// Controlled compact-sheet visibility. Null lets the layout manage it.
+  /// Whether the compact navigation sheet is open.
+  ///
+  /// When `null`, the layout manages the open state internally.
   final bool? compactOpen;
 
-  /// Called when the user requests a different open state, or an
-  /// uncontrolled sheet changes state. Updating [compactOpen] itself does
-  /// not emit another callback.
+  /// Called when the compact navigation sheet open state changes.
+  ///
+  /// Updating [compactOpen] directly does not invoke this callback.
   final ValueChanged<bool>? onCompactOpenChanged;
 
   @override
@@ -321,12 +305,10 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
   }
 }
 
-/// Reads the layout's compact state and drives its compact sheet.
+/// An inherited scope that provides compact layout state and controls.
 ///
-/// Available to both the layout's normal subtree (for example, a [header]'s
-/// menu button) and the compact sheet's own subtree (for example, a
-/// destination's `onSelected` callback closing the sheet after navigating),
-/// since the layout re-provides this scope inside the sheet route.
+/// Descendants of [VanillaSidebarLayout] and its compact navigation sheet can
+/// read this scope to observe compact mode or toggle the sheet.
 class VanillaSidebarLayoutScope extends InheritedWidget {
   const VanillaSidebarLayoutScope._({
     required this.isCompact,
@@ -341,21 +323,25 @@ class VanillaSidebarLayoutScope extends InheritedWidget {
 
   /// Whether the compact sheet is currently open.
   ///
-  /// Always false outside a compact presentation.
+  /// Always `false` outside a compact presentation.
   final bool isCompactOpen;
 
   final VoidCallback _openCompact;
   final VoidCallback _closeCompact;
 
-  /// Opens the compact sheet. A no-op while wide.
+  /// Opens the compact sheet.
+  ///
+  /// Has no effect when the layout is not compact.
   void openCompact() => _openCompact();
 
-  /// Closes the compact sheet. A no-op when already closed.
+  /// Closes the compact sheet.
+  ///
+  /// Has no effect when the sheet is already closed.
   void closeCompact() => _closeCompact();
 
-  /// Reads the nearest [VanillaSidebarLayoutScope].
+  /// Returns the nearest [VanillaSidebarLayoutScope] from [context].
   ///
-  /// Throws a [FlutterError] outside a [VanillaSidebarLayout].
+  /// Throws a [FlutterError] if no [VanillaSidebarLayout] ancestor is found.
   static VanillaSidebarLayoutScope of(BuildContext context) {
     final scope = maybeOf(context);
     if (scope == null) {
@@ -367,8 +353,7 @@ class VanillaSidebarLayoutScope extends InheritedWidget {
     return scope;
   }
 
-  /// Reads the nearest [VanillaSidebarLayoutScope], or null outside a
-  /// [VanillaSidebarLayout].
+  /// Returns the nearest [VanillaSidebarLayoutScope] from [context], or `null` if none exists.
   static VanillaSidebarLayoutScope? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<VanillaSidebarLayoutScope>();
 

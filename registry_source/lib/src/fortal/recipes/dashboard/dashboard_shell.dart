@@ -10,10 +10,10 @@ import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/theme.dart';
 
-/// A reusable Fortal dashboard shell.
+/// A dashboard shell styled with the Fortal preset.
 ///
-/// The host owns navigation values and page state. Supply [onSearchChanged]
-/// only when the host has real search behavior; otherwise no field is shown.
+/// The host manages navigation values and page state. Provide [onSearchChanged]
+/// to display the search field.
 class FortalDashboardShell<T extends Object> extends StatelessWidget {
   const FortalDashboardShell({
     super.key,

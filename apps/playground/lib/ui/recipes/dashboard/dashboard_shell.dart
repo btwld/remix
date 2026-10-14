@@ -2,18 +2,18 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../../dashboard/dashboard_shell_base.dart';
 import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
-import 'dashboard_shell_base.dart';
 
-/// A reusable default-preset dashboard shell.
+/// A dashboard shell styled with the Playground preset.
 ///
-/// The host owns navigation values and page state. Supply [onSearchChanged]
-/// only when the host has real search behavior; otherwise no field is shown.
+/// The host manages navigation values and page state. Provide [onSearchChanged]
+/// to display the search field.
 class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
   const PlaygroundDashboardShell({
     super.key,
@@ -70,7 +70,7 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
             ).width(PlaygroundTokens.strokeHairline),
           ),
         );
-    return PlaygroundDashboardShellBase<T>(
+    return RegistryDashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected,
@@ -191,7 +191,7 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
 }
 
 final class _PlaygroundDashboardLayoutControls
-    implements PlaygroundDashboardLayoutControls {
+    implements RegistryDashboardLayoutControls {
   const _PlaygroundDashboardLayoutControls(this.scope);
 
   final PlaygroundSidebarLayoutScope scope;

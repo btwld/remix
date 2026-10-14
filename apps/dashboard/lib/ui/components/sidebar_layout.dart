@@ -15,52 +15,38 @@ const _navigationSemanticLabel = 'Navigation';
 /// scrim stays reachable on narrow screens.
 const _compactSheetBarrierGutter = 56.0;
 
-/// Ui-themed shell layout pairing a [sidebar] with a [body].
+/// A Fortal-themed layout widget that pairs a [sidebar] with a [body].
 ///
-/// A layout, not a styled component: it owns no `Spec`, ships no generated
-/// adapter, and paints nothing of its own beyond the compact sheet's panel
-/// surface. [sidebar] is expected to be an already-configured `UiSidebar`
-/// (or any widget) that renders its own collapsed/expanded content; this
-/// widget only decides where that content sits.
+/// At or above [compactBreakpoint] width, the layout displays [sidebar] in a
+/// row beside an expanded column containing [header] and [body]. The sidebar
+/// animates width transitions between [collapsedWidth] and [sidebarWidth]
+/// based on [collapsed].
 ///
-/// At or above [compactBreakpoint] logical pixels of available width, the
-/// layout renders a row: [sidebar] at [collapsedWidth] or [sidebarWidth]
-/// (matching [collapsed]), animated over 200ms with an ease-in-out curve —
-/// the same timing `RemixSidebar` uses by default — next to an expanded
-/// column holding the optional [header] above [body].
+/// Below [compactBreakpoint] width, the layout hides the inline sidebar and
+/// presents it inside a modal sheet pinned to the start edge. The sheet is
+/// controlled through [FortalSidebarLayoutScope] or the [compactOpen] property.
 ///
-/// Below [compactBreakpoint], [sidebar] is hidden from the row entirely and
-/// instead presented as a full-height sheet pinned to the layout's *start*
-/// edge (end edge in RTL), opened and closed through
-/// [UiSidebarLayoutScope]. The sheet is a [showRemixDialog] route, which
-/// supplies the barrier, Escape-to-dismiss, and focus containment; this
-/// widget only positions the sheet's content and supplies its panel surface.
-///
-/// [compactOpen] and [onCompactOpenChanged] make the sheet's open state
-/// controlled. Leave [compactOpen] null to let the layout manage it, still
-/// observing changes through [onCompactOpenChanged] if supplied.
-///
-/// A controlled [compactOpen] is the single source of truth: a barrier tap,
-/// Escape, or a back gesture requests closure through [onCompactOpenChanged].
-/// The host must set [compactOpen] to `false` to dismiss it. Crossing back
-/// above [compactBreakpoint] hides the sheet and requests a closed state.
+/// When [compactOpen] is `null`, the layout manages sheet visibility
+/// internally. When [compactOpen] is non-null, the host controls visibility and
+/// must update [compactOpen] to `false` when [onCompactOpenChanged] requests
+/// dismissal.
 ///
 /// ```dart
-/// UiSidebarLayout(
-///   sidebar: UiSidebar<AppPage>(
+/// FortalSidebarLayout(
+///   sidebar: FortalSidebar<AppPage>(
 ///     sections: sections,
 ///     selectedValue: page,
 ///     onSelected: (value) {
 ///       setState(() => page = value);
-///       UiSidebarLayoutScope.of(context).closeCompact();
+///       FortalSidebarLayoutScope.of(context).closeCompact();
 ///     },
 ///   ),
-///   header: const UiAppBar(title: 'Overview'),
+///   header: const FortalAppBar(title: 'Overview'),
 ///   body: PageBody(page: page),
 /// )
 /// ```
-class UiSidebarLayout extends StatefulWidget {
-  const UiSidebarLayout({
+class FortalSidebarLayout extends StatefulWidget {
+  const FortalSidebarLayout({
     super.key,
     required this.sidebar,
     required this.body,
@@ -75,49 +61,48 @@ class UiSidebarLayout extends StatefulWidget {
        assert(sidebarWidth > 0),
        assert(collapsedWidth > 0 && collapsedWidth <= sidebarWidth);
 
-  /// The navigation panel. Rendered inline while wide, and inside the
-  /// compact sheet while narrow.
+  /// The navigation sidebar widget.
+  ///
+  /// Rendered inline in wide layouts and inside a modal sheet in compact layouts.
   final Widget sidebar;
 
-  /// The page content, always visible.
+  /// The primary content widget displayed alongside or below the sidebar.
   final Widget body;
 
-  /// Optional fixed content above [body], in both presentations, usually a
-  /// `UiAppBar`.
+  /// The optional header widget displayed above [body].
   ///
-  /// When present, the header is responsible for keeping clear of the top
-  /// inset, as an app bar does by default, and [body] lays out with no top
-  /// inset of its own.
+  /// When present, the header handles top safe-area insets, and [body] removes
+  /// its top padding to avoid duplicate insets.
   final Widget? header;
 
   /// The available-width threshold, in logical pixels, below which the
   /// layout switches to its compact presentation.
   final double compactBreakpoint;
 
-  /// The wide-mode panel width when [collapsed] is false.
+  /// The sidebar width in wide mode when [collapsed] is `false`.
   final double sidebarWidth;
 
-  /// The wide-mode panel width when [collapsed] is true.
+  /// The sidebar width in wide mode when [collapsed] is `true`.
   final double collapsedWidth;
 
-  /// Whether the wide-mode panel renders at [collapsedWidth] instead of
-  /// [sidebarWidth]. The host toggles this; [sidebar] itself decides how its
-  /// own content responds.
+  /// Whether the sidebar renders at [collapsedWidth] instead of [sidebarWidth].
   final bool collapsed;
 
-  /// Controlled compact-sheet visibility. Null lets the layout manage it.
+  /// Whether the compact navigation sheet is open.
+  ///
+  /// When `null`, the layout manages the open state internally.
   final bool? compactOpen;
 
-  /// Called when the user requests a different open state, or an
-  /// uncontrolled sheet changes state. Updating [compactOpen] itself does
-  /// not emit another callback.
+  /// Called when the compact navigation sheet open state changes.
+  ///
+  /// Updating [compactOpen] directly does not invoke this callback.
   final ValueChanged<bool>? onCompactOpenChanged;
 
   @override
-  State<UiSidebarLayout> createState() => _UiSidebarLayoutState();
+  State<FortalSidebarLayout> createState() => _FortalSidebarLayoutState();
 }
 
-class _UiSidebarLayoutState extends State<UiSidebarLayout> {
+class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
   bool _selfOpen = false;
   bool _sheetShowing = false;
 
@@ -178,7 +163,7 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
       context: context,
       barrierDismissible: true,
       barrierLabel: _closeNavigationLabel,
-      barrierColor: MixScope.tokenOf(UiTokens.colorOverlay, context),
+      barrierColor: MixScope.tokenOf(FortalTokens.colorOverlay, context),
       transitionDuration: reduceMotion
           ? Duration.zero
           : const Duration(milliseconds: 250),
@@ -194,7 +179,7 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
           onPopInvokedWithResult: (didPop, _) {
             if (!didPop) _closeCompact();
           },
-          child: UiSidebarLayoutScope._(
+          child: FortalSidebarLayoutScope._(
             isCompact: true,
             isCompactOpen: true,
             openCompact: _openCompact,
@@ -207,14 +192,17 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: MixScope.tokenOf(
-                    UiTokens.colorPanelSolid,
+                    FortalTokens.colorPanelSolid,
                     dialogContext,
                   ),
                   border: BorderDirectional(
                     end: BorderSide(
-                      color: MixScope.tokenOf(UiTokens.grayA5, dialogContext),
+                      color: MixScope.tokenOf(
+                        FortalTokens.grayA5,
+                        dialogContext,
+                      ),
                       width: MixScope.tokenOf(
-                        UiTokens.borderWidth1,
+                        FortalTokens.borderWidth1,
                         dialogContext,
                       ),
                     ),
@@ -263,7 +251,7 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
         final isCompact = constraints.maxWidth < widget.compactBreakpoint;
         _reconcileSheet(isCompact);
 
-        return UiSidebarLayoutScope._(
+        return FortalSidebarLayoutScope._(
           isCompact: isCompact,
           // Anded with isCompact so it can't read true while wide.
           isCompactOpen: isCompact && _effectiveOpen,
@@ -325,17 +313,15 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
   }
 }
 
-/// Reads the layout's compact state and drives its compact sheet.
+/// An inherited scope that provides compact layout state and controls.
 ///
-/// Available to both the layout's normal subtree (for example, a [header]'s
-/// menu button) and the compact sheet's own subtree (for example, a
-/// destination's `onSelected` callback closing the sheet after navigating),
-/// since the layout re-provides this scope inside the sheet route.
-class UiSidebarLayoutScope extends InheritedWidget {
-  // Ui source floors at Dart 3.11, one release before private named
+/// Descendants of [FortalSidebarLayout] and its compact navigation sheet can
+/// read this scope to observe compact mode or toggle the sheet.
+class FortalSidebarLayoutScope extends InheritedWidget {
+  // Fortal source floors at Dart 3.11, one release before private named
   // parameters, so this assigns the private fields explicitly instead of
   // naming the parameters after them.
-  const UiSidebarLayoutScope._({
+  const FortalSidebarLayoutScope._({
     required this.isCompact,
     required this.isCompactOpen,
     required VoidCallback openCompact,
@@ -349,38 +335,41 @@ class UiSidebarLayoutScope extends InheritedWidget {
 
   /// Whether the compact sheet is currently open.
   ///
-  /// Always false outside a compact presentation.
+  /// Always `false` outside a compact presentation.
   final bool isCompactOpen;
 
   final VoidCallback _openCompact;
   final VoidCallback _closeCompact;
 
-  /// Opens the compact sheet. A no-op while wide.
+  /// Opens the compact sheet.
+  ///
+  /// Has no effect when the layout is not compact.
   void openCompact() => _openCompact();
 
-  /// Closes the compact sheet. A no-op when already closed.
+  /// Closes the compact sheet.
+  ///
+  /// Has no effect when the sheet is already closed.
   void closeCompact() => _closeCompact();
 
-  /// Reads the nearest [UiSidebarLayoutScope].
+  /// Returns the nearest [FortalSidebarLayoutScope] from [context].
   ///
-  /// Throws a [FlutterError] outside a [UiSidebarLayout].
-  static UiSidebarLayoutScope of(BuildContext context) {
+  /// Throws a [FlutterError] if no [FortalSidebarLayout] ancestor is found.
+  static FortalSidebarLayoutScope of(BuildContext context) {
     final scope = maybeOf(context);
     if (scope == null) {
       throw FlutterError(
-        'UiSidebarLayoutScope.of requires a UiSidebarLayout ancestor.',
+        'FortalSidebarLayoutScope.of requires a FortalSidebarLayout ancestor.',
       );
     }
     return scope;
   }
 
-  /// Reads the nearest [UiSidebarLayoutScope], or null outside a
-  /// [UiSidebarLayout].
-  static UiSidebarLayoutScope? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<UiSidebarLayoutScope>();
+  /// Returns the nearest [FortalSidebarLayoutScope] from [context], or `null` if none exists.
+  static FortalSidebarLayoutScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<FortalSidebarLayoutScope>();
 
   @override
-  bool updateShouldNotify(UiSidebarLayoutScope oldWidget) =>
+  bool updateShouldNotify(FortalSidebarLayoutScope oldWidget) =>
       isCompact != oldWidget.isCompact ||
       isCompactOpen != oldWidget.isCompactOpen;
 }

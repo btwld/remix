@@ -1,28 +1,37 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-/// The layout state exposed to the shared dashboard composition.
-abstract interface class UiDashboardLayoutControls {
+/// The layout state and navigation controls exposed to the dashboard shell.
+abstract interface class RegistryDashboardLayoutControls {
+  /// Whether the dashboard layout is in compact mode.
   bool get isCompact;
 
+  /// Opens the navigation drawer in compact mode.
   void openCompact();
 
+  /// Closes the navigation drawer in compact mode.
   void closeCompact();
 }
 
-typedef UiDashboardRegionBuilder =
-    Widget Function(BuildContext context, UiDashboardLayoutControls controls);
+/// Builds a dashboard region given layout [controls].
+typedef RegistryDashboardRegionBuilder =
+    Widget Function(
+      BuildContext context,
+      RegistryDashboardLayoutControls controls,
+    );
 
-typedef UiDashboardLayoutBuilder =
+/// Builds the outer layout structure for the dashboard shell.
+typedef RegistryDashboardLayoutBuilder =
     Widget Function(
       BuildContext context, {
       required bool collapsed,
       required Widget body,
-      required UiDashboardRegionBuilder sidebarBuilder,
-      required UiDashboardRegionBuilder headerBuilder,
+      required RegistryDashboardRegionBuilder sidebarBuilder,
+      required RegistryDashboardRegionBuilder headerBuilder,
     });
 
-typedef UiDashboardSidebarBuilder<T extends Object> =
+/// Builds the sidebar navigation panel for the dashboard shell.
+typedef RegistryDashboardSidebarBuilder<T extends Object> =
     Widget Function(
       BuildContext context, {
       required bool collapsed,
@@ -34,7 +43,8 @@ typedef UiDashboardSidebarBuilder<T extends Object> =
       required String semanticLabel,
     });
 
-typedef UiDashboardIconButtonBuilder =
+/// Builds an icon button for dashboard controls.
+typedef RegistryDashboardIconButtonBuilder =
     Widget Function(
       BuildContext context, {
       required Key key,
@@ -43,7 +53,8 @@ typedef UiDashboardIconButtonBuilder =
       required VoidCallback onPressed,
     });
 
-typedef UiDashboardAppBarBuilder =
+/// Builds the page app bar for the dashboard shell.
+typedef RegistryDashboardAppBarBuilder =
     Widget Function(
       BuildContext context, {
       required Widget? leading,
@@ -52,7 +63,8 @@ typedef UiDashboardAppBarBuilder =
       required List<Widget> actions,
     });
 
-typedef UiDashboardSearchBuilder =
+/// Builds the search input field for the dashboard shell.
+typedef RegistryDashboardSearchBuilder =
     Widget Function(
       BuildContext context, {
       required Key key,
@@ -66,8 +78,8 @@ typedef UiDashboardSearchBuilder =
 /// The host owns navigation state, page content, and product actions. The
 /// installed preset supplies the sidebar, layout, controls, and unresolved
 /// styles so this implementation never branches on a preset name.
-class UiDashboardShellBase<T extends Object> extends StatefulWidget {
-  const UiDashboardShellBase({
+class RegistryDashboardShellBase<T extends Object> extends StatefulWidget {
+  const RegistryDashboardShellBase({
     super.key,
     required this.sections,
     required this.selectedValue,
@@ -107,8 +119,10 @@ class UiDashboardShellBase<T extends Object> extends StatefulWidget {
   final Widget body;
   final String title;
 
-  /// Optional visible title composition. [title] remains the accessible label
-  /// and the fallback when this is null.
+  /// The custom widget displayed in place of the page title.
+  ///
+  /// When this is `null`, the header displays [title]. [title] always serves
+  /// as the accessible label.
   final Widget? headerTitle;
   final Widget brand;
   final Widget? account;
@@ -117,29 +131,38 @@ class UiDashboardShellBase<T extends Object> extends StatefulWidget {
   final String searchHintText;
   final String navigationSemanticLabel;
 
-  /// Controlled desktop collapse state. Null lets the shell own it.
+  /// Whether the desktop sidebar is collapsed.
+  ///
+  /// When `null`, the shell manages its own collapse state.
   final bool? collapsed;
+
+  /// Whether the desktop sidebar is initially collapsed when uncontrolled.
   final bool initiallyCollapsed;
+
+  /// Called when the sidebar collapse state changes.
   final ValueChanged<bool>? onCollapsedChanged;
 
-  /// The header width, in logical pixels, from which the search field shows.
+  /// The minimum header width in logical pixels required to display search.
   final double searchBreakpoint;
+
+  /// The width of the search field in logical pixels.
   final double searchWidth;
 
-  /// The gap between the brand and the collapse button in the sidebar header.
-  /// The app bar's own recipe spaces the page header.
+  /// The gap between the brand widget and the collapse button in the sidebar header.
   final double headerSpacing;
 
-  final UiDashboardLayoutBuilder layoutBuilder;
-  final UiDashboardSidebarBuilder<T> sidebarBuilder;
+  final RegistryDashboardLayoutBuilder layoutBuilder;
+  final RegistryDashboardSidebarBuilder<T> sidebarBuilder;
 
-  /// Builds the page header from the installed `app_bar` recipe.
-  final UiDashboardAppBarBuilder appBarBuilder;
-  final UiDashboardIconButtonBuilder iconButtonBuilder;
-  final UiDashboardSearchBuilder searchBuilder;
+  /// The builder that creates the page app bar.
+  final RegistryDashboardAppBarBuilder appBarBuilder;
+  final RegistryDashboardIconButtonBuilder iconButtonBuilder;
+  final RegistryDashboardSearchBuilder searchBuilder;
 
-  /// The sidebar's brand row. Give it the app bar's toolbar height and bottom
-  /// edge so the two line up across the shell.
+  /// The style applied to the sidebar header container.
+  ///
+  /// Set this to match the app bar toolbar height and bottom border to align
+  /// the sidebar and header rows across the shell.
   final BoxStyler sidebarHeaderStyle;
   final IconData menuIcon;
   final IconData searchIcon;
@@ -147,12 +170,12 @@ class UiDashboardShellBase<T extends Object> extends StatefulWidget {
   final IconData forwardIcon;
 
   @override
-  State<UiDashboardShellBase<T>> createState() =>
-      _UiDashboardShellBaseState<T>();
+  State<RegistryDashboardShellBase<T>> createState() =>
+      _RegistryDashboardShellBaseState<T>();
 }
 
-class _UiDashboardShellBaseState<T extends Object>
-    extends State<UiDashboardShellBase<T>> {
+class _RegistryDashboardShellBaseState<T extends Object>
+    extends State<RegistryDashboardShellBase<T>> {
   late bool _selfCollapsed = widget.initiallyCollapsed;
 
   // SidebarLayout changes the body's ancestry at its responsive breakpoint.
@@ -180,7 +203,7 @@ class _UiDashboardShellBaseState<T extends Object>
 
   Widget _buildSidebar(
     BuildContext context,
-    UiDashboardLayoutControls controls,
+    RegistryDashboardLayoutControls controls,
   ) {
     final collapsed = !controls.isCompact && _collapsed;
     return widget.sidebarBuilder(
@@ -227,7 +250,7 @@ class _UiDashboardShellBaseState<T extends Object>
 
   Widget _buildHeader(
     BuildContext context,
-    UiDashboardLayoutControls controls,
+    RegistryDashboardLayoutControls controls,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-/// The four navigation groups shared with the repository dashboard showcase.
+/// The navigation groups shared across dashboard showcase presets.
 enum RegistryDashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
@@ -14,7 +14,7 @@ enum RegistryDashboardDemoSection {
   final String label;
 }
 
-/// Every destination in the full dashboard demo.
+/// The navigation destinations in the dashboard demo.
 enum RegistryDashboardDemoPage {
   overview(
     RegistryDashboardDemoSection.workspace,
@@ -73,7 +73,7 @@ enum RegistryDashboardDemoPage {
   final IconData icon;
 }
 
-/// Stable screen inventory shared by both presets and parity tests.
+/// The section identifiers for each page in the dashboard demo.
 const registryDashboardDemoSectionIds = {
   RegistryDashboardDemoPage.overview: [
     'metrics',
@@ -164,7 +164,7 @@ const registryDashboardDemoSectionIds = {
   ],
 };
 
-/// Deterministic behaviors exercised by the parity fixture suite.
+/// The interaction identifiers exercised by the parity test suite.
 const registryDashboardDemoInteractionIds = <String>[
   'navigate-and-retain-page-state',
   'search-local-and-global',
@@ -175,7 +175,7 @@ const registryDashboardDemoInteractionIds = <String>[
   'appearance-notifications-theme-account',
 ];
 
-/// The complete sidebar inventory used by the presets.
+/// The sidebar sections and destinations for the dashboard demo.
 final registryDashboardDemoSections =
     <RemixSidebarSection<RegistryDashboardDemoPage>>[
       for (final section in RegistryDashboardDemoSection.values)
@@ -212,10 +212,9 @@ typedef RegistryDashboardDemoPageBuilder =
       ValueChanged<RegistryDashboardDemoPage> onSelected,
     );
 
-/// Preset-neutral navigation and state for the full dashboard demo.
+/// Shared state and navigation for the dashboard demo.
 ///
-/// Pages live in an [IndexedStack] so interactive controls and the chat draft
-/// keep their state while visitors compare other destinations.
+/// Displays pages in an [IndexedStack] to preserve state across navigation.
 class RegistryDashboardDemoBase extends StatefulWidget {
   const RegistryDashboardDemoBase({
     super.key,
@@ -262,7 +261,7 @@ class _RegistryDashboardDemoBaseState extends State<RegistryDashboardDemoBase> {
   );
 }
 
-/// Responsive scrolling frame shared by the product and component pages.
+/// A responsive scroll container for dashboard demo pages.
 class RegistryDashboardDemoPageFrame extends StatelessWidget {
   const RegistryDashboardDemoPageFrame({
     super.key,

@@ -1,21 +1,26 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-/// The layout state exposed to the shared dashboard composition.
+/// The layout state and navigation controls exposed to the dashboard shell.
 abstract interface class {{typePrefix}}DashboardLayoutControls {
+  /// Whether the dashboard layout is in compact mode.
   bool get isCompact;
 
+  /// Opens the navigation drawer in compact mode.
   void openCompact();
 
+  /// Closes the navigation drawer in compact mode.
   void closeCompact();
 }
 
+/// Builds a dashboard region given layout [controls].
 typedef {{typePrefix}}DashboardRegionBuilder =
     Widget Function(
       BuildContext context,
       {{typePrefix}}DashboardLayoutControls controls,
     );
 
+/// Builds the outer layout structure for the dashboard shell.
 typedef {{typePrefix}}DashboardLayoutBuilder =
     Widget Function(
       BuildContext context, {
@@ -25,6 +30,7 @@ typedef {{typePrefix}}DashboardLayoutBuilder =
       required {{typePrefix}}DashboardRegionBuilder headerBuilder,
     });
 
+/// Builds the sidebar navigation panel for the dashboard shell.
 typedef {{typePrefix}}DashboardSidebarBuilder<T extends Object> =
     Widget Function(
       BuildContext context, {
@@ -37,6 +43,7 @@ typedef {{typePrefix}}DashboardSidebarBuilder<T extends Object> =
       required String semanticLabel,
     });
 
+/// Builds an icon button for dashboard controls.
 typedef {{typePrefix}}DashboardIconButtonBuilder =
     Widget Function(
       BuildContext context, {
@@ -46,6 +53,7 @@ typedef {{typePrefix}}DashboardIconButtonBuilder =
       required VoidCallback onPressed,
     });
 
+/// Builds the page app bar for the dashboard shell.
 typedef {{typePrefix}}DashboardAppBarBuilder =
     Widget Function(
       BuildContext context, {
@@ -55,6 +63,7 @@ typedef {{typePrefix}}DashboardAppBarBuilder =
       required List<Widget> actions,
     });
 
+/// Builds the search input field for the dashboard shell.
 typedef {{typePrefix}}DashboardSearchBuilder =
     Widget Function(
       BuildContext context, {
@@ -110,8 +119,10 @@ class {{typePrefix}}DashboardShellBase<T extends Object> extends StatefulWidget 
   final Widget body;
   final String title;
 
-  /// Optional visible title composition. [title] remains the accessible label
-  /// and the fallback when this is null.
+  /// The custom widget displayed in place of the page title.
+  ///
+  /// When this is `null`, the header displays [title]. [title] always serves
+  /// as the accessible label.
   final Widget? headerTitle;
   final Widget brand;
   final Widget? account;
@@ -120,29 +131,38 @@ class {{typePrefix}}DashboardShellBase<T extends Object> extends StatefulWidget 
   final String searchHintText;
   final String navigationSemanticLabel;
 
-  /// Controlled desktop collapse state. Null lets the shell own it.
+  /// Whether the desktop sidebar is collapsed.
+  ///
+  /// When `null`, the shell manages its own collapse state.
   final bool? collapsed;
+
+  /// Whether the desktop sidebar is initially collapsed when uncontrolled.
   final bool initiallyCollapsed;
+
+  /// Called when the sidebar collapse state changes.
   final ValueChanged<bool>? onCollapsedChanged;
 
-  /// The header width, in logical pixels, from which the search field shows.
+  /// The minimum header width in logical pixels required to display search.
   final double searchBreakpoint;
+
+  /// The width of the search field in logical pixels.
   final double searchWidth;
 
-  /// The gap between the brand and the collapse button in the sidebar header.
-  /// The app bar's own recipe spaces the page header.
+  /// The gap between the brand widget and the collapse button in the sidebar header.
   final double headerSpacing;
 
   final {{typePrefix}}DashboardLayoutBuilder layoutBuilder;
   final {{typePrefix}}DashboardSidebarBuilder<T> sidebarBuilder;
 
-  /// Builds the page header from the installed `app_bar` recipe.
+  /// The builder that creates the page app bar.
   final {{typePrefix}}DashboardAppBarBuilder appBarBuilder;
   final {{typePrefix}}DashboardIconButtonBuilder iconButtonBuilder;
   final {{typePrefix}}DashboardSearchBuilder searchBuilder;
 
-  /// The sidebar's brand row. Give it the app bar's toolbar height and bottom
-  /// edge so the two line up across the shell.
+  /// The style applied to the sidebar header container.
+  ///
+  /// Set this to match the app bar toolbar height and bottom border to align
+  /// the sidebar and header rows across the shell.
   final BoxStyler sidebarHeaderStyle;
   final IconData menuIcon;
   final IconData searchIcon;
