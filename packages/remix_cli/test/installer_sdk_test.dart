@@ -51,11 +51,14 @@ void main() {
       expect(snapshotFiles(root), before);
 
       final remixRoot = Directory(p.join('..', 'remix')).absolute.path;
+      final nakedUiRoot = Directory(p.join('..', 'naked_ui')).absolute.path;
       final fontsRoot = Directory(p.join('..', 'remix_ui_fonts')).absolute.path;
       File(p.join(root.path, 'pubspec_overrides.yaml')).writeAsStringSync('''
 dependency_overrides:
   remix:
     path: ${jsonEncode(remixRoot)}
+  naked_ui:
+    path: ${jsonEncode(nakedUiRoot)}
   remix_ui_fonts:
     path: ${jsonEncode(fontsRoot)}
 ''');
