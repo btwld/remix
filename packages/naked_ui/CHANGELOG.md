@@ -1,11 +1,76 @@
-## Unreleased
+## 1.2.0
+
+### Features
+
+- Build `NakedTooltip` on Flutter's `RawTooltip` for triggers, delays,
+  feedback, animation, hoverable content, and overlay lifetime. Retains 1.1.0
+  focus, blur, Escape, and collision-resolved `OverlayPlacement` behaviors.
+- Add `NakedTooltip.tooltipKey` (`GlobalKey<RawTooltipState>`) to show the
+  tooltip imperatively via `ensureTooltipVisible()`.
+
+### Deprecations
+
+- Deprecate `NakedTooltip.open`, `useRootOverlay`, and
+  `disableHoverableContent` for removal in 2.0.0. Setting any of these
+  parameters runs the legacy 1.1.0 implementation. Use `tooltipKey` to show
+  the tooltip imperatively and `onOpenChanged` to observe visibility.
+  `tooltipKey` has no effect when a deprecated parameter is set.
+
+### Changed
+
+- Clarify `NakedCombobox`'s direct `RawAutocomplete` composition and retain
+  its lifecycle callbacks. Flutter issue #191928 still allows a pending async
+  result to reopen the options after Escape; the adapter reports that reopen
+  accurately and does not add a second visibility state machine.
+
+### Fixes
+
+- Allow Escape on a closed `NakedTooltip` trigger to reach enclosing dismiss
+  actions (such as dialogs or drawers).
+- Deliver uncontrolled `NakedTooltip.onOpenChanged` notifications after the
+  current frame so callers can safely call `setState`. Discard pending
+  notifications on disposal, report closure before replacing `tooltipKey`, and
+  report zero-duration reopens while mounted.
+- Preserve `NakedTooltip` animation defaults for partial `AnimationStyle`
+  values, honor reverse curves, and apply style updates without resetting
+  visibility, focus, or raw tooltip state.
+- `NakedTextMagnifier` now updates its position and focal point when its
+  notifier, size, magnification scale, or vertical shift changes, without
+  waiting for the notifier's next update.
+- A controlled `NakedSelect` (`open` + `onOpenChanged`) now asks its owner
+  before every close, including Escape on the trigger, an ancestor scroll
+  (once when scrolling starts and once when it ends), and a view resize. These
+  used to close the overlay without calling `onOpenChanged`.
+- Escape on a closed `NakedSelect` trigger now reaches an enclosing dismiss
+  action, such as the `NakedPopover` around it. 1.1.0 consumed it.
+- Remove the duplicate horizontal traversal binding from menubar overlays.
+  `OverlayPortal` preserves the bar ancestry, while menu panels retain their
+  own Home/End bindings; arrow traversal behavior is unchanged.
+- Guard `NakedMenu` and `NakedPopover` `onCloseRequested` callbacks against
+  closed anchors on Flutter 3.41 and 3.47, and avoid restoring focus to a
+  closing menubar trigger when a sibling menu in the same `NakedMenubar` is
+  already open.
+- Bind Escape directly on dismissible `showNakedDialog` routes so custom
+  `WidgetsApp` shortcut maps that omit `DismissIntent` still dismiss
+  dialogs on Escape while respecting `PopScope`.
+- Wrap `NakedCombobox` options overlays in `ExcludeFocus` (matching Flutter
+  3.47) so Tab from an open combobox moves focus to the next focusable widget on
+  Flutter 3.41 and 3.44, and guard async `optionsBuilder` completions after
+  unmount on Flutter 3.41.
+- Preserve other actively focused or hovered `NakedTooltip` overlays when a
+  blurred tooltip's `dismissDelay` runs `RawTooltip.dismissAllToolTips()`, and
+  reset hover/focus state cleanly on Escape or overlay removal.
+- Reset `NakedScrollbar` hover state when `interactive` becomes `false` while
+  hovered, and snap `NakedTextMagnifier` immediately on widget property updates
+  instead of animating as a line jump.
 
 ### Evaluated and skipped
 
 - `Expansible` hard-wires a clipped height animation and would drop
   `reverseDuration`.
-- `RawTooltip` still has no controlled open state, hoverable content, or
-  `useRootOverlay`.
+- `RawTooltip` still has no per-instance dismiss, controlled open state,
+  root-overlay option, or focus trigger, and `ignorePointer` needs Flutter
+  3.44, so the deprecated parameters keep the 1.1.0 implementation.
 - `showRawDialog` needs Flutter 3.44 and only adds native-window dialogs.
 
 ## 1.1.0
