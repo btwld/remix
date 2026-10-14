@@ -186,6 +186,10 @@ class _NakedTooltipState extends State<NakedTooltip> {
   bool _contentHovered = false;
   // Focus is holding the tooltip open; mouse exits must not close it.
   bool _heldByFocus = false;
+  // Tracks whether pointer hover ever engaged this tooltip during its current
+  // open cycle so imperatively/manually opened tooltips are not dismissed as
+  // stale hover state when hovering another tooltip.
+  bool _hoveredWhileOpen = false;
   late OverlayPlacement _placement = _initialPlacement(widget.positioning);
   OverlayPlacement? _pendingPlacement;
 
@@ -295,35 +299,52 @@ class _NakedTooltipState extends State<NakedTooltip> {
   // Snapshot any other actively held or hovered tooltips and restore them.
   void _dismiss() {
     _heldByFocus = false;
-    final toRestore = <(_NakedTooltipState, bool)>[
+    _hoveredWhileOpen = false;
+    final toRestore = <(_NakedTooltipState, bool, bool)>[
       for (final tooltip in _mountedTooltips)
         if (!identical(tooltip, this) &&
             !tooltip._usesLegacyTooltip &&
             tooltip._visible &&
             (tooltip._heldByFocus ||
                 tooltip._triggerHovered ||
-                tooltip._contentHovered))
-          (tooltip, tooltip._heldByFocus),
+                tooltip._contentHovered ||
+                !tooltip._hoveredWhileOpen ||
+                tooltip.widget.triggerMode == TooltipTriggerMode.manual))
+          (tooltip, tooltip._heldByFocus, tooltip._hoveredWhileOpen),
     ];
     RawTooltip.dismissAllToolTips();
-    for (final (tooltip, wasHeldByFocus) in toRestore) {
+    for (final (tooltip, wasHeldByFocus, wasHoveredWhileOpen) in toRestore) {
       if (wasHeldByFocus) tooltip._heldByFocus = true;
+      if (wasHoveredWhileOpen) tooltip._hoveredWhileOpen = true;
       tooltip._show();
     }
   }
 
-  void _dismissStaleTooltips() {
-    for (final tooltip in _mountedTooltips.toList()) {
-      if (!identical(tooltip, this) &&
-          !tooltip._usesLegacyTooltip &&
-          tooltip._visible &&
-          !tooltip._heldByFocus &&
-          !tooltip._triggerHovered &&
-          !tooltip._contentHovered) {
-        tooltip._dismiss();
-        break;
+  void _preserveNonHoverTooltips() {
+    final toPreserve = <_NakedTooltipState>[
+      for (final tooltip in _mountedTooltips)
+        if (!identical(tooltip, this) &&
+            !tooltip._usesLegacyTooltip &&
+            tooltip._visible &&
+            (tooltip._heldByFocus ||
+                (tooltip.widget.triggerMode == TooltipTriggerMode.manual &&
+                    !tooltip._hoveredWhileOpen)))
+          tooltip,
+    ];
+    if (toPreserve.isEmpty) return;
+    // RawTooltip._handleMouseEnter dismisses all other unhovered tooltips when
+    // a new trigger is hovered. Reopen any focus-held or manually opened
+    // tooltips in a microtask after RawTooltip processes the enter event.
+    scheduleMicrotask(() {
+      for (final tooltip in toPreserve) {
+        if (!tooltip.mounted) continue;
+        if (tooltip._heldByFocus ||
+            (tooltip.widget.triggerMode == TooltipTriggerMode.manual &&
+                !tooltip._hoveredWhileOpen)) {
+          tooltip._show();
+        }
       }
-    }
+    });
   }
 
   void _handleFocusChange(bool focused) {
@@ -362,9 +383,8 @@ class _NakedTooltipState extends State<NakedTooltip> {
   }
 
   void _handlePointerExit() {
-    // These regions sit inside RawTooltip's, so they see the exit first, in
-    // hit-test order. RawTooltip then schedules, or with a zero dismissDelay
-    // performs, its own dismissal. Reopen afterwards while focus holds it.
+    // RawTooltip schedules, or with a zero dismissDelay performs, its own
+    // dismissal on pointer exit. Reopen afterwards while focus holds it.
     if (!_focusWithin) return;
     scheduleMicrotask(() {
       if (!mounted || !_focusWithin) return;
@@ -404,9 +424,12 @@ class _NakedTooltipState extends State<NakedTooltip> {
   void _reportVisibility(bool visible) {
     if (_visible == visible) return;
     _visible = visible;
-    if (!visible) {
+    if (visible) {
+      _hoveredWhileOpen = _triggerHovered || _contentHovered;
+    } else {
       _heldByFocus = false;
       _contentHovered = false;
+      _hoveredWhileOpen = false;
     }
     // The overlay can first report visibility during build. Deliver from the
     // owner so closing survives overlay removal, but not tooltip disposal.
@@ -470,7 +493,10 @@ class _NakedTooltipState extends State<NakedTooltip> {
           placement: _placement,
           child: MouseRegion(
             opaque: false,
-            onEnter: (_) => _contentHovered = true,
+            onEnter: (_) {
+              _contentHovered = true;
+              if (_visible) _hoveredWhileOpen = true;
+            },
             onExit: (_) {
               _contentHovered = false;
               _handlePointerExit();
@@ -510,7 +536,8 @@ class _NakedTooltipState extends State<NakedTooltip> {
       opaque: false,
       onEnter: (_) {
         _triggerHovered = true;
-        _dismissStaleTooltips();
+        if (_visible) _hoveredWhileOpen = true;
+        _preserveNonHoverTooltips();
       },
       onExit: (_) {
         _triggerHovered = false;

@@ -592,6 +592,62 @@ void main() {
           await mouse.removePointer();
         },
       );
+
+      testWidgets(
+        'hovering another tooltip preserves a manually opened tooltip',
+        (WidgetTester tester) async {
+          final manualTooltipKey = GlobalKey<RawTooltipState>();
+          const triggerA = Key('manual-trigger-a');
+          const triggerB = Key('hover-trigger-b');
+          await tester.pumpMaterialWidget(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NakedTooltip(
+                  tooltipKey: manualTooltipKey,
+                  triggerMode: TooltipTriggerMode.manual,
+                  animationStyle: AnimationStyle.noAnimation,
+                  overlayBuilder: (context, animation) =>
+                      const Text('Manual Tooltip A'),
+                  child: const SizedBox(key: triggerA, width: 100, height: 40),
+                ),
+                const SizedBox(width: 100),
+                NakedTooltip(
+                  hoverDelay: Duration.zero,
+                  dismissDelay: Duration.zero,
+                  animationStyle: AnimationStyle.noAnimation,
+                  overlayBuilder: (context, animation) =>
+                      const Text('Hover Tooltip B'),
+                  child: const SizedBox(key: triggerB, width: 100, height: 40),
+                ),
+              ],
+            ),
+          );
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: const Offset(500, 500));
+          await tester.pump();
+
+          manualTooltipKey.currentState!.ensureTooltipVisible();
+          await tester.pumpAndSettle();
+          expect(find.text('Manual Tooltip A'), findsOneWidget);
+
+          await mouse.moveTo(tester.getCenter(find.byKey(triggerB)));
+          await tester.pumpAndSettle();
+
+          expect(find.text('Manual Tooltip A'), findsOneWidget);
+          expect(find.text('Hover Tooltip B'), findsOneWidget);
+
+          await mouse.moveTo(const Offset(-1000, -1000));
+          await tester.pumpAndSettle();
+
+          expect(find.text('Manual Tooltip A'), findsOneWidget);
+          expect(find.text('Hover Tooltip B'), findsNothing);
+          await mouse.removePointer();
+        },
+      );
     });
   });
 }
