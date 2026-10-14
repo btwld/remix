@@ -2,52 +2,60 @@ part of 'app_bar.dart';
 
 /// Resolved visual values for a [RemixAppBar].
 ///
-/// Geometry scalars stay null here. [RemixAppBar] falls back to a 56 logical
-/// pixel toolbar and no gaps at render time; presets set their own metrics.
+/// Unset dimensions default at render time to a 56 logical pixel toolbar
+/// height and zero spacing.
 @MixableSpec(target: RemixAppBar.new, extraStylerMixins: [RemixBoxStylerMixin])
 @immutable
 final class AppBarSpec with _$AppBarSpec {
-  /// Surface behind the whole bar: color, border, and decoration.
+  /// Surface style for the entire bar, including color, border, and decoration.
   ///
-  /// It paints under the top inset when [RemixAppBar.safeArea] is true, so
-  /// its padding applies inside the inset rather than replacing it.
+  /// When [RemixAppBar.safeArea] is `true`, this surface paints behind the top
+  /// inset. Container padding applies inside that inset.
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
-  /// Layout around the leading, title, and actions row, typically the
-  /// horizontal inset of its content.
+  /// Layout and decoration style for the toolbar row.
+  ///
+  /// This style typically defines horizontal padding for the leading widget,
+  /// title, and actions.
   @override
   final StyleSpec<BoxSpec> toolbar;
 
-  /// Typography for the title.
+  /// Text style for the title.
   ///
-  /// Also the default text style for a custom title widget. A title stays on
-  /// one line with an ellipsis unless this sets [TextSpec.maxLines].
+  /// This style also provides the default text style for [RemixAppBar.titleChild].
+  /// Titles truncate to a single line with an ellipsis unless this style sets
+  /// [TextSpec.maxLines].
   @override
   final StyleSpec<TextSpec> title;
 
-  /// Layout for the actions row. Its direction and main-axis size are always
-  /// horizontal and minimal; use it for spacing and alignment.
+  /// Layout style for the actions row.
+  ///
+  /// The row direction is always horizontal with minimal main-axis size. Use
+  /// this style to configure spacing and alignment for action items.
   @override
   final StyleSpec<FlexBoxSpec> actions;
 
-  /// Layout and decoration around the optional bottom content.
+  /// Layout and decoration style for optional bottom content.
   ///
-  /// Resolved but unused when the bar has no bottom content.
+  /// [RemixAppBar] resolves this style even when [RemixAppBar.bottom] is `null`.
   @override
   final StyleSpec<BoxSpec> bottom;
 
-  /// Height of the toolbar row, including the [toolbar] padding.
+  /// Height of the toolbar row, including [toolbar] padding.
+  ///
+  /// When `null`, [RemixAppBar] uses a default height of 56 logical pixels.
   @override
   final double? toolbarHeight;
 
-  /// Gap between the leading widget, the title, and the actions.
+  /// Horizontal spacing between the leading widget, title, and actions.
   ///
-  /// Applies only between parts that are present.
+  /// Spacing applies only between slots that contain widgets.
   @override
   final double? spacing;
 
+  /// Creates an [AppBarSpec].
   const AppBarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? toolbar,
