@@ -32,7 +32,6 @@ without dynamic scope lookup or arithmetic limitations. Token IDs use the value 
 so they render per consumer.
 
 ```dart
-import 'package:flutter/animation.dart';
 import 'package:remix/remix.dart';
 
 abstract final class AcmeTokens {
@@ -42,7 +41,9 @@ abstract final class AcmeTokens {
   static const s4 = 16.0;
   static const strokeIndicator = 2.0;
   static const disabledOpacity = 0.5;
-  static const motion = Curves.fastOutSlowIn;
+  static const motion = CurveAnimationConfig.fastOutSlowIn(
+    Duration(milliseconds: 150),
+  );
 
   // Mix token identities.
   static const background = ColorToken('acme.color.background');

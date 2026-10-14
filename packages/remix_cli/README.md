@@ -416,8 +416,9 @@ an existing Vanilla project installed prior to token consolidation:
    to update `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`;
 2. update installed components to use `<Prefix>Tokens` instead of `scale.dart`
    by re-adding them with `--overwrite` (for example, `remix add <component> --overwrite`)
-   or updating local component imports and references from `scale.dart` /
-   `<Prefix>Space` / `<Prefix>Motion` to `<Prefix>Tokens`;
+   or updating local component imports and references from `scale.dart` and its
+   retired helper classes (`<Prefix>Space`, `<Prefix>Size`, `<Prefix>Stroke`,
+   `<Prefix>Opacity`, and `<Prefix>Motion`) to `<Prefix>Tokens`;
 3. delete `lib/ui/theme/scale.dart`;
 4. remove `export 'theme/scale.dart';` from `lib/ui/ui.dart`.
 
