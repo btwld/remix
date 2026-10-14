@@ -137,43 +137,19 @@ class _MenuIntentActions {
 
   Map<Type, Action<Intent>> actions({
     required VoidCallback onDismiss,
-    VoidCallback? onNextFocus,
-    VoidCallback? onPreviousFocus,
-    VoidCallback? onFirstFocus,
-    VoidCallback? onLastFocus,
-  }) {
-    final map = <Type, Action<Intent>>{
-      DismissIntent: CallbackAction<DismissIntent>(
-        onInvoke: (_) => onDismiss(),
-      ),
-    };
-
-    if (onNextFocus != null) {
-      map[NextFocusIntent] = CallbackAction<NextFocusIntent>(
-        onInvoke: (_) => onNextFocus(),
-      );
-    }
-
-    if (onPreviousFocus != null) {
-      map[PreviousFocusIntent] = CallbackAction<PreviousFocusIntent>(
-        onInvoke: (_) => onPreviousFocus(),
-      );
-    }
-
-    if (onFirstFocus != null) {
-      map[_FirstFocusIntent] = CallbackAction<_FirstFocusIntent>(
-        onInvoke: (_) => onFirstFocus(),
-      );
-    }
-
-    if (onLastFocus != null) {
-      map[_LastFocusIntent] = CallbackAction<_LastFocusIntent>(
-        onInvoke: (_) => onLastFocus(),
-      );
-    }
-
-    return map;
-  }
+    required VoidCallback onFirstFocus,
+    required VoidCallback onLastFocus,
+  }) => {
+    DismissIntent: CallbackAction<DismissIntent>(onInvoke: (_) => onDismiss()),
+    NextFocusIntent: NextFocusAction(),
+    PreviousFocusIntent: PreviousFocusAction(),
+    _FirstFocusIntent: CallbackAction<_FirstFocusIntent>(
+      onInvoke: (_) => onFirstFocus(),
+    ),
+    _LastFocusIntent: CallbackAction<_LastFocusIntent>(
+      onInvoke: (_) => onLastFocus(),
+    ),
+  };
 }
 
 // Intent helpers for menu bars
@@ -181,8 +157,8 @@ class _MenuIntentActions {
 class _MenubarIntentActions {
   const _MenubarIntentActions();
 
-  /// Left/right (direction-aware) move between bar triggers.
-  Map<ShortcutActivator, Intent> traversalShortcuts(TextDirection direction) {
+  /// Left/right (direction-aware) and Home/End move between bar triggers.
+  Map<ShortcutActivator, Intent> barShortcuts(TextDirection direction) {
     final nextKey = direction == TextDirection.ltr
         ? LogicalKeyboardKey.arrowRight
         : LogicalKeyboardKey.arrowLeft;
@@ -193,14 +169,6 @@ class _MenubarIntentActions {
     return <ShortcutActivator, Intent>{
       SingleActivator(nextKey): _MenubarNextIntent(),
       SingleActivator(previousKey): _MenubarPreviousIntent(),
-    };
-  }
-
-  /// Bar traversal plus Home/End. Overlay panels use [traversalShortcuts] so
-  /// Home/End still move inside the open menu.
-  Map<ShortcutActivator, Intent> barShortcuts(TextDirection direction) {
-    return <ShortcutActivator, Intent>{
-      ...traversalShortcuts(direction),
       SingleActivator(LogicalKeyboardKey.home): _FirstFocusIntent(),
       SingleActivator(LogicalKeyboardKey.end): _LastFocusIntent(),
     };
@@ -213,21 +181,6 @@ class _MenubarIntentActions {
         SingleActivator(LogicalKeyboardKey.arrowUp): _OpenOverlayIntent(),
       };
 
-  /// Actions for [traversalShortcuts].
-  Map<Type, Action<Intent>> traversalActions({
-    required VoidCallback onNext,
-    required VoidCallback onPrevious,
-  }) {
-    return <Type, Action<Intent>>{
-      _MenubarNextIntent: CallbackAction<_MenubarNextIntent>(
-        onInvoke: (_) => onNext(),
-      ),
-      _MenubarPreviousIntent: CallbackAction<_MenubarPreviousIntent>(
-        onInvoke: (_) => onPrevious(),
-      ),
-    };
-  }
-
   /// Actions for [barShortcuts].
   Map<Type, Action<Intent>> barActions({
     required VoidCallback onNext,
@@ -236,7 +189,12 @@ class _MenubarIntentActions {
     required VoidCallback onLast,
   }) {
     return <Type, Action<Intent>>{
-      ...traversalActions(onNext: onNext, onPrevious: onPrevious),
+      _MenubarNextIntent: CallbackAction<_MenubarNextIntent>(
+        onInvoke: (_) => onNext(),
+      ),
+      _MenubarPreviousIntent: CallbackAction<_MenubarPreviousIntent>(
+        onInvoke: (_) => onPrevious(),
+      ),
       _FirstFocusIntent: CallbackAction<_FirstFocusIntent>(
         onInvoke: (_) => onFirst(),
       ),
@@ -273,15 +231,16 @@ class _SelectIntentActions {
   Map<ShortcutActivator, Intent> get shortcuts => _selectShortcuts;
 
   Map<Type, Action<Intent>> actions({
-    required VoidCallback onDismiss,
+    VoidCallback? onDismiss,
     VoidCallback? onOpenOverlay,
     VoidCallback? onPageUp,
     VoidCallback? onPageDown,
   }) {
     final map = <Type, Action<Intent>>{
-      DismissIntent: CallbackAction<DismissIntent>(
-        onInvoke: (_) => onDismiss(),
-      ),
+      if (onDismiss != null)
+        DismissIntent: CallbackAction<DismissIntent>(
+          onInvoke: (_) => onDismiss(),
+        ),
     };
 
     if (onOpenOverlay != null) {

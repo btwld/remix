@@ -1,9 +1,9 @@
 /// Base abstractions for overlay widgets like [NakedMenu] and [NakedSelect].
 ///
 /// This file provides:
-/// - [OverlayScope]: InheritedWidget pattern for overlay context
-/// - [OverlayItem]: Base class for overlay items (actions/options)
-/// - [OverlayStateMixin]: State management for overlay widgets
+/// - [OverlayScope]: [InheritedWidget] pattern for overlay context.
+/// - [OverlayItem]: Base class for overlay items (actions and options).
+/// - [OverlayStateMixin]: State management for overlay widgets.
 library;
 
 import 'dart:ui' show SemanticsRole;
@@ -11,6 +11,8 @@ import 'dart:ui' show SemanticsRole;
 import 'package:flutter/widgets.dart';
 
 import '../naked_button.dart';
+import '../naked_menu.dart';
+import '../naked_select.dart';
 import '../utilities/naked_state_scope.dart';
 import '../utilities/state.dart';
 
@@ -18,15 +20,15 @@ import '../utilities/state.dart';
 
 /// Base class for overlay scope widgets that provide context to their children.
 ///
-/// This class provides the common pattern for InheritedWidget-based scopes
-/// used by overlay widgets like NakedMenu and NakedSelect.
+/// Provides the [InheritedWidget] scope pattern used by [NakedMenu] and
+/// [NakedSelect].
 abstract class OverlayScope<T> extends InheritedWidget {
   /// Creates a scope that exposes overlay state to [child].
   const OverlayScope({required super.child, super.key});
 
   /// Returns the scope of the specified type that most tightly encloses the given [context].
   ///
-  /// This method returns null if no scope of the specified type is found.
+  /// Returns `null` if no scope of the specified type is found.
   @protected
   static S? maybeOf<S extends OverlayScope>(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType();
@@ -34,7 +36,7 @@ abstract class OverlayScope<T> extends InheritedWidget {
 
   /// Returns the scope of the specified type that most tightly encloses the given [context].
   ///
-  /// If no scope is found, this method throws a [FlutterError] with a descriptive message.
+  /// Throws a [FlutterError] if no matching scope is found.
   @protected
   static S of<S extends OverlayScope>(
     BuildContext context, {
@@ -67,10 +69,7 @@ abstract class OverlayScope<T> extends InheritedWidget {
 
 // Base implementation for overlay item widgets
 
-/// Base class for overlay item widgets (actions, options, etc.)
-///
-/// This class provides the common pattern for widgets that represent
-/// selectable/actionable items within overlay panels.
+/// Base class for selectable or actionable items in overlay panels.
 abstract class OverlayItem<T, S extends NakedState> extends StatelessWidget {
   /// Creates an overlay item associated with [value].
   const OverlayItem({
@@ -91,19 +90,16 @@ abstract class OverlayItem<T, S extends NakedState> extends StatelessWidget {
   /// Whether this item is enabled for interaction.
   final bool enabled;
 
-  /// Optional semantic label for accessibility.
+  /// The semantic label for accessibility.
   final String? semanticLabel;
 
-  /// Optional child widget to display.
+  /// The child widget to display.
   final Widget? child;
 
-  /// Optional builder function for custom styling based on widget states.
+  /// A builder function for custom styling based on widget states.
   final ValueWidgetBuilder<S>? builder;
 
-  /// Helper method to build a [NakedButton] with consistent behavior.
-  ///
-  /// This method handles the common pattern of wrapping item content
-  /// in a button with proper state management.
+  /// Builds a [NakedButton] with state mapping and semantics for this item.
   @protected
   Widget buildButton({
     required VoidCallback? onPressed,
@@ -162,34 +158,25 @@ abstract class OverlayItem<T, S extends NakedState> extends StatelessWidget {
 
 // State management utilities for overlay widgets
 
-/// Mixin that provides common state management for overlay widgets.
-///
-/// This mixin handles the shared patterns for tracking selection sessions
-/// and managing overlay lifecycle callbacks.
+/// Mixin that manages selection sessions and lifecycle callbacks for overlays.
 mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
-  /// Tracks whether a selection was made during the current overlay session.
-  ///
-  /// This is used to determine whether to call onCanceled callback when
-  /// the overlay closes.
   bool _selectionMadeDuringSession = false;
 
-  /// Returns whether a selection was made during the current session.
+  /// Whether a selection was made during the current session.
   @protected
   bool get selectionMadeDuringSession => _selectionMadeDuringSession;
 
-  /// Handles overlay opening logic.
-  ///
-  /// Resets the selection tracking and calls the provided [onOpen] callback.
+  /// Resets selection tracking and invokes [onOpen].
   @protected
   void handleOpen(VoidCallback? onOpen) {
     _selectionMadeDuringSession = false;
     onOpen?.call();
   }
 
-  /// Handles overlay closing logic.
+  /// Handles overlay closure, invoking [onCanceled] if no selection occurred.
   ///
-  /// If no selection was made during the session, calls [onCanceled].
-  /// Always calls [onClose] and optionally requests focus on [triggerFocusNode].
+  /// Always invokes [onClose] and requests focus on [triggerFocusNode] when
+  /// provided.
   @protected
   void handleClose({
     VoidCallback? onClose,
@@ -205,9 +192,24 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
 
   /// Marks that a selection was made during the current session.
   ///
-  /// This prevents the onCanceled callback from being called when the overlay closes.
+  /// Prevents [handleClose] from invoking `onCanceled` when the overlay closes.
   @protected
   void markSelectionMade() {
     _selectionMadeDuringSession = true;
+  }
+
+  /// Forwards [hideOverlay] to [onCloseRequested] only while [controller] is
+  /// open, ignoring close requests sent to already-closed anchors.
+  @protected
+  void handleCloseRequested({
+    required MenuController controller,
+    required RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+    required VoidCallback hideOverlay,
+  }) {
+    if (!controller.isOpen || onCloseRequested == null) {
+      hideOverlay();
+    } else {
+      onCloseRequested(hideOverlay);
+    }
   }
 }

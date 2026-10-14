@@ -118,6 +118,69 @@ void main() {
       expect(find.text('Apple'), findsOneWidget);
     });
 
+    testWidgets('controlled Escape on the trigger requests close', (
+      tester,
+    ) async {
+      final requests = <bool>[];
+      final triggerFocusNode = FocusNode();
+      addTearDown(triggerFocusNode.dispose);
+      await tester.pumpMaterialWidget(
+        Center(
+          child: NakedSelect<String>(
+            onChanged: (_) {},
+            open: true,
+            onOpenChanged: requests.add,
+            triggerFocusNode: triggerFocusNode,
+            builder: (context, state, child) => const Text('Select option'),
+            overlayBuilder: (context, info) => const NakedSelectOption<String>(
+              value: 'apple',
+              child: Text('Apple'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      triggerFocusNode.requestFocus();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+
+      expect(requests, [false]);
+      expect(find.text('Apple'), findsOneWidget);
+    });
+
+    testWidgets('controlled ancestor scroll requests close', (tester) async {
+      final requests = <bool>[];
+      await tester.pumpMaterialWidget(
+        ListView(
+          children: [
+            // Keeps the trigger in the viewport after the drag.
+            const SizedBox(height: 200),
+            NakedSelect<String>(
+              onChanged: (_) {},
+              open: true,
+              onOpenChanged: requests.add,
+              builder: (context, state, child) => const Text('Select option'),
+              overlayBuilder: (context, info) =>
+                  const NakedSelectOption<String>(
+                    value: 'apple',
+                    child: Text('Apple'),
+                  ),
+            ),
+            const SizedBox(height: 3000),
+          ],
+        ),
+      );
+      await tester.pump();
+
+      await tester.drag(find.text('Select option'), const Offset(0, -50));
+      await tester.pumpAndSettle();
+
+      expect(requests, contains(false));
+      expect(find.text('Apple'), findsOneWidget);
+    });
+
     testWidgets(
       'renders trigger and menu when opened',
       (WidgetTester tester) async {
@@ -839,6 +902,44 @@ void main() {
       await tester.pump();
       expect(find.text('Apple'), findsNothing);
     });
+
+    testWidgets(
+      'does not invoke onCloseRequested when closed inside a closing ancestor overlay',
+      (WidgetTester tester) async {
+        var selectCloseRequests = 0;
+        final popoverController = MenuController();
+
+        await tester.pumpMaterialWidget(
+          NakedPopover(
+            controller: popoverController,
+            popoverBuilder: (context, info) => NakedSelect<String>(
+              onChanged: (_) {},
+              onCloseRequested: (hideOverlay) {
+                selectCloseRequests++;
+                hideOverlay();
+              },
+              builder: (context, state, child) => const Text('Select option'),
+              overlayBuilder: (context, info) =>
+                  const NakedSelectOption<String>(
+                    value: 'apple',
+                    child: Text('Apple'),
+                  ),
+            ),
+            child: const Text('Open Popover'),
+          ),
+        );
+
+        popoverController.open();
+        await tester.pumpAndSettle();
+        expect(find.text('Select option'), findsOneWidget);
+
+        // Close the ancestor popover while the nested select is still closed.
+        popoverController.close();
+        await tester.pumpAndSettle();
+
+        expect(selectCloseRequests, 0);
+      },
+    );
   });
 
   group('Cursor', () {

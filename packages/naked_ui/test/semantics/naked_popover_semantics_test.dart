@@ -291,6 +291,34 @@ void main() {
 
       handle.dispose();
     });
+
+    testWidgets(
+      'non-interactive popover content is not marked focusable by internal overlay focus',
+      (tester) async {
+        final handle = tester.ensureSemantics();
+
+        await tester.pumpWidget(_buildTestApp(_buildNakedPopover()));
+
+        await tester.tap(find.text('Show Menu'));
+        await tester.pumpAndSettle();
+
+        final contentSemantics = tester.getSemantics(find.text('Menu Item 1'));
+        expect(
+          contentSemantics,
+          matchesSemantics(
+            label: 'Menu Item 1\nMenu Item 2',
+            isFocusable: false,
+            isFocused: false,
+          ),
+        );
+        expect(
+          contentSemantics.getSemanticsData().flagsCollection.isFocused,
+          Tristate.none,
+        );
+
+        handle.dispose();
+      },
+    );
   });
 
   group('NakedPopover expanded/collapsed semantics', () {
