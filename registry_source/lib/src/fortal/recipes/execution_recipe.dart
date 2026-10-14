@@ -36,7 +36,7 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
         .color(FortalTokens.gray3())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
     tool: TextStyler().color(FortalTokens.gray11()).fontSize(12),
     title: TextStyler()
         .color(FortalTokens.gray12())

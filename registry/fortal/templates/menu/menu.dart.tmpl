@@ -161,12 +161,9 @@ DividerStyler _{{valuePrefix}}MenuDividerStyler(_{{typePrefix}}MenuMetrics metri
     DividerStyler()
         .height(1)
         .margin(
-          .only(
-            left: metrics.leadingInset,
-            right: metrics.trailingInset,
-            top: {{typePrefix}}Tokens.space2(),
-            bottom: {{typePrefix}}Tokens.space2(),
-          ),
+          .left(
+            metrics.leadingInset,
+          ).right(metrics.trailingInset).vertical({{typePrefix}}Tokens.space2()),
         )
         .color({{typePrefix}}Tokens.grayA6());
 

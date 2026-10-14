@@ -31,7 +31,7 @@ FortalAgentActivityRecipe fortalAgentActivityRecipe({
     count: TextStyler()
         .color(FortalTokens.gray11())
         .fontSize(12)
-        .wrap(.padding(.only(right: 8))),
+        .wrap(.padding(.right(8))),
     indicator: IconStyler().color(FortalTokens.gray12()).size(16),
     pendingStatus: IconStyler().color(FortalTokens.gray9()).size(12),
     activeStatus: IconStyler().color(FortalTokens.accent9()).size(12),

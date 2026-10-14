@@ -39,7 +39,7 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
 }) => PlaygroundAgentPermissionRecipe(
   style: PlaygroundPermissionStyler(
     header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler().spacing(8).padding(.only(top: 8)),
+    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
     title: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontWeight(FontWeight.w600),

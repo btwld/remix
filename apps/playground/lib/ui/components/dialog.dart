@@ -50,7 +50,7 @@ DialogStyler playgroundDialogStyle({
           .height(1)
           .fontWeight(FontWeight.w600)
           .color(PlaygroundTokens.foreground())
-          .wrap(.padding(.only(bottom: PlaygroundTokens.s2))),
+          .wrap(.padding(.bottom(PlaygroundTokens.s2))),
     )
     .description(
       .style(

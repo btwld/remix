@@ -107,7 +107,7 @@ AccordionStyler playgroundAccordionStyle({
     .trailingIcon(
       .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
-    .content(.padding(.only(bottom: PlaygroundTokens.s4)))
+    .content(.padding(.bottom(PlaygroundTokens.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())

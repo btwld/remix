@@ -29,9 +29,9 @@ FortalAgentMessageRecipe fortalAgentMessageRecipe({
   style: AgentMessageStyler(
     row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
     avatar: BoxStyler().size(28, 28),
-    header: BoxStyler().padding(.only(bottom: 6)),
+    header: BoxStyler().padding(.bottom(6)),
     body: BoxStyler(),
-    footer: BoxStyler().padding(.only(top: 4)),
+    footer: BoxStyler().padding(.top(4)),
     maxWidth: 640,
   ).merge(style),
   surfaceStyle: fortalCardStyle(style: surfaceStyle),

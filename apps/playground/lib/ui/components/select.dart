@@ -149,12 +149,9 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     .crossAxisAlignment(.center)
     .minHeight(PlaygroundTokens.controlSm)
     .padding(
-      .only(
-        left: PlaygroundTokens.s2,
-        right: PlaygroundTokens.s8,
-        top: PlaygroundTokens.s1_5,
-        bottom: PlaygroundTokens.s1_5,
-      ),
+      .left(
+        PlaygroundTokens.s2,
+      ).right(PlaygroundTokens.s8).vertical(PlaygroundTokens.s1_5),
     )
     .spacing(PlaygroundTokens.s2)
     .borderRadius(.all(PlaygroundTokens.radiusSm()))

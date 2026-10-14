@@ -35,7 +35,7 @@ VanillaAgentComposerRecipe vanillaAgentComposerRecipe({
         .mainAxisSize(.max)
         .crossAxisAlignment(.center)
         .spacing(8)
-        .padding(.only(top: 8)),
+        .padding(.top(8)),
   ).merge(style),
   surfaceStyle: vanillaCardStyle(
     style: CardStyler().padding(.all(12)).merge(surfaceStyle),

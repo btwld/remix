@@ -32,8 +32,8 @@ final class {{typePrefix}}AgentAnswerRecipe {
 }) => {{typePrefix}}AgentAnswerRecipe(
   style: {{typePrefix}}AnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    feedback: BoxStyler().padding(.only(top: 6)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    feedback: BoxStyler().padding(.top(6)),
     sourcesLabel: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(13),
     indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
   ).merge(style),

@@ -33,7 +33,7 @@ VanillaAgentPlanRecipe vanillaAgentPlanRecipe({
     count: TextStyler()
         .color(VanillaTokens.mutedForeground())
         .fontSize(12)
-        .wrap(.padding(.only(right: 8))),
+        .wrap(.padding(.right(8))),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
     pendingStatus: IconStyler().color(VanillaTokens.mutedForeground()).size(18),
     activeStatus: IconStyler().color(VanillaTokens.primary()).size(18),

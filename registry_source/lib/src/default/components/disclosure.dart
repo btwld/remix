@@ -81,7 +81,7 @@ DisclosureStyler vanillaDisclosureStyle({
     // `content` has to be reached by name; a bare `.padding(...)` would inset
     // the trigger instead. It has no side inset either, so the revealed
     // content lines up under the trigger's own text.
-    .content(.padding(.only(bottom: VanillaTokens.s4)))
+    .content(.padding(.bottom(VanillaTokens.s4)))
     .onHovered(
       DisclosureStyler().trigger(
         BoxStyler().wrap(

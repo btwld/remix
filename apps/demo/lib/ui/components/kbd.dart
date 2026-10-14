@@ -54,13 +54,7 @@ BadgeStyler fortalKbdStyle(
   var recipe = BadgeStyler()
       .label(textStyle)
       .minWidth(1.75 * fontSize)
-      .padding(
-        EdgeInsetsGeometryMix.only(
-          left: 0.5 * fontSize,
-          right: 0.5 * fontSize,
-          bottom: 0.05 * fontSize,
-        ),
-      )
+      .padding(.horizontal(0.5 * fontSize).bottom(0.05 * fontSize))
       .borderRadius(
         BorderRadiusGeometryMix.circular(
           0.35 * fontSize * fortalRadiusFactor(context),

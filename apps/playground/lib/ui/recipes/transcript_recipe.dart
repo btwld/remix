@@ -13,7 +13,7 @@ PlaygroundAgentTranscriptRecipe playgroundAgentTranscriptRecipe({
   PlaygroundTranscriptStyler style = const PlaygroundTranscriptStyler.create(),
 }) => PlaygroundAgentTranscriptRecipe(
   style: PlaygroundTranscriptStyler(
-    viewport: BoxStyler().padding(.only(right: 12)),
+    viewport: BoxStyler().padding(.right(12)),
     item: BoxStyler(),
     spacing: 16,
   ).merge(style),

@@ -36,7 +36,7 @@ PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
         .color(PlaygroundTokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
     tool: TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
     title: TextStyler()
         .color(PlaygroundTokens.foreground())

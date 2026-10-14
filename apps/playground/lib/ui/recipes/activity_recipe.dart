@@ -33,7 +33,7 @@ PlaygroundAgentActivityRecipe playgroundAgentActivityRecipe({
     count: TextStyler()
         .color(PlaygroundTokens.mutedForeground())
         .fontSize(12)
-        .wrap(.padding(.only(right: 8))),
+        .wrap(.padding(.right(8))),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
     pendingStatus: IconStyler()
         .color(PlaygroundTokens.mutedForeground())

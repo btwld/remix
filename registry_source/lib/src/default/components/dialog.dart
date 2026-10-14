@@ -48,7 +48,7 @@ DialogStyler vanillaDialogStyle({
           .height(1)
           .fontWeight(FontWeight.w600)
           .color(VanillaTokens.foreground())
-          .wrap(.padding(.only(bottom: VanillaTokens.s2))),
+          .wrap(.padding(.bottom(VanillaTokens.s2))),
     )
     .description(
       .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),

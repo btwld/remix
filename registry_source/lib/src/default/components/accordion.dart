@@ -105,7 +105,7 @@ AccordionStyler vanillaAccordionStyle({
     .trailingIcon(
       .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
-    .content(.padding(.only(bottom: VanillaTokens.s4)))
+    .content(.padding(.bottom(VanillaTokens.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())

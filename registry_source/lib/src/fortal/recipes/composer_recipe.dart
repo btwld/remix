@@ -36,7 +36,7 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
         .mainAxisSize(.max)
         .crossAxisAlignment(.center)
         .spacing(8)
-        .padding(.only(top: 8)),
+        .padding(.top(8)),
   ).merge(style),
   surfaceStyle: fortalCardStyle(
     size: .size2,

@@ -132,12 +132,9 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     .crossAxisAlignment(.center)
     .minHeight({{typePrefix}}Tokens.controlSm)
     .padding(
-      .only(
-        left: {{typePrefix}}Tokens.s2,
-        right: {{typePrefix}}Tokens.s8,
-        top: {{typePrefix}}Tokens.s1_5,
-        bottom: {{typePrefix}}Tokens.s1_5,
-      ),
+      .left(
+        {{typePrefix}}Tokens.s2,
+      ).right({{typePrefix}}Tokens.s8).vertical({{typePrefix}}Tokens.s1_5),
     )
     .spacing({{typePrefix}}Tokens.s2)
     .borderRadius(.all({{typePrefix}}Tokens.radiusSm()))
