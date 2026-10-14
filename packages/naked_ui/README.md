@@ -20,17 +20,19 @@ The complete documentation covers detailed component APIs and examples, guides a
 - NakedLink — link semantics and Enter-only activation
 - NakedCheckbox — toggle behavior and semantics
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
-- NakedRadio — single‑select radio with group management
+- NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
 - NakedSelect — controlled/uncontrolled dropdown with keyboard navigation
 - NakedScrollbar — styleable scrollbar thumb and track
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics
-- NakedToggle — toggle button or switch behavior
+- NakedTextField — headless text input on EditableText with observable interaction states
+- NakedTextMagnifier — headless text magnifier on RawMagnifier with line-jump animation
+- NakedToggle / NakedToggleGroup — toggle button or switch behavior and single/multi-select groups
 - NakedTabs — tablist + roving focus
 - NakedAccordion — expandable/collapsible sections
 - NakedDisclosure — standalone show/hide button and panel
 - NakedMenu — anchored menu with checkbox/radio items + recursive submenus
 - NakedMenubar — menu bar that closes sibling menus and moves with the arrow keys
-- NakedDialog — normal and alert dialog semantics + modal focus trap
+- NakedDialog — normal and alert dialog (`showNakedAlertDialog`) semantics + modal focus trap
 - NakedTooltip — controlled, hoverable, collision-aware tooltip
 - NakedPopover — anchored, dismissible overlay with optional separate anchor
 - NakedToastScope — queued, nonmodal toasts with status/alert semantics
