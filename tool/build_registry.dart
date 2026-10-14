@@ -426,7 +426,6 @@ const defaultPreset = PresetSpec(
         'theme/tokens.dart',
         'theme/theme_data.dart',
         'theme/theme_scope.dart',
-        'theme/scale.dart',
         'theme/effects.dart',
       ],
     ),

@@ -11,14 +11,14 @@ part of 'icon_button.dart';
 /// Everything visual about an icon button lives in this function: geometry, the
 /// five variants, hover and press motion, and the hover/pressed/focus/disabled
 /// fragments. Every state change settles over 150ms on the shared curve
-/// (`VanillaMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// (`VanillaTokens.motion`). Remix keeps ownership of rendering, pointer and
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
 ///
 /// It restates the button's fills rather than sharing them. That is
 /// deliberate: the two components have separate update stories, and a shared
 /// table would make every change to one a change to the other. The scale and
-/// the tints they draw on are shared, through `VanillaSize` and `vanillaTint`.
+/// the tints they draw on are shared, through `VanillaTokens` and `vanillaTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and

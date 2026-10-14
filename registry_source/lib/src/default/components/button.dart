@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'button.g.dart';
@@ -47,7 +46,7 @@ enum VanillaButtonSize {
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
 /// hover/pressed/focus/disabled fragments. Every state change settles over
-/// 150ms on the shared curve (`VanillaMotion.standard`). Remix keeps ownership
+/// 150ms on the shared curve (`VanillaTokens.motion`). Remix keeps ownership
 /// of rendering, pointer and keyboard behavior, accessibility semantics, and
 /// the loading/disabled interaction rules — this recipe never reimplements any
 /// of that.
@@ -177,25 +176,25 @@ typedef _VanillaButtonMetrics = ({
 
 _VanillaButtonMetrics _metricsFor(VanillaButtonSize size) => switch (size) {
   .small => (
-    minHeight: VanillaSize.controlSm,
-    paddingX: VanillaSpace.s3,
-    gap: VanillaSpace.s1_5,
+    minHeight: VanillaTokens.controlSm,
+    paddingX: VanillaTokens.s3,
+    gap: VanillaTokens.s1_5,
   ),
   .medium => (
-    minHeight: VanillaSize.controlMd,
-    paddingX: VanillaSpace.s4,
-    gap: VanillaSpace.s2,
+    minHeight: VanillaTokens.controlMd,
+    paddingX: VanillaTokens.s4,
+    gap: VanillaTokens.s2,
   ),
   .large => (
-    minHeight: VanillaSize.controlLg,
-    paddingX: VanillaSpace.s6,
-    gap: VanillaSpace.s2,
+    minHeight: VanillaTokens.controlLg,
+    paddingX: VanillaTokens.s6,
+    gap: VanillaTokens.s2,
   ),
 };
 
 /// Layout, typography, and spinner defaults shared by every variant.
 ButtonStyler _base(_VanillaButtonMetrics metrics) => ButtonStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
@@ -205,10 +204,10 @@ ButtonStyler _base(_VanillaButtonMetrics metrics) => ButtonStyler()
     .spacing(metrics.gap)
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size(VanillaSize.icon))
+    .icon(.size(VanillaTokens.icon))
     .spinner(
       .size(
-        VanillaSize.icon,
+        VanillaTokens.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -230,7 +229,9 @@ ButtonStyler _variantStyle(VanillaButtonVariant variant) => switch (variant) {
   ),
   .outline =>
     _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
-        .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+        .border(
+          .color(VanillaTokens.input()).width(VanillaTokens.strokeHairline),
+        )
         // In the effects layer rather than the decoration: the dark fill is
         // translucent, and a decoration shadow would show through it.
         .containerEffects(.behindContent(VanillaShadow.xs.effects)),
@@ -303,4 +304,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'avatar.g.dart';
@@ -36,7 +35,7 @@ part 'avatar.g.dart';
 AvatarStyler playgroundAvatarStyle({
   AvatarStyler style = const AvatarStyler.create(),
 }) => AvatarStyler()
-    .size(PlaygroundSize.controlSm, PlaygroundSize.controlSm)
+    .size(PlaygroundTokens.controlSm, PlaygroundTokens.controlSm)
     .borderRadius(.all(_circular))
     // The clip is what rounds an image: Remix renders `backgroundImage` as
     // a child of the container, not as part of its decoration.
@@ -47,8 +46,10 @@ AvatarStyler playgroundAvatarStyle({
         PlaygroundTokens.textSm.mix(),
       ).color(PlaygroundTokens.mutedForeground()),
     )
-    .icon(.size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()))
+    .icon(
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
+    )
     .merge(style);
 
 /// A radius large enough to round any avatar in this scale into a circle.
-const _circular = Radius.circular(PlaygroundSize.pill);
+const _circular = Radius.circular(PlaygroundTokens.pill);

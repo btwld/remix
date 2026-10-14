@@ -18,19 +18,34 @@ reference
 ## 1. Theme item
 
 Three files at the least, installed together as the `theme` item. Vanilla
-adds two more that are worth copying once a system has fixed scales and shared
-recipe helpers: `scale.dart` (spacing, sizes, strokes, and motion as plain
-constants) and `effects.dart` (tints, shadows, and the focus ring every
+adds fixed scales directly on `<Prefix>Tokens` in `tokens.dart` (spacing,
+sizes, strokes, opacity, and motion as plain constants) and a fourth file,
+`effects.dart` (tints, shadows, and the focus ring every
 control draws). Anything a recipe needs from the theme belongs in the item, so
 a component never imports another component to get it.
 
-**`tokens.dart` — identities only.** A Mix token names a value; the active
-`MixScope` supplies it. Ids use the value word so they render per consumer.
+**`tokens.dart` — token identities and fixed scale constants.** A Mix token names
+an environment-dependent value; the active `MixScope` supplies it. Fixed scales
+(spacing, sizes, strokes, opacity, and motion) are declared directly on `<Prefix>Tokens`
+as plain `const` values alongside token identities so every recipe reads from one place
+without dynamic scope lookup or arithmetic limitations. Token IDs use the value word
+so they render per consumer.
 
 ```dart
 import 'package:remix/remix.dart';
 
 abstract final class AcmeTokens {
+  // Fixed scale constants.
+  static const s1 = 4.0;
+  static const s2 = 8.0;
+  static const s4 = 16.0;
+  static const strokeIndicator = 2.0;
+  static const disabledOpacity = 0.5;
+  static const motion = CurveAnimationConfig.fastOutSlowIn(
+    Duration(milliseconds: 150),
+  );
+
+  // Mix token identities.
   static const background = ColorToken('acme.color.background');
   static const text = ColorToken('acme.color.text');
   static const interactivePrimary = ColorToken(

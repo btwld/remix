@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'select.g.dart';
@@ -71,17 +70,22 @@ const _panelMaxHeight = 320.0;
 /// The closed control: a field showing the current value and a chevron, 36px
 /// tall with a 12px side inset, 8px above and below, and an 8px gap.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .mainAxisAlignment(.spaceBetween)
-    .minHeight(PlaygroundSize.controlMd)
+    .minHeight(PlaygroundTokens.controlMd)
     .padding(
-      .symmetric(horizontal: PlaygroundSpace.s3, vertical: PlaygroundSpace.s2),
+      .symmetric(
+        horizontal: PlaygroundTokens.s3,
+        vertical: PlaygroundTokens.s2,
+      ),
     )
-    .spacing(PlaygroundSpace.s2)
+    .spacing(PlaygroundTokens.s2)
     .color(_triggerFill())
-    .border(.color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.input()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     // In the effects layer rather than the decoration: the fill is
     // transparent, and a decoration shadow would show through it.
@@ -98,9 +102,11 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
         PlaygroundTokens.textSm.mix(),
       ).color(PlaygroundTokens.mutedForeground()),
     )
-    .icon(.size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()))
+    .icon(
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
+    )
     .indicator(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
     .indicatorOpacity(_chevronOpacity)
     .onHovered(SelectTriggerStyler().color(_triggerHoverFill()))
@@ -114,17 +120,19 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .onDisabled(
       SelectTriggerStyler()
           .containerEffects(.outline(.style(.none)))
-          .wrap(.opacity(PlaygroundOpacity.disabled)),
+          .wrap(.opacity(PlaygroundTokens.disabledOpacity)),
     );
 
 /// The floating panel the options live in: `popover` inside a `border`
 /// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow.
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(PlaygroundTokens.popover())
-    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .padding(.all(PlaygroundSpace.s1))
-    .minWidth(PlaygroundSize.panelMinWidth)
+    .padding(.all(PlaygroundTokens.s1))
+    .minWidth(PlaygroundTokens.panelMinWidth)
     .maxHeight(_panelMaxHeight)
     .containerEffects(.behindContent(PlaygroundShadow.md.effects));
 
@@ -136,19 +144,16 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// arrow keys are on, because a select is as often driven by the keyboard as
 /// by the mouse.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(PlaygroundSize.controlSm)
+    .minHeight(PlaygroundTokens.controlSm)
     .padding(
-      .only(
-        left: PlaygroundSpace.s2,
-        right: PlaygroundSpace.s8,
-        top: PlaygroundSpace.s1_5,
-        bottom: PlaygroundSpace.s1_5,
-      ),
+      .left(
+        PlaygroundTokens.s2,
+      ).right(PlaygroundTokens.s8).vertical(PlaygroundTokens.s1_5),
     )
-    .spacing(PlaygroundSpace.s2)
+    .spacing(PlaygroundTokens.s2)
     .borderRadius(.all(PlaygroundTokens.radiusSm()))
     .label(
       .style(
@@ -157,11 +162,13 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     )
     // The check mark on the chosen option stays `mutedForeground`, highlighted
     // or not: it marks the row without competing with its label.
-    .icon(.size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()))
+    .icon(
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
+    )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
     .onDisabled(
-      SelectMenuItemStyler().wrap(.opacity(PlaygroundOpacity.disabled)),
+      SelectMenuItemStyler().wrap(.opacity(PlaygroundTokens.disabledOpacity)),
     );
 
 /// The option under the pointer or the keyboard cursor.

@@ -207,7 +207,6 @@ lib/ui/
     tokens.dart
     theme_data.dart
     theme_scope.dart
-    scale.dart
     effects.dart
   components/
     button.dart
@@ -407,6 +406,25 @@ the source you install; the registry pin in `remix.yaml` does:
    and the regenerated adapter.
 
 There is no automatic merge or migration layer in 0.1.0.
+
+Because `--overwrite` replaces only files present in the incoming registry item
+and `updateManagedBarrel` preserves existing exports without pruning, removing
+an obsolete template file during an upgrade requires manual cleanup. If upgrading
+an existing Vanilla project installed prior to token consolidation:
+
+1. run `remix add theme --overwrite` (or `dart run remix_cli:remix add theme --overwrite`)
+   to update `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`;
+2. update installed components to use `<Prefix>Tokens` instead of `scale.dart`
+   by re-adding them with `--overwrite` (for example, `remix add <component> --overwrite`)
+   or updating local component imports and references from `scale.dart` and its
+   retired helper classes (`<Prefix>Space`, `<Prefix>Size`, `<Prefix>Stroke`,
+   `<Prefix>Opacity`, and `<Prefix>Motion`) to `<Prefix>Tokens`;
+3. delete `lib/ui/theme/scale.dart`;
+4. remove `export 'theme/scale.dart';` from `lib/ui/ui.dart`.
+
+All scale constants (`s0_5` .. `s16`, `controlSm` .. `pill`, `strokeHairline`,
+`strokeIndicator`, `strokeRing`, `disabledOpacity`, and `motion`) now reside on
+`<Prefix>Tokens` in `lib/ui/theme/tokens.dart`.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

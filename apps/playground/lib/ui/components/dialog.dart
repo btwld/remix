@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'dialog.g.dart';
@@ -31,15 +30,17 @@ DialogStyler playgroundDialogStyle({
     // panel would take all of it. The padding leaves room at the edges, and
     // the alignment lets the panel keep its own size.
     .wrap(
-      .padding(.all(PlaygroundSpace.s4))
+      .padding(.all(PlaygroundTokens.s4))
           .align(alignment: .center)
           .orderOfModifiers([PaddingModifier, AlignModifier]),
     )
     .color(PlaygroundTokens.background())
-    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusLg()))
-    .padding(.all(PlaygroundSpace.s6))
-    .width(PlaygroundSize.dialogMaxWidth)
+    .padding(.all(PlaygroundTokens.s6))
+    .width(PlaygroundTokens.dialogMaxWidth)
     .shadows(PlaygroundShadow.lg.box)
     .title(
       .style(PlaygroundTokens.textLg.mix())
@@ -49,7 +50,7 @@ DialogStyler playgroundDialogStyle({
           .height(1)
           .fontWeight(FontWeight.w600)
           .color(PlaygroundTokens.foreground())
-          .wrap(.padding(.only(bottom: PlaygroundSpace.s2))),
+          .wrap(.padding(.bottom(PlaygroundTokens.s2))),
     )
     .description(
       .style(
@@ -62,7 +63,7 @@ DialogStyler playgroundDialogStyle({
       FlexBoxStyler()
           .direction(.horizontal)
           .mainAxisAlignment(.end)
-          .spacing(PlaygroundSpace.s2)
-          .margin(.top(PlaygroundSpace.s4)),
+          .spacing(PlaygroundTokens.s2)
+          .margin(.top(PlaygroundTokens.s4)),
     )
     .merge(style);

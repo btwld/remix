@@ -279,7 +279,7 @@ final _buttonTargets = <SpecTarget>[
     'transition',
     source: 'button.tsx: transition-all (150ms ease)',
     read: (spec) => spec.animation,
-    expected: (_) => VanillaMotion.standard,
+    expected: (_) => VanillaTokens.motion,
   ),
 ];
 
@@ -390,7 +390,7 @@ final _iconButtonTargets = <SpecTarget>[
     'transition',
     source: 'button.tsx: transition-all',
     read: (spec) => spec.animation,
-    expected: (_) => VanillaMotion.standard,
+    expected: (_) => VanillaTokens.motion,
   ),
 ];
 
@@ -630,7 +630,7 @@ final _toggleTargets = <SpecTarget>[
     'transition',
     source: 'toggle.tsx: transition-[color,box-shadow]',
     read: (spec) => spec.animation,
-    expected: (_) => VanillaMotion.standard,
+    expected: (_) => VanillaTokens.motion,
   ),
 ];
 

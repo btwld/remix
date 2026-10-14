@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'menu.g.dart';
@@ -45,11 +44,13 @@ MenuStyler {{valuePrefix}}MenuStyle({MenuStyler style = const MenuStyler.create(
               .mainAxisSize(.min)
               .color({{typePrefix}}Tokens.popover())
               .border(
-                .color({{typePrefix}}Tokens.border()).width({{typePrefix}}Stroke.hairline),
+                .color(
+                  {{typePrefix}}Tokens.border(),
+                ).width({{typePrefix}}Tokens.strokeHairline),
               )
               .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-              .padding(.vertical({{typePrefix}}Space.s1))
-              .minWidth({{typePrefix}}Size.panelMinWidth),
+              .padding(.vertical({{typePrefix}}Tokens.s1))
+              .minWidth({{typePrefix}}Tokens.panelMinWidth),
         )
         .containerEffects(.behindContent({{typePrefix}}Shadow.md.effects))
         .item(_itemStyle())
@@ -65,29 +66,31 @@ MenuStyler {{valuePrefix}}MenuStyle({MenuStyler style = const MenuStyler.create(
 /// free to wrap a bare `Text`, and that caller must not end up with a
 /// keyboard-reachable control that shows nothing when it is reached.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
-    .animate({{typePrefix}}Motion.standard)
+    .animate({{typePrefix}}Tokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .crossAxisAlignment(.center)
-    .minHeight({{typePrefix}}Size.controlSm)
+    .minHeight({{typePrefix}}Tokens.controlSm)
     .padding(
-      .symmetric(horizontal: {{typePrefix}}Space.s2, vertical: {{typePrefix}}Space.s1_5),
+      .symmetric(horizontal: {{typePrefix}}Tokens.s2, vertical: {{typePrefix}}Tokens.s1_5),
     )
-    .spacing({{typePrefix}}Space.s2)
+    .spacing({{typePrefix}}Tokens.s2)
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .label(
       .style(
         {{typePrefix}}Tokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
-    .icon(.size({{typePrefix}}Size.icon).color({{typePrefix}}Tokens.foreground()))
+    .icon(.size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.foreground()))
     .onHovered(.color({{typePrefix}}Tokens.accent()))
     // A trigger is keyboard-reachable whether or not it wraps a control that
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
     .onFocusVisible(.foregroundDecoration({{valuePrefix}}FocusRingDecoration()))
-    .onDisabled(MenuTriggerStyler().wrap(.opacity({{typePrefix}}Opacity.disabled)));
+    .onDisabled(
+      MenuTriggerStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+    );
 
 /// One row, in every kind the menu can hold: 32px tall, with an 8px side inset,
 /// `radiusSm` corners, and `textSm`.
@@ -97,29 +100,33 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
-    .animate({{typePrefix}}Motion.standard)
+    .animate({{typePrefix}}Tokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight({{typePrefix}}Size.controlSm)
-    .margin(.horizontal({{typePrefix}}Space.s1))
+    .minHeight({{typePrefix}}Tokens.controlSm)
+    .margin(.horizontal({{typePrefix}}Tokens.s1))
     .padding(
-      .symmetric(horizontal: {{typePrefix}}Space.s2, vertical: {{typePrefix}}Space.s1_5),
+      .symmetric(horizontal: {{typePrefix}}Tokens.s2, vertical: {{typePrefix}}Tokens.s1_5),
     )
-    .spacing({{typePrefix}}Space.s2)
+    .spacing({{typePrefix}}Tokens.s2)
     .borderRadius(.all({{typePrefix}}Tokens.radiusSm()))
     .label(
       .style(
         {{typePrefix}}Tokens.textSm.mix(),
       ).color({{typePrefix}}Tokens.popoverForeground()),
     )
-    .leadingIcon(.size({{typePrefix}}Size.icon).color({{typePrefix}}Tokens.mutedForeground()))
-    .trailingIcon(
-      .size({{typePrefix}}Size.icon).color({{typePrefix}}Tokens.mutedForeground()),
+    .leadingIcon(
+      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.mutedForeground()),
     )
-    .indicator(.size({{typePrefix}}Size.icon).color({{typePrefix}}Tokens.popoverForeground()))
+    .trailingIcon(
+      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.mutedForeground()),
+    )
+    .indicator(
+      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.popoverForeground()),
+    )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(MenuItemStyler().wrap(.opacity({{typePrefix}}Opacity.disabled)));
+    .onDisabled(MenuItemStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)));
 
 /// The row under the pointer or the keyboard cursor.
 ///
@@ -138,6 +145,6 @@ MenuItemStyler _highlighted() => MenuItemStyler()
 /// lives on the rows rather than on the panel.
 DividerStyler _dividerStyle() => DividerStyler()
     .color({{typePrefix}}Tokens.border())
-    .height({{typePrefix}}Stroke.hairline)
-    .margin(.vertical({{typePrefix}}Space.s1))
+    .height({{typePrefix}}Tokens.strokeHairline)
+    .margin(.vertical({{typePrefix}}Tokens.s1))
     .wrap(.fractionallySizedBox(widthFactor: 1));

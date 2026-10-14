@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'tabs.g.dart';
@@ -72,7 +71,7 @@ TabBarStyler vanillaTabBarStyle({
       .direction(.horizontal)
       .mainAxisSize(.min)
       .crossAxisAlignment(.center)
-      .height(VanillaSize.controlMd)
+      .height(VanillaTokens.controlMd)
       .padding(.all(_listInset));
 
   return switch (variant) {
@@ -149,7 +148,7 @@ TabStyler vanillaTabStyle({
 @MixWidget(target: RemixTabView.new)
 TabViewStyler vanillaTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
-}) => TabViewStyler().padding(.top(VanillaSpace.s2)).merge(style);
+}) => TabViewStyler().padding(.top(VanillaTokens.s2)).merge(style);
 
 /// The list's inset around its tabs.
 const _listInset = 3.0;
@@ -200,23 +199,25 @@ final _currentEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
 /// A tab is the list's height less its inset on both sides, so it fills the
 /// list edge to edge.
 TabStyler _base() => _content(_restingContent())
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
     .crossAxisAlignment(.center)
-    .minHeight(VanillaSize.controlMd - 2 * _listInset)
-    .padding(.symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s1))
-    .spacing(VanillaSpace.s1_5)
+    .minHeight(VanillaTokens.controlMd - 2 * _listInset)
+    .padding(
+      .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s1),
+    )
+    .spacing(VanillaTokens.s1_5)
     .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size(VanillaSize.icon));
+    .icon(.size(VanillaTokens.icon));
 
 /// The filled look: a transparent outline at rest, so the dark theme's
 /// current outline paints a pixel it already owns, and the lifted surface once
 /// current.
 TabStyler _filled() => TabStyler()
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    .border(.all(.color(_noEdge).width(VanillaStroke.hairline)))
+    .border(.all(.color(_noEdge).width(VanillaTokens.strokeHairline)))
     .onSelected(
       _current()
           .color(_currentFill())
@@ -230,7 +231,7 @@ TabStyler _filled() => TabStyler()
 /// tab paints two pixels instead of reflowing the strip. It has no corner
 /// radius: Flutter cannot round a box whose edges differ.
 TabStyler _line() => TabStyler()
-    .border(.bottom(.color(_noEdge).width(VanillaStroke.indicator)))
+    .border(.bottom(.color(_noEdge).width(VanillaTokens.strokeIndicator)))
     .onSelected(_current().border(.bottom(.color(VanillaTokens.foreground()))));
 
 /// The content color of a hovered or current tab.
@@ -264,4 +265,4 @@ TabStyler _focusVisibleStyle(VanillaTabsVariant variant) =>
 /// ring reads as reachable.
 TabStyler _disabledStyle() => TabStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

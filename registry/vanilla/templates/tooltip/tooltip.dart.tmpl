@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'tooltip.g.dart';
@@ -30,7 +29,7 @@ TooltipStyler {{valuePrefix}}TooltipStyle({
     .color({{typePrefix}}Tokens.foreground())
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .padding(
-      .symmetric(horizontal: {{typePrefix}}Space.s3, vertical: {{typePrefix}}Space.s1_5),
+      .symmetric(horizontal: {{typePrefix}}Tokens.s3, vertical: {{typePrefix}}Tokens.s1_5),
     )
     .label(.style({{typePrefix}}Tokens.textXs.mix()).color({{typePrefix}}Tokens.background()))
     .waitDuration(Duration.zero)

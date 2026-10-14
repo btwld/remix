@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'button.g.dart';
@@ -47,7 +46,7 @@ enum {{typePrefix}}ButtonSize {
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
 /// hover/pressed/focus/disabled fragments. Every state change settles over
-/// 150ms on the shared curve (`{{typePrefix}}Motion.standard`). Remix keeps ownership
+/// 150ms on the shared curve (`{{typePrefix}}Tokens.motion`). Remix keeps ownership
 /// of rendering, pointer and keyboard behavior, accessibility semantics, and
 /// the loading/disabled interaction rules — this recipe never reimplements any
 /// of that.
@@ -177,25 +176,25 @@ typedef _{{typePrefix}}ButtonMetrics = ({
 
 _{{typePrefix}}ButtonMetrics _metricsFor({{typePrefix}}ButtonSize size) => switch (size) {
   .small => (
-    minHeight: {{typePrefix}}Size.controlSm,
-    paddingX: {{typePrefix}}Space.s3,
-    gap: {{typePrefix}}Space.s1_5,
+    minHeight: {{typePrefix}}Tokens.controlSm,
+    paddingX: {{typePrefix}}Tokens.s3,
+    gap: {{typePrefix}}Tokens.s1_5,
   ),
   .medium => (
-    minHeight: {{typePrefix}}Size.controlMd,
-    paddingX: {{typePrefix}}Space.s4,
-    gap: {{typePrefix}}Space.s2,
+    minHeight: {{typePrefix}}Tokens.controlMd,
+    paddingX: {{typePrefix}}Tokens.s4,
+    gap: {{typePrefix}}Tokens.s2,
   ),
   .large => (
-    minHeight: {{typePrefix}}Size.controlLg,
-    paddingX: {{typePrefix}}Space.s6,
-    gap: {{typePrefix}}Space.s2,
+    minHeight: {{typePrefix}}Tokens.controlLg,
+    paddingX: {{typePrefix}}Tokens.s6,
+    gap: {{typePrefix}}Tokens.s2,
   ),
 };
 
 /// Layout, typography, and spinner defaults shared by every variant.
 ButtonStyler _base(_{{typePrefix}}ButtonMetrics metrics) => ButtonStyler()
-    .animate({{typePrefix}}Motion.standard)
+    .animate({{typePrefix}}Tokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
@@ -205,10 +204,10 @@ ButtonStyler _base(_{{typePrefix}}ButtonMetrics metrics) => ButtonStyler()
     .spacing(metrics.gap)
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .label(.style({{typePrefix}}Tokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size({{typePrefix}}Size.icon))
+    .icon(.size({{typePrefix}}Tokens.icon))
     .spinner(
       .size(
-        {{typePrefix}}Size.icon,
+        {{typePrefix}}Tokens.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -230,7 +229,9 @@ ButtonStyler _variantStyle({{typePrefix}}ButtonVariant variant) => switch (varia
   ),
   .outline =>
     _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
-        .border(.color({{typePrefix}}Tokens.input()).width({{typePrefix}}Stroke.hairline))
+        .border(
+          .color({{typePrefix}}Tokens.input()).width({{typePrefix}}Tokens.strokeHairline),
+        )
         // In the effects layer rather than the decoration: the dark fill is
         // translucent, and a decoration shadow would show through it.
         .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects)),
@@ -303,4 +304,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

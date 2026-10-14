@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'segmented_control.g.dart';
@@ -83,15 +82,17 @@ final _chosenEdge = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: 1);
 /// Its height is the track's 36px less the inset on both sides, so the track
 /// lands on the height of the button and field beside it.
 SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
-    .animate({{typePrefix}}Motion.standard)
+    .animate({{typePrefix}}Tokens.motion)
     .color(_noFill)
-    .minHeight({{typePrefix}}Size.controlMd - 2 * _trackInset)
-    .padding(.symmetric(horizontal: {{typePrefix}}Space.s2, vertical: {{typePrefix}}Space.s1))
-    .spacing({{typePrefix}}Space.s1_5)
+    .minHeight({{typePrefix}}Tokens.controlMd - 2 * _trackInset)
+    .padding(
+      .symmetric(horizontal: {{typePrefix}}Tokens.s2, vertical: {{typePrefix}}Tokens.s1),
+    )
+    .spacing({{typePrefix}}Tokens.s1_5)
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-    .border(.color(_noEdge).width({{typePrefix}}Stroke.hairline))
+    .border(.color(_noEdge).width({{typePrefix}}Tokens.strokeHairline))
     .label(.style({{typePrefix}}Tokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size({{typePrefix}}Size.icon))
+    .icon(.size({{typePrefix}}Tokens.icon))
     .onHovered(_content({{typePrefix}}Tokens.foreground()))
     .onSelected(
       _content({{typePrefix}}Tokens.foreground())
@@ -121,4 +122,4 @@ SegmentedControlItemStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

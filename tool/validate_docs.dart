@@ -127,6 +127,12 @@ final _retiredApis = <(RegExp, String)>[
     _removedComponentBackgroundColorInvocation,
     'retired component backgroundColor alias; use color',
   ),
+  (
+    RegExp(
+      r'\b(?:Vanilla|Ui|Acme|Playground)(?:Space|Size|Stroke|Opacity|Motion)\b',
+    ),
+    'retired scale helper class; use <Prefix>Tokens',
+  ),
 ];
 
 final _iconButtonInvocation = RegExp(

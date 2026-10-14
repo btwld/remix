@@ -126,10 +126,10 @@ validates in a scratch application.
 ### Phase 2 — Theme item
 
 Build `tokens.dart`, `theme_data.dart`, and `theme_scope.dart` in Vanilla's
-shape (`references/components.md` §1): token identities, concrete values per
+shape (`references/components.md` §1): token identities and fixed scales, concrete values per
 mode with value equality, and a scope taking `theme`, `darkTheme`, and `mode`.
-Put fixed scales and shared recipe helpers beside them, as Vanilla's
-`scale.dart` and `effects.dart` do.
+Put shared recipe helpers beside them, as Vanilla's
+`effects.dart` does.
 Record every value's source in `specs/tokens.yaml` and test the Dart values
 against it (`references/tokens.md` §4).
 

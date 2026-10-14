@@ -161,12 +161,9 @@ DividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
     DividerStyler()
         .height(1)
         .margin(
-          .only(
-            left: metrics.leadingInset,
-            right: metrics.trailingInset,
-            top: FortalTokens.space2(),
-            bottom: FortalTokens.space2(),
-          ),
+          .left(
+            metrics.leadingInset,
+          ).right(metrics.trailingInset).vertical(FortalTokens.space2()),
         )
         .color(FortalTokens.grayA6());
 

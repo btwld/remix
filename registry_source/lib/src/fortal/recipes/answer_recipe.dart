@@ -32,8 +32,8 @@ FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
 }) => FortalAgentAnswerRecipe(
   style: AgentAnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    feedback: BoxStyler().padding(.only(top: 6)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    feedback: BoxStyler().padding(.top(6)),
     sourcesLabel: TextStyler().color(FortalTokens.gray12()).fontSize(13),
     indicator: IconStyler().color(FortalTokens.gray12()).size(16),
   ).merge(style),

@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle_group.g.dart';
@@ -78,9 +77,9 @@ const _noFill = Color(0x00000000);
 
 /// The option height for one [VanillaToggleGroupSize]: 32, 36, or 40px.
 double _heightFor(VanillaToggleGroupSize size) => switch (size) {
-  .small => VanillaSize.controlSm,
-  .medium => VanillaSize.controlMd,
-  .large => VanillaSize.controlLg,
+  .small => VanillaTokens.controlSm,
+  .medium => VanillaTokens.controlMd,
+  .large => VanillaTokens.controlLg,
 };
 
 /// The outline variant's one outline around the strip.
@@ -91,7 +90,7 @@ ToggleGroupStyler _groupOutline(VanillaToggleGroupVariant variant) =>
     switch (variant) {
       .ghost => ToggleGroupStyler(),
       .outline => ToggleGroupStyler().border(
-        .color(VanillaTokens.input()).width(VanillaStroke.hairline),
+        .color(VanillaTokens.input()).width(VanillaTokens.strokeHairline),
       ),
     };
 
@@ -102,17 +101,17 @@ ToggleGroupItemStyler _itemStyle(
   VanillaToggleGroupVariant variant,
 ) {
   return _content(VanillaTokens.foreground())
-      .animate(VanillaMotion.standard)
+      .animate(VanillaTokens.motion)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)
       .mainAxisAlignment(.center)
       .crossAxisAlignment(.center)
       .minHeight(height)
-      .padding(.horizontal(VanillaSpace.s3))
-      .spacing(VanillaSpace.s2)
+      .padding(.horizontal(VanillaTokens.s3))
+      .spacing(VanillaTokens.s2)
       .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
-      .icon(.size(VanillaSize.icon))
+      .icon(.size(VanillaTokens.icon))
       .onHovered(switch (variant) {
         .ghost => _content(
           VanillaTokens.mutedForeground(),
@@ -148,4 +147,4 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

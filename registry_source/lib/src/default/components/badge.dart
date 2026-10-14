@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'badge.g.dart';
@@ -47,7 +46,7 @@ BadgeStyler vanillaBadgeStyle({
 }) => _base().merge(_variantStyle(variant)).merge(style);
 
 /// A radius that rounds any badge into a pill.
-const _pill = Radius.circular(VanillaSize.pill);
+const _pill = Radius.circular(VanillaTokens.pill);
 
 /// A fill that paints nothing, used by `outline` and by every other variant's
 /// outline.
@@ -68,7 +67,7 @@ const _darkDestructiveAlpha = 0.6;
 /// inset and 2px above and below, set in `textXs` at medium weight.
 BadgeStyler _base() => BadgeStyler()
     .padding(
-      .symmetric(horizontal: VanillaSpace.s2, vertical: VanillaSpace.s0_5),
+      .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s0_5),
     )
     .borderRadius(.all(_pill))
     .label(.style(VanillaTokens.textXs.mix()).fontWeight(FontWeight.w500));
@@ -104,5 +103,5 @@ BadgeStyler _filled({
   Color outline = _noFill,
 }) => BadgeStyler()
     .color(fill)
-    .border(.color(outline).width(VanillaStroke.hairline))
+    .border(.color(outline).width(VanillaTokens.strokeHairline))
     .label(.color(foreground));

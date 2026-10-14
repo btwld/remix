@@ -225,7 +225,6 @@ const _defaultPreset = _PresetContract(
     'tokens.dart',
     'theme_data.dart',
     'theme_scope.dart',
-    'scale.dart',
     'effects.dart',
   ],
   // Vanilla's theme sets its type in Geist, so every install carries the fonts.

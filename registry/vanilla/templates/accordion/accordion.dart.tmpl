@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'accordion.g.dart';
@@ -71,14 +70,16 @@ part 'accordion.g.dart';
 AccordionStyler {{valuePrefix}}AccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()
-    .animate({{typePrefix}}Motion.standard)
+    .animate({{typePrefix}}Tokens.motion)
     // `container` has to be reached by name. `AccordionStyler` forwards its
     // box shorthand to `trigger`, so a bare `.border(...)` would outline the
     // clickable row rather than the section, and the rule between sections
     // would move with the panel as it opens.
     .container(
       .border(
-        .bottom(.color({{typePrefix}}Tokens.border()).width({{typePrefix}}Stroke.hairline)),
+        .bottom(
+          .color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline),
+        ),
       ),
     )
     // These *are* the forwarded shorthand, so they land on `trigger`: the row a
@@ -87,22 +88,24 @@ AccordionStyler {{valuePrefix}}AccordionStyle({
     // the list.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .padding(.vertical({{typePrefix}}Space.s4))
-    .spacing({{typePrefix}}Space.s4)
+    .padding(.vertical({{typePrefix}}Tokens.s4))
+    .spacing({{typePrefix}}Tokens.s4)
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .title(
       .style(
         {{typePrefix}}Tokens.textSm.mix(),
       ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
-    .leadingIcon(.size({{typePrefix}}Size.icon).color({{typePrefix}}Tokens.mutedForeground()))
+    .leadingIcon(
+      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.mutedForeground()),
+    )
     // Both icons are markers, not the state: Remix renders whatever
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
     .trailingIcon(
-      .size({{typePrefix}}Size.icon).color({{typePrefix}}Tokens.mutedForeground()),
+      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.mutedForeground()),
     )
-    .content(.padding(.only(bottom: {{typePrefix}}Space.s4)))
+    .content(.padding(.bottom({{typePrefix}}Tokens.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
@@ -133,4 +136,4 @@ AccordionStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

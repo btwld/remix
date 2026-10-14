@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'link.g.dart';
@@ -40,7 +39,7 @@ part 'link.g.dart';
 @MixWidget(target: RemixLink.new)
 LinkStyler {{valuePrefix}}LinkStyle({LinkStyler style = const LinkStyler.create()}) =>
     LinkStyler()
-        .animate({{typePrefix}}Motion.standard)
+        .animate({{typePrefix}}Tokens.motion)
         .label(
           .style(
             {{typePrefix}}Tokens.textSm.mix(),
@@ -58,4 +57,4 @@ LinkStyler {{valuePrefix}}LinkStyle({LinkStyler style = const LinkStyler.create(
 /// is also what a decorative link looks like.
 LinkStyler _disabledStyle() => LinkStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Opacity.disabled));
+    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

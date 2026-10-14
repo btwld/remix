@@ -13,7 +13,7 @@ UiAgentTranscriptRecipe uiAgentTranscriptRecipe({
   UiTranscriptStyler style = const UiTranscriptStyler.create(),
 }) => UiAgentTranscriptRecipe(
   style: UiTranscriptStyler(
-    viewport: BoxStyler().padding(.only(right: 12)),
+    viewport: BoxStyler().padding(.right(12)),
     item: BoxStyler(),
     spacing: 16,
   ).merge(style),

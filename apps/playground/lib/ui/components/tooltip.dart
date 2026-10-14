@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'tooltip.g.dart';
@@ -31,8 +30,8 @@ TooltipStyler playgroundTooltipStyle({
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(
       .symmetric(
-        horizontal: PlaygroundSpace.s3,
-        vertical: PlaygroundSpace.s1_5,
+        horizontal: PlaygroundTokens.s3,
+        vertical: PlaygroundTokens.s1_5,
       ),
     )
     .label(

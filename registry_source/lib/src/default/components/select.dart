@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'select.g.dart';
@@ -71,15 +70,17 @@ const _panelMaxHeight = 320.0;
 /// The closed control: a field showing the current value and a chevron, 36px
 /// tall with a 12px side inset, 8px above and below, and an 8px gap.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .mainAxisAlignment(.spaceBetween)
-    .minHeight(VanillaSize.controlMd)
-    .padding(.symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s2))
-    .spacing(VanillaSpace.s2)
+    .minHeight(VanillaTokens.controlMd)
+    .padding(
+      .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s2),
+    )
+    .spacing(VanillaTokens.s2)
     .color(_triggerFill())
-    .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.input()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(VanillaTokens.radiusMd()))
     // In the effects layer rather than the decoration: the fill is
     // transparent, and a decoration shadow would show through it.
@@ -90,8 +91,8 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .placeholder(
       .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
     )
-    .icon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
-    .indicator(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
+    .icon(.size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()))
+    .indicator(.size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()))
     .indicatorOpacity(_chevronOpacity)
     .onHovered(SelectTriggerStyler().color(_triggerHoverFill()))
     // A 3px band of `ring` at half strength, with the trigger's own outline
@@ -104,17 +105,17 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .onDisabled(
       SelectTriggerStyler()
           .containerEffects(.outline(.style(.none)))
-          .wrap(.opacity(VanillaOpacity.disabled)),
+          .wrap(.opacity(VanillaTokens.disabledOpacity)),
     );
 
 /// The floating panel the options live in: `popover` inside a `border`
 /// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow.
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(VanillaTokens.popover())
-    .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(VanillaTokens.radiusMd()))
-    .padding(.all(VanillaSpace.s1))
-    .minWidth(VanillaSize.panelMinWidth)
+    .padding(.all(VanillaTokens.s1))
+    .minWidth(VanillaTokens.panelMinWidth)
     .maxHeight(_panelMaxHeight)
     .containerEffects(.behindContent(VanillaShadow.md.effects));
 
@@ -126,19 +127,16 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// arrow keys are on, because a select is as often driven by the keyboard as
 /// by the mouse.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .minHeight(VanillaSize.controlSm)
+    .minHeight(VanillaTokens.controlSm)
     .padding(
-      .only(
-        left: VanillaSpace.s2,
-        right: VanillaSpace.s8,
-        top: VanillaSpace.s1_5,
-        bottom: VanillaSpace.s1_5,
-      ),
+      .left(
+        VanillaTokens.s2,
+      ).right(VanillaTokens.s8).vertical(VanillaTokens.s1_5),
     )
-    .spacing(VanillaSpace.s2)
+    .spacing(VanillaTokens.s2)
     .borderRadius(.all(VanillaTokens.radiusSm()))
     .label(
       .style(
@@ -147,10 +145,12 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     )
     // The check mark on the chosen option stays `mutedForeground`, highlighted
     // or not: it marks the row without competing with its label.
-    .icon(.size(VanillaSize.icon).color(VanillaTokens.mutedForeground()))
+    .icon(.size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(SelectMenuItemStyler().wrap(.opacity(VanillaOpacity.disabled)));
+    .onDisabled(
+      SelectMenuItemStyler().wrap(.opacity(VanillaTokens.disabledOpacity)),
+    );
 
 /// The option under the pointer or the keyboard cursor.
 SelectMenuItemStyler _highlighted() => SelectMenuItemStyler()

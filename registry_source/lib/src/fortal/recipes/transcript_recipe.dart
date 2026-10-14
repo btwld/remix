@@ -12,7 +12,7 @@ FortalAgentTranscriptRecipe fortalAgentTranscriptRecipe({
   AgentTranscriptStyler style = const AgentTranscriptStyler.create(),
 }) => FortalAgentTranscriptRecipe(
   style: AgentTranscriptStyler(
-    viewport: BoxStyler().padding(.only(right: 12)),
+    viewport: BoxStyler().padding(.right(12)),
     item: BoxStyler(),
     spacing: 16,
   ).merge(style),

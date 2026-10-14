@@ -39,7 +39,7 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
 }) => UiAgentPermissionRecipe(
   style: UiPermissionStyler(
     header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler().spacing(8).padding(.only(top: 8)),
+    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
     title: TextStyler().color(UiTokens.gray12()).fontWeight(FontWeight.w600),
     tool: TextStyler().color(UiTokens.gray11()).fontSize(12),
     description: TextStyler()

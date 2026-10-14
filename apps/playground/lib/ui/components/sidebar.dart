@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'toggle.dart';
 import 'tooltip.dart';
@@ -61,21 +60,21 @@ SidebarStyler playgroundSidebarStyle({
         .end(
           .color(
             PlaygroundTokens.sidebarBorder(),
-          ).width(PlaygroundStroke.hairline),
+          ).width(PlaygroundTokens.strokeHairline),
         ),
       ),
   content: FlexBoxStyler()
-      .padding(.all(PlaygroundSpace.s2))
-      .spacing(PlaygroundSpace.s4),
+      .padding(.all(PlaygroundTokens.s2))
+      .spacing(PlaygroundTokens.s4),
   footer: BoxStyler()
       .border(
         .top(
           .color(
             PlaygroundTokens.sidebarBorder(),
-          ).width(PlaygroundStroke.hairline),
+          ).width(PlaygroundTokens.strokeHairline),
         ),
       )
-      .padding(.all(PlaygroundSpace.s2)),
+      .padding(.all(PlaygroundTokens.s2)),
   // A section label is a 32px row of `textXs` at medium weight in
   // `sidebarForeground` at 70%, inset like the destinations below it. It is the
   // quietest text in the panel, so it reads as a heading for the destinations
@@ -87,12 +86,12 @@ SidebarStyler playgroundSidebarStyle({
       .wrap(
         .padding(
           .symmetric(
-            horizontal: PlaygroundSpace.s2,
-            vertical: PlaygroundSpace.s2,
+            horizontal: PlaygroundTokens.s2,
+            vertical: PlaygroundTokens.s2,
           ),
         ),
       ),
-  destinations: FlexBoxStyler().spacing(PlaygroundSpace.s1),
+  destinations: FlexBoxStyler().spacing(PlaygroundTokens.s1),
   destination: _destinationStyle(),
   // A collapsed rail shows each destination's label in the application's own
   // tooltip, so it reads like every other tooltip in the app.
@@ -126,17 +125,17 @@ ToggleStyler _destinationStyle() {
 
   return playgroundToggleStyle(variant: .ghost, size: .small)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start))
-      .minHeight(PlaygroundSize.controlSm)
+      .minHeight(PlaygroundTokens.controlSm)
       // The reference is `h-8 p-2`: CSS fixes the height and lets the line
       // overrun the padding. Flutter lays the line out inside the padding, so
       // 6px vertically is what keeps the row at 32.
       .padding(
         .symmetric(
-          horizontal: PlaygroundSpace.s2,
-          vertical: PlaygroundSpace.s1_5,
+          horizontal: PlaygroundTokens.s2,
+          vertical: PlaygroundTokens.s1_5,
         ),
       )
-      .spacing(PlaygroundSpace.s2)
+      .spacing(PlaygroundTokens.s2)
       .label(
         .fontWeight(
           FontWeight.w400,

@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
 import 'icon_button.dart';
@@ -79,13 +78,13 @@ final _shadow = BoxShadowMix(
 /// with the theme's `radius`.
 ToastStyler _base() => ToastStyler()
     .color(VanillaTokens.popover())
-    .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(VanillaTokens.radiusLg()))
-    .padding(.all(VanillaSpace.s4))
-    .maxWidth(VanillaSize.toastWidth)
+    .padding(.all(VanillaTokens.s4))
+    .maxWidth(VanillaTokens.toastWidth)
     .shadow(_shadow)
-    .spacing(VanillaSpace.s3)
-    .content(FlexBoxStyler().spacing(VanillaSpace.s1))
+    .spacing(VanillaTokens.s3)
+    .content(FlexBoxStyler().spacing(VanillaTokens.s1))
     .title(
       .style(
         VanillaTokens.textSm.mix(),
@@ -94,7 +93,7 @@ ToastStyler _base() => ToastStyler()
     .description(
       .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
     )
-    .icon(.size(VanillaSize.icon))
+    .icon(.size(VanillaTokens.icon))
     .action(vanillaButtonStyle(variant: .outline, size: .small))
     .closeButton(vanillaIconButtonStyle(variant: .ghost, size: .small));
 

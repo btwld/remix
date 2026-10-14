@@ -8,7 +8,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'textfield.g.dart';
@@ -39,9 +38,9 @@ TextFieldStyler vanillaTextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(VanillaSize.controlMd)
+      .minHeight(VanillaTokens.controlMd)
       .padding(
-        .symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s1),
+        .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s1),
       )
       // A single line sits on the field's centre line; the accessories go with
       // it.
@@ -63,9 +62,9 @@ TextFieldStyler vanillaTextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(VanillaSpace.s16)
+      .minHeight(VanillaTokens.s16)
       .padding(
-        .symmetric(horizontal: VanillaSpace.s3, vertical: VanillaSpace.s2),
+        .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s2),
       )
       .crossAxisAlignment(.start)
       .merge(style);
@@ -83,14 +82,14 @@ const _darkFillAlpha = 0.3;
 /// Both recipes share this whole body; only the box's height, its vertical
 /// inset, and the accessory alignment differ between them.
 TextFieldStyler _base() => TextFieldStyler()
-    .animate(VanillaMotion.standard)
+    .animate(VanillaTokens.motion)
     .color(_fill())
-    .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.input()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(VanillaTokens.radiusMd()))
     // In the effects layer rather than the decoration: the fill is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent(VanillaShadow.xs.effects))
-    .spacing(VanillaSpace.s2)
+    .spacing(VanillaTokens.s2)
     .text(.style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()))
     // The placeholder is not the value: it has to read as the quieter of the
     // two, or an empty field looks filled in.
@@ -106,7 +105,7 @@ TextFieldStyler _base() => TextFieldStyler()
     .helperText(
       .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
     )
-    .layout(.direction(.vertical).spacing(VanillaSpace.s2))
+    .layout(.direction(.vertical).spacing(VanillaTokens.s2))
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
@@ -163,4 +162,4 @@ const _darkErrorRingAlpha = 0.4;
 /// editable.
 TextFieldStyler _disabledStyle() => TextFieldStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

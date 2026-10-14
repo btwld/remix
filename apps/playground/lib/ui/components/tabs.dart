@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'tabs.g.dart';
@@ -72,7 +71,7 @@ TabBarStyler playgroundTabBarStyle({
       .direction(.horizontal)
       .mainAxisSize(.min)
       .crossAxisAlignment(.center)
-      .height(PlaygroundSize.controlMd)
+      .height(PlaygroundTokens.controlMd)
       .padding(.all(_listInset));
 
   return switch (variant) {
@@ -149,7 +148,7 @@ TabStyler playgroundTabStyle({
 @MixWidget(target: RemixTabView.new)
 TabViewStyler playgroundTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
-}) => TabViewStyler().padding(.top(PlaygroundSpace.s2)).merge(style);
+}) => TabViewStyler().padding(.top(PlaygroundTokens.s2)).merge(style);
 
 /// The list's inset around its tabs.
 const _listInset = 3.0;
@@ -203,25 +202,28 @@ final _currentEdge = playgroundTint(PlaygroundTokens.input, 0, dark: 1);
 /// A tab is the list's height less its inset on both sides, so it fills the
 /// list edge to edge.
 TabStyler _base() => _content(_restingContent())
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
     .crossAxisAlignment(.center)
-    .minHeight(PlaygroundSize.controlMd - 2 * _listInset)
+    .minHeight(PlaygroundTokens.controlMd - 2 * _listInset)
     .padding(
-      .symmetric(horizontal: PlaygroundSpace.s2, vertical: PlaygroundSpace.s1),
+      .symmetric(
+        horizontal: PlaygroundTokens.s2,
+        vertical: PlaygroundTokens.s1,
+      ),
     )
-    .spacing(PlaygroundSpace.s1_5)
+    .spacing(PlaygroundTokens.s1_5)
     .label(.style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size(PlaygroundSize.icon));
+    .icon(.size(PlaygroundTokens.icon));
 
 /// The filled look: a transparent outline at rest, so the dark theme's
 /// current outline paints a pixel it already owns, and the lifted surface once
 /// current.
 TabStyler _filled() => TabStyler()
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .border(.all(.color(_noEdge).width(PlaygroundStroke.hairline)))
+    .border(.all(.color(_noEdge).width(PlaygroundTokens.strokeHairline)))
     .onSelected(
       _current()
           .color(_currentFill())
@@ -235,7 +237,7 @@ TabStyler _filled() => TabStyler()
 /// tab paints two pixels instead of reflowing the strip. It has no corner
 /// radius: Flutter cannot round a box whose edges differ.
 TabStyler _line() => TabStyler()
-    .border(.bottom(.color(_noEdge).width(PlaygroundStroke.indicator)))
+    .border(.bottom(.color(_noEdge).width(PlaygroundTokens.strokeIndicator)))
     .onSelected(
       _current().border(.bottom(.color(PlaygroundTokens.foreground()))),
     );
@@ -271,4 +273,4 @@ TabStyler _focusVisibleStyle(PlaygroundTabsVariant variant) =>
 /// ring reads as reachable.
 TabStyler _disabledStyle() => TabStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

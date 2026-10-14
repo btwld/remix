@@ -152,12 +152,9 @@ MenuItemStyler _uiMenuSubmenuItemStyler(
 DividerStyler _uiMenuDividerStyler(_UiMenuMetrics metrics) => DividerStyler()
     .height(1)
     .margin(
-      .only(
-        left: metrics.leadingInset,
-        right: metrics.trailingInset,
-        top: UiTokens.space2(),
-        bottom: UiTokens.space2(),
-      ),
+      .left(
+        metrics.leadingInset,
+      ).right(metrics.trailingInset).vertical(UiTokens.space2()),
     )
     .color(UiTokens.grayA6());
 

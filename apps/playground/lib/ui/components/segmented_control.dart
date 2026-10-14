@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'segmented_control.g.dart';
@@ -83,17 +82,20 @@ final _chosenEdge = playgroundTint(PlaygroundTokens.input, 0, dark: 1);
 /// Its height is the track's 36px less the inset on both sides, so the track
 /// lands on the height of the button and field beside it.
 SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .color(_noFill)
-    .minHeight(PlaygroundSize.controlMd - 2 * _trackInset)
+    .minHeight(PlaygroundTokens.controlMd - 2 * _trackInset)
     .padding(
-      .symmetric(horizontal: PlaygroundSpace.s2, vertical: PlaygroundSpace.s1),
+      .symmetric(
+        horizontal: PlaygroundTokens.s2,
+        vertical: PlaygroundTokens.s1,
+      ),
     )
-    .spacing(PlaygroundSpace.s1_5)
+    .spacing(PlaygroundTokens.s1_5)
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .border(.color(_noEdge).width(PlaygroundStroke.hairline))
+    .border(.color(_noEdge).width(PlaygroundTokens.strokeHairline))
     .label(.style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size(PlaygroundSize.icon))
+    .icon(.size(PlaygroundTokens.icon))
     .onHovered(_content(PlaygroundTokens.foreground()))
     .onSelected(
       _content(PlaygroundTokens.foreground())
@@ -123,4 +125,4 @@ SegmentedControlItemStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

@@ -111,8 +111,8 @@ differs:
 
 | Use | Not |
 | --- | --- |
-| `.padding(.all(...))`, `.padding(.horizontal(...))` | `paddingAll`, `paddingX`, `paddingY` |
-| `.margin(...)` shorthands | `marginAll`, `marginX`, `marginY` |
+| `.padding(.all(...))`, `.padding(.horizontal(...))`, `.padding(.bottom(...))` | `paddingAll`, `paddingX`, `paddingY`, `.padding(.only(bottom: ...))` |
+| `.margin(...)` shorthands (`.top(...)`, `.horizontal(...)`, …) | `marginAll`, `marginX`, `marginY`, `.margin(.only(top: ...))` |
 | `.borderRadius(.circular(x))`, `.borderRadius(.all(...))` | `borderRounded*` |
 | `.border(.color(...).width(...))`, `.border(.top(...))` | `borderAll`, `borderTop`, … |
 | `.shadow(.color(...).offset(x: ..., y: ...).blurRadius(...))` | `shadowOnly`, `boxShadows`, `boxElevation` |

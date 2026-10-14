@@ -53,10 +53,10 @@ destructive fills at 60%.
 
 ## Scales and helpers
 
-`theme/scale.dart` holds the fixed scales as constants: `<Prefix>Space`
-(a 4px grid, `s0_5` through `s16`), `<Prefix>Size` (control heights
-32/36/40, icon sizes, a few panel widths, `pill`), `<Prefix>Stroke`,
-`<Prefix>Opacity.disabled`, and `<Prefix>Motion.standard` (150ms,
+`theme/tokens.dart` also holds the fixed scales as constants on `<Prefix>Tokens`:
+spacing (`s0_5` through `s16`, a 4px grid), sizes (`controlSm`/`controlMd`/`controlLg`
+32/36/40, icon sizes, panel widths, `pill`), strokes (`strokeHairline`,
+`strokeIndicator`, `strokeRing`), `disabledOpacity`, and `motion` (150ms,
 `Curves.fastOutSlowIn`). Spacing is deliberately not a token.
 
 `theme/effects.dart` holds the shared helpers:

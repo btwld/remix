@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'checkbox.dart';
 import 'icon_button.dart';
@@ -47,13 +46,13 @@ DataTableStyler vanillaDataTableStyle({
   DataTableStyler style = const DataTableStyler.create(),
 }) => DataTableStyler()
     .color(VanillaTokens.background())
-    .border(.color(VanillaTokens.border()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(_frameRadius()))
     .clipBehavior(Clip.antiAlias)
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate(VanillaMotion.standard)
+          .animate(VanillaTokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color(VanillaTokens.muted())),
@@ -63,12 +62,12 @@ DataTableStyler vanillaDataTableStyle({
     .lastBodyRow(.border(.bottom(.style(.none))))
     // A header cell insets its label from the sides only and takes its height
     // from the row; a body cell insets on every side.
-    .headerCell(.padding(.horizontal(VanillaSpace.s2)))
+    .headerCell(.padding(.horizontal(VanillaTokens.s2)))
     .bodyCell(_cell())
     .selectionCell(_cell())
-    .headerMinHeight(VanillaSize.controlLg)
-    .rowMinHeight(VanillaSize.controlMd)
-    .selectionColumnWidth(VanillaSize.controlLg)
+    .headerMinHeight(VanillaTokens.controlLg)
+    .rowMinHeight(VanillaTokens.controlMd)
+    .selectionColumnWidth(VanillaTokens.controlLg)
     // `foreground` at medium weight: the weight is what makes a column name
     // read as a label rather than as data.
     .headerLabel(
@@ -82,16 +81,18 @@ DataTableStyler vanillaDataTableStyle({
     .footerLabel(
       .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
     )
-    .sortIcon(.size(VanillaSize.iconSm).color(VanillaTokens.mutedForeground()))
-    .sortIconSpacing(VanillaSpace.s1)
+    .sortIcon(
+      .size(VanillaTokens.iconSm).color(VanillaTokens.mutedForeground()),
+    )
+    .sortIconSpacing(VanillaTokens.s1)
     .footer(
       FlexBoxStyler()
           .direction(.horizontal)
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
-          .minHeight(VanillaSize.controlLg)
-          .padding(.horizontal(VanillaSpace.s2))
-          .spacing(VanillaSpace.s3)
+          .minHeight(VanillaTokens.controlLg)
+          .padding(.horizontal(VanillaTokens.s2))
+          .spacing(VanillaTokens.s3)
           .border(.top(_rule())),
     )
     // The application's own controls, not restatements of them.
@@ -122,7 +123,7 @@ const _hoveredRowAlpha = 0.5;
 /// Clamping rather than hardcoding leaves the theme in charge in the other
 /// direction: `radius: Radius.zero` still gives a square table. The checkbox
 /// recipe clamps for the same class of reason at a different scale.
-const _maxFrameRadius = VanillaSize.controlLg / 2;
+const _maxFrameRadius = VanillaTokens.controlLg / 2;
 
 /// The theme's control radius, clamped to [_maxFrameRadius].
 ///
@@ -139,12 +140,14 @@ final _frameRadius = ContextToken<Radius>((context) {
 });
 
 /// One hairline in the `border` token, shared by every rule the table draws.
-BorderSideMix _rule() =>
-    BorderSideMix(color: VanillaTokens.border(), width: VanillaStroke.hairline);
+BorderSideMix _rule() => BorderSideMix(
+  color: VanillaTokens.border(),
+  width: VanillaTokens.strokeHairline,
+);
 
 /// The rule under a row.
 BoxBorderMix _rowRule() => .bottom(_rule());
 
 /// One body cell's 8px inset, shared by the selection column so the columns
 /// line up regardless of what is in them.
-BoxStyler _cell() => BoxStyler().padding(.all(VanillaSpace.s2));
+BoxStyler _cell() => BoxStyler().padding(.all(VanillaTokens.s2));

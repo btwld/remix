@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'icon_button.g.dart';
@@ -51,14 +50,14 @@ enum PlaygroundIconButtonSize {
 /// Everything visual about an icon button lives in this function: geometry, the
 /// five variants, hover and press motion, and the hover/pressed/focus/disabled
 /// fragments. Every state change settles over 150ms on the shared curve
-/// (`PlaygroundMotion.standard`). Remix keeps ownership of rendering, pointer and
+/// (`PlaygroundTokens.motion`). Remix keeps ownership of rendering, pointer and
 /// keyboard behavior, accessibility semantics, and the loading/disabled
 /// interaction rules — this recipe never reimplements any of that.
 ///
 /// It restates the button's fills rather than sharing them. That is
 /// deliberate: the two components have separate update stories, and a shared
 /// table would make every change to one a change to the other. The scale and
-/// the tints they draw on are shared, through `PlaygroundSize` and `playgroundTint`.
+/// the tints they draw on are shared, through `PlaygroundTokens` and `playgroundTint`.
 ///
 /// `RemixIconButton` requires a `semanticLabel` because an icon has no
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
@@ -156,9 +155,9 @@ const _noFill = Color(0x00000000);
 /// The square's edge for one [PlaygroundIconButtonSize]: 32, 36, or 40px, the
 /// button's heights. The glyph stays at 16 in every size.
 double _edgeFor(PlaygroundIconButtonSize size) => switch (size) {
-  .small => PlaygroundSize.controlSm,
-  .medium => PlaygroundSize.controlMd,
-  .large => PlaygroundSize.controlLg,
+  .small => PlaygroundTokens.controlSm,
+  .medium => PlaygroundTokens.controlMd,
+  .large => PlaygroundTokens.controlLg,
 };
 
 /// Layout and spinner defaults shared by every variant.
@@ -166,14 +165,14 @@ double _edgeFor(PlaygroundIconButtonSize size) => switch (size) {
 /// The box is square and centered, so the control's footprint does not change
 /// with the glyph inside it.
 IconButtonStyler _base(double edge) => IconButtonStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .size(edge, edge)
     .alignment(.center)
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    .icon(.size(PlaygroundSize.icon))
+    .icon(.size(PlaygroundTokens.icon))
     .spinner(
       .size(
-        PlaygroundSize.icon,
+        PlaygroundTokens.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -197,7 +196,9 @@ IconButtonStyler _variantStyle(PlaygroundIconButtonVariant variant) =>
       .outline =>
         _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
             .border(
-              .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+              .color(
+                PlaygroundTokens.input(),
+              ).width(PlaygroundTokens.strokeHairline),
             )
             // In the effects layer rather than the decoration: the dark fill
             // is translucent, and a decoration shadow would show through it.
@@ -269,4 +270,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 IconButtonStyler _disabledStyle() => IconButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle.g.dart';
@@ -85,15 +84,15 @@ const _noFill = Color(0x00000000);
 typedef _VanillaToggleMetrics = ({double minHeight, double paddingX});
 
 _VanillaToggleMetrics _metricsFor(VanillaToggleSize size) => switch (size) {
-  .small => (minHeight: VanillaSize.controlSm, paddingX: VanillaSpace.s1_5),
-  .medium => (minHeight: VanillaSize.controlMd, paddingX: VanillaSpace.s2),
-  .large => (minHeight: VanillaSize.controlLg, paddingX: VanillaSpace.s2_5),
+  .small => (minHeight: VanillaTokens.controlSm, paddingX: VanillaTokens.s1_5),
+  .medium => (minHeight: VanillaTokens.controlMd, paddingX: VanillaTokens.s2),
+  .large => (minHeight: VanillaTokens.controlLg, paddingX: VanillaTokens.s2_5),
 };
 
 /// Layout, typography, and the off appearance shared by both variants.
 ToggleStyler _base(_VanillaToggleMetrics metrics) =>
     _content(VanillaTokens.foreground())
-        .animate(VanillaMotion.standard)
+        .animate(VanillaTokens.motion)
         .color(_noFill)
         .direction(.horizontal)
         .mainAxisSize(.min)
@@ -102,10 +101,10 @@ ToggleStyler _base(_VanillaToggleMetrics metrics) =>
         .minHeight(metrics.minHeight)
         .minWidth(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
-        .spacing(VanillaSpace.s2)
+        .spacing(VanillaTokens.s2)
         .borderRadius(.all(VanillaTokens.radiusMd()))
         .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
-        .icon(.size(VanillaSize.icon));
+        .icon(.size(VanillaTokens.icon));
 
 /// The variant's outline and its hover.
 ToggleStyler _variantStyle(VanillaToggleVariant variant) => switch (variant) {
@@ -116,7 +115,9 @@ ToggleStyler _variantStyle(VanillaToggleVariant variant) => switch (variant) {
   // a transparent control shows through it as a gray wash.
   .outline =>
     ToggleStyler()
-        .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+        .border(
+          .color(VanillaTokens.input()).width(VanillaTokens.strokeHairline),
+        )
         .onHovered(
           _content(
             VanillaTokens.accentForeground(),
@@ -154,4 +155,4 @@ ToggleStyler _focusVisibleStyle(VanillaToggleVariant variant) {
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

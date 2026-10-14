@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'toggle_group.g.dart';
@@ -78,9 +77,9 @@ const _noFill = Color(0x00000000);
 
 /// The option height for one [PlaygroundToggleGroupSize]: 32, 36, or 40px.
 double _heightFor(PlaygroundToggleGroupSize size) => switch (size) {
-  .small => PlaygroundSize.controlSm,
-  .medium => PlaygroundSize.controlMd,
-  .large => PlaygroundSize.controlLg,
+  .small => PlaygroundTokens.controlSm,
+  .medium => PlaygroundTokens.controlMd,
+  .large => PlaygroundTokens.controlLg,
 };
 
 /// The outline variant's one outline around the strip.
@@ -91,7 +90,7 @@ ToggleGroupStyler _groupOutline(PlaygroundToggleGroupVariant variant) =>
     switch (variant) {
       .ghost => ToggleGroupStyler(),
       .outline => ToggleGroupStyler().border(
-        .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+        .color(PlaygroundTokens.input()).width(PlaygroundTokens.strokeHairline),
       ),
     };
 
@@ -102,17 +101,17 @@ ToggleGroupItemStyler _itemStyle(
   PlaygroundToggleGroupVariant variant,
 ) {
   return _content(PlaygroundTokens.foreground())
-      .animate(PlaygroundMotion.standard)
+      .animate(PlaygroundTokens.motion)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)
       .mainAxisAlignment(.center)
       .crossAxisAlignment(.center)
       .minHeight(height)
-      .padding(.horizontal(PlaygroundSpace.s3))
-      .spacing(PlaygroundSpace.s2)
+      .padding(.horizontal(PlaygroundTokens.s3))
+      .spacing(PlaygroundTokens.s2)
       .label(.style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500))
-      .icon(.size(PlaygroundSize.icon))
+      .icon(.size(PlaygroundTokens.icon))
       .onHovered(switch (variant) {
         .ghost => _content(
           PlaygroundTokens.mutedForeground(),
@@ -148,4 +147,4 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
     .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

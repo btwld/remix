@@ -39,7 +39,7 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
 }) => VanillaAgentPermissionRecipe(
   style: AgentPermissionStyler(
     header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler().spacing(8).padding(.only(top: 8)),
+    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
     title: TextStyler()
         .color(VanillaTokens.foreground())
         .fontWeight(FontWeight.w600),

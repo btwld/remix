@@ -32,8 +32,8 @@ PlaygroundAgentAnswerRecipe playgroundAgentAnswerRecipe({
 }) => PlaygroundAgentAnswerRecipe(
   style: PlaygroundAnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    feedback: BoxStyler().padding(.only(top: 6)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    feedback: BoxStyler().padding(.top(6)),
     sourcesLabel: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontSize(13),

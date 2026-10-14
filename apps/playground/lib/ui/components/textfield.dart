@@ -8,7 +8,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'textfield.g.dart';
@@ -39,11 +38,11 @@ TextFieldStyler playgroundTextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(PlaygroundSize.controlMd)
+      .minHeight(PlaygroundTokens.controlMd)
       .padding(
         .symmetric(
-          horizontal: PlaygroundSpace.s3,
-          vertical: PlaygroundSpace.s1,
+          horizontal: PlaygroundTokens.s3,
+          vertical: PlaygroundTokens.s1,
         ),
       )
       // A single line sits on the field's centre line; the accessories go with
@@ -66,11 +65,11 @@ TextFieldStyler playgroundTextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight(PlaygroundSpace.s16)
+      .minHeight(PlaygroundTokens.s16)
       .padding(
         .symmetric(
-          horizontal: PlaygroundSpace.s3,
-          vertical: PlaygroundSpace.s2,
+          horizontal: PlaygroundTokens.s3,
+          vertical: PlaygroundTokens.s2,
         ),
       )
       .crossAxisAlignment(.start)
@@ -89,14 +88,16 @@ const _darkFillAlpha = 0.3;
 /// Both recipes share this whole body; only the box's height, its vertical
 /// inset, and the accessory alignment differ between them.
 TextFieldStyler _base() => TextFieldStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .color(_fill())
-    .border(.color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.input()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     // In the effects layer rather than the decoration: the fill is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
-    .spacing(PlaygroundSpace.s2)
+    .spacing(PlaygroundTokens.s2)
     .text(
       .style(
         PlaygroundTokens.textSm.mix(),
@@ -120,7 +121,7 @@ TextFieldStyler _base() => TextFieldStyler()
         PlaygroundTokens.textSm.mix(),
       ).color(PlaygroundTokens.mutedForeground()),
     )
-    .layout(.direction(.vertical).spacing(PlaygroundSpace.s2))
+    .layout(.direction(.vertical).spacing(PlaygroundTokens.s2))
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
@@ -177,4 +178,4 @@ const _darkErrorRingAlpha = 0.4;
 /// editable.
 TextFieldStyler _disabledStyle() => TextFieldStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

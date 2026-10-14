@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'checkbox.dart';
 import 'icon_button.dart';
@@ -47,13 +46,15 @@ DataTableStyler playgroundDataTableStyle({
   DataTableStyler style = const DataTableStyler.create(),
 }) => DataTableStyler()
     .color(PlaygroundTokens.background())
-    .border(.color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
+    )
     .borderRadius(.all(_frameRadius()))
     .clipBehavior(Clip.antiAlias)
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate(PlaygroundMotion.standard)
+          .animate(PlaygroundTokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color(PlaygroundTokens.muted())),
@@ -63,12 +64,12 @@ DataTableStyler playgroundDataTableStyle({
     .lastBodyRow(.border(.bottom(.style(.none))))
     // A header cell insets its label from the sides only and takes its height
     // from the row; a body cell insets on every side.
-    .headerCell(.padding(.horizontal(PlaygroundSpace.s2)))
+    .headerCell(.padding(.horizontal(PlaygroundTokens.s2)))
     .bodyCell(_cell())
     .selectionCell(_cell())
-    .headerMinHeight(PlaygroundSize.controlLg)
-    .rowMinHeight(PlaygroundSize.controlMd)
-    .selectionColumnWidth(PlaygroundSize.controlLg)
+    .headerMinHeight(PlaygroundTokens.controlLg)
+    .rowMinHeight(PlaygroundTokens.controlMd)
+    .selectionColumnWidth(PlaygroundTokens.controlLg)
     // `foreground` at medium weight: the weight is what makes a column name
     // read as a label rather than as data.
     .headerLabel(
@@ -87,17 +88,17 @@ DataTableStyler playgroundDataTableStyle({
       ).color(PlaygroundTokens.mutedForeground()),
     )
     .sortIcon(
-      .size(PlaygroundSize.iconSm).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.iconSm).color(PlaygroundTokens.mutedForeground()),
     )
-    .sortIconSpacing(PlaygroundSpace.s1)
+    .sortIconSpacing(PlaygroundTokens.s1)
     .footer(
       FlexBoxStyler()
           .direction(.horizontal)
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
-          .minHeight(PlaygroundSize.controlLg)
-          .padding(.horizontal(PlaygroundSpace.s2))
-          .spacing(PlaygroundSpace.s3)
+          .minHeight(PlaygroundTokens.controlLg)
+          .padding(.horizontal(PlaygroundTokens.s2))
+          .spacing(PlaygroundTokens.s3)
           .border(.top(_rule())),
     )
     // The application's own controls, not restatements of them.
@@ -128,7 +129,7 @@ const _hoveredRowAlpha = 0.5;
 /// Clamping rather than hardcoding leaves the theme in charge in the other
 /// direction: `radius: Radius.zero` still gives a square table. The checkbox
 /// recipe clamps for the same class of reason at a different scale.
-const _maxFrameRadius = PlaygroundSize.controlLg / 2;
+const _maxFrameRadius = PlaygroundTokens.controlLg / 2;
 
 /// The theme's control radius, clamped to [_maxFrameRadius].
 ///
@@ -147,7 +148,7 @@ final _frameRadius = ContextToken<Radius>((context) {
 /// One hairline in the `border` token, shared by every rule the table draws.
 BorderSideMix _rule() => BorderSideMix(
   color: PlaygroundTokens.border(),
-  width: PlaygroundStroke.hairline,
+  width: PlaygroundTokens.strokeHairline,
 );
 
 /// The rule under a row.
@@ -155,4 +156,4 @@ BoxBorderMix _rowRule() => .bottom(_rule());
 
 /// One body cell's 8px inset, shared by the selection column so the columns
 /// line up regardless of what is in them.
-BoxStyler _cell() => BoxStyler().padding(.all(PlaygroundSpace.s2));
+BoxStyler _cell() => BoxStyler().padding(.all(PlaygroundTokens.s2));

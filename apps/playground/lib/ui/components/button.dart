@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'button.g.dart';
@@ -47,7 +46,7 @@ enum PlaygroundButtonSize {
 /// Everything visual about a button lives in this function: geometry,
 /// typography, the five variants, hover and press motion, and the
 /// hover/pressed/focus/disabled fragments. Every state change settles over
-/// 150ms on the shared curve (`PlaygroundMotion.standard`). Remix keeps ownership
+/// 150ms on the shared curve (`PlaygroundTokens.motion`). Remix keeps ownership
 /// of rendering, pointer and keyboard behavior, accessibility semantics, and
 /// the loading/disabled interaction rules — this recipe never reimplements any
 /// of that.
@@ -178,25 +177,25 @@ typedef _PlaygroundButtonMetrics = ({
 _PlaygroundButtonMetrics _metricsFor(PlaygroundButtonSize size) =>
     switch (size) {
       .small => (
-        minHeight: PlaygroundSize.controlSm,
-        paddingX: PlaygroundSpace.s3,
-        gap: PlaygroundSpace.s1_5,
+        minHeight: PlaygroundTokens.controlSm,
+        paddingX: PlaygroundTokens.s3,
+        gap: PlaygroundTokens.s1_5,
       ),
       .medium => (
-        minHeight: PlaygroundSize.controlMd,
-        paddingX: PlaygroundSpace.s4,
-        gap: PlaygroundSpace.s2,
+        minHeight: PlaygroundTokens.controlMd,
+        paddingX: PlaygroundTokens.s4,
+        gap: PlaygroundTokens.s2,
       ),
       .large => (
-        minHeight: PlaygroundSize.controlLg,
-        paddingX: PlaygroundSpace.s6,
-        gap: PlaygroundSpace.s2,
+        minHeight: PlaygroundTokens.controlLg,
+        paddingX: PlaygroundTokens.s6,
+        gap: PlaygroundTokens.s2,
       ),
     };
 
 /// Layout, typography, and spinner defaults shared by every variant.
 ButtonStyler _base(_PlaygroundButtonMetrics metrics) => ButtonStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)
@@ -206,10 +205,10 @@ ButtonStyler _base(_PlaygroundButtonMetrics metrics) => ButtonStyler()
     .spacing(metrics.gap)
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(.style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size(PlaygroundSize.icon))
+    .icon(.size(PlaygroundTokens.icon))
     .spinner(
       .size(
-        PlaygroundSize.icon,
+        PlaygroundTokens.icon,
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
@@ -233,7 +232,9 @@ ButtonStyler _variantStyle(PlaygroundButtonVariant variant) =>
       .outline =>
         _quiet(fill: _outlineFill(), hoverFill: _outlineHoverFill())
             .border(
-              .color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline),
+              .color(
+                PlaygroundTokens.input(),
+              ).width(PlaygroundTokens.strokeHairline),
             )
             // In the effects layer rather than the decoration: the dark fill is
             // translucent, and a decoration shadow would show through it.
@@ -307,4 +308,4 @@ const _darkDestructiveRingAlpha = 0.4;
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

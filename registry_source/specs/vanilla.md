@@ -102,8 +102,8 @@ installed `theme` item declares `remix_ui_fonts` and every Vanilla install
 carries the fonts. A null `fontFamily` leaves the family to the platform, and
 a null `monoFontFamily` uses `fontFamily`.
 
-**Spacing.** Tailwind's 4px grid, as constants in `theme/scale.dart`:
-`VanillaSpace.s0_5` (2) through `s16` (64). Spacing is not a token: the
+**Spacing.** Tailwind's 4px grid, as constants on `VanillaTokens` in `theme/tokens.dart`:
+`VanillaTokens.s0_5` (2) through `s16` (64). Spacing is not a token: the
 reference does not theme it, and arithmetic on an unresolved token cannot be
 written.
 
@@ -119,7 +119,7 @@ written.
 | `md` | (4, 6, −1, 10%) + (2, 4, −2, 10%) |
 | `lg` | (10, 15, −3, 10%) + (4, 6, −4, 10%) |
 
-**Motion.** `VanillaMotion.standard`: 150ms on `Curves.fastOutSlowIn`, which is
+**Motion.** `VanillaTokens.motion`: 150ms on `Curves.fastOutSlowIn`, which is
 Tailwind's `transition` default, `cubic-bezier(0.4, 0, 0.2, 1)`.
 
 **Focus.** `focus-visible:ring-[3px] ring-ring/50`: a 3px band of `ring` at 50%,

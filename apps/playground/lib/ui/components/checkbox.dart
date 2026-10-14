@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'checkbox.g.dart';
@@ -113,7 +112,7 @@ final _boxRadius = ContextToken<Radius>((context) {
 /// Sized for Remix's edge-to-edge 9×9 path; a call site passing a padded
 /// `IconData` (`checkedIcon`) can widen `.indicator(.size(...))` through
 /// `style`.
-const _indicator = PlaygroundSpace.s2_5;
+const _indicator = PlaygroundTokens.s2_5;
 
 /// The unchecked box's fill: transparent, or `input` at 30% in the dark.
 final _fill = playgroundTint(PlaygroundTokens.input, 0, dark: _darkFillAlpha);
@@ -131,17 +130,19 @@ const _darkFillAlpha = 0.3;
 /// The label is a form label, set like the text field's: `textSm` at medium
 /// weight, 12px from the box.
 CheckboxStyler _base() => CheckboxStyler()
-    .animate(PlaygroundMotion.standard)
-    .size(PlaygroundSize.icon, PlaygroundSize.icon)
+    .animate(PlaygroundTokens.motion)
+    .size(PlaygroundTokens.icon, PlaygroundTokens.icon)
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
     .color(_fill())
-    .border(.color(PlaygroundTokens.input()).width(PlaygroundStroke.hairline))
+    .border(
+      .color(PlaygroundTokens.input()).width(PlaygroundTokens.strokeHairline),
+    )
     // In the effects layer rather than the decoration: the empty box is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
     .indicator(.size(_indicator))
-    .labelSpacing(PlaygroundSpace.s3)
+    .labelSpacing(PlaygroundTokens.s3)
     .label(
       .style(
         PlaygroundTokens.textSm.mix(),
@@ -175,4 +176,4 @@ CheckboxStyler _focusVisibleStyle() => CheckboxStyler()
 /// draws a focus ring reads as actionable.
 CheckboxStyler _disabledStyle() => CheckboxStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

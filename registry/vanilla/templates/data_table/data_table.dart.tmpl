@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 import 'checkbox.dart';
 import 'icon_button.dart';
@@ -47,13 +46,13 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
   DataTableStyler style = const DataTableStyler.create(),
 }) => DataTableStyler()
     .color({{typePrefix}}Tokens.background())
-    .border(.color({{typePrefix}}Tokens.border()).width({{typePrefix}}Stroke.hairline))
+    .border(.color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline))
     .borderRadius(.all(_frameRadius()))
     .clipBehavior(Clip.antiAlias)
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate({{typePrefix}}Motion.standard)
+          .animate({{typePrefix}}Tokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color({{typePrefix}}Tokens.muted())),
@@ -63,12 +62,12 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
     .lastBodyRow(.border(.bottom(.style(.none))))
     // A header cell insets its label from the sides only and takes its height
     // from the row; a body cell insets on every side.
-    .headerCell(.padding(.horizontal({{typePrefix}}Space.s2)))
+    .headerCell(.padding(.horizontal({{typePrefix}}Tokens.s2)))
     .bodyCell(_cell())
     .selectionCell(_cell())
-    .headerMinHeight({{typePrefix}}Size.controlLg)
-    .rowMinHeight({{typePrefix}}Size.controlMd)
-    .selectionColumnWidth({{typePrefix}}Size.controlLg)
+    .headerMinHeight({{typePrefix}}Tokens.controlLg)
+    .rowMinHeight({{typePrefix}}Tokens.controlMd)
+    .selectionColumnWidth({{typePrefix}}Tokens.controlLg)
     // `foreground` at medium weight: the weight is what makes a column name
     // read as a label rather than as data.
     .headerLabel(
@@ -82,16 +81,18 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
     .footerLabel(
       .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
     )
-    .sortIcon(.size({{typePrefix}}Size.iconSm).color({{typePrefix}}Tokens.mutedForeground()))
-    .sortIconSpacing({{typePrefix}}Space.s1)
+    .sortIcon(
+      .size({{typePrefix}}Tokens.iconSm).color({{typePrefix}}Tokens.mutedForeground()),
+    )
+    .sortIconSpacing({{typePrefix}}Tokens.s1)
     .footer(
       FlexBoxStyler()
           .direction(.horizontal)
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
-          .minHeight({{typePrefix}}Size.controlLg)
-          .padding(.horizontal({{typePrefix}}Space.s2))
-          .spacing({{typePrefix}}Space.s3)
+          .minHeight({{typePrefix}}Tokens.controlLg)
+          .padding(.horizontal({{typePrefix}}Tokens.s2))
+          .spacing({{typePrefix}}Tokens.s3)
           .border(.top(_rule())),
     )
     // The application's own controls, not restatements of them.
@@ -122,7 +123,7 @@ const _hoveredRowAlpha = 0.5;
 /// Clamping rather than hardcoding leaves the theme in charge in the other
 /// direction: `radius: Radius.zero` still gives a square table. The checkbox
 /// recipe clamps for the same class of reason at a different scale.
-const _maxFrameRadius = {{typePrefix}}Size.controlLg / 2;
+const _maxFrameRadius = {{typePrefix}}Tokens.controlLg / 2;
 
 /// The theme's control radius, clamped to [_maxFrameRadius].
 ///
@@ -139,12 +140,14 @@ final _frameRadius = ContextToken<Radius>((context) {
 });
 
 /// One hairline in the `border` token, shared by every rule the table draws.
-BorderSideMix _rule() =>
-    BorderSideMix(color: {{typePrefix}}Tokens.border(), width: {{typePrefix}}Stroke.hairline);
+BorderSideMix _rule() => BorderSideMix(
+  color: {{typePrefix}}Tokens.border(),
+  width: {{typePrefix}}Tokens.strokeHairline,
+);
 
 /// The rule under a row.
 BoxBorderMix _rowRule() => .bottom(_rule());
 
 /// One body cell's 8px inset, shared by the selection column so the columns
 /// line up regardless of what is in them.
-BoxStyler _cell() => BoxStyler().padding(.all({{typePrefix}}Space.s2));
+BoxStyler _cell() => BoxStyler().padding(.all({{typePrefix}}Tokens.s2));

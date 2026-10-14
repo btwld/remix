@@ -32,8 +32,8 @@ VanillaAgentAnswerRecipe vanillaAgentAnswerRecipe({
 }) => VanillaAgentAnswerRecipe(
   style: AgentAnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    feedback: BoxStyler().padding(.only(top: 6)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    feedback: BoxStyler().padding(.top(6)),
     sourcesLabel: TextStyler().color(VanillaTokens.foreground()).fontSize(13),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
   ).merge(style),

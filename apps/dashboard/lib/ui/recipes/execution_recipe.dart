@@ -36,7 +36,7 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
         .color(UiTokens.gray3())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
     tool: TextStyler().color(UiTokens.gray11()).fontSize(12),
     title: TextStyler().color(UiTokens.gray12()).fontWeight(FontWeight.w600),
     meta: TextStyler().color(UiTokens.gray11()).fontSize(12),

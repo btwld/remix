@@ -35,7 +35,7 @@ PlaygroundAgentComposerRecipe playgroundAgentComposerRecipe({
         .mainAxisSize(.max)
         .crossAxisAlignment(.center)
         .spacing(8)
-        .padding(.only(top: 8)),
+        .padding(.top(8)),
   ).merge(style),
   surfaceStyle: playgroundCardStyle(
     style: CardStyler().padding(.all(12)).merge(surfaceStyle),

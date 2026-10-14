@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'accordion.g.dart';
@@ -71,7 +70,7 @@ part 'accordion.g.dart';
 AccordionStyler playgroundAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     // `container` has to be reached by name. `AccordionStyler` forwards its
     // box shorthand to `trigger`, so a bare `.border(...)` would outline the
     // clickable row rather than the section, and the rule between sections
@@ -79,7 +78,9 @@ AccordionStyler playgroundAccordionStyle({
     .container(
       .border(
         .bottom(
-          .color(PlaygroundTokens.border()).width(PlaygroundStroke.hairline),
+          .color(
+            PlaygroundTokens.border(),
+          ).width(PlaygroundTokens.strokeHairline),
         ),
       ),
     )
@@ -89,8 +90,8 @@ AccordionStyler playgroundAccordionStyle({
     // the list.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
-    .padding(.vertical(PlaygroundSpace.s4))
-    .spacing(PlaygroundSpace.s4)
+    .padding(.vertical(PlaygroundTokens.s4))
+    .spacing(PlaygroundTokens.s4)
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .title(
       .style(
@@ -98,15 +99,15 @@ AccordionStyler playgroundAccordionStyle({
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
     .leadingIcon(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
     // Both icons are markers, not the state: Remix renders whatever
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
     .trailingIcon(
-      .size(PlaygroundSize.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
-    .content(.padding(.only(bottom: PlaygroundSpace.s4)))
+    .content(.padding(.bottom(PlaygroundTokens.s4)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
@@ -137,4 +138,4 @@ AccordionStyler _focusVisibleStyle() =>
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

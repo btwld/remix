@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'checkbox.g.dart';
@@ -113,7 +112,7 @@ final _boxRadius = ContextToken<Radius>((context) {
 /// Sized for Remix's edge-to-edge 9×9 path; a call site passing a padded
 /// `IconData` (`checkedIcon`) can widen `.indicator(.size(...))` through
 /// `style`.
-const _indicator = VanillaSpace.s2_5;
+const _indicator = VanillaTokens.s2_5;
 
 /// The unchecked box's fill: transparent, or `input` at 30% in the dark.
 final _fill = vanillaTint(VanillaTokens.input, 0, dark: _darkFillAlpha);
@@ -131,17 +130,17 @@ const _darkFillAlpha = 0.3;
 /// The label is a form label, set like the text field's: `textSm` at medium
 /// weight, 12px from the box.
 CheckboxStyler _base() => CheckboxStyler()
-    .animate(VanillaMotion.standard)
-    .size(VanillaSize.icon, VanillaSize.icon)
+    .animate(VanillaTokens.motion)
+    .size(VanillaTokens.icon, VanillaTokens.icon)
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
     .color(_fill())
-    .border(.color(VanillaTokens.input()).width(VanillaStroke.hairline))
+    .border(.color(VanillaTokens.input()).width(VanillaTokens.strokeHairline))
     // In the effects layer rather than the decoration: the empty box is
     // transparent, and a decoration shadow would show through it.
     .containerEffects(.behindContent(VanillaShadow.xs.effects))
     .indicator(.size(_indicator))
-    .labelSpacing(VanillaSpace.s3)
+    .labelSpacing(VanillaTokens.s3)
     .label(
       .style(
         VanillaTokens.textSm.mix(),
@@ -175,4 +174,4 @@ CheckboxStyler _focusVisibleStyle() => CheckboxStyler()
 /// draws a focus ring reads as actionable.
 CheckboxStyler _disabledStyle() => CheckboxStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaOpacity.disabled));
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

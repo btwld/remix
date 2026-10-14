@@ -3,7 +3,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
-import '../theme/scale.dart';
 import '../theme/tokens.dart';
 
 part 'link.g.dart';
@@ -41,7 +40,7 @@ part 'link.g.dart';
 LinkStyler playgroundLinkStyle({
   LinkStyler style = const LinkStyler.create(),
 }) => LinkStyler()
-    .animate(PlaygroundMotion.standard)
+    .animate(PlaygroundTokens.motion)
     .label(
       .style(
         PlaygroundTokens.textSm.mix(),
@@ -59,4 +58,4 @@ LinkStyler playgroundLinkStyle({
 /// is also what a decorative link looks like.
 LinkStyler _disabledStyle() => LinkStyler()
     .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundOpacity.disabled));
+    .wrap(.opacity(PlaygroundTokens.disabledOpacity));
