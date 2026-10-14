@@ -18,10 +18,10 @@ handling, focus management, accessibility semantics, and the loading/disabled
 interaction rules. The installed file only decides what things look like.
 
 <Info>
-`remix_cli` has not been published. The hosted installation commands below
-apply after its first release. Until then, use the checkout installation
-described in the CLI README. The CLI has its own version and release schedule.
-Fortal preset does not add a `remix_fortal` dependency.
+`remix_cli` is not yet published. Hosted installation commands apply after its
+first release. Until then, install from a local checkout or activate from Git
+below. The CLI has an independent version and release schedule. The Fortal
+preset does not add a `remix_fortal` dependency.
 </Info>
 
 ## Choose a preset
@@ -73,10 +73,25 @@ The command is called `remix`. How you reach it depends on how it is installed:
 # Project-local dev dependency (recommended)
 dart run remix_cli:remix <command>
 
-# Global install
+# Global install (available after release)
 dart pub global activate remix_cli
 remix <command>
 ```
+
+Before publication, activate the global command from Git:
+
+```bash
+dart pub global activate --source git https://github.com/btwld/remix.git \
+  --git-path packages/remix_cli --git-ref main
+remix --help
+```
+
+To pin a specific CLI revision, replace `main` with a full commit SHA. Add
+Pub's `bin` directory to `PATH` if prompted. Git activation isolates the global
+command from local workspace lockfiles. If a previous `--source path` activation
+fails with "cannot resolve to the same set of dependencies", run this Git
+activation to replace it. You do not need to modify checkout manifests or
+lockfiles.
 
 Prefer the project-local form to pin the CLI. Registry content is pinned
 independently to a GitHub commit in `remix.yaml`. Neither CLI upgrades nor

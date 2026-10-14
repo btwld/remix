@@ -18,11 +18,13 @@ the same installed source; see
 
 ## Install the CLI in a project
 
-The CLI has not been published. The hosted commands below apply after its
-first release. Until then, use the checkout command in this section.
+`remix_cli` is not yet published. Hosted commands apply after its first release.
+Until then, use the checkout command below. For the global `remix` command, use
+[Git activation](../packages/remix_cli/README.md#activate-an-unreleased-cli-from-git).
+Git activation resolves dependencies independently of local workspace lockfiles.
 
-Use a project-local development dependency so the application's lockfile pins
-the CLI version; `remix.yaml` separately pins registry content:
+Use a project-local development dependency to pin the CLI version in the
+application lockfile. `remix.yaml` pins registry content separately:
 
 ```shell
 flutter pub add dev:remix_cli

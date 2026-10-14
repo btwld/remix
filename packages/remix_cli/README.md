@@ -41,8 +41,10 @@ unstyled and backward compatible.
 
 ## Install project-locally
 
-The CLI has not been published. The hosted commands below apply after its
-first release. Until then, use the checkout command in this section.
+`remix_cli` is not yet published. Hosted commands apply after its first release.
+Until then, install from a local checkout or
+[activate the CLI from Git](#activate-an-unreleased-cli-from-git) to use the
+global `remix` command.
 
 The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
 the dependency fails during version solving.
@@ -74,8 +76,7 @@ dependency_overrides:
 Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
-Global activation is convenient for experiments. Registry content remains
-pinned per project in `remix.yaml`:
+After publication, activate the package globally:
 
 ```shell
 dart pub global activate remix_cli
@@ -84,6 +85,36 @@ dart pub global activate remix_cli
 `remix_cli` is versioned independently of `remix`, so its version does not
 match Remix's. Its registry is authored against one `remix`
 version; `add` reports when your resolved `remix` is newer than that one.
+
+### Activate an unreleased CLI from Git
+
+To use the global `remix` command before publication, activate the package from
+Git:
+
+```shell
+dart pub global activate --source git https://github.com/btwld/remix.git \
+  --git-path packages/remix_cli --git-ref main
+remix --help
+```
+
+Add Pub's `bin` directory to `PATH` if prompted. To pin a specific revision,
+replace `main` with a full commit SHA. Run the activation command again to update
+a branch-based install. The CLI revision is independent of the registry commit in
+`remix.yaml`. Activating a newer CLI does not advance that registry pin.
+
+Git activation resolves CLI dependencies independently of a local checkout. In
+contrast, `--source path` activates the live checkout using its
+`resolution: workspace` configuration. That command can update the monorepo
+lockfile to match your active Dart SDK. If you later restore or change that
+lockfile, `remix` commands fail before the CLI starts:
+
+```text
+The current activation of `remix_cli` cannot resolve to the same set of dependencies.
+```
+
+To recover the global command, run the Git activation command above. This
+replaces the path activation without modifying checkout manifests or lockfiles.
+To test local CLI edits, use a project-local path dependency instead.
 
 ## Initialize a project
 
