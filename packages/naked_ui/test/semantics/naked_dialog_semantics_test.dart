@@ -554,6 +554,13 @@ void main() {
       );
 
       expect(find.text('Non-modal content'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(NakedDialog),
+          matching: find.byType(BlockSemantics),
+        ),
+        findsNothing,
+      );
 
       // Test modal dialog
       await tester.pumpWidget(
@@ -572,6 +579,13 @@ void main() {
       );
 
       expect(find.text('Modal content'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(NakedDialog),
+          matching: find.byType(BlockSemantics),
+        ),
+        findsOneWidget,
+      );
 
       handle.dispose();
     });
