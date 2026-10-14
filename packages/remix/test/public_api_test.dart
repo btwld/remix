@@ -211,6 +211,44 @@ void main() {
     expect(called.excludeSemantics, isTrue);
   });
 
+  test('the app bar is constructible from the public API', () {
+    const leading = SizedBox(key: ValueKey<String>('leading'));
+    const action = SizedBox(key: ValueKey<String>('action'));
+    const bottom = SizedBox(key: ValueKey<String>('bottom'));
+    const raw = RemixAppBar(
+      leading: leading,
+      title: 'Orders',
+      titleChild: Text('Workspace / Orders'),
+      actions: [action],
+      bottom: bottom,
+      centerTitle: true,
+      safeArea: false,
+      namesRoute: false,
+      headingLevel: 1,
+      styleSpec: AppBarSpec(toolbarHeight: 64, spacing: 12),
+    );
+    final Style<AppBarSpec> style = raw.style;
+
+    final AppBarStyler styler = RemixAppBar.styleFrom(
+      toolbarHeight: 64,
+      spacing: 12,
+    );
+    final called = styler(title: 'Forwarded', safeArea: false);
+
+    expect(raw.leading, same(leading));
+    expect(raw.actions.single, same(action));
+    expect(raw.bottom, same(bottom));
+    expect(raw.centerTitle, isTrue);
+    expect(raw.safeArea, isFalse);
+    expect(raw.namesRoute, isFalse);
+    expect(raw.headingLevel, 1);
+    expect(raw.styleSpec?.toolbarHeight, 64);
+    expect(style, isA<AppBarStyler>());
+    expect(called.style, same(styler));
+    expect(called.title, 'Forwarded');
+    expect(called.safeArea, isFalse);
+  });
+
   test('the data table family is constructible from the public API', () {
     final columns = <RemixDataTableColumn<String>>[
       RemixDataTableColumn(

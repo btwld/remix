@@ -1,0 +1,236 @@
+---
+title: App Bar
+description: A bar across the top of a page with an optional leading button, a title heading, actions, and bottom content
+keywords: [flutter, remix, app bar, header, toolbar, title, navigation, accessibility]
+---
+
+An app bar is a header row across the top of a page or pane. It provides slots
+for an optional leading widget, page title, header actions, and optional bottom
+content such as tabs. `RemixAppBar` manages toolbar layout, title heading
+semantics, and top safe-area insets. The enclosing application manages
+navigation, outer page structure, and scrolling.
+
+## When to use this
+
+- **Page headers**: Display the page title and primary actions.
+- **Detail views**: Pair a custom back button with a record title.
+- **Tabbed pages**: Place a tab bar below the title using the `bottom` slot.
+- **Pane headers**: Title a nested pane or split view with `safeArea` disabled.
+
+`RemixAppBar` does not provide default navigation buttons or inspect `Navigator`
+or route state. Pass navigation controls explicitly using `leading`. The app bar
+remains static and does not change on scroll.
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class OrdersHeader extends StatelessWidget {
+  const OrdersHeader({super.key, required this.onBack});
+
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixAppBar(
+      leading: RemixIconButton(
+        icon: Icons.arrow_back,
+        semanticLabel: 'Back',
+        onPressed: onBack,
+      ),
+      title: 'Orders',
+      actions: [
+        RemixIconButton(
+          icon: Icons.search,
+          semanticLabel: 'Search orders',
+          onPressed: () {},
+        ),
+      ],
+      style: AppBarStyler()
+          .color(const Color(0xFFFFFFFF))
+          .toolbarHeight(56)
+          .spacing(12)
+          .toolbar(BoxStyler().padding(.horizontal(16)))
+          .title(TextStyler().fontSize(18).fontWeight(FontWeight.w600)),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Placing the bar in a page
+
+Place the bar at the top of a `Column` with the page body below it. The bar
+requires a bounded horizontal width, which `Column` provides.
+
+By default, `safeArea` is enabled (`true`). The container surface extends behind
+the top safe-area inset (such as a status bar or display cutout), while toolbar
+content renders below it. Wrap the page body in `MediaQuery.removePadding` with
+`removeTop: true` so scroll views do not apply the top inset twice.
+
+<CodeGroup title="Page frame" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class OrdersPage extends StatelessWidget {
+  const OrdersPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const RemixAppBar(title: 'Orders'),
+        Expanded(
+          child: MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView(
+              children: const [Text('Order 1042'), Text('Order 1043')],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+Disable `safeArea` (`safeArea: false`) when embedding the bar inside a container
+that does not touch the top window edge, such as a sheet or nested pane.
+
+## Tabs and other bottom content
+
+The `bottom` slot displays secondary content below the toolbar, inside the app
+bar container surface. To display tabs, wrap both the app bar and page body in
+`RemixTabs`, then place `RemixTabBar` in `bottom`.
+
+<CodeGroup title="Tabbed page" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class AccountPage extends StatefulWidget {
+  const AccountPage({super.key});
+
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  String _tab = 'profile';
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixTabs(
+      selectedTabId: _tab,
+      onChanged: (id) => setState(() => _tab = id),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          RemixAppBar(
+            title: 'Account',
+            bottom: RemixTabBar(
+              child: Row(
+                children: [
+                  RemixTab(tabId: 'profile', label: 'Profile'),
+                  RemixTab(tabId: 'billing', label: 'Billing'),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                RemixTabView(tabId: 'profile', child: Text('Profile')),
+                RemixTabView(tabId: 'billing', child: Text('Billing')),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Title and semantics
+
+- **Heading node**: The title renders as an accessibility heading. `title` provides both visible text and the accessible label.
+- **Custom titles**: `titleChild` renders custom widgets in the title slot and inherits the title text style. When `title` is `null`, assistive technologies preserve the semantics of `titleChild`, including interactive controls.
+- **Semantics override**: Setting `title` overrides all child semantics. Omit `title` when `titleChild` contains interactive controls.
+- **Route naming**: On Android, Fuchsia, Linux, and Windows, the title names the enclosing route. Screen readers announce this title on page entry. Use `namesRoute` to override platform defaults.
+- **Web heading level**: `headingLevel` configures the HTML heading tag level from 1 to 6 on the web.
+- **Accessibility traversal**: Screen readers navigate leading, title, and actions in sequential order, including when `centerTitle` is `true`.
+- **Text truncation**: Titles truncate to a single line with an ellipsis unless the style defines custom line limits.
+
+Flutter does not provide a banner or toolbar semantic role, so `RemixAppBar`
+publishes no landmark semantics.
+
+## Styling
+
+`AppBarStyler` exposes these slots:
+
+| Slot | Description |
+| --- | --- |
+| `container` | Surface behind the entire bar, including the top window inset |
+| `toolbar` | Layout and decoration of the toolbar row, including horizontal content padding |
+| `title` | Title typography and default text style for `titleChild` |
+| `actions` | Spacing and alignment for the actions row |
+| `bottom` | Layout and decoration for bottom content |
+| `toolbarHeight` | Height of the toolbar row in logical pixels. Defaults to 56 |
+| `spacing` | Horizontal spacing between leading, title, and action slots |
+
+Styler box methods such as `color`, `padding`, and `border` apply to
+`container`. The actions row lays out with intrinsic width
+(`MainAxisSize.min`). A border on `container` adds to total bar height, whereas
+a border on `toolbar` renders inside `toolbarHeight`.
+
+<CodeGroup title="Fluent styling" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final style = AppBarStyler()
+    .color(const Color(0xFFFBFBFB))
+    .toolbarHeight(64)
+    .spacing(12)
+    .toolbar(
+      BoxStyler()
+          .padding(.horizontal(16))
+          .border(.bottom(.color(const Color(0xFFE5E5E5)).width(1))),
+    )
+    .actions(FlexBoxStyler().spacing(8))
+    .title(TextStyler().fontSize(18).fontWeight(FontWeight.w600));
+```
+</CodeGroup>
+
+## Constructor
+
+<CodeGroup title="Public API" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixAppBar remixAppBarConstructor({
+  Key? key,
+  Widget? leading,
+  String? title,
+  Widget? titleChild,
+  List<Widget> actions = const [],
+  Widget? bottom,
+  bool centerTitle = false,
+  bool safeArea = true,
+  bool? namesRoute,
+  int? headingLevel,
+  AppBarStyler style = const AppBarStyler.create(),
+  AppBarSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>

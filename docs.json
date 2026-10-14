@@ -97,6 +97,10 @@
       "collapsible": true,
       "pages": [
         {
+          "title": "App Bar",
+          "href": "/components/app_bar"
+        },
+        {
           "title": "Link",
           "href": "/components/link"
         },

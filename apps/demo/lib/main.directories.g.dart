@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:demo/components/accordion.dart' as _demo_components_accordion;
+import 'package:demo/components/app_bar.dart' as _demo_components_app_bar;
 import 'package:demo/components/avatar.dart' as _demo_components_avatar;
 import 'package:demo/components/badge.dart' as _demo_components_badge;
 import 'package:demo/components/button.dart' as _demo_components_button;
@@ -121,6 +122,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Catalog',
             builder: _demo_components_accordion.buildAccordionCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixAppBar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Page header',
+            builder: _demo_components_app_bar.buildAppBarUseCase,
           ),
         ],
       ),

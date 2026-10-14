@@ -5,6 +5,7 @@ import 'package:remix/remix.dart';
 void main() {
   group('generated Styler.call methods', () {
     test('forward the owning style for non-generic widgets', () {
+      final appBarStyle = AppBarStyler();
       final avatarStyle = AvatarStyler();
       final badgeStyle = BadgeStyler();
       final calloutStyle = CalloutStyler();
@@ -14,6 +15,7 @@ void main() {
       final linkStyle = LinkStyler();
       final popoverStyle = PopoverStyler();
 
+      expect(appBarStyle.call(title: 'Orders').style, same(appBarStyle));
       expect(avatarStyle.call().style, same(avatarStyle));
       expect(badgeStyle.call().style, same(badgeStyle));
       expect(calloutStyle.call(text: 'Notice').style, same(calloutStyle));

@@ -11,6 +11,14 @@
       }
     ]
   },
+  "app_bar": {
+    "cases": [
+      {
+        "name": "Page header",
+        "path": "components/remixappbar/page-header"
+      }
+    ]
+  },
   "avatar": {
     "cases": [
       {

@@ -6,6 +6,7 @@ library remix;
 
 /// COMPONENTS
 export 'src/components/accordion/accordion.dart';
+export 'src/components/app_bar/app_bar.dart';
 export 'src/components/avatar/avatar.dart';
 export 'src/components/badge/badge.dart';
 export 'src/components/button/button.dart';
