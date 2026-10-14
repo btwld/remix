@@ -610,7 +610,7 @@ void main() {
 
 Iterable<RemixTooltip> _openTooltips(WidgetTester tester) => tester
     .widgetList<RemixTooltip>(find.byType(RemixTooltip))
-    .where((tooltip) => tooltip.open == true);
+    .where((tooltip) => tester.any(find.byWidget(tooltip.tooltipChild)));
 
 class _Host extends StatefulWidget {
   const _Host({super.key, this.initiallyCollapsed = false, this.rtl = false});

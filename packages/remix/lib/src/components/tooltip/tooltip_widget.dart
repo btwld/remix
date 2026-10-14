@@ -1,15 +1,16 @@
 part of 'tooltip.dart';
 
-/// A trigger widget that shows styled overlay content in a tooltip.
+/// A trigger widget that displays styled content in a tooltip overlay.
 ///
-/// [tooltipChild] is rendered inside the tooltip overlay. [child] is the
-/// widget users hover, focus, or long-press to reveal the tooltip.
+/// Renders [tooltipChild] inside the overlay. Users hover, focus, or
+/// long-press [child] to reveal the tooltip.
 class RemixTooltip extends StatelessWidget {
+  /// Creates a [RemixTooltip].
   const RemixTooltip({
     super.key,
     required this.tooltipChild,
     required this.child,
-    this.open,
+    this.tooltipKey,
     this.onOpenChanged,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
@@ -26,21 +27,22 @@ class RemixTooltip extends StatelessWidget {
   /// The widget to display in the tooltip.
   final Widget tooltipChild;
 
-  /// The child widget that will trigger the tooltip.
+  /// The child widget that triggers the tooltip.
   final Widget child;
 
-  /// Controlled visibility, or null for hover/focus/touch-managed visibility.
-  final bool? open;
+  /// A key for imperative control via [RawTooltipState.ensureTooltipVisible].
+  final GlobalKey<RawTooltipState>? tooltipKey;
 
-  /// Requests a visibility change; controlled callers must accept it in [open].
+  /// A callback invoked when the tooltip visible state changes.
   final ValueChanged<bool>? onOpenChanged;
 
   /// The semantic label for the tooltip.
   final String? tooltipSemantics;
 
-  /// Overlay positioning configuration.
+  /// The overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
+  /// The style factory for [RemixTooltip].
   static final styleFrom = TooltipStyler.new;
 
   @override
@@ -50,9 +52,9 @@ class RemixTooltip extends StatelessWidget {
       styleSpec: styleSpec,
       builder: (context, spec) {
         return NakedTooltip(
-          open: open,
+          tooltipKey: tooltipKey,
           onOpenChanged: onOpenChanged,
-          overlayBuilder: (context, info) => Box(
+          overlayBuilder: (context, _) => Box(
             styleSpec: spec.container,
             child: StyleSpecBuilder(
               styleSpec: spec.label,
@@ -76,30 +78,7 @@ class RemixTooltip extends StatelessWidget {
               spec.dismissDuration ?? const Duration(milliseconds: 100),
           positioning: positioning,
           semanticLabel: tooltipSemantics,
-          child: Focus(
-            canRequestFocus: false,
-            skipTraversal: true,
-            includeSemantics: false,
-            onKeyEvent: (_, event) {
-              // A controlled, closed tooltip must not swallow a containing
-              // drawer/menu's dismissal shortcut in NakedTooltip's handler.
-              // Match NakedTooltip's binding so modified Escape is untouched.
-              if (open == false &&
-                  event is KeyDownEvent &&
-                  const SingleActivator(
-                    LogicalKeyboardKey.escape,
-                  ).accepts(event, HardwareKeyboard.instance)) {
-                const intent = DismissIntent();
-                final action = Actions.maybeFind<DismissIntent>(context);
-                if (action != null && action.isEnabled(intent)) {
-                  Actions.invoke(context, intent);
-                  return KeyEventResult.handled;
-                }
-              }
-              return KeyEventResult.ignored;
-            },
-            child: child,
-          ),
+          child: child,
         );
       },
     );

@@ -162,12 +162,13 @@ routes and require a caller-provided `Navigator`; toasts require a
   `RemixDialog` also takes `scrollable` (default `false`).
 - **showRemixAlertDialog** — requires a nonempty, localized `semanticLabel`;
   the barrier is non-dismissible by default.
-- **RemixTooltip** — has controlled `open`/`onOpenChanged` in addition to
-  hover/long-press behavior. Its resolved `TooltipStyler.label(...)` spec is
-  applied through `DefaultTextStyle`, so ordinary descendant `Text` widgets
-  inside an arbitrary `tooltipChild` inherit the custom label style without
-  requiring a single `Text` child. Base default `waitDuration` is 300ms; the
-  Fortal recipe shortens it to 200ms (see [Fortal](fortal.md)).
+- **RemixTooltip** — opens on hover, focus, or long-press. Accepts `tooltipKey`
+  (`GlobalKey<RawTooltipState>?`) for imperative display via
+  `ensureTooltipVisible()`, and `onOpenChanged` to observe visibility. Applies
+  the resolved `TooltipStyler.label(...)` spec through `DefaultTextStyle` so
+  descendant `Text` widgets inside `tooltipChild` inherit the label style. The
+  default `waitDuration` is 300ms (200ms in the Fortal recipe; see
+  [Fortal](fortal.md)).
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`

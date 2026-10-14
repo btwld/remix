@@ -649,7 +649,8 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatefulWidget {
 
 class _RemixSidebarDestinationState<T extends Object>
     extends State<_RemixSidebarDestinationWidget<T>> {
-  bool _tooltipOpen = false;
+  final _buttonKey = GlobalKey();
+  final _tooltipKey = GlobalKey<RawTooltipState>();
   bool _hovered = false;
   bool _focused = false;
   Timer? _resumeTooltip;
@@ -661,7 +662,6 @@ class _RemixSidebarDestinationState<T extends Object>
     super.didUpdateWidget(oldWidget);
     if (!_canShow) {
       _resumeTooltip?.cancel();
-      _tooltipOpen = false;
     } else if ((!oldWidget.tooltipsEnabled || oldWidget.motion.isAnimating) &&
         (_hovered || _focused)) {
       _resumeTooltip?.cancel();
@@ -670,7 +670,7 @@ class _RemixSidebarDestinationState<T extends Object>
             const Duration(milliseconds: 300),
         () {
           if (mounted && _canShow && (_hovered || _focused)) {
-            setState(() => _tooltipOpen = true);
+            _tooltipKey.currentState?.ensureTooltipVisible();
           }
         },
       );
@@ -697,24 +697,27 @@ class _RemixSidebarDestinationState<T extends Object>
             itemStyle: data.style,
           );
 
-    final button = Semantics(
-      button: true,
-      selected: widget.selected,
-      enabled: enabled,
-      label: data.semanticLabel ?? data.label,
-      onTap: enabled ? activate : null,
-      child: NakedToggle(
-        value: widget.selected,
+    final button = KeyedSubtree(
+      key: _buttonKey,
+      child: Semantics(
+        button: true,
+        selected: widget.selected,
         enabled: enabled,
-        onChanged: enabled ? (_) => activate() : null,
-        focusNode: data.focusNode,
-        autofocus: data.autofocus,
-        excludeSemantics: true,
-        builder: (context, _, _) => RemixStyleSpecBuilder<ToggleSpec>(
-          style: style,
-          styleSpec: null,
-          controller: NakedToggleState.controllerOf(context),
-          builder: (context, spec) => _destinationContent(spec),
+        label: data.semanticLabel ?? data.label,
+        onTap: enabled ? activate : null,
+        child: NakedToggle(
+          value: widget.selected,
+          enabled: enabled,
+          onChanged: enabled ? (_) => activate() : null,
+          focusNode: data.focusNode,
+          autofocus: data.autofocus,
+          excludeSemantics: true,
+          builder: (context, _, _) => RemixStyleSpecBuilder<ToggleSpec>(
+            style: style,
+            styleSpec: null,
+            controller: NakedToggleState.controllerOf(context),
+            builder: (context, spec) => _destinationContent(spec),
+          ),
         ),
       ),
     );
@@ -735,20 +738,20 @@ class _RemixSidebarDestinationState<T extends Object>
           _focused = value;
           if (!value && !_hovered) _resumeTooltip?.cancel();
         },
-        child: RemixTooltip(
-          open: _canShow && _tooltipOpen,
-          onOpenChanged: (value) {
-            if (!value) _resumeTooltip?.cancel();
-            final next = _canShow && value;
-            if (next != _tooltipOpen) setState(() => _tooltipOpen = next);
-          },
-          // The button already owns the accessible name. Suppress the
-          // duplicate tooltip name that Flutter web appends to button labels.
-          tooltipChild: ExcludeSemantics(child: Text(data.label)),
-          positioning: widget.tooltipPositioning,
-          style: _SidebarTooltipStyler(widget.tooltipStyle),
-          child: button,
-        ),
+        child: _canShow
+            ? RemixTooltip(
+                tooltipKey: _tooltipKey,
+                onOpenChanged: (value) {
+                  if (!value) _resumeTooltip?.cancel();
+                },
+                // The button already owns the accessible name. Suppress the
+                // duplicate tooltip name that Flutter web appends to button labels.
+                tooltipChild: ExcludeSemantics(child: Text(data.label)),
+                positioning: widget.tooltipPositioning,
+                style: _SidebarTooltipStyler(widget.tooltipStyle),
+                child: button,
+              )
+            : button,
       ),
     );
   }
