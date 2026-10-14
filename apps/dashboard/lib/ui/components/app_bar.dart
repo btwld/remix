@@ -7,7 +7,7 @@ import 'text.dart';
 
 part 'app_bar.g.dart';
 
-/// Creates the default [AppBarStyler] for the Fortal app bar.
+/// Creates the default [AppBarStyler] for the Ui app bar.
 ///
 /// Configures a solid panel surface, a `space9` toolbar height with an inset
 /// bottom border, `space4` horizontal padding, and bold `size4` title
@@ -15,19 +15,17 @@ part 'app_bar.g.dart';
 ///
 /// Merges [style] after the default styling to allow caller overrides.
 @MixWidget(target: RemixAppBar.new)
-AppBarStyler fortalAppBarStyle({
+AppBarStyler uiAppBarStyle({
   AppBarStyler style = const AppBarStyler.create(),
 }) => AppBarStyler(
-  container: BoxStyler().color(FortalTokens.colorPanelSolid()),
+  container: BoxStyler().color(UiTokens.colorPanelSolid()),
   toolbar: BoxStyler()
-      .padding(.horizontal(FortalTokens.space4()))
+      .padding(.horizontal(UiTokens.space4()))
       .border(
-        .bottom(
-          .color(FortalTokens.grayA6()).width(FortalTokens.borderWidth1()),
-        ),
+        .bottom(.color(UiTokens.grayA6()).width(UiTokens.borderWidth1())),
       ),
-  title: fortalTextStyle(size: .size4, weight: .bold),
-  actions: FlexBoxStyler().spacing(FortalTokens.space3()),
-  toolbarHeight: FortalTokens.space9(),
-  spacing: FortalTokens.space3(),
+  title: uiTextStyle(size: .size4, weight: .bold),
+  actions: FlexBoxStyler().spacing(UiTokens.space3()),
+  toolbarHeight: UiTokens.space9(),
+  spacing: UiTokens.space3(),
 ).merge(style);

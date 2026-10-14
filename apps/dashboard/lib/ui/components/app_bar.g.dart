@@ -6,21 +6,13 @@ part of 'app_bar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixAppBar].
+/// Creates the default [AppBarStyler] for the Ui app bar.
 ///
-/// The recipe paints the solid panel surface, sets the toolbar row to the
-/// `space9` token (64 logical pixels at 100% scaling) including a bottom edge
-/// border, insets it by `space4`, and separates the leading button, the
-/// title, and the actions by `space3`. The title uses the bold `size4` text
-/// step.
+/// Configures a solid panel surface, a `space9` toolbar height with an inset
+/// bottom border, `space4` horizontal padding, and bold `size4` title
+/// typography.
 ///
-/// The edge belongs to the row rather than the surface so it sits inside the
-/// row height instead of adding a pixel below it. Anything built the same way
-/// beside the bar, such as a sidebar's brand row with a `space9` height and
-/// the same edge, lines up with it under every Ui scaling setting.
-/// Content in the bar's `bottom` slot brings its own edge.
-///
-/// App bar is a Ui extension, not a Radix Themes parity family.
+/// Merges [style] after the default styling to allow caller overrides.
 class UiAppBar extends StatelessWidget {
   const UiAppBar({
     super.key,

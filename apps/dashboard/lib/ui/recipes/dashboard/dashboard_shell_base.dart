@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 /// The layout state and navigation controls exposed to the dashboard shell.
-abstract interface class RegistryDashboardLayoutControls {
+abstract interface class UiDashboardLayoutControls {
   /// Whether the dashboard layout is in compact mode.
   bool get isCompact;
 
@@ -14,24 +14,21 @@ abstract interface class RegistryDashboardLayoutControls {
 }
 
 /// Builds a dashboard region given layout [controls].
-typedef RegistryDashboardRegionBuilder =
-    Widget Function(
-      BuildContext context,
-      RegistryDashboardLayoutControls controls,
-    );
+typedef UiDashboardRegionBuilder =
+    Widget Function(BuildContext context, UiDashboardLayoutControls controls);
 
 /// Builds the outer layout structure for the dashboard shell.
-typedef RegistryDashboardLayoutBuilder =
+typedef UiDashboardLayoutBuilder =
     Widget Function(
       BuildContext context, {
       required bool collapsed,
       required Widget body,
-      required RegistryDashboardRegionBuilder sidebarBuilder,
-      required RegistryDashboardRegionBuilder headerBuilder,
+      required UiDashboardRegionBuilder sidebarBuilder,
+      required UiDashboardRegionBuilder headerBuilder,
     });
 
 /// Builds the sidebar navigation panel for the dashboard shell.
-typedef RegistryDashboardSidebarBuilder<T extends Object> =
+typedef UiDashboardSidebarBuilder<T extends Object> =
     Widget Function(
       BuildContext context, {
       required bool collapsed,
@@ -44,7 +41,7 @@ typedef RegistryDashboardSidebarBuilder<T extends Object> =
     });
 
 /// Builds an icon button for dashboard controls.
-typedef RegistryDashboardIconButtonBuilder =
+typedef UiDashboardIconButtonBuilder =
     Widget Function(
       BuildContext context, {
       required Key key,
@@ -54,7 +51,7 @@ typedef RegistryDashboardIconButtonBuilder =
     });
 
 /// Builds the page app bar for the dashboard shell.
-typedef RegistryDashboardAppBarBuilder =
+typedef UiDashboardAppBarBuilder =
     Widget Function(
       BuildContext context, {
       required Widget? leading,
@@ -64,7 +61,7 @@ typedef RegistryDashboardAppBarBuilder =
     });
 
 /// Builds the search input field for the dashboard shell.
-typedef RegistryDashboardSearchBuilder =
+typedef UiDashboardSearchBuilder =
     Widget Function(
       BuildContext context, {
       required Key key,
@@ -78,8 +75,8 @@ typedef RegistryDashboardSearchBuilder =
 /// The host owns navigation state, page content, and product actions. The
 /// installed preset supplies the sidebar, layout, controls, and unresolved
 /// styles so this implementation never branches on a preset name.
-class RegistryDashboardShellBase<T extends Object> extends StatefulWidget {
-  const RegistryDashboardShellBase({
+class UiDashboardShellBase<T extends Object> extends StatefulWidget {
+  const UiDashboardShellBase({
     super.key,
     required this.sections,
     required this.selectedValue,
@@ -151,13 +148,13 @@ class RegistryDashboardShellBase<T extends Object> extends StatefulWidget {
   /// The gap between the brand widget and the collapse button in the sidebar header.
   final double headerSpacing;
 
-  final RegistryDashboardLayoutBuilder layoutBuilder;
-  final RegistryDashboardSidebarBuilder<T> sidebarBuilder;
+  final UiDashboardLayoutBuilder layoutBuilder;
+  final UiDashboardSidebarBuilder<T> sidebarBuilder;
 
   /// The builder that creates the page app bar.
-  final RegistryDashboardAppBarBuilder appBarBuilder;
-  final RegistryDashboardIconButtonBuilder iconButtonBuilder;
-  final RegistryDashboardSearchBuilder searchBuilder;
+  final UiDashboardAppBarBuilder appBarBuilder;
+  final UiDashboardIconButtonBuilder iconButtonBuilder;
+  final UiDashboardSearchBuilder searchBuilder;
 
   /// The style applied to the sidebar header container.
   ///
@@ -170,12 +167,12 @@ class RegistryDashboardShellBase<T extends Object> extends StatefulWidget {
   final IconData forwardIcon;
 
   @override
-  State<RegistryDashboardShellBase<T>> createState() =>
-      _RegistryDashboardShellBaseState<T>();
+  State<UiDashboardShellBase<T>> createState() =>
+      _UiDashboardShellBaseState<T>();
 }
 
-class _RegistryDashboardShellBaseState<T extends Object>
-    extends State<RegistryDashboardShellBase<T>> {
+class _UiDashboardShellBaseState<T extends Object>
+    extends State<UiDashboardShellBase<T>> {
   late bool _selfCollapsed = widget.initiallyCollapsed;
 
   // SidebarLayout changes the body's ancestry at its responsive breakpoint.
@@ -203,7 +200,7 @@ class _RegistryDashboardShellBaseState<T extends Object>
 
   Widget _buildSidebar(
     BuildContext context,
-    RegistryDashboardLayoutControls controls,
+    UiDashboardLayoutControls controls,
   ) {
     final collapsed = !controls.isCompact && _collapsed;
     return widget.sidebarBuilder(
@@ -250,7 +247,7 @@ class _RegistryDashboardShellBaseState<T extends Object>
 
   Widget _buildHeader(
     BuildContext context,
-    RegistryDashboardLayoutControls controls,
+    UiDashboardLayoutControls controls,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {

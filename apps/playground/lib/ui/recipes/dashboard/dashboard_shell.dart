@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../../../dashboard/dashboard_shell_base.dart';
 import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
+import 'dashboard_shell_base.dart';
 
 /// A dashboard shell styled with the Playground preset.
 ///
@@ -70,7 +70,7 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
             ).width(PlaygroundTokens.strokeHairline),
           ),
         );
-    return RegistryDashboardShellBase<T>(
+    return PlaygroundDashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected,
@@ -191,7 +191,7 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
 }
 
 final class _PlaygroundDashboardLayoutControls
-    implements RegistryDashboardLayoutControls {
+    implements PlaygroundDashboardLayoutControls {
   const _PlaygroundDashboardLayoutControls(this.scope);
 
   final PlaygroundSidebarLayoutScope scope;

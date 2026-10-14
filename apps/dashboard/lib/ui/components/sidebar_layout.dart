@@ -15,7 +15,7 @@ const _navigationSemanticLabel = 'Navigation';
 /// scrim stays reachable on narrow screens.
 const _compactSheetBarrierGutter = 56.0;
 
-/// A Fortal-themed layout widget that pairs a [sidebar] with a [body].
+/// A Ui-themed layout widget that pairs a [sidebar] with a [body].
 ///
 /// At or above [compactBreakpoint] width, the layout displays [sidebar] in a
 /// row beside an expanded column containing [header] and [body]. The sidebar
@@ -24,7 +24,7 @@ const _compactSheetBarrierGutter = 56.0;
 ///
 /// Below [compactBreakpoint] width, the layout hides the inline sidebar and
 /// presents it inside a modal sheet pinned to the start edge. The sheet is
-/// controlled through [FortalSidebarLayoutScope] or the [compactOpen] property.
+/// controlled through [UiSidebarLayoutScope] or the [compactOpen] property.
 ///
 /// When [compactOpen] is `null`, the layout manages sheet visibility
 /// internally. When [compactOpen] is non-null, the host controls visibility and
@@ -32,21 +32,21 @@ const _compactSheetBarrierGutter = 56.0;
 /// dismissal.
 ///
 /// ```dart
-/// FortalSidebarLayout(
-///   sidebar: FortalSidebar<AppPage>(
+/// UiSidebarLayout(
+///   sidebar: UiSidebar<AppPage>(
 ///     sections: sections,
 ///     selectedValue: page,
 ///     onSelected: (value) {
 ///       setState(() => page = value);
-///       FortalSidebarLayoutScope.of(context).closeCompact();
+///       UiSidebarLayoutScope.of(context).closeCompact();
 ///     },
 ///   ),
-///   header: const FortalAppBar(title: 'Overview'),
+///   header: const UiAppBar(title: 'Overview'),
 ///   body: PageBody(page: page),
 /// )
 /// ```
-class FortalSidebarLayout extends StatefulWidget {
-  const FortalSidebarLayout({
+class UiSidebarLayout extends StatefulWidget {
+  const UiSidebarLayout({
     super.key,
     required this.sidebar,
     required this.body,
@@ -99,10 +99,10 @@ class FortalSidebarLayout extends StatefulWidget {
   final ValueChanged<bool>? onCompactOpenChanged;
 
   @override
-  State<FortalSidebarLayout> createState() => _FortalSidebarLayoutState();
+  State<UiSidebarLayout> createState() => _UiSidebarLayoutState();
 }
 
-class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
+class _UiSidebarLayoutState extends State<UiSidebarLayout> {
   bool _selfOpen = false;
   bool _sheetShowing = false;
 
@@ -163,7 +163,7 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
       context: context,
       barrierDismissible: true,
       barrierLabel: _closeNavigationLabel,
-      barrierColor: MixScope.tokenOf(FortalTokens.colorOverlay, context),
+      barrierColor: MixScope.tokenOf(UiTokens.colorOverlay, context),
       transitionDuration: reduceMotion
           ? Duration.zero
           : const Duration(milliseconds: 250),
@@ -179,7 +179,7 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
           onPopInvokedWithResult: (didPop, _) {
             if (!didPop) _closeCompact();
           },
-          child: FortalSidebarLayoutScope._(
+          child: UiSidebarLayoutScope._(
             isCompact: true,
             isCompactOpen: true,
             openCompact: _openCompact,
@@ -192,17 +192,14 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: MixScope.tokenOf(
-                    FortalTokens.colorPanelSolid,
+                    UiTokens.colorPanelSolid,
                     dialogContext,
                   ),
                   border: BorderDirectional(
                     end: BorderSide(
-                      color: MixScope.tokenOf(
-                        FortalTokens.grayA5,
-                        dialogContext,
-                      ),
+                      color: MixScope.tokenOf(UiTokens.grayA5, dialogContext),
                       width: MixScope.tokenOf(
-                        FortalTokens.borderWidth1,
+                        UiTokens.borderWidth1,
                         dialogContext,
                       ),
                     ),
@@ -251,7 +248,7 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
         final isCompact = constraints.maxWidth < widget.compactBreakpoint;
         _reconcileSheet(isCompact);
 
-        return FortalSidebarLayoutScope._(
+        return UiSidebarLayoutScope._(
           isCompact: isCompact,
           // Anded with isCompact so it can't read true while wide.
           isCompactOpen: isCompact && _effectiveOpen,
@@ -315,13 +312,13 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
 
 /// An inherited scope that provides compact layout state and controls.
 ///
-/// Descendants of [FortalSidebarLayout] and its compact navigation sheet can
+/// Descendants of [UiSidebarLayout] and its compact navigation sheet can
 /// read this scope to observe compact mode or toggle the sheet.
-class FortalSidebarLayoutScope extends InheritedWidget {
-  // Fortal source floors at Dart 3.11, one release before private named
+class UiSidebarLayoutScope extends InheritedWidget {
+  // Ui source floors at Dart 3.11, one release before private named
   // parameters, so this assigns the private fields explicitly instead of
   // naming the parameters after them.
-  const FortalSidebarLayoutScope._({
+  const UiSidebarLayoutScope._({
     required this.isCompact,
     required this.isCompactOpen,
     required VoidCallback openCompact,
@@ -351,25 +348,25 @@ class FortalSidebarLayoutScope extends InheritedWidget {
   /// Has no effect when the sheet is already closed.
   void closeCompact() => _closeCompact();
 
-  /// Returns the nearest [FortalSidebarLayoutScope] from [context].
+  /// Returns the nearest [UiSidebarLayoutScope] from [context].
   ///
-  /// Throws a [FlutterError] if no [FortalSidebarLayout] ancestor is found.
-  static FortalSidebarLayoutScope of(BuildContext context) {
+  /// Throws a [FlutterError] if no [UiSidebarLayout] ancestor is found.
+  static UiSidebarLayoutScope of(BuildContext context) {
     final scope = maybeOf(context);
     if (scope == null) {
       throw FlutterError(
-        'FortalSidebarLayoutScope.of requires a FortalSidebarLayout ancestor.',
+        'UiSidebarLayoutScope.of requires a UiSidebarLayout ancestor.',
       );
     }
     return scope;
   }
 
-  /// Returns the nearest [FortalSidebarLayoutScope] from [context], or `null` if none exists.
-  static FortalSidebarLayoutScope? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<FortalSidebarLayoutScope>();
+  /// Returns the nearest [UiSidebarLayoutScope] from [context], or `null` if none exists.
+  static UiSidebarLayoutScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<UiSidebarLayoutScope>();
 
   @override
-  bool updateShouldNotify(FortalSidebarLayoutScope oldWidget) =>
+  bool updateShouldNotify(UiSidebarLayoutScope oldWidget) =>
       isCompact != oldWidget.isCompact ||
       isCompactOpen != oldWidget.isCompactOpen;
 }
