@@ -41,6 +41,8 @@ import 'api/naked_textfield.0.dart' as textfield_example;
 import 'api/naked_toast.0.dart' as toast_example;
 // Toggle
 import 'api/naked_toggle.0.dart' as toggle_example;
+// Tooltip
+import 'api/naked_tooltip.0.dart' as tooltip_example;
 
 class Demo {
   final String id; // slug used in routes
@@ -259,6 +261,15 @@ class DemoRegistry {
       sourceUrl:
           'https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_toast.0.dart',
       tags: ['toast', 'notification', 'overlay', 'accessibility'],
+    ),
+    Demo(
+      id: 'tooltip-basic',
+      title: 'Tooltip – Basic',
+      category: 'Tooltip',
+      builder: (_) => const tooltip_example.TooltipExample(),
+      sourceUrl:
+          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_tooltip.0.dart',
+      tags: ['tooltip', 'overlay'],
     ),
     Demo(
       id: 'semantics-playground',
