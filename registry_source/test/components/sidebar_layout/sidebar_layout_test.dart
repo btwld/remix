@@ -11,7 +11,7 @@ const _bodyKey = ValueKey('body');
 const _headerKey = ValueKey('header');
 
 /// Pumps [layout] inside a resizable [width] harness with a real [Navigator]
-/// (via [MaterialApp]) and [FortalTheme], so `showRemixDialog` and Fortal
+/// (via [WidgetsApp]) and [FortalTheme], so `showRemixDialog` and Fortal
 /// token resolution both work. [width] changes propagate through
 /// [StatefulBuilder] so tests can cross the compact breakpoint mid-test.
 Future<StateSetter> _pump(
@@ -23,7 +23,12 @@ Future<StateSetter> _pump(
   late StateSetter setState;
   await tester.pumpWidget(
     FortalTheme(
-      child: MaterialApp(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
         // `builder` wraps the Navigator itself, unlike `home`, which is only
         // the initial route's content. `showRemixDialog` pushes a sibling
         // route on the same Navigator, so the compact sheet only inherits a
@@ -71,7 +76,12 @@ void main() {
     final requests = <bool>[];
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: ValueListenableBuilder<bool>(
             valueListenable: open,
             builder: (context, value, _) => SizedBox(
@@ -111,7 +121,12 @@ void main() {
     addTearDown(present.dispose);
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: ValueListenableBuilder<bool>(
             valueListenable: present,
             builder: (context, value, _) => value
@@ -164,7 +179,12 @@ void main() {
     final width = ValueNotifier<double>(900);
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: ValueListenableBuilder<double>(
             valueListenable: width,
             builder: (context, value, _) => Align(
@@ -195,7 +215,12 @@ void main() {
     final collapsed = ValueNotifier<bool>(false);
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: ValueListenableBuilder<bool>(
             valueListenable: collapsed,
             builder: (context, value, _) => Align(
@@ -343,7 +368,12 @@ void main() {
       final width = ValueNotifier<double>(900);
       await tester.pumpWidget(
         FortalTheme(
-          child: MaterialApp(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: ValueListenableBuilder<double>(
               valueListenable: width,
               builder: (context, value, _) => Align(
@@ -405,7 +435,12 @@ void main() {
       late BuildContext scopeContext;
       await tester.pumpWidget(
         FortalTheme(
-          child: MaterialApp(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: ValueListenableBuilder<double>(
               valueListenable: width,
               builder: (context, value, _) => Align(
@@ -474,7 +509,12 @@ void main() {
     late BuildContext scopeContext;
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           navigatorKey: rootNavigatorKey,
           home: ValueListenableBuilder<double>(
             valueListenable: width,

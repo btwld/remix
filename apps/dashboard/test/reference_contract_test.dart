@@ -361,9 +361,14 @@ void main() {
         ThemeScope(
           settings: const ThemeSettings(),
           onChanged: (_) {},
-          child: MaterialApp(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             builder: (context, child) => UiTheme(child: child!),
-            home: const Scaffold(body: ThemePanel()),
+            home: const ThemePanel(),
           ),
         ),
       );
@@ -463,9 +468,14 @@ void main() {
 
 Future<void> _pumpPage(WidgetTester tester, Widget page) {
   return tester.pumpWidget(
-    MaterialApp(
+    WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, _, _) => builder(context),
+      ),
       builder: (context, child) => UiTheme(child: child!),
-      home: Scaffold(body: page),
+      home: page,
     ),
   );
 }

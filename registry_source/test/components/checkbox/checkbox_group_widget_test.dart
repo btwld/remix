@@ -198,7 +198,12 @@ Future<StyleSpec<CheckboxSpec>> _resolveCheckboxStyle(
   await tester.pumpWidget(
     FortalTheme(
       scaling: scaling,
-      child: MaterialApp(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
         home: Builder(
           builder: (context) {
             resolved = style.build(context);

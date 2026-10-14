@@ -78,7 +78,12 @@ void main() {
         await tester.pumpWidget(
           FortalTheme(
             mode: .light,
-            child: MaterialApp(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
               home: FortalAvatar(size: size, icon: Icons.person),
             ),
           ),
@@ -94,7 +99,12 @@ void main() {
         await tester.pumpWidget(
           FortalTheme(
             mode: .light,
-            child: MaterialApp(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
               home: FortalAvatar(
                 size: size,
                 icon: Icons.person,

@@ -159,7 +159,16 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const UiTheme(child: MaterialApp(home: SettingsPage())),
+        child: UiTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
+            home: const SettingsPage(),
+          ),
+        ),
       ),
     );
     final wideName = field('Name');
@@ -172,7 +181,16 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const UiTheme(child: MaterialApp(home: SettingsPage())),
+        child: UiTheme(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
+            home: const SettingsPage(),
+          ),
+        ),
       ),
     );
     final stackedName = field('Name');
@@ -193,7 +211,12 @@ void main() {
       Future<List<Rect>> pumpAt(double width) async {
         await tester.pumpWidget(
           UiTheme(
-            child: MaterialApp(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
               home: Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(width: width, child: const AnalyticsCharts()),
@@ -234,7 +257,14 @@ Future<List<Rect>> _pumpOverview(
 
   await tester.pumpWidget(
     UiTheme(
-      child: MaterialApp(home: OverviewPage(onViewOrders: () {})),
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
+        home: OverviewPage(onViewOrders: () {}),
+      ),
     ),
   );
   return [

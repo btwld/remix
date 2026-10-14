@@ -1,5 +1,5 @@
 import 'package:demo/components/accordion.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:demo/ui/ui.dart';
@@ -9,8 +9,10 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: FortalTheme(child: Builder(builder: buildAvatarUseCase)),
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        builder: (_, _) =>
+            const FortalTheme(child: Builder(builder: buildAvatarUseCase)),
       ),
     );
 

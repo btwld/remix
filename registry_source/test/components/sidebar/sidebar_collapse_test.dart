@@ -12,7 +12,12 @@ void main() {
     late StateSetter update;
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: Align(
             alignment: Alignment.topLeft,
             child: StatefulBuilder(
@@ -48,7 +53,12 @@ void main() {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
         FortalTheme(
-          child: MaterialApp(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: Align(
               alignment: Alignment.topLeft,
               child: SizedBox(
@@ -121,7 +131,12 @@ void main() {
       await tester.pumpWidget(
         FortalTheme(
           scaling: scaling,
-          child: MaterialApp(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             home: Directionality(
               textDirection: TextDirection.rtl,
               child: MediaQuery(

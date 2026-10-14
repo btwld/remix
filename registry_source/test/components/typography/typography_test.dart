@@ -1353,13 +1353,16 @@ Future<void> _pump(
     color: Colors.purple,
   ),
 }) => tester.pumpWidget(
-  MaterialApp(
+  WidgetsApp(
+    color: const Color(0xFFFFFFFF),
+    pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+      settings: settings,
+      pageBuilder: (context, _, _) => builder(context),
+    ),
     home: FortalTheme(
       scaling: scaling,
       mode: brightness == Brightness.dark ? .dark : .light,
-      child: Scaffold(
-        body: DefaultTextStyle(style: ambient, child: child),
-      ),
+      child: DefaultTextStyle(style: ambient, child: child),
     ),
   ),
 );

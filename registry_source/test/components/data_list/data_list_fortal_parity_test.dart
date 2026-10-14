@@ -9,7 +9,12 @@ void main() {
       'horizontal single-value layout preserves intrinsic bounds: $value',
       (tester) async {
         await tester.pumpWidget(
-          MaterialApp(
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
             builder: (_, child) => FortalTheme(child: child!),
             home: Center(
               child: SizedBox(

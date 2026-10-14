@@ -318,14 +318,17 @@ void main() {
   ) async {
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
-          home: Scaffold(
-            body: FortalSelect<String>(
-              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              items: const [RemixSelectItem(value: 'a', label: 'Apple')],
-              selectedValue: 'a',
-              onChanged: (_) {},
-            ),
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
+          home: FortalSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+            items: const [RemixSelectItem(value: 'a', label: 'Apple')],
+            selectedValue: 'a',
+            onChanged: (_) {},
           ),
         ),
       ),

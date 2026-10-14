@@ -12,7 +12,12 @@ void main() {
 
     await tester.pumpWidget(
       FortalTheme(
-        child: MaterialApp(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
           home: WidgetStateProvider(
             states: const {WidgetState.disabled},
             child: Builder(
