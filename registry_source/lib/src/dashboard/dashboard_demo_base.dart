@@ -74,10 +74,7 @@ enum RegistryDashboardDemoPage {
 }
 
 /// Stable screen inventory shared by both presets and parity tests.
-typedef _RegistryDashboardSectionInventory =
-    Map<RegistryDashboardDemoPage, List<String>>;
-
-const _RegistryDashboardSectionInventory registryDashboardDemoSectionIds = {
+const registryDashboardDemoSectionIds = {
   RegistryDashboardDemoPage.overview: [
     'metrics',
     'analytics',

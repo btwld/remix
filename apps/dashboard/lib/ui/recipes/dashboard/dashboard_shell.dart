@@ -2,15 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
-import '../../components/text.dart';
 import '../../components/textfield.dart';
 import '../../theme/theme.dart';
 import 'dashboard_shell_base.dart';
-
-const _headerHeight = 64.0;
 
 /// A reusable Ui dashboard shell.
 ///
@@ -58,17 +56,16 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topBarStyle = BoxStyler()
-        .height(_headerHeight)
+    // The brand row lines up with the app bar beside it: the same toolbar
+    // height, surface, and bottom edge as the `app_bar` recipe.
+    final sidebarHeaderStyle = BoxStyler()
+        .height(UiTokens.space9())
         .alignment(AlignmentDirectional.centerStart)
-        .padding(.horizontal(UiTokens.space4()))
+        .padding(.horizontal(UiTokens.space2()))
         .color(UiTokens.colorPanelSolid())
         .border(
           .bottom(.color(UiTokens.grayA6()).width(UiTokens.borderWidth1())),
         );
-    final sidebarHeaderStyle = topBarStyle.padding(
-      .horizontal(UiTokens.space2()),
-    );
     return UiDashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
@@ -85,8 +82,6 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
       initiallyCollapsed: initiallyCollapsed,
       onCollapsedChanged: onCollapsedChanged,
       sidebarHeaderStyle: sidebarHeaderStyle,
-      topBarStyle: topBarStyle,
-      titleStyle: uiTextStyle(size: .size4, weight: .bold),
       menuIcon: RemixIcons.hamburgerMenu,
       searchIcon: RemixIcons.magnifyingGlass,
       backwardIcon: RemixIcons.doubleArrowLeft,
@@ -140,6 +135,19 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
             footer: footer,
             semanticLabel: semanticLabel,
           ),
+      appBarBuilder:
+          (
+            context, {
+            required leading,
+            required title,
+            required titleChild,
+            required actions,
+          }) => UiAppBar(
+            leading: leading,
+            title: title,
+            titleChild: titleChild,
+            actions: actions,
+          ),
       iconButtonBuilder:
           (
             context, {
@@ -165,6 +173,7 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
             key: key,
             size: .size2,
             hintText: hintText,
+            semanticLabel: hintText,
             leading: leading,
             onChanged: onChanged,
           ),

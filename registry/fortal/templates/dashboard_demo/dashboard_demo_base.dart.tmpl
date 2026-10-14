@@ -74,10 +74,7 @@ enum {{typePrefix}}DashboardDemoPage {
 }
 
 /// Stable screen inventory shared by both presets and parity tests.
-typedef _{{typePrefix}}DashboardSectionInventory =
-    Map<{{typePrefix}}DashboardDemoPage, List<String>>;
-
-const _{{typePrefix}}DashboardSectionInventory {{valuePrefix}}DashboardDemoSectionIds = {
+const {{valuePrefix}}DashboardDemoSectionIds = {
   {{typePrefix}}DashboardDemoPage.overview: [
     'metrics',
     'analytics',

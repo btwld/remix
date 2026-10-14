@@ -806,7 +806,7 @@ void main() {
       DashboardPage.galleryOverlays:
           'Real dialog, popover, tooltip, and menu triggers for every recipe.',
       DashboardPage.galleryNavigation:
-          'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
+          'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
       DashboardPage.galleryTypography:
           'Text, headings, code, keys, and links on one shared scale.',
     };

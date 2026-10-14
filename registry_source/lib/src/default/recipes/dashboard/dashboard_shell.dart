@@ -3,13 +3,12 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../../dashboard/dashboard_shell_base.dart';
+import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
-
-const _headerHeight = 64.0;
 
 /// A reusable default-preset dashboard shell.
 ///
@@ -57,13 +56,18 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topBarStyle = BoxStyler()
-        .height(_headerHeight)
+    // The brand row lines up with the app bar beside it: the same toolbar
+    // height, surface, and bottom hairline as the `app_bar` recipe.
+    final sidebarHeaderStyle = BoxStyler()
+        .height(vanillaAppBarToolbarHeight)
         .alignment(AlignmentDirectional.centerStart)
-        .padding(.horizontal(16))
+        .padding(.horizontal(VanillaTokens.s3))
         .color(VanillaTokens.background())
-        .border(.bottom(.color(VanillaTokens.border()).width(1)));
-    final sidebarHeaderStyle = topBarStyle.padding(.horizontal(12));
+        .border(
+          .bottom(
+            .color(VanillaTokens.border()).width(VanillaTokens.strokeHairline),
+          ),
+        );
     return RegistryDashboardShellBase<T>(
       sections: sections,
       selectedValue: selectedValue,
@@ -80,11 +84,6 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
       initiallyCollapsed: initiallyCollapsed,
       onCollapsedChanged: onCollapsedChanged,
       sidebarHeaderStyle: sidebarHeaderStyle,
-      topBarStyle: topBarStyle,
-      titleStyle: TextStyler()
-          .fontSize(18)
-          .fontWeight(FontWeight.w600)
-          .color(VanillaTokens.foreground()),
       menuIcon: RemixIcons.hamburgerMenu,
       searchIcon: RemixIcons.magnifyingGlass,
       backwardIcon: RemixIcons.doubleArrowLeft,
@@ -144,6 +143,19 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
             footer: footer,
             semanticLabel: semanticLabel,
           ),
+      appBarBuilder:
+          (
+            context, {
+            required leading,
+            required title,
+            required titleChild,
+            required actions,
+          }) => VanillaAppBar(
+            leading: leading,
+            title: title,
+            titleChild: titleChild,
+            actions: actions,
+          ),
       iconButtonBuilder:
           (
             context, {
@@ -168,6 +180,7 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
           }) => VanillaTextField(
             key: key,
             hintText: hintText,
+            semanticLabel: hintText,
             leading: leading,
             onChanged: onChanged,
           ),

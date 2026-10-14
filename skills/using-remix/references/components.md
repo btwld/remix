@@ -100,17 +100,27 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 ## Layout and dashboard recipes
 
+[app_bar.mdx](https://github.com/btwld/remix/blob/main/docs/components/app_bar.mdx) ·
+[sidebar.mdx](https://github.com/btwld/remix/blob/main/docs/components/sidebar.mdx)
+
 Both presets also ship layout items beyond the core component set:
 
+- **app_bar** — `RemixAppBar`: leading, title heading, actions, and optional
+  `bottom` content over Flutter's `NavigationToolbar`. It owns the top safe
+  area (`safeArea`, default on) but no navigation: pass your own Back or menu
+  button as `leading`. Wrap the body below it in
+  `MediaQuery.removePadding(removeTop: true)`. The Fortal item additionally
+  depends on `text`.
 - **sidebar** — `RemixSidebar<T>`; its styler has a generic `call<T>()`
   builder. The Fortal item additionally depends on `text`.
 - **sidebar_layout** — a plain shell with no spec or generated adapter; it
   composes an installed `sidebar` into a row above its compact breakpoint and
   a start-edge sheet below it.
-- **dashboard_shell** — a grouped recipe combining `sidebar`/`sidebar_layout`
-  with host-owned navigation, page content, search, and brand/account/action
-  slots. No generated adapter; does not install charts, tables, or agent
-  surfaces itself.
+- **dashboard_shell** — a grouped recipe combining `app_bar`, `sidebar`, and
+  `sidebar_layout` with host-owned navigation, page content, `title` (plus an
+  optional `headerTitle` widget to override the default title widget in the app
+  bar), search, and brand/account/action slots. No generated adapter; does not
+  install charts, tables, or agent surfaces itself.
 - **dashboard_demo** — a large composite recipe that pulls in most other
   items to build a runnable example dashboard; see
   [Reference showcases](reference-showcases.md) for how its `GalleryMatrix`
@@ -216,6 +226,8 @@ routes and require a caller-provided `Navigator`; toasts require a
   and `state.isExpanded`.
 
 ## Typography
+
+[link.mdx](https://github.com/btwld/remix/blob/main/docs/components/link.mdx)
 
 `FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` exist only in
 the Fortal preset. `RemixLink` is base Remix — the Vanilla preset also ships

@@ -211,6 +211,35 @@ final style = AppBarStyler()
 ```
 </CodeGroup>
 
+## Fortal recipe
+
+The public `FortalAppBar` wrapper is produced by Mix code generation. Its
+recipe paints the solid panel surface, sets a `space9` toolbar row (64 logical
+pixels at 100% scaling) with a bottom edge border inside it, insets the row by
+`space4`, and separates the leading button, the title, and the actions by
+`space3`. The title uses the bold `size4` text step.
+
+A sidebar header built with the same `space9` height and edge lines up with
+the bar under every scaling setting, which is how the `dashboard_shell` item
+pairs them.
+
+App bar is a Fortal extension, not a Radix Themes parity family, so it is
+intentionally absent from the generated Radix parity catalog.
+
+<CodeGroup title="Fortal app bar" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'ui/ui.dart';
+
+FortalAppBar buildHeader({required VoidCallback onExport}) => FortalAppBar(
+  title: 'Orders',
+  actions: [
+    FortalButton(label: 'Export', onPressed: onExport),
+  ],
+);
+```
+</CodeGroup>
+
 ## Constructor
 
 <CodeGroup title="Public API" defaultLanguage="dart">

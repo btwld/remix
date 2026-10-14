@@ -1,6 +1,8 @@
 ## Unreleased
 
-- Add `FortalScope.theme`, `darkTheme`, and `mode`, with light/dark data constructors, live system appearance, and nested theme-pair inheritance. **Breaking:** remove scope `brightness` and config `createScope`; use `mode` and `theme`. Direct design options such as `accent` remain supported.
+- Add `fortalAppBarStyle` and the generated `FortalAppBar`: the solid panel surface, a `space9` toolbar row with its bottom edge inside that height, `space4` insets, `space3` gaps, and the bold `size4` title. App bar is a Fortal extension and is not tracked in the Radix Themes parity ledger. The dashboard shell's header is now a `FortalAppBar`, and its sidebar header follows the same `space9` height.
+
+- Add `FortalTheme.theme`, `darkTheme`, and `mode`, with light/dark data constructors, live system appearance, and nested theme-pair inheritance. The outermost `FortalTheme` sets `DefaultTextStyle` and `IconTheme(color: gray12)`, and a nested `FortalTheme` whose `brightness` or `gray` differs from its parent recolors both `DefaultTextStyle` and `IconTheme` to the new `gray12`. **Breaking:** rename `FortalScope` to `FortalTheme` and remove scope `brightness` and config `createScope`; use `mode` and `theme`. Direct design options such as `accent` remain supported.
 
 - **Breaking:** align icon button icon sizes to 12/16/20 pixels.
 

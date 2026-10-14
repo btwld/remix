@@ -47,14 +47,14 @@ button(
 Add Remix to your project:
 
 ```bash
-flutter pub add remix:^1.0.0-beta.9
+flutter pub add remix:^1.0.0-beta.10
 ```
 
 Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0-beta.9
+  remix: ^1.0.0-beta.10
 ```
 
 ### Your First Component
@@ -171,6 +171,7 @@ Remix composes inside your existing Flutter host. It does not require a
 | Widgets styled by the Fortal preset | The preset's token scope, in addition to the widget's normal Flutter services | Any Flutter host |
 | Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
 | `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
+| Toast (`showRemixToast`) | A `RemixToastScope` above the invoking context | Any host exposing an overlay |
 
 For a portal-based interface without routing, provide only an overlay:
 
@@ -208,6 +209,7 @@ Available components:
 - **IconButton** - Icon-based actions
 - **Switch** - Toggle controls
 - **Toggle** - Two-state on/off buttons
+- **ToggleGroup** - Coordinated single-selection toggle buttons (`RemixToggleGroup`)
 - **Checkbox** - Multiple selection
 - **CheckboxGroup** - Coordinated multiple selection with composable checkbox visuals
 - **Radio** - Single selection from a group
@@ -230,6 +232,8 @@ Available components:
 - **Spinner** - Loading states
 
 ### Layout & Navigation
+- **AppBar** - Page headers and top toolbars (`RemixAppBar`)
+- **Sidebar** - Collapsible navigation panels (`RemixSidebar`)
 - **Tabs** - Tabbed navigation
 - **Accordion** - Collapsible content sections
 - **Disclosure** - A standalone trigger and inline expandable panel
@@ -239,7 +243,9 @@ Available components:
 
 ### Overlays
 - **Dialog** - Modal dialogs
+- **Popover** - Anchored non-modal overlays (`RemixPopover`)
 - **Tooltip** - Contextual help
+- **Toast** - Queued non-modal notifications (`RemixToast` / `RemixToastScope`)
 - **Callout** - Highlighted information blocks
 
 ## Who is Remix for?

@@ -19,7 +19,8 @@ part of 'sidebar.dart';
 /// the recipe's to decide: the host sizes the panel, because the same panel
 /// is usually presented as a drawer at narrow widths and the drawer's width
 /// is a layout decision. Nothing here sets a width, and nothing here pads the
-/// header, whose metrics normally have to line up with an application top bar.
+/// header, whose metrics normally have to line up with the app bar beside it:
+/// give the header the `app_bar` item's toolbar height and bottom hairline.
 ///
 /// This recipe **depends on the `toggle` and `tooltip` items**, which is why
 /// its registry entry lists both beside `theme`. A destination is a toggle: it

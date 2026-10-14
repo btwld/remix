@@ -55,7 +55,7 @@ const _compactSheetBarrierGutter = 56.0;
 ///       UiSidebarLayoutScope.of(context).closeCompact();
 ///     },
 ///   ),
-///   header: const TopBar(),
+///   header: const UiAppBar(title: 'Overview'),
 ///   body: PageBody(page: page),
 /// )
 /// ```
@@ -82,7 +82,12 @@ class UiSidebarLayout extends StatefulWidget {
   /// The page content, always visible.
   final Widget body;
 
-  /// Optional fixed content above [body], in both presentations.
+  /// Optional fixed content above [body], in both presentations, usually a
+  /// `UiAppBar`.
+  ///
+  /// When present, the header is responsible for keeping clear of the top
+  /// inset, as an app bar does by default, and [body] lays out with no top
+  /// inset of its own.
   final Widget? header;
 
   /// The available-width threshold, in logical pixels, below which the
@@ -284,17 +289,37 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
           width: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
           child: widget.sidebar,
         ),
-        Expanded(child: _body()),
+        Expanded(child: _body(besideSidebar: true)),
       ],
     );
   }
 
-  Widget _body() {
+  Widget _body({bool besideSidebar = false}) {
+    final header = widget.header;
+    final ltr = Directionality.of(context) == TextDirection.ltr;
+
+    // Beside the sidebar, the column never touches the start edge, so it
+    // must not keep clear of a start inset such as a landscape notch. A header
+    // sits against the top edge and keeps clear of the top inset itself, so
+    // the body below must not reserve it a second time: a scroll view
+    // otherwise pads its content by MediaQuery's top inset. Both wrappers
+    // read this widget's MediaQuery, so neither undoes the other.
+    Widget inset(Widget child, {bool removeTop = false}) =>
+        MediaQuery.removePadding(
+          context: context,
+          removeTop: removeTop,
+          removeLeft: besideSidebar && ltr,
+          removeRight: besideSidebar && !ltr,
+          child: child,
+        );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ?widget.header,
-        Expanded(child: widget.body),
+        if (header != null) inset(header),
+        // The body's wrapper stays mounted either way so its state survives
+        // a header coming or going.
+        Expanded(child: inset(widget.body, removeTop: header != null)),
       ],
     );
   }

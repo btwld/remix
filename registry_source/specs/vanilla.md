@@ -157,6 +157,7 @@ the steps above. The source column names the file under
 | Tabs (filled) | list h 36, p 3, radius lg, muted; tab radius md, px 8, py 4, gap 6; inactive foreground/60; active background + `shadow-sm` | `tabs.tsx` |
 | Tabs (line) | transparent list; active tab marked by a 2px `foreground` underline | `tabs.tsx` (`variant=line`) |
 | Segmented control | styled as the filled tab list | `tabs.tsx` |
+| App bar | `background` fill; toolbar h 64 including a `border` bottom hairline, px 16; gap 12 between leading, title, and actions and between actions; title `text-lg` w600 | none (see Deviations) |
 | Sidebar | `sidebar` fill, `sidebarBorder` edge; content p 8, section gap 16 | `sidebar.tsx` |
 | Sidebar destination | h 32, px 8, py 6 (see Deviations), gap 8, radius md; hover and current `sidebarAccent`, current w500 | `sidebar.tsx` (`SidebarMenuButton`) |
 | Sidebar label | h 32, px 8, `text-xs` w500, `sidebarForeground`/70, no tracking | `sidebar.tsx` (`SidebarGroupLabel`) |
@@ -193,6 +194,7 @@ the steps above. The source column names the file under
 | Focus ring | `ring/50`, 3px | `ring` at 50%, 3px | Matches the reference, which is below the 3:1 non-text floor: about 1.5:1 on the light page and 1.85:1 on the dark. The old Vanilla `focusRing` cleared 3:1. Raise the band's alpha in the recipes, or darken `ring`, where focus visibility matters more than matching. |
 | Callout, destructive | description at `destructive/90` | one text color for the whole callout | `CalloutSpec` has a single text role, so the description cannot take its own color. |
 | Current filled tab, dark | `bg-input/30` over the list | `input` at 30% pre-blended over `muted`, opaque | Flutter paints the tab's `shadow-sm` under the whole box, so a translucent fill would show it through and darken the tab. Tabs have no effects layer to move the shadow to. |
+| App bar | no `ui/` primitive | the header the Vanilla dashboard already shipped | shadcn builds page headers inline in its blocks. Vanilla keeps the dashboard's metrics so the `app_bar` item and the dashboard shell look the same, and names the row height `vanillaAppBarToolbarHeight` so a sidebar header can line up with it. |
 | Sidebar destination padding | `h-8 p-2` | 32 min height, 8px across and 6px down | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside it, so `p-2` would make a 36px row. |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |

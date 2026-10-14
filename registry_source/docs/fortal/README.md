@@ -57,12 +57,15 @@ class MyApp extends StatelessWidget {
 
 `FortalTheme` is a `MixScope`. The outermost one also establishes the Radix
 theme root's `text3` at `gray-12` run as a courtesy `DefaultTextStyle` for bare
-Flutter `Text`. Fortal typography does not depend on that inherited run:
-unsized `FortalText`, `FortalCode`, `FortalKbd`, and `FortalLink` resolve their
-documented defaults directly from the active scope's tokens. A nested scope
-re-scopes those tokens without restating the courtesy bare-`Text` run. The one
-deliberate foreground exception is transparent, non-accent `FortalCode.ghost`,
-which blends with its surrounding text unless explicitly restyled.
+Flutter `Text` and sets `IconTheme(color: gray12)` for bare `Icon`s. Fortal
+typography does not depend on that inherited run: unsized `FortalText`,
+`FortalCode`, `FortalKbd`, and `FortalLink` resolve their documented defaults
+directly from the active scope's tokens. A nested scope re-scopes those tokens
+without restating the courtesy bare-`Text` font metrics; when its `brightness`
+or `gray` differs from its parent, it recolors both `DefaultTextStyle` and
+`IconTheme` to the new `gray12`. The one deliberate foreground exception is
+transparent, non-accent `FortalCode.ghost`, which blends with its surrounding
+text unless explicitly restyled.
 
 Use `WidgetsApp` as the application host. Put the scope in `builder` above the
 Navigator so routes, dialogs, and overlays inherit the same theme:
@@ -261,7 +264,7 @@ for controls, semantics, and parity boundaries.
 
 ### Interactive Elements
 - **FortalButton**, **FortalIconButton**, **FortalSwitch**, **FortalToggle**
-- **FortalCheckbox**, **FortalRadio**, **FortalSlider**
+- **FortalCheckbox**, **FortalCheckboxGroupItem**, **FortalRadio**, **FortalSlider**
 
 ### Input Components
 - **FortalTextField**, **FortalTextArea**, **FortalSelect**
@@ -274,7 +277,7 @@ for controls, semantics, and parity boundaries.
 
 ### Layout & Navigation
 - **FortalTabBar**, **FortalTab**, **FortalTabView**, **FortalAccordion**
-- **FortalDisclosure**, **FortalSidebar**
+- **FortalAppBar**, **FortalDisclosure**, **FortalSidebar**, **FortalSidebarLayout**, **FortalDashboardShell**
 - **FortalMenu**, **FortalSegmentedControl**, **FortalToggleGroup**
 
 There is no `FortalTabs`: the behavioral root stays `RemixTabs`, which takes no
@@ -289,8 +292,14 @@ and no header padding, because the host owns placement and usually has to match
 its own top bar. Its optional `panelPadding` keeps host-provided display insets
 inside the painted surface when that surface must extend to the display edge.
 
+`FortalAppBar` is also a Fortal extension. It applies the solid panel surface,
+a `space9` toolbar row with its bottom edge border inside that height, `space4`
+insets, `space3` gaps, and the bold `size4` title to the public `RemixAppBar`
+behavior. A sidebar header with the same `space9` height and edge lines up
+with it under every scaling setting.
+
 ### Overlays
-- **FortalDialog**, **FortalTooltip**, **FortalPopover**, **FortalCallout**
+- **FortalDialog**, **FortalTooltip**, **FortalPopover**, **FortalToast**, **FortalCallout**
 
 ## Radix parity
 

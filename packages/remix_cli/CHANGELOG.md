@@ -1,5 +1,13 @@
 ## Unreleased
 
+- Adds `app_bar` to both presets: a page-header recipe backed by `RemixAppBar`
+  with a generated `<Prefix>AppBar` adapter (`fortal` also pulls in `text`).
+- Adds `dashboard_shell` to both presets: a host-controlled responsive shell
+  under `lib/ui/recipes/dashboard/` composing `sidebar`, `sidebar_layout`,
+  `app_bar`, `icon_button`, `textfield`, and `icons` with no generated adapter.
+- Adds `dashboard_demo` to both presets: the full twelve-destination reference
+  dashboard (`<Prefix>DashboardDemo` and `<Prefix>DashboardOverview`) under
+  `lib/ui/recipes/dashboard/`.
 - **Breaking.** `remix.yaml` schema 3 is the only readable configuration.
   Schemas 1 and 2 named no registry and read from a catalog frozen inside the
   CLI; both that catalog and `remix registry migrate` are gone. A project still

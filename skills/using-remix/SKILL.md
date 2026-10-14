@@ -162,9 +162,11 @@ assuming Fortal's families — see [Vanilla](references/vanilla.md).
   platform brightness changes; no brightness observer is needed.
 - The outermost Fortal theme also sets a courtesy `DefaultTextStyle` for bare
   Flutter `Text` (Radix `text3`, `gray-12`, regular weight, no pinned font
-  family) — a fallback for ordinary text, not the source of Fortal
-  typography's own token defaults. A nested theme re-scopes tokens only and
-  does not restate that fallback.
+  family) and `IconTheme(color: gray12)` for bare `Icon`s — a fallback for
+  ordinary text and icons, not the source of Fortal typography's own token
+  defaults. A nested theme re-scopes tokens without restating the font
+  metrics, and when its `brightness` or `gray` differs from its parent it
+  recolors both `DefaultTextStyle` and `IconTheme` to the new `gray12`.
 
 ## Customize installed source
 

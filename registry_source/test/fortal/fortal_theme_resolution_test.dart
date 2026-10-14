@@ -52,6 +52,7 @@ void main() {
     ]) {
       for (final brightness in Brightness.values) {
         late TextStyle root;
+        late Color? iconColor;
         late Color gray12;
         await tester.pumpWidget(
           FortalTheme(
@@ -60,6 +61,7 @@ void main() {
             child: Builder(
               builder: (context) {
                 root = DefaultTextStyle.of(context).style;
+                iconColor = IconTheme.of(context).color;
                 gray12 = MixScope.tokenOf(FortalTokens.gray12, context);
 
                 return const SizedBox();
@@ -74,6 +76,7 @@ void main() {
         expect(root.letterSpacing, 0, reason: reason);
         expect(root.fontWeight, FontWeight.w400, reason: reason);
         expect(root.color, gray12, reason: reason);
+        expect(iconColor, gray12, reason: reason);
         // Radix's `--default-font-family` is the platform system stack, so the
         // root deliberately pins no family.
         expect(root.fontFamily, isNull, reason: reason);

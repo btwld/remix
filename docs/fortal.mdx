@@ -77,17 +77,20 @@ that overlay and route content inherits the tokens.
 ## Scope placement
 
 The **outermost** `FortalTheme` provides the design tokens and establishes a
-courtesy `DefaultTextStyle` for bare Flutter `Text`: the Radix theme root run —
-`text3` (16px, 1.5 line height, 0 letter spacing) at `gray-12`, regular weight,
-with no pinned font family. This is analogous to Material's `bodyMedium`; it is
-not the source of a Fortal typography run. Unsized `FortalText`, `FortalCode`,
-`FortalKbd`, and `FortalLink` resolve their documented defaults directly from
-the active scope's tokens.
+courtesy `DefaultTextStyle` for bare Flutter `Text` and `IconTheme(color: gray12)`
+for bare `Icon`s: the Radix theme root run — `text3` (16px, 1.5 line height, 0
+letter spacing) at `gray-12`, regular weight, with no pinned font family. This
+is analogous to Material's `bodyMedium`; it is not the source of a Fortal
+typography run. Unsized `FortalText`, `FortalCode`, `FortalKbd`, and
+`FortalLink` resolve their documented defaults directly from the active scope's
+tokens.
 
 A **nested** scope re-scopes tokens without restating the courtesy bare-`Text`
-run. Fortal typography re-resolves against those nested tokens, so gray or
-scaling changes apply to the subtree, while ordinary Flutter text keeps its
-nearest inherited style.
+font metrics; when its `brightness` or `gray` differs from its parent, it
+recolors both `DefaultTextStyle` and `IconTheme` to the new `gray12`. Fortal
+typography re-resolves against those nested tokens, so gray or scaling changes
+apply to the subtree, while ordinary Flutter text keeps its nearest inherited
+metrics.
 
 Use `WidgetsApp` for the application host. For an application with routes, put
 `FortalTheme` in `builder`, above the Navigator, so pushed routes and dialogs

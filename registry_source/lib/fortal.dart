@@ -21,6 +21,7 @@ export 'src/fortal/components/base_button.dart'
 
 /// RECIPES
 export 'src/fortal/components/accordion.dart';
+export 'src/fortal/components/app_bar.dart';
 export 'src/fortal/components/avatar.dart';
 export 'src/fortal/components/badge.dart';
 export 'src/fortal/components/button.dart';

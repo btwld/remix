@@ -10,7 +10,7 @@ application owns its tokens, theme values, component recipes, and generated
 adapters.
 
 The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
-component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
+component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
@@ -258,13 +258,14 @@ dependencies change.
 dart run remix_cli:remix add dashboard_shell
 ```
 
-This installs the preset's sidebar, responsive sidebar layout, icon button,
+This installs the preset's sidebar, responsive sidebar layout, app bar, icon button,
 textfield, icons, and theme dependency closure plus two editable files under
 `lib/ui/recipes/dashboard/`. The public `UiDashboardShell<T>` API is the same
 for `vanilla` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
-the selected value and callback, the current page body, title, and brand slot.
-Account and header-action slots are optional. Search is absent unless the host
-provides `onSearchChanged`.
+the selected value and callback, the current page body, `title` (with an
+optional `headerTitle` widget to override the default title widget), and brand
+slot. Account and header-action slots are optional. Search is absent unless the
+host provides `onSearchChanged`.
 
 The shell composes inside the existing application. It does not create a
 `MaterialApp`, `WidgetsApp`, `Navigator`, route table, authentication layer, or

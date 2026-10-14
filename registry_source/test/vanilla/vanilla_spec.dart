@@ -1331,6 +1331,58 @@ Color _currentTabFill(VanillaThemeData theme) => _isDark(theme)
     ? Color.alphaBlend(tint(theme.input, 0.3), theme.muted)
     : theme.background;
 
+// -- app bar ------------------------------------------------------------------
+
+SpecTarget _appBar(
+  String property, {
+  required String source,
+  required Object? Function(StyleSpec<AppBarSpec> spec) read,
+  required Object? Function(VanillaThemeData theme) expected,
+}) => _target<AppBarSpec>(
+  'app bar',
+  property,
+  source: source,
+  style: vanillaAppBarStyle,
+  read: read,
+  expected: expected,
+);
+
+final _appBarTargets = <SpecTarget>[
+  _appBar(
+    'surface',
+    source: 'no ui/ primitive; the dashboard header (see Deviations)',
+    read: (spec) {
+      final border = decorationOf(spec.spec.toolbar)?.border;
+      return (
+        decorationOf(spec.spec.container)?.color,
+        border is Border ? border.bottom : null,
+      );
+    },
+    expected: (theme) => (theme.background, BorderSide(color: theme.border)),
+  ),
+  _appBar(
+    'toolbar',
+    source: 'no ui/ primitive; the dashboard header (see Deviations)',
+    read: (spec) => (
+      spec.spec.toolbarHeight,
+      spec.spec.toolbar.spec.padding,
+      spec.spec.spacing,
+      flexOf(spec.spec.actions)?.spacing,
+    ),
+    expected: (_) =>
+        (64.0, const EdgeInsets.symmetric(horizontal: 16), 12.0, 12.0),
+  ),
+  _appBar(
+    'title',
+    source: 'no ui/ primitive; the dashboard header (see Deviations)',
+    read: (spec) {
+      final style = spec.spec.title.spec.style;
+      return (style?.fontSize, style?.fontWeight, style?.color);
+    },
+    expected: (theme) => (18.0, FontWeight.w600, theme.foreground),
+  ),
+];
+
 // -- sidebar ------------------------------------------------------------------
 
 SpecTarget _sidebar(
@@ -1898,6 +1950,7 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._switchTargets,
   ..._sliderTargets,
   ..._tabsTargets,
+  ..._appBarTargets,
   ..._sidebarTargets,
   ..._menuTargets,
   ..._accordionTargets,

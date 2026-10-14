@@ -38,6 +38,7 @@ const _fixtureAppFiles = <String>[
 const _defaultRegistryItems = <String>[
   'icons',
   'accordion',
+  'app_bar',
   'avatar',
   'badge',
   'button',
@@ -174,6 +175,7 @@ const _generatedSnapshots = <String, String>{
 const _fortalRegistryItems = <String>[
   'icons',
   'accordion',
+  'app_bar',
   'avatar',
   'badge',
   'base_button',
@@ -240,6 +242,7 @@ const _defaultPreset = _PresetContract(
     'icons': ['theme', 'icons'],
     'dashboard_shell': [
       'theme',
+      'app_bar',
       'icon_button',
       'toggle',
       'tooltip',
@@ -252,6 +255,7 @@ const _defaultPreset = _PresetContract(
       'theme',
       'models',
       'support',
+      'app_bar',
       'accordion',
       'activity',
       'activity_recipe',
@@ -351,6 +355,7 @@ const _fortalPreset = _PresetContract(
   focusedClosures: {
     'dashboard_shell': [
       'theme',
+      'app_bar',
       'base_button',
       'icon_button',
       'typography',
@@ -366,6 +371,7 @@ const _fortalPreset = _PresetContract(
       'theme',
       'models',
       'support',
+      'app_bar',
       'accordion',
       'activity',
       'activity_recipe',

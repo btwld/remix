@@ -33,7 +33,7 @@ dart run remix_cli:remix add button
 ```
 
 One `add` installs every named item plus shared dependencies once. The catalog is `theme`, the opt-in `icons` seam,
-the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
+the optional `chart` extension, plus `accordion`, `app_bar`, `avatar`, `badge`, `button`,
 `callout`, `card`, `checkbox`, `dashboard_demo`, `dashboard_shell`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
 `radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`,
@@ -43,8 +43,8 @@ layout with no `Spec` and no generated adapter, pairing an installed
 `sidebar` with a header and body.
 
 `dashboard_shell` installs a reusable, host-controlled shell plus its shared
-composition source. It pulls in the existing sidebar layout, sidebar,
-icon-button, icon, and text-field items; it does not install charts, tables,
+composition source. It pulls in the existing app-bar, sidebar layout,
+sidebar, icon-button, icon, and text-field items; it does not install charts, tables,
 sample data, routes, or an application entry point.
 
 `dashboard_demo` installs that shell plus the same twelve destinations as the

@@ -74,10 +74,7 @@ enum PlaygroundDashboardDemoPage {
 }
 
 /// Stable screen inventory shared by both presets and parity tests.
-typedef _PlaygroundDashboardSectionInventory =
-    Map<PlaygroundDashboardDemoPage, List<String>>;
-
-const _PlaygroundDashboardSectionInventory playgroundDashboardDemoSectionIds = {
+const playgroundDashboardDemoSectionIds = {
   PlaygroundDashboardDemoPage.overview: [
     'metrics',
     'analytics',

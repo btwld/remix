@@ -46,6 +46,15 @@ typedef PlaygroundDashboardIconButtonBuilder =
       required VoidCallback onPressed,
     });
 
+typedef PlaygroundDashboardAppBarBuilder =
+    Widget Function(
+      BuildContext context, {
+      required Widget? leading,
+      required String title,
+      required Widget titleChild,
+      required List<Widget> actions,
+    });
+
 typedef PlaygroundDashboardSearchBuilder =
     Widget Function(
       BuildContext context, {
@@ -71,11 +80,10 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
     required this.brand,
     required this.layoutBuilder,
     required this.sidebarBuilder,
+    required this.appBarBuilder,
     required this.iconButtonBuilder,
     required this.searchBuilder,
     required this.sidebarHeaderStyle,
-    required this.topBarStyle,
-    required this.titleStyle,
     required this.menuIcon,
     required this.searchIcon,
     required this.backwardIcon,
@@ -117,17 +125,25 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
   final bool initiallyCollapsed;
   final ValueChanged<bool>? onCollapsedChanged;
 
+  /// The header width, in logical pixels, from which the search field shows.
   final double searchBreakpoint;
   final double searchWidth;
+
+  /// The gap between the brand and the collapse button in the sidebar header.
+  /// The app bar's own recipe spaces the page header.
   final double headerSpacing;
 
   final PlaygroundDashboardLayoutBuilder layoutBuilder;
   final PlaygroundDashboardSidebarBuilder<T> sidebarBuilder;
+
+  /// Builds the page header from the installed `app_bar` recipe.
+  final PlaygroundDashboardAppBarBuilder appBarBuilder;
   final PlaygroundDashboardIconButtonBuilder iconButtonBuilder;
   final PlaygroundDashboardSearchBuilder searchBuilder;
+
+  /// The sidebar's brand row. Give it the app bar's toolbar height and bottom
+  /// edge so the two line up across the shell.
   final BoxStyler sidebarHeaderStyle;
-  final BoxStyler topBarStyle;
-  final TextStyler titleStyle;
   final IconData menuIcon;
   final IconData searchIcon;
   final IconData backwardIcon;
@@ -216,54 +232,45 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     BuildContext context,
     PlaygroundDashboardLayoutControls controls,
   ) {
-    return Box(
-      style: widget.topBarStyle,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final showSearch =
-              widget.onSearchChanged != null &&
-              constraints.maxWidth >= widget.searchBreakpoint;
-          return RowBox(
-            style: FlexBoxStyler().spacing(widget.headerSpacing),
-            children: [
-              if (controls.isCompact)
-                widget.iconButtonBuilder(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final showSearch =
+            widget.onSearchChanged != null &&
+            constraints.maxWidth >= widget.searchBreakpoint;
+        return widget.appBarBuilder(
+          context,
+          leading: controls.isCompact
+              ? widget.iconButtonBuilder(
                   context,
                   key: const ValueKey('dashboard-menu'),
                   icon: widget.menuIcon,
                   semanticLabel: 'Open navigation',
                   onPressed: controls.openCompact,
-                ),
-              Expanded(
-                child: Semantics(
-                  key: const ValueKey('dashboard-title'),
-                  header: true,
-                  label: widget.title,
-                  excludeSemantics: widget.headerTitle != null,
-                  child:
-                      widget.headerTitle ??
-                      StyledText(
-                        widget.title,
-                        style: widget.titleStyle.maxLines(1).softWrap(false),
-                      ),
+                )
+              : null,
+          // The app bar names its heading with [title] and renders this,
+          // which inherits the recipe's title style.
+          title: widget.title,
+          titleChild: KeyedSubtree(
+            key: const ValueKey('dashboard-title'),
+            child: widget.headerTitle ?? Text(widget.title),
+          ),
+          actions: [
+            if (showSearch)
+              SizedBox(
+                width: widget.searchWidth,
+                child: widget.searchBuilder(
+                  context,
+                  key: const ValueKey('dashboard-search'),
+                  hintText: widget.searchHintText,
+                  leading: Icon(widget.searchIcon, size: 16),
+                  onChanged: widget.onSearchChanged!,
                 ),
               ),
-              if (showSearch)
-                SizedBox(
-                  width: widget.searchWidth,
-                  child: widget.searchBuilder(
-                    context,
-                    key: const ValueKey('dashboard-search'),
-                    hintText: widget.searchHintText,
-                    leading: Icon(widget.searchIcon, size: 16),
-                    onChanged: widget.onSearchChanged!,
-                  ),
-                ),
-              ...widget.headerActions,
-            ],
-          );
-        },
-      ),
+            ...widget.headerActions,
+          ],
+        );
+      },
     );
   }
 
