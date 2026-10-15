@@ -168,6 +168,7 @@ class _PlaygroundExecutionState extends State<PlaygroundExecution> {
             semanticLabel: widget.title,
             style: widget.disclosureStyle,
             triggerBuilder: (context, state, trigger) => Row(
+              spacing: 8,
               children: [
                 Expanded(child: trigger!),
                 PlaygroundDisclosureIndicator(
@@ -185,6 +186,7 @@ class _PlaygroundExecutionState extends State<PlaygroundExecution> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 2,
                     children: [
                       StyledText(widget.title, styleSpec: spec.title),
                       StyledText(widget.tool, styleSpec: spec.tool),
@@ -197,6 +199,7 @@ class _PlaygroundExecutionState extends State<PlaygroundExecution> {
                   styleSpec: _statusContainer(spec),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    spacing: 6,
                     children: [
                       widget.statusBuilder?.call(context, widget.status) ??
                           StyleSpecBuilder<IconSpec>(

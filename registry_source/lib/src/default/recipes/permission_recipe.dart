@@ -38,12 +38,15 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => VanillaAgentPermissionRecipe(
   style: AgentPermissionStyler(
-    header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+    actions: FlexBoxStyler().spacing(8).padding(.top(12)),
     title: TextStyler()
         .color(VanillaTokens.foreground())
         .fontWeight(FontWeight.w600),
-    tool: TextStyler().color(VanillaTokens.mutedForeground()).fontSize(12),
+    tool: TextStyler()
+        .color(VanillaTokens.mutedForeground())
+        .fontSize(12)
+        .wrap(.padding(.top(4))),
     description: TextStyler()
         .color(VanillaTokens.mutedForeground())
         .wrap(.padding(.symmetric(vertical: 8))),
@@ -53,8 +56,15 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
     statusIcon: IconStyler().color(VanillaTokens.primary()).size(12),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: vanillaCardStyle(style: surfaceStyle),
-  detailsStyle: vanillaDisclosureStyle(style: detailsStyle),
+  surfaceStyle: vanillaCardStyle(
+    style: CardStyler().padding(.all(VanillaTokens.s4)).merge(surfaceStyle),
+  ),
+  detailsStyle: vanillaDisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.symmetric(vertical: VanillaTokens.s2))
+        .content(BoxStyler().padding(.bottom(VanillaTokens.s2)))
+        .merge(detailsStyle),
+  ),
   parametersStyle: vanillaDataListStyle(style: parametersStyle),
   allowOnceStyle: vanillaButtonStyle(style: allowOnceStyle),
   alwaysAllowStyle: vanillaButtonStyle(

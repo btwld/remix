@@ -320,7 +320,8 @@ class _PlaygroundDashboardChatPageState
                     if (!_active) ...[_starters(), const SizedBox(height: 16)],
                   ],
                   Expanded(child: _transcript()),
-                  if (!_following)
+                  if (!_following) ...[
+                    const SizedBox(height: 8),
                     Align(
                       child: styles.buttonBuilder(
                         'Return to latest',
@@ -328,6 +329,7 @@ class _PlaygroundDashboardChatPageState
                         .soft,
                       ),
                     ),
+                  ],
                   const SizedBox(height: 12),
                   _composer(maxLines: compact ? 2 : 8),
                 ],
@@ -360,6 +362,7 @@ class _PlaygroundDashboardChatPageState
 
   Widget _transcript() {
     final requestId = _runId;
+    final narrow = MediaQuery.sizeOf(context).width < 600;
     final children = <Widget>[];
     for (final turn in _history) {
       children.addAll([
@@ -428,7 +431,13 @@ class _PlaygroundDashboardChatPageState
             parameters: const [
               RemixDataListItem(label: 'Command', value: 'flutter test'),
             ],
-            style: styles.permissionStyle,
+            style: styles.permissionStyle.merge(
+              PlaygroundPermissionStyler(
+                actions: FlexBoxStyler()
+                    .direction(narrow ? .vertical : .horizontal)
+                    .crossAxisAlignment(narrow ? .stretch : .center),
+              ),
+            ),
             surfaceStyle: styles.permissionSurfaceStyle,
             detailsStyle: styles.permissionDetailsStyle,
             parametersStyle: styles.permissionParametersStyle,

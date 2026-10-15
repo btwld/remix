@@ -31,12 +31,12 @@ PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => PlaygroundAgentExecutionRecipe(
   style: PlaygroundExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     output: BoxStyler()
         .color(PlaygroundTokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(6)),
     tool: TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
     title: TextStyler()
         .color(PlaygroundTokens.foreground())
@@ -47,16 +47,23 @@ PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
     statusIcon: IconStyler().color(PlaygroundTokens.primary()).size(12),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: playgroundCardStyle(style: surfaceStyle),
-  disclosureStyle: playgroundDisclosureStyle(style: disclosureStyle),
+  surfaceStyle: playgroundCardStyle(
+    style: CardStyler().padding(.all(PlaygroundTokens.s4)).merge(surfaceStyle),
+  ),
+  disclosureStyle: playgroundDisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.vertical(0))
+        .content(BoxStyler().padding(.top(PlaygroundTokens.s3).bottom(0)))
+        .merge(disclosureStyle),
+  ),
   copyStyle: playgroundIconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: copyStyle,
+    style: IconButtonStyler().size(28, 28).merge(copyStyle),
   ),
   retryStyle: playgroundIconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: retryStyle,
+    style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );

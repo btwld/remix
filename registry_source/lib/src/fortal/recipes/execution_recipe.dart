@@ -31,12 +31,12 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => FortalAgentExecutionRecipe(
   style: AgentExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     output: BoxStyler()
         .color(FortalTokens.gray3())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
     tool: TextStyler().color(FortalTokens.gray11()).fontSize(12),
     title: TextStyler()
         .color(FortalTokens.gray12())
@@ -48,7 +48,23 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
     indicator: IconStyler().color(FortalTokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
-  disclosureStyle: fortalDisclosureStyle(style: disclosureStyle),
+  disclosureStyle: fortalDisclosureStyle(
+    style: DisclosureStyler()
+        .container(
+          BoxStyler()
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
+        .content(
+          BoxStyler()
+              .padding(.fromLTRB(0, 12, 0, 4))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
+        .merge(disclosureStyle),
+  ),
   copyStyle: fortalIconButtonStyle(
     variant: .ghost,
     size: .size1,

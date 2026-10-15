@@ -37,16 +37,24 @@ VanillaAgentAnswerRecipe vanillaAgentAnswerRecipe({
     sourcesLabel: TextStyler().color(VanillaTokens.foreground()).fontSize(13),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: vanillaCardStyle(style: surfaceStyle),
-  sourcesStyle: vanillaDisclosureStyle(style: sourcesStyle),
+  surfaceStyle: vanillaCardStyle(
+    style: CardStyler().padding(.all(VanillaTokens.s4)).merge(surfaceStyle),
+  ),
+  sourcesStyle: vanillaDisclosureStyle(
+    style: DisclosureStyler()
+        .container(BoxStyler().margin(.top(4)))
+        .padding(.symmetric(vertical: 10))
+        .content(BoxStyler().padding(.bottom(VanillaTokens.s2)))
+        .merge(sourcesStyle),
+  ),
   copyStyle: vanillaIconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: copyStyle,
+    style: IconButtonStyler().size(28, 28).merge(copyStyle),
   ),
   retryStyle: vanillaIconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: retryStyle,
+    style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );

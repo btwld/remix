@@ -54,7 +54,6 @@ DataTableStyler playgroundDataTableStyle({
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate(PlaygroundTokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color(PlaygroundTokens.muted())),

@@ -101,7 +101,6 @@ ToggleGroupItemStyler _itemStyle(
   PlaygroundToggleGroupVariant variant,
 ) {
   return _content(PlaygroundTokens.foreground())
-      .animate(PlaygroundTokens.motion)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)

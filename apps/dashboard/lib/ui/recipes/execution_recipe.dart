@@ -31,12 +31,12 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => UiAgentExecutionRecipe(
   style: UiExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     output: BoxStyler()
         .color(UiTokens.gray3())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
     tool: TextStyler().color(UiTokens.gray11()).fontSize(12),
     title: TextStyler().color(UiTokens.gray12()).fontWeight(FontWeight.w600),
     meta: TextStyler().color(UiTokens.gray11()).fontSize(12),
@@ -46,7 +46,23 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
     indicator: IconStyler().color(UiTokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
-  disclosureStyle: uiDisclosureStyle(style: disclosureStyle),
+  disclosureStyle: uiDisclosureStyle(
+    style: DisclosureStyler()
+        .container(
+          BoxStyler()
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
+        .content(
+          BoxStyler()
+              .padding(.fromLTRB(0, 12, 0, 4))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
+        .merge(disclosureStyle),
+  ),
   copyStyle: uiIconButtonStyle(variant: .ghost, size: .size1, style: copyStyle),
   retryStyle: uiIconButtonStyle(
     variant: .ghost,

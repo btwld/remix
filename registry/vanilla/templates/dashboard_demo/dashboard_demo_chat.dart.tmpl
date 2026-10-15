@@ -319,7 +319,8 @@ class _{{typePrefix}}DashboardChatPageState extends State<{{typePrefix}}Dashboar
                     if (!_active) ...[_starters(), const SizedBox(height: 16)],
                   ],
                   Expanded(child: _transcript()),
-                  if (!_following)
+                  if (!_following) ...[
+                    const SizedBox(height: 8),
                     Align(
                       child: styles.buttonBuilder(
                         'Return to latest',
@@ -327,6 +328,7 @@ class _{{typePrefix}}DashboardChatPageState extends State<{{typePrefix}}Dashboar
                         .soft,
                       ),
                     ),
+                  ],
                   const SizedBox(height: 12),
                   _composer(maxLines: compact ? 2 : 8),
                 ],
@@ -359,6 +361,7 @@ class _{{typePrefix}}DashboardChatPageState extends State<{{typePrefix}}Dashboar
 
   Widget _transcript() {
     final requestId = _runId;
+    final narrow = MediaQuery.sizeOf(context).width < 600;
     final children = <Widget>[];
     for (final turn in _history) {
       children.addAll([
@@ -427,7 +430,13 @@ class _{{typePrefix}}DashboardChatPageState extends State<{{typePrefix}}Dashboar
             parameters: const [
               RemixDataListItem(label: 'Command', value: 'flutter test'),
             ],
-            style: styles.permissionStyle,
+            style: styles.permissionStyle.merge(
+              {{typePrefix}}PermissionStyler(
+                actions: FlexBoxStyler()
+                    .direction(narrow ? .vertical : .horizontal)
+                    .crossAxisAlignment(narrow ? .stretch : .center),
+              ),
+            ),
             surfaceStyle: styles.permissionSurfaceStyle,
             detailsStyle: styles.permissionDetailsStyle,
             parametersStyle: styles.permissionParametersStyle,

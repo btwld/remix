@@ -52,7 +52,6 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate({{typePrefix}}Tokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color({{typePrefix}}Tokens.muted())),

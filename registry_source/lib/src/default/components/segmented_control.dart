@@ -82,7 +82,6 @@ final _chosenEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
 /// Its height is the track's 36px less the inset on both sides, so the track
 /// lands on the height of the button and field beside it.
 SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
-    .animate(VanillaTokens.motion)
     .color(_noFill)
     .minHeight(VanillaTokens.controlMd - 2 * _trackInset)
     .padding(

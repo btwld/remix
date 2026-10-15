@@ -52,7 +52,6 @@ DataTableStyler vanillaDataTableStyle({
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate(VanillaTokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color(VanillaTokens.muted())),

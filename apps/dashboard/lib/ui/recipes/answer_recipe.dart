@@ -32,13 +32,18 @@ UiAgentAnswerRecipe uiAgentAnswerRecipe({
 }) => UiAgentAnswerRecipe(
   style: UiAnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
     feedback: BoxStyler().padding(.top(6)),
     sourcesLabel: TextStyler().color(UiTokens.gray12()).fontSize(13),
     indicator: IconStyler().color(UiTokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
-  sourcesStyle: uiDisclosureStyle(style: sourcesStyle),
+  sourcesStyle: uiDisclosureStyle(
+    size: .size1,
+    style: DisclosureStyler()
+        .container(BoxStyler().margin(.top(12)))
+        .merge(sourcesStyle),
+  ),
   copyStyle: uiIconButtonStyle(variant: .ghost, size: .size1, style: copyStyle),
   retryStyle: uiIconButtonStyle(
     variant: .ghost,

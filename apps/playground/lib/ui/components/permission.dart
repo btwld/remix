@@ -225,6 +225,7 @@ class _PlaygroundPermissionState extends State<PlaygroundPermission> {
                   styleSpec: _statusContainer(spec),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    spacing: 6,
                     children: [
                       widget.statusBuilder?.call(context, widget.status) ??
                           StyleSpecBuilder<IconSpec>(
@@ -248,6 +249,7 @@ class _PlaygroundPermissionState extends State<PlaygroundPermission> {
                     semanticLabel: widget.detailsLabel,
                     style: widget.detailsStyle,
                     triggerBuilder: (context, state, trigger) => Row(
+                      spacing: 8,
                       children: [
                         Expanded(child: trigger!),
                         PlaygroundDisclosureIndicator(

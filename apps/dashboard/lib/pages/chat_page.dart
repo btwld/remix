@@ -241,7 +241,8 @@ class _ChatPageState extends State<ChatPage> {
                     if (!_active) ...[_starters(), const SizedBox(height: 16)],
                   ],
                   Expanded(child: _transcript()),
-                  if (!_following)
+                  if (!_following) ...[
+                    const SizedBox(height: 8),
                     Align(
                       alignment: Alignment.center,
                       child: RemixButton(
@@ -250,6 +251,7 @@ class _ChatPageState extends State<ChatPage> {
                         style: uiButtonStyle(variant: .soft),
                       ),
                     ),
+                  ],
                   const SizedBox(height: 12),
                   _composer(maxLines: compact ? 2 : 8),
                 ],

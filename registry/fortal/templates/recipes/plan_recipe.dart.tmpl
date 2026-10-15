@@ -21,7 +21,10 @@ final class {{typePrefix}}AgentPlanRecipe {
 }) => {{typePrefix}}AgentPlanRecipe(
   style: {{typePrefix}}PlanStyler(
     viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
         .fontSize(14)
@@ -33,10 +36,10 @@ final class {{typePrefix}}AgentPlanRecipe {
         .fontSize(12)
         .wrap(.padding(.right(8))),
     indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
-    pendingStatus: IconStyler().color({{typePrefix}}Tokens.gray9()).size(18),
-    activeStatus: IconStyler().color({{typePrefix}}Tokens.accent9()).size(18),
-    completedStatus: IconStyler().color({{typePrefix}}Tokens.accent9()).size(18),
-    cancelledStatus: IconStyler().color({{typePrefix}}Tokens.gray9()).size(18),
+    pendingStatus: IconStyler().color({{typePrefix}}Tokens.gray9()).size(16),
+    activeStatus: IconStyler().color({{typePrefix}}Tokens.accent9()).size(16),
+    completedStatus: IconStyler().color({{typePrefix}}Tokens.accent9()).size(16),
+    cancelledStatus: IconStyler().color({{typePrefix}}Tokens.gray9()).size(16),
   ).merge(style),
   disclosureStyle: {{valuePrefix}}DisclosureStyle(style: disclosureStyle),
 );

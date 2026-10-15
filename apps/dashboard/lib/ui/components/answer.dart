@@ -130,6 +130,7 @@ class _UiAnswerState extends State<UiAnswer> {
                   semanticLabel: widget.sourcesLabel,
                   style: widget.sourcesStyle,
                   triggerBuilder: (context, state, trigger) => Row(
+                    spacing: 8,
                     children: [
                       Expanded(child: trigger!),
                       UiDisclosureIndicator(

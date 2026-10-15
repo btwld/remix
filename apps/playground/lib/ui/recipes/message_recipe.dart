@@ -34,7 +34,11 @@ PlaygroundAgentMessageRecipe playgroundAgentMessageRecipe({
     footer: BoxStyler().padding(.top(4)),
     maxWidth: 640,
   ).merge(style),
-  surfaceStyle: playgroundCardStyle(style: surfaceStyle),
+  surfaceStyle: playgroundCardStyle(
+    style: CardStyler()
+        .padding(.symmetric(horizontal: 16, vertical: 12))
+        .merge(surfaceStyle),
+  ),
   collapsibleStyle: PlaygroundMessageCollapsibleStyler(
     collapsedHeight: 72,
     container: BoxStyler(),

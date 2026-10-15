@@ -38,15 +38,18 @@ final class {{typePrefix}}AgentPermissionRecipe {
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => {{typePrefix}}AgentPermissionRecipe(
   style: {{typePrefix}}PermissionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     actions: FlexBoxStyler().spacing(8).padding(.top(8)),
     title: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
         .fontWeight(FontWeight.w600),
-    tool: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+    tool: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .fontSize(12)
+        .wrap(.padding(.top(2))),
     description: TextStyler()
         .color({{typePrefix}}Tokens.gray11())
-        .wrap(.padding(.symmetric(vertical: 8))),
+        .wrap(.padding(.symmetric(vertical: 6))),
     status: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
     detailsLabel: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(13),
     toolIcon: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
@@ -54,7 +57,12 @@ final class {{typePrefix}}AgentPermissionRecipe {
     indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
-  detailsStyle: {{valuePrefix}}DisclosureStyle(style: detailsStyle),
+  detailsStyle: {{valuePrefix}}DisclosureStyle(
+    size: .size1,
+    style: DisclosureStyler()
+        .container(BoxStyler().margin(.top(4)))
+        .merge(detailsStyle),
+  ),
   parametersStyle: {{valuePrefix}}DataListStyle(style: parametersStyle),
   allowOnceStyle: {{valuePrefix}}ButtonStyle(style: allowOnceStyle),
   alwaysAllowStyle: {{valuePrefix}}ButtonStyle(

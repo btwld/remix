@@ -21,7 +21,10 @@ PlaygroundAgentActivityRecipe playgroundAgentActivityRecipe({
 }) => PlaygroundAgentActivityRecipe(
   style: PlaygroundActivityStyler(
     viewport: BoxStyler().maxHeight(200),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontSize(14)
@@ -37,12 +40,13 @@ PlaygroundAgentActivityRecipe playgroundAgentActivityRecipe({
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
     pendingStatus: IconStyler()
         .color(PlaygroundTokens.mutedForeground())
-        .size(12),
-    activeStatus: IconStyler().color(PlaygroundTokens.primary()).size(12),
-    completedStatus: IconStyler().color(PlaygroundTokens.primary()).size(12),
+        .size(16),
+    activeStatus: IconStyler().color(PlaygroundTokens.primary()).size(16),
+    completedStatus: IconStyler().color(PlaygroundTokens.primary()).size(16),
   ).merge(style),
   disclosureStyle: playgroundDisclosureStyle(
     style: DisclosureStyler()
+        .padding(.vertical(PlaygroundTokens.s3))
         .content(BoxStyler().padding(.all(0)))
         .merge(disclosureStyle),
   ),

@@ -50,11 +50,11 @@ PlaygroundAgentComposerRecipe playgroundAgentComposerRecipe({
   ),
   submitStyle: playgroundIconButtonStyle(
     size: .small,
-    style: IconButtonStyler().size(48, 48).merge(submitStyle),
+    style: IconButtonStyler().size(36, 36).merge(submitStyle),
   ),
   stopStyle: playgroundIconButtonStyle(
     variant: .destructive,
     size: .small,
-    style: IconButtonStyler().size(48, 48).merge(stopStyle),
+    style: IconButtonStyler().size(36, 36).merge(stopStyle),
   ),
 );
