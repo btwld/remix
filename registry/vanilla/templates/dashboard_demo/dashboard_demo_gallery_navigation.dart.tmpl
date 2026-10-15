@@ -133,9 +133,9 @@ class _{{typePrefix}}GalleryNavigationPageState
           child: ColumnBox(
             style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: [
-              {{typePrefix}}TabBar(
+              const {{typePrefix}}TabBar(
                 child: RowBox(
-                  children: const [
+                  children: [
                     {{typePrefix}}Tab(tabId: 'overview', label: 'Overview'),
                     {{typePrefix}}Tab(tabId: 'activity', label: 'Activity'),
                   ],

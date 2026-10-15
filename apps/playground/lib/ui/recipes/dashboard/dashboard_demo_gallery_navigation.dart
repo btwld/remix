@@ -135,9 +135,9 @@ class _PlaygroundGalleryNavigationPageState
           child: ColumnBox(
             style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: [
-              PlaygroundTabBar(
+              const PlaygroundTabBar(
                 child: RowBox(
-                  children: const [
+                  children: [
                     PlaygroundTab(tabId: 'overview', label: 'Overview'),
                     PlaygroundTab(tabId: 'activity', label: 'Activity'),
                   ],

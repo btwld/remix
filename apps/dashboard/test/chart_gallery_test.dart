@@ -1,12 +1,8 @@
 import 'package:dashboard/main.dart';
-import 'package:dashboard/pages/charts_page.dart';
-import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/theme/theme_settings.dart';
-import 'package:dashboard/widgets/analytics_charts.dart';
-import 'package:flutter/material.dart';
+import 'package:dashboard/ui/ui.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
-import 'package:dashboard/ui/ui.dart';
 
 void main() {
   testWidgets('charts destination presents every Fortal chart family', (
@@ -18,17 +14,17 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      const DashboardApp(initialSettings: ThemeSettings(appearance: .light)),
+      const DashboardApp(initialSettings: UiThemeSettings(appearance: .light)),
     );
 
-    final destination = find.byKey(const ValueKey(DashboardPage.charts));
+    final destination = find.byKey(const ValueKey(UiDashboardDemoPage.charts));
     expect(destination, findsOneWidget);
     await tester.tap(destination);
     await tester.pump();
 
     expect(
       find.text(
-        'Fortal-native chart patterns for comparison, composition, interaction, and empty states.',
+        'Native chart patterns for comparison, composition, interaction, and empty states.',
       ),
       findsOneWidget,
     );
@@ -61,10 +57,13 @@ void main() {
   ) async {
     await tester.pumpWidget(
       const DashboardApp(
-        initialSettings: ThemeSettings(appearance: .dark, accentColor: .orange),
+        initialSettings: UiThemeSettings(
+          appearance: .dark,
+          accentColor: .orange,
+        ),
       ),
     );
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.charts)));
+    await tester.tap(find.byKey(const ValueKey(UiDashboardDemoPage.charts)));
     await tester.pump();
 
     final page = find.byKey(const ValueKey('charts-page'));
@@ -332,7 +331,7 @@ void main() {
             ),
             home: Align(
               alignment: Alignment.topLeft,
-              child: SizedBox(width: width, child: const AnalyticsCharts()),
+              child: SizedBox(width: width, child: const UiAnalyticsCharts()),
             ),
           ),
         ),
@@ -373,7 +372,7 @@ void main() {
             settings: settings,
             pageBuilder: (context, _, _) => builder(context),
           ),
-          home: const ChartsPage(),
+          home: const UiChartsPage(),
         ),
       ),
     );
@@ -401,7 +400,9 @@ Future<void> _pumpCompactCharts(WidgetTester tester) async {
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));
   }
-  await tester.tap(find.byKey(const ValueKey(DashboardPage.charts)).first);
+  await tester.tap(
+    find.byKey(const ValueKey(UiDashboardDemoPage.charts)).first,
+  );
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));
   }

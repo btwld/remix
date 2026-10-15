@@ -69,7 +69,7 @@ installed `remix_cli` source rather than as an Agent theme.
 The example installs all eight surfaces plus Theme, Card, TextField,
 IconButton, and Button from the default registry. Its Composer recipe is the
 worked styling integration; the installed source
-is committed, and `tool/check_open_code_dogfood.dart` holds it against the
+is committed, and `tool/check_consumer_apps.dart` holds it against the
 templates. `example/test/composer_recipe_test.dart` then proves:
 
 - `uiAgentComposerRecipe()` combines the toolbar style with four child

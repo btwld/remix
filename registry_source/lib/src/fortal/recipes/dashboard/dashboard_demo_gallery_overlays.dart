@@ -79,18 +79,20 @@ class _FortalGalleryOverlaysPageState extends State<FortalGalleryOverlaysPage> {
                 FortalPopover(
                   size: size,
                   semanticLabel: 'Open ${enumLabel(size)} popover',
-                  popoverChild: ColumnBox(
-                    style: FlexBoxStyler()
-                        .width(250)
-                        .mainAxisSize(.min)
-                        .crossAxisAlignment(.start)
-                        .spacing(8),
-                    children: const [
-                      FortalText('Quick note'),
-                      FortalText(
-                        'Popover content inherits the active Fortal scope.',
-                      ),
-                    ],
+                  popoverChild: Box(
+                    style: BoxStyler().width(250),
+                    child: ColumnBox(
+                      style: FlexBoxStyler()
+                          .mainAxisSize(.min)
+                          .crossAxisAlignment(.start)
+                          .spacing(8),
+                      children: const [
+                        FortalText('Quick note'),
+                        FortalText(
+                          'Popover content inherits the active theme scope.',
+                        ),
+                      ],
+                    ),
                   ),
                   child: _OverlayTrigger('Popover ${enumLabel(size)}'),
                 ),

@@ -934,7 +934,7 @@ packages:
   test(
     'diff after a clean long-prefix install has no formatter-only changes',
     () async {
-      // Every item, at the longest prefix the repository dogfoods. A template
+      // Every item, at the longest prefix the repository consumers use. A template
       // laid out for a four-character prefix can wrap differently at ten, and
       // the formatter would then rewrite the file the CLI just wrote — which
       // shows up for a consumer as an `add --diff` that never comes back

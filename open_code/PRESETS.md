@@ -116,17 +116,17 @@ compares the complete output trees, including unexpected or missing files.
 
 ## Repository consumers
 
-- `apps/playground`: full Vanilla catalog, prefix `Playground`, on the stock
-  theme; its one deliberate customization, an app-owned `PlaygroundIcons.back`
-  alias in `icons`, is declared in the dogfood checker.
+- `apps/playground`: full Vanilla catalog including Agent surfaces, recipes, and
+  `dashboard_demo`, prefix `Playground`, on the stock theme.
 - `apps/demo`: non-Agent Fortal review catalog, prefix `Fortal`.
-- `apps/dashboard`: full Fortal catalog including Agent surfaces and recipes,
-  prefix `Ui`. Workspace → Chat demonstrates the eight surfaces together.
+- `apps/dashboard`: full Fortal catalog including Agent surfaces, recipes, and
+  `dashboard_demo`, prefix `Ui`. Workspace → Chat demonstrates the eight
+  surfaces together.
 
-All three consume installed source. The repository dashboard pages and its
-simulated runner remain application-owned. The reusable `dashboard_shell` and
-full `dashboard_demo` are distributed as separate stacked registry items; a
-standalone composed `chat` item is still separate work.
+All three consume installed source. Both `apps/playground` and `apps/dashboard`
+render their preset's installed `dashboard_demo` item; the reusable
+`dashboard_shell` and full `dashboard_demo` are distributed as separate stacked
+registry items.
 
 ## Verification and release
 

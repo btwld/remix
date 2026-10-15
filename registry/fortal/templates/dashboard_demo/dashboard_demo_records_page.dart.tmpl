@@ -2,16 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
-import '../../components/avatar.dart';
-import '../../components/badge.dart';
-import '../../components/button.dart';
-import '../../components/data_table.dart';
-import '../../components/menu.dart';
-import '../../components/segmented_control.dart';
-import '../../components/text.dart';
-import '../../components/textfield.dart';
-import '../../components/typography.dart';
+import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_records.dart';
+import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
@@ -65,7 +59,7 @@ class _{{typePrefix}}DashboardCustomersPageState
               .runSpacing(10),
           children: [
             Box(
-              style: BoxStyler().width(300),
+              style: BoxStyler().maxWidth(300),
               child: {{typePrefix}}TextField(
                 key: const ValueKey('customer-search'),
                 leading: const Icon({{icon:magnifyingGlass}}, size: 18),
@@ -78,9 +72,16 @@ class _{{typePrefix}}DashboardCustomersPageState
             ),
             if (_selectedIds.isNotEmpty)
               WrapBox(
-                style: WrapBoxStyler().spacing(6).crossAxisAlignment(.center),
+                style: WrapBoxStyler()
+                    .spacing(6)
+                    .runSpacing(6)
+                    .crossAxisAlignment(.center),
                 children: [
-                  {{typePrefix}}Badge.soft(label: '${_selectedIds.length} selected'),
+                  {{typePrefix}}Badge(
+                    size: .size2,
+                    highContrast: true,
+                    label: '${_selectedIds.length} selected',
+                  ),
                   {{typePrefix}}Button.ghost(
                     size: .size1,
                     label: 'Export',
@@ -108,10 +109,10 @@ class _{{typePrefix}}DashboardCustomersPageState
               ),
           ],
         ),
-        {{typePrefix}}DataTable<{{typePrefix}}DashboardCustomer>(
+        {{typePrefix}}DataTable<{{typePrefix}}DashboardCustomer>.surface(
           key: const ValueKey('data-grid-customers'),
           rows: page.items,
-          columns: _customerColumns(context),
+          columns: _customerColumns,
           semanticLabel: 'Customers',
           minimumWidth: 840,
           sort: _sort,
@@ -131,7 +132,8 @@ class _{{typePrefix}}DashboardCustomersPageState
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => const {{typePrefix}}EmptyState(
+            icon: {{icon:magnifyingGlass}},
             title: 'No customers found',
             body: 'Try a different name or email address.',
           ),
@@ -185,7 +187,7 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
     return _Page(
       title: 'Orders',
       description: 'Review transactions and fulfillment status.',
-      action: {{typePrefix}}Button(
+      action: {{typePrefix}}Button.soft(
         label: 'Export',
         leadingIcon: {{icon:download}},
         onPressed: () => _toast(context, 'Order export prepared'),
@@ -215,10 +217,10 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
             ),
           ),
         ),
-        {{typePrefix}}DataTable<{{typePrefix}}DashboardOrder>(
+        {{typePrefix}}DataTable<{{typePrefix}}DashboardOrder>.surface(
           key: const ValueKey('data-grid-orders'),
           rows: page.items,
-          columns: _orderColumns(context),
+          columns: _orderColumns,
           semanticLabel: 'Orders',
           minimumWidth: 840,
           sort: _sort,
@@ -235,9 +237,17 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => {{typePrefix}}EmptyState(
+            icon: {{icon:table}},
             title: 'No matching orders',
             body: 'Choose another status to see more orders.',
+            action: _filter == .all
+                ? null
+                : {{typePrefix}}Button.soft(
+                    size: .size1,
+                    label: 'Clear filters',
+                    onPressed: () => setState(() => _filter = .all),
+                  ),
           ),
         ),
       ],
@@ -252,19 +262,20 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
   }
 }
 
-List<RemixDataTableColumn<{{typePrefix}}DashboardCustomer>> _customerColumns(
-  BuildContext context,
-) => [
+final _customerColumns = <RemixDataTableColumn<{{typePrefix}}DashboardCustomer>>[
   RemixDataTableColumn(
     id: 'name',
     label: 'Customer',
     sortable: true,
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => RowBox(
-      style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
+    cellBuilder: (_, customer) => RowBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.center)
+          .spacing(9),
       children: [
-        {{typePrefix}}Avatar(label: value.initials),
-        Flexible(child: _Text(value.name, emphasized: true)),
+        {{typePrefix}}Avatar(size: .size2, label: customer.initials),
+        Flexible(child: {{typePrefix}}DataTableCellText(customer.name, primary: true)),
       ],
     ),
   ),
@@ -272,58 +283,72 @@ List<RemixDataTableColumn<{{typePrefix}}DashboardCustomer>> _customerColumns(
     id: 'email',
     label: 'Email',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.email),
+    cellBuilder: (_, customer) => {{typePrefix}}DataTableCellText(customer.email),
   ),
   RemixDataTableColumn(
     id: 'plan',
     label: 'Plan',
     width: const FixedColumnWidth(110),
-    cellBuilder: (_, value) => _Text(value.plan, emphasized: true),
+    cellBuilder: (_, customer) =>
+        {{typePrefix}}DataTableCellText(customer.plan, primary: true),
   ),
   RemixDataTableColumn(
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(110),
-    cellBuilder: (_, value) => _status(value.status.name),
+    cellBuilder: (_, customer) => {{typePrefix}}StatusBadge.customer(customer.status),
   ),
   RemixDataTableColumn(
     id: 'joined',
     label: 'Joined',
     sortable: true,
     width: const FixedColumnWidth(118),
-    cellBuilder: (_, value) =>
-        _Text({{valuePrefix}}DashboardShortDate(value.joinedAt)),
+    cellBuilder: (_, customer) =>
+        {{typePrefix}}DataTableCellText({{valuePrefix}}DashboardShortDate(customer.joinedAt)),
   ),
   RemixDataTableColumn(
     id: 'actions',
     header: const SizedBox.shrink(),
     semanticLabel: 'Actions',
     width: const FixedColumnWidth(64),
-    cellBuilder: (_, value) => _actions(context, value.name),
+    alignment: AlignmentDirectional.centerEnd,
+    cellBuilder: (context, customer) => {{typePrefix}}ActionMenu(
+      key: ValueKey('customer-actions-${customer.id}'),
+      semanticLabel: 'Actions for ${customer.name}',
+      positioning: {{valuePrefix}}DataTableActionsPositioning,
+      trigger: {{valuePrefix}}DataTableActionsTrigger,
+      actions: const [
+        {{typePrefix}}Action(value: 'view', label: 'View profile'),
+        {{typePrefix}}Action(value: 'email', label: 'Send email'),
+        {{typePrefix}}Action(value: 'archive', label: 'Archive', dividerBefore: true),
+      ],
+      onSelected: (value) =>
+          _toast(context, '$value selected for ${customer.name}'),
+    ),
   ),
 ];
 
-List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>> _orderColumns(
-  BuildContext context,
-) => [
+final _orderColumns = <RemixDataTableColumn<{{typePrefix}}DashboardOrder>>[
   RemixDataTableColumn(
     id: 'id',
     label: 'Order',
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(value.id, emphasized: true),
+    cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(order.id, primary: true),
   ),
   RemixDataTableColumn(
     id: 'customer',
     label: 'Customer',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.customer, emphasized: true),
+    cellBuilder: (_, order) =>
+        {{typePrefix}}DataTableCellText(order.customer, primary: true),
   ),
   RemixDataTableColumn(
     id: 'date',
     label: 'Date',
     sortable: true,
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text({{valuePrefix}}DashboardShortDate(value.date)),
+    cellBuilder: (_, order) =>
+        {{typePrefix}}DataTableCellText({{valuePrefix}}DashboardShortDate(order.date)),
   ),
   RemixDataTableColumn(
     id: 'amount',
@@ -331,45 +356,41 @@ List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>> _orderColumns(
     sortable: true,
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, value) =>
-        _Text('\$${value.amount.toStringAsFixed(2)}', emphasized: true),
+    cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(
+      '\$${order.amount.toStringAsFixed(2)}',
+      primary: true,
+    ),
   ),
   RemixDataTableColumn(
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(118),
-    cellBuilder: (_, value) => _status(value.status.name),
+    cellBuilder: (_, order) => {{typePrefix}}StatusBadge.order(order.status),
   ),
   RemixDataTableColumn(
     id: 'actions',
     header: const SizedBox.shrink(),
     semanticLabel: 'Actions',
     width: const FixedColumnWidth(64),
-    cellBuilder: (_, value) => _actions(context, value.id),
+    alignment: AlignmentDirectional.centerEnd,
+    cellBuilder: (context, order) => {{typePrefix}}ActionMenu(
+      key: ValueKey('order-actions-${order.id}'),
+      semanticLabel: 'Actions for ${order.id}',
+      positioning: {{valuePrefix}}DataTableActionsPositioning,
+      trigger: {{valuePrefix}}DataTableActionsTrigger,
+      actions: const [
+        {{typePrefix}}Action(value: 'view', label: 'View order'),
+        {{typePrefix}}Action(value: 'receipt', label: 'Download receipt'),
+        {{typePrefix}}Action(
+          value: 'refund',
+          label: 'Issue refund',
+          dividerBefore: true,
+        ),
+      ],
+      onSelected: (value) => _toast(context, '$value selected for ${order.id}'),
+    ),
   ),
 ];
-
-Widget _actions(BuildContext context, String value) => {{typePrefix}}Menu<String>(
-  trigger: RemixMenuTrigger.builder(
-    label: 'More',
-    icon: {{icon:dotsHorizontal}},
-    builder: (_, _, _) => const Icon({{icon:dotsHorizontal}}, size: 18),
-  ),
-  items: const [
-    RemixMenuItem(value: 'view', label: 'View'),
-    RemixMenuItem(value: 'download', label: 'Download'),
-    RemixMenuDivider(),
-    RemixMenuItem(value: 'archive', label: 'Archive'),
-  ],
-  onSelected: (action) => _toast(context, '$action selected for $value'),
-);
-
-Widget _status(String value) => switch (value) {
-  'active' || 'paid' => {{typePrefix}}Badge(label: value),
-  'suspended' || 'cancelled' => {{typePrefix}}Badge.outline(label: value),
-  'invited' || 'pending' => {{typePrefix}}Badge.soft(label: value),
-  _ => {{typePrefix}}Badge.outline(label: value),
-};
 
 class _Page extends StatelessWidget {
   const _Page({
@@ -389,68 +410,14 @@ class _Page extends StatelessWidget {
     child: ColumnBox(
       style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [
-        RowBox(
-          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(16),
-          children: [
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
-                children: [
-                  _Text(title, size: 28, emphasized: true),
-                  _Text(description, muted: true),
-                ],
-              ),
-            ),
-            action,
-          ],
+        {{typePrefix}}PageHeader(
+          title: title,
+          description: description,
+          actions: action,
         ),
         ...children,
       ],
     ),
-  );
-}
-
-class _Empty extends StatelessWidget {
-  const _Empty({required this.title, required this.body});
-  final String title;
-  final String body;
-  @override
-  Widget build(BuildContext context) => Box(
-    style: BoxStyler().padding(.all(32)),
-    child: ColumnBox(
-      style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
-      children: [
-        const Icon({{icon:magnifyingGlass}}, size: 24),
-        ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.center).spacing(4),
-          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
-        ),
-      ],
-    ),
-  );
-}
-
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.size = 14,
-    this.emphasized = false,
-    this.muted = false,
-  });
-  final String value;
-  final double size;
-  final bool emphasized;
-  final bool muted;
-  @override
-  Widget build(BuildContext context) => {{typePrefix}}Text(
-    value,
-    size: size >= 24
-        ? {{typePrefix}}TextSize.size7
-        : size >= 18
-        ? {{typePrefix}}TextSize.size4
-        : {{typePrefix}}TextSize.size2,
-    weight: emphasized ? .bold : .regular,
-    highContrast: !muted,
   );
 }
 

@@ -1,30 +1,24 @@
 import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
-import 'package:dashboard/pages/gallery/gallery_navigation_page.dart';
-import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/dashboard_shell.dart';
-import 'package:dashboard/shell/top_bar.dart';
-import 'package:dashboard/theme/theme_scope.dart';
-import 'package:dashboard/theme/theme_settings.dart';
-import 'package:dashboard/utils/text.dart';
-import 'package:dashboard/widgets/page_header.dart';
-import 'package:flutter/material.dart';
+import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:dashboard/ui/ui.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 /// Whether the shell's compact navigation sheet is currently open.
 ///
-/// `TopBar` sits inside `UiSidebarLayout`'s `header` slot in both the
+/// `UiDashboardTopBar` sits inside `UiSidebarLayout`'s `header` slot in both the
 /// wide and compact presentations, so its element is always a descendant of
-/// the scope the layout re-provides — unlike `DashboardShell`'s own element,
+/// the scope the layout re-provides — unlike `UiDashboardDemo`'s own element,
 /// which sits above the layout it returns.
-bool _isCompactSheetOpen(WidgetTester tester) =>
-    UiSidebarLayoutScope.of(tester.element(find.byType(TopBar))).isCompactOpen;
+bool _isCompactSheetOpen(WidgetTester tester) => UiSidebarLayoutScope.of(
+  tester.element(find.byType(UiDashboardTopBar)),
+).isCompactOpen;
 
 void main() {
   testWidgets('renders the dashboard inside one app and one shell', (
@@ -33,16 +27,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
 
     expect(find.byType(WidgetsApp), findsOneWidget);
-    expect(find.byType(MaterialApp), findsNothing);
-    // The shell replaced Material's Scaffold/Drawer with the open-code
-    // UiSidebarLayout template; see `compact layout uses a sheet
-    // without rendering overflows` below for its compact-sheet behavior.
-    expect(find.byType(Scaffold), findsNothing);
     expect(find.byType(UiSidebarLayout), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('dashboard-fortal-scope')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('dashboard-theme-scope')), findsOneWidget);
     expect(find.text('Overview'), findsWidgets);
   });
 
@@ -59,7 +45,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: brand, matching: find.byIcon(Icons.auto_awesome)),
+      find.descendant(of: brand, matching: find.byIcon(RemixIcons.magicWand)),
       findsNothing,
     );
   });
@@ -87,7 +73,9 @@ void main() {
 
   testWidgets('customer rows retain compact kebab actions', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
+    );
     await tester.pump();
 
     final trigger = find.byKey(const ValueKey('customer-actions-cus_024'));
@@ -106,7 +94,9 @@ void main() {
 
   testWidgets('order rows retain compact kebab actions', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.orders)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.orders)).first,
+    );
     await tester.pump();
 
     final trigger = find.byKey(const ValueKey('order-actions-ORD-1048'));
@@ -143,7 +133,7 @@ void main() {
     expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
+      find.byKey(const ValueKey(UiDashboardDemoPage.forms)).first,
     );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
@@ -206,7 +196,7 @@ void main() {
     expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
+      find.byKey(const ValueKey(UiDashboardDemoPage.forms)).first,
     );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
@@ -231,7 +221,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -248,7 +240,7 @@ void main() {
 
     final overviewSemantics = find
         .descendant(
-          of: find.byKey(const ValueKey(DashboardPage.overview)).first,
+          of: find.byKey(const ValueKey(UiDashboardDemoPage.overview)).first,
           matching: find.byType(Semantics),
         )
         .first;
@@ -287,7 +279,7 @@ void main() {
 
     final customersSemantics = find
         .descendant(
-          of: find.byKey(const ValueKey(DashboardPage.customers)).first,
+          of: find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
           matching: find.byType(Semantics),
         )
         .first;
@@ -322,7 +314,9 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
+    );
     await tester.pump();
 
     // UiDataTable forwards the key to the Remix widget it builds, so the
@@ -357,7 +351,9 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     expect(find.text('Refunded'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.orders)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.orders)).first,
+    );
     await tester.pump();
 
     // The filter offers "Refunded" too, so the badge is the second match.
@@ -369,7 +365,9 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     await tester.pump();
 
     final panel = find.byKey(const ValueKey('theme-panel'));
@@ -394,7 +392,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     await tester.pump();
 
     final translucent = find.text('Translucent');
@@ -403,7 +403,7 @@ void main() {
     await tester.pump();
 
     expect(
-      UiTheme.of(tester.element(find.byType(DashboardShell))).panelBackground,
+      UiTheme.of(tester.element(find.byType(UiDashboardDemo))).panelBackground,
       UiPanelBackground.translucent,
     );
   });
@@ -412,7 +412,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(DashboardPage.galleryForms)).first;
+    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.forms)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -427,7 +427,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first;
+    final nav = find
+        .byKey(const ValueKey(UiDashboardDemoPage.dataDisplay))
+        .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -451,7 +453,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first;
+    final nav = find
+        .byKey(const ValueKey(UiDashboardDemoPage.dataDisplay))
+        .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -469,7 +473,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(DashboardPage.galleryOverlays)).first;
+    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.overlays)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -494,7 +498,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(DashboardPage.galleryOverlays)).first;
+    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.overlays)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -510,7 +514,7 @@ void main() {
     );
     expect(content, findsOneWidget);
     final title = find.text('Quick note');
-    final body = find.text('Popover content inherits the active Fortal scope.');
+    final body = find.text('Popover content inherits the active theme scope.');
     final expectedHeight =
         tester.getSize(title).height + 8 + tester.getSize(body).height;
     expect(tester.getSize(content), Size(250, expectedHeight));
@@ -612,7 +616,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.notifications_none));
+    await tester.tap(find.byIcon(RemixIcons.bell));
     await tester.pump();
 
     final content = find.byKey(const ValueKey('topbar-notifications-content'));
@@ -630,7 +634,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(DashboardPage.galleryOverlays)).first;
+    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.overlays)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -656,7 +660,9 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     await tester.pump();
 
     final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
@@ -685,7 +691,7 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
 
     final actions = find
-        .byKey(const ValueKey(DashboardPage.galleryActions))
+        .byKey(const ValueKey(UiDashboardDemoPage.actions))
         .first;
     await tester.ensureVisible(actions);
     await tester.tap(actions);
@@ -701,7 +707,7 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
     final nav = find
-        .byKey(const ValueKey(DashboardPage.galleryNavigation))
+        .byKey(const ValueKey(UiDashboardDemoPage.navigation))
         .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
@@ -724,13 +730,13 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
     final nav = find
-        .byKey(const ValueKey(DashboardPage.galleryNavigation))
+        .byKey(const ValueKey(UiDashboardDemoPage.navigation))
         .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
 
-    final gallery = find.byType(GalleryNavigationPage);
+    final gallery = find.byType(UiGalleryNavigationPage);
     final disclosureFinder = find.descendant(
       of: gallery,
       matching: find.byType(UiDisclosure),
@@ -761,13 +767,13 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
     final nav = find
-        .byKey(const ValueKey(DashboardPage.galleryNavigation))
+        .byKey(const ValueKey(UiDashboardDemoPage.navigation))
         .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
 
-    final gallery = find.byType(GalleryNavigationPage);
+    final gallery = find.byType(UiGalleryNavigationPage);
     final example = find.descendant(
       of: gallery,
       matching: find.byType(UiSidebar<String>),
@@ -790,26 +796,26 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    const destinations = <DashboardPage, String>{
-      DashboardPage.overview: 'A snapshot of your workspace performance.',
-      DashboardPage.customers:
+    const destinations = <UiDashboardDemoPage, String>{
+      UiDashboardDemoPage.overview: 'A snapshot of your workspace performance.',
+      UiDashboardDemoPage.customers:
           'Manage customer access, plans, and account status.',
-      DashboardPage.orders: 'Review transactions and fulfillment status.',
-      DashboardPage.settings:
+      UiDashboardDemoPage.orders: 'Review transactions and fulfillment status.',
+      UiDashboardDemoPage.settings:
           'Manage your profile, preferences, and workspace.',
-      DashboardPage.charts:
-          'Fortal-native chart patterns for comparison, composition, interaction, and empty states.',
-      DashboardPage.galleryActions:
-          'Interactive actions across every Fortal variant and size.',
-      DashboardPage.galleryForms:
+      UiDashboardDemoPage.charts:
+          'Native chart patterns for comparison, composition, interaction, and empty states.',
+      UiDashboardDemoPage.actions:
+          'Interactive actions across every native variant and size.',
+      UiDashboardDemoPage.forms:
           'Production-ready fields and selection controls in every preset.',
-      DashboardPage.galleryDisplay:
+      UiDashboardDemoPage.dataDisplay:
           'Rich surfaces and status components for product interfaces.',
-      DashboardPage.galleryOverlays:
+      UiDashboardDemoPage.overlays:
           'Real dialog, popover, tooltip, and menu triggers for every recipe.',
-      DashboardPage.galleryNavigation:
+      UiDashboardDemoPage.navigation:
           'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
-      DashboardPage.galleryTypography:
+      UiDashboardDemoPage.typography:
           'Text, headings, code, keys, and links on one shared scale.',
     };
 
@@ -819,7 +825,7 @@ void main() {
       await tester.tap(nav);
       await tester.pump();
 
-      expect(find.byType(DashboardShell), findsOneWidget);
+      expect(find.byType(UiDashboardDemo), findsOneWidget);
       expect(find.text(entry.value), findsOneWidget);
     }
   });
@@ -828,17 +834,15 @@ void main() {
     'quick toggle changes Fortal brightness without a Material host',
     (tester) async {
       await tester.pumpWidget(const DashboardApp());
-      final shell = tester.element(find.byType(DashboardShell));
+      final shell = tester.element(find.byType(UiDashboardDemo));
 
-      expect(find.byType(MaterialApp), findsNothing);
       final before = UiTheme.of(shell).isDark;
 
       await tester.tap(find.byKey(const ValueKey('theme-quick-toggle')).first);
       await tester.pump();
 
-      final updatedShell = tester.element(find.byType(DashboardShell));
+      final updatedShell = tester.element(find.byType(UiDashboardDemo));
       expect(UiTheme.of(updatedShell).isDark, isNot(before));
-      expect(find.byType(MaterialApp), findsNothing);
     },
   );
 
@@ -851,7 +855,7 @@ void main() {
       await tester.pumpWidget(const DashboardApp());
 
       bool isDark() =>
-          UiTheme.of(tester.element(find.byType(DashboardShell))).isDark;
+          UiTheme.of(tester.element(find.byType(UiDashboardDemo))).isDark;
       expect(isDark(), isFalse);
 
       platform.platformBrightnessTestValue = Brightness.dark;
@@ -868,7 +872,7 @@ void main() {
       expect(isDark(), isFalse);
 
       await tester.tap(
-        find.byKey(const ValueKey(DashboardPage.settings)).first,
+        find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
       );
       await tester.pump();
       final reset = find.byKey(const ValueKey('theme-reset')).first;
@@ -885,17 +889,18 @@ void main() {
 
   testWidgets('supports an explicit dark initial theme', (tester) async {
     await tester.pumpWidget(
-      const DashboardApp(initialSettings: ThemeSettings(appearance: .dark)),
+      const DashboardApp(initialSettings: UiThemeSettings(appearance: .dark)),
     );
 
-    final shell = tester.element(find.byType(DashboardShell));
+    final shell = tester.element(find.byType(UiDashboardDemo));
     expect(UiTheme.of(shell).isDark, isTrue);
-    expect(find.byType(MaterialApp), findsNothing);
   });
 
   testWidgets('theme panel changes the resolved accent live', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     await tester.pump();
 
     final grass = find.byKey(const ValueKey('accent-grass'));
@@ -903,13 +908,15 @@ void main() {
     await tester.tap(grass);
     await tester.pump();
 
-    final shell = tester.element(find.byType(DashboardShell));
+    final shell = tester.element(find.byType(UiDashboardDemo));
     expect(UiTheme.of(shell).accent, UiAccentColor.grass);
   });
 
   testWidgets('theme swatch centers its selected checkmark', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     await tester.pump();
 
     final swatch = find.byKey(const ValueKey('accent-indigo'));
@@ -919,7 +926,7 @@ void main() {
     );
     final check = find.descendant(
       of: swatch,
-      matching: find.byIcon(Icons.check),
+      matching: find.byIcon(RemixIcons.check),
     );
 
     expect(tester.getCenter(check), tester.getCenter(toggle));
@@ -934,7 +941,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final topBar = find.byType(TopBar);
+    final topBar = find.byType(UiDashboardTopBar);
     final surfaces = find.descendant(
       of: topBar,
       matching: find.byKey(const ValueKey('remix-icon-button-surface')),
@@ -953,7 +960,7 @@ void main() {
     }
 
     expectSquareSurfaces();
-    final notifications = find.byIcon(Icons.notifications_none);
+    final notifications = find.byIcon(RemixIcons.bell);
     final mouse = await tester.createGesture(kind: ui.PointerDeviceKind.mouse);
     addTearDown(mouse.removePointer);
     await mouse.addPointer(location: tester.getCenter(notifications));
@@ -967,7 +974,9 @@ void main() {
 
   testWidgets('grid sorts, selects the page, and paginates', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
+    );
     await tester.pump();
 
     final sortName = find.text('Customer').first;
@@ -1000,7 +1009,9 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
+    );
     await tester.pump();
 
     final selectAll = find
@@ -1042,7 +1053,7 @@ void main() {
 
     await tester.pumpWidget(const DashboardApp());
     final nav = find
-        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .byKey(const ValueKey(UiDashboardDemoPage.typography))
         .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
@@ -1073,7 +1084,7 @@ void main() {
 
     await tester.pumpWidget(const DashboardApp());
     final nav = find
-        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .byKey(const ValueKey(UiDashboardDemoPage.typography))
         .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
@@ -1111,7 +1122,7 @@ void main() {
     }
 
     final typography = find
-        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .byKey(const ValueKey(UiDashboardDemoPage.typography))
         .first;
     await tester.ensureVisible(typography);
     await tester.tap(typography);
@@ -1136,7 +1147,7 @@ void main() {
     // independent of the visual size each one picks.
     final title = tester.getSemantics(
       find.descendant(
-        of: find.byType(PageHeader),
+        of: find.byType(UiPageHeader),
         matching: find.text('Overview'),
       ),
     );
@@ -1165,7 +1176,7 @@ void main() {
     // That is what makes them repaint when the gray family changes, and it is
     // why the assertion reads the painted colour rather than the widget's.
     final pageTitle = find.descendant(
-      of: find.byType(PageHeader),
+      of: find.byType(UiPageHeader),
       matching: find.text('Overview'),
     );
     final activityTitle = find.text('Payment received');
@@ -1173,14 +1184,16 @@ void main() {
         tester.renderObject<RenderParagraph>(finder).text.style!.color!;
     Color gray12() => MixScope.tokenOf(
       UiTokens.gray12,
-      tester.element(find.byType(DashboardShell)),
+      tester.element(find.byType(UiDashboardDemo)),
     );
 
     final slate = gray12();
     expect(painted(pageTitle), slate);
     expect(painted(activityTitle), slate);
 
-    final themeScope = tester.widget<ThemeScope>(find.byType(ThemeScope));
+    final themeScope = tester.widget<UiDashboardThemeScope>(
+      find.byType(UiDashboardThemeScope),
+    );
     themeScope.onChanged(
       themeScope.settings.copyWith(grayColor: UiGrayColor.mauve),
     );
@@ -1214,7 +1227,7 @@ void main() {
       tester.renderObject<RenderParagraph>(brand).text.style!.color,
       MixScope.tokenOf(
         UiTokens.gray12,
-        tester.element(find.byType(DashboardShell)),
+        tester.element(find.byType(UiDashboardDemo)),
       ),
     );
   });
@@ -1225,7 +1238,9 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
+    );
     await tester.pump();
 
     final search = find.byKey(const ValueKey('dashboard-search'));

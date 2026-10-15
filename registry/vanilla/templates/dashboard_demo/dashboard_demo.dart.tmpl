@@ -3,12 +3,15 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
+import '../../components/avatar.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
+import '../../components/divider.dart';
 import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/popover.dart';
+import '../../components/segmented_control.dart';
 import '../../components/toast.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -79,6 +82,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   /// is placed in.
   bool? _dark;
   Brightness? _ambientBrightness;
+  bool _notificationsRead = false;
 
   @override
   void didChangeDependencies() {
@@ -189,27 +193,68 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         child: ColumnBox(
           style: FlexBoxStyler()
               .mainAxisSize(.min)
-              .crossAxisAlignment(.start)
-              .spacing({{typePrefix}}Tokens.s1_5),
+              .crossAxisAlignment(.stretch)
+              .spacing({{typePrefix}}Tokens.s2),
           children: [
-            StyledText(
-              'Notifications',
-              style: _textStyle(weight: FontWeight.w600),
+            RowBox(
+              style: FlexBoxStyler()
+                  .mainAxisAlignment(.spaceBetween)
+                  .crossAxisAlignment(.center),
+              children: [
+                Flexible(
+                  child: StyledText(
+                    'Notifications',
+                    style: _textStyle(weight: FontWeight.w600),
+                  ),
+                ),
+                if (!_notificationsRead)
+                  {{typePrefix}}Button.ghost(
+                    size: .small,
+                    label: 'Mark all read',
+                    onPressed: () => setState(() => _notificationsRead = true),
+                  ),
+              ],
             ),
-            StyledText(
+            const {{typePrefix}}Divider(),
+            _notificationItem(
               'Order ORD-1047 requires review.',
-              style: _textStyle(token: {{typePrefix}}Tokens.textXs),
+              '14m ago',
+              unread: !_notificationsRead,
             ),
-            StyledText(
+            _notificationItem(
               'Three customer invitations are pending.',
-              style: _textStyle(token: {{typePrefix}}Tokens.textXs, muted: true),
+              '1h ago',
+              unread: !_notificationsRead,
+            ),
+            _notificationItem(
+              'Payout batch #29 was settled.',
+              '3h ago',
+              unread: false,
             ),
           ],
         ),
       ),
-      child: const {{typePrefix}}IconButton.ghost(
-        icon: {{icon:bell}},
-        semanticLabel: 'Open notifications',
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          const {{typePrefix}}IconButton.ghost(
+            icon: {{icon:bell}},
+            semanticLabel: 'Open notifications',
+          ),
+          if (!_notificationsRead)
+            Positioned(
+              right: 8,
+              top: 8,
+              child: IgnorePointer(
+                child: Box(
+                  style: BoxStyler()
+                      .size(7, 7)
+                      .borderRadius(.circular(99))
+                      .color({{typePrefix}}Tokens.primary()),
+                ),
+              ),
+            ),
+        ],
       ),
     ),
     {{typePrefix}}Popover(
@@ -231,6 +276,16 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
                 weight: FontWeight.w600,
               ),
             ),
+            {{typePrefix}}SegmentedControl<bool>(
+              semanticLabel: 'Theme appearance',
+              selectedValue: _isDark,
+              items: const [
+                RemixSegmentedControlItem(value: false, label: 'Light'),
+                RemixSegmentedControlItem(value: true, label: 'Dark'),
+              ],
+              onChanged: (value) => setState(() => _dark = value),
+            ),
+            const {{typePrefix}}Divider(),
             ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)
@@ -258,6 +313,36 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       Expanded(child: StyledText(label, style: _textStyle())),
       StyledText(value, style: _textStyle(muted: true)),
     ],
+  );
+
+  Widget _notificationItem(
+    String message,
+    String time, {
+    required bool unread,
+  }) => Box(
+    style: BoxStyler()
+        .padding(.all({{typePrefix}}Tokens.s2))
+        .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+        .color(unread ? {{typePrefix}}Tokens.secondary() : const Color(0x00000000)),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.start)
+          .spacing({{typePrefix}}Tokens.s0_5),
+      children: [
+        StyledText(
+          message,
+          style: _textStyle(
+            token: {{typePrefix}}Tokens.textXs,
+            weight: unread ? FontWeight.w500 : FontWeight.w400,
+          ),
+        ),
+        StyledText(
+          time,
+          style: _textStyle(token: {{typePrefix}}Tokens.textXs, muted: true),
+        ),
+      ],
+    ),
   );
 }
 
@@ -309,27 +394,67 @@ class _{{typePrefix}}Account extends StatelessWidget {
   const _{{typePrefix}}Account();
 
   @override
-  Widget build(BuildContext context) => ColumnBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.stretch)
-        .spacing({{typePrefix}}Tokens.s2),
-    children: [
-      StyledText('Northstar workspace', style: _textStyle(muted: true)),
-      {{typePrefix}}Menu<String>(
-        trigger: const RemixMenuTrigger(
-          label: 'Ada Chen',
-          icon: {{icon:person}},
+  Widget build(BuildContext context) => {{typePrefix}}Menu<String>(
+    trigger: RemixMenuTrigger.builder(
+      label: 'Ada Chen',
+      icon: {{icon:person}},
+      builder: (context, _, _) => Box(
+        style: BoxStyler()
+            .padding(
+              .symmetric(
+                horizontal: {{typePrefix}}Tokens.s2_5,
+                vertical: {{typePrefix}}Tokens.s2,
+              ),
+            )
+            .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+            .border(.all(.color({{typePrefix}}Tokens.border())))
+            .color({{typePrefix}}Tokens.card()),
+        child: RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing({{typePrefix}}Tokens.s2_5),
+          children: [
+            const {{typePrefix}}Avatar(label: 'AC'),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.start),
+                children: [
+                  StyledText(
+                    'Ada Chen',
+                    style: _textStyle(
+                      weight: FontWeight.w500,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                  StyledText(
+                    'Northstar workspace',
+                    style: _textStyle(
+                      token: {{typePrefix}}Tokens.textXs,
+                      muted: true,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                ],
+              ),
+            ),
+            StyledIcon(
+              icon: {{icon:dotsHorizontal}},
+              style: IconStyler()
+                  .size({{typePrefix}}Tokens.icon)
+                  .color({{typePrefix}}Tokens.mutedForeground()),
+            ),
+          ],
         ),
-        items: const [
-          RemixMenuItem(value: 'account', label: 'Account settings'),
-          RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
-          RemixMenuDivider(),
-          RemixMenuItem(value: 'sign-out', label: 'Sign out'),
-        ],
-        onSelected: (value) =>
-            showRemixToast(context, RemixToastData(title: '$value selected')),
       ),
+    ),
+    items: const [
+      RemixMenuItem(value: 'account', label: 'Account settings'),
+      RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
+      RemixMenuDivider(),
+      RemixMenuItem(value: 'sign-out', label: 'Sign out'),
     ],
+    onSelected: (value) =>
+        showRemixToast(context, RemixToastData(title: '$value selected')),
   );
 }
 
@@ -366,6 +491,7 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => {{typePrefix}}DashboardCharts(
     cardBuilder: _chartCard,
+    legendBuilder: (_, chart) => _chartLegend(chart),
     sectionBuilder: (title, description, cards) => ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -585,32 +711,156 @@ const _pieRadius = 96.0;
 PieChartStyler _pieRing([double centerRadius = 0]) =>
     PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
-Widget _chartCard(String title, String description, Widget chart) =>
-    {{typePrefix}}Card(
-      child: ColumnBox(
+Widget _chartCard(
+  String title,
+  String description,
+  Widget chart, {
+  Widget? legend,
+}) => {{typePrefix}}Card(
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s3),
+    children: [
+      ColumnBox(
         style: FlexBoxStyler()
-            .crossAxisAlignment(.stretch)
-            .spacing({{typePrefix}}Tokens.s3),
+            .crossAxisAlignment(.start)
+            .spacing({{typePrefix}}Tokens.s1),
         children: [
-          ColumnBox(
-            style: FlexBoxStyler()
-                .crossAxisAlignment(.start)
-                .spacing({{typePrefix}}Tokens.s1),
-            children: [
-              StyledText(
-                title,
-                style: _textStyle(
-                  token: {{typePrefix}}Tokens.textBase,
-                  weight: FontWeight.w600,
-                ),
-              ),
-              StyledText(description, style: _textStyle(muted: true)),
-            ],
+          StyledText(
+            title,
+            style: _textStyle(
+              token: {{typePrefix}}Tokens.textBase,
+              weight: FontWeight.w600,
+            ),
           ),
-          Box(style: BoxStyler().height(240), child: chart),
+          StyledText(description, style: _textStyle(muted: true)),
         ],
       ),
-    );
+      ?legend,
+      Box(style: BoxStyler().height(240), child: chart),
+    ],
+  ),
+);
+
+Widget? _chartLegend({{typePrefix}}DashboardChartCase chart) {
+  final items = switch (chart) {
+    .revenueMomentum => const [
+      {{typePrefix}}ChartLegendItem(label: 'Revenue', color: {{typePrefix}}Tokens.chart1),
+    ],
+    .linePatterns => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Actual',
+        detail: 'solid',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Plan',
+        detail: 'dashed',
+        color: {{typePrefix}}Tokens.chart2,
+        pattern: .dashed,
+      ),
+    ],
+    .stepGaps => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Inventory',
+        detail: 'step after',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+    ],
+    .viewportLabels => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Revenue',
+        detail: '3x pan / zoom',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+    ],
+    .groupedBars => const [
+      {{typePrefix}}ChartLegendItem(label: 'Actual', color: {{typePrefix}}Tokens.chart1),
+      {{typePrefix}}ChartLegendItem(label: 'Plan', color: {{typePrefix}}Tokens.chart2),
+    ],
+    .stackedBars => const [
+      {{typePrefix}}ChartLegendItem(label: 'Product', color: {{typePrefix}}Tokens.chart1),
+      {{typePrefix}}ChartLegendItem(label: 'Services', color: {{typePrefix}}Tokens.chart2),
+    ],
+    .floatingBars => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Min–Max range',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+    ],
+    .trackedBars => const [
+      {{typePrefix}}ChartLegendItem(label: 'Revenue', color: {{typePrefix}}Tokens.chart1),
+      {{typePrefix}}ChartLegendItem(
+        label: '60k track',
+        color: {{typePrefix}}Tokens.muted,
+        pattern: .outlined,
+      ),
+    ],
+    .trafficPie => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Desktop',
+        detail: '58%',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Mobile',
+        detail: '29%',
+        color: {{typePrefix}}Tokens.chart2,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Tablet',
+        detail: '13%',
+        color: {{typePrefix}}Tokens.chart3,
+      ),
+    ],
+    .interactivePie => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Core',
+        detail: '46%',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Add-ons',
+        detail: '31%',
+        color: {{typePrefix}}Tokens.chart2,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Services',
+        detail: '23%',
+        color: {{typePrefix}}Tokens.chart3,
+      ),
+    ],
+    .badgePie => const [
+      {{typePrefix}}ChartLegendItem(
+        label: 'Desktop',
+        detail: 'D',
+        color: {{typePrefix}}Tokens.chart1,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Mobile',
+        detail: 'M',
+        color: {{typePrefix}}Tokens.chart2,
+      ),
+      {{typePrefix}}ChartLegendItem(
+        label: 'Tablet',
+        detail: 'T',
+        color: {{typePrefix}}Tokens.chart3,
+      ),
+    ],
+    .emptyPie => null,
+  };
+  if (items == null) return null;
+  return {{typePrefix}}ChartLegend(
+    items: items,
+    labelStyle: _textStyle(
+      token: {{typePrefix}}Tokens.textXs,
+      weight: FontWeight.w500,
+    ),
+    detailStyle: _textStyle(token: {{typePrefix}}Tokens.textXs, muted: true),
+    outlineBorderColor: {{typePrefix}}Tokens.border,
+  );
+}
 
 TextStyler _textStyle({
   TextStyleToken token = {{typePrefix}}Tokens.textSm,

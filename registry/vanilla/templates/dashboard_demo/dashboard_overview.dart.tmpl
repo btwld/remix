@@ -3,11 +3,13 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
+import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
 import '../../components/data_table.dart';
 import '../../components/divider.dart';
+import '../../components/progress.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_charts.dart';
 import 'dashboard_overview_base.dart';
@@ -56,15 +58,49 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
     metricBuilder: (context, metric) => {{typePrefix}}Card(
       child: ColumnBox(
         style: FlexBoxStyler()
-            .crossAxisAlignment(.start)
-            .spacing({{typePrefix}}Tokens.s1_5),
+            .crossAxisAlignment(.stretch)
+            .spacing({{typePrefix}}Tokens.s2),
         children: [
-          StyledText(
-            metric.label,
-            style: TextStyler()
-                .style({{typePrefix}}Tokens.textSm.mix())
-                .fontWeight(FontWeight.w500)
-                .color({{typePrefix}}Tokens.mutedForeground()),
+          RowBox(
+            style: FlexBoxStyler()
+                .mainAxisAlignment(.spaceBetween)
+                .crossAxisAlignment(.center),
+            children: [
+              Flexible(
+                child: StyledText(
+                  metric.label,
+                  style: TextStyler()
+                      .style({{typePrefix}}Tokens.textSm.mix())
+                      .fontWeight(FontWeight.w500)
+                      .color({{typePrefix}}Tokens.mutedForeground()),
+                ),
+              ),
+              if (metric.delta case final delta?)
+                {{typePrefix}}Badge(
+                  variant: metric.positive ? .secondary : .outline,
+                  child: RowBox(
+                    style: FlexBoxStyler()
+                        .mainAxisSize(.min)
+                        .crossAxisAlignment(.center)
+                        .spacing({{typePrefix}}Tokens.s1),
+                    children: [
+                      StyledIcon(
+                        icon: metric.positive
+                            ? {{icon:chevronUp}}
+                            : {{icon:chevronDown}},
+                        style: IconStyler()
+                            .size(12)
+                            .color(
+                              metric.positive
+                                  ? {{typePrefix}}Tokens.secondaryForeground()
+                                  : {{typePrefix}}Tokens.foreground(),
+                            ),
+                      ),
+                      StyledText(delta),
+                    ],
+                  ),
+                ),
+            ],
           ),
           StyledText(
             metric.value,
@@ -73,6 +109,8 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
                 .fontWeight(FontWeight.w700)
                 .color({{typePrefix}}Tokens.foreground()),
           ),
+          if (metric.progress case final progress?)
+            {{typePrefix}}Progress(value: progress),
           StyledText(
             metric.change,
             style: TextStyler()
@@ -196,7 +234,7 @@ Widget _fulfillmentCard() => {{typePrefix}}Card(
   child: ColumnBox(
     style: FlexBoxStyler()
         .crossAxisAlignment(.stretch)
-        .spacing({{typePrefix}}Tokens.s4),
+        .spacing({{typePrefix}}Tokens.s3),
     children: [
       ColumnBox(
         style: FlexBoxStyler()
@@ -207,12 +245,39 @@ Widget _fulfillmentCard() => {{typePrefix}}Card(
           _sectionDescription('Current order status'),
         ],
       ),
+      {{typePrefix}}ChartLegend(
+        items: const [
+          {{typePrefix}}ChartLegendItem(
+            label: 'Fulfilled',
+            detail: '72%',
+            color: {{typePrefix}}Tokens.chart1,
+          ),
+          {{typePrefix}}ChartLegendItem(
+            label: 'Processing',
+            detail: '18%',
+            color: {{typePrefix}}Tokens.chart2,
+          ),
+          {{typePrefix}}ChartLegendItem(
+            label: 'Review',
+            detail: '10%',
+            color: {{typePrefix}}Tokens.chart3,
+          ),
+        ],
+        labelStyle: TextStyler()
+            .style({{typePrefix}}Tokens.textXs.mix())
+            .fontWeight(FontWeight.w500)
+            .color({{typePrefix}}Tokens.foreground()),
+        detailStyle: TextStyler()
+            .style({{typePrefix}}Tokens.textXs.mix())
+            .color({{typePrefix}}Tokens.mutedForeground()),
+        outlineBorderColor: {{typePrefix}}Tokens.border,
+      ),
       Box(
-        style: BoxStyler().height(220),
+        style: BoxStyler().height(190),
         child: {{typePrefix}}PieChart(
           centerRadius: 44,
           // mix_chart draws each slice 80px wide in any box; this ring stops
-          // the donut at 88px, 80% of the way to the edge of its 220px box.
+          // the donut at 88px, 80% of the way to the edge of its box.
           style: PieChartStyler().slice(PieSliceStyler().radius(44)),
           semanticsLabel: 'Current order status',
           slices: [
@@ -244,11 +309,18 @@ Widget _activityCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Ca
                     .crossAxisAlignment(.center)
                     .spacing({{typePrefix}}Tokens.s2_5),
                 children: [
-                  StyledIcon(
-                    icon: {{icon:activityLog}},
-                    style: IconStyler()
-                        .size({{typePrefix}}Tokens.icon)
-                        .color({{typePrefix}}Tokens.mutedForeground()),
+                  Box(
+                    style: BoxStyler()
+                        .size(32, 32)
+                        .alignment(.center)
+                        .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+                        .color({{typePrefix}}Tokens.secondary()),
+                    child: StyledIcon(
+                      icon: _activityIcon(event.kind),
+                      style: IconStyler()
+                          .size({{typePrefix}}Tokens.icon)
+                          .color({{typePrefix}}Tokens.secondaryForeground()),
+                    ),
                   ),
                   Expanded(
                     child: ColumnBox(
@@ -273,6 +345,13 @@ Widget _activityCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Ca
   ),
 );
 
+IconData _activityIcon({{typePrefix}}DashboardActivityKind kind) => switch (kind) {
+  .customer => {{icon:person}},
+  .order => {{icon:box}},
+  .payment => {{icon:checkCircled}},
+  .alert => {{icon:exclamationTriangle}},
+};
+
 Widget _ordersCard(
   {{typePrefix}}DashboardSampleData data,
   VoidCallback? onViewOrders,
@@ -290,6 +369,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
+            trailingIcon: {{icon:doubleArrowRight}},
             onPressed: onViewOrders,
           ),
         ],
@@ -330,6 +410,13 @@ Widget _cell(String text, {bool emphasized = false}) => StyledText(
       .color({{typePrefix}}Tokens.foreground()),
 );
 
+Widget _statusBadge(String status) => switch (status.toLowerCase()) {
+  'paid' || 'fulfilled' => {{typePrefix}}Badge(label: status),
+  'pending' || 'in review' => {{typePrefix}}Badge.secondary(label: status),
+  'cancelled' => {{typePrefix}}Badge.destructive(label: status),
+  _ => {{typePrefix}}Badge.outline(label: status),
+};
+
 LineSeries _revenueSeries(List<{{typePrefix}}DashboardPoint> points) => LineSeries(
   id: 'revenue',
   label: 'Revenue',
@@ -361,7 +448,7 @@ final _recordColumns = <RemixDataTableColumn<{{typePrefix}}DashboardRecord>>[
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(104),
-    cellBuilder: (_, record) => _cell(record.status),
+    cellBuilder: (_, record) => _statusBadge(record.status),
   ),
   RemixDataTableColumn(
     id: 'amount',

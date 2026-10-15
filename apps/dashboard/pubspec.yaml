@@ -23,6 +23,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mix_generator: ^2.2.0-beta.3
-
-flutter:
-  uses-material-design: true

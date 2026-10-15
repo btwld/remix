@@ -1,23 +1,8 @@
-import 'package:dashboard/data/models.dart';
 import 'package:dashboard/main.dart';
-import 'package:dashboard/pages/gallery/gallery_actions_page.dart';
-import 'package:dashboard/pages/gallery/gallery_display_page.dart';
-import 'package:dashboard/pages/gallery/gallery_forms_page.dart';
-import 'package:dashboard/pages/gallery/gallery_navigation_page.dart';
-import 'package:dashboard/pages/gallery/gallery_overlays_page.dart';
-import 'package:dashboard/pages/gallery/gallery_typography_page.dart';
-import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/dashboard_shell.dart';
-import 'package:dashboard/theme/theme_scope.dart';
-import 'package:dashboard/theme/theme_settings.dart';
-import 'package:dashboard/utils/text.dart';
-import 'package:dashboard/widgets/gallery_scaffold.dart';
-import 'package:dashboard/widgets/status_badge.dart';
-import 'package:dashboard/widgets/theme_panel.dart';
-import 'package:flutter/material.dart';
+import 'package:dashboard/ui/ui.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:dashboard/ui/ui.dart';
 
 void main() {
   group('gallery preset contracts', () {
@@ -26,7 +11,7 @@ void main() {
     ) async {
       await _pumpPage(
         tester,
-        GalleryMatrix<String, String>(
+        UiGalleryMatrix<String, String>(
           rows: const ['Tall sample'],
           columns: const ['Example'],
           rowLabelBuilder: (label) => label,
@@ -44,7 +29,7 @@ void main() {
     testWidgets('action matrices render every variant and size pair', (
       tester,
     ) async {
-      await _pumpPage(tester, const GalleryActionsPage());
+      await _pumpPage(tester, const UiGalleryActionsPage());
 
       _expectCartesian<UiButton, UiButtonVariant, UiButtonSize>(
         tester,
@@ -75,7 +60,7 @@ void main() {
     testWidgets('form matrices render every variant and size pair', (
       tester,
     ) async {
-      await _pumpPage(tester, const GalleryFormsPage());
+      await _pumpPage(tester, const UiGalleryFormsPage());
 
       _expectCartesian<UiTextField, UiTextFieldVariant, UiTextFieldSize>(
         tester,
@@ -162,7 +147,7 @@ void main() {
     testWidgets('display matrices render their complete preset axes', (
       tester,
     ) async {
-      await _pumpPage(tester, const GalleryDisplayPage());
+      await _pumpPage(tester, const UiGalleryDisplayPage());
 
       _expectCartesian<UiAvatar, UiAvatarVariant, UiAvatarSize>(
         tester,
@@ -217,7 +202,7 @@ void main() {
     testWidgets('navigation and overlay matrices use every declared preset', (
       tester,
     ) async {
-      await _pumpPage(tester, const GalleryNavigationPage());
+      await _pumpPage(tester, const UiGalleryNavigationPage());
 
       final sidebarSection = _sectionChild(tester, 'Sidebar');
       final sidebar = tester.widget<UiSidebar<String>>(
@@ -255,7 +240,7 @@ void main() {
         columnOf: (widget) => widget.size,
       );
 
-      await _pumpPage(tester, const GalleryOverlaysPage());
+      await _pumpPage(tester, const UiGalleryOverlaysPage());
       _expectCartesian<UiMenu<String>, UiMenuVariant, UiMenuSize>(
         tester,
         within: _sectionChild(tester, 'Menu'),
@@ -273,7 +258,7 @@ void main() {
 
       final dialogSection = _sectionChild(tester, 'Dialog');
       final dialogMatrix = tester
-          .widget<GalleryMatrix<Alignment, UiDialogSize>>(dialogSection);
+          .widget<UiGalleryMatrix<Alignment, UiDialogSize>>(dialogSection);
       expect(dialogMatrix.rows, const [Alignment.topCenter, Alignment.center]);
       expect(dialogMatrix.columns, UiDialogSize.values);
       expect(
@@ -295,7 +280,7 @@ void main() {
     });
 
     testWidgets('typography matrices use typed preset values', (tester) async {
-      await _pumpPage(tester, const GalleryTypographyPage());
+      await _pumpPage(tester, const UiGalleryTypographyPage());
 
       _expectCartesian<UiCode, UiCodeVariant, bool>(
         tester,
@@ -338,7 +323,7 @@ void main() {
     testWidgets('dialog matrix forwards its nondefault alignment and size', (
       tester,
     ) async {
-      await _pumpPage(tester, const GalleryOverlaysPage());
+      await _pumpPage(tester, const UiGalleryOverlaysPage());
 
       final trigger = find.bySemanticsLabel('Open Top Size1 dialog');
       await tester.ensureVisible(trigger);
@@ -358,8 +343,8 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        ThemeScope(
-          settings: const ThemeSettings(),
+        UiDashboardThemeScope(
+          settings: const UiThemeSettings(),
           onChanged: (_) {},
           child: WidgetsApp(
             color: const Color(0xFFFFFFFF),
@@ -368,7 +353,7 @@ void main() {
               pageBuilder: (context, _, _) => builder(context),
             ),
             builder: (context, child) => UiTheme(child: child!),
-            home: const ThemePanel(),
+            home: const UiThemePanel(),
           ),
         ),
       );
@@ -395,7 +380,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         const DashboardApp(
-          initialSettings: ThemeSettings(
+          initialSettings: UiThemeSettings(
             appearance: .dark,
             accentColor: .blue,
             grayColor: .mauve,
@@ -406,11 +391,11 @@ void main() {
         ),
       );
       await tester.tap(
-        find.byKey(const ValueKey(DashboardPage.settings)).first,
+        find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
       );
       await tester.pump();
 
-      final root = UiTheme.of(tester.element(find.byType(DashboardShell)));
+      final root = UiTheme.of(tester.element(find.byType(UiDashboardDemo)));
       final danger = UiTheme.of(tester.element(find.text('Danger zone')));
 
       expect(danger.accent, UiAccentColor.red);
@@ -429,9 +414,10 @@ void main() {
         tester,
         Column(
           children: [
-            for (final status in OrderStatus.values) StatusBadge.order(status),
-            for (final status in CustomerStatus.values)
-              StatusBadge.customer(status),
+            for (final status in UiDashboardOrderStatus.values)
+              UiStatusBadge.order(status),
+            for (final status in UiDashboardCustomerStatus.values)
+              UiStatusBadge.customer(status),
           ],
         ),
       );
@@ -482,10 +468,10 @@ Future<void> _pumpPage(WidgetTester tester, Widget page) {
 
 Finder _sectionChild(WidgetTester tester, String label) {
   final sectionFinder = find.byWidgetPredicate(
-    (widget) => widget is GallerySection && widget.label == label,
+    (widget) => widget is UiGallerySection && widget.label == label,
   );
   expect(sectionFinder, findsOneWidget, reason: label);
-  return find.byWidget(tester.widget<GallerySection>(sectionFinder).child);
+  return find.byWidget(tester.widget<UiGallerySection>(sectionFinder).child);
 }
 
 Finder _within<W extends Widget>(Finder parent) => find.descendant(

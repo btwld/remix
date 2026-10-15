@@ -114,5 +114,5 @@ identifier-initial `Agent` to the consumer prefix before the preset's own word
 goes. `uiAgentComposerRecipe()` keeps its domain name; `AgentComposerStyler`
 becomes the installed `UiComposerStyler`.
 
-`tool/check_open_code_dogfood.dart` fails when any `apps/*/lib` file outside
+`tool/check_consumer_apps.dart` fails when any `apps/*/lib` file outside
 `lib/ui/` imports `package:registry_source`.

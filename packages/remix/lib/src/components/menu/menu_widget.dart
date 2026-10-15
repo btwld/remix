@@ -486,7 +486,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       children: [
         if (widget.trigger.icon != null)
           StyledIcon(icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
-        StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
+        Flexible(
+          child: StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
+        ),
       ],
     );
   }

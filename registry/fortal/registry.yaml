@@ -321,6 +321,12 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_typography.dart"
       - source: templates/dashboard_demo/dashboard_demo_page_header.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_page_header.dart"
+      - source: templates/dashboard_demo/dashboard_demo_theme.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_theme.dart"
+      - source: templates/dashboard_demo/dashboard_demo_theme_panel.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_theme_panel.dart"
+      - source: templates/dashboard_demo/dashboard_demo_widgets.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_widgets.dart"
       - source: templates/dashboard_demo/dashboard_demo_gallery_scaffold.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_gallery_scaffold.dart"
       - source: templates/dashboard_demo/dashboard_demo_gallery_actions.dart.tmpl
@@ -343,6 +349,22 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo.dart"
     exports:
       - recipes/dashboard/dashboard_sample_data.dart
+      - recipes/dashboard/dashboard_demo_base.dart
+      - recipes/dashboard/dashboard_demo_chat.dart
+      - recipes/dashboard/dashboard_demo_records.dart
+      - recipes/dashboard/dashboard_demo_theme.dart
+      - recipes/dashboard/dashboard_demo_theme_panel.dart
+      - recipes/dashboard/dashboard_demo_widgets.dart
+      - recipes/dashboard/dashboard_demo_page_header.dart
+      - recipes/dashboard/dashboard_demo_text.dart
+      - recipes/dashboard/dashboard_demo_gallery_scaffold.dart
+      - recipes/dashboard/dashboard_demo_gallery_actions.dart
+      - recipes/dashboard/dashboard_demo_gallery_forms.dart
+      - recipes/dashboard/dashboard_demo_gallery_display.dart
+      - recipes/dashboard/dashboard_demo_gallery_overlays.dart
+      - recipes/dashboard/dashboard_demo_gallery_navigation.dart
+      - recipes/dashboard/dashboard_demo_gallery_typography.dart
+      - recipes/dashboard/dashboard_demo_settings.dart
       - recipes/dashboard/dashboard_overview.dart
       - recipes/dashboard/dashboard_demo.dart
 

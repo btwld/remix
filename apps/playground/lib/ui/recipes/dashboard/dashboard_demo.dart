@@ -3,12 +3,15 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../components/avatar.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
+import '../../components/divider.dart';
 import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/popover.dart';
+import '../../components/segmented_control.dart';
 import '../../components/toast.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -80,6 +83,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
   /// is placed in.
   bool? _dark;
   Brightness? _ambientBrightness;
+  bool _notificationsRead = false;
 
   @override
   void didChangeDependencies() {
@@ -191,27 +195,68 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
         child: ColumnBox(
           style: FlexBoxStyler()
               .mainAxisSize(.min)
-              .crossAxisAlignment(.start)
-              .spacing(PlaygroundTokens.s1_5),
+              .crossAxisAlignment(.stretch)
+              .spacing(PlaygroundTokens.s2),
           children: [
-            StyledText(
-              'Notifications',
-              style: _textStyle(weight: FontWeight.w600),
+            RowBox(
+              style: FlexBoxStyler()
+                  .mainAxisAlignment(.spaceBetween)
+                  .crossAxisAlignment(.center),
+              children: [
+                Flexible(
+                  child: StyledText(
+                    'Notifications',
+                    style: _textStyle(weight: FontWeight.w600),
+                  ),
+                ),
+                if (!_notificationsRead)
+                  PlaygroundButton.ghost(
+                    size: .small,
+                    label: 'Mark all read',
+                    onPressed: () => setState(() => _notificationsRead = true),
+                  ),
+              ],
             ),
-            StyledText(
+            const PlaygroundDivider(),
+            _notificationItem(
               'Order ORD-1047 requires review.',
-              style: _textStyle(token: PlaygroundTokens.textXs),
+              '14m ago',
+              unread: !_notificationsRead,
             ),
-            StyledText(
+            _notificationItem(
               'Three customer invitations are pending.',
-              style: _textStyle(token: PlaygroundTokens.textXs, muted: true),
+              '1h ago',
+              unread: !_notificationsRead,
+            ),
+            _notificationItem(
+              'Payout batch #29 was settled.',
+              '3h ago',
+              unread: false,
             ),
           ],
         ),
       ),
-      child: const PlaygroundIconButton.ghost(
-        icon: RemixIcons.bell,
-        semanticLabel: 'Open notifications',
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          const PlaygroundIconButton.ghost(
+            icon: RemixIcons.bell,
+            semanticLabel: 'Open notifications',
+          ),
+          if (!_notificationsRead)
+            Positioned(
+              right: 8,
+              top: 8,
+              child: IgnorePointer(
+                child: Box(
+                  style: BoxStyler()
+                      .size(7, 7)
+                      .borderRadius(.circular(99))
+                      .color(PlaygroundTokens.primary()),
+                ),
+              ),
+            ),
+        ],
       ),
     ),
     PlaygroundPopover(
@@ -233,6 +278,16 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
                 weight: FontWeight.w600,
               ),
             ),
+            PlaygroundSegmentedControl<bool>(
+              semanticLabel: 'Theme appearance',
+              selectedValue: _isDark,
+              items: const [
+                RemixSegmentedControlItem(value: false, label: 'Light'),
+                RemixSegmentedControlItem(value: true, label: 'Dark'),
+              ],
+              onChanged: (value) => setState(() => _dark = value),
+            ),
+            const PlaygroundDivider(),
             ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)
@@ -260,6 +315,36 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
       Expanded(child: StyledText(label, style: _textStyle())),
       StyledText(value, style: _textStyle(muted: true)),
     ],
+  );
+
+  Widget _notificationItem(
+    String message,
+    String time, {
+    required bool unread,
+  }) => Box(
+    style: BoxStyler()
+        .padding(.all(PlaygroundTokens.s2))
+        .borderRadius(.all(PlaygroundTokens.radiusMd()))
+        .color(unread ? PlaygroundTokens.secondary() : const Color(0x00000000)),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.start)
+          .spacing(PlaygroundTokens.s0_5),
+      children: [
+        StyledText(
+          message,
+          style: _textStyle(
+            token: PlaygroundTokens.textXs,
+            weight: unread ? FontWeight.w500 : FontWeight.w400,
+          ),
+        ),
+        StyledText(
+          time,
+          style: _textStyle(token: PlaygroundTokens.textXs, muted: true),
+        ),
+      ],
+    ),
   );
 }
 
@@ -311,27 +396,67 @@ class _PlaygroundAccount extends StatelessWidget {
   const _PlaygroundAccount();
 
   @override
-  Widget build(BuildContext context) => ColumnBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.stretch)
-        .spacing(PlaygroundTokens.s2),
-    children: [
-      StyledText('Northstar workspace', style: _textStyle(muted: true)),
-      PlaygroundMenu<String>(
-        trigger: const RemixMenuTrigger(
-          label: 'Ada Chen',
-          icon: RemixIcons.person,
+  Widget build(BuildContext context) => PlaygroundMenu<String>(
+    trigger: RemixMenuTrigger.builder(
+      label: 'Ada Chen',
+      icon: RemixIcons.person,
+      builder: (context, _, _) => Box(
+        style: BoxStyler()
+            .padding(
+              .symmetric(
+                horizontal: PlaygroundTokens.s2_5,
+                vertical: PlaygroundTokens.s2,
+              ),
+            )
+            .borderRadius(.all(PlaygroundTokens.radiusMd()))
+            .border(.all(.color(PlaygroundTokens.border())))
+            .color(PlaygroundTokens.card()),
+        child: RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(PlaygroundTokens.s2_5),
+          children: [
+            const PlaygroundAvatar(label: 'AC'),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.start),
+                children: [
+                  StyledText(
+                    'Ada Chen',
+                    style: _textStyle(
+                      weight: FontWeight.w500,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                  StyledText(
+                    'Northstar workspace',
+                    style: _textStyle(
+                      token: PlaygroundTokens.textXs,
+                      muted: true,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                ],
+              ),
+            ),
+            StyledIcon(
+              icon: RemixIcons.dotsHorizontal,
+              style: IconStyler()
+                  .size(PlaygroundTokens.icon)
+                  .color(PlaygroundTokens.mutedForeground()),
+            ),
+          ],
         ),
-        items: const [
-          RemixMenuItem(value: 'account', label: 'Account settings'),
-          RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
-          RemixMenuDivider(),
-          RemixMenuItem(value: 'sign-out', label: 'Sign out'),
-        ],
-        onSelected: (value) =>
-            showRemixToast(context, RemixToastData(title: '$value selected')),
       ),
+    ),
+    items: const [
+      RemixMenuItem(value: 'account', label: 'Account settings'),
+      RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
+      RemixMenuDivider(),
+      RemixMenuItem(value: 'sign-out', label: 'Sign out'),
     ],
+    onSelected: (value) =>
+        showRemixToast(context, RemixToastData(title: '$value selected')),
   );
 }
 
@@ -368,6 +493,7 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PlaygroundDashboardCharts(
     cardBuilder: _chartCard,
+    legendBuilder: (_, chart) => _chartLegend(chart),
     sectionBuilder: (title, description, cards) => ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -587,32 +713,171 @@ const _pieRadius = 96.0;
 PieChartStyler _pieRing([double centerRadius = 0]) =>
     PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
-Widget _chartCard(String title, String description, Widget chart) =>
-    PlaygroundCard(
-      child: ColumnBox(
+Widget _chartCard(
+  String title,
+  String description,
+  Widget chart, {
+  Widget? legend,
+}) => PlaygroundCard(
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s3),
+    children: [
+      ColumnBox(
         style: FlexBoxStyler()
-            .crossAxisAlignment(.stretch)
-            .spacing(PlaygroundTokens.s3),
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s1),
         children: [
-          ColumnBox(
-            style: FlexBoxStyler()
-                .crossAxisAlignment(.start)
-                .spacing(PlaygroundTokens.s1),
-            children: [
-              StyledText(
-                title,
-                style: _textStyle(
-                  token: PlaygroundTokens.textBase,
-                  weight: FontWeight.w600,
-                ),
-              ),
-              StyledText(description, style: _textStyle(muted: true)),
-            ],
+          StyledText(
+            title,
+            style: _textStyle(
+              token: PlaygroundTokens.textBase,
+              weight: FontWeight.w600,
+            ),
           ),
-          Box(style: BoxStyler().height(240), child: chart),
+          StyledText(description, style: _textStyle(muted: true)),
         ],
       ),
-    );
+      ?legend,
+      Box(style: BoxStyler().height(240), child: chart),
+    ],
+  ),
+);
+
+Widget? _chartLegend(PlaygroundDashboardChartCase chart) {
+  final items = switch (chart) {
+    .revenueMomentum => const [
+      PlaygroundChartLegendItem(
+        label: 'Revenue',
+        color: PlaygroundTokens.chart1,
+      ),
+    ],
+    .linePatterns => const [
+      PlaygroundChartLegendItem(
+        label: 'Actual',
+        detail: 'solid',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Plan',
+        detail: 'dashed',
+        color: PlaygroundTokens.chart2,
+        pattern: .dashed,
+      ),
+    ],
+    .stepGaps => const [
+      PlaygroundChartLegendItem(
+        label: 'Inventory',
+        detail: 'step after',
+        color: PlaygroundTokens.chart1,
+      ),
+    ],
+    .viewportLabels => const [
+      PlaygroundChartLegendItem(
+        label: 'Revenue',
+        detail: '3x pan / zoom',
+        color: PlaygroundTokens.chart1,
+      ),
+    ],
+    .groupedBars => const [
+      PlaygroundChartLegendItem(
+        label: 'Actual',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(label: 'Plan', color: PlaygroundTokens.chart2),
+    ],
+    .stackedBars => const [
+      PlaygroundChartLegendItem(
+        label: 'Product',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Services',
+        color: PlaygroundTokens.chart2,
+      ),
+    ],
+    .floatingBars => const [
+      PlaygroundChartLegendItem(
+        label: 'Min–Max range',
+        color: PlaygroundTokens.chart1,
+      ),
+    ],
+    .trackedBars => const [
+      PlaygroundChartLegendItem(
+        label: 'Revenue',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(
+        label: '60k track',
+        color: PlaygroundTokens.muted,
+        pattern: .outlined,
+      ),
+    ],
+    .trafficPie => const [
+      PlaygroundChartLegendItem(
+        label: 'Desktop',
+        detail: '58%',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Mobile',
+        detail: '29%',
+        color: PlaygroundTokens.chart2,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Tablet',
+        detail: '13%',
+        color: PlaygroundTokens.chart3,
+      ),
+    ],
+    .interactivePie => const [
+      PlaygroundChartLegendItem(
+        label: 'Core',
+        detail: '46%',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Add-ons',
+        detail: '31%',
+        color: PlaygroundTokens.chart2,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Services',
+        detail: '23%',
+        color: PlaygroundTokens.chart3,
+      ),
+    ],
+    .badgePie => const [
+      PlaygroundChartLegendItem(
+        label: 'Desktop',
+        detail: 'D',
+        color: PlaygroundTokens.chart1,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Mobile',
+        detail: 'M',
+        color: PlaygroundTokens.chart2,
+      ),
+      PlaygroundChartLegendItem(
+        label: 'Tablet',
+        detail: 'T',
+        color: PlaygroundTokens.chart3,
+      ),
+    ],
+    .emptyPie => null,
+  };
+  if (items == null) return null;
+  return PlaygroundChartLegend(
+    items: items,
+    labelStyle: _textStyle(
+      token: PlaygroundTokens.textXs,
+      weight: FontWeight.w500,
+    ),
+    detailStyle: _textStyle(token: PlaygroundTokens.textXs, muted: true),
+    outlineBorderColor: PlaygroundTokens.border,
+  );
+}
 
 TextStyler _textStyle({
   TextStyleToken token = PlaygroundTokens.textSm,

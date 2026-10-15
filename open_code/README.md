@@ -343,17 +343,17 @@ sources. Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.
 
-All three dogfood consumers are checked against the templates they installed:
+All three workspace consumers are checked against the templates they installed:
 
 ```shell
-fvm dart run tool/check_open_code_dogfood.dart
+fvm dart run tool/check_consumer_apps.dart
 ```
 
 `apps/playground` holds every Vanilla item; `apps/demo` installs the non-Agent
 Fortal catalog; `apps/dashboard` installs the full Fortal catalog, including all
-eight Agent surfaces and recipes. The checker declares the Fortal items
-explicitly, so missing files are checked too. The CLI reads each consumer's
-`remix.yaml` to locate its installed source.
+eight Agent surfaces, recipes, and `dashboard_demo`. The checker derives the
+expected items from each preset's `registry.yaml`, so missing files are checked
+too. The CLI reads each consumer's `remix.yaml` to locate its installed source.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

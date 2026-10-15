@@ -705,6 +705,8 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
       ],
     );
 
+    final footer = _table._paginated ? _buildFooter(context) : null;
+
     return RemixBoxAdapter(
       styleSpec: _spec.container,
       containerEffects: _spec.containerEffects,
@@ -722,10 +724,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    tableContent,
-                    if (_table._paginated) _buildFooter(context),
-                  ],
+                  children: [tableContent, ?footer],
                 ),
               ),
             );
@@ -746,7 +745,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
               // PaginatedDataTable — pagination stays visible while the table
               // scrolls. Its top border spans the viewport, not the laid-out
               // table width.
-              if (_table._paginated) _buildFooter(context),
+              ?footer,
             ],
           );
         },

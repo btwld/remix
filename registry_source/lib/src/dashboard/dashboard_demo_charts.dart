@@ -100,8 +100,16 @@ typedef RegistryDashboardChartBuilder =
       ValueChanged<Object?> onSliceSelected,
     );
 
+typedef RegistryDashboardChartLegendBuilder =
+    Widget? Function(BuildContext context, RegistryDashboardChartCase chart);
+
 typedef RegistryDashboardChartCardBuilder =
-    Widget Function(String title, String description, Widget chart);
+    Widget Function(
+      String title,
+      String description,
+      Widget chart, {
+      Widget? legend,
+    });
 
 typedef RegistryDashboardChartSectionBuilder =
     Widget Function(String title, String description, List<Widget> cards);
@@ -113,11 +121,13 @@ class RegistryDashboardCharts extends StatefulWidget {
     required this.chartBuilder,
     required this.cardBuilder,
     required this.sectionBuilder,
+    this.legendBuilder,
   });
 
   final RegistryDashboardChartBuilder chartBuilder;
   final RegistryDashboardChartCardBuilder cardBuilder;
   final RegistryDashboardChartSectionBuilder sectionBuilder;
+  final RegistryDashboardChartLegendBuilder? legendBuilder;
 
   @override
   State<RegistryDashboardCharts> createState() {
@@ -145,6 +155,7 @@ class _RegistryDashboardChartsState extends State<RegistryDashboardCharts> {
                   _selectedSlice,
                   (value) => setState(() => _selectedSlice = value),
                 ),
+                legend: widget.legendBuilder?.call(context, chart),
               ),
         ]),
     ],
@@ -163,8 +174,12 @@ List<ChartPoint> registryDashboardRevenuePoints(
     ChartPoint(id: point.label, x: index.toDouble(), y: point.value),
 ];
 
-List<BarGroup> registryDashboardGroupedBars() =>
-    _barGroups(const [32, 41, 37, 52, 48, 59], const [29, 36, 40, 45, 50, 54]);
+List<BarGroup> registryDashboardGroupedBars([List<Color>? palette]) =>
+    _barGroups(
+      const [32, 41, 37, 52, 48, 59],
+      const [29, 36, 40, 45, 50, 54],
+      palette: palette,
+    );
 
 List<BarGroup> registryDashboardStackedBars() {
   const product = <double>[21, 28, 25, 34, 31, 38];
@@ -279,13 +294,15 @@ ChartAxis registryDashboardWeekdayAxis() => ChartAxis.numeric(
   interval: 1,
   minIncluded: false,
   maxIncluded: false,
-  labelFormatter: (value) {
-    final index = value.round();
-    return index >= 0 && index < registryDashboardWeekdays.length
-        ? registryDashboardWeekdays[index]
-        : '';
-  },
+  labelFormatter: registryDashboardWeekdayLabel,
 );
+
+String registryDashboardWeekdayLabel(double value) {
+  final index = value.round();
+  return index >= 0 && index < registryDashboardWeekdays.length
+      ? registryDashboardWeekdays[index]
+      : '';
+}
 
 /// A value axis on round steps, from [min] to [max], with half a step of room
 /// at each end.
@@ -329,14 +346,144 @@ const registryDashboardWeekdays = [
 ];
 const registryDashboardMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-List<BarGroup> _barGroups(List<double> first, List<double> second) => [
+List<BarGroup> _barGroups(
+  List<double> first,
+  List<double> second, {
+  List<Color>? palette,
+}) => [
   for (var index = 0; index < first.length; index++)
     BarGroup(
       id: 'month-$index',
       label: registryDashboardMonths[index],
       bars: [
-        BarValue(id: 'actual', label: 'Actual', toY: first[index]),
-        BarValue(id: 'plan', label: 'Plan', toY: second[index]),
+        BarValue(
+          id: 'actual',
+          label: 'Actual',
+          toY: first[index],
+          style: palette != null && palette.isNotEmpty
+              ? BarStyler().color(palette[0])
+              : null,
+        ),
+        BarValue(
+          id: 'plan',
+          label: 'Plan',
+          toY: second[index],
+          style: palette != null && palette.length > 1
+              ? BarStyler()
+                    .color(palette[1].withValues(alpha: 0.22))
+                    .border(BorderSide(color: palette[1], width: 2))
+                    .borderDashArray([4, 3])
+              : null,
+        ),
       ],
     ),
 ];
+
+/// Visual encoding for a [RegistryChartLegend] swatch.
+enum RegistryChartSwatchPattern { solid, dashed, outlined, dot }
+
+/// One series or slice entry in a [RegistryChartLegend].
+final class RegistryChartLegendItem {
+  const RegistryChartLegendItem({
+    required this.label,
+    required this.color,
+    this.detail,
+    this.pattern = .solid,
+  });
+
+  final String label;
+  final ColorToken color;
+  final String? detail;
+  final RegistryChartSwatchPattern pattern;
+}
+
+/// Shared legend for multi-series and part-to-whole dashboard charts.
+class RegistryChartLegend extends StatelessWidget {
+  const RegistryChartLegend({
+    super.key,
+    required this.items,
+    required this.labelStyle,
+    required this.detailStyle,
+    required this.outlineBorderColor,
+  });
+
+  final List<RegistryChartLegendItem> items;
+  final TextStyler labelStyle;
+  final TextStyler detailStyle;
+  final ColorToken outlineBorderColor;
+
+  @override
+  Widget build(BuildContext context) => WrapBox(
+    style: WrapBoxStyler()
+        .spacing(16)
+        .runSpacing(8)
+        .crossAxisAlignment(.center),
+    children: [
+      for (final item in items)
+        RowBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.center)
+              .spacing(6),
+          children: [
+            _RegistryLegendSwatch(
+              item: item,
+              outlineBorderColor: outlineBorderColor,
+            ),
+            StyledText(item.label, style: labelStyle),
+            if (item.detail case final detail?)
+              StyledText(detail, style: detailStyle),
+          ],
+        ),
+    ],
+  );
+}
+
+class _RegistryLegendSwatch extends StatelessWidget {
+  const _RegistryLegendSwatch({
+    required this.item,
+    required this.outlineBorderColor,
+  });
+
+  final RegistryChartLegendItem item;
+  final ColorToken outlineBorderColor;
+
+  @override
+  Widget build(BuildContext context) => switch (item.pattern) {
+    .solid => Box(
+      style: BoxStyler()
+          .size(10, 10)
+          .borderRadius(.circular(3))
+          .color(item.color()),
+    ),
+    .dot => Box(
+      style: BoxStyler()
+          .size(10, 10)
+          .borderRadius(.circular(99))
+          .color(item.color()),
+    ),
+    .outlined => Box(
+      style: BoxStyler()
+          .size(10, 10)
+          .borderRadius(.circular(3))
+          .color(item.color())
+          .border(.color(outlineBorderColor()).width(1)),
+    ),
+    .dashed => RowBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.center)
+          .spacing(2),
+      children: [
+        for (var index = 0; index < 2; index++)
+          Box(
+            style: BoxStyler()
+                .width(5)
+                .height(2.5)
+                .borderRadius(.circular(99))
+                .color(item.color()),
+          ),
+      ],
+    ),
+  };
+}

@@ -133,9 +133,9 @@ class _VanillaGalleryNavigationPageState
           child: ColumnBox(
             style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: [
-              VanillaTabBar(
+              const VanillaTabBar(
                 child: RowBox(
-                  children: const [
+                  children: [
                     VanillaTab(tabId: 'overview', label: 'Overview'),
                     VanillaTab(tabId: 'activity', label: 'Activity'),
                   ],

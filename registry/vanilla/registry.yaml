@@ -304,6 +304,8 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo.dart"
     exports:
       - recipes/dashboard/dashboard_sample_data.dart
+      - recipes/dashboard/dashboard_demo_base.dart
+      - recipes/dashboard/dashboard_demo_chat.dart
       - recipes/dashboard/dashboard_overview.dart
       - recipes/dashboard/dashboard_demo.dart
 

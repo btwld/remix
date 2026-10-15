@@ -2,21 +2,12 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../../components/button.dart';
-import '../../components/callout.dart';
-import '../../components/card.dart';
-import '../../components/checkbox.dart';
-import '../../components/dialog.dart';
-import '../../components/disclosure.dart';
-import '../../components/segmented_control.dart';
-import '../../components/select.dart';
-import '../../components/slider.dart';
-import '../../components/switch.dart';
-import '../../components/textfield.dart';
-import '../../components/text.dart';
-import '../../components/typography.dart';
-
-enum _Appearance { light, dark, system }
+import 'dashboard_demo_page_header.dart';
+import 'dashboard_demo_theme.dart';
+import 'dashboard_demo_theme_panel.dart';
+import 'dashboard_demo_typography.dart';
+import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
 
 class FortalDashboardSettingsPage extends StatefulWidget {
   const FortalDashboardSettingsPage({
@@ -35,257 +26,279 @@ class FortalDashboardSettingsPage extends StatefulWidget {
 
 class _FortalDashboardSettingsPageState
     extends State<FortalDashboardSettingsPage> {
+  final _nameController = TextEditingController(text: 'Leo Farias');
+  final _emailController = TextEditingController(text: 'leo@remix.dev');
+  String _language = 'English (US)';
   bool _productUpdates = true;
   bool _weeklyDigest = false;
-  String _language = 'en';
-  _Appearance _appearance = .system;
-  double _radius = 8;
-
-  _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
-      ? _appearance
-      : switch (widget.darkMode) {
-          false => .light,
-          true => .dark,
-          null => .system,
-        };
+  FortalThemeSettings _fallbackSettings = const FortalThemeSettings();
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: ColumnBox(
-      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-      children: [
-        ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
-          children: const [
-            _Text('Settings', size: 28, emphasized: true),
-            _Text(
-              'Manage your profile, preferences, and workspace.',
-              muted: true,
-            ),
-          ],
-        ),
-        _section(
-          'Profile',
-          'This information appears across your workspace.',
-          ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ambientScope = FortalDashboardThemeScope.maybeOf(context);
+    final effectiveSettings =
+        ambientScope?.settings ??
+        _fallbackSettings.copyWith(
+          appearance: switch (widget.darkMode) {
+            false => FortalThemeMode.light,
+            true => FortalThemeMode.dark,
+            null => _fallbackSettings.appearance,
+          },
+        );
+    final GridBoxStyler profileFields = .equalColumns(
+      2,
+    ).gap(14).onConstraints(const .maxWidth(560), .equalColumns(1).gap(14));
+
+    final content = SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 680),
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
             children: [
-              const FortalTextField(label: 'Full name', hintText: 'Ada Chen'),
-              const FortalTextField(
-                label: 'Email address',
-                hintText: 'ada@northstar.co',
+              const FortalPageHeader(
+                title: 'Settings',
+                description: 'Manage your profile, preferences, and workspace.',
               ),
-              FortalSelect<String>(
-                trigger: const RemixSelectTrigger(placeholder: 'Language'),
-                items: const [
-                  RemixSelectItem(value: 'en', label: 'English'),
-                  RemixSelectItem(value: 'es', label: 'Spanish'),
-                  RemixSelectItem(value: 'fr', label: 'French'),
-                ],
-                selectedValue: _language,
-                onChanged: (value) {
-                  if (value != null) setState(() => _language = value);
-                },
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: FortalButton(
-                  label: 'Save changes',
-                  onPressed: () => _toast(context, 'Profile settings saved'),
+              FortalCard(
+                size: .size3,
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(16),
+                  children: [
+                    const FortalCardHeading(
+                      title: 'Profile',
+                      description:
+                          'Your personal details and communication preferences.',
+                    ),
+                    GridBox(
+                      style: profileFields,
+                      children: [
+                        FortalTextField(
+                          controller: _nameController,
+                          label: 'Name',
+                          hintText: 'Your name',
+                        ),
+                        FortalTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          helperText: 'Domain verification is pending.',
+                          error: true,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      ],
+                    ),
+                    FortalSelect<String>(
+                      trigger: const RemixSelectTrigger(
+                        placeholder: 'Language',
+                      ),
+                      selectedValue: _language,
+                      items: const [
+                        RemixSelectItem(
+                          value: 'English (US)',
+                          label: 'English (US)',
+                        ),
+                        RemixSelectItem(
+                          value: 'English (UK)',
+                          label: 'English (UK)',
+                        ),
+                        RemixSelectItem(value: 'Spanish', label: 'Spanish'),
+                        RemixSelectItem(
+                          value: 'Portuguese',
+                          label: 'Portuguese',
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) setState(() => _language = value);
+                      },
+                    ),
+                    const FortalCardHeading(
+                      title: 'Preferences',
+                      description:
+                          'Choose which workspace activity reaches your inbox.',
+                    ),
+                    _PreferenceRow(
+                      title: 'Product updates',
+                      description: 'News about features and improvements.',
+                      trailing: FortalSwitch(
+                        selected: _productUpdates,
+                        semanticLabel: 'Receive product updates',
+                        onChanged: (value) =>
+                            setState(() => _productUpdates = value),
+                      ),
+                    ),
+                    _PreferenceRow(
+                      title: 'Weekly digest',
+                      description:
+                          'A summary of workspace activity each Monday.',
+                      trailing: FortalCheckbox(
+                        selected: _weeklyDigest,
+                        semanticLabel: 'Receive weekly digest',
+                        onChanged: (value) =>
+                            setState(() => _weeklyDigest = value ?? false),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: FortalButton(
+                        onPressed: () => showRemixToast(
+                          context,
+                          const RemixToastData(
+                            title: 'Profile settings saved',
+                            icon: RemixIcons.checkCircled,
+                          ),
+                        ),
+                        label: 'Save changes',
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        _section(
-          'Preferences',
-          'Choose which workspace activity reaches your inbox.',
-          ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-            children: [
-              _preference(
-                'Product updates',
-                'News about features and improvements.',
-                FortalSwitch(
-                  selected: _productUpdates,
-                  semanticLabel: 'Receive product updates',
-                  onChanged: (value) => setState(() => _productUpdates = value),
+              FortalCard(
+                size: .size3,
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(16),
+                  children: const [
+                    FortalCardHeading(
+                      title: 'Appearance',
+                      description:
+                          'Tune every Fortal theme parameter in real time.',
+                    ),
+                    FortalCallout(
+                      icon: RemixIcons.magicWand,
+                      text: 'Changes apply live across the entire dashboard.',
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: FortalThemePanel(),
+                    ),
+                  ],
                 ),
               ),
-              _preference(
-                'Weekly digest',
-                'A summary of workspace activity each Monday.',
-                FortalCheckbox(
-                  selected: _weeklyDigest,
-                  semanticLabel: 'Receive weekly digest',
-                  onChanged: (value) =>
-                      setState(() => _weeklyDigest = value ?? false),
-                ),
-              ),
-            ],
-          ),
-        ),
-        _section(
-          'Appearance',
-          'Tune the default preset theme with meaningful native values.',
-          ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-            children: [
-              const FortalCallout(
-                icon: RemixIcons.magicWand,
-                text: 'Changes are deterministic and remain local to the demo.',
-              ),
-              ColumnBox(
-                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(8),
-                children: [
-                  const _Text('Color mode', emphasized: true),
-                  FortalSegmentedControl<_Appearance>(
-                    semanticLabel: 'Color mode',
-                    selectedValue: _resolvedAppearance,
-                    items: const [
-                      RemixSegmentedControlItem(value: .light, label: 'Light'),
-                      RemixSegmentedControlItem(value: .dark, label: 'Dark'),
-                      RemixSegmentedControlItem(
-                        value: .system,
-                        label: 'System',
+              FortalAccentScope(
+                accent: .red,
+                child: FortalDisclosure.soft(
+                  key: const ValueKey('settings-danger-zone'),
+                  size: .size3,
+                  animationStyle: fortalDisclosureAnimationStyle,
+                  semanticHint: 'Shows destructive workspace actions',
+                  trigger: const Text('Danger zone'),
+                  triggerBuilder: (context, state, child) =>
+                      FortalDisclosureTrigger(
+                        expanded: state.isExpanded,
+                        child: child!,
+                      ),
+                  content: ColumnBox(
+                    style: FlexBoxStyler()
+                        .crossAxisAlignment(.stretch)
+                        .spacing(12),
+                    children: [
+                      const Text(
+                        'Destructive workspace actions cannot be undone.',
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: FortalButton.outline(
+                          onPressed: _confirmDelete,
+                          label: 'Delete workspace',
+                        ),
                       ),
                     ],
-                    onChanged: (value) {
-                      setState(() => _appearance = value);
-                      widget.onDarkModeChanged?.call(switch (value) {
-                        .light => false,
-                        .dark => true,
-                        .system => null,
-                      });
-                    },
                   ),
-                ],
-              ),
-              ColumnBox(
-                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
-                children: [
-                  _Text(
-                    'Control radius · ${_radius.round()}px',
-                    emphasized: true,
-                  ),
-                  FortalSlider(
-                    value: _radius,
-                    min: 0,
-                    max: 16,
-                    snapDivisions: 16,
-                    onChanged: (value) => setState(() => _radius = value),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        FortalDisclosure(
-          key: const ValueKey('settings-danger-zone'),
-          semanticHint: 'Shows destructive workspace actions',
-          trigger: const _Text('Danger zone', emphasized: true),
-          content: ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
-            children: [
-              const _Text('Destructive workspace actions cannot be undone.'),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: FortalButton.outline(
-                  label: 'Delete workspace',
-                  onPressed: _confirmDelete,
                 ),
               ),
             ],
           ),
         ),
-      ],
-    ),
-  );
+      ),
+    );
+
+    if (ambientScope != null) return content;
+    return FortalDashboardThemeScope(
+      settings: effectiveSettings,
+      onChanged: (next) {
+        setState(() => _fallbackSettings = next);
+        widget.onDarkModeChanged?.call(switch (next.appearance) {
+          .light => false,
+          .dark => true,
+          .system => null,
+        });
+      },
+      child: content,
+    );
+  }
 
   Future<void> _confirmDelete() async {
     final confirmed = await showRemixDialog<bool>(
       context: context,
       barrierLabel: 'Dismiss',
-      builder: (dialogContext) => FortalDialog(
+      builder: (context) => FortalDialog(
         title: 'Delete workspace?',
         description:
             'This demo keeps your data safe, but a real action would be permanent.',
         actions: [
           FortalButton.soft(
+            onPressed: () => Navigator.of(context).pop(false),
             label: 'Cancel',
-            onPressed: () => Navigator.of(dialogContext).pop(false),
           ),
-          FortalButton.solid(
-            label: 'Delete',
-            onPressed: () => Navigator.of(dialogContext).pop(true),
+          FortalAccentScope(
+            accent: .red,
+            child: FortalButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              label: 'Delete',
+            ),
           ),
         ],
       ),
     );
     if (!mounted || confirmed != true) return;
-    _toast(context, 'Demo workspace was not deleted');
+    showRemixToast(
+      context,
+      const RemixToastData(
+        title: 'Demo workspace was not deleted',
+        icon: RemixIcons.infoCircled,
+      ),
+    );
   }
 }
 
-Widget _section(String title, String description, Widget child) => FortalCard(
-  child: ColumnBox(
-    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-    children: [
-      ColumnBox(
-        style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
-        children: [
-          _Text(title, size: 17, emphasized: true),
-          _Text(description, size: 13, muted: true),
-        ],
-      ),
-      child,
-    ],
-  ),
-);
-
-Widget _preference(String title, String description, Widget trailing) => RowBox(
-  style: FlexBoxStyler().crossAxisAlignment(.center).spacing(16),
-  children: [
-    Expanded(
-      child: ColumnBox(
-        style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
-        children: [
-          _Text(title, emphasized: true),
-          _Text(description, size: 13, muted: true),
-        ],
-      ),
-    ),
-    trailing,
-  ],
-);
-
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.size = 14,
-    this.emphasized = false,
-    this.muted = false,
+class _PreferenceRow extends StatelessWidget {
+  const _PreferenceRow({
+    required this.title,
+    required this.description,
+    required this.trailing,
   });
-  final String value;
-  final double size;
-  final bool emphasized;
-  final bool muted;
+
+  final String title;
+  final String description;
+  final Widget trailing;
 
   @override
-  Widget build(BuildContext context) => FortalText(
-    value,
-    size: size >= 24
-        ? FortalTextSize.size7
-        : size >= 18
-        ? FortalTextSize.size4
-        : FortalTextSize.size2,
-    weight: emphasized ? .bold : .regular,
-    highContrast: !muted,
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(
+        child: ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
+          children: [
+            FortalText(title, size: .size2, weight: .medium),
+            StyledText(description, style: dashboardText(.size1, tone: .muted)),
+          ],
+        ),
+      ),
+      trailing,
+    ],
   );
 }
-
-void _toast(BuildContext context, String title) => showRemixToast(
-  context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
-);

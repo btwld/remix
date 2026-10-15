@@ -270,18 +270,79 @@ void main() {
           ],
         };
 
-        for (final entry in expected.entries) {
-          await _pumpDashboard(tester, preset: preset, initialPage: entry.key);
-          for (final label in entry.value) {
-            expect(
-              find.text(label),
-              findsWidgets,
-              reason: '${entry.key.name}: $label',
-            );
+        final mixWarnings = <String>[];
+        final originalDebugPrint = debugPrint;
+        debugPrint = (String? message, {int? wrapWidth}) {
+          if (message != null && message.contains('Mix: could not convert')) {
+            mixWarnings.add(message);
           }
-          expect(tester.takeException(), isNull, reason: entry.key.name);
+        };
+        try {
+          for (final entry in expected.entries) {
+            await _pumpDashboard(
+              tester,
+              preset: preset,
+              initialPage: entry.key,
+            );
+            for (final label in entry.value) {
+              expect(
+                find.text(label),
+                findsWidgets,
+                reason: '${entry.key.name}: $label',
+              );
+            }
+            expect(tester.takeException(), isNull, reason: entry.key.name);
+            expect(mixWarnings, isEmpty, reason: entry.key.name);
+          }
+        } finally {
+          debugPrint = originalDebugPrint;
         }
       });
+
+      testWidgets(
+        'sidebar collapse and expand animate across 16ms frames without overflow or Mix warnings',
+        (tester) async {
+          final mixWarnings = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null && message.contains('Mix: could not convert')) {
+              mixWarnings.add(message);
+            }
+          };
+          try {
+            await _pumpDashboard(tester, preset: preset);
+            expect(mixWarnings, isEmpty);
+
+            await tester.tap(
+              find.byKey(const ValueKey('dashboard-collapse')).first,
+            );
+            for (var frame = 0; frame < 16; frame++) {
+              await tester.pump(const Duration(milliseconds: 16));
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: 'collapse frame $frame',
+              );
+              expect(mixWarnings, isEmpty, reason: 'collapse frame $frame');
+            }
+
+            await tester.tap(
+              find.byKey(const ValueKey('dashboard-collapse')).first,
+            );
+            for (var frame = 0; frame < 16; frame++) {
+              await tester.pump(const Duration(milliseconds: 16));
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: 'expand frame $frame',
+              );
+              expect(mixWarnings, isEmpty, reason: 'expand frame $frame');
+            }
+          } finally {
+            debugPrint = originalDebugPrint;
+          }
+        },
+      );
 
       // mix_chart draws each slice 80px wide whatever box it is given, so a
       // donut whose hole plus ring outgrows half its box is clipped.
@@ -416,7 +477,7 @@ void main() {
           lessThanOrEqualTo(orders.rows.last.amount),
         );
 
-        await tester.tap(find.text('Pending').last);
+        await tester.tap(find.text('Pending').first);
         await tester.pump();
         orders = tester.widget(
           find.byType(RemixDataTable<RegistryDashboardOrder>),

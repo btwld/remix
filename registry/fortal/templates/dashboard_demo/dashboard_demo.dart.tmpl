@@ -3,16 +3,6 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
-import '../../components/button.dart';
-import '../../components/card.dart';
-import '../../components/chart.dart';
-import '../../components/heading.dart';
-import '../../components/icon_button.dart';
-import '../../components/menu.dart';
-import '../../components/popover.dart';
-import '../../components/text.dart';
-import '../../components/toast.dart';
-import '../../theme/theme.dart';
 import '../activity_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
@@ -31,32 +21,356 @@ import 'dashboard_demo_gallery_forms.dart';
 import 'dashboard_demo_gallery_navigation.dart';
 import 'dashboard_demo_gallery_overlays.dart';
 import 'dashboard_demo_gallery_typography.dart';
+import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_records_page.dart';
 import 'dashboard_demo_settings.dart';
+import 'dashboard_demo_text.dart';
+import 'dashboard_demo_theme.dart';
+import 'dashboard_demo_theme_panel.dart';
+import 'dashboard_demo_typography.dart';
+import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
-/// Full {{typePrefix}} dashboard demo.
-///
-/// This is the open-code equivalent of the repository's {{typePrefix}} showcase: it
-/// includes the same Workspace, Data, Manage, and Components destinations,
-/// while demonstrating the Radix-aligned {{typePrefix}} vocabulary honestly.
-class {{typePrefix}}DashboardDemo extends StatefulWidget {
-  const {{typePrefix}}DashboardDemo({
-    super.key,
-    this.brand = const {{typePrefix}}Text(
-      'Northstar',
-      size: .size3,
+/// Product brand supplied through the installed shell's brand slot.
+class {{typePrefix}}DashboardBrand extends StatelessWidget {
+  const {{typePrefix}}DashboardBrand({super.key});
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    key: const ValueKey('dashboard-brand'),
+    label: 'Dashboard',
+    excludeSemantics: true,
+    child: const {{typePrefix}}Text(
+      'Dashboard',
+      size: .size5,
       weight: .bold,
       softWrap: false,
       truncate: true,
     ),
+  );
+}
+
+/// Product account menu supplied through the installed shell's footer slot.
+class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
+  const {{typePrefix}}DashboardSidebarAccount({super.key});
+
+  @override
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(
+      .symmetric(
+        horizontal: {{typePrefix}}Tokens.space2(),
+        vertical: {{typePrefix}}Tokens.space3(),
+      ),
+    ),
+    child: {{typePrefix}}ActionMenu(
+      key: const ValueKey('sidebar-account-trigger'),
+      semanticLabel: 'Workspace account menu',
+      trigger: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: RowBox(
+          style: FlexBoxStyler().crossAxisAlignment(.center).spacing(10),
+          children: [
+            const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.start),
+                children: [
+                  const {{typePrefix}}Text(
+                    'Leo Farias',
+                    size: .size2,
+                    weight: .medium,
+                    softWrap: false,
+                    truncate: true,
+                  ),
+                  StyledText(
+                    'Northstar workspace',
+                    style: dashboardText(
+                      .size1,
+                      tone: .muted,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              {{icon:dotsHorizontal}},
+              size: 18,
+              color: MixScope.tokenOf({{typePrefix}}Tokens.gray11, context),
+            ),
+          ],
+        ),
+      ),
+      actions: const [
+        {{typePrefix}}Action(value: 'profile', label: 'View profile'),
+        {{typePrefix}}Action(value: 'preferences', label: 'Preferences'),
+        {{typePrefix}}Action(value: 'signout', label: 'Sign out', dividerBefore: true),
+      ],
+      onSelected: (value) => showRemixToast(
+        context,
+        RemixToastData(
+          title: value == 'signout'
+              ? 'Signed out of demo'
+              : '${capitalize(value)} opened',
+          icon: {{icon:checkCircled}},
+        ),
+      ),
+    ),
+  );
+}
+
+/// Application-owned toolbar actions supplied to the {{typePrefix}} dashboard shell.
+class {{typePrefix}}DashboardTopBar extends StatefulWidget {
+  const {{typePrefix}}DashboardTopBar({super.key, this.activities = const []});
+
+  final List<{{typePrefix}}DashboardActivity> activities;
+
+  @override
+  State<{{typePrefix}}DashboardTopBar> createState() => _{{typePrefix}}DashboardTopBarState();
+}
+
+class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardTopBar> {
+  final _notificationsController = MenuController();
+  final _themeController = MenuController();
+  bool _notificationsRead = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 600;
+    final isDark = {{typePrefix}}Theme.of(context).isDark;
+
+    return RowBox(
+      style: FlexBoxStyler().spacing({{typePrefix}}Tokens.space2()),
+      children: [
+        KeyedSubtree(
+          key: const ValueKey('dashboard-appearance-toggle'),
+          child: RemixIconButton(
+            key: const ValueKey('theme-quick-toggle'),
+            semanticLabel: isDark
+                ? 'Use light appearance'
+                : 'Use dark appearance',
+            style: _toolbarButtonStyle,
+            onPressed: () {
+              final theme = {{typePrefix}}DashboardThemeScope.of(context);
+              theme.onChanged(
+                theme.settings.copyWith(appearance: isDark ? .light : .dark),
+              );
+            },
+            icon: isDark ? {{icon:sun}} : {{icon:moon}},
+          ),
+        ),
+        if (!compact)
+          {{typePrefix}}Popover(
+            controller: _notificationsController,
+            openOnTap: false,
+            semanticLabel: 'Notifications',
+            positioning: const OverlayPositionConfig(
+              side: .bottom,
+              alignment: .end,
+              sideOffset: 8,
+            ),
+            popoverChild: Box(
+              key: const ValueKey('topbar-notifications-content'),
+              style: BoxStyler().width(330),
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.stretch)
+                    .spacing(10),
+                children: [
+                  RowBox(
+                    style: FlexBoxStyler().crossAxisAlignment(.center),
+                    children: [
+                      const Expanded(
+                        child: {{typePrefix}}Heading(
+                          'Notifications',
+                          headingLevel: 2,
+                          size: .size3,
+                          weight: .medium,
+                        ),
+                      ),
+                      if (!_notificationsRead)
+                        {{typePrefix}}Button.ghost(
+                          size: .size1,
+                          onPressed: () {
+                            setState(() => _notificationsRead = true);
+                            _notificationsController.close();
+                            showRemixToast(
+                              context,
+                              const RemixToastData(
+                                title: 'All notifications marked read',
+                                icon: {{icon:checkCircled}},
+                              ),
+                            );
+                          },
+                          label: 'Mark all read',
+                        ),
+                    ],
+                  ),
+                  for (final event in widget.activities.take(4))
+                    RowBox(
+                      style: FlexBoxStyler()
+                          .crossAxisAlignment(.start)
+                          .spacing(9),
+                      children: [
+                        Box(
+                          style: BoxStyler()
+                              .width(7)
+                              .height(7)
+                              .margin(.top(6))
+                              .color(
+                                _notificationsRead
+                                    ? {{typePrefix}}Tokens.gray6()
+                                    : {{typePrefix}}Tokens.accent9(),
+                              )
+                              .borderRadius(.circular(4)),
+                        ),
+                        Expanded(
+                          child: ColumnBox(
+                            style: FlexBoxStyler()
+                                .crossAxisAlignment(.start)
+                                .spacing(2),
+                            children: [
+                              {{typePrefix}}Text(
+                                event.kind == .alert
+                                    ? 'Order ORD-1047 requires review.'
+                                    : event.title,
+                                size: .size2,
+                                weight: _notificationsRead ? .regular : .medium,
+                              ),
+                              StyledText(
+                                event.relativeTime,
+                                style: dashboardText(.size1, tone: .muted),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+            child: RemixIconButton(
+              semanticLabel: 'Notifications',
+              style: _toolbarButtonStyle,
+              onPressed: _toggleNotifications,
+              icon: {{icon:bell}},
+              iconBuilder: (context, spec, icon) => Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  StyledIcon(
+                    icon: icon,
+                    styleSpec: StyleSpec(spec: spec),
+                  ),
+                  if (!_notificationsRead)
+                    Positioned(
+                      right: -1,
+                      top: -1,
+                      child: Box(
+                        style: BoxStyler()
+                            .width(7)
+                            .height(7)
+                            .color({{typePrefix}}Tokens.accent9())
+                            .borderRadius(.circular(4)),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        {{typePrefix}}Popover(
+          controller: _themeController,
+          openOnTap: false,
+          semanticLabel: 'Theme settings',
+          positioning: const OverlayPositionConfig(
+            side: .bottom,
+            alignment: .end,
+            sideOffset: 8,
+          ),
+          popoverChild: Box(
+            style: BoxStyler().width(400).maxHeight(650),
+            child: const SingleChildScrollView(child: {{typePrefix}}ThemePanel()),
+          ),
+          child: RemixIconButton(
+            key: const ValueKey('theme-panel-trigger'),
+            semanticLabel: 'Theme settings',
+            style: _toolbarButtonStyle,
+            onPressed: _toggleTheme,
+            icon: {{icon:mixerHorizontal}},
+          ),
+        ),
+        if (!compact)
+          {{typePrefix}}ActionMenu(
+            key: const ValueKey('topbar-account-trigger'),
+            semanticLabel: 'Account menu',
+            positioning: const OverlayPositionConfig(
+              side: .bottom,
+              alignment: .end,
+              sideOffset: 8,
+            ),
+            trigger: const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+            actions: const [
+              {{typePrefix}}Action(value: 'profile', label: 'Profile'),
+              {{typePrefix}}Action(value: 'preferences', label: 'Preferences'),
+              {{typePrefix}}Action(
+                value: 'signout',
+                label: 'Sign out',
+                dividerBefore: true,
+              ),
+            ],
+            onSelected: (value) => showRemixToast(
+              context,
+              RemixToastData(
+                title: value == 'signout'
+                    ? 'Signed out of demo'
+                    : 'Opened $value',
+                icon: {{icon:checkCircled}},
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _toggleNotifications() {
+    _notificationsController.isOpen
+        ? _notificationsController.close()
+        : _notificationsController.open();
+  }
+
+  void _toggleTheme() {
+    _themeController.isOpen
+        ? _themeController.close()
+        : _themeController.open();
+  }
+}
+
+final _toolbarButtonStyle = {{valuePrefix}}IconButtonStyle(variant: .ghost)
+    .width(40)
+    .height(40)
+    .padding(.all(0))
+    .margin(.all(0))
+    .container(.alignment(.center));
+
+/// Full {{typePrefix}} dashboard demo.
+///
+/// This is the open-code {{typePrefix}} showcase: it includes the Workspace, Data,
+/// Manage, and Components destinations, live Radix theme customization,
+/// interactive Agent chat, and 12 chart patterns.
+class {{typePrefix}}DashboardDemo extends StatefulWidget {
+  const {{typePrefix}}DashboardDemo({
+    super.key,
+    this.brand = const {{typePrefix}}DashboardBrand(),
     this.account,
     this.headerActions = const [],
     this.onSearchChanged,
     this.data = {{valuePrefix}}DashboardSampleData,
     this.initialPage = {{typePrefix}}DashboardDemoPage.overview,
+    this.initialSettings = const {{typePrefix}}ThemeSettings(),
     this.collapsed,
     this.initiallyCollapsed = false,
     this.onCollapsedChanged,
@@ -70,6 +384,7 @@ class {{typePrefix}}DashboardDemo extends StatefulWidget {
   final ValueChanged<String>? onSearchChanged;
   final {{typePrefix}}DashboardSampleData data;
   final {{typePrefix}}DashboardDemoPage initialPage;
+  final {{typePrefix}}ThemeSettings initialSettings;
   final bool? collapsed;
   final bool initiallyCollapsed;
   final ValueChanged<bool>? onCollapsedChanged;
@@ -81,26 +396,46 @@ class {{typePrefix}}DashboardDemo extends StatefulWidget {
 }
 
 class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDemo> {
-  /// The appearance the toggle chose, or null to follow the scope this demo
-  /// is placed in.
-  bool? _dark;
+  late {{typePrefix}}ThemeSettings _settings = widget.initialSettings;
   bool? _ambientIsDark;
+
+  @override
+  void didUpdateWidget(covariant {{typePrefix}}DashboardDemo oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSettings != oldWidget.initialSettings) {
+      _settings = widget.initialSettings;
+    }
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final ambient = {{typePrefix}}Theme.maybeOf(context)?.isDark;
     if (_ambientIsDark != null && ambient != _ambientIsDark) {
-      _dark = null;
+      _settings = _settings.copyWith(appearance: .system);
     }
     _ambientIsDark = ambient;
   }
 
-  bool get _isDark => _dark ?? ({{typePrefix}}Theme.maybeOf(context)?.isDark ?? false);
+  bool _resolveIsDark(BuildContext context, {{typePrefix}}ThemeSettings settings) {
+    final platformDark =
+        MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+    final ambientDark = {{typePrefix}}Theme.maybeOf(context)?.isDark ?? false;
+    return switch (settings.appearance) {
+      .light => false,
+      .dark => true,
+      .system => platformDark || ambientDark,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
-    const kit = _{{typePrefix}}DashboardDemoKit();
+    final ambientScope = {{typePrefix}}DashboardThemeScope.maybeOf(context);
+    final activeSettings = ambientScope?.settings ?? _settings;
+    final onSettingsChanged =
+        ambientScope?.onChanged ??
+        ({{typePrefix}}ThemeSettings next) => setState(() => _settings = next);
+    final isDark = _resolveIsDark(context, activeSettings);
     final demo = {{typePrefix}}DashboardDemoBase(
       initialPage: widget.initialPage,
       shellBuilder:
@@ -118,15 +453,15 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
             onSelected: onSelected,
             body: body,
             title: title,
-            headerTitle: widget.builtInChrome
-                ? _{{typePrefix}}Breadcrumb(page: selectedValue)
-                : null,
             brand: widget.brand,
             account:
                 widget.account ??
-                (widget.builtInChrome ? const _{{typePrefix}}Account() : null),
+                (widget.builtInChrome
+                    ? const {{typePrefix}}DashboardSidebarAccount()
+                    : null),
             headerActions: [
-              if (widget.builtInChrome) ..._chromeActions(),
+              if (widget.builtInChrome)
+                {{typePrefix}}DashboardTopBar(activities: widget.data.activities),
               ...widget.headerActions,
             ],
             onSearchChanged:
@@ -152,155 +487,59 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         .customers => {{typePrefix}}DashboardCustomersPage(globalQuery: query),
         .orders => {{typePrefix}}DashboardOrdersPage(globalQuery: query),
         .settings => {{typePrefix}}DashboardSettingsPage(
-          darkMode: _dark,
-          onDarkModeChanged: (value) => setState(() => _dark = value),
+          darkMode: switch (activeSettings.appearance) {
+            .light => false,
+            .dark => true,
+            .system => null,
+          },
+          onDarkModeChanged: (value) => onSettingsChanged(
+            activeSettings.copyWith(
+              appearance: switch (value) {
+                false => .light,
+                true => .dark,
+                null => .system,
+              },
+            ),
+          ),
         ),
+        .charts => {{typePrefix}}ChartsPage(data: widget.data),
         .actions => const {{typePrefix}}GalleryActionsPage(),
         .forms => const {{typePrefix}}GalleryFormsPage(),
         .dataDisplay => const {{typePrefix}}GalleryDisplayPage(),
         .overlays => const {{typePrefix}}GalleryOverlaysPage(),
         .navigation => const {{typePrefix}}GalleryNavigationPage(),
         .typography => const {{typePrefix}}GalleryTypographyPage(),
-        _ => {{typePrefix}}DashboardDemoContent(
-          page: page,
-          kit: kit,
-          data: widget.data,
-        ),
       },
     );
-    if (!widget.builtInChrome) return demo;
-    return {{typePrefix}}Theme(
-      mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
-      child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
+    if (!widget.builtInChrome || ambientScope != null) return demo;
+    return {{typePrefix}}DashboardThemeScope(
+      settings: _settings,
+      onChanged: onSettingsChanged,
+      child: {{typePrefix}}Theme(
+        key: const ValueKey('dashboard-theme-scope'),
+        mode: isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
+        accent: _settings.accentColor,
+        gray: _settings.grayColor,
+        panelBackground: _settings.panelBackground,
+        radius: _settings.radius,
+        scaling: _settings.scaling,
+        child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
+      ),
     );
   }
-
-  List<Widget> _chromeActions() => [
-    {{typePrefix}}IconButton.ghost(
-      key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _isDark ? {{icon:sun}} : {{icon:moon}},
-      semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
-      onPressed: () => setState(() => _dark = !_isDark),
-    ),
-    {{typePrefix}}Popover(
-      semanticLabel: 'Notifications',
-      popoverChild: Box(
-        style: BoxStyler().width(280).padding(.all(16)),
-        child: ColumnBox(
-          style: FlexBoxStyler()
-              .mainAxisSize(.min)
-              .crossAxisAlignment(.start)
-              .spacing(6),
-          children: const [
-            {{typePrefix}}Text('Notifications', weight: .bold),
-            {{typePrefix}}Text('Order ORD-1047 requires review.', size: .size2),
-            {{typePrefix}}Text('Three customer invitations are pending.', size: .size2),
-          ],
-        ),
-      ),
-      child: const {{typePrefix}}IconButton.ghost(
-        icon: {{icon:bell}},
-        semanticLabel: 'Open notifications',
-      ),
-    ),
-    {{typePrefix}}Popover(
-      semanticLabel: 'Theme settings',
-      popoverChild: Box(
-        style: BoxStyler().width(300).padding(.all(16)),
-        child: ColumnBox(
-          style: FlexBoxStyler()
-              .mainAxisSize(.min)
-              .crossAxisAlignment(.stretch)
-              .spacing(12),
-          children: [
-            const {{typePrefix}}Text('Theme settings', size: .size4, weight: .bold),
-            ColumnBox(
-              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
-              children: [
-                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-                _settingLine('Accent color', 'Indigo'),
-                _settingLine('Gray color', 'Slate'),
-                _settingLine('Radius', 'Medium'),
-                _settingLine('Scaling', '100%'),
-              ],
-            ),
-          ],
-        ),
-      ),
-      child: const {{typePrefix}}IconButton.ghost(
-        icon: {{icon:gear}},
-        semanticLabel: 'Open theme settings',
-      ),
-    ),
-  ];
-
-  Widget _settingLine(String label, String value) => RowBox(
-    style: FlexBoxStyler().crossAxisAlignment(.center),
-    children: [
-      Expanded(child: {{typePrefix}}Text(label, size: .size2)),
-      {{typePrefix}}Text(value, size: .size1, highContrast: false),
-    ],
-  );
 }
 
-class _{{typePrefix}}Breadcrumb extends StatelessWidget {
-  const _{{typePrefix}}Breadcrumb({required this.page});
-  final {{typePrefix}}DashboardDemoPage page;
+/// Charts gallery page for the {{typePrefix}} dashboard.
+class {{typePrefix}}ChartsPage extends StatelessWidget {
+  const {{typePrefix}}ChartsPage({super.key, this.data = {{valuePrefix}}DashboardSampleData});
+
+  final {{typePrefix}}DashboardSampleData data;
 
   @override
-  Widget build(BuildContext context) => RowBox(
-    style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
-    children: [
-      Flexible(
-        child: {{typePrefix}}Text(
-          page.section.label,
-          size: .size2,
-          highContrast: false,
-          softWrap: false,
-          truncate: true,
-        ),
-      ),
-      const {{typePrefix}}Text('/', size: .size2, highContrast: false),
-      Flexible(
-        child: {{typePrefix}}Text(
-          page.label,
-          size: .size3,
-          weight: .bold,
-          softWrap: false,
-          truncate: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _{{typePrefix}}Account extends StatelessWidget {
-  const _{{typePrefix}}Account();
-
-  @override
-  Widget build(BuildContext context) => ColumnBox(
-    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
-    children: [
-      const {{typePrefix}}Text(
-        'Northstar workspace',
-        size: .size1,
-        highContrast: false,
-      ),
-      {{typePrefix}}Menu<String>(
-        trigger: const RemixMenuTrigger(
-          label: 'Ada Chen',
-          icon: {{icon:person}},
-        ),
-        items: const [
-          RemixMenuItem(value: 'account', label: 'Account settings'),
-          RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
-          RemixMenuDivider(),
-          RemixMenuItem(value: 'sign-out', label: 'Sign out'),
-        ],
-        onSelected: (value) =>
-            showRemixToast(context, RemixToastData(title: '$value selected')),
-      ),
-    ],
+  Widget build(BuildContext context) => {{typePrefix}}DashboardDemoContent(
+    page: {{typePrefix}}DashboardDemoPage.charts,
+    kit: const _{{typePrefix}}DashboardDemoKit(),
+    data: data,
   );
 }
 
@@ -308,12 +547,10 @@ final class _{{typePrefix}}DashboardDemoKit implements {{typePrefix}}DashboardDe
   const _{{typePrefix}}DashboardDemoKit();
 
   @override
-  Widget pageHeader(String title, String description) => ColumnBox(
-    style: FlexBoxStyler().crossAxisAlignment(.start).spacing(6),
-    children: [
-      {{typePrefix}}Heading(title, size: .size7),
-      {{typePrefix}}Text(description, size: .size2, highContrast: false),
-    ],
+  Widget pageHeader(String title, String description) => {{typePrefix}}PageHeader(
+    title: title,
+    description:
+        'Native chart patterns for comparison, composition, interaction, and empty states.',
   );
 
   @override
@@ -327,223 +564,380 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
   final {{typePrefix}}DashboardSampleData data;
 
   @override
-  Widget build(BuildContext context) => {{typePrefix}}DashboardCharts(
-    cardBuilder: _chartCard,
-    sectionBuilder: (title, description, cards) => ColumnBox(
-      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
-      children: [
-        ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+  Widget build(BuildContext context) {
+    final palette = resolve{{typePrefix}}ChartPalette(context);
+
+    return KeyedSubtree(
+      key: const ValueKey('charts-page'),
+      child: {{typePrefix}}DashboardCharts(
+        cardBuilder: (title, description, chart, {legend}) => {{typePrefix}}ChartCard(
+          title: title,
+          description: description,
+          legend: legend,
+          chartPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 12,
+          ),
+          chart: chart,
+        ),
+        legendBuilder: (_, chart) => _chartLegend(chart, palette),
+        sectionBuilder: (title, description, cards) => ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
           children: [
-            {{typePrefix}}Heading(title, headingLevel: 2, size: .size4),
-            {{typePrefix}}Text(description, size: .size2, highContrast: false),
+            ColumnBox(
+              style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+              children: [
+                {{typePrefix}}SectionLabel(title),
+                StyledText(
+                  description,
+                  style: dashboardText(.size2, tone: .muted),
+                ),
+              ],
+            ),
+            GridBox(
+              style: GridBoxStyler.equalColumns(2)
+                  .gap(16)
+                  .onConstraints(
+                    const .maxWidth(860),
+                    .equalColumns(1).gap(16),
+                  ),
+              children: cards,
+            ),
           ],
         ),
-        GridBox(
-          style: GridBoxStyler.equalColumns(2)
-              .gap(16)
-              .onConstraints(const .maxWidth(759), .equalColumns(1).gap(16)),
-          children: cards,
-        ),
-      ],
-    ),
-    chartBuilder: (context, chart, selected, onSelected) => switch (chart) {
-      .revenueMomentum => {{typePrefix}}LineChart(
-        showMarkers: true,
-        semanticsLabel: 'Weekly revenue momentum',
-        series: [
-          LineSeries(
-            id: 'revenue',
-            label: 'Revenue',
-            points: {{valuePrefix}}DashboardRevenuePoints(data),
-          ),
-        ],
-        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
-        style: {{valuePrefix}}DashboardLineStyle(),
-      ),
-      .linePatterns => {{typePrefix}}LineChart(
-        showMarkers: true,
-        semanticsLabel: 'Weekly actual and planned revenue',
-        series: [
-          LineSeries(
-            id: 'actual',
-            label: 'Actual',
-            points: {{valuePrefix}}DashboardPoints('actual', const [
-              18,
-              24,
-              22,
-              34,
-              31,
-              42,
-              48,
-            ]),
-          ),
-          LineSeries(
-            id: 'plan',
-            label: 'Plan',
-            points: {{valuePrefix}}DashboardPoints('plan', const [
-              16,
-              20,
-              25,
-              28,
-              34,
-              37,
-              41,
-            ]),
-            style: LineSeriesStyler()
-                .stroke(ChartStrokeStyler().dashArray([6, 4]))
-                .marker(ChartMarkerStyler().show(true).shape(.square)),
-          ),
-        ],
-        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
-        style: {{valuePrefix}}DashboardLineStyle(),
-      ),
-      .stepGaps => {{typePrefix}}LineChart(
-        showMarkers: true,
-        semanticsLabel: 'Inventory levels with missing observations',
-        series: [
-          LineSeries(
-            id: 'inventory',
-            label: 'Inventory',
-            points: {{valuePrefix}}DashboardPoints('inventory', const [
-              32,
-              27,
-              null,
-              null,
-              19,
-              25,
-              22,
-            ]),
-            style: LineSeriesStyler().curve(.stepAfter),
-          ),
-        ],
-        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
-        style: {{valuePrefix}}DashboardLineStyle(),
-      ),
-      .viewportLabels => {{typePrefix}}LineChart(
-        showMarkers: true,
-        semanticsLabel: 'Revenue chart with scalable horizontal viewport',
-        viewport: ChartViewport(axis: .horizontal, maxScale: 3),
-        series: [
-          LineSeries(
-            id: 'viewport',
-            label: 'Revenue',
-            points: {{valuePrefix}}DashboardPoints('viewport', const [
-              18,
-              24,
-              22,
-              34,
-              31,
-              42,
-              48,
-            ]),
-          ),
-        ],
-        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
-        style: {{valuePrefix}}DashboardLineStyle(),
-      ),
-      .groupedBars => {{typePrefix}}BarChart(
-        semanticsLabel: 'Monthly actual and planned revenue',
-        groups: {{valuePrefix}}DashboardGroupedBars(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
-        style: {{valuePrefix}}DashboardBarStyle(),
-      ),
-      .stackedBars => {{typePrefix}}BarChart(
-        semanticsLabel: 'Monthly product and services revenue',
-        groups: {{valuePrefix}}DashboardStackedBars(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
-        style: {{valuePrefix}}DashboardBarStyle(),
-      ),
-      .floatingBars => {{typePrefix}}BarChart(
-        semanticsLabel: 'Monthly floating inventory changes',
-        groups: {{valuePrefix}}DashboardFloatingBars(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
-        style: {{valuePrefix}}DashboardBarStyle(),
-      ),
-      .trackedBars => {{typePrefix}}BarChart(
-        semanticsLabel: 'Monthly revenue against full-scale tracks',
-        groups: {{valuePrefix}}DashboardTrackedBars(),
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 70),
-        style: {{valuePrefix}}DashboardBarStyle(),
-      ),
-      .trafficPie => {{typePrefix}}PieChart(
-        style: _pieRing(),
-        semanticsLabel: 'Traffic share by device',
-        slices: {{valuePrefix}}DashboardChannelSlices(),
-        valueFormatter: (value) => '${value.toInt()}%',
-      ),
-      .interactivePie => {{typePrefix}}PieChart(
-        centerRadius: 40,
-        style: _pieRing(40),
-        semanticsLabel: 'Product mix',
-        slices: {{valuePrefix}}DashboardProductSlices(),
-        selectedSliceIds: {?selected},
-        onSliceTap: (hit) => onSelected(hit.sliceId),
-        valueFormatter: (value) => '${value.toInt()}%',
-      ),
-      .badgePie => {{typePrefix}}PieChart(
-        centerRadius: 34,
-        style: _pieRing(34),
-        semanticsLabel: 'Device traffic with badge markers',
-        slices: {{valuePrefix}}DashboardChannelSlices(badges: true),
-      ),
-      .emptyPie => StackBox(
-        style: StackBoxStyler().alignment(.center),
-        children: [
-          {{typePrefix}}PieChart(
-            centerRadius: 52,
-            style: _pieRing(52),
-            semanticsLabel: 'No channel data',
-            slices: {{valuePrefix}}DashboardEmptySlices(),
-          ),
-          ColumnBox(
-            style: FlexBoxStyler()
-                .mainAxisSize(.min)
-                .crossAxisAlignment(.center)
-                .spacing(6),
-            children: const [
-              Icon({{icon:box}}, size: 20),
-              {{typePrefix}}Text('No data yet', size: .size1),
+        chartBuilder: (context, chart, selected, onSelected) => switch (chart) {
+          .revenueMomentum => {{typePrefix}}LineChart(
+            palette: palette,
+            showMarkers: true,
+            semanticsLabel: 'Weekly revenue momentum',
+            series: [
+              LineSeries(
+                id: 'revenue',
+                label: 'Revenue',
+                points: {{valuePrefix}}DashboardRevenuePoints(data),
+              ),
             ],
+            xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
+            style: {{valuePrefix}}DashboardLineStyle(),
           ),
-        ],
-      ),
-    },
-  );
-}
-
-/// How far every pie on the charts page reaches: 80% of the way to the edge
-/// of its 240px box.
-///
-/// mix_chart draws each slice 80px wide whatever the box, so a donut left at
-/// that default spills out of the box by the width of its hole.
-const _pieRadius = 96.0;
-
-/// A pie ring that ends at [_pieRadius] around a hole of [centerRadius].
-PieChartStyler _pieRing([double centerRadius = 0]) =>
-    PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
-
-Widget _chartCard(String title, String description, Widget chart) =>
-    {{typePrefix}}Card.surface(
-      size: .size2,
-      child: ColumnBox(
-        style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
-        children: [
-          ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+          .linePatterns => {{typePrefix}}LineChart(
+            key: const ValueKey('charts-line-patterns'),
+            palette: palette,
+            showMarkers: true,
+            semanticsLabel: 'Weekly actual and planned revenue',
+            series: [
+              LineSeries(
+                id: 'actual',
+                label: 'Actual',
+                points: {{valuePrefix}}DashboardPoints('actual', const [
+                  18,
+                  24,
+                  22,
+                  34,
+                  31,
+                  42,
+                  48,
+                ]),
+              ),
+              LineSeries(
+                id: 'plan',
+                label: 'Plan',
+                points: {{valuePrefix}}DashboardPoints('plan', const [
+                  16,
+                  20,
+                  25,
+                  28,
+                  34,
+                  37,
+                  41,
+                ]),
+                style: LineSeriesStyler()
+                    .stroke(ChartStrokeStyler().dashArray([6, 4]).width(2.5))
+                    .marker(
+                      ChartMarkerStyler().show(true).shape(.square).radius(3.5),
+                    ),
+              ),
+            ],
+            xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
+            style: {{valuePrefix}}DashboardLineStyle(),
+          ),
+          .stepGaps => {{typePrefix}}LineChart(
+            palette: palette,
+            showMarkers: true,
+            semanticsLabel: 'Inventory levels with missing observations',
+            series: [
+              LineSeries(
+                id: 'inventory',
+                label: 'Inventory',
+                points: {{valuePrefix}}DashboardPoints('inventory', const [
+                  32,
+                  27,
+                  null,
+                  null,
+                  19,
+                  25,
+                  22,
+                ]),
+                style: LineSeriesStyler()
+                    .curve(.stepAfter)
+                    .marker(ChartMarkerStyler().show(true).shape(.square)),
+              ),
+            ],
+            xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
+            style: {{valuePrefix}}DashboardLineStyle(),
+          ),
+          .viewportLabels => LayoutBuilder(
+            builder: (context, constraints) => {{typePrefix}}LineChart(
+              palette: palette,
+              showMarkers: true,
+              semanticsLabel: 'Revenue chart with scalable horizontal viewport',
+              viewport: ChartViewport(axis: .horizontal, maxScale: 3),
+              series: [
+                LineSeries(
+                  id: 'viewport',
+                  label: 'Revenue',
+                  points: {{valuePrefix}}DashboardPoints('viewport', const [
+                    18,
+                    24,
+                    22,
+                    34,
+                    31,
+                    42,
+                    48,
+                  ]),
+                ),
+              ],
+              xAxis: ChartAxis.numeric(
+                min: 0,
+                max: 6,
+                interval: constraints.maxWidth < 360 ? 3 : 1,
+                labelFormatter: {{valuePrefix}}DashboardWeekdayLabel,
+                labelBuilder: (_, label) => {{typePrefix}}Badge.soft(
+                  size: .size1,
+                  highContrast: true,
+                  label: label.formattedValue,
+                ),
+              ),
+              yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
+              style: {{valuePrefix}}DashboardLineStyle(),
+            ),
+          ),
+          .groupedBars => {{typePrefix}}BarChart(
+            key: const ValueKey('charts-bar-grouped'),
+            palette: palette,
+            semanticsLabel: 'Monthly actual and planned revenue',
+            groups: {{valuePrefix}}DashboardGroupedBars(palette),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
+            style: {{valuePrefix}}DashboardBarStyle(),
+          ),
+          .stackedBars => {{typePrefix}}BarChart(
+            palette: palette,
+            semanticsLabel: 'Monthly product and services revenue',
+            groups: {{valuePrefix}}DashboardStackedBars(),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 60),
+            style: {{valuePrefix}}DashboardBarStyle(),
+          ),
+          .floatingBars => {{typePrefix}}BarChart(
+            palette: palette,
+            semanticsLabel: 'Monthly floating inventory changes',
+            groups: {{valuePrefix}}DashboardFloatingBars(),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 40),
+            style: {{valuePrefix}}DashboardBarStyle(),
+          ),
+          .trackedBars => {{typePrefix}}BarChart(
+            palette: palette,
+            semanticsLabel: 'Monthly revenue against full-scale tracks',
+            groups: {{valuePrefix}}DashboardTrackedBars(),
+            yAxis: {{valuePrefix}}DashboardNumericAxis(max: 70),
+            style: {{valuePrefix}}DashboardBarStyle(),
+          ),
+          .trafficPie => PieChart(
+            style: {{valuePrefix}}PieChartStyle(
+              palette: palette,
+            ).slice(PieSliceStyler().radius(72)),
+            semanticsLabel: 'Traffic share by device',
+            slices: {{valuePrefix}}DashboardChannelSlices(),
+            valueFormatter: (value) => '${value.toInt()}%',
+          ),
+          .interactivePie => PieChart(
+            style: {{valuePrefix}}PieChartStyle(
+              palette: palette,
+              centerRadius: 40,
+            ).slice(PieSliceStyler().radius(36)),
+            semanticsLabel: 'Product mix',
+            slices: {{valuePrefix}}DashboardProductSlices(),
+            selectedSliceIds: {?selected},
+            onSliceTap: (hit) => onSelected(hit.sliceId),
+            valueFormatter: (value) => '${value.toInt()}%',
+          ),
+          .badgePie => PieChart(
+            style: {{valuePrefix}}PieChartStyle(
+              palette: palette,
+              centerRadius: 34,
+            ).slice(PieSliceStyler().radius(48).badgePosition(0.72)),
+            semanticsLabel: 'Device traffic with badge markers',
+            slices: {{valuePrefix}}DashboardChannelSlices(badges: true),
+            valueFormatter: (value) => '${value.toInt()}%',
+          ),
+          .emptyPie => StackBox(
+            style: StackBoxStyler().alignment(.center),
             children: [
-              {{typePrefix}}Heading(title, headingLevel: 3, size: .size3),
-              {{typePrefix}}Text(description, size: .size1, highContrast: false),
+              {{typePrefix}}PieChart(
+                palette: palette,
+                centerRadius: 52,
+                style: PieChartStyler().slice(PieSliceStyler().radius(32)),
+                semanticsLabel: 'No channel data',
+                slices: {{valuePrefix}}DashboardEmptySlices(),
+              ),
+              ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.center)
+                    .spacing(6),
+                children: [
+                  StyledIcon(
+                    icon: {{icon:box}},
+                    style: IconStyler().size(20).color({{typePrefix}}Tokens.gray11()),
+                  ),
+                  StyledText(
+                    'No data yet',
+                    style: dashboardText(.size1, tone: .muted),
+                  ),
+                ],
+              ),
             ],
           ),
-          Box(style: BoxStyler().height(240), child: chart),
-        ],
+        },
       ),
     );
+  }
+}
+
+Widget? _chartLegend({{typePrefix}}DashboardChartCase chart, List<Color> palette) =>
+    switch (chart) {
+      .revenueMomentum => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Revenue series legend',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'revenue',
+            label: 'Revenue',
+            color: palette[0],
+          ),
+        ],
+      ),
+      .linePatterns => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Actual and plan line patterns',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'actual',
+            label: 'Actual',
+            color: palette[0],
+          ),
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'plan',
+            label: 'Plan',
+            color: palette[1],
+            pattern: .dashed,
+          ),
+        ],
+      ),
+      .stepGaps => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Inventory series legend',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'inventory',
+            label: 'Inventory',
+            color: palette[0],
+          ),
+        ],
+      ),
+      .viewportLabels => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Viewport revenue legend',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'viewport-revenue',
+            label: 'Revenue',
+            color: palette[0],
+          ),
+        ],
+      ),
+      .groupedBars => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Actual and plan bar patterns',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'actual',
+            label: 'Actual',
+            color: palette[0],
+          ),
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'plan',
+            label: 'Plan',
+            color: palette[1],
+            pattern: .dashed,
+          ),
+        ],
+      ),
+      .stackedBars => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Revenue mix legend',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'product',
+            label: 'Product',
+            color: palette[0],
+          ),
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'services',
+            label: 'Services',
+            color: palette[1],
+          ),
+        ],
+      ),
+      .floatingBars => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Floating changes legend',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'change',
+            label: 'Change range',
+            color: palette[2],
+          ),
+        ],
+      ),
+      .trackedBars => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Tracked revenue legend',
+        items: [
+          {{typePrefix}}DashboardChartLegendItem(
+            id: 'tracked',
+            label: 'Revenue',
+            color: palette[0],
+          ),
+        ],
+      ),
+      .trafficPie => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Traffic channel legend',
+        items: {{valuePrefix}}PercentagePieLegendItems(
+          slices: {{valuePrefix}}DashboardChannelSlices(),
+          palette: palette,
+        ),
+      ),
+      .badgePie => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Badge marker chart legend',
+        items: {{valuePrefix}}PercentagePieLegendItems(
+          slices: {{valuePrefix}}DashboardChannelSlices(),
+          palette: palette,
+        ),
+      ),
+      .interactivePie => {{typePrefix}}DashboardChartLegend(
+        semanticLabel: 'Product mix legend',
+        items: {{valuePrefix}}PercentagePieLegendItems(
+          slices: {{valuePrefix}}DashboardProductSlices(),
+          palette: palette,
+        ),
+      ),
+      .emptyPie => null,
+    };
 
 {{typePrefix}}DashboardAgentStyles _{{valuePrefix}}AgentStyles() {
   final message = {{valuePrefix}}AgentMessageRecipe();

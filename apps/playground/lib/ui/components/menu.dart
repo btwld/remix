@@ -81,9 +81,12 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .spacing(PlaygroundTokens.s2)
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .label(
-      .style(
-        PlaygroundTokens.textSm.mix(),
-      ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
+      .style(PlaygroundTokens.textSm.mix())
+          .fontWeight(FontWeight.w500)
+          .color(PlaygroundTokens.foreground())
+          .maxLines(1)
+          .softWrap(false)
+          .overflow(.ellipsis),
     )
     .icon(.size(PlaygroundTokens.icon).color(PlaygroundTokens.foreground()))
     .onHovered(.color(PlaygroundTokens.accent()))

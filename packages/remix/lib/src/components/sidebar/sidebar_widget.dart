@@ -896,15 +896,45 @@ final class _SidebarDestinationStyler extends ToggleStyler {
 
   @override
   StyleSpec<ToggleSpec> resolve(BuildContext context) {
-    return defaultStyle
-        .merge(SidebarStyler(destination: itemStyle))
-        .build(context)
-        .spec
-        .destination;
+    return _SidebarDestinationProjection(
+      defaultStyle,
+      itemStyle,
+    ).build(context).spec.destination;
   }
 
   @override
   List<Object?> get props => [defaultStyle, itemStyle];
+}
+
+/// Projects a destination only after Mix has merged the sidebar's active variants.
+final class _SidebarDestinationProjection extends SidebarStyler {
+  _SidebarDestinationProjection(this.source, this.itemStyle)
+    : super.create(variants: source.$variants);
+
+  final SidebarStyler source;
+  final ToggleStyler itemStyle;
+
+  @override
+  SidebarStyler merge(SidebarStyler? other) =>
+      _SidebarDestinationProjection(source.merge(other), itemStyle);
+
+  @override
+  StyleSpec<SidebarSpec> resolve(BuildContext context) {
+    final mergedStyle = MixOps.merge(
+      source.$destination,
+      Prop.maybeMix<StyleSpec<ToggleSpec>>(itemStyle),
+    );
+    return StyleSpec(
+      spec: SidebarSpec(
+        destination:
+            MixOps.resolve(context, mergedStyle) ??
+            const StyleSpec(spec: ToggleSpec()),
+      ),
+    );
+  }
+
+  @override
+  List<Object?> get props => [source, itemStyle];
 }
 
 /// Adapts a nested raw destination spec to the destination's style input so its

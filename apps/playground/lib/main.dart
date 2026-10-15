@@ -1,45 +1,58 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/semantics.dart' show SemanticsBinding;
-
+import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
-import 'registry/component_registry.dart';
-import 'routes/playground_home.dart';
-
 void main() {
-  // Ensure bindings are initialized before enabling semantics
   WidgetsFlutterBinding.ensureInitialized();
-  // Enable accessible semantics for automation tools (e.g., Playwright)
+  // Web paints to canvas; without a live semantics tree the page has no
+  // accessible names for browser review or Playwright clicks.
   if (kIsWeb) SemanticsBinding.instance.ensureSemantics();
-  runApp(const _App());
+  runApp(const PlaygroundApp());
 }
 
-class _App extends StatelessWidget {
-  const _App();
+class AppScrollBehavior extends ScrollBehavior {
+  const AppScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    ...super.dragDevices,
+    PointerDeviceKind.mouse,
+  };
+}
+
+class PlaygroundApp extends StatelessWidget {
+  const PlaygroundApp({super.key, this.mode = PlaygroundThemeMode.light});
+
+  final PlaygroundThemeMode mode;
 
   @override
   Widget build(BuildContext context) {
-    const defineKey = String.fromEnvironment('COMPONENT', defaultValue: '');
-    final queryKey = kIsWeb ? Uri.base.queryParameters['component'] ?? '' : '';
-    final key = (defineKey.isNotEmpty ? defineKey : queryKey).toLowerCase();
-
-    final builder = components[key];
-
     return WidgetsApp(
+      title: 'Remix Playground',
+      debugShowCheckedModeBanner: false,
       color: const Color(0xFFFAFAFA),
       pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
         settings: settings,
         pageBuilder: (context, animation, secondaryAnimation) =>
             builder(context),
       ),
-      builder: (context, child) =>
-          PlaygroundTheme(mode: PlaygroundThemeMode.light, child: child!),
-      home: builder != null
-          ? Builder(builder: builder)
-          : const PlaygroundHome(),
-      title: 'Remix Playground',
-      debugShowCheckedModeBanner: false,
+      builder: (context, child) => PlaygroundTheme(
+        key: const ValueKey('playground-theme-scope'),
+        mode: mode,
+        child: ScrollConfiguration(
+          behavior: const AppScrollBehavior(),
+          child: Overlay.wrap(
+            child: RemixToastScope(
+              style: playgroundToastStyle(),
+              child: child!,
+            ),
+          ),
+        ),
+      ),
+      home: const PlaygroundDashboardDemo(),
     );
   }
 }

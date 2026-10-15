@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -177,7 +178,7 @@ const playgroundDashboardDemoInteractionIds = <String>[
 
 /// The sidebar sections and destinations for the dashboard demo.
 final playgroundDashboardDemoSections =
-    <RemixSidebarSection<PlaygroundDashboardDemoPage>>[
+    List<RemixSidebarSection<PlaygroundDashboardDemoPage>>.unmodifiable([
       for (final section in PlaygroundDashboardDemoSection.values)
         RemixSidebarSection(
           label: section.label,
@@ -191,7 +192,7 @@ final playgroundDashboardDemoSections =
                 ),
           ],
         ),
-    ];
+    ]);
 
 typedef PlaygroundDashboardDemoShellBuilder =
     Widget Function(
@@ -235,11 +236,27 @@ class PlaygroundDashboardDemoBase extends StatefulWidget {
 class _PlaygroundDashboardDemoBaseState
     extends State<PlaygroundDashboardDemoBase> {
   late PlaygroundDashboardDemoPage _selected = widget.initialPage;
+  late final Set<PlaygroundDashboardDemoPage> _visitedPages = {
+    widget.initialPage,
+  };
   String _searchQuery = '';
+
+  @override
+  void didUpdateWidget(covariant PlaygroundDashboardDemoBase oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialPage != oldWidget.initialPage &&
+        _selected == oldWidget.initialPage) {
+      _selected = widget.initialPage;
+      _visitedPages.add(_selected);
+    }
+  }
 
   void _select(PlaygroundDashboardDemoPage page) {
     if (_selected == page) return;
-    setState(() => _selected = page);
+    setState(() {
+      _selected = page;
+      _visitedPages.add(page);
+    });
   }
 
   @override
@@ -256,10 +273,97 @@ class _PlaygroundDashboardDemoBaseState
       index: _selected.index,
       children: [
         for (final page in PlaygroundDashboardDemoPage.values)
-          widget.pageBuilder(context, page, _searchQuery, _select),
+          if (_visitedPages.contains(page))
+            TickerMode(
+              key: ValueKey('dashboard-page-${page.name}'),
+              enabled: page == _selected,
+              child: RepaintBoundary(
+                child: _FreezeInactiveConstraints(
+                  active: page == _selected,
+                  child: widget.pageBuilder(
+                    context,
+                    page,
+                    _searchQuery,
+                    _select,
+                  ),
+                ),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
       ],
     ),
   );
+}
+
+class _FreezeInactiveConstraints extends SingleChildRenderObjectWidget {
+  const _FreezeInactiveConstraints({
+    required this.active,
+    required super.child,
+  });
+
+  final bool active;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderFreezeInactiveConstraints(active);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _RenderFreezeInactiveConstraints renderObject,
+  ) {
+    renderObject.active = active;
+  }
+}
+
+class _RenderFreezeInactiveConstraints extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  _RenderFreezeInactiveConstraints(this._active);
+
+  bool _active;
+  BoxConstraints? _frozenConstraints;
+
+  bool get active => _active;
+  set active(bool value) {
+    if (_active == value) return;
+    _active = value;
+    if (value) {
+      markNeedsLayout();
+    }
+  }
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    if (child == null) {
+      size = constraints.smallest;
+      return;
+    }
+    final effectiveConstraints = _active
+        ? (_frozenConstraints = constraints)
+        : (_frozenConstraints ?? constraints);
+    if (constraints.isTight) {
+      child.layout(effectiveConstraints);
+      size = constraints.biggest;
+    } else {
+      child.layout(effectiveConstraints, parentUsesSize: true);
+      size = constraints.constrain(child.size);
+    }
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (!_active) return;
+    final child = this.child;
+    if (child != null) {
+      context.paintChild(child, offset);
+    }
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
+      _active && (child?.hitTest(result, position: position) ?? false);
 }
 
 /// A responsive scroll container for dashboard demo pages.

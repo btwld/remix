@@ -9,7 +9,7 @@ import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 ///
 /// The previews render the installed components, but nothing renders the
 /// theme values themselves. `dart analyze` proves the theme compiles and
-/// `tool/check_open_code_dogfood.dart` proves it still matches the templates,
+/// `tool/check_consumer_apps.dart` proves it still matches the templates,
 /// but neither one runs it.
 void main() {
   test('every declared token has a value in both brightnesses', () {
@@ -35,7 +35,7 @@ void main() {
   });
 
   test('the theme is the stock Vanilla template', () {
-    // This app declares no theme edit, so the dogfood check already requires
+    // This app declares no theme edit, so the consumer check already requires
     // the installed theme to match the template byte for byte. These are the
     // stock values themselves, which also fail if the check is ever taught to
     // allow a theme edit here.

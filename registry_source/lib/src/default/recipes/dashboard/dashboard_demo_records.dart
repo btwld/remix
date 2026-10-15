@@ -64,7 +64,7 @@ class _VanillaDashboardCustomersPageState
               .runSpacing(VanillaTokens.s2_5),
           children: [
             Box(
-              style: BoxStyler().width(300),
+              style: BoxStyler().maxWidth(300),
               child: VanillaTextField(
                 key: const ValueKey('customer-search'),
                 leading: const Icon(
@@ -242,9 +242,16 @@ class _VanillaDashboardOrdersPageState
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => _Empty(
             title: 'No matching orders',
             body: 'Choose another status to see more orders.',
+            action: _filter != .all
+                ? VanillaButton.outline(
+                    size: .small,
+                    label: 'Clear filters',
+                    onPressed: () => setState(() => _filter = .all),
+                  )
+                : null,
           ),
         ),
       ],
@@ -361,10 +368,24 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
 
 Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
   trigger: RemixMenuTrigger.builder(
-    label: 'More',
+    label: 'Actions for $value',
     icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) =>
-        const Icon(RemixIcons.dotsHorizontal, size: VanillaTokens.icon),
+    builder: (_, _, _) => Semantics(
+      label: 'Actions for $value',
+      button: true,
+      child: Box(
+        style: BoxStyler()
+            .size(28, 28)
+            .alignment(.center)
+            .borderRadius(.all(VanillaTokens.radiusSm())),
+        child: StyledIcon(
+          icon: RemixIcons.dotsHorizontal,
+          style: IconStyler()
+              .size(VanillaTokens.icon)
+              .color(VanillaTokens.mutedForeground()),
+        ),
+      ),
+    ),
   ),
   items: const [
     RemixMenuItem(value: 'view', label: 'View'),
@@ -428,24 +449,38 @@ class _Page extends StatelessWidget {
 }
 
 class _Empty extends StatelessWidget {
-  const _Empty({required this.title, required this.body});
+  const _Empty({required this.title, required this.body, this.action});
   final String title;
   final String body;
+  final Widget? action;
   @override
   Widget build(BuildContext context) => Box(
     style: BoxStyler().padding(.all(VanillaTokens.s8)),
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.center)
-          .spacing(VanillaTokens.s2),
+          .spacing(VanillaTokens.s3),
       children: [
-        const Icon(RemixIcons.magnifyingGlass, size: VanillaTokens.s6),
+        Box(
+          style: BoxStyler()
+              .size(40, 40)
+              .alignment(.center)
+              .borderRadius(.all(VanillaTokens.radiusMd()))
+              .color(VanillaTokens.secondary()),
+          child: StyledIcon(
+            icon: RemixIcons.magnifyingGlass,
+            style: IconStyler()
+                .size(VanillaTokens.s5)
+                .color(VanillaTokens.secondaryForeground()),
+          ),
+        ),
         ColumnBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)
               .spacing(VanillaTokens.s1),
           children: [_Text(title, emphasized: true), _Text(body, muted: true)],
         ),
+        ?action,
       ],
     ),
   );

@@ -3,11 +3,13 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
 import '../../components/data_table.dart';
 import '../../components/divider.dart';
+import '../../components/progress.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_charts.dart';
 import 'dashboard_overview_base.dart';
@@ -56,15 +58,49 @@ class PlaygroundDashboardOverview extends StatelessWidget {
     metricBuilder: (context, metric) => PlaygroundCard(
       child: ColumnBox(
         style: FlexBoxStyler()
-            .crossAxisAlignment(.start)
-            .spacing(PlaygroundTokens.s1_5),
+            .crossAxisAlignment(.stretch)
+            .spacing(PlaygroundTokens.s2),
         children: [
-          StyledText(
-            metric.label,
-            style: TextStyler()
-                .style(PlaygroundTokens.textSm.mix())
-                .fontWeight(FontWeight.w500)
-                .color(PlaygroundTokens.mutedForeground()),
+          RowBox(
+            style: FlexBoxStyler()
+                .mainAxisAlignment(.spaceBetween)
+                .crossAxisAlignment(.center),
+            children: [
+              Flexible(
+                child: StyledText(
+                  metric.label,
+                  style: TextStyler()
+                      .style(PlaygroundTokens.textSm.mix())
+                      .fontWeight(FontWeight.w500)
+                      .color(PlaygroundTokens.mutedForeground()),
+                ),
+              ),
+              if (metric.delta case final delta?)
+                PlaygroundBadge(
+                  variant: metric.positive ? .secondary : .outline,
+                  child: RowBox(
+                    style: FlexBoxStyler()
+                        .mainAxisSize(.min)
+                        .crossAxisAlignment(.center)
+                        .spacing(PlaygroundTokens.s1),
+                    children: [
+                      StyledIcon(
+                        icon: metric.positive
+                            ? RemixIcons.chevronUp
+                            : RemixIcons.chevronDown,
+                        style: IconStyler()
+                            .size(12)
+                            .color(
+                              metric.positive
+                                  ? PlaygroundTokens.secondaryForeground()
+                                  : PlaygroundTokens.foreground(),
+                            ),
+                      ),
+                      StyledText(delta),
+                    ],
+                  ),
+                ),
+            ],
           ),
           StyledText(
             metric.value,
@@ -73,6 +109,8 @@ class PlaygroundDashboardOverview extends StatelessWidget {
                 .fontWeight(FontWeight.w700)
                 .color(PlaygroundTokens.foreground()),
           ),
+          if (metric.progress case final progress?)
+            PlaygroundProgress(value: progress),
           StyledText(
             metric.change,
             style: TextStyler()
@@ -196,7 +234,7 @@ Widget _fulfillmentCard() => PlaygroundCard(
   child: ColumnBox(
     style: FlexBoxStyler()
         .crossAxisAlignment(.stretch)
-        .spacing(PlaygroundTokens.s4),
+        .spacing(PlaygroundTokens.s3),
     children: [
       ColumnBox(
         style: FlexBoxStyler()
@@ -207,12 +245,39 @@ Widget _fulfillmentCard() => PlaygroundCard(
           _sectionDescription('Current order status'),
         ],
       ),
+      PlaygroundChartLegend(
+        items: const [
+          PlaygroundChartLegendItem(
+            label: 'Fulfilled',
+            detail: '72%',
+            color: PlaygroundTokens.chart1,
+          ),
+          PlaygroundChartLegendItem(
+            label: 'Processing',
+            detail: '18%',
+            color: PlaygroundTokens.chart2,
+          ),
+          PlaygroundChartLegendItem(
+            label: 'Review',
+            detail: '10%',
+            color: PlaygroundTokens.chart3,
+          ),
+        ],
+        labelStyle: TextStyler()
+            .style(PlaygroundTokens.textXs.mix())
+            .fontWeight(FontWeight.w500)
+            .color(PlaygroundTokens.foreground()),
+        detailStyle: TextStyler()
+            .style(PlaygroundTokens.textXs.mix())
+            .color(PlaygroundTokens.mutedForeground()),
+        outlineBorderColor: PlaygroundTokens.border,
+      ),
       Box(
-        style: BoxStyler().height(220),
+        style: BoxStyler().height(190),
         child: PlaygroundPieChart(
           centerRadius: 44,
           // mix_chart draws each slice 80px wide in any box; this ring stops
-          // the donut at 88px, 80% of the way to the edge of its 220px box.
+          // the donut at 88px, 80% of the way to the edge of its box.
           style: PieChartStyler().slice(PieSliceStyler().radius(44)),
           semanticsLabel: 'Current order status',
           slices: [
@@ -244,11 +309,18 @@ Widget _activityCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
                     .crossAxisAlignment(.center)
                     .spacing(PlaygroundTokens.s2_5),
                 children: [
-                  StyledIcon(
-                    icon: RemixIcons.activityLog,
-                    style: IconStyler()
-                        .size(PlaygroundTokens.icon)
-                        .color(PlaygroundTokens.mutedForeground()),
+                  Box(
+                    style: BoxStyler()
+                        .size(32, 32)
+                        .alignment(.center)
+                        .borderRadius(.all(PlaygroundTokens.radiusMd()))
+                        .color(PlaygroundTokens.secondary()),
+                    child: StyledIcon(
+                      icon: _activityIcon(event.kind),
+                      style: IconStyler()
+                          .size(PlaygroundTokens.icon)
+                          .color(PlaygroundTokens.secondaryForeground()),
+                    ),
                   ),
                   Expanded(
                     child: ColumnBox(
@@ -273,6 +345,13 @@ Widget _activityCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
   ),
 );
 
+IconData _activityIcon(PlaygroundDashboardActivityKind kind) => switch (kind) {
+  .customer => RemixIcons.person,
+  .order => RemixIcons.box,
+  .payment => RemixIcons.checkCircled,
+  .alert => RemixIcons.exclamationTriangle,
+};
+
 Widget _ordersCard(
   PlaygroundDashboardSampleData data,
   VoidCallback? onViewOrders,
@@ -290,6 +369,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
+            trailingIcon: RemixIcons.doubleArrowRight,
             onPressed: onViewOrders,
           ),
         ],
@@ -330,6 +410,13 @@ Widget _cell(String text, {bool emphasized = false}) => StyledText(
       .color(PlaygroundTokens.foreground()),
 );
 
+Widget _statusBadge(String status) => switch (status.toLowerCase()) {
+  'paid' || 'fulfilled' => PlaygroundBadge(label: status),
+  'pending' || 'in review' => PlaygroundBadge.secondary(label: status),
+  'cancelled' => PlaygroundBadge.destructive(label: status),
+  _ => PlaygroundBadge.outline(label: status),
+};
+
 LineSeries _revenueSeries(List<PlaygroundDashboardPoint> points) => LineSeries(
   id: 'revenue',
   label: 'Revenue',
@@ -361,7 +448,7 @@ final _recordColumns = <RemixDataTableColumn<PlaygroundDashboardRecord>>[
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(104),
-    cellBuilder: (_, record) => _cell(record.status),
+    cellBuilder: (_, record) => _statusBadge(record.status),
   ),
   RemixDataTableColumn(
     id: 'amount',

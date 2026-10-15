@@ -77,9 +77,12 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .spacing({{typePrefix}}Tokens.s2)
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
     .label(
-      .style(
-        {{typePrefix}}Tokens.textSm.mix(),
-      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
+      .style({{typePrefix}}Tokens.textSm.mix())
+          .fontWeight(FontWeight.w500)
+          .color({{typePrefix}}Tokens.foreground())
+          .maxLines(1)
+          .softWrap(false)
+          .overflow(.ellipsis),
     )
     .icon(.size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.foreground()))
     .onHovered(.color({{typePrefix}}Tokens.accent()))

@@ -3,7 +3,6 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 /// Application-owned aliases for the icons used by this UI layer.
 ///
-/// The complete 318-glyph catalog remains available through [RemixIcons].
 /// Add, rename, or remove aliases here as the application vocabulary evolves.
 abstract final class PlaygroundIcons {
   /// Confirms a successful or selected action.
@@ -29,10 +28,4 @@ abstract final class PlaygroundIcons {
 
   /// Represents the dashboard overview destination.
   static const IconData dashboard = RemixIcons.dashboard;
-
-  /// Returns from a component preview to the index.
-  ///
-  /// An app-owned alias added on top of the installed catalog. The dogfood
-  /// check declares it as this app's deliberate edit to `icons`.
-  static const IconData back = RemixIcons.arrowLeft;
 }

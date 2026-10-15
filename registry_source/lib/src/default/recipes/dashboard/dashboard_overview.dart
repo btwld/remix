@@ -6,11 +6,13 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../../../dashboard/dashboard_demo_charts.dart';
 import '../../../dashboard/dashboard_overview_base.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
+import '../../components/badge.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
 import '../../components/data_table.dart';
 import '../../components/button.dart';
 import '../../components/divider.dart';
+import '../../components/progress.dart';
 import '../../theme/tokens.dart';
 
 /// The default-preset dashboard overview.
@@ -56,15 +58,49 @@ class VanillaDashboardOverview extends StatelessWidget {
     metricBuilder: (context, metric) => VanillaCard(
       child: ColumnBox(
         style: FlexBoxStyler()
-            .crossAxisAlignment(.start)
-            .spacing(VanillaTokens.s1_5),
+            .crossAxisAlignment(.stretch)
+            .spacing(VanillaTokens.s2),
         children: [
-          StyledText(
-            metric.label,
-            style: TextStyler()
-                .style(VanillaTokens.textSm.mix())
-                .fontWeight(FontWeight.w500)
-                .color(VanillaTokens.mutedForeground()),
+          RowBox(
+            style: FlexBoxStyler()
+                .mainAxisAlignment(.spaceBetween)
+                .crossAxisAlignment(.center),
+            children: [
+              Flexible(
+                child: StyledText(
+                  metric.label,
+                  style: TextStyler()
+                      .style(VanillaTokens.textSm.mix())
+                      .fontWeight(FontWeight.w500)
+                      .color(VanillaTokens.mutedForeground()),
+                ),
+              ),
+              if (metric.delta case final delta?)
+                VanillaBadge(
+                  variant: metric.positive ? .secondary : .outline,
+                  child: RowBox(
+                    style: FlexBoxStyler()
+                        .mainAxisSize(.min)
+                        .crossAxisAlignment(.center)
+                        .spacing(VanillaTokens.s1),
+                    children: [
+                      StyledIcon(
+                        icon: metric.positive
+                            ? RemixIcons.chevronUp
+                            : RemixIcons.chevronDown,
+                        style: IconStyler()
+                            .size(12)
+                            .color(
+                              metric.positive
+                                  ? VanillaTokens.secondaryForeground()
+                                  : VanillaTokens.foreground(),
+                            ),
+                      ),
+                      StyledText(delta),
+                    ],
+                  ),
+                ),
+            ],
           ),
           StyledText(
             metric.value,
@@ -73,6 +109,8 @@ class VanillaDashboardOverview extends StatelessWidget {
                 .fontWeight(FontWeight.w700)
                 .color(VanillaTokens.foreground()),
           ),
+          if (metric.progress case final progress?)
+            VanillaProgress(value: progress),
           StyledText(
             metric.change,
             style: TextStyler()
@@ -196,7 +234,7 @@ Widget _fulfillmentCard() => VanillaCard(
   child: ColumnBox(
     style: FlexBoxStyler()
         .crossAxisAlignment(.stretch)
-        .spacing(VanillaTokens.s4),
+        .spacing(VanillaTokens.s3),
     children: [
       ColumnBox(
         style: FlexBoxStyler()
@@ -207,12 +245,39 @@ Widget _fulfillmentCard() => VanillaCard(
           _sectionDescription('Current order status'),
         ],
       ),
+      RegistryChartLegend(
+        items: const [
+          RegistryChartLegendItem(
+            label: 'Fulfilled',
+            detail: '72%',
+            color: VanillaTokens.chart1,
+          ),
+          RegistryChartLegendItem(
+            label: 'Processing',
+            detail: '18%',
+            color: VanillaTokens.chart2,
+          ),
+          RegistryChartLegendItem(
+            label: 'Review',
+            detail: '10%',
+            color: VanillaTokens.chart3,
+          ),
+        ],
+        labelStyle: TextStyler()
+            .style(VanillaTokens.textXs.mix())
+            .fontWeight(FontWeight.w500)
+            .color(VanillaTokens.foreground()),
+        detailStyle: TextStyler()
+            .style(VanillaTokens.textXs.mix())
+            .color(VanillaTokens.mutedForeground()),
+        outlineBorderColor: VanillaTokens.border,
+      ),
       Box(
-        style: BoxStyler().height(220),
+        style: BoxStyler().height(190),
         child: VanillaPieChart(
           centerRadius: 44,
           // mix_chart draws each slice 80px wide in any box; this ring stops
-          // the donut at 88px, 80% of the way to the edge of its 220px box.
+          // the donut at 88px, 80% of the way to the edge of its box.
           style: PieChartStyler().slice(PieSliceStyler().radius(44)),
           semanticsLabel: 'Current order status',
           slices: [
@@ -244,11 +309,18 @@ Widget _activityCard(RegistryDashboardSampleData data) => VanillaCard(
                     .crossAxisAlignment(.center)
                     .spacing(VanillaTokens.s2_5),
                 children: [
-                  StyledIcon(
-                    icon: RemixIcons.activityLog,
-                    style: IconStyler()
-                        .size(VanillaTokens.icon)
-                        .color(VanillaTokens.mutedForeground()),
+                  Box(
+                    style: BoxStyler()
+                        .size(32, 32)
+                        .alignment(.center)
+                        .borderRadius(.all(VanillaTokens.radiusMd()))
+                        .color(VanillaTokens.secondary()),
+                    child: StyledIcon(
+                      icon: _activityIcon(event.kind),
+                      style: IconStyler()
+                          .size(VanillaTokens.icon)
+                          .color(VanillaTokens.secondaryForeground()),
+                    ),
                   ),
                   Expanded(
                     child: ColumnBox(
@@ -273,6 +345,13 @@ Widget _activityCard(RegistryDashboardSampleData data) => VanillaCard(
   ),
 );
 
+IconData _activityIcon(RegistryDashboardActivityKind kind) => switch (kind) {
+  .customer => RemixIcons.person,
+  .order => RemixIcons.box,
+  .payment => RemixIcons.checkCircled,
+  .alert => RemixIcons.exclamationTriangle,
+};
+
 Widget _ordersCard(
   RegistryDashboardSampleData data,
   VoidCallback? onViewOrders,
@@ -290,6 +369,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
+            trailingIcon: RemixIcons.doubleArrowRight,
             onPressed: onViewOrders,
           ),
         ],
@@ -330,6 +410,13 @@ Widget _cell(String text, {bool emphasized = false}) => StyledText(
       .color(VanillaTokens.foreground()),
 );
 
+Widget _statusBadge(String status) => switch (status.toLowerCase()) {
+  'paid' || 'fulfilled' => VanillaBadge(label: status),
+  'pending' || 'in review' => VanillaBadge.secondary(label: status),
+  'cancelled' => VanillaBadge.destructive(label: status),
+  _ => VanillaBadge.outline(label: status),
+};
+
 LineSeries _revenueSeries(List<RegistryDashboardPoint> points) => LineSeries(
   id: 'revenue',
   label: 'Revenue',
@@ -361,7 +448,7 @@ final _recordColumns = <RemixDataTableColumn<RegistryDashboardRecord>>[
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(104),
-    cellBuilder: (_, record) => _cell(record.status),
+    cellBuilder: (_, record) => _statusBadge(record.status),
   ),
   RemixDataTableColumn(
     id: 'amount',

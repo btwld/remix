@@ -206,6 +206,7 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     PlaygroundDashboardLayoutControls controls,
   ) {
     final collapsed = !controls.isCompact && _collapsed;
+    final account = widget.account;
     return widget.sidebarBuilder(
       context,
       collapsed: collapsed,
@@ -215,35 +216,57 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
         widget.onSelected(value);
         controls.closeCompact();
       },
-      header: Box(
-        style: widget.sidebarHeaderStyle,
-        child: RowBox(
-          style: FlexBoxStyler()
-              .spacing(collapsed ? 0 : widget.headerSpacing)
-              .mainAxisAlignment(collapsed ? .center : .start),
-          children: [
-            if (!collapsed)
-              Expanded(
-                child: DefaultTextStyle.merge(
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  child: widget.brand,
-                ),
-              ),
-            if (!controls.isCompact)
-              widget.iconButtonBuilder(
-                context,
-                key: const ValueKey('dashboard-collapse'),
-                icon: _collapseIcon(context, collapsed),
-                semanticLabel: collapsed
-                    ? 'Expand navigation'
-                    : 'Collapse navigation',
-                onPressed: () => _setCollapsed(!collapsed),
-              ),
-          ],
-        ),
+      header: Builder(
+        builder: (context) {
+          final motion = RemixSidebar.maybeAnimationOf(context);
+          final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
+          final labelOpacity = motion?.labelOpacity ?? expansion;
+          final showBrand = controls.isCompact ? !collapsed : expansion > 0;
+          return Box(
+            style: widget.sidebarHeaderStyle,
+            child: RowBox(
+              style: FlexBoxStyler()
+                  .spacing(
+                    controls.isCompact
+                        ? (collapsed ? 0 : widget.headerSpacing)
+                        : widget.headerSpacing * expansion,
+                  )
+                  .mainAxisAlignment(showBrand ? .start : .center),
+              children: [
+                if (showBrand)
+                  Expanded(
+                    child: Opacity(
+                      opacity: controls.isCompact ? 1 : labelOpacity,
+                      child: DefaultTextStyle.merge(
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        child: widget.brand,
+                      ),
+                    ),
+                  ),
+                if (!controls.isCompact)
+                  widget.iconButtonBuilder(
+                    context,
+                    key: const ValueKey('dashboard-collapse'),
+                    icon: _collapseIcon(context, collapsed),
+                    semanticLabel: collapsed
+                        ? 'Expand navigation'
+                        : 'Collapse navigation',
+                    onPressed: () => _setCollapsed(!collapsed),
+                  ),
+              ],
+            ),
+          );
+        },
       ),
-      footer: collapsed ? null : widget.account,
+      footer: account == null
+          ? null
+          : _SidebarFooterSlot(
+              collapsed: collapsed,
+              isCompact: controls.isCompact,
+              child: account,
+            ),
       semanticLabel: widget.navigationSemanticLabel,
     );
   }
@@ -252,45 +275,42 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     BuildContext context,
     PlaygroundDashboardLayoutControls controls,
   ) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final showSearch =
-            widget.onSearchChanged != null &&
-            constraints.maxWidth >= widget.searchBreakpoint;
-        return widget.appBarBuilder(
-          context,
-          leading: controls.isCompact
-              ? widget.iconButtonBuilder(
-                  context,
-                  key: const ValueKey('dashboard-menu'),
-                  icon: widget.menuIcon,
-                  semanticLabel: 'Open navigation',
-                  onPressed: controls.openCompact,
-                )
-              : null,
-          // The app bar names its heading with [title] and renders this,
-          // which inherits the recipe's title style.
-          title: widget.title,
-          titleChild: KeyedSubtree(
-            key: const ValueKey('dashboard-title'),
-            child: widget.headerTitle ?? Text(widget.title),
-          ),
-          actions: [
-            if (showSearch)
-              Box(
-                style: BoxStyler().width(widget.searchWidth),
-                child: widget.searchBuilder(
-                  context,
-                  key: const ValueKey('dashboard-search'),
-                  hintText: widget.searchHintText,
-                  leading: Icon(widget.searchIcon, size: 16),
-                  onChanged: widget.onSearchChanged!,
-                ),
+    return _HeaderBreakpointBuilder(
+      breakpoint: widget.searchBreakpoint,
+      enabled: widget.onSearchChanged != null,
+      builder: (context, showSearch) => widget.appBarBuilder(
+        context,
+        leading: controls.isCompact
+            ? widget.iconButtonBuilder(
+                context,
+                key: const ValueKey('dashboard-menu'),
+                icon: widget.menuIcon,
+                semanticLabel: 'Open navigation',
+                onPressed: controls.openCompact,
+              )
+            : null,
+        // The app bar names its heading with [title] and renders this,
+        // which inherits the recipe's title style.
+        title: widget.title,
+        titleChild: KeyedSubtree(
+          key: const ValueKey('dashboard-title'),
+          child: widget.headerTitle ?? Text(widget.title),
+        ),
+        actions: [
+          if (showSearch)
+            Box(
+              style: BoxStyler().width(widget.searchWidth),
+              child: widget.searchBuilder(
+                context,
+                key: const ValueKey('dashboard-search'),
+                hintText: widget.searchHintText,
+                leading: Icon(widget.searchIcon, size: 16),
+                onChanged: widget.onSearchChanged!,
               ),
-            ...widget.headerActions,
-          ],
-        );
-      },
+            ),
+          ...widget.headerActions,
+        ],
+      ),
     );
   }
 
@@ -298,5 +318,87 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     final ltr = Directionality.of(context) == TextDirection.ltr;
     if (collapsed) return ltr ? widget.forwardIcon : widget.backwardIcon;
     return ltr ? widget.backwardIcon : widget.forwardIcon;
+  }
+}
+
+class _SidebarFooterSlot extends StatelessWidget {
+  const _SidebarFooterSlot({
+    required this.collapsed,
+    required this.isCompact,
+    required this.child,
+  });
+
+  final bool collapsed;
+  final bool isCompact;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isCompact) {
+      return collapsed ? const SizedBox.shrink() : child;
+    }
+    final motion = RemixSidebar.maybeAnimationOf(context);
+    final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
+    final labelOpacity = motion?.labelOpacity ?? expansion;
+    if (labelOpacity == 0) {
+      return const SizedBox.shrink();
+    }
+    if (expansion == 1 && !(motion?.isAnimating ?? false)) {
+      return child;
+    }
+    return Opacity(
+      opacity: labelOpacity,
+      child: IgnorePointer(ignoring: collapsed, child: child),
+    );
+  }
+}
+
+class _HeaderBreakpointBuilder extends StatefulWidget {
+  const _HeaderBreakpointBuilder({
+    required this.breakpoint,
+    required this.enabled,
+    required this.builder,
+  });
+
+  final double breakpoint;
+  final bool enabled;
+  final Widget Function(BuildContext context, bool showSearch) builder;
+
+  @override
+  State<_HeaderBreakpointBuilder> createState() =>
+      _HeaderBreakpointBuilderState();
+}
+
+class _HeaderBreakpointBuilderState extends State<_HeaderBreakpointBuilder> {
+  bool? _lastShowSearch;
+  Widget? _cachedChild;
+
+  @override
+  void didUpdateWidget(covariant _HeaderBreakpointBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _cachedChild = null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _cachedChild = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.enabled) {
+      return widget.builder(context, false);
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final showSearch = constraints.maxWidth >= widget.breakpoint;
+        if (_cachedChild == null || _lastShowSearch != showSearch) {
+          _lastShowSearch = showSearch;
+          _cachedChild = widget.builder(context, showSearch);
+        }
+        return _cachedChild!;
+      },
+    );
   }
 }

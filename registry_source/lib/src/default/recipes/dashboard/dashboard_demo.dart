@@ -8,12 +8,15 @@ import '../../../dashboard/dashboard_demo_chat.dart';
 import '../../../dashboard/dashboard_demo_charts.dart';
 import '../../../dashboard/dashboard_demo_content.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
+import '../../components/avatar.dart';
 import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
+import '../../components/divider.dart';
 import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/popover.dart';
+import '../../components/segmented_control.dart';
 import '../../components/toast.dart';
 import '../activity_recipe.dart';
 import '../answer_recipe.dart';
@@ -79,6 +82,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
   /// is placed in.
   bool? _dark;
   Brightness? _ambientBrightness;
+  bool _notificationsRead = false;
 
   @override
   void didChangeDependencies() {
@@ -189,27 +193,68 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
         child: ColumnBox(
           style: FlexBoxStyler()
               .mainAxisSize(.min)
-              .crossAxisAlignment(.start)
-              .spacing(VanillaTokens.s1_5),
+              .crossAxisAlignment(.stretch)
+              .spacing(VanillaTokens.s2),
           children: [
-            StyledText(
-              'Notifications',
-              style: _textStyle(weight: FontWeight.w600),
+            RowBox(
+              style: FlexBoxStyler()
+                  .mainAxisAlignment(.spaceBetween)
+                  .crossAxisAlignment(.center),
+              children: [
+                Flexible(
+                  child: StyledText(
+                    'Notifications',
+                    style: _textStyle(weight: FontWeight.w600),
+                  ),
+                ),
+                if (!_notificationsRead)
+                  VanillaButton.ghost(
+                    size: .small,
+                    label: 'Mark all read',
+                    onPressed: () => setState(() => _notificationsRead = true),
+                  ),
+              ],
             ),
-            StyledText(
+            const VanillaDivider(),
+            _notificationItem(
               'Order ORD-1047 requires review.',
-              style: _textStyle(token: VanillaTokens.textXs),
+              '14m ago',
+              unread: !_notificationsRead,
             ),
-            StyledText(
+            _notificationItem(
               'Three customer invitations are pending.',
-              style: _textStyle(token: VanillaTokens.textXs, muted: true),
+              '1h ago',
+              unread: !_notificationsRead,
+            ),
+            _notificationItem(
+              'Payout batch #29 was settled.',
+              '3h ago',
+              unread: false,
             ),
           ],
         ),
       ),
-      child: const VanillaIconButton.ghost(
-        icon: RemixIcons.bell,
-        semanticLabel: 'Open notifications',
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          const VanillaIconButton.ghost(
+            icon: RemixIcons.bell,
+            semanticLabel: 'Open notifications',
+          ),
+          if (!_notificationsRead)
+            Positioned(
+              right: 8,
+              top: 8,
+              child: IgnorePointer(
+                child: Box(
+                  style: BoxStyler()
+                      .size(7, 7)
+                      .borderRadius(.circular(99))
+                      .color(VanillaTokens.primary()),
+                ),
+              ),
+            ),
+        ],
       ),
     ),
     VanillaPopover(
@@ -231,6 +276,16 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
                 weight: FontWeight.w600,
               ),
             ),
+            VanillaSegmentedControl<bool>(
+              semanticLabel: 'Theme appearance',
+              selectedValue: _isDark,
+              items: const [
+                RemixSegmentedControlItem(value: false, label: 'Light'),
+                RemixSegmentedControlItem(value: true, label: 'Dark'),
+              ],
+              onChanged: (value) => setState(() => _dark = value),
+            ),
+            const VanillaDivider(),
             ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)
@@ -258,6 +313,36 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
       Expanded(child: StyledText(label, style: _textStyle())),
       StyledText(value, style: _textStyle(muted: true)),
     ],
+  );
+
+  Widget _notificationItem(
+    String message,
+    String time, {
+    required bool unread,
+  }) => Box(
+    style: BoxStyler()
+        .padding(.all(VanillaTokens.s2))
+        .borderRadius(.all(VanillaTokens.radiusMd()))
+        .color(unread ? VanillaTokens.secondary() : const Color(0x00000000)),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.start)
+          .spacing(VanillaTokens.s0_5),
+      children: [
+        StyledText(
+          message,
+          style: _textStyle(
+            token: VanillaTokens.textXs,
+            weight: unread ? FontWeight.w500 : FontWeight.w400,
+          ),
+        ),
+        StyledText(
+          time,
+          style: _textStyle(token: VanillaTokens.textXs, muted: true),
+        ),
+      ],
+    ),
   );
 }
 
@@ -309,27 +394,67 @@ class _VanillaAccount extends StatelessWidget {
   const _VanillaAccount();
 
   @override
-  Widget build(BuildContext context) => ColumnBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.stretch)
-        .spacing(VanillaTokens.s2),
-    children: [
-      StyledText('Northstar workspace', style: _textStyle(muted: true)),
-      VanillaMenu<String>(
-        trigger: const RemixMenuTrigger(
-          label: 'Ada Chen',
-          icon: RemixIcons.person,
+  Widget build(BuildContext context) => VanillaMenu<String>(
+    trigger: RemixMenuTrigger.builder(
+      label: 'Ada Chen',
+      icon: RemixIcons.person,
+      builder: (context, _, _) => Box(
+        style: BoxStyler()
+            .padding(
+              .symmetric(
+                horizontal: VanillaTokens.s2_5,
+                vertical: VanillaTokens.s2,
+              ),
+            )
+            .borderRadius(.all(VanillaTokens.radiusMd()))
+            .border(.all(.color(VanillaTokens.border())))
+            .color(VanillaTokens.card()),
+        child: RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(VanillaTokens.s2_5),
+          children: [
+            const VanillaAvatar(label: 'AC'),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.start),
+                children: [
+                  StyledText(
+                    'Ada Chen',
+                    style: _textStyle(
+                      weight: FontWeight.w500,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                  StyledText(
+                    'Northstar workspace',
+                    style: _textStyle(
+                      token: VanillaTokens.textXs,
+                      muted: true,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                ],
+              ),
+            ),
+            StyledIcon(
+              icon: RemixIcons.dotsHorizontal,
+              style: IconStyler()
+                  .size(VanillaTokens.icon)
+                  .color(VanillaTokens.mutedForeground()),
+            ),
+          ],
         ),
-        items: const [
-          RemixMenuItem(value: 'account', label: 'Account settings'),
-          RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
-          RemixMenuDivider(),
-          RemixMenuItem(value: 'sign-out', label: 'Sign out'),
-        ],
-        onSelected: (value) =>
-            showRemixToast(context, RemixToastData(title: '$value selected')),
       ),
+    ),
+    items: const [
+      RemixMenuItem(value: 'account', label: 'Account settings'),
+      RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
+      RemixMenuDivider(),
+      RemixMenuItem(value: 'sign-out', label: 'Sign out'),
     ],
+    onSelected: (value) =>
+        showRemixToast(context, RemixToastData(title: '$value selected')),
   );
 }
 
@@ -366,6 +491,7 @@ class _VanillaDashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => RegistryDashboardCharts(
     cardBuilder: _chartCard,
+    legendBuilder: (_, chart) => _chartLegend(chart),
     sectionBuilder: (title, description, cards) => ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -585,32 +711,156 @@ const _pieRadius = 96.0;
 PieChartStyler _pieRing([double centerRadius = 0]) =>
     PieChartStyler().slice(PieSliceStyler().radius(_pieRadius - centerRadius));
 
-Widget _chartCard(String title, String description, Widget chart) =>
-    VanillaCard(
-      child: ColumnBox(
+Widget _chartCard(
+  String title,
+  String description,
+  Widget chart, {
+  Widget? legend,
+}) => VanillaCard(
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(VanillaTokens.s3),
+    children: [
+      ColumnBox(
         style: FlexBoxStyler()
-            .crossAxisAlignment(.stretch)
-            .spacing(VanillaTokens.s3),
+            .crossAxisAlignment(.start)
+            .spacing(VanillaTokens.s1),
         children: [
-          ColumnBox(
-            style: FlexBoxStyler()
-                .crossAxisAlignment(.start)
-                .spacing(VanillaTokens.s1),
-            children: [
-              StyledText(
-                title,
-                style: _textStyle(
-                  token: VanillaTokens.textBase,
-                  weight: FontWeight.w600,
-                ),
-              ),
-              StyledText(description, style: _textStyle(muted: true)),
-            ],
+          StyledText(
+            title,
+            style: _textStyle(
+              token: VanillaTokens.textBase,
+              weight: FontWeight.w600,
+            ),
           ),
-          Box(style: BoxStyler().height(240), child: chart),
+          StyledText(description, style: _textStyle(muted: true)),
         ],
       ),
-    );
+      ?legend,
+      Box(style: BoxStyler().height(240), child: chart),
+    ],
+  ),
+);
+
+Widget? _chartLegend(RegistryDashboardChartCase chart) {
+  final items = switch (chart) {
+    .revenueMomentum => const [
+      RegistryChartLegendItem(label: 'Revenue', color: VanillaTokens.chart1),
+    ],
+    .linePatterns => const [
+      RegistryChartLegendItem(
+        label: 'Actual',
+        detail: 'solid',
+        color: VanillaTokens.chart1,
+      ),
+      RegistryChartLegendItem(
+        label: 'Plan',
+        detail: 'dashed',
+        color: VanillaTokens.chart2,
+        pattern: .dashed,
+      ),
+    ],
+    .stepGaps => const [
+      RegistryChartLegendItem(
+        label: 'Inventory',
+        detail: 'step after',
+        color: VanillaTokens.chart1,
+      ),
+    ],
+    .viewportLabels => const [
+      RegistryChartLegendItem(
+        label: 'Revenue',
+        detail: '3x pan / zoom',
+        color: VanillaTokens.chart1,
+      ),
+    ],
+    .groupedBars => const [
+      RegistryChartLegendItem(label: 'Actual', color: VanillaTokens.chart1),
+      RegistryChartLegendItem(label: 'Plan', color: VanillaTokens.chart2),
+    ],
+    .stackedBars => const [
+      RegistryChartLegendItem(label: 'Product', color: VanillaTokens.chart1),
+      RegistryChartLegendItem(label: 'Services', color: VanillaTokens.chart2),
+    ],
+    .floatingBars => const [
+      RegistryChartLegendItem(
+        label: 'Min–Max range',
+        color: VanillaTokens.chart1,
+      ),
+    ],
+    .trackedBars => const [
+      RegistryChartLegendItem(label: 'Revenue', color: VanillaTokens.chart1),
+      RegistryChartLegendItem(
+        label: '60k track',
+        color: VanillaTokens.muted,
+        pattern: .outlined,
+      ),
+    ],
+    .trafficPie => const [
+      RegistryChartLegendItem(
+        label: 'Desktop',
+        detail: '58%',
+        color: VanillaTokens.chart1,
+      ),
+      RegistryChartLegendItem(
+        label: 'Mobile',
+        detail: '29%',
+        color: VanillaTokens.chart2,
+      ),
+      RegistryChartLegendItem(
+        label: 'Tablet',
+        detail: '13%',
+        color: VanillaTokens.chart3,
+      ),
+    ],
+    .interactivePie => const [
+      RegistryChartLegendItem(
+        label: 'Core',
+        detail: '46%',
+        color: VanillaTokens.chart1,
+      ),
+      RegistryChartLegendItem(
+        label: 'Add-ons',
+        detail: '31%',
+        color: VanillaTokens.chart2,
+      ),
+      RegistryChartLegendItem(
+        label: 'Services',
+        detail: '23%',
+        color: VanillaTokens.chart3,
+      ),
+    ],
+    .badgePie => const [
+      RegistryChartLegendItem(
+        label: 'Desktop',
+        detail: 'D',
+        color: VanillaTokens.chart1,
+      ),
+      RegistryChartLegendItem(
+        label: 'Mobile',
+        detail: 'M',
+        color: VanillaTokens.chart2,
+      ),
+      RegistryChartLegendItem(
+        label: 'Tablet',
+        detail: 'T',
+        color: VanillaTokens.chart3,
+      ),
+    ],
+    .emptyPie => null,
+  };
+  if (items == null) return null;
+  return RegistryChartLegend(
+    items: items,
+    labelStyle: _textStyle(
+      token: VanillaTokens.textXs,
+      weight: FontWeight.w500,
+    ),
+    detailStyle: _textStyle(token: VanillaTokens.textXs, muted: true),
+    outlineBorderColor: VanillaTokens.border,
+  );
+}
 
 TextStyler _textStyle({
   TextStyleToken token = VanillaTokens.textSm,

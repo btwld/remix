@@ -109,56 +109,7 @@ const _independentRegistryItems = <String>[
   'dashboard_shell',
 ];
 
-const _dashboardShellFiles = <String>[
-  'recipes/dashboard/dashboard_shell_base.dart',
-  'recipes/dashboard/dashboard_shell.dart',
-];
-
-const _defaultDashboardFiles = <String>[
-  'recipes/dashboard/dashboard_sample_data.dart',
-  'recipes/dashboard/dashboard_overview_base.dart',
-  'recipes/dashboard/dashboard_demo_base.dart',
-  'recipes/dashboard/dashboard_demo_content.dart',
-  'recipes/dashboard/dashboard_demo_chat.dart',
-  'recipes/dashboard/dashboard_demo_charts.dart',
-  'recipes/dashboard/dashboard_demo_records.dart',
-  'recipes/dashboard/dashboard_overview.dart',
-  'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
-  'recipes/dashboard/dashboard_demo_gallery_actions.dart',
-  'recipes/dashboard/dashboard_demo_gallery_forms.dart',
-  'recipes/dashboard/dashboard_demo_gallery_display.dart',
-  'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
-  'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
-  'recipes/dashboard/dashboard_demo_gallery_typography.dart',
-  'recipes/dashboard/dashboard_demo_records_page.dart',
-  'recipes/dashboard/dashboard_demo_settings.dart',
-  'recipes/dashboard/dashboard_demo.dart',
-];
-
-const _fortalDashboardFiles = <String>[
-  'recipes/dashboard/dashboard_sample_data.dart',
-  'recipes/dashboard/dashboard_overview_base.dart',
-  'recipes/dashboard/dashboard_demo_base.dart',
-  'recipes/dashboard/dashboard_demo_content.dart',
-  'recipes/dashboard/dashboard_demo_chat.dart',
-  'recipes/dashboard/dashboard_demo_charts.dart',
-  'recipes/dashboard/dashboard_demo_records.dart',
-  'recipes/dashboard/dashboard_overview.dart',
-  'recipes/dashboard/dashboard_demo_ui.dart',
-  'recipes/dashboard/dashboard_demo_text.dart',
-  'recipes/dashboard/dashboard_demo_typography.dart',
-  'recipes/dashboard/dashboard_demo_page_header.dart',
-  'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
-  'recipes/dashboard/dashboard_demo_gallery_actions.dart',
-  'recipes/dashboard/dashboard_demo_gallery_forms.dart',
-  'recipes/dashboard/dashboard_demo_gallery_display.dart',
-  'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
-  'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
-  'recipes/dashboard/dashboard_demo_gallery_typography.dart',
-  'recipes/dashboard/dashboard_demo_records_page.dart',
-  'recipes/dashboard/dashboard_demo_settings.dart',
-  'recipes/dashboard/dashboard_demo.dart',
-];
+const _foundationItems = <String>{'theme', 'models', 'support'};
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.
 ///
@@ -229,226 +180,16 @@ const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
-  themeFiles: [
-    'tokens.dart',
-    'theme_data.dart',
-    'theme_scope.dart',
-    'effects.dart',
-  ],
   // Vanilla's theme sets its type in Geist, so every install carries the fonts.
   requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
   allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
   generatedSnapshots: _generatedSnapshots,
-  nonGeneratedItems: {'sidebar_layout', 'dashboard_shell', 'dashboard_demo'},
-  itemFileOverrides: {
-    'dashboard_shell': _dashboardShellFiles,
-    'dashboard_demo': _defaultDashboardFiles,
-  },
-  focusedClosures: {
-    'icons': ['theme', 'icons'],
-    'dashboard_shell': [
-      'theme',
-      'app_bar',
-      'icon_button',
-      'toggle',
-      'tooltip',
-      'sidebar',
-      'sidebar_layout',
-      'textfield',
-      'dashboard_shell',
-    ],
-    'dashboard_demo': [
-      'theme',
-      'models',
-      'support',
-      'app_bar',
-      'accordion',
-      'activity',
-      'activity_recipe',
-      'answer',
-      'answer_recipe',
-      'avatar',
-      'badge',
-      'button',
-      'callout',
-      'card',
-      'chart',
-      'icon_button',
-      'toggle',
-      'tooltip',
-      'sidebar',
-      'sidebar_layout',
-      'textfield',
-      'dashboard_shell',
-      'checkbox',
-      'composer',
-      'composer_recipe',
-      'data_list',
-      'select',
-      'data_table',
-      'dialog',
-      'disclosure',
-      'divider',
-      'execution',
-      'execution_recipe',
-      'link',
-      'menu',
-      'message',
-      'message_recipe',
-      'permission',
-      'permission_recipe',
-      'plan',
-      'plan_recipe',
-      'popover',
-      'progress',
-      'radio',
-      'segmented_control',
-      'skeleton',
-      'slider',
-      'spinner',
-      'switch',
-      'tabs',
-      'toast',
-      'toggle_group',
-      'transcript',
-      'transcript_recipe',
-      'dashboard_demo',
-    ],
-  },
-  sharedItems: {
-    'models': [
-      'models/activity_item.dart',
-      'models/plan_item.dart',
-      'models/statuses.dart',
-    ],
-    'support': [
-      'support/disclosure.dart',
-      'support/functional_glyph.dart',
-      'support/live_edge.dart',
-    ],
-  },
 );
 
 const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
-  themeFiles: [
-    'computed.dart',
-    'control_styles.dart',
-    'radix_colors.dart',
-    'surface_frame.dart',
-    'theme.dart',
-    'theme_data.dart',
-    'theme_scope.dart',
-    'tokens.dart',
-  ],
-  nonGeneratedItems: {
-    'base_button',
-    'code',
-    'heading',
-    'kbd',
-    'link',
-    'sidebar_layout',
-    'typography',
-    'dashboard_shell',
-    'dashboard_demo',
-  },
-  itemFileOverrides: {
-    'dashboard_shell': _dashboardShellFiles,
-    'dashboard_demo': _fortalDashboardFiles,
-  },
-  focusedClosures: {
-    'dashboard_shell': [
-      'theme',
-      'app_bar',
-      'base_button',
-      'icon_button',
-      'typography',
-      'text',
-      'toggle',
-      'tooltip',
-      'sidebar',
-      'sidebar_layout',
-      'textfield',
-      'dashboard_shell',
-    ],
-    'dashboard_demo': [
-      'theme',
-      'models',
-      'support',
-      'app_bar',
-      'accordion',
-      'activity',
-      'activity_recipe',
-      'answer',
-      'answer_recipe',
-      'avatar',
-      'badge',
-      'button',
-      'callout',
-      'card',
-      'chart',
-      'base_button',
-      'icon_button',
-      'typography',
-      'text',
-      'toggle',
-      'tooltip',
-      'sidebar',
-      'sidebar_layout',
-      'textfield',
-      'dashboard_shell',
-      'checkbox',
-      'code',
-      'composer',
-      'composer_recipe',
-      'data_list',
-      'select',
-      'data_table',
-      'dialog',
-      'disclosure',
-      'divider',
-      'execution',
-      'execution_recipe',
-      'heading',
-      'kbd',
-      'link',
-      'menu',
-      'message',
-      'message_recipe',
-      'permission',
-      'permission_recipe',
-      'plan',
-      'plan_recipe',
-      'popover',
-      'progress',
-      'radio',
-      'segmented_control',
-      'skeleton',
-      'slider',
-      'spinner',
-      'switch',
-      'tabs',
-      'toast',
-      'toggle_group',
-      'transcript',
-      'transcript_recipe',
-      'dashboard_demo',
-    ],
-  },
-  sharedItems: {
-    'models': [
-      'models/activity_item.dart',
-      'models/plan_item.dart',
-      'models/statuses.dart',
-    ],
-    'support': [
-      'support/disclosure.dart',
-      'support/functional_glyph.dart',
-      'support/live_edge.dart',
-    ],
-  },
 );
 
 /// The hosted packages every preset's installed application declares. A preset
@@ -480,12 +221,7 @@ final class _PresetContract {
     required this.name,
     required this.fixtureDirectory,
     required this.registryItems,
-    required this.themeFiles,
-    this.nonGeneratedItems = const {},
     this.generatedSnapshots = const {},
-    this.sharedItems = const {},
-    this.itemFileOverrides = const {},
-    this.focusedClosures = const {},
     this.requiredRuntimeDependencies = _baseRuntimeDependencies,
     this.allowedImportPackages = _baseImportPackages,
   });
@@ -493,12 +229,7 @@ final class _PresetContract {
   final String name;
   final String fixtureDirectory;
   final List<String> registryItems;
-  final List<String> themeFiles;
-  final Set<String> nonGeneratedItems;
   final Map<String, String> generatedSnapshots;
-  final Map<String, List<String>> sharedItems;
-  final Map<String, List<String>> itemFileOverrides;
-  final Map<String, List<String>> focusedClosures;
 
   /// Hosted runtime dependencies the CLI must add to the consumer, exactly.
   final List<String> requiredRuntimeDependencies;
@@ -517,54 +248,84 @@ final class _PresetContract {
       name: name,
       fixtureDirectory: fixtureDirectory,
       registryItems: registryItems,
-      themeFiles: themeFiles,
-      nonGeneratedItems: nonGeneratedItems,
       generatedSnapshots: generatedSnapshots,
-      sharedItems: sharedItems,
-      itemFileOverrides: itemFileOverrides,
-      focusedClosures: focusedClosures,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
       allowedImportPackages: swap(allowedImportPackages),
     );
   }
 
-  List<String> focusedUiFiles(String item) => [
-    'ui.dart',
-    for (final name in focusedClosures[item] ?? const <String>[])
-      if (name == 'theme')
-        for (final file in themeFiles) 'theme/$file'
-      else
-        ..._itemFiles(name),
-  ];
+  YamlMap _loadItems([Directory? repositoryRoot]) {
+    final root = repositoryRoot ?? Directory.current.absolute;
+    final file = File('${root.path}/registry/$name/registry.yaml');
+    final document = loadYaml(file.readAsStringSync()) as YamlMap;
+    return document['items'] as YamlMap;
+  }
 
-  List<String> get installedUiFiles => [
-    'ui.dart',
-    for (final file in themeFiles) 'theme/$file',
-    for (final files in sharedItems.values) ...files,
-    for (final item in registryItems) ..._itemFiles(item),
-  ];
-
-  List<String> _itemFiles(String item) {
-    final shared = sharedItems[item];
-    if (shared != null) return shared;
-    final explicit = itemFileOverrides[item];
-    if (explicit != null) return explicit;
-    if (item == 'icons') return const ['icons.dart'];
-    if (item.endsWith('_recipe')) return ['recipes/$item.dart'];
+  static List<String> _authoredFiles(YamlMap items, String key) {
+    final item = items[key] as YamlMap;
+    final files = item['files'] as YamlList;
     return [
-      'components/$item.dart',
-      if (!nonGeneratedItems.contains(item)) 'components/$item.g.dart',
+      for (final entry in files)
+        ((entry as YamlMap)['target'] as String).replaceFirst('@ui/', ''),
     ];
   }
 
-  List<String> get generatedAppFiles => [
-    for (final item in registryItems)
-      if (item != 'icons' &&
-          !item.endsWith('_recipe') &&
-          !itemFileOverrides.containsKey(item) &&
-          !nonGeneratedItems.contains(item))
-        'lib/ui/components/$item.g.dart',
+  static List<String> _generatedFiles(YamlMap items, String key) {
+    final item = items[key] as YamlMap;
+    final generated = item['generated'] as YamlList?;
+    return [
+      if (generated != null)
+        for (final target in generated.cast<String>())
+          target.replaceFirst('@ui/', ''),
+    ];
+  }
+
+  static List<String> _allFiles(YamlMap items, String key) => [
+    ..._authoredFiles(items, key),
+    ..._generatedFiles(items, key),
   ];
+
+  List<String> focusedUiFiles(String item, [Directory? repositoryRoot]) {
+    final items = _loadItems(repositoryRoot);
+    final visited = <String>{};
+    final closure = <String>[];
+    void visit(String key) {
+      if (!visited.add(key)) return;
+      final definition = items[key] as YamlMap?;
+      if (definition == null) {
+        throw StateError('Registry $name has no item "$key".');
+      }
+      final deps = definition['registryDependencies'] as YamlList?;
+      if (deps != null) {
+        for (final dep in deps.cast<String>()) {
+          visit(dep);
+        }
+      }
+      closure.add(key);
+    }
+
+    visit(item);
+    return <String>{
+      'ui.dart',
+      for (final key in closure) ..._allFiles(items, key),
+    }.toList();
+  }
+
+  List<String> get installedUiFiles {
+    final items = _loadItems();
+    return <String>{
+      'ui.dart',
+      for (final key in items.keys.cast<String>()) ..._allFiles(items, key),
+    }.toList();
+  }
+
+  List<String> get generatedAppFiles {
+    final items = _loadItems();
+    return <String>{
+      for (final key in items.keys.cast<String>())
+        for (final file in _generatedFiles(items, key)) 'lib/ui/$file',
+    }.toList();
+  }
 }
 
 enum RemixSource { both, hosted, checkout }
@@ -1461,11 +1222,7 @@ _Failure? _verifyRegistryCoverage(
     for (final key in (document['items'] as YamlMap).keys)
       if (key is String) key,
   };
-  final installed = {
-    'theme',
-    ...preset.sharedItems.keys,
-    ...preset.registryItems,
-  };
+  final installed = {..._foundationItems, ...preset.registryItems};
   final problems = <String>[
     for (final item in catalogItems.difference(installed))
       'registry.yaml has $item, which this check never installs',
@@ -2012,19 +1769,9 @@ String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
 List<String> requiredRuntimeDependenciesForTest(String preset) =>
     _presetByName(preset).requiredRuntimeDependencies;
 
-/// Returns the explicit-or-conventional file inventory for focused tests.
-List<String> registryItemInventoryForTest(
-  String item, {
-  List<String>? explicitFiles,
-  bool nonGenerated = false,
-}) => _PresetContract(
-  name: 'test',
-  fixtureDirectory: 'test',
-  registryItems: [item],
-  themeFiles: const [],
-  nonGeneratedItems: nonGenerated ? {item} : const {},
-  itemFileOverrides: explicitFiles == null ? const {} : {item: explicitFiles},
-).installedUiFiles.where((file) => file != 'ui.dart').toList();
+/// Returns the expected installed UI inventory for focused regression tests.
+List<String> installedUiFilesForTest({String preset = 'vanilla'}) =>
+    _presetByName(preset).installedUiFiles;
 
 /// Returns exact focused-install inventory errors for checker regression tests.
 List<String> focusedInventoryProblemsForTest(

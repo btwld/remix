@@ -64,7 +64,7 @@ class _{{typePrefix}}DashboardCustomersPageState
               .runSpacing({{typePrefix}}Tokens.s2_5),
           children: [
             Box(
-              style: BoxStyler().width(300),
+              style: BoxStyler().maxWidth(300),
               child: {{typePrefix}}TextField(
                 key: const ValueKey('customer-search'),
                 leading: const Icon(
@@ -242,9 +242,16 @@ class _{{typePrefix}}DashboardOrdersPageState
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => _Empty(
             title: 'No matching orders',
             body: 'Choose another status to see more orders.',
+            action: _filter != .all
+                ? {{typePrefix}}Button.outline(
+                    size: .small,
+                    label: 'Clear filters',
+                    onPressed: () => setState(() => _filter = .all),
+                  )
+                : null,
           ),
         ),
       ],
@@ -361,10 +368,24 @@ List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>> _orderColumns(
 
 Widget _actions(BuildContext context, String value) => {{typePrefix}}Menu<String>(
   trigger: RemixMenuTrigger.builder(
-    label: 'More',
+    label: 'Actions for $value',
     icon: {{icon:dotsHorizontal}},
-    builder: (_, _, _) =>
-        const Icon({{icon:dotsHorizontal}}, size: {{typePrefix}}Tokens.icon),
+    builder: (_, _, _) => Semantics(
+      label: 'Actions for $value',
+      button: true,
+      child: Box(
+        style: BoxStyler()
+            .size(28, 28)
+            .alignment(.center)
+            .borderRadius(.all({{typePrefix}}Tokens.radiusSm())),
+        child: StyledIcon(
+          icon: {{icon:dotsHorizontal}},
+          style: IconStyler()
+              .size({{typePrefix}}Tokens.icon)
+              .color({{typePrefix}}Tokens.mutedForeground()),
+        ),
+      ),
+    ),
   ),
   items: const [
     RemixMenuItem(value: 'view', label: 'View'),
@@ -428,24 +449,38 @@ class _Page extends StatelessWidget {
 }
 
 class _Empty extends StatelessWidget {
-  const _Empty({required this.title, required this.body});
+  const _Empty({required this.title, required this.body, this.action});
   final String title;
   final String body;
+  final Widget? action;
   @override
   Widget build(BuildContext context) => Box(
     style: BoxStyler().padding(.all({{typePrefix}}Tokens.s8)),
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.center)
-          .spacing({{typePrefix}}Tokens.s2),
+          .spacing({{typePrefix}}Tokens.s3),
       children: [
-        const Icon({{icon:magnifyingGlass}}, size: {{typePrefix}}Tokens.s6),
+        Box(
+          style: BoxStyler()
+              .size(40, 40)
+              .alignment(.center)
+              .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+              .color({{typePrefix}}Tokens.secondary()),
+          child: StyledIcon(
+            icon: {{icon:magnifyingGlass}},
+            style: IconStyler()
+                .size({{typePrefix}}Tokens.s5)
+                .color({{typePrefix}}Tokens.secondaryForeground()),
+          ),
+        ),
         ColumnBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)
               .spacing({{typePrefix}}Tokens.s1),
           children: [_Text(title, emphasized: true), _Text(body, muted: true)],
         ),
+        ?action,
       ],
     ),
   );
