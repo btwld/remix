@@ -278,17 +278,16 @@ class PlaygroundDashboardDemoPageFrame extends StatelessWidget {
     key: const ValueKey('dashboard-demo-page-scroll'),
     padding: const EdgeInsets.all(24),
     child: Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1180),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Box(
+        style: BoxStyler().maxWidth(1180),
+        child: ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(24),
           children: [
             header,
-            const SizedBox(height: 24),
-            for (final (index, child) in children.indexed) ...[
-              if (index > 0) const SizedBox(height: 16),
-              child,
-            ],
+            ColumnBox(
+              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+              children: children,
+            ),
           ],
         ),
       ),

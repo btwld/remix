@@ -182,52 +182,49 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
-    const {{typePrefix}}Popover(
+    {{typePrefix}}Popover(
       semanticLabel: 'Notifications',
-      popoverChild: SizedBox(
-        width: 280,
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              {{typePrefix}}Text('Notifications', weight: .bold),
-              SizedBox(height: 8),
-              {{typePrefix}}Text('Order ORD-1047 requires review.', size: .size2),
-              SizedBox(height: 6),
-              {{typePrefix}}Text(
-                'Three customer invitations are pending.',
-                size: .size2,
-              ),
-            ],
-          ),
+      popoverChild: Box(
+        style: BoxStyler().width(280).padding(.all(16)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.start)
+              .spacing(6),
+          children: const [
+            {{typePrefix}}Text('Notifications', weight: .bold),
+            {{typePrefix}}Text('Order ORD-1047 requires review.', size: .size2),
+            {{typePrefix}}Text('Three customer invitations are pending.', size: .size2),
+          ],
         ),
       ),
-      child: {{typePrefix}}IconButton.ghost(
+      child: const {{typePrefix}}IconButton.ghost(
         icon: {{icon:bell}},
         semanticLabel: 'Open notifications',
       ),
     ),
     {{typePrefix}}Popover(
       semanticLabel: 'Theme settings',
-      popoverChild: SizedBox(
-        width: 300,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const {{typePrefix}}Text('Theme settings', size: .size4, weight: .bold),
-              const SizedBox(height: 12),
-              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-              _settingLine('Accent color', 'Indigo'),
-              _settingLine('Gray color', 'Slate'),
-              _settingLine('Radius', 'Medium'),
-              _settingLine('Scaling', '100%'),
-            ],
-          ),
+      popoverChild: Box(
+        style: BoxStyler().width(300).padding(.all(16)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.stretch)
+              .spacing(12),
+          children: [
+            const {{typePrefix}}Text('Theme settings', size: .size4, weight: .bold),
+            ColumnBox(
+              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
+              children: [
+                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
+                _settingLine('Accent color', 'Indigo'),
+                _settingLine('Gray color', 'Slate'),
+                _settingLine('Radius', 'Medium'),
+                _settingLine('Scaling', '100%'),
+              ],
+            ),
+          ],
         ),
       ),
       child: const {{typePrefix}}IconButton.ghost(
@@ -237,14 +234,12 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     ),
   ];
 
-  Widget _settingLine(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Row(
-      children: [
-        Expanded(child: {{typePrefix}}Text(label, size: .size2)),
-        {{typePrefix}}Text(value, size: .size1, highContrast: false),
-      ],
-    ),
+  Widget _settingLine(String label, String value) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: {{typePrefix}}Text(label, size: .size2)),
+      {{typePrefix}}Text(value, size: .size1, highContrast: false),
+    ],
   );
 }
 
@@ -253,7 +248,8 @@ class _{{typePrefix}}Breadcrumb extends StatelessWidget {
   final {{typePrefix}}DashboardDemoPage page;
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
     children: [
       Flexible(
         child: {{typePrefix}}Text(
@@ -264,10 +260,7 @@ class _{{typePrefix}}Breadcrumb extends StatelessWidget {
           truncate: true,
         ),
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: {{typePrefix}}Text('/', size: .size2, highContrast: false),
-      ),
+      const {{typePrefix}}Text('/', size: .size2, highContrast: false),
       Flexible(
         child: {{typePrefix}}Text(
           page.label,
@@ -285,15 +278,14 @@ class _{{typePrefix}}Account extends StatelessWidget {
   const _{{typePrefix}}Account();
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
     children: [
       const {{typePrefix}}Text(
         'Northstar workspace',
         size: .size1,
         highContrast: false,
       ),
-      const SizedBox(height: 8),
       {{typePrefix}}Menu<String>(
         trigger: const RemixMenuTrigger(
           label: 'Ada Chen',
@@ -316,11 +308,10 @@ final class _{{typePrefix}}DashboardDemoKit implements {{typePrefix}}DashboardDe
   const _{{typePrefix}}DashboardDemoKit();
 
   @override
-  Widget pageHeader(String title, String description) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+  Widget pageHeader(String title, String description) => ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.start).spacing(6),
     children: [
       {{typePrefix}}Heading(title, size: .size7),
-      const SizedBox(height: 6),
       {{typePrefix}}Text(description, size: .size2, highContrast: false),
     ],
   );
@@ -338,26 +329,21 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => {{typePrefix}}DashboardCharts(
     cardBuilder: _chartCard,
-    sectionBuilder: (title, description, cards) => Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    sectionBuilder: (title, description, cards) => ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
       children: [
-        {{typePrefix}}Heading(title, headingLevel: 2, size: .size4),
-        const SizedBox(height: 4),
-        {{typePrefix}}Text(description, size: .size2, highContrast: false),
-        const SizedBox(height: 12),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth < 760
-                ? constraints.maxWidth
-                : (constraints.maxWidth - 16) / 2;
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                for (final card in cards) SizedBox(width: width, child: card),
-              ],
-            );
-          },
+        ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+          children: [
+            {{typePrefix}}Heading(title, headingLevel: 2, size: .size4),
+            {{typePrefix}}Text(description, size: .size2, highContrast: false),
+          ],
+        ),
+        GridBox(
+          style: GridBoxStyler.equalColumns(2)
+              .gap(16)
+              .onConstraints(const .maxWidth(759), .equalColumns(1).gap(16)),
+          children: cards,
         ),
       ],
     ),
@@ -505,8 +491,8 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         semanticsLabel: 'Device traffic with badge markers',
         slices: {{valuePrefix}}DashboardChannelSlices(badges: true),
       ),
-      .emptyPie => Stack(
-        alignment: Alignment.center,
+      .emptyPie => StackBox(
+        style: StackBoxStyler().alignment(.center),
         children: [
           {{typePrefix}}PieChart(
             centerRadius: 52,
@@ -514,11 +500,13 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
             semanticsLabel: 'No channel data',
             slices: {{valuePrefix}}DashboardEmptySlices(),
           ),
-          const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          ColumnBox(
+            style: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .crossAxisAlignment(.center)
+                .spacing(6),
+            children: const [
               Icon({{icon:box}}, size: 20),
-              SizedBox(height: 6),
               {{typePrefix}}Text('No data yet', size: .size1),
             ],
           ),
@@ -542,14 +530,17 @@ PieChartStyler _pieRing([double centerRadius = 0]) =>
 Widget _chartCard(String title, String description, Widget chart) =>
     {{typePrefix}}Card.surface(
       size: .size2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
         children: [
-          {{typePrefix}}Heading(title, headingLevel: 3, size: .size3),
-          const SizedBox(height: 4),
-          {{typePrefix}}Text(description, size: .size1, highContrast: false),
-          const SizedBox(height: 12),
-          SizedBox(height: 240, child: chart),
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+            children: [
+              {{typePrefix}}Heading(title, headingLevel: 3, size: .size3),
+              {{typePrefix}}Text(description, size: .size1, highContrast: false),
+            ],
+          ),
+          Box(style: BoxStyler().height(240), child: chart),
         ],
       ),
     );

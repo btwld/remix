@@ -33,99 +33,94 @@ class PlaygroundDashboardOverview extends StatelessWidget {
   Widget build(BuildContext context) => PlaygroundDashboardOverviewBase(
     data: data,
     scrollController: scrollController,
-    headerBuilder: (context, title, description) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    headerBuilder: (context, title, description) => ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.start)
+          .spacing(PlaygroundTokens.s1_5),
       children: [
         StyledText(
           title,
           style: TextStyler()
-              .fontSize(28)
+              .style(PlaygroundTokens.text3xl.mix())
               .fontWeight(FontWeight.w700)
               .color(PlaygroundTokens.foreground()),
         ),
-        const SizedBox(height: 6),
         StyledText(
           description,
           style: TextStyler()
-              .fontSize(14)
+              .style(PlaygroundTokens.textSm.mix())
               .color(PlaygroundTokens.mutedForeground()),
         ),
       ],
     ),
     metricBuilder: (context, metric) => PlaygroundCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s1_5),
         children: [
           StyledText(
             metric.label,
             style: TextStyler()
-                .fontSize(13)
+                .style(PlaygroundTokens.textSm.mix())
                 .fontWeight(FontWeight.w500)
                 .color(PlaygroundTokens.mutedForeground()),
           ),
-          const SizedBox(height: 10),
           StyledText(
             metric.value,
             style: TextStyler()
-                .fontSize(24)
+                .style(PlaygroundTokens.text2xl.mix())
                 .fontWeight(FontWeight.w700)
                 .color(PlaygroundTokens.foreground()),
           ),
-          const SizedBox(height: 6),
           StyledText(
             metric.change,
             style: TextStyler()
-                .fontSize(12)
+                .style(PlaygroundTokens.textXs.mix())
                 .color(PlaygroundTokens.mutedForeground()),
           ),
         ],
       ),
     ),
-    chartBuilder: (context, data) => LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth < 760
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 32) / 3;
-        return Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: [
-            SizedBox(width: width, child: _revenueCard(data)),
-            SizedBox(width: width, child: _customerChartCard()),
-            SizedBox(width: width, child: _fulfillmentCard()),
-          ],
-        );
-      },
+    chartBuilder: (context, data) => GridBox(
+      style: GridBoxStyler.equalColumns(3)
+          .gap(PlaygroundTokens.s4)
+          .onConstraints(
+            const .maxWidth(759),
+            .equalColumns(1).gap(PlaygroundTokens.s4),
+          ),
+      children: [_revenueCard(data), _customerChartCard(), _fulfillmentCard()],
     ),
-    tableBuilder: (context, data) => LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth < 900
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 20) / 2;
-        return Wrap(
-          spacing: 20,
-          runSpacing: 20,
-          children: [
-            SizedBox(width: width, child: _activityCard(data)),
-            SizedBox(width: width, child: _ordersCard(data, onViewOrders)),
-          ],
-        );
-      },
+    tableBuilder: (context, data) => GridBox(
+      style: GridBoxStyler.equalColumns(2)
+          .gap(PlaygroundTokens.s5)
+          .onConstraints(
+            const .maxWidth(899),
+            .equalColumns(1).gap(PlaygroundTokens.s5),
+          ),
+      children: [_activityCard(data), _ordersCard(data, onViewOrders)],
     ),
   );
 }
 
 Widget _revenueCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s4),
     children: [
-      _sectionTitle('Revenue trend'),
-      const SizedBox(height: 4),
-      _sectionDescription('Seven-day net revenue'),
-      const SizedBox(height: 16),
-      SizedBox(
+      ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s1),
+        children: [
+          _sectionTitle('Revenue trend'),
+          _sectionDescription('Seven-day net revenue'),
+        ],
+      ),
+      Box(
         key: const ValueKey('dashboard-revenue-chart'),
-        height: 220,
+        style: BoxStyler().height(220),
         child: PlaygroundLineChart(
           semanticsLabel: 'Seven-day net revenue',
           showMarkers: true,
@@ -152,15 +147,22 @@ Widget _revenueCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
 );
 
 Widget _customerChartCard() => PlaygroundCard(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s4),
     children: [
-      _sectionTitle('Customer acquisition'),
-      const SizedBox(height: 4),
-      _sectionDescription('New accounts by month'),
-      const SizedBox(height: 16),
-      SizedBox(
-        height: 220,
+      ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s1),
+        children: [
+          _sectionTitle('Customer acquisition'),
+          _sectionDescription('New accounts by month'),
+        ],
+      ),
+      Box(
+        style: BoxStyler().height(220),
         child: PlaygroundBarChart(
           semanticsLabel: 'New accounts by month',
           groups: [
@@ -191,15 +193,22 @@ Widget _customerChartCard() => PlaygroundCard(
 );
 
 Widget _fulfillmentCard() => PlaygroundCard(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s4),
     children: [
-      _sectionTitle('Fulfillment mix'),
-      const SizedBox(height: 4),
-      _sectionDescription('Current order status'),
-      const SizedBox(height: 16),
-      SizedBox(
-        height: 220,
+      ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s1),
+        children: [
+          _sectionTitle('Fulfillment mix'),
+          _sectionDescription('Current order status'),
+        ],
+      ),
+      Box(
+        style: BoxStyler().height(220),
         child: PlaygroundPieChart(
           centerRadius: 44,
           // mix_chart draws each slice 80px wide in any box; this ring stops
@@ -218,33 +227,48 @@ Widget _fulfillmentCard() => PlaygroundCard(
 );
 
 Widget _activityCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s2),
     children: [
       _sectionTitle('Recent activity'),
-      const SizedBox(height: 8),
-      for (final (index, event) in data.activities.indexed) ...[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 9),
-          child: Row(
-            children: [
-              const Icon(RemixIcons.activityLog, size: 16),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _cell(event.title, emphasized: true),
-                    _sectionDescription(event.detail),
-                  ],
-                ),
+      ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.stretch),
+        children: [
+          for (final (index, event) in data.activities.indexed) ...[
+            Box(
+              style: BoxStyler().padding(.vertical(PlaygroundTokens.s2_5)),
+              child: RowBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.center)
+                    .spacing(PlaygroundTokens.s2_5),
+                children: [
+                  StyledIcon(
+                    icon: RemixIcons.activityLog,
+                    style: IconStyler()
+                        .size(PlaygroundTokens.icon)
+                        .color(PlaygroundTokens.mutedForeground()),
+                  ),
+                  Expanded(
+                    child: ColumnBox(
+                      style: FlexBoxStyler()
+                          .crossAxisAlignment(.start)
+                          .spacing(PlaygroundTokens.s0_5),
+                      children: [
+                        _cell(event.title, emphasized: true),
+                        _sectionDescription(event.detail),
+                      ],
+                    ),
+                  ),
+                  _sectionDescription(event.relativeTime),
+                ],
               ),
-              _sectionDescription(event.relativeTime),
-            ],
-          ),
-        ),
-        if (index != data.activities.length - 1) const PlaygroundDivider(),
-      ],
+            ),
+            if (index != data.activities.length - 1) const PlaygroundDivider(),
+          ],
+        ],
+      ),
     ],
   ),
 );
@@ -253,10 +277,13 @@ Widget _ordersCard(
   PlaygroundDashboardSampleData data,
   VoidCallback? onViewOrders,
 ) => PlaygroundCard(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s3),
     children: [
-      Row(
+      RowBox(
+        style: FlexBoxStyler().crossAxisAlignment(.center),
         children: [
           Expanded(child: _sectionTitle('Recent orders')),
           PlaygroundButton.ghost(
@@ -267,7 +294,6 @@ Widget _ordersCard(
           ),
         ],
       ),
-      const SizedBox(height: 12),
       PlaygroundDataTable<PlaygroundDashboardRecord>(
         key: const ValueKey('dashboard-records-table'),
         semanticLabel: 'Recent customer orders',
@@ -284,20 +310,22 @@ Widget _ordersCard(
 Widget _sectionTitle(String text) => StyledText(
   text,
   style: TextStyler()
-      .fontSize(17)
+      .style(PlaygroundTokens.textLg.mix())
       .fontWeight(FontWeight.w600)
       .color(PlaygroundTokens.foreground()),
 );
 
 Widget _sectionDescription(String text) => StyledText(
   text,
-  style: TextStyler().fontSize(13).color(PlaygroundTokens.mutedForeground()),
+  style: TextStyler()
+      .style(PlaygroundTokens.textSm.mix())
+      .color(PlaygroundTokens.mutedForeground()),
 );
 
 Widget _cell(String text, {bool emphasized = false}) => StyledText(
   text,
   style: TextStyler()
-      .fontSize(14)
+      .style(PlaygroundTokens.textSm.mix())
       .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
       .color(PlaygroundTokens.foreground()),
 );

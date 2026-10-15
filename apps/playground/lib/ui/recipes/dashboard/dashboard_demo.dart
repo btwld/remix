@@ -163,11 +163,9 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     if (!widget.builtInChrome) return demo;
     return PlaygroundTheme(
       mode: _isDark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
-      child: Builder(
-        builder: (context) => ColoredBox(
-          color: PlaygroundTokens.background.resolve(context),
-          child: RemixToastScope(style: playgroundToastStyle(), child: demo),
-        ),
+      child: Box(
+        style: BoxStyler().color(PlaygroundTokens.background()),
+        child: RemixToastScope(style: playgroundToastStyle(), child: demo),
       ),
     );
   }
@@ -181,30 +179,29 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     ),
     PlaygroundPopover(
       semanticLabel: 'Notifications',
-      popoverChild: SizedBox(
-        width: 280,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              StyledText(
-                'Notifications',
-                style: _textStyle(weight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              StyledText(
-                'Order ORD-1047 requires review.',
-                style: _textStyle(size: 13),
-              ),
-              const SizedBox(height: 6),
-              StyledText(
-                'Three customer invitations are pending.',
-                style: _textStyle(size: 13, muted: true),
-              ),
-            ],
-          ),
+      popoverChild: Box(
+        style: BoxStyler()
+            .width(PlaygroundTokens.popoverWidth)
+            .padding(.all(PlaygroundTokens.s4)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s1_5),
+          children: [
+            StyledText(
+              'Notifications',
+              style: _textStyle(weight: FontWeight.w600),
+            ),
+            StyledText(
+              'Order ORD-1047 requires review.',
+              style: _textStyle(token: PlaygroundTokens.textXs),
+            ),
+            StyledText(
+              'Three customer invitations are pending.',
+              style: _textStyle(token: PlaygroundTokens.textXs, muted: true),
+            ),
+          ],
         ),
       ),
       child: const PlaygroundIconButton.ghost(
@@ -214,25 +211,35 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     ),
     PlaygroundPopover(
       semanticLabel: 'Theme settings',
-      popoverChild: SizedBox(
-        width: 300,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              StyledText(
-                'Theme settings',
-                style: _textStyle(size: 16, weight: FontWeight.w600),
+      popoverChild: Box(
+        style: BoxStyler()
+            .width(PlaygroundTokens.popoverWidth)
+            .padding(.all(PlaygroundTokens.s4)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.stretch)
+              .spacing(PlaygroundTokens.s3),
+          children: [
+            StyledText(
+              'Theme settings',
+              style: _textStyle(
+                token: PlaygroundTokens.textBase,
+                weight: FontWeight.w600,
               ),
-              const SizedBox(height: 12),
-              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-              _settingLine('Accent color', 'Neutral'),
-              _settingLine('Radius', 'Medium'),
-              _settingLine('Density', 'Comfortable'),
-            ],
-          ),
+            ),
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(PlaygroundTokens.s2),
+              children: [
+                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
+                _settingLine('Accent color', 'Neutral'),
+                _settingLine('Radius', 'Medium'),
+                _settingLine('Density', 'Comfortable'),
+              ],
+            ),
+          ],
         ),
       ),
       child: const PlaygroundIconButton.ghost(
@@ -242,14 +249,12 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     ),
   ];
 
-  Widget _settingLine(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Row(
-      children: [
-        Expanded(child: StyledText(label, style: _textStyle())),
-        StyledText(value, style: _textStyle(muted: true)),
-      ],
-    ),
+  Widget _settingLine(String label, String value) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: StyledText(label, style: _textStyle())),
+      StyledText(value, style: _textStyle(muted: true)),
+    ],
   );
 }
 
@@ -270,7 +275,10 @@ class _PlaygroundBreadcrumb extends StatelessWidget {
   final PlaygroundDashboardDemoPage page;
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.center)
+        .spacing(PlaygroundTokens.s2),
     children: [
       Flexible(
         child: StyledText(
@@ -280,15 +288,12 @@ class _PlaygroundBreadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: StyledText('/', style: _textStyle(muted: true)),
-      ),
+      StyledText('/', style: _textStyle(muted: true)),
       Flexible(
         child: StyledText(
           page.label,
           style: _textStyle(
-            size: 16,
+            token: PlaygroundTokens.textBase,
             weight: FontWeight.w600,
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
@@ -301,11 +306,12 @@ class _PlaygroundAccount extends StatelessWidget {
   const _PlaygroundAccount();
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s2),
     children: [
       StyledText('Northstar workspace', style: _textStyle(muted: true)),
-      const SizedBox(height: 8),
       PlaygroundMenu<String>(
         trigger: const RemixMenuTrigger(
           label: 'Ada Chen',
@@ -328,11 +334,18 @@ final class _PlaygroundDashboardDemoKit implements PlaygroundDashboardDemoKit {
   const _PlaygroundDashboardDemoKit();
 
   @override
-  Widget pageHeader(String title, String description) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+  Widget pageHeader(String title, String description) => ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.start)
+        .spacing(PlaygroundTokens.s1_5),
     children: [
-      StyledText(title, style: _textStyle(size: 28, weight: FontWeight.w700)),
-      const SizedBox(height: 6),
+      StyledText(
+        title,
+        style: _textStyle(
+          token: PlaygroundTokens.text3xl,
+          weight: FontWeight.w700,
+        ),
+      ),
       StyledText(description, style: _textStyle(muted: true)),
     ],
   );
@@ -350,26 +363,34 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PlaygroundDashboardCharts(
     cardBuilder: _chartCard,
-    sectionBuilder: (title, description, cards) => Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    sectionBuilder: (title, description, cards) => ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(PlaygroundTokens.s3),
       children: [
-        StyledText(title, style: _textStyle(size: 17, weight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        StyledText(description, style: _textStyle(size: 13, muted: true)),
-        const SizedBox(height: 12),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth < 760
-                ? constraints.maxWidth
-                : (constraints.maxWidth - 16) / 2;
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                for (final card in cards) SizedBox(width: width, child: card),
-              ],
-            );
-          },
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s1),
+          children: [
+            StyledText(
+              title,
+              style: _textStyle(
+                token: PlaygroundTokens.textLg,
+                weight: FontWeight.w600,
+              ),
+            ),
+            StyledText(description, style: _textStyle(muted: true)),
+          ],
+        ),
+        GridBox(
+          style: GridBoxStyler.equalColumns(2)
+              .gap(PlaygroundTokens.s4)
+              .onConstraints(
+                const .maxWidth(759),
+                .equalColumns(1).gap(PlaygroundTokens.s4),
+              ),
+          children: cards,
         ),
       ],
     ),
@@ -517,8 +538,8 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
         semanticsLabel: 'Device traffic with badge markers',
         slices: playgroundDashboardChannelSlices(badges: true),
       ),
-      .emptyPie => Stack(
-        alignment: Alignment.center,
+      .emptyPie => StackBox(
+        style: StackBoxStyler().alignment(.center),
         children: [
           PlaygroundPieChart(
             centerRadius: 52,
@@ -526,19 +547,21 @@ class _PlaygroundDashboardCharts extends StatelessWidget {
             semanticsLabel: 'No channel data',
             slices: playgroundDashboardEmptySlices(),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
+          ColumnBox(
+            style: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .crossAxisAlignment(.center)
+                .spacing(PlaygroundTokens.s1_5),
             children: [
               StyledIcon(
                 icon: RemixIcons.box,
                 style: IconStyler()
-                    .size(20)
+                    .size(PlaygroundTokens.s5)
                     .color(PlaygroundTokens.mutedForeground()),
               ),
-              const SizedBox(height: 6),
               StyledText(
                 'No data yet',
-                style: _textStyle(size: 12, muted: true),
+                style: _textStyle(token: PlaygroundTokens.textXs, muted: true),
               ),
             ],
           ),
@@ -561,27 +584,37 @@ PieChartStyler _pieRing([double centerRadius = 0]) =>
 
 Widget _chartCard(String title, String description, Widget chart) =>
     PlaygroundCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.stretch)
+            .spacing(PlaygroundTokens.s3),
         children: [
-          StyledText(
-            title,
-            style: _textStyle(size: 16, weight: FontWeight.w600),
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing(PlaygroundTokens.s1),
+            children: [
+              StyledText(
+                title,
+                style: _textStyle(
+                  token: PlaygroundTokens.textBase,
+                  weight: FontWeight.w600,
+                ),
+              ),
+              StyledText(description, style: _textStyle(muted: true)),
+            ],
           ),
-          const SizedBox(height: 4),
-          StyledText(description, style: _textStyle(size: 13, muted: true)),
-          const SizedBox(height: 12),
-          SizedBox(height: 240, child: chart),
+          Box(style: BoxStyler().height(240), child: chart),
         ],
       ),
     );
 
 TextStyler _textStyle({
-  double size = 14,
+  TextStyleToken token = PlaygroundTokens.textSm,
   FontWeight weight = FontWeight.w400,
   bool muted = false,
 }) => TextStyler()
-    .fontSize(size)
+    .style(token.mix())
     .fontWeight(weight)
     .color(
       muted
@@ -604,8 +637,11 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
       .soft => PlaygroundButton.secondary(label: label, onPressed: onPressed),
       .outline => PlaygroundButton.outline(label: label, onPressed: onPressed),
     },
-    heading: _textStyle(size: 26, weight: FontWeight.w700),
-    body: _textStyle(size: 13, muted: true),
+    heading: _textStyle(
+      token: PlaygroundTokens.text2xl,
+      weight: FontWeight.w700,
+    ),
+    body: _textStyle(muted: true),
     messageStyle: message.style,
     messageSurfaceStyle: message.surfaceStyle,
     answerStyle: answer.style,

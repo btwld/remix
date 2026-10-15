@@ -161,11 +161,9 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     if (!widget.builtInChrome) return demo;
     return {{typePrefix}}Theme(
       mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
-      child: Builder(
-        builder: (context) => ColoredBox(
-          color: {{typePrefix}}Tokens.background.resolve(context),
-          child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
-        ),
+      child: Box(
+        style: BoxStyler().color({{typePrefix}}Tokens.background()),
+        child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
       ),
     );
   }
@@ -179,30 +177,29 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     ),
     {{typePrefix}}Popover(
       semanticLabel: 'Notifications',
-      popoverChild: SizedBox(
-        width: 280,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              StyledText(
-                'Notifications',
-                style: _textStyle(weight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              StyledText(
-                'Order ORD-1047 requires review.',
-                style: _textStyle(size: 13),
-              ),
-              const SizedBox(height: 6),
-              StyledText(
-                'Three customer invitations are pending.',
-                style: _textStyle(size: 13, muted: true),
-              ),
-            ],
-          ),
+      popoverChild: Box(
+        style: BoxStyler()
+            .width({{typePrefix}}Tokens.popoverWidth)
+            .padding(.all({{typePrefix}}Tokens.s4)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.start)
+              .spacing({{typePrefix}}Tokens.s1_5),
+          children: [
+            StyledText(
+              'Notifications',
+              style: _textStyle(weight: FontWeight.w600),
+            ),
+            StyledText(
+              'Order ORD-1047 requires review.',
+              style: _textStyle(token: {{typePrefix}}Tokens.textXs),
+            ),
+            StyledText(
+              'Three customer invitations are pending.',
+              style: _textStyle(token: {{typePrefix}}Tokens.textXs, muted: true),
+            ),
+          ],
         ),
       ),
       child: const {{typePrefix}}IconButton.ghost(
@@ -212,25 +209,35 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     ),
     {{typePrefix}}Popover(
       semanticLabel: 'Theme settings',
-      popoverChild: SizedBox(
-        width: 300,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              StyledText(
-                'Theme settings',
-                style: _textStyle(size: 16, weight: FontWeight.w600),
+      popoverChild: Box(
+        style: BoxStyler()
+            .width({{typePrefix}}Tokens.popoverWidth)
+            .padding(.all({{typePrefix}}Tokens.s4)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.stretch)
+              .spacing({{typePrefix}}Tokens.s3),
+          children: [
+            StyledText(
+              'Theme settings',
+              style: _textStyle(
+                token: {{typePrefix}}Tokens.textBase,
+                weight: FontWeight.w600,
               ),
-              const SizedBox(height: 12),
-              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-              _settingLine('Accent color', 'Neutral'),
-              _settingLine('Radius', 'Medium'),
-              _settingLine('Density', 'Comfortable'),
-            ],
-          ),
+            ),
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing({{typePrefix}}Tokens.s2),
+              children: [
+                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
+                _settingLine('Accent color', 'Neutral'),
+                _settingLine('Radius', 'Medium'),
+                _settingLine('Density', 'Comfortable'),
+              ],
+            ),
+          ],
         ),
       ),
       child: const {{typePrefix}}IconButton.ghost(
@@ -240,14 +247,12 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     ),
   ];
 
-  Widget _settingLine(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Row(
-      children: [
-        Expanded(child: StyledText(label, style: _textStyle())),
-        StyledText(value, style: _textStyle(muted: true)),
-      ],
-    ),
+  Widget _settingLine(String label, String value) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: StyledText(label, style: _textStyle())),
+      StyledText(value, style: _textStyle(muted: true)),
+    ],
   );
 }
 
@@ -268,7 +273,10 @@ class _{{typePrefix}}Breadcrumb extends StatelessWidget {
   final {{typePrefix}}DashboardDemoPage page;
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.center)
+        .spacing({{typePrefix}}Tokens.s2),
     children: [
       Flexible(
         child: StyledText(
@@ -278,15 +286,12 @@ class _{{typePrefix}}Breadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: StyledText('/', style: _textStyle(muted: true)),
-      ),
+      StyledText('/', style: _textStyle(muted: true)),
       Flexible(
         child: StyledText(
           page.label,
           style: _textStyle(
-            size: 16,
+            token: {{typePrefix}}Tokens.textBase,
             weight: FontWeight.w600,
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
@@ -299,11 +304,12 @@ class _{{typePrefix}}Account extends StatelessWidget {
   const _{{typePrefix}}Account();
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s2),
     children: [
       StyledText('Northstar workspace', style: _textStyle(muted: true)),
-      const SizedBox(height: 8),
       {{typePrefix}}Menu<String>(
         trigger: const RemixMenuTrigger(
           label: 'Ada Chen',
@@ -326,11 +332,18 @@ final class _{{typePrefix}}DashboardDemoKit implements {{typePrefix}}DashboardDe
   const _{{typePrefix}}DashboardDemoKit();
 
   @override
-  Widget pageHeader(String title, String description) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+  Widget pageHeader(String title, String description) => ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.start)
+        .spacing({{typePrefix}}Tokens.s1_5),
     children: [
-      StyledText(title, style: _textStyle(size: 28, weight: FontWeight.w700)),
-      const SizedBox(height: 6),
+      StyledText(
+        title,
+        style: _textStyle(
+          token: {{typePrefix}}Tokens.text3xl,
+          weight: FontWeight.w700,
+        ),
+      ),
       StyledText(description, style: _textStyle(muted: true)),
     ],
   );
@@ -348,26 +361,34 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => {{typePrefix}}DashboardCharts(
     cardBuilder: _chartCard,
-    sectionBuilder: (title, description, cards) => Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    sectionBuilder: (title, description, cards) => ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing({{typePrefix}}Tokens.s3),
       children: [
-        StyledText(title, style: _textStyle(size: 17, weight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        StyledText(description, style: _textStyle(size: 13, muted: true)),
-        const SizedBox(height: 12),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth < 760
-                ? constraints.maxWidth
-                : (constraints.maxWidth - 16) / 2;
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                for (final card in cards) SizedBox(width: width, child: card),
-              ],
-            );
-          },
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing({{typePrefix}}Tokens.s1),
+          children: [
+            StyledText(
+              title,
+              style: _textStyle(
+                token: {{typePrefix}}Tokens.textLg,
+                weight: FontWeight.w600,
+              ),
+            ),
+            StyledText(description, style: _textStyle(muted: true)),
+          ],
+        ),
+        GridBox(
+          style: GridBoxStyler.equalColumns(2)
+              .gap({{typePrefix}}Tokens.s4)
+              .onConstraints(
+                const .maxWidth(759),
+                .equalColumns(1).gap({{typePrefix}}Tokens.s4),
+              ),
+          children: cards,
         ),
       ],
     ),
@@ -515,8 +536,8 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
         semanticsLabel: 'Device traffic with badge markers',
         slices: {{valuePrefix}}DashboardChannelSlices(badges: true),
       ),
-      .emptyPie => Stack(
-        alignment: Alignment.center,
+      .emptyPie => StackBox(
+        style: StackBoxStyler().alignment(.center),
         children: [
           {{typePrefix}}PieChart(
             centerRadius: 52,
@@ -524,19 +545,21 @@ class _{{typePrefix}}DashboardCharts extends StatelessWidget {
             semanticsLabel: 'No channel data',
             slices: {{valuePrefix}}DashboardEmptySlices(),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
+          ColumnBox(
+            style: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .crossAxisAlignment(.center)
+                .spacing({{typePrefix}}Tokens.s1_5),
             children: [
               StyledIcon(
                 icon: {{icon:box}},
                 style: IconStyler()
-                    .size(20)
+                    .size({{typePrefix}}Tokens.s5)
                     .color({{typePrefix}}Tokens.mutedForeground()),
               ),
-              const SizedBox(height: 6),
               StyledText(
                 'No data yet',
-                style: _textStyle(size: 12, muted: true),
+                style: _textStyle(token: {{typePrefix}}Tokens.textXs, muted: true),
               ),
             ],
           ),
@@ -559,27 +582,37 @@ PieChartStyler _pieRing([double centerRadius = 0]) =>
 
 Widget _chartCard(String title, String description, Widget chart) =>
     {{typePrefix}}Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.stretch)
+            .spacing({{typePrefix}}Tokens.s3),
         children: [
-          StyledText(
-            title,
-            style: _textStyle(size: 16, weight: FontWeight.w600),
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing({{typePrefix}}Tokens.s1),
+            children: [
+              StyledText(
+                title,
+                style: _textStyle(
+                  token: {{typePrefix}}Tokens.textBase,
+                  weight: FontWeight.w600,
+                ),
+              ),
+              StyledText(description, style: _textStyle(muted: true)),
+            ],
           ),
-          const SizedBox(height: 4),
-          StyledText(description, style: _textStyle(size: 13, muted: true)),
-          const SizedBox(height: 12),
-          SizedBox(height: 240, child: chart),
+          Box(style: BoxStyler().height(240), child: chart),
         ],
       ),
     );
 
 TextStyler _textStyle({
-  double size = 14,
+  TextStyleToken token = {{typePrefix}}Tokens.textSm,
   FontWeight weight = FontWeight.w400,
   bool muted = false,
 }) => TextStyler()
-    .fontSize(size)
+    .style(token.mix())
     .fontWeight(weight)
     .color(
       muted ? {{typePrefix}}Tokens.mutedForeground() : {{typePrefix}}Tokens.foreground(),
@@ -600,8 +633,8 @@ TextStyler _textStyle({
       .soft => {{typePrefix}}Button.secondary(label: label, onPressed: onPressed),
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
-    heading: _textStyle(size: 26, weight: FontWeight.w700),
-    body: _textStyle(size: 13, muted: true),
+    heading: _textStyle(token: {{typePrefix}}Tokens.text2xl, weight: FontWeight.w700),
+    body: _textStyle(muted: true),
     messageStyle: message.style,
     messageSurfaceStyle: message.surfaceStyle,
     answerStyle: answer.style,

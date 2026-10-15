@@ -56,67 +56,63 @@ class _DefaultDashboardCustomersPageState
         onPressed: () => _toast(context, 'Customer invitation started'),
       ),
       children: [
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final search = SizedBox(
-              width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing(VanillaTokens.s3)
+              .runSpacing(VanillaTokens.s2_5),
+          children: [
+            Box(
+              style: BoxStyler().width(300),
               child: VanillaTextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(RemixIcons.magnifyingGlass, size: 18),
+                leading: const Icon(
+                  RemixIcons.magnifyingGlass,
+                  size: VanillaTokens.icon,
+                ),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;
                 }),
               ),
-            );
-            final selection = _selectedIds.isEmpty
-                ? null
-                : Wrap(
-                    spacing: 6,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      VanillaBadge.secondary(
-                        label: '${_selectedIds.length} selected',
-                      ),
-                      VanillaButton.ghost(
-                        size: .small,
-                        label: 'Export',
-                        onPressed: () => _toast(
-                          context,
-                          'Export prepared for ${_selectedIds.length} customers',
+            ),
+            if (_selectedIds.isNotEmpty)
+              WrapBox(
+                style: WrapBoxStyler()
+                    .spacing(VanillaTokens.s1_5)
+                    .crossAxisAlignment(.center),
+                children: [
+                  VanillaBadge.secondary(
+                    label: '${_selectedIds.length} selected',
+                  ),
+                  VanillaButton.ghost(
+                    size: .small,
+                    label: 'Export',
+                    onPressed: () => _toast(
+                      context,
+                      'Export prepared for ${_selectedIds.length} customers',
+                    ),
+                  ),
+                  VanillaButton.ghost(
+                    size: .small,
+                    label: 'Archive',
+                    onPressed: () => showRemixToast(
+                      context,
+                      RemixToastData(
+                        title: '${_selectedIds.length} customers archived',
+                        icon: RemixIcons.checkCircled,
+                        action: const RemixToastAction(
+                          label: 'Undo',
+                          onPressed: _noop,
                         ),
                       ),
-                      VanillaButton.ghost(
-                        size: .small,
-                        label: 'Archive',
-                        onPressed: () => showRemixToast(
-                          context,
-                          RemixToastData(
-                            title: '${_selectedIds.length} customers archived',
-                            icon: RemixIcons.checkCircled,
-                            action: const RemixToastAction(
-                              label: 'Undo',
-                              onPressed: _noop,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            return constraints.maxWidth < 700
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      search,
-                      if (selection != null) ...[
-                        const SizedBox(height: 10),
-                        selection,
-                      ],
-                    ],
-                  )
-                : Row(children: [search, const Spacer(), ?selection]);
-          },
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
         VanillaDataTable<RegistryDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
@@ -271,10 +267,12 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     label: 'Customer',
     sortable: true,
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => Row(
+    cellBuilder: (_, value) => RowBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.center)
+          .spacing(VanillaTokens.s2),
       children: [
         VanillaAvatar(label: value.initials),
-        const SizedBox(width: 9),
         Flexible(child: _Text(value.name, emphasized: true)),
       ],
     ),
@@ -365,7 +363,8 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
   trigger: RemixMenuTrigger.builder(
     label: 'More',
     icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) => const Icon(RemixIcons.dotsHorizontal, size: 18),
+    builder: (_, _, _) =>
+        const Icon(RemixIcons.dotsHorizontal, size: VanillaTokens.icon),
   ),
   items: const [
     RemixMenuItem(value: 'view', label: 'View'),
@@ -397,19 +396,24 @@ class _Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    padding: const EdgeInsets.all(VanillaTokens.s8),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(VanillaTokens.s5),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(VanillaTokens.s4),
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.start)
+                    .spacing(VanillaTokens.s1),
                 children: [
-                  _Text(title, size: 28, emphasized: true),
-                  const SizedBox(height: 4),
+                  _Text(title, token: VanillaTokens.text3xl, emphasized: true),
                   _Text(description, muted: true),
                 ],
               ),
@@ -417,7 +421,7 @@ class _Page extends StatelessWidget {
             action,
           ],
         ),
-        for (final child in children) ...[const SizedBox(height: 20), child],
+        ...children,
       ],
     ),
   );
@@ -428,15 +432,20 @@ class _Empty extends StatelessWidget {
   final String title;
   final String body;
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(32),
-    child: Column(
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.all(VanillaTokens.s8)),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.center)
+          .spacing(VanillaTokens.s2),
       children: [
-        const Icon(RemixIcons.magnifyingGlass, size: 24),
-        const SizedBox(height: 8),
-        _Text(title, emphasized: true),
-        const SizedBox(height: 4),
-        _Text(body, muted: true),
+        const Icon(RemixIcons.magnifyingGlass, size: VanillaTokens.s6),
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(VanillaTokens.s1),
+          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
+        ),
       ],
     ),
   );
@@ -445,19 +454,19 @@ class _Empty extends StatelessWidget {
 class _Text extends StatelessWidget {
   const _Text(
     this.value, {
-    this.size = 14,
+    this.token = VanillaTokens.textSm,
     this.emphasized = false,
     this.muted = false,
   });
   final String value;
-  final double size;
+  final TextStyleToken token;
   final bool emphasized;
   final bool muted;
   @override
   Widget build(BuildContext context) => StyledText(
     value,
     style: TextStyler()
-        .fontSize(size)
+        .style(token.mix())
         .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
         .color(
           muted ? VanillaTokens.mutedForeground() : VanillaTokens.foreground(),

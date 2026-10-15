@@ -57,10 +57,15 @@ class _FortalDashboardCustomersPageState
         onPressed: () => _toast(context, 'Customer invitation started'),
       ),
       children: [
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final search = SizedBox(
-              width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing(12)
+              .runSpacing(10),
+          children: [
+            Box(
+              style: BoxStyler().width(300),
               child: FortalTextField(
                 key: const ValueKey('customer-search'),
                 leading: const Icon(RemixIcons.magnifyingGlass, size: 18),
@@ -70,60 +75,38 @@ class _FortalDashboardCustomersPageState
                   _page = 0;
                 }),
               ),
-            );
-            final selection = _selectedIds.isEmpty
-                ? null
-                : Wrap(
-                    spacing: 6,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      FortalBadge.soft(
-                        label: '${_selectedIds.length} selected',
-                      ),
-                      FortalButton.ghost(
-                        size: .size1,
-                        label: 'Export',
-                        onPressed: () => _toast(
-                          context,
-                          'Export prepared for ${_selectedIds.length} customers',
+            ),
+            if (_selectedIds.isNotEmpty)
+              WrapBox(
+                style: WrapBoxStyler().spacing(6).crossAxisAlignment(.center),
+                children: [
+                  FortalBadge.soft(label: '${_selectedIds.length} selected'),
+                  FortalButton.ghost(
+                    size: .size1,
+                    label: 'Export',
+                    onPressed: () => _toast(
+                      context,
+                      'Export prepared for ${_selectedIds.length} customers',
+                    ),
+                  ),
+                  FortalButton.ghost(
+                    size: .size1,
+                    label: 'Archive',
+                    onPressed: () => showRemixToast(
+                      context,
+                      RemixToastData(
+                        title: '${_selectedIds.length} customers archived',
+                        icon: RemixIcons.checkCircled,
+                        action: const RemixToastAction(
+                          label: 'Undo',
+                          onPressed: _noop,
                         ),
                       ),
-                      FortalButton.ghost(
-                        size: .size1,
-                        label: 'Archive',
-                        onPressed: () => showRemixToast(
-                          context,
-                          RemixToastData(
-                            title: '${_selectedIds.length} customers archived',
-                            icon: RemixIcons.checkCircled,
-                            action: const RemixToastAction(
-                              label: 'Undo',
-                              onPressed: _noop,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            return constraints.maxWidth < 700
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      search,
-                      if (selection != null) ...[
-                        const SizedBox(height: 10),
-                        selection,
-                      ],
-                    ],
-                  )
-                : Row(
-                    children: [
-                      search,
-                      const Spacer(),
-                      if (selection != null) selection,
-                    ],
-                  );
-          },
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
         FortalDataTable<RegistryDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
@@ -277,10 +260,10 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     label: 'Customer',
     sortable: true,
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => Row(
+    cellBuilder: (_, value) => RowBox(
+      style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
       children: [
         FortalAvatar(label: value.initials),
-        const SizedBox(width: 9),
         Flexible(child: _Text(value.name, emphasized: true)),
       ],
     ),
@@ -403,18 +386,17 @@ class _Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        RowBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(16),
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
                 children: [
                   _Text(title, size: 28, emphasized: true),
-                  const SizedBox(height: 4),
                   _Text(description, muted: true),
                 ],
               ),
@@ -422,7 +404,7 @@ class _Page extends StatelessWidget {
             action,
           ],
         ),
-        for (final child in children) ...[const SizedBox(height: 20), child],
+        ...children,
       ],
     ),
   );
@@ -433,15 +415,16 @@ class _Empty extends StatelessWidget {
   final String title;
   final String body;
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(32),
-    child: Column(
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.all(32)),
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
       children: [
         const Icon(RemixIcons.magnifyingGlass, size: 24),
-        const SizedBox(height: 8),
-        _Text(title, emphasized: true),
-        const SizedBox(height: 4),
-        _Text(body, muted: true),
+        ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.center).spacing(4),
+          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
+        ),
       ],
     ),
   );

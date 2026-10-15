@@ -182,52 +182,49 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
-    const FortalPopover(
+    FortalPopover(
       semanticLabel: 'Notifications',
-      popoverChild: SizedBox(
-        width: 280,
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FortalText('Notifications', weight: .bold),
-              SizedBox(height: 8),
-              FortalText('Order ORD-1047 requires review.', size: .size2),
-              SizedBox(height: 6),
-              FortalText(
-                'Three customer invitations are pending.',
-                size: .size2,
-              ),
-            ],
-          ),
+      popoverChild: Box(
+        style: BoxStyler().width(280).padding(.all(16)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.start)
+              .spacing(6),
+          children: const [
+            FortalText('Notifications', weight: .bold),
+            FortalText('Order ORD-1047 requires review.', size: .size2),
+            FortalText('Three customer invitations are pending.', size: .size2),
+          ],
         ),
       ),
-      child: FortalIconButton.ghost(
+      child: const FortalIconButton.ghost(
         icon: RemixIcons.bell,
         semanticLabel: 'Open notifications',
       ),
     ),
     FortalPopover(
       semanticLabel: 'Theme settings',
-      popoverChild: SizedBox(
-        width: 300,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const FortalText('Theme settings', size: .size4, weight: .bold),
-              const SizedBox(height: 12),
-              _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-              _settingLine('Accent color', 'Indigo'),
-              _settingLine('Gray color', 'Slate'),
-              _settingLine('Radius', 'Medium'),
-              _settingLine('Scaling', '100%'),
-            ],
-          ),
+      popoverChild: Box(
+        style: BoxStyler().width(300).padding(.all(16)),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .mainAxisSize(.min)
+              .crossAxisAlignment(.stretch)
+              .spacing(12),
+          children: [
+            const FortalText('Theme settings', size: .size4, weight: .bold),
+            ColumnBox(
+              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
+              children: [
+                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
+                _settingLine('Accent color', 'Indigo'),
+                _settingLine('Gray color', 'Slate'),
+                _settingLine('Radius', 'Medium'),
+                _settingLine('Scaling', '100%'),
+              ],
+            ),
+          ],
         ),
       ),
       child: const FortalIconButton.ghost(
@@ -237,14 +234,12 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
     ),
   ];
 
-  Widget _settingLine(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Row(
-      children: [
-        Expanded(child: FortalText(label, size: .size2)),
-        FortalText(value, size: .size1, highContrast: false),
-      ],
-    ),
+  Widget _settingLine(String label, String value) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: FortalText(label, size: .size2)),
+      FortalText(value, size: .size1, highContrast: false),
+    ],
   );
 }
 
@@ -253,7 +248,8 @@ class _FortalBreadcrumb extends StatelessWidget {
   final RegistryDashboardDemoPage page;
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
     children: [
       Flexible(
         child: FortalText(
@@ -264,10 +260,7 @@ class _FortalBreadcrumb extends StatelessWidget {
           truncate: true,
         ),
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: FortalText('/', size: .size2, highContrast: false),
-      ),
+      const FortalText('/', size: .size2, highContrast: false),
       Flexible(
         child: FortalText(
           page.label,
@@ -285,15 +278,14 @@ class _FortalAccount extends StatelessWidget {
   const _FortalAccount();
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
     children: [
       const FortalText(
         'Northstar workspace',
         size: .size1,
         highContrast: false,
       ),
-      const SizedBox(height: 8),
       FortalMenu<String>(
         trigger: const RemixMenuTrigger(
           label: 'Ada Chen',
@@ -316,11 +308,10 @@ final class _FortalDashboardDemoKit implements RegistryDashboardDemoKit {
   const _FortalDashboardDemoKit();
 
   @override
-  Widget pageHeader(String title, String description) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+  Widget pageHeader(String title, String description) => ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.start).spacing(6),
     children: [
       FortalHeading(title, size: .size7),
-      const SizedBox(height: 6),
       FortalText(description, size: .size2, highContrast: false),
     ],
   );
@@ -338,26 +329,21 @@ class _FortalDashboardCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => RegistryDashboardCharts(
     cardBuilder: _chartCard,
-    sectionBuilder: (title, description, cards) => Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    sectionBuilder: (title, description, cards) => ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
       children: [
-        FortalHeading(title, headingLevel: 2, size: .size4),
-        const SizedBox(height: 4),
-        FortalText(description, size: .size2, highContrast: false),
-        const SizedBox(height: 12),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth < 760
-                ? constraints.maxWidth
-                : (constraints.maxWidth - 16) / 2;
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                for (final card in cards) SizedBox(width: width, child: card),
-              ],
-            );
-          },
+        ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+          children: [
+            FortalHeading(title, headingLevel: 2, size: .size4),
+            FortalText(description, size: .size2, highContrast: false),
+          ],
+        ),
+        GridBox(
+          style: GridBoxStyler.equalColumns(2)
+              .gap(16)
+              .onConstraints(const .maxWidth(759), .equalColumns(1).gap(16)),
+          children: cards,
         ),
       ],
     ),
@@ -505,8 +491,8 @@ class _FortalDashboardCharts extends StatelessWidget {
         semanticsLabel: 'Device traffic with badge markers',
         slices: registryDashboardChannelSlices(badges: true),
       ),
-      .emptyPie => Stack(
-        alignment: Alignment.center,
+      .emptyPie => StackBox(
+        style: StackBoxStyler().alignment(.center),
         children: [
           FortalPieChart(
             centerRadius: 52,
@@ -514,11 +500,13 @@ class _FortalDashboardCharts extends StatelessWidget {
             semanticsLabel: 'No channel data',
             slices: registryDashboardEmptySlices(),
           ),
-          const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          ColumnBox(
+            style: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .crossAxisAlignment(.center)
+                .spacing(6),
+            children: const [
               Icon(RemixIcons.box, size: 20),
-              SizedBox(height: 6),
               FortalText('No data yet', size: .size1),
             ],
           ),
@@ -542,14 +530,17 @@ PieChartStyler _pieRing([double centerRadius = 0]) =>
 Widget _chartCard(String title, String description, Widget chart) =>
     FortalCard.surface(
       size: .size2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
         children: [
-          FortalHeading(title, headingLevel: 3, size: .size3),
-          const SizedBox(height: 4),
-          FortalText(description, size: .size1, highContrast: false),
-          const SizedBox(height: 12),
-          SizedBox(height: 240, child: chart),
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+            children: [
+              FortalHeading(title, headingLevel: 3, size: .size3),
+              FortalText(description, size: .size1, highContrast: false),
+            ],
+          ),
+          Box(style: BoxStyler().height(240), child: chart),
         ],
       ),
     );

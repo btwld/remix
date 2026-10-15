@@ -48,18 +48,26 @@ class DefaultGalleryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    padding: const EdgeInsets.all(PlaygroundTokens.s8),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(PlaygroundTokens.s5),
       children: [
-        _Heading(title, size: 28, weight: FontWeight.w700),
-        const SizedBox(height: 6),
-        _Text(intro, muted: true),
-        const SizedBox(height: 20),
-        for (final (index, section) in sections.indexed) ...[
-          if (index > 0) const SizedBox(height: 20),
-          section,
-        ],
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s1_5),
+          children: [
+            _Heading(
+              title,
+              token: PlaygroundTokens.text3xl,
+              weight: FontWeight.w700,
+            ),
+            _Text(intro, muted: true),
+          ],
+        ),
+        ...sections,
       ],
     ),
   );
@@ -78,13 +86,24 @@ class _Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PlaygroundCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(PlaygroundTokens.s4),
       children: [
-        _Heading(label, size: 17, weight: FontWeight.w600),
-        const SizedBox(height: 4),
-        _Text(description, muted: true, size: 13),
-        const SizedBox(height: 16),
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s1),
+          children: [
+            _Heading(
+              label,
+              token: PlaygroundTokens.textLg,
+              weight: FontWeight.w600,
+            ),
+            _Text(description, muted: true),
+          ],
+        ),
         child,
       ],
     ),
@@ -109,46 +128,99 @@ class _Matrix<R, C> extends StatelessWidget {
   final double cellWidth;
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    child: Table(
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      border: TableBorder.all(color: PlaygroundTokens.border.resolve(context)),
-      columnWidths: {
-        0: const FixedColumnWidth(112),
-        for (var index = 0; index < columns.length; index++)
-          index + 1: FixedColumnWidth(cellWidth),
-      },
-      children: [
-        TableRow(
+  Widget build(BuildContext context) {
+    final divider = BorderSideMix(
+      color: PlaygroundTokens.border(),
+      width: PlaygroundTokens.strokeHairline,
+    );
+    final borderRadius = BorderRadiusMix.all(PlaygroundTokens.radiusMd());
+    final GridBoxStyler gridStyle = .columns([
+      const .fixed(112),
+      for (final _ in columns) .fixed(cellWidth),
+    ]);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Box(
+        style: BoxStyler()
+            .borderRadius(borderRadius)
+            .clipBehavior(.antiAlias)
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(divider),
+                borderRadius: borderRadius,
+              ),
+            ),
+        child: GridBox(
+          style: gridStyle,
           children: [
-            const SizedBox(height: 48),
+            _MatrixCell(
+              divider: divider,
+              alignment: Alignment.centerLeft,
+              child: const _Text('', muted: true),
+            ),
             for (final column in columns)
-              _MatrixCell(child: _Text(columnLabel(column), muted: true)),
+              _MatrixCell(
+                divider: divider,
+                hasLeadingDivider: true,
+                child: _Text(columnLabel(column), muted: true),
+              ),
+            for (final row in rows) ...[
+              _MatrixCell(
+                divider: divider,
+                hasTopDivider: true,
+                alignment: Alignment.centerLeft,
+                child: _Text(rowLabel(row), muted: true),
+              ),
+              for (final column in columns)
+                _MatrixCell(
+                  divider: divider,
+                  hasLeadingDivider: true,
+                  hasTopDivider: true,
+                  child: cell(row, column),
+                ),
+            ],
           ],
         ),
-        for (final row in rows)
-          TableRow(
-            children: [
-              _MatrixCell(child: _Text(rowLabel(row), muted: true)),
-              for (final column in columns)
-                _MatrixCell(child: cell(row, column)),
-            ],
-          ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
 
 class _MatrixCell extends StatelessWidget {
-  const _MatrixCell({required this.child});
+  const _MatrixCell({
+    required this.child,
+    required this.divider,
+    this.hasLeadingDivider = false,
+    this.hasTopDivider = false,
+    this.alignment = Alignment.center,
+  });
+
   final Widget child;
+  final BorderSideMix divider;
+  final bool hasLeadingDivider;
+  final bool hasTopDivider;
+  final AlignmentGeometry alignment;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(10),
-    child: Center(child: child),
-  );
+  Widget build(BuildContext context) {
+    var style = BoxStyler()
+        .minHeight(64)
+        .padding(.all(PlaygroundTokens.s2_5))
+        .alignment(alignment);
+    if (hasLeadingDivider || hasTopDivider) {
+      style = style.foregroundDecoration(
+        BoxDecorationMix(
+          border: BorderMix(
+            left: hasLeadingDivider ? divider : null,
+            top: hasTopDivider ? divider : null,
+          ),
+        ),
+      );
+    }
+
+    return Box(style: style, child: child);
+  }
 }
 
 class DefaultGalleryActionsPage extends StatefulWidget {
@@ -224,9 +296,10 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
         label: 'States',
         description:
             'Disabled and loading behavior uses the same component API.',
-        child: Wrap(
-          spacing: 12,
-          runSpacing: 12,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s3),
           children: [
             const PlaygroundButton(label: 'Disabled', enabled: false),
             PlaygroundButton(label: 'Saving', loading: true, onPressed: () {}),
@@ -264,23 +337,26 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
     title: 'Forms & Inputs',
     intro: 'Production-ready fields and selection controls in every preset.',
     sections: [
-      const _Section(
+      _Section(
         label: 'Text field',
         description: 'The native field with a leading icon and placeholder.',
-        child: SizedBox(
-          width: 300,
-          child: PlaygroundTextField(
+        child: Box(
+          style: BoxStyler().width(300),
+          child: const PlaygroundTextField(
             hintText: 'Type something…',
-            leading: Icon(RemixIcons.magnifyingGlass, size: 16),
+            leading: Icon(
+              RemixIcons.magnifyingGlass,
+              size: PlaygroundTokens.icon,
+            ),
           ),
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Text area',
         description: 'Multi-line input sharing the text field treatment.',
-        child: SizedBox(
-          width: 360,
-          child: PlaygroundTextArea(hintText: 'Add a note…'),
+        child: Box(
+          style: BoxStyler().width(360),
+          child: const PlaygroundTextArea(hintText: 'Add a note…'),
         ),
       ),
       _Section(
@@ -304,8 +380,8 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
         description: 'A keyboard-accessible native select.',
         child: Align(
           alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 220,
+          child: Box(
+            style: BoxStyler().width(220),
             child: PlaygroundSelect<String>(
               trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
               items: const [
@@ -375,9 +451,10 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
           values: _channels,
           semanticLabel: 'Notification channels',
           onChanged: (values) => setState(() => _channels = values),
-          child: Wrap(
-            spacing: 18,
-            runSpacing: 6,
+          child: WrapBox(
+            style: WrapBoxStyler()
+                .spacing(PlaygroundTokens.s4)
+                .runSpacing(PlaygroundTokens.s1_5),
             children: [
               for (final (value, label) in const [
                 ('email', 'Email'),
@@ -397,9 +474,9 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
           onChanged: (value) {
             if (value != null) setState(() => _radio = value);
           },
-          child: const Wrap(
-            spacing: 20,
-            children: [
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(PlaygroundTokens.s5),
+            children: const [
               PlaygroundRadio<int>(value: 1, semanticLabel: 'First option'),
               PlaygroundRadio<int>(value: 2, semanticLabel: 'Second option'),
             ],
@@ -421,8 +498,8 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
       _Section(
         label: 'Slider',
         description: 'A discrete single-thumb slider.',
-        child: SizedBox(
-          width: 300,
+        child: Box(
+          style: BoxStyler().width(300),
           child: PlaygroundSlider(
             value: _slider,
             min: 0,
@@ -432,30 +509,31 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
           ),
         ),
       ),
-      const _Section(
+      _Section(
         label: 'States',
         description: 'Validation, disabled, and indeterminate states.',
-        child: Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          crossAxisAlignment: WrapCrossAlignment.center,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s4)
+              .runSpacing(PlaygroundTokens.s4)
+              .crossAxisAlignment(.center),
           children: [
-            SizedBox(
-              width: 240,
-              child: PlaygroundTextField(
+            Box(
+              style: BoxStyler().width(240),
+              child: const PlaygroundTextField(
                 error: true,
                 label: 'Workspace slug',
                 hintText: 'remix',
                 helperText: 'That slug is already in use.',
               ),
             ),
-            PlaygroundCheckbox(
+            const PlaygroundCheckbox(
               selected: null,
               tristate: true,
               semanticLabel: 'Indeterminate checkbox',
             ),
-            PlaygroundCheckbox(selected: true, label: 'Labelled'),
-            PlaygroundSwitch(
+            const PlaygroundCheckbox(selected: true, label: 'Labelled'),
+            const PlaygroundSwitch(
               selected: false,
               enabled: false,
               semanticLabel: 'Disabled switch',
@@ -484,13 +562,14 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
     title: 'Data Display',
     intro: 'Rich surfaces and status components for product interfaces.',
     sections: [
-      const _Section(
+      _Section(
         label: 'Avatar',
         description: 'The native avatar treatment with image and fallback.',
-        child: Wrap(
-          spacing: 16,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s4)
+              .crossAxisAlignment(.center),
+          children: const [
             PlaygroundAvatar(label: 'RF'),
             PlaygroundAvatar(icon: RemixIcons.person),
           ],
@@ -499,33 +578,35 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
       _Section(
         label: 'Badge',
         description: 'Status labels in every native variant.',
-        child: Wrap(
-          spacing: 12,
-          runSpacing: 12,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s3),
           children: [
             for (final variant in PlaygroundBadgeVariant.values)
               PlaygroundBadge(variant: variant, label: _enumLabel(variant)),
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Card',
         description: 'The native surface and spacing treatment.',
-        child: SizedBox(
-          width: 240,
-          child: PlaygroundCard(child: _Text('Card content')),
+        child: Box(
+          style: BoxStyler().width(240),
+          child: const PlaygroundCard(child: _Text('Card content')),
         ),
       ),
       _Section(
         label: 'Callout',
         description: 'Contextual information in every native variant.',
-        child: Wrap(
-          spacing: 12,
-          runSpacing: 12,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s3),
           children: [
             for (final variant in PlaygroundCalloutVariant.values)
-              SizedBox(
-                width: 280,
+              Box(
+                style: BoxStyler().width(280),
                 child: PlaygroundCallout(
                   variant: variant,
                   icon: variant == PlaygroundCalloutVariant.destructive
@@ -537,13 +618,14 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Data list',
         description: 'Label and value pairs in both orientations.',
-        child: Wrap(
-          spacing: 32,
-          runSpacing: 20,
-          children: [
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s8)
+              .runSpacing(PlaygroundTokens.s5),
+          children: const [
             PlaygroundDataList(
               items: [
                 RemixDataListItem(label: 'Status', value: 'Active'),
@@ -565,8 +647,10 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
       _Section(
         label: 'Skeleton',
         description: 'Placeholder shapes preserve loaded measurements.',
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s3),
           children: [
             PlaygroundButton.secondary(
               size: .small,
@@ -574,12 +658,10 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
               onPressed: () =>
                   setState(() => _skeletonLoading = !_skeletonLoading),
             ),
-            const SizedBox(height: 14),
             PlaygroundSkeleton(
               loading: _skeletonLoading,
               child: const PlaygroundAvatar(label: 'RF'),
             ),
-            const SizedBox(height: 10),
             PlaygroundSkeleton(
               loading: _skeletonLoading,
               child: const _Text('Loaded content replaces the placeholder.'),
@@ -587,12 +669,12 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Progress',
         description: 'Determinate progress using the native treatment.',
-        child: SizedBox(
-          width: 320,
-          child: PlaygroundProgress(
+        child: Box(
+          style: BoxStyler().width(320),
+          child: const PlaygroundProgress(
             value: .68,
             semanticsLabel: '68 percent complete',
           ),
@@ -602,7 +684,10 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
         label: 'Spinner',
         description:
             'Animation is stopped by default so automated tests settle.',
-        child: Row(
+        child: RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(PlaygroundTokens.s4),
           children: [
             PlaygroundButton.secondary(
               size: .small,
@@ -610,24 +695,23 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
               onPressed: () =>
                   setState(() => _spinnersRunning = !_spinnersRunning),
             ),
-            const SizedBox(width: 18),
             if (_spinnersRunning)
               const PlaygroundSpinner(semanticsLabel: 'Loading example')
             else
-              const Icon(RemixIcons.check, size: 16),
+              const Icon(RemixIcons.check, size: PlaygroundTokens.icon),
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Divider',
         description: 'Horizontal and vertical native dividers.',
-        child: Column(
+        child: ColumnBox(
+          style: FlexBoxStyler().spacing(PlaygroundTokens.s3_5),
           children: [
-            PlaygroundDivider(),
-            SizedBox(height: 14),
-            SizedBox(
-              height: 48,
-              child: PlaygroundDivider(orientation: Axis.vertical),
+            const PlaygroundDivider(),
+            Box(
+              style: BoxStyler().height(PlaygroundTokens.s12),
+              child: const PlaygroundDivider(orientation: Axis.vertical),
             ),
           ],
         ),
@@ -677,35 +761,38 @@ class _DefaultGalleryOverlaysPageState
                     onPressed: () => Navigator.of(dialogContext).pop(),
                   ),
                 ],
-                child: const Padding(
-                  padding: EdgeInsets.only(top: 12),
-                  child: PlaygroundTextField(hintText: 'teammate@example.com'),
+                child: Box(
+                  style: BoxStyler().padding(.only(top: PlaygroundTokens.s3)),
+                  child: const PlaygroundTextField(
+                    hintText: 'teammate@example.com',
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Popover',
         description: 'Anchored content using the native padding treatment.',
         child: Align(
           alignment: Alignment.centerLeft,
           child: PlaygroundPopover(
             semanticLabel: 'Open quick note popover',
-            popoverChild: SizedBox(
-              width: 250,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            popoverChild: Box(
+              style: BoxStyler().width(250),
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.start)
+                    .spacing(PlaygroundTokens.s2),
+                children: const [
                   _Text('Quick note', emphasized: true),
-                  SizedBox(height: 8),
                   _Text('Popover content inherits the active theme.'),
                 ],
               ),
             ),
-            child: _OverlayTrigger('Open popover'),
+            child: const _OverlayTrigger('Open popover'),
           ),
         ),
       ),
@@ -830,13 +917,16 @@ class _DefaultGalleryNavigationPageState
             'A controlled native sidebar with fixed header and footer.',
         child: Align(
           alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 280,
-            height: 320,
+          child: Box(
+            style: BoxStyler().width(280).height(320),
             child: PlaygroundSidebar<String>(
-              header: const Padding(
-                padding: EdgeInsets.all(14),
-                child: _Heading('Acme', size: 16, weight: FontWeight.w700),
+              header: Box(
+                style: BoxStyler().padding(.all(PlaygroundTokens.s3_5)),
+                child: const _Heading(
+                  'Acme',
+                  token: PlaygroundTokens.textBase,
+                  weight: FontWeight.w700,
+                ),
               ),
               sections: const [
                 RemixSidebarSection(
@@ -879,12 +969,12 @@ class _DefaultGalleryNavigationPageState
         child: RemixTabs(
           selectedTabId: _tab,
           onChanged: (value) => setState(() => _tab = value),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: [
               PlaygroundTabBar(
-                child: Row(
-                  children: [
+                child: RowBox(
+                  children: const [
                     PlaygroundTab(tabId: 'overview', label: 'Overview'),
                     PlaygroundTab(tabId: 'activity', label: 'Activity'),
                   ],
@@ -892,16 +982,16 @@ class _DefaultGalleryNavigationPageState
               ),
               PlaygroundTabView(
                 tabId: 'overview',
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: _Text('Overview content'),
+                child: Box(
+                  style: BoxStyler().padding(.all(PlaygroundTokens.s3)),
+                  child: const _Text('Overview content'),
                 ),
               ),
               PlaygroundTabView(
                 tabId: 'activity',
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: _Text('Activity content'),
+                child: Box(
+                  style: BoxStyler().padding(.all(PlaygroundTokens.s3)),
+                  child: const _Text('Activity content'),
                 ),
               ),
             ],
@@ -923,8 +1013,9 @@ class _DefaultGalleryNavigationPageState
         description: 'Coordinated panels keep one section open.',
         child: RemixAccordionGroup<String>(
           controller: _accordion,
-          child: const Column(
-            children: [
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch),
+            children: const [
               PlaygroundAccordion<String>(
                 value: 'details',
                 title: 'What is Playground?',
@@ -958,26 +1049,31 @@ class DefaultGalleryTypographyPage extends StatelessWidget {
       _Section(
         label: 'Text scale',
         description: 'The native scale from caption to display.',
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s1_5),
           children: [
-            for (final size in const [12.0, 14.0, 16.0, 20.0, 24.0, 32.0])
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3),
-                child: _Text(
-                  'The quick brown fox · ${size.toInt()}px',
-                  size: size,
-                ),
-              ),
+            for (final (label, token) in const [
+              ('12px', PlaygroundTokens.textXs),
+              ('14px', PlaygroundTokens.textSm),
+              ('16px', PlaygroundTokens.textBase),
+              ('18px', PlaygroundTokens.textLg),
+              ('20px', PlaygroundTokens.textXl),
+              ('24px', PlaygroundTokens.text2xl),
+              ('30px', PlaygroundTokens.text3xl),
+            ])
+              _Text('The quick brown fox · $label', token: token),
           ],
         ),
       ),
       _Section(
         label: 'Weights',
         description: 'The complete native font-weight range.',
-        child: Wrap(
-          spacing: 24,
-          runSpacing: 12,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s6)
+              .runSpacing(PlaygroundTokens.s3),
           children: [
             for (final (label, weight) in const [
               ('Regular', FontWeight.w400),
@@ -985,7 +1081,7 @@ class DefaultGalleryTypographyPage extends StatelessWidget {
               ('Semibold', FontWeight.w600),
               ('Bold', FontWeight.w700),
             ])
-              _Text(label, size: 18, weight: weight),
+              _Text(label, token: PlaygroundTokens.textLg, weight: weight),
           ],
         ),
       ),
@@ -993,48 +1089,63 @@ class DefaultGalleryTypographyPage extends StatelessWidget {
         label: 'Heading level and size',
         description:
             'Semantic heading levels remain independent of visual scale.',
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s2),
           children: [
             Semantics(
               header: true,
-              child: const _Heading('Level 1 heading at 28px', size: 28),
+              child: const _Heading(
+                'Level 1 heading at 30px',
+                token: PlaygroundTokens.text3xl,
+              ),
             ),
-            const SizedBox(height: 8),
             Semantics(
               header: true,
-              child: const _Heading('Level 2 heading at 20px', size: 20),
+              child: const _Heading(
+                'Level 2 heading at 20px',
+                token: PlaygroundTokens.textXl,
+              ),
             ),
-            const SizedBox(height: 8),
             Semantics(
               header: true,
-              child: const _Heading('Level 3 heading at 16px', size: 16),
+              child: const _Heading(
+                'Level 3 heading at 16px',
+                token: PlaygroundTokens.textBase,
+              ),
             ),
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Code',
         description: 'Inline code uses a distinct monospace surface.',
-        child: Wrap(
-          spacing: 12,
-          children: [_Code('const x = 1;'), _Code('remix add dashboard_demo')],
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s2),
+          children: const [
+            _Code('const x = 1;'),
+            _Code('remix add dashboard_demo'),
+          ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Keyboard keys',
         description: 'Keyboard caps remain readable beside body copy.',
-        child: Wrap(
-          spacing: 8,
-          children: [_Keycap('⌘'), _Keycap('K'), _Keycap('Enter')],
+        child: WrapBox(
+          style: WrapBoxStyler().spacing(PlaygroundTokens.s2),
+          children: const [_Keycap('⌘'), _Keycap('K'), _Keycap('Enter')],
         ),
       ),
       _Section(
         label: 'Links',
         description: 'Interactive, disabled, and destination-bearing links.',
-        child: Wrap(
-          spacing: 20,
-          runSpacing: 12,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s5)
+              .runSpacing(PlaygroundTokens.s3),
           children: [
             PlaygroundLink(
               label: 'Interactive',
@@ -1049,35 +1160,37 @@ class DefaultGalleryTypographyPage extends StatelessWidget {
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Accent and high contrast',
         description: 'Foreground and muted roles preserve useful contrast.',
-        child: Wrap(
-          spacing: 20,
-          runSpacing: 12,
-          children: [
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s5)
+              .runSpacing(PlaygroundTokens.s3),
+          children: const [
             _Text('Foreground'),
             _Text('Muted foreground', muted: true),
-            _Heading('Strong heading', size: 16),
+            _Heading('Strong heading', token: PlaygroundTokens.textBase),
           ],
         ),
       ),
-      const _Section(
+      _Section(
         label: 'Wrapping and truncation',
         description: 'Long text demonstrates both wrapping strategies.',
-        child: Wrap(
-          spacing: 32,
-          runSpacing: 16,
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s8)
+              .runSpacing(PlaygroundTokens.s4),
           children: [
-            SizedBox(
-              width: 260,
-              child: _Text(
+            Box(
+              style: BoxStyler().width(260),
+              child: const _Text(
                 'Wrap keeps the complete sentence, across as many lines as it needs.',
               ),
             ),
-            SizedBox(
-              width: 260,
-              child: _Text(
+            Box(
+              style: BoxStyler().width(260),
+              child: const _Text(
                 'Truncate keeps exactly one line, across as many lines as it needs.',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -1101,7 +1214,7 @@ class _OverlayTrigger extends StatelessWidget {
 class _Text extends StatelessWidget {
   const _Text(
     this.value, {
-    this.size = 14,
+    this.token = PlaygroundTokens.textSm,
     this.weight = FontWeight.w400,
     this.muted = false,
     this.emphasized = false,
@@ -1110,7 +1223,7 @@ class _Text extends StatelessWidget {
   });
 
   final String value;
-  final double size;
+  final TextStyleToken token;
   final FontWeight weight;
   final bool muted;
   final bool emphasized;
@@ -1120,7 +1233,7 @@ class _Text extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var style = TextStyler()
-        .fontSize(size)
+        .style(token.mix())
         .fontWeight(emphasized ? FontWeight.w600 : weight)
         .color(
           muted
@@ -1136,7 +1249,7 @@ class _Text extends StatelessWidget {
 class _Heading extends _Text {
   const _Heading(
     super.value, {
-    super.size = 18,
+    super.token = PlaygroundTokens.textLg,
     super.weight = FontWeight.w600,
   });
 }
@@ -1146,20 +1259,21 @@ class _Code extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: PlaygroundTokens.muted.resolve(context),
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: StyledText(
-        value,
-        style: TextStyler()
-            .style(PlaygroundTokens.textMono.mix())
-            .fontSize(13)
-            .color(PlaygroundTokens.foreground()),
-      ),
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        .color(PlaygroundTokens.muted())
+        .borderRadius(.all(PlaygroundTokens.radiusSm()))
+        .padding(
+          .symmetric(
+            horizontal: PlaygroundTokens.s2,
+            vertical: PlaygroundTokens.s1,
+          ),
+        ),
+    child: StyledText(
+      value,
+      style: TextStyler()
+          .style(PlaygroundTokens.textMono.mix())
+          .color(PlaygroundTokens.foreground()),
     ),
   );
 }
@@ -1169,16 +1283,21 @@ class _Keycap extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: PlaygroundTokens.background.resolve(context),
-      border: Border.all(color: PlaygroundTokens.border.resolve(context)),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-      child: _Text(value, size: 12, emphasized: true),
-    ),
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        .color(PlaygroundTokens.background())
+        .borderAll(
+          color: PlaygroundTokens.border(),
+          width: PlaygroundTokens.strokeHairline,
+        )
+        .borderRadius(.all(PlaygroundTokens.radiusSm()))
+        .padding(
+          .symmetric(
+            horizontal: PlaygroundTokens.s2,
+            vertical: PlaygroundTokens.s1,
+          ),
+        ),
+    child: _Text(value, token: PlaygroundTokens.textXs, emphasized: true),
   );
 }
 

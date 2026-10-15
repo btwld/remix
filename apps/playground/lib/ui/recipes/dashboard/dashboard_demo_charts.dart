@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import 'dashboard_sample_data.dart';
@@ -132,12 +133,10 @@ class _PlaygroundDashboardChartsState extends State<PlaygroundDashboardCharts> {
   Object? _selectedSlice = 'core';
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(24),
     children: [
-      for (final (index, section)
-          in PlaygroundDashboardChartSection.values.indexed) ...[
-        if (index > 0) const SizedBox(height: 24),
+      for (final section in PlaygroundDashboardChartSection.values)
         widget.sectionBuilder(section.label, section.description, [
           for (final chart in PlaygroundDashboardChartCase.values)
             if (chart.section == section)
@@ -152,7 +151,6 @@ class _PlaygroundDashboardChartsState extends State<PlaygroundDashboardCharts> {
                 ),
               ),
         ]),
-      ],
     ],
   );
 }

@@ -52,29 +52,30 @@ class _FortalDashboardSettingsPageState
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
       children: [
-        const _Text('Settings', size: 28, emphasized: true),
-        const SizedBox(height: 4),
-        const _Text(
-          'Manage your profile, preferences, and workspace.',
-          muted: true,
+        ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+          children: const [
+            _Text('Settings', size: 28, emphasized: true),
+            _Text(
+              'Manage your profile, preferences, and workspace.',
+              muted: true,
+            ),
+          ],
         ),
-        const SizedBox(height: 20),
         _section(
           'Profile',
           'This information appears across your workspace.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
             children: [
               const FortalTextField(label: 'Full name', hintText: 'Ada Chen'),
-              const SizedBox(height: 12),
               const FortalTextField(
                 label: 'Email address',
                 hintText: 'ada@northstar.co',
               ),
-              const SizedBox(height: 12),
               FortalSelect<String>(
                 trigger: const RemixSelectTrigger(placeholder: 'Language'),
                 items: const [
@@ -87,7 +88,6 @@ class _FortalDashboardSettingsPageState
                   if (value != null) setState(() => _language = value);
                 },
               ),
-              const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: FortalButton(
@@ -98,11 +98,11 @@ class _FortalDashboardSettingsPageState
             ],
           ),
         ),
-        const SizedBox(height: 16),
         _section(
           'Preferences',
           'Choose which workspace activity reaches your inbox.',
-          Column(
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
             children: [
               _preference(
                 'Product updates',
@@ -113,7 +113,6 @@ class _FortalDashboardSettingsPageState
                   onChanged: (value) => setState(() => _productUpdates = value),
                 ),
               ),
-              const SizedBox(height: 16),
               _preference(
                 'Weekly digest',
                 'A summary of workspace activity each Monday.',
@@ -127,63 +126,69 @@ class _FortalDashboardSettingsPageState
             ],
           ),
         ),
-        const SizedBox(height: 16),
         _section(
           'Appearance',
           'Tune the default preset theme with meaningful native values.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
             children: [
               const FortalCallout(
                 icon: RemixIcons.magicWand,
                 text: 'Changes are deterministic and remain local to the demo.',
               ),
-              const SizedBox(height: 16),
-              const _Text('Color mode', emphasized: true),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: FortalSegmentedControl<_Appearance>(
-                  semanticLabel: 'Color mode',
-                  selectedValue: _resolvedAppearance,
-                  items: const [
-                    RemixSegmentedControlItem(value: .light, label: 'Light'),
-                    RemixSegmentedControlItem(value: .dark, label: 'Dark'),
-                    RemixSegmentedControlItem(value: .system, label: 'System'),
-                  ],
-                  onChanged: (value) {
-                    setState(() => _appearance = value);
-                    widget.onDarkModeChanged?.call(switch (value) {
-                      .light => false,
-                      .dark => true,
-                      .system => null,
-                    });
-                  },
-                ),
+              ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(8),
+                children: [
+                  const _Text('Color mode', emphasized: true),
+                  FortalSegmentedControl<_Appearance>(
+                    semanticLabel: 'Color mode',
+                    selectedValue: _resolvedAppearance,
+                    items: const [
+                      RemixSegmentedControlItem(value: .light, label: 'Light'),
+                      RemixSegmentedControlItem(value: .dark, label: 'Dark'),
+                      RemixSegmentedControlItem(
+                        value: .system,
+                        label: 'System',
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() => _appearance = value);
+                      widget.onDarkModeChanged?.call(switch (value) {
+                        .light => false,
+                        .dark => true,
+                        .system => null,
+                      });
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              _Text('Control radius · ${_radius.round()}px', emphasized: true),
-              const SizedBox(height: 8),
-              FortalSlider(
-                value: _radius,
-                min: 0,
-                max: 16,
-                snapDivisions: 16,
-                onChanged: (value) => setState(() => _radius = value),
+              ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
+                children: [
+                  _Text(
+                    'Control radius · ${_radius.round()}px',
+                    emphasized: true,
+                  ),
+                  FortalSlider(
+                    value: _radius,
+                    min: 0,
+                    max: 16,
+                    snapDivisions: 16,
+                    onChanged: (value) => setState(() => _radius = value),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
         FortalDisclosure(
           key: const ValueKey('settings-danger-zone'),
           semanticHint: 'Shows destructive workspace actions',
           trigger: const _Text('Danger zone', emphasized: true),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          content: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
             children: [
               const _Text('Destructive workspace actions cannot be undone.'),
-              const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerLeft,
                 child: FortalButton.outline(
@@ -224,26 +229,29 @@ class _FortalDashboardSettingsPageState
 }
 
 Widget _section(String title, String description, Widget child) => FortalCard(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
     children: [
-      _Text(title, size: 17, emphasized: true),
-      const SizedBox(height: 4),
-      _Text(description, size: 13, muted: true),
-      const SizedBox(height: 16),
+      ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
+        children: [
+          _Text(title, size: 17, emphasized: true),
+          _Text(description, size: 13, muted: true),
+        ],
+      ),
       child,
     ],
   ),
 );
 
-Widget _preference(String title, String description, Widget trailing) => Row(
+Widget _preference(String title, String description, Widget trailing) => RowBox(
+  style: FlexBoxStyler().crossAxisAlignment(.center).spacing(16),
   children: [
     Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
         children: [
           _Text(title, emphasized: true),
-          const SizedBox(height: 2),
           _Text(description, size: 13, muted: true),
         ],
       ),

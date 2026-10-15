@@ -33,99 +33,94 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
   Widget build(BuildContext context) => {{typePrefix}}DashboardOverviewBase(
     data: data,
     scrollController: scrollController,
-    headerBuilder: (context, title, description) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    headerBuilder: (context, title, description) => ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.start)
+          .spacing({{typePrefix}}Tokens.s1_5),
       children: [
         StyledText(
           title,
           style: TextStyler()
-              .fontSize(28)
+              .style({{typePrefix}}Tokens.text3xl.mix())
               .fontWeight(FontWeight.w700)
               .color({{typePrefix}}Tokens.foreground()),
         ),
-        const SizedBox(height: 6),
         StyledText(
           description,
           style: TextStyler()
-              .fontSize(14)
+              .style({{typePrefix}}Tokens.textSm.mix())
               .color({{typePrefix}}Tokens.mutedForeground()),
         ),
       ],
     ),
     metricBuilder: (context, metric) => {{typePrefix}}Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing({{typePrefix}}Tokens.s1_5),
         children: [
           StyledText(
             metric.label,
             style: TextStyler()
-                .fontSize(13)
+                .style({{typePrefix}}Tokens.textSm.mix())
                 .fontWeight(FontWeight.w500)
                 .color({{typePrefix}}Tokens.mutedForeground()),
           ),
-          const SizedBox(height: 10),
           StyledText(
             metric.value,
             style: TextStyler()
-                .fontSize(24)
+                .style({{typePrefix}}Tokens.text2xl.mix())
                 .fontWeight(FontWeight.w700)
                 .color({{typePrefix}}Tokens.foreground()),
           ),
-          const SizedBox(height: 6),
           StyledText(
             metric.change,
             style: TextStyler()
-                .fontSize(12)
+                .style({{typePrefix}}Tokens.textXs.mix())
                 .color({{typePrefix}}Tokens.mutedForeground()),
           ),
         ],
       ),
     ),
-    chartBuilder: (context, data) => LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth < 760
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 32) / 3;
-        return Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: [
-            SizedBox(width: width, child: _revenueCard(data)),
-            SizedBox(width: width, child: _customerChartCard()),
-            SizedBox(width: width, child: _fulfillmentCard()),
-          ],
-        );
-      },
+    chartBuilder: (context, data) => GridBox(
+      style: GridBoxStyler.equalColumns(3)
+          .gap({{typePrefix}}Tokens.s4)
+          .onConstraints(
+            const .maxWidth(759),
+            .equalColumns(1).gap({{typePrefix}}Tokens.s4),
+          ),
+      children: [_revenueCard(data), _customerChartCard(), _fulfillmentCard()],
     ),
-    tableBuilder: (context, data) => LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth < 900
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 20) / 2;
-        return Wrap(
-          spacing: 20,
-          runSpacing: 20,
-          children: [
-            SizedBox(width: width, child: _activityCard(data)),
-            SizedBox(width: width, child: _ordersCard(data, onViewOrders)),
-          ],
-        );
-      },
+    tableBuilder: (context, data) => GridBox(
+      style: GridBoxStyler.equalColumns(2)
+          .gap({{typePrefix}}Tokens.s5)
+          .onConstraints(
+            const .maxWidth(899),
+            .equalColumns(1).gap({{typePrefix}}Tokens.s5),
+          ),
+      children: [_activityCard(data), _ordersCard(data, onViewOrders)],
     ),
   );
 }
 
 Widget _revenueCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Card(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s4),
     children: [
-      _sectionTitle('Revenue trend'),
-      const SizedBox(height: 4),
-      _sectionDescription('Seven-day net revenue'),
-      const SizedBox(height: 16),
-      SizedBox(
+      ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing({{typePrefix}}Tokens.s1),
+        children: [
+          _sectionTitle('Revenue trend'),
+          _sectionDescription('Seven-day net revenue'),
+        ],
+      ),
+      Box(
         key: const ValueKey('dashboard-revenue-chart'),
-        height: 220,
+        style: BoxStyler().height(220),
         child: {{typePrefix}}LineChart(
           semanticsLabel: 'Seven-day net revenue',
           showMarkers: true,
@@ -152,15 +147,22 @@ Widget _revenueCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Car
 );
 
 Widget _customerChartCard() => {{typePrefix}}Card(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s4),
     children: [
-      _sectionTitle('Customer acquisition'),
-      const SizedBox(height: 4),
-      _sectionDescription('New accounts by month'),
-      const SizedBox(height: 16),
-      SizedBox(
-        height: 220,
+      ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing({{typePrefix}}Tokens.s1),
+        children: [
+          _sectionTitle('Customer acquisition'),
+          _sectionDescription('New accounts by month'),
+        ],
+      ),
+      Box(
+        style: BoxStyler().height(220),
         child: {{typePrefix}}BarChart(
           semanticsLabel: 'New accounts by month',
           groups: [
@@ -191,15 +193,22 @@ Widget _customerChartCard() => {{typePrefix}}Card(
 );
 
 Widget _fulfillmentCard() => {{typePrefix}}Card(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s4),
     children: [
-      _sectionTitle('Fulfillment mix'),
-      const SizedBox(height: 4),
-      _sectionDescription('Current order status'),
-      const SizedBox(height: 16),
-      SizedBox(
-        height: 220,
+      ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing({{typePrefix}}Tokens.s1),
+        children: [
+          _sectionTitle('Fulfillment mix'),
+          _sectionDescription('Current order status'),
+        ],
+      ),
+      Box(
+        style: BoxStyler().height(220),
         child: {{typePrefix}}PieChart(
           centerRadius: 44,
           // mix_chart draws each slice 80px wide in any box; this ring stops
@@ -218,33 +227,48 @@ Widget _fulfillmentCard() => {{typePrefix}}Card(
 );
 
 Widget _activityCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Card(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s2),
     children: [
       _sectionTitle('Recent activity'),
-      const SizedBox(height: 8),
-      for (final (index, event) in data.activities.indexed) ...[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 9),
-          child: Row(
-            children: [
-              const Icon({{icon:activityLog}}, size: 16),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _cell(event.title, emphasized: true),
-                    _sectionDescription(event.detail),
-                  ],
-                ),
+      ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.stretch),
+        children: [
+          for (final (index, event) in data.activities.indexed) ...[
+            Box(
+              style: BoxStyler().padding(.vertical({{typePrefix}}Tokens.s2_5)),
+              child: RowBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.center)
+                    .spacing({{typePrefix}}Tokens.s2_5),
+                children: [
+                  StyledIcon(
+                    icon: {{icon:activityLog}},
+                    style: IconStyler()
+                        .size({{typePrefix}}Tokens.icon)
+                        .color({{typePrefix}}Tokens.mutedForeground()),
+                  ),
+                  Expanded(
+                    child: ColumnBox(
+                      style: FlexBoxStyler()
+                          .crossAxisAlignment(.start)
+                          .spacing({{typePrefix}}Tokens.s0_5),
+                      children: [
+                        _cell(event.title, emphasized: true),
+                        _sectionDescription(event.detail),
+                      ],
+                    ),
+                  ),
+                  _sectionDescription(event.relativeTime),
+                ],
               ),
-              _sectionDescription(event.relativeTime),
-            ],
-          ),
-        ),
-        if (index != data.activities.length - 1) const {{typePrefix}}Divider(),
-      ],
+            ),
+            if (index != data.activities.length - 1) const {{typePrefix}}Divider(),
+          ],
+        ],
+      ),
     ],
   ),
 );
@@ -253,10 +277,13 @@ Widget _ordersCard(
   {{typePrefix}}DashboardSampleData data,
   VoidCallback? onViewOrders,
 ) => {{typePrefix}}Card(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.s3),
     children: [
-      Row(
+      RowBox(
+        style: FlexBoxStyler().crossAxisAlignment(.center),
         children: [
           Expanded(child: _sectionTitle('Recent orders')),
           {{typePrefix}}Button.ghost(
@@ -267,7 +294,6 @@ Widget _ordersCard(
           ),
         ],
       ),
-      const SizedBox(height: 12),
       {{typePrefix}}DataTable<{{typePrefix}}DashboardRecord>(
         key: const ValueKey('dashboard-records-table'),
         semanticLabel: 'Recent customer orders',
@@ -284,20 +310,22 @@ Widget _ordersCard(
 Widget _sectionTitle(String text) => StyledText(
   text,
   style: TextStyler()
-      .fontSize(17)
+      .style({{typePrefix}}Tokens.textLg.mix())
       .fontWeight(FontWeight.w600)
       .color({{typePrefix}}Tokens.foreground()),
 );
 
 Widget _sectionDescription(String text) => StyledText(
   text,
-  style: TextStyler().fontSize(13).color({{typePrefix}}Tokens.mutedForeground()),
+  style: TextStyler()
+      .style({{typePrefix}}Tokens.textSm.mix())
+      .color({{typePrefix}}Tokens.mutedForeground()),
 );
 
 Widget _cell(String text, {bool emphasized = false}) => StyledText(
   text,
   style: TextStyler()
-      .fontSize(14)
+      .style({{typePrefix}}Tokens.textSm.mix())
       .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
       .color({{typePrefix}}Tokens.foreground()),
 );

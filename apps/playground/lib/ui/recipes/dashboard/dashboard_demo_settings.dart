@@ -50,33 +50,44 @@ class _DefaultDashboardSettingsPageState
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    padding: const EdgeInsets.all(PlaygroundTokens.s8),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(PlaygroundTokens.s4),
       children: [
-        const _Text('Settings', size: 28, emphasized: true),
-        const SizedBox(height: 4),
-        const _Text(
-          'Manage your profile, preferences, and workspace.',
-          muted: true,
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s1),
+          children: const [
+            _Text(
+              'Settings',
+              token: PlaygroundTokens.text3xl,
+              emphasized: true,
+            ),
+            _Text(
+              'Manage your profile, preferences, and workspace.',
+              muted: true,
+            ),
+          ],
         ),
-        const SizedBox(height: 20),
         _section(
           'Profile',
           'This information appears across your workspace.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.stretch)
+                .spacing(PlaygroundTokens.s3),
             children: [
               const PlaygroundTextField(
                 label: 'Full name',
                 hintText: 'Ada Chen',
               ),
-              const SizedBox(height: 12),
               const PlaygroundTextField(
                 label: 'Email address',
                 hintText: 'ada@northstar.co',
               ),
-              const SizedBox(height: 12),
               PlaygroundSelect<String>(
                 trigger: const RemixSelectTrigger(placeholder: 'Language'),
                 items: const [
@@ -89,7 +100,6 @@ class _DefaultDashboardSettingsPageState
                   if (value != null) setState(() => _language = value);
                 },
               ),
-              const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: PlaygroundButton(
@@ -100,11 +110,13 @@ class _DefaultDashboardSettingsPageState
             ],
           ),
         ),
-        const SizedBox(height: 16),
         _section(
           'Preferences',
           'Choose which workspace activity reaches your inbox.',
-          Column(
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.stretch)
+                .spacing(PlaygroundTokens.s4),
             children: [
               _preference(
                 'Product updates',
@@ -115,7 +127,6 @@ class _DefaultDashboardSettingsPageState
                   onChanged: (value) => setState(() => _productUpdates = value),
                 ),
               ),
-              const SizedBox(height: 16),
               _preference(
                 'Weekly digest',
                 'A summary of workspace activity each Monday.',
@@ -129,63 +140,77 @@ class _DefaultDashboardSettingsPageState
             ],
           ),
         ),
-        const SizedBox(height: 16),
         _section(
           'Appearance',
           'Tune the default preset theme with meaningful native values.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.stretch)
+                .spacing(PlaygroundTokens.s4),
             children: [
               const PlaygroundCallout(
                 icon: RemixIcons.magicWand,
                 text: 'Changes are deterministic and remain local to the demo.',
               ),
-              const SizedBox(height: 16),
-              const _Text('Color mode', emphasized: true),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: PlaygroundSegmentedControl<_Appearance>(
-                  semanticLabel: 'Color mode',
-                  selectedValue: _resolvedAppearance,
-                  items: const [
-                    RemixSegmentedControlItem(value: .light, label: 'Light'),
-                    RemixSegmentedControlItem(value: .dark, label: 'Dark'),
-                    RemixSegmentedControlItem(value: .system, label: 'System'),
-                  ],
-                  onChanged: (value) {
-                    setState(() => _appearance = value);
-                    widget.onDarkModeChanged?.call(switch (value) {
-                      .light => false,
-                      .dark => true,
-                      .system => null,
-                    });
-                  },
-                ),
+              ColumnBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.start)
+                    .spacing(PlaygroundTokens.s2),
+                children: [
+                  const _Text('Color mode', emphasized: true),
+                  PlaygroundSegmentedControl<_Appearance>(
+                    semanticLabel: 'Color mode',
+                    selectedValue: _resolvedAppearance,
+                    items: const [
+                      RemixSegmentedControlItem(value: .light, label: 'Light'),
+                      RemixSegmentedControlItem(value: .dark, label: 'Dark'),
+                      RemixSegmentedControlItem(
+                        value: .system,
+                        label: 'System',
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() => _appearance = value);
+                      widget.onDarkModeChanged?.call(switch (value) {
+                        .light => false,
+                        .dark => true,
+                        .system => null,
+                      });
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              _Text('Control radius · ${_radius.round()}px', emphasized: true),
-              const SizedBox(height: 8),
-              PlaygroundSlider(
-                value: _radius,
-                min: 0,
-                max: 16,
-                snapDivisions: 16,
-                onChanged: (value) => setState(() => _radius = value),
+              ColumnBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.stretch)
+                    .spacing(PlaygroundTokens.s2),
+                children: [
+                  _Text(
+                    'Control radius · ${_radius.round()}px',
+                    emphasized: true,
+                  ),
+                  PlaygroundSlider(
+                    value: _radius,
+                    min: 0,
+                    max: 16,
+                    snapDivisions: 16,
+                    onChanged: (value) => setState(() => _radius = value),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
         PlaygroundDisclosure(
           key: const ValueKey('settings-danger-zone'),
           semanticHint: 'Shows destructive workspace actions',
           trigger: const _Text('Danger zone', emphasized: true),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          content: ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.stretch)
+                .spacing(PlaygroundTokens.s3),
             children: [
               const _Text('Destructive workspace actions cannot be undone.'),
-              const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerLeft,
                 child: PlaygroundButton.destructive(
@@ -227,27 +252,38 @@ class _DefaultDashboardSettingsPageState
 
 Widget _section(String title, String description, Widget child) =>
     PlaygroundCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.stretch)
+            .spacing(PlaygroundTokens.s4),
         children: [
-          _Text(title, size: 17, emphasized: true),
-          const SizedBox(height: 4),
-          _Text(description, size: 13, muted: true),
-          const SizedBox(height: 16),
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing(PlaygroundTokens.s1),
+            children: [
+              _Text(title, token: PlaygroundTokens.textLg, emphasized: true),
+              _Text(description, muted: true),
+            ],
+          ),
           child,
         ],
       ),
     );
 
-Widget _preference(String title, String description, Widget trailing) => Row(
+Widget _preference(String title, String description, Widget trailing) => RowBox(
+  style: FlexBoxStyler()
+      .crossAxisAlignment(.center)
+      .spacing(PlaygroundTokens.s4),
   children: [
     Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s0_5),
         children: [
           _Text(title, emphasized: true),
-          const SizedBox(height: 2),
-          _Text(description, size: 13, muted: true),
+          _Text(description, muted: true),
         ],
       ),
     ),
@@ -258,12 +294,12 @@ Widget _preference(String title, String description, Widget trailing) => Row(
 class _Text extends StatelessWidget {
   const _Text(
     this.value, {
-    this.size = 14,
+    this.token = PlaygroundTokens.textSm,
     this.emphasized = false,
     this.muted = false,
   });
   final String value;
-  final double size;
+  final TextStyleToken token;
   final bool emphasized;
   final bool muted;
 
@@ -271,7 +307,7 @@ class _Text extends StatelessWidget {
   Widget build(BuildContext context) => StyledText(
     value,
     style: TextStyler()
-        .fontSize(size)
+        .style(token.mix())
         .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
         .color(
           muted

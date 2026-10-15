@@ -56,67 +56,63 @@ class _DefaultDashboardCustomersPageState
         onPressed: () => _toast(context, 'Customer invitation started'),
       ),
       children: [
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final search = SizedBox(
-              width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s2_5),
+          children: [
+            Box(
+              style: BoxStyler().width(300),
               child: PlaygroundTextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(RemixIcons.magnifyingGlass, size: 18),
+                leading: const Icon(
+                  RemixIcons.magnifyingGlass,
+                  size: PlaygroundTokens.icon,
+                ),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;
                 }),
               ),
-            );
-            final selection = _selectedIds.isEmpty
-                ? null
-                : Wrap(
-                    spacing: 6,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      PlaygroundBadge.secondary(
-                        label: '${_selectedIds.length} selected',
-                      ),
-                      PlaygroundButton.ghost(
-                        size: .small,
-                        label: 'Export',
-                        onPressed: () => _toast(
-                          context,
-                          'Export prepared for ${_selectedIds.length} customers',
+            ),
+            if (_selectedIds.isNotEmpty)
+              WrapBox(
+                style: WrapBoxStyler()
+                    .spacing(PlaygroundTokens.s1_5)
+                    .crossAxisAlignment(.center),
+                children: [
+                  PlaygroundBadge.secondary(
+                    label: '${_selectedIds.length} selected',
+                  ),
+                  PlaygroundButton.ghost(
+                    size: .small,
+                    label: 'Export',
+                    onPressed: () => _toast(
+                      context,
+                      'Export prepared for ${_selectedIds.length} customers',
+                    ),
+                  ),
+                  PlaygroundButton.ghost(
+                    size: .small,
+                    label: 'Archive',
+                    onPressed: () => showRemixToast(
+                      context,
+                      RemixToastData(
+                        title: '${_selectedIds.length} customers archived',
+                        icon: RemixIcons.checkCircled,
+                        action: const RemixToastAction(
+                          label: 'Undo',
+                          onPressed: _noop,
                         ),
                       ),
-                      PlaygroundButton.ghost(
-                        size: .small,
-                        label: 'Archive',
-                        onPressed: () => showRemixToast(
-                          context,
-                          RemixToastData(
-                            title: '${_selectedIds.length} customers archived',
-                            icon: RemixIcons.checkCircled,
-                            action: const RemixToastAction(
-                              label: 'Undo',
-                              onPressed: _noop,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            return constraints.maxWidth < 700
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      search,
-                      if (selection != null) ...[
-                        const SizedBox(height: 10),
-                        selection,
-                      ],
-                    ],
-                  )
-                : Row(children: [search, const Spacer(), ?selection]);
-          },
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
         PlaygroundDataTable<PlaygroundDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
@@ -271,10 +267,12 @@ List<RemixDataTableColumn<PlaygroundDashboardCustomer>> _customerColumns(
     label: 'Customer',
     sortable: true,
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => Row(
+    cellBuilder: (_, value) => RowBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.center)
+          .spacing(PlaygroundTokens.s2),
       children: [
         PlaygroundAvatar(label: value.initials),
-        const SizedBox(width: 9),
         Flexible(child: _Text(value.name, emphasized: true)),
       ],
     ),
@@ -365,7 +363,8 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
   trigger: RemixMenuTrigger.builder(
     label: 'More',
     icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) => const Icon(RemixIcons.dotsHorizontal, size: 18),
+    builder: (_, _, _) =>
+        const Icon(RemixIcons.dotsHorizontal, size: PlaygroundTokens.icon),
   ),
   items: const [
     RemixMenuItem(value: 'view', label: 'View'),
@@ -397,19 +396,28 @@ class _Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    padding: const EdgeInsets.all(PlaygroundTokens.s8),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(PlaygroundTokens.s5),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s4),
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.start)
+                    .spacing(PlaygroundTokens.s1),
                 children: [
-                  _Text(title, size: 28, emphasized: true),
-                  const SizedBox(height: 4),
+                  _Text(
+                    title,
+                    token: PlaygroundTokens.text3xl,
+                    emphasized: true,
+                  ),
                   _Text(description, muted: true),
                 ],
               ),
@@ -417,7 +425,7 @@ class _Page extends StatelessWidget {
             action,
           ],
         ),
-        for (final child in children) ...[const SizedBox(height: 20), child],
+        ...children,
       ],
     ),
   );
@@ -428,15 +436,20 @@ class _Empty extends StatelessWidget {
   final String title;
   final String body;
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(32),
-    child: Column(
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.all(PlaygroundTokens.s8)),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.center)
+          .spacing(PlaygroundTokens.s2),
       children: [
-        const Icon(RemixIcons.magnifyingGlass, size: 24),
-        const SizedBox(height: 8),
-        _Text(title, emphasized: true),
-        const SizedBox(height: 4),
-        _Text(body, muted: true),
+        const Icon(RemixIcons.magnifyingGlass, size: PlaygroundTokens.s6),
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(PlaygroundTokens.s1),
+          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
+        ),
       ],
     ),
   );
@@ -445,19 +458,19 @@ class _Empty extends StatelessWidget {
 class _Text extends StatelessWidget {
   const _Text(
     this.value, {
-    this.size = 14,
+    this.token = PlaygroundTokens.textSm,
     this.emphasized = false,
     this.muted = false,
   });
   final String value;
-  final double size;
+  final TextStyleToken token;
   final bool emphasized;
   final bool muted;
   @override
   Widget build(BuildContext context) => StyledText(
     value,
     style: TextStyler()
-        .fontSize(size)
+        .style(token.mix())
         .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
         .color(
           muted
