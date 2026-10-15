@@ -5,27 +5,28 @@ import 'dashboard_demo_ui.dart';
 
 import 'dashboard_demo_gallery_scaffold.dart';
 
-class GalleryActionsPage extends StatefulWidget {
-  const GalleryActionsPage({super.key});
+class FortalGalleryActionsPage extends StatefulWidget {
+  const FortalGalleryActionsPage({super.key});
 
   @override
-  State<GalleryActionsPage> createState() => _GalleryActionsPageState();
+  State<FortalGalleryActionsPage> createState() =>
+      _FortalGalleryActionsPageState();
 }
 
-class _GalleryActionsPageState extends State<GalleryActionsPage> {
+class _FortalGalleryActionsPageState extends State<FortalGalleryActionsPage> {
   bool _selected = true;
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return FortalGalleryPage(
       title: 'Actions',
       intro: 'Interactive actions across every native variant and size.',
       sections: [
-        GallerySection(
+        FortalGallerySection(
           label: 'Button',
           description:
               'Classic, solid, soft, surface, outline, and ghost actions.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalButtonVariant.values,
             columns: FortalButtonSize.values,
             cellBuilder: (context, variant, size) => FortalButton(
@@ -42,11 +43,11 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Icon button',
           description:
               'Compact icon-only controls with complete focus semantics.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalIconButtonVariant.values,
             columns: FortalIconButtonSize.values,
             cellBuilder: (context, variant, size) => FortalIconButton(
@@ -64,10 +65,10 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Toggle',
           description: 'Ghost and outline toggles remain fully interactive.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalToggleVariant.values,
             columns: FortalToggleSize.values,
             cellBuilder: (_, variant, size) => FortalToggle(
@@ -80,7 +81,7 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'States',
           description:
               'Disabled and loading behavior uses the same component API.',

@@ -6,28 +6,29 @@ import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_text.dart';
 import 'dashboard_demo_ui.dart';
 
-class GalleryDisplayPage extends StatefulWidget {
-  const GalleryDisplayPage({super.key});
+class {{typePrefix}}GalleryDisplayPage extends StatefulWidget {
+  const {{typePrefix}}GalleryDisplayPage({super.key});
 
   @override
-  State<GalleryDisplayPage> createState() => _GalleryDisplayPageState();
+  State<{{typePrefix}}GalleryDisplayPage> createState() =>
+      _{{typePrefix}}GalleryDisplayPageState();
 }
 
-class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
+class _{{typePrefix}}GalleryDisplayPageState extends State<{{typePrefix}}GalleryDisplayPage> {
   bool _spinnersRunning = false;
   bool _skeletonLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return {{typePrefix}}GalleryPage(
       title: 'Data Display',
       intro: 'Rich surfaces and status components for product interfaces.',
       sections: [
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Avatar',
           description:
               'Two visual variants across all nine Radix-compatible sizes.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}AvatarVariant.values,
             columns: {{typePrefix}}AvatarSize.values,
             // Size9 is 160px; preserve its 20px cell padding and divider.
@@ -36,22 +37,22 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                 {{typePrefix}}Avatar(variant: variant, size: size, label: 'RF'),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Badge',
           description:
               'Status labels in solid, soft, surface, and outline variants.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}BadgeVariant.values,
             columns: {{typePrefix}}BadgeSize.values,
             cellBuilder: (_, variant, size) =>
                 {{typePrefix}}Badge(variant: variant, size: size, label: 'Active'),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Card',
           description:
               'Surface, classic, and ghost containers across five spacing sizes.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}CardVariant.values,
             columns: {{typePrefix}}CardSize.values,
             cellWidth: 200,
@@ -65,10 +66,10 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Callout',
           description: 'Contextual information in every variant and size.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}CalloutVariant.values,
             columns: {{typePrefix}}CalloutSize.values,
             cellWidth: 230,
@@ -82,11 +83,11 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Data list',
           description:
               'Label and value pairs at every size, horizontal and vertical.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: Axis.values,
             columns: {{typePrefix}}DataListSize.values,
             cellWidth: 250,
@@ -104,7 +105,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Skeleton',
           description:
               'Placeholder shapes that keep the loaded layout measurements.',
@@ -131,11 +132,11 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ],
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Progress',
           description:
               'Determinate progress with classic, surface, and soft treatments.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}ProgressVariant.values,
             columns: {{typePrefix}}ProgressSize.values,
             cellWidth: 210,
@@ -150,7 +151,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Spinner',
           description:
               'Animation is stopped by default so automated tests remain settleable.',
@@ -171,7 +172,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ],
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Divider',
           description: 'Horizontal dividers at all four inset sizes.',
           child: ColumnBox(

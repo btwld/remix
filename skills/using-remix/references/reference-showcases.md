@@ -86,11 +86,10 @@ variant is fixed; the unnamed constructor is appropriate here because a
 matrix deliberately selects variants at runtime.
 
 `GalleryMatrix` itself is not a Remix or Fortal library API — it is an
-app-owned widget installed at
-`<ui-path>/recipes/dashboard/dashboard_demo_gallery_scaffold.dart` by the
-Fortal `dashboard_demo` registry item, the same way any other recipe file
-becomes application-owned once installed. The Vanilla `dashboard_demo` item
-does not include this file or `GalleryMatrix`. Treat it as a pattern to
+app-owned widget in `apps/dashboard` (and installed as `<Prefix>GalleryMatrix`
+at `<ui-path>/recipes/dashboard/dashboard_demo_gallery_scaffold.dart` by the
+`dashboard_demo` registry item across both presets), the same way any other
+recipe file becomes application-owned once installed. Treat it as a pattern to
 reproduce in the target app, not a type to import from a package.
 
 A two-dimensional comparison is a good use of Mix `GridBox`: declare the

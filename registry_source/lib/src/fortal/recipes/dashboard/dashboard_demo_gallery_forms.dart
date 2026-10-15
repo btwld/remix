@@ -5,14 +5,14 @@ import 'dashboard_demo_ui.dart';
 
 import 'dashboard_demo_gallery_scaffold.dart';
 
-class GalleryFormsPage extends StatefulWidget {
-  const GalleryFormsPage({super.key});
+class FortalGalleryFormsPage extends StatefulWidget {
+  const FortalGalleryFormsPage({super.key});
 
   @override
-  State<GalleryFormsPage> createState() => _GalleryFormsPageState();
+  State<FortalGalleryFormsPage> createState() => _FortalGalleryFormsPageState();
 }
 
-class _GalleryFormsPageState extends State<GalleryFormsPage> {
+class _FortalGalleryFormsPageState extends State<FortalGalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
@@ -23,15 +23,15 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return FortalGalleryPage(
       title: 'Forms & Inputs',
       intro: 'Production-ready fields and selection controls in every preset.',
       sections: [
-        GallerySection(
+        FortalGallerySection(
           label: 'Text field',
           description:
               'All field variants and sizes with a leading icon and placeholder.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalTextFieldVariant.values,
             columns: FortalTextFieldSize.values,
             cellWidth: 210,
@@ -43,11 +43,11 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Text area',
           description:
               'Multi-line input sharing the text field variants and sizes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalTextAreaVariant.values,
             columns: FortalTextAreaSize.values,
             cellWidth: 230,
@@ -58,10 +58,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Segmented control',
           description: 'Exclusive selection in surface and classic treatments.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalSegmentedControlVariant.values,
             columns: FortalSegmentedControlSize.values,
             cellWidth: 250,
@@ -78,10 +78,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Select',
           description: 'Every visual variant across the three sizes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalSelectVariant.values,
             columns: FortalSelectSize.values,
             cellBuilder: (_, variant, size) => FortalSelect<String>(
@@ -98,11 +98,11 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Toggle group',
           description:
               'Single-selection groups in soft and surface treatments.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalToggleGroupVariant.values,
             columns: FortalToggleGroupSize.values,
             cellWidth: 230,
@@ -134,10 +134,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Checkbox',
           description: 'Classic, surface, and soft checkbox recipes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalCheckboxVariant.values,
             columns: FortalCheckboxSize.values,
             cellBuilder: (_, variant, size) => FortalCheckbox(
@@ -149,7 +149,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Checkbox group',
           description:
               'Labelled options whose text shares the checkbox tap target.',
@@ -170,10 +170,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Radio',
           description: 'Radio selection shown across every variant and size.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalRadioVariant.values,
             columns: FortalRadioSize.values,
             cellBuilder: (_, variant, size) => RemixRadioGroup<int>(
@@ -190,10 +190,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Switch',
           description: 'Binary settings controls with all visual treatments.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalSwitchVariant.values,
             columns: FortalSwitchSize.values,
             cellBuilder: (_, variant, size) => FortalSwitch(
@@ -205,10 +205,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Slider',
           description: 'Discrete single-thumb sliders in every Fortal recipe.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalSliderVariant.values,
             columns: FortalSliderSize.values,
             cellWidth: 210,
@@ -226,7 +226,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'States',
           description: 'Validation, disabled, and indeterminate states.',
           child: WrapBox(

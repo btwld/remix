@@ -6,28 +6,29 @@ import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_text.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 
-class GalleryDisplayPage extends StatefulWidget {
-  const GalleryDisplayPage({super.key});
+class FortalGalleryDisplayPage extends StatefulWidget {
+  const FortalGalleryDisplayPage({super.key});
 
   @override
-  State<GalleryDisplayPage> createState() => _GalleryDisplayPageState();
+  State<FortalGalleryDisplayPage> createState() =>
+      _FortalGalleryDisplayPageState();
 }
 
-class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
+class _FortalGalleryDisplayPageState extends State<FortalGalleryDisplayPage> {
   bool _spinnersRunning = false;
   bool _skeletonLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return FortalGalleryPage(
       title: 'Data Display',
       intro: 'Rich surfaces and status components for product interfaces.',
       sections: [
-        GallerySection(
+        FortalGallerySection(
           label: 'Avatar',
           description:
               'Two visual variants across all nine Radix-compatible sizes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalAvatarVariant.values,
             columns: FortalAvatarSize.values,
             // Size9 is 160px; preserve its 20px cell padding and divider.
@@ -36,22 +37,22 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                 FortalAvatar(variant: variant, size: size, label: 'RF'),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Badge',
           description:
               'Status labels in solid, soft, surface, and outline variants.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalBadgeVariant.values,
             columns: FortalBadgeSize.values,
             cellBuilder: (_, variant, size) =>
                 FortalBadge(variant: variant, size: size, label: 'Active'),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Card',
           description:
               'Surface, classic, and ghost containers across five spacing sizes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalCardVariant.values,
             columns: FortalCardSize.values,
             cellWidth: 200,
@@ -65,10 +66,10 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Callout',
           description: 'Contextual information in every variant and size.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalCalloutVariant.values,
             columns: FortalCalloutSize.values,
             cellWidth: 230,
@@ -82,11 +83,11 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Data list',
           description:
               'Label and value pairs at every size, horizontal and vertical.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: Axis.values,
             columns: FortalDataListSize.values,
             cellWidth: 250,
@@ -104,7 +105,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Skeleton',
           description:
               'Placeholder shapes that keep the loaded layout measurements.',
@@ -131,11 +132,11 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ],
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Progress',
           description:
               'Determinate progress with classic, surface, and soft treatments.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalProgressVariant.values,
             columns: FortalProgressSize.values,
             cellWidth: 210,
@@ -150,7 +151,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Spinner',
           description:
               'Animation is stopped by default so automated tests remain settleable.',
@@ -171,7 +172,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             ],
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Divider',
           description: 'Horizontal dividers at all four inset sizes.',
           child: ColumnBox(

@@ -1,0 +1,239 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+{{icon:import}}
+
+import '../../components/checkbox.dart';
+import '../../components/radio.dart';
+import '../../components/segmented_control.dart';
+import '../../components/select.dart';
+import '../../components/slider.dart';
+import '../../components/switch.dart';
+import '../../components/textfield.dart';
+import '../../components/toggle_group.dart';
+import '../../theme/tokens.dart';
+import 'dashboard_demo_gallery_scaffold.dart';
+
+class {{typePrefix}}GalleryFormsPage extends StatefulWidget {
+  const {{typePrefix}}GalleryFormsPage({super.key});
+
+  @override
+  State<{{typePrefix}}GalleryFormsPage> createState() =>
+      _{{typePrefix}}GalleryFormsPageState();
+}
+
+class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFormsPage> {
+  bool _checked = true;
+  bool _switched = true;
+  int _radio = 1;
+  String _alignment = 'left';
+  String _density = 'comfortable';
+  Set<String> _channels = {'email'};
+  double _slider = 58;
+
+  @override
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
+    title: 'Forms & Inputs',
+    intro: 'Production-ready fields and selection controls in every preset.',
+    sections: [
+      {{typePrefix}}GallerySection(
+        label: 'Text field',
+        description: 'The native field with a leading icon and placeholder.',
+        child: Box(
+          style: BoxStyler().width(300),
+          child: const {{typePrefix}}TextField(
+            hintText: 'Type something…',
+            leading: Icon({{icon:magnifyingGlass}}, size: {{typePrefix}}Tokens.icon),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Text area',
+        description: 'Multi-line input sharing the text field treatment.',
+        child: Box(
+          style: BoxStyler().width(360),
+          child: const {{typePrefix}}TextArea(hintText: 'Add a note…'),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Segmented control',
+        description: 'Exclusive selection using the native treatment.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: {{typePrefix}}SegmentedControl<String>(
+            selectedValue: _density,
+            semanticLabel: 'Row density',
+            items: const [
+              RemixSegmentedControlItem(value: 'compact', label: 'Compact'),
+              RemixSegmentedControlItem(value: 'comfortable', label: 'Cozy'),
+            ],
+            onChanged: (value) => setState(() => _density = value),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Select',
+        description: 'A keyboard-accessible native select.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Box(
+            style: BoxStyler().width(220),
+            child: {{typePrefix}}Select<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
+              items: const [
+                RemixSelectItem(value: 'apple', label: 'Apple'),
+                RemixSelectItem(value: 'orange', label: 'Orange'),
+                RemixSelectItem(value: 'pear', label: 'Pear'),
+              ],
+              selectedValue: 'apple',
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Toggle group',
+        description: 'Every native group variant and size.',
+        child: {{typePrefix}}GalleryEnumMatrix(
+          rows: {{typePrefix}}ToggleGroupVariant.values,
+          columns: {{typePrefix}}ToggleGroupSize.values,
+          cellWidth: 230,
+          cellBuilder: (_, variant, size) => {{typePrefix}}ToggleGroup<String>(
+            variant: variant,
+            size: size,
+            selectedValue: _alignment,
+            semanticLabel: 'Text alignment',
+            items: const [
+              RemixToggleGroupItem(
+                value: 'left',
+                icon: {{icon:alignLeft}},
+                semanticLabel: 'Left',
+              ),
+              RemixToggleGroupItem(
+                value: 'center',
+                icon: {{icon:alignCenterHorizontally}},
+                semanticLabel: 'Center',
+              ),
+              RemixToggleGroupItem(
+                value: 'right',
+                icon: {{icon:alignRight}},
+                semanticLabel: 'Right',
+              ),
+            ],
+            onChanged: (value) {
+              if (value != null) setState(() => _alignment = value);
+            },
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Checkbox',
+        description: 'The native tri-state checkbox recipe.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: {{typePrefix}}Checkbox(
+            selected: _checked,
+            label: 'Example checkbox',
+            onChanged: (value) => setState(() => _checked = value ?? false),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Checkbox group',
+        description: 'Labelled options share the checkbox tap target.',
+        child: RemixCheckboxGroup<String>(
+          values: _channels,
+          semanticLabel: 'Notification channels',
+          onChanged: (values) => setState(() => _channels = values),
+          child: WrapBox(
+            style: WrapBoxStyler()
+                .spacing({{typePrefix}}Tokens.s4)
+                .runSpacing({{typePrefix}}Tokens.s1_5),
+            children: [
+              for (final (value, label) in const [
+                ('email', 'Email'),
+                ('sms', 'SMS'),
+                ('push', 'Push'),
+              ])
+                {{typePrefix}}CheckboxGroupItem<String>(value: value, label: label),
+            ],
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Radio',
+        description: 'Exclusive radio selection.',
+        child: RemixRadioGroup<int>(
+          groupValue: _radio,
+          onChanged: (value) {
+            if (value != null) setState(() => _radio = value);
+          },
+          child: WrapBox(
+            style: WrapBoxStyler().spacing({{typePrefix}}Tokens.s5),
+            children: const [
+              {{typePrefix}}Radio<int>(value: 1, semanticLabel: 'First option'),
+              {{typePrefix}}Radio<int>(value: 2, semanticLabel: 'Second option'),
+            ],
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Switch',
+        description: 'The native binary setting control.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: {{typePrefix}}Switch(
+            selected: _switched,
+            semanticLabel: 'Example switch',
+            onChanged: (value) => setState(() => _switched = value),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Slider',
+        description: 'A discrete single-thumb slider.',
+        child: Box(
+          style: BoxStyler().width(300),
+          child: {{typePrefix}}Slider(
+            value: _slider,
+            min: 0,
+            max: 100,
+            snapDivisions: 100,
+            onChanged: (value) => setState(() => _slider = value),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'States',
+        description: 'Validation, disabled, and indeterminate states.',
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing({{typePrefix}}Tokens.s4)
+              .runSpacing({{typePrefix}}Tokens.s4)
+              .crossAxisAlignment(.center),
+          children: [
+            Box(
+              style: BoxStyler().width(240),
+              child: const {{typePrefix}}TextField(
+                error: true,
+                label: 'Workspace slug',
+                hintText: 'remix',
+                helperText: 'That slug is already in use.',
+              ),
+            ),
+            const {{typePrefix}}Checkbox(
+              selected: null,
+              tristate: true,
+              semanticLabel: 'Indeterminate checkbox',
+            ),
+            const {{typePrefix}}Checkbox(selected: true, label: 'Labelled'),
+            const {{typePrefix}}Switch(
+              selected: false,
+              enabled: false,
+              semanticLabel: 'Disabled switch',
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}

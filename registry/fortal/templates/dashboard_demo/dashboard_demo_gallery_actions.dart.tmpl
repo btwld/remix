@@ -5,27 +5,28 @@ import 'package:remix/remix.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_ui.dart';
 
-class GalleryActionsPage extends StatefulWidget {
-  const GalleryActionsPage({super.key});
+class {{typePrefix}}GalleryActionsPage extends StatefulWidget {
+  const {{typePrefix}}GalleryActionsPage({super.key});
 
   @override
-  State<GalleryActionsPage> createState() => _GalleryActionsPageState();
+  State<{{typePrefix}}GalleryActionsPage> createState() =>
+      _{{typePrefix}}GalleryActionsPageState();
 }
 
-class _GalleryActionsPageState extends State<GalleryActionsPage> {
+class _{{typePrefix}}GalleryActionsPageState extends State<{{typePrefix}}GalleryActionsPage> {
   bool _selected = true;
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return {{typePrefix}}GalleryPage(
       title: 'Actions',
       intro: 'Interactive actions across every native variant and size.',
       sections: [
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Button',
           description:
               'Classic, solid, soft, surface, outline, and ghost actions.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}ButtonVariant.values,
             columns: {{typePrefix}}ButtonSize.values,
             cellBuilder: (context, variant, size) => {{typePrefix}}Button(
@@ -42,11 +43,11 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Icon button',
           description:
               'Compact icon-only controls with complete focus semantics.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}IconButtonVariant.values,
             columns: {{typePrefix}}IconButtonSize.values,
             cellBuilder: (context, variant, size) => {{typePrefix}}IconButton(
@@ -64,10 +65,10 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Toggle',
           description: 'Ghost and outline toggles remain fully interactive.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}ToggleVariant.values,
             columns: {{typePrefix}}ToggleSize.values,
             cellBuilder: (_, variant, size) => {{typePrefix}}Toggle(
@@ -80,7 +81,7 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'States',
           description:
               'Disabled and loading behavior uses the same component API.',

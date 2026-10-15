@@ -10,8 +10,8 @@ import 'dashboard_demo_ui.dart';
 /// page title is level 1 and every card or section title below it is level 2.
 /// The visual size is chosen independently of that level, exactly as Radix
 /// separates `as` from `size`.
-class PageHeader extends StatelessWidget {
-  const PageHeader({
+class {{typePrefix}}PageHeader extends StatelessWidget {
+  const {{typePrefix}}PageHeader({
     super.key,
     required this.title,
     required this.description,
@@ -46,8 +46,8 @@ class PageHeader extends StatelessWidget {
 }
 
 /// The title of a section inside a card.
-class SectionLabel extends StatelessWidget {
-  const SectionLabel(this.label, {super.key});
+class {{typePrefix}}SectionLabel extends StatelessWidget {
+  const {{typePrefix}}SectionLabel(this.label, {super.key});
   final String label;
 
   @override
@@ -55,9 +55,9 @@ class SectionLabel extends StatelessWidget {
       {{typePrefix}}Heading(label, headingLevel: 2, size: .size4, weight: .medium);
 }
 
-/// A [SectionLabel] with supporting copy beneath it.
-class CardHeading extends StatelessWidget {
-  const CardHeading({
+/// A [{{typePrefix}}SectionLabel] with supporting copy beneath it.
+class {{typePrefix}}CardHeading extends StatelessWidget {
+  const {{typePrefix}}CardHeading({
     super.key,
     required this.title,
     required this.description,
@@ -70,7 +70,7 @@ class CardHeading extends StatelessWidget {
   Widget build(BuildContext context) => ColumnBox(
     style: FlexBoxStyler().crossAxisAlignment(.start).spacing(3),
     children: [
-      SectionLabel(title),
+      {{typePrefix}}SectionLabel(title),
       StyledText(description, style: dashboardText(.size2, tone: .muted)),
     ],
   );

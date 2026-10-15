@@ -21,9 +21,8 @@ class GalleryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: .stretch,
-      spacing: 20,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [
         PageHeader(title: title, description: intro),
         ...sections,
@@ -47,9 +46,8 @@ class GallerySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => UiCard(
     size: .size2,
-    child: Column(
-      crossAxisAlignment: .stretch,
-      spacing: 14,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(14),
       children: [
         CardHeading(title: label, description: description),
         child,

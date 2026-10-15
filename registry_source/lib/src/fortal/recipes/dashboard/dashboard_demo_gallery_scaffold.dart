@@ -6,8 +6,8 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_typography.dart';
 
-class GalleryPage extends StatelessWidget {
-  const GalleryPage({
+class FortalGalleryPage extends StatelessWidget {
+  const FortalGalleryPage({
     super.key,
     required this.title,
     required this.intro,
@@ -24,15 +24,15 @@ class GalleryPage extends StatelessWidget {
     child: ColumnBox(
       style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [
-        PageHeader(title: title, description: intro),
+        FortalPageHeader(title: title, description: intro),
         ...sections,
       ],
     ),
   );
 }
 
-class GallerySection extends StatelessWidget {
-  const GallerySection({
+class FortalGallerySection extends StatelessWidget {
+  const FortalGallerySection({
     super.key,
     required this.label,
     required this.description,
@@ -49,7 +49,7 @@ class GallerySection extends StatelessWidget {
     child: ColumnBox(
       style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(14),
       children: [
-        CardHeading(title: label, description: description),
+        FortalCardHeading(title: label, description: description),
         child,
       ],
     ),
@@ -57,8 +57,8 @@ class GallerySection extends StatelessWidget {
 }
 
 /// A typed Mix Grid whose axis values label and build every comparison cell.
-class GalleryMatrix<R, C> extends StatelessWidget {
-  const GalleryMatrix({
+class FortalGalleryMatrix<R, C> extends StatelessWidget {
+  const FortalGalleryMatrix({
     super.key,
     required this.rows,
     required this.columns,
@@ -169,9 +169,9 @@ class _MatrixCell extends StatelessWidget {
 }
 
 /// A comparison matrix whose labels come directly from its enum axes.
-class GalleryEnumMatrix<R extends Enum, C extends Enum>
-    extends GalleryMatrix<R, C> {
-  const GalleryEnumMatrix({
+class FortalGalleryEnumMatrix<R extends Enum, C extends Enum>
+    extends FortalGalleryMatrix<R, C> {
+  const FortalGalleryEnumMatrix({
     super.key,
     required super.rows,
     required super.columns,

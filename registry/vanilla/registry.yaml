@@ -282,8 +282,20 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_records.dart"
       - source: templates/dashboard_demo/dashboard_overview.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_overview.dart"
-      - source: templates/dashboard_demo/dashboard_demo_galleries.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_galleries.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_scaffold.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_scaffold.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_actions.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_actions.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_forms.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_forms.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_display.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_display.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_overlays.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_overlays.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_navigation.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_navigation.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_typography.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_typography.dart"
       - source: templates/dashboard_demo/dashboard_demo_records_page.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_records_page.dart"
       - source: templates/dashboard_demo/dashboard_demo_settings.dart.tmpl

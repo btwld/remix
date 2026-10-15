@@ -55,9 +55,9 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
                       label: 'Send invite',
                     ),
                   ],
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 12),
-                    child: UiTextField(hintText: 'teammate@example.com'),
+                  child: Box(
+                    style: BoxStyler().padding(.top(12)),
+                    child: const UiTextField(hintText: 'teammate@example.com'),
                   ),
                 ),
               ),
@@ -68,21 +68,21 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
         GallerySection(
           label: 'Popover',
           description: 'Anchored content with all four padding presets.',
-          child: Wrap(
-            spacing: 14,
-            runSpacing: 14,
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(14).runSpacing(14),
             children: [
               for (final size in UiPopoverSize.values)
                 UiPopover(
                   size: size,
                   semanticLabel: 'Open ${enumLabel(size)} popover',
-                  popoverChild: const SizedBox(
-                    width: 250,
-                    child: Column(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .start,
-                      spacing: 8,
-                      children: [
+                  popoverChild: Box(
+                    style: BoxStyler().width(250),
+                    child: ColumnBox(
+                      style: FlexBoxStyler()
+                          .mainAxisSize(.min)
+                          .crossAxisAlignment(.start)
+                          .spacing(8),
+                      children: const [
                         UiText('Quick note'),
                         UiText(
                           'Popover content inherits the active Fortal scope.',

@@ -1,0 +1,200 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+{{icon:import}}
+
+import '../../components/accordion.dart';
+import '../../components/app_bar.dart';
+import '../../components/disclosure.dart';
+import '../../components/icon_button.dart';
+import '../../components/sidebar.dart';
+import '../../components/tabs.dart';
+import '../../theme/tokens.dart';
+import 'dashboard_demo_gallery_scaffold.dart';
+
+class {{typePrefix}}GalleryNavigationPage extends StatefulWidget {
+  const {{typePrefix}}GalleryNavigationPage({super.key});
+
+  @override
+  State<{{typePrefix}}GalleryNavigationPage> createState() =>
+      _{{typePrefix}}GalleryNavigationPageState();
+}
+
+class _{{typePrefix}}GalleryNavigationPageState
+    extends State<{{typePrefix}}GalleryNavigationPage> {
+  String _sidebar = 'overview';
+  String _tab = 'overview';
+  final _accordion = RemixAccordionController<String>(max: 1);
+
+  @override
+  void dispose() {
+    _accordion.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
+    title: 'Navigation',
+    intro:
+        'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
+    sections: [
+      {{typePrefix}}GallerySection(
+        label: 'App bar',
+        description:
+            'A page header with a leading button, a title heading, and actions.',
+        child: {{typePrefix}}AppBar(
+          // A sample inside a card: it neither touches the screen edge nor
+          // names the page.
+          safeArea: false,
+          namesRoute: false,
+          leading: {{typePrefix}}IconButton.ghost(
+            size: .large,
+            icon: {{icon:hamburgerMenu}},
+            semanticLabel: 'Open navigation',
+            onPressed: () =>
+                show{{typePrefix}}GalleryToast(context, 'Navigation is the caller\'s'),
+          ),
+          title: 'Orders',
+          actions: [
+            {{typePrefix}}IconButton.ghost(
+              size: .large,
+              icon: {{icon:magnifyingGlass}},
+              semanticLabel: 'Search orders',
+              onPressed: () =>
+                  show{{typePrefix}}GalleryToast(context, 'Search orders'),
+            ),
+            {{typePrefix}}IconButton.ghost(
+              size: .large,
+              icon: {{icon:bell}},
+              semanticLabel: 'Notifications',
+              onPressed: () =>
+                  show{{typePrefix}}GalleryToast(context, 'No new notifications'),
+            ),
+          ],
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Sidebar',
+        description:
+            'A controlled native sidebar with fixed header and footer.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Box(
+            style: BoxStyler().width(280).height(320),
+            child: {{typePrefix}}Sidebar<String>(
+              header: Box(
+                style: BoxStyler().padding(.all({{typePrefix}}Tokens.s3_5)),
+                child: const {{typePrefix}}GalleryHeading(
+                  'Acme',
+                  token: {{typePrefix}}Tokens.textBase,
+                  weight: FontWeight.w700,
+                ),
+              ),
+              sections: const [
+                RemixSidebarSection(
+                  label: 'Workspace',
+                  destinations: [
+                    RemixSidebarDestination(
+                      value: 'overview',
+                      label: 'Overview',
+                      icon: {{icon:dashboard}},
+                    ),
+                    RemixSidebarDestination(
+                      value: 'activity',
+                      label: 'Activity',
+                      icon: {{icon:activityLog}},
+                    ),
+                  ],
+                ),
+                RemixSidebarSection(
+                  label: 'Manage',
+                  destinations: [
+                    RemixSidebarDestination(
+                      value: 'settings',
+                      label: 'Settings',
+                      icon: {{icon:mixerHorizontal}},
+                    ),
+                  ],
+                ),
+              ],
+              selectedValue: _sidebar,
+              onSelected: (value) => setState(() => _sidebar = value),
+              footer: const {{typePrefix}}GalleryText('Ada Chen', emphasized: true),
+              semanticLabel: 'Gallery navigation example',
+            ),
+          ),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Tabs',
+        description: 'Live keyboard and pointer selection.',
+        child: RemixTabs(
+          selectedTabId: _tab,
+          onChanged: (value) => setState(() => _tab = value),
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch),
+            children: [
+              {{typePrefix}}TabBar(
+                child: RowBox(
+                  children: const [
+                    {{typePrefix}}Tab(tabId: 'overview', label: 'Overview'),
+                    {{typePrefix}}Tab(tabId: 'activity', label: 'Activity'),
+                  ],
+                ),
+              ),
+              {{typePrefix}}TabView(
+                tabId: 'overview',
+                child: Box(
+                  style: BoxStyler().padding(.all({{typePrefix}}Tokens.s3)),
+                  child: const {{typePrefix}}GalleryText('Overview content'),
+                ),
+              ),
+              {{typePrefix}}TabView(
+                tabId: 'activity',
+                child: Box(
+                  style: BoxStyler().padding(.all({{typePrefix}}Tokens.s3)),
+                  child: const {{typePrefix}}GalleryText('Activity content'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      const {{typePrefix}}GallerySection(
+        label: 'Disclosure',
+        description: 'An independent expandable native panel.',
+        child: {{typePrefix}}Disclosure(
+          defaultExpanded: true,
+          semanticLabel: 'Shipping details',
+          trigger: {{typePrefix}}GalleryText('Shipping details', emphasized: true),
+          content: {{typePrefix}}GalleryText('Delivery takes 3–5 business days.'),
+        ),
+      ),
+      {{typePrefix}}GallerySection(
+        label: 'Accordion',
+        description: 'Coordinated panels keep one section open.',
+        child: RemixAccordionGroup<String>(
+          controller: _accordion,
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch),
+            children: const [
+              {{typePrefix}}Accordion<String>(
+                value: 'details',
+                title: 'What is {{typePrefix}}?',
+                child: {{typePrefix}}GalleryText(
+                  'A neutral starter theme, installed as source you own.',
+                ),
+              ),
+              {{typePrefix}}Accordion<String>(
+                value: 'tokens',
+                title: 'Does it support tokens?',
+                child: {{typePrefix}}GalleryText(
+                  'Every recipe resolves through the active Mix scope.',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
+}

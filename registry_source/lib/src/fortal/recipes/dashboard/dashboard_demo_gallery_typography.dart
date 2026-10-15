@@ -11,16 +11,16 @@ import 'dashboard_demo_gallery_scaffold.dart';
 /// Everything here is a `Fortal*` widget: the dashboard's own `dashboardText`
 /// helper exists only to add a neutral tone, and none of these samples want
 /// one.
-class GalleryTypographyPage extends StatelessWidget {
-  const GalleryTypographyPage({super.key});
+class FortalGalleryTypographyPage extends StatelessWidget {
+  const FortalGalleryTypographyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return FortalGalleryPage(
       title: 'Typography',
       intro: 'Text, headings, code, keys, and links on one shared scale.',
       sections: [
-        GallerySection(
+        FortalGallerySection(
           label: 'Text scale',
           description:
               'The nine-step Radix scale, from 12 to 60 logical pixels.',
@@ -50,11 +50,11 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Weights',
           description:
               'Text, heading, code, and link share all four weight presets.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: _TypographyFamily.values,
             columns: FortalTextWeight.values,
             cellWidth: 130,
@@ -84,7 +84,7 @@ class GalleryTypographyPage extends StatelessWidget {
             },
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Heading level and size',
           description:
               'The accessibility level is independent of the visual size, '
@@ -106,10 +106,10 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Code',
           description: 'Solid, soft, outline, and ghost inline code.',
-          child: GalleryMatrix<FortalCodeVariant, bool>(
+          child: FortalGalleryMatrix<FortalCodeVariant, bool>(
             rows: FortalCodeVariant.values,
             columns: const [false, true],
             rowLabelBuilder: enumLabel,
@@ -125,11 +125,11 @@ class GalleryTypographyPage extends StatelessWidget {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Keyboard keys',
           description:
               'Classic key caps and the flat soft variant at all nine sizes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalKbdVariant.values,
             columns: FortalTextSize.values,
             cellWidth: 130,
@@ -141,7 +141,7 @@ class GalleryTypographyPage extends StatelessWidget {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Links',
           description:
               'Only a link with a callback becomes focusable and underlined; '
@@ -194,7 +194,7 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Accent and high contrast',
           description:
               'Accent text takes accent-a11; high contrast promotes it to '
@@ -228,7 +228,7 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Wrapping and truncation',
           description:
               'Truncate deliberately wins over softWrap and holds one '

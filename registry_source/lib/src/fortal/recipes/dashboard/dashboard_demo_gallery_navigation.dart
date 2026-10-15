@@ -6,31 +6,31 @@ import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_text.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 
-class GalleryNavigationPage extends StatelessWidget {
-  const GalleryNavigationPage({super.key});
+class FortalGalleryNavigationPage extends StatelessWidget {
+  const FortalGalleryNavigationPage({super.key});
 
   @override
-  Widget build(BuildContext context) => GalleryPage(
+  Widget build(BuildContext context) => FortalGalleryPage(
     title: 'Navigation',
     intro:
         'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
     sections: [
-      const GallerySection(
+      const FortalGallerySection(
         label: 'App bar',
         description:
             'A Fortal page header with a leading button, a title heading, and actions.',
         child: _AppBarDemo(),
       ),
-      const GallerySection(
+      const FortalGallerySection(
         label: 'Sidebar',
         description:
             'A controlled Fortal sidebar with a fixed header and footer, a scrolling destination region, headings, selected state, and ordinary Tab traversal.',
         child: _SidebarDemo(),
       ),
-      GallerySection(
+      FortalGallerySection(
         label: 'Tabs',
         description: 'Both tab sizes with live keyboard and pointer selection.',
-        child: GalleryMatrix<String, FortalTabsSize>(
+        child: FortalGalleryMatrix<String, FortalTabsSize>(
           rows: const ['Tabs'],
           columns: FortalTabsSize.values,
           rowLabelBuilder: (label) => label,
@@ -39,11 +39,11 @@ class GalleryNavigationPage extends StatelessWidget {
           cellBuilder: (_, _, size) => _TabsDemo(size: size),
         ),
       ),
-      GallerySection(
+      FortalGallerySection(
         label: 'Disclosure',
         description:
             'Independent expandable panels in every Fortal variant and size.',
-        child: GalleryEnumMatrix(
+        child: FortalGalleryEnumMatrix(
           rows: FortalDisclosureVariant.values,
           columns: FortalDisclosureSize.values,
           cellWidth: 300,
@@ -51,11 +51,11 @@ class GalleryNavigationPage extends StatelessWidget {
               _DisclosureDemo(variant: variant, size: size),
         ),
       ),
-      GallerySection(
+      FortalGallerySection(
         label: 'Accordion',
         description:
             'Coordinated disclosure items where only one panel stays open.',
-        child: GalleryEnumMatrix(
+        child: FortalGalleryEnumMatrix(
           rows: FortalAccordionVariant.values,
           columns: FortalAccordionSize.values,
           cellWidth: 300,

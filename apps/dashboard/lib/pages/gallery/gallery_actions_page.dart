@@ -83,9 +83,8 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           label: 'States',
           description:
               'Disabled and loading behavior uses the same component API.',
-          child: Wrap(
-            spacing: 12,
-            runSpacing: 12,
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(12).runSpacing(12),
             children: [
               const UiButton(
                 enabled: false,

@@ -5,14 +5,14 @@ import 'package:remix/remix.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_ui.dart';
 
-class GalleryFormsPage extends StatefulWidget {
-  const GalleryFormsPage({super.key});
+class {{typePrefix}}GalleryFormsPage extends StatefulWidget {
+  const {{typePrefix}}GalleryFormsPage({super.key});
 
   @override
-  State<GalleryFormsPage> createState() => _GalleryFormsPageState();
+  State<{{typePrefix}}GalleryFormsPage> createState() => _{{typePrefix}}GalleryFormsPageState();
 }
 
-class _GalleryFormsPageState extends State<GalleryFormsPage> {
+class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
@@ -23,15 +23,15 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return {{typePrefix}}GalleryPage(
       title: 'Forms & Inputs',
       intro: 'Production-ready fields and selection controls in every preset.',
       sections: [
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Text field',
           description:
               'All field variants and sizes with a leading icon and placeholder.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}TextFieldVariant.values,
             columns: {{typePrefix}}TextFieldSize.values,
             cellWidth: 210,
@@ -43,11 +43,11 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Text area',
           description:
               'Multi-line input sharing the text field variants and sizes.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}TextAreaVariant.values,
             columns: {{typePrefix}}TextAreaSize.values,
             cellWidth: 230,
@@ -58,10 +58,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Segmented control',
           description: 'Exclusive selection in surface and classic treatments.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}SegmentedControlVariant.values,
             columns: {{typePrefix}}SegmentedControlSize.values,
             cellWidth: 250,
@@ -78,10 +78,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Select',
           description: 'Every visual variant across the three sizes.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}SelectVariant.values,
             columns: {{typePrefix}}SelectSize.values,
             cellBuilder: (_, variant, size) => {{typePrefix}}Select<String>(
@@ -98,11 +98,11 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Toggle group',
           description:
               'Single-selection groups in soft and surface treatments.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}ToggleGroupVariant.values,
             columns: {{typePrefix}}ToggleGroupSize.values,
             cellWidth: 230,
@@ -134,10 +134,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Checkbox',
           description: 'Classic, surface, and soft checkbox recipes.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}CheckboxVariant.values,
             columns: {{typePrefix}}CheckboxSize.values,
             cellBuilder: (_, variant, size) => {{typePrefix}}Checkbox(
@@ -149,7 +149,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Checkbox group',
           description:
               'Labelled options whose text shares the checkbox tap target.',
@@ -170,10 +170,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Radio',
           description: 'Radio selection shown across every variant and size.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}RadioVariant.values,
             columns: {{typePrefix}}RadioSize.values,
             cellBuilder: (_, variant, size) => RemixRadioGroup<int>(
@@ -190,10 +190,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Switch',
           description: 'Binary settings controls with all visual treatments.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}SwitchVariant.values,
             columns: {{typePrefix}}SwitchSize.values,
             cellBuilder: (_, variant, size) => {{typePrefix}}Switch(
@@ -205,10 +205,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Slider',
           description: 'Discrete single-thumb sliders in every {{typePrefix}} recipe.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}SliderVariant.values,
             columns: {{typePrefix}}SliderSize.values,
             cellWidth: 210,
@@ -226,7 +226,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'States',
           description: 'Validation, disabled, and indeterminate states.',
           child: WrapBox(

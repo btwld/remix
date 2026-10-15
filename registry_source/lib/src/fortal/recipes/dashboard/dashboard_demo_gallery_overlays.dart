@@ -6,29 +6,30 @@ import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_text.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 
-class GalleryOverlaysPage extends StatefulWidget {
-  const GalleryOverlaysPage({super.key});
+class FortalGalleryOverlaysPage extends StatefulWidget {
+  const FortalGalleryOverlaysPage({super.key});
 
   @override
-  State<GalleryOverlaysPage> createState() => _GalleryOverlaysPageState();
+  State<FortalGalleryOverlaysPage> createState() =>
+      _FortalGalleryOverlaysPageState();
 }
 
-class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
+class _FortalGalleryOverlaysPageState extends State<FortalGalleryOverlaysPage> {
   bool _showArchived = true;
   String _sort = 'newest';
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return FortalGalleryPage(
       title: 'Overlays',
       intro:
           'Real dialog, popover, tooltip, and menu triggers for every recipe.',
       sections: [
-        GallerySection(
+        FortalGallerySection(
           label: 'Dialog',
           description:
               'Both viewport alignments across the complete four-size scale.',
-          child: GalleryMatrix<Alignment, FortalDialogSize>(
+          child: FortalGalleryMatrix<Alignment, FortalDialogSize>(
             rows: const [Alignment.topCenter, Alignment.center],
             rowLabelBuilder: (align) =>
                 align == Alignment.topCenter ? 'Top' : 'Center',
@@ -68,7 +69,7 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
             ),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Popover',
           description: 'Anchored content with all four padding presets.',
           child: WrapBox(
@@ -96,7 +97,7 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
             ],
           ),
         ),
-        const GallerySection(
+        const FortalGallerySection(
           label: 'Tooltip',
           description:
               'Hover or long-press the trigger to reveal contextual help.',
@@ -106,10 +107,10 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
             child: _OverlayTrigger('Hover for shortcut'),
           ),
         ),
-        GallerySection(
+        FortalGallerySection(
           label: 'Menu',
           description: 'Solid and soft menus at both supported density sizes.',
-          child: GalleryEnumMatrix(
+          child: FortalGalleryEnumMatrix(
             rows: FortalMenuVariant.values,
             columns: FortalMenuSize.values,
             cellBuilder: (context, variant, size) => FortalMenu<String>(

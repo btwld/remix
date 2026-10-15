@@ -505,7 +505,7 @@ void main() {
     final content = find.ancestor(
       of: find.text('Quick note'),
       matching: find.byWidgetPredicate(
-        (widget) => widget is SizedBox && widget.width == 250,
+        (widget) => widget is Box && widget.child is ColumnBox,
       ),
     );
     expect(content, findsOneWidget);
@@ -513,7 +513,7 @@ void main() {
     final body = find.text('Popover content inherits the active Fortal scope.');
     final expectedHeight =
         tester.getSize(title).height + 8 + tester.getSize(body).height;
-    expect(tester.getSize(content).height, expectedHeight);
+    expect(tester.getSize(content), Size(250, expectedHeight));
   });
 
   testWidgets('dashboard action menus expose menu semantics and width', (
@@ -707,12 +707,14 @@ void main() {
     await tester.tap(nav);
     await tester.pump();
 
-    final group = tester.widget<RemixAccordionGroup<String>>(
-      find.byType(RemixAccordionGroup<String>).first,
+    final groupFinder = find.byType(RemixAccordionGroup<String>).first;
+    final group = tester.widget<RemixAccordionGroup<String>>(groupFinder);
+    final items = group.child as ColumnBox;
+    final column = tester.widget<Flex>(
+      find.descendant(of: groupFinder, matching: find.byType(Flex)).first,
     );
-    final items = group.child as Column;
 
-    expect(items.spacing, 8);
+    expect(column.spacing, 8);
     expect(items.children, hasLength(2));
     expect(items.children, everyElement(isA<UiAccordion<String>>()));
   });

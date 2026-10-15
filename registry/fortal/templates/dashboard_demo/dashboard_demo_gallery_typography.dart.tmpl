@@ -11,16 +11,16 @@ import 'dashboard_demo_ui.dart';
 /// Everything here is a `{{typePrefix}}*` widget: the dashboard's own `dashboardText`
 /// helper exists only to add a neutral tone, and none of these samples want
 /// one.
-class GalleryTypographyPage extends StatelessWidget {
-  const GalleryTypographyPage({super.key});
+class {{typePrefix}}GalleryTypographyPage extends StatelessWidget {
+  const {{typePrefix}}GalleryTypographyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GalleryPage(
+    return {{typePrefix}}GalleryPage(
       title: 'Typography',
       intro: 'Text, headings, code, keys, and links on one shared scale.',
       sections: [
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Text scale',
           description:
               'The nine-step Radix scale, from 12 to 60 logical pixels.',
@@ -50,11 +50,11 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Weights',
           description:
               'Text, heading, code, and link share all four weight presets.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: _TypographyFamily.values,
             columns: {{typePrefix}}TextWeight.values,
             cellWidth: 130,
@@ -84,7 +84,7 @@ class GalleryTypographyPage extends StatelessWidget {
             },
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Heading level and size',
           description:
               'The accessibility level is independent of the visual size, '
@@ -106,10 +106,10 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Code',
           description: 'Solid, soft, outline, and ghost inline code.',
-          child: GalleryMatrix<{{typePrefix}}CodeVariant, bool>(
+          child: {{typePrefix}}GalleryMatrix<{{typePrefix}}CodeVariant, bool>(
             rows: {{typePrefix}}CodeVariant.values,
             columns: const [false, true],
             rowLabelBuilder: enumLabel,
@@ -125,11 +125,11 @@ class GalleryTypographyPage extends StatelessWidget {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Keyboard keys',
           description:
               'Classic key caps and the flat soft variant at all nine sizes.',
-          child: GalleryEnumMatrix(
+          child: {{typePrefix}}GalleryEnumMatrix(
             rows: {{typePrefix}}KbdVariant.values,
             columns: {{typePrefix}}TextSize.values,
             cellWidth: 130,
@@ -141,7 +141,7 @@ class GalleryTypographyPage extends StatelessWidget {
             ),
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Links',
           description:
               'Only a link with a callback becomes focusable and underlined; '
@@ -194,7 +194,7 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Accent and high contrast',
           description:
               'Accent text takes accent-a11; high contrast promotes it to '
@@ -228,7 +228,7 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
+        {{typePrefix}}GallerySection(
           label: 'Wrapping and truncation',
           description:
               'Truncate deliberately wins over softWrap and holds one '

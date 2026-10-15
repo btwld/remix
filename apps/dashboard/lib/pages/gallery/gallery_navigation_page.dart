@@ -144,9 +144,8 @@ class _SidebarDemoState extends State<_SidebarDemo> {
   // destination region scrolling while the header and footer stay put.
   Widget build(BuildContext context) => Align(
     alignment: Alignment.centerLeft,
-    child: SizedBox(
-      width: 280,
-      height: 320,
+    child: Box(
+      style: BoxStyler().width(280).height(320),
       child: UiSidebar<String>(
         header: const _SidebarDemoHeader(),
         sections: _sections,
@@ -163,8 +162,8 @@ class _SidebarDemoHeader extends StatelessWidget {
   const _SidebarDemoHeader();
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.symmetric(horizontal: 16, vertical: 14)),
     child: const UiText('Acme', size: .size4, weight: .bold),
   );
 }
@@ -173,13 +172,13 @@ class _SidebarDemoFooter extends StatelessWidget {
   const _SidebarDemoFooter();
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(14),
-    child: Row(
-      spacing: 10,
-      children: [
-        const UiAvatar(label: 'AC', size: .size1),
-        const UiText('Ada Chen', size: .size2, weight: .medium),
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.all(14)),
+    child: RowBox(
+      style: FlexBoxStyler().spacing(10),
+      children: const [
+        UiAvatar(label: 'AC', size: .size1),
+        UiText('Ada Chen', size: .size2, weight: .medium),
       ],
     ),
   );
@@ -192,8 +191,8 @@ class _DisclosureDemo extends StatelessWidget {
   final UiDisclosureSize size;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 280,
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().width(280),
     child: UiDisclosure(
       key: ValueKey('disclosure-${variant.name}-${size.name}'),
       variant: variant,
@@ -226,12 +225,11 @@ class _TabsDemoState extends State<_TabsDemo> {
   Widget build(BuildContext context) => RemixTabs(
     selectedTabId: _selected,
     onChanged: (value) => setState(() => _selected = value),
-    child: Column(
-      crossAxisAlignment: .stretch,
-      spacing: 10,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(10),
       children: [
         UiTabBar(
-          child: Row(
+          child: RowBox(
             children: [
               UiTab(size: widget.size, tabId: 'overview', label: 'Overview'),
               UiTab(size: widget.size, tabId: 'activity', label: 'Activity'),
@@ -240,16 +238,16 @@ class _TabsDemoState extends State<_TabsDemo> {
         ),
         UiTabView(
           tabId: 'overview',
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: UiText('Overview content'),
+          child: Box(
+            style: BoxStyler().padding(.all(8)),
+            child: const UiText('Overview content'),
           ),
         ),
         UiTabView(
           tabId: 'activity',
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: UiText('Activity content'),
+          child: Box(
+            style: BoxStyler().padding(.all(8)),
+            child: const UiText('Activity content'),
           ),
         ),
       ],
@@ -279,8 +277,8 @@ class _AccordionDemoState extends State<_AccordionDemo> {
   Widget build(BuildContext context) => RemixAccordionGroup<String>(
     controller: _controller,
     initialExpandedValues: const ['details'],
-    child: Column(
-      spacing: 8,
+    child: ColumnBox(
+      style: FlexBoxStyler().spacing(8),
       children: [
         UiAccordion<String>(
           variant: widget.variant,
