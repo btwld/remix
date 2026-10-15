@@ -101,7 +101,6 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
 
   @override
   Widget build(BuildContext context) {
-    const kit = _PlaygroundDashboardDemoKit();
     final demo = PlaygroundDashboardDemoBase(
       initialPage: widget.initialPage,
       shellBuilder:
@@ -156,17 +155,13 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
           darkMode: _dark,
           onDarkModeChanged: (value) => setState(() => _dark = value),
         ),
+        .charts => PlaygroundChartsPage(data: widget.data),
         .actions => const PlaygroundGalleryActionsPage(),
         .forms => const PlaygroundGalleryFormsPage(),
         .dataDisplay => const PlaygroundGalleryDisplayPage(),
         .overlays => const PlaygroundGalleryOverlaysPage(),
         .navigation => const PlaygroundGalleryNavigationPage(),
         .typography => const PlaygroundGalleryTypographyPage(),
-        _ => PlaygroundDashboardDemoContent(
-          page: page,
-          kit: kit,
-          data: widget.data,
-        ),
       },
     );
     if (!widget.builtInChrome) return demo;
@@ -236,8 +231,8 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
           ],
         ),
       ),
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: StackBox(
+        style: StackBoxStyler().clipBehavior(.none),
         children: [
           const PlaygroundIconButton.ghost(
             icon: RemixIcons.bell,
@@ -460,29 +455,37 @@ class _PlaygroundAccount extends StatelessWidget {
   );
 }
 
-final class _PlaygroundDashboardDemoKit implements PlaygroundDashboardDemoKit {
-  const _PlaygroundDashboardDemoKit();
+/// Charts gallery page for the Playground dashboard.
+class PlaygroundChartsPage extends StatelessWidget {
+  const PlaygroundChartsPage({
+    super.key,
+    this.data = playgroundDashboardSampleData,
+  });
+
+  final PlaygroundDashboardSampleData data;
 
   @override
-  Widget pageHeader(String title, String description) => ColumnBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.start)
-        .spacing(PlaygroundTokens.s1_5),
-    children: [
-      StyledText(
-        title,
-        style: _textStyle(
-          token: PlaygroundTokens.text3xl,
-          weight: FontWeight.w700,
+  Widget build(BuildContext context) => PlaygroundDashboardDemoContent(
+    header: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.start)
+          .spacing(PlaygroundTokens.s1_5),
+      children: [
+        StyledText(
+          'Charts',
+          style: _textStyle(
+            token: PlaygroundTokens.text3xl,
+            weight: FontWeight.w700,
+          ),
         ),
-      ),
-      StyledText(description, style: _textStyle(muted: true)),
-    ],
+        StyledText(
+          'Line, bar, and pie charts styled through the preset recipe.',
+          style: _textStyle(muted: true),
+        ),
+      ],
+    ),
+    child: _PlaygroundDashboardCharts(data: data),
   );
-
-  @override
-  Widget charts(PlaygroundDashboardSampleData data) =>
-      _PlaygroundDashboardCharts(data: data);
 }
 
 class _PlaygroundDashboardCharts extends StatelessWidget {

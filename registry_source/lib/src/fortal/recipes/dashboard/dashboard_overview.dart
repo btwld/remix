@@ -214,33 +214,35 @@ Widget _activityCard(RegistryDashboardSampleData data) => FortalCard(
   child: ColumnBox(
     style: FlexBoxStyler().crossAxisAlignment(.stretch),
     children: [
-      const FortalSectionLabel('Recent activity'),
-      const SizedBox(height: 8),
+      Box(
+        style: BoxStyler().padding(.bottom(8)),
+        child: const FortalSectionLabel('Recent activity'),
+      ),
       for (final (index, event) in data.activities.indexed) ...[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 11),
-          child: RowBox(
-            style: FlexBoxStyler().crossAxisAlignment(.center).spacing(12),
-            children: [
-              _FortalActivityIcon(kind: event.kind),
-              Expanded(
-                child: ColumnBox(
-                  style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
-                  children: [
-                    FortalText(event.title, size: .size2, weight: .medium),
-                    StyledText(
-                      event.detail,
-                      style: dashboardText(.size1, tone: .muted),
-                    ),
-                  ],
-                ),
+        RowBox(
+          style: FlexBoxStyler()
+              .padding(.symmetric(vertical: 11))
+              .crossAxisAlignment(.center)
+              .spacing(12),
+          children: [
+            _FortalActivityIcon(kind: event.kind),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
+                children: [
+                  FortalText(event.title, size: .size2, weight: .medium),
+                  StyledText(
+                    event.detail,
+                    style: dashboardText(.size1, tone: .muted),
+                  ),
+                ],
               ),
-              StyledText(
-                event.relativeTime,
-                style: dashboardText(.size1, tone: .subtle),
-              ),
-            ],
-          ),
+            ),
+            StyledText(
+              event.relativeTime,
+              style: dashboardText(.size1, tone: .subtle),
+            ),
+          ],
         ),
         if (index != data.activities.length - 1)
           const FortalDivider(size: .size4),

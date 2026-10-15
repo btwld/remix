@@ -99,7 +99,6 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
 
   @override
   Widget build(BuildContext context) {
-    const kit = _{{typePrefix}}DashboardDemoKit();
     final demo = {{typePrefix}}DashboardDemoBase(
       initialPage: widget.initialPage,
       shellBuilder:
@@ -154,17 +153,13 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
           darkMode: _dark,
           onDarkModeChanged: (value) => setState(() => _dark = value),
         ),
+        .charts => {{typePrefix}}ChartsPage(data: widget.data),
         .actions => const {{typePrefix}}GalleryActionsPage(),
         .forms => const {{typePrefix}}GalleryFormsPage(),
         .dataDisplay => const {{typePrefix}}GalleryDisplayPage(),
         .overlays => const {{typePrefix}}GalleryOverlaysPage(),
         .navigation => const {{typePrefix}}GalleryNavigationPage(),
         .typography => const {{typePrefix}}GalleryTypographyPage(),
-        _ => {{typePrefix}}DashboardDemoContent(
-          page: page,
-          kit: kit,
-          data: widget.data,
-        ),
       },
     );
     if (!widget.builtInChrome) return demo;
@@ -234,8 +229,8 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
           ],
         ),
       ),
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: StackBox(
+        style: StackBoxStyler().clipBehavior(.none),
         children: [
           const {{typePrefix}}IconButton.ghost(
             icon: {{icon:bell}},
@@ -458,29 +453,34 @@ class _{{typePrefix}}Account extends StatelessWidget {
   );
 }
 
-final class _{{typePrefix}}DashboardDemoKit implements {{typePrefix}}DashboardDemoKit {
-  const _{{typePrefix}}DashboardDemoKit();
+/// Charts gallery page for the {{typePrefix}} dashboard.
+class {{typePrefix}}ChartsPage extends StatelessWidget {
+  const {{typePrefix}}ChartsPage({super.key, this.data = {{valuePrefix}}DashboardSampleData});
+
+  final {{typePrefix}}DashboardSampleData data;
 
   @override
-  Widget pageHeader(String title, String description) => ColumnBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.start)
-        .spacing({{typePrefix}}Tokens.s1_5),
-    children: [
-      StyledText(
-        title,
-        style: _textStyle(
-          token: {{typePrefix}}Tokens.text3xl,
-          weight: FontWeight.w700,
+  Widget build(BuildContext context) => {{typePrefix}}DashboardDemoContent(
+    header: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.start)
+          .spacing({{typePrefix}}Tokens.s1_5),
+      children: [
+        StyledText(
+          'Charts',
+          style: _textStyle(
+            token: {{typePrefix}}Tokens.text3xl,
+            weight: FontWeight.w700,
+          ),
         ),
-      ),
-      StyledText(description, style: _textStyle(muted: true)),
-    ],
+        StyledText(
+          'Line, bar, and pie charts styled through the preset recipe.',
+          style: _textStyle(muted: true),
+        ),
+      ],
+    ),
+    child: _{{typePrefix}}DashboardCharts(data: data),
   );
-
-  @override
-  Widget charts({{typePrefix}}DashboardSampleData data) =>
-      _{{typePrefix}}DashboardCharts(data: data);
 }
 
 class _{{typePrefix}}DashboardCharts extends StatelessWidget {

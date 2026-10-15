@@ -125,8 +125,10 @@ const uiDashboardDemoSectionIds = {
     'popover',
     'tooltip',
     'menu',
+    'toast',
   ],
   UiDashboardDemoPage.navigation: [
+    'app-bar',
     'sidebar',
     'tabs',
     'disclosure',
@@ -172,6 +174,27 @@ final uiDashboardDemoSections =
           ],
         ),
     ]);
+
+/// Returns the dashboard destinations whose label, section, or component
+/// section identifiers match [query].
+Set<UiDashboardDemoPage> uiDashboardMatchingPages(String query) {
+  final normalized = query.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return UiDashboardDemoPage.values.toSet();
+  }
+  return {
+    for (final page in UiDashboardDemoPage.values)
+      if (page.label.toLowerCase().contains(normalized) ||
+          page.section.label.toLowerCase().contains(normalized) ||
+          (uiDashboardDemoSectionIds[page]?.any(
+                (id) =>
+                    id.contains(normalized) ||
+                    id.replaceAll('-', ' ').contains(normalized),
+              ) ??
+              false))
+        page,
+  };
+}
 
 typedef UiDashboardDemoShellBuilder =
     Widget Function(
@@ -234,15 +257,56 @@ class _UiDashboardDemoBaseState extends State<UiDashboardDemoBase> {
     });
   }
 
+  void _handleSearchChanged(String value) {
+    final nextQuery = value.trim().toLowerCase();
+    if (_searchQuery == nextQuery) return;
+    setState(() {
+      _searchQuery = nextQuery;
+      if (nextQuery.isEmpty) return;
+      final matches = uiDashboardMatchingPages(nextQuery);
+      if (matches.isNotEmpty &&
+          !matches.contains(_selected) &&
+          _selected != UiDashboardDemoPage.customers &&
+          _selected != UiDashboardDemoPage.orders) {
+        _selected = matches.first;
+        _visitedPages.add(_selected);
+      }
+    });
+  }
+
+  List<RemixSidebarSection<UiDashboardDemoPage>> _visibleSections() {
+    if (_searchQuery.isEmpty) return uiDashboardDemoSections;
+    final matches = uiDashboardMatchingPages(_searchQuery);
+    if (matches.isEmpty) return uiDashboardDemoSections;
+    final visible = {...matches, _selected};
+    return [
+      for (final section in UiDashboardDemoSection.values)
+        if (UiDashboardDemoPage.values.any(
+          (page) => page.section == section && visible.contains(page),
+        ))
+          RemixSidebarSection(
+            label: section.label,
+            destinations: [
+              for (final page in UiDashboardDemoPage.values)
+                if (page.section == section && visible.contains(page))
+                  RemixSidebarDestination(
+                    value: page,
+                    label: page.label,
+                    icon: page.icon,
+                  ),
+            ],
+          ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) => widget.shellBuilder(
     context,
-    sections: uiDashboardDemoSections,
+    sections: _visibleSections(),
     selectedValue: _selected,
     onSelected: _select,
     title: _selected.label,
-    onSearchChanged: (value) =>
-        setState(() => _searchQuery = value.trim().toLowerCase()),
+    onSearchChanged: _handleSearchChanged,
     body: IndexedStack(
       key: const ValueKey('dashboard-demo-pages'),
       index: _selected.index,
@@ -356,19 +420,20 @@ class UiDashboardDemoPageFrame extends StatelessWidget {
   Widget build(BuildContext context) => SingleChildScrollView(
     key: const ValueKey('dashboard-demo-page-scroll'),
     padding: const EdgeInsets.all(24),
-    child: Center(
-      child: Box(
-        style: BoxStyler().maxWidth(1180),
-        child: ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(24),
-          children: [
-            header,
-            ColumnBox(
-              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-              children: children,
-            ),
-          ],
-        ),
+    child: Box(
+      style: BoxStyler().alignment(.center),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(1180)
+            .crossAxisAlignment(.stretch)
+            .spacing(24),
+        children: [
+          header,
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+            children: children,
+          ),
+        ],
       ),
     ),
   );

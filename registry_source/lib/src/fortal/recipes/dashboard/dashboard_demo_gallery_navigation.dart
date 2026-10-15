@@ -142,8 +142,8 @@ class _SidebarDemoState extends State<_SidebarDemo> {
   // Align loosens the stretched section constraints so the panel keeps the
   // width and height a host would give it. The bounded height shows the
   // destination region scrolling while the header and footer stay put.
-  Widget build(BuildContext context) => Align(
-    alignment: Alignment.centerLeft,
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().alignment(.centerStart),
     child: Box(
       style: BoxStyler().width(280).height(320),
       child: FortalSidebar<String>(

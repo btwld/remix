@@ -68,42 +68,41 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
     child: {{typePrefix}}ActionMenu(
       key: const ValueKey('sidebar-account-trigger'),
       semanticLabel: 'Workspace account menu',
-      trigger: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
-        child: RowBox(
-          style: FlexBoxStyler().crossAxisAlignment(.center).spacing(10),
-          children: [
-            const {{typePrefix}}Avatar(label: 'LF', size: .size2),
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler()
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.start),
-                children: [
-                  const {{typePrefix}}Text(
-                    'Leo Farias',
-                    size: .size2,
-                    weight: .medium,
-                    softWrap: false,
-                    truncate: true,
-                  ),
-                  StyledText(
-                    'Northstar workspace',
-                    style: dashboardText(
-                      .size1,
-                      tone: .muted,
-                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                  ),
-                ],
-              ),
+      trigger: RowBox(
+        style: FlexBoxStyler()
+            .minHeight(48)
+            .crossAxisAlignment(.center)
+            .spacing(10),
+        children: [
+          const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+          Expanded(
+            child: ColumnBox(
+              style: FlexBoxStyler()
+                  .mainAxisSize(.min)
+                  .crossAxisAlignment(.start),
+              children: [
+                const {{typePrefix}}Text(
+                  'Leo Farias',
+                  size: .size2,
+                  weight: .medium,
+                  softWrap: false,
+                  truncate: true,
+                ),
+                StyledText(
+                  'Northstar workspace',
+                  style: dashboardText(
+                    .size1,
+                    tone: .muted,
+                  ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                ),
+              ],
             ),
-            Icon(
-              {{icon:dotsHorizontal}},
-              size: 18,
-              color: MixScope.tokenOf({{typePrefix}}Tokens.gray11, context),
-            ),
-          ],
-        ),
+          ),
+          StyledIcon(
+            icon: {{icon:dotsHorizontal}},
+            style: IconStyler().size(18).color({{typePrefix}}Tokens.gray11()),
+          ),
+        ],
       ),
       actions: const [
         {{typePrefix}}Action(value: 'profile', label: 'View profile'),
@@ -259,8 +258,8 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
               style: _toolbarButtonStyle,
               onPressed: _toggleNotifications,
               icon: {{icon:bell}},
-              iconBuilder: (context, spec, icon) => Stack(
-                clipBehavior: Clip.none,
+              iconBuilder: (context, spec, icon) => StackBox(
+                style: StackBoxStyler().clipBehavior(.none),
                 children: [
                   StyledIcon(
                     icon: icon,
@@ -537,25 +536,13 @@ class {{typePrefix}}ChartsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => {{typePrefix}}DashboardDemoContent(
-    page: {{typePrefix}}DashboardDemoPage.charts,
-    kit: const _{{typePrefix}}DashboardDemoKit(),
-    data: data,
+    header: const {{typePrefix}}PageHeader(
+      title: 'Charts',
+      description:
+          'Native chart patterns for comparison, composition, interaction, and empty states.',
+    ),
+    child: _{{typePrefix}}DashboardCharts(data: data),
   );
-}
-
-final class _{{typePrefix}}DashboardDemoKit implements {{typePrefix}}DashboardDemoKit {
-  const _{{typePrefix}}DashboardDemoKit();
-
-  @override
-  Widget pageHeader(String title, String description) => {{typePrefix}}PageHeader(
-    title: title,
-    description:
-        'Native chart patterns for comparison, composition, interaction, and empty states.',
-  );
-
-  @override
-  Widget charts({{typePrefix}}DashboardSampleData data) =>
-      _{{typePrefix}}DashboardCharts(data: data);
 }
 
 class _{{typePrefix}}DashboardCharts extends StatelessWidget {

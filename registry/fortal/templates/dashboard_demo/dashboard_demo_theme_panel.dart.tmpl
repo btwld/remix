@@ -116,8 +116,8 @@ class {{typePrefix}}ThemePanel extends StatelessWidget {
               apply: (value) => settings.copyWith(scaling: value),
             ),
           ),
-          Align(
-            alignment: Alignment.centerLeft,
+          Box(
+            style: BoxStyler().alignment(.centerStart),
             child: {{typePrefix}}Button.ghost(
               key: const ValueKey('theme-reset'),
               size: .size1,

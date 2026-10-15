@@ -211,33 +211,35 @@ Widget _activityCard(UiDashboardSampleData data) => UiCard(
   child: ColumnBox(
     style: FlexBoxStyler().crossAxisAlignment(.stretch),
     children: [
-      const UiSectionLabel('Recent activity'),
-      const SizedBox(height: 8),
+      Box(
+        style: BoxStyler().padding(.bottom(8)),
+        child: const UiSectionLabel('Recent activity'),
+      ),
       for (final (index, event) in data.activities.indexed) ...[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 11),
-          child: RowBox(
-            style: FlexBoxStyler().crossAxisAlignment(.center).spacing(12),
-            children: [
-              _UiActivityIcon(kind: event.kind),
-              Expanded(
-                child: ColumnBox(
-                  style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
-                  children: [
-                    UiText(event.title, size: .size2, weight: .medium),
-                    StyledText(
-                      event.detail,
-                      style: dashboardText(.size1, tone: .muted),
-                    ),
-                  ],
-                ),
+        RowBox(
+          style: FlexBoxStyler()
+              .padding(.symmetric(vertical: 11))
+              .crossAxisAlignment(.center)
+              .spacing(12),
+          children: [
+            _UiActivityIcon(kind: event.kind),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
+                children: [
+                  UiText(event.title, size: .size2, weight: .medium),
+                  StyledText(
+                    event.detail,
+                    style: dashboardText(.size1, tone: .muted),
+                  ),
+                ],
               ),
-              StyledText(
-                event.relativeTime,
-                style: dashboardText(.size1, tone: .subtle),
-              ),
-            ],
-          ),
+            ),
+            StyledText(
+              event.relativeTime,
+              style: dashboardText(.size1, tone: .subtle),
+            ),
+          ],
         ),
         if (index != data.activities.length - 1) const UiDivider(size: .size4),
       ],

@@ -57,169 +57,157 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
 
     final content = SingleChildScrollView(
       padding: const EdgeInsets.all(32),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 680),
-          child: ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
-            children: [
-              const UiPageHeader(
-                title: 'Settings',
-                description: 'Manage your profile, preferences, and workspace.',
-              ),
-              UiCard(
-                size: .size3,
-                child: ColumnBox(
-                  style: FlexBoxStyler()
-                      .crossAxisAlignment(.stretch)
-                      .spacing(16),
-                  children: [
-                    const UiCardHeading(
-                      title: 'Profile',
-                      description:
-                          'Your personal details and communication preferences.',
-                    ),
-                    GridBox(
-                      style: profileFields,
-                      children: [
-                        UiTextField(
-                          controller: _nameController,
-                          label: 'Name',
-                          hintText: 'Your name',
-                        ),
-                        UiTextField(
-                          controller: _emailController,
-                          label: 'Email',
-                          helperText: 'Domain verification is pending.',
-                          error: true,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                      ],
-                    ),
-                    UiSelect<String>(
-                      trigger: const RemixSelectTrigger(
-                        placeholder: 'Language',
-                      ),
-                      selectedValue: _language,
-                      items: const [
-                        RemixSelectItem(
-                          value: 'English (US)',
-                          label: 'English (US)',
-                        ),
-                        RemixSelectItem(
-                          value: 'English (UK)',
-                          label: 'English (UK)',
-                        ),
-                        RemixSelectItem(value: 'Spanish', label: 'Spanish'),
-                        RemixSelectItem(
-                          value: 'Portuguese',
-                          label: 'Portuguese',
-                        ),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) setState(() => _language = value);
-                      },
-                    ),
-                    const UiCardHeading(
-                      title: 'Preferences',
-                      description:
-                          'Choose which workspace activity reaches your inbox.',
-                    ),
-                    _PreferenceRow(
-                      title: 'Product updates',
-                      description: 'News about features and improvements.',
-                      trailing: UiSwitch(
-                        selected: _productUpdates,
-                        semanticLabel: 'Receive product updates',
-                        onChanged: (value) =>
-                            setState(() => _productUpdates = value),
-                      ),
-                    ),
-                    _PreferenceRow(
-                      title: 'Weekly digest',
-                      description:
-                          'A summary of workspace activity each Monday.',
-                      trailing: UiCheckbox(
-                        selected: _weeklyDigest,
-                        semanticLabel: 'Receive weekly digest',
-                        onChanged: (value) =>
-                            setState(() => _weeklyDigest = value ?? false),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: UiButton(
-                        onPressed: () => showRemixToast(
-                          context,
-                          const RemixToastData(
-                            title: 'Profile settings saved',
-                            icon: RemixIcons.checkCircled,
-                          ),
-                        ),
-                        label: 'Save changes',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              UiCard(
-                size: .size3,
-                child: ColumnBox(
-                  style: FlexBoxStyler()
-                      .crossAxisAlignment(.stretch)
-                      .spacing(16),
-                  children: const [
-                    UiCardHeading(
-                      title: 'Appearance',
-                      description:
-                          'Tune every Ui theme parameter in real time.',
-                    ),
-                    UiCallout(
-                      icon: RemixIcons.magicWand,
-                      text: 'Changes apply live across the entire dashboard.',
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: UiThemePanel(),
-                    ),
-                  ],
-                ),
-              ),
-              UiAccentScope(
-                accent: .red,
-                child: UiDisclosure.soft(
-                  key: const ValueKey('settings-danger-zone'),
-                  size: .size3,
-                  animationStyle: uiDisclosureAnimationStyle,
-                  semanticHint: 'Shows destructive workspace actions',
-                  trigger: const Text('Danger zone'),
-                  triggerBuilder: (context, state, child) =>
-                      UiDisclosureTrigger(
-                        expanded: state.isExpanded,
-                        child: child!,
-                      ),
-                  content: ColumnBox(
-                    style: FlexBoxStyler()
-                        .crossAxisAlignment(.stretch)
-                        .spacing(12),
+      child: Box(
+        style: BoxStyler().alignment(.topStart),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .maxWidth(680)
+              .crossAxisAlignment(.stretch)
+              .spacing(20),
+          children: [
+            const UiPageHeader(
+              title: 'Settings',
+              description: 'Manage your profile, preferences, and workspace.',
+            ),
+            UiCard(
+              size: .size3,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+                children: [
+                  const UiCardHeading(
+                    title: 'Profile',
+                    description:
+                        'Your personal details and communication preferences.',
+                  ),
+                  GridBox(
+                    style: profileFields,
                     children: [
-                      const Text(
-                        'Destructive workspace actions cannot be undone.',
+                      UiTextField(
+                        controller: _nameController,
+                        label: 'Name',
+                        hintText: 'Your name',
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: UiButton.outline(
-                          onPressed: _confirmDelete,
-                          label: 'Delete workspace',
-                        ),
+                      UiTextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        helperText: 'Domain verification is pending.',
+                        error: true,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                     ],
                   ),
+                  UiSelect<String>(
+                    trigger: const RemixSelectTrigger(placeholder: 'Language'),
+                    selectedValue: _language,
+                    items: const [
+                      RemixSelectItem(
+                        value: 'English (US)',
+                        label: 'English (US)',
+                      ),
+                      RemixSelectItem(
+                        value: 'English (UK)',
+                        label: 'English (UK)',
+                      ),
+                      RemixSelectItem(value: 'Spanish', label: 'Spanish'),
+                      RemixSelectItem(value: 'Portuguese', label: 'Portuguese'),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) setState(() => _language = value);
+                    },
+                  ),
+                  const UiCardHeading(
+                    title: 'Preferences',
+                    description:
+                        'Choose which workspace activity reaches your inbox.',
+                  ),
+                  _PreferenceRow(
+                    title: 'Product updates',
+                    description: 'News about features and improvements.',
+                    trailing: UiSwitch(
+                      selected: _productUpdates,
+                      semanticLabel: 'Receive product updates',
+                      onChanged: (value) =>
+                          setState(() => _productUpdates = value),
+                    ),
+                  ),
+                  _PreferenceRow(
+                    title: 'Weekly digest',
+                    description: 'A summary of workspace activity each Monday.',
+                    trailing: UiCheckbox(
+                      selected: _weeklyDigest,
+                      semanticLabel: 'Receive weekly digest',
+                      onChanged: (value) =>
+                          setState(() => _weeklyDigest = value ?? false),
+                    ),
+                  ),
+                  Box(
+                    style: BoxStyler().alignment(.centerStart),
+                    child: UiButton(
+                      onPressed: () => showRemixToast(
+                        context,
+                        const RemixToastData(
+                          title: 'Profile settings saved',
+                          icon: RemixIcons.checkCircled,
+                        ),
+                      ),
+                      label: 'Save changes',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            UiCard(
+              size: .size3,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+                children: const [
+                  UiCardHeading(
+                    title: 'Appearance',
+                    description: 'Tune every Ui theme parameter in real time.',
+                  ),
+                  UiCallout(
+                    icon: RemixIcons.magicWand,
+                    text: 'Changes apply live across the entire dashboard.',
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: UiThemePanel(),
+                  ),
+                ],
+              ),
+            ),
+            UiAccentScope(
+              accent: .red,
+              child: UiDisclosure.soft(
+                key: const ValueKey('settings-danger-zone'),
+                size: .size3,
+                animationStyle: uiDisclosureAnimationStyle,
+                semanticHint: 'Shows destructive workspace actions',
+                trigger: const Text('Danger zone'),
+                triggerBuilder: (context, state, child) => UiDisclosureTrigger(
+                  expanded: state.isExpanded,
+                  child: child!,
+                ),
+                content: ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(12),
+                  children: [
+                    const Text(
+                      'Destructive workspace actions cannot be undone.',
+                    ),
+                    Box(
+                      style: BoxStyler().alignment(.centerStart),
+                      child: UiButton.outline(
+                        onPressed: _confirmDelete,
+                        label: 'Delete workspace',
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

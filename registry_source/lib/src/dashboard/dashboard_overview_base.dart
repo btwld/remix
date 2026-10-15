@@ -42,8 +42,12 @@ class RegistryDashboardOverviewBase extends StatelessWidget {
     final charts = chartBuilder(context, data);
     final table = tableBuilder(context, data);
 
-    return _OverviewBreakpointBuilder(
-      builder: (context, compact) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : 960.0;
+        final compact = width < 600;
         final gap = compact ? 12.0 : 16.0;
         final padding = compact ? 16.0 : 24.0;
         final sectionGap = compact ? 20.0 : 24.0;
@@ -75,45 +79,4 @@ class RegistryDashboardOverviewBase extends StatelessWidget {
       },
     );
   }
-}
-
-class _OverviewBreakpointBuilder extends StatefulWidget {
-  const _OverviewBreakpointBuilder({required this.builder});
-
-  final Widget Function(BuildContext context, bool compact) builder;
-
-  @override
-  State<_OverviewBreakpointBuilder> createState() =>
-      _OverviewBreakpointBuilderState();
-}
-
-class _OverviewBreakpointBuilderState
-    extends State<_OverviewBreakpointBuilder> {
-  bool? _lastCompact;
-  Widget? _cachedChild;
-
-  @override
-  void didUpdateWidget(covariant _OverviewBreakpointBuilder oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _cachedChild = null;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _cachedChild = null;
-  }
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final width = constraints.hasBoundedWidth ? constraints.maxWidth : 960.0;
-      final compact = width < 600;
-      if (_cachedChild == null || _lastCompact != compact) {
-        _lastCompact = compact;
-        _cachedChild = widget.builder(context, compact);
-      }
-      return _cachedChild!;
-    },
-  );
 }

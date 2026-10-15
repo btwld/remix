@@ -257,7 +257,7 @@ class _UiDashboardShellBaseState<T extends Object>
           );
         },
       ),
-      footer: account == null
+      footer: account == null || collapsed
           ? null
           : _SidebarFooterSlot(
               collapsed: collapsed,
@@ -272,42 +272,46 @@ class _UiDashboardShellBaseState<T extends Object>
     BuildContext context,
     UiDashboardLayoutControls controls,
   ) {
-    return _HeaderBreakpointBuilder(
-      breakpoint: widget.searchBreakpoint,
-      enabled: widget.onSearchChanged != null,
-      builder: (context, showSearch) => widget.appBarBuilder(
-        context,
-        leading: controls.isCompact
-            ? widget.iconButtonBuilder(
-                context,
-                key: const ValueKey('dashboard-menu'),
-                icon: widget.menuIcon,
-                semanticLabel: 'Open navigation',
-                onPressed: controls.openCompact,
-              )
-            : null,
-        // The app bar names its heading with [title] and renders this,
-        // which inherits the recipe's title style.
-        title: widget.title,
-        titleChild: KeyedSubtree(
-          key: const ValueKey('dashboard-title'),
-          child: widget.headerTitle ?? Text(widget.title),
-        ),
-        actions: [
-          if (showSearch)
-            Box(
-              style: BoxStyler().width(widget.searchWidth),
-              child: widget.searchBuilder(
-                context,
-                key: const ValueKey('dashboard-search'),
-                hintText: widget.searchHintText,
-                leading: Icon(widget.searchIcon, size: 16),
-                onChanged: widget.onSearchChanged!,
-              ),
-            ),
-          ...widget.headerActions,
-        ],
+    Widget buildAppBar(bool showSearch) => widget.appBarBuilder(
+      context,
+      leading: controls.isCompact
+          ? widget.iconButtonBuilder(
+              context,
+              key: const ValueKey('dashboard-menu'),
+              icon: widget.menuIcon,
+              semanticLabel: 'Open navigation',
+              onPressed: controls.openCompact,
+            )
+          : null,
+      // The app bar names its heading with [title] and renders this,
+      // which inherits the recipe's title style.
+      title: widget.title,
+      titleChild: KeyedSubtree(
+        key: const ValueKey('dashboard-title'),
+        child: widget.headerTitle ?? Text(widget.title),
       ),
+      actions: [
+        if (showSearch)
+          Box(
+            style: BoxStyler().width(widget.searchWidth),
+            child: widget.searchBuilder(
+              context,
+              key: const ValueKey('dashboard-search'),
+              hintText: widget.searchHintText,
+              leading: Icon(widget.searchIcon, size: 16),
+              onChanged: widget.onSearchChanged!,
+            ),
+          ),
+        ...widget.headerActions,
+      ],
+    );
+
+    if (widget.onSearchChanged == null) {
+      return buildAppBar(false);
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) =>
+          buildAppBar(constraints.maxWidth >= widget.searchBreakpoint),
     );
   }
 
@@ -346,56 +350,6 @@ class _SidebarFooterSlot extends StatelessWidget {
     return Opacity(
       opacity: labelOpacity,
       child: IgnorePointer(ignoring: collapsed, child: child),
-    );
-  }
-}
-
-class _HeaderBreakpointBuilder extends StatefulWidget {
-  const _HeaderBreakpointBuilder({
-    required this.breakpoint,
-    required this.enabled,
-    required this.builder,
-  });
-
-  final double breakpoint;
-  final bool enabled;
-  final Widget Function(BuildContext context, bool showSearch) builder;
-
-  @override
-  State<_HeaderBreakpointBuilder> createState() =>
-      _HeaderBreakpointBuilderState();
-}
-
-class _HeaderBreakpointBuilderState extends State<_HeaderBreakpointBuilder> {
-  bool? _lastShowSearch;
-  Widget? _cachedChild;
-
-  @override
-  void didUpdateWidget(covariant _HeaderBreakpointBuilder oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _cachedChild = null;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _cachedChild = null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!widget.enabled) {
-      return widget.builder(context, false);
-    }
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final showSearch = constraints.maxWidth >= widget.breakpoint;
-        if (_cachedChild == null || _lastShowSearch != showSearch) {
-          _lastShowSearch = showSearch;
-          _cachedChild = widget.builder(context, showSearch);
-        }
-        return _cachedChild!;
-      },
     );
   }
 }

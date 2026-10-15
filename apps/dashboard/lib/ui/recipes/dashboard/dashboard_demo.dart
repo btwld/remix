@@ -65,42 +65,41 @@ class UiDashboardSidebarAccount extends StatelessWidget {
     child: UiActionMenu(
       key: const ValueKey('sidebar-account-trigger'),
       semanticLabel: 'Workspace account menu',
-      trigger: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
-        child: RowBox(
-          style: FlexBoxStyler().crossAxisAlignment(.center).spacing(10),
-          children: [
-            const UiAvatar(label: 'LF', size: .size2),
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler()
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.start),
-                children: [
-                  const UiText(
-                    'Leo Farias',
-                    size: .size2,
-                    weight: .medium,
-                    softWrap: false,
-                    truncate: true,
-                  ),
-                  StyledText(
-                    'Northstar workspace',
-                    style: dashboardText(
-                      .size1,
-                      tone: .muted,
-                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                  ),
-                ],
-              ),
+      trigger: RowBox(
+        style: FlexBoxStyler()
+            .minHeight(48)
+            .crossAxisAlignment(.center)
+            .spacing(10),
+        children: [
+          const UiAvatar(label: 'LF', size: .size2),
+          Expanded(
+            child: ColumnBox(
+              style: FlexBoxStyler()
+                  .mainAxisSize(.min)
+                  .crossAxisAlignment(.start),
+              children: [
+                const UiText(
+                  'Leo Farias',
+                  size: .size2,
+                  weight: .medium,
+                  softWrap: false,
+                  truncate: true,
+                ),
+                StyledText(
+                  'Northstar workspace',
+                  style: dashboardText(
+                    .size1,
+                    tone: .muted,
+                  ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                ),
+              ],
             ),
-            Icon(
-              RemixIcons.dotsHorizontal,
-              size: 18,
-              color: MixScope.tokenOf(UiTokens.gray11, context),
-            ),
-          ],
-        ),
+          ),
+          StyledIcon(
+            icon: RemixIcons.dotsHorizontal,
+            style: IconStyler().size(18).color(UiTokens.gray11()),
+          ),
+        ],
       ),
       actions: const [
         UiAction(value: 'profile', label: 'View profile'),
@@ -256,8 +255,8 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
               style: _toolbarButtonStyle,
               onPressed: _toggleNotifications,
               icon: RemixIcons.bell,
-              iconBuilder: (context, spec, icon) => Stack(
-                clipBehavior: Clip.none,
+              iconBuilder: (context, spec, icon) => StackBox(
+                style: StackBoxStyler().clipBehavior(.none),
                 children: [
                   StyledIcon(
                     icon: icon,
@@ -534,24 +533,13 @@ class UiChartsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => UiDashboardDemoContent(
-    page: UiDashboardDemoPage.charts,
-    kit: const _UiDashboardDemoKit(),
-    data: data,
+    header: const UiPageHeader(
+      title: 'Charts',
+      description:
+          'Native chart patterns for comparison, composition, interaction, and empty states.',
+    ),
+    child: _UiDashboardCharts(data: data),
   );
-}
-
-final class _UiDashboardDemoKit implements UiDashboardDemoKit {
-  const _UiDashboardDemoKit();
-
-  @override
-  Widget pageHeader(String title, String description) => UiPageHeader(
-    title: title,
-    description:
-        'Native chart patterns for comparison, composition, interaction, and empty states.',
-  );
-
-  @override
-  Widget charts(UiDashboardSampleData data) => _UiDashboardCharts(data: data);
 }
 
 class _UiDashboardCharts extends StatelessWidget {

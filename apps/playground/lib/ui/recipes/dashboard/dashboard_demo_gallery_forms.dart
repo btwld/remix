@@ -61,8 +61,8 @@ class _PlaygroundGalleryFormsPageState
       PlaygroundGallerySection(
         label: 'Segmented control',
         description: 'Exclusive selection using the native treatment.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundSegmentedControl<String>(
             selectedValue: _density,
             semanticLabel: 'Row density',
@@ -77,8 +77,8 @@ class _PlaygroundGalleryFormsPageState
       PlaygroundGallerySection(
         label: 'Select',
         description: 'A keyboard-accessible native select.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: Box(
             style: BoxStyler().width(220),
             child: PlaygroundSelect<String>(
@@ -132,8 +132,8 @@ class _PlaygroundGalleryFormsPageState
       PlaygroundGallerySection(
         label: 'Checkbox',
         description: 'The native tri-state checkbox recipe.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundCheckbox(
             selected: _checked,
             label: 'Example checkbox',
@@ -183,8 +183,8 @@ class _PlaygroundGalleryFormsPageState
       PlaygroundGallerySection(
         label: 'Switch',
         description: 'The native binary setting control.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundSwitch(
             selected: _switched,
             semanticLabel: 'Example switch',

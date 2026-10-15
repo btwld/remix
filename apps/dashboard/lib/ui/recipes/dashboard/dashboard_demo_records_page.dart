@@ -191,8 +191,8 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
+        Box(
+          style: BoxStyler().alignment(.centerStart),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: UiSegmentedControl<_OrderFilter>(

@@ -254,6 +254,7 @@ void main() {
             'Popover',
             'Tooltip',
             'Menu',
+            'Toast',
           ],
           RegistryDashboardDemoPage.navigation: [
             'App bar',
@@ -402,6 +403,25 @@ void main() {
 
         expect(find.text('Olivia Martin'), findsOneWidget);
         expect(find.text('Jackson Lee'), findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('global search finds component galleries by section id', (
+        tester,
+      ) async {
+        await _pumpDashboard(tester, preset: preset);
+
+        await tester.enterText(
+          find.descendant(
+            of: find.byKey(const ValueKey('dashboard-search')),
+            matching: find.byType(EditableText),
+          ),
+          'toast',
+        );
+        await tester.pump();
+
+        expect(find.text('Show toast'), findsOneWidget);
+        expect(find.text('Show action toast'), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
 

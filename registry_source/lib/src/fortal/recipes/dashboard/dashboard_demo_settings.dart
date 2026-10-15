@@ -58,169 +58,159 @@ class _FortalDashboardSettingsPageState
 
     final content = SingleChildScrollView(
       padding: const EdgeInsets.all(32),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 680),
-          child: ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
-            children: [
-              const FortalPageHeader(
-                title: 'Settings',
-                description: 'Manage your profile, preferences, and workspace.',
-              ),
-              FortalCard(
-                size: .size3,
-                child: ColumnBox(
-                  style: FlexBoxStyler()
-                      .crossAxisAlignment(.stretch)
-                      .spacing(16),
-                  children: [
-                    const FortalCardHeading(
-                      title: 'Profile',
-                      description:
-                          'Your personal details and communication preferences.',
-                    ),
-                    GridBox(
-                      style: profileFields,
-                      children: [
-                        FortalTextField(
-                          controller: _nameController,
-                          label: 'Name',
-                          hintText: 'Your name',
-                        ),
-                        FortalTextField(
-                          controller: _emailController,
-                          label: 'Email',
-                          helperText: 'Domain verification is pending.',
-                          error: true,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                      ],
-                    ),
-                    FortalSelect<String>(
-                      trigger: const RemixSelectTrigger(
-                        placeholder: 'Language',
-                      ),
-                      selectedValue: _language,
-                      items: const [
-                        RemixSelectItem(
-                          value: 'English (US)',
-                          label: 'English (US)',
-                        ),
-                        RemixSelectItem(
-                          value: 'English (UK)',
-                          label: 'English (UK)',
-                        ),
-                        RemixSelectItem(value: 'Spanish', label: 'Spanish'),
-                        RemixSelectItem(
-                          value: 'Portuguese',
-                          label: 'Portuguese',
-                        ),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) setState(() => _language = value);
-                      },
-                    ),
-                    const FortalCardHeading(
-                      title: 'Preferences',
-                      description:
-                          'Choose which workspace activity reaches your inbox.',
-                    ),
-                    _PreferenceRow(
-                      title: 'Product updates',
-                      description: 'News about features and improvements.',
-                      trailing: FortalSwitch(
-                        selected: _productUpdates,
-                        semanticLabel: 'Receive product updates',
-                        onChanged: (value) =>
-                            setState(() => _productUpdates = value),
-                      ),
-                    ),
-                    _PreferenceRow(
-                      title: 'Weekly digest',
-                      description:
-                          'A summary of workspace activity each Monday.',
-                      trailing: FortalCheckbox(
-                        selected: _weeklyDigest,
-                        semanticLabel: 'Receive weekly digest',
-                        onChanged: (value) =>
-                            setState(() => _weeklyDigest = value ?? false),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: FortalButton(
-                        onPressed: () => showRemixToast(
-                          context,
-                          const RemixToastData(
-                            title: 'Profile settings saved',
-                            icon: RemixIcons.checkCircled,
-                          ),
-                        ),
-                        label: 'Save changes',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              FortalCard(
-                size: .size3,
-                child: ColumnBox(
-                  style: FlexBoxStyler()
-                      .crossAxisAlignment(.stretch)
-                      .spacing(16),
-                  children: const [
-                    FortalCardHeading(
-                      title: 'Appearance',
-                      description:
-                          'Tune every Fortal theme parameter in real time.',
-                    ),
-                    FortalCallout(
-                      icon: RemixIcons.magicWand,
-                      text: 'Changes apply live across the entire dashboard.',
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: FortalThemePanel(),
-                    ),
-                  ],
-                ),
-              ),
-              FortalAccentScope(
-                accent: .red,
-                child: FortalDisclosure.soft(
-                  key: const ValueKey('settings-danger-zone'),
-                  size: .size3,
-                  animationStyle: fortalDisclosureAnimationStyle,
-                  semanticHint: 'Shows destructive workspace actions',
-                  trigger: const Text('Danger zone'),
-                  triggerBuilder: (context, state, child) =>
-                      FortalDisclosureTrigger(
-                        expanded: state.isExpanded,
-                        child: child!,
-                      ),
-                  content: ColumnBox(
-                    style: FlexBoxStyler()
-                        .crossAxisAlignment(.stretch)
-                        .spacing(12),
+      child: Box(
+        style: BoxStyler().alignment(.topStart),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .maxWidth(680)
+              .crossAxisAlignment(.stretch)
+              .spacing(20),
+          children: [
+            const FortalPageHeader(
+              title: 'Settings',
+              description: 'Manage your profile, preferences, and workspace.',
+            ),
+            FortalCard(
+              size: .size3,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+                children: [
+                  const FortalCardHeading(
+                    title: 'Profile',
+                    description:
+                        'Your personal details and communication preferences.',
+                  ),
+                  GridBox(
+                    style: profileFields,
                     children: [
-                      const Text(
-                        'Destructive workspace actions cannot be undone.',
+                      FortalTextField(
+                        controller: _nameController,
+                        label: 'Name',
+                        hintText: 'Your name',
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: FortalButton.outline(
-                          onPressed: _confirmDelete,
-                          label: 'Delete workspace',
-                        ),
+                      FortalTextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        helperText: 'Domain verification is pending.',
+                        error: true,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                     ],
                   ),
+                  FortalSelect<String>(
+                    trigger: const RemixSelectTrigger(placeholder: 'Language'),
+                    selectedValue: _language,
+                    items: const [
+                      RemixSelectItem(
+                        value: 'English (US)',
+                        label: 'English (US)',
+                      ),
+                      RemixSelectItem(
+                        value: 'English (UK)',
+                        label: 'English (UK)',
+                      ),
+                      RemixSelectItem(value: 'Spanish', label: 'Spanish'),
+                      RemixSelectItem(value: 'Portuguese', label: 'Portuguese'),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) setState(() => _language = value);
+                    },
+                  ),
+                  const FortalCardHeading(
+                    title: 'Preferences',
+                    description:
+                        'Choose which workspace activity reaches your inbox.',
+                  ),
+                  _PreferenceRow(
+                    title: 'Product updates',
+                    description: 'News about features and improvements.',
+                    trailing: FortalSwitch(
+                      selected: _productUpdates,
+                      semanticLabel: 'Receive product updates',
+                      onChanged: (value) =>
+                          setState(() => _productUpdates = value),
+                    ),
+                  ),
+                  _PreferenceRow(
+                    title: 'Weekly digest',
+                    description: 'A summary of workspace activity each Monday.',
+                    trailing: FortalCheckbox(
+                      selected: _weeklyDigest,
+                      semanticLabel: 'Receive weekly digest',
+                      onChanged: (value) =>
+                          setState(() => _weeklyDigest = value ?? false),
+                    ),
+                  ),
+                  Box(
+                    style: BoxStyler().alignment(.centerStart),
+                    child: FortalButton(
+                      onPressed: () => showRemixToast(
+                        context,
+                        const RemixToastData(
+                          title: 'Profile settings saved',
+                          icon: RemixIcons.checkCircled,
+                        ),
+                      ),
+                      label: 'Save changes',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            FortalCard(
+              size: .size3,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+                children: const [
+                  FortalCardHeading(
+                    title: 'Appearance',
+                    description:
+                        'Tune every Fortal theme parameter in real time.',
+                  ),
+                  FortalCallout(
+                    icon: RemixIcons.magicWand,
+                    text: 'Changes apply live across the entire dashboard.',
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: FortalThemePanel(),
+                  ),
+                ],
+              ),
+            ),
+            FortalAccentScope(
+              accent: .red,
+              child: FortalDisclosure.soft(
+                key: const ValueKey('settings-danger-zone'),
+                size: .size3,
+                animationStyle: fortalDisclosureAnimationStyle,
+                semanticHint: 'Shows destructive workspace actions',
+                trigger: const Text('Danger zone'),
+                triggerBuilder: (context, state, child) =>
+                    FortalDisclosureTrigger(
+                      expanded: state.isExpanded,
+                      child: child!,
+                    ),
+                content: ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(12),
+                  children: [
+                    const Text(
+                      'Destructive workspace actions cannot be undone.',
+                    ),
+                    Box(
+                      style: BoxStyler().alignment(.centerStart),
+                      child: FortalButton.outline(
+                        onPressed: _confirmDelete,
+                        label: 'Delete workspace',
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -68,42 +68,41 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
     child: FortalActionMenu(
       key: const ValueKey('sidebar-account-trigger'),
       semanticLabel: 'Workspace account menu',
-      trigger: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
-        child: RowBox(
-          style: FlexBoxStyler().crossAxisAlignment(.center).spacing(10),
-          children: [
-            const FortalAvatar(label: 'LF', size: .size2),
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler()
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.start),
-                children: [
-                  const FortalText(
-                    'Leo Farias',
-                    size: .size2,
-                    weight: .medium,
-                    softWrap: false,
-                    truncate: true,
-                  ),
-                  StyledText(
-                    'Northstar workspace',
-                    style: dashboardText(
-                      .size1,
-                      tone: .muted,
-                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                  ),
-                ],
-              ),
+      trigger: RowBox(
+        style: FlexBoxStyler()
+            .minHeight(48)
+            .crossAxisAlignment(.center)
+            .spacing(10),
+        children: [
+          const FortalAvatar(label: 'LF', size: .size2),
+          Expanded(
+            child: ColumnBox(
+              style: FlexBoxStyler()
+                  .mainAxisSize(.min)
+                  .crossAxisAlignment(.start),
+              children: [
+                const FortalText(
+                  'Leo Farias',
+                  size: .size2,
+                  weight: .medium,
+                  softWrap: false,
+                  truncate: true,
+                ),
+                StyledText(
+                  'Northstar workspace',
+                  style: dashboardText(
+                    .size1,
+                    tone: .muted,
+                  ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                ),
+              ],
             ),
-            Icon(
-              RemixIcons.dotsHorizontal,
-              size: 18,
-              color: MixScope.tokenOf(FortalTokens.gray11, context),
-            ),
-          ],
-        ),
+          ),
+          StyledIcon(
+            icon: RemixIcons.dotsHorizontal,
+            style: IconStyler().size(18).color(FortalTokens.gray11()),
+          ),
+        ],
       ),
       actions: const [
         FortalAction(value: 'profile', label: 'View profile'),
@@ -259,8 +258,8 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
               style: _toolbarButtonStyle,
               onPressed: _toggleNotifications,
               icon: RemixIcons.bell,
-              iconBuilder: (context, spec, icon) => Stack(
-                clipBehavior: Clip.none,
+              iconBuilder: (context, spec, icon) => StackBox(
+                style: StackBoxStyler().clipBehavior(.none),
                 children: [
                   StyledIcon(
                     icon: icon,
@@ -537,25 +536,13 @@ class FortalChartsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => RegistryDashboardDemoContent(
-    page: RegistryDashboardDemoPage.charts,
-    kit: const _FortalDashboardDemoKit(),
-    data: data,
+    header: const FortalPageHeader(
+      title: 'Charts',
+      description:
+          'Native chart patterns for comparison, composition, interaction, and empty states.',
+    ),
+    child: _FortalDashboardCharts(data: data),
   );
-}
-
-final class _FortalDashboardDemoKit implements RegistryDashboardDemoKit {
-  const _FortalDashboardDemoKit();
-
-  @override
-  Widget pageHeader(String title, String description) => FortalPageHeader(
-    title: title,
-    description:
-        'Native chart patterns for comparison, composition, interaction, and empty states.',
-  );
-
-  @override
-  Widget charts(RegistryDashboardSampleData data) =>
-      _FortalDashboardCharts(data: data);
 }
 
 class _FortalDashboardCharts extends StatelessWidget {

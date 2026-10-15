@@ -159,6 +159,39 @@ class _FortalGalleryOverlaysPageState extends State<FortalGalleryOverlaysPage> {
             ),
           ),
         ),
+        FortalGallerySection(
+          label: 'Toast',
+          description:
+              'Non-blocking status notifications and undo actions hosted by RemixToastScope.',
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(12).runSpacing(12),
+            children: [
+              FortalButton.soft(
+                label: 'Show toast',
+                onPressed: () => showRemixToast(
+                  context,
+                  const RemixToastData(
+                    title: 'Changes saved',
+                    description: 'Your workspace settings are up to date.',
+                    icon: RemixIcons.checkCircled,
+                  ),
+                ),
+              ),
+              FortalButton.outline(
+                label: 'Show action toast',
+                onPressed: () => showRemixToast(
+                  context,
+                  RemixToastData(
+                    title: 'Deployment queued',
+                    description: 'Production rollout starts in 30 seconds.',
+                    icon: RemixIcons.bell,
+                    action: RemixToastAction(label: 'Undo', onPressed: () {}),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

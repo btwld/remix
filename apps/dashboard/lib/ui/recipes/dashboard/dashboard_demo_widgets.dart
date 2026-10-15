@@ -271,9 +271,12 @@ const uiDataTableActionsPositioning = OverlayPositionConfig(
 );
 
 /// Compact kebab trigger shared by data-table actions columns.
-const uiDataTableActionsTrigger = Padding(
-  padding: EdgeInsets.all(6),
-  child: Icon(RemixIcons.dotsHorizontal, size: 18),
+final uiDataTableActionsTrigger = Box(
+  style: BoxStyler().padding(.all(6)),
+  child: StyledIcon(
+    icon: RemixIcons.dotsHorizontal,
+    style: IconStyler().size(18),
+  ),
 );
 
 /// Empty state card used when search or filter queries match no rows.
@@ -293,47 +296,42 @@ class UiEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 340),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 44, horizontal: 24),
-          child: ColumnBox(
-            style: FlexBoxStyler()
-                .mainAxisSize(.min)
-                .crossAxisAlignment(.center)
-                .spacing(10),
-            children: [
-              Box(
-                style: BoxStyler()
-                    .width(46)
-                    .height(46)
-                    .alignment(.center)
-                    .color(UiTokens.gray4())
-                    .shape(.circle()),
-                child: Icon(
-                  icon,
-                  color: MixScope.tokenOf(UiTokens.gray9, context),
-                ),
-              ),
-              UiHeading(
-                title,
-                headingLevel: 2,
-                size: .size3,
-                weight: .medium,
-                align: .center,
-              ),
-              StyledText(
-                body,
-                style: dashboardText(.size2, tone: .muted).textAlign(.center),
-              ),
-              if (action case final action?) ...[
-                const SizedBox(height: 4),
-                action,
-              ],
-            ],
+    return Box(
+      style: BoxStyler().alignment(.center),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(340)
+            .padding(.symmetric(vertical: 44, horizontal: 24))
+            .mainAxisSize(.min)
+            .crossAxisAlignment(.center)
+            .spacing(10),
+        children: [
+          Box(
+            style: BoxStyler()
+                .width(46)
+                .height(46)
+                .alignment(.center)
+                .color(UiTokens.gray4())
+                .shape(.circle()),
+            child: StyledIcon(
+              icon: icon,
+              style: IconStyler().color(UiTokens.gray9()),
+            ),
           ),
-        ),
+          UiHeading(
+            title,
+            headingLevel: 2,
+            size: .size3,
+            weight: .medium,
+            align: .center,
+          ),
+          StyledText(
+            body,
+            style: dashboardText(.size2, tone: .muted).textAlign(.center),
+          ),
+          if (action case final action?)
+            Box(style: BoxStyler().padding(.top(4)), child: action),
+        ],
       ),
     );
   }
@@ -362,27 +360,28 @@ class UiChartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gap = MixScope.tokenOf(UiTokens.space4, context);
-    final defaultInset = MixScope.tokenOf(UiTokens.space2, context);
     final scaledPlot = _plotHeight * UiTheme.of(context).scaling.factor;
 
     return UiCard(
       size: .size2,
       child: ColumnBox(
-        style: FlexBoxStyler().mainAxisSize(.min).crossAxisAlignment(.stretch),
+        style: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .crossAxisAlignment(.stretch)
+            .spacing(UiTokens.space4()),
         children: [
           UiCardHeading(title: title, description: description),
-          SizedBox(height: gap),
-          SizedBox(
-            height: scaledPlot,
-            child: Padding(
-              key: chartPaddingKey,
-              padding:
-                  chartPadding ?? EdgeInsets.symmetric(vertical: defaultInset),
-              child: chart,
-            ),
+          Box(
+            key: chartPaddingKey,
+            style: BoxStyler()
+                .height(scaledPlot)
+                .padding(
+                  EdgeInsetsGeometryMix.maybeValue(chartPadding) ??
+                      .symmetric(vertical: UiTokens.space2()),
+                ),
+            child: chart,
           ),
-          if (legend case final legend?) ...[SizedBox(height: gap), legend],
+          ?legend,
         ],
       ),
     );

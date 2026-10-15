@@ -76,8 +76,8 @@ class _VanillaGalleryNavigationPageState
         label: 'Sidebar',
         description:
             'A controlled native sidebar with fixed header and footer.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: Box(
             style: BoxStyler().width(280).height(320),
             child: VanillaSidebar<String>(

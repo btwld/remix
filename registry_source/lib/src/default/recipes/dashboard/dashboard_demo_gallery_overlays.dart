@@ -33,8 +33,8 @@ class _VanillaGalleryOverlaysPageState
       VanillaGallerySection(
         label: 'Dialog',
         description: 'A modal, focus-trapped confirmation surface.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaButton.secondary(
             label: 'Open',
             onPressed: () => showRemixDialog<void>(
@@ -67,8 +67,8 @@ class _VanillaGalleryOverlaysPageState
       VanillaGallerySection(
         label: 'Popover',
         description: 'Anchored content using the native padding treatment.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaPopover(
             semanticLabel: 'Open quick note popover',
             popoverChild: Box(
@@ -90,11 +90,11 @@ class _VanillaGalleryOverlaysPageState
           ),
         ),
       ),
-      const VanillaGallerySection(
+      VanillaGallerySection(
         label: 'Tooltip',
         description: 'Hover or long-press to reveal contextual help.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaTooltip(
             tooltipSemantics: 'Keyboard shortcut Command K',
             tooltipChild: Text('Search · ⌘K'),
@@ -106,8 +106,8 @@ class _VanillaGalleryOverlaysPageState
         label: 'Menu',
         description:
             'Submenus, checkbox and radio items use real menu behavior.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaMenu<String>(
             trigger: const RemixMenuTrigger(
               label: 'Open menu',
@@ -142,6 +142,41 @@ class _VanillaGalleryOverlaysPageState
             onSelected: (value) =>
                 showVanillaGalleryToast(context, '$value selected'),
           ),
+        ),
+      ),
+      VanillaGallerySection(
+        label: 'Toast',
+        description:
+            'Non-blocking status notifications and undo actions hosted by RemixToastScope.',
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(VanillaTokens.s3)
+              .runSpacing(VanillaTokens.s3),
+          children: [
+            VanillaButton.secondary(
+              label: 'Show toast',
+              onPressed: () => showRemixToast(
+                context,
+                const RemixToastData(
+                  title: 'Changes saved',
+                  description: 'Your workspace settings are up to date.',
+                  icon: RemixIcons.checkCircled,
+                ),
+              ),
+            ),
+            VanillaButton.outline(
+              label: 'Show action toast',
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Deployment queued',
+                  description: 'Production rollout starts in 30 seconds.',
+                  icon: RemixIcons.bell,
+                  action: RemixToastAction(label: 'Undo', onPressed: () {}),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     ],

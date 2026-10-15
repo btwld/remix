@@ -99,7 +99,6 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
 
   @override
   Widget build(BuildContext context) {
-    const kit = _VanillaDashboardDemoKit();
     final demo = RegistryDashboardDemoBase(
       initialPage: widget.initialPage,
       shellBuilder:
@@ -154,17 +153,13 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
           darkMode: _dark,
           onDarkModeChanged: (value) => setState(() => _dark = value),
         ),
+        .charts => VanillaChartsPage(data: widget.data),
         .actions => const VanillaGalleryActionsPage(),
         .forms => const VanillaGalleryFormsPage(),
         .dataDisplay => const VanillaGalleryDisplayPage(),
         .overlays => const VanillaGalleryOverlaysPage(),
         .navigation => const VanillaGalleryNavigationPage(),
         .typography => const VanillaGalleryTypographyPage(),
-        _ => RegistryDashboardDemoContent(
-          page: page,
-          kit: kit,
-          data: widget.data,
-        ),
       },
     );
     if (!widget.builtInChrome) return demo;
@@ -234,8 +229,8 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
           ],
         ),
       ),
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: StackBox(
+        style: StackBoxStyler().clipBehavior(.none),
         children: [
           const VanillaIconButton.ghost(
             icon: RemixIcons.bell,
@@ -458,29 +453,34 @@ class _VanillaAccount extends StatelessWidget {
   );
 }
 
-final class _VanillaDashboardDemoKit implements RegistryDashboardDemoKit {
-  const _VanillaDashboardDemoKit();
+/// Charts gallery page for the Vanilla dashboard.
+class VanillaChartsPage extends StatelessWidget {
+  const VanillaChartsPage({super.key, this.data = registryDashboardSampleData});
+
+  final RegistryDashboardSampleData data;
 
   @override
-  Widget pageHeader(String title, String description) => ColumnBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.start)
-        .spacing(VanillaTokens.s1_5),
-    children: [
-      StyledText(
-        title,
-        style: _textStyle(
-          token: VanillaTokens.text3xl,
-          weight: FontWeight.w700,
+  Widget build(BuildContext context) => RegistryDashboardDemoContent(
+    header: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.start)
+          .spacing(VanillaTokens.s1_5),
+      children: [
+        StyledText(
+          'Charts',
+          style: _textStyle(
+            token: VanillaTokens.text3xl,
+            weight: FontWeight.w700,
+          ),
         ),
-      ),
-      StyledText(description, style: _textStyle(muted: true)),
-    ],
+        StyledText(
+          'Line, bar, and pie charts styled through the preset recipe.',
+          style: _textStyle(muted: true),
+        ),
+      ],
+    ),
+    child: _VanillaDashboardCharts(data: data),
   );
-
-  @override
-  Widget charts(RegistryDashboardSampleData data) =>
-      _VanillaDashboardCharts(data: data);
 }
 
 class _VanillaDashboardCharts extends StatelessWidget {

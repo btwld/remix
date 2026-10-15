@@ -51,203 +51,188 @@ class _VanillaDashboardSettingsPageState
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(VanillaTokens.s8),
-    child: Align(
-      alignment: AlignmentDirectional.topStart,
-      child: Box(
-        style: BoxStyler().maxWidth(880),
-        child: ColumnBox(
-          style: FlexBoxStyler()
-              .crossAxisAlignment(.stretch)
-              .spacing(VanillaTokens.s4),
-          children: [
+    child: Box(
+      style: BoxStyler().alignment(.topStart),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(880)
+            .crossAxisAlignment(.stretch)
+            .spacing(VanillaTokens.s4),
+        children: [
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing(VanillaTokens.s1),
+            children: const [
+              _Text('Settings', token: VanillaTokens.text3xl, emphasized: true),
+              _Text(
+                'Manage your profile, preferences, and workspace.',
+                muted: true,
+              ),
+            ],
+          ),
+          _section(
+            'Profile',
+            'This information appears across your workspace.',
             ColumnBox(
               style: FlexBoxStyler()
-                  .crossAxisAlignment(.start)
-                  .spacing(VanillaTokens.s1),
-              children: const [
-                _Text(
-                  'Settings',
-                  token: VanillaTokens.text3xl,
-                  emphasized: true,
+                  .crossAxisAlignment(.stretch)
+                  .spacing(VanillaTokens.s3),
+              children: [
+                GridBox(
+                  style: GridBoxStyler.equalColumns(2)
+                      .gap(VanillaTokens.s3)
+                      .onConstraints(
+                        const .maxWidth(559),
+                        .equalColumns(1).gap(VanillaTokens.s3),
+                      ),
+                  children: const [
+                    VanillaTextField(label: 'Full name', hintText: 'Ada Chen'),
+                    VanillaTextField(
+                      label: 'Email address',
+                      hintText: 'ada@northstar.co',
+                    ),
+                  ],
                 ),
-                _Text(
-                  'Manage your profile, preferences, and workspace.',
-                  muted: true,
+                VanillaSelect<String>(
+                  trigger: const RemixSelectTrigger(placeholder: 'Language'),
+                  items: const [
+                    RemixSelectItem(value: 'en', label: 'English'),
+                    RemixSelectItem(value: 'es', label: 'Spanish'),
+                    RemixSelectItem(value: 'fr', label: 'French'),
+                  ],
+                  selectedValue: _language,
+                  onChanged: (value) {
+                    if (value != null) setState(() => _language = value);
+                  },
+                ),
+                Box(
+                  style: BoxStyler().alignment(.centerStart),
+                  child: VanillaButton(
+                    label: 'Save changes',
+                    onPressed: () => _toast(context, 'Profile settings saved'),
+                  ),
                 ),
               ],
             ),
-            _section(
-              'Profile',
-              'This information appears across your workspace.',
-              ColumnBox(
-                style: FlexBoxStyler()
-                    .crossAxisAlignment(.stretch)
-                    .spacing(VanillaTokens.s3),
-                children: [
-                  GridBox(
-                    style: GridBoxStyler.equalColumns(2)
-                        .gap(VanillaTokens.s3)
-                        .onConstraints(
-                          const .maxWidth(559),
-                          .equalColumns(1).gap(VanillaTokens.s3),
+          ),
+          _section(
+            'Preferences',
+            'Choose which workspace activity reaches your inbox.',
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(VanillaTokens.s4),
+              children: [
+                _preference(
+                  'Product updates',
+                  'News about features and improvements.',
+                  VanillaSwitch(
+                    selected: _productUpdates,
+                    semanticLabel: 'Receive product updates',
+                    onChanged: (value) =>
+                        setState(() => _productUpdates = value),
+                  ),
+                ),
+                _preference(
+                  'Weekly digest',
+                  'A summary of workspace activity each Monday.',
+                  VanillaCheckbox(
+                    selected: _weeklyDigest,
+                    semanticLabel: 'Receive weekly digest',
+                    onChanged: (value) =>
+                        setState(() => _weeklyDigest = value ?? false),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _section(
+            'Appearance',
+            'Tune the default preset theme with meaningful native values.',
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(VanillaTokens.s4),
+              children: [
+                const VanillaCallout(
+                  icon: RemixIcons.magicWand,
+                  text:
+                      'Changes are deterministic and remain local to the demo.',
+                ),
+                ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.start)
+                      .spacing(VanillaTokens.s2),
+                  children: [
+                    const _Text('Color mode', emphasized: true),
+                    VanillaSegmentedControl<_Appearance>(
+                      semanticLabel: 'Color mode',
+                      selectedValue: _resolvedAppearance,
+                      items: const [
+                        RemixSegmentedControlItem(
+                          value: .light,
+                          label: 'Light',
                         ),
-                    children: const [
-                      VanillaTextField(
-                        label: 'Full name',
-                        hintText: 'Ada Chen',
-                      ),
-                      VanillaTextField(
-                        label: 'Email address',
-                        hintText: 'ada@northstar.co',
-                      ),
-                    ],
-                  ),
-                  VanillaSelect<String>(
-                    trigger: const RemixSelectTrigger(placeholder: 'Language'),
-                    items: const [
-                      RemixSelectItem(value: 'en', label: 'English'),
-                      RemixSelectItem(value: 'es', label: 'Spanish'),
-                      RemixSelectItem(value: 'fr', label: 'French'),
-                    ],
-                    selectedValue: _language,
-                    onChanged: (value) {
-                      if (value != null) setState(() => _language = value);
-                    },
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: VanillaButton(
-                      label: 'Save changes',
-                      onPressed: () =>
-                          _toast(context, 'Profile settings saved'),
+                        RemixSegmentedControlItem(value: .dark, label: 'Dark'),
+                        RemixSegmentedControlItem(
+                          value: .system,
+                          label: 'System',
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() => _appearance = value);
+                        widget.onDarkModeChanged?.call(switch (value) {
+                          .light => false,
+                          .dark => true,
+                          .system => null,
+                        });
+                      },
                     ),
-                  ),
-                ],
-              ),
-            ),
-            _section(
-              'Preferences',
-              'Choose which workspace activity reaches your inbox.',
-              ColumnBox(
-                style: FlexBoxStyler()
-                    .crossAxisAlignment(.stretch)
-                    .spacing(VanillaTokens.s4),
-                children: [
-                  _preference(
-                    'Product updates',
-                    'News about features and improvements.',
-                    VanillaSwitch(
-                      selected: _productUpdates,
-                      semanticLabel: 'Receive product updates',
-                      onChanged: (value) =>
-                          setState(() => _productUpdates = value),
+                  ],
+                ),
+                ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(VanillaTokens.s2),
+                  children: [
+                    _Text(
+                      'Control radius · ${_radius.round()}px',
+                      emphasized: true,
                     ),
-                  ),
-                  _preference(
-                    'Weekly digest',
-                    'A summary of workspace activity each Monday.',
-                    VanillaCheckbox(
-                      selected: _weeklyDigest,
-                      semanticLabel: 'Receive weekly digest',
-                      onChanged: (value) =>
-                          setState(() => _weeklyDigest = value ?? false),
+                    VanillaSlider(
+                      value: _radius,
+                      min: 0,
+                      max: 16,
+                      snapDivisions: 16,
+                      onChanged: (value) => setState(() => _radius = value),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            _section(
-              'Appearance',
-              'Tune the default preset theme with meaningful native values.',
-              ColumnBox(
-                style: FlexBoxStyler()
-                    .crossAxisAlignment(.stretch)
-                    .spacing(VanillaTokens.s4),
-                children: [
-                  const VanillaCallout(
-                    icon: RemixIcons.magicWand,
-                    text:
-                        'Changes are deterministic and remain local to the demo.',
+          ),
+          VanillaDisclosure(
+            key: const ValueKey('settings-danger-zone'),
+            semanticHint: 'Shows destructive workspace actions',
+            trigger: const _Text('Danger zone', emphasized: true),
+            content: ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(VanillaTokens.s3),
+              children: [
+                const _Text('Destructive workspace actions cannot be undone.'),
+                Box(
+                  style: BoxStyler().alignment(.centerStart),
+                  child: VanillaButton.destructive(
+                    label: 'Delete workspace',
+                    onPressed: _confirmDelete,
                   ),
-                  ColumnBox(
-                    style: FlexBoxStyler()
-                        .crossAxisAlignment(.start)
-                        .spacing(VanillaTokens.s2),
-                    children: [
-                      const _Text('Color mode', emphasized: true),
-                      VanillaSegmentedControl<_Appearance>(
-                        semanticLabel: 'Color mode',
-                        selectedValue: _resolvedAppearance,
-                        items: const [
-                          RemixSegmentedControlItem(
-                            value: .light,
-                            label: 'Light',
-                          ),
-                          RemixSegmentedControlItem(
-                            value: .dark,
-                            label: 'Dark',
-                          ),
-                          RemixSegmentedControlItem(
-                            value: .system,
-                            label: 'System',
-                          ),
-                        ],
-                        onChanged: (value) {
-                          setState(() => _appearance = value);
-                          widget.onDarkModeChanged?.call(switch (value) {
-                            .light => false,
-                            .dark => true,
-                            .system => null,
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  ColumnBox(
-                    style: FlexBoxStyler()
-                        .crossAxisAlignment(.stretch)
-                        .spacing(VanillaTokens.s2),
-                    children: [
-                      _Text(
-                        'Control radius · ${_radius.round()}px',
-                        emphasized: true,
-                      ),
-                      VanillaSlider(
-                        value: _radius,
-                        min: 0,
-                        max: 16,
-                        snapDivisions: 16,
-                        onChanged: (value) => setState(() => _radius = value),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            VanillaDisclosure(
-              key: const ValueKey('settings-danger-zone'),
-              semanticHint: 'Shows destructive workspace actions',
-              trigger: const _Text('Danger zone', emphasized: true),
-              content: ColumnBox(
-                style: FlexBoxStyler()
-                    .crossAxisAlignment(.stretch)
-                    .spacing(VanillaTokens.s3),
-                children: [
-                  const _Text(
-                    'Destructive workspace actions cannot be undone.',
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: VanillaButton.destructive(
-                      label: 'Delete workspace',
-                      onPressed: _confirmDelete,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );

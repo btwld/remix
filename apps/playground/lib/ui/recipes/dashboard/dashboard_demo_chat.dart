@@ -332,7 +332,8 @@ class _PlaygroundDashboardChatPageState
                 if (!compact && !_active) _starters(),
                 Expanded(child: _transcript()),
                 if (!_following)
-                  Align(
+                  Box(
+                    style: BoxStyler().alignment(.center),
                     child: styles.buttonBuilder(
                       'Return to latest',
                       _returnToLatest,

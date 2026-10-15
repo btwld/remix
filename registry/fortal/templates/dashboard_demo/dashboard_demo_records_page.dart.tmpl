@@ -193,8 +193,8 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
+        Box(
+          style: BoxStyler().alignment(.centerStart),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: {{typePrefix}}SegmentedControl<_OrderFilter>(

@@ -146,8 +146,10 @@ const registryDashboardDemoSectionIds = {
     'popover',
     'tooltip',
     'menu',
+    'toast',
   ],
   RegistryDashboardDemoPage.navigation: [
+    'app-bar',
     'sidebar',
     'tabs',
     'disclosure',
@@ -193,6 +195,27 @@ final registryDashboardDemoSections =
           ],
         ),
     ]);
+
+/// Returns the dashboard destinations whose label, section, or component
+/// section identifiers match [query].
+Set<RegistryDashboardDemoPage> registryDashboardMatchingPages(String query) {
+  final normalized = query.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return RegistryDashboardDemoPage.values.toSet();
+  }
+  return {
+    for (final page in RegistryDashboardDemoPage.values)
+      if (page.label.toLowerCase().contains(normalized) ||
+          page.section.label.toLowerCase().contains(normalized) ||
+          (registryDashboardDemoSectionIds[page]?.any(
+                (id) =>
+                    id.contains(normalized) ||
+                    id.replaceAll('-', ' ').contains(normalized),
+              ) ??
+              false))
+        page,
+  };
+}
 
 typedef RegistryDashboardDemoShellBuilder =
     Widget Function(
@@ -258,15 +281,56 @@ class _RegistryDashboardDemoBaseState extends State<RegistryDashboardDemoBase> {
     });
   }
 
+  void _handleSearchChanged(String value) {
+    final nextQuery = value.trim().toLowerCase();
+    if (_searchQuery == nextQuery) return;
+    setState(() {
+      _searchQuery = nextQuery;
+      if (nextQuery.isEmpty) return;
+      final matches = registryDashboardMatchingPages(nextQuery);
+      if (matches.isNotEmpty &&
+          !matches.contains(_selected) &&
+          _selected != RegistryDashboardDemoPage.customers &&
+          _selected != RegistryDashboardDemoPage.orders) {
+        _selected = matches.first;
+        _visitedPages.add(_selected);
+      }
+    });
+  }
+
+  List<RemixSidebarSection<RegistryDashboardDemoPage>> _visibleSections() {
+    if (_searchQuery.isEmpty) return registryDashboardDemoSections;
+    final matches = registryDashboardMatchingPages(_searchQuery);
+    if (matches.isEmpty) return registryDashboardDemoSections;
+    final visible = {...matches, _selected};
+    return [
+      for (final section in RegistryDashboardDemoSection.values)
+        if (RegistryDashboardDemoPage.values.any(
+          (page) => page.section == section && visible.contains(page),
+        ))
+          RemixSidebarSection(
+            label: section.label,
+            destinations: [
+              for (final page in RegistryDashboardDemoPage.values)
+                if (page.section == section && visible.contains(page))
+                  RemixSidebarDestination(
+                    value: page,
+                    label: page.label,
+                    icon: page.icon,
+                  ),
+            ],
+          ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) => widget.shellBuilder(
     context,
-    sections: registryDashboardDemoSections,
+    sections: _visibleSections(),
     selectedValue: _selected,
     onSelected: _select,
     title: _selected.label,
-    onSearchChanged: (value) =>
-        setState(() => _searchQuery = value.trim().toLowerCase()),
+    onSearchChanged: _handleSearchChanged,
     body: IndexedStack(
       key: const ValueKey('dashboard-demo-pages'),
       index: _selected.index,
@@ -380,19 +444,20 @@ class RegistryDashboardDemoPageFrame extends StatelessWidget {
   Widget build(BuildContext context) => SingleChildScrollView(
     key: const ValueKey('dashboard-demo-page-scroll'),
     padding: const EdgeInsets.all(24),
-    child: Center(
-      child: Box(
-        style: BoxStyler().maxWidth(1180),
-        child: ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(24),
-          children: [
-            header,
-            ColumnBox(
-              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-              children: children,
-            ),
-          ],
-        ),
+    child: Box(
+      style: BoxStyler().alignment(.center),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(1180)
+            .crossAxisAlignment(.stretch)
+            .spacing(24),
+        children: [
+          header,
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+            children: children,
+          ),
+        ],
       ),
     ),
   );

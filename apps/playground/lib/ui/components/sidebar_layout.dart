@@ -106,6 +106,7 @@ class PlaygroundSidebarLayout extends StatefulWidget {
 class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   bool _selfOpen = false;
   bool _sheetShowing = false;
+  bool _isWidthAnimating = false;
 
   /// The layout's presentation as of its most recent build, so [_openCompact]
   /// can no-op while wide even when called outside that build.
@@ -118,6 +119,20 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   Route<void>? _sheetRoute;
 
   bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
+
+  @override
+  void didUpdateWidget(covariant PlaygroundSidebarLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final widthChanged =
+        oldWidget.collapsed != widget.collapsed ||
+        oldWidget.sidebarWidth != widget.sidebarWidth ||
+        oldWidget.collapsedWidth != widget.collapsedWidth;
+    if (widthChanged && !_isCompact) {
+      final reduceMotion =
+          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      _isWidthAnimating = !reduceMotion;
+    }
+  }
 
   void _setOpen(bool value) {
     if (_effectiveOpen == value) return;
@@ -138,6 +153,9 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
 
   void _reconcileSheet(bool isCompact) {
     _isCompact = isCompact;
+    if (isCompact && _isWidthAnimating) {
+      _isWidthAnimating = false;
+    }
     final desiredOpen = isCompact && _effectiveOpen;
     if (desiredOpen == _sheetShowing) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -244,7 +262,8 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isCompact = constraints.maxWidth < widget.compactBreakpoint;
+        final maxWidth = constraints.maxWidth;
+        final isCompact = maxWidth < widget.compactBreakpoint;
         _reconcileSheet(isCompact);
 
         return PlaygroundSidebarLayoutScope._(
@@ -253,32 +272,45 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
           isCompactOpen: isCompact && _effectiveOpen,
           openCompact: _openCompact,
           closeCompact: _closeCompact,
-          child: isCompact ? _body() : _wideRow(),
+          child: isCompact
+              ? _body(maxWidth: maxWidth)
+              : _wideRow(maxWidth: maxWidth),
         );
       },
     );
   }
 
-  Widget _wideRow() {
+  Widget _wideRow({required double maxWidth}) {
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return RowBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
-        AnimatedContainer(
-          duration: reduceMotion
-              ? Duration.zero
-              : const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          width: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+        Box(
+          style: BoxStyler()
+              .width(
+                widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+              )
+              .animate(
+                .easeInOut(
+                  reduceMotion
+                      ? Duration.zero
+                      : const Duration(milliseconds: 200),
+                  onEnd: () {
+                    if (mounted && _isWidthAnimating) {
+                      setState(() => _isWidthAnimating = false);
+                    }
+                  },
+                ),
+              ),
           child: widget.sidebar,
         ),
-        Expanded(child: _body(besideSidebar: true)),
+        Expanded(child: _body(besideSidebar: true, maxWidth: maxWidth)),
       ],
     );
   }
 
-  Widget _body({bool besideSidebar = false}) {
+  Widget _body({bool besideSidebar = false, required double maxWidth}) {
     final header = widget.header;
     final ltr = Directionality.of(context) == TextDirection.ltr;
 
@@ -297,13 +329,34 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
           child: child,
         );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final bodyChild = inset(widget.body, removeTop: header != null);
+    final effectiveSidebarWidth = !besideSidebar
+        ? 0.0
+        : _isWidthAnimating
+        ? math.min(widget.collapsedWidth, widget.sidebarWidth)
+        : (widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth);
+    final bodyWidth = maxWidth.isFinite
+        ? math.max(0.0, maxWidth - effectiveSidebarWidth)
+        : null;
+
+    return ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
         if (header != null) inset(header),
         // The body's wrapper stays mounted either way so its state survives
-        // a header coming or going.
-        Expanded(child: inset(widget.body, removeTop: header != null)),
+        // a header coming or going. While the sidebar animates between widths,
+        // holding the body's layout width at its expanded-slot bound avoids
+        // relayouting charts, grids, and tables on every animation frame.
+        Expanded(
+          child: ClipRect(
+            child: OverflowBox(
+              alignment: AlignmentDirectional.topStart,
+              minWidth: bodyWidth,
+              maxWidth: bodyWidth,
+              child: RepaintBoundary(child: bodyChild),
+            ),
+          ),
+        ),
       ],
     );
   }

@@ -146,8 +146,10 @@ const playgroundDashboardDemoSectionIds = {
     'popover',
     'tooltip',
     'menu',
+    'toast',
   ],
   PlaygroundDashboardDemoPage.navigation: [
+    'app-bar',
     'sidebar',
     'tabs',
     'disclosure',
@@ -193,6 +195,29 @@ final playgroundDashboardDemoSections =
           ],
         ),
     ]);
+
+/// Returns the dashboard destinations whose label, section, or component
+/// section identifiers match [query].
+Set<PlaygroundDashboardDemoPage> playgroundDashboardMatchingPages(
+  String query,
+) {
+  final normalized = query.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return PlaygroundDashboardDemoPage.values.toSet();
+  }
+  return {
+    for (final page in PlaygroundDashboardDemoPage.values)
+      if (page.label.toLowerCase().contains(normalized) ||
+          page.section.label.toLowerCase().contains(normalized) ||
+          (playgroundDashboardDemoSectionIds[page]?.any(
+                (id) =>
+                    id.contains(normalized) ||
+                    id.replaceAll('-', ' ').contains(normalized),
+              ) ??
+              false))
+        page,
+  };
+}
 
 typedef PlaygroundDashboardDemoShellBuilder =
     Widget Function(
@@ -259,15 +284,56 @@ class _PlaygroundDashboardDemoBaseState
     });
   }
 
+  void _handleSearchChanged(String value) {
+    final nextQuery = value.trim().toLowerCase();
+    if (_searchQuery == nextQuery) return;
+    setState(() {
+      _searchQuery = nextQuery;
+      if (nextQuery.isEmpty) return;
+      final matches = playgroundDashboardMatchingPages(nextQuery);
+      if (matches.isNotEmpty &&
+          !matches.contains(_selected) &&
+          _selected != PlaygroundDashboardDemoPage.customers &&
+          _selected != PlaygroundDashboardDemoPage.orders) {
+        _selected = matches.first;
+        _visitedPages.add(_selected);
+      }
+    });
+  }
+
+  List<RemixSidebarSection<PlaygroundDashboardDemoPage>> _visibleSections() {
+    if (_searchQuery.isEmpty) return playgroundDashboardDemoSections;
+    final matches = playgroundDashboardMatchingPages(_searchQuery);
+    if (matches.isEmpty) return playgroundDashboardDemoSections;
+    final visible = {...matches, _selected};
+    return [
+      for (final section in PlaygroundDashboardDemoSection.values)
+        if (PlaygroundDashboardDemoPage.values.any(
+          (page) => page.section == section && visible.contains(page),
+        ))
+          RemixSidebarSection(
+            label: section.label,
+            destinations: [
+              for (final page in PlaygroundDashboardDemoPage.values)
+                if (page.section == section && visible.contains(page))
+                  RemixSidebarDestination(
+                    value: page,
+                    label: page.label,
+                    icon: page.icon,
+                  ),
+            ],
+          ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) => widget.shellBuilder(
     context,
-    sections: playgroundDashboardDemoSections,
+    sections: _visibleSections(),
     selectedValue: _selected,
     onSelected: _select,
     title: _selected.label,
-    onSearchChanged: (value) =>
-        setState(() => _searchQuery = value.trim().toLowerCase()),
+    onSearchChanged: _handleSearchChanged,
     body: IndexedStack(
       key: const ValueKey('dashboard-demo-pages'),
       index: _selected.index,
@@ -381,19 +447,20 @@ class PlaygroundDashboardDemoPageFrame extends StatelessWidget {
   Widget build(BuildContext context) => SingleChildScrollView(
     key: const ValueKey('dashboard-demo-page-scroll'),
     padding: const EdgeInsets.all(24),
-    child: Center(
-      child: Box(
-        style: BoxStyler().maxWidth(1180),
-        child: ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(24),
-          children: [
-            header,
-            ColumnBox(
-              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-              children: children,
-            ),
-          ],
-        ),
+    child: Box(
+      style: BoxStyler().alignment(.center),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(1180)
+            .crossAxisAlignment(.stretch)
+            .spacing(24),
+        children: [
+          header,
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+            children: children,
+          ),
+        ],
       ),
     ),
   );

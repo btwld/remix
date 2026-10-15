@@ -57,8 +57,8 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
       {{typePrefix}}GallerySection(
         label: 'Segmented control',
         description: 'Exclusive selection using the native treatment.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: {{typePrefix}}SegmentedControl<String>(
             selectedValue: _density,
             semanticLabel: 'Row density',
@@ -73,8 +73,8 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
       {{typePrefix}}GallerySection(
         label: 'Select',
         description: 'A keyboard-accessible native select.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: Box(
             style: BoxStyler().width(220),
             child: {{typePrefix}}Select<String>(
@@ -128,8 +128,8 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
       {{typePrefix}}GallerySection(
         label: 'Checkbox',
         description: 'The native tri-state checkbox recipe.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: {{typePrefix}}Checkbox(
             selected: _checked,
             label: 'Example checkbox',
@@ -179,8 +179,8 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
       {{typePrefix}}GallerySection(
         label: 'Switch',
         description: 'The native binary setting control.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: {{typePrefix}}Switch(
             selected: _switched,
             semanticLabel: 'Example switch',

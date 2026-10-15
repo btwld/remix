@@ -146,8 +146,10 @@ const {{valuePrefix}}DashboardDemoSectionIds = {
     'popover',
     'tooltip',
     'menu',
+    'toast',
   ],
   {{typePrefix}}DashboardDemoPage.navigation: [
+    'app-bar',
     'sidebar',
     'tabs',
     'disclosure',
@@ -193,6 +195,27 @@ final {{valuePrefix}}DashboardDemoSections =
           ],
         ),
     ]);
+
+/// Returns the dashboard destinations whose label, section, or component
+/// section identifiers match [query].
+Set<{{typePrefix}}DashboardDemoPage> {{valuePrefix}}DashboardMatchingPages(String query) {
+  final normalized = query.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return {{typePrefix}}DashboardDemoPage.values.toSet();
+  }
+  return {
+    for (final page in {{typePrefix}}DashboardDemoPage.values)
+      if (page.label.toLowerCase().contains(normalized) ||
+          page.section.label.toLowerCase().contains(normalized) ||
+          ({{valuePrefix}}DashboardDemoSectionIds[page]?.any(
+                (id) =>
+                    id.contains(normalized) ||
+                    id.replaceAll('-', ' ').contains(normalized),
+              ) ??
+              false))
+        page,
+  };
+}
 
 typedef {{typePrefix}}DashboardDemoShellBuilder =
     Widget Function(
@@ -258,15 +281,56 @@ class _{{typePrefix}}DashboardDemoBaseState extends State<{{typePrefix}}Dashboar
     });
   }
 
+  void _handleSearchChanged(String value) {
+    final nextQuery = value.trim().toLowerCase();
+    if (_searchQuery == nextQuery) return;
+    setState(() {
+      _searchQuery = nextQuery;
+      if (nextQuery.isEmpty) return;
+      final matches = {{valuePrefix}}DashboardMatchingPages(nextQuery);
+      if (matches.isNotEmpty &&
+          !matches.contains(_selected) &&
+          _selected != {{typePrefix}}DashboardDemoPage.customers &&
+          _selected != {{typePrefix}}DashboardDemoPage.orders) {
+        _selected = matches.first;
+        _visitedPages.add(_selected);
+      }
+    });
+  }
+
+  List<RemixSidebarSection<{{typePrefix}}DashboardDemoPage>> _visibleSections() {
+    if (_searchQuery.isEmpty) return {{valuePrefix}}DashboardDemoSections;
+    final matches = {{valuePrefix}}DashboardMatchingPages(_searchQuery);
+    if (matches.isEmpty) return {{valuePrefix}}DashboardDemoSections;
+    final visible = {...matches, _selected};
+    return [
+      for (final section in {{typePrefix}}DashboardDemoSection.values)
+        if ({{typePrefix}}DashboardDemoPage.values.any(
+          (page) => page.section == section && visible.contains(page),
+        ))
+          RemixSidebarSection(
+            label: section.label,
+            destinations: [
+              for (final page in {{typePrefix}}DashboardDemoPage.values)
+                if (page.section == section && visible.contains(page))
+                  RemixSidebarDestination(
+                    value: page,
+                    label: page.label,
+                    icon: page.icon,
+                  ),
+            ],
+          ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) => widget.shellBuilder(
     context,
-    sections: {{valuePrefix}}DashboardDemoSections,
+    sections: _visibleSections(),
     selectedValue: _selected,
     onSelected: _select,
     title: _selected.label,
-    onSearchChanged: (value) =>
-        setState(() => _searchQuery = value.trim().toLowerCase()),
+    onSearchChanged: _handleSearchChanged,
     body: IndexedStack(
       key: const ValueKey('dashboard-demo-pages'),
       index: _selected.index,
@@ -380,19 +444,20 @@ class {{typePrefix}}DashboardDemoPageFrame extends StatelessWidget {
   Widget build(BuildContext context) => SingleChildScrollView(
     key: const ValueKey('dashboard-demo-page-scroll'),
     padding: const EdgeInsets.all(24),
-    child: Center(
-      child: Box(
-        style: BoxStyler().maxWidth(1180),
-        child: ColumnBox(
-          style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(24),
-          children: [
-            header,
-            ColumnBox(
-              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-              children: children,
-            ),
-          ],
-        ),
+    child: Box(
+      style: BoxStyler().alignment(.center),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(1180)
+            .crossAxisAlignment(.stretch)
+            .spacing(24),
+        children: [
+          header,
+          ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+            children: children,
+          ),
+        ],
       ),
     ),
   );

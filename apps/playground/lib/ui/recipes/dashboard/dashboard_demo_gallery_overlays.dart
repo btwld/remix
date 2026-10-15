@@ -33,8 +33,8 @@ class _PlaygroundGalleryOverlaysPageState
       PlaygroundGallerySection(
         label: 'Dialog',
         description: 'A modal, focus-trapped confirmation surface.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundButton.secondary(
             label: 'Open',
             onPressed: () => showRemixDialog<void>(
@@ -67,8 +67,8 @@ class _PlaygroundGalleryOverlaysPageState
       PlaygroundGallerySection(
         label: 'Popover',
         description: 'Anchored content using the native padding treatment.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundPopover(
             semanticLabel: 'Open quick note popover',
             popoverChild: Box(
@@ -90,11 +90,11 @@ class _PlaygroundGalleryOverlaysPageState
           ),
         ),
       ),
-      const PlaygroundGallerySection(
+      PlaygroundGallerySection(
         label: 'Tooltip',
         description: 'Hover or long-press to reveal contextual help.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundTooltip(
             tooltipSemantics: 'Keyboard shortcut Command K',
             tooltipChild: Text('Search · ⌘K'),
@@ -106,8 +106,8 @@ class _PlaygroundGalleryOverlaysPageState
         label: 'Menu',
         description:
             'Submenus, checkbox and radio items use real menu behavior.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: PlaygroundMenu<String>(
             trigger: const RemixMenuTrigger(
               label: 'Open menu',
@@ -142,6 +142,41 @@ class _PlaygroundGalleryOverlaysPageState
             onSelected: (value) =>
                 showPlaygroundGalleryToast(context, '$value selected'),
           ),
+        ),
+      ),
+      PlaygroundGallerySection(
+        label: 'Toast',
+        description:
+            'Non-blocking status notifications and undo actions hosted by RemixToastScope.',
+        child: WrapBox(
+          style: WrapBoxStyler()
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s3),
+          children: [
+            PlaygroundButton.secondary(
+              label: 'Show toast',
+              onPressed: () => showRemixToast(
+                context,
+                const RemixToastData(
+                  title: 'Changes saved',
+                  description: 'Your workspace settings are up to date.',
+                  icon: RemixIcons.checkCircled,
+                ),
+              ),
+            ),
+            PlaygroundButton.outline(
+              label: 'Show action toast',
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Deployment queued',
+                  description: 'Production rollout starts in 30 seconds.',
+                  icon: RemixIcons.bell,
+                  action: RemixToastAction(label: 'Undo', onPressed: () {}),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     ],

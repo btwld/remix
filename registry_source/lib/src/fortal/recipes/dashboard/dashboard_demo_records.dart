@@ -193,8 +193,8 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
+        Box(
+          style: BoxStyler().alignment(.centerStart),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FortalSegmentedControl<_OrderFilter>(

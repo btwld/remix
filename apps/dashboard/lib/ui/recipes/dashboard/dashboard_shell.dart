@@ -126,8 +126,6 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
             key: const ValueKey('dashboard-sidebar'),
             collapsed: collapsed,
             panelPadding: MediaQuery.paddingOf(context),
-            expandedWidth: sidebarWidth,
-            collapsedWidth: collapsedWidth,
             header: header,
             sections: sections,
             selectedValue: selectedValue,

@@ -136,8 +136,6 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
               EdgeInsetsGeometryMix.value(MediaQuery.paddingOf(context)),
             ),
             collapsed: collapsed,
-            expandedWidth: sidebarWidth,
-            collapsedWidth: collapsedWidth,
             header: header,
             sections: sections,
             selectedValue: selectedValue,

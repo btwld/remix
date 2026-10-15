@@ -116,8 +116,8 @@ class FortalThemePanel extends StatelessWidget {
               apply: (value) => settings.copyWith(scaling: value),
             ),
           ),
-          Align(
-            alignment: Alignment.centerLeft,
+          Box(
+            style: BoxStyler().alignment(.centerStart),
             child: FortalButton.ghost(
               key: const ValueKey('theme-reset'),
               size: .size1,

@@ -159,6 +159,39 @@ class _{{typePrefix}}GalleryOverlaysPageState extends State<{{typePrefix}}Galler
             ),
           ),
         ),
+        {{typePrefix}}GallerySection(
+          label: 'Toast',
+          description:
+              'Non-blocking status notifications and undo actions hosted by RemixToastScope.',
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(12).runSpacing(12),
+            children: [
+              {{typePrefix}}Button.soft(
+                label: 'Show toast',
+                onPressed: () => showRemixToast(
+                  context,
+                  const RemixToastData(
+                    title: 'Changes saved',
+                    description: 'Your workspace settings are up to date.',
+                    icon: {{icon:checkCircled}},
+                  ),
+                ),
+              ),
+              {{typePrefix}}Button.outline(
+                label: 'Show action toast',
+                onPressed: () => showRemixToast(
+                  context,
+                  RemixToastData(
+                    title: 'Deployment queued',
+                    description: 'Production rollout starts in 30 seconds.',
+                    icon: {{icon:bell}},
+                    action: RemixToastAction(label: 'Undo', onPressed: () {}),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

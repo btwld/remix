@@ -57,8 +57,8 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
       VanillaGallerySection(
         label: 'Segmented control',
         description: 'Exclusive selection using the native treatment.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaSegmentedControl<String>(
             selectedValue: _density,
             semanticLabel: 'Row density',
@@ -73,8 +73,8 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
       VanillaGallerySection(
         label: 'Select',
         description: 'A keyboard-accessible native select.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: Box(
             style: BoxStyler().width(220),
             child: VanillaSelect<String>(
@@ -128,8 +128,8 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
       VanillaGallerySection(
         label: 'Checkbox',
         description: 'The native tri-state checkbox recipe.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaCheckbox(
             selected: _checked,
             label: 'Example checkbox',
@@ -179,8 +179,8 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
       VanillaGallerySection(
         label: 'Switch',
         description: 'The native binary setting control.',
-        child: Align(
-          alignment: Alignment.centerLeft,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
           child: VanillaSwitch(
             selected: _switched,
             semanticLabel: 'Example switch',

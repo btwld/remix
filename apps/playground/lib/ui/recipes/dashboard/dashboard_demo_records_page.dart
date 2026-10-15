@@ -198,8 +198,8 @@ class _PlaygroundDashboardOrdersPageState
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
+        Box(
+          style: BoxStyler().alignment(.centerStart),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: PlaygroundSegmentedControl<_OrderFilter>(
