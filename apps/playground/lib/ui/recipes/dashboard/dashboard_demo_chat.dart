@@ -513,12 +513,10 @@ class _PlaygroundDashboardChatPageState
       },
       style: styles.transcriptStyle,
       children: children.isEmpty
-          ? const [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Text('Choose a starter or write a message.'),
-                ),
+          ? [
+              Box(
+                style: BoxStyler().alignment(.center).padding(.all(32)),
+                child: const Text('Choose a starter or write a message.'),
               ),
             ]
           : children,

@@ -14,17 +14,17 @@ import 'dashboard_demo_records.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
-class DefaultDashboardCustomersPage extends StatefulWidget {
-  const DefaultDashboardCustomersPage({super.key, this.globalQuery = ''});
+class PlaygroundDashboardCustomersPage extends StatefulWidget {
+  const PlaygroundDashboardCustomersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
 
   @override
-  State<DefaultDashboardCustomersPage> createState() =>
-      _DefaultDashboardCustomersPageState();
+  State<PlaygroundDashboardCustomersPage> createState() =>
+      _PlaygroundDashboardCustomersPageState();
 }
 
-class _DefaultDashboardCustomersPageState
-    extends State<DefaultDashboardCustomersPage> {
+class _PlaygroundDashboardCustomersPageState
+    extends State<PlaygroundDashboardCustomersPage> {
   String _query = '';
   RemixDataTableSort _sort = const RemixDataTableSort(
     columnId: 'joined',
@@ -154,17 +154,17 @@ class _DefaultDashboardCustomersPageState
   }
 }
 
-class DefaultDashboardOrdersPage extends StatefulWidget {
-  const DefaultDashboardOrdersPage({super.key, this.globalQuery = ''});
+class PlaygroundDashboardOrdersPage extends StatefulWidget {
+  const PlaygroundDashboardOrdersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
 
   @override
-  State<DefaultDashboardOrdersPage> createState() =>
-      _DefaultDashboardOrdersPageState();
+  State<PlaygroundDashboardOrdersPage> createState() =>
+      _PlaygroundDashboardOrdersPageState();
 }
 
-class _DefaultDashboardOrdersPageState
-    extends State<DefaultDashboardOrdersPage> {
+class _PlaygroundDashboardOrdersPageState
+    extends State<PlaygroundDashboardOrdersPage> {
   _OrderFilter _filter = .all;
   RemixDataTableSort _sort = const RemixDataTableSort(
     columnId: 'date',

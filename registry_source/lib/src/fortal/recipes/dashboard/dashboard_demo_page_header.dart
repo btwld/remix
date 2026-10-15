@@ -24,13 +24,12 @@ class PageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: .start,
+    return RowBox(
+      style: FlexBoxStyler().crossAxisAlignment(.start),
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: .start,
-            spacing: 4,
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
             children: [
               FortalHeading(title, size: .size6, weight: .bold),
               StyledText(
@@ -68,9 +67,8 @@ class CardHeading extends StatelessWidget {
   final String description;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: .start,
-    spacing: 3,
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.start).spacing(3),
     children: [
       SectionLabel(title),
       StyledText(description, style: dashboardText(.size2, tone: .muted)),

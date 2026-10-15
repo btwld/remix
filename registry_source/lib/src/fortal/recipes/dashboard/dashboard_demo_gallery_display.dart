@@ -55,8 +55,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             rows: FortalCardVariant.values,
             columns: FortalCardSize.values,
             cellWidth: 200,
-            cellBuilder: (_, variant, size) => SizedBox(
-              width: 160,
+            cellBuilder: (_, variant, size) => Box(
+              style: BoxStyler().width(160),
               child: FortalCard(
                 variant: variant,
                 size: size,
@@ -72,8 +72,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             rows: FortalCalloutVariant.values,
             columns: FortalCalloutSize.values,
             cellWidth: 230,
-            cellBuilder: (_, variant, size) => SizedBox(
-              width: 200,
+            cellBuilder: (_, variant, size) => Box(
+              style: BoxStyler().width(200),
               child: FortalCallout(
                 variant: variant,
                 size: size,
@@ -108,9 +108,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           label: 'Skeleton',
           description:
               'Placeholder shapes that keep the loaded layout measurements.',
-          child: Column(
-            crossAxisAlignment: .start,
-            spacing: 14,
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(14),
             children: [
               FortalButton.soft(
                 size: .size1,
@@ -140,8 +139,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             rows: FortalProgressVariant.values,
             columns: FortalProgressSize.values,
             cellWidth: 210,
-            cellBuilder: (_, variant, size) => SizedBox(
-              width: 170,
+            cellBuilder: (_, variant, size) => Box(
+              style: BoxStyler().width(170),
               child: FortalProgress(
                 variant: variant,
                 size: size,
@@ -155,8 +154,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           label: 'Spinner',
           description:
               'Animation is stopped by default so automated tests remain settleable.',
-          child: Row(
-            spacing: 18,
+          child: RowBox(
+            style: FlexBoxStyler().crossAxisAlignment(.center).spacing(18),
             children: [
               FortalButton.soft(
                 size: .size1,
@@ -175,15 +174,17 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
         GallerySection(
           label: 'Divider',
           description: 'Horizontal dividers at all four inset sizes.',
-          child: Column(
-            spacing: 14,
+          child: ColumnBox(
+            style: FlexBoxStyler().spacing(14),
             children: [
               for (final size in FortalDividerSize.values)
-                Row(
-                  spacing: 12,
+                RowBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.center)
+                      .spacing(12),
                   children: [
-                    SizedBox(
-                      width: 64,
+                    Box(
+                      style: BoxStyler().width(64),
                       child: FortalText(enumLabel(size), size: .size2),
                     ),
                     Expanded(child: FortalDivider(size: size)),

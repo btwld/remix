@@ -17,8 +17,8 @@ import '../../theme/tokens.dart';
 
 enum _Appearance { light, dark, system }
 
-class DefaultDashboardSettingsPage extends StatefulWidget {
-  const DefaultDashboardSettingsPage({
+class {{typePrefix}}DashboardSettingsPage extends StatefulWidget {
+  const {{typePrefix}}DashboardSettingsPage({
     super.key,
     this.darkMode,
     this.onDarkModeChanged,
@@ -28,12 +28,12 @@ class DefaultDashboardSettingsPage extends StatefulWidget {
   final ValueChanged<bool?>? onDarkModeChanged;
 
   @override
-  State<DefaultDashboardSettingsPage> createState() =>
-      _DefaultDashboardSettingsPageState();
+  State<{{typePrefix}}DashboardSettingsPage> createState() =>
+      _{{typePrefix}}DashboardSettingsPageState();
 }
 
-class _DefaultDashboardSettingsPageState
-    extends State<DefaultDashboardSettingsPage> {
+class _{{typePrefix}}DashboardSettingsPageState
+    extends State<{{typePrefix}}DashboardSettingsPage> {
   bool _productUpdates = true;
   bool _weeklyDigest = false;
   String _language = 'en';

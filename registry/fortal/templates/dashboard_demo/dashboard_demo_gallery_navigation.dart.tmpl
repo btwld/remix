@@ -144,9 +144,8 @@ class _SidebarDemoState extends State<_SidebarDemo> {
   // destination region scrolling while the header and footer stay put.
   Widget build(BuildContext context) => Align(
     alignment: Alignment.centerLeft,
-    child: SizedBox(
-      width: 280,
-      height: 320,
+    child: Box(
+      style: BoxStyler().width(280).height(320),
       child: {{typePrefix}}Sidebar<String>(
         header: const _SidebarDemoHeader(),
         sections: _sections,
@@ -163,9 +162,9 @@ class _SidebarDemoHeader extends StatelessWidget {
   const _SidebarDemoHeader();
 
   @override
-  Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-    child: {{typePrefix}}Text('Acme', size: .size4, weight: .bold),
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.symmetric(horizontal: 16, vertical: 14)),
+    child: const {{typePrefix}}Text('Acme', size: .size4, weight: .bold),
   );
 }
 
@@ -173,15 +172,15 @@ class _SidebarDemoFooter extends StatelessWidget {
   const _SidebarDemoFooter();
 
   @override
-  Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.all(14),
-    child: Row(
-      spacing: 10,
-      children: [
-        {{typePrefix}}Avatar(label: 'AC', size: .size1),
-        {{typePrefix}}Text('Ada Chen', size: .size2, weight: .medium),
-      ],
-    ),
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler()
+        .padding(.all(14))
+        .crossAxisAlignment(.center)
+        .spacing(10),
+    children: const [
+      {{typePrefix}}Avatar(label: 'AC', size: .size1),
+      {{typePrefix}}Text('Ada Chen', size: .size2, weight: .medium),
+    ],
   );
 }
 
@@ -192,8 +191,8 @@ class _DisclosureDemo extends StatelessWidget {
   final {{typePrefix}}DisclosureSize size;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 280,
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().width(280),
     child: {{typePrefix}}Disclosure(
       key: ValueKey('disclosure-${variant.name}-${size.name}'),
       variant: variant,
@@ -223,12 +222,12 @@ class _TabsDemoState extends State<_TabsDemo> {
   Widget build(BuildContext context) => RemixTabs(
     selectedTabId: _selected,
     onChanged: (value) => setState(() => _selected = value),
-    child: Column(
-      crossAxisAlignment: .stretch,
-      spacing: 10,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(10),
       children: [
         {{typePrefix}}TabBar(
-          child: Row(
+          child: RowBox(
+            style: FlexBoxStyler().mainAxisSize(.min),
             children: [
               {{typePrefix}}Tab(
                 size: widget.size,
@@ -243,18 +242,18 @@ class _TabsDemoState extends State<_TabsDemo> {
             ],
           ),
         ),
-        const {{typePrefix}}TabView(
+        {{typePrefix}}TabView(
           tabId: 'overview',
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: {{typePrefix}}Text('Overview content'),
+          child: Box(
+            style: BoxStyler().padding(.all(8)),
+            child: const {{typePrefix}}Text('Overview content'),
           ),
         ),
-        const {{typePrefix}}TabView(
+        {{typePrefix}}TabView(
           tabId: 'activity',
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: {{typePrefix}}Text('Activity content'),
+          child: Box(
+            style: BoxStyler().padding(.all(8)),
+            child: const {{typePrefix}}Text('Activity content'),
           ),
         ),
       ],
@@ -284,8 +283,8 @@ class _AccordionDemoState extends State<_AccordionDemo> {
   Widget build(BuildContext context) => RemixAccordionGroup<String>(
     controller: _controller,
     initialExpandedValues: const ['details'],
-    child: Column(
-      spacing: 8,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
       children: [
         {{typePrefix}}Accordion<String>(
           variant: widget.variant,

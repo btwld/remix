@@ -274,8 +274,8 @@ class _UiDashboardShellBaseState<T extends Object>
           ),
           actions: [
             if (showSearch)
-              SizedBox(
-                width: widget.searchWidth,
+              Box(
+                style: BoxStyler().width(widget.searchWidth),
                 child: widget.searchBuilder(
                   context,
                   key: const ValueKey('dashboard-search'),

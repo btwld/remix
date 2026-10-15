@@ -34,8 +34,8 @@ import '../../components/toggle_group.dart';
 import '../../components/tooltip.dart';
 import '../../theme/tokens.dart';
 
-class DefaultGalleryPage extends StatelessWidget {
-  const DefaultGalleryPage({
+class VanillaGalleryPage extends StatelessWidget {
+  const VanillaGalleryPage({
     super.key,
     required this.title,
     required this.intro,
@@ -223,19 +223,19 @@ class _MatrixCell extends StatelessWidget {
   }
 }
 
-class DefaultGalleryActionsPage extends StatefulWidget {
-  const DefaultGalleryActionsPage({super.key});
+class VanillaGalleryActionsPage extends StatefulWidget {
+  const VanillaGalleryActionsPage({super.key});
 
   @override
-  State<DefaultGalleryActionsPage> createState() =>
-      _DefaultGalleryActionsPageState();
+  State<VanillaGalleryActionsPage> createState() =>
+      _VanillaGalleryActionsPageState();
 }
 
-class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
+class _VanillaGalleryActionsPageState extends State<VanillaGalleryActionsPage> {
   bool _selected = true;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => VanillaGalleryPage(
     title: 'Actions',
     intro: 'Interactive actions across every native variant and size.',
     sections: [
@@ -315,15 +315,15 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
   );
 }
 
-class DefaultGalleryFormsPage extends StatefulWidget {
-  const DefaultGalleryFormsPage({super.key});
+class VanillaGalleryFormsPage extends StatefulWidget {
+  const VanillaGalleryFormsPage({super.key});
 
   @override
-  State<DefaultGalleryFormsPage> createState() =>
-      _DefaultGalleryFormsPageState();
+  State<VanillaGalleryFormsPage> createState() =>
+      _VanillaGalleryFormsPageState();
 }
 
-class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
+class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
@@ -333,7 +333,7 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
   double _slider = 58;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => VanillaGalleryPage(
     title: 'Forms & Inputs',
     intro: 'Production-ready fields and selection controls in every preset.',
     sections: [
@@ -542,20 +542,20 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
   );
 }
 
-class DefaultGalleryDisplayPage extends StatefulWidget {
-  const DefaultGalleryDisplayPage({super.key});
+class VanillaGalleryDisplayPage extends StatefulWidget {
+  const VanillaGalleryDisplayPage({super.key});
 
   @override
-  State<DefaultGalleryDisplayPage> createState() =>
-      _DefaultGalleryDisplayPageState();
+  State<VanillaGalleryDisplayPage> createState() =>
+      _VanillaGalleryDisplayPageState();
 }
 
-class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
+class _VanillaGalleryDisplayPageState extends State<VanillaGalleryDisplayPage> {
   bool _spinnersRunning = false;
   bool _skeletonLoading = false;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => VanillaGalleryPage(
     title: 'Data Display',
     intro: 'Rich surfaces and status components for product interfaces.',
     sections: [
@@ -717,21 +717,21 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
   );
 }
 
-class DefaultGalleryOverlaysPage extends StatefulWidget {
-  const DefaultGalleryOverlaysPage({super.key});
+class VanillaGalleryOverlaysPage extends StatefulWidget {
+  const VanillaGalleryOverlaysPage({super.key});
 
   @override
-  State<DefaultGalleryOverlaysPage> createState() =>
-      _DefaultGalleryOverlaysPageState();
+  State<VanillaGalleryOverlaysPage> createState() =>
+      _VanillaGalleryOverlaysPageState();
 }
 
-class _DefaultGalleryOverlaysPageState
-    extends State<DefaultGalleryOverlaysPage> {
+class _VanillaGalleryOverlaysPageState
+    extends State<VanillaGalleryOverlaysPage> {
   bool _showArchived = true;
   String _sort = 'newest';
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => VanillaGalleryPage(
     title: 'Overlays',
     intro: 'Real dialog, popover, tooltip, and menu triggers for every recipe.',
     sections: [
@@ -850,16 +850,16 @@ class _DefaultGalleryOverlaysPageState
   );
 }
 
-class DefaultGalleryNavigationPage extends StatefulWidget {
-  const DefaultGalleryNavigationPage({super.key});
+class VanillaGalleryNavigationPage extends StatefulWidget {
+  const VanillaGalleryNavigationPage({super.key});
 
   @override
-  State<DefaultGalleryNavigationPage> createState() =>
-      _DefaultGalleryNavigationPageState();
+  State<VanillaGalleryNavigationPage> createState() =>
+      _VanillaGalleryNavigationPageState();
 }
 
-class _DefaultGalleryNavigationPageState
-    extends State<DefaultGalleryNavigationPage> {
+class _VanillaGalleryNavigationPageState
+    extends State<VanillaGalleryNavigationPage> {
   String _sidebar = 'overview';
   String _tab = 'overview';
   final _accordion = RemixAccordionController<String>(max: 1);
@@ -871,7 +871,7 @@ class _DefaultGalleryNavigationPageState
   }
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => VanillaGalleryPage(
     title: 'Navigation',
     intro:
         'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
@@ -1035,11 +1035,11 @@ class _DefaultGalleryNavigationPageState
   );
 }
 
-class DefaultGalleryTypographyPage extends StatelessWidget {
-  const DefaultGalleryTypographyPage({super.key});
+class VanillaGalleryTypographyPage extends StatelessWidget {
+  const VanillaGalleryTypographyPage({super.key});
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => VanillaGalleryPage(
     title: 'Typography',
     intro: 'Text, headings, code, keys, and links on one shared scale.',
     sections: [

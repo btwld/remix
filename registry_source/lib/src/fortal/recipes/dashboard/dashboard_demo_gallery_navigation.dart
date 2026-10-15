@@ -144,9 +144,8 @@ class _SidebarDemoState extends State<_SidebarDemo> {
   // destination region scrolling while the header and footer stay put.
   Widget build(BuildContext context) => Align(
     alignment: Alignment.centerLeft,
-    child: SizedBox(
-      width: 280,
-      height: 320,
+    child: Box(
+      style: BoxStyler().width(280).height(320),
       child: FortalSidebar<String>(
         header: const _SidebarDemoHeader(),
         sections: _sections,
@@ -163,9 +162,9 @@ class _SidebarDemoHeader extends StatelessWidget {
   const _SidebarDemoHeader();
 
   @override
-  Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-    child: FortalText('Acme', size: .size4, weight: .bold),
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.symmetric(horizontal: 16, vertical: 14)),
+    child: const FortalText('Acme', size: .size4, weight: .bold),
   );
 }
 
@@ -173,15 +172,15 @@ class _SidebarDemoFooter extends StatelessWidget {
   const _SidebarDemoFooter();
 
   @override
-  Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.all(14),
-    child: Row(
-      spacing: 10,
-      children: [
-        FortalAvatar(label: 'AC', size: .size1),
-        FortalText('Ada Chen', size: .size2, weight: .medium),
-      ],
-    ),
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler()
+        .padding(.all(14))
+        .crossAxisAlignment(.center)
+        .spacing(10),
+    children: const [
+      FortalAvatar(label: 'AC', size: .size1),
+      FortalText('Ada Chen', size: .size2, weight: .medium),
+    ],
   );
 }
 
@@ -192,8 +191,8 @@ class _DisclosureDemo extends StatelessWidget {
   final FortalDisclosureSize size;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 280,
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().width(280),
     child: FortalDisclosure(
       key: ValueKey('disclosure-${variant.name}-${size.name}'),
       variant: variant,
@@ -223,12 +222,12 @@ class _TabsDemoState extends State<_TabsDemo> {
   Widget build(BuildContext context) => RemixTabs(
     selectedTabId: _selected,
     onChanged: (value) => setState(() => _selected = value),
-    child: Column(
-      crossAxisAlignment: .stretch,
-      spacing: 10,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(10),
       children: [
         FortalTabBar(
-          child: Row(
+          child: RowBox(
+            style: FlexBoxStyler().mainAxisSize(.min),
             children: [
               FortalTab(
                 size: widget.size,
@@ -243,18 +242,18 @@ class _TabsDemoState extends State<_TabsDemo> {
             ],
           ),
         ),
-        const FortalTabView(
+        FortalTabView(
           tabId: 'overview',
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: FortalText('Overview content'),
+          child: Box(
+            style: BoxStyler().padding(.all(8)),
+            child: const FortalText('Overview content'),
           ),
         ),
-        const FortalTabView(
+        FortalTabView(
           tabId: 'activity',
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: FortalText('Activity content'),
+          child: Box(
+            style: BoxStyler().padding(.all(8)),
+            child: const FortalText('Activity content'),
           ),
         ),
       ],
@@ -284,8 +283,8 @@ class _AccordionDemoState extends State<_AccordionDemo> {
   Widget build(BuildContext context) => RemixAccordionGroup<String>(
     controller: _controller,
     initialExpandedValues: const ['details'],
-    child: Column(
-      spacing: 8,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(8),
       children: [
         FortalAccordion<String>(
           variant: widget.variant,

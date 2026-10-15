@@ -34,8 +34,8 @@ import '../../components/toggle_group.dart';
 import '../../components/tooltip.dart';
 import '../../theme/tokens.dart';
 
-class DefaultGalleryPage extends StatelessWidget {
-  const DefaultGalleryPage({
+class {{typePrefix}}GalleryPage extends StatelessWidget {
+  const {{typePrefix}}GalleryPage({
     super.key,
     required this.title,
     required this.intro,
@@ -223,19 +223,19 @@ class _MatrixCell extends StatelessWidget {
   }
 }
 
-class DefaultGalleryActionsPage extends StatefulWidget {
-  const DefaultGalleryActionsPage({super.key});
+class {{typePrefix}}GalleryActionsPage extends StatefulWidget {
+  const {{typePrefix}}GalleryActionsPage({super.key});
 
   @override
-  State<DefaultGalleryActionsPage> createState() =>
-      _DefaultGalleryActionsPageState();
+  State<{{typePrefix}}GalleryActionsPage> createState() =>
+      _{{typePrefix}}GalleryActionsPageState();
 }
 
-class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
+class _{{typePrefix}}GalleryActionsPageState extends State<{{typePrefix}}GalleryActionsPage> {
   bool _selected = true;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
     title: 'Actions',
     intro: 'Interactive actions across every native variant and size.',
     sections: [
@@ -315,15 +315,15 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
   );
 }
 
-class DefaultGalleryFormsPage extends StatefulWidget {
-  const DefaultGalleryFormsPage({super.key});
+class {{typePrefix}}GalleryFormsPage extends StatefulWidget {
+  const {{typePrefix}}GalleryFormsPage({super.key});
 
   @override
-  State<DefaultGalleryFormsPage> createState() =>
-      _DefaultGalleryFormsPageState();
+  State<{{typePrefix}}GalleryFormsPage> createState() =>
+      _{{typePrefix}}GalleryFormsPageState();
 }
 
-class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
+class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
@@ -333,7 +333,7 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
   double _slider = 58;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
     title: 'Forms & Inputs',
     intro: 'Production-ready fields and selection controls in every preset.',
     sections: [
@@ -542,20 +542,20 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
   );
 }
 
-class DefaultGalleryDisplayPage extends StatefulWidget {
-  const DefaultGalleryDisplayPage({super.key});
+class {{typePrefix}}GalleryDisplayPage extends StatefulWidget {
+  const {{typePrefix}}GalleryDisplayPage({super.key});
 
   @override
-  State<DefaultGalleryDisplayPage> createState() =>
-      _DefaultGalleryDisplayPageState();
+  State<{{typePrefix}}GalleryDisplayPage> createState() =>
+      _{{typePrefix}}GalleryDisplayPageState();
 }
 
-class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
+class _{{typePrefix}}GalleryDisplayPageState extends State<{{typePrefix}}GalleryDisplayPage> {
   bool _spinnersRunning = false;
   bool _skeletonLoading = false;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
     title: 'Data Display',
     intro: 'Rich surfaces and status components for product interfaces.',
     sections: [
@@ -717,21 +717,21 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
   );
 }
 
-class DefaultGalleryOverlaysPage extends StatefulWidget {
-  const DefaultGalleryOverlaysPage({super.key});
+class {{typePrefix}}GalleryOverlaysPage extends StatefulWidget {
+  const {{typePrefix}}GalleryOverlaysPage({super.key});
 
   @override
-  State<DefaultGalleryOverlaysPage> createState() =>
-      _DefaultGalleryOverlaysPageState();
+  State<{{typePrefix}}GalleryOverlaysPage> createState() =>
+      _{{typePrefix}}GalleryOverlaysPageState();
 }
 
-class _DefaultGalleryOverlaysPageState
-    extends State<DefaultGalleryOverlaysPage> {
+class _{{typePrefix}}GalleryOverlaysPageState
+    extends State<{{typePrefix}}GalleryOverlaysPage> {
   bool _showArchived = true;
   String _sort = 'newest';
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
     title: 'Overlays',
     intro: 'Real dialog, popover, tooltip, and menu triggers for every recipe.',
     sections: [
@@ -850,16 +850,16 @@ class _DefaultGalleryOverlaysPageState
   );
 }
 
-class DefaultGalleryNavigationPage extends StatefulWidget {
-  const DefaultGalleryNavigationPage({super.key});
+class {{typePrefix}}GalleryNavigationPage extends StatefulWidget {
+  const {{typePrefix}}GalleryNavigationPage({super.key});
 
   @override
-  State<DefaultGalleryNavigationPage> createState() =>
-      _DefaultGalleryNavigationPageState();
+  State<{{typePrefix}}GalleryNavigationPage> createState() =>
+      _{{typePrefix}}GalleryNavigationPageState();
 }
 
-class _DefaultGalleryNavigationPageState
-    extends State<DefaultGalleryNavigationPage> {
+class _{{typePrefix}}GalleryNavigationPageState
+    extends State<{{typePrefix}}GalleryNavigationPage> {
   String _sidebar = 'overview';
   String _tab = 'overview';
   final _accordion = RemixAccordionController<String>(max: 1);
@@ -871,7 +871,7 @@ class _DefaultGalleryNavigationPageState
   }
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
     title: 'Navigation',
     intro:
         'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
@@ -1035,11 +1035,11 @@ class _DefaultGalleryNavigationPageState
   );
 }
 
-class DefaultGalleryTypographyPage extends StatelessWidget {
-  const DefaultGalleryTypographyPage({super.key});
+class {{typePrefix}}GalleryTypographyPage extends StatelessWidget {
+  const {{typePrefix}}GalleryTypographyPage({super.key});
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => {{typePrefix}}GalleryPage(
     title: 'Typography',
     intro: 'Text, headings, code, keys, and links on one shared scale.',
     sections: [

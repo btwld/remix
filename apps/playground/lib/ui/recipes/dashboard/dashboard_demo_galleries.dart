@@ -34,8 +34,8 @@ import '../../components/toggle_group.dart';
 import '../../components/tooltip.dart';
 import '../../theme/tokens.dart';
 
-class DefaultGalleryPage extends StatelessWidget {
-  const DefaultGalleryPage({
+class PlaygroundGalleryPage extends StatelessWidget {
+  const PlaygroundGalleryPage({
     super.key,
     required this.title,
     required this.intro,
@@ -223,19 +223,20 @@ class _MatrixCell extends StatelessWidget {
   }
 }
 
-class DefaultGalleryActionsPage extends StatefulWidget {
-  const DefaultGalleryActionsPage({super.key});
+class PlaygroundGalleryActionsPage extends StatefulWidget {
+  const PlaygroundGalleryActionsPage({super.key});
 
   @override
-  State<DefaultGalleryActionsPage> createState() =>
-      _DefaultGalleryActionsPageState();
+  State<PlaygroundGalleryActionsPage> createState() =>
+      _PlaygroundGalleryActionsPageState();
 }
 
-class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
+class _PlaygroundGalleryActionsPageState
+    extends State<PlaygroundGalleryActionsPage> {
   bool _selected = true;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => PlaygroundGalleryPage(
     title: 'Actions',
     intro: 'Interactive actions across every native variant and size.',
     sections: [
@@ -315,15 +316,16 @@ class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
   );
 }
 
-class DefaultGalleryFormsPage extends StatefulWidget {
-  const DefaultGalleryFormsPage({super.key});
+class PlaygroundGalleryFormsPage extends StatefulWidget {
+  const PlaygroundGalleryFormsPage({super.key});
 
   @override
-  State<DefaultGalleryFormsPage> createState() =>
-      _DefaultGalleryFormsPageState();
+  State<PlaygroundGalleryFormsPage> createState() =>
+      _PlaygroundGalleryFormsPageState();
 }
 
-class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
+class _PlaygroundGalleryFormsPageState
+    extends State<PlaygroundGalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
@@ -333,7 +335,7 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
   double _slider = 58;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => PlaygroundGalleryPage(
     title: 'Forms & Inputs',
     intro: 'Production-ready fields and selection controls in every preset.',
     sections: [
@@ -545,20 +547,21 @@ class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
   );
 }
 
-class DefaultGalleryDisplayPage extends StatefulWidget {
-  const DefaultGalleryDisplayPage({super.key});
+class PlaygroundGalleryDisplayPage extends StatefulWidget {
+  const PlaygroundGalleryDisplayPage({super.key});
 
   @override
-  State<DefaultGalleryDisplayPage> createState() =>
-      _DefaultGalleryDisplayPageState();
+  State<PlaygroundGalleryDisplayPage> createState() =>
+      _PlaygroundGalleryDisplayPageState();
 }
 
-class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
+class _PlaygroundGalleryDisplayPageState
+    extends State<PlaygroundGalleryDisplayPage> {
   bool _spinnersRunning = false;
   bool _skeletonLoading = false;
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => PlaygroundGalleryPage(
     title: 'Data Display',
     intro: 'Rich surfaces and status components for product interfaces.',
     sections: [
@@ -720,21 +723,21 @@ class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
   );
 }
 
-class DefaultGalleryOverlaysPage extends StatefulWidget {
-  const DefaultGalleryOverlaysPage({super.key});
+class PlaygroundGalleryOverlaysPage extends StatefulWidget {
+  const PlaygroundGalleryOverlaysPage({super.key});
 
   @override
-  State<DefaultGalleryOverlaysPage> createState() =>
-      _DefaultGalleryOverlaysPageState();
+  State<PlaygroundGalleryOverlaysPage> createState() =>
+      _PlaygroundGalleryOverlaysPageState();
 }
 
-class _DefaultGalleryOverlaysPageState
-    extends State<DefaultGalleryOverlaysPage> {
+class _PlaygroundGalleryOverlaysPageState
+    extends State<PlaygroundGalleryOverlaysPage> {
   bool _showArchived = true;
   String _sort = 'newest';
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => PlaygroundGalleryPage(
     title: 'Overlays',
     intro: 'Real dialog, popover, tooltip, and menu triggers for every recipe.',
     sections: [
@@ -853,16 +856,16 @@ class _DefaultGalleryOverlaysPageState
   );
 }
 
-class DefaultGalleryNavigationPage extends StatefulWidget {
-  const DefaultGalleryNavigationPage({super.key});
+class PlaygroundGalleryNavigationPage extends StatefulWidget {
+  const PlaygroundGalleryNavigationPage({super.key});
 
   @override
-  State<DefaultGalleryNavigationPage> createState() =>
-      _DefaultGalleryNavigationPageState();
+  State<PlaygroundGalleryNavigationPage> createState() =>
+      _PlaygroundGalleryNavigationPageState();
 }
 
-class _DefaultGalleryNavigationPageState
-    extends State<DefaultGalleryNavigationPage> {
+class _PlaygroundGalleryNavigationPageState
+    extends State<PlaygroundGalleryNavigationPage> {
   String _sidebar = 'overview';
   String _tab = 'overview';
   final _accordion = RemixAccordionController<String>(max: 1);
@@ -874,7 +877,7 @@ class _DefaultGalleryNavigationPageState
   }
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => PlaygroundGalleryPage(
     title: 'Navigation',
     intro:
         'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
@@ -1038,11 +1041,11 @@ class _DefaultGalleryNavigationPageState
   );
 }
 
-class DefaultGalleryTypographyPage extends StatelessWidget {
-  const DefaultGalleryTypographyPage({super.key});
+class PlaygroundGalleryTypographyPage extends StatelessWidget {
+  const PlaygroundGalleryTypographyPage({super.key});
 
   @override
-  Widget build(BuildContext context) => DefaultGalleryPage(
+  Widget build(BuildContext context) => PlaygroundGalleryPage(
     title: 'Typography',
     intro: 'Text, headings, code, keys, and links on one shared scale.',
     sections: [

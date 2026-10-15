@@ -157,9 +157,8 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             values: _channels,
             semanticLabel: 'Notification channels',
             onChanged: (values) => setState(() => _channels = values),
-            child: Wrap(
-              spacing: 18,
-              runSpacing: 6,
+            child: WrapBox(
+              style: WrapBoxStyler().spacing(18).runSpacing(6),
               children: [
                 for (final (value, label) in const [
                   ('email', 'Email'),
@@ -213,8 +212,8 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             rows: FortalSliderVariant.values,
             columns: FortalSliderSize.values,
             cellWidth: 210,
-            cellBuilder: (_, variant, size) => SizedBox(
-              width: 170,
+            cellBuilder: (_, variant, size) => Box(
+              style: BoxStyler().width(170),
               child: FortalSlider(
                 variant: variant,
                 size: size,
@@ -227,30 +226,31 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             ),
           ),
         ),
-        const GallerySection(
+        GallerySection(
           label: 'States',
           description: 'Validation, disabled, and indeterminate states.',
-          child: Wrap(
-            spacing: 16,
-            runSpacing: 16,
-            crossAxisAlignment: WrapCrossAlignment.center,
+          child: WrapBox(
+            style: WrapBoxStyler()
+                .spacing(16)
+                .runSpacing(16)
+                .crossAxisAlignment(.center),
             children: [
-              SizedBox(
-                width: 240,
-                child: FortalTextField(
+              Box(
+                style: BoxStyler().width(240),
+                child: const FortalTextField(
                   error: true,
                   label: 'Workspace slug',
                   hintText: 'remix',
                   helperText: 'That slug is already in use.',
                 ),
               ),
-              FortalCheckbox(
+              const FortalCheckbox(
                 selected: null,
                 tristate: true,
                 semanticLabel: 'Indeterminate checkbox',
               ),
-              FortalCheckbox(selected: true, label: 'Labelled'),
-              FortalSwitch(
+              const FortalCheckbox(selected: true, label: 'Labelled'),
+              const FortalSwitch(
                 selected: false,
                 enabled: false,
                 semanticLabel: 'Disabled switch',

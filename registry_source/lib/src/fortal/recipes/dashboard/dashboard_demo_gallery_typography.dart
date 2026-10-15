@@ -24,18 +24,18 @@ class GalleryTypographyPage extends StatelessWidget {
           label: 'Text scale',
           description:
               'The nine-step Radix scale, from 12 to 60 logical pixels.',
-          child: Column(
-            crossAxisAlignment: .start,
-            spacing: 6,
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(6),
             children: [
               for (final size in FortalTextSize.values)
-                Row(
-                  crossAxisAlignment: .baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  spacing: 14,
+                RowBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.baseline)
+                      .textBaseline(.alphabetic)
+                      .spacing(14),
                   children: [
-                    SizedBox(
-                      width: 64,
+                    Box(
+                      style: BoxStyler().width(64),
                       child: FortalCode.ghost(enumLabel(size), size: .size1),
                     ),
                     Flexible(
@@ -89,9 +89,8 @@ class GalleryTypographyPage extends StatelessWidget {
           description:
               'The accessibility level is independent of the visual size, '
               'exactly as Radix separates its element from its size.',
-          child: Column(
-            crossAxisAlignment: .start,
-            spacing: 8,
+          child: ColumnBox(
+            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(8),
             children: [
               for (final (level, size) in const [
                 (1, FortalTextSize.size6),
@@ -147,10 +146,11 @@ class GalleryTypographyPage extends StatelessWidget {
           description:
               'Only a link with a callback becomes focusable and underlined; '
               'an inert link is styled text.',
-          child: Wrap(
-            spacing: 20,
-            runSpacing: 14,
-            crossAxisAlignment: WrapCrossAlignment.center,
+          child: WrapBox(
+            style: WrapBoxStyler()
+                .spacing(20)
+                .runSpacing(14)
+                .crossAxisAlignment(.center),
             children: [
               for (final underline in FortalLinkUnderline.values)
                 FortalLink(
@@ -194,16 +194,17 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        const GallerySection(
+        GallerySection(
           label: 'Accent and high contrast',
           description:
               'Accent text takes accent-a11; high contrast promotes it to '
               'accent-12. Setting high contrast alone does nothing.',
-          child: Wrap(
-            spacing: 20,
-            runSpacing: 12,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
+          child: WrapBox(
+            style: WrapBoxStyler()
+                .spacing(20)
+                .runSpacing(12)
+                .crossAxisAlignment(.center),
+            children: const [
               FortalText('Neutral', size: .size3),
               FortalText(
                 'High contrast alone',
@@ -227,28 +228,27 @@ class GalleryTypographyPage extends StatelessWidget {
             ],
           ),
         ),
-        const GallerySection(
+        GallerySection(
           label: 'Wrapping and truncation',
           description:
               'Truncate deliberately wins over softWrap and holds one '
               'ellipsized line.',
           // Both samples are pinned to the same narrow box: at full page width
           // the sentence fits on one line and the two settings look identical.
-          child: Wrap(
-            spacing: 32,
-            runSpacing: 16,
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(32).runSpacing(16),
             children: [
-              SizedBox(
-                width: 260,
-                child: FortalText(
+              Box(
+                style: BoxStyler().width(260),
+                child: const FortalText(
                   'Wrap keeps the complete sentence, across as many lines as '
                   'it needs.',
                   size: .size2,
                 ),
               ),
-              SizedBox(
-                width: 260,
-                child: FortalText(
+              Box(
+                style: BoxStyler().width(260),
+                child: const FortalText(
                   'Truncate keeps exactly one line, across as many lines as '
                   'it needs.',
                   size: .size2,

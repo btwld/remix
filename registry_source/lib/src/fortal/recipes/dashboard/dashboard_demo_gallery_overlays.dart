@@ -56,9 +56,11 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
                       label: 'Send invite',
                     ),
                   ],
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 12),
-                    child: FortalTextField(hintText: 'teammate@example.com'),
+                  child: Box(
+                    style: BoxStyler().padding(.only(top: 12)),
+                    child: const FortalTextField(
+                      hintText: 'teammate@example.com',
+                    ),
                   ),
                 ),
               ),
@@ -69,27 +71,25 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
         GallerySection(
           label: 'Popover',
           description: 'Anchored content with all four padding presets.',
-          child: Wrap(
-            spacing: 14,
-            runSpacing: 14,
+          child: WrapBox(
+            style: WrapBoxStyler().spacing(14).runSpacing(14),
             children: [
               for (final size in FortalPopoverSize.values)
                 FortalPopover(
                   size: size,
                   semanticLabel: 'Open ${enumLabel(size)} popover',
-                  popoverChild: const SizedBox(
-                    width: 250,
-                    child: Column(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .start,
-                      spacing: 8,
-                      children: [
-                        FortalText('Quick note'),
-                        FortalText(
-                          'Popover content inherits the active Fortal scope.',
-                        ),
-                      ],
-                    ),
+                  popoverChild: ColumnBox(
+                    style: FlexBoxStyler()
+                        .width(250)
+                        .mainAxisSize(.min)
+                        .crossAxisAlignment(.start)
+                        .spacing(8),
+                    children: const [
+                      FortalText('Quick note'),
+                      FortalText(
+                        'Popover content inherits the active Fortal scope.',
+                      ),
+                    ],
                   ),
                   child: _OverlayTrigger('Popover ${enumLabel(size)}'),
                 ),
