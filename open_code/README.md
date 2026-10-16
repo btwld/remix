@@ -66,7 +66,7 @@ for the global `remix` command):
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.10`. Until that release is available,
+Both presets require Remix `^1.0.0-beta.11`. Until that release is available,
 add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml
