@@ -893,6 +893,40 @@ void main() {
         expect(align.heightFactor, 0.5);
       });
     });
+
+    group('Style Equality & Standalone Resolution', () {
+      testWidgets(
+        'AccordionStyler expansion variants preserve equality and resolve outside RemixAccordion',
+        (tester) async {
+          AccordionStyler buildStyle() => AccordionStyler()
+              .onExpanded(AccordionStyler().trailingIcon(IconStyler().size(18)))
+              .onCollapsed(
+                AccordionStyler().trailingIcon(IconStyler().size(16)),
+              )
+              .onCanExpand(AccordionStyler().title(TextStyler().fontSize(14)))
+              .onCanCollapse(
+                AccordionStyler().title(TextStyler().fontSize(15)),
+              );
+
+          expect(buildStyle(), equals(buildStyle()));
+
+          late StyleSpec<AccordionSpec> resolved;
+          await tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: Builder(
+                builder: (context) {
+                  resolved = buildStyle().resolve(context);
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          );
+
+          expect(resolved.spec.trailingIcon, isNotNull);
+        },
+      );
+    });
   });
 }
 

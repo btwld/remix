@@ -1,5 +1,26 @@
 part of 'accordion.dart';
 
+final _onExpandedAccordionVariant = ContextVariant(
+  'onExpanded',
+  (context) => _RemixAccordionStyleState.maybeOf(context)?.isExpanded ?? false,
+);
+
+final _onCollapsedAccordionVariant = ContextVariant(
+  'onCollapsed',
+  (context) =>
+      !(_RemixAccordionStyleState.maybeOf(context)?.isExpanded ?? false),
+);
+
+final _onCanCollapseAccordionVariant = ContextVariant(
+  'onCanCollapse',
+  (context) => _RemixAccordionStyleState.maybeOf(context)?.canCollapse ?? false,
+);
+
+final _onCanExpandAccordionVariant = ContextVariant(
+  'onCanExpand',
+  (context) => _RemixAccordionStyleState.maybeOf(context)?.canExpand ?? false,
+);
+
 /// Style configuration for [RemixAccordion] trigger, icons, title, and content.
 extension RemixAccordionStylerRemixHelpers on AccordionStyler {
   /// Sets title color.
@@ -62,45 +83,21 @@ extension RemixAccordionStylerRemixHelpers on AccordionStyler {
   /// The item state is provided above the panel's style builder, so the same
   /// variant can target the container, trigger, content, icons, or title.
   AccordionStyler onExpanded<T>(AccordionStyler value) {
-    return variant(
-      ContextVariant(
-        'onExpanded',
-        (context) => _RemixAccordionStyleState.of(context).isExpanded,
-      ),
-      value,
-    );
+    return variant(_onExpandedAccordionVariant, value);
   }
 
   /// Style applied while the item is collapsed. See [onExpanded].
   AccordionStyler onCollapsed<T>(AccordionStyler value) {
-    return variant(
-      ContextVariant(
-        'onCollapsed',
-        (context) => !_RemixAccordionStyleState.of(context).isExpanded,
-      ),
-      value,
-    );
+    return variant(_onCollapsedAccordionVariant, value);
   }
 
   /// Style when the accordion item can collapse.
   AccordionStyler onCanCollapse(AccordionStyler value) {
-    return variant(
-      ContextVariant(
-        'onCanCollapse',
-        (context) => _RemixAccordionStyleState.of(context).canCollapse,
-      ),
-      value,
-    );
+    return variant(_onCanCollapseAccordionVariant, value);
   }
 
   /// Style when the accordion item can expand.
   AccordionStyler onCanExpand<T>(AccordionStyler value) {
-    return variant(
-      ContextVariant(
-        'onCanExpand',
-        (context) => _RemixAccordionStyleState.of(context).canExpand,
-      ),
-      value,
-    );
+    return variant(_onCanExpandAccordionVariant, value);
   }
 }
