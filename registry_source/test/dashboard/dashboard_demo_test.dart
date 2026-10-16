@@ -259,10 +259,16 @@ void main() {
               );
               expect(mixWarnings, isEmpty, reason: 'collapse frame $frame');
               final currentButtonDx = tester.getCenter(collapseButton).dx;
+              final step = previousButtonDx - currentButtonDx;
               expect(
                 currentButtonDx,
                 lessThanOrEqualTo(previousButtonDx + 0.5),
                 reason: 'collapse button should move monotonically left',
+              );
+              expect(
+                step,
+                lessThanOrEqualTo(frame >= 19 ? 4.0 : 20.0),
+                reason: 'collapse frame $frame should not jump',
               );
               previousButtonDx = currentButtonDx;
             }
@@ -279,10 +285,16 @@ void main() {
               );
               expect(mixWarnings, isEmpty, reason: 'expand frame $frame');
               final currentButtonDx = tester.getCenter(collapseButton).dx;
+              final step = currentButtonDx - previousButtonDx;
               expect(
                 currentButtonDx,
                 greaterThanOrEqualTo(previousButtonDx - 0.5),
                 reason: 'collapse button should move monotonically right',
+              );
+              expect(
+                step,
+                lessThanOrEqualTo(frame >= 19 ? 4.0 : 20.0),
+                reason: 'expand frame $frame should not jump',
               );
               previousButtonDx = currentButtonDx;
             }
@@ -292,8 +304,6 @@ void main() {
         },
       );
 
-      // mix_chart draws each slice 80px wide whatever box it is given, so a
-      // donut whose hole plus ring outgrows half its box is clipped.
       testWidgets('value axis end labels sit on their gridlines', (
         tester,
       ) async {
@@ -314,6 +324,8 @@ void main() {
         }
       });
 
+      // mix_chart draws each slice 80px wide whatever box it is given, so a
+      // donut whose hole plus ring outgrows half its box is clipped.
       testWidgets('every pie fits inside its chart box', (tester) async {
         await _pumpOverview(tester, preset: preset, width: 1280);
         final overviewPies = _expectPiesFit(tester);

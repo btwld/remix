@@ -269,12 +269,12 @@ dart run remix_cli:remix add dashboard_demo
 ```
 
 `dashboard_demo` installs `UiDashboardDemo`, `UiDashboardOverview`, the
-usable shell, and all twelve destinations from the Fortal reference
-dashboard. Product pages and gallery categories match across presets while
-their specimens use each preset's native variants. The overview's four
-metrics, revenue series, and recent records live in editable
-`lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them there or
-pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
+usable shell, and the five product destinations from the reference dashboard
+(Overview, Chat, Customers, Orders, and Settings). Product pages and navigation
+match across presets while rendering each preset's native components and
+variants. The overview's four metrics, revenue series, and recent records live
+in editable `lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them
+there or pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
 
 The host supplies its Flutter application, directionality, brand, and theme
 scope. Default uses `UiTheme(theme: UiThemeData.light(), child: ...)`;

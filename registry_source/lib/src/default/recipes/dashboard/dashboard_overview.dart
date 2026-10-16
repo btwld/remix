@@ -270,7 +270,6 @@ Widget _fulfillmentCard() => VanillaCard(
         detailStyle: TextStyler()
             .style(VanillaTokens.textXs.mix())
             .color(VanillaTokens.mutedForeground()),
-        outlineBorderColor: VanillaTokens.border,
       ),
       Box(
         style: BoxStyler().height(190),

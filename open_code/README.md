@@ -42,13 +42,12 @@ composition source. It pulls in the existing app-bar, sidebar layout,
 sidebar, icon-button, icon, and text-field items; it does not install charts, tables,
 sample data, routes, or an application entry point.
 
-`dashboard_demo` installs that shell plus the same twelve destinations as the
-Fortal reference dashboard: Overview, Chat, Customers, Orders, Settings,
-Charts, Actions, Forms & Inputs, Data Display, Overlays, Navigation, and
-Typography. It uses the same `UiDashboardDemo` API in both presets, renders
-each preset's native component variants, and still leaves the host's app,
-theme scope, routes, authentication, persistence, and real search behavior in
-the application.
+`dashboard_demo` installs that shell plus the five destinations of the
+reference product dashboard: Overview, Chat, Customers, Orders, and Settings.
+It uses the same `UiDashboardDemo` API in both presets, renders each preset's
+native component variants, and still leaves the host's app, theme scope,
+routes, authentication, persistence, and real search behavior in the
+application.
 
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.
@@ -343,7 +342,7 @@ sources. Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.
 
-All three workspace consumers are checked against the templates they installed:
+All four workspace consumers are checked against the templates they installed:
 
 ```shell
 fvm dart run tool/check_consumer_apps.dart
@@ -351,9 +350,10 @@ fvm dart run tool/check_consumer_apps.dart
 
 `apps/playground` holds every Vanilla item; `apps/demo` installs the non-Agent
 Fortal catalog; `apps/dashboard` installs the full Fortal catalog, including all
-eight Agent surfaces, recipes, and `dashboard_demo`. The checker derives the
-expected items from each preset's `registry.yaml`, so missing files are checked
-too. The CLI reads each consumer's `remix.yaml` to locate its installed source.
+eight Agent surfaces, recipes, and `dashboard_demo`; `apps/widgetbook_vanilla`
+installs the non-Agent Vanilla catalog. The checker derives the expected items
+from each preset's `registry.yaml`, so missing files are checked too. The CLI
+reads each consumer's `remix.yaml` to locate its installed source.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

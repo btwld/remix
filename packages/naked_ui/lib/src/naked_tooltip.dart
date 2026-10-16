@@ -327,8 +327,8 @@ class _NakedTooltipState extends State<NakedTooltip> {
             !tooltip._usesLegacyTooltip &&
             tooltip._visible &&
             (tooltip._heldByFocus ||
-                (tooltip.widget.triggerMode == TooltipTriggerMode.manual &&
-                    !tooltip._hoveredWhileOpen)))
+                !tooltip._hoveredWhileOpen ||
+                tooltip.widget.triggerMode == TooltipTriggerMode.manual))
           tooltip,
     ];
     if (toPreserve.isEmpty) return;
@@ -339,8 +339,8 @@ class _NakedTooltipState extends State<NakedTooltip> {
       for (final tooltip in toPreserve) {
         if (!tooltip.mounted) continue;
         if (tooltip._heldByFocus ||
-            (tooltip.widget.triggerMode == TooltipTriggerMode.manual &&
-                !tooltip._hoveredWhileOpen)) {
+            !tooltip._hoveredWhileOpen ||
+            tooltip.widget.triggerMode == TooltipTriggerMode.manual) {
           tooltip._show();
         }
       }

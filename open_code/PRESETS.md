@@ -69,12 +69,11 @@ Agent surfaces (`activity`, `answer`, `composer`, `execution`, `message`,
 The `dashboard_shell` grouped recipe combines shared composition with one
 preset adapter and installs only its shell dependency closure. It leaves the
 host entry point, routes, page body, authentication, and persistence alone.
-The `dashboard_demo` grouped recipe adds the full twelve-destination reference
-application: Overview, Chat, Customers, Orders, Settings, Charts, Actions,
-Forms & Inputs, Data Display, Overlays, Navigation, and Typography. Both
-presets share the information architecture and product content; component
-galleries render each preset's own public variants. The host still owns the
-entry point, theme scope, routes, authentication, and persistence.
+The `dashboard_demo` grouped recipe adds the five-destination reference
+application: Overview, Chat, Customers, Orders, and Settings. Both presets
+share the information architecture and product content while rendering each
+preset's own components and variants. The host still owns the entry point,
+theme scope, routes, authentication, and persistence.
 
 Installed Dart imports the public `remix` API, not `registry_source`.
 `mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
@@ -122,8 +121,9 @@ compares the complete output trees, including unexpected or missing files.
 - `apps/dashboard`: full Fortal catalog including Agent surfaces, recipes, and
   `dashboard_demo`, prefix `Ui`. Workspace → Chat demonstrates the eight
   surfaces together.
+- `apps/widgetbook_vanilla`: non-Agent Vanilla review catalog, prefix `Vanilla`.
 
-All three consume installed source. Both `apps/playground` and `apps/dashboard`
+All four consume installed source. Both `apps/playground` and `apps/dashboard`
 render their preset's installed `dashboard_demo` item; the reusable
 `dashboard_shell` and full `dashboard_demo` are distributed as separate stacked
 registry items.

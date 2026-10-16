@@ -213,28 +213,36 @@ SidebarStyler _sidebarMotionStyle(
   required bool collapsed,
   required double collapsedWidth,
 }) {
-  final leftPadding = ContextToken<double>(
-    (context) => _resolveDestinationPadding(
-      context,
-      collapsed: collapsed,
-      collapsedWidth: collapsedWidth,
-      left: true,
-    ),
-  );
-  final rightPadding = ContextToken<double>(
-    (context) => _resolveDestinationPadding(
-      context,
-      collapsed: collapsed,
-      collapsedWidth: collapsedWidth,
-      left: false,
-    ),
-  );
-  final footerVerticalPadding = ContextToken<double>((context) {
-    final expansion =
-        RemixSidebar.maybeAnimationOf(context)?.expansion ??
-        (collapsed ? 0.0 : 1.0);
-    return PlaygroundTokens.s2 * expansion;
-  });
+  final leftPadding = collapsedWidth == 72
+      ? (collapsed
+            ? _destinationLeftPaddingCollapsed
+            : _destinationLeftPaddingExpanded)
+      : ContextToken<double>(
+          (context) => _resolveDestinationPadding(
+            context,
+            collapsed: collapsed,
+            collapsedWidth: collapsedWidth,
+            left: true,
+          ),
+        );
+  final rightPadding = collapsedWidth == 72
+      ? (collapsed
+            ? _destinationRightPaddingCollapsed
+            : _destinationRightPaddingExpanded)
+      : ContextToken<double>(
+          (context) => _resolveDestinationPadding(
+            context,
+            collapsed: collapsed,
+            collapsedWidth: collapsedWidth,
+            left: false,
+          ),
+        );
+  final footerVerticalPadding = collapsed
+      ? _footerVerticalPaddingCollapsed
+      : _footerVerticalPaddingExpanded;
+  final footerBorderWidth = collapsed
+      ? _footerBorderWidthCollapsed
+      : _footerBorderWidthExpanded;
 
   return SidebarStyler()
       .padding(EdgeInsetsGeometryMix.value(MediaQuery.paddingOf(context)))
@@ -249,12 +257,20 @@ SidebarStyler _sidebarMotionStyle(
         ),
       )
       .footer(
-        BoxStyler().padding(
-          .symmetric(
-            horizontal: PlaygroundTokens.s2,
-            vertical: footerVerticalPadding(),
-          ),
-        ),
+        BoxStyler()
+            .border(
+              .top(
+                .color(
+                  PlaygroundTokens.sidebarBorder(),
+                ).width(footerBorderWidth()),
+              ),
+            )
+            .padding(
+              .symmetric(
+                horizontal: PlaygroundTokens.s2,
+                vertical: footerVerticalPadding(),
+              ),
+            ),
       );
 }
 
@@ -275,3 +291,99 @@ double _resolveDestinationPadding(
   );
   return railLeading + (PlaygroundTokens.s2 - railLeading) * expansion;
 }
+
+double _resolveDestinationLeftPaddingExpanded(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: false,
+      collapsedWidth: 72,
+      left: true,
+    );
+
+double _resolveDestinationLeftPaddingCollapsed(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: true,
+      collapsedWidth: 72,
+      left: true,
+    );
+
+double _resolveDestinationRightPaddingExpanded(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: false,
+      collapsedWidth: 72,
+      left: false,
+    );
+
+double _resolveDestinationRightPaddingCollapsed(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: true,
+      collapsedWidth: 72,
+      left: false,
+    );
+
+double _resolveFooterVerticalPadding(
+  BuildContext context, {
+  required bool collapsed,
+}) {
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  return PlaygroundTokens.s2 * expansion;
+}
+
+double _resolveFooterVerticalPaddingExpanded(BuildContext context) =>
+    _resolveFooterVerticalPadding(context, collapsed: false);
+
+double _resolveFooterVerticalPaddingCollapsed(BuildContext context) =>
+    _resolveFooterVerticalPadding(context, collapsed: true);
+
+double _resolveFooterBorderWidth(
+  BuildContext context, {
+  required bool collapsed,
+}) {
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  return expansion > 0 ? PlaygroundTokens.strokeHairline : 0.0;
+}
+
+double _resolveFooterBorderWidthExpanded(BuildContext context) =>
+    _resolveFooterBorderWidth(context, collapsed: false);
+
+double _resolveFooterBorderWidthCollapsed(BuildContext context) =>
+    _resolveFooterBorderWidth(context, collapsed: true);
+
+const _destinationLeftPaddingExpanded = ContextToken<double>(
+  _resolveDestinationLeftPaddingExpanded,
+);
+
+const _destinationLeftPaddingCollapsed = ContextToken<double>(
+  _resolveDestinationLeftPaddingCollapsed,
+);
+
+const _destinationRightPaddingExpanded = ContextToken<double>(
+  _resolveDestinationRightPaddingExpanded,
+);
+
+const _destinationRightPaddingCollapsed = ContextToken<double>(
+  _resolveDestinationRightPaddingCollapsed,
+);
+
+const _footerVerticalPaddingExpanded = ContextToken<double>(
+  _resolveFooterVerticalPaddingExpanded,
+);
+
+const _footerVerticalPaddingCollapsed = ContextToken<double>(
+  _resolveFooterVerticalPaddingCollapsed,
+);
+
+const _footerBorderWidthExpanded = ContextToken<double>(
+  _resolveFooterBorderWidthExpanded,
+);
+
+const _footerBorderWidthCollapsed = ContextToken<double>(
+  _resolveFooterBorderWidthCollapsed,
+);

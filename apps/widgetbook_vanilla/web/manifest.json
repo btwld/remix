@@ -1,11 +1,11 @@
 {
-    "name": "Remix Component Demo",
-    "short_name": "Remix Demo",
+    "name": "Remix Vanilla Catalog",
+    "short_name": "Vanilla Catalog",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Widgetbook catalog for Remix and Fortal components.",
+    "description": "Widgetbook catalog for Remix Vanilla components.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

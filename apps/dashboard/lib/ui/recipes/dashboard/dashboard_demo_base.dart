@@ -322,37 +322,3 @@ class _RenderFreezeInactiveConstraints extends RenderBox
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
       _active && (child?.hitTest(result, position: position) ?? false);
 }
-
-/// A responsive scroll container for dashboard demo pages.
-class UiDashboardDemoPageFrame extends StatelessWidget {
-  const UiDashboardDemoPageFrame({
-    super.key,
-    required this.header,
-    required this.children,
-  });
-
-  final Widget header;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    key: const ValueKey('dashboard-demo-page-scroll'),
-    padding: const EdgeInsets.all(24),
-    child: Box(
-      style: BoxStyler().alignment(.center),
-      child: ColumnBox(
-        style: FlexBoxStyler()
-            .maxWidth(1180)
-            .crossAxisAlignment(.stretch)
-            .spacing(24),
-        children: [
-          header,
-          ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
-            children: children,
-          ),
-        ],
-      ),
-    ),
-  );
-}

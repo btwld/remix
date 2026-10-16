@@ -41,8 +41,9 @@ or `borderRounded`.
   Do not hand-edit; run `dart run melos run open-code:registry:build`. The one
   exception is `registry/icons.yaml`, the hand-authored icon table that maps
   each Remix icon to its constant in every supported library.
-- `apps/`: `playground`, `demo`, and `dashboard` are workspace consumers pinned
-  in their `remix.yaml`; `docs` is the docs site; `naked_ui_example`.
+- `apps/`: `playground`, `demo`, `dashboard`, and `widgetbook_vanilla` are
+  workspace consumers pinned in their `remix.yaml`; `docs` is the docs site;
+  `naked_ui_example`.
 - `docs/`: MDX documentation. `open_code/`: registry, preset, and release docs.
 - `skills/`: published agent skills (`npx skills add btwld/remix`).
 - `tool/`: contract checkers run by `ci:checks`.

@@ -220,64 +220,54 @@ class _UiDashboardShellBaseState<T extends Object>
           final motion = RemixSidebar.maybeAnimationOf(context);
           final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
           final labelOpacity = motion?.labelOpacity ?? expansion;
-          final showBrand = controls.isCompact ? !collapsed : expansion > 0;
+          final showBrand = controls.isCompact || expansion > 0;
+          final trailingFlex = controls.isCompact
+              ? 0
+              : ((1 - expansion) * 1000).round();
+          final leadingFlex = 2000 - trailingFlex;
+          final brandGap = controls.isCompact
+              ? 0.0
+              : widget.headerSpacing * expansion;
           return Box(
             style: widget.sidebarHeaderStyle,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final trailingSpace =
-                    !controls.isCompact &&
-                        showBrand &&
-                        constraints.maxWidth.isFinite
-                    ? math.max(0.0, (constraints.maxWidth - 40.0) / 2) *
-                          (1 - expansion)
-                    : 0.0;
-                return RowBox(
-                  style: FlexBoxStyler()
-                      .spacing(
-                        controls.isCompact
-                            ? (collapsed ? 0 : widget.headerSpacing)
-                            : widget.headerSpacing * expansion,
-                      )
-                      .mainAxisAlignment(showBrand ? .start : .center),
-                  children: [
-                    if (showBrand)
-                      Expanded(
-                        child: Opacity(
-                          opacity: controls.isCompact ? 1 : labelOpacity,
-                          child: DefaultTextStyle.merge(
-                            maxLines: 1,
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                            child: widget.brand,
+            child: RowBox(
+              children: [
+                Expanded(
+                  flex: leadingFlex,
+                  child: showBrand
+                      ? Padding(
+                          padding: EdgeInsetsDirectional.only(end: brandGap),
+                          child: Opacity(
+                            opacity: controls.isCompact ? 1 : labelOpacity,
+                            child: DefaultTextStyle.merge(
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              child: widget.brand,
+                            ),
                           ),
-                        ),
-                      ),
-                    if (!controls.isCompact)
-                      widget.iconButtonBuilder(
-                        context,
-                        key: const ValueKey('dashboard-collapse'),
-                        icon: _collapseIcon(context, collapsed),
-                        semanticLabel: collapsed
-                            ? 'Expand navigation'
-                            : 'Collapse navigation',
-                        onPressed: () => _setCollapsed(!collapsed),
-                      ),
-                    if (trailingSpace > 0) SizedBox(width: trailingSpace),
-                  ],
-                );
-              },
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                if (!controls.isCompact)
+                  widget.iconButtonBuilder(
+                    context,
+                    key: const ValueKey('dashboard-collapse'),
+                    icon: _collapseIcon(context, collapsed),
+                    semanticLabel: collapsed
+                        ? 'Expand navigation'
+                        : 'Collapse navigation',
+                    onPressed: () => _setCollapsed(!collapsed),
+                  ),
+                if (trailingFlex > 0) Spacer(flex: trailingFlex),
+              ],
             ),
           );
         },
       ),
       footer: account == null
           ? null
-          : _SidebarFooterSlot(
-              collapsed: collapsed,
-              isCompact: controls.isCompact,
-              child: account,
-            ),
+          : _SidebarFooterSlot(collapsed: collapsed, child: account),
       semanticLabel: widget.navigationSemanticLabel,
     );
   }
@@ -340,23 +330,15 @@ class _UiDashboardShellBaseState<T extends Object>
 }
 
 class _SidebarFooterSlot extends StatelessWidget {
-  const _SidebarFooterSlot({
-    required this.collapsed,
-    required this.isCompact,
-    required this.child,
-  });
+  const _SidebarFooterSlot({required this.collapsed, required this.child});
 
   static const _minChildWidth = 220.0;
 
   final bool collapsed;
-  final bool isCompact;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    if (isCompact) {
-      return collapsed ? const SizedBox.shrink() : child;
-    }
     final motion = RemixSidebar.maybeAnimationOf(context);
     final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
     final labelOpacity = motion?.labelOpacity ?? expansion;

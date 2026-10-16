@@ -270,7 +270,6 @@ Widget _fulfillmentCard() => PlaygroundCard(
         detailStyle: TextStyler()
             .style(PlaygroundTokens.textXs.mix())
             .color(PlaygroundTokens.mutedForeground()),
-        outlineBorderColor: PlaygroundTokens.border,
       ),
       Box(
         style: BoxStyler().height(190),

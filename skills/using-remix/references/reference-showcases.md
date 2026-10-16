@@ -63,7 +63,7 @@ Derive axes from the public enum values whenever the gallery promises complete
 coverage. Keep values, labels, and cells connected through typed data instead
 of parallel lists:
 
-<!-- dart-excerpt: GalleryMatrix is apps/dashboard source -->
+<!-- dart-excerpt: GalleryMatrix is an app-owned gallery helper -->
 
 ```dart
 GalleryMatrix<FortalButtonVariant, FortalButtonSize>(
@@ -86,11 +86,8 @@ variant is fixed; the unnamed constructor is appropriate here because a
 matrix deliberately selects variants at runtime.
 
 `GalleryMatrix` itself is not a Remix or Fortal library API — it is an
-app-owned widget in `apps/dashboard` (and installed as `<Prefix>GalleryMatrix`
-at `<ui-path>/recipes/dashboard/dashboard_demo_gallery_scaffold.dart` by the
-`dashboard_demo` registry item across both presets), the same way any other
-recipe file becomes application-owned once installed. Treat it as a pattern to
-reproduce in the target app, not a type to import from a package.
+app-owned helper widget that a showcase or gallery defines locally. Treat it as
+a pattern to reproduce in the target app, not a type to import from a package.
 
 A two-dimensional comparison is a good use of Mix `GridBox`: declare the
 label column and specimen columns explicitly and allow implicit rows to size

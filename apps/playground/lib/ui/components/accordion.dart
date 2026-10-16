@@ -48,7 +48,7 @@ part 'accordion.g.dart';
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
 /// by depth: an override that must beat the recipe's open title has to be
-/// declared as a selected fragment too (`AccordionStyler().onSelected(...)`).
+/// declared as an expanded fragment too (`AccordionStyler().onExpanded(...)`).
 @MixWidget(
   target: RemixAccordion.new,
   widgetParameters: .only({

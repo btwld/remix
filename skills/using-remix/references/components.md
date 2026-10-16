@@ -118,10 +118,10 @@ Both presets also ship layout items beyond the core component set:
 - **dashboard_shell** — compound recipe combining `app_bar`, `sidebar`, and
   `sidebar_layout`. Provides slots for brand, search, page title (or custom
   `headerTitle`), account, and header actions. Contains no generated adapter.
-- **dashboard_demo** — showcase recipe assembling component galleries and
-  dashboard screens into a runnable demo; see
-  [Reference showcases](reference-showcases.md) for how its `GalleryMatrix`
-  widget is provenanced.
+- **dashboard_demo** — showcase recipe assembling the five product dashboard
+  screens (Overview, Chat, Customers, Orders, and Settings) into a runnable
+  demo; see [Reference showcases](reference-showcases.md) for product-example
+  and coverage-gallery conventions.
 
 ## Agent surfaces
 

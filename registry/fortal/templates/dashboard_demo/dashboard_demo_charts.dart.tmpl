@@ -1,155 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-{{icon:import}}
 
-import 'dashboard_sample_data.dart';
-
-/// Chart data and styles shared by the dashboard overview in both presets.
-
-List<ChartPoint> {{valuePrefix}}DashboardPoints(String id, List<double?> values) => [
-  for (final (index, value) in values.indexed)
-    ChartPoint(id: '$id-$index', x: index.toDouble(), y: value),
-];
-
-List<ChartPoint> {{valuePrefix}}DashboardRevenuePoints(
-  {{typePrefix}}DashboardSampleData data,
-) => [
-  for (final (index, point) in data.revenue.indexed)
-    ChartPoint(id: point.label, x: index.toDouble(), y: point.value),
-];
-
-List<BarGroup> {{valuePrefix}}DashboardGroupedBars([List<Color>? palette]) =>
-    _barGroups(
-      const [32, 41, 37, 52, 48, 59],
-      const [29, 36, 40, 45, 50, 54],
-      palette: palette,
-    );
-
-List<BarGroup> {{valuePrefix}}DashboardStackedBars() {
-  const product = <double>[21, 28, 25, 34, 31, 38];
-  const services = <double>[11, 13, 12, 18, 17, 21];
-  return [
-    for (var index = 0; index < product.length; index++)
-      BarGroup(
-        id: 'stack-$index',
-        label: {{valuePrefix}}DashboardMonths[index],
-        bars: [
-          BarValue(
-            id: 'revenue',
-            label: 'Revenue',
-            toY: product[index] + services[index],
-            segments: [
-              BarSegment(
-                id: 'product',
-                label: 'Product',
-                fromY: 0,
-                toY: product[index],
-              ),
-              BarSegment(
-                id: 'services',
-                label: 'Services',
-                fromY: product[index],
-                toY: product[index] + services[index],
-              ),
-            ],
-          ),
-        ],
-      ),
-  ];
-}
-
-List<BarGroup> {{valuePrefix}}DashboardFloatingBars() {
-  const ranges = [
-    (12.0, 18.0),
-    (18.0, 14.0),
-    (14.0, 22.0),
-    (22.0, 17.0),
-    (17.0, 25.0),
-    (25.0, 31.0),
-  ];
-  return [
-    for (final (index, range) in ranges.indexed)
-      BarGroup(
-        id: 'floating-$index',
-        label: {{valuePrefix}}DashboardMonths[index],
-        bars: [
-          BarValue(
-            id: 'change',
-            label: 'Change',
-            fromY: range.$1,
-            toY: range.$2,
-          ),
-        ],
-      ),
-  ];
-}
-
-List<BarGroup> {{valuePrefix}}DashboardTrackedBars() => [
-  for (final (index, value) in const <double>[32, 41, 37, 52, 48, 59].indexed)
-    BarGroup(
-      id: 'tracked-$index',
-      label: {{valuePrefix}}DashboardMonths[index],
-      bars: [BarValue(id: 'tracked', label: 'Revenue', toY: value)],
-    ),
-];
-
-List<PieSlice> {{valuePrefix}}DashboardChannelSlices({bool badges = false}) {
-  const source = [
-    ('mobile', 'Mobile', 46.0),
-    ('desktop', 'Desktop', 31.0),
-    ('tablet', 'Tablet', 15.0),
-    ('other', 'Other', 8.0),
-  ];
-  const icons = [
-    {{icon:mobile}},
-    {{icon:laptop}},
-    {{icon:dashboard}},
-    {{icon:activityLog}},
-  ];
-  return [
-    for (final (index, value) in source.indexed)
-      PieSlice(
-        id: value.$1,
-        label: value.$2,
-        value: value.$3,
-        badge: badges
-            ? StyledIcon(icon: icons[index], style: IconStyler().size(16))
-            : null,
-      ),
-  ];
-}
-
-List<PieSlice> {{valuePrefix}}DashboardProductSlices() => [
-  PieSlice(id: 'core', label: 'Core', value: 54),
-  PieSlice(id: 'teams', label: 'Teams', value: 27),
-  PieSlice(id: 'enterprise', label: 'Enterprise', value: 19),
-];
-
-List<PieSlice> {{valuePrefix}}DashboardEmptySlices() => [
-  PieSlice(id: 'empty', label: 'No data', value: 0),
-];
-
-/// Monday through Sunday, with half a day of room at each end.
-///
-/// The room keeps the first and last labels and markers off the plot's edges:
-/// flush against an edge, a marker is cut in half and a label is pushed inward
-/// into its neighbor. The two bounds are not labels themselves.
-ChartAxis {{valuePrefix}}DashboardWeekdayAxis() => ChartAxis.numeric(
-  min: -0.5,
-  max: 6.5,
-  interval: 1,
-  minIncluded: false,
-  maxIncluded: false,
-  labelFormatter: {{valuePrefix}}DashboardWeekdayLabel,
-);
-
-String {{valuePrefix}}DashboardWeekdayLabel(double value) {
-  final index = value.round();
-  return index >= 0 && index < {{valuePrefix}}DashboardWeekdays.length
-      ? {{valuePrefix}}DashboardWeekdays[index]
-      : '';
-}
+/// Chart axis, style, and legend helpers shared by the dashboard overview.
 
 /// A value axis on round steps, from [min] to [max], with half a step of room
 /// at each end.
@@ -182,66 +35,17 @@ LineChartStyler {{valuePrefix}}DashboardLineStyle() =>
 BarChartStyler {{valuePrefix}}DashboardBarStyle() =>
     BarChartStyler().yAxis(ChartAxisStyler().fitInside(false));
 
-const {{valuePrefix}}DashboardWeekdays = [
-  'Mon',
-  'Tue',
-  'Wed',
-  'Thu',
-  'Fri',
-  'Sat',
-  'Sun',
-];
-const {{valuePrefix}}DashboardMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-
-List<BarGroup> _barGroups(
-  List<double> first,
-  List<double> second, {
-  List<Color>? palette,
-}) => [
-  for (var index = 0; index < first.length; index++)
-    BarGroup(
-      id: 'month-$index',
-      label: {{valuePrefix}}DashboardMonths[index],
-      bars: [
-        BarValue(
-          id: 'actual',
-          label: 'Actual',
-          toY: first[index],
-          style: palette != null && palette.isNotEmpty
-              ? BarStyler().color(palette[0])
-              : null,
-        ),
-        BarValue(
-          id: 'plan',
-          label: 'Plan',
-          toY: second[index],
-          style: palette != null && palette.length > 1
-              ? BarStyler()
-                    .color(palette[1].withValues(alpha: 0.22))
-                    .border(BorderSide(color: palette[1], width: 2))
-                    .borderDashArray([4, 3])
-              : null,
-        ),
-      ],
-    ),
-];
-
-/// Visual encoding for a [{{typePrefix}}ChartLegend] swatch.
-enum {{typePrefix}}ChartSwatchPattern { solid, dashed, outlined, dot }
-
 /// One series or slice entry in a [{{typePrefix}}ChartLegend].
 final class {{typePrefix}}ChartLegendItem {
   const {{typePrefix}}ChartLegendItem({
     required this.label,
     required this.color,
     this.detail,
-    this.pattern = .solid,
   });
 
   final String label;
   final ColorToken color;
   final String? detail;
-  final {{typePrefix}}ChartSwatchPattern pattern;
 }
 
 /// Shared legend for multi-series and part-to-whole dashboard charts.
@@ -251,13 +55,11 @@ class {{typePrefix}}ChartLegend extends StatelessWidget {
     required this.items,
     required this.labelStyle,
     required this.detailStyle,
-    required this.outlineBorderColor,
   });
 
   final List<{{typePrefix}}ChartLegendItem> items;
   final TextStyler labelStyle;
   final TextStyler detailStyle;
-  final ColorToken outlineBorderColor;
 
   @override
   Widget build(BuildContext context) => WrapBox(
@@ -273,9 +75,11 @@ class {{typePrefix}}ChartLegend extends StatelessWidget {
               .crossAxisAlignment(.center)
               .spacing(6),
           children: [
-            _{{typePrefix}}LegendSwatch(
-              item: item,
-              outlineBorderColor: outlineBorderColor,
+            Box(
+              style: BoxStyler()
+                  .size(10, 10)
+                  .borderRadius(.circular(3))
+                  .color(item.color()),
             ),
             StyledText(item.label, style: labelStyle),
             if (item.detail case final detail?)
@@ -284,53 +88,4 @@ class {{typePrefix}}ChartLegend extends StatelessWidget {
         ),
     ],
   );
-}
-
-class _{{typePrefix}}LegendSwatch extends StatelessWidget {
-  const _{{typePrefix}}LegendSwatch({
-    required this.item,
-    required this.outlineBorderColor,
-  });
-
-  final {{typePrefix}}ChartLegendItem item;
-  final ColorToken outlineBorderColor;
-
-  @override
-  Widget build(BuildContext context) => switch (item.pattern) {
-    .solid => Box(
-      style: BoxStyler()
-          .size(10, 10)
-          .borderRadius(.circular(3))
-          .color(item.color()),
-    ),
-    .dot => Box(
-      style: BoxStyler()
-          .size(10, 10)
-          .borderRadius(.circular(99))
-          .color(item.color()),
-    ),
-    .outlined => Box(
-      style: BoxStyler()
-          .size(10, 10)
-          .borderRadius(.circular(3))
-          .color(item.color())
-          .border(.color(outlineBorderColor()).width(1)),
-    ),
-    .dashed => RowBox(
-      style: FlexBoxStyler()
-          .mainAxisSize(.min)
-          .crossAxisAlignment(.center)
-          .spacing(2),
-      children: [
-        for (var index = 0; index < 2; index++)
-          Box(
-            style: BoxStyler()
-                .width(5)
-                .height(2.5)
-                .borderRadius(.circular(99))
-                .color(item.color()),
-          ),
-      ],
-    ),
-  };
 }

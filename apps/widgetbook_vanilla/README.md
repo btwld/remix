@@ -1,19 +1,12 @@
-# Remix component demo
+# Vanilla component catalog
 
-This package is the Widgetbook catalog for reviewing Remix components, Vanilla
-presets, variants, states, and preview scenarios.
-
-## Live catalog
-
-[Open the Remix component catalog](https://btwld.github.io/remix/catalog/).
+This package is the Widgetbook catalog for reviewing Remix's Vanilla preset
+components, variants, states, and preview scenarios.
 
 From the repository root:
 
 ```sh
 fvm dart run melos bootstrap
-cd apps/demo
+cd apps/widgetbook_vanilla
 fvm flutter run -d chrome
 ```
-
-See [PREVIEW.md](PREVIEW.md) for the macOS preview workflow and component
-inventory.
