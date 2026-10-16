@@ -9,7 +9,7 @@ const _expectedNakedUiVersion = '1.2.1';
 /// The parity contract validates one exact Naked UI resolution through Remix.
 /// The range is Remix's consumer constraint; the packages/naked_ui workspace
 /// member is the byte-exact tested resolution.
-const _expectedNakedUiConstraint = '^1.2.0';
+const _expectedNakedUiConstraint = '^1.2.1';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',

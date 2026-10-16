@@ -1,23 +1,34 @@
 ## 1.0.0-beta.11
 
-> Note: This release has breaking changes.
+### Breaking changes
 
- - **FEAT**(registry,remix): unify Vanilla & Fortal dashboard demos and optimize sidebar motion (#288).
- - **FEAT**(remix): add a host-owned app bar component (#273).
- - **FEAT**: add NakedTextMagnifier on RawMagnifier (#250).
- - **BREAKING** **REFACTOR**(registry): unify <Prefix>Theme scope across Vanilla and Fortal (#279).
- - **BREAKING** **FEAT**(remix): migrate RemixTooltip to RawTooltip tooltipKey API (#274).
- - **BREAKING** **FEAT**(registry): integrate app bars into Fortal and Vanilla dashboards (#272).
+- Replace `RemixTooltip.open` and `TooltipStyler.call(open: ...)` with
+  `tooltipKey: GlobalKey<RawTooltipState>()`. Show a tooltip with
+  `tooltipKey.currentState?.ensureTooltipVisible()` and observe visibility
+  through `onOpenChanged`; controlled visibility is no longer supported.
+  Tooltips now use Naked UI's `RawTooltip` implementation and fade animation.
 
-## Unreleased
+### Features
 
-- **FEAT**: Add RemixAppBar, AppBarStyler, and AppBarSpec for page headers and top toolbars.
+- Add `RemixAppBar`, `AppBarStyler`, and `AppBarSpec` for host-owned page
+  headers and toolbars, with leading, title, actions, and bottom slots,
+  safe-area handling, and accessible title semantics.
+- Styled text fields now draw Remix selection handles on touch platforms;
+  the underlying `NakedTextField` remains headless. Supply `selectionControls`
+  to replace the handles and `contextMenuBuilder` for a cut/copy/paste menu.
+
+### Fixes
+
+- Reduce sidebar collapse rebuilds while preserving destination styles,
+  tooltip lifetime, and separate header/footer accessibility nodes.
+- Preserve accordion and disclosure style equality and allow expansion
+  variants to resolve outside their component scopes.
+- Allow menu trigger labels to flex within constrained layouts.
+- Require `naked_ui ^1.2.1` for the latest menu focus, nested submenu hover,
+  and tooltip lifetime fixes.
 
 ## 1.0.0-beta.10
 
-- Styled text fields now draw Remix selection handles on touch platforms; the
-  underlying `NakedTextField` remains headless. Supply `selectionControls` to
-  replace the handles and `contextMenuBuilder` for a cut/copy/paste menu.
 - **BREAKING**: Tabs apply their container styling to custom tab children; use the builder escape hatch for fully custom tab rendering.
 - **BREAKING**: `RemixIconAlignment` is replaced by `RemixPlacement`. `ButtonSpec.iconAlignment` and the button styler's `iconAlignment` take a `RemixPlacement`.
 - **BREAKING**: `RemixDataListItem.alignment` takes a Flutter `CrossAxisAlignment` (default `baseline`); `RemixDataListItemAlignment` is removed.
