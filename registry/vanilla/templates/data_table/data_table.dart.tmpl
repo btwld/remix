@@ -91,7 +91,10 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
           .mainAxisAlignment(.end)
           .minHeight({{typePrefix}}Tokens.controlLg)
           .padding(
-            .symmetric(horizontal: {{typePrefix}}Tokens.s3, vertical: {{typePrefix}}Tokens.s2),
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.s3,
+              vertical: {{typePrefix}}Tokens.s2,
+            ),
           )
           .spacing({{typePrefix}}Tokens.s3)
           .border(.top(_rule())),

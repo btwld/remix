@@ -127,11 +127,13 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .leadingIcon(
       .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
+    // 10px (`PlaygroundTokens.s2_5`) sizes Remix's edge-to-edge 9×9 submenu
+    // chevron and choice check paths.
     .trailingIcon(
-      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.s2_5).color(PlaygroundTokens.mutedForeground()),
     )
     .indicator(
-      .size(PlaygroundTokens.icon).color(PlaygroundTokens.popoverForeground()),
+      .size(PlaygroundTokens.s2_5).color(PlaygroundTokens.popoverForeground()),
     )
     .onHovered(_highlighted())
     .onFocused(_highlighted())

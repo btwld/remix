@@ -4591,7 +4591,7 @@ void main() {
 
         expect(idleItem.label.spec.style?.color, theme.data.foreground);
         expect(idleItem.leadingIcon.spec.color, theme.data.mutedForeground);
-        expect(idleItem.indicator.spec.size, 16);
+        expect(idleItem.indicator.spec.size, 10);
         expect(idleItem.indicator.spec.color, theme.data.popoverForeground);
 
         // Hover and focus have to agree: a menu is as often driven by the
@@ -4742,7 +4742,7 @@ void main() {
         final idleIndicator = idle.spec.trigger.spec.indicator.spec;
         final hoveredIndicator = hovered.spec.trigger.spec.indicator.spec;
 
-        expect(idleIndicator.size, 16);
+        expect(idleIndicator.size, 10);
         expect(idleIndicator.color, theme.data.mutedForeground);
         expect(idle.spec.trigger.spec.indicatorOpacity, 0.5);
         // Hover changes the trigger's fill at most, never its content.

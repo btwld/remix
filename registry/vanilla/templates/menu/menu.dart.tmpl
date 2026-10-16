@@ -120,11 +120,13 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .leadingIcon(
       .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.mutedForeground()),
     )
+    // 10px (`{{typePrefix}}Tokens.s2_5`) sizes Remix's edge-to-edge 9×9 submenu
+    // chevron and choice check paths.
     .trailingIcon(
-      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.mutedForeground()),
+      .size({{typePrefix}}Tokens.s2_5).color({{typePrefix}}Tokens.mutedForeground()),
     )
     .indicator(
-      .size({{typePrefix}}Tokens.icon).color({{typePrefix}}Tokens.popoverForeground()),
+      .size({{typePrefix}}Tokens.s2_5).color({{typePrefix}}Tokens.popoverForeground()),
     )
     .onHovered(_highlighted())
     .onFocused(_highlighted())

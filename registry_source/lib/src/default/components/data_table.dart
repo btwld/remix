@@ -91,7 +91,10 @@ DataTableStyler vanillaDataTableStyle({
           .mainAxisAlignment(.end)
           .minHeight(VanillaTokens.controlLg)
           .padding(
-            .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s2),
+            .symmetric(
+              horizontal: VanillaTokens.s3,
+              vertical: VanillaTokens.s2,
+            ),
           )
           .spacing(VanillaTokens.s3)
           .border(.top(_rule())),

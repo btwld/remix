@@ -884,12 +884,12 @@ final _selectTargets = <SpecTarget>[
   ),
   _select(
     'chevron',
-    source: 'select.tsx: ChevronDownIcon size-4 opacity-50',
+    source: 'select.tsx: ChevronDownIcon size-4 opacity-50 (see Deviations)',
     read: (spec) => (
       spec.spec.trigger.spec.indicator.spec.size,
       spec.spec.trigger.spec.indicatorOpacity,
     ),
-    expected: (_) => (16.0, 0.5),
+    expected: (_) => (10.0, 0.5),
   ),
   _select(
     'content surface',
@@ -922,19 +922,21 @@ final _selectTargets = <SpecTarget>[
   ),
   _select(
     'item',
-    source: 'select.tsx: SelectItem py-1.5 pr-8 pl-2 rounded-sm',
+    source: 'select.tsx: SelectItem py-1.5 px-2 rounded-sm (see Deviations)',
     read: (spec) {
       final container = spec.spec.item.spec.container;
       return (
         boxOf(container)?.constraints?.minHeight,
         boxOf(container)?.padding,
         flexDecorationOf(container)?.borderRadius,
+        spec.spec.item.spec.icon.spec.size,
       );
     },
     expected: (theme) => (
       32.0,
-      const EdgeInsets.only(left: 8, right: 32, top: 6, bottom: 6),
+      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       _rounded(theme, VanillaTokens.radiusSm),
+      10.0,
     ),
   ),
   _select(

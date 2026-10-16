@@ -105,8 +105,9 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .icon(
       .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
     )
+    // 10px (`PlaygroundTokens.s2_5`) sizes Remix's edge-to-edge 9×9 chevron path.
     .indicator(
-      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.s2_5).color(PlaygroundTokens.mutedForeground()),
     )
     .indicatorOpacity(_chevronOpacity)
     .onHovered(SelectTriggerStyler().color(_triggerHoverFill()))
@@ -136,21 +137,23 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
     .maxHeight(_panelMaxHeight)
     .containerEffects(.behindContent(PlaygroundShadow.md.effects));
 
-/// One option row: 8px in from the leading edge, 32px from the trailing one,
-/// 6px above and below, with `radiusSm` corners.
+/// One option row: 8px in from either side, 6px above and below, with
+/// `radiusSm` corners.
 ///
-/// The trailing inset leaves room for the check mark Remix draws on the
-/// chosen option. `accent` marks the row under the pointer *and* the row the
-/// arrow keys are on, because a select is as often driven by the keyboard as
-/// by the mouse.
+/// Remix lays the selected option's check mark out in the row after the label
+/// rather than positioning it inside a right padding gutter, so symmetric 8px
+/// horizontal padding places the check mark 8px from the trailing edge.
+/// `accent` marks the row under the pointer *and* the row the arrow keys are
+/// on, because a select is as often driven by the keyboard as by the mouse.
 SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(PlaygroundTokens.controlSm)
     .padding(
-      .left(
-        PlaygroundTokens.s2,
-      ).right(PlaygroundTokens.s8).vertical(PlaygroundTokens.s1_5),
+      .symmetric(
+        horizontal: PlaygroundTokens.s2,
+        vertical: PlaygroundTokens.s1_5,
+      ),
     )
     .spacing(PlaygroundTokens.s2)
     .borderRadius(.all(PlaygroundTokens.radiusSm()))
@@ -160,9 +163,10 @@ SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
       ).color(PlaygroundTokens.popoverForeground()),
     )
     // The check mark on the chosen option stays `mutedForeground`, highlighted
-    // or not: it marks the row without competing with its label.
+    // or not: it marks the row without competing with its label. 10px sizes
+    // Remix's edge-to-edge 9×9 check path.
     .icon(
-      .size(PlaygroundTokens.icon).color(PlaygroundTokens.mutedForeground()),
+      .size(PlaygroundTokens.s2_5).color(PlaygroundTokens.mutedForeground()),
     )
     .onHovered(_highlighted())
     .onFocused(_highlighted())
