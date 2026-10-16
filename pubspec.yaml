@@ -18,6 +18,7 @@ workspace:
   - apps/demo
   - apps/naked_ui_example
   - apps/playground
+  - apps/widgetbook_vanilla
   - packages/naked_ui
   - packages/remix
   - packages/remix_cli

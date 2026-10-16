@@ -1,0 +1,119 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/effects.dart';
+import '../theme/tokens.dart';
+
+part 'disclosure.g.dart';
+
+/// The application's Disclosure recipe.
+///
+/// A single collapsible section: a trigger row and the content it reveals.
+/// Remix owns the rendering, the expand and collapse animation, keyboard
+/// activation, and the accessibility semantics — including announcing the
+/// expanded state; this recipe supplies the trigger row, the content inset,
+/// and the state fragments.
+///
+/// It is the accordion's trigger without the accordion's frame: 16px above and
+/// below with no side inset, `textSm` at medium weight, underlined under the
+/// pointer. The accordion draws a rule under each section because its rows have
+/// neighbours to separate; a lone disclosure has none, so a frame would only
+/// box in whatever the caller already placed it inside.
+///
+/// The spec carries plain boxes (`trigger`, `content`), not text: the caller
+/// passes whole widgets for both. The recipe sets the trigger's type through a
+/// default text style instead, so a bare `Text` trigger takes it and a caller
+/// who styles their own text keeps theirs.
+///
+/// Two constructor parameters are deliberately not forwarded to the generated
+/// `VanillaDisclosure`: `triggerBuilder` and `transitionBuilder`. Both
+/// are typed by `package:naked_ui`, which this layer does not depend on.
+/// Reach for `RemixDisclosure` directly on the rare call site that needs a
+/// state-aware trigger or a custom transition.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it. State fragments merge by state,
+/// not by depth: an override that must beat the hovered trigger has to be
+/// declared with `.onHovered(...)` too.
+@MixWidget(
+  target: RemixDisclosure.new,
+  widgetParameters: .only({
+    'trigger',
+    'content',
+    'expanded',
+    'defaultExpanded',
+    'onExpandedChanged',
+    'enabled',
+    'mouseCursor',
+    'enableFeedback',
+    'focusNode',
+    'autofocus',
+    'onFocusChange',
+    'onHoverChange',
+    'onPressChange',
+    'semanticLabel',
+    'semanticHint',
+    'excludeSemantics',
+    'animationStyle',
+  }),
+)
+DisclosureStyler vanillaDisclosureStyle({
+  DisclosureStyler style = const DisclosureStyler.create(),
+}) => DisclosureStyler()
+    .animate(VanillaTokens.motion)
+    // These are the forwarded box shorthand, so they land on `trigger`: the
+    // row a reader clicks to open the section.
+    .width(double.infinity)
+    .alignment(.centerLeft)
+    .padding(.vertical(VanillaTokens.s4))
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    .trigger(
+      BoxStyler().wrap(
+        .defaultText(
+          TextStyler()
+              .style(VanillaTokens.textSm.mix())
+              .fontWeight(FontWeight.w500)
+              .color(VanillaTokens.foreground()),
+        ),
+      ),
+    )
+    // `content` has to be reached by name; a bare `.padding(...)` would inset
+    // the trigger instead. It has no side inset either, so the revealed
+    // content lines up under the trigger's own text.
+    .content(.padding(.bottom(VanillaTokens.s4)))
+    .onHovered(
+      DisclosureStyler().trigger(
+        BoxStyler().wrap(
+          .defaultText(TextStyler().decoration(TextDecoration.underline)),
+        ),
+      ),
+    )
+    .onFocusVisible(_focusVisibleStyle())
+    .onDisabled(_disabledStyle())
+    .merge(style);
+
+/// The keyboard focus ring, drawn on the trigger alone.
+///
+/// Not on the container, which is where the effects layer lives and where the
+/// accordion puts its ring. Keyboard focus is on the trigger, and an expanded
+/// disclosure's container is the trigger *plus* everything it revealed — a
+/// ring there claims the content is focused too, and grows with it.
+///
+/// `foregroundDecoration` is what makes a trigger-only ring possible: it paints
+/// over the box's own bounds rather than beside them, so the ring takes no
+/// layout space and opening the section never reflows the page. A plain
+/// `.border(...)` would push the trigger's content in by two pixels the moment
+/// it took focus. The ring is a 3px band of `ring` at half strength, stroked
+/// outside the trigger.
+DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
+  .foregroundDecoration(vanillaFocusRingDecoration()),
+);
+
+/// Declared last so it wins over every other state fragment.
+///
+/// The ring is cleared as well as faded: a disabled control that still draws
+/// a focus ring reads as reachable.
+DisclosureStyler _disabledStyle() => DisclosureStyler()
+    .trigger(.foregroundDecoration(BoxDecorationMix.border(.style(.none))))
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

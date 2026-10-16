@@ -1,0 +1,124 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/effects.dart';
+import '../theme/tokens.dart';
+
+part 'segmented_control.g.dart';
+
+/// The application's SegmentedControl recipe.
+///
+/// A segmented control is one control divided into parts: the segments share a
+/// track, exactly one is chosen, and the chosen one is *lifted* out of the
+/// track rather than tinted on top of it. It is drawn as the filled tab list,
+/// so a segmented control and a tab strip on one page read as one family. Remix
+/// owns the rendering, the equal-width layout, the roving focus, and the group
+/// accessibility semantics.
+///
+/// One recipe covers the track and the segments, because
+/// `SegmentedControlSpec` carries the segment's style as a field: the
+/// control's `item` is the default every `RemixSegmentedControlItem` resolves
+/// against, so a segment in a loop cannot be left unstyled.
+///
+/// It takes no variant. The whole point of the component is one shape — a
+/// recessed track with a raised current segment — and a second look would be
+/// a toggle group wearing the wrong name.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it.
+@MixWidget(target: RemixSegmentedControl.new)
+SegmentedControlStyler vanillaSegmentedControlStyle({
+  SegmentedControlStyler style = const SegmentedControlStyler.create(),
+}) {
+  return SegmentedControlStyler()
+      // The track is the filled tab list: `muted`, with large corners and a
+      // 3px inset. The chosen segment is lifted onto the page color.
+      .color(VanillaTokens.muted())
+      .borderRadius(.all(VanillaTokens.radiusLg()))
+      .padding(.all(_trackInset))
+      .mainAxisSize(.min)
+      .spacing(0)
+      .item(_itemStyle())
+      .merge(style);
+}
+
+/// Gap between the track edge and its segments, on every side.
+const _trackInset = 3.0;
+
+/// A fill that paints nothing, used by an unchosen segment.
+const _noFill = Color(0x00000000);
+
+/// An edge that paints nothing, holding the chosen segment's outline space.
+const _noEdge = Color(0x00000000);
+
+/// An unchosen segment's content: 60% `foreground`, or `mutedForeground` in
+/// the dark theme, exactly as an unchosen tab's. Both clear 4.5:1 on the
+/// `muted` track.
+final _restingContent = vanillaByBrightness(
+  light: vanillaTint(VanillaTokens.foreground, _restingAlpha),
+  dark: VanillaTokens.mutedForeground,
+);
+
+/// See [_restingContent].
+const _restingAlpha = 0.6;
+
+/// The chosen segment's surface: the page color, or `input` at 30% in the
+/// dark theme, as the current tab's.
+final _chosenFill = vanillaByBrightness(
+  light: VanillaTokens.background,
+  dark: vanillaTint(VanillaTokens.input, _darkChosenFillAlpha),
+);
+
+/// See [_chosenFill].
+const _darkChosenFillAlpha = 0.3;
+
+/// The chosen segment's outline: none in the light theme, `input` in the dark
+/// one, as the current tab's.
+final _chosenEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
+
+/// One segment: the filled tab, edge to edge in the track.
+///
+/// Its height is the track's 36px less the inset on both sides, so the track
+/// lands on the height of the button and field beside it.
+SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
+    .color(_noFill)
+    .minHeight(VanillaTokens.controlMd - 2 * _trackInset)
+    .padding(
+      .symmetric(horizontal: VanillaTokens.s2, vertical: VanillaTokens.s1),
+    )
+    .spacing(VanillaTokens.s1_5)
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    .border(.color(_noEdge).width(VanillaTokens.strokeHairline))
+    .label(.style(VanillaTokens.textSm.mix()).fontWeight(FontWeight.w500))
+    .icon(.size(VanillaTokens.icon))
+    .onHovered(_content(VanillaTokens.foreground()))
+    .onSelected(
+      _content(VanillaTokens.foreground())
+          .color(_chosenFill())
+          .border(.color(_chosenEdge()))
+          // In the effects layer rather than the decoration: the dark chosen
+          // fill is translucent, and a decoration shadow would show through.
+          .containerEffects(.behindContent(VanillaShadow.sm.effects)),
+    )
+    .onFocusVisible(_focusVisibleStyle())
+    .onDisabled(_disabledStyle());
+
+/// Applies one content color to the label and the icons.
+SegmentedControlItemStyler _content(Color foreground) =>
+    SegmentedControlItemStyler()
+        .label(.color(foreground))
+        .icon(.color(foreground));
+
+/// The keyboard focus ring: a 3px band of `ring` at half strength.
+///
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the
+/// segment without taking layout space, so focusing one never widens the
+/// track.
+SegmentedControlItemStyler _focusVisibleStyle() =>
+    SegmentedControlItemStyler().containerEffects(vanillaFocusRing());
+
+/// Declared last so it wins over every other state fragment.
+SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(VanillaTokens.disabledOpacity));
