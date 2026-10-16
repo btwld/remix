@@ -1,3 +1,14 @@
+## 1.2.1
+
+### Fixes
+
+- Clear stale keyboard focus when hovering menu items, and close hovered
+  submenus without returning focus to their triggers. Keep ancestor submenus
+  open while the pointer moves into nested panels.
+- Dismiss stale hover tooltips when entering another trigger while preserving
+  focus-held and manually opened tooltips. Keep focused tooltips visible when
+  the pointer leaves their trigger or content.
+
 ## 1.2.0
 
 ### Features
