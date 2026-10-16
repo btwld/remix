@@ -1,3 +1,14 @@
+## 1.0.0-beta.11
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(registry,remix): unify Vanilla & Fortal dashboard demos and optimize sidebar motion (#288).
+ - **FEAT**(remix): add a host-owned app bar component (#273).
+ - **FEAT**: add NakedTextMagnifier on RawMagnifier (#250).
+ - **BREAKING** **REFACTOR**(registry): unify <Prefix>Theme scope across Vanilla and Fortal (#279).
+ - **BREAKING** **FEAT**(remix): migrate RemixTooltip to RawTooltip tooltipKey API (#274).
+ - **BREAKING** **FEAT**(registry): integrate app bars into Fortal and Vanilla dashboards (#272).
+
 ## Unreleased
 
 - **FEAT**: Add RemixAppBar, AppBarStyler, and AppBarSpec for page headers and top toolbars.
