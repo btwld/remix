@@ -11,14 +11,14 @@ Widget buildVanillaChartUseCase(BuildContext context) => Scaffold(
       height: 220,
       child: VanillaLineChart(
         series: [
-          ChartSeries(
+          LineSeries(
             id: 'revenue',
             label: 'Revenue',
-            points: const [
-              ChartPoint(x: 0, y: 18, label: 'Jan'),
-              ChartPoint(x: 1, y: 24, label: 'Feb'),
-              ChartPoint(x: 2, y: 21, label: 'Mar'),
-              ChartPoint(x: 3, y: 32, label: 'Apr'),
+            points: [
+              ChartPoint(id: 'Jan', x: 0, y: 18),
+              ChartPoint(id: 'Feb', x: 1, y: 24),
+              ChartPoint(id: 'Mar', x: 2, y: 21),
+              ChartPoint(id: 'Apr', x: 3, y: 32),
             ],
           ),
         ],

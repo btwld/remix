@@ -5,9 +5,8 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Accordion', type: VanillaAccordion)
 Widget buildVanillaAccordionUseCase(BuildContext context) {
-  final controller = RemixAccordionController<String>(
-    initial: const ['shipping'],
-  );
+  final controller = RemixAccordionController<String>(min: 0, max: 1)
+    ..values.add('shipping');
   return Scaffold(
     body: Center(
       child: SizedBox(
