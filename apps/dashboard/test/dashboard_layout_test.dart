@@ -1,15 +1,7 @@
 import 'package:dashboard/main.dart';
-import 'package:dashboard/pages/overview_page.dart';
-import 'package:dashboard/pages/settings_page.dart';
-import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/top_bar.dart';
-import 'package:dashboard/theme/theme_scope.dart';
-import 'package:dashboard/theme/theme_settings.dart';
-import 'package:dashboard/widgets/action_menu.dart';
-import 'package:dashboard/widgets/analytics_charts.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:dashboard/ui/ui.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('shell switches to the sheet strictly below 720 pixels', (
@@ -44,9 +36,9 @@ void main() {
 
     void expectHeaderContent() {
       expect(find.byKey(const ValueKey('dashboard-brand')), findsOneWidget);
-      expect(find.byType(TopBar), findsOneWidget);
+      expect(find.byType(UiDashboardTopBar), findsOneWidget);
       expect(find.byKey(const ValueKey('dashboard-title')), findsOneWidget);
-      expect(tester.getCenter(find.byType(TopBar)).dy, lessThan(64));
+      expect(tester.getCenter(find.byType(UiDashboardTopBar)).dy, lessThan(64));
     }
 
     tester.view.physicalSize = const Size(1000, 800);
@@ -71,7 +63,7 @@ void main() {
     tester.view.physicalSize = const Size(1000, 800);
     await tester.pumpWidget(const DashboardApp());
 
-    final sidebar = find.byType(UiSidebar<DashboardPage>);
+    final sidebar = find.byType(UiSidebar<UiDashboardDemoPage>);
     final panel = tester.getRect(sidebar);
     final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
     final account = tester.getRect(
@@ -91,10 +83,7 @@ void main() {
     );
     expect(scrollable, findsOneWidget);
     expect(
-      find.descendant(
-        of: scrollable,
-        matching: find.byType(DashboardActionMenu),
-      ),
+      find.descendant(of: scrollable, matching: find.byType(UiActionMenu)),
       findsNothing,
     );
     expect(tester.takeException(), isNull);
@@ -156,8 +145,8 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
-      ThemeScope(
-        settings: const ThemeSettings(),
+      UiDashboardThemeScope(
+        settings: const UiThemeSettings(),
         onChanged: (_) {},
         child: UiTheme(
           child: WidgetsApp(
@@ -166,7 +155,10 @@ void main() {
               settings: settings,
               pageBuilder: (context, _, _) => builder(context),
             ),
-            home: const SettingsPage(),
+            home: UiDashboardSettingsPage(
+              darkMode: null,
+              onDarkModeChanged: (_) {},
+            ),
           ),
         ),
       ),
@@ -178,8 +170,8 @@ void main() {
 
     tester.view.physicalSize = const Size(500, 1600);
     await tester.pumpWidget(
-      ThemeScope(
-        settings: const ThemeSettings(),
+      UiDashboardThemeScope(
+        settings: const UiThemeSettings(),
         onChanged: (_) {},
         child: UiTheme(
           child: WidgetsApp(
@@ -188,7 +180,10 @@ void main() {
               settings: settings,
               pageBuilder: (context, _, _) => builder(context),
             ),
-            home: const SettingsPage(),
+            home: UiDashboardSettingsPage(
+              darkMode: null,
+              onDarkModeChanged: (_) {},
+            ),
           ),
         ),
       ),
@@ -219,7 +214,7 @@ void main() {
               ),
               home: Align(
                 alignment: Alignment.topLeft,
-                child: SizedBox(width: width, child: const AnalyticsCharts()),
+                child: SizedBox(width: width, child: const UiAnalyticsCharts()),
               ),
             ),
           ),
@@ -263,7 +258,7 @@ Future<List<Rect>> _pumpOverview(
           settings: settings,
           pageBuilder: (context, _, _) => builder(context),
         ),
-        home: OverviewPage(onViewOrders: () {}),
+        home: UiDashboardOverview(onViewOrders: () {}),
       ),
     ),
   );

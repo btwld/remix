@@ -223,6 +223,7 @@ class _UiPermissionState extends State<UiPermission> {
                   styleSpec: _statusContainer(spec),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    spacing: 6,
                     children: [
                       widget.statusBuilder?.call(context, widget.status) ??
                           StyleSpecBuilder<IconSpec>(
@@ -245,6 +246,7 @@ class _UiPermissionState extends State<UiPermission> {
                     semanticLabel: widget.detailsLabel,
                     style: widget.detailsStyle,
                     triggerBuilder: (context, state, trigger) => Row(
+                      spacing: 8,
                       children: [
                         Expanded(child: trigger!),
                         UiDisclosureIndicator(

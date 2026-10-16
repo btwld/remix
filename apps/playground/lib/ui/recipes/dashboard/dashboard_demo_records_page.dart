@@ -14,17 +14,22 @@ import 'dashboard_demo_records.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
-class DefaultDashboardCustomersPage extends StatefulWidget {
-  const DefaultDashboardCustomersPage({super.key, this.globalQuery = ''});
+/// Shared layout for the selected-row badge cluster in the records toolbar.
+final playgroundSelectedBadgesStyle = WrapBoxStyler()
+    .spacing(PlaygroundTokens.s1_5)
+    .crossAxisAlignment(.center);
+
+class PlaygroundDashboardCustomersPage extends StatefulWidget {
+  const PlaygroundDashboardCustomersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
 
   @override
-  State<DefaultDashboardCustomersPage> createState() =>
-      _DefaultDashboardCustomersPageState();
+  State<PlaygroundDashboardCustomersPage> createState() =>
+      _PlaygroundDashboardCustomersPageState();
 }
 
-class _DefaultDashboardCustomersPageState
-    extends State<DefaultDashboardCustomersPage> {
+class _PlaygroundDashboardCustomersPageState
+    extends State<PlaygroundDashboardCustomersPage> {
   String _query = '';
   RemixDataTableSort _sort = const RemixDataTableSort(
     columnId: 'joined',
@@ -56,67 +61,57 @@ class _DefaultDashboardCustomersPageState
         onPressed: () => _toast(context, 'Customer invitation started'),
       ),
       children: [
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final search = SizedBox(
-              width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing(PlaygroundTokens.s3)
+              .runSpacing(PlaygroundTokens.s2_5),
+          children: [
+            Box(
+              style: BoxStyler().maxWidth(300),
               child: PlaygroundTextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(RemixIcons.magnifyingGlass, size: 18),
+                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;
                 }),
               ),
-            );
-            final selection = _selectedIds.isEmpty
-                ? null
-                : Wrap(
-                    spacing: 6,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      PlaygroundBadge.secondary(
-                        label: '${_selectedIds.length} selected',
-                      ),
-                      PlaygroundButton.ghost(
-                        size: .small,
-                        label: 'Export',
-                        onPressed: () => _toast(
-                          context,
-                          'Export prepared for ${_selectedIds.length} customers',
+            ),
+            if (_selectedIds.isNotEmpty)
+              playgroundSelectedBadgesStyle(
+                children: [
+                  PlaygroundBadge.secondary(
+                    label: '${_selectedIds.length} selected',
+                  ),
+                  PlaygroundButton.ghost(
+                    size: .small,
+                    label: 'Export',
+                    onPressed: () => _toast(
+                      context,
+                      'Export prepared for ${_selectedIds.length} customers',
+                    ),
+                  ),
+                  PlaygroundButton.ghost(
+                    size: .small,
+                    label: 'Archive',
+                    onPressed: () => showRemixToast(
+                      context,
+                      RemixToastData(
+                        title: '${_selectedIds.length} customers archived',
+                        icon: RemixIcons.checkCircled,
+                        action: const RemixToastAction(
+                          label: 'Undo',
+                          onPressed: _noop,
                         ),
                       ),
-                      PlaygroundButton.ghost(
-                        size: .small,
-                        label: 'Archive',
-                        onPressed: () => showRemixToast(
-                          context,
-                          RemixToastData(
-                            title: '${_selectedIds.length} customers archived',
-                            icon: RemixIcons.checkCircled,
-                            action: const RemixToastAction(
-                              label: 'Undo',
-                              onPressed: _noop,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            return constraints.maxWidth < 700
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      search,
-                      if (selection != null) ...[
-                        const SizedBox(height: 10),
-                        selection,
-                      ],
-                    ],
-                  )
-                : Row(children: [search, const Spacer(), ?selection]);
-          },
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
         PlaygroundDataTable<PlaygroundDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
@@ -158,17 +153,17 @@ class _DefaultDashboardCustomersPageState
   }
 }
 
-class DefaultDashboardOrdersPage extends StatefulWidget {
-  const DefaultDashboardOrdersPage({super.key, this.globalQuery = ''});
+class PlaygroundDashboardOrdersPage extends StatefulWidget {
+  const PlaygroundDashboardOrdersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
 
   @override
-  State<DefaultDashboardOrdersPage> createState() =>
-      _DefaultDashboardOrdersPageState();
+  State<PlaygroundDashboardOrdersPage> createState() =>
+      _PlaygroundDashboardOrdersPageState();
 }
 
-class _DefaultDashboardOrdersPageState
-    extends State<DefaultDashboardOrdersPage> {
+class _PlaygroundDashboardOrdersPageState
+    extends State<PlaygroundDashboardOrdersPage> {
   _OrderFilter _filter = .all;
   RemixDataTableSort _sort = const RemixDataTableSort(
     columnId: 'date',
@@ -202,8 +197,8 @@ class _DefaultDashboardOrdersPageState
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
+        Box(
+          style: BoxStyler().alignment(.centerStart),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: PlaygroundSegmentedControl<_OrderFilter>(
@@ -246,9 +241,16 @@ class _DefaultDashboardOrdersPageState
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => _Empty(
             title: 'No matching orders',
             body: 'Choose another status to see more orders.',
+            action: _filter != .all
+                ? PlaygroundButton.outline(
+                    size: .small,
+                    label: 'Clear filters',
+                    onPressed: () => setState(() => _filter = .all),
+                  )
+                : null,
           ),
         ),
       ],
@@ -271,10 +273,12 @@ List<RemixDataTableColumn<PlaygroundDashboardCustomer>> _customerColumns(
     label: 'Customer',
     sortable: true,
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => Row(
+    cellBuilder: (_, value) => RowBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.center)
+          .spacing(PlaygroundTokens.s2),
       children: [
         PlaygroundAvatar(label: value.initials),
-        const SizedBox(width: 9),
         Flexible(child: _Text(value.name, emphasized: true)),
       ],
     ),
@@ -363,9 +367,24 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
 
 Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
   trigger: RemixMenuTrigger.builder(
-    label: 'More',
+    label: 'Actions for $value',
     icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) => const Icon(RemixIcons.dotsHorizontal, size: 18),
+    builder: (_, _, _) => Semantics(
+      label: 'Actions for $value',
+      button: true,
+      child: Box(
+        style: BoxStyler()
+            .size(28, 28)
+            .alignment(.center)
+            .borderRadius(.all(PlaygroundTokens.radiusSm())),
+        child: StyledIcon(
+          icon: RemixIcons.dotsHorizontal,
+          style: IconStyler()
+              .size(PlaygroundTokens.icon)
+              .color(PlaygroundTokens.mutedForeground()),
+        ),
+      ),
+    ),
   ),
   items: const [
     RemixMenuItem(value: 'view', label: 'View'),
@@ -397,19 +416,28 @@ class _Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    padding: const EdgeInsets.all(PlaygroundTokens.s8),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing(PlaygroundTokens.s5),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.start)
+              .spacing(PlaygroundTokens.s4),
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.start)
+                    .spacing(PlaygroundTokens.s1),
                 children: [
-                  _Text(title, size: 28, emphasized: true),
-                  const SizedBox(height: 4),
+                  _Text(
+                    title,
+                    token: PlaygroundTokens.text3xl,
+                    emphasized: true,
+                  ),
                   _Text(description, muted: true),
                 ],
               ),
@@ -417,26 +445,45 @@ class _Page extends StatelessWidget {
             action,
           ],
         ),
-        for (final child in children) ...[const SizedBox(height: 20), child],
+        ...children,
       ],
     ),
   );
 }
 
 class _Empty extends StatelessWidget {
-  const _Empty({required this.title, required this.body});
+  const _Empty({required this.title, required this.body, this.action});
   final String title;
   final String body;
+  final Widget? action;
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(32),
-    child: Column(
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().padding(.all(PlaygroundTokens.s8)),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.center)
+          .spacing(PlaygroundTokens.s3),
       children: [
-        const Icon(RemixIcons.magnifyingGlass, size: 24),
-        const SizedBox(height: 8),
-        _Text(title, emphasized: true),
-        const SizedBox(height: 4),
-        _Text(body, muted: true),
+        Box(
+          style: BoxStyler()
+              .size(40, 40)
+              .alignment(.center)
+              .borderRadius(.all(PlaygroundTokens.radiusMd()))
+              .color(PlaygroundTokens.secondary()),
+          child: StyledIcon(
+            icon: RemixIcons.magnifyingGlass,
+            style: IconStyler()
+                .size(PlaygroundTokens.s5)
+                .color(PlaygroundTokens.secondaryForeground()),
+          ),
+        ),
+        ColumnBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(PlaygroundTokens.s1),
+          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
+        ),
+        ?action,
       ],
     ),
   );
@@ -445,19 +492,19 @@ class _Empty extends StatelessWidget {
 class _Text extends StatelessWidget {
   const _Text(
     this.value, {
-    this.size = 14,
+    this.token = PlaygroundTokens.textSm,
     this.emphasized = false,
     this.muted = false,
   });
   final String value;
-  final double size;
+  final TextStyleToken token;
   final bool emphasized;
   final bool muted;
   @override
   Widget build(BuildContext context) => StyledText(
     value,
     style: TextStyler()
-        .fontSize(size)
+        .style(token.mix())
         .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
         .color(
           muted

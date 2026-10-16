@@ -31,12 +31,12 @@ VanillaAgentExecutionRecipe vanillaAgentExecutionRecipe({
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => VanillaAgentExecutionRecipe(
   style: AgentExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     output: BoxStyler()
         .color(VanillaTokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(6)),
     tool: TextStyler().color(VanillaTokens.mutedForeground()).fontSize(12),
     title: TextStyler()
         .color(VanillaTokens.foreground())
@@ -47,16 +47,23 @@ VanillaAgentExecutionRecipe vanillaAgentExecutionRecipe({
     statusIcon: IconStyler().color(VanillaTokens.primary()).size(12),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: vanillaCardStyle(style: surfaceStyle),
-  disclosureStyle: vanillaDisclosureStyle(style: disclosureStyle),
+  surfaceStyle: vanillaCardStyle(
+    style: CardStyler().padding(.all(VanillaTokens.s4)).merge(surfaceStyle),
+  ),
+  disclosureStyle: vanillaDisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.vertical(0))
+        .content(BoxStyler().padding(.top(VanillaTokens.s3).bottom(0)))
+        .merge(disclosureStyle),
+  ),
   copyStyle: vanillaIconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: copyStyle,
+    style: IconButtonStyler().size(28, 28).merge(copyStyle),
   ),
   retryStyle: vanillaIconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: retryStyle,
+    style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );

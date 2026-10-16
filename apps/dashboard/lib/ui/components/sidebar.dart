@@ -37,7 +37,15 @@ SidebarStyler uiSidebarStyle({
   EdgeInsetsGeometry? panelPadding,
   SidebarStyler style = const SidebarStyler.create(),
 }) {
-  final horizontalPadding = Prop.mix(_SidebarHorizontalPadding(collapsed));
+  final horizontalPadding = collapsed
+      ? _sidebarHorizontalPaddingCollapsed()
+      : _sidebarHorizontalPaddingExpanded();
+  final destinationLeftPadding = collapsed
+      ? _destinationLeftPaddingCollapsed()
+      : _destinationLeftPaddingExpanded();
+  final destinationRightPadding = collapsed
+      ? _destinationRightPaddingCollapsed()
+      : _destinationRightPaddingExpanded();
   return SidebarStyler(
     container:
         FlexBoxStyler(padding: EdgeInsetsGeometryMix.maybeValue(panelPadding))
@@ -48,11 +56,11 @@ SidebarStyler uiSidebarStyle({
     content: FlexBoxStyler()
         .spacing(UiTokens.space3())
         .padding(
-          EdgeInsetsMix.create(
+          .only(
             left: horizontalPadding,
             right: horizontalPadding,
-            top: Prop.token(UiTokens.space4),
-            bottom: Prop.token(UiTokens.space4),
+            top: UiTokens.space4(),
+            bottom: UiTokens.space4(),
           ),
         ),
     footer: BoxStyler().border(
@@ -76,18 +84,38 @@ SidebarStyler uiSidebarStyle({
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
             .minHeight(_minimumDestinationTargetHeight)
             .padding(
-              EdgeInsetsMix.create(
-                left: Prop.mix(
-                  _DestinationInlinePadding(collapsed, left: true),
-                ),
-                right: Prop.mix(
-                  _DestinationInlinePadding(collapsed, left: false),
-                ),
+              .only(
+                left: destinationLeftPadding,
+                right: destinationRightPadding,
               ),
             )
             .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
   ).merge(style);
 }
+
+/// Resolve both endpoints before interpolation so theme scaling stays live.
+double _resolveSidebarHorizontalPadding(BuildContext context, bool collapsed) {
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  final rail = UiTokens.space2.resolve(context);
+  final expanded = UiTokens.space3.resolve(context);
+  return rail + (expanded - rail) * expansion;
+}
+
+double _resolveSidebarHorizontalPaddingExpanded(BuildContext context) =>
+    _resolveSidebarHorizontalPadding(context, false);
+
+double _resolveSidebarHorizontalPaddingCollapsed(BuildContext context) =>
+    _resolveSidebarHorizontalPadding(context, true);
+
+const _sidebarHorizontalPaddingExpanded = ContextToken<double>(
+  _resolveSidebarHorizontalPaddingExpanded,
+);
+
+const _sidebarHorizontalPaddingCollapsed = ContextToken<double>(
+  _resolveSidebarHorizontalPaddingCollapsed,
+);
 
 /// Repays the narrowing panel inset on the leading side so icons hold still.
 ///
@@ -96,46 +124,43 @@ SidebarStyler uiSidebarStyle({
 /// dashboard rail then settles each icon on its center line. The trailing side
 /// keeps the toggle's `space3`. Sides are physical so this merges with the
 /// toggle's own horizontal padding; the text direction picks the leading one.
-final class _DestinationInlinePadding extends Mix<double> {
-  const _DestinationInlinePadding(this.collapsed, {required this.left});
-  final bool collapsed;
-  final bool left;
-
-  @override
-  double resolve(BuildContext context) {
-    final trailing = UiTokens.space3.resolve(context);
-    final leading = (Directionality.of(context) == TextDirection.ltr) == left;
-    if (!leading) return trailing;
-    return trailing +
-        UiTokens.space4.resolve(context) -
-        _SidebarHorizontalPadding(collapsed).resolve(context);
-  }
-
-  @override
-  Mix<double> merge(Mix<double>? other) => other ?? this;
-
-  @override
-  List<Object?> get props => [collapsed, left];
+double _resolveDestinationInlinePadding(
+  BuildContext context, {
+  required bool collapsed,
+  required bool left,
+}) {
+  final trailing = UiTokens.space3.resolve(context);
+  final leading = (Directionality.of(context) == TextDirection.ltr) == left;
+  if (!leading) return trailing;
+  return trailing +
+      UiTokens.space4.resolve(context) -
+      _resolveSidebarHorizontalPadding(context, collapsed);
 }
 
-/// Resolve both endpoints before interpolation so theme scaling stays live.
-final class _SidebarHorizontalPadding extends Mix<double> {
-  const _SidebarHorizontalPadding(this.collapsed);
-  final bool collapsed;
+double _resolveDestinationLeftPaddingExpanded(BuildContext context) =>
+    _resolveDestinationInlinePadding(context, collapsed: false, left: true);
 
-  @override
-  double resolve(BuildContext context) {
-    final expansion =
-        RemixSidebar.maybeAnimationOf(context)?.expansion ??
-        (collapsed ? 0.0 : 1.0);
-    final rail = UiTokens.space2.resolve(context);
-    final expanded = UiTokens.space3.resolve(context);
-    return rail + (expanded - rail) * expansion;
-  }
+double _resolveDestinationLeftPaddingCollapsed(BuildContext context) =>
+    _resolveDestinationInlinePadding(context, collapsed: true, left: true);
 
-  @override
-  Mix<double> merge(Mix<double>? other) => other ?? this;
+double _resolveDestinationRightPaddingExpanded(BuildContext context) =>
+    _resolveDestinationInlinePadding(context, collapsed: false, left: false);
 
-  @override
-  List<Object?> get props => [collapsed];
-}
+double _resolveDestinationRightPaddingCollapsed(BuildContext context) =>
+    _resolveDestinationInlinePadding(context, collapsed: true, left: false);
+
+const _destinationLeftPaddingExpanded = ContextToken<double>(
+  _resolveDestinationLeftPaddingExpanded,
+);
+
+const _destinationLeftPaddingCollapsed = ContextToken<double>(
+  _resolveDestinationLeftPaddingCollapsed,
+);
+
+const _destinationRightPaddingExpanded = ContextToken<double>(
+  _resolveDestinationRightPaddingExpanded,
+);
+
+const _destinationRightPaddingCollapsed = ContextToken<double>(
+  _resolveDestinationRightPaddingCollapsed,
+);

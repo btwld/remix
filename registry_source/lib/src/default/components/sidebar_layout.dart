@@ -183,30 +183,27 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
             isCompactOpen: true,
             openCompact: _openCompact,
             closeCompact: _closeCompact,
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              // A plain DecoratedBox paints the panel surface without
-              // affecting layout, unlike a Mix `Box`, whose border-box sizing
-              // would shrink `width` by the border's own stroke width.
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: MixScope.tokenOf(VanillaTokens.sidebar, dialogContext),
-                  border: BorderDirectional(
-                    end: BorderSide(
-                      color: MixScope.tokenOf(
-                        VanillaTokens.sidebarBorder,
-                        dialogContext,
+            child: Box(
+              style: BoxStyler().alignment(.centerStart),
+              // A foreground border paints the panel edge without shrinking
+              // `width` by the border's own stroke width.
+              child: Box(
+                style: BoxStyler()
+                    .width(width)
+                    .height(.infinity)
+                    .color(VanillaTokens.sidebar())
+                    .foregroundDecoration(
+                      BoxDecorationMix(
+                        border: BorderDirectionalMix(
+                          end: BorderSideMix(
+                            color: VanillaTokens.sidebarBorder(),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: SizedBox(
-                  width: width,
-                  height: double.infinity,
-                  child: RemixDialog(
-                    semanticLabel: _navigationSemanticLabel,
-                    child: widget.sidebar,
-                  ),
+                child: RemixDialog(
+                  semanticLabel: _navigationSemanticLabel,
+                  child: widget.sidebar,
                 ),
               ),
             ),
@@ -258,15 +255,21 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
   Widget _wideRow() {
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return RowBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
-        AnimatedContainer(
-          duration: reduceMotion
-              ? Duration.zero
-              : const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          width: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+        Box(
+          style: BoxStyler()
+              .width(
+                widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+              )
+              .animate(
+                .easeInOut(
+                  reduceMotion
+                      ? Duration.zero
+                      : const Duration(milliseconds: 200),
+                ),
+              ),
           child: widget.sidebar,
         ),
         Expanded(child: _body(besideSidebar: true)),
@@ -293,13 +296,17 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
           child: child,
         );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
         if (header != null) inset(header),
         // The body's wrapper stays mounted either way so its state survives
         // a header coming or going.
-        Expanded(child: inset(widget.body, removeTop: header != null)),
+        Expanded(
+          child: RepaintBoundary(
+            child: inset(widget.body, removeTop: header != null),
+          ),
+        ),
       ],
     );
   }

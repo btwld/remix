@@ -1,9 +1,7 @@
 import 'package:dashboard/main.dart';
-import 'package:dashboard/pages/chat_page.dart';
-import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/ui/ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -314,7 +312,9 @@ void main() {
     final requestId = tester
         .widget<UiPermission>(find.byType(UiPermission))
         .requestId;
-    final theme = ThemeScope.of(tester.element(find.byType(ChatPage)));
+    final theme = UiDashboardThemeScope.of(
+      tester.element(find.byType(UiDashboardChatPage)),
+    );
     theme.onChanged(
       theme.settings.copyWith(
         appearance: UiThemeMode.dark,

@@ -130,6 +130,7 @@ class _PlaygroundAnswerState extends State<PlaygroundAnswer> {
                   semanticLabel: widget.sourcesLabel,
                   style: widget.sourcesStyle,
                   triggerBuilder: (context, state, trigger) => Row(
+                    spacing: 8,
                     children: [
                       Expanded(child: trigger!),
                       PlaygroundDisclosureIndicator(

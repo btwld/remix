@@ -3,17 +3,17 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../../dashboard/dashboard_demo_records.dart';
-import '../../components/avatar.dart';
-import '../../components/badge.dart';
-import '../../components/button.dart';
-import '../../components/data_table.dart';
-import '../../components/menu.dart';
-import '../../components/segmented_control.dart';
-import '../../components/textfield.dart';
-import '../../components/text.dart';
-import '../../components/typography.dart';
+import 'dashboard_demo_page_header.dart';
+import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
+
+/// Shared layout for the selected-row badge cluster in the records toolbar.
+final fortalSelectedBadgesStyle = WrapBoxStyler()
+    .spacing(6)
+    .runSpacing(6)
+    .crossAxisAlignment(.center);
 
 class FortalDashboardCustomersPage extends StatefulWidget {
   const FortalDashboardCustomersPage({super.key, this.globalQuery = ''});
@@ -57,78 +57,64 @@ class _FortalDashboardCustomersPageState
         onPressed: () => _toast(context, 'Customer invitation started'),
       ),
       children: [
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final search = SizedBox(
-              width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing(12)
+              .runSpacing(10),
+          children: [
+            Box(
+              style: BoxStyler().maxWidth(300),
               child: FortalTextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(RemixIcons.magnifyingGlass, size: 18),
+                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;
                 }),
               ),
-            );
-            final selection = _selectedIds.isEmpty
-                ? null
-                : Wrap(
-                    spacing: 6,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      FortalBadge.soft(
-                        label: '${_selectedIds.length} selected',
-                      ),
-                      FortalButton.ghost(
-                        size: .size1,
-                        label: 'Export',
-                        onPressed: () => _toast(
-                          context,
-                          'Export prepared for ${_selectedIds.length} customers',
+            ),
+            if (_selectedIds.isNotEmpty)
+              fortalSelectedBadgesStyle(
+                children: [
+                  FortalBadge(
+                    size: .size2,
+                    highContrast: true,
+                    label: '${_selectedIds.length} selected',
+                  ),
+                  FortalButton.ghost(
+                    size: .size1,
+                    label: 'Export',
+                    onPressed: () => _toast(
+                      context,
+                      'Export prepared for ${_selectedIds.length} customers',
+                    ),
+                  ),
+                  FortalButton.ghost(
+                    size: .size1,
+                    label: 'Archive',
+                    onPressed: () => showRemixToast(
+                      context,
+                      RemixToastData(
+                        title: '${_selectedIds.length} customers archived',
+                        icon: RemixIcons.checkCircled,
+                        action: const RemixToastAction(
+                          label: 'Undo',
+                          onPressed: _noop,
                         ),
                       ),
-                      FortalButton.ghost(
-                        size: .size1,
-                        label: 'Archive',
-                        onPressed: () => showRemixToast(
-                          context,
-                          RemixToastData(
-                            title: '${_selectedIds.length} customers archived',
-                            icon: RemixIcons.checkCircled,
-                            action: const RemixToastAction(
-                              label: 'Undo',
-                              onPressed: _noop,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            return constraints.maxWidth < 700
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      search,
-                      if (selection != null) ...[
-                        const SizedBox(height: 10),
-                        selection,
-                      ],
-                    ],
-                  )
-                : Row(
-                    children: [
-                      search,
-                      const Spacer(),
-                      if (selection != null) selection,
-                    ],
-                  );
-          },
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
-        FortalDataTable<RegistryDashboardCustomer>(
+        FortalDataTable<RegistryDashboardCustomer>.surface(
           key: const ValueKey('data-grid-customers'),
           rows: page.items,
-          columns: _customerColumns(context),
+          columns: _customerColumns,
           semanticLabel: 'Customers',
           minimumWidth: 840,
           sort: _sort,
@@ -148,7 +134,8 @@ class _FortalDashboardCustomersPageState
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => const FortalEmptyState(
+            icon: RemixIcons.magnifyingGlass,
             title: 'No customers found',
             body: 'Try a different name or email address.',
           ),
@@ -202,14 +189,14 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
     return _Page(
       title: 'Orders',
       description: 'Review transactions and fulfillment status.',
-      action: FortalButton(
+      action: FortalButton.soft(
         label: 'Export',
         leadingIcon: RemixIcons.download,
         onPressed: () => _toast(context, 'Order export prepared'),
       ),
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
+        Box(
+          style: BoxStyler().alignment(.centerStart),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FortalSegmentedControl<_OrderFilter>(
@@ -232,10 +219,10 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
             ),
           ),
         ),
-        FortalDataTable<RegistryDashboardOrder>(
+        FortalDataTable<RegistryDashboardOrder>.surface(
           key: const ValueKey('data-grid-orders'),
           rows: page.items,
-          columns: _orderColumns(context),
+          columns: _orderColumns,
           semanticLabel: 'Orders',
           minimumWidth: 840,
           sort: _sort,
@@ -252,9 +239,17 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const _Empty(
+          emptyBuilder: (_) => FortalEmptyState(
+            icon: RemixIcons.table,
             title: 'No matching orders',
             body: 'Choose another status to see more orders.',
+            action: _filter == .all
+                ? null
+                : FortalButton.soft(
+                    size: .size1,
+                    label: 'Clear filters',
+                    onPressed: () => setState(() => _filter = .all),
+                  ),
           ),
         ),
       ],
@@ -269,19 +264,20 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
   }
 }
 
-List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
-  BuildContext context,
-) => [
+final _customerColumns = <RemixDataTableColumn<RegistryDashboardCustomer>>[
   RemixDataTableColumn(
     id: 'name',
     label: 'Customer',
     sortable: true,
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => Row(
+    cellBuilder: (_, customer) => RowBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.center)
+          .spacing(9),
       children: [
-        FortalAvatar(label: value.initials),
-        const SizedBox(width: 9),
-        Flexible(child: _Text(value.name, emphasized: true)),
+        FortalAvatar(size: .size2, label: customer.initials),
+        Flexible(child: FortalDataTableCellText(customer.name, primary: true)),
       ],
     ),
   ),
@@ -289,58 +285,72 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     id: 'email',
     label: 'Email',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.email),
+    cellBuilder: (_, customer) => FortalDataTableCellText(customer.email),
   ),
   RemixDataTableColumn(
     id: 'plan',
     label: 'Plan',
     width: const FixedColumnWidth(110),
-    cellBuilder: (_, value) => _Text(value.plan, emphasized: true),
+    cellBuilder: (_, customer) =>
+        FortalDataTableCellText(customer.plan, primary: true),
   ),
   RemixDataTableColumn(
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(110),
-    cellBuilder: (_, value) => _status(value.status.name),
+    cellBuilder: (_, customer) => FortalStatusBadge.customer(customer.status),
   ),
   RemixDataTableColumn(
     id: 'joined',
     label: 'Joined',
     sortable: true,
     width: const FixedColumnWidth(118),
-    cellBuilder: (_, value) =>
-        _Text(registryDashboardShortDate(value.joinedAt)),
+    cellBuilder: (_, customer) =>
+        FortalDataTableCellText(registryDashboardShortDate(customer.joinedAt)),
   ),
   RemixDataTableColumn(
     id: 'actions',
     header: const SizedBox.shrink(),
     semanticLabel: 'Actions',
     width: const FixedColumnWidth(64),
-    cellBuilder: (_, value) => _actions(context, value.name),
+    alignment: AlignmentDirectional.centerEnd,
+    cellBuilder: (context, customer) => FortalActionMenu(
+      key: ValueKey('customer-actions-${customer.id}'),
+      semanticLabel: 'Actions for ${customer.name}',
+      positioning: fortalDataTableActionsPositioning,
+      trigger: fortalDataTableActionsTrigger,
+      actions: const [
+        FortalAction(value: 'view', label: 'View profile'),
+        FortalAction(value: 'email', label: 'Send email'),
+        FortalAction(value: 'archive', label: 'Archive', dividerBefore: true),
+      ],
+      onSelected: (value) =>
+          _toast(context, '$value selected for ${customer.name}'),
+    ),
   ),
 ];
 
-List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
-  BuildContext context,
-) => [
+final _orderColumns = <RemixDataTableColumn<RegistryDashboardOrder>>[
   RemixDataTableColumn(
     id: 'id',
     label: 'Order',
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(value.id, emphasized: true),
+    cellBuilder: (_, order) => FortalDataTableCellText(order.id, primary: true),
   ),
   RemixDataTableColumn(
     id: 'customer',
     label: 'Customer',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.customer, emphasized: true),
+    cellBuilder: (_, order) =>
+        FortalDataTableCellText(order.customer, primary: true),
   ),
   RemixDataTableColumn(
     id: 'date',
     label: 'Date',
     sortable: true,
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(registryDashboardShortDate(value.date)),
+    cellBuilder: (_, order) =>
+        FortalDataTableCellText(registryDashboardShortDate(order.date)),
   ),
   RemixDataTableColumn(
     id: 'amount',
@@ -348,45 +358,41 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
     sortable: true,
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, value) =>
-        _Text('\$${value.amount.toStringAsFixed(2)}', emphasized: true),
+    cellBuilder: (_, order) => FortalDataTableCellText(
+      '\$${order.amount.toStringAsFixed(2)}',
+      primary: true,
+    ),
   ),
   RemixDataTableColumn(
     id: 'status',
     label: 'Status',
     width: const FixedColumnWidth(118),
-    cellBuilder: (_, value) => _status(value.status.name),
+    cellBuilder: (_, order) => FortalStatusBadge.order(order.status),
   ),
   RemixDataTableColumn(
     id: 'actions',
     header: const SizedBox.shrink(),
     semanticLabel: 'Actions',
     width: const FixedColumnWidth(64),
-    cellBuilder: (_, value) => _actions(context, value.id),
+    alignment: AlignmentDirectional.centerEnd,
+    cellBuilder: (context, order) => FortalActionMenu(
+      key: ValueKey('order-actions-${order.id}'),
+      semanticLabel: 'Actions for ${order.id}',
+      positioning: fortalDataTableActionsPositioning,
+      trigger: fortalDataTableActionsTrigger,
+      actions: const [
+        FortalAction(value: 'view', label: 'View order'),
+        FortalAction(value: 'receipt', label: 'Download receipt'),
+        FortalAction(
+          value: 'refund',
+          label: 'Issue refund',
+          dividerBefore: true,
+        ),
+      ],
+      onSelected: (value) => _toast(context, '$value selected for ${order.id}'),
+    ),
   ),
 ];
-
-Widget _actions(BuildContext context, String value) => FortalMenu<String>(
-  trigger: RemixMenuTrigger.builder(
-    label: 'More',
-    icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) => const Icon(RemixIcons.dotsHorizontal, size: 18),
-  ),
-  items: const [
-    RemixMenuItem(value: 'view', label: 'View'),
-    RemixMenuItem(value: 'download', label: 'Download'),
-    RemixMenuDivider(),
-    RemixMenuItem(value: 'archive', label: 'Archive'),
-  ],
-  onSelected: (action) => _toast(context, '$action selected for $value'),
-);
-
-Widget _status(String value) => switch (value) {
-  'active' || 'paid' => FortalBadge(label: value),
-  'suspended' || 'cancelled' => FortalBadge.outline(label: value),
-  'invited' || 'pending' => FortalBadge.soft(label: value),
-  _ => FortalBadge.outline(label: value),
-};
 
 class _Page extends StatelessWidget {
   const _Page({
@@ -403,71 +409,17 @@ class _Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    child: ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _Text(title, size: 28, emphasized: true),
-                  const SizedBox(height: 4),
-                  _Text(description, muted: true),
-                ],
-              ),
-            ),
-            action,
-          ],
+        FortalPageHeader(
+          title: title,
+          description: description,
+          actions: action,
         ),
-        for (final child in children) ...[const SizedBox(height: 20), child],
+        ...children,
       ],
     ),
-  );
-}
-
-class _Empty extends StatelessWidget {
-  const _Empty({required this.title, required this.body});
-  final String title;
-  final String body;
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      children: [
-        const Icon(RemixIcons.magnifyingGlass, size: 24),
-        const SizedBox(height: 8),
-        _Text(title, emphasized: true),
-        const SizedBox(height: 4),
-        _Text(body, muted: true),
-      ],
-    ),
-  );
-}
-
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.size = 14,
-    this.emphasized = false,
-    this.muted = false,
-  });
-  final String value;
-  final double size;
-  final bool emphasized;
-  final bool muted;
-  @override
-  Widget build(BuildContext context) => FortalText(
-    value,
-    size: size >= 24
-        ? FortalTextSize.size7
-        : size >= 18
-        ? FortalTextSize.size4
-        : FortalTextSize.size2,
-    weight: emphasized ? .bold : .regular,
-    highContrast: !muted,
   );
 }
 

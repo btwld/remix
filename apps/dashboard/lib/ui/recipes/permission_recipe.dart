@@ -38,13 +38,16 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => UiAgentPermissionRecipe(
   style: UiPermissionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     actions: FlexBoxStyler().spacing(8).padding(.top(8)),
     title: TextStyler().color(UiTokens.gray12()).fontWeight(FontWeight.w600),
-    tool: TextStyler().color(UiTokens.gray11()).fontSize(12),
+    tool: TextStyler()
+        .color(UiTokens.gray11())
+        .fontSize(12)
+        .wrap(.padding(.top(2))),
     description: TextStyler()
         .color(UiTokens.gray11())
-        .wrap(.padding(.symmetric(vertical: 8))),
+        .wrap(.padding(.symmetric(vertical: 6))),
     status: TextStyler().color(UiTokens.gray11()).fontSize(12),
     detailsLabel: TextStyler().color(UiTokens.gray12()).fontSize(13),
     toolIcon: IconStyler().color(UiTokens.gray12()).size(16),
@@ -52,7 +55,12 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
     indicator: IconStyler().color(UiTokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
-  detailsStyle: uiDisclosureStyle(style: detailsStyle),
+  detailsStyle: uiDisclosureStyle(
+    size: .size1,
+    style: DisclosureStyler()
+        .container(BoxStyler().margin(.top(4)))
+        .merge(detailsStyle),
+  ),
   parametersStyle: uiDataListStyle(style: parametersStyle),
   allowOnceStyle: uiButtonStyle(style: allowOnceStyle),
   alwaysAllowStyle: uiButtonStyle(variant: .outline, style: alwaysAllowStyle),

@@ -168,47 +168,33 @@ void main() {
     }
   });
 
-  test('explicit item inventories support grouped non-generated recipes', () {
+  test('focused inventories derive grouped recipes from registry.yaml', () {
+    final vanillaShell = checker.focusedInventoryForTest('dashboard_shell');
     expect(
-      checker.registryItemInventoryForTest(
-        'dashboard_shell',
-        explicitFiles: [
-          'recipes/dashboard/dashboard_navigation.dart',
-          'recipes/dashboard/dashboard_shell_base.dart',
-          'recipes/dashboard/dashboard_shell.dart',
-        ],
-        nonGenerated: true,
-      ),
-      [
-        'recipes/dashboard/dashboard_navigation.dart',
+      vanillaShell,
+      containsAll([
         'recipes/dashboard/dashboard_shell_base.dart',
         'recipes/dashboard/dashboard_shell.dart',
-      ],
+        'components/sidebar_layout.dart',
+      ]),
     );
-    expect(checker.registryItemInventoryForTest('button'), [
-      'components/button.dart',
-      'components/button.g.dart',
-    ]);
     expect(
-      checker.registryItemInventoryForTest(
-        'dashboard_demo',
-        explicitFiles: [
-          'recipes/dashboard/dashboard_sample_data.dart',
-          'recipes/dashboard/dashboard_overview_base.dart',
-          'recipes/dashboard/dashboard_demo_base.dart',
-          'recipes/dashboard/dashboard_demo_content.dart',
-          'recipes/dashboard/dashboard_demo_chat.dart',
-          'recipes/dashboard/dashboard_demo_charts.dart',
-          'recipes/dashboard/dashboard_demo_records.dart',
-          'recipes/dashboard/dashboard_overview.dart',
-          'recipes/dashboard/dashboard_demo_galleries.dart',
-          'recipes/dashboard/dashboard_demo_records_page.dart',
-          'recipes/dashboard/dashboard_demo_settings.dart',
-          'recipes/dashboard/dashboard_demo.dart',
-        ],
-        nonGenerated: true,
-      ),
+      vanillaShell,
+      isNot(contains('recipes/dashboard/dashboard_demo.dart')),
+    );
+
+    final vanillaDemo = checker.focusedInventoryForTest('dashboard_demo');
+    expect(
+      vanillaDemo.where((path) => path.startsWith('recipes/dashboard/')),
       hasLength(12),
+    );
+    final fortalDemo = checker.focusedInventoryForTest(
+      'dashboard_demo',
+      preset: 'fortal',
+    );
+    expect(
+      fortalDemo.where((path) => path.startsWith('recipes/dashboard/')),
+      hasLength(19),
     );
   });
 
@@ -394,7 +380,7 @@ import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
     test('does not let Fortal import the fonts package', () {
       final app = Directory('${sandbox.path}/app');
-      _writeInstalledUi(app);
+      _writeInstalledUi(app, preset: 'fortal');
       File('${app.path}/lib/ui/theme/theme_data.dart').writeAsStringSync('''
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 ''');
@@ -471,112 +457,8 @@ dev_dependencies:
 ''');
 }
 
-/// Mirrors the checker's own item list; kept here so a new registry item that
-/// the checker forgot still shows up as a failing boundary test.
-const _registryItems = <String>[
-  'icons',
-  'accordion',
-  'app_bar',
-  'avatar',
-  'badge',
-  'button',
-  'callout',
-  'card',
-  'chart',
-  'dashboard_demo',
-  'dashboard_shell',
-  'checkbox',
-  'data_list',
-  'data_table',
-  'dialog',
-  'disclosure',
-  'divider',
-  'icon_button',
-  'link',
-  'menu',
-  'popover',
-  'progress',
-  'radio',
-  'segmented_control',
-  'select',
-  'sidebar',
-  'sidebar_layout',
-  'skeleton',
-  'slider',
-  'spinner',
-  'switch',
-  'tabs',
-  'textfield',
-  'toast',
-  'toggle',
-  'toggle_group',
-  'tooltip',
-  'activity',
-  'answer',
-  'composer',
-  'execution',
-  'message',
-  'permission',
-  'plan',
-  'transcript',
-  'activity_recipe',
-  'answer_recipe',
-  'composer_recipe',
-  'execution_recipe',
-  'message_recipe',
-  'permission_recipe',
-  'plan_recipe',
-  'transcript_recipe',
-];
-
-/// Items with no generated adapter: layouts and other plain compositions
-/// that install with no `Spec` and no `part '*.g.dart';`.
-const _nonGeneratedRegistryItems = <String>['sidebar_layout'];
-
-void _writeInstalledUi(Directory app) {
-  final files = [
-    'ui.dart',
-    'theme/tokens.dart',
-    'theme/theme_data.dart',
-    'theme/theme_scope.dart',
-    'theme/effects.dart',
-    'models/activity_item.dart',
-    'models/plan_item.dart',
-    'models/statuses.dart',
-    'support/disclosure.dart',
-    'support/functional_glyph.dart',
-    'support/live_edge.dart',
-    for (final item in _registryItems)
-      ...(item == 'dashboard_demo'
-          ? const [
-              'recipes/dashboard/dashboard_sample_data.dart',
-              'recipes/dashboard/dashboard_overview_base.dart',
-              'recipes/dashboard/dashboard_demo_base.dart',
-              'recipes/dashboard/dashboard_demo_content.dart',
-              'recipes/dashboard/dashboard_demo_chat.dart',
-              'recipes/dashboard/dashboard_demo_charts.dart',
-              'recipes/dashboard/dashboard_demo_records.dart',
-              'recipes/dashboard/dashboard_overview.dart',
-              'recipes/dashboard/dashboard_demo_galleries.dart',
-              'recipes/dashboard/dashboard_demo_records_page.dart',
-              'recipes/dashboard/dashboard_demo_settings.dart',
-              'recipes/dashboard/dashboard_demo.dart',
-            ]
-          : item == 'dashboard_shell'
-          ? const [
-              'recipes/dashboard/dashboard_shell_base.dart',
-              'recipes/dashboard/dashboard_shell.dart',
-            ]
-          : item == 'icons'
-          ? const ['icons.dart']
-          : item.endsWith('_recipe')
-          ? ['recipes/$item.dart']
-          : [
-              'components/$item.dart',
-              if (!_nonGeneratedRegistryItems.contains(item))
-                'components/$item.g.dart',
-            ]),
-  ];
+void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
+  final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
   File('${app.path}/build.yaml').writeAsStringSync('''targets:
   \$default:

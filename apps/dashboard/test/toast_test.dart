@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:dashboard/main.dart';
-import 'package:dashboard/shell/dashboard_shell.dart';
-import 'package:dashboard/theme/theme_scope.dart';
-import 'package:dashboard/theme/theme_settings.dart';
-import 'package:flutter/material.dart';
+import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:dashboard/ui/ui.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
   testWidgets('visible toast follows live Fortal theme changes', (
@@ -18,26 +16,28 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: Icons.check_circle_outline),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircled),
     );
     await _settle(tester);
 
-    final before = tester
-        .widget<Icon>(find.byIcon(Icons.check_circle_outline))
-        .color;
+    final toastIcon = find.descendant(
+      of: find.byType(RemixToast),
+      matching: find.byIcon(RemixIcons.checkCircled),
+    );
+    final before = tester.widget<Icon>(toastIcon).color;
 
-    final themeScope = tester.widget<ThemeScope>(find.byType(ThemeScope));
+    final themeScope = tester.widget<UiDashboardThemeScope>(
+      find.byType(UiDashboardThemeScope),
+    );
     themeScope.onChanged(
       themeScope.settings.copyWith(accentColor: UiAccentColor.green),
     );
     await tester.pump();
 
-    final after = tester
-        .widget<Icon>(find.byIcon(Icons.check_circle_outline))
-        .color;
+    final after = tester.widget<Icon>(toastIcon).color;
     final expected = MixScope.tokenOf(
       UiTokens.accent11,
-      tester.element(find.byType(DashboardShell)),
+      tester.element(find.byType(UiDashboardDemo)),
     );
 
     expect(after, isNot(before));
@@ -59,7 +59,7 @@ void main() {
       context,
       RemixToastData(
         title: 'Customer archived',
-        icon: Icons.check_circle_outline,
+        icon: RemixIcons.checkCircled,
         action: RemixToastAction(label: 'Undo', onPressed: () => actionCount++),
       ),
     );
@@ -79,7 +79,7 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: Icons.check_circle_outline),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircled),
     );
     await _settle(tester);
 
@@ -101,16 +101,13 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(
-        title: 'First toast',
-        icon: Icons.check_circle_outline,
-      ),
+      const RemixToastData(title: 'First toast', icon: RemixIcons.checkCircled),
     );
     showRemixToast(
       context,
       const RemixToastData(
         title: 'Second toast',
-        icon: Icons.check_circle_outline,
+        icon: RemixIcons.checkCircled,
       ),
     );
     await _settle(tester);
@@ -149,10 +146,7 @@ void main() {
     // this only works when the scope sits above the Navigator.
     showRemixToast(
       dialogContext,
-      const RemixToastData(
-        title: 'Invite sent',
-        icon: Icons.check_circle_outline,
-      ),
+      const RemixToastData(title: 'Invite sent', icon: RemixIcons.checkCircled),
     );
     await _settle(tester);
 
@@ -169,7 +163,7 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: Icons.check_circle_outline),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircled),
     );
     await _settle(tester);
 
@@ -192,13 +186,13 @@ void main() {
 Future<BuildContext> _pumpDashboard(WidgetTester tester) async {
   await tester.pumpWidget(
     const DashboardApp(
-      initialSettings: ThemeSettings(
+      initialSettings: UiThemeSettings(
         appearance: UiThemeMode.light,
         accentColor: UiAccentColor.blue,
       ),
     ),
   );
-  return tester.element(find.byType(DashboardShell));
+  return tester.element(find.byType(UiDashboardDemo));
 }
 
 /// Advances past the toast entrance/exit transitions (180ms / 120ms) without

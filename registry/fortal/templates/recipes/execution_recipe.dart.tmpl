@@ -31,12 +31,12 @@ final class {{typePrefix}}AgentExecutionRecipe {
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentExecutionRecipe(
   style: {{typePrefix}}ExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     output: BoxStyler()
         .color({{typePrefix}}Tokens.gray3())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
     tool: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
     title: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
@@ -48,7 +48,23 @@ final class {{typePrefix}}AgentExecutionRecipe {
     indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
-  disclosureStyle: {{valuePrefix}}DisclosureStyle(style: disclosureStyle),
+  disclosureStyle: {{valuePrefix}}DisclosureStyle(
+    style: DisclosureStyler()
+        .container(
+          BoxStyler()
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
+        .content(
+          BoxStyler()
+              .padding(.fromLTRB(0, 12, 0, 4))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
+        .merge(disclosureStyle),
+  ),
   copyStyle: {{valuePrefix}}IconButtonStyle(
     variant: .ghost,
     size: .size1,

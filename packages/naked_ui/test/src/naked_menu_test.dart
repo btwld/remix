@@ -786,6 +786,155 @@ void main() {
         expect(elsewhere.hasFocus, isTrue);
       });
 
+      testWidgets(
+        'hovering from a submenu or its panel to a sibling item closes the submenu without focusing the submenu trigger',
+        (tester) async {
+          final controller = MenuController();
+          final submenuFocus = FocusNode(debugLabel: 'submenu');
+          addTearDown(submenuFocus.dispose);
+          var siblingHovered = false;
+
+          await tester.pumpMaterialWidget(
+            Align(
+              alignment: Alignment.topLeft,
+              child: NakedMenu<String>(
+                controller: controller,
+                builder: (context, state, child) => const Text('Open'),
+                overlayBuilder: (context, info) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NakedMenuItem<String>(
+                      value: 'a',
+                      builder: (context, state, child) {
+                        siblingHovered = state.isHovered;
+                        return child!;
+                      },
+                      child: const SizedBox(
+                        width: 120,
+                        height: 30,
+                        child: Text('A'),
+                      ),
+                    ),
+                    NakedMenuSubmenu<String>(
+                      focusNode: submenuFocus,
+                      overlayBuilder: _submenuContent,
+                      child: const SizedBox(
+                        width: 120,
+                        height: 30,
+                        child: Text('More'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: const Offset(700, 500));
+          addTearDown(mouse.removePointer);
+
+          // 1. Hover submenu trigger -> opens submenu -> move to sibling item 'A'.
+          await mouse.moveTo(tester.getCenter(find.text('More')));
+          await tester.pump(const Duration(milliseconds: 150));
+          await tester.pumpAndSettle();
+          expect(find.text('Child item'), findsOneWidget);
+
+          await mouse.moveTo(tester.getCenter(find.text('A')));
+          await tester.pump(const Duration(milliseconds: 150));
+          await tester.pumpAndSettle();
+          expect(find.text('Child item'), findsNothing);
+          expect(siblingHovered, isTrue);
+          expect(submenuFocus.hasFocus, isFalse);
+
+          // 2. Hover submenu trigger -> enter submenu panel -> exit panel to 'A'.
+          await mouse.moveTo(tester.getCenter(find.text('More')));
+          await tester.pump(const Duration(milliseconds: 150));
+          await tester.pumpAndSettle();
+          expect(find.text('Child item'), findsOneWidget);
+
+          await mouse.moveTo(tester.getCenter(find.text('Child item')));
+          await tester.pump(const Duration(milliseconds: 150));
+          expect(find.text('Child item'), findsOneWidget);
+
+          await mouse.moveTo(tester.getCenter(find.text('A')));
+          await tester.pump(const Duration(milliseconds: 150));
+          await tester.pumpAndSettle();
+          expect(find.text('Child item'), findsNothing);
+          expect(siblingHovered, isTrue);
+          expect(submenuFocus.hasFocus, isFalse);
+        },
+      );
+
+      testWidgets(
+        'hovering a menu item clears keyboard focus on a sibling item',
+        (tester) async {
+          final controller = MenuController();
+          var firstFocused = false;
+          var secondHovered = false;
+
+          await tester.pumpMaterialWidget(
+            Align(
+              alignment: Alignment.topLeft,
+              child: NakedMenu<String>(
+                controller: controller,
+                builder: (context, state, child) => const Text('Open'),
+                overlayBuilder: (context, info) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NakedMenuItem<String>(
+                      value: 'one',
+                      builder: (context, state, child) {
+                        firstFocused = state.isFocused;
+                        return child!;
+                      },
+                      child: const SizedBox(
+                        width: 120,
+                        height: 30,
+                        child: Text('One'),
+                      ),
+                    ),
+                    NakedMenuItem<String>(
+                      value: 'two',
+                      builder: (context, state, child) {
+                        secondHovered = state.isFocused || state.isHovered;
+                        return child!;
+                      },
+                      child: const SizedBox(
+                        width: 120,
+                        height: 30,
+                        child: Text('Two'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+          await tester.pump();
+          expect(firstFocused, isTrue);
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: const Offset(700, 500));
+          addTearDown(mouse.removePointer);
+          await mouse.moveTo(tester.getCenter(find.text('Two')));
+          await tester.pump();
+
+          expect(firstFocused, isFalse);
+          expect(secondHovered, isTrue);
+        },
+      );
+
       testWidgets('Arrow Down and Up move through items and wrap', (
         tester,
       ) async {

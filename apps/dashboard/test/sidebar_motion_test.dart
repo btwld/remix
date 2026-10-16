@@ -1,9 +1,7 @@
 import 'package:dashboard/main.dart';
-import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/ui/ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -23,7 +21,7 @@ void main() {
     }
   }
 
-  Finder sidebar() => find.byType(UiSidebar<DashboardPage>);
+  Finder sidebar() => find.byType(UiSidebar<UiDashboardDemoPage>);
   Finder collapse() => find.byKey(const ValueKey('dashboard-collapse')).first;
 
   bool compactOpen(WidgetTester tester) => UiSidebarLayoutScope.of(
@@ -54,7 +52,7 @@ void main() {
     tester,
   ) async {
     await mount(tester);
-    expect(find.byType(TopBar), findsOneWidget);
+    expect(find.byType(UiDashboardTopBar), findsOneWidget);
     expect(find.byKey(const ValueKey('theme-quick-toggle')), findsOneWidget);
     expect(find.byKey(const ValueKey('theme-panel-trigger')), findsOneWidget);
     expect(
@@ -70,7 +68,9 @@ void main() {
     await finishMotion(tester);
     expect(find.byKey(const ValueKey('sidebar-account-trigger')), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
+    );
     await tester.pump();
     expect(find.text('Customers'), findsWidgets);
     expect(tester.getSize(sidebar()).width, 72);
@@ -92,7 +92,9 @@ void main() {
     expect(compactOpen(tester), isTrue);
     expect(tester.takeException(), isNull, reason: 'open drawer');
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
+    await tester.tap(
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
+    );
     await finishMotion(tester);
     expect(compactOpen(tester), isFalse);
     expect(find.text('Settings'), findsWidgets);

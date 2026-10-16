@@ -21,7 +21,10 @@ VanillaAgentPlanRecipe vanillaAgentPlanRecipe({
 }) => VanillaAgentPlanRecipe(
   style: AgentPlanStyler(
     viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(VanillaTokens.foreground())
         .fontSize(14)
@@ -35,12 +38,17 @@ VanillaAgentPlanRecipe vanillaAgentPlanRecipe({
         .fontSize(12)
         .wrap(.padding(.right(8))),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
-    pendingStatus: IconStyler().color(VanillaTokens.mutedForeground()).size(18),
-    activeStatus: IconStyler().color(VanillaTokens.primary()).size(18),
-    completedStatus: IconStyler().color(VanillaTokens.primary()).size(18),
+    pendingStatus: IconStyler().color(VanillaTokens.mutedForeground()).size(16),
+    activeStatus: IconStyler().color(VanillaTokens.primary()).size(16),
+    completedStatus: IconStyler().color(VanillaTokens.primary()).size(16),
     cancelledStatus: IconStyler()
         .color(VanillaTokens.mutedForeground())
-        .size(18),
+        .size(16),
   ).merge(style),
-  disclosureStyle: vanillaDisclosureStyle(style: disclosureStyle),
+  disclosureStyle: vanillaDisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.vertical(VanillaTokens.s3))
+        .content(BoxStyler().padding(.bottom(VanillaTokens.s2)))
+        .merge(disclosureStyle),
+  ),
 );

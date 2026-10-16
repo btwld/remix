@@ -21,7 +21,10 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
 }) => UiAgentActivityRecipe(
   style: UiActivityStyler(
     viewport: BoxStyler().maxHeight(200),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(UiTokens.gray12())
         .fontSize(14)
@@ -33,13 +36,13 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
         .fontSize(12)
         .wrap(.padding(.right(8))),
     indicator: IconStyler().color(UiTokens.gray12()).size(16),
-    pendingStatus: IconStyler().color(UiTokens.gray9()).size(12),
-    activeStatus: IconStyler().color(UiTokens.accent9()).size(12),
-    completedStatus: IconStyler().color(UiTokens.accent9()).size(12),
+    pendingStatus: IconStyler().color(UiTokens.gray9()).size(16),
+    activeStatus: IconStyler().color(UiTokens.accent9()).size(16),
+    completedStatus: IconStyler().color(UiTokens.accent9()).size(16),
   ).merge(style),
   disclosureStyle: uiDisclosureStyle(
     style: DisclosureStyler()
-        .content(BoxStyler().padding(.all(0)))
+        .content(BoxStyler().padding(.symmetric(horizontal: 12, vertical: 2)))
         .merge(disclosureStyle),
   ),
 );

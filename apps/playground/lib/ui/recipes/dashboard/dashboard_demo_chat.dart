@@ -283,57 +283,67 @@ class _PlaygroundDashboardChatPageState
 
   @override
   Widget build(BuildContext context) {
-    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 32.0;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        gutter,
-        gutter,
-        gutter,
-        gutter + MediaQuery.viewInsetsOf(context).bottom,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxHeight < 500;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: StyledText('Agent chat', style: styles.heading),
-                      ),
-                      styles.buttonBuilder('New chat', _reset, .outline),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  StyledText('Interactive demo', style: styles.body),
-                  if (!compact) ...[
-                    const SizedBox(height: 8),
-                    StyledText(
-                      'Simulated responses and tools — no backend or credentials.',
-                      style: styles.body,
+    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 20.0;
+    return Box(
+      style: BoxStyler()
+          .padding(
+            .fromLTRB(
+              gutter,
+              gutter,
+              gutter,
+              gutter + MediaQuery.viewInsetsOf(context).bottom,
+            ),
+          )
+          .alignment(.center),
+      child: Box(
+        style: BoxStyler().maxWidth(800),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final compact = constraints.maxHeight < 500;
+            return ColumnBox(
+              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
+              children: [
+                ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.stretch)
+                      .spacing(4),
+                  children: [
+                    RowBox(
+                      style: FlexBoxStyler().spacing(12),
+                      children: [
+                        Expanded(
+                          child: StyledText(
+                            'Agent chat',
+                            style: styles.heading,
+                          ),
+                        ),
+                        styles.buttonBuilder('New chat', _reset, .outline),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    if (!_active) ...[_starters(), const SizedBox(height: 16)],
+                    StyledText('Interactive demo', style: styles.body),
+                    if (!compact)
+                      StyledText(
+                        'Simulated responses and tools — no backend or credentials.',
+                        style: styles.body,
+                      ),
                   ],
-                  Expanded(child: _transcript()),
-                  if (!_following)
-                    Align(
-                      child: styles.buttonBuilder(
-                        'Return to latest',
-                        _returnToLatest,
-                        .soft,
-                      ),
+                ),
+                if (!compact && !_active) _starters(),
+                Expanded(child: _transcript()),
+                if (!_following)
+                  Box(
+                    style: BoxStyler().alignment(.center),
+                    child: styles.buttonBuilder(
+                      'Return to latest',
+                      _returnToLatest,
+                      .soft,
                     ),
-                  const SizedBox(height: 12),
-                  _composer(maxLines: compact ? 2 : 8),
-                ],
-              );
-            },
-          ),
+                  ),
+                _composer(maxLines: compact ? 2 : 8),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -341,12 +351,11 @@ class _PlaygroundDashboardChatPageState
 
   Widget _starters() => SingleChildScrollView(
     scrollDirection: Axis.horizontal,
-    child: Row(
+    child: RowBox(
+      style: FlexBoxStyler().spacing(8),
       children: [
         _starter('Review checkout', .success),
-        const SizedBox(width: 8),
         _starter('Run terminal checks', .permission),
-        const SizedBox(width: 8),
         _starter('Recover a failed command', .failure),
       ],
     ),
@@ -360,6 +369,7 @@ class _PlaygroundDashboardChatPageState
 
   Widget _transcript() {
     final requestId = _runId;
+    final narrow = MediaQuery.sizeOf(context).width < 600;
     final children = <Widget>[];
     for (final turn in _history) {
       children.addAll([
@@ -428,7 +438,13 @@ class _PlaygroundDashboardChatPageState
             parameters: const [
               RemixDataListItem(label: 'Command', value: 'flutter test'),
             ],
-            style: styles.permissionStyle,
+            style: styles.permissionStyle.merge(
+              PlaygroundPermissionStyler(
+                actions: FlexBoxStyler()
+                    .direction(narrow ? .vertical : .horizontal)
+                    .crossAxisAlignment(narrow ? .stretch : .center),
+              ),
+            ),
             surfaceStyle: styles.permissionSurfaceStyle,
             detailsStyle: styles.permissionDetailsStyle,
             parametersStyle: styles.permissionParametersStyle,
@@ -471,7 +487,7 @@ class _PlaygroundDashboardChatPageState
             onCopy: () =>
                 Clipboard.setData(ClipboardData(text: _executionOutput)),
             onRetry: _retry,
-            child: Text(_executionOutput),
+            child: StyledText(_executionOutput),
           ),
         );
       }
@@ -498,12 +514,10 @@ class _PlaygroundDashboardChatPageState
       },
       style: styles.transcriptStyle,
       children: children.isEmpty
-          ? const [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Text('Choose a starter or write a message.'),
-                ),
+          ? [
+              Box(
+                style: BoxStyler().alignment(.center).padding(.all(32)),
+                child: const StyledText('Choose a starter or write a message.'),
               ),
             ]
           : children,
@@ -514,7 +528,7 @@ class _PlaygroundDashboardChatPageState
     role: .user,
     style: styles.messageStyle,
     surfaceStyle: styles.messageSurfaceStyle,
-    child: Text(value),
+    child: StyledText(value),
   );
 
   Widget _answerWidget(String value, PlaygroundAnswerStatus status) {
@@ -528,8 +542,10 @@ class _PlaygroundDashboardChatPageState
       retryStyle: styles.answerRetryStyle,
       onCopy: () => Clipboard.setData(ClipboardData(text: value)),
       onRetry: _retry,
-      sourcesContent: const Text('Deterministic local fixture · no network'),
-      child: Text(value),
+      sourcesContent: const StyledText(
+        'Deterministic local fixture · no network',
+      ),
+      child: StyledText(value),
     );
   }
 

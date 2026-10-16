@@ -344,7 +344,7 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
   @override
   State<RemixSidebar<T>> createState() => _RemixSidebarState<T>();
 
-  Widget _build(BuildContext context, SidebarAnimation motion) {
+  Widget _buildPanel(BuildContext context) {
     assert(_debugConfigurationIsValid());
     if (collapsed) {
       for (final section in sections) {
@@ -364,24 +364,19 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
         );
       }
     }
-    final panel = _buildPanel(context, motion);
-    return _SidebarAnimationScope(
-      motion: motion,
-      child: expandedWidth == null
-          ? panel
-          : Box(
-              style: BoxStyler().width(
-                ui.lerpDouble(collapsedWidth, expandedWidth, motion.expansion)!,
-              ),
-              child: panel,
-            ),
-    );
-  }
 
-  Widget _buildPanel(BuildContext context, SidebarAnimation motion) {
     final effectiveStyle = _effectiveStyle();
     final handleSelected = onSelected;
     final destinationsDisabled = !enabled || handleSelected == null;
+    final resolvedTooltipPositioning =
+        tooltipPositioning ??
+        OverlayPositionConfig(
+          side: Directionality.of(context) == TextDirection.ltr
+              ? OverlaySide.right
+              : OverlaySide.left,
+          alignment: OverlayAlignment.center,
+          sideOffset: 8,
+        );
 
     return WidgetStateProvider(
       states: destinationsDisabled ? const {WidgetState.disabled} : const {},
@@ -389,86 +384,6 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
         style: effectiveStyle,
         styleSpec: styleSpec,
         builder: (context, spec) {
-          final destinations = FlexBox(
-            styleSpec: _forceSourceOrder(spec.content),
-            children: [
-              for (final section in sections)
-                if (section.destinations.isNotEmpty)
-                  FlexBox(
-                    styleSpec: _forceSourceOrder(spec.section),
-                    children: [
-                      if (section.label case final label?)
-                        Semantics(
-                          header: true,
-                          label: label,
-                          excludeSemantics: true,
-                          // The heading keeps its row in the rail, so
-                          // destinations never shift vertically; only the
-                          // text fades.
-                          child: Opacity(
-                            opacity: motion.labelOpacity,
-                            child: StyledText(
-                              label,
-                              styleSpec: motion.expansion == 1
-                                  ? spec.sectionLabel
-                                  : spec.sectionLabel.copyWith(
-                                      spec: spec.sectionLabel.spec.copyWith(
-                                        maxLines: 1,
-                                        softWrap: false,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                      FlexBox(
-                        styleSpec: _forceSourceOrder(spec.destinations),
-                        children: [
-                          for (final destination in section.destinations)
-                            _RemixSidebarDestinationWidget<T>(
-                              key: ValueKey<T>(destination.value),
-                              data: destination,
-                              motion: motion,
-                              tooltipsEnabled: collapsed && showTooltips,
-                              tooltipStyle: spec.tooltip,
-                              tooltipPositioning:
-                                  tooltipPositioning ??
-                                  OverlayPositionConfig(
-                                    side:
-                                        Directionality.of(context) ==
-                                            TextDirection.ltr
-                                        ? OverlaySide.right
-                                        : OverlaySide.left,
-                                    alignment: OverlayAlignment.center,
-                                    sideOffset: 8,
-                                  ),
-                              selected: destination.value == selectedValue,
-                              sidebarEnabled: enabled,
-                              onSelected: handleSelected,
-                              defaultStyle: styleSpec == null
-                                  ? effectiveStyle
-                                  : null,
-                              defaultStyleSpec: styleSpec == null
-                                  ? null
-                                  : spec.destination,
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
-            ],
-          );
-
-          final landmark = ExcludeSemantics(
-            excluding: excludeSemantics,
-            child: Semantics(
-              role: ui.SemanticsRole.navigation,
-              container: true,
-              explicitChildNodes: true,
-              label: semanticLabel,
-              child: destinations,
-            ),
-          );
-
           final container = _forceSourceOrder(spec.container);
 
           // FlexBox applies its Box constraints below this builder. Enforce
@@ -481,24 +396,117 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
                   styleConstraints?.enforce(parentConstraints) ??
                   parentConstraints;
               final hasBoundedHeight = effectiveConstraints.hasBoundedHeight;
+              final hasBoundedWidth =
+                  expandedWidth != null || effectiveConstraints.hasBoundedWidth;
+
+              final destinations = FlexBox(
+                styleSpec: _forceSourceOrder(spec.content),
+                children: [
+                  for (final section in sections)
+                    if (section.destinations.isNotEmpty)
+                      FlexBox(
+                        styleSpec: _forceSourceOrder(spec.section),
+                        children: [
+                          if (section.label case final label?)
+                            _SidebarSectionHeading(
+                              label: label,
+                              styleSpec: spec.sectionLabel,
+                            ),
+                          FlexBox(
+                            styleSpec: _forceSourceOrder(spec.destinations),
+                            children: [
+                              for (final destination in section.destinations)
+                                _RemixSidebarDestinationWidget<T>(
+                                  key: ValueKey<T>(destination.value),
+                                  data: destination,
+                                  boundedWidth: hasBoundedWidth,
+                                  tooltipsEnabled: collapsed && showTooltips,
+                                  tooltipStyle: spec.tooltip,
+                                  tooltipPositioning:
+                                      resolvedTooltipPositioning,
+                                  selected: destination.value == selectedValue,
+                                  sidebarEnabled: enabled,
+                                  onSelected: handleSelected,
+                                  defaultStyle: styleSpec == null
+                                      ? effectiveStyle
+                                      : null,
+                                  defaultStyleSpec: styleSpec == null
+                                      ? null
+                                      : spec.destination,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                ],
+              );
+
+              final landmark = ExcludeSemantics(
+                excluding: excludeSemantics,
+                child: Semantics(
+                  role: ui.SemanticsRole.navigation,
+                  container: true,
+                  explicitChildNodes: true,
+                  label: semanticLabel,
+                  child: destinations,
+                ),
+              );
 
               return FlexBox(
                 key: const ValueKey('RemixSidebar.container'),
                 styleSpec: container,
                 children: [
                   if (header case final header?)
-                    Box(styleSpec: spec.header, child: header),
+                    Semantics(
+                      container: true,
+                      explicitChildNodes: true,
+                      child: Box(styleSpec: spec.header, child: header),
+                    ),
                   if (hasBoundedHeight)
                     Expanded(child: SingleChildScrollView(child: landmark))
                   else
                     landmark,
                   if (footer case final footer?)
-                    Box(styleSpec: spec.footer, child: footer),
+                    Semantics(
+                      container: true,
+                      explicitChildNodes: true,
+                      child: Box(styleSpec: spec.footer, child: footer),
+                    ),
                 ],
               );
             },
           );
         },
+      ),
+    );
+  }
+}
+
+class _SidebarSectionHeading extends StatelessWidget {
+  const _SidebarSectionHeading({required this.label, required this.styleSpec});
+
+  final String label;
+  final StyleSpec<TextSpec> styleSpec;
+
+  @override
+  Widget build(BuildContext context) {
+    final motion = RemixSidebar.animationOf(context);
+    return Semantics(
+      header: true,
+      label: label,
+      excludeSemantics: true,
+      // The heading keeps its row in the rail, so destinations never shift
+      // vertically; only the text fades.
+      child: Opacity(
+        opacity: motion.labelOpacity,
+        child: StyledText(
+          label,
+          styleSpec: motion.expansion == 1
+              ? styleSpec
+              : styleSpec.copyWith(
+                  spec: styleSpec.spec.copyWith(maxLines: 1, softWrap: false),
+                ),
+        ),
       ),
     );
   }
@@ -597,11 +605,33 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: _controller,
-    builder: (context, child) =>
-        widget._build(context, _frame(widget.collapsed, widget.animationStyle)),
-  );
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        child: widget._buildPanel(context),
+        builder: (context, child) {
+          final motion = _frame(widget.collapsed, widget.animationStyle);
+          return _SidebarAnimationScope(
+            motion: motion,
+            child: _SidebarAnimatingScope(
+              isAnimating: motion.isAnimating,
+              child: widget.expandedWidth == null
+                  ? child!
+                  : SizedBox(
+                      width: ui.lerpDouble(
+                        widget.collapsedWidth,
+                        widget.expandedWidth,
+                        motion.expansion,
+                      )!,
+                      child: child,
+                    ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
 /// Makes the internally owned frame available to slots and style resolution.
@@ -616,14 +646,35 @@ class _SidebarAnimationScope extends InheritedWidget {
       motion.isAnimating != oldWidget.motion.isAnimating;
 }
 
+/// Notifies destinations only when motion starts or settles, avoiding per-frame
+/// rebuilds of interactive toggle wrappers and tooltips.
+class _SidebarAnimatingScope extends InheritedWidget {
+  const _SidebarAnimatingScope({
+    required this.isAnimating,
+    required super.child,
+  });
+
+  final bool isAnimating;
+
+  static bool of(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<_SidebarAnimatingScope>()
+          ?.isAnimating ??
+      false;
+
+  @override
+  bool updateShouldNotify(_SidebarAnimatingScope oldWidget) =>
+      isAnimating != oldWidget.isAnimating;
+}
+
 class _RemixSidebarDestinationWidget<T extends Object> extends StatefulWidget {
   const _RemixSidebarDestinationWidget({
     super.key,
     required this.data,
+    required this.boundedWidth,
     required this.selected,
     required this.sidebarEnabled,
     required this.onSelected,
-    required this.motion,
     required this.tooltipsEnabled,
     required this.tooltipStyle,
     required this.tooltipPositioning,
@@ -632,10 +683,10 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatefulWidget {
   });
 
   final RemixSidebarDestination<T> data;
+  final bool boundedWidth;
   final bool selected;
   final bool sidebarEnabled;
   final ValueChanged<T>? onSelected;
-  final SidebarAnimation motion;
   final bool tooltipsEnabled;
   final StyleSpec<TooltipSpec> tooltipStyle;
   final OverlayPositionConfig tooltipPositioning;
@@ -653,16 +704,38 @@ class _RemixSidebarDestinationState<T extends Object>
   final _tooltipKey = GlobalKey<RawTooltipState>();
   bool _hovered = false;
   bool _focused = false;
+  bool _isAnimating = false;
   Timer? _resumeTooltip;
 
-  bool get _canShow => widget.tooltipsEnabled && !widget.motion.isAnimating;
+  bool get _canShow => widget.tooltipsEnabled && !_isAnimating;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final wasAnimating = _isAnimating;
+    _isAnimating = _SidebarAnimatingScope.of(context);
+    _reconcileTooltip(
+      oldTooltipsEnabled: widget.tooltipsEnabled,
+      wasAnimating: wasAnimating,
+    );
+  }
 
   @override
   void didUpdateWidget(_RemixSidebarDestinationWidget<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _reconcileTooltip(
+      oldTooltipsEnabled: oldWidget.tooltipsEnabled,
+      wasAnimating: _isAnimating,
+    );
+  }
+
+  void _reconcileTooltip({
+    required bool oldTooltipsEnabled,
+    required bool wasAnimating,
+  }) {
     if (!_canShow) {
       _resumeTooltip?.cancel();
-    } else if ((!oldWidget.tooltipsEnabled || oldWidget.motion.isAnimating) &&
+    } else if ((!oldTooltipsEnabled || wasAnimating) &&
         (_hovered || _focused)) {
       _resumeTooltip?.cancel();
       _resumeTooltip = Timer(
@@ -716,7 +789,12 @@ class _RemixSidebarDestinationState<T extends Object>
             style: style,
             styleSpec: null,
             controller: NakedToggleState.controllerOf(context),
-            builder: (context, spec) => _destinationContent(spec),
+            builder: (context, spec) => _SidebarDestinationContent(
+              icon: data.icon,
+              label: data.label,
+              spec: spec,
+              boundedWidth: widget.boundedWidth,
+            ),
           ),
         ),
       ),
@@ -755,29 +833,45 @@ class _RemixSidebarDestinationState<T extends Object>
       ),
     );
   }
+}
 
-  Widget _destinationContent(ToggleSpec spec) {
-    final motion = widget.motion;
+class _SidebarDestinationContent extends StatelessWidget {
+  const _SidebarDestinationContent({
+    required this.icon,
+    required this.label,
+    required this.spec,
+    required this.boundedWidth,
+  });
+
+  final IconData? icon;
+  final String label;
+  final ToggleSpec spec;
+  final bool boundedWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final motion = RemixSidebar.animationOf(context);
+    final hasBoundedWidth =
+        boundedWidth ||
+        (spec.container.spec.box?.spec.constraints?.hasBoundedWidth ?? false);
+    final iconWidget = icon == null
+        ? null
+        : StyledIcon(icon: icon, styleSpec: spec.icon);
+
     // Keep the expanded contract (including caller-supplied wrapping and
     // space-between alignment) and avoid reveal wrappers at rest. Only the
     // content changes here; the interactive NakedToggle remains mounted.
     if (motion.expansion == 1 && !motion.isAnimating) {
-      return LayoutBuilder(
-        builder: (context, constraints) => RowBox(
-          styleSpec: spec.container,
-          children: [
-            if (widget.data.icon case final icon?)
-              StyledIcon(icon: icon, styleSpec: spec.icon),
-            if (constraints.hasBoundedWidth)
-              Flexible(
-                child: StyledText(widget.data.label, styleSpec: spec.label),
-              )
-            else
-              StyledText(widget.data.label, styleSpec: spec.label),
-          ],
-        ),
+      final textWidget = StyledText(label, styleSpec: spec.label);
+      return RowBox(
+        styleSpec: spec.container,
+        children: [
+          ?iconWidget,
+          if (hasBoundedWidth) Flexible(child: textWidget) else textWidget,
+        ],
       );
     }
+
     final flex = spec.container.spec.flex?.spec;
     final expandedAlignment = switch (flex?.mainAxisAlignment) {
       MainAxisAlignment.center => AlignmentDirectional.center,
@@ -787,57 +881,50 @@ class _RemixSidebarDestinationState<T extends Object>
     // Icons hold their expanded position while the narrowing row clips the
     // label; only the settled rail centers them.
     final railAtRest = motion.expansion == 0 && !motion.isAnimating;
-    Widget content(bool bounded) {
-      final label = Offstage(
-        offstage: motion.expansion == 0,
-        child: Opacity(
-          opacity: motion.labelOpacity,
-          child: StyledText(
-            widget.data.label,
-            styleSpec: spec.label.copyWith(
-              spec: spec.label.spec.copyWith(
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.clip,
-              ),
+    final labelWidget = Offstage(
+      offstage: motion.expansion == 0,
+      child: Opacity(
+        opacity: motion.labelOpacity,
+        child: StyledText(
+          label,
+          styleSpec: spec.label.copyWith(
+            spec: spec.label.spec.copyWith(
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.clip,
             ),
           ),
         ),
-      );
-      return Align(
-        alignment: railAtRest ? AlignmentDirectional.center : expandedAlignment,
-        widthFactor: bounded ? null : 1,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.data.icon case final icon?) ...[
-              StyledIcon(icon: icon, styleSpec: spec.icon),
-              SizedBox(width: (flex?.spacing ?? 0) * motion.expansion),
-            ],
-            if (bounded) Flexible(child: label) else label,
-          ],
-        ),
-      );
-    }
-
-    return LayoutBuilder(
-      builder: (context, constraints) => RowBox(
-        styleSpec: railAtRest
-            ? _centeredContainer(spec.container)
-            : spec.container,
+      ),
+    );
+    final inner = Align(
+      alignment: railAtRest ? AlignmentDirectional.center : expandedAlignment,
+      widthFactor: hasBoundedWidth ? null : 1,
+      child: RowBox(
+        style: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .spacing((flex?.spacing ?? 0) * motion.expansion),
         children: [
-          if (constraints.hasBoundedWidth)
-            Flexible(child: content(true))
-          else
-            content(false),
+          ?iconWidget,
+          if (hasBoundedWidth) Flexible(child: labelWidget) else labelWidget,
         ],
       ),
+    );
+
+    return RowBox(
+      styleSpec: railAtRest
+          ? _centeredContainer(context, spec.container)
+          : spec.container,
+      children: [if (hasBoundedWidth) Flexible(child: inner) else inner],
     );
   }
 
   /// Centers the settled rail icon in the whole target, not only in the space
   /// left by a recipe's (possibly asymmetric) horizontal padding.
-  StyleSpec<FlexBoxSpec> _centeredContainer(StyleSpec<FlexBoxSpec> container) {
+  StyleSpec<FlexBoxSpec> _centeredContainer(
+    BuildContext context,
+    StyleSpec<FlexBoxSpec> container,
+  ) {
     final box = container.spec.box;
     final padding = box?.spec.padding?.resolve(Directionality.of(context));
     if (box == null || padding == null) return container;
@@ -858,6 +945,26 @@ final class _SidebarTooltipStyler extends TooltipStyler {
   final StyleSpec<TooltipSpec> value;
   @override
   StyleSpec<TooltipSpec> resolve(BuildContext context) => value;
+  @override
+  List<Object?> get props => [value];
+}
+
+/// Adapts a nested raw destination spec to the destination's style input so its
+/// animation and modifier metadata remain intact.
+final class _RawSidebarDestinationStyler extends ToggleStyler {
+  const _RawSidebarDestinationStyler(this.value) : super.create();
+
+  final StyleSpec<ToggleSpec> value;
+
+  @override
+  ToggleStyler merge(ToggleStyler? other) {
+    // A raw SidebarSpec is authoritative by contract.
+    return this;
+  }
+
+  @override
+  StyleSpec<ToggleSpec> resolve(BuildContext context) => value;
+
   @override
   List<Object?> get props => [value];
 }
@@ -888,33 +995,52 @@ final class _SidebarDestinationStyler extends ToggleStyler {
 
   @override
   StyleSpec<ToggleSpec> resolve(BuildContext context) {
-    return defaultStyle
-        .merge(SidebarStyler(destination: itemStyle))
-        .build(context)
-        .spec
-        .destination;
+    final variants = defaultStyle.$variants;
+    if (variants == null || variants.isEmpty) {
+      final mergedStyle = MixOps.merge(
+        defaultStyle.$destination,
+        Prop.maybeMix<StyleSpec<ToggleSpec>>(itemStyle),
+      );
+      return MixOps.resolve(context, mergedStyle) ??
+          const StyleSpec(spec: ToggleSpec());
+    }
+    return _SidebarDestinationProjection(
+      defaultStyle,
+      itemStyle,
+    ).build(context).spec.destination;
   }
 
   @override
   List<Object?> get props => [defaultStyle, itemStyle];
 }
 
-/// Adapts a nested raw destination spec to the destination's style input so its
-/// animation and modifier metadata remain intact.
-final class _RawSidebarDestinationStyler extends ToggleStyler {
-  const _RawSidebarDestinationStyler(this.value) : super.create();
+/// Projects a destination only after Mix has merged the sidebar's active variants.
+final class _SidebarDestinationProjection extends SidebarStyler {
+  _SidebarDestinationProjection(this.source, this.itemStyle)
+    : super.create(variants: source.$variants);
 
-  final StyleSpec<ToggleSpec> value;
+  final SidebarStyler source;
+  final ToggleStyler itemStyle;
 
   @override
-  ToggleStyler merge(ToggleStyler? other) {
-    // A raw SidebarSpec is authoritative by contract.
-    return this;
+  SidebarStyler merge(SidebarStyler? other) =>
+      _SidebarDestinationProjection(source.merge(other), itemStyle);
+
+  @override
+  StyleSpec<SidebarSpec> resolve(BuildContext context) {
+    final mergedStyle = MixOps.merge(
+      source.$destination,
+      Prop.maybeMix<StyleSpec<ToggleSpec>>(itemStyle),
+    );
+    return StyleSpec(
+      spec: SidebarSpec(
+        destination:
+            MixOps.resolve(context, mergedStyle) ??
+            const StyleSpec(spec: ToggleSpec()),
+      ),
+    );
   }
 
   @override
-  StyleSpec<ToggleSpec> resolve(BuildContext context) => value;
-
-  @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [source, itemStyle];
 }

@@ -77,9 +77,12 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .spacing(VanillaTokens.s2)
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .label(
-      .style(
-        VanillaTokens.textSm.mix(),
-      ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
+      .style(VanillaTokens.textSm.mix())
+          .fontWeight(FontWeight.w500)
+          .color(VanillaTokens.foreground())
+          .maxLines(1)
+          .softWrap(false)
+          .overflow(.ellipsis),
     )
     .icon(.size(VanillaTokens.icon).color(VanillaTokens.foreground()))
     .onHovered(.color(VanillaTokens.accent()))
@@ -100,7 +103,6 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
 /// the pointer, and a keyboard user has to see the same row a mouse user
 /// would.
 MenuItemStyler _itemStyle() => MenuItemStyler()
-    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(VanillaTokens.controlSm)
@@ -118,11 +120,13 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .leadingIcon(
       .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
+    // 10px (`VanillaTokens.s2_5`) sizes Remix's edge-to-edge 9×9 submenu
+    // chevron and choice check paths.
     .trailingIcon(
-      .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
+      .size(VanillaTokens.s2_5).color(VanillaTokens.mutedForeground()),
     )
     .indicator(
-      .size(VanillaTokens.icon).color(VanillaTokens.popoverForeground()),
+      .size(VanillaTokens.s2_5).color(VanillaTokens.popoverForeground()),
     )
     .onHovered(_highlighted())
     .onFocused(_highlighted())

@@ -1,0 +1,62 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'divider.g.dart';
+
+/// The application's Divider recipe.
+///
+/// A divider is a hairline in the `border` token, the same color every other
+/// control outline uses, so a rule between two rows matches the edge of the
+/// card around them.
+///
+/// It always fills the axis it is laid along rather than offering length
+/// presets: a rule that stops short of its container is a decision for the
+/// layout that placed it, expressed with ordinary padding.
+///
+/// [orientation] is a plain Flutter [Axis] rather than an enum of this
+/// layer's own. There is nothing application-specific about which way a line
+/// runs, and a local enum would only need mapping back at every call site.
+/// It is also not named `variant`, so the generator emits no named
+/// constructors for it — an axis is a value a caller computes, not a
+/// hand-written choice.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it:
+///
+/// ```dart
+/// VanillaDivider(
+///   orientation: Axis.vertical,
+///   style: DividerStyler().color(VanillaTokens.muted()),
+/// )
+/// ```
+@MixWidget(target: RemixDivider.new)
+DividerStyler vanillaDividerStyle({
+  Axis orientation = Axis.horizontal,
+  DividerStyler style = const DividerStyler.create(),
+}) => DividerStyler()
+    .color(VanillaTokens.border())
+    .merge(_extent(orientation))
+    .merge(style);
+
+/// Pins the cross-axis thickness and stretches along the main axis.
+///
+/// The rule is a hairline, the weight every bordered control draws, so a
+/// divider and a card edge do not read as two different weights.
+///
+/// A `FractionallySizedBox` rather than an explicit width or height: the
+/// divider does not know how wide its parent is, and a fixed length would be
+/// wrong the moment the layout changed. It centres on the cross axis by
+/// itself, so it needs no `.align()` after it.
+DividerStyler _extent(Axis orientation) => switch (orientation) {
+  .horizontal =>
+    DividerStyler()
+        .height(VanillaTokens.strokeHairline)
+        .wrap(.fractionallySizedBox(widthFactor: 1)),
+  .vertical =>
+    DividerStyler()
+        .width(VanillaTokens.strokeHairline)
+        .wrap(.fractionallySizedBox(heightFactor: 1)),
+};

@@ -38,15 +38,18 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => FortalAgentPermissionRecipe(
   style: AgentPermissionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     actions: FlexBoxStyler().spacing(8).padding(.top(8)),
     title: TextStyler()
         .color(FortalTokens.gray12())
         .fontWeight(FontWeight.w600),
-    tool: TextStyler().color(FortalTokens.gray11()).fontSize(12),
+    tool: TextStyler()
+        .color(FortalTokens.gray11())
+        .fontSize(12)
+        .wrap(.padding(.top(2))),
     description: TextStyler()
         .color(FortalTokens.gray11())
-        .wrap(.padding(.symmetric(vertical: 8))),
+        .wrap(.padding(.symmetric(vertical: 6))),
     status: TextStyler().color(FortalTokens.gray11()).fontSize(12),
     detailsLabel: TextStyler().color(FortalTokens.gray12()).fontSize(13),
     toolIcon: IconStyler().color(FortalTokens.gray12()).size(16),
@@ -54,7 +57,12 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
     indicator: IconStyler().color(FortalTokens.gray12()).size(16),
   ).merge(style),
   surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
-  detailsStyle: fortalDisclosureStyle(style: detailsStyle),
+  detailsStyle: fortalDisclosureStyle(
+    size: .size1,
+    style: DisclosureStyler()
+        .container(BoxStyler().margin(.top(4)))
+        .merge(detailsStyle),
+  ),
   parametersStyle: fortalDataListStyle(style: parametersStyle),
   allowOnceStyle: fortalButtonStyle(style: allowOnceStyle),
   alwaysAllowStyle: fortalButtonStyle(

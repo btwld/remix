@@ -21,7 +21,10 @@ FortalAgentPlanRecipe fortalAgentPlanRecipe({
 }) => FortalAgentPlanRecipe(
   style: AgentPlanStyler(
     viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(FortalTokens.gray12())
         .fontSize(14)
@@ -33,10 +36,10 @@ FortalAgentPlanRecipe fortalAgentPlanRecipe({
         .fontSize(12)
         .wrap(.padding(.right(8))),
     indicator: IconStyler().color(FortalTokens.gray12()).size(16),
-    pendingStatus: IconStyler().color(FortalTokens.gray9()).size(18),
-    activeStatus: IconStyler().color(FortalTokens.accent9()).size(18),
-    completedStatus: IconStyler().color(FortalTokens.accent9()).size(18),
-    cancelledStatus: IconStyler().color(FortalTokens.gray9()).size(18),
+    pendingStatus: IconStyler().color(FortalTokens.gray9()).size(16),
+    activeStatus: IconStyler().color(FortalTokens.accent9()).size(16),
+    completedStatus: IconStyler().color(FortalTokens.accent9()).size(16),
+    cancelledStatus: IconStyler().color(FortalTokens.gray9()).size(16),
   ).merge(style),
   disclosureStyle: fortalDisclosureStyle(style: disclosureStyle),
 );

@@ -101,7 +101,6 @@ ToggleGroupItemStyler _itemStyle(
   VanillaToggleGroupVariant variant,
 ) {
   return _content(VanillaTokens.foreground())
-      .animate(VanillaTokens.motion)
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)

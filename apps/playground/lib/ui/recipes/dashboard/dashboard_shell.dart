@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -132,12 +134,12 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
             required semanticLabel,
           }) => PlaygroundSidebar<T>(
             key: const ValueKey('dashboard-sidebar'),
-            style: SidebarStyler().padding(
-              EdgeInsetsGeometryMix.value(MediaQuery.paddingOf(context)),
+            style: _sidebarMotionStyle(
+              context,
+              collapsed: collapsed,
+              collapsedWidth: collapsedWidth,
             ),
             collapsed: collapsed,
-            expandedWidth: sidebarWidth,
-            collapsedWidth: collapsedWidth,
             header: header,
             sections: sections,
             selectedValue: selectedValue,
@@ -205,3 +207,183 @@ final class _PlaygroundDashboardLayoutControls
   @override
   void openCompact() => scope.openCompact();
 }
+
+SidebarStyler _sidebarMotionStyle(
+  BuildContext context, {
+  required bool collapsed,
+  required double collapsedWidth,
+}) {
+  final leftPadding = collapsedWidth == 72
+      ? (collapsed
+            ? _destinationLeftPaddingCollapsed
+            : _destinationLeftPaddingExpanded)
+      : ContextToken<double>(
+          (context) => _resolveDestinationPadding(
+            context,
+            collapsed: collapsed,
+            collapsedWidth: collapsedWidth,
+            left: true,
+          ),
+        );
+  final rightPadding = collapsedWidth == 72
+      ? (collapsed
+            ? _destinationRightPaddingCollapsed
+            : _destinationRightPaddingExpanded)
+      : ContextToken<double>(
+          (context) => _resolveDestinationPadding(
+            context,
+            collapsed: collapsed,
+            collapsedWidth: collapsedWidth,
+            left: false,
+          ),
+        );
+  final footerVerticalPadding = collapsed
+      ? _footerVerticalPaddingCollapsed
+      : _footerVerticalPaddingExpanded;
+  final footerBorderWidth = collapsed
+      ? _footerBorderWidthCollapsed
+      : _footerBorderWidthExpanded;
+
+  return SidebarStyler()
+      .padding(EdgeInsetsGeometryMix.value(MediaQuery.paddingOf(context)))
+      .destination(
+        ToggleStyler().padding(
+          .only(
+            left: leftPadding(),
+            right: rightPadding(),
+            top: PlaygroundTokens.s1_5,
+            bottom: PlaygroundTokens.s1_5,
+          ),
+        ),
+      )
+      .footer(
+        BoxStyler()
+            .border(
+              .top(
+                .color(
+                  PlaygroundTokens.sidebarBorder(),
+                ).width(footerBorderWidth()),
+              ),
+            )
+            .padding(
+              .symmetric(
+                horizontal: PlaygroundTokens.s2,
+                vertical: footerVerticalPadding(),
+              ),
+            ),
+      );
+}
+
+double _resolveDestinationPadding(
+  BuildContext context, {
+  required bool collapsed,
+  required double collapsedWidth,
+  required bool left,
+}) {
+  final leading = (Directionality.of(context) == TextDirection.ltr) == left;
+  if (!leading) return PlaygroundTokens.s2;
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  final railLeading = math.max(
+    PlaygroundTokens.s2,
+    (collapsedWidth - PlaygroundTokens.s2 * 2 - PlaygroundTokens.iconSm) / 2,
+  );
+  return railLeading + (PlaygroundTokens.s2 - railLeading) * expansion;
+}
+
+double _resolveDestinationLeftPaddingExpanded(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: false,
+      collapsedWidth: 72,
+      left: true,
+    );
+
+double _resolveDestinationLeftPaddingCollapsed(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: true,
+      collapsedWidth: 72,
+      left: true,
+    );
+
+double _resolveDestinationRightPaddingExpanded(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: false,
+      collapsedWidth: 72,
+      left: false,
+    );
+
+double _resolveDestinationRightPaddingCollapsed(BuildContext context) =>
+    _resolveDestinationPadding(
+      context,
+      collapsed: true,
+      collapsedWidth: 72,
+      left: false,
+    );
+
+double _resolveFooterVerticalPadding(
+  BuildContext context, {
+  required bool collapsed,
+}) {
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  return PlaygroundTokens.s2 * expansion;
+}
+
+double _resolveFooterVerticalPaddingExpanded(BuildContext context) =>
+    _resolveFooterVerticalPadding(context, collapsed: false);
+
+double _resolveFooterVerticalPaddingCollapsed(BuildContext context) =>
+    _resolveFooterVerticalPadding(context, collapsed: true);
+
+double _resolveFooterBorderWidth(
+  BuildContext context, {
+  required bool collapsed,
+}) {
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  return expansion > 0 ? PlaygroundTokens.strokeHairline : 0.0;
+}
+
+double _resolveFooterBorderWidthExpanded(BuildContext context) =>
+    _resolveFooterBorderWidth(context, collapsed: false);
+
+double _resolveFooterBorderWidthCollapsed(BuildContext context) =>
+    _resolveFooterBorderWidth(context, collapsed: true);
+
+const _destinationLeftPaddingExpanded = ContextToken<double>(
+  _resolveDestinationLeftPaddingExpanded,
+);
+
+const _destinationLeftPaddingCollapsed = ContextToken<double>(
+  _resolveDestinationLeftPaddingCollapsed,
+);
+
+const _destinationRightPaddingExpanded = ContextToken<double>(
+  _resolveDestinationRightPaddingExpanded,
+);
+
+const _destinationRightPaddingCollapsed = ContextToken<double>(
+  _resolveDestinationRightPaddingCollapsed,
+);
+
+const _footerVerticalPaddingExpanded = ContextToken<double>(
+  _resolveFooterVerticalPaddingExpanded,
+);
+
+const _footerVerticalPaddingCollapsed = ContextToken<double>(
+  _resolveFooterVerticalPaddingCollapsed,
+);
+
+const _footerBorderWidthExpanded = ContextToken<double>(
+  _resolveFooterBorderWidthExpanded,
+);
+
+const _footerBorderWidthCollapsed = ContextToken<double>(
+  _resolveFooterBorderWidthCollapsed,
+);

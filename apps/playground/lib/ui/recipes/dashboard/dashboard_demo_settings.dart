@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -17,164 +19,237 @@ import '../../theme/tokens.dart';
 
 enum _Appearance { light, dark, system }
 
-class DefaultDashboardSettingsPage extends StatefulWidget {
-  const DefaultDashboardSettingsPage({super.key});
+class PlaygroundDashboardSettingsPage extends StatefulWidget {
+  const PlaygroundDashboardSettingsPage({
+    super.key,
+    this.darkMode,
+    this.onDarkModeChanged,
+  });
+
+  final bool? darkMode;
+  final ValueChanged<bool?>? onDarkModeChanged;
 
   @override
-  State<DefaultDashboardSettingsPage> createState() =>
-      _DefaultDashboardSettingsPageState();
+  State<PlaygroundDashboardSettingsPage> createState() =>
+      _PlaygroundDashboardSettingsPageState();
 }
 
-class _DefaultDashboardSettingsPageState
-    extends State<DefaultDashboardSettingsPage> {
+class _PlaygroundDashboardSettingsPageState
+    extends State<PlaygroundDashboardSettingsPage> {
   bool _productUpdates = true;
   bool _weeklyDigest = false;
   String _language = 'en';
   _Appearance _appearance = .system;
   double _radius = 8;
+  bool _dangerZoneExpanded = false;
+
+  _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
+      ? _appearance
+      : switch (widget.darkMode) {
+          false => .light,
+          true => .dark,
+          null => .system,
+        };
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const _Text('Settings', size: 28, emphasized: true),
-        const SizedBox(height: 4),
-        const _Text(
-          'Manage your profile, preferences, and workspace.',
-          muted: true,
-        ),
-        const SizedBox(height: 20),
-        _section(
-          'Profile',
-          'This information appears across your workspace.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const PlaygroundTextField(
-                label: 'Full name',
-                hintText: 'Ada Chen',
+    padding: const EdgeInsets.all(PlaygroundTokens.s8),
+    child: Box(
+      style: BoxStyler().alignment(.topStart),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(880)
+            .crossAxisAlignment(.stretch)
+            .spacing(PlaygroundTokens.s4),
+        children: [
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing(PlaygroundTokens.s1),
+            children: const [
+              _Text(
+                'Settings',
+                token: PlaygroundTokens.text3xl,
+                emphasized: true,
               ),
-              const SizedBox(height: 12),
-              const PlaygroundTextField(
-                label: 'Email address',
-                hintText: 'ada@northstar.co',
-              ),
-              const SizedBox(height: 12),
-              PlaygroundSelect<String>(
-                trigger: const RemixSelectTrigger(placeholder: 'Language'),
-                items: const [
-                  RemixSelectItem(value: 'en', label: 'English'),
-                  RemixSelectItem(value: 'es', label: 'Spanish'),
-                  RemixSelectItem(value: 'fr', label: 'French'),
-                ],
-                selectedValue: _language,
-                onChanged: (value) {
-                  if (value != null) setState(() => _language = value);
-                },
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: PlaygroundButton(
-                  label: 'Save changes',
-                  onPressed: () => _toast(context, 'Profile settings saved'),
-                ),
+              _Text(
+                'Manage your profile, preferences, and workspace.',
+                muted: true,
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 16),
-        _section(
-          'Preferences',
-          'Choose which workspace activity reaches your inbox.',
-          Column(
-            children: [
-              _preference(
-                'Product updates',
-                'News about features and improvements.',
-                PlaygroundSwitch(
-                  selected: _productUpdates,
-                  semanticLabel: 'Receive product updates',
-                  onChanged: (value) => setState(() => _productUpdates = value),
-                ),
-              ),
-              const SizedBox(height: 16),
-              _preference(
-                'Weekly digest',
-                'A summary of workspace activity each Monday.',
-                PlaygroundCheckbox(
-                  selected: _weeklyDigest,
-                  semanticLabel: 'Receive weekly digest',
-                  onChanged: (value) =>
-                      setState(() => _weeklyDigest = value ?? false),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        _section(
-          'Appearance',
-          'Tune the default preset theme with meaningful native values.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const PlaygroundCallout(
-                icon: RemixIcons.magicWand,
-                text: 'Changes are deterministic and remain local to the demo.',
-              ),
-              const SizedBox(height: 16),
-              const _Text('Color mode', emphasized: true),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: PlaygroundSegmentedControl<_Appearance>(
-                  semanticLabel: 'Color mode',
-                  selectedValue: _appearance,
-                  items: const [
-                    RemixSegmentedControlItem(value: .light, label: 'Light'),
-                    RemixSegmentedControlItem(value: .dark, label: 'Dark'),
-                    RemixSegmentedControlItem(value: .system, label: 'System'),
+          _section(
+            'Profile',
+            'This information appears across your workspace.',
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(PlaygroundTokens.s3),
+              children: [
+                GridBox(
+                  style: GridBoxStyler.equalColumns(2)
+                      .gap(PlaygroundTokens.s3)
+                      .onConstraints(
+                        const .maxWidth(559),
+                        .equalColumns(1).gap(PlaygroundTokens.s3),
+                      ),
+                  children: const [
+                    PlaygroundTextField(
+                      label: 'Full name',
+                      hintText: 'Ada Chen',
+                    ),
+                    PlaygroundTextField(
+                      label: 'Email address',
+                      hintText: 'ada@northstar.co',
+                    ),
                   ],
-                  onChanged: (value) => setState(() => _appearance = value),
                 ),
-              ),
-              const SizedBox(height: 16),
-              _Text('Control radius · ${_radius.round()}px', emphasized: true),
-              const SizedBox(height: 8),
-              PlaygroundSlider(
-                value: _radius,
-                min: 0,
-                max: 16,
-                snapDivisions: 16,
-                onChanged: (value) => setState(() => _radius = value),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        PlaygroundDisclosure(
-          key: const ValueKey('settings-danger-zone'),
-          semanticHint: 'Shows destructive workspace actions',
-          trigger: const _Text('Danger zone', emphasized: true),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const _Text('Destructive workspace actions cannot be undone.'),
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: PlaygroundButton.destructive(
-                  label: 'Delete workspace',
-                  onPressed: _confirmDelete,
+                PlaygroundSelect<String>(
+                  trigger: const RemixSelectTrigger(placeholder: 'Language'),
+                  items: const [
+                    RemixSelectItem(value: 'en', label: 'English'),
+                    RemixSelectItem(value: 'es', label: 'Spanish'),
+                    RemixSelectItem(value: 'fr', label: 'French'),
+                  ],
+                  selectedValue: _language,
+                  onChanged: (value) {
+                    if (value != null) setState(() => _language = value);
+                  },
                 ),
-              ),
-            ],
+                Box(
+                  style: BoxStyler().alignment(.centerStart),
+                  child: PlaygroundButton(
+                    label: 'Save changes',
+                    onPressed: () => _toast(context, 'Profile settings saved'),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          _section(
+            'Preferences',
+            'Choose which workspace activity reaches your inbox.',
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(PlaygroundTokens.s4),
+              children: [
+                _preference(
+                  'Product updates',
+                  'News about features and improvements.',
+                  PlaygroundSwitch(
+                    selected: _productUpdates,
+                    semanticLabel: 'Receive product updates',
+                    onChanged: (value) =>
+                        setState(() => _productUpdates = value),
+                  ),
+                ),
+                _preference(
+                  'Weekly digest',
+                  'A summary of workspace activity each Monday.',
+                  PlaygroundCheckbox(
+                    selected: _weeklyDigest,
+                    semanticLabel: 'Receive weekly digest',
+                    onChanged: (value) =>
+                        setState(() => _weeklyDigest = value ?? false),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _section(
+            'Appearance',
+            'Tune the default preset theme with meaningful native values.',
+            ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(PlaygroundTokens.s4),
+              children: [
+                const PlaygroundCallout(
+                  icon: RemixIcons.magicWand,
+                  text:
+                      'Changes are deterministic and remain local to the demo.',
+                ),
+                ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.start)
+                      .spacing(PlaygroundTokens.s2),
+                  children: [
+                    const _Text('Color mode', emphasized: true),
+                    PlaygroundSegmentedControl<_Appearance>(
+                      semanticLabel: 'Color mode',
+                      selectedValue: _resolvedAppearance,
+                      items: const [
+                        RemixSegmentedControlItem(
+                          value: .light,
+                          label: 'Light',
+                        ),
+                        RemixSegmentedControlItem(value: .dark, label: 'Dark'),
+                        RemixSegmentedControlItem(
+                          value: .system,
+                          label: 'System',
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() => _appearance = value);
+                        widget.onDarkModeChanged?.call(switch (value) {
+                          .light => false,
+                          .dark => true,
+                          .system => null,
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(PlaygroundTokens.s2),
+                  children: [
+                    _Text(
+                      'Control radius · ${_radius.round()}px',
+                      emphasized: true,
+                    ),
+                    PlaygroundSlider(
+                      value: _radius,
+                      min: 0,
+                      max: 16,
+                      snapDivisions: 16,
+                      onChanged: (value) => setState(() => _radius = value),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          PlaygroundDisclosure(
+            key: const ValueKey('settings-danger-zone'),
+            expanded: _dangerZoneExpanded,
+            onExpandedChanged: (value) =>
+                setState(() => _dangerZoneExpanded = value),
+            semanticHint: 'Shows destructive workspace actions',
+            trigger: PlaygroundDisclosureTrigger(
+              expanded: _dangerZoneExpanded,
+              child: const _Text('Danger zone', emphasized: true),
+            ),
+            content: ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing(PlaygroundTokens.s3),
+              children: [
+                const _Text('Destructive workspace actions cannot be undone.'),
+                Box(
+                  style: BoxStyler().alignment(.centerStart),
+                  child: PlaygroundButton.destructive(
+                    label: 'Delete workspace',
+                    onPressed: _confirmDelete,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     ),
   );
 
@@ -205,27 +280,38 @@ class _DefaultDashboardSettingsPageState
 
 Widget _section(String title, String description, Widget child) =>
     PlaygroundCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.stretch)
+            .spacing(PlaygroundTokens.s4),
         children: [
-          _Text(title, size: 17, emphasized: true),
-          const SizedBox(height: 4),
-          _Text(description, size: 13, muted: true),
-          const SizedBox(height: 16),
+          ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing(PlaygroundTokens.s1),
+            children: [
+              _Text(title, token: PlaygroundTokens.textLg, emphasized: true),
+              _Text(description, muted: true),
+            ],
+          ),
           child,
         ],
       ),
     );
 
-Widget _preference(String title, String description, Widget trailing) => Row(
+Widget _preference(String title, String description, Widget trailing) => RowBox(
+  style: FlexBoxStyler()
+      .crossAxisAlignment(.center)
+      .spacing(PlaygroundTokens.s4),
   children: [
     Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.start)
+            .spacing(PlaygroundTokens.s0_5),
         children: [
           _Text(title, emphasized: true),
-          const SizedBox(height: 2),
-          _Text(description, size: 13, muted: true),
+          _Text(description, muted: true),
         ],
       ),
     ),
@@ -236,12 +322,12 @@ Widget _preference(String title, String description, Widget trailing) => Row(
 class _Text extends StatelessWidget {
   const _Text(
     this.value, {
-    this.size = 14,
+    this.token = PlaygroundTokens.textSm,
     this.emphasized = false,
     this.muted = false,
   });
   final String value;
-  final double size;
+  final TextStyleToken token;
   final bool emphasized;
   final bool muted;
 
@@ -249,7 +335,7 @@ class _Text extends StatelessWidget {
   Widget build(BuildContext context) => StyledText(
     value,
     style: TextStyler()
-        .fontSize(size)
+        .style(token.mix())
         .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
         .color(
           muted
@@ -263,3 +349,36 @@ void _toast(BuildContext context, String title) => showRemixToast(
   context,
   RemixToastData(title: title, icon: RemixIcons.checkCircled),
 );
+
+class PlaygroundDisclosureTrigger extends StatelessWidget {
+  const PlaygroundDisclosureTrigger({
+    super.key,
+    required this.expanded,
+    required this.child,
+  });
+
+  final bool expanded;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: child),
+      Box(
+        style: BoxStyler()
+            .transform(
+              Matrix4.rotationZ(expanded ? math.pi : 0),
+              alignment: .center,
+            )
+            .animate(PlaygroundTokens.motion),
+        child: StyledIcon(
+          icon: RemixIcons.chevronDown,
+          style: IconStyler()
+              .size(PlaygroundTokens.icon)
+              .color(PlaygroundTokens.mutedForeground()),
+        ),
+      ),
+    ],
+  );
+}

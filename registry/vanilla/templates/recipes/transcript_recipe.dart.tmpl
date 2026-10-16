@@ -13,8 +13,8 @@ final class {{typePrefix}}AgentTranscriptRecipe {
   {{typePrefix}}TranscriptStyler style = const {{typePrefix}}TranscriptStyler.create(),
 }) => {{typePrefix}}AgentTranscriptRecipe(
   style: {{typePrefix}}TranscriptStyler(
-    viewport: BoxStyler().padding(.right(12)),
+    viewport: BoxStyler(),
     item: BoxStyler(),
-    spacing: 16,
+    spacing: 12,
   ).merge(style),
 );

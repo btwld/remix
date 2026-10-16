@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +8,6 @@ import 'package:registry_source/src/agent/components/answer.dart';
 import 'package:registry_source/src/agent/components/composer.dart';
 import 'package:registry_source/src/agent/components/permission.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
-import 'package:registry_source/src/dashboard/dashboard_demo_charts.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dart';
@@ -18,6 +18,7 @@ import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 enum _Preset { defaultPreset, fortal }
 
@@ -29,37 +30,15 @@ void main() {
       'customers',
       'orders',
       'settings',
-      'charts',
-      'actions',
-      'forms',
-      'dataDisplay',
-      'overlays',
-      'navigation',
-      'typography',
     ]);
     expect(
       registryDashboardDemoSectionIds.keys,
       RegistryDashboardDemoPage.values,
     );
     expect(registryDashboardDemoSectionIds.values, everyElement(isNotEmpty));
-    expect(RegistryDashboardChartCase.values, hasLength(12));
-    expect(RegistryDashboardChartCase.values.map((chart) => chart.title), [
-      'Revenue momentum',
-      'Per-series patterns',
-      'Steps and gaps',
-      'Viewport labels',
-      'Actual versus plan',
-      'Revenue mix',
-      'Floating changes',
-      'Tracks and labels',
-      'Traffic channels',
-      'Interactive product mix',
-      'Badge markers',
-      'Safe empty state',
-    ]);
     expect(registryDashboardCustomers, hasLength(24));
     expect(registryDashboardOrders, hasLength(30));
-    expect(registryDashboardDemoInteractionIds, hasLength(7));
+    expect(registryDashboardDemoInteractionIds, hasLength(6));
   });
 
   for (final preset in _Preset.values) {
@@ -134,7 +113,7 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('full demo exposes and navigates all showcase destinations', (
+      testWidgets('full demo exposes and navigates all real destinations', (
         tester,
       ) async {
         await _pumpDashboard(tester, preset: preset);
@@ -145,13 +124,6 @@ void main() {
           'Customers',
           'Orders',
           'Settings',
-          'Charts',
-          'Actions',
-          'Forms & Inputs',
-          'Data Display',
-          'Overlays',
-          'Navigation',
-          'Typography',
         ]) {
           expect(find.text(label), findsWidgets, reason: label);
         }
@@ -204,7 +176,7 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('all twelve screens expose the shared section inventory', (
+      testWidgets('all five screens expose the shared section inventory', (
         tester,
       ) async {
         const expected = <RegistryDashboardDemoPage, List<String>>{
@@ -226,65 +198,112 @@ void main() {
             'Appearance',
             'Danger zone',
           ],
-          RegistryDashboardDemoPage.charts: [
-            'Revenue momentum',
-            'Interactive product mix',
-            'Safe empty state',
-          ],
-          RegistryDashboardDemoPage.actions: [
-            'Button',
-            'Icon button',
-            'Toggle',
-            'States',
-          ],
-          RegistryDashboardDemoPage.forms: [
-            'Text field',
-            'Text area',
-            'Checkbox group',
-            'Slider',
-          ],
-          RegistryDashboardDemoPage.dataDisplay: [
-            'Avatar',
-            'Data list',
-            'Skeleton',
-            'Divider',
-          ],
-          RegistryDashboardDemoPage.overlays: [
-            'Dialog',
-            'Popover',
-            'Tooltip',
-            'Menu',
-          ],
-          RegistryDashboardDemoPage.navigation: [
-            'App bar',
-            'Sidebar',
-            'Tabs',
-            'Disclosure',
-            'Accordion',
-          ],
-          RegistryDashboardDemoPage.typography: [
-            'Text scale',
-            'Heading level and size',
-            'Keyboard keys',
-            'Wrapping and truncation',
-          ],
         };
 
-        for (final entry in expected.entries) {
-          await _pumpDashboard(tester, preset: preset, initialPage: entry.key);
-          for (final label in entry.value) {
-            expect(
-              find.text(label),
-              findsWidgets,
-              reason: '${entry.key.name}: $label',
-            );
+        final mixWarnings = <String>[];
+        final originalDebugPrint = debugPrint;
+        debugPrint = (String? message, {int? wrapWidth}) {
+          if (message != null && message.contains('Mix: could not convert')) {
+            mixWarnings.add(message);
           }
-          expect(tester.takeException(), isNull, reason: entry.key.name);
+        };
+        try {
+          for (final entry in expected.entries) {
+            await _pumpDashboard(
+              tester,
+              preset: preset,
+              initialPage: entry.key,
+            );
+            for (final label in entry.value) {
+              expect(
+                find.text(label),
+                findsWidgets,
+                reason: '${entry.key.name}: $label',
+              );
+            }
+            expect(tester.takeException(), isNull, reason: entry.key.name);
+            expect(mixWarnings, isEmpty, reason: entry.key.name);
+          }
+        } finally {
+          debugPrint = originalDebugPrint;
         }
       });
 
-      // mix_chart draws each slice 80px wide whatever box it is given, so a
-      // donut whose hole plus ring outgrows half its box is clipped.
+      testWidgets(
+        'sidebar collapse and expand animate across frames without overflow, jumps, or Mix warnings',
+        (tester) async {
+          final mixWarnings = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null && message.contains('Mix: could not convert')) {
+              mixWarnings.add(message);
+            }
+          };
+          try {
+            await _pumpDashboard(tester, preset: preset);
+            expect(mixWarnings, isEmpty);
+
+            final collapseButton = find
+                .byKey(const ValueKey('dashboard-collapse'))
+                .first;
+
+            await tester.tap(collapseButton);
+            await tester.pump();
+            double previousButtonDx = tester.getCenter(collapseButton).dx;
+            for (var frame = 0; frame < 24; frame++) {
+              await tester.pump(const Duration(milliseconds: 10));
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: 'collapse frame $frame',
+              );
+              expect(mixWarnings, isEmpty, reason: 'collapse frame $frame');
+              final currentButtonDx = tester.getCenter(collapseButton).dx;
+              final step = previousButtonDx - currentButtonDx;
+              expect(
+                currentButtonDx,
+                lessThanOrEqualTo(previousButtonDx + 0.5),
+                reason: 'collapse button should move monotonically left',
+              );
+              expect(
+                step,
+                lessThanOrEqualTo(frame >= 19 ? 4.0 : 20.0),
+                reason: 'collapse frame $frame should not jump',
+              );
+              previousButtonDx = currentButtonDx;
+            }
+
+            await tester.tap(collapseButton);
+            await tester.pump();
+            previousButtonDx = tester.getCenter(collapseButton).dx;
+            for (var frame = 0; frame < 24; frame++) {
+              await tester.pump(const Duration(milliseconds: 10));
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: 'expand frame $frame',
+              );
+              expect(mixWarnings, isEmpty, reason: 'expand frame $frame');
+              final currentButtonDx = tester.getCenter(collapseButton).dx;
+              final step = currentButtonDx - previousButtonDx;
+              expect(
+                currentButtonDx,
+                greaterThanOrEqualTo(previousButtonDx - 0.5),
+                reason: 'collapse button should move monotonically right',
+              );
+              expect(
+                step,
+                lessThanOrEqualTo(frame >= 19 ? 4.0 : 20.0),
+                reason: 'expand frame $frame should not jump',
+              );
+              previousButtonDx = currentButtonDx;
+            }
+          } finally {
+            debugPrint = originalDebugPrint;
+          }
+        },
+      );
+
       testWidgets('value axis end labels sit on their gridlines', (
         tester,
       ) async {
@@ -305,19 +324,13 @@ void main() {
         }
       });
 
+      // mix_chart draws each slice 80px wide whatever box it is given, so a
+      // donut whose hole plus ring outgrows half its box is clipped.
       testWidgets('every pie fits inside its chart box', (tester) async {
         await _pumpOverview(tester, preset: preset, width: 1280);
         final overviewPies = _expectPiesFit(tester);
 
-        await _pumpDashboard(
-          tester,
-          preset: preset,
-          initialPage: RegistryDashboardDemoPage.charts,
-          height: 4000,
-        );
-        final chartsPies = _expectPiesFit(tester);
-
-        expect(overviewPies + chartsPies, 5);
+        expect(overviewPies, greaterThan(0));
       });
 
       testWidgets('customer state survives navigation', (tester) async {
@@ -341,6 +354,25 @@ void main() {
 
         expect(find.text('Olivia Martin'), findsOneWidget);
         expect(find.text('Jackson Lee'), findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('global search finds real screens by section id', (
+        tester,
+      ) async {
+        await _pumpDashboard(tester, preset: preset);
+
+        await tester.enterText(
+          find.descendant(
+            of: find.byKey(const ValueKey('dashboard-search')),
+            matching: find.byType(EditableText),
+          ),
+          'profile',
+        );
+        await tester.pump();
+
+        expect(find.text('Settings'), findsWidgets);
+        expect(find.text('Profile'), findsWidgets);
         expect(tester.takeException(), isNull);
       });
 
@@ -416,7 +448,7 @@ void main() {
           lessThanOrEqualTo(orders.rows.last.amount),
         );
 
-        await tester.tap(find.text('Pending').last);
+        await tester.tap(find.text('Pending').first);
         await tester.pump();
         orders = tester.widget(
           find.byType(RemixDataTable<RegistryDashboardOrder>),
@@ -483,6 +515,127 @@ void main() {
         );
         expect(tester.takeException(), isNull);
       });
+
+      testWidgets(
+        'DataTable sort carets, tri-state selection checkboxes, and pager buttons work',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.customers,
+            height: 1200,
+          );
+
+          final table = find.byType(RemixDataTable<RegistryDashboardCustomer>);
+          expect(_glyphIn(table, RemixPathGlyph.caretDown), findsOneWidget);
+          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+
+          await tester.tap(
+            find.descendant(of: table, matching: find.text('Customer')),
+          );
+          await tester.pumpAndSettle();
+          expect(_glyphIn(table, RemixPathGlyph.caretUp), findsOneWidget);
+          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+
+          await tester.tap(
+            find.descendant(of: table, matching: find.text('Customer')),
+          );
+          await tester.pumpAndSettle();
+          expect(_glyphIn(table, RemixPathGlyph.caretDown), findsOneWidget);
+          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+
+          final checkboxes = find.descendant(
+            of: table,
+            matching: find.byType(RemixCheckbox),
+          );
+          final headerCheckbox = checkboxes.first;
+          final firstRowCheckbox = checkboxes.at(1);
+
+          await tester.tap(firstRowCheckbox);
+          await tester.pumpAndSettle();
+          expect(find.text('1 selected'), findsOneWidget);
+          expect(
+            _glyphIn(headerCheckbox, RemixPathGlyph.thickDividerHorizontal),
+            findsOneWidget,
+          );
+
+          await tester.tap(headerCheckbox);
+          await tester.pumpAndSettle();
+          expect(find.text('10 selected'), findsOneWidget);
+          expect(
+            _glyphIn(headerCheckbox, RemixPathGlyph.thickCheck),
+            findsOneWidget,
+          );
+
+          expect(find.text('1–10 of 24'), findsOneWidget);
+          await tester.tap(
+            find.descendant(
+              of: table,
+              matching: _pathGlyph(RemixPathGlyph.chevronRight),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('11–20 of 24'), findsOneWidget);
+
+          await tester.tap(
+            find.descendant(
+              of: table,
+              matching: _pathGlyph(RemixPathGlyph.chevronLeft),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('1–10 of 24'), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        },
+      );
+
+      testWidgets(
+        'Settings Select, Checkbox, and Danger zone Disclosure work',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.settings,
+          );
+
+          final select = find.byType(RemixSelect<String>);
+          expect(_glyphIn(select, RemixPathGlyph.chevronDown), findsOneWidget);
+          expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+
+          await tester.tap(select);
+          await tester.pumpAndSettle();
+          expect(_transformAngleIn(tester, select), closeTo(math.pi, 0.01));
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
+
+          await tester.tap(find.text('Spanish').last);
+          await tester.pumpAndSettle();
+          expect(
+            find.descendant(of: select, matching: find.text('Spanish')),
+            findsOneWidget,
+          );
+          expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+
+          final checkbox = find.byType(RemixCheckbox);
+          expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
+          await tester.ensureVisible(checkbox);
+          await tester.tap(checkbox);
+          await tester.pumpAndSettle();
+          expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsOneWidget);
+
+          final dangerZone = find
+              .byKey(const ValueKey('settings-danger-zone'))
+              .first;
+          expect(find.text('Delete workspace'), findsNothing);
+          expect(_transformAngleIn(tester, dangerZone), closeTo(0, 0.01));
+
+          await tester.ensureVisible(dangerZone);
+          await tester.tap(find.text('Danger zone'));
+          await tester.pumpAndSettle();
+          expect(find.text('Delete workspace'), findsOneWidget);
+          expect(_transformAngleIn(tester, dangerZone), closeTo(math.pi, 0.01));
+          expect(tester.takeException(), isNull);
+        },
+      );
     });
   }
 
@@ -624,4 +777,20 @@ Future<void> _pump(
     .fortal => FortalTheme(child: app),
   });
   await tester.pump();
+}
+
+Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
+  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+);
+
+Finder _glyphIn(Finder ancestor, RemixPathGlyph glyph) =>
+    find.descendant(of: ancestor, matching: _pathGlyph(glyph));
+
+double _transformAngleIn(WidgetTester tester, Finder ancestor) {
+  final transform = tester.widget<Transform>(
+    find.descendant(of: ancestor, matching: find.byType(Transform)).first,
+  );
+  return math
+      .atan2(transform.transform.entry(1, 0), transform.transform.entry(0, 0))
+      .abs();
 }

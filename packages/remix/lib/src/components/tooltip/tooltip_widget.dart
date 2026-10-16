@@ -54,19 +54,22 @@ class RemixTooltip extends StatelessWidget {
         return NakedTooltip(
           tooltipKey: tooltipKey,
           onOpenChanged: onOpenChanged,
-          overlayBuilder: (context, _) => Box(
-            styleSpec: spec.container,
-            child: StyleSpecBuilder(
-              styleSpec: spec.label,
-              builder: (context, labelSpec) => DefaultTextStyle.merge(
-                style: labelSpec.style,
-                textAlign: labelSpec.textAlign,
-                softWrap: labelSpec.softWrap,
-                overflow: labelSpec.overflow,
-                maxLines: labelSpec.maxLines,
-                textWidthBasis: labelSpec.textWidthBasis,
-                textHeightBehavior: labelSpec.textHeightBehavior,
-                child: tooltipChild,
+          overlayBuilder: (context, animation) => FadeTransition(
+            opacity: animation,
+            child: Box(
+              styleSpec: spec.container,
+              child: StyleSpecBuilder(
+                styleSpec: spec.label,
+                builder: (context, labelSpec) => DefaultTextStyle.merge(
+                  style: labelSpec.style,
+                  textAlign: labelSpec.textAlign,
+                  softWrap: labelSpec.softWrap,
+                  overflow: labelSpec.overflow,
+                  maxLines: labelSpec.maxLines,
+                  textWidthBasis: labelSpec.textWidthBasis,
+                  textHeightBehavior: labelSpec.textHeightBehavior,
+                  child: tooltipChild,
+                ),
               ),
             ),
           ),

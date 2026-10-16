@@ -38,12 +38,15 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => PlaygroundAgentPermissionRecipe(
   style: PlaygroundPermissionStyler(
-    header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+    actions: FlexBoxStyler().spacing(8).padding(.top(12)),
     title: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontWeight(FontWeight.w600),
-    tool: TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
+    tool: TextStyler()
+        .color(PlaygroundTokens.mutedForeground())
+        .fontSize(12)
+        .wrap(.padding(.top(4))),
     description: TextStyler()
         .color(PlaygroundTokens.mutedForeground())
         .wrap(.padding(.symmetric(vertical: 8))),
@@ -55,8 +58,15 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
     statusIcon: IconStyler().color(PlaygroundTokens.primary()).size(12),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: playgroundCardStyle(style: surfaceStyle),
-  detailsStyle: playgroundDisclosureStyle(style: detailsStyle),
+  surfaceStyle: playgroundCardStyle(
+    style: CardStyler().padding(.all(PlaygroundTokens.s4)).merge(surfaceStyle),
+  ),
+  detailsStyle: playgroundDisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.symmetric(vertical: PlaygroundTokens.s2))
+        .content(BoxStyler().padding(.bottom(PlaygroundTokens.s2)))
+        .merge(detailsStyle),
+  ),
   parametersStyle: playgroundDataListStyle(style: parametersStyle),
   allowOnceStyle: playgroundButtonStyle(style: allowOnceStyle),
   alwaysAllowStyle: playgroundButtonStyle(

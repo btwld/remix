@@ -607,6 +607,62 @@ void main() {
         expect(find.text('Trigger 1'), findsOneWidget);
         expect(find.text('Trigger 2'), findsOneWidget);
       });
+
+      testWidgets(
+        'hovering from one tooltip trigger to another dismisses the previous tooltip',
+        (tester) async {
+          await tester.pumpRemixApp(
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RemixTooltip(
+                    style: TooltipStyler().waitDuration(Duration.zero),
+                    tooltipChild: const Text('Tooltip 1'),
+                    child: const SizedBox(
+                      key: ValueKey('trigger_1'),
+                      width: 80,
+                      height: 36,
+                      child: Text('Trigger 1'),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  RemixTooltip(
+                    style: TooltipStyler().waitDuration(Duration.zero),
+                    tooltipChild: const Text('Tooltip 2'),
+                    child: const SizedBox(
+                      key: ValueKey('trigger_2'),
+                      width: 80,
+                      height: 36,
+                      child: Text('Trigger 2'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final gesture = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await gesture.addPointer(location: Offset.zero);
+          await gesture.moveTo(
+            tester.getCenter(find.byKey(const ValueKey('trigger_1'))),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('Tooltip 1'), findsOneWidget);
+          expect(find.byType(FadeTransition), findsWidgets);
+
+          await gesture.moveTo(
+            tester.getCenter(find.byKey(const ValueKey('trigger_2'))),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('Tooltip 1'), findsNothing);
+          expect(find.text('Tooltip 2'), findsOneWidget);
+          await gesture.removePointer();
+        },
+      );
     });
 
     group('Icon Child', () {

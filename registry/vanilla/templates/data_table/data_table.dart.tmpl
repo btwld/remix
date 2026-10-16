@@ -52,7 +52,6 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate({{typePrefix}}Tokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color({{typePrefix}}Tokens.muted())),
@@ -91,7 +90,12 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
           .minHeight({{typePrefix}}Tokens.controlLg)
-          .padding(.horizontal({{typePrefix}}Tokens.s2))
+          .padding(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.s3,
+              vertical: {{typePrefix}}Tokens.s2,
+            ),
+          )
           .spacing({{typePrefix}}Tokens.s3)
           .border(.top(_rule())),
     )

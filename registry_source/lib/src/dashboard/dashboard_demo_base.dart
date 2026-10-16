@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -6,8 +7,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 enum RegistryDashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
-  manage('Manage'),
-  components('Components');
+  manage('Manage');
 
   const RegistryDashboardDemoSection(this.label);
 
@@ -28,42 +28,6 @@ enum RegistryDashboardDemoPage {
     RegistryDashboardDemoSection.manage,
     'Settings',
     RemixIcons.mixerHorizontal,
-  ),
-  charts(
-    // Keep this destination expanded at every generated preset prefix.
-    RegistryDashboardDemoSection.components,
-    'Charts',
-    RemixIcons.barChart,
-  ),
-  actions(
-    RegistryDashboardDemoSection.components,
-    'Actions',
-    RemixIcons.cursorArrow,
-  ),
-  forms(
-    RegistryDashboardDemoSection.components,
-    'Forms & Inputs',
-    RemixIcons.input,
-  ),
-  dataDisplay(
-    RegistryDashboardDemoSection.components,
-    'Data Display',
-    RemixIcons.table,
-  ),
-  overlays(
-    RegistryDashboardDemoSection.components,
-    'Overlays',
-    RemixIcons.stack,
-  ),
-  navigation(
-    RegistryDashboardDemoSection.components,
-    'Navigation',
-    RemixIcons.hamburgerMenu,
-  ),
-  typography(
-    RegistryDashboardDemoSection.components,
-    'Typography',
-    RemixIcons.fontSize,
   );
 
   const RegistryDashboardDemoPage(this.section, this.label, this.icon);
@@ -103,65 +67,6 @@ const registryDashboardDemoSectionIds = {
     'appearance',
     'danger-zone',
   ],
-  RegistryDashboardDemoPage.charts: [
-    // All three chart families remain distinct parity sections.
-    'line-area',
-    'bar-charts',
-    'pie-donut',
-  ],
-  RegistryDashboardDemoPage.actions: [
-    'button',
-    'icon-button',
-    'toggle',
-    'states',
-  ],
-  RegistryDashboardDemoPage.forms: [
-    'text-field',
-    'text-area',
-    'segmented-control',
-    'select',
-    'toggle-group',
-    'checkbox',
-    'checkbox-group',
-    'radio',
-    'switch',
-    'slider',
-    'states',
-  ],
-  RegistryDashboardDemoPage.dataDisplay: [
-    'avatar',
-    'badge',
-    'card',
-    'callout',
-    'data-list',
-    'skeleton',
-    'progress',
-    'spinner',
-    'divider',
-  ],
-  RegistryDashboardDemoPage.overlays: [
-    // Compound overlays share one ordered gallery contract.
-    'dialog',
-    'popover',
-    'tooltip',
-    'menu',
-  ],
-  RegistryDashboardDemoPage.navigation: [
-    'sidebar',
-    'tabs',
-    'disclosure',
-    'accordion',
-  ],
-  RegistryDashboardDemoPage.typography: [
-    'text-scale',
-    'weights',
-    'heading-level-size',
-    'code',
-    'keyboard-keys',
-    'links',
-    'accent-contrast',
-    'wrapping-truncation',
-  ],
 };
 
 /// The interaction identifiers exercised by the parity test suite.
@@ -171,13 +76,12 @@ const registryDashboardDemoInteractionIds = <String>[
   'sort-select-bulk-undo-paginate',
   'filter-export-row-actions',
   'agent-success-permission-failure-retry-stop-copy-follow',
-  'dialog-popover-tooltip-menu-toast',
   'appearance-notifications-theme-account',
 ];
 
 /// The sidebar sections and destinations for the dashboard demo.
 final registryDashboardDemoSections =
-    <RemixSidebarSection<RegistryDashboardDemoPage>>[
+    List<RemixSidebarSection<RegistryDashboardDemoPage>>.unmodifiable([
       for (final section in RegistryDashboardDemoSection.values)
         RemixSidebarSection(
           label: section.label,
@@ -191,7 +95,28 @@ final registryDashboardDemoSections =
                 ),
           ],
         ),
-    ];
+    ]);
+
+/// Returns the dashboard destinations whose label, section, or component
+/// section identifiers match [query].
+Set<RegistryDashboardDemoPage> registryDashboardMatchingPages(String query) {
+  final normalized = query.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return RegistryDashboardDemoPage.values.toSet();
+  }
+  return {
+    for (final page in RegistryDashboardDemoPage.values)
+      if (page.label.toLowerCase().contains(normalized) ||
+          page.section.label.toLowerCase().contains(normalized) ||
+          (registryDashboardDemoSectionIds[page]?.any(
+                (id) =>
+                    id.contains(normalized) ||
+                    id.replaceAll('-', ' ').contains(normalized),
+              ) ??
+              false))
+        page,
+  };
+}
 
 typedef RegistryDashboardDemoShellBuilder =
     Widget Function(
@@ -234,63 +159,171 @@ class RegistryDashboardDemoBase extends StatefulWidget {
 
 class _RegistryDashboardDemoBaseState extends State<RegistryDashboardDemoBase> {
   late RegistryDashboardDemoPage _selected = widget.initialPage;
+  late final _visitedPages = <RegistryDashboardDemoPage>{widget.initialPage};
   String _searchQuery = '';
+
+  @override
+  void didUpdateWidget(covariant RegistryDashboardDemoBase oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialPage != oldWidget.initialPage &&
+        _selected == oldWidget.initialPage) {
+      _selected = widget.initialPage;
+      _visitedPages.add(_selected);
+    }
+  }
 
   void _select(RegistryDashboardDemoPage page) {
     if (_selected == page) return;
-    setState(() => _selected = page);
+    setState(() {
+      _selected = page;
+      _visitedPages.add(page);
+    });
+  }
+
+  void _handleSearchChanged(String value) {
+    final nextQuery = value.trim().toLowerCase();
+    if (_searchQuery == nextQuery) return;
+    setState(() {
+      _searchQuery = nextQuery;
+      if (nextQuery.isEmpty) return;
+      final matches = registryDashboardMatchingPages(nextQuery);
+      if (matches.isNotEmpty &&
+          !matches.contains(_selected) &&
+          _selected != RegistryDashboardDemoPage.customers &&
+          _selected != RegistryDashboardDemoPage.orders) {
+        _selected = matches.first;
+        _visitedPages.add(_selected);
+      }
+    });
+  }
+
+  List<RemixSidebarSection<RegistryDashboardDemoPage>> _visibleSections() {
+    if (_searchQuery.isEmpty) return registryDashboardDemoSections;
+    final matches = registryDashboardMatchingPages(_searchQuery);
+    if (matches.isEmpty) return registryDashboardDemoSections;
+    final visible = {...matches, _selected};
+    return [
+      for (final section in RegistryDashboardDemoSection.values)
+        if (RegistryDashboardDemoPage.values.any(
+          (page) => page.section == section && visible.contains(page),
+        ))
+          RemixSidebarSection(
+            label: section.label,
+            destinations: [
+              for (final page in RegistryDashboardDemoPage.values)
+                if (page.section == section && visible.contains(page))
+                  RemixSidebarDestination(
+                    value: page,
+                    label: page.label,
+                    icon: page.icon,
+                  ),
+            ],
+          ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) => widget.shellBuilder(
     context,
-    sections: registryDashboardDemoSections,
+    sections: _visibleSections(),
     selectedValue: _selected,
     onSelected: _select,
     title: _selected.label,
-    onSearchChanged: (value) =>
-        setState(() => _searchQuery = value.trim().toLowerCase()),
+    onSearchChanged: _handleSearchChanged,
     body: IndexedStack(
       key: const ValueKey('dashboard-demo-pages'),
       index: _selected.index,
       children: [
         for (final page in RegistryDashboardDemoPage.values)
-          widget.pageBuilder(context, page, _searchQuery, _select),
+          if (_visitedPages.contains(page))
+            TickerMode(
+              key: ValueKey('dashboard-page-${page.name}'),
+              enabled: page == _selected,
+              child: RepaintBoundary(
+                child: _FreezeInactiveConstraints(
+                  active: page == _selected,
+                  child: widget.pageBuilder(
+                    context,
+                    page,
+                    _searchQuery,
+                    _select,
+                  ),
+                ),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
       ],
     ),
   );
 }
 
-/// A responsive scroll container for dashboard demo pages.
-class RegistryDashboardDemoPageFrame extends StatelessWidget {
-  const RegistryDashboardDemoPageFrame({
-    super.key,
-    required this.header,
-    required this.children,
+class _FreezeInactiveConstraints extends SingleChildRenderObjectWidget {
+  const _FreezeInactiveConstraints({
+    required this.active,
+    required super.child,
   });
 
-  final Widget header;
-  final List<Widget> children;
+  final bool active;
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    key: const ValueKey('dashboard-demo-page-scroll'),
-    padding: const EdgeInsets.all(24),
-    child: Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1180),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            header,
-            const SizedBox(height: 24),
-            for (final (index, child) in children.indexed) ...[
-              if (index > 0) const SizedBox(height: 16),
-              child,
-            ],
-          ],
-        ),
-      ),
-    ),
-  );
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderFreezeInactiveConstraints(active);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _RenderFreezeInactiveConstraints renderObject,
+  ) {
+    renderObject.active = active;
+  }
+}
+
+class _RenderFreezeInactiveConstraints extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  _RenderFreezeInactiveConstraints(this._active);
+
+  bool _active;
+  BoxConstraints? _frozenConstraints;
+
+  bool get active => _active;
+  set active(bool value) {
+    if (_active == value) return;
+    _active = value;
+    if (value) {
+      markNeedsLayout();
+    }
+  }
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    if (child == null) {
+      size = constraints.smallest;
+      return;
+    }
+    final effectiveConstraints = _active
+        ? (_frozenConstraints = constraints)
+        : (_frozenConstraints ?? constraints);
+    if (constraints.isTight) {
+      child.layout(effectiveConstraints);
+      size = constraints.biggest;
+    } else {
+      child.layout(effectiveConstraints, parentUsesSize: true);
+      size = constraints.constrain(child.size);
+    }
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (!_active) return;
+    final child = this.child;
+    if (child != null) {
+      context.paintChild(child, offset);
+    }
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
+      _active && (child?.hitTest(result, position: position) ?? false);
 }

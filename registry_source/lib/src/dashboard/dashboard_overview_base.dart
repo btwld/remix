@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
 
 import 'dashboard_sample_data.dart';
 
@@ -29,52 +30,53 @@ class RegistryDashboardOverviewBase extends StatelessWidget {
   final ScrollController? scrollController;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final width = constraints.hasBoundedWidth ? constraints.maxWidth : 960.0;
-      final compact = width < 600;
-      final columns = switch (width) {
-        >= 1040 => 4,
-        >= 600 => 2,
-        _ => 1,
-      };
-      final gap = compact ? 12.0 : 16.0;
-      final padding = compact ? 16.0 : 24.0;
-      final available = (width - (padding * 2)).clamp(0.0, double.infinity);
-      final metricWidth = (available - (gap * (columns - 1))) / columns;
+  Widget build(BuildContext context) {
+    final header = headerBuilder(
+      context,
+      'Overview',
+      'A snapshot of your workspace performance.',
+    );
+    final metrics = [
+      for (final metric in data.metrics) metricBuilder(context, metric),
+    ];
+    final charts = chartBuilder(context, data);
+    final table = tableBuilder(context, data);
 
-      return SingleChildScrollView(
-        key: const ValueKey('dashboard-overview-scroll'),
-        controller: scrollController,
-        padding: EdgeInsets.all(padding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            headerBuilder(
-              context,
-              'Overview',
-              'A snapshot of your workspace performance.',
-            ),
-            SizedBox(height: compact ? 20 : 24),
-            Wrap(
-              key: const ValueKey('dashboard-metrics'),
-              spacing: gap,
-              runSpacing: gap,
-              children: [
-                for (final metric in data.metrics)
-                  SizedBox(
-                    width: metricWidth,
-                    child: metricBuilder(context, metric),
-                  ),
-              ],
-            ),
-            SizedBox(height: compact ? 20 : 24),
-            chartBuilder(context, data),
-            SizedBox(height: compact ? 20 : 24),
-            tableBuilder(context, data),
-          ],
-        ),
-      );
-    },
-  );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : 960.0;
+        final compact = width < 600;
+        final gap = compact ? 12.0 : 16.0;
+        final padding = compact ? 16.0 : 24.0;
+        final sectionGap = compact ? 20.0 : 24.0;
+        final GridBoxStyler metricsStyle = .equalColumns(4)
+            .gap(gap)
+            .onConstraints(const .maxWidth(991), .equalColumns(2).gap(gap))
+            .onConstraints(const .maxWidth(551), .equalColumns(1).gap(gap));
+
+        return SingleChildScrollView(
+          key: const ValueKey('dashboard-overview-scroll'),
+          controller: scrollController,
+          padding: EdgeInsets.all(padding),
+          child: ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.stretch)
+                .spacing(sectionGap),
+            children: [
+              header,
+              GridBox(
+                key: const ValueKey('dashboard-metrics'),
+                style: metricsStyle,
+                children: metrics,
+              ),
+              charts,
+              table,
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

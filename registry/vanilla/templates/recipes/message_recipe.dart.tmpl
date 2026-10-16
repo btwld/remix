@@ -34,7 +34,11 @@ final class {{typePrefix}}AgentMessageRecipe {
     footer: BoxStyler().padding(.top(4)),
     maxWidth: 640,
   ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(style: surfaceStyle),
+  surfaceStyle: {{valuePrefix}}CardStyle(
+    style: CardStyler()
+        .padding(.symmetric(horizontal: 16, vertical: 12))
+        .merge(surfaceStyle),
+  ),
   collapsibleStyle: {{typePrefix}}MessageCollapsibleStyler(
     collapsedHeight: 72,
     container: BoxStyler(),

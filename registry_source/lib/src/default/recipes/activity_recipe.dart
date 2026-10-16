@@ -21,7 +21,10 @@ VanillaAgentActivityRecipe vanillaAgentActivityRecipe({
 }) => VanillaAgentActivityRecipe(
   style: AgentActivityStyler(
     viewport: BoxStyler().maxHeight(200),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(VanillaTokens.foreground())
         .fontSize(14)
@@ -35,12 +38,13 @@ VanillaAgentActivityRecipe vanillaAgentActivityRecipe({
         .fontSize(12)
         .wrap(.padding(.right(8))),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
-    pendingStatus: IconStyler().color(VanillaTokens.mutedForeground()).size(12),
-    activeStatus: IconStyler().color(VanillaTokens.primary()).size(12),
-    completedStatus: IconStyler().color(VanillaTokens.primary()).size(12),
+    pendingStatus: IconStyler().color(VanillaTokens.mutedForeground()).size(16),
+    activeStatus: IconStyler().color(VanillaTokens.primary()).size(16),
+    completedStatus: IconStyler().color(VanillaTokens.primary()).size(16),
   ).merge(style),
   disclosureStyle: vanillaDisclosureStyle(
     style: DisclosureStyler()
+        .padding(.vertical(VanillaTokens.s3))
         .content(BoxStyler().padding(.all(0)))
         .merge(disclosureStyle),
   ),

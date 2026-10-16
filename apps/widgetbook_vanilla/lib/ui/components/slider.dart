@@ -1,0 +1,112 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/effects.dart';
+import '../theme/tokens.dart';
+
+part 'slider.g.dart';
+
+/// The application's Slider recipe.
+///
+/// Remix owns the rendering, the drag and keyboard behavior, the mapping from
+/// a 0-1 value onto the filled range, and the slider accessibility semantics;
+/// this recipe supplies the rail, the filled range, and the thumb.
+///
+/// The rail is `muted` and the range is `primary`. The thumb is a white disc
+/// with a `primary` outline and a small shadow, which keeps it a distinct
+/// handle on either page.
+///
+/// `semanticFormatterCallback` is deliberately not forwarded to the generated
+/// `VanillaSlider`. Its type is
+/// `NakedSliderSemanticFormatterCallback`, which comes from
+/// `package:naked_ui` — a package this layer does not depend on. Reach for
+/// `RemixSlider` directly on the rare call site that needs to reword the
+/// announced value.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it. State fragments merge by state, not
+/// by depth: an override that must beat the recipe's hover thumb has to be
+/// declared as a hover fragment too (`SliderStyler().onHovered(...)`).
+@MixWidget(
+  target: RemixSlider.new,
+  widgetParameters: .only({
+    'value',
+    'onChanged',
+    'onChangeStart',
+    'onChangeEnd',
+    'min',
+    'max',
+    'enabled',
+    'enableFeedback',
+    'focusNode',
+    'autofocus',
+    'snapDivisions',
+    'semanticLabel',
+    'excludeSemantics',
+  }),
+)
+SliderStyler vanillaSliderStyle({
+  SliderStyler style = const SliderStyler.create(),
+}) {
+  return SliderStyler()
+      .animate(VanillaTokens.motion)
+      .thickness(_rail)
+      .trackColor(VanillaTokens.muted())
+      .rangeColor(VanillaTokens.primary())
+      .thumbSize(const Size.square(VanillaTokens.icon))
+      // White in both themes: the thumb is a physical-looking handle, and its
+      // `primary` outline and small shadow are what separate it from the range
+      // it sits on.
+      .thumbColor(_thumbFill)
+      .thumb(
+        BoxStyler()
+            .borderRadius(.all(_circular))
+            .border(
+              .color(
+                VanillaTokens.primary(),
+              ).width(VanillaTokens.strokeHairline),
+            )
+            .shadows(VanillaShadow.sm.box),
+      )
+      // A thumb is a grab target, so it answers the pointer with the same ring
+      // keyboard focus draws.
+      .onHovered(SliderStyler().thumbEffects(_thumbRing()))
+      .onFocusVisible(_focusVisibleStyle())
+      .onDisabled(_disabledStyle())
+      .merge(style);
+}
+
+/// A radius large enough to round the thumb into a circle.
+const _circular = Radius.circular(VanillaTokens.pill);
+
+/// The thumb's fill: white, in both themes.
+const _thumbFill = Color(0xFFFFFFFF);
+
+/// Width of the ring around a hovered or focused thumb: 4px, a step wider than
+/// other controls' because the thumb is a small target.
+const _thumbRingWidth = 4.0;
+
+/// The rail's thickness: 6px.
+///
+/// One size, not a scale. A call site that needs another sets `.thickness(...)`
+/// through [style].
+const _rail = VanillaTokens.s1_5;
+
+/// The ring around a hovered or focused thumb.
+RemixBoxEffectsMix _thumbRing() => vanillaFocusRing(width: _thumbRingWidth);
+
+/// The keyboard focus ring, drawn around the thumb.
+///
+/// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
+/// only while the slider has visible focus, which is the state a ring is for.
+SliderStyler _focusVisibleStyle() =>
+    SliderStyler().thumbFocusEffects(_thumbRing());
+
+/// Declared last so it wins over every other state fragment.
+///
+/// A disabled slider keeps its rail and range and simply fades; there is no
+/// ring to clear because the focus effects are already conditional on focus.
+SliderStyler _disabledStyle() => SliderStyler()
+    .thumbEffects(RemixBoxEffectsMix.outline(.style(.none)))
+    .wrap(.opacity(VanillaTokens.disabledOpacity));

@@ -1,23 +1,22 @@
 import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
-import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/sidebar_sections.dart';
-import 'package:flutter/material.dart';
+import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:dashboard/ui/ui.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-const _sections = <RemixSidebarSection<DashboardPage>>[
+const _sections = <RemixSidebarSection<UiDashboardDemoPage>>[
   RemixSidebarSection(
     label: 'Workspace',
     destinations: [
       RemixSidebarDestination(
-        value: DashboardPage.overview,
+        value: UiDashboardDemoPage.overview,
         label: 'Overview',
-        icon: Icons.space_dashboard_outlined,
+        icon: RemixIcons.dashboard,
       ),
     ],
   ),
@@ -25,14 +24,14 @@ const _sections = <RemixSidebarSection<DashboardPage>>[
     label: 'Data',
     destinations: [
       RemixSidebarDestination(
-        value: DashboardPage.customers,
+        value: UiDashboardDemoPage.customers,
         label: 'Customers',
-        icon: Icons.people_outline,
+        icon: RemixIcons.group,
       ),
       RemixSidebarDestination(
-        value: DashboardPage.orders,
+        value: UiDashboardDemoPage.orders,
         label: 'Orders',
-        icon: Icons.receipt_long_outlined,
+        icon: RemixIcons.table,
       ),
     ],
   ),
@@ -41,15 +40,15 @@ const _sections = <RemixSidebarSection<DashboardPage>>[
 void main() {
   test('dashboard data uses the public immutable navigation records', () {
     expect(
-      dashboardSidebarSections,
-      isA<List<RemixSidebarSection<DashboardPage>>>(),
+      uiDashboardDemoSections,
+      isA<List<RemixSidebarSection<UiDashboardDemoPage>>>(),
     );
     expect(
-      dashboardSidebarSections.expand((section) => section.destinations).length,
-      DashboardPage.values.length,
+      uiDashboardDemoSections.expand((section) => section.destinations).length,
+      UiDashboardDemoPage.values.length,
     );
     expect(
-      () => dashboardSidebarSections.add(
+      () => uiDashboardDemoSections.add(
         const RemixSidebarSection(destinations: []),
       ),
       throwsUnsupportedError,
@@ -59,35 +58,41 @@ void main() {
   testWidgets('activation emits unselected and selected destinations once', (
     tester,
   ) async {
-    final emitted = <DashboardPage>[];
+    final emitted = <UiDashboardDemoPage>[];
     await _pumpSidebar(tester, onSelected: emitted.add);
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)));
+    await tester.tap(find.byKey(const ValueKey(UiDashboardDemoPage.customers)));
     await tester.pump();
-    expect(emitted, [DashboardPage.customers]);
+    expect(emitted, [UiDashboardDemoPage.customers]);
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.overview)));
+    await tester.tap(find.byKey(const ValueKey(UiDashboardDemoPage.overview)));
     await tester.pump();
-    expect(emitted, [DashboardPage.customers, DashboardPage.overview]);
+    expect(emitted, [
+      UiDashboardDemoPage.customers,
+      UiDashboardDemoPage.overview,
+    ]);
   });
 
   testWidgets('pointer and semantics tap routes each emit exactly once', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    final emitted = <DashboardPage>[];
+    final emitted = <UiDashboardDemoPage>[];
     await _pumpSidebar(tester, onSelected: emitted.add);
 
-    await tester.tap(find.byKey(const ValueKey(DashboardPage.overview)));
+    await tester.tap(find.byKey(const ValueKey(UiDashboardDemoPage.overview)));
     await tester.pump();
-    expect(emitted, [DashboardPage.overview]);
+    expect(emitted, [UiDashboardDemoPage.overview]);
 
     tester.semantics.performAction(
       find.semantics.byLabel('Customers'),
       ui.SemanticsAction.tap,
     );
     await tester.pump();
-    expect(emitted, [DashboardPage.overview, DashboardPage.customers]);
+    expect(emitted, [
+      UiDashboardDemoPage.overview,
+      UiDashboardDemoPage.customers,
+    ]);
     handle.dispose();
   });
 
@@ -149,7 +154,7 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    final emitted = <DashboardPage>[];
+    final emitted = <UiDashboardDemoPage>[];
     await _pumpSidebar(tester, onSelected: emitted.add);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.tab);
@@ -178,17 +183,19 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.space);
     await tester.pump();
 
-    expect(emitted, [DashboardPage.orders, DashboardPage.orders]);
+    expect(emitted, [UiDashboardDemoPage.orders, UiDashboardDemoPage.orders]);
     handle.dispose();
   });
 
   testWidgets('the shell panel paints under device insets', (tester) async {
     await tester.pumpWidget(const DashboardApp());
 
-    final panelFinder = find.byType(UiSidebar<DashboardPage>);
+    final panelFinder = find.byType(UiSidebar<UiDashboardDemoPage>);
     final panel = tester.getRect(panelFinder);
     final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
-    final generated = tester.widget<UiSidebar<DashboardPage>>(panelFinder);
+    final generated = tester.widget<UiSidebar<UiDashboardDemoPage>>(
+      panelFinder,
+    );
 
     expect(
       generated.panelPadding,
@@ -201,9 +208,9 @@ void main() {
   testWidgets('builds in scrolling and fixed-height column hosts', (
     tester,
   ) async {
-    UiSidebar<DashboardPage> buildPanel() => UiSidebar(
+    UiSidebar<UiDashboardDemoPage> buildPanel() => UiSidebar(
       sections: _sections,
-      selectedValue: DashboardPage.overview,
+      selectedValue: UiDashboardDemoPage.overview,
       onSelected: (_) {},
     );
 
@@ -211,7 +218,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
-        of: find.byType(RemixSidebar<DashboardPage>),
+        of: find.byType(RemixSidebar<UiDashboardDemoPage>),
         matching: find.byType(Scrollable),
       ),
       findsNothing,
@@ -224,7 +231,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
-        of: find.byType(RemixSidebar<DashboardPage>),
+        of: find.byType(RemixSidebar<UiDashboardDemoPage>),
         matching: find.byType(Scrollable),
       ),
       findsNothing,
@@ -243,21 +250,21 @@ void main() {
           ).copyWith(textScaler: const TextScaler.linear(2)),
           child: SizedBox(
             width: 256,
-            child: UiSidebar<DashboardPage>(
+            child: UiSidebar<UiDashboardDemoPage>(
               sections: const [
                 RemixSidebarSection(
                   label: 'Workspace',
                   destinations: [
                     RemixSidebarDestination(
-                      value: DashboardPage.overview,
+                      value: UiDashboardDemoPage.overview,
                       label:
                           'Overview of every active workspace and its status',
-                      icon: Icons.space_dashboard_outlined,
+                      icon: RemixIcons.dashboard,
                     ),
                   ],
                 ),
               ],
-              selectedValue: DashboardPage.overview,
+              selectedValue: UiDashboardDemoPage.overview,
               onSelected: (_) {},
             ),
           ),
@@ -277,9 +284,9 @@ void main() {
         textDirection: TextDirection.rtl,
         child: SizedBox(
           width: 256,
-          child: UiSidebar<DashboardPage>(
+          child: UiSidebar<UiDashboardDemoPage>(
             sections: _sections,
-            selectedValue: DashboardPage.overview,
+            selectedValue: UiDashboardDemoPage.overview,
             onSelected: (_) {},
           ),
         ),
@@ -310,13 +317,13 @@ void main() {
 
 Future<void> _pumpSidebar(
   WidgetTester tester, {
-  List<RemixSidebarSection<DashboardPage>> sections = _sections,
-  DashboardPage? selectedValue = DashboardPage.overview,
-  ValueChanged<DashboardPage>? onSelected,
+  List<RemixSidebarSection<UiDashboardDemoPage>> sections = _sections,
+  UiDashboardDemoPage? selectedValue = UiDashboardDemoPage.overview,
+  ValueChanged<UiDashboardDemoPage>? onSelected,
 }) {
   return _pumpPage(
     tester,
-    UiSidebar<DashboardPage>(
+    UiSidebar<UiDashboardDemoPage>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected ?? (_) {},

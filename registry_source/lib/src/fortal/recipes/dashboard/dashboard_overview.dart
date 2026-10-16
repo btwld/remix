@@ -6,13 +6,18 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../../../dashboard/dashboard_demo_charts.dart';
 import '../../../dashboard/dashboard_overview_base.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
+import '../../components/avatar.dart';
+import '../../components/button.dart';
 import '../../components/card.dart';
 import '../../components/chart.dart';
 import '../../components/data_table.dart';
-import '../../components/button.dart';
 import '../../components/divider.dart';
 import '../../components/text.dart';
-import '../../components/typography.dart';
+import '../../theme/theme.dart';
+import 'dashboard_demo_page_header.dart';
+import 'dashboard_demo_theme.dart';
+import 'dashboard_demo_typography.dart';
+import 'dashboard_demo_widgets.dart';
 
 /// The Fortal dashboard overview with Radix-native surfaces and type.
 class FortalDashboardOverview extends StatelessWidget {
@@ -28,87 +33,73 @@ class FortalDashboardOverview extends StatelessWidget {
   final VoidCallback? onViewOrders;
 
   @override
-  Widget build(BuildContext context) => RegistryDashboardOverviewBase(
-    data: data,
-    scrollController: scrollController,
-    headerBuilder: (context, title, description) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FortalText(title, size: .size7, weight: .bold),
-        const SizedBox(height: 6),
-        FortalText(description, size: .size2, highContrast: false),
-      ],
-    ),
-    metricBuilder: (context, metric) => FortalCard.surface(
-      size: .size2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FortalText(metric.label, size: .size2, weight: .medium),
-          const SizedBox(height: 10),
-          FortalText(metric.value, size: .size6, weight: .bold),
-          const SizedBox(height: 6),
-          FortalText(metric.change, size: .size1, highContrast: false),
-        ],
+  Widget build(BuildContext context) {
+    return RegistryDashboardOverviewBase(
+      data: data,
+      scrollController: scrollController,
+      headerBuilder: (context, title, description) =>
+          FortalPageHeader(title: title, description: description),
+      metricBuilder: (context, metric) => FortalStatCard(
+        label: metric.label,
+        value: metric.value,
+        caption: metric.change,
+        delta: metric.delta,
+        positive: metric.positive,
+        progress: metric.progress,
       ),
-    ),
-    chartBuilder: (context, data) => LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth < 760
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 32) / 3;
-        return Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: [
-            SizedBox(width: width, child: _revenueCard(data)),
-            SizedBox(width: width, child: _customerChartCard()),
-            SizedBox(width: width, child: _fulfillmentCard()),
-          ],
-        );
-      },
-    ),
-    tableBuilder: (context, data) => LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth < 900
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 20) / 2;
-        return Wrap(
-          spacing: 20,
-          runSpacing: 20,
-          children: [
-            SizedBox(width: width, child: _activityCard(data)),
-            SizedBox(width: width, child: _ordersCard(data, onViewOrders)),
-          ],
-        );
-      },
-    ),
-  );
+      chartBuilder: (context, data) => FortalAnalyticsCharts(data: data),
+      tableBuilder: (context, data) => GridBox(
+        style: GridBoxStyler.equalColumns(2)
+            .gap(20)
+            .onConstraints(const .maxWidth(1001), .equalColumns(1).gap(20)),
+        children: [_activityCard(data), _ordersCard(data, onViewOrders)],
+      ),
+    );
+  }
 }
 
-Widget _revenueCard(RegistryDashboardSampleData data) => FortalCard.surface(
-  size: .size2,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      const FortalText('Revenue trend', size: .size4, weight: .bold),
-      const SizedBox(height: 4),
-      const FortalText(
-        'Seven-day net revenue',
-        size: .size2,
-        highContrast: false,
-      ),
-      const SizedBox(height: 16),
-      SizedBox(
+/// Overview analytics chart grid for the Fortal dashboard.
+class FortalAnalyticsCharts extends StatelessWidget {
+  const FortalAnalyticsCharts({
+    super.key,
+    this.data = registryDashboardSampleData,
+  });
+
+  final RegistryDashboardSampleData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = resolveFortalChartPalette(context);
+    final gap = MixScope.tokenOf(FortalTokens.space4, context);
+    final chartInset = MixScope.tokenOf(FortalTokens.space2, context);
+
+    return GridBox(
+      key: const ValueKey('overview-chart-grid'),
+      style: GridBoxStyler.equalColumns(3)
+          .gap(gap)
+          .onConstraints(const .maxWidth(1119), .equalColumns(2).gap(gap))
+          .onConstraints(const .maxWidth(719), .equalColumns(1).gap(gap)),
+      children: [
+        _revenueCard(data, palette),
+        _orderVolumeCard(palette),
+        _channelMixCard(palette, chartInset),
+      ],
+    );
+  }
+}
+
+Widget _revenueCard(RegistryDashboardSampleData data, List<Color> palette) =>
+    FortalChartCard(
+      title: 'Revenue trend',
+      description: 'Seven-day net revenue',
+      chartPadding: EdgeInsets.zero,
+      chart: Box(
         key: const ValueKey('dashboard-revenue-chart'),
-        height: 220,
         child: FortalLineChart(
+          palette: palette,
           semanticsLabel: 'Seven-day net revenue',
           showMarkers: true,
           series: [_revenueSeries(data.revenue)],
-          // Half a step of room at each end keeps the first and last labels
-          // and markers off the plot's edges, where a marker is cut in half
-          // and a label is pushed into its neighbor.
           xAxis: ChartAxis.numeric(
             min: -0.5,
             max: data.revenue.length > 1 ? data.revenue.length - 0.5 : 1.5,
@@ -117,164 +108,200 @@ Widget _revenueCard(RegistryDashboardSampleData data) => FortalCard.surface(
             maxIncluded: false,
             labelFormatter: (value) => _pointLabel(data.revenue, value),
           ),
-          // Round steps, with room past each end so the end labels sit on
-          // their gridlines.
           yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
           style: registryDashboardLineStyle(),
         ),
       ),
+    );
+
+Widget _orderVolumeCard(List<Color> palette) => FortalChartCard(
+  title: 'Order volume',
+  description: 'Actual versus plan',
+  chartPadding: EdgeInsets.zero,
+  legend: FortalDashboardChartLegend(
+    key: const ValueKey('overview-order-legend'),
+    semanticLabel: 'Order volume series',
+    items: [
+      FortalDashboardChartLegendItem(
+        id: 'actual',
+        label: 'Actual',
+        color: palette[0],
+      ),
+      FortalDashboardChartLegendItem(
+        id: 'plan',
+        label: 'Plan',
+        color: palette[1],
+        pattern: .dashed,
+      ),
     ],
+  ),
+  chart: FortalBarChart(
+    key: const ValueKey('overview-order-chart'),
+    palette: palette,
+    semanticsLabel: 'Quarterly actual and planned orders',
+    groups: [
+      _orderGroup('q1', 'Q1', 52, 48, palette),
+      _orderGroup('q2', 'Q2', 68, 64, palette),
+      _orderGroup('q3', 'Q3', 74, 78, palette),
+      _orderGroup('q4', 'Q4', 88, 82, palette),
+    ],
+    yAxis: registryDashboardNumericAxis(max: 100, interval: 25),
+    style: registryDashboardBarStyle(),
   ),
 );
 
-Widget _customerChartCard() => FortalCard.surface(
+BarGroup _orderGroup(
+  String id,
+  String label,
+  double actual,
+  double plan,
+  List<Color> palette,
+) => BarGroup(
+  id: id,
+  label: label,
+  bars: [
+    BarValue(
+      id: 'actual',
+      label: 'Actual',
+      toY: actual,
+      style: BarStyler().color(palette[0]),
+    ),
+    BarValue(
+      id: 'plan',
+      label: 'Plan',
+      toY: plan,
+      style: BarStyler()
+          .color(palette[1].withValues(alpha: 0.22))
+          .border(BorderSide(color: palette[1], width: 2))
+          .borderDashArray([4, 3]),
+    ),
+  ],
+);
+
+Widget _channelMixCard(List<Color> palette, double chartInset) {
+  final slices = [
+    PieSlice(id: 'direct', label: 'Direct', value: 46),
+    PieSlice(id: 'partners', label: 'Partners', value: 31),
+    PieSlice(id: 'marketplace', label: 'Marketplace', value: 23),
+  ];
+  return FortalChartCard(
+    title: 'Channel mix',
+    description: 'Revenue contribution',
+    chartPadding: EdgeInsets.symmetric(
+      horizontal: chartInset,
+      vertical: chartInset,
+    ),
+    chartPaddingKey: const ValueKey('overview-channel-chart-safe-area'),
+    legend: FortalDashboardChartLegend(
+      key: const ValueKey('overview-channel-legend'),
+      semanticLabel: 'Revenue contribution legend',
+      items: fortalPercentagePieLegendItems(slices: slices, palette: palette),
+    ),
+    chart: PieChart(
+      style: fortalPieChartStyle(
+        palette: palette,
+        centerRadius: 44,
+      ).slice(PieSliceStyler().radius(36)),
+      semanticsLabel: 'Revenue contribution by channel',
+      slices: slices,
+      valueFormatter: (value) => '${value.toInt()}%',
+    ),
+  );
+}
+
+Widget _activityCard(RegistryDashboardSampleData data) => FortalCard(
   size: .size2,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.stretch),
     children: [
-      const FortalText('Customer acquisition', size: .size4, weight: .bold),
-      const SizedBox(height: 4),
-      const FortalText(
-        'New accounts by month',
-        size: .size2,
-        highContrast: false,
+      Box(
+        style: BoxStyler().padding(.bottom(8)),
+        child: const FortalSectionLabel('Recent activity'),
       ),
-      const SizedBox(height: 16),
-      SizedBox(
-        height: 220,
-        child: FortalBarChart(
-          semanticsLabel: 'New accounts by month',
-          groups: [
-            for (final (index, value) in const [
-              18.0,
-              24.0,
-              21.0,
-              32.0,
-              38.0,
-              44.0,
-            ].indexed)
-              BarGroup(
-                id: 'customers-$index',
-                label: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][index],
-                bars: [
-                  BarValue(id: 'customers', label: 'Customers', toY: value),
+      for (final (index, event) in data.activities.indexed) ...[
+        RowBox(
+          style: FlexBoxStyler()
+              .padding(.symmetric(vertical: 11))
+              .crossAxisAlignment(.center)
+              .spacing(12),
+          children: [
+            _FortalActivityIcon(kind: event.kind),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
+                children: [
+                  FortalText(event.title, size: .size2, weight: .medium),
+                  StyledText(
+                    event.detail,
+                    style: dashboardText(.size1, tone: .muted),
+                  ),
                 ],
               ),
-          ],
-          // Customers peak at 44; see the revenue chart above for why the
-          // maximum is pinned to a whole number of intervals.
-          yAxis: registryDashboardNumericAxis(max: 50),
-          style: registryDashboardBarStyle(),
-        ),
-      ),
-    ],
-  ),
-);
-
-Widget _fulfillmentCard() => FortalCard.surface(
-  size: .size2,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      const FortalText('Fulfillment mix', size: .size4, weight: .bold),
-      const SizedBox(height: 4),
-      const FortalText(
-        'Current order status',
-        size: .size2,
-        highContrast: false,
-      ),
-      const SizedBox(height: 16),
-      SizedBox(
-        height: 220,
-        child: FortalPieChart(
-          centerRadius: 44,
-          // mix_chart draws each slice 80px wide in any box; this ring stops
-          // the donut at 88px, 80% of the way to the edge of its 220px box.
-          style: PieChartStyler().slice(PieSliceStyler().radius(44)),
-          semanticsLabel: 'Current order status',
-          slices: [
-            PieSlice(id: 'fulfilled', label: 'Fulfilled', value: 72),
-            PieSlice(id: 'processing', label: 'Processing', value: 18),
-            PieSlice(id: 'review', label: 'Review', value: 10),
+            ),
+            StyledText(
+              event.relativeTime,
+              style: dashboardText(.size1, tone: .subtle),
+            ),
           ],
         ),
-      ),
-    ],
-  ),
-);
-
-Widget _activityCard(RegistryDashboardSampleData data) => FortalCard.surface(
-  size: .size2,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      const FortalText('Recent activity', size: .size4, weight: .bold),
-      const SizedBox(height: 8),
-      for (final (index, event) in data.activities.indexed) ...[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 9),
-          child: Row(
-            children: [
-              const Icon(RemixIcons.activityLog, size: 16),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FortalText(event.title, size: .size2, weight: .medium),
-                    FortalText(event.detail, size: .size1, highContrast: false),
-                  ],
-                ),
-              ),
-              FortalText(event.relativeTime, size: .size1, highContrast: false),
-            ],
-          ),
-        ),
-        if (index != data.activities.length - 1) const FortalDivider(),
+        if (index != data.activities.length - 1)
+          const FortalDivider(size: .size4),
       ],
     ],
   ),
 );
 
+class _FortalActivityIcon extends StatelessWidget {
+  const _FortalActivityIcon({required this.kind});
+
+  final RegistryDashboardActivityKind kind;
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, accent) = switch (kind) {
+      .customer => (RemixIcons.person, FortalAccentColor.blue),
+      .order => (RemixIcons.box, FortalAccentColor.indigo),
+      .payment => (RemixIcons.checkCircled, FortalAccentColor.green),
+      .alert => (RemixIcons.exclamationTriangle, FortalAccentColor.amber),
+    };
+
+    return FortalAccentScope(
+      accent: accent,
+      child: FortalAvatar.soft(icon: icon, size: .size2),
+    );
+  }
+}
+
 Widget _ordersCard(
   RegistryDashboardSampleData data,
   VoidCallback? onViewOrders,
-) => FortalCard.surface(
+) => FortalCard(
   size: .size2,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+  child: ColumnBox(
+    style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
     children: [
-      Row(
+      RowBox(
+        style: FlexBoxStyler().crossAxisAlignment(.center),
         children: [
-          const Expanded(
-            child: FortalText('Recent orders', size: .size4, weight: .bold),
-          ),
+          const Expanded(child: FortalSectionLabel('Recent orders')),
           FortalButton.ghost(
             key: const ValueKey('overview-view-orders'),
             size: .size1,
             label: 'View all',
+            trailingIcon: RemixIcons.doubleArrowRight,
             onPressed: onViewOrders,
           ),
         ],
       ),
-      const SizedBox(height: 12),
       FortalDataTable<RegistryDashboardRecord>.surface(
         key: const ValueKey('dashboard-records-table'),
-        semanticLabel: 'Recent customer orders',
+        semanticLabel: 'Recent orders',
         rows: data.records,
-        // Fits the half-width card at a 1280px desktop with the sidebar open;
-        // narrower than this, the table scrolls sideways.
         minimumWidth: 400,
         columns: _recordColumns,
       ),
     ],
   ),
-);
-
-Widget _cell(String text, {bool emphasized = false}) => FortalText(
-  text,
-  size: .size2,
-  weight: emphasized ? FortalTextWeight.bold : FortalTextWeight.regular,
 );
 
 LineSeries _revenueSeries(List<RegistryDashboardPoint> points) => LineSeries(
@@ -294,27 +321,29 @@ String _pointLabel(List<RegistryDashboardPoint> points, double value) {
 final _recordColumns = <RemixDataTableColumn<RegistryDashboardRecord>>[
   RemixDataTableColumn(
     id: 'id',
-    label: 'Record',
-    width: const FixedColumnWidth(96),
-    cellBuilder: (_, record) => _cell(record.id, emphasized: true),
+    label: 'Order',
+    width: const FixedColumnWidth(105),
+    cellBuilder: (_, record) =>
+        FortalDataTableCellText(record.id, primary: true),
   ),
   RemixDataTableColumn(
     id: 'customer',
     label: 'Customer',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, record) => _cell(record.customer),
-  ),
-  RemixDataTableColumn(
-    id: 'status',
-    label: 'Status',
-    width: const FixedColumnWidth(104),
-    cellBuilder: (_, record) => _cell(record.status),
+    cellBuilder: (_, record) => FortalDataTableCellText(record.customer),
   ),
   RemixDataTableColumn(
     id: 'amount',
     label: 'Amount',
-    width: const FixedColumnWidth(96),
+    width: const FixedColumnWidth(100),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, record) => _cell(record.amount, emphasized: true),
+    cellBuilder: (_, record) =>
+        FortalDataTableCellText(record.amount, primary: true),
+  ),
+  RemixDataTableColumn(
+    id: 'status',
+    label: 'Status',
+    width: const FixedColumnWidth(94),
+    cellBuilder: (_, record) => FortalStatusBadge.label(record.status),
   ),
 ];

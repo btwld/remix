@@ -1,13 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
-
-import 'shell/dashboard_shell.dart';
-import 'theme/scroll_behavior.dart';
-import 'theme/theme_scope.dart';
-import 'theme/theme_settings.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,21 +13,34 @@ void main() {
   runApp(const DashboardApp());
 }
 
-class DashboardApp extends StatefulWidget {
-  const DashboardApp({super.key, this.initialSettings = const ThemeSettings()});
+class AppScrollBehavior extends ScrollBehavior {
+  const AppScrollBehavior();
 
-  final ThemeSettings initialSettings;
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    ...super.dragDevices,
+    PointerDeviceKind.mouse,
+  };
+}
+
+class DashboardApp extends StatefulWidget {
+  const DashboardApp({
+    super.key,
+    this.initialSettings = const UiThemeSettings(),
+  });
+
+  final UiThemeSettings initialSettings;
 
   @override
   State<DashboardApp> createState() => _DashboardAppState();
 }
 
 class _DashboardAppState extends State<DashboardApp> {
-  late ThemeSettings _settings = widget.initialSettings;
+  late UiThemeSettings _settings = widget.initialSettings;
 
   @override
   Widget build(BuildContext context) {
-    return ThemeScope(
+    return UiDashboardThemeScope(
       settings: _settings,
       onChanged: (settings) => setState(() => _settings = settings),
       child: WidgetsApp(
@@ -49,7 +58,7 @@ class _DashboardAppState extends State<DashboardApp> {
         // pushed routes and dialogs. A nearer DefaultTextStyle retains its
         // normal priority through Flutter's inheritance.
         builder: (context, child) => UiTheme(
-          key: const ValueKey('dashboard-fortal-scope'),
+          key: const ValueKey('dashboard-theme-scope'),
           accent: _settings.accentColor,
           gray: _settings.grayColor,
           mode: _settings.appearance,
@@ -70,7 +79,7 @@ class _DashboardAppState extends State<DashboardApp> {
             ),
           ),
         ),
-        home: const DashboardShell(),
+        home: const UiDashboardDemo(),
       ),
     );
   }

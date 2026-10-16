@@ -2,24 +2,22 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
-import '../../components/button.dart';
-import '../../components/callout.dart';
-import '../../components/card.dart';
-import '../../components/checkbox.dart';
-import '../../components/dialog.dart';
-import '../../components/disclosure.dart';
-import '../../components/segmented_control.dart';
-import '../../components/select.dart';
-import '../../components/slider.dart';
-import '../../components/switch.dart';
-import '../../components/text.dart';
-import '../../components/textfield.dart';
-import '../../components/typography.dart';
-
-enum _Appearance { light, dark, system }
+import 'dashboard_demo_page_header.dart';
+import 'dashboard_demo_theme.dart';
+import 'dashboard_demo_theme_panel.dart';
+import 'dashboard_demo_typography.dart';
+import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
 
 class {{typePrefix}}DashboardSettingsPage extends StatefulWidget {
-  const {{typePrefix}}DashboardSettingsPage({super.key});
+  const {{typePrefix}}DashboardSettingsPage({
+    super.key,
+    this.darkMode,
+    this.onDarkModeChanged,
+  });
+
+  final bool? darkMode;
+  final ValueChanged<bool?>? onDarkModeChanged;
 
   @override
   State<{{typePrefix}}DashboardSettingsPage> createState() =>
@@ -28,234 +26,269 @@ class {{typePrefix}}DashboardSettingsPage extends StatefulWidget {
 
 class _{{typePrefix}}DashboardSettingsPageState
     extends State<{{typePrefix}}DashboardSettingsPage> {
+  final _nameController = TextEditingController(text: 'Leo Farias');
+  final _emailController = TextEditingController(text: 'leo@remix.dev');
+  String _language = 'English (US)';
   bool _productUpdates = true;
   bool _weeklyDigest = false;
-  String _language = 'en';
-  _Appearance _appearance = .system;
-  double _radius = 8;
+  {{typePrefix}}ThemeSettings _fallbackSettings = const {{typePrefix}}ThemeSettings();
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const _Text('Settings', size: 28, emphasized: true),
-        const SizedBox(height: 4),
-        const _Text(
-          'Manage your profile, preferences, and workspace.',
-          muted: true,
-        ),
-        const SizedBox(height: 20),
-        _section(
-          'Profile',
-          'This information appears across your workspace.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const {{typePrefix}}TextField(label: 'Full name', hintText: 'Ada Chen'),
-              const SizedBox(height: 12),
-              const {{typePrefix}}TextField(
-                label: 'Email address',
-                hintText: 'ada@northstar.co',
-              ),
-              const SizedBox(height: 12),
-              {{typePrefix}}Select<String>(
-                trigger: const RemixSelectTrigger(placeholder: 'Language'),
-                items: const [
-                  RemixSelectItem(value: 'en', label: 'English'),
-                  RemixSelectItem(value: 'es', label: 'Spanish'),
-                  RemixSelectItem(value: 'fr', label: 'French'),
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ambientScope = {{typePrefix}}DashboardThemeScope.maybeOf(context);
+    final effectiveSettings =
+        ambientScope?.settings ??
+        _fallbackSettings.copyWith(
+          appearance: switch (widget.darkMode) {
+            false => {{typePrefix}}ThemeMode.light,
+            true => {{typePrefix}}ThemeMode.dark,
+            null => _fallbackSettings.appearance,
+          },
+        );
+    final GridBoxStyler profileFields = .equalColumns(
+      2,
+    ).gap(14).onConstraints(const .maxWidth(560), .equalColumns(1).gap(14));
+
+    final content = SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Box(
+        style: BoxStyler().alignment(.topStart),
+        child: ColumnBox(
+          style: FlexBoxStyler()
+              .maxWidth(680)
+              .crossAxisAlignment(.stretch)
+              .spacing(20),
+          children: [
+            const {{typePrefix}}PageHeader(
+              title: 'Settings',
+              description: 'Manage your profile, preferences, and workspace.',
+            ),
+            {{typePrefix}}Card(
+              size: .size3,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+                children: [
+                  const {{typePrefix}}CardHeading(
+                    title: 'Profile',
+                    description:
+                        'Your personal details and communication preferences.',
+                  ),
+                  GridBox(
+                    style: profileFields,
+                    children: [
+                      {{typePrefix}}TextField(
+                        controller: _nameController,
+                        label: 'Name',
+                        hintText: 'Your name',
+                      ),
+                      {{typePrefix}}TextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        helperText: 'Domain verification is pending.',
+                        error: true,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ],
+                  ),
+                  {{typePrefix}}Select<String>(
+                    trigger: const RemixSelectTrigger(placeholder: 'Language'),
+                    selectedValue: _language,
+                    items: const [
+                      RemixSelectItem(
+                        value: 'English (US)',
+                        label: 'English (US)',
+                      ),
+                      RemixSelectItem(
+                        value: 'English (UK)',
+                        label: 'English (UK)',
+                      ),
+                      RemixSelectItem(value: 'Spanish', label: 'Spanish'),
+                      RemixSelectItem(value: 'Portuguese', label: 'Portuguese'),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) setState(() => _language = value);
+                    },
+                  ),
+                  const {{typePrefix}}CardHeading(
+                    title: 'Preferences',
+                    description:
+                        'Choose which workspace activity reaches your inbox.',
+                  ),
+                  _PreferenceRow(
+                    title: 'Product updates',
+                    description: 'News about features and improvements.',
+                    trailing: {{typePrefix}}Switch(
+                      selected: _productUpdates,
+                      semanticLabel: 'Receive product updates',
+                      onChanged: (value) =>
+                          setState(() => _productUpdates = value),
+                    ),
+                  ),
+                  _PreferenceRow(
+                    title: 'Weekly digest',
+                    description: 'A summary of workspace activity each Monday.',
+                    trailing: {{typePrefix}}Checkbox(
+                      selected: _weeklyDigest,
+                      semanticLabel: 'Receive weekly digest',
+                      onChanged: (value) =>
+                          setState(() => _weeklyDigest = value ?? false),
+                    ),
+                  ),
+                  Box(
+                    style: BoxStyler().alignment(.centerStart),
+                    child: {{typePrefix}}Button(
+                      onPressed: () => showRemixToast(
+                        context,
+                        const RemixToastData(
+                          title: 'Profile settings saved',
+                          icon: {{icon:checkCircled}},
+                        ),
+                      ),
+                      label: 'Save changes',
+                    ),
+                  ),
                 ],
-                selectedValue: _language,
-                onChanged: (value) {
-                  if (value != null) setState(() => _language = value);
-                },
               ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: {{typePrefix}}Button(
-                  label: 'Save changes',
-                  onPressed: () => _toast(context, 'Profile settings saved'),
-                ),
+            ),
+            {{typePrefix}}Card(
+              size: .size3,
+              child: ColumnBox(
+                style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(16),
+                children: const [
+                  {{typePrefix}}CardHeading(
+                    title: 'Appearance',
+                    description:
+                        'Tune every {{typePrefix}} theme parameter in real time.',
+                  ),
+                  {{typePrefix}}Callout(
+                    icon: {{icon:magicWand}},
+                    text: 'Changes apply live across the entire dashboard.',
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: {{typePrefix}}ThemePanel(),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        _section(
-          'Preferences',
-          'Choose which workspace activity reaches your inbox.',
-          Column(
-            children: [
-              _preference(
-                'Product updates',
-                'News about features and improvements.',
-                {{typePrefix}}Switch(
-                  selected: _productUpdates,
-                  semanticLabel: 'Receive product updates',
-                  onChanged: (value) => setState(() => _productUpdates = value),
-                ),
-              ),
-              const SizedBox(height: 16),
-              _preference(
-                'Weekly digest',
-                'A summary of workspace activity each Monday.',
-                {{typePrefix}}Checkbox(
-                  selected: _weeklyDigest,
-                  semanticLabel: 'Receive weekly digest',
-                  onChanged: (value) =>
-                      setState(() => _weeklyDigest = value ?? false),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        _section(
-          'Appearance',
-          'Tune the default preset theme with meaningful native values.',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const {{typePrefix}}Callout(
-                icon: {{icon:magicWand}},
-                text: 'Changes are deterministic and remain local to the demo.',
-              ),
-              const SizedBox(height: 16),
-              const _Text('Color mode', emphasized: true),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: {{typePrefix}}SegmentedControl<_Appearance>(
-                  semanticLabel: 'Color mode',
-                  selectedValue: _appearance,
-                  items: const [
-                    RemixSegmentedControlItem(value: .light, label: 'Light'),
-                    RemixSegmentedControlItem(value: .dark, label: 'Dark'),
-                    RemixSegmentedControlItem(value: .system, label: 'System'),
+            ),
+            {{typePrefix}}AccentScope(
+              accent: .red,
+              child: {{typePrefix}}Disclosure.soft(
+                key: const ValueKey('settings-danger-zone'),
+                size: .size3,
+                animationStyle: {{valuePrefix}}DisclosureAnimationStyle,
+                semanticHint: 'Shows destructive workspace actions',
+                trigger: const StyledText('Danger zone'),
+                triggerBuilder: (context, state, child) =>
+                    {{typePrefix}}DisclosureTrigger(
+                      expanded: state.isExpanded,
+                      child: child!,
+                    ),
+                content: ColumnBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.stretch)
+                      .spacing(12),
+                  children: [
+                    const StyledText(
+                      'Destructive workspace actions cannot be undone.',
+                    ),
+                    Box(
+                      style: BoxStyler().alignment(.centerStart),
+                      child: {{typePrefix}}Button.outline(
+                        onPressed: _confirmDelete,
+                        label: 'Delete workspace',
+                      ),
+                    ),
                   ],
-                  onChanged: (value) => setState(() => _appearance = value),
                 ),
               ),
-              const SizedBox(height: 16),
-              _Text('Control radius · ${_radius.round()}px', emphasized: true),
-              const SizedBox(height: 8),
-              {{typePrefix}}Slider(
-                value: _radius,
-                min: 0,
-                max: 16,
-                snapDivisions: 16,
-                onChanged: (value) => setState(() => _radius = value),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        {{typePrefix}}Disclosure(
-          key: const ValueKey('settings-danger-zone'),
-          semanticHint: 'Shows destructive workspace actions',
-          trigger: const _Text('Danger zone', emphasized: true),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const _Text('Destructive workspace actions cannot be undone.'),
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: {{typePrefix}}Button.outline(
-                  label: 'Delete workspace',
-                  onPressed: _confirmDelete,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
+      ),
+    );
+
+    if (ambientScope != null) return content;
+    return {{typePrefix}}DashboardThemeScope(
+      settings: effectiveSettings,
+      onChanged: (next) {
+        setState(() => _fallbackSettings = next);
+        widget.onDarkModeChanged?.call(switch (next.appearance) {
+          .light => false,
+          .dark => true,
+          .system => null,
+        });
+      },
+      child: content,
+    );
+  }
 
   Future<void> _confirmDelete() async {
     final confirmed = await showRemixDialog<bool>(
       context: context,
       barrierLabel: 'Dismiss',
-      builder: (dialogContext) => {{typePrefix}}Dialog(
+      builder: (context) => {{typePrefix}}Dialog(
         title: 'Delete workspace?',
         description:
             'This demo keeps your data safe, but a real action would be permanent.',
         actions: [
           {{typePrefix}}Button.soft(
+            onPressed: () => Navigator.of(context).pop(false),
             label: 'Cancel',
-            onPressed: () => Navigator.of(dialogContext).pop(false),
           ),
-          {{typePrefix}}Button.solid(
-            label: 'Delete',
-            onPressed: () => Navigator.of(dialogContext).pop(true),
+          {{typePrefix}}AccentScope(
+            accent: .red,
+            child: {{typePrefix}}Button(
+              onPressed: () => Navigator.of(context).pop(true),
+              label: 'Delete',
+            ),
           ),
         ],
       ),
     );
     if (!mounted || confirmed != true) return;
-    _toast(context, 'Demo workspace was not deleted');
+    showRemixToast(
+      context,
+      const RemixToastData(
+        title: 'Demo workspace was not deleted',
+        icon: {{icon:infoCircled}},
+      ),
+    );
   }
 }
 
-Widget _section(String title, String description, Widget child) => {{typePrefix}}Card(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      _Text(title, size: 17, emphasized: true),
-      const SizedBox(height: 4),
-      _Text(description, size: 13, muted: true),
-      const SizedBox(height: 16),
-      child,
-    ],
-  ),
-);
-
-Widget _preference(String title, String description, Widget trailing) => Row(
-  children: [
-    Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _Text(title, emphasized: true),
-          const SizedBox(height: 2),
-          _Text(description, size: 13, muted: true),
-        ],
-      ),
-    ),
-    trailing,
-  ],
-);
-
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.size = 14,
-    this.emphasized = false,
-    this.muted = false,
+class _PreferenceRow extends StatelessWidget {
+  const _PreferenceRow({
+    required this.title,
+    required this.description,
+    required this.trailing,
   });
-  final String value;
-  final double size;
-  final bool emphasized;
-  final bool muted;
+
+  final String title;
+  final String description;
+  final Widget trailing;
 
   @override
-  Widget build(BuildContext context) => {{typePrefix}}Text(
-    value,
-    size: size >= 24
-        ? {{typePrefix}}TextSize.size7
-        : size >= 18
-        ? {{typePrefix}}TextSize.size4
-        : {{typePrefix}}TextSize.size2,
-    weight: emphasized ? .bold : .regular,
-    highContrast: !muted,
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(
+        child: ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start).spacing(2),
+          children: [
+            {{typePrefix}}Text(title, size: .size2, weight: .medium),
+            StyledText(description, style: dashboardText(.size1, tone: .muted)),
+          ],
+        ),
+      ),
+      trailing,
+    ],
   );
 }
-
-void _toast(BuildContext context, String title) => showRemixToast(
-  context,
-  RemixToastData(title: title, icon: {{icon:checkCircled}}),
-);

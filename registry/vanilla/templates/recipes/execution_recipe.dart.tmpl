@@ -31,12 +31,12 @@ final class {{typePrefix}}AgentExecutionRecipe {
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentExecutionRecipe(
   style: {{typePrefix}}ExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
+    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
     output: BoxStyler()
         .color({{typePrefix}}Tokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(8)),
+    actions: FlexBoxStyler().spacing(6).padding(.top(6)),
     tool: TextStyler().color({{typePrefix}}Tokens.mutedForeground()).fontSize(12),
     title: TextStyler()
         .color({{typePrefix}}Tokens.foreground())
@@ -47,16 +47,23 @@ final class {{typePrefix}}AgentExecutionRecipe {
     statusIcon: IconStyler().color({{typePrefix}}Tokens.primary()).size(12),
     indicator: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(style: surfaceStyle),
-  disclosureStyle: {{valuePrefix}}DisclosureStyle(style: disclosureStyle),
+  surfaceStyle: {{valuePrefix}}CardStyle(
+    style: CardStyler().padding(.all({{typePrefix}}Tokens.s4)).merge(surfaceStyle),
+  ),
+  disclosureStyle: {{valuePrefix}}DisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.vertical(0))
+        .content(BoxStyler().padding(.top({{typePrefix}}Tokens.s3).bottom(0)))
+        .merge(disclosureStyle),
+  ),
   copyStyle: {{valuePrefix}}IconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: copyStyle,
+    style: IconButtonStyler().size(28, 28).merge(copyStyle),
   ),
   retryStyle: {{valuePrefix}}IconButtonStyle(
     variant: .ghost,
     size: .small,
-    style: retryStyle,
+    style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );

@@ -54,7 +54,6 @@ DataTableStyler playgroundDataTableStyle({
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate(PlaygroundTokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color(PlaygroundTokens.muted())),
@@ -97,7 +96,12 @@ DataTableStyler playgroundDataTableStyle({
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
           .minHeight(PlaygroundTokens.controlLg)
-          .padding(.horizontal(PlaygroundTokens.s2))
+          .padding(
+            .symmetric(
+              horizontal: PlaygroundTokens.s3,
+              vertical: PlaygroundTokens.s2,
+            ),
+          )
           .spacing(PlaygroundTokens.s3)
           .border(.top(_rule())),
     )

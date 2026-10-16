@@ -12,8 +12,8 @@ VanillaAgentTranscriptRecipe vanillaAgentTranscriptRecipe({
   AgentTranscriptStyler style = const AgentTranscriptStyler.create(),
 }) => VanillaAgentTranscriptRecipe(
   style: AgentTranscriptStyler(
-    viewport: BoxStyler().padding(.right(12)),
+    viewport: BoxStyler(),
     item: BoxStyler(),
-    spacing: 16,
+    spacing: 12,
   ).merge(style),
 );

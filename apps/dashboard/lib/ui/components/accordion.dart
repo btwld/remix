@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -37,6 +39,16 @@ AccordionStyler _uiAccordionBaseStyler(UiAccordionSize size) {
       .title(.fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()))
       .trailingIcon(.color(UiTokens.gray11()))
       .content(.width(.infinity))
+      .onExpanded(
+        AccordionStyler().trailingIcon(
+          IconStyler().wrap(
+            WidgetModifierConfig.transform(
+              transform: Matrix4.rotationZ(math.pi),
+              alignment: .center,
+            ),
+          ),
+        ),
+      )
       .merge(_uiAccordionSizeStyler(size));
 }
 

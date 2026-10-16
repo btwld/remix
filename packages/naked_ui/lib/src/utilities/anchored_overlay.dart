@@ -30,7 +30,7 @@ import 'positioning.dart';
 ///   child: trigger,
 /// )
 /// ```
-class AnchoredOverlay extends StatelessWidget {
+class AnchoredOverlay extends StatefulWidget {
   /// Creates the overlay content for the [RawMenuAnchor] described by [info].
   const AnchoredOverlay({
     super.key,
@@ -52,6 +52,56 @@ class AnchoredOverlay extends StatelessWidget {
   /// The overlay panel.
   final Widget child;
 
+  /// Moves focus back to the nearest [AnchoredOverlay] container if focus is
+  /// currently on a descendant item within the same overlay [FocusScope].
+  static void clearItemFocus(BuildContext context) {
+    final containerNode = context
+        .getInheritedWidgetOfExactType<_AnchoredOverlayScope>()
+        ?.containerFocusNode;
+    if (containerNode == null || containerNode.hasPrimaryFocus) return;
+    final scope = containerNode.enclosingScope;
+    if (scope != null && scope.hasFocus) {
+      containerNode.requestFocus();
+    }
+  }
+
+  /// Requests focus on the nearest [AnchoredOverlay] container node.
+  static void focusContainer(BuildContext context) {
+    final containerNode = context
+        .getInheritedWidgetOfExactType<_AnchoredOverlayScope>()
+        ?.containerFocusNode;
+    containerNode?.requestFocus();
+  }
+
+  @override
+  State<AnchoredOverlay> createState() => _AnchoredOverlayState();
+}
+
+class _AnchoredOverlayScope extends InheritedWidget {
+  const _AnchoredOverlayScope({
+    required this.containerFocusNode,
+    required super.child,
+  });
+
+  final FocusNode containerFocusNode;
+
+  @override
+  bool updateShouldNotify(_AnchoredOverlayScope oldWidget) =>
+      containerFocusNode != oldWidget.containerFocusNode;
+}
+
+class _AnchoredOverlayState extends State<AnchoredOverlay> {
+  final FocusNode _containerFocusNode = FocusNode(
+    debugLabel: 'AnchoredOverlay container',
+    skipTraversal: true,
+  );
+
+  @override
+  void dispose() {
+    _containerFocusNode.dispose();
+    super.dispose();
+  }
+
   void _focusBoundary({required bool last}) {
     final current = FocusManager.instance.primaryFocus;
     if (current == null) return;
@@ -70,11 +120,11 @@ class AnchoredOverlay extends StatelessWidget {
     void close() => controller?.close();
 
     return OverlayPositioner(
-      targetRect: info.anchorRect,
-      positioning: positioning,
+      targetRect: widget.info.anchorRect,
+      positioning: widget.positioning,
       child: TapRegion(
-        onTapOutside: closeOnTapOutside ? (_) => close() : null,
-        groupId: info.tapRegionGroupId,
+        onTapOutside: widget.closeOnTapOutside ? (_) => close() : null,
+        groupId: widget.info.tapRegionGroupId,
         child: FocusScope(
           child: FocusTraversalGroup(
             child: Shortcuts(
@@ -86,11 +136,15 @@ class AnchoredOverlay extends StatelessWidget {
                   onLastFocus: () => _focusBoundary(last: true),
                 ),
                 child: Focus(
+                  focusNode: _containerFocusNode,
                   autofocus: true,
                   canRequestFocus: true,
                   skipTraversal: true,
                   includeSemantics: false,
-                  child: child,
+                  child: _AnchoredOverlayScope(
+                    containerFocusNode: _containerFocusNode,
+                    child: widget.child,
+                  ),
                 ),
               ),
             ),

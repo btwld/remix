@@ -1,0 +1,157 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/effects.dart';
+import '../theme/tokens.dart';
+import 'checkbox.dart';
+import 'icon_button.dart';
+import 'select.dart';
+
+part 'data_table.g.dart';
+
+/// The application's DataTable recipe.
+///
+/// Remix owns the rendering, sorting, selection, pagination, the empty state,
+/// and the table accessibility semantics; this recipe supplies the frame, the
+/// rows, the cells, and the three text roles.
+///
+/// It is the one recipe in this layer that **depends on other items**, and it
+/// is the reason its registry entry lists `checkbox`, `icon_button`, and
+/// `select` beside `theme`. A table's selection column is a checkbox, its
+/// pager is a pair of icon buttons, and its page-size control is a select —
+/// literally, not by analogy. `DataTableSpec` takes each of those as a styler,
+/// so the honest thing is to hand it the application's own recipes rather than
+/// restate three components inside a fourth. Change the checkbox recipe and
+/// this table's checkboxes change with it, which is what a reader expects.
+///
+/// That is a deliberate exception to the rule that these files are
+/// self-contained. It earns it: the alternative is either three duplicated
+/// recipes that drift, or a table whose controls do not match the rest of the
+/// application.
+///
+/// It is a table inside a frame: the page's `background` fill, a `border`
+/// hairline, and `radiusMd` corners around a header with no surface of its own.
+/// Header and body rows are separated by the same hairline, and the last body
+/// row drops it so the table does not draw a second line on top of its own
+/// bottom edge. A row under the pointer sits on `muted` at half strength and a
+/// selected row on `muted`.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it.
+@MixWidget(target: RemixDataTable.new)
+DataTableStyler vanillaDataTableStyle({
+  DataTableStyler style = const DataTableStyler.create(),
+}) => DataTableStyler()
+    .color(VanillaTokens.background())
+    .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
+    .borderRadius(.all(_frameRadius()))
+    .clipBehavior(Clip.antiAlias)
+    .headerRow(.border(_rowRule()))
+    .bodyRow(
+      BoxStyler()
+          .border(_rowRule())
+          .onHovered(.color(_hoveredRow()))
+          .onSelected(.color(VanillaTokens.muted())),
+    )
+    // Without this the bottom row's rule would double up with the frame's own
+    // edge, which reads as a two-pixel border on one side only.
+    .lastBodyRow(.border(.bottom(.style(.none))))
+    // A header cell insets its label from the sides only and takes its height
+    // from the row; a body cell insets on every side.
+    .headerCell(.padding(.horizontal(VanillaTokens.s2)))
+    .bodyCell(_cell())
+    .selectionCell(_cell())
+    .headerMinHeight(VanillaTokens.controlLg)
+    .rowMinHeight(VanillaTokens.controlMd)
+    .selectionColumnWidth(VanillaTokens.controlLg)
+    // `foreground` at medium weight: the weight is what makes a column name
+    // read as a label rather than as data.
+    .headerLabel(
+      .style(
+        VanillaTokens.textSm.mix(),
+      ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
+    )
+    .cellText(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.foreground()),
+    )
+    .footerLabel(
+      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
+    )
+    .sortIcon(
+      .size(VanillaTokens.iconSm).color(VanillaTokens.mutedForeground()),
+    )
+    .sortIconSpacing(VanillaTokens.s1)
+    .footer(
+      FlexBoxStyler()
+          .direction(.horizontal)
+          .crossAxisAlignment(.center)
+          .mainAxisAlignment(.end)
+          .minHeight(VanillaTokens.controlLg)
+          .padding(
+            .symmetric(
+              horizontal: VanillaTokens.s3,
+              vertical: VanillaTokens.s2,
+            ),
+          )
+          .spacing(VanillaTokens.s3)
+          .border(.top(_rule())),
+    )
+    // The application's own controls, not restatements of them.
+    .selectionCheckbox(vanillaCheckboxStyle())
+    .pageButton(vanillaIconButtonStyle(variant: .ghost, size: .small))
+    .pageSizeSelect(vanillaSelectStyle())
+    .merge(style);
+
+/// A row under the pointer: `muted` at half strength.
+final _hoveredRow = vanillaTint(VanillaTokens.muted, _hoveredRowAlpha);
+
+/// See [_hoveredRow].
+const _hoveredRowAlpha = 0.5;
+
+/// The frame's corner radius, bounded so the clip cannot eat a corner cell.
+///
+/// This is the one recipe here that both rounds its frame and clips to it.
+/// The clip is not optional: a hovered or selected first or last row would
+/// otherwise square off two corners inside the rounded border. But the corner
+/// arc is carved out of the first and last rows, and the leading cell of both
+/// is the selection column — so past a certain radius the clip stops trimming
+/// a fill and starts removing a checkbox.
+///
+/// The bound is the geometry, not a taste: an arc of radius r has finished
+/// turning r from the corner, so a radius no larger than half the header's
+/// height is fully out of the way by the row's own content line.
+///
+/// Clamping rather than hardcoding leaves the theme in charge in the other
+/// direction: `radius: Radius.zero` still gives a square table. The checkbox
+/// recipe clamps for the same class of reason at a different scale.
+const _maxFrameRadius = VanillaTokens.controlLg / 2;
+
+/// The theme's control radius, clamped to [_maxFrameRadius].
+///
+/// A top-level final rather than a per-call closure because `ContextToken`
+/// equality is resolver identity: rebuilding one per call would make two
+/// identical recipes compare unequal.
+final _frameRadius = ContextToken<Radius>((context) {
+  final radius = VanillaTokens.radiusMd.resolve(context);
+
+  return Radius.elliptical(
+    math.min(radius.x, _maxFrameRadius),
+    math.min(radius.y, _maxFrameRadius),
+  );
+});
+
+/// One hairline in the `border` token, shared by every rule the table draws.
+BorderSideMix _rule() => BorderSideMix(
+  color: VanillaTokens.border(),
+  width: VanillaTokens.strokeHairline,
+);
+
+/// The rule under a row.
+BoxBorderMix _rowRule() => .bottom(_rule());
+
+/// One body cell's 8px inset, shared by the selection column so the columns
+/// line up regardless of what is in them.
+BoxStyler _cell() => BoxStyler().padding(.all(VanillaTokens.s2));

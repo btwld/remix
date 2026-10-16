@@ -6,20 +6,20 @@ components, Mix layouts, and chart recipes built on `mix_chart`.
 ## Showcase role
 
 This app demonstrates how Fortal components compose into realistic product
-flows, with reusable dashboard-owned patterns and focused variant/size
-matrices. The [component catalog](../demo/) remains the exhaustive source for
-every API state and preview knob; the dashboard is the copyable product
-implementation.
+flows (Overview, Chat, Customers, Orders, and Settings) with reusable
+dashboard-owned patterns. The [component catalog](../demo/) remains the
+exhaustive source for every variant, size, API state, and preview knob; the
+dashboard is the copyable product implementation.
 
 ## Registry ownership
 
 The dashboard selects the Fortal preset with prefix `Ui` in `remix.yaml`.
 Its full component catalog, eight Agent recipe bundles, and the Fortal
-`dashboard_shell` recipe are installed under `lib/ui/`; the dogfood check
-compares them with the bundled registry. The app supplies its existing pages,
-navigation state, search behavior, theme/account actions, and local simulated
-runner through the shell's host-owned callbacks and slots. The separate
-`dashboard` item remains the minimal overview starter for new consumers.
+`dashboard_demo` recipe are installed under `lib/ui/`; `tool/check_consumer_apps.dart`
+compares them with the bundled registry. `apps/dashboard/lib/main.dart` is a
+thin entry point that mounts `UiDashboardDemo` inside a `UiDashboardThemeScope`
+and `UiTheme` with a local simulated chat runner. The separate
+`dashboard_shell` item remains the minimal shell starter for custom pages.
 
 Open **Workspace → Chat** to review the Agent surfaces together. No model or
 tool service is contacted. The [Agent component docs](../../docs/agent/transcript.mdx)
@@ -27,19 +27,15 @@ describe installation and host responsibilities.
 
 ## Reference rules
 
-- Gallery axes pass typed values from the Fortal enums that label them. A new
-  variant or size therefore becomes a rendered cell instead of silently
-  drifting from a parallel label list.
 - Variants describe visual treatment. Product intent such as success or danger
-  is expressed with a local `AppAccentScope`, which overrides only the
-  accent and inherits the active brightness, gray, radius, scaling, and panel
+  is expressed with a local `UiAccentScope`, which overrides only the accent
+  and inherits the active brightness, gray, radius, scaling, and panel
   settings.
 - Meaningful product and interactive badge labels opt into high contrast
   because the selectable light accent scales do not all guarantee WCAG AA for
-  the default soft label. Variant matrices preserve the component defaults.
-- Product card layouts and gallery matrices use Mix `GridBox`. Matrices combine
-  fixed-width columns with implicit content-sized rows so each recipe sample
-  determines its row height.
+  the default soft label.
+- Product card layouts use Mix `GridBox` and `FlexBox` so each card determines
+  its content height without hardcoded heights.
 
 ## Live demo
 

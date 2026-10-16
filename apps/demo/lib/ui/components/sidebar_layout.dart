@@ -184,37 +184,28 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
             isCompactOpen: true,
             openCompact: _openCompact,
             closeCompact: _closeCompact,
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              // A plain DecoratedBox paints the panel surface without
-              // affecting layout, unlike a Mix `Box`, whose border-box sizing
-              // would shrink `width` by the border's own stroke width.
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: MixScope.tokenOf(
-                    FortalTokens.colorPanelSolid,
-                    dialogContext,
-                  ),
-                  border: BorderDirectional(
-                    end: BorderSide(
-                      color: MixScope.tokenOf(
-                        FortalTokens.grayA5,
-                        dialogContext,
-                      ),
-                      width: MixScope.tokenOf(
-                        FortalTokens.borderWidth1,
-                        dialogContext,
+            child: Box(
+              style: BoxStyler().alignment(.centerStart),
+              // A foreground border paints the panel edge without shrinking
+              // `width` by the border's own stroke width.
+              child: Box(
+                style: BoxStyler()
+                    .width(width)
+                    .height(.infinity)
+                    .color(FortalTokens.colorPanelSolid())
+                    .foregroundDecoration(
+                      BoxDecorationMix(
+                        border: BorderDirectionalMix(
+                          end: BorderSideMix(
+                            color: FortalTokens.grayA5(),
+                            width: FortalTokens.borderWidth1(),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: SizedBox(
-                  width: width,
-                  height: double.infinity,
-                  child: RemixDialog(
-                    semanticLabel: _navigationSemanticLabel,
-                    child: widget.sidebar,
-                  ),
+                child: RemixDialog(
+                  semanticLabel: _navigationSemanticLabel,
+                  child: widget.sidebar,
                 ),
               ),
             ),
@@ -266,15 +257,21 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
   Widget _wideRow() {
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return RowBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
-        AnimatedContainer(
-          duration: reduceMotion
-              ? Duration.zero
-              : const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          width: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+        Box(
+          style: BoxStyler()
+              .width(
+                widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+              )
+              .animate(
+                .easeInOut(
+                  reduceMotion
+                      ? Duration.zero
+                      : const Duration(milliseconds: 200),
+                ),
+              ),
           child: widget.sidebar,
         ),
         Expanded(child: _body(besideSidebar: true)),
@@ -301,13 +298,17 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
           child: child,
         );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return ColumnBox(
+      style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
         if (header != null) inset(header),
         // The body's wrapper stays mounted either way so its state survives
         // a header coming or going.
-        Expanded(child: inset(widget.body, removeTop: header != null)),
+        Expanded(
+          child: RepaintBoundary(
+            child: inset(widget.body, removeTop: header != null),
+          ),
+        ),
       ],
     );
   }

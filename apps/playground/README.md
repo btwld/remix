@@ -1,8 +1,8 @@
-# Remix playground
+# Remix Playground (Vanilla Dashboard Demo)
 
-This standalone app previews Remix components and compares their Mix 2 styles.
-Open the component index or select one directly with the web query parameter
-`?component=<name>`.
+Vanilla preset showcase for Remix 2, consuming the full installed `vanilla`
+registry catalog (`prefix: Playground`) under `lib/ui/` and mounting
+`PlaygroundDashboardDemo` directly at the root.
 
 From the repository root:
 
@@ -12,10 +12,8 @@ cd apps/playground
 fvm flutter run -d chrome
 ```
 
-## Base-theme dashboard shell
+## Installed registry source
 
-Open `?component=dashboard_shell` (or select `dashboard_shell` from the home
-list) to preview the installed default-preset dashboard shell. Switch between
-Overview and Projects, filter projects with the search field, collapse the
-sidebar, and use the preview toolbar to test light/dark and mobile layouts.
-The sample data is local; no backend is needed.
+All UI components, Agent surfaces, charts, and the `dashboard_demo` recipe are
+installed under `lib/ui/`; `tool/check_consumer_apps.dart` verifies that the
+installed tree stays in sync with the `vanilla` registry.

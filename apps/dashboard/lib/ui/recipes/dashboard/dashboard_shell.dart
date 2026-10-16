@@ -125,9 +125,18 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
           }) => UiSidebar<T>(
             key: const ValueKey('dashboard-sidebar'),
             collapsed: collapsed,
+            style: SidebarStyler().footer(
+              BoxStyler().border(
+                .top(
+                  .color(UiTokens.gray6()).width(
+                    (collapsed
+                        ? _footerBorderWidthCollapsed
+                        : _footerBorderWidthExpanded)(),
+                  ),
+                ),
+              ),
+            ),
             panelPadding: MediaQuery.paddingOf(context),
-            expandedWidth: sidebarWidth,
-            collapsedWidth: collapsedWidth,
             header: header,
             sections: sections,
             selectedValue: selectedValue,
@@ -195,3 +204,27 @@ final class _UiDashboardLayoutControls implements UiDashboardLayoutControls {
   @override
   void openCompact() => scope.openCompact();
 }
+
+double _resolveFooterBorderWidth(
+  BuildContext context, {
+  required bool collapsed,
+}) {
+  final expansion =
+      RemixSidebar.maybeAnimationOf(context)?.expansion ??
+      (collapsed ? 0.0 : 1.0);
+  return expansion > 0 ? UiTokens.borderWidth1.resolve(context) : 0.0;
+}
+
+double _resolveFooterBorderWidthExpanded(BuildContext context) =>
+    _resolveFooterBorderWidth(context, collapsed: false);
+
+double _resolveFooterBorderWidthCollapsed(BuildContext context) =>
+    _resolveFooterBorderWidth(context, collapsed: true);
+
+const _footerBorderWidthExpanded = ContextToken<double>(
+  _resolveFooterBorderWidthExpanded,
+);
+
+const _footerBorderWidthCollapsed = ContextToken<double>(
+  _resolveFooterBorderWidthCollapsed,
+);

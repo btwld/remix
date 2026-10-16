@@ -10,12 +10,9 @@ final class _RemixAccordionStyleState extends InheritedWidget {
     required super.child,
   });
 
-  static _RemixAccordionStyleState of(BuildContext context) {
-    final state = context
+  static _RemixAccordionStyleState? maybeOf(BuildContext context) {
+    return context
         .dependOnInheritedWidgetOfExactType<_RemixAccordionStyleState>();
-    assert(state != null, 'No RemixAccordion style state found in context.');
-
-    return state!;
   }
 
   final bool isExpanded;

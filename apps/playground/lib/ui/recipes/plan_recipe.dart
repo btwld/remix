@@ -21,7 +21,10 @@ PlaygroundAgentPlanRecipe playgroundAgentPlanRecipe({
 }) => PlaygroundAgentPlanRecipe(
   style: PlaygroundPlanStyler(
     viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontSize(14)
@@ -37,12 +40,17 @@ PlaygroundAgentPlanRecipe playgroundAgentPlanRecipe({
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
     pendingStatus: IconStyler()
         .color(PlaygroundTokens.mutedForeground())
-        .size(18),
-    activeStatus: IconStyler().color(PlaygroundTokens.primary()).size(18),
-    completedStatus: IconStyler().color(PlaygroundTokens.primary()).size(18),
+        .size(16),
+    activeStatus: IconStyler().color(PlaygroundTokens.primary()).size(16),
+    completedStatus: IconStyler().color(PlaygroundTokens.primary()).size(16),
     cancelledStatus: IconStyler()
         .color(PlaygroundTokens.mutedForeground())
-        .size(18),
+        .size(16),
   ).merge(style),
-  disclosureStyle: playgroundDisclosureStyle(style: disclosureStyle),
+  disclosureStyle: playgroundDisclosureStyle(
+    style: DisclosureStyler()
+        .padding(.vertical(PlaygroundTokens.s3))
+        .content(BoxStyler().padding(.bottom(PlaygroundTokens.s2)))
+        .merge(disclosureStyle),
+  ),
 );

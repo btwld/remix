@@ -328,6 +328,15 @@ void main() {
     expect(find.byKey(_sidebarKey), findsOneWidget);
   });
 
+  testWidgets('the compact sheet keeps the full sidebar width', (tester) async {
+    await _pump(tester, _layout(compactOpen: true), width: 500);
+    await tester.pumpAndSettle();
+
+    // The panel border paints inside the sheet, so it must not shrink the
+    // sidebar below the configured sidebarWidth.
+    expect(tester.getSize(find.byKey(_sidebarKey)).width, 256);
+  });
+
   testWidgets('closes the compact sheet through the scope', (tester) async {
     bool? lastOpen;
     await _pump(

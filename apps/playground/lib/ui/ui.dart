@@ -51,6 +51,8 @@ export 'recipes/activity_recipe.dart';
 export 'recipes/answer_recipe.dart';
 export 'recipes/composer_recipe.dart';
 export 'recipes/dashboard/dashboard_demo.dart';
+export 'recipes/dashboard/dashboard_demo_base.dart';
+export 'recipes/dashboard/dashboard_demo_chat.dart';
 export 'recipes/dashboard/dashboard_overview.dart';
 export 'recipes/dashboard/dashboard_sample_data.dart';
 export 'recipes/dashboard/dashboard_shell.dart';

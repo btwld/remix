@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -41,6 +43,16 @@ AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
       )
       .trailingIcon(.color(FortalTokens.gray11()))
       .content(.width(.infinity))
+      .onExpanded(
+        AccordionStyler().trailingIcon(
+          IconStyler().wrap(
+            WidgetModifierConfig.transform(
+              transform: Matrix4.rotationZ(math.pi),
+              alignment: .center,
+            ),
+          ),
+        ),
+      )
       .merge(_fortalAccordionSizeStyler(size));
 }
 

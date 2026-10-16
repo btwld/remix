@@ -199,7 +199,6 @@ final _currentEdge = vanillaTint(VanillaTokens.input, 0, dark: 1);
 /// A tab is the list's height less its inset on both sides, so it fills the
 /// list edge to edge.
 TabStyler _base() => _content(_restingContent())
-    .animate(VanillaTokens.motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
     .mainAxisAlignment(.center)

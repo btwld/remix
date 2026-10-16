@@ -147,9 +147,9 @@ the steps above. The source column names the file under
 | Text field | h 36; px 12, py 4; border `input`, transparent fill, `shadow-xs`; `text-sm`; placeholder muted-fg | `input.tsx` |
 | Text area | min-h 64; px 12, py 8 | `textarea.tsx` |
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
-| Select trigger | the text field's metrics, gap 8; chevron 16 at 50% | `select.tsx` |
+| Select trigger | the text field's metrics, gap 8; chevron 10 at 50% (see Deviations) | `select.tsx` |
 | Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128 | `select.tsx` |
-| Select item | h 32; pl 8, pr 32, py 6; radius sm; highlight accent; check muted-fg | `select.tsx` |
+| Select item | h 32; px 8, py 6 (see Deviations); radius sm; highlight accent; check 10 muted-fg | `select.tsx` |
 | Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
 | Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary | `radio-group.tsx` |
 | Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border | `switch.tsx` |
@@ -162,7 +162,7 @@ the steps above. The source column names the file under
 | Sidebar destination | h 32, px 8, py 6 (see Deviations), gap 8, radius md; hover and current `sidebarAccent`, current w500 | `sidebar.tsx` (`SidebarMenuButton`) |
 | Sidebar label | h 32, px 8, `text-xs` w500, `sidebarForeground`/70, no tracking | `sidebar.tsx` (`SidebarGroupLabel`) |
 | Sidebar layout | collapsed width 48 | `sidebar.tsx` (`SIDEBAR_WIDTH_ICON`) |
-| Menu | content as the select's; items h 32, px 8, py 6, radius sm; icons muted-fg even when highlighted; separator full-bleed | `dropdown-menu.tsx` |
+| Menu | content as the select's; items h 32, px 8, py 6, radius sm; icons muted-fg even when highlighted, choice check and submenu chevron 10 (see Deviations); separator full-bleed | `dropdown-menu.tsx` |
 | Accordion, disclosure | trigger py 16, no px, `text-sm` w500, underline on hover; chevron 16 muted-fg; content pb 16 | `accordion.tsx` |
 | Card | `card` fill, border, radius xl, `shadow-sm`, p 24 | `card.tsx` |
 | Dialog | radius lg, border, `shadow-lg`, p 24, max-w 512; title `text-lg` w600; description `text-sm` muted-fg; gap 8 | `dialog.tsx` |
@@ -187,7 +187,8 @@ the steps above. The source column names the file under
 | Pressed state | none | none | Vanilla dropped its old pressed step: a press lands on the hover fill. An 80% destructive fill would fail 4.5:1 with the new red. |
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
-| Checkbox check mark | `size-3.5` (14) | 10 | The reference sizes a padded 24×24 Lucide icon; Remix draws an edge-to-edge 9×9 path, which matches the painted mark at 10. |
+| Checkbox, select, and menu 9×9 glyphs | `size-3.5` (14) / `size-4` (16) | 10 (`VanillaTokens.s2_5`) | The reference sizes padded 24×24 Lucide icons; Remix draws edge-to-edge 9×9 paths (`thickCheck`, `chevronDown`, `thickChevronRight`), which match the painted mark at 10. |
+| Select item horizontal padding | `pl-2 pr-8` (8 / 32) | `px-2` (8) | CSS positions the check mark inside the 32px right gutter (`right-2`); Remix lays the check mark out in the row after the label, so `px-2` places it 8px from the trailing edge. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |

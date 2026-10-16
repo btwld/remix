@@ -34,7 +34,11 @@ VanillaAgentMessageRecipe vanillaAgentMessageRecipe({
     footer: BoxStyler().padding(.top(4)),
     maxWidth: 640,
   ).merge(style),
-  surfaceStyle: vanillaCardStyle(style: surfaceStyle),
+  surfaceStyle: vanillaCardStyle(
+    style: CardStyler()
+        .padding(.symmetric(horizontal: 16, vertical: 12))
+        .merge(surfaceStyle),
+  ),
   collapsibleStyle: AgentMessageCollapsibleStyler(
     collapsedHeight: 72,
     container: BoxStyler(),

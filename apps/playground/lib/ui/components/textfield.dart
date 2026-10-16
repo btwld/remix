@@ -122,6 +122,12 @@ TextFieldStyler _base() => TextFieldStyler()
       ).color(PlaygroundTokens.mutedForeground()),
     )
     .layout(.direction(.vertical).spacing(PlaygroundTokens.s2))
+    .wrap(
+      .iconTheme(
+        color: PlaygroundTokens.mutedForeground(),
+        size: PlaygroundTokens.icon,
+      ),
+    )
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());

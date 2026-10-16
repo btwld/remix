@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
@@ -206,6 +208,7 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     PlaygroundDashboardLayoutControls controls,
   ) {
     final collapsed = !controls.isCompact && _collapsed;
+    final account = widget.account;
     return widget.sidebarBuilder(
       context,
       collapsed: collapsed,
@@ -215,35 +218,59 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
         widget.onSelected(value);
         controls.closeCompact();
       },
-      header: Box(
-        style: widget.sidebarHeaderStyle,
-        child: RowBox(
-          style: FlexBoxStyler()
-              .spacing(collapsed ? 0 : widget.headerSpacing)
-              .mainAxisAlignment(collapsed ? .center : .start),
-          children: [
-            if (!collapsed)
-              Expanded(
-                child: DefaultTextStyle.merge(
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  child: widget.brand,
+      header: Builder(
+        builder: (context) {
+          final motion = RemixSidebar.maybeAnimationOf(context);
+          final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
+          final labelOpacity = motion?.labelOpacity ?? expansion;
+          final showBrand = controls.isCompact || expansion > 0;
+          final trailingFlex = controls.isCompact
+              ? 0
+              : ((1 - expansion) * 1000).round();
+          final leadingFlex = 2000 - trailingFlex;
+          final brandGap = controls.isCompact
+              ? 0.0
+              : widget.headerSpacing * expansion;
+          return Box(
+            style: widget.sidebarHeaderStyle,
+            child: RowBox(
+              children: [
+                Expanded(
+                  flex: leadingFlex,
+                  child: showBrand
+                      ? Padding(
+                          padding: EdgeInsetsDirectional.only(end: brandGap),
+                          child: Opacity(
+                            opacity: controls.isCompact ? 1 : labelOpacity,
+                            child: DefaultTextStyle.merge(
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              child: widget.brand,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
-              ),
-            if (!controls.isCompact)
-              widget.iconButtonBuilder(
-                context,
-                key: const ValueKey('dashboard-collapse'),
-                icon: _collapseIcon(context, collapsed),
-                semanticLabel: collapsed
-                    ? 'Expand navigation'
-                    : 'Collapse navigation',
-                onPressed: () => _setCollapsed(!collapsed),
-              ),
-          ],
-        ),
+                if (!controls.isCompact)
+                  widget.iconButtonBuilder(
+                    context,
+                    key: const ValueKey('dashboard-collapse'),
+                    icon: _collapseIcon(context, collapsed),
+                    semanticLabel: collapsed
+                        ? 'Expand navigation'
+                        : 'Collapse navigation',
+                    onPressed: () => _setCollapsed(!collapsed),
+                  ),
+                if (trailingFlex > 0) Spacer(flex: trailingFlex),
+              ],
+            ),
+          );
+        },
       ),
-      footer: collapsed ? null : widget.account,
+      footer: account == null
+          ? null
+          : _SidebarFooterSlot(collapsed: collapsed, child: account),
       semanticLabel: widget.navigationSemanticLabel,
     );
   }
@@ -252,45 +279,49 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     BuildContext context,
     PlaygroundDashboardLayoutControls controls,
   ) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final showSearch =
-            widget.onSearchChanged != null &&
-            constraints.maxWidth >= widget.searchBreakpoint;
-        return widget.appBarBuilder(
-          context,
-          leading: controls.isCompact
-              ? widget.iconButtonBuilder(
-                  context,
-                  key: const ValueKey('dashboard-menu'),
-                  icon: widget.menuIcon,
-                  semanticLabel: 'Open navigation',
-                  onPressed: controls.openCompact,
-                )
-              : null,
-          // The app bar names its heading with [title] and renders this,
-          // which inherits the recipe's title style.
-          title: widget.title,
-          titleChild: KeyedSubtree(
-            key: const ValueKey('dashboard-title'),
-            child: widget.headerTitle ?? Text(widget.title),
-          ),
-          actions: [
-            if (showSearch)
-              SizedBox(
-                width: widget.searchWidth,
-                child: widget.searchBuilder(
-                  context,
-                  key: const ValueKey('dashboard-search'),
-                  hintText: widget.searchHintText,
-                  leading: Icon(widget.searchIcon, size: 16),
-                  onChanged: widget.onSearchChanged!,
-                ),
+    Widget buildAppBar(bool showSearch) => widget.appBarBuilder(
+      context,
+      leading: controls.isCompact
+          ? widget.iconButtonBuilder(
+              context,
+              key: const ValueKey('dashboard-menu'),
+              icon: widget.menuIcon,
+              semanticLabel: 'Open navigation',
+              onPressed: controls.openCompact,
+            )
+          : null,
+      // The app bar names its heading with [title] and renders this,
+      // which inherits the recipe's title style.
+      title: widget.title,
+      titleChild: KeyedSubtree(
+        key: const ValueKey('dashboard-title'),
+        child: widget.headerTitle ?? StyledText(widget.title),
+      ),
+      actions: [
+        if (showSearch)
+          Box(
+            style: BoxStyler().width(widget.searchWidth),
+            child: widget.searchBuilder(
+              context,
+              key: const ValueKey('dashboard-search'),
+              hintText: widget.searchHintText,
+              leading: StyledIcon(
+                icon: widget.searchIcon,
+                style: IconStyler().size(16),
               ),
-            ...widget.headerActions,
-          ],
-        );
-      },
+              onChanged: widget.onSearchChanged!,
+            ),
+          ),
+        ...widget.headerActions,
+      ],
+    );
+
+    if (widget.onSearchChanged == null) {
+      return buildAppBar(false);
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) =>
+          buildAppBar(constraints.maxWidth >= widget.searchBreakpoint),
     );
   }
 
@@ -298,5 +329,52 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
     final ltr = Directionality.of(context) == TextDirection.ltr;
     if (collapsed) return ltr ? widget.forwardIcon : widget.backwardIcon;
     return ltr ? widget.backwardIcon : widget.forwardIcon;
+  }
+}
+
+class _SidebarFooterSlot extends StatelessWidget {
+  const _SidebarFooterSlot({required this.collapsed, required this.child});
+
+  static const _minChildWidth = 220.0;
+
+  final bool collapsed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final motion = RemixSidebar.maybeAnimationOf(context);
+    final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
+    final labelOpacity = motion?.labelOpacity ?? expansion;
+    if (expansion == 0 && !(motion?.isAnimating ?? false)) {
+      return const SizedBox.shrink();
+    }
+    if (expansion == 1 && !(motion?.isAnimating ?? false)) {
+      return child;
+    }
+    return ClipRect(
+      child: Align(
+        alignment: AlignmentDirectional.topStart,
+        heightFactor: expansion,
+        child: Opacity(
+          opacity: labelOpacity,
+          child: IgnorePointer(
+            ignoring: collapsed,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final targetWidth = math.max(
+                  constraints.maxWidth,
+                  _minChildWidth,
+                );
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: SizedBox(width: targetWidth, child: child),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

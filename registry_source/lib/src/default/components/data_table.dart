@@ -52,7 +52,6 @@ DataTableStyler vanillaDataTableStyle({
     .headerRow(.border(_rowRule()))
     .bodyRow(
       BoxStyler()
-          .animate(VanillaTokens.motion)
           .border(_rowRule())
           .onHovered(.color(_hoveredRow()))
           .onSelected(.color(VanillaTokens.muted())),
@@ -91,7 +90,12 @@ DataTableStyler vanillaDataTableStyle({
           .crossAxisAlignment(.center)
           .mainAxisAlignment(.end)
           .minHeight(VanillaTokens.controlLg)
-          .padding(.horizontal(VanillaTokens.s2))
+          .padding(
+            .symmetric(
+              horizontal: VanillaTokens.s3,
+              vertical: VanillaTokens.s2,
+            ),
+          )
           .spacing(VanillaTokens.s3)
           .border(.top(_rule())),
     )

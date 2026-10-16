@@ -75,6 +75,7 @@ class _NakedMenuScope<T> extends OverlayScope<T> {
     required this.onSelected,
     required this.controller,
     required this.rootController,
+    this.submenu,
     required super.child,
     super.key,
   });
@@ -96,6 +97,7 @@ class _NakedMenuScope<T> extends OverlayScope<T> {
   final ValueChanged<T>? onSelected;
   final MenuController controller;
   final MenuController rootController;
+  final _NakedMenuSubmenuState<T>? submenu;
 
   void closeAll() => rootController.close();
 
@@ -103,7 +105,8 @@ class _NakedMenuScope<T> extends OverlayScope<T> {
   bool updateShouldNotify(covariant _NakedMenuScope<T> oldWidget) {
     return onSelected != oldWidget.onSelected ||
         controller != oldWidget.controller ||
-        rootController != oldWidget.rootController;
+        rootController != oldWidget.rootController ||
+        submenu != oldWidget.submenu;
   }
 }
 
@@ -361,6 +364,9 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   final GlobalKey _overlayKey = GlobalKey();
   Timer? _hoverTimer;
   bool _focusFirstOnOpen = false;
+  bool _isTriggerHovered = false;
+  bool _isOverlayHovered = false;
+  bool _closedFromHover = false;
   late _NakedMenuScope<T> _parentMenu;
 
   MenuController get _controller => widget.controller ?? _internalController;
@@ -377,9 +383,18 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
     _hoverTimer = null;
   }
 
+  void _cancelAncestorHoverTimers() {
+    _NakedMenuSubmenuState<T>? ancestor = _parentMenu.submenu;
+    while (ancestor != null) {
+      ancestor._cancelHoverTimer();
+      ancestor = ancestor._parentMenu.submenu;
+    }
+  }
+
   void _open({required bool focusFirst}) {
     if (!widget.enabled) return;
     _cancelHoverTimer();
+    _closedFromHover = false;
     _focusFirstOnOpen = _focusFirstOnOpen || focusFirst;
     if (_controller.isOpen) {
       if (_focusFirstOnOpen) _scheduleFirstItemFocus();
@@ -389,8 +404,9 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
     _controller.open();
   }
 
-  void _close() {
+  void _close({bool fromHover = false}) {
     _cancelHoverTimer();
+    _closedFromHover = fromHover;
     _controller.close();
   }
 
@@ -406,8 +422,38 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   void _scheduleHoverClose() {
     _cancelHoverTimer();
     _hoverTimer = Timer(widget.hoverDelay, () {
-      if (mounted) _close();
+      if (mounted) _close(fromHover: true);
     });
+  }
+
+  void _scheduleHoverCloseUpward() {
+    if (!_isTriggerHovered && !_isOverlayHovered) {
+      _scheduleHoverClose();
+    }
+    _parentMenu.submenu?._scheduleHoverCloseUpward();
+  }
+
+  void _handleTriggerEnter() {
+    _isTriggerHovered = true;
+    AnchoredOverlay.clearItemFocus(context);
+    _cancelAncestorHoverTimers();
+    _scheduleHoverOpen();
+  }
+
+  void _handleTriggerExit() {
+    _isTriggerHovered = false;
+    _scheduleHoverCloseUpward();
+  }
+
+  void _handleOverlayEnter() {
+    _isOverlayHovered = true;
+    _cancelHoverTimer();
+    _cancelAncestorHoverTimers();
+  }
+
+  void _handleOverlayExit() {
+    _isOverlayHovered = false;
+    _scheduleHoverCloseUpward();
   }
 
   void _scheduleFirstItemFocus() {
@@ -427,12 +473,22 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   }
 
   void _handleClose() {
+    final closedFromHover =
+        _closedFromHover ||
+        (_hoverTimer != null && !_isTriggerHovered && !_isOverlayHovered);
+    _cancelHoverTimer();
+    _closedFromHover = false;
+    _isOverlayHovered = false;
     if (mounted) setState(() {});
     widget.onClose?.call();
     // Focus still inside the closing overlay would otherwise be lost.
     final overlayContext = _overlayKey.currentContext;
     if (overlayContext != null && FocusScope.of(overlayContext).hasFocus) {
-      _focusNode.requestFocus();
+      if (closedFromHover) {
+        if (mounted) AnchoredOverlay.focusContainer(context);
+      } else {
+        _focusNode.requestFocus();
+      }
     }
     _focusFirstOnOpen = false;
   }
@@ -505,8 +561,8 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
       },
     );
     final trigger = MouseRegion(
-      onEnter: (_) => _scheduleHoverOpen(),
-      onExit: (_) => _scheduleHoverClose(),
+      onEnter: (_) => _handleTriggerEnter(),
+      onExit: (_) => _handleTriggerExit(),
       child: MergeSemantics(
         child: Semantics(
           role: SemanticsRole.menuItem,
@@ -531,7 +587,8 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
               actions: _actions,
               child: MouseRegion(
                 key: _overlayKey,
-                onEnter: (_) => _cancelHoverTimer(),
+                onEnter: (_) => _handleOverlayEnter(),
+                onExit: (_) => _handleOverlayExit(),
                 child: Semantics(
                   role: SemanticsRole.menu,
                   container: true,
@@ -544,6 +601,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
                       onSelected: _parentMenu.onSelected,
                       controller: _controller,
                       rootController: _parentMenu.rootController,
+                      submenu: this,
                       child: Builder(
                         builder: (context) =>
                             widget.overlayBuilder(context, info),

@@ -41,7 +41,7 @@ visual contract and responsive review; it is not a registry-cutoff fix.
   the child renders its own interactive state.
 - Do not edit derived registry templates or installed consumer mirrors by hand.
 - Regenerate with `dart run tool/build_registry.dart`, reinstall affected items,
-  and run registry/dogfood checks plus recipe and consumer tests.
+  and run registry/consumer checks plus recipe and consumer tests.
 - Treat a proposed reference-parity redesign as explicit new work; do not silently
   update these benchmarks to make an implementation appear conformant.
 
