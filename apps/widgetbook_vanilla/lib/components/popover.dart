@@ -4,5 +4,10 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Popover', type: VanillaPopover)
 Widget buildVanillaPopoverUseCase(BuildContext context) => Scaffold(
-  body: Center(child: const VanillaPopover(popoverChild: Text('Quick note'), child: Text('Open popover'))),
+  body: Center(
+    child: const VanillaPopover(
+      popoverChild: Text('Quick note'),
+      child: Text('Open popover'),
+    ),
+  ),
 );

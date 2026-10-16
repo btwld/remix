@@ -5,5 +5,7 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Callout', type: VanillaCallout)
 Widget buildVanillaCalloutUseCase(BuildContext context) => Scaffold(
-  body: Center(child: const VanillaCallout(text: 'Heads up', icon: RemixIcons.infoCircled)),
+  body: Center(
+    child: const VanillaCallout(text: 'Heads up', icon: RemixIcons.infoCircled),
+  ),
 );

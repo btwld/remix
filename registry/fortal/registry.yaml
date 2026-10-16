@@ -303,8 +303,6 @@ items:
         target: "@ui/recipes/dashboard/dashboard_overview_base.dart"
       - source: templates/dashboard_demo/dashboard_demo_base.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_base.dart"
-      - source: templates/dashboard_demo/dashboard_demo_content.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_content.dart"
       - source: templates/dashboard_demo/dashboard_demo_chat.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_chat.dart"
       - source: templates/dashboard_demo/dashboard_demo_charts.dart.tmpl
@@ -327,20 +325,6 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_theme_panel.dart"
       - source: templates/dashboard_demo/dashboard_demo_widgets.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_widgets.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_scaffold.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_scaffold.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_actions.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_actions.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_forms.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_forms.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_display.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_display.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_overlays.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_overlays.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_navigation.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_navigation.dart"
-      - source: templates/dashboard_demo/dashboard_demo_gallery_typography.dart.tmpl
-        target: "@ui/recipes/dashboard/dashboard_demo_gallery_typography.dart"
       - source: templates/dashboard_demo/dashboard_demo_records_page.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_records_page.dart"
       - source: templates/dashboard_demo/dashboard_demo_settings.dart.tmpl

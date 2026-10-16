@@ -5,5 +5,12 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Data List', type: VanillaDataList)
 Widget buildVanillaDataListUseCase(BuildContext context) => Scaffold(
-  body: Center(child: const VanillaDataList(items: [RemixDataListItem(label: 'Status', value: 'Active'), RemixDataListItem(label: 'Plan', value: 'Enterprise')])),
+  body: Center(
+    child: const VanillaDataList(
+      items: [
+        RemixDataListItem(label: 'Status', value: 'Active'),
+        RemixDataListItem(label: 'Plan', value: 'Enterprise'),
+      ],
+    ),
+  ),
 );

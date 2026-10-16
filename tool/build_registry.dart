@@ -521,12 +521,6 @@ const defaultPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
-          source: '../dashboard/dashboard_demo_content.dart',
-          target: 'recipes/dashboard/dashboard_demo_content.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
           source: '../dashboard/dashboard_demo_chat.dart',
           target: 'recipes/dashboard/dashboard_demo_chat.dart',
           sourceTypeWord: 'Registry',
@@ -547,48 +541,6 @@ const defaultPreset = PresetSpec(
         GroupedRecipeFileSpec(
           source: 'recipes/dashboard/dashboard_overview.dart',
           target: 'recipes/dashboard/dashboard_overview.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_actions.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_actions.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_forms.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_forms.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_display.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_display.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_typography.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_typography.dart',
           sourceTypeWord: 'Registry',
           sourceValueWord: 'registry',
         ),
@@ -727,12 +679,6 @@ const fortalPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
-          source: '../dashboard/dashboard_demo_content.dart',
-          target: 'recipes/dashboard/dashboard_demo_content.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
           source: '../dashboard/dashboard_demo_chat.dart',
           target: 'recipes/dashboard/dashboard_demo_chat.dart',
           sourceTypeWord: 'Registry',
@@ -795,48 +741,6 @@ const fortalPreset = PresetSpec(
         GroupedRecipeFileSpec(
           source: 'recipes/dashboard/dashboard_demo_widgets.dart',
           target: 'recipes/dashboard/dashboard_demo_widgets.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_actions.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_actions.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_forms.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_forms.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_display.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_display.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
-          sourceTypeWord: 'Registry',
-          sourceValueWord: 'registry',
-        ),
-        GroupedRecipeFileSpec(
-          source: 'recipes/dashboard/dashboard_demo_gallery_typography.dart',
-          target: 'recipes/dashboard/dashboard_demo_gallery_typography.dart',
           sourceTypeWord: 'Registry',
           sourceValueWord: 'registry',
         ),

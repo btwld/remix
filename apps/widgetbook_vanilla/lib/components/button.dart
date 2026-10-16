@@ -4,5 +4,7 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Button', type: VanillaButton)
 Widget buildVanillaButtonUseCase(BuildContext context) => Scaffold(
-  body: Center(child: VanillaButton(label: 'Button', onPressed: () {})),
+  body: Center(
+    child: VanillaButton(label: 'Button', onPressed: () {}),
+  ),
 );

@@ -133,16 +133,14 @@ void main() {
     expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.forms)).first,
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
     );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
     expect(
-      find.text(
-        'Production-ready fields and selection controls in every preset.',
-      ),
+      find.text('Manage your profile, preferences, and workspace.'),
       findsOneWidget,
     );
     expect(_isCompactSheetOpen(tester), isFalse);
@@ -196,7 +194,7 @@ void main() {
     expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.forms)).first,
+      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
     );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
@@ -408,118 +406,6 @@ void main() {
     );
   });
 
-  testWidgets('the forms gallery covers every Fortal input recipe', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.forms)).first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    expect(find.byType(UiTextArea), findsWidgets);
-    expect(find.byType(UiSegmentedControl<String>), findsWidgets);
-    expect(find.byType(RemixCheckboxGroupItem<String>), findsNWidgets(3));
-    expect(find.text('Labelled'), findsOneWidget);
-  });
-
-  testWidgets('the display gallery covers the data list and skeleton', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.dataDisplay))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    expect(find.byType(UiDataList), findsWidgets);
-    expect(find.byType(UiSkeleton), findsNWidgets(2));
-
-    final showContent = find.text('Show content');
-    await tester.ensureVisible(showContent);
-    await tester.pump();
-    await tester.tap(showContent);
-    await tester.pump();
-    expect(find.text('Show skeleton'), findsOneWidget);
-    expect(
-      find.text('Loaded content replaces the placeholder.'),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets('avatar gallery renders the largest preset at full size', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.dataDisplay))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final largestAvatars = find.byWidgetPredicate(
-      (widget) => widget is UiAvatar && widget.size == UiAvatarSize.size9,
-    );
-    expect(largestAvatars, findsNWidgets(2));
-    for (var index = 0; index < 2; index++) {
-      expect(tester.getSize(largestAvatars.at(index)), const Size.square(160));
-    }
-  });
-
-  testWidgets('the overlays gallery exposes the compound menu items', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.overlays)).first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final trigger = find.text('Open menu').first;
-    await tester.ensureVisible(trigger);
-    await tester.tap(trigger);
-    await tester.pump();
-
-    expect(find.text('Show archived'), findsOneWidget);
-    expect(find.text('Newest'), findsOneWidget);
-    expect(find.text('Share'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('overlay gallery popovers shrink-wrap vertical content', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(1400, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.overlays)).first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    await tester.tap(find.text('Popover Size1'));
-    await tester.pump();
-
-    final content = find.ancestor(
-      of: find.text('Quick note'),
-      matching: find.byWidgetPredicate(
-        (widget) => widget is Box && widget.child is ColumnBox,
-      ),
-    );
-    expect(content, findsOneWidget);
-    final title = find.text('Quick note');
-    final body = find.text('Popover content inherits the active theme scope.');
-    final expectedHeight =
-        tester.getSize(title).height + 8 + tester.getSize(body).height;
-    expect(tester.getSize(content), Size(250, expectedHeight));
-  });
-
   testWidgets('dashboard action menus expose menu semantics and width', (
     tester,
   ) async {
@@ -625,34 +511,6 @@ void main() {
     expect(tester.getSize(content).height, lessThan(300));
   });
 
-  testWidgets('overlay gallery dialogs are centered and bounded', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(1400, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey(UiDashboardDemoPage.overlays)).first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final trigger = find.bySemanticsLabel('Open Center Size3 dialog');
-    await tester.ensureVisible(trigger);
-    await tester.tap(trigger);
-    for (var frame = 0; frame < 5; frame++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-
-    final rect = _dialogSurfaceRect(tester);
-    expect(rect.width, lessThanOrEqualTo(600));
-    expect(rect.height, lessThan(300));
-    expect(rect.center.dx, closeTo(700, 0.01));
-    expect(rect.center.dy, closeTo(_dialogCenterY, 0.01));
-  });
-
   testWidgets('settings confirmation dialog is centered', (tester) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1;
@@ -685,112 +543,6 @@ void main() {
     expect(rect.center.dy, closeTo(_dialogCenterY, 0.01));
   });
 
-  testWidgets('actions gallery exposes button, icon button, and toggle', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-
-    final actions = find
-        .byKey(const ValueKey(UiDashboardDemoPage.actions))
-        .first;
-    await tester.ensureVisible(actions);
-    await tester.tap(actions);
-    await tester.pump();
-
-    expect(find.text('Button'), findsWidgets);
-    expect(find.text('Icon button'), findsOneWidget);
-    expect(find.text('Toggle'), findsOneWidget);
-  });
-
-  testWidgets('accordion gallery presents each item as a separate panel', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.navigation))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final groupFinder = find.byType(RemixAccordionGroup<String>).first;
-    final group = tester.widget<RemixAccordionGroup<String>>(groupFinder);
-    final items = group.child as ColumnBox;
-    final column = tester.widget<Flex>(
-      find.descendant(of: groupFinder, matching: find.byType(Flex)).first,
-    );
-
-    expect(column.spacing, 8);
-    expect(items.children, hasLength(2));
-    expect(items.children, everyElement(isA<UiAccordion<String>>()));
-  });
-
-  testWidgets('navigation gallery disclosure collapses independently', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.navigation))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final gallery = find.byType(UiGalleryNavigationPage);
-    final disclosureFinder = find.descendant(
-      of: gallery,
-      matching: find.byType(UiDisclosure),
-    );
-    final disclosureCount = tester
-        .widgetList<UiDisclosure>(disclosureFinder)
-        .length;
-
-    final panelCopy = find.descendant(
-      of: gallery,
-      matching: find.text('Delivery takes 3–5 business days.'),
-    );
-    expect(panelCopy, findsNWidgets(disclosureCount));
-
-    final trigger = find.bySemanticsLabel('Surface Size1 shipping details');
-    await tester.ensureVisible(trigger);
-    await tester.pump();
-    await tester.tap(trigger);
-    for (var frame = 0; frame < 5; frame++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-
-    expect(panelCopy, findsNWidgets(disclosureCount - 1));
-  });
-
-  testWidgets('navigation gallery list updates its controlled selection', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.navigation))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final gallery = find.byType(UiGalleryNavigationPage);
-    final example = find.descendant(
-      of: gallery,
-      matching: find.byType(UiSidebar<String>),
-    );
-    expect(tester.widget<UiSidebar<String>>(example).selectedValue, 'overview');
-
-    final activity = find.descendant(
-      of: gallery,
-      matching: find.byKey(const ValueKey('activity')),
-    );
-    await tester.ensureVisible(activity);
-    await tester.tap(activity);
-    await tester.pump();
-
-    expect(tester.widget<UiSidebar<String>>(example).selectedValue, 'activity');
-  });
-
   testWidgets('every sidebar destination renders without replacing the shell', (
     tester,
   ) async {
@@ -803,20 +555,6 @@ void main() {
       UiDashboardDemoPage.orders: 'Review transactions and fulfillment status.',
       UiDashboardDemoPage.settings:
           'Manage your profile, preferences, and workspace.',
-      UiDashboardDemoPage.charts:
-          'Native chart patterns for comparison, composition, interaction, and empty states.',
-      UiDashboardDemoPage.actions:
-          'Interactive actions across every native variant and size.',
-      UiDashboardDemoPage.forms:
-          'Production-ready fields and selection controls in every preset.',
-      UiDashboardDemoPage.dataDisplay:
-          'Rich surfaces and status components for product interfaces.',
-      UiDashboardDemoPage.overlays:
-          'Real dialog, popover, tooltip, and menu triggers for every recipe.',
-      UiDashboardDemoPage.navigation:
-          'Page headers, sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
-      UiDashboardDemoPage.typography:
-          'Text, headings, code, keys, and links on one shared scale.',
     };
 
     for (final entry in destinations.entries) {
@@ -1041,100 +779,6 @@ void main() {
       ),
       const Size.square(14),
     );
-  });
-
-  testWidgets('the typography gallery renders all five Fortal families', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(1440, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.typography))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    // The nine-step scale, four weights, and every Code and Kbd variant are on
-    // the page at once, so each family appears many times over.
-    expect(find.byType(UiText), findsWidgets);
-    expect(find.byType(UiHeading), findsWidgets);
-    expect(find.byType(UiCode), findsWidgets);
-    expect(find.byType(UiKbd), findsWidgets);
-    expect(find.byType(UiLink), findsWidgets);
-    for (final underline in UiLinkUnderline.values) {
-      expect(find.text(enumLabel(underline)), findsOneWidget);
-    }
-    expect(find.text('Disabled'), findsOneWidget);
-    expect(find.text('Disabled (no callback)'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('an actionable gallery link activates, a disabled one does not', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(1440, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(const DashboardApp());
-    final nav = find
-        .byKey(const ValueKey(UiDashboardDemoPage.typography))
-        .first;
-    await tester.ensureVisible(nav);
-    await tester.tap(nav);
-    await tester.pump();
-
-    final always = find.text('Always');
-    await tester.ensureVisible(always);
-    await tester.tap(always);
-    await tester.pump();
-    expect(find.text('Always link activated'), findsOneWidget);
-
-    final disabled = find.text('Disabled (no callback)');
-    await tester.ensureVisible(disabled);
-    await tester.tap(disabled, warnIfMissed: false);
-    await tester.pump();
-    expect(tester.takeException(), isNull);
-
-    // Let the toast's own dismissal timer run out rather than leaving it
-    // pending past the end of the test.
-    await tester.pump(const Duration(seconds: 5));
-  });
-
-  testWidgets('the typography gallery fits the compact breakpoint', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
-    for (var frame = 0; frame < 5; frame++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-
-    final typography = find
-        .byKey(const ValueKey(UiDashboardDemoPage.typography))
-        .first;
-    await tester.ensureVisible(typography);
-    await tester.tap(typography);
-    for (var frame = 0; frame < 5; frame++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-
-    expect(
-      find.text('Text, headings, code, keys, and links on one shared scale.'),
-      findsOneWidget,
-    );
-    expect(tester.takeException(), isNull);
   });
 
   testWidgets('page and section titles publish one heading tree', (

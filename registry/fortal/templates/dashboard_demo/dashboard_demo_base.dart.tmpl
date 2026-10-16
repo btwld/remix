@@ -7,8 +7,7 @@ import 'package:remix/remix.dart';
 enum {{typePrefix}}DashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
-  manage('Manage'),
-  components('Components');
+  manage('Manage');
 
   const {{typePrefix}}DashboardDemoSection(this.label);
 
@@ -29,42 +28,6 @@ enum {{typePrefix}}DashboardDemoPage {
     {{typePrefix}}DashboardDemoSection.manage,
     'Settings',
     {{icon:mixerHorizontal}},
-  ),
-  charts(
-    // Keep this destination expanded at every generated preset prefix.
-    {{typePrefix}}DashboardDemoSection.components,
-    'Charts',
-    {{icon:barChart}},
-  ),
-  actions(
-    {{typePrefix}}DashboardDemoSection.components,
-    'Actions',
-    {{icon:cursorArrow}},
-  ),
-  forms(
-    {{typePrefix}}DashboardDemoSection.components,
-    'Forms & Inputs',
-    {{icon:input}},
-  ),
-  dataDisplay(
-    {{typePrefix}}DashboardDemoSection.components,
-    'Data Display',
-    {{icon:table}},
-  ),
-  overlays(
-    {{typePrefix}}DashboardDemoSection.components,
-    'Overlays',
-    {{icon:stack}},
-  ),
-  navigation(
-    {{typePrefix}}DashboardDemoSection.components,
-    'Navigation',
-    {{icon:hamburgerMenu}},
-  ),
-  typography(
-    {{typePrefix}}DashboardDemoSection.components,
-    'Typography',
-    {{icon:fontSize}},
   );
 
   const {{typePrefix}}DashboardDemoPage(this.section, this.label, this.icon);
@@ -104,67 +67,6 @@ const {{valuePrefix}}DashboardDemoSectionIds = {
     'appearance',
     'danger-zone',
   ],
-  {{typePrefix}}DashboardDemoPage.charts: [
-    // All three chart families remain distinct parity sections.
-    'line-area',
-    'bar-charts',
-    'pie-donut',
-  ],
-  {{typePrefix}}DashboardDemoPage.actions: [
-    'button',
-    'icon-button',
-    'toggle',
-    'states',
-  ],
-  {{typePrefix}}DashboardDemoPage.forms: [
-    'text-field',
-    'text-area',
-    'segmented-control',
-    'select',
-    'toggle-group',
-    'checkbox',
-    'checkbox-group',
-    'radio',
-    'switch',
-    'slider',
-    'states',
-  ],
-  {{typePrefix}}DashboardDemoPage.dataDisplay: [
-    'avatar',
-    'badge',
-    'card',
-    'callout',
-    'data-list',
-    'skeleton',
-    'progress',
-    'spinner',
-    'divider',
-  ],
-  {{typePrefix}}DashboardDemoPage.overlays: [
-    // Compound overlays share one ordered gallery contract.
-    'dialog',
-    'popover',
-    'tooltip',
-    'menu',
-    'toast',
-  ],
-  {{typePrefix}}DashboardDemoPage.navigation: [
-    'app-bar',
-    'sidebar',
-    'tabs',
-    'disclosure',
-    'accordion',
-  ],
-  {{typePrefix}}DashboardDemoPage.typography: [
-    'text-scale',
-    'weights',
-    'heading-level-size',
-    'code',
-    'keyboard-keys',
-    'links',
-    'accent-contrast',
-    'wrapping-truncation',
-  ],
 };
 
 /// The interaction identifiers exercised by the parity test suite.
@@ -174,7 +76,6 @@ const {{valuePrefix}}DashboardDemoInteractionIds = <String>[
   'sort-select-bulk-undo-paginate',
   'filter-export-row-actions',
   'agent-success-permission-failure-retry-stop-copy-follow',
-  'dialog-popover-tooltip-menu-toast',
   'appearance-notifications-theme-account',
 ];
 

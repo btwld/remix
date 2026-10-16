@@ -7,8 +7,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 enum PlaygroundDashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
-  manage('Manage'),
-  components('Components');
+  manage('Manage');
 
   const PlaygroundDashboardDemoSection(this.label);
 
@@ -29,42 +28,6 @@ enum PlaygroundDashboardDemoPage {
     PlaygroundDashboardDemoSection.manage,
     'Settings',
     RemixIcons.mixerHorizontal,
-  ),
-  charts(
-    // Keep this destination expanded at every generated preset prefix.
-    PlaygroundDashboardDemoSection.components,
-    'Charts',
-    RemixIcons.barChart,
-  ),
-  actions(
-    PlaygroundDashboardDemoSection.components,
-    'Actions',
-    RemixIcons.cursorArrow,
-  ),
-  forms(
-    PlaygroundDashboardDemoSection.components,
-    'Forms & Inputs',
-    RemixIcons.input,
-  ),
-  dataDisplay(
-    PlaygroundDashboardDemoSection.components,
-    'Data Display',
-    RemixIcons.table,
-  ),
-  overlays(
-    PlaygroundDashboardDemoSection.components,
-    'Overlays',
-    RemixIcons.stack,
-  ),
-  navigation(
-    PlaygroundDashboardDemoSection.components,
-    'Navigation',
-    RemixIcons.hamburgerMenu,
-  ),
-  typography(
-    PlaygroundDashboardDemoSection.components,
-    'Typography',
-    RemixIcons.fontSize,
   );
 
   const PlaygroundDashboardDemoPage(this.section, this.label, this.icon);
@@ -104,67 +67,6 @@ const playgroundDashboardDemoSectionIds = {
     'appearance',
     'danger-zone',
   ],
-  PlaygroundDashboardDemoPage.charts: [
-    // All three chart families remain distinct parity sections.
-    'line-area',
-    'bar-charts',
-    'pie-donut',
-  ],
-  PlaygroundDashboardDemoPage.actions: [
-    'button',
-    'icon-button',
-    'toggle',
-    'states',
-  ],
-  PlaygroundDashboardDemoPage.forms: [
-    'text-field',
-    'text-area',
-    'segmented-control',
-    'select',
-    'toggle-group',
-    'checkbox',
-    'checkbox-group',
-    'radio',
-    'switch',
-    'slider',
-    'states',
-  ],
-  PlaygroundDashboardDemoPage.dataDisplay: [
-    'avatar',
-    'badge',
-    'card',
-    'callout',
-    'data-list',
-    'skeleton',
-    'progress',
-    'spinner',
-    'divider',
-  ],
-  PlaygroundDashboardDemoPage.overlays: [
-    // Compound overlays share one ordered gallery contract.
-    'dialog',
-    'popover',
-    'tooltip',
-    'menu',
-    'toast',
-  ],
-  PlaygroundDashboardDemoPage.navigation: [
-    'app-bar',
-    'sidebar',
-    'tabs',
-    'disclosure',
-    'accordion',
-  ],
-  PlaygroundDashboardDemoPage.typography: [
-    'text-scale',
-    'weights',
-    'heading-level-size',
-    'code',
-    'keyboard-keys',
-    'links',
-    'accent-contrast',
-    'wrapping-truncation',
-  ],
 };
 
 /// The interaction identifiers exercised by the parity test suite.
@@ -174,7 +76,6 @@ const playgroundDashboardDemoInteractionIds = <String>[
   'sort-select-bulk-undo-paginate',
   'filter-export-row-actions',
   'agent-success-permission-failure-retry-stop-copy-follow',
-  'dialog-popover-tooltip-menu-toast',
   'appearance-notifications-theme-account',
 ];
 

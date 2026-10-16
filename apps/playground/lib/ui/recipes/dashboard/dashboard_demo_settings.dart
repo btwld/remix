@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -14,7 +16,6 @@ import '../../components/slider.dart';
 import '../../components/switch.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
-import 'dashboard_demo_gallery_scaffold.dart';
 
 enum _Appearance { light, dark, system }
 
@@ -348,3 +349,36 @@ void _toast(BuildContext context, String title) => showRemixToast(
   context,
   RemixToastData(title: title, icon: RemixIcons.checkCircled),
 );
+
+class PlaygroundDisclosureTrigger extends StatelessWidget {
+  const PlaygroundDisclosureTrigger({
+    super.key,
+    required this.expanded,
+    required this.child,
+  });
+
+  final bool expanded;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: child),
+      Box(
+        style: BoxStyler()
+            .transform(
+              Matrix4.rotationZ(expanded ? math.pi : 0),
+              alignment: .center,
+            )
+            .animate(PlaygroundTokens.motion),
+        child: StyledIcon(
+          icon: RemixIcons.chevronDown,
+          style: IconStyler()
+              .size(PlaygroundTokens.icon)
+              .color(PlaygroundTokens.mutedForeground()),
+        ),
+      ),
+    ],
+  );
+}

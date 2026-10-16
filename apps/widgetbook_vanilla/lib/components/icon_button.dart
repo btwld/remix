@@ -5,5 +5,11 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Icon Button', type: VanillaIconButton)
 Widget buildVanillaIconButtonUseCase(BuildContext context) => Scaffold(
-  body: Center(child: VanillaIconButton(icon: RemixIcons.check, semanticLabel: 'Confirm', onPressed: () {})),
+  body: Center(
+    child: VanillaIconButton(
+      icon: RemixIcons.check,
+      semanticLabel: 'Confirm',
+      onPressed: () {},
+    ),
+  ),
 );

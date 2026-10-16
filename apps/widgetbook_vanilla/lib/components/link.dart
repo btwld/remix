@@ -4,5 +4,7 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Link', type: VanillaLink)
 Widget buildVanillaLinkUseCase(BuildContext context) => Scaffold(
-  body: Center(child: VanillaLink(label: 'Documentation', onPressed: () {})),
+  body: Center(
+    child: VanillaLink(label: 'Documentation', onPressed: () {}),
+  ),
 );

@@ -724,9 +724,6 @@ packages:
         final demoBase = File(
           p.join(dashboardDirectory.path, 'dashboard_demo_base.dart'),
         );
-        final demoContent = File(
-          p.join(dashboardDirectory.path, 'dashboard_demo_content.dart'),
-        );
         final demoChat = File(
           p.join(dashboardDirectory.path, 'dashboard_demo_chat.dart'),
         );
@@ -744,7 +741,6 @@ packages:
         );
         expect(dashboardDemo.existsSync(), isTrue);
         expect(demoBase.existsSync(), isTrue);
-        expect(demoContent.existsSync(), isTrue);
         expect(demoChat.existsSync(), isTrue);
         expect(demoCharts.existsSync(), isTrue);
         expect(demoRecords.existsSync(), isTrue);

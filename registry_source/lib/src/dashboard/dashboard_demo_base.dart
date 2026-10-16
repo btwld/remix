@@ -7,8 +7,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 enum RegistryDashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
-  manage('Manage'),
-  components('Components');
+  manage('Manage');
 
   const RegistryDashboardDemoSection(this.label);
 
@@ -29,42 +28,6 @@ enum RegistryDashboardDemoPage {
     RegistryDashboardDemoSection.manage,
     'Settings',
     RemixIcons.mixerHorizontal,
-  ),
-  charts(
-    // Keep this destination expanded at every generated preset prefix.
-    RegistryDashboardDemoSection.components,
-    'Charts',
-    RemixIcons.barChart,
-  ),
-  actions(
-    RegistryDashboardDemoSection.components,
-    'Actions',
-    RemixIcons.cursorArrow,
-  ),
-  forms(
-    RegistryDashboardDemoSection.components,
-    'Forms & Inputs',
-    RemixIcons.input,
-  ),
-  dataDisplay(
-    RegistryDashboardDemoSection.components,
-    'Data Display',
-    RemixIcons.table,
-  ),
-  overlays(
-    RegistryDashboardDemoSection.components,
-    'Overlays',
-    RemixIcons.stack,
-  ),
-  navigation(
-    RegistryDashboardDemoSection.components,
-    'Navigation',
-    RemixIcons.hamburgerMenu,
-  ),
-  typography(
-    RegistryDashboardDemoSection.components,
-    'Typography',
-    RemixIcons.fontSize,
   );
 
   const RegistryDashboardDemoPage(this.section, this.label, this.icon);
@@ -104,67 +67,6 @@ const registryDashboardDemoSectionIds = {
     'appearance',
     'danger-zone',
   ],
-  RegistryDashboardDemoPage.charts: [
-    // All three chart families remain distinct parity sections.
-    'line-area',
-    'bar-charts',
-    'pie-donut',
-  ],
-  RegistryDashboardDemoPage.actions: [
-    'button',
-    'icon-button',
-    'toggle',
-    'states',
-  ],
-  RegistryDashboardDemoPage.forms: [
-    'text-field',
-    'text-area',
-    'segmented-control',
-    'select',
-    'toggle-group',
-    'checkbox',
-    'checkbox-group',
-    'radio',
-    'switch',
-    'slider',
-    'states',
-  ],
-  RegistryDashboardDemoPage.dataDisplay: [
-    'avatar',
-    'badge',
-    'card',
-    'callout',
-    'data-list',
-    'skeleton',
-    'progress',
-    'spinner',
-    'divider',
-  ],
-  RegistryDashboardDemoPage.overlays: [
-    // Compound overlays share one ordered gallery contract.
-    'dialog',
-    'popover',
-    'tooltip',
-    'menu',
-    'toast',
-  ],
-  RegistryDashboardDemoPage.navigation: [
-    'app-bar',
-    'sidebar',
-    'tabs',
-    'disclosure',
-    'accordion',
-  ],
-  RegistryDashboardDemoPage.typography: [
-    'text-scale',
-    'weights',
-    'heading-level-size',
-    'code',
-    'keyboard-keys',
-    'links',
-    'accent-contrast',
-    'wrapping-truncation',
-  ],
 };
 
 /// The interaction identifiers exercised by the parity test suite.
@@ -174,7 +76,6 @@ const registryDashboardDemoInteractionIds = <String>[
   'sort-select-bulk-undo-paginate',
   'filter-export-row-actions',
   'agent-success-permission-failure-retry-stop-copy-follow',
-  'dialog-popover-tooltip-menu-toast',
   'appearance-notifications-theme-account',
 ];
 

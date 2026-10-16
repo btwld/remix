@@ -4,5 +4,16 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Checkbox', type: VanillaCheckbox)
 Widget buildVanillaCheckboxUseCase(BuildContext context) => Scaffold(
-  body: Center(child: StatefulBuilder(builder: (context, setState) { var v = true; return VanillaCheckbox(selected: v, onChanged: (value) => setState(() => v = value ?? false), semanticLabel: 'Label'); })),
+  body: Center(
+    child: StatefulBuilder(
+      builder: (context, setState) {
+        var v = true;
+        return VanillaCheckbox(
+          selected: v,
+          onChanged: (value) => setState(() => v = value ?? false),
+          semanticLabel: 'Label',
+        );
+      },
+    ),
+  ),
 );

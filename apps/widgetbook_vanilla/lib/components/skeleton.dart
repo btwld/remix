@@ -4,5 +4,10 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Skeleton', type: VanillaSkeleton)
 Widget buildVanillaSkeletonUseCase(BuildContext context) => Scaffold(
-  body: Center(child: const VanillaSkeleton(loading: true, child: VanillaAvatar(label: 'LF'))),
+  body: Center(
+    child: const VanillaSkeleton(
+      loading: true,
+      child: VanillaAvatar(label: 'LF'),
+    ),
+  ),
 );

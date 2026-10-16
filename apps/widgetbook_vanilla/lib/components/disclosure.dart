@@ -4,5 +4,11 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Disclosure', type: VanillaDisclosure)
 Widget buildVanillaDisclosureUseCase(BuildContext context) => Scaffold(
-  body: Center(child: const VanillaDisclosure(trigger: Text('Details'), content: Text('More information'), defaultExpanded: true)),
+  body: Center(
+    child: const VanillaDisclosure(
+      trigger: Text('Details'),
+      content: Text('More information'),
+      defaultExpanded: true,
+    ),
+  ),
 );

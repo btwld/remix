@@ -362,7 +362,7 @@ items:
 
         expect(
           item.files,
-          hasLength(preset == 'vanilla' ? 18 : 25),
+          hasLength(preset == 'vanilla' ? 10 : 17),
           reason: preset,
         );
         expect(item.generated, isEmpty, reason: preset);

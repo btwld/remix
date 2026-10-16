@@ -7,8 +7,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 enum UiDashboardDemoSection {
   workspace('Workspace'),
   data('Data'),
-  manage('Manage'),
-  components('Components');
+  manage('Manage');
 
   const UiDashboardDemoSection(this.label);
 
@@ -25,30 +24,6 @@ enum UiDashboardDemoPage {
     UiDashboardDemoSection.manage,
     'Settings',
     RemixIcons.mixerHorizontal,
-  ),
-  charts(
-    // Keep this destination expanded at every generated preset prefix.
-    UiDashboardDemoSection.components,
-    'Charts',
-    RemixIcons.barChart,
-  ),
-  actions(UiDashboardDemoSection.components, 'Actions', RemixIcons.cursorArrow),
-  forms(UiDashboardDemoSection.components, 'Forms & Inputs', RemixIcons.input),
-  dataDisplay(
-    UiDashboardDemoSection.components,
-    'Data Display',
-    RemixIcons.table,
-  ),
-  overlays(UiDashboardDemoSection.components, 'Overlays', RemixIcons.stack),
-  navigation(
-    UiDashboardDemoSection.components,
-    'Navigation',
-    RemixIcons.hamburgerMenu,
-  ),
-  typography(
-    UiDashboardDemoSection.components,
-    'Typography',
-    RemixIcons.fontSize,
   );
 
   const UiDashboardDemoPage(this.section, this.label, this.icon);
@@ -88,62 +63,6 @@ const uiDashboardDemoSectionIds = {
     'appearance',
     'danger-zone',
   ],
-  UiDashboardDemoPage.charts: [
-    // All three chart families remain distinct parity sections.
-    'line-area',
-    'bar-charts',
-    'pie-donut',
-  ],
-  UiDashboardDemoPage.actions: ['button', 'icon-button', 'toggle', 'states'],
-  UiDashboardDemoPage.forms: [
-    'text-field',
-    'text-area',
-    'segmented-control',
-    'select',
-    'toggle-group',
-    'checkbox',
-    'checkbox-group',
-    'radio',
-    'switch',
-    'slider',
-    'states',
-  ],
-  UiDashboardDemoPage.dataDisplay: [
-    'avatar',
-    'badge',
-    'card',
-    'callout',
-    'data-list',
-    'skeleton',
-    'progress',
-    'spinner',
-    'divider',
-  ],
-  UiDashboardDemoPage.overlays: [
-    // Compound overlays share one ordered gallery contract.
-    'dialog',
-    'popover',
-    'tooltip',
-    'menu',
-    'toast',
-  ],
-  UiDashboardDemoPage.navigation: [
-    'app-bar',
-    'sidebar',
-    'tabs',
-    'disclosure',
-    'accordion',
-  ],
-  UiDashboardDemoPage.typography: [
-    'text-scale',
-    'weights',
-    'heading-level-size',
-    'code',
-    'keyboard-keys',
-    'links',
-    'accent-contrast',
-    'wrapping-truncation',
-  ],
 };
 
 /// The interaction identifiers exercised by the parity test suite.
@@ -153,7 +72,6 @@ const uiDashboardDemoInteractionIds = <String>[
   'sort-select-bulk-undo-paginate',
   'filter-export-row-actions',
   'agent-success-permission-failure-retry-stop-copy-follow',
-  'dialog-popover-tooltip-menu-toast',
   'appearance-notifications-theme-account',
 ];
 

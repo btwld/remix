@@ -5,5 +5,11 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Toast', type: VanillaToast)
 Widget buildVanillaToastUseCase(BuildContext context) => Scaffold(
-  body: Center(child: const VanillaToast(title: 'Changes saved', description: 'Your settings are up to date.', icon: RemixIcons.checkCircled)),
+  body: Center(
+    child: const VanillaToast(
+      title: 'Changes saved',
+      description: 'Your settings are up to date.',
+      icon: RemixIcons.checkCircled,
+    ),
+  ),
 );
