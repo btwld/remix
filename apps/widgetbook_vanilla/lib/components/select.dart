@@ -4,14 +4,14 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook_vanilla/ui/ui.dart';
 
 @widgetbook.UseCase(name: 'Select', type: VanillaSelect)
-Widget buildVanillaSelectUseCase(BuildContext context) => Scaffold(
-  body: Center(
-    child: SizedBox(
-      width: 240,
-      child: StatefulBuilder(
-        builder: (context, setState) {
-          String? v;
-          return VanillaSelect<String>(
+Widget buildVanillaSelectUseCase(BuildContext context) {
+  String? v;
+  return Scaffold(
+    body: Center(
+      child: SizedBox(
+        width: 240,
+        child: StatefulBuilder(
+          builder: (context, setState) => VanillaSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
             items: const [
               RemixSelectItem(value: 'apple', label: 'Apple'),
@@ -19,9 +19,9 @@ Widget buildVanillaSelectUseCase(BuildContext context) => Scaffold(
             ],
             selectedValue: v,
             onChanged: (value) => setState(() => v = value),
-          );
-        },
+          ),
+        ),
       ),
     ),
-  ),
-);
+  );
+}

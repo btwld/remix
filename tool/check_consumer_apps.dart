@@ -5,8 +5,8 @@
 /// ```
 ///
 /// Playground and dashboard expect the full manifest for their configured
-/// preset (`vanilla` and `fortal`); demo installs the non-recipe, non-agent
-/// Fortal component catalog.
+/// preset (`vanilla` and `fortal`); demo and widgetbook_vanilla install the
+/// non-recipe, non-agent component catalog for their preset.
 /// Check expected items even when their files are missing. The CLI owns config parsing, template rendering, and diffing.
 ///
 /// Application-owned source may be customized. Each deliberate edit belongs in
@@ -35,6 +35,7 @@ typedef _ItemFilter = bool Function(String key, YamlMap item);
 const _consumers = <String, _ItemFilter?>{
   'apps/playground': null,
   'apps/demo': _isComponentCatalogItem,
+  'apps/widgetbook_vanilla': _isComponentCatalogItem,
   'apps/dashboard': null,
 };
 

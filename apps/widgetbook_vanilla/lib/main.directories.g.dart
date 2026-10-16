@@ -11,6 +11,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
+import 'package:widgetbook_vanilla/components/accordion.dart'
+    as _widgetbook_vanilla_components_accordion;
+import 'package:widgetbook_vanilla/components/app_bar.dart'
+    as _widgetbook_vanilla_components_app_bar;
 import 'package:widgetbook_vanilla/components/avatar.dart'
     as _widgetbook_vanilla_components_avatar;
 import 'package:widgetbook_vanilla/components/badge.dart'
@@ -21,10 +25,16 @@ import 'package:widgetbook_vanilla/components/callout.dart'
     as _widgetbook_vanilla_components_callout;
 import 'package:widgetbook_vanilla/components/card.dart'
     as _widgetbook_vanilla_components_card;
+import 'package:widgetbook_vanilla/components/chart.dart'
+    as _widgetbook_vanilla_components_chart;
 import 'package:widgetbook_vanilla/components/checkbox.dart'
     as _widgetbook_vanilla_components_checkbox;
+import 'package:widgetbook_vanilla/components/checkbox_group.dart'
+    as _widgetbook_vanilla_components_checkbox_group;
 import 'package:widgetbook_vanilla/components/data_list.dart'
     as _widgetbook_vanilla_components_data_list;
+import 'package:widgetbook_vanilla/components/data_table.dart'
+    as _widgetbook_vanilla_components_data_table;
 import 'package:widgetbook_vanilla/components/dialog.dart'
     as _widgetbook_vanilla_components_dialog;
 import 'package:widgetbook_vanilla/components/disclosure.dart'
@@ -35,12 +45,22 @@ import 'package:widgetbook_vanilla/components/icon_button.dart'
     as _widgetbook_vanilla_components_icon_button;
 import 'package:widgetbook_vanilla/components/link.dart'
     as _widgetbook_vanilla_components_link;
+import 'package:widgetbook_vanilla/components/menu.dart'
+    as _widgetbook_vanilla_components_menu;
 import 'package:widgetbook_vanilla/components/popover.dart'
     as _widgetbook_vanilla_components_popover;
 import 'package:widgetbook_vanilla/components/progress.dart'
     as _widgetbook_vanilla_components_progress;
+import 'package:widgetbook_vanilla/components/radio.dart'
+    as _widgetbook_vanilla_components_radio;
+import 'package:widgetbook_vanilla/components/segmented_control.dart'
+    as _widgetbook_vanilla_components_segmented_control;
 import 'package:widgetbook_vanilla/components/select.dart'
     as _widgetbook_vanilla_components_select;
+import 'package:widgetbook_vanilla/components/sidebar.dart'
+    as _widgetbook_vanilla_components_sidebar;
+import 'package:widgetbook_vanilla/components/sidebar_layout.dart'
+    as _widgetbook_vanilla_components_sidebar_layout;
 import 'package:widgetbook_vanilla/components/skeleton.dart'
     as _widgetbook_vanilla_components_skeleton;
 import 'package:widgetbook_vanilla/components/slider.dart'
@@ -49,6 +69,8 @@ import 'package:widgetbook_vanilla/components/spinner.dart'
     as _widgetbook_vanilla_components_spinner;
 import 'package:widgetbook_vanilla/components/switch.dart'
     as _widgetbook_vanilla_components_switch;
+import 'package:widgetbook_vanilla/components/tabs.dart'
+    as _widgetbook_vanilla_components_tabs;
 import 'package:widgetbook_vanilla/components/textarea.dart'
     as _widgetbook_vanilla_components_textarea;
 import 'package:widgetbook_vanilla/components/textfield.dart'
@@ -57,6 +79,8 @@ import 'package:widgetbook_vanilla/components/toast.dart'
     as _widgetbook_vanilla_components_toast;
 import 'package:widgetbook_vanilla/components/toggle.dart'
     as _widgetbook_vanilla_components_toggle;
+import 'package:widgetbook_vanilla/components/toggle_group.dart'
+    as _widgetbook_vanilla_components_toggle_group;
 import 'package:widgetbook_vanilla/components/tooltip.dart'
     as _widgetbook_vanilla_components_tooltip;
 
@@ -64,6 +88,26 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'components',
     children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaAccordion',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Accordion',
+            builder: _widgetbook_vanilla_components_accordion
+                .buildVanillaAccordionUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaAppBar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'AppBar',
+            builder: _widgetbook_vanilla_components_app_bar
+                .buildVanillaAppBarUseCase,
+          ),
+        ],
+      ),
       _widgetbook.WidgetbookComponent(
         name: 'VanillaAvatar',
         useCases: [
@@ -125,12 +169,32 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaCheckboxGroupItem<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'CheckboxGroup',
+            builder: _widgetbook_vanilla_components_checkbox_group
+                .buildVanillaCheckboxGroupUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaDataList',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Data List',
             builder: _widgetbook_vanilla_components_data_list
                 .buildVanillaDataListUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaDataTable',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'DataTable',
+            builder: _widgetbook_vanilla_components_data_table
+                .buildVanillaDataTableUseCase,
           ),
         ],
       ),
@@ -175,12 +239,32 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaLineChart',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'LineChart',
+            builder:
+                _widgetbook_vanilla_components_chart.buildVanillaChartUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaLink',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Link',
             builder:
                 _widgetbook_vanilla_components_link.buildVanillaLinkUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaMenu',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Menu',
+            builder:
+                _widgetbook_vanilla_components_menu.buildVanillaMenuUseCase,
           ),
         ],
       ),
@@ -205,12 +289,52 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaRadio',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Radio',
+            builder:
+                _widgetbook_vanilla_components_radio.buildVanillaRadioUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaSegmentedControl<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'SegmentedControl',
+            builder: _widgetbook_vanilla_components_segmented_control
+                .buildVanillaSegmentedControlUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaSelect',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Select',
             builder:
                 _widgetbook_vanilla_components_select.buildVanillaSelectUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaSidebar<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Sidebar',
+            builder: _widgetbook_vanilla_components_sidebar
+                .buildVanillaSidebarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaSidebarLayout',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'SidebarLayout',
+            builder: _widgetbook_vanilla_components_sidebar_layout
+                .buildVanillaSidebarLayoutUseCase,
           ),
         ],
       ),
@@ -255,6 +379,16 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaTabBar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Tabs',
+            builder:
+                _widgetbook_vanilla_components_tabs.buildVanillaTabsUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaTextArea',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -291,6 +425,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Toggle',
             builder:
                 _widgetbook_vanilla_components_toggle.buildVanillaToggleUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaToggleGroup',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'ToggleGroup',
+            builder: _widgetbook_vanilla_components_toggle_group
+                .buildVanillaToggleGroupUseCase,
           ),
         ],
       ),

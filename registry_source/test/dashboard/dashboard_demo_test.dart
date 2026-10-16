@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -557,6 +558,62 @@ void main() {
           expect(tester.takeException(), isNull);
         },
       );
+
+      testWidgets(
+        'Settings Select, Checkbox, and Danger zone Disclosure work',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.settings,
+          );
+
+          final select = find.byType(RemixSelect<String>);
+          final selectIndicator = find.descendant(
+            of: select,
+            matching: find.byKey(const ValueKey('remix-select-indicator')),
+          );
+          expect(
+            _glyphIn(selectIndicator, RemixPathGlyph.chevronDown),
+            findsOneWidget,
+          );
+          expect(_transformAngleIn(tester, selectIndicator), closeTo(0, 0.01));
+
+          await tester.tap(select);
+          await tester.pumpAndSettle();
+          expect(
+            _transformAngleIn(tester, selectIndicator),
+            closeTo(math.pi, 0.01),
+          );
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
+
+          await tester.tap(find.text('Spanish').last);
+          await tester.pumpAndSettle();
+          expect(
+            find.descendant(of: select, matching: find.text('Spanish')),
+            findsOneWidget,
+          );
+          expect(_transformAngleIn(tester, selectIndicator), closeTo(0, 0.01));
+
+          final checkbox = find.byType(RemixCheckbox);
+          expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
+          await tester.ensureVisible(checkbox);
+          await tester.tap(checkbox);
+          await tester.pumpAndSettle();
+          expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsOneWidget);
+
+          final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
+          expect(find.text('Delete workspace'), findsNothing);
+          expect(_transformAngleIn(tester, dangerZone), closeTo(0, 0.01));
+
+          await tester.ensureVisible(dangerZone);
+          await tester.tap(find.text('Danger zone'));
+          await tester.pumpAndSettle();
+          expect(find.text('Delete workspace'), findsOneWidget);
+          expect(_transformAngleIn(tester, dangerZone), closeTo(math.pi, 0.01));
+          expect(tester.takeException(), isNull);
+        },
+      );
     });
   }
 
@@ -706,3 +763,12 @@ Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
 
 Finder _glyphIn(Finder ancestor, RemixPathGlyph glyph) =>
     find.descendant(of: ancestor, matching: _pathGlyph(glyph));
+
+double _transformAngleIn(WidgetTester tester, Finder ancestor) {
+  final transform = tester.widget<Transform>(
+    find.descendant(of: ancestor, matching: find.byType(Transform)).first,
+  );
+  return math
+      .atan2(transform.transform.entry(1, 0), transform.transform.entry(0, 0))
+      .abs();
+}

@@ -239,12 +239,10 @@ items:
   dashboard_demo:
     registryDependencies:
       - theme
-      - accordion
       - activity
       - activity_recipe
       - answer
       - answer_recipe
-      - app_bar
       - avatar
       - badge
       - button
@@ -252,11 +250,9 @@ items:
       - card
       - chart
       - checkbox
-      - code
       - composer
       - composer_recipe
       - dashboard_shell
-      - data_list
       - data_table
       - dialog
       - disclosure
@@ -265,8 +261,6 @@ items:
       - execution_recipe
       - heading
       - icon_button
-      - kbd
-      - link
       - menu
       - message
       - message_recipe
@@ -276,21 +270,12 @@ items:
       - plan_recipe
       - popover
       - progress
-      - radio
       - segmented_control
       - select
-      - sidebar
-      - skeleton
-      - slider
-      - spinner
       - switch
-      - tabs
       - text
       - textfield
       - toast
-      - toggle
-      - toggle_group
-      - tooltip
       - transcript
       - transcript_recipe
       - typography

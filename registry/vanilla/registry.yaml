@@ -213,7 +213,6 @@ items:
   dashboard_demo:
     registryDependencies:
       - theme
-      - accordion
       - activity
       - activity_recipe
       - answer
@@ -244,16 +243,12 @@ items:
       - plan_recipe
       - popover
       - progress
-      - radio
       - segmented_control
       - select
-      - skeleton
       - slider
-      - spinner
       - switch
       - textfield
       - toast
-      - toggle_group
       - transcript
       - transcript_recipe
     dependencies:
