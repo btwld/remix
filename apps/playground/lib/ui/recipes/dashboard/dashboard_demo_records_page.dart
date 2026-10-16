@@ -14,6 +14,11 @@ import 'dashboard_demo_records.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
+/// Shared layout for the selected-row badge cluster in the records toolbar.
+final playgroundSelectedBadgesStyle = WrapBoxStyler()
+    .spacing(PlaygroundTokens.s1_5)
+    .crossAxisAlignment(.center);
+
 class PlaygroundDashboardCustomersPage extends StatefulWidget {
   const PlaygroundDashboardCustomersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
@@ -76,10 +81,7 @@ class _PlaygroundDashboardCustomersPageState
               ),
             ),
             if (_selectedIds.isNotEmpty)
-              WrapBox(
-                style: WrapBoxStyler()
-                    .spacing(PlaygroundTokens.s1_5)
-                    .crossAxisAlignment(.center),
+              playgroundSelectedBadgesStyle(
                 children: [
                   PlaygroundBadge.secondary(
                     label: '${_selectedIds.length} selected',

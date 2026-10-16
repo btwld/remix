@@ -12,6 +12,12 @@ import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
 
+/// Tag row under a stat card's value: delta badge plus caption.
+final uiStatTagsStyle = WrapBoxStyler()
+    .spacing(8)
+    .runSpacing(6)
+    .crossAxisAlignment(.center);
+
 /// Metric card used on the Ui dashboard overview page.
 class UiStatCard extends StatelessWidget {
   const UiStatCard({
@@ -63,11 +69,7 @@ class UiStatCard extends StatelessWidget {
           ],
         ),
         UiText(value, size: .size7, weight: .bold),
-        WrapBox(
-          style: WrapBoxStyler()
-              .spacing(8)
-              .runSpacing(6)
-              .crossAxisAlignment(.center),
+        uiStatTagsStyle(
           children: [
             if (delta case final delta?)
               UiAccentScope(

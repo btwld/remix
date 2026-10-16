@@ -14,6 +14,11 @@ import '../../theme/tokens.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
+/// Shared layout for the selected-row badge cluster in the records toolbar.
+final vanillaSelectedBadgesStyle = WrapBoxStyler()
+    .spacing(VanillaTokens.s1_5)
+    .crossAxisAlignment(.center);
+
 class VanillaDashboardCustomersPage extends StatefulWidget {
   const VanillaDashboardCustomersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
@@ -76,10 +81,7 @@ class _VanillaDashboardCustomersPageState
               ),
             ),
             if (_selectedIds.isNotEmpty)
-              WrapBox(
-                style: WrapBoxStyler()
-                    .spacing(VanillaTokens.s1_5)
-                    .crossAxisAlignment(.center),
+              vanillaSelectedBadgesStyle(
                 children: [
                   VanillaBadge.secondary(
                     label: '${_selectedIds.length} selected',

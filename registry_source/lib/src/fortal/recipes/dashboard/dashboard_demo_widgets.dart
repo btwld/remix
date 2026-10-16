@@ -12,6 +12,12 @@ import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
 
+/// Tag row under a stat card's value: delta badge plus caption.
+final fortalStatTagsStyle = WrapBoxStyler()
+    .spacing(8)
+    .runSpacing(6)
+    .crossAxisAlignment(.center);
+
 /// Metric card used on the Fortal dashboard overview page.
 class FortalStatCard extends StatelessWidget {
   const FortalStatCard({
@@ -63,11 +69,7 @@ class FortalStatCard extends StatelessWidget {
           ],
         ),
         FortalText(value, size: .size7, weight: .bold),
-        WrapBox(
-          style: WrapBoxStyler()
-              .spacing(8)
-              .runSpacing(6)
-              .crossAxisAlignment(.center),
+        fortalStatTagsStyle(
           children: [
             if (delta case final delta?)
               FortalAccentScope(

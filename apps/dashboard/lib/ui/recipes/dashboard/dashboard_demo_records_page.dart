@@ -9,6 +9,12 @@ import 'dashboard_demo_widgets.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
+/// Shared layout for the selected-row badge cluster in the records toolbar.
+final uiSelectedBadgesStyle = WrapBoxStyler()
+    .spacing(6)
+    .runSpacing(6)
+    .crossAxisAlignment(.center);
+
 class UiDashboardCustomersPage extends StatefulWidget {
   const UiDashboardCustomersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
@@ -70,11 +76,7 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
               ),
             ),
             if (_selectedIds.isNotEmpty)
-              WrapBox(
-                style: WrapBoxStyler()
-                    .spacing(6)
-                    .runSpacing(6)
-                    .crossAxisAlignment(.center),
+              uiSelectedBadgesStyle(
                 children: [
                   UiBadge(
                     size: .size2,

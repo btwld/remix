@@ -9,6 +9,12 @@ import 'dashboard_demo_widgets.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
+/// Shared layout for the selected-row badge cluster in the records toolbar.
+final fortalSelectedBadgesStyle = WrapBoxStyler()
+    .spacing(6)
+    .runSpacing(6)
+    .crossAxisAlignment(.center);
+
 class FortalDashboardCustomersPage extends StatefulWidget {
   const FortalDashboardCustomersPage({super.key, this.globalQuery = ''});
   final String globalQuery;
@@ -71,11 +77,7 @@ class _FortalDashboardCustomersPageState
               ),
             ),
             if (_selectedIds.isNotEmpty)
-              WrapBox(
-                style: WrapBoxStyler()
-                    .spacing(6)
-                    .runSpacing(6)
-                    .crossAxisAlignment(.center),
+              fortalSelectedBadgesStyle(
                 children: [
                   FortalBadge(
                     size: .size2,
