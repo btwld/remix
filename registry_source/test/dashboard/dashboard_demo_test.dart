@@ -230,7 +230,7 @@ void main() {
       });
 
       testWidgets(
-        'sidebar collapse and expand animate across 16ms frames without overflow or Mix warnings',
+        'sidebar collapse and expand animate across frames without overflow, jumps, or Mix warnings',
         (tester) async {
           final mixWarnings = <String>[];
           final originalDebugPrint = debugPrint;
@@ -243,30 +243,48 @@ void main() {
             await _pumpDashboard(tester, preset: preset);
             expect(mixWarnings, isEmpty);
 
-            await tester.tap(
-              find.byKey(const ValueKey('dashboard-collapse')).first,
-            );
-            for (var frame = 0; frame < 16; frame++) {
-              await tester.pump(const Duration(milliseconds: 16));
+            final collapseButton = find
+                .byKey(const ValueKey('dashboard-collapse'))
+                .first;
+
+            await tester.tap(collapseButton);
+            await tester.pump();
+            double previousButtonDx = tester.getCenter(collapseButton).dx;
+            for (var frame = 0; frame < 24; frame++) {
+              await tester.pump(const Duration(milliseconds: 10));
               expect(
                 tester.takeException(),
                 isNull,
                 reason: 'collapse frame $frame',
               );
               expect(mixWarnings, isEmpty, reason: 'collapse frame $frame');
+              final currentButtonDx = tester.getCenter(collapseButton).dx;
+              expect(
+                currentButtonDx,
+                lessThanOrEqualTo(previousButtonDx + 0.5),
+                reason: 'collapse button should move monotonically left',
+              );
+              previousButtonDx = currentButtonDx;
             }
 
-            await tester.tap(
-              find.byKey(const ValueKey('dashboard-collapse')).first,
-            );
-            for (var frame = 0; frame < 16; frame++) {
-              await tester.pump(const Duration(milliseconds: 16));
+            await tester.tap(collapseButton);
+            await tester.pump();
+            previousButtonDx = tester.getCenter(collapseButton).dx;
+            for (var frame = 0; frame < 24; frame++) {
+              await tester.pump(const Duration(milliseconds: 10));
               expect(
                 tester.takeException(),
                 isNull,
                 reason: 'expand frame $frame',
               );
               expect(mixWarnings, isEmpty, reason: 'expand frame $frame');
+              final currentButtonDx = tester.getCenter(collapseButton).dx;
+              expect(
+                currentButtonDx,
+                greaterThanOrEqualTo(previousButtonDx - 0.5),
+                reason: 'collapse button should move monotonically right',
+              );
+              previousButtonDx = currentButtonDx;
             }
           } finally {
             debugPrint = originalDebugPrint;
@@ -569,22 +587,12 @@ void main() {
           );
 
           final select = find.byType(RemixSelect<String>);
-          final selectIndicator = find.descendant(
-            of: select,
-            matching: find.byKey(const ValueKey('remix-select-indicator')),
-          );
-          expect(
-            _glyphIn(selectIndicator, RemixPathGlyph.chevronDown),
-            findsOneWidget,
-          );
-          expect(_transformAngleIn(tester, selectIndicator), closeTo(0, 0.01));
+          expect(_glyphIn(select, RemixPathGlyph.chevronDown), findsOneWidget);
+          expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
 
           await tester.tap(select);
           await tester.pumpAndSettle();
-          expect(
-            _transformAngleIn(tester, selectIndicator),
-            closeTo(math.pi, 0.01),
-          );
+          expect(_transformAngleIn(tester, select), closeTo(math.pi, 0.01));
           expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
 
           await tester.tap(find.text('Spanish').last);
@@ -593,7 +601,7 @@ void main() {
             find.descendant(of: select, matching: find.text('Spanish')),
             findsOneWidget,
           );
-          expect(_transformAngleIn(tester, selectIndicator), closeTo(0, 0.01));
+          expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
 
           final checkbox = find.byType(RemixCheckbox);
           expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
@@ -602,7 +610,9 @@ void main() {
           await tester.pumpAndSettle();
           expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsOneWidget);
 
-          final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
+          final dangerZone = find
+              .byKey(const ValueKey('settings-danger-zone'))
+              .first;
           expect(find.text('Delete workspace'), findsNothing);
           expect(_transformAngleIn(tester, dangerZone), closeTo(0, 0.01));
 

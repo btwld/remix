@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
@@ -221,43 +223,55 @@ class _UiDashboardShellBaseState<T extends Object>
           final showBrand = controls.isCompact ? !collapsed : expansion > 0;
           return Box(
             style: widget.sidebarHeaderStyle,
-            child: RowBox(
-              style: FlexBoxStyler()
-                  .spacing(
-                    controls.isCompact
-                        ? (collapsed ? 0 : widget.headerSpacing)
-                        : widget.headerSpacing * expansion,
-                  )
-                  .mainAxisAlignment(showBrand ? .start : .center),
-              children: [
-                if (showBrand)
-                  Expanded(
-                    child: Opacity(
-                      opacity: controls.isCompact ? 1 : labelOpacity,
-                      child: DefaultTextStyle.merge(
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        child: widget.brand,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final trailingSpace =
+                    !controls.isCompact &&
+                        showBrand &&
+                        constraints.maxWidth.isFinite
+                    ? math.max(0.0, (constraints.maxWidth - 40.0) / 2) *
+                          (1 - expansion)
+                    : 0.0;
+                return RowBox(
+                  style: FlexBoxStyler()
+                      .spacing(
+                        controls.isCompact
+                            ? (collapsed ? 0 : widget.headerSpacing)
+                            : widget.headerSpacing * expansion,
+                      )
+                      .mainAxisAlignment(showBrand ? .start : .center),
+                  children: [
+                    if (showBrand)
+                      Expanded(
+                        child: Opacity(
+                          opacity: controls.isCompact ? 1 : labelOpacity,
+                          child: DefaultTextStyle.merge(
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            child: widget.brand,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                if (!controls.isCompact)
-                  widget.iconButtonBuilder(
-                    context,
-                    key: const ValueKey('dashboard-collapse'),
-                    icon: _collapseIcon(context, collapsed),
-                    semanticLabel: collapsed
-                        ? 'Expand navigation'
-                        : 'Collapse navigation',
-                    onPressed: () => _setCollapsed(!collapsed),
-                  ),
-              ],
+                    if (!controls.isCompact)
+                      widget.iconButtonBuilder(
+                        context,
+                        key: const ValueKey('dashboard-collapse'),
+                        icon: _collapseIcon(context, collapsed),
+                        semanticLabel: collapsed
+                            ? 'Expand navigation'
+                            : 'Collapse navigation',
+                        onPressed: () => _setCollapsed(!collapsed),
+                      ),
+                    if (trailingSpace > 0) SizedBox(width: trailingSpace),
+                  ],
+                );
+              },
             ),
           );
         },
       ),
-      footer: account == null || collapsed
+      footer: account == null
           ? null
           : _SidebarFooterSlot(
               collapsed: collapsed,
@@ -332,6 +346,8 @@ class _SidebarFooterSlot extends StatelessWidget {
     required this.child,
   });
 
+  static const _minChildWidth = 220.0;
+
   final bool collapsed;
   final bool isCompact;
   final Widget child;
@@ -344,15 +360,36 @@ class _SidebarFooterSlot extends StatelessWidget {
     final motion = RemixSidebar.maybeAnimationOf(context);
     final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
     final labelOpacity = motion?.labelOpacity ?? expansion;
-    if (labelOpacity == 0) {
+    if (expansion == 0 && !(motion?.isAnimating ?? false)) {
       return const SizedBox.shrink();
     }
     if (expansion == 1 && !(motion?.isAnimating ?? false)) {
       return child;
     }
-    return Opacity(
-      opacity: labelOpacity,
-      child: IgnorePointer(ignoring: collapsed, child: child),
+    return ClipRect(
+      child: Align(
+        alignment: AlignmentDirectional.topStart,
+        heightFactor: expansion,
+        child: Opacity(
+          opacity: labelOpacity,
+          child: IgnorePointer(
+            ignoring: collapsed,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final targetWidth = math.max(
+                  constraints.maxWidth,
+                  _minChildWidth,
+                );
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: SizedBox(width: targetWidth, child: child),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
