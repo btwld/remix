@@ -183,7 +183,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                 size: .size3,
                 animationStyle: uiDisclosureAnimationStyle,
                 semanticHint: 'Shows destructive workspace actions',
-                trigger: const Text('Danger zone'),
+                trigger: const StyledText('Danger zone'),
                 triggerBuilder: (context, state, child) => UiDisclosureTrigger(
                   expanded: state.isExpanded,
                   child: child!,
@@ -193,7 +193,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                       .crossAxisAlignment(.stretch)
                       .spacing(12),
                   children: [
-                    const Text(
+                    const StyledText(
                       'Destructive workspace actions cannot be undone.',
                     ),
                     Box(

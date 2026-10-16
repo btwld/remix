@@ -16,7 +16,7 @@ class {{typePrefix}}GalleryDisplayPage extends StatefulWidget {
 
 class _{{typePrefix}}GalleryDisplayPageState extends State<{{typePrefix}}GalleryDisplayPage> {
   bool _spinnersRunning = false;
-  bool _skeletonLoading = false;
+  bool _skeletonLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +168,10 @@ class _{{typePrefix}}GalleryDisplayPageState extends State<{{typePrefix}}Gallery
                 if (_spinnersRunning)
                   {{typePrefix}}Spinner(size: size, semanticsLabel: 'Loading example')
                 else
-                  const Icon({{icon:check}}, size: 16),
+                  StyledIcon(
+                    icon: {{icon:check}},
+                    style: IconStyler().size(16).color({{typePrefix}}Tokens.gray11()),
+                  ),
             ],
           ),
         ),

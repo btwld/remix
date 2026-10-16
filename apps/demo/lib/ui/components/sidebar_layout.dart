@@ -202,37 +202,28 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
             isCompactOpen: true,
             openCompact: _openCompact,
             closeCompact: _closeCompact,
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              // A plain DecoratedBox paints the panel surface without
-              // affecting layout, unlike a Mix `Box`, whose border-box sizing
-              // would shrink `width` by the border's own stroke width.
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: MixScope.tokenOf(
-                    FortalTokens.colorPanelSolid,
-                    dialogContext,
-                  ),
-                  border: BorderDirectional(
-                    end: BorderSide(
-                      color: MixScope.tokenOf(
-                        FortalTokens.grayA5,
-                        dialogContext,
-                      ),
-                      width: MixScope.tokenOf(
-                        FortalTokens.borderWidth1,
-                        dialogContext,
+            child: Box(
+              style: BoxStyler().alignment(.centerStart),
+              // A foreground border paints the panel edge without shrinking
+              // `width` by the border's own stroke width.
+              child: Box(
+                style: BoxStyler()
+                    .width(width)
+                    .height(.infinity)
+                    .color(FortalTokens.colorPanelSolid())
+                    .foregroundDecoration(
+                      BoxDecorationMix(
+                        border: BorderDirectionalMix(
+                          end: BorderSideMix(
+                            color: FortalTokens.grayA5(),
+                            width: FortalTokens.borderWidth1(),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: SizedBox(
-                  width: width,
-                  height: double.infinity,
-                  child: RemixDialog(
-                    semanticLabel: _navigationSemanticLabel,
-                    child: widget.sidebar,
-                  ),
+                child: RemixDialog(
+                  semanticLabel: _navigationSemanticLabel,
+                  child: widget.sidebar,
                 ),
               ),
             ),

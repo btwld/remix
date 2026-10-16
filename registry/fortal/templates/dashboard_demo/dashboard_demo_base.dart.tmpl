@@ -258,9 +258,7 @@ class {{typePrefix}}DashboardDemoBase extends StatefulWidget {
 
 class _{{typePrefix}}DashboardDemoBaseState extends State<{{typePrefix}}DashboardDemoBase> {
   late {{typePrefix}}DashboardDemoPage _selected = widget.initialPage;
-  late final Set<{{typePrefix}}DashboardDemoPage> _visitedPages = {
-    widget.initialPage,
-  };
+  late final _visitedPages = <{{typePrefix}}DashboardDemoPage>{widget.initialPage};
   String _searchQuery = '';
 
   @override

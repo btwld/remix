@@ -100,9 +100,9 @@ class _UiGalleryOverlaysPageState extends State<UiGalleryOverlaysPage> {
           label: 'Tooltip',
           description:
               'Hover or long-press the trigger to reveal contextual help.',
-          child: UiTooltip(
+          child: const UiTooltip(
             tooltipSemantics: 'Keyboard shortcut Command K',
-            tooltipChild: Text('Search · ⌘K'),
+            tooltipChild: StyledText('Search · ⌘K'),
             child: _OverlayTrigger('Hover for shortcut'),
           ),
         ),

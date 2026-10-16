@@ -67,10 +67,7 @@ class _VanillaDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: VanillaTextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(
-                  RemixIcons.magnifyingGlass,
-                  size: VanillaTokens.icon,
-                ),
+                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();

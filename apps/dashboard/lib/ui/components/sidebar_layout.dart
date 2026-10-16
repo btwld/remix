@@ -202,34 +202,28 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
             isCompactOpen: true,
             openCompact: _openCompact,
             closeCompact: _closeCompact,
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              // A plain DecoratedBox paints the panel surface without
-              // affecting layout, unlike a Mix `Box`, whose border-box sizing
-              // would shrink `width` by the border's own stroke width.
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: MixScope.tokenOf(
-                    UiTokens.colorPanelSolid,
-                    dialogContext,
-                  ),
-                  border: BorderDirectional(
-                    end: BorderSide(
-                      color: MixScope.tokenOf(UiTokens.grayA5, dialogContext),
-                      width: MixScope.tokenOf(
-                        UiTokens.borderWidth1,
-                        dialogContext,
+            child: Box(
+              style: BoxStyler().alignment(.centerStart),
+              // A foreground border paints the panel edge without shrinking
+              // `width` by the border's own stroke width.
+              child: Box(
+                style: BoxStyler()
+                    .width(width)
+                    .height(.infinity)
+                    .color(UiTokens.colorPanelSolid())
+                    .foregroundDecoration(
+                      BoxDecorationMix(
+                        border: BorderDirectionalMix(
+                          end: BorderSideMix(
+                            color: UiTokens.grayA5(),
+                            width: UiTokens.borderWidth1(),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: SizedBox(
-                  width: width,
-                  height: double.infinity,
-                  child: RemixDialog(
-                    semanticLabel: _navigationSemanticLabel,
-                    child: widget.sidebar,
-                  ),
+                child: RemixDialog(
+                  semanticLabel: _navigationSemanticLabel,
+                  child: widget.sidebar,
                 ),
               ),
             ),

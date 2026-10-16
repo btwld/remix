@@ -5,6 +5,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 import 'dashboard_demo_text.dart';
 import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
 
 class UiGalleryNavigationPage extends StatelessWidget {
   const UiGalleryNavigationPage({super.key});
@@ -198,11 +199,14 @@ class _DisclosureDemo extends StatelessWidget {
       variant: variant,
       size: size,
       defaultExpanded: true,
+      animationStyle: uiDisclosureAnimationStyle,
       semanticLabel:
           '${enumLabel(variant)} ${enumLabel(size)} shipping details',
       semanticHint: 'Toggles shipping details',
-      trigger: const Text('Shipping details'),
-      content: const Text('Delivery takes 3–5 business days.'),
+      trigger: const StyledText('Shipping details'),
+      triggerBuilder: (context, state, child) =>
+          UiDisclosureTrigger(expanded: state.isExpanded, child: child!),
+      content: const StyledText('Delivery takes 3–5 business days.'),
     ),
   );
 }
@@ -283,6 +287,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
           size: widget.size,
           value: 'details',
           title: 'What is Ui?',
+          trailingIcon: RemixIcons.chevronDown,
           child: const UiText(
             'A Radix-inspired theme and component system for Flutter.',
           ),
@@ -292,6 +297,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
           size: widget.size,
           value: 'tokens',
           title: 'Does it support tokens?',
+          trailingIcon: RemixIcons.chevronDown,
           child: const UiText(
             'Every recipe resolves through the active Mix scope.',
           ),

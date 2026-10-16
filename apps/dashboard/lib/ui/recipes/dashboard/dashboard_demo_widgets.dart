@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -185,11 +187,19 @@ class UiDisclosureTrigger extends StatelessWidget {
     style: FlexBoxStyler().crossAxisAlignment(.center),
     children: [
       Expanded(child: child),
-      AnimatedRotation(
-        turns: expanded ? 0.5 : 0,
-        duration: uiDisclosureAnimationStyle.duration!,
-        curve: uiDisclosureAnimationStyle.curve!,
-        child: const Icon(RemixIcons.chevronDown, size: 16),
+      Box(
+        style: BoxStyler()
+            .transform(
+              Matrix4.rotationZ(expanded ? math.pi : 0),
+              alignment: .center,
+            )
+            .animate(
+              AnimationConfig.curve(
+                duration: uiDisclosureAnimationStyle.duration!,
+                curve: uiDisclosureAnimationStyle.curve!,
+              ),
+            ),
+        child: const StyledIcon(icon: RemixIcons.chevronDown),
       ),
     ],
   );

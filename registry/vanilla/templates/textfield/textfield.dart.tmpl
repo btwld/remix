@@ -106,6 +106,12 @@ TextFieldStyler _base() => TextFieldStyler()
       .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
     )
     .layout(.direction(.vertical).spacing({{typePrefix}}Tokens.s2))
+    .wrap(
+      .iconTheme(
+        color: {{typePrefix}}Tokens.mutedForeground(),
+        size: {{typePrefix}}Tokens.icon,
+      ),
+    )
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -266,3 +268,37 @@ void showVanillaGalleryToast(BuildContext context, String title) =>
       context,
       RemixToastData(title: title, icon: RemixIcons.checkCircled),
     );
+
+/// Disclosure trigger row with an animated rotating chevron.
+class VanillaDisclosureTrigger extends StatelessWidget {
+  const VanillaDisclosureTrigger({
+    super.key,
+    required this.expanded,
+    required this.child,
+  });
+
+  final bool expanded;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: child),
+      Box(
+        style: BoxStyler()
+            .transform(
+              Matrix4.rotationZ(expanded ? math.pi : 0),
+              alignment: .center,
+            )
+            .animate(VanillaTokens.motion),
+        child: StyledIcon(
+          icon: RemixIcons.chevronDown,
+          style: IconStyler()
+              .size(VanillaTokens.icon)
+              .color(VanillaTokens.mutedForeground()),
+        ),
+      ),
+    ],
+  );
+}

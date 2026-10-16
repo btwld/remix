@@ -95,9 +95,9 @@ class _{{typePrefix}}GalleryOverlaysPageState
         description: 'Hover or long-press to reveal contextual help.',
         child: Box(
           style: BoxStyler().alignment(.centerStart),
-          child: {{typePrefix}}Tooltip(
+          child: const {{typePrefix}}Tooltip(
             tooltipSemantics: 'Keyboard shortcut Command K',
-            tooltipChild: Text('Search · ⌘K'),
+            tooltipChild: StyledText('Search · ⌘K'),
             child: _OverlayTrigger('Hover for shortcut'),
           ),
         ),

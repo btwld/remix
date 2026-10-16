@@ -236,7 +236,7 @@ class UiDashboardDemoBase extends StatefulWidget {
 
 class _UiDashboardDemoBaseState extends State<UiDashboardDemoBase> {
   late UiDashboardDemoPage _selected = widget.initialPage;
-  late final Set<UiDashboardDemoPage> _visitedPages = {widget.initialPage};
+  late final _visitedPages = <UiDashboardDemoPage>{widget.initialPage};
   String _searchQuery = '';
 
   @override

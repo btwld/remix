@@ -185,7 +185,7 @@ class _{{typePrefix}}DashboardSettingsPageState
                 size: .size3,
                 animationStyle: {{valuePrefix}}DisclosureAnimationStyle,
                 semanticHint: 'Shows destructive workspace actions',
-                trigger: const Text('Danger zone'),
+                trigger: const StyledText('Danger zone'),
                 triggerBuilder: (context, state, child) =>
                     {{typePrefix}}DisclosureTrigger(
                       expanded: state.isExpanded,
@@ -196,7 +196,7 @@ class _{{typePrefix}}DashboardSettingsPageState
                       .crossAxisAlignment(.stretch)
                       .spacing(12),
                   children: [
-                    const Text(
+                    const StyledText(
                       'Destructive workspace actions cannot be undone.',
                     ),
                     Box(

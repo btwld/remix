@@ -25,6 +25,7 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
+  String _fruit = 'apple';
   String _alignment = 'left';
   String _density = 'comfortable';
   Set<String> _channels = {'email'};
@@ -42,7 +43,7 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
           style: BoxStyler().width(300),
           child: const {{typePrefix}}TextField(
             hintText: 'Type something…',
-            leading: Icon({{icon:magnifyingGlass}}, size: {{typePrefix}}Tokens.icon),
+            leading: StyledIcon(icon: {{icon:magnifyingGlass}}),
           ),
         ),
       ),
@@ -78,14 +79,17 @@ class _{{typePrefix}}GalleryFormsPageState extends State<{{typePrefix}}GalleryFo
           child: Box(
             style: BoxStyler().width(220),
             child: {{typePrefix}}Select<String>(
+              key: const ValueKey('{{valuePrefix}}-gallery-select'),
               trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
               items: const [
                 RemixSelectItem(value: 'apple', label: 'Apple'),
                 RemixSelectItem(value: 'orange', label: 'Orange'),
                 RemixSelectItem(value: 'pear', label: 'Pear'),
               ],
-              selectedValue: 'apple',
-              onChanged: (_) {},
+              selectedValue: _fruit,
+              onChanged: (value) {
+                if (value != null) setState(() => _fruit = value);
+              },
             ),
           ),
         ),

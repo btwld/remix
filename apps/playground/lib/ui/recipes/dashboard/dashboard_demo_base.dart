@@ -261,9 +261,7 @@ class PlaygroundDashboardDemoBase extends StatefulWidget {
 class _PlaygroundDashboardDemoBaseState
     extends State<PlaygroundDashboardDemoBase> {
   late PlaygroundDashboardDemoPage _selected = widget.initialPage;
-  late final Set<PlaygroundDashboardDemoPage> _visitedPages = {
-    widget.initialPage,
-  };
+  late final _visitedPages = <PlaygroundDashboardDemoPage>{widget.initialPage};
   String _searchQuery = '';
 
   @override

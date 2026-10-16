@@ -288,7 +288,7 @@ class _UiDashboardShellBaseState<T extends Object>
       title: widget.title,
       titleChild: KeyedSubtree(
         key: const ValueKey('dashboard-title'),
-        child: widget.headerTitle ?? Text(widget.title),
+        child: widget.headerTitle ?? StyledText(widget.title),
       ),
       actions: [
         if (showSearch)
@@ -298,7 +298,10 @@ class _UiDashboardShellBaseState<T extends Object>
               context,
               key: const ValueKey('dashboard-search'),
               hintText: widget.searchHintText,
-              leading: Icon(widget.searchIcon, size: 16),
+              leading: StyledIcon(
+                icon: widget.searchIcon,
+                style: IconStyler().size(16),
+              ),
               onChanged: widget.onSearchChanged!,
             ),
           ),

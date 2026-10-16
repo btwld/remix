@@ -95,9 +95,9 @@ class _PlaygroundGalleryOverlaysPageState
         description: 'Hover or long-press to reveal contextual help.',
         child: Box(
           style: BoxStyler().alignment(.centerStart),
-          child: PlaygroundTooltip(
+          child: const PlaygroundTooltip(
             tooltipSemantics: 'Keyboard shortcut Command K',
-            tooltipChild: Text('Search · ⌘K'),
+            tooltipChild: StyledText('Search · ⌘K'),
             child: _OverlayTrigger('Hover for shortcut'),
           ),
         ),

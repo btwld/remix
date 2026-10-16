@@ -25,7 +25,7 @@ class VanillaGalleryDisplayPage extends StatefulWidget {
 
 class _VanillaGalleryDisplayPageState extends State<VanillaGalleryDisplayPage> {
   bool _spinnersRunning = false;
-  bool _skeletonLoading = false;
+  bool _skeletonLoading = true;
 
   @override
   Widget build(BuildContext context) => VanillaGalleryPage(
@@ -174,7 +174,12 @@ class _VanillaGalleryDisplayPageState extends State<VanillaGalleryDisplayPage> {
             if (_spinnersRunning)
               const VanillaSpinner(semanticsLabel: 'Loading example')
             else
-              const Icon(RemixIcons.check, size: VanillaTokens.icon),
+              StyledIcon(
+                icon: RemixIcons.check,
+                style: IconStyler()
+                    .size(VanillaTokens.icon)
+                    .color(VanillaTokens.mutedForeground()),
+              ),
           ],
         ),
       ),

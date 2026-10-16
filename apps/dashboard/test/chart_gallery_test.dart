@@ -149,8 +149,18 @@ void main() {
       const ValueKey('overview-channel-chart-safe-area'),
     );
     expect(safeArea, findsOneWidget);
-    final padding = tester.widget<Padding>(safeArea).padding as EdgeInsets;
-    expect(padding.vertical, greaterThanOrEqualTo(16));
+    // The chart sits inside the safe area's padding, so its rect is inset
+    // from the safe area's rect by that padding on every side.
+    final donutRect = tester.getRect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is PieChart &&
+            widget.semanticsLabel == 'Revenue contribution by channel',
+      ),
+    );
+    final safeRect = tester.getRect(safeArea);
+    expect(donutRect.top - safeRect.top, greaterThanOrEqualTo(8));
+    expect(safeRect.bottom - donutRect.bottom, greaterThanOrEqualTo(8));
 
     final donut = tester.widget<PieChart>(
       find.byWidgetPredicate(

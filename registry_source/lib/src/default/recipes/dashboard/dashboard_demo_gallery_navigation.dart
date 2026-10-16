@@ -23,6 +23,7 @@ class _VanillaGalleryNavigationPageState
     extends State<VanillaGalleryNavigationPage> {
   String _sidebar = 'overview';
   String _tab = 'overview';
+  bool _disclosureExpanded = true;
   final _accordion = RemixAccordionController<String>(max: 1);
 
   @override
@@ -159,14 +160,25 @@ class _VanillaGalleryNavigationPageState
           ),
         ),
       ),
-      const VanillaGallerySection(
+      VanillaGallerySection(
         label: 'Disclosure',
         description: 'An independent expandable native panel.',
         child: VanillaDisclosure(
-          defaultExpanded: true,
+          key: const ValueKey('vanilla-gallery-disclosure'),
+          expanded: _disclosureExpanded,
+          onExpandedChanged: (value) =>
+              setState(() => _disclosureExpanded = value),
           semanticLabel: 'Shipping details',
-          trigger: VanillaGalleryText('Shipping details', emphasized: true),
-          content: VanillaGalleryText('Delivery takes 3–5 business days.'),
+          trigger: VanillaDisclosureTrigger(
+            expanded: _disclosureExpanded,
+            child: const VanillaGalleryText(
+              'Shipping details',
+              emphasized: true,
+            ),
+          ),
+          content: const VanillaGalleryText(
+            'Delivery takes 3–5 business days.',
+          ),
         ),
       ),
       VanillaGallerySection(
@@ -174,12 +186,14 @@ class _VanillaGalleryNavigationPageState
         description: 'Coordinated panels keep one section open.',
         child: RemixAccordionGroup<String>(
           controller: _accordion,
+          initialExpandedValues: const ['details'],
           child: ColumnBox(
             style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: const [
               VanillaAccordion<String>(
                 value: 'details',
                 title: 'What is Vanilla?',
+                trailingIcon: RemixIcons.chevronDown,
                 child: VanillaGalleryText(
                   'A neutral starter theme, installed as source you own.',
                 ),
@@ -187,6 +201,7 @@ class _VanillaGalleryNavigationPageState
               VanillaAccordion<String>(
                 value: 'tokens',
                 title: 'Does it support tokens?',
+                trailingIcon: RemixIcons.chevronDown,
                 child: VanillaGalleryText(
                   'Every recipe resolves through the active Mix scope.',
                 ),

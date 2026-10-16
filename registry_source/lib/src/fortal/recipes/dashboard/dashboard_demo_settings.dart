@@ -185,7 +185,7 @@ class _FortalDashboardSettingsPageState
                 size: .size3,
                 animationStyle: fortalDisclosureAnimationStyle,
                 semanticHint: 'Shows destructive workspace actions',
-                trigger: const Text('Danger zone'),
+                trigger: const StyledText('Danger zone'),
                 triggerBuilder: (context, state, child) =>
                     FortalDisclosureTrigger(
                       expanded: state.isExpanded,
@@ -196,7 +196,7 @@ class _FortalDashboardSettingsPageState
                       .crossAxisAlignment(.stretch)
                       .spacing(12),
                   children: [
-                    const Text(
+                    const StyledText(
                       'Destructive workspace actions cannot be undone.',
                     ),
                     Box(

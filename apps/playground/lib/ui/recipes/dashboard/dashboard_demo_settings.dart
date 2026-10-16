@@ -14,6 +14,7 @@ import '../../components/slider.dart';
 import '../../components/switch.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
+import 'dashboard_demo_gallery_scaffold.dart';
 
 enum _Appearance { light, dark, system }
 
@@ -39,6 +40,7 @@ class _PlaygroundDashboardSettingsPageState
   String _language = 'en';
   _Appearance _appearance = .system;
   double _radius = 8;
+  bool _dangerZoneExpanded = false;
 
   _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
       ? _appearance
@@ -221,8 +223,14 @@ class _PlaygroundDashboardSettingsPageState
           ),
           PlaygroundDisclosure(
             key: const ValueKey('settings-danger-zone'),
+            expanded: _dangerZoneExpanded,
+            onExpandedChanged: (value) =>
+                setState(() => _dangerZoneExpanded = value),
             semanticHint: 'Shows destructive workspace actions',
-            trigger: const _Text('Danger zone', emphasized: true),
+            trigger: PlaygroundDisclosureTrigger(
+              expanded: _dangerZoneExpanded,
+              child: const _Text('Danger zone', emphasized: true),
+            ),
             content: ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)

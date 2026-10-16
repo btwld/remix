@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -99,14 +101,12 @@ AccordionStyler vanillaAccordionStyle({
     .leadingIcon(
       .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
-    // Both icons are markers, not the state: Remix renders whatever
-    // `IconData` the caller passes and does not rotate it, so a chevron that
-    // turns is a caller passing a different glyph when the section is open.
     .trailingIcon(
       .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
     .content(.padding(.bottom(VanillaTokens.s4)))
     .onHovered(_hoverStyle())
+    .onExpanded(_openStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
     .onDisabled(_disabledStyle())
@@ -116,14 +116,20 @@ AccordionStyler vanillaAccordionStyle({
 AccordionStyler _hoverStyle() =>
     AccordionStyler().title(.decoration(TextDecoration.underline));
 
-/// The open section promotes its icons to `foreground`.
-///
-/// Remix renders the glyph it is given and does not rotate it, so the recipe
-/// marks the state with the icons' strength, and a caller who wants the turn
-/// passes the other chevron while the section is open.
+/// The open section promotes its icons to `foreground` and rotates the
+/// trailing chevron 180 degrees.
 AccordionStyler _openStyle() => AccordionStyler()
     .leadingIcon(.color(VanillaTokens.foreground()))
-    .trailingIcon(.color(VanillaTokens.foreground()));
+    .trailingIcon(
+      IconStyler()
+          .color(VanillaTokens.foreground())
+          .wrap(
+            WidgetModifierConfig.transform(
+              transform: Matrix4.rotationZ(math.pi),
+              alignment: .center,
+            ),
+          ),
+    );
 
 /// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///

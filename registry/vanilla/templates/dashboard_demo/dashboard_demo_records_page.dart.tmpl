@@ -67,10 +67,7 @@ class _{{typePrefix}}DashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: {{typePrefix}}TextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(
-                  {{icon:magnifyingGlass}},
-                  size: {{typePrefix}}Tokens.icon,
-                ),
+                leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();

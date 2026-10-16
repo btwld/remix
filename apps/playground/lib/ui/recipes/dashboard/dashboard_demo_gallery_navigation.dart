@@ -23,6 +23,7 @@ class _PlaygroundGalleryNavigationPageState
     extends State<PlaygroundGalleryNavigationPage> {
   String _sidebar = 'overview';
   String _tab = 'overview';
+  bool _disclosureExpanded = true;
   final _accordion = RemixAccordionController<String>(max: 1);
 
   @override
@@ -161,14 +162,25 @@ class _PlaygroundGalleryNavigationPageState
           ),
         ),
       ),
-      const PlaygroundGallerySection(
+      PlaygroundGallerySection(
         label: 'Disclosure',
         description: 'An independent expandable native panel.',
         child: PlaygroundDisclosure(
-          defaultExpanded: true,
+          key: const ValueKey('playground-gallery-disclosure'),
+          expanded: _disclosureExpanded,
+          onExpandedChanged: (value) =>
+              setState(() => _disclosureExpanded = value),
           semanticLabel: 'Shipping details',
-          trigger: PlaygroundGalleryText('Shipping details', emphasized: true),
-          content: PlaygroundGalleryText('Delivery takes 3–5 business days.'),
+          trigger: PlaygroundDisclosureTrigger(
+            expanded: _disclosureExpanded,
+            child: const PlaygroundGalleryText(
+              'Shipping details',
+              emphasized: true,
+            ),
+          ),
+          content: const PlaygroundGalleryText(
+            'Delivery takes 3–5 business days.',
+          ),
         ),
       ),
       PlaygroundGallerySection(
@@ -176,12 +188,14 @@ class _PlaygroundGalleryNavigationPageState
         description: 'Coordinated panels keep one section open.',
         child: RemixAccordionGroup<String>(
           controller: _accordion,
+          initialExpandedValues: const ['details'],
           child: ColumnBox(
             style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: const [
               PlaygroundAccordion<String>(
                 value: 'details',
                 title: 'What is Playground?',
+                trailingIcon: RemixIcons.chevronDown,
                 child: PlaygroundGalleryText(
                   'A neutral starter theme, installed as source you own.',
                 ),
@@ -189,6 +203,7 @@ class _PlaygroundGalleryNavigationPageState
               PlaygroundAccordion<String>(
                 value: 'tokens',
                 title: 'Does it support tokens?',
+                trailingIcon: RemixIcons.chevronDown,
                 child: PlaygroundGalleryText(
                   'Every recipe resolves through the active Mix scope.',
                 ),

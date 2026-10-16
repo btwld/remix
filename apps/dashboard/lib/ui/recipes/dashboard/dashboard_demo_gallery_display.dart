@@ -15,7 +15,7 @@ class UiGalleryDisplayPage extends StatefulWidget {
 
 class _UiGalleryDisplayPageState extends State<UiGalleryDisplayPage> {
   bool _spinnersRunning = false;
-  bool _skeletonLoading = false;
+  bool _skeletonLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +167,10 @@ class _UiGalleryDisplayPageState extends State<UiGalleryDisplayPage> {
                 if (_spinnersRunning)
                   UiSpinner(size: size, semanticsLabel: 'Loading example')
                 else
-                  const Icon(RemixIcons.check, size: 16),
+                  StyledIcon(
+                    icon: RemixIcons.check,
+                    style: IconStyler().size(16).color(UiTokens.gray11()),
+                  ),
             ],
           ),
         ),

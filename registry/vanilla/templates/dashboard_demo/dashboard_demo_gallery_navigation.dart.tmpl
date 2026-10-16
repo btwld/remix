@@ -23,6 +23,7 @@ class _{{typePrefix}}GalleryNavigationPageState
     extends State<{{typePrefix}}GalleryNavigationPage> {
   String _sidebar = 'overview';
   String _tab = 'overview';
+  bool _disclosureExpanded = true;
   final _accordion = RemixAccordionController<String>(max: 1);
 
   @override
@@ -159,14 +160,25 @@ class _{{typePrefix}}GalleryNavigationPageState
           ),
         ),
       ),
-      const {{typePrefix}}GallerySection(
+      {{typePrefix}}GallerySection(
         label: 'Disclosure',
         description: 'An independent expandable native panel.',
         child: {{typePrefix}}Disclosure(
-          defaultExpanded: true,
+          key: const ValueKey('{{valuePrefix}}-gallery-disclosure'),
+          expanded: _disclosureExpanded,
+          onExpandedChanged: (value) =>
+              setState(() => _disclosureExpanded = value),
           semanticLabel: 'Shipping details',
-          trigger: {{typePrefix}}GalleryText('Shipping details', emphasized: true),
-          content: {{typePrefix}}GalleryText('Delivery takes 3–5 business days.'),
+          trigger: {{typePrefix}}DisclosureTrigger(
+            expanded: _disclosureExpanded,
+            child: const {{typePrefix}}GalleryText(
+              'Shipping details',
+              emphasized: true,
+            ),
+          ),
+          content: const {{typePrefix}}GalleryText(
+            'Delivery takes 3–5 business days.',
+          ),
         ),
       ),
       {{typePrefix}}GallerySection(
@@ -174,12 +186,14 @@ class _{{typePrefix}}GalleryNavigationPageState
         description: 'Coordinated panels keep one section open.',
         child: RemixAccordionGroup<String>(
           controller: _accordion,
+          initialExpandedValues: const ['details'],
           child: ColumnBox(
             style: FlexBoxStyler().crossAxisAlignment(.stretch),
             children: const [
               {{typePrefix}}Accordion<String>(
                 value: 'details',
                 title: 'What is {{typePrefix}}?',
+                trailingIcon: {{icon:chevronDown}},
                 child: {{typePrefix}}GalleryText(
                   'A neutral starter theme, installed as source you own.',
                 ),
@@ -187,6 +201,7 @@ class _{{typePrefix}}GalleryNavigationPageState
               {{typePrefix}}Accordion<String>(
                 value: 'tokens',
                 title: 'Does it support tokens?',
+                trailingIcon: {{icon:chevronDown}},
                 child: {{typePrefix}}GalleryText(
                   'Every recipe resolves through the active Mix scope.',
                 ),

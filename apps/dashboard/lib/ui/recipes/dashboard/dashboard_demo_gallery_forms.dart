@@ -16,6 +16,7 @@ class _UiGalleryFormsPageState extends State<UiGalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
+  String _fruit = 'apple';
   String _alignment = 'left';
   String _density = 'comfortable';
   Set<String> _channels = {'email'};
@@ -39,7 +40,7 @@ class _UiGalleryFormsPageState extends State<UiGalleryFormsPage> {
               variant: variant,
               size: size,
               hintText: 'Type something…',
-              leading: const Icon(RemixIcons.magnifyingGlass, size: 16),
+              leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
             ),
           ),
         ),
@@ -85,6 +86,7 @@ class _UiGalleryFormsPageState extends State<UiGalleryFormsPage> {
             rows: UiSelectVariant.values,
             columns: UiSelectSize.values,
             cellBuilder: (_, variant, size) => UiSelect<String>(
+              key: ValueKey('select-${variant.name}-${size.name}'),
               variant: variant,
               size: size,
               trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
@@ -93,8 +95,10 @@ class _UiGalleryFormsPageState extends State<UiGalleryFormsPage> {
                 RemixSelectItem(value: 'orange', label: 'Orange'),
                 RemixSelectItem(value: 'pear', label: 'Pear'),
               ],
-              selectedValue: 'apple',
-              onChanged: (_) {},
+              selectedValue: _fruit,
+              onChanged: (value) {
+                if (value != null) setState(() => _fruit = value);
+              },
             ),
           ),
         ),

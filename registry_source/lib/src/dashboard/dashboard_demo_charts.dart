@@ -268,7 +268,9 @@ List<PieSlice> registryDashboardChannelSlices({bool badges = false}) {
         id: value.$1,
         label: value.$2,
         value: value.$3,
-        badge: badges ? Icon(icons[index], size: 16) : null,
+        badge: badges
+            ? StyledIcon(icon: icons[index], style: IconStyler().size(16))
+            : null,
       ),
   ];
 }

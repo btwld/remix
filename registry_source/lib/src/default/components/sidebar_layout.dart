@@ -201,30 +201,27 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
             isCompactOpen: true,
             openCompact: _openCompact,
             closeCompact: _closeCompact,
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              // A plain DecoratedBox paints the panel surface without
-              // affecting layout, unlike a Mix `Box`, whose border-box sizing
-              // would shrink `width` by the border's own stroke width.
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: MixScope.tokenOf(VanillaTokens.sidebar, dialogContext),
-                  border: BorderDirectional(
-                    end: BorderSide(
-                      color: MixScope.tokenOf(
-                        VanillaTokens.sidebarBorder,
-                        dialogContext,
+            child: Box(
+              style: BoxStyler().alignment(.centerStart),
+              // A foreground border paints the panel edge without shrinking
+              // `width` by the border's own stroke width.
+              child: Box(
+                style: BoxStyler()
+                    .width(width)
+                    .height(.infinity)
+                    .color(VanillaTokens.sidebar())
+                    .foregroundDecoration(
+                      BoxDecorationMix(
+                        border: BorderDirectionalMix(
+                          end: BorderSideMix(
+                            color: VanillaTokens.sidebarBorder(),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: SizedBox(
-                  width: width,
-                  height: double.infinity,
-                  child: RemixDialog(
-                    semanticLabel: _navigationSemanticLabel,
-                    child: widget.sidebar,
-                  ),
+                child: RemixDialog(
+                  semanticLabel: _navigationSemanticLabel,
+                  child: widget.sidebar,
                 ),
               ),
             ),

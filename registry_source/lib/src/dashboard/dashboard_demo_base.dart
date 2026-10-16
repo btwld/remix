@@ -258,9 +258,7 @@ class RegistryDashboardDemoBase extends StatefulWidget {
 
 class _RegistryDashboardDemoBaseState extends State<RegistryDashboardDemoBase> {
   late RegistryDashboardDemoPage _selected = widget.initialPage;
-  late final Set<RegistryDashboardDemoPage> _visitedPages = {
-    widget.initialPage,
-  };
+  late final _visitedPages = <RegistryDashboardDemoPage>{widget.initialPage};
   String _searchQuery = '';
 
   @override

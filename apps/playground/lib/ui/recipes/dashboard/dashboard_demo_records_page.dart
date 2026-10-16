@@ -67,10 +67,7 @@ class _PlaygroundDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: PlaygroundTextField(
                 key: const ValueKey('customer-search'),
-                leading: const Icon(
-                  RemixIcons.magnifyingGlass,
-                  size: PlaygroundTokens.icon,
-                ),
+                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();

@@ -18,6 +18,8 @@ import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 enum _Preset { defaultPreset, fortal }
 
@@ -564,6 +566,248 @@ void main() {
         );
         expect(tester.takeException(), isNull);
       });
+
+      testWidgets(
+        'Select, Checkbox, CheckboxGroup, and Disclosure work in Forms and Settings',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.forms,
+            height: 3000,
+          );
+
+          final formsSelect = find
+              .byKey(
+                ValueKey(
+                  preset == .defaultPreset
+                      ? 'vanilla-gallery-select'
+                      : 'select-surface-size2',
+                ),
+              )
+              .first;
+          expect(_isRotatedPi(tester, _selectIndicator(formsSelect)), isFalse);
+          expect(
+            find.descendant(of: formsSelect, matching: find.text('Apple')),
+            findsOneWidget,
+          );
+
+          await tester.tap(formsSelect);
+          await tester.pumpAndSettle();
+          expect(_isRotatedPi(tester, _selectIndicator(formsSelect)), isTrue);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsWidgets);
+
+          await tester.tap(find.text('Orange').last);
+          await tester.pumpAndSettle();
+          expect(_isRotatedPi(tester, _selectIndicator(formsSelect)), isFalse);
+          expect(
+            find.descendant(of: formsSelect, matching: find.text('Orange')),
+            findsOneWidget,
+          );
+
+          final firstCheckbox = find.byType(RemixCheckbox).first;
+          expect(
+            _glyphIn(firstCheckbox, RemixPathGlyph.thickCheck),
+            findsOneWidget,
+          );
+          await tester.tap(firstCheckbox);
+          await tester.pumpAndSettle();
+          expect(
+            _glyphIn(firstCheckbox, RemixPathGlyph.thickCheck),
+            findsNothing,
+          );
+
+          final checkboxGroup = find.byType(RemixCheckboxGroup<String>);
+          expect(
+            _glyphIn(checkboxGroup, RemixPathGlyph.thickCheck),
+            findsOneWidget,
+          );
+          await tester.tap(find.text('SMS'));
+          await tester.pumpAndSettle();
+          expect(
+            _glyphIn(checkboxGroup, RemixPathGlyph.thickCheck),
+            findsNWidgets(2),
+          );
+
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.settings,
+            height: 2000,
+          );
+
+          final langSelect = find.byType(RemixSelect<String>).first;
+          expect(_isRotatedPi(tester, _selectIndicator(langSelect)), isFalse);
+          await tester.tap(langSelect);
+          await tester.pumpAndSettle();
+          expect(_isRotatedPi(tester, _selectIndicator(langSelect)), isTrue);
+          await tester.tap(find.text('Spanish').last);
+          await tester.pumpAndSettle();
+          expect(
+            find.descendant(of: langSelect, matching: find.text('Spanish')),
+            findsOneWidget,
+          );
+
+          final digestCheckbox = find.byType(RemixCheckbox).first;
+          expect(
+            _glyphIn(digestCheckbox, RemixPathGlyph.thickCheck),
+            findsNothing,
+          );
+          await tester.tap(digestCheckbox);
+          await tester.pumpAndSettle();
+          expect(
+            _glyphIn(digestCheckbox, RemixPathGlyph.thickCheck),
+            findsOneWidget,
+          );
+
+          final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
+          final dangerChevron = find.descendant(
+            of: dangerZone,
+            matching: find.byIcon(RemixIcons.chevronDown),
+          );
+          expect(find.text('Delete workspace'), findsNothing);
+          expect(_isRotatedPi(tester, dangerChevron), isFalse);
+
+          await tester.tap(find.text('Danger zone'));
+          await tester.pumpAndSettle();
+          expect(find.text('Delete workspace'), findsOneWidget);
+          expect(_isRotatedPi(tester, dangerChevron), isTrue);
+          expect(tester.takeException(), isNull);
+        },
+      );
+
+      testWidgets(
+        'Disclosure, Accordion, and Menu interactions update icons and indicators',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.navigation,
+            height: 2200,
+          );
+
+          final disclosure = find.byType(RemixDisclosure).first;
+          final disclosureChevron = find.descendant(
+            of: disclosure,
+            matching: find.byIcon(RemixIcons.chevronDown),
+          );
+          expect(_isRotatedPi(tester, disclosureChevron), isTrue);
+          await tester.tap(find.text('Shipping details').first);
+          await tester.pumpAndSettle();
+          expect(_isRotatedPi(tester, disclosureChevron), isFalse);
+          await tester.tap(find.text('Shipping details').first);
+          await tester.pumpAndSettle();
+          expect(_isRotatedPi(tester, disclosureChevron), isTrue);
+
+          final accordions = find.byType(RemixAccordion<String>);
+          final itemA = accordions.at(0);
+          final itemB = accordions.at(1);
+          final chevronA = find.descendant(
+            of: itemA,
+            matching: find.byIcon(RemixIcons.chevronDown),
+          );
+          final chevronB = find.descendant(
+            of: itemB,
+            matching: find.byIcon(RemixIcons.chevronDown),
+          );
+          expect(_isRotatedPi(tester, chevronA), isTrue);
+          expect(_isRotatedPi(tester, chevronB), isFalse);
+
+          await tester.tap(find.text('Does it support tokens?').first);
+          await tester.pumpAndSettle();
+          expect(_isRotatedPi(tester, chevronA), isFalse);
+          expect(_isRotatedPi(tester, chevronB), isTrue);
+
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.overlays,
+            height: 2200,
+          );
+          await tester.tap(find.text('Open menu').first);
+          await tester.pumpAndSettle();
+
+          expect(find.text('Show archived'), findsOneWidget);
+          expect(find.text('Newest'), findsOneWidget);
+          expect(find.text('Share'), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.thickChevronRight), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsWidgets);
+          expect(tester.takeException(), isNull);
+        },
+      );
+
+      testWidgets(
+        'DataTable sort carets, tri-state selection checkboxes, and pager buttons work',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.customers,
+            height: 1200,
+          );
+
+          final table = find.byType(RemixDataTable<RegistryDashboardCustomer>);
+          expect(_glyphIn(table, RemixPathGlyph.caretDown), findsOneWidget);
+          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+
+          await tester.tap(
+            find.descendant(of: table, matching: find.text('Customer')),
+          );
+          await tester.pumpAndSettle();
+          expect(_glyphIn(table, RemixPathGlyph.caretUp), findsOneWidget);
+          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+
+          await tester.tap(
+            find.descendant(of: table, matching: find.text('Customer')),
+          );
+          await tester.pumpAndSettle();
+          expect(_glyphIn(table, RemixPathGlyph.caretDown), findsOneWidget);
+          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+
+          final checkboxes = find.descendant(
+            of: table,
+            matching: find.byType(RemixCheckbox),
+          );
+          final headerCheckbox = checkboxes.first;
+          final firstRowCheckbox = checkboxes.at(1);
+
+          await tester.tap(firstRowCheckbox);
+          await tester.pumpAndSettle();
+          expect(find.text('1 selected'), findsOneWidget);
+          expect(
+            _glyphIn(headerCheckbox, RemixPathGlyph.thickDividerHorizontal),
+            findsOneWidget,
+          );
+
+          await tester.tap(headerCheckbox);
+          await tester.pumpAndSettle();
+          expect(find.text('10 selected'), findsOneWidget);
+          expect(
+            _glyphIn(headerCheckbox, RemixPathGlyph.thickCheck),
+            findsOneWidget,
+          );
+
+          expect(find.text('1–10 of 24'), findsOneWidget);
+          await tester.tap(
+            find.descendant(
+              of: table,
+              matching: _pathGlyph(RemixPathGlyph.chevronRight),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('11–20 of 24'), findsOneWidget);
+
+          await tester.tap(
+            find.descendant(
+              of: table,
+              matching: _pathGlyph(RemixPathGlyph.chevronLeft),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('1–10 of 24'), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        },
+      );
     });
   }
 
@@ -705,4 +949,23 @@ Future<void> _pump(
     .fortal => FortalTheme(child: app),
   });
   await tester.pump();
+}
+
+Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
+  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+);
+
+Finder _glyphIn(Finder ancestor, RemixPathGlyph glyph) =>
+    find.descendant(of: ancestor, matching: _pathGlyph(glyph));
+
+Finder _selectIndicator(Finder select) => find.descendant(
+  of: select,
+  matching: find.byKey(const ValueKey('remix-select-indicator')),
+);
+
+bool _isRotatedPi(WidgetTester tester, Finder target) {
+  final transforms = tester.widgetList<Transform>(
+    find.ancestor(of: target, matching: find.byType(Transform)),
+  );
+  return transforms.any((t) => (t.transform.storage[0] + 1.0).abs() < 0.01);
 }

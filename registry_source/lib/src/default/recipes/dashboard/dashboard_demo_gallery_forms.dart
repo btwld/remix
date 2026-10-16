@@ -25,6 +25,7 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
+  String _fruit = 'apple';
   String _alignment = 'left';
   String _density = 'comfortable';
   Set<String> _channels = {'email'};
@@ -42,7 +43,7 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
           style: BoxStyler().width(300),
           child: const VanillaTextField(
             hintText: 'Type something…',
-            leading: Icon(RemixIcons.magnifyingGlass, size: VanillaTokens.icon),
+            leading: StyledIcon(icon: RemixIcons.magnifyingGlass),
           ),
         ),
       ),
@@ -78,14 +79,17 @@ class _VanillaGalleryFormsPageState extends State<VanillaGalleryFormsPage> {
           child: Box(
             style: BoxStyler().width(220),
             child: VanillaSelect<String>(
+              key: const ValueKey('vanilla-gallery-select'),
               trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
               items: const [
                 RemixSelectItem(value: 'apple', label: 'Apple'),
                 RemixSelectItem(value: 'orange', label: 'Orange'),
                 RemixSelectItem(value: 'pear', label: 'Pear'),
               ],
-              selectedValue: 'apple',
-              onChanged: (_) {},
+              selectedValue: _fruit,
+              onChanged: (value) {
+                if (value != null) setState(() => _fruit = value);
+              },
             ),
           ),
         ),

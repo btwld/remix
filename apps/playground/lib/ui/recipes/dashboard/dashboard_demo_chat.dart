@@ -487,7 +487,7 @@ class _PlaygroundDashboardChatPageState
             onCopy: () =>
                 Clipboard.setData(ClipboardData(text: _executionOutput)),
             onRetry: _retry,
-            child: Text(_executionOutput),
+            child: StyledText(_executionOutput),
           ),
         );
       }
@@ -517,7 +517,7 @@ class _PlaygroundDashboardChatPageState
           ? [
               Box(
                 style: BoxStyler().alignment(.center).padding(.all(32)),
-                child: const Text('Choose a starter or write a message.'),
+                child: const StyledText('Choose a starter or write a message.'),
               ),
             ]
           : children,
@@ -528,7 +528,7 @@ class _PlaygroundDashboardChatPageState
     role: .user,
     style: styles.messageStyle,
     surfaceStyle: styles.messageSurfaceStyle,
-    child: Text(value),
+    child: StyledText(value),
   );
 
   Widget _answerWidget(String value, PlaygroundAnswerStatus status) {
@@ -542,8 +542,10 @@ class _PlaygroundDashboardChatPageState
       retryStyle: styles.answerRetryStyle,
       onCopy: () => Clipboard.setData(ClipboardData(text: value)),
       onRetry: _retry,
-      sourcesContent: const Text('Deterministic local fixture · no network'),
-      child: Text(value),
+      sourcesContent: const StyledText(
+        'Deterministic local fixture · no network',
+      ),
+      child: StyledText(value),
     );
   }
 

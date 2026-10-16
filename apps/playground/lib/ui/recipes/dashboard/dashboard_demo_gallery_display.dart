@@ -26,7 +26,7 @@ class PlaygroundGalleryDisplayPage extends StatefulWidget {
 class _PlaygroundGalleryDisplayPageState
     extends State<PlaygroundGalleryDisplayPage> {
   bool _spinnersRunning = false;
-  bool _skeletonLoading = false;
+  bool _skeletonLoading = true;
 
   @override
   Widget build(BuildContext context) => PlaygroundGalleryPage(
@@ -177,7 +177,12 @@ class _PlaygroundGalleryDisplayPageState
             if (_spinnersRunning)
               const PlaygroundSpinner(semanticsLabel: 'Loading example')
             else
-              const Icon(RemixIcons.check, size: PlaygroundTokens.icon),
+              StyledIcon(
+                icon: RemixIcons.check,
+                style: IconStyler()
+                    .size(PlaygroundTokens.icon)
+                    .color(PlaygroundTokens.mutedForeground()),
+              ),
           ],
         ),
       ),

@@ -485,7 +485,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
             onCopy: () =>
                 Clipboard.setData(ClipboardData(text: _executionOutput)),
             onRetry: _retry,
-            child: Text(_executionOutput),
+            child: StyledText(_executionOutput),
           ),
         );
       }
@@ -515,7 +515,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
           ? [
               Box(
                 style: BoxStyler().alignment(.center).padding(.all(32)),
-                child: const Text('Choose a starter or write a message.'),
+                child: const StyledText('Choose a starter or write a message.'),
               ),
             ]
           : children,
@@ -526,7 +526,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
     role: .user,
     style: styles.messageStyle,
     surfaceStyle: styles.messageSurfaceStyle,
-    child: Text(value),
+    child: StyledText(value),
   );
 
   Widget _answerWidget(String value, UiAnswerStatus status) {
@@ -540,8 +540,10 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
       retryStyle: styles.answerRetryStyle,
       onCopy: () => Clipboard.setData(ClipboardData(text: value)),
       onRetry: _retry,
-      sourcesContent: const Text('Deterministic local fixture · no network'),
-      child: Text(value),
+      sourcesContent: const StyledText(
+        'Deterministic local fixture · no network',
+      ),
+      child: StyledText(value),
     );
   }
 

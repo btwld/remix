@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -268,3 +270,37 @@ void showPlaygroundGalleryToast(BuildContext context, String title) =>
       context,
       RemixToastData(title: title, icon: RemixIcons.checkCircled),
     );
+
+/// Disclosure trigger row with an animated rotating chevron.
+class PlaygroundDisclosureTrigger extends StatelessWidget {
+  const PlaygroundDisclosureTrigger({
+    super.key,
+    required this.expanded,
+    required this.child,
+  });
+
+  final bool expanded;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center),
+    children: [
+      Expanded(child: child),
+      Box(
+        style: BoxStyler()
+            .transform(
+              Matrix4.rotationZ(expanded ? math.pi : 0),
+              alignment: .center,
+            )
+            .animate(PlaygroundTokens.motion),
+        child: StyledIcon(
+          icon: RemixIcons.chevronDown,
+          style: IconStyler()
+              .size(PlaygroundTokens.icon)
+              .color(PlaygroundTokens.mutedForeground()),
+        ),
+      ),
+    ],
+  );
+}

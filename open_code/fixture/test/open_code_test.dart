@@ -3106,7 +3106,17 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(_resolvedSpecOf<LinkSpec>(tester).widgetModifiers, isNull);
+      // The enabled link must not wear the disabled opacity fragment. Mix
+      // resolves an untouched modifier config to an empty list rather than
+      // null, so assert the fragment's absence instead of null identity.
+      expect(
+        _resolvedSpecOf<LinkSpec>(tester).widgetModifiers,
+        isNot(
+          contains(
+            isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+          ),
+        ),
+      );
 
       await tester.tap(find.byType(AcmeLink));
       await tester.pumpAndSettle();

@@ -16,7 +16,7 @@ class FortalGalleryDisplayPage extends StatefulWidget {
 
 class _FortalGalleryDisplayPageState extends State<FortalGalleryDisplayPage> {
   bool _spinnersRunning = false;
-  bool _skeletonLoading = false;
+  bool _skeletonLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +168,10 @@ class _FortalGalleryDisplayPageState extends State<FortalGalleryDisplayPage> {
                 if (_spinnersRunning)
                   FortalSpinner(size: size, semanticsLabel: 'Loading example')
                 else
-                  const Icon(RemixIcons.check, size: 16),
+                  StyledIcon(
+                    icon: RemixIcons.check,
+                    style: IconStyler().size(16).color(FortalTokens.gray11()),
+                  ),
             ],
           ),
         ),

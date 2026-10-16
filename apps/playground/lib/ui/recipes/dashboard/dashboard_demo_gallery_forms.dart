@@ -26,6 +26,7 @@ class _PlaygroundGalleryFormsPageState
   bool _checked = true;
   bool _switched = true;
   int _radio = 1;
+  String _fruit = 'apple';
   String _alignment = 'left';
   String _density = 'comfortable';
   Set<String> _channels = {'email'};
@@ -43,10 +44,7 @@ class _PlaygroundGalleryFormsPageState
           style: BoxStyler().width(300),
           child: const PlaygroundTextField(
             hintText: 'Type something…',
-            leading: Icon(
-              RemixIcons.magnifyingGlass,
-              size: PlaygroundTokens.icon,
-            ),
+            leading: StyledIcon(icon: RemixIcons.magnifyingGlass),
           ),
         ),
       ),
@@ -82,14 +80,17 @@ class _PlaygroundGalleryFormsPageState
           child: Box(
             style: BoxStyler().width(220),
             child: PlaygroundSelect<String>(
+              key: const ValueKey('playground-gallery-select'),
               trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
               items: const [
                 RemixSelectItem(value: 'apple', label: 'Apple'),
                 RemixSelectItem(value: 'orange', label: 'Orange'),
                 RemixSelectItem(value: 'pear', label: 'Pear'),
               ],
-              selectedValue: 'apple',
-              onChanged: (_) {},
+              selectedValue: _fruit,
+              onChanged: (value) {
+                if (value != null) setState(() => _fruit = value);
+              },
             ),
           ),
         ),

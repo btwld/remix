@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import 'dashboard_demo_ui.dart';
 
 import 'dashboard_demo_text.dart';
+import 'dashboard_demo_widgets.dart';
 import 'dashboard_demo_gallery_scaffold.dart';
 
 class FortalGalleryNavigationPage extends StatelessWidget {
@@ -198,11 +199,14 @@ class _DisclosureDemo extends StatelessWidget {
       variant: variant,
       size: size,
       defaultExpanded: true,
+      animationStyle: fortalDisclosureAnimationStyle,
       semanticLabel:
           '${enumLabel(variant)} ${enumLabel(size)} shipping details',
       semanticHint: 'Toggles shipping details',
-      trigger: const Text('Shipping details'),
-      content: const Text('Delivery takes 3–5 business days.'),
+      trigger: const StyledText('Shipping details'),
+      triggerBuilder: (context, state, child) =>
+          FortalDisclosureTrigger(expanded: state.isExpanded, child: child!),
+      content: const StyledText('Delivery takes 3–5 business days.'),
     ),
   );
 }
@@ -291,6 +295,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
           size: widget.size,
           value: 'details',
           title: 'What is Fortal?',
+          trailingIcon: RemixIcons.chevronDown,
           child: const FortalText(
             'A Radix-inspired theme and component system for Flutter.',
           ),
@@ -300,6 +305,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
           size: widget.size,
           value: 'tokens',
           title: 'Does it support tokens?',
+          trailingIcon: RemixIcons.chevronDown,
           child: const FortalText(
             'Every recipe resolves through the active Mix scope.',
           ),
