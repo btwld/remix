@@ -57,4 +57,4 @@ or later.
   `dashboard_shell`, `dashboard_demo`, an opt-in `icons` seam, an optional `chart`
   component backed by `mix_chart`, and unstyled Agent items with opt-in
   `<component>_recipe` stylers.
-- Generated adapters require Remix `^1.0.0-beta.10`.
+- Generated adapters require Remix `^1.0.0-beta.11`.
