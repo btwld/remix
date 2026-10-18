@@ -995,18 +995,9 @@ void _checkNakedResolution(
   File nakedUiPubspec,
   List<String> failures,
 ) {
-  // Remix owns the Naked UI behavior boundary. Its constraint must admit the
-  // release used by this parity contract, and the resolved Naked UI must be
-  // that exact version.
-  //
-  // naked_ui used to resolve from pub.dev, and this checked the workspace
-  // lockfile for `source: hosted` at the expected version. It is now a
-  // workspace member (packages/naked_ui), so pub resolves it from source and
-  // writes no lockfile entry at all -- the hosted assertion could no longer
-  // pass by construction. The guarantee it existed for is unchanged and is
-  // enforced below against the member's own pubspec: parity is measured
-  // against one known Naked UI version, never an arbitrary local checkout.
-  // The dependency_overrides guard still matters and is kept as-is.
+  // Keep Remix's consumer range and the workspace member version aligned with
+  // the parity baseline. Workspace members have no hosted lockfile entry, so
+  // check the member's manifest and reject dependency overrides instead.
   final pinned = RegExp(
     '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
     multiLine: true,

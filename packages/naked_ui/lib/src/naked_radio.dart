@@ -1,3 +1,6 @@
+/// @docImport 'package:flutter/material.dart';
+library;
+
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
@@ -20,7 +23,7 @@ class NakedRadioState<T> extends NakedState {
   static NakedRadioState<S> of<S>(BuildContext context) =>
       NakedState.of(context);
 
-  /// Returns the nearest [NakedRadioState] if available, otherwise null.
+  /// Returns the nearest [NakedRadioState], or `null` if none is available.
   static NakedRadioState<S>? maybeOf<S>(BuildContext context) =>
       NakedState.maybeOf(context);
 
@@ -42,7 +45,7 @@ class NakedRadioState<T> extends NakedState {
 ///
 /// ```dart
 /// RadioGroup<String>(
-///   value: selectedValue,
+///   groupValue: selectedValue,
 ///   onChanged: (value) => setState(() => selectedValue = value),
 ///   child: Column(children: [
 ///     NakedRadio(value: 'option1', child: Text('Option 1')),
@@ -52,15 +55,19 @@ class NakedRadioState<T> extends NakedState {
 /// ```
 ///
 /// ## Accessibility
+///
 /// For optimal accessibility, ensure your radio has a minimum touch target
 /// of 48x48dp. Smaller sizes will work but may be difficult for some users
 /// to tap accurately.
 ///
 /// See also:
-/// - Flutter's Material `Radio`, for a styled radio.
+///
+/// - [Radio], for a styled Material radio.
 /// - [RadioGroup], which manages the selected value and provides grouping.
 class NakedRadio<T> extends StatefulWidget {
   /// Creates a headless radio associated with [value].
+  ///
+  /// Either [child] or [builder] must be provided.
   const NakedRadio({
     super.key,
     required this.value,
@@ -89,6 +96,8 @@ class NakedRadio<T> extends StatefulWidget {
   final Widget? child;
 
   /// Whether the radio is enabled.
+  ///
+  /// An enclosing [NakedRadioGroup] must also be enabled for interaction.
   final bool enabled;
 
   /// The mouse cursor when hovering.
@@ -97,7 +106,7 @@ class NakedRadio<T> extends StatefulWidget {
   /// The focus node for the radio.
   final FocusNode? focusNode;
 
-  /// Whether to autofocus.
+  /// Whether this radio requests focus when first built.
   final bool autofocus;
 
   /// Whether tapping the selected radio clears the selection.
@@ -112,12 +121,12 @@ class NakedRadio<T> extends StatefulWidget {
   /// Called when press state changes.
   final ValueChanged<bool>? onPressChange;
 
-  /// Builds the radio using the current [NakedRadioState].
+  /// The builder for radio content based on the current [NakedRadioState].
   final ValueWidgetBuilder<NakedRadioState<T>>? builder;
 
   /// The registry override for advanced usage and testing.
   ///
-  /// When null, the nearest [RadioGroup] ancestor is used.
+  /// When `null`, the nearest [RadioGroup] ancestor is used.
   final RadioGroupRegistry<T>? groupRegistry;
 
   /// Semantic label for assistive technologies.
@@ -180,7 +189,7 @@ class _NakedRadioState<T> extends State<NakedRadio<T>>
       value: widget.value,
       mouseCursor: WidgetStateMouseCursor.resolveWith((_) => effectiveCursor),
       toggleable: widget.toggleable,
-      focusNode: effectiveFocusNode, // FocusNodeMixin guarantees non-null
+      focusNode: effectiveFocusNode, // FocusNodeMixin guarantees non-null.
       autofocus: widget.autofocus && effectiveEnabled,
       groupRegistry: registry,
       enabled: effectiveEnabled,
@@ -190,7 +199,7 @@ class _NakedRadioState<T> extends State<NakedRadio<T>>
         final bool pressed = radioState.downPosition != null;
         final states = {...radioState.states, if (pressed) WidgetState.pressed};
 
-        // Notify hover changes only when interactive, without setState in build
+        // Defer callbacks until after build so listeners may rebuild safely.
         final hovered = states.contains(WidgetState.hovered);
         if (effectiveEnabled && _lastReportedHover != hovered) {
           _lastReportedHover = hovered;
@@ -199,7 +208,6 @@ class _NakedRadioState<T> extends State<NakedRadio<T>>
           });
         }
 
-        // Notify press changes only when interactive
         if (effectiveEnabled && _lastReportedPressed != pressed) {
           _lastReportedPressed = pressed;
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -243,11 +251,10 @@ class _NakedRadioState<T> extends State<NakedRadio<T>>
   }
 }
 
-/// Groups [NakedRadio] children under Flutter's [RadioGroup].
+/// A group of [NakedRadio] widgets sharing a selection and enabled state.
 ///
-/// Owns the Flutter radio registry, group enabled state, the disabled
-/// callback adaptation [RadioGroup] requires, and optional group
-/// semantics. A null [onChanged] is a genuinely disabled group.
+/// Uses Flutter's [RadioGroup] for selection and keyboard navigation. Radios
+/// are interactive only when [enabled] is true and [onChanged] is non-null.
 ///
 /// Do not nest a plain [RadioGroup] of the same value type inside this
 /// group: its radios would register with the inner registry while still
@@ -269,13 +276,13 @@ class NakedRadioGroup<T> extends StatelessWidget {
 
   /// Called when a radio in the group is selected.
   ///
-  /// When null, the group is disabled. Flutter's [RadioGroup] requires a
-  /// non-null callback, so a no-op is supplied only as that adapter.
+  /// When `null`, radios in this group are disabled, even if [enabled] is true.
   final ValueChanged<T?>? onChanged;
 
   /// Whether the group is enabled.
   ///
-  /// Combined with [onChanged] != null to produce the interactive state.
+  /// Radios are interactive only when this is true, [onChanged] is non-null,
+  /// and their own [NakedRadio.enabled] is true.
   final bool enabled;
 
   /// Accessible name for the radio group.
@@ -296,10 +303,8 @@ class NakedRadioGroup<T> extends StatelessWidget {
 
     final label = semanticLabel;
     if (label != null && label.isNotEmpty) {
-      // No role here: Flutter's RadioGroup already publishes the single
-      // SemanticsRole.radioGroup node (radio_group.dart), and it accepts no
-      // label. Adding the role again would announce the group twice, so the
-      // label lives on a plain container around Flutter's role node.
+      // Put the label on a plain container to avoid duplicating the radio-group
+      // role already supplied by Flutter's RadioGroup.
       group = Semantics(
         container: true,
         explicitChildNodes: true,
@@ -330,7 +335,7 @@ class NakedRadioGroupScope<T> extends InheritedWidget {
   /// Whether radios in this group are interactive.
   final bool enabled;
 
-  /// The nearest group scope for value type [T], if any.
+  /// Returns the nearest group scope for value type [T], if any.
   static NakedRadioGroupScope<T>? maybeOf<T>(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<NakedRadioGroupScope<T>>();

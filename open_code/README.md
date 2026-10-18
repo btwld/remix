@@ -23,8 +23,9 @@ Naked UI, Remix, the icon/font packages, and application-owned preset source:
 their libraries do not import or export Flutter Material, and their manifests
 do not request the Material icon font. The standalone consumer fixtures and
 playground also omit that flag. Custom Remix icon and Geist font assets remain
-supported; they do not require `uses-material-design`. Applications that use Material
-`Icons` must enable `uses-material-design: true` in their own manifest.
+supported; they do not require `uses-material-design`. Applications that use
+Material `Icons` must enable `uses-material-design: true` under `flutter:` in
+their own `pubspec.yaml`.
 
 This is not a claim of **transitive Material independence**. Mix still contains
 intentional Material theme integration and broad Material imports. The optional
@@ -34,11 +35,9 @@ retain Material usage. Those upstream boundaries remain tracked in
 [Mix #1021](https://github.com/btwld/mix/issues/1021). The direct-source check
 does not audit or certify the resolved dependency graph.
 
-The current runtime constraints remain `naked_ui: ^1.2.1`,
-`mix: ^2.2.0-beta.5`, and `mix_chart: ^0.0.1-beta.3`. No clean upstream release
-is available to justify a Material-boundary dependency bump. A new Naked UI
-release containing the direct cleanup must exist before a consumer floor can
-require it; the registry inherits that boundary through its Remix dependency.
+Raise a consumer's Naked UI floor only after the required changes are published;
+the registry inherits that boundary through its Remix dependency. See the
+[release instructions](RELEASING.md) for runtime and registry publication order.
 
 ## Install the CLI in a project
 

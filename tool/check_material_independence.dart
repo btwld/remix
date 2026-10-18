@@ -10,7 +10,7 @@ const _consumerSourcePackages = [
   'registry_source',
 ];
 
-// Inspect every URI in a directive, including conditional imports/exports.
+// Material can appear in a conditional branch even when the default URI is safe.
 final _libraryDirective = RegExp(
   r'''^\s*(?:import|export)\s+[^;]+;''',
   multiLine: true,
