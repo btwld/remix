@@ -2,9 +2,10 @@
 
 ### Changed
 
-- Remove the remaining direct Material imports and stop requesting the Material
-  icon font implicitly. Applications using Material `Icons` must enable
-  `uses-material-design` in their own `pubspec.yaml`.
+- Replace the remaining direct Material imports with widgets imports and remove
+  the unused package-level `uses-material-design` declaration. Widget APIs and
+  app font bundling are unchanged: applications using Material `Icons` already
+  need `uses-material-design: true` in their own `pubspec.yaml`.
 
 ## 1.2.1
 
