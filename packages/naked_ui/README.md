@@ -2,28 +2,18 @@
 
 A Flutter UI library for headless widgets. No styling, just behavior. Build custom UIs with full semantics and observable states like hovered, focused, pressed, dragged, and others.
 
+Naked UI uses Flutter's widget primitives and does not require a Material host.
+
 ## Features
+
 - No styling: Completely naked components for total design control.
 - Full semantics: Built-in accessibility for screen readers and assistive tools.
 - Observable states: Track hover, focus, drag, and more.
 - Builder APIs: Composable widgets for custom UI logic.
 
-## Material boundary
-
-Naked UI builds on Flutter's widget primitives without importing Material or
-requesting its icon font. A Material host is not required. Applications that
-use Material `Icons` in their own visuals must set `uses-material-design: true`
-under `flutter:` in their application's `pubspec.yaml`.
-
-The examples below may use Material's `Colors` palette in application-owned
-visuals. That is an application choice, not a dependency of Naked UI; plain
-`Color` values work too.
-
 ## Documentation
 
 📚 **[View Full Documentation](https://docs.page/btwld/naked_ui)**
-
-The complete documentation covers detailed component APIs and examples, guides and best practices, accessibility implementation details, as well as advanced usage patterns and customization.
 
 ## Supported Components
 
@@ -55,8 +45,6 @@ The complete documentation covers detailed component APIs and examples, guides a
 3. React to typed state callbacks or use the builder snapshot to style interaction states
 
 ## Examples
-
-Below are examples of using `NakedButton`, `NakedCheckbox`, and `NakedMenu`. Each shows how to wrap custom visuals with headless behavior and handle states using the builder pattern. See the [full documentation](https://docs.page/btwld/naked_ui) for all components.
 
 ### Alert Dialog
 

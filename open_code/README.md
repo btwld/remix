@@ -18,26 +18,13 @@ the same installed source; see
 
 ## Material boundary
 
-The `material:check` contract enforces **direct Material independence** for
-Naked UI, Remix, the icon/font packages, and application-owned preset source:
-their libraries do not import or export Flutter Material, and their manifests
-do not request the Material icon font. The standalone consumer fixtures and
-playground also omit that flag. Custom Remix icon and Geist font assets remain
-supported; they do not require `uses-material-design`. Applications that use
-Material `Icons` must enable `uses-material-design: true` under `flutter:` in
-their own `pubspec.yaml`.
+The `material:check` CI guard rejects Material imports and exports in Naked UI,
+Remix, the icon/font packages, and preset source. It also rejects `material_ui`
+dependencies and `uses-material-design` declarations in those packages.
 
-This is not a claim of **transitive Material independence**. Mix still contains
-intentional Material theme integration and broad Material imports. The optional
-chart items also add `mix_chart`; its adapters and the `fl_chart` dependency
-retain Material usage. Those upstream boundaries remain tracked in
-[Remix #135](https://github.com/btwld/remix/issues/135) and
-[Mix #1021](https://github.com/btwld/mix/issues/1021). The direct-source check
-does not audit or certify the resolved dependency graph.
-
-Raise a consumer's Naked UI floor only after the required changes are published;
-the registry inherits that boundary through its Remix dependency. See the
-[release instructions](RELEASING.md) for runtime and registry publication order.
+The check does not inspect transitive dependencies: Mix retains Material
+integration, and optional charts use `mix_chart` / `fl_chart`. Upstream cleanup
+is tracked in [Mix #1021](https://github.com/btwld/mix/issues/1021).
 
 ## Install the CLI in a project
 

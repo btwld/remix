@@ -4,10 +4,6 @@ import '../mixins/naked_mixins.dart';
 
 /// A focus boundary with optional hover detection, actions, and shortcuts.
 ///
-/// Always wraps [child] in [Focus]. Adds a [MouseRegion] when [onHoverChange]
-/// is provided, and [Actions] and [Shortcuts] when their maps are non-empty
-/// and [enabled] is true.
-///
 /// Disabling this widget suppresses hover callbacks and omits its actions and
 /// shortcuts. It does not suppress [onFocusChange] or [onKeyEvent]. In
 /// directional navigation mode, focus requests still follow [canRequestFocus].
@@ -76,9 +72,7 @@ class NakedFocusableDetector extends StatefulWidget {
   /// The externally managed focus node, if provided.
   final FocusNode? focusNode;
 
-  /// The cursor shown by the optional hover region.
-  ///
-  /// Used only when [onHoverChange] is provided.
+  /// The mouse cursor, used only when [onHoverChange] is provided.
   final MouseCursor? mouseCursor;
 
   /// The keyboard shortcuts available while [enabled] is true.

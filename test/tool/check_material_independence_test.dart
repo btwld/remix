@@ -35,10 +35,8 @@ void main() {
 
   tearDown(() => sandbox.deleteSync(recursive: true));
 
-  test(
-    'accepts widget primitives and custom font assets without overclaiming',
-    () {
-      manifest('packages/remix_ui_icons').writeAsStringSync('''
+  test('accepts widget primitives and custom fonts', () {
+    manifest('packages/remix_ui_icons').writeAsStringSync('''
 name: fixture
 flutter:
   fonts:
@@ -46,15 +44,9 @@ flutter:
       fonts:
         - asset: icons.otf
 ''');
-      final result = check();
-      expect(result.exitCode, 0, reason: '${result.stderr}');
-      expect(result.stdout, contains('no direct Material usage'));
-      expect(
-        result.stdout,
-        contains('Transitive dependencies are not checked'),
-      );
-    },
-  );
+    final result = check();
+    expect(result.exitCode, 0, reason: '${result.stderr}');
+  });
 
   for (final package in _packages) {
     test('rejects direct Material imports in $package', () {

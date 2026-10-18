@@ -57,9 +57,6 @@ npx skills add btwld/mix --skill mix -g -y
 
 ## Styling a button
 
-The examples use plain Flutter `Color` values; no Material color palette is
-required. Use your own colors or a preset's theme tokens for your design.
-
 ```dart
 final style = ButtonStyler()
   .padding(.horizontal(16))
@@ -251,17 +248,8 @@ A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
 commonly provides a `Navigator` and its overlay already. Dialog helpers push
 routes, so their calling context must be below that caller-owned `Navigator`.
 
-## Material boundary
-
-Remix and the installed presets have no direct Flutter Material imports and
-can run under `WidgetsApp`. This does **not** certify a Material-free runtime
-dependency graph: Mix retains Material interoperability, and optional chart
-items depend on `mix_chart` / `fl_chart`. The remaining work is tracked in
-[Remix #135](https://github.com/btwld/remix/issues/135).
-
-Applications rendering Material `Icons` must declare `uses-material-design: true`
-under `flutter:` in their own `pubspec.yaml`. Remix's custom icon and Geist font
-assets do not require that flag.
+See the [Material dependency boundary](open_code/README.md#material-boundary)
+for the scope of the source check and remaining upstream dependencies.
 
 ## Components
 

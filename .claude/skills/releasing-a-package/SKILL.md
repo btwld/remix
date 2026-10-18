@@ -29,8 +29,7 @@ git log <last-release-commit>..HEAD --format='%h %ad %s' --date=short -- package
 git show <sha> -- packages/<pkg>          # read every diff
 ```
 
-Then apply semver. Naked UI and Remix both commit to it publicly, so
-the rule is not advisory:
+Apply semantic versioning:
 
 | Change | Bump |
 | --- | --- |
@@ -38,13 +37,7 @@ the rule is not advisory:
 | Public API or required consumer configuration changed incompatibly | major |
 | Fix, internal change, message/doc-only change | patch |
 
-A change to a user-visible `ErrorHint`, assert message, or doc comment is a
-**patch** — it ships in the package but moves no API surface.
-
 ## 2. Change every file the version lives in
-
-This is where releases break. The version is duplicated across contract
-files on purpose, and a checker fails on each one that drifts.
 
 **Always, for any package:**
 
@@ -57,14 +50,9 @@ files on purpose, and a checker fails on each one that drifts.
 - `registry_source/tool/fortal_parity/check.dart` —
   `const _expectedNakedUiVersion`
 
-  Set this to the tested workspace member version; the checker compares
-  version strings, not source bytes. `_expectedNakedUiConstraint` must match
-  the consumer range in `packages/remix/pubspec.yaml`.
-  Keep that range when the release only adds compatible behavior;
-  raise the floor deliberately when consumers must require a new fix or
-  dependency boundary. If the floor changes, update the melos shared
-  `naked_ui` constraint in the root `pubspec.yaml`, bootstrap the workspace,
-  and update `_expectedNakedUiConstraint` to match.
+  Set this to the tested workspace member version. If raising Remix's consumer
+  floor, also update its `naked_ui` dependency, the root melos shared constraint,
+  and `_expectedNakedUiConstraint`, then bootstrap the workspace.
 
 **`remix_cli` only:**
 
@@ -95,16 +83,13 @@ It runs `melos version` plus `tool/sync_registry_remix.dart` and
 `release/version-packages` and prints a compare link; it does not open the PR
 or tag.
 
-Dependents with a caret range already admit compatible releases within that
-range. Do not bump a dependency just to mirror its version. Raise the floor
-only when the consumer must require the new
-behavior, and never require an unpublished hosted release. The generated
-registry inherits the Naked UI boundary through Remix; no `remix_cli` bump is
-needed for a runtime or registry-only change.
+Keep compatible caret constraints unless the consumer needs a newer release.
+If raising a floor, publish the dependency first. Runtime or registry-only
+changes do not require a `remix_cli` version bump.
 
 ## 3. Verify locally before pushing
 
-Run the same job CI runs — it is seconds, and it catches all of the above:
+Run the contract checks:
 
 ```bash
 dart run melos run ci:checks

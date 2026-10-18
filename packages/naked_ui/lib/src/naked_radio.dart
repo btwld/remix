@@ -1,6 +1,3 @@
-/// @docImport 'package:flutter/material.dart';
-library;
-
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
@@ -38,10 +35,8 @@ class NakedRadioState<T> extends NakedState {
 
 /// A headless radio built on Flutter's [RawRadio] without visuals.
 ///
-/// [RawRadio] owns selection, focus, hover, semantics, gestures, and registration
-/// with [RadioGroup]. This widget adds a [NakedRadioState] builder, semantic
-/// label/exclusion, interaction callbacks, a hit-testable child boundary, and
-/// the group-wide enabled adapter in [NakedRadioGroup].
+/// Uses Flutter's [RadioGroup] for selection and keyboard navigation. Provide
+/// visuals with [child] or [builder]; [NakedRadioGroup] adds group-wide enablement.
 ///
 /// ```dart
 /// RadioGroup<String>(
@@ -56,14 +51,7 @@ class NakedRadioState<T> extends NakedState {
 ///
 /// ## Accessibility
 ///
-/// For optimal accessibility, ensure your radio has a minimum touch target
-/// of 48x48dp. Smaller sizes will work but may be difficult for some users
-/// to tap accurately.
-///
-/// See also:
-///
-/// - [Radio], for a styled Material radio.
-/// - [RadioGroup], which manages the selected value and provides grouping.
+/// Provide a touch target of at least 48×48 logical pixels.
 class NakedRadio<T> extends StatefulWidget {
   /// Creates a headless radio associated with [value].
   ///
@@ -189,7 +177,7 @@ class _NakedRadioState<T> extends State<NakedRadio<T>>
       value: widget.value,
       mouseCursor: WidgetStateMouseCursor.resolveWith((_) => effectiveCursor),
       toggleable: widget.toggleable,
-      focusNode: effectiveFocusNode, // FocusNodeMixin guarantees non-null.
+      focusNode: effectiveFocusNode,
       autofocus: widget.autofocus && effectiveEnabled,
       groupRegistry: registry,
       enabled: effectiveEnabled,

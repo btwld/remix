@@ -1,11 +1,9 @@
 ## Unreleased
 
-### Changed
+### Fixes
 
-- Replace the remaining direct Material imports with widgets imports and remove
-  the unused package-level `uses-material-design` declaration. Widget APIs and
-  app font bundling are unchanged: applications using Material `Icons` already
-  need `uses-material-design: true` in their own `pubspec.yaml`.
+- Remove the remaining direct Material imports and unused Material icon-font
+  declaration. Public APIs and application font bundling are unchanged.
 
 ## 1.2.1
 

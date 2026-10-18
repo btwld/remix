@@ -91,14 +91,6 @@ Material, Cupertino, Widgets, and router-based hosts can all supply these
 services. The [settings-screen tutorial](/tutorials/settings-screen) shows a
 complete host, including the scope placement used by its dialog.
 
-Not requiring a Material host does **not** mean the runtime dependency graph
-is Material-free: Mix still contains Material interoperability, and the
-optional chart items add Material-backed `mix_chart` / `fl_chart` code.
-See the [Material boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
-for the direct-source check and remaining upstream work. Applications using
-Material `Icons` must enable `uses-material-design: true` in their own
-`pubspec.yaml`; Remix's custom icon/font assets do not require that flag.
-
 ## Examples
 
 - [Fortal dashboard](https://btwld.github.io/remix/dashboard/): an application with layouts, data, and theme controls.
