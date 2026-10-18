@@ -1,3 +1,11 @@
+## Unreleased
+
+### Changed
+
+- Remove the remaining direct Material imports and stop requesting the Material
+  icon font implicitly. Applications using Material `Icons` must enable
+  `uses-material-design` in their own `pubspec.yaml`.
+
 ## 1.2.1
 
 ### Fixes

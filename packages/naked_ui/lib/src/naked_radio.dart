@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
 import 'utilities/hit_testable_container.dart';
@@ -57,7 +57,7 @@ class NakedRadioState<T> extends NakedState {
 /// to tap accurately.
 ///
 /// See also:
-/// - [Radio], the Material-styled radio for typical apps.
+/// - Flutter's Material `Radio`, for a styled radio.
 /// - [RadioGroup], which manages the selected value and provides grouping.
 class NakedRadio<T> extends StatefulWidget {
   /// Creates a headless radio associated with [value].

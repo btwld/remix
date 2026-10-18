@@ -58,9 +58,13 @@ files on purpose, and a checker fails on each one that drifts.
   `const _expectedNakedUiVersion`
 
   The parity contract records the **byte-exact tested** Naked UI resolution, so
-  it must equal the workspace member's version. Leave
-  `_expectedNakedUiConstraint` (`'^1.0.0'`) alone — that is the *consumer
-  range* in `packages/remix/pubspec.yaml`, and it only changes on a major.
+  it must equal the workspace member's version. `_expectedNakedUiConstraint`
+  must match the consumer range in `packages/remix/pubspec.yaml` (currently
+  `^1.2.1`). Keep that range when the release only adds compatible behavior;
+  raise the floor deliberately when consumers must require a new fix or
+  dependency boundary. If the floor changes, update the melos shared
+  `naked_ui` constraint in the root `pubspec.yaml`, bootstrap the workspace,
+  and update `_expectedNakedUiConstraint` to match.
   Missing this is the classic release-PR failure:
 
   ```
@@ -97,8 +101,12 @@ It runs `melos version` plus `tool/sync_registry_remix.dart` and
 `release/version-packages` and prints a compare link; it does not open the PR
 or tag.
 
-Dependents pinned with a caret (`packages/remix/pubspec.yaml` has
-`naked_ui: ^1.0.0`) need **no** edit for a minor or patch.
+Dependents with a caret range (currently `naked_ui: ^1.2.1` in Remix) already
+admit compatible minor/patch releases. Do not bump a dependency just to mirror
+its version. Raise the floor only when the consumer must require the new
+behavior, and never require an unpublished hosted release. The generated
+registry inherits the Naked UI boundary through Remix; no `remix_cli` bump is
+needed for a runtime or registry-only change.
 
 ## 3. Verify locally before pushing
 

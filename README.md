@@ -61,10 +61,10 @@ npx skills add btwld/mix --skill mix -g -y
 final style = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
+  .color(MixColors.blue)
+  .borderRadius(.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(Colors.blue.shade700));
+  .onHovered(.color(MixColors.blueSwatch[700]!));
 
 RemixButton(
   onPressed: () {},
@@ -78,9 +78,9 @@ Or using callable styles:
 final button = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .onHovered(.color(Colors.blue.shade700))
+  .color(MixColors.blue)
+  .borderRadius(.circular(8))
+  .onHovered(.color(MixColors.blueSwatch[700]!))
   .animate(AnimationConfig.spring(300.ms));
 
 button(
@@ -96,14 +96,14 @@ button(
 Add Remix to your project:
 
 ```bash
-flutter pub add remix
+flutter pub add remix:^1.0.0-beta.11
 ```
 
 Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0-beta.9
+  remix: ^1.0.0-beta.11
 ```
 
 ### Your First Component
@@ -111,7 +111,7 @@ dependencies:
 A button with hover styling and animation:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 class MyApp extends StatelessWidget {
@@ -119,14 +119,14 @@ class MyApp extends StatelessWidget {
   final button = ButtonStyler()
     .padding(.horizontal(16))
     .padding(.vertical(10))
-    .color(Colors.blue)
-    .borderRadius(.all(const Radius.circular(8)))
-    .label(TextStyler().color(Colors.white));
+    .color(MixColors.blue)
+    .borderRadius(.circular(8))
+    .label(TextStyler().color(MixColors.white));
 
   @override
   Widget build(BuildContext context) {
     return WidgetsApp(
-      color: Colors.blue,
+      color: MixColors.blue,
       builder: (_, _) => Center(
         child: button(
           label: 'Click Me',
@@ -146,10 +146,10 @@ Easily define how components should look in different interaction states.
 final button = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .label(TextStyler().color(Colors.white))
-  .onHovered(.color(Colors.blue.shade700))
+  .color(MixColors.blue)
+  .borderRadius(.circular(8))
+  .label(TextStyler().color(MixColors.white))
+  .onHovered(.color(MixColors.blueSwatch[700]!))
   .onPressed(.scale(0.95));
 ```
 
@@ -161,10 +161,10 @@ Make your button style smoothly animate when its state changes by chaining `.ani
 final style = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
+  .color(MixColors.blue)
+  .borderRadius(.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(Colors.blue.shade700))
+  .onHovered(.color(MixColors.blueSwatch[700]!))
   .onPressed(.scale(0.95));
 ```
 
@@ -180,15 +180,15 @@ Create base styles and extend them to build variants:
 final baseButtonStyle = ButtonStyler()
     .padding(.horizontal(16))
     .padding(.vertical(10))
-    .borderRadius(.all(const Radius.circular(8)));
+    .borderRadius(.circular(8));
 
 final primaryButton = baseButtonStyle
-    .color(Colors.blue)
-    .label(TextStyler().color(Colors.white));
+    .color(MixColors.blue)
+    .label(TextStyler().color(MixColors.white));
 
 final destructiveButton = baseButtonStyle
-    .color(Colors.red)
-    .label(TextStyler().color(Colors.white));
+    .color(MixColors.red)
+    .label(TextStyler().color(MixColors.white));
 ```
 
 ## Theming with Fortal
@@ -247,6 +247,18 @@ Widget buildPortalHost() {
 A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
 commonly provides a `Navigator` and its overlay already. Dialog helpers push
 routes, so their calling context must be below that caller-owned `Navigator`.
+
+## Material boundary
+
+Remix and the installed presets have no direct Flutter Material imports and
+can run under `WidgetsApp`. This does **not** certify a Material-free runtime
+dependency graph: Mix retains Material interoperability, and optional chart
+items depend on `mix_chart` / `fl_chart`. The remaining work is tracked in
+[Remix #135](https://github.com/btwld/remix/issues/135).
+
+Applications rendering Material `Icons` must declare `uses-material-design: true`
+under `flutter:` in their own `pubspec.yaml`. Remix's custom icon and Geist font
+assets do not require that flag.
 
 ## Components
 
@@ -313,4 +325,4 @@ Check out `apps/dashboard`, `apps/demo`, and the per-package examples in
 
 ---
 
-Built with ❤️ using [Mix](https://github.com/btwld/mix) and [Naked UI](https://github.com/btwld/naked_ui)
+Built with ❤️ using [Mix](https://github.com/btwld/mix) and [Naked UI](https://github.com/btwld/remix/tree/main/packages/naked_ui)

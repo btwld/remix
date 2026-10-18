@@ -8,6 +8,17 @@ A Flutter UI library for headless widgets. No styling, just behavior. Build cust
 - Observable states: Track hover, focus, drag, and more.
 - Builder APIs: Composable widgets for custom UI logic.
 
+## Material boundary
+
+Naked UI builds on Flutter's widget primitives without importing Material or
+requesting its icon font. A Material host is not required. Applications that
+use Material `Icons` in their own visuals must set `uses-material-design: true`
+under `flutter:` in their application's `pubspec.yaml`.
+
+The examples below may use Material's `Colors` palette in application-owned
+visuals. That is an application choice, not a dependency of Naked UI; plain
+`Color` values work too.
+
 ## Documentation
 
 📚 **[View Full Documentation](https://docs.page/btwld/naked_ui)**
