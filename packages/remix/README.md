@@ -8,14 +8,17 @@ with Mix styling.
 
 ## Styling a button
 
+The examples use plain Flutter `Color` values; no Material color palette is
+required. Use your own colors or a preset's theme tokens for your design.
+
 ```dart
 final style = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(MixColors.blue)
+  .color(const Color(0xFF2196F3))
   .borderRadius(.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(MixColors.blueSwatch[700]!));
+  .onHovered(.color(const Color(0xFF1976D2)));
 
 RemixButton(
   onPressed: () {},
@@ -29,9 +32,9 @@ Or using callable styles:
 final button = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(MixColors.blue)
+  .color(const Color(0xFF2196F3))
   .borderRadius(.circular(8))
-  .onHovered(.color(MixColors.blueSwatch[700]!))
+  .onHovered(.color(const Color(0xFF1976D2)))
   .animate(AnimationConfig.spring(300.ms));
 
 button(
@@ -70,14 +73,14 @@ class MyApp extends StatelessWidget {
   final button = ButtonStyler()
     .padding(.horizontal(16))
     .padding(.vertical(10))
-    .color(MixColors.blue)
+    .color(const Color(0xFF2196F3))
     .borderRadius(.circular(8))
-    .label(TextStyler().color(MixColors.white));
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
 
   @override
   Widget build(BuildContext context) {
     return WidgetsApp(
-      color: MixColors.blue,
+      color: const Color(0xFF2196F3),
       builder: (_, _) => Center(
         child: button(
           label: 'Click Me',
@@ -97,10 +100,10 @@ Easily define how components should look in different interaction states.
 final button = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(MixColors.blue)
+  .color(const Color(0xFF2196F3))
   .borderRadius(.circular(8))
-  .label(TextStyler().color(MixColors.white))
-  .onHovered(.color(MixColors.blueSwatch[700]!))
+  .label(TextStyler().color(const Color(0xFFFFFFFF)))
+  .onHovered(.color(const Color(0xFF1976D2)))
   .onPressed(.scale(0.95));
 ```
 
@@ -112,10 +115,10 @@ Make your button style smoothly animate when its state changes by chaining `.ani
 final style = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(MixColors.blue)
+  .color(const Color(0xFF2196F3))
   .borderRadius(.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(MixColors.blueSwatch[700]!))
+  .onHovered(.color(const Color(0xFF1976D2)))
   .onPressed(.scale(0.95));
 ```
 
@@ -134,12 +137,12 @@ final baseButtonStyle = ButtonStyler()
     .borderRadius(.circular(8));
 
 final primaryButton = baseButtonStyle
-    .color(MixColors.blue)
-    .label(TextStyler().color(MixColors.white));
+    .color(const Color(0xFF2196F3))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
 
 final destructiveButton = baseButtonStyle
-    .color(MixColors.red)
-    .label(TextStyler().color(MixColors.white));
+    .color(const Color(0xFFF44336))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
 ```
 
 ## Theming with Fortal
