@@ -16,6 +16,16 @@ known Radix Themes 3.3.0 color values. A behavioral package can be styled from
 the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
+## Material boundary
+
+The `material:check` CI guard rejects Material imports and exports in Naked UI,
+Remix, the icon/font packages, and preset source. It also rejects `material_ui`
+dependencies and `uses-material-design` declarations in those packages.
+
+The check does not inspect transitive dependencies: Mix retains Material
+integration, and optional charts use `mix_chart` / `fl_chart`. Upstream cleanup
+is tracked in [Mix #1021](https://github.com/btwld/mix/issues/1021).
+
 ## Install the CLI in a project
 
 Use a project-local development dependency to pin the CLI version in the

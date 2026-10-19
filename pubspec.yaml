@@ -153,8 +153,10 @@ melos:
       description: Verify every package declares the melos-managed toolchain floor
 
     material:check:
-      run: dart run tool/check_material_independence.dart
-      description: Verify Remix, Fortal, and Agent consumer sources contain no direct Material usage
+      steps:
+        - dart test test/tool/check_material_independence_test.dart
+        - dart run tool/check_material_independence.dart
+      description: Verify published Flutter libraries and preset sources contain no direct Material usage
 
     open-code:check:
       steps:

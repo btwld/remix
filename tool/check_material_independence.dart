@@ -2,11 +2,21 @@ import 'dart:io';
 
 // Repository-relative package directories whose source ships to applications,
 // either installed from the registry or resolved as a hosted dependency.
-const _consumerSourcePackages = ['packages/remix', 'registry_source'];
+const _consumerSourcePackages = [
+  'packages/naked_ui',
+  'packages/remix',
+  'packages/remix_ui_icons',
+  'packages/remix_ui_fonts',
+  'registry_source',
+];
 
-final _forbiddenLibraryDirective = RegExp(
-  r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
+// Material can appear in a conditional branch even when the default URI is safe.
+final _libraryDirective = RegExp(
+  r'''^\s*(?:import|export)\s+[^;]+;''',
   multiLine: true,
+);
+final _materialLibraryUri = RegExp(
+  r'''['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
 );
 
 final _materialUiDependency = RegExp(
@@ -37,11 +47,15 @@ void main() {
       if (entity is! File || !entity.path.endsWith('.dart')) continue;
 
       final source = entity.readAsStringSync();
-      for (final match in _forbiddenLibraryDirective.allMatches(source)) {
-        final relativePath = entity.path.substring(workspace.path.length + 1);
-        final line =
-            '\n'.allMatches(source.substring(0, match.start)).length + 1;
-        failures.add('$relativePath:$line imports a Material library');
+      for (final directive in _libraryDirective.allMatches(source)) {
+        for (final uri in _materialLibraryUri.allMatches(directive.group(0)!)) {
+          final relativePath = entity.path.substring(workspace.path.length + 1);
+          final offset = directive.start + uri.start;
+          final line = '\n'.allMatches(source.substring(0, offset)).length + 1;
+          failures.add(
+            '$relativePath:$line imports or exports a Material library',
+          );
+        }
       }
     }
 
@@ -56,8 +70,9 @@ void main() {
 
   if (failures.isEmpty) {
     stdout.writeln(
-      'Remix and application-owned Fortal/Agent sources have no direct Material '
-      'usage.',
+      'Naked UI, Remix, icon/font packages, and application-owned preset '
+      'sources have no direct Material usage. '
+      'Transitive dependencies are not checked.',
     );
     return;
   }

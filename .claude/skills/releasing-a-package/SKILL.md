@@ -29,22 +29,15 @@ git log <last-release-commit>..HEAD --format='%h %ad %s' --date=short -- package
 git show <sha> -- packages/<pkg>          # read every diff
 ```
 
-Then apply semver. `naked_ui` 1.0.0 and `remix` both commit to it publicly, so
-the rule is not advisory:
+Apply semantic versioning:
 
 | Change | Bump |
 | --- | --- |
 | Public API added | minor |
-| Public API removed or changed incompatibly | major |
+| Public API or required consumer configuration changed incompatibly | major |
 | Fix, internal change, message/doc-only change | patch |
 
-A change to a user-visible `ErrorHint`, assert message, or doc comment is a
-**patch** — it ships in the package but moves no API surface.
-
 ## 2. Change every file the version lives in
-
-This is where releases break. The version is duplicated across contract
-files on purpose, and a checker fails on each one that drifts.
 
 **Always, for any package:**
 
@@ -57,16 +50,9 @@ files on purpose, and a checker fails on each one that drifts.
 - `registry_source/tool/fortal_parity/check.dart` —
   `const _expectedNakedUiVersion`
 
-  The parity contract records the **byte-exact tested** Naked UI resolution, so
-  it must equal the workspace member's version. Leave
-  `_expectedNakedUiConstraint` (`'^1.0.0'`) alone — that is the *consumer
-  range* in `packages/remix/pubspec.yaml`, and it only changes on a major.
-  Missing this is the classic release-PR failure:
-
-  ```
-  Fortal parity contract failed (1 findings):
-  - The packages/naked_ui workspace member must be version 1.0.0.
-  ```
+  Set this to the tested workspace member version. If raising Remix's consumer
+  floor, also update its `naked_ui` dependency, the root melos shared constraint,
+  and `_expectedNakedUiConstraint`, then bootstrap the workspace.
 
 **`remix_cli` only:**
 
@@ -97,12 +83,13 @@ It runs `melos version` plus `tool/sync_registry_remix.dart` and
 `release/version-packages` and prints a compare link; it does not open the PR
 or tag.
 
-Dependents pinned with a caret (`packages/remix/pubspec.yaml` has
-`naked_ui: ^1.0.0`) need **no** edit for a minor or patch.
+Keep compatible caret constraints unless the consumer needs a newer release.
+If raising a floor, publish the dependency first. Runtime or registry-only
+changes do not require a `remix_cli` version bump.
 
 ## 3. Verify locally before pushing
 
-Run the same job CI runs — it is seconds, and it catches all of the above:
+Run the contract checks:
 
 ```bash
 dart run melos run ci:checks

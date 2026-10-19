@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixes
+
+- Remove the remaining direct Material imports and unused Material icon-font
+  declaration. Public APIs and application font bundling are unchanged.
+
 ## 1.2.1
 
 ### Fixes

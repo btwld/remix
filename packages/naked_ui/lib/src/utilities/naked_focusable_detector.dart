@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../mixins/naked_mixins.dart';
 
-/// Minimal widget that composes [MouseRegion], [Focus], [Shortcuts], and [Actions]
-/// based on what's needed. Exposes all [Focus] parameters for full control.
+/// A focus boundary with optional hover detection, actions, and shortcuts.
+///
+/// Disabling this widget suppresses hover callbacks and omits its actions and
+/// shortcuts. It does not suppress [onFocusChange] or [onKeyEvent]. In
+/// directional navigation mode, focus requests still follow [canRequestFocus].
 class NakedFocusableDetector extends StatefulWidget {
   /// Creates an interaction detector around [child].
   const NakedFocusableDetector({
@@ -43,10 +46,10 @@ class NakedFocusableDetector extends StatefulWidget {
   /// Whether descendants can receive focus.
   final bool descendantsAreFocusable;
 
-  /// Whether descendants are traversable.
+  /// Whether descendants participate in focus traversal.
   final bool descendantsAreTraversable;
 
-  /// Whether to skip in traversal order.
+  /// Whether focus traversal skips this widget's focus node.
   final bool skipTraversal;
 
   /// Whether to include focus semantics.
@@ -55,28 +58,30 @@ class NakedFocusableDetector extends StatefulWidget {
   /// Called when the focus state changes.
   final ValueChanged<bool>? onFocusChange;
 
-  /// Called when the hover state changes. Adds a [MouseRegion] when provided.
+  /// Called when the hover state changes while [enabled] is true.
+  ///
+  /// Providing this callback adds a [MouseRegion].
   final ValueChanged<bool>? onHoverChange;
 
   /// Called when the enabled state changes.
   final ValueChanged<bool>? onEnableChange;
 
-  /// Raw keyboard event handler.
+  /// The handler for key events received by the focus node.
   final FocusOnKeyEventCallback? onKeyEvent;
 
-  /// Optional external focus node.
+  /// The externally managed focus node, if provided.
   final FocusNode? focusNode;
 
-  /// Mouse cursor. Used only when [onHoverChange] is provided.
+  /// The mouse cursor, used only when [onHoverChange] is provided.
   final MouseCursor? mouseCursor;
 
-  /// Keyboard shortcuts. Applied only when provided and enabled.
+  /// The keyboard shortcuts available while [enabled] is true.
   final Map<ShortcutActivator, Intent>? shortcuts;
 
-  /// Intent actions. Applied only when provided and enabled.
+  /// The intent actions available while [enabled] is true.
   final Map<Type, Action<Intent>>? actions;
 
-  /// Debug label for the focus node.
+  /// The debug label for the internally managed focus node.
   final String? debugLabel;
 
   @override
@@ -118,17 +123,14 @@ class _NakedFocusableDetectorState extends State<NakedFocusableDetector>
 
   @override
   Widget build(BuildContext context) {
-    // Check navigation mode to determine focus behavior.
     final navigationMode =
         MediaQuery.maybeNavigationModeOf(context) ?? NavigationMode.traditional;
+    // Preserve directional focus navigation when interaction is disabled.
     final effectiveCanRequestFocus =
         navigationMode == NavigationMode.directional
-        // Directional: disabled widgets stay traversable.
         ? widget.canRequestFocus
-        // Traditional: disabled = unfocusable.
         : widget.enabled && widget.canRequestFocus;
 
-    // Start with Focus wrapping the child
     Widget result = Focus(
       focusNode: effectiveFocusNode,
       autofocus: widget.autofocus,
@@ -143,8 +145,7 @@ class _NakedFocusableDetectorState extends State<NakedFocusableDetector>
       child: widget.child,
     );
 
-    // Wrap with MouseRegion if hover detection is needed
-    // When disabled, MouseRegion still exists (for cursor) but doesn't trigger callbacks
+    // Keep the hover region and cursor when disabled, but suppress callbacks.
     if (widget.onHoverChange != null) {
       result = MouseRegion(
         onEnter: widget.enabled ? (_) => widget.onHoverChange!(true) : null,
@@ -154,14 +155,12 @@ class _NakedFocusableDetectorState extends State<NakedFocusableDetector>
       );
     }
 
-    // Add Actions if provided and enabled
     if (widget.enabled &&
         widget.actions != null &&
         widget.actions!.isNotEmpty) {
       result = Actions(actions: widget.actions!, child: result);
     }
 
-    // Add Shortcuts last (outermost) if provided and enabled
     if (widget.enabled &&
         widget.shortcuts != null &&
         widget.shortcuts!.isNotEmpty) {

@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
   test('the default palette retains its Radix Themes 3.3.0 values', () {
@@ -162,7 +162,7 @@ List<_WidgetCase> _generatedWidgetCases() => [
   const _WidgetCase('divider', AcmeDivider(), {AcmeDivider}),
   const _WidgetCase(
     'icon button',
-    AcmeIconButton(icon: Icons.add, semanticLabel: 'Add'),
+    AcmeIconButton(icon: RemixIcons.plus, semanticLabel: 'Add'),
     {AcmeIconButton},
   ),
   const _WidgetCase(

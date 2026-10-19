@@ -12,10 +12,10 @@ with Mix styling.
 final style = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
+  .color(const Color(0xFF2196F3))
+  .borderRadius(.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(Colors.blue.shade700));
+  .onHovered(.color(const Color(0xFF1976D2)));
 
 RemixButton(
   onPressed: () {},
@@ -29,9 +29,9 @@ Or using callable styles:
 final button = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .onHovered(.color(Colors.blue.shade700))
+  .color(const Color(0xFF2196F3))
+  .borderRadius(.circular(8))
+  .onHovered(.color(const Color(0xFF1976D2)))
   .animate(AnimationConfig.spring(300.ms));
 
 button(
@@ -62,7 +62,7 @@ dependencies:
 A button with hover styling and animation:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 class MyApp extends StatelessWidget {
@@ -70,14 +70,14 @@ class MyApp extends StatelessWidget {
   final button = ButtonStyler()
     .padding(.horizontal(16))
     .padding(.vertical(10))
-    .color(Colors.blue)
-    .borderRadius(.all(const Radius.circular(8)))
-    .label(TextStyler().color(Colors.white));
+    .color(const Color(0xFF2196F3))
+    .borderRadius(.circular(8))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
 
   @override
   Widget build(BuildContext context) {
     return WidgetsApp(
-      color: Colors.blue,
+      color: const Color(0xFF2196F3),
       builder: (_, _) => Center(
         child: button(
           label: 'Click Me',
@@ -97,10 +97,10 @@ Easily define how components should look in different interaction states.
 final button = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .label(TextStyler().color(Colors.white))
-  .onHovered(.color(Colors.blue.shade700))
+  .color(const Color(0xFF2196F3))
+  .borderRadius(.circular(8))
+  .label(TextStyler().color(const Color(0xFFFFFFFF)))
+  .onHovered(.color(const Color(0xFF1976D2)))
   .onPressed(.scale(0.95));
 ```
 
@@ -112,10 +112,10 @@ Make your button style smoothly animate when its state changes by chaining `.ani
 final style = ButtonStyler()
   .padding(.horizontal(16))
   .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
+  .color(const Color(0xFF2196F3))
+  .borderRadius(.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(Colors.blue.shade700))
+  .onHovered(.color(const Color(0xFF1976D2)))
   .onPressed(.scale(0.95));
 ```
 
@@ -131,15 +131,15 @@ Create base styles and extend them to build variants:
 final baseButtonStyle = ButtonStyler()
     .padding(.horizontal(16))
     .padding(.vertical(10))
-    .borderRadius(.all(const Radius.circular(8)));
+    .borderRadius(.circular(8));
 
 final primaryButton = baseButtonStyle
-    .color(Colors.blue)
-    .label(TextStyler().color(Colors.white));
+    .color(const Color(0xFF2196F3))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
 
 final destructiveButton = baseButtonStyle
-    .color(Colors.red)
-    .label(TextStyler().color(Colors.white));
+    .color(const Color(0xFFF44336))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
 ```
 
 ## Theming with Fortal
@@ -199,6 +199,9 @@ Widget buildPortalHost() {
 A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
 commonly provides a `Navigator` and its overlay already. Dialog helpers push
 routes, so their calling context must be below that caller-owned `Navigator`.
+
+See the [Material dependency boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
+for the scope of the source check and remaining upstream dependencies.
 
 ## Components
 
@@ -266,4 +269,4 @@ Check out `apps/dashboard`, `apps/demo`, and the per-package examples in
 
 ---
 
-Built with ❤️ using [Mix](https://github.com/btwld/mix) and [Naked UI](https://github.com/btwld/naked_ui)
+Built with ❤️ using [Mix](https://github.com/btwld/mix) and [Naked UI](https://github.com/btwld/remix/tree/main/packages/naked_ui)
