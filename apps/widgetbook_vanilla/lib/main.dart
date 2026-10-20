@@ -33,13 +33,19 @@ class VanillaThemeAddon extends ThemeAddon<ThemeData> {
           ),
           WidgetbookTheme(
             name: 'dark',
-            data: ThemeData(brightness: .dark),
+            data: ThemeData(
+              brightness: .dark,
+              scaffoldBackgroundColor: const Color(0xFF111111),
+            ),
           ),
         ],
         themeBuilder: (context, theme, child) {
-          return VanillaTheme(
-            mode: theme.brightness == Brightness.dark ? .dark : .light,
-            child: child,
+          return Theme(
+            data: theme,
+            child: VanillaTheme(
+              mode: theme.brightness == Brightness.dark ? .dark : .light,
+              child: child,
+            ),
           );
         },
       );
