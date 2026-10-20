@@ -238,13 +238,6 @@ void main() {
         expect(propertyNames, contains('icon'));
       });
 
-      test('can be converted to string for debugging', () {
-        const spec = AvatarSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
-
       test('toString includes class name', () {
         const spec = AvatarSpec();
 

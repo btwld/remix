@@ -305,13 +305,6 @@ void main() {
         );
       });
 
-      test('can be converted to string for debugging', () {
-        const spec = IconButtonSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
-
       test('toString includes all properties', () {
         const spec = IconButtonSpec();
         final stringRepresentation = spec.toString();

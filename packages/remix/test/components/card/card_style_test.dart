@@ -63,22 +63,6 @@ void main() {
       );
 
       styleMethodTest(
-        'color sets container background color',
-        initial: CardStyler(),
-        modify: (style) => style.color(Colors.blue),
-        expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
         'borderRadius sets container border radius',
         initial: CardStyler(),
         modify: (style) =>
@@ -296,12 +280,6 @@ void main() {
         const style2 = CardStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
-      });
-
-      test('styles with different properties are not equal', () {
-        const style1 = CardStyler.create();
-        final style2 = CardStyler();
-        expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {

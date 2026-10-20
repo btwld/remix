@@ -23,7 +23,10 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSlider), findsOneWidget);
+        final slider = tester.widget<RemixSlider>(find.byType(RemixSlider));
+        expect(slider.value, 50.0);
+        expect(slider.min, 0.0);
+        expect(slider.max, 100.0);
       });
 
       testWidgets('renders slider at minimum value', (tester) async {
@@ -32,7 +35,8 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSlider), findsOneWidget);
+        final slider = tester.widget<RemixSlider>(find.byType(RemixSlider));
+        expect(slider.value, slider.min);
       });
 
       testWidgets('renders slider at maximum value', (tester) async {
@@ -41,7 +45,8 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSlider), findsOneWidget);
+        final slider = tester.widget<RemixSlider>(find.byType(RemixSlider));
+        expect(slider.value, slider.max);
       });
     });
 

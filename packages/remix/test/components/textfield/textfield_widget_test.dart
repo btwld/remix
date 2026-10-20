@@ -389,13 +389,19 @@ void main() {
     });
 
     group('Styling', () {
-      testWidgets('applies custom text color', (tester) async {
+      testWidgets('applies color to the container background', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(style: TextFieldStyler().color(Colors.red)),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
+        final boxDecorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+        expect(
+          boxDecorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
       });
 
       testWidgets('applies custom background color', (tester) async {
@@ -404,7 +410,13 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
+        final boxDecorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+        expect(
+          boxDecorations,
+          contains(equals(const BoxDecoration(color: Colors.grey))),
+        );
       });
 
       testWidgets('applies custom padding', (tester) async {

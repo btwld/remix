@@ -226,13 +226,6 @@ void main() {
           ]),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        final spec = SliderSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
 
     group('Edge Cases and Error Handling', () {

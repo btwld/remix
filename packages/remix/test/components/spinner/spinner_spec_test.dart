@@ -225,13 +225,6 @@ void main() {
           ]),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        const spec = SpinnerSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
 
     group('Edge Cases and Error Handling', () {
