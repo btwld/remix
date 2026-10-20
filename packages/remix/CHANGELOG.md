@@ -1,3 +1,20 @@
+## Unreleased
+
+### Breaking changes
+
+- Rename `RemixStyleSpecBuilder.trackFocusHighlightMode` to
+  `trackFocusVisibility`. It now rebuilds on Mix's `FocusVisibility` instead
+  of Flutter's focus highlight mode.
+
+### Fixes
+
+- Hide focus rings after a pointer press until the next keyboard input,
+  through Mix 2.3.0's `onFocusVisible`. On desktop, clicking a tab, slider
+  thumb, select, or menu trigger no longer leaves a ring. The slider thumb,
+  toggle group, segmented control, and menu items update when input switches
+  between pointer and keyboard. Vanilla text fields still ring on click, as
+  browsers do for text inputs. Requires `mix` 2.3.0.
+
 ## 1.0.0-beta.11
 
 ### Breaking changes

@@ -882,23 +882,27 @@ class _RemixMenuItemContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExcludeSemantics(
-      child: ListenableBuilder(
-        listenable: controller,
-        builder: (context, child) {
-          final states = <WidgetState>{
-            ...controller.value,
-            if (submenuOpen) WidgetState.selected,
-          };
-          return WidgetStateProvider(
-            states: states,
-            child: Builder(
-              builder: (context) => StyleSpecBuilder<MenuItemSpec>(
-                styleSpec: _resolveStyle(context),
-                builder: (context, spec) => _buildRow(context, spec),
+      // Keeps onFocusVisible item styles in step with pointer and keyboard
+      // input, which the manual WidgetStateProvider below does not track.
+      child: FocusVisibilityScope(
+        child: ListenableBuilder(
+          listenable: controller,
+          builder: (context, child) {
+            final states = <WidgetState>{
+              ...controller.value,
+              if (submenuOpen) WidgetState.selected,
+            };
+            return WidgetStateProvider(
+              states: states,
+              child: Builder(
+                builder: (context) => StyleSpecBuilder<MenuItemSpec>(
+                  styleSpec: _resolveStyle(context),
+                  builder: (context, spec) => _buildRow(context, spec),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
