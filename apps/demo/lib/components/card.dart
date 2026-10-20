@@ -37,22 +37,21 @@ Widget buildCardUseCase(BuildContext context) {
                 mainAxisSize: .min,
                 crossAxisAlignment: .start,
                 children: [
-                  StyledText(
+                  FortalText(
                     context.knobs.string(
                       label: 'Name',
                       initialValue: 'Leo Farias',
                     ),
-                    style: TextStyler()
-                        .fontSize(14)
-                        .fontWeight(FontWeight.bold)
-                        .color(Colors.black),
+                    size: .size2,
+                    weight: .bold,
                   ),
-                  StyledText(
+                  FortalText(
                     context.knobs.string(
                       label: 'Title',
                       initialValue: 'Flutter Engineer',
                     ),
-                    style: TextStyler().fontSize(12).color(Colors.black54),
+                    size: .size1,
+                    style: TextStyler().color(FortalTokens.gray11()),
                   ),
                 ],
               ),

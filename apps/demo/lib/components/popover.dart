@@ -53,7 +53,7 @@ Widget buildPopoverUseCase(BuildContext context) {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).colorScheme.outline),
+              border: Border.all(color: FortalTokens.gray6.resolve(context)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Row(

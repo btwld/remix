@@ -5,7 +5,7 @@ import 'package:demo/ui/ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
-final _tabState = _TabState('tab1');
+final _tabState = ValueNotifier('tab1');
 
 @widgetbook.UseCase(name: 'Tabs Component', type: RemixTabs)
 Widget buildTabsUseCase(BuildContext context) {
@@ -22,9 +22,7 @@ Widget buildTabsUseCase(BuildContext context) {
               builder: (context, child) {
                 return RemixTabs(
                   selectedTabId: _tabState.value,
-                  onChanged: (id) {
-                    _tabState.update(id);
-                  },
+                  onChanged: (id) => _tabState.value = id,
                   child: ColumnBox(
                     style: FlexBoxStyler().spacing(12),
                     children: [
@@ -58,15 +56,6 @@ Widget buildTabsUseCase(BuildContext context) {
       ),
     ),
   );
-}
-
-class _TabState extends ValueNotifier<String> {
-  _TabState(super.value);
-
-  void update(String value) {
-    this.value = value;
-    notifyListeners();
-  }
 }
 
 @widgetbook.UseCase(name: 'Catalog', type: RemixTabs)

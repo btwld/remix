@@ -41,6 +41,22 @@ void main() {
     expect(registryDashboardDemoInteractionIds, hasLength(6));
   });
 
+  testWidgets('alert notification uses the sample event title', (tester) async {
+    await _pumpDashboard(tester, preset: .fortal);
+    await tester.tap(find.bySemanticsLabel('Notifications').first);
+    await tester.pump();
+
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('topbar-notifications-content')),
+        matching: find.text('Inventory alert'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Order ORD-1047 requires review.'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   for (final preset in _Preset.values) {
     group(preset.name, () {
       testWidgets('overview renders coherent sample data', (tester) async {
@@ -156,7 +172,23 @@ void main() {
 
         await tester.tap(find.bySemanticsLabel('Notifications').first);
         await tester.pump();
-        expect(find.text('Order ORD-1047 requires review.'), findsOneWidget);
+        expect(
+          find.text(switch (preset) {
+            .defaultPreset => 'Order ORD-1047 requires review.',
+            .fortal => 'Inventory alert',
+          }),
+          findsWidgets,
+        );
+        if (preset == .fortal) {
+          expect(
+            find.descendant(
+              of: find.byKey(const ValueKey('topbar-notifications-content')),
+              matching: find.text('Inventory alert'),
+            ),
+            findsOneWidget,
+          );
+          expect(find.text('Order ORD-1047 requires review.'), findsNothing);
+        }
         await tester.tap(find.bySemanticsLabel('Notifications').first);
         await tester.pump();
 

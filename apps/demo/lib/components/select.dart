@@ -5,55 +5,67 @@ import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-final _key = GlobalKey();
-
 @widgetbook.UseCase(name: 'Select Component', type: RemixSelect)
 Widget buildSelectUseCase(BuildContext context) {
-  final variant = context.knobs.object.dropdown(
-    label: 'variant',
-    options: FortalSelectVariant.values,
-    labelBuilder: (variant) => variant.name,
-  );
-  final size = context.knobs.object.dropdown(
-    label: 'size',
-    options: FortalSelectSize.values,
-    labelBuilder: (size) => size.name,
-    initialOption: FortalSelectSize.size2,
-  );
-
-  String selectedValue = 'Apple';
-  return KeyedSubtree(
-    key: _key,
-    child: Scaffold(
-      body: Center(
-        child: StatefulBuilder(
-          builder: (context, setState) {
-            return FortalSelect(
-              variant: variant,
-              size: size,
-              trigger: RemixSelectTrigger(
-                placeholder: context.knobs.string(
-                  label: 'Placeholder',
-                  initialValue: 'Select item...',
-                ),
-              ),
-              selectedValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value ?? 'Apple';
-                });
-              },
-              items: [
-                RemixSelectItem(value: 'Apple', label: 'Apple'),
-                RemixSelectItem(value: 'Banana', label: 'Banana'),
-                RemixSelectItem(value: 'Orange', label: 'Orange'),
-              ],
-            );
-          },
-        ),
-      ),
+  return SelectExample(
+    variant: context.knobs.object.dropdown(
+      label: 'variant',
+      options: FortalSelectVariant.values,
+      labelBuilder: (variant) => variant.name,
+    ),
+    size: context.knobs.object.dropdown(
+      label: 'size',
+      options: FortalSelectSize.values,
+      labelBuilder: (size) => size.name,
+      initialOption: FortalSelectSize.size2,
+    ),
+    placeholder: context.knobs.string(
+      label: 'Placeholder',
+      initialValue: 'Select item...',
     ),
   );
+}
+
+class SelectExample extends StatefulWidget {
+  const SelectExample({
+    super.key,
+    required this.variant,
+    required this.size,
+    required this.placeholder,
+  });
+
+  final FortalSelectVariant variant;
+  final FortalSelectSize size;
+  final String placeholder;
+
+  @override
+  State<SelectExample> createState() => _SelectExampleState();
+}
+
+class _SelectExampleState extends State<SelectExample> {
+  String _selectedValue = 'Apple';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: FortalSelect(
+          variant: widget.variant,
+          size: widget.size,
+          trigger: RemixSelectTrigger(placeholder: widget.placeholder),
+          selectedValue: _selectedValue,
+          onChanged: (value) {
+            setState(() => _selectedValue = value ?? 'Apple');
+          },
+          items: [
+            RemixSelectItem(value: 'Apple', label: 'Apple'),
+            RemixSelectItem(value: 'Banana', label: 'Banana'),
+            RemixSelectItem(value: 'Orange', label: 'Orange'),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 @widgetbook.UseCase(name: 'Catalog', type: RemixSelect)
