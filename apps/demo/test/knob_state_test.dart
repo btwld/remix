@@ -1,4 +1,5 @@
 import 'package:demo/addons/icon_data_knob.dart';
+import 'package:demo/components/icon_button.dart';
 import 'package:demo/components/select.dart';
 import 'package:demo/ui/ui.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,33 @@ void main() {
 
     expect(read(const {}), Icons.add);
     expect(read(const {'Icon': 'none'}), isNull);
+  });
+
+  testWidgets('icon button story keeps its icon when None is chosen', (
+    tester,
+  ) async {
+    final state = WidgetbookState(
+      root: WidgetbookRoot(children: const []),
+      queryParams: {
+        'knobs': FieldCodec.encodeQueryGroup({'Icon': 'none'}),
+      },
+    );
+    addTearDown(state.dispose);
+
+    await tester.pumpWidget(
+      WidgetbookScope(
+        state: state,
+        child: const MaterialApp(
+          home: FortalTheme(child: Builder(builder: buildIconButtonUseCase)),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(
+      tester.widget<FortalIconButton>(find.byType(FortalIconButton)).icon,
+      Icons.add,
+    );
   });
 
   testWidgets('select keeps its selection across a knob rebuild', (

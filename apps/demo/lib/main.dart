@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide Scaffold;
 import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -23,14 +23,36 @@ class HotReload extends StatelessWidget {
   }
 }
 
-class FortalThemeAddon extends ThemeAddon<FortalThemeMode> {
+class FortalThemeAddon extends ThemeAddon<ThemeData> {
   FortalThemeAddon()
     : super(
         themes: [
-          WidgetbookTheme(name: 'light', data: FortalThemeMode.light),
-          WidgetbookTheme(name: 'dark', data: FortalThemeMode.dark),
+          WidgetbookTheme(
+            name: 'light',
+            data: ThemeData(
+              brightness: .light,
+              scaffoldBackgroundColor: Colors.white,
+            ),
+          ),
+          WidgetbookTheme(
+            name: 'dark',
+            data: ThemeData(
+              brightness: .dark,
+              scaffoldBackgroundColor: const Color(0xFF111111),
+            ),
+          ),
         ],
-        themeBuilder: (context, mode, child) =>
-            FortalTheme(mode: mode, child: child),
+        themeBuilder: (context, theme, child) {
+          return Theme(
+            data: theme,
+            child: FortalTheme(
+              mode: theme.brightness == Brightness.dark ? .dark : .light,
+              child: ColoredBox(
+                color: theme.scaffoldBackgroundColor,
+                child: child,
+              ),
+            ),
+          );
+        },
       );
 }

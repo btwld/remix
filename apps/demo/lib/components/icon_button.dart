@@ -38,10 +38,12 @@ Widget buildIconButtonUseCase(BuildContext context) {
                 label: 'Loading',
                 initialValue: false,
               ),
-              icon: context.knobs.iconData(
-                label: 'Icon',
-                initialValue: Icons.add,
-              ),
+              icon:
+                  context.knobs.iconData(
+                    label: 'Icon',
+                    initialValue: Icons.add,
+                  ) ??
+                  Icons.add,
               size: context.knobs.object.dropdown(
                 label: 'size',
                 options: FortalIconButtonSize.values,
