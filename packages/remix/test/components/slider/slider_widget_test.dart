@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -606,6 +607,42 @@ void main() {
           expect(_sliderThumb(tester).containerEffects?.outline.width, 0);
         });
       }
+
+      testWidgets(
+        'a click hides the thumb focus effect and Tab shows it',
+        (tester) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 240,
+              child: RemixSlider(
+                value: 0.5,
+                onChanged: (value) {},
+                focusNode: focusNode,
+                style: _sliderFocusStyle(),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(_sliderThumb(tester).containerEffects?.outline.width ?? 0, 0);
+
+          await tester.tap(
+            find.byType(RemixSlider),
+            kind: PointerDeviceKind.mouse,
+          );
+          await tester.pumpAndSettle();
+          expect(focusNode.hasFocus, isTrue);
+          expect(_sliderThumb(tester).containerEffects?.outline.width ?? 0, 0);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          await tester.pumpAndSettle();
+          expect(focusNode.hasFocus, isTrue);
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 3);
+        },
+        variant: TargetPlatformVariant({TargetPlatform.macOS}),
+      );
 
       testWidgets('forced focus state renders the thumb focus effect', (
         tester,

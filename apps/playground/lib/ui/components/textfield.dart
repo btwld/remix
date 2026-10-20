@@ -128,17 +128,20 @@ TextFieldStyler _base() => TextFieldStyler()
         size: PlaygroundTokens.icon,
       ),
     )
-    .onFocusVisible(_focusVisibleStyle())
+    // A text field rings on any focus, including a click. Radix Themes and
+    // React Aria do the same (`:focus` / `data-focused`); other controls stay
+    // on `onFocusVisible`.
+    .onFocused(_focusedStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
 
-/// The keyboard focus ring: a 3px band of `ring` at half strength, with the
+/// The focus ring: a 3px band of `ring` at half strength, with the
 /// field's own outline turned `ring`.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// box without taking layout space, so focusing a field never reflows the form
 /// it sits in.
-TextFieldStyler _focusVisibleStyle() => TextFieldStyler()
+TextFieldStyler _focusedStyle() => TextFieldStyler()
     .containerEffects(playgroundFocusRing())
     .border(playgroundFocusBorder());
 
@@ -159,8 +162,8 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
       .border(.color(PlaygroundTokens.destructive()))
       .helperText(.color(PlaygroundTokens.destructive()))
       // An invalid field that takes focus rings in its own red and keeps its
-      // red outline.
-      .onFocusVisible(
+      // red outline. Same `onFocused` contract as the enabled field.
+      .onFocused(
         TextFieldStyler()
             .containerEffects(
               playgroundFocusRing(

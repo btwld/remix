@@ -1,3 +1,14 @@
+## Unreleased
+
+### Fixes
+
+- Require `mix ^2.2.3`. Focus rings follow Mix `FocusVisibility`: a pointer
+  press hides them until the next keyboard input. `RemixSlider` reads that
+  signal for its thumb ring. `RemixFocusHighlightModeProvider` is removed;
+  composites that publish their own widget states use `FocusVisibilityScope`.
+- Vanilla text fields and text areas draw their focus ring with `onFocused`,
+  so a click shows it. Other controls stay on `onFocusVisible`.
+
 ## 1.0.0-beta.11
 
 ### Breaking changes

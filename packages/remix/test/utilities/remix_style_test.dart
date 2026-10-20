@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/src/utilities/remix_style.dart'
@@ -104,6 +106,49 @@ void main() {
       await tester.pumpWidget(build(forceFocus: true));
       expect(_boxColor(resolved), Colors.red);
     });
+
+    testWidgets(
+      'a pointer press hides focus-visible until the next key',
+      (tester) async {
+        late BoxSpec resolved;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Align(
+              alignment: Alignment.topLeft,
+              child: WidgetStateProvider(
+                states: const {WidgetState.focused},
+                child: RemixStyleSpecBuilder<BoxSpec>(
+                  style: BoxStyler()
+                      .color(Colors.blue)
+                      .onFocusVisible(.color(Colors.red)),
+                  styleSpec: null,
+                  trackFocusHighlightMode: true,
+                  builder: (context, spec) {
+                    resolved = spec;
+                    return const SizedBox(width: 20, height: 20);
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(_boxColor(resolved), Colors.red);
+
+        await tester.tapAt(
+          const Offset(400, 400),
+          kind: PointerDeviceKind.mouse,
+        );
+        await tester.pump();
+        expect(_boxColor(resolved), Colors.blue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+        expect(_boxColor(resolved), Colors.red);
+      },
+      variant: TargetPlatformVariant({TargetPlatform.macOS}),
+    );
   });
 
   testWidgets(
