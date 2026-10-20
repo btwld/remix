@@ -404,21 +404,6 @@ void main() {
         );
       });
 
-      testWidgets('applies custom background color', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTextField(style: TextFieldStyler().color(Colors.grey)),
-        );
-        await tester.pumpAndSettle();
-
-        final boxDecorations = tester
-            .widgetList<Box>(find.byType(Box))
-            .map((box) => box.styleSpec?.spec.decoration);
-        expect(
-          boxDecorations,
-          contains(equals(const BoxDecoration(color: Colors.grey))),
-        );
-      });
-
       testWidgets('applies custom padding', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(

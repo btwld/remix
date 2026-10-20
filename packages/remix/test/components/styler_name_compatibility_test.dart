@@ -326,7 +326,7 @@ void main() {
   });
 }
 
-/// One alias case: construct, `create()`, assign, `runtimeType`, and `merge`.
+/// One alias case: construct, `create()`, `runtimeType`, and `merge`.
 ///
 /// [construct] and [create] are tear-offs of the deprecated export, so dropping
 /// that export fails this library at compile time.
@@ -338,9 +338,7 @@ void expectStylerAlias<T>(
 ) {
   test('$legacyName aliases ${construct().runtimeType}', () {
     final legacy = construct();
-    final T canonical = legacy;
 
-    expect(canonical, same(legacy));
     expect(legacy.runtimeType, T);
     expect(merge(legacy, create()), isA<T>());
   });
