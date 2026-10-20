@@ -14,6 +14,7 @@ import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dar
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
+import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
@@ -670,6 +671,59 @@ void main() {
       );
     });
   }
+
+  testWidgets('settings radius slider changes the resolved radius', (
+    tester,
+  ) async {
+    await _pumpDashboard(
+      tester,
+      preset: .defaultPreset,
+      initialPage: RegistryDashboardDemoPage.settings,
+    );
+
+    Radius radiusOf(RadiusToken token) => MixScope.tokenOf(
+      token,
+      tester.element(find.textContaining('Control radius')),
+    );
+
+    final before = radiusOf(VanillaTokens.radiusLg);
+    expect(before, const Radius.circular(10));
+    expect(find.text('Control radius · 10px'), findsOneWidget);
+
+    final slider = find.byType(RemixSlider);
+    await tester.ensureVisible(slider);
+    await tester.drag(slider, const Offset(160, 0));
+    await tester.pumpAndSettle();
+
+    final after = radiusOf(VanillaTokens.radiusLg);
+    expect(after.x, greaterThan(before.x));
+    expect(radiusOf(VanillaTokens.radiusMd).x, closeTo(after.x - 2, 0.001));
+    expect(find.text('Control radius · 10px'), findsNothing);
+
+    await tester.tap(
+      find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+    );
+    await tester.pumpAndSettle();
+    expect(
+      MixScope.tokenOf(
+        VanillaTokens.background,
+        tester.element(find.textContaining('Control radius')),
+      ),
+      const Color(0xFF0A0A0A),
+    );
+    expect(radiusOf(VanillaTokens.radiusLg), after);
+
+    await tester.tap(find.bySemanticsLabel('Theme settings'));
+    await tester.pumpAndSettle();
+    expect(find.text('Theme settings'), findsOneWidget);
+    expect(find.text('Accent color'), findsNothing);
+    expect(find.text('Density'), findsNothing);
+    expect(find.text('Comfortable'), findsNothing);
+    expect(find.text('Neutral'), findsNothing);
+    expect(find.text('Light'), findsWidgets);
+    expect(find.text('Dark'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
 
   test('dashboard_demo starter sources remain independent of Material', () {
     final lib = Directory('lib').existsSync() ? 'lib' : 'registry_source/lib';

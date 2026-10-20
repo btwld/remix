@@ -15,6 +15,8 @@ import '../../components/select.dart';
 import '../../components/slider.dart';
 import '../../components/switch.dart';
 import '../../components/textfield.dart';
+import '../../theme/theme_data.dart';
+import '../../theme/theme_scope.dart';
 import '../../theme/tokens.dart';
 
 enum _Appearance { light, dark, system }
@@ -24,10 +26,14 @@ class VanillaDashboardSettingsPage extends StatefulWidget {
     super.key,
     this.darkMode,
     this.onDarkModeChanged,
+    this.onRadiusChanged,
   });
 
   final bool? darkMode;
   final ValueChanged<bool?>? onDarkModeChanged;
+
+  /// Called with the base corner radius, in logical pixels, as the slider moves.
+  final ValueChanged<double>? onRadiusChanged;
 
   @override
   State<VanillaDashboardSettingsPage> createState() =>
@@ -40,7 +46,7 @@ class _VanillaDashboardSettingsPageState
   bool _weeklyDigest = false;
   String _language = 'en';
   _Appearance _appearance = .system;
-  double _radius = 8;
+  double? _radius;
   bool _dangerZoneExpanded = false;
 
   _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
@@ -50,6 +56,13 @@ class _VanillaDashboardSettingsPageState
           true => .dark,
           null => .system,
         };
+
+  /// The slider's value: the user's drag, otherwise the active theme's
+  /// [VanillaThemeData.radius].
+  double _resolvedRadius(BuildContext context) =>
+      _radius ??
+      VanillaTheme.maybeOf(context)?.radius.x ??
+      const VanillaThemeData.light().radius.x;
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -200,15 +213,18 @@ class _VanillaDashboardSettingsPageState
                       .spacing(VanillaTokens.s2),
                   children: [
                     _Text(
-                      'Control radius · ${_radius.round()}px',
+                      'Control radius · ${_resolvedRadius(context).round()}px',
                       emphasized: true,
                     ),
                     VanillaSlider(
-                      value: _radius,
+                      value: _resolvedRadius(context),
                       min: 0,
                       max: 16,
                       snapDivisions: 16,
-                      onChanged: (value) => setState(() => _radius = value),
+                      onChanged: (value) {
+                        setState(() => _radius = value);
+                        widget.onRadiusChanged?.call(value);
+                      },
                     ),
                   ],
                 ),
