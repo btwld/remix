@@ -135,133 +135,137 @@ class RemixSlider extends StatelessWidget {
           : [semanticFormatterCallback],
       excludeSemantics: excludeSemantics,
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<SliderSpec>(
-          style: style,
-          styleSpec: styleSpec,
-          controller: NakedSliderState.controllerOf(context),
-          trackFocusHighlightMode: true,
-          builder: (context, spec) {
-            final thumbSpec = spec.thumb;
-            final thumbSize = _resolveThumbSize(context, thumbSpec);
-            final trackThickness = spec.trackThickness > 0
-                ? spec.trackThickness
-                : SliderSpec.defaultTrackStrokeWidth;
-            final override = WidgetStateStyleOverride.maybeOf(context);
-            final shouldShowThumbFocusEffect = override != null
-                ? override.states.contains(WidgetState.focused)
-                : state.focusedThumbIndex == 0 && FocusVisibility.of(context);
+        return FocusVisibilityScope(
+          child: RemixStyleSpecBuilder<SliderSpec>(
+            style: style,
+            styleSpec: styleSpec,
+            controller: NakedSliderState.controllerOf(context),
+            builder: (context, spec) {
+              final thumbSpec = spec.thumb;
+              final thumbSize = _resolveThumbSize(context, thumbSpec);
+              final trackThickness = spec.trackThickness > 0
+                  ? spec.trackThickness
+                  : SliderSpec.defaultTrackStrokeWidth;
+              final override = WidgetStateStyleOverride.maybeOf(context);
+              final shouldShowThumbFocusEffect = override != null
+                  ? override.states.contains(WidgetState.focused)
+                  : state.focusedThumbIndex == 0 && FocusVisibility.of(context);
 
-            // Slider height accommodates both thumb and track:
-            // - thumb.height + trackThickness: ensures thumb has clearance above/below
-            // - trackThickness alone: minimum viable height
-            final sliderHeight = math.max(
-              thumbSize.height + trackThickness,
-              trackThickness,
-            );
-            final horizontalOverflow = math.max(
-              thumbSize.width / 2,
-              trackThickness / 2,
-            );
-            final horizontalPadding = horizontalOverflow * 2;
+              // Slider height accommodates both thumb and track:
+              // - thumb.height + trackThickness: ensures thumb has clearance above/below
+              // - trackThickness alone: minimum viable height
+              final sliderHeight = math.max(
+                thumbSize.height + trackThickness,
+                trackThickness,
+              );
+              final horizontalOverflow = math.max(
+                thumbSize.width / 2,
+                trackThickness / 2,
+              );
+              final horizontalPadding = horizontalOverflow * 2;
 
-            final slider = SizedBox(
-              height: sliderHeight,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  // Visual placement comes from Naked so LTR, RTL, and
-                  // inverted tracks match the interaction layer.
-                  final originVisual = state.visualPercentageOf(0);
-                  final thumbVisual = state.visualPercentageAt(0);
-                  final rangeStart = math.min(originVisual, thumbVisual);
-                  final rangeSpan = (thumbVisual - originVisual).abs();
-                  final availableWidth = math.max(
-                    0.0,
-                    constraints.maxWidth - horizontalPadding,
-                  );
-                  // The thumb is a direct child of the outer Stack, so it must
-                  // re-apply the inset the track gets from its Padding, then
-                  // back off half its own width to center on the track point.
-                  // When the thumb is the widest element both terms cancel.
-                  final thumbPosition =
-                      horizontalOverflow -
-                      thumbSize.width / 2 +
-                      availableWidth * thumbVisual;
+              final slider = SizedBox(
+                height: sliderHeight,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Visual placement comes from Naked so LTR, RTL, and
+                    // inverted tracks match the interaction layer.
+                    final originVisual = state.visualPercentageOf(0);
+                    final thumbVisual = state.visualPercentageAt(0);
+                    final rangeStart = math.min(originVisual, thumbVisual);
+                    final rangeSpan = (thumbVisual - originVisual).abs();
+                    final availableWidth = math.max(
+                      0.0,
+                      constraints.maxWidth - horizontalPadding,
+                    );
+                    // The thumb is a direct child of the outer Stack, so it must
+                    // re-apply the inset the track gets from its Padding, then
+                    // back off half its own width to center on the track point.
+                    // When the thumb is the widest element both terms cancel.
+                    final thumbPosition =
+                        horizontalOverflow -
+                        thumbSize.width / 2 +
+                        availableWidth * thumbVisual;
 
-                  return Stack(
-                    alignment: .centerLeft,
-                    children: [
-                      Padding(
-                        padding: .symmetric(horizontal: horizontalPadding / 2),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: constraints.maxHeight,
-                          child: LayoutBuilder(
-                            builder: (context, trackConstraints) {
-                              final trackWidth = trackConstraints.maxWidth;
-                              return Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: spec.trackWidth,
-                                    child: RemixBoxAdapter(
-                                      styleSpec: _sliderRailStyle(
-                                        spec.track,
-                                        color: spec.trackColor,
-                                        thickness: spec.trackWidth,
+                    return Stack(
+                      alignment: .centerLeft,
+                      children: [
+                        Padding(
+                          padding: .symmetric(
+                            horizontal: horizontalPadding / 2,
+                          ),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: constraints.maxHeight,
+                            child: LayoutBuilder(
+                              builder: (context, trackConstraints) {
+                                final trackWidth = trackConstraints.maxWidth;
+                                return Stack(
+                                  alignment: Alignment.centerLeft,
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: spec.trackWidth,
+                                      child: RemixBoxAdapter(
+                                        styleSpec: _sliderRailStyle(
+                                          spec.track,
+                                          color: spec.trackColor,
+                                          thickness: spec.trackWidth,
+                                        ),
+                                        containerEffects: spec.trackEffects,
                                       ),
-                                      containerEffects: spec.trackEffects,
                                     ),
-                                  ),
-                                  Positioned(
-                                    left: rangeStart * trackWidth,
-                                    width: rangeSpan * trackWidth,
-                                    top: 0,
-                                    bottom: 0,
-                                    child: Center(
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        height: spec.rangeWidth,
-                                        child: RemixBoxAdapter(
-                                          styleSpec: _sliderRailStyle(
-                                            spec.range,
-                                            color: spec.rangeColor,
-                                            thickness: spec.rangeWidth,
+                                    Positioned(
+                                      left: rangeStart * trackWidth,
+                                      width: rangeSpan * trackWidth,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: spec.rangeWidth,
+                                          child: RemixBoxAdapter(
+                                            styleSpec: _sliderRailStyle(
+                                              spec.range,
+                                              color: spec.rangeColor,
+                                              thickness: spec.rangeWidth,
+                                            ),
+                                            containerEffects: spec.rangeEffects,
                                           ),
-                                          containerEffects: spec.rangeEffects,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      Transform.translate(
-                        offset: Offset(thumbPosition, 0),
-                        child: RemixBoxAdapter(
-                          styleSpec: spec.thumb,
-                          containerEffects:
-                              (spec.thumbEffects ?? const RemixBoxEffectsSpec())
-                                  .merge(
-                                    shouldShowThumbFocusEffect
-                                        ? spec.thumbFocusEffects
-                                        : null,
-                                  ),
+                        Transform.translate(
+                          offset: Offset(thumbPosition, 0),
+                          child: RemixBoxAdapter(
+                            styleSpec: spec.thumb,
+                            containerEffects:
+                                (spec.thumbEffects ??
+                                        const RemixBoxEffectsSpec())
+                                    .merge(
+                                      shouldShowThumbFocusEffect
+                                          ? spec.thumbFocusEffects
+                                          : null,
+                                    ),
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            );
-            final blendMode = spec.blendMode;
-            return blendMode == null
-                ? slider
-                : RemixBlendMode(blendMode: blendMode, child: slider);
-          },
+                      ],
+                    );
+                  },
+                ),
+              );
+              final blendMode = spec.blendMode;
+              return blendMode == null
+                  ? slider
+                  : RemixBlendMode(blendMode: blendMode, child: slider);
+            },
+          ),
         );
       },
     );

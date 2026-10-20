@@ -176,7 +176,7 @@ class UiTheme extends StatelessWidget {
     final data = useDark ? dark : base;
     final tokens = buildUiScopeTokens(data);
     final foreground = tokens[UiTokens.gray12]! as Color;
-    Widget scoped = child;
+    Widget scoped = FocusVisibilityScope(child: child);
     if (parent == null) {
       scoped = _uiRootTextStyle(tokens: tokens, child: scoped);
     } else if (parent.brightness != data.brightness ||

@@ -116,18 +116,19 @@ void main() {
           MaterialApp(
             home: Align(
               alignment: Alignment.topLeft,
-              child: WidgetStateProvider(
-                states: const {WidgetState.focused},
-                child: RemixStyleSpecBuilder<BoxSpec>(
-                  style: BoxStyler()
-                      .color(Colors.blue)
-                      .onFocusVisible(.color(Colors.red)),
-                  styleSpec: null,
-                  trackFocusHighlightMode: true,
-                  builder: (context, spec) {
-                    resolved = spec;
-                    return const SizedBox(width: 20, height: 20);
-                  },
+              child: FocusVisibilityScope(
+                child: WidgetStateProvider(
+                  states: const {WidgetState.focused},
+                  child: RemixStyleSpecBuilder<BoxSpec>(
+                    style: BoxStyler()
+                        .color(Colors.blue)
+                        .onFocusVisible(.color(Colors.red)),
+                    styleSpec: null,
+                    builder: (context, spec) {
+                      resolved = spec;
+                      return const SizedBox(width: 20, height: 20);
+                    },
+                  ),
                 ),
               ),
             ),

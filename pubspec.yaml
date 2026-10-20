@@ -34,7 +34,7 @@ dependency_overrides:
     git:
       url: https://github.com/btwld/mix.git
       path: packages/mix
-      ref: main
+      ref: d313788951e5c92ac288eb8f36b97e094b0a8490
 
 melos:
   packages:

@@ -95,7 +95,7 @@ abstract final class VanillaTokens {
   /// dark one, where a control has to stand out from a card's hairline.
   static const input = ColorToken('vanilla.color.input');
 
-  /// Focus color: the keyboard focus ring and a focused control's border.
+  /// Focus color: the focus ring and a focused control's border.
   ///
   /// Recipes draw the ring at half strength and turn a bordered control's
   /// outline to full strength. Give it a brand color here and every control's

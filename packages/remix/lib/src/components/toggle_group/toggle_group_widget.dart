@@ -200,24 +200,25 @@ class RemixToggleGroup<T> extends StatelessWidget {
       loop: loop,
       semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
-      child: RemixStyleSpecBuilder<ToggleGroupSpec>(
-        style: effectiveStyle,
-        styleSpec: styleSpec,
-        trackFocusHighlightMode: true,
-        builder: (context, spec) {
-          return FlexBox(
-            styleSpec: _withOrientation(spec.container),
-            children: [
-              for (final item in items)
-                _RemixToggleGroupItemWidget(
-                  key: ValueKey(item.value),
-                  data: item,
-                  defaultStyle: styleSpec == null ? effectiveStyle : null,
-                  defaultStyleSpec: styleSpec == null ? null : spec.item,
-                ),
-            ],
-          );
-        },
+      child: FocusVisibilityScope(
+        child: RemixStyleSpecBuilder<ToggleGroupSpec>(
+          style: effectiveStyle,
+          styleSpec: styleSpec,
+          builder: (context, spec) {
+            return FlexBox(
+              styleSpec: _withOrientation(spec.container),
+              children: [
+                for (final item in items)
+                  _RemixToggleGroupItemWidget(
+                    key: ValueKey(item.value),
+                    data: item,
+                    defaultStyle: styleSpec == null ? effectiveStyle : null,
+                    defaultStyleSpec: styleSpec == null ? null : spec.item,
+                  ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

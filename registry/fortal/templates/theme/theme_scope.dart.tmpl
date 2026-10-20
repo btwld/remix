@@ -177,7 +177,7 @@ class {{typePrefix}}Theme extends StatelessWidget {
     final data = useDark ? dark : base;
     final tokens = build{{typePrefix}}ScopeTokens(data);
     final foreground = tokens[{{typePrefix}}Tokens.gray12]! as Color;
-    Widget scoped = child;
+    Widget scoped = FocusVisibilityScope(child: child);
     if (parent == null) {
       scoped = _{{valuePrefix}}RootTextStyle(tokens: tokens, child: scoped);
     } else if (parent.brightness != data.brightness ||

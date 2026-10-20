@@ -196,54 +196,55 @@ class RemixSegmentedControl<T extends Object> extends StatelessWidget {
       loop: loop,
       semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
-      child: WidgetStateProvider(
-        states: groupDisabled ? const {WidgetState.disabled} : const {},
-        child: RemixStyleSpecBuilder<SegmentedControlSpec>(
-          style: style,
-          styleSpec: styleSpec,
-          trackFocusHighlightMode: true,
-          builder: (context, spec) {
-            final textDirection = Directionality.of(context);
-            return StyleSpecBuilder<BoxSpec>(
-              key: const ValueKey('RemixSegmentedControl.track'),
-              styleSpec: spec.container,
-              builder: (context, trackSpec) {
-                final fillMainAxis = spec.mainAxisSize == MainAxisSize.max;
-                final track = Box(
-                  styleSpec: StyleSpec(spec: trackSpec),
-                  child: _EqualSegmentLayout(
-                    orientation: orientation,
-                    spacing: spec.spacing ?? 0,
-                    textDirection: textDirection,
-                    fillMainAxis: fillMainAxis,
-                    children: [
-                      for (final item in snapshot)
-                        KeyedSubtree(
-                          key: ValueKey(item.value),
-                          child: _RemixSegmentedControlItemWidget<T>(
-                            data: item,
-                            defaultStyle: styleSpec == null ? style : null,
-                            defaultStyleSpec: styleSpec == null
-                                ? null
-                                : spec.item,
+      child: FocusVisibilityScope(
+        child: WidgetStateProvider(
+          states: groupDisabled ? const {WidgetState.disabled} : const {},
+          child: RemixStyleSpecBuilder<SegmentedControlSpec>(
+            style: style,
+            styleSpec: styleSpec,
+            builder: (context, spec) {
+              final textDirection = Directionality.of(context);
+              return StyleSpecBuilder<BoxSpec>(
+                key: const ValueKey('RemixSegmentedControl.track'),
+                styleSpec: spec.container,
+                builder: (context, trackSpec) {
+                  final fillMainAxis = spec.mainAxisSize == MainAxisSize.max;
+                  final track = Box(
+                    styleSpec: StyleSpec(spec: trackSpec),
+                    child: _EqualSegmentLayout(
+                      orientation: orientation,
+                      spacing: spec.spacing ?? 0,
+                      textDirection: textDirection,
+                      fillMainAxis: fillMainAxis,
+                      children: [
+                        for (final item in snapshot)
+                          KeyedSubtree(
+                            key: ValueKey(item.value),
+                            child: _RemixSegmentedControlItemWidget<T>(
+                              data: item,
+                              defaultStyle: styleSpec == null ? style : null,
+                              defaultStyleSpec: styleSpec == null
+                                  ? null
+                                  : spec.item,
+                            ),
                           ),
-                        ),
-                    ],
-                  ),
-                );
-                return Align(
-                  alignment: AlignmentDirectional.topStart,
-                  widthFactor: orientation == Axis.horizontal && fillMainAxis
-                      ? null
-                      : 1,
-                  heightFactor: orientation == Axis.vertical && fillMainAxis
-                      ? null
-                      : 1,
-                  child: track,
-                );
-              },
-            );
-          },
+                      ],
+                    ),
+                  );
+                  return Align(
+                    alignment: AlignmentDirectional.topStart,
+                    widthFactor: orientation == Axis.horizontal && fillMainAxis
+                        ? null
+                        : 1,
+                    heightFactor: orientation == Axis.vertical && fillMainAxis
+                        ? null
+                        : 1,
+                    child: track,
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

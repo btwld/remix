@@ -125,7 +125,10 @@ class {{typePrefix}}Theme extends StatelessWidget {
           };
     final selected = useDark ? dark : base;
     final tokens = selected.tokens;
-    Widget scoped = MixScope(tokens: tokens, child: child);
+    Widget scoped = MixScope(
+      tokens: tokens,
+      child: FocusVisibilityScope(child: child),
+    );
     // Only the outermost scope sets the page up. A nested scope must not
     // reinstall the root text run, which would silently replace whatever
     // `DefaultTextStyle` the subtree sits in, nor paint a second background

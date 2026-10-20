@@ -177,7 +177,7 @@ class FortalTheme extends StatelessWidget {
     final data = useDark ? dark : base;
     final tokens = buildFortalScopeTokens(data);
     final foreground = tokens[FortalTokens.gray12]! as Color;
-    Widget scoped = child;
+    Widget scoped = FocusVisibilityScope(child: child);
     if (parent == null) {
       scoped = _fortalRootTextStyle(tokens: tokens, child: scoped);
     } else if (parent.brightness != data.brightness ||

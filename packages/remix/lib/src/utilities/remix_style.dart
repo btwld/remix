@@ -66,7 +66,6 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
     required this.styleSpec,
     required this.builder,
     this.controller,
-    this.trackFocusHighlightMode = false,
   });
 
   /// The fluent style to resolve when [styleSpec] is null.
@@ -78,44 +77,23 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   /// Optional widget state controller for fluent style resolution.
   final WidgetStatesController? controller;
 
-  /// Whether [builder] should rebuild when [FocusVisibility] changes.
-  ///
-  /// Mix-managed controller scopes already make [FocusVisibleVariant]
-  /// reactive. Set this for composite widgets that publish focus through a
-  /// manual [WidgetStateProvider], or for visuals that read
-  /// [FocusVisibility.of] directly.
-  final bool trackFocusHighlightMode;
-
   final Widget Function(BuildContext context, S spec) builder;
-
-  Widget _buildTracked(BuildContext context, S spec) {
-    if (trackFocusHighlightMode) {
-      // Register a dependency on the focus-visibility scope. This also
-      // rebuilds styles resolved beneath manually mounted WidgetStateProvider
-      // instances, where Mix's focus-visible variant otherwise observes
-      // visibility on the next unrelated rebuild.
-      FocusVisibility.of(context);
-    }
-    return builder(context, spec);
-  }
 
   @override
   Widget build(BuildContext context) {
     final spec = styleSpec;
-    final Widget result = spec != null
-        ? StyleSpecBuilder<S>(
-            styleSpec: StyleSpec(spec: spec),
-            builder: _buildTracked,
-          )
-        : StyleBuilder<S>(
-            style: style,
-            controller: controller,
-            builder: _buildTracked,
-          );
+    if (spec != null) {
+      return StyleSpecBuilder<S>(
+        styleSpec: StyleSpec(spec: spec),
+        builder: builder,
+      );
+    }
 
-    if (!trackFocusHighlightMode) return result;
-
-    return FocusVisibilityScope(child: result);
+    return StyleBuilder<S>(
+      style: style,
+      controller: controller,
+      builder: builder,
+    );
   }
 }
 

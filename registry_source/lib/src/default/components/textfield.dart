@@ -112,9 +112,6 @@ TextFieldStyler _base() => TextFieldStyler()
         size: VanillaTokens.icon,
       ),
     )
-    // A text field rings on any focus, including a click. Radix Themes and
-    // React Aria do the same (`:focus` / `data-focused`); other controls stay
-    // on `onFocusVisible`.
     .onFocused(_focusedStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
@@ -146,7 +143,7 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
       .border(.color(VanillaTokens.destructive()))
       .helperText(.color(VanillaTokens.destructive()))
       // An invalid field that takes focus rings in its own red and keeps its
-      // red outline. Same `onFocused` contract as the enabled field.
+      // red outline.
       .onFocused(
         TextFieldStyler()
             .containerEffects(
