@@ -209,7 +209,7 @@ dart run remix_cli:remix add button --overwrite
 ```
 
 Overwrite is requested-item-only. Overwriting Button does not overwrite its
-Theme dependency.
+Theme dependency. The CLI has no content hash in this MVP.
 
 ## Generated source
 
