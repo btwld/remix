@@ -1,3 +1,10 @@
+## Unreleased
+
+### Breaking changes
+
+- Remove `createSpinnerWidget`, `SliderSpec.defaultTrackThickness`, and
+  `RemixDisclosureSpec`.
+
 ## 1.0.0-beta.11
 
 ### Breaking changes
