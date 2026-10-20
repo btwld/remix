@@ -11,6 +11,7 @@ import '../../components/segmented_control.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_records.dart';
+import 'dashboard_demo_text.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
@@ -58,7 +59,8 @@ class _PlaygroundDashboardCustomersPageState
       action: PlaygroundButton(
         label: 'Add customer',
         leadingIcon: RemixIcons.plus,
-        onPressed: () => _toast(context, 'Customer invitation started'),
+        onPressed: () =>
+            playgroundDashboardToast(context, 'Customer invitation started'),
       ),
       children: [
         WrapBox(
@@ -89,7 +91,7 @@ class _PlaygroundDashboardCustomersPageState
                   PlaygroundButton.ghost(
                     size: .small,
                     label: 'Export',
-                    onPressed: () => _toast(
+                    onPressed: () => playgroundDashboardToast(
                       context,
                       'Export prepared for ${_selectedIds.length} customers',
                     ),
@@ -194,7 +196,8 @@ class _PlaygroundDashboardOrdersPageState
       action: PlaygroundButton(
         label: 'Export',
         leadingIcon: RemixIcons.download,
-        onPressed: () => _toast(context, 'Order export prepared'),
+        onPressed: () =>
+            playgroundDashboardToast(context, 'Order export prepared'),
       ),
       children: [
         Box(
@@ -279,7 +282,7 @@ List<RemixDataTableColumn<PlaygroundDashboardCustomer>> _customerColumns(
           .spacing(PlaygroundTokens.s2),
       children: [
         PlaygroundAvatar(label: value.initials),
-        Flexible(child: _Text(value.name, emphasized: true)),
+        Flexible(child: PlaygroundDashboardText(value.name, emphasized: true)),
       ],
     ),
   ),
@@ -287,13 +290,14 @@ List<RemixDataTableColumn<PlaygroundDashboardCustomer>> _customerColumns(
     id: 'email',
     label: 'Email',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.email),
+    cellBuilder: (_, value) => PlaygroundDashboardText(value.email),
   ),
   RemixDataTableColumn(
     id: 'plan',
     label: 'Plan',
     width: const FixedColumnWidth(110),
-    cellBuilder: (_, value) => _Text(value.plan, emphasized: true),
+    cellBuilder: (_, value) =>
+        PlaygroundDashboardText(value.plan, emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'status',
@@ -307,7 +311,9 @@ List<RemixDataTableColumn<PlaygroundDashboardCustomer>> _customerColumns(
     sortable: true,
     width: const FixedColumnWidth(118),
     cellBuilder: (_, value) {
-      return _Text(playgroundDashboardShortDate(value.joinedAt));
+      return PlaygroundDashboardText(
+        playgroundDashboardShortDate(value.joinedAt),
+      );
     },
   ),
   RemixDataTableColumn(
@@ -326,20 +332,23 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
     id: 'id',
     label: 'Order',
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(value.id, emphasized: true),
+    cellBuilder: (_, value) =>
+        PlaygroundDashboardText(value.id, emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'customer',
     label: 'Customer',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.customer, emphasized: true),
+    cellBuilder: (_, value) =>
+        PlaygroundDashboardText(value.customer, emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'date',
     label: 'Date',
     sortable: true,
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(playgroundDashboardShortDate(value.date)),
+    cellBuilder: (_, value) =>
+        PlaygroundDashboardText(playgroundDashboardShortDate(value.date)),
   ),
   RemixDataTableColumn(
     id: 'amount',
@@ -347,8 +356,10 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
     sortable: true,
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, value) =>
-        _Text('\$${value.amount.toStringAsFixed(2)}', emphasized: true),
+    cellBuilder: (_, value) => PlaygroundDashboardText(
+      '\$${value.amount.toStringAsFixed(2)}',
+      emphasized: true,
+    ),
   ),
   RemixDataTableColumn(
     id: 'status',
@@ -392,7 +403,8 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
     RemixMenuDivider(),
     RemixMenuItem(value: 'archive', label: 'Archive'),
   ],
-  onSelected: (action) => _toast(context, '$action selected for $value'),
+  onSelected: (action) =>
+      playgroundDashboardToast(context, '$action selected for $value'),
 );
 
 Widget _status(String value) => switch (value) {
@@ -433,12 +445,12 @@ class _Page extends StatelessWidget {
                     .crossAxisAlignment(.start)
                     .spacing(PlaygroundTokens.s1),
                 children: [
-                  _Text(
+                  PlaygroundDashboardText(
                     title,
                     token: PlaygroundTokens.text3xl,
                     emphasized: true,
                   ),
-                  _Text(description, muted: true),
+                  PlaygroundDashboardText(description, muted: true),
                 ],
               ),
             ),
@@ -481,7 +493,10 @@ class _Empty extends StatelessWidget {
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)
               .spacing(PlaygroundTokens.s1),
-          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
+          children: [
+            PlaygroundDashboardText(title, emphasized: true),
+            PlaygroundDashboardText(body, muted: true),
+          ],
         ),
         ?action,
       ],
@@ -489,33 +504,4 @@ class _Empty extends StatelessWidget {
   );
 }
 
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.token = PlaygroundTokens.textSm,
-    this.emphasized = false,
-    this.muted = false,
-  });
-  final String value;
-  final TextStyleToken token;
-  final bool emphasized;
-  final bool muted;
-  @override
-  Widget build(BuildContext context) => StyledText(
-    value,
-    style: TextStyler()
-        .style(token.mix())
-        .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
-        .color(
-          muted
-              ? PlaygroundTokens.mutedForeground()
-              : PlaygroundTokens.foreground(),
-        ),
-  );
-}
-
-void _toast(BuildContext context, String title) => showRemixToast(
-  context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
-);
 void _noop() {}

@@ -11,6 +11,7 @@ import '../../components/menu.dart';
 import '../../components/segmented_control.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
+import 'dashboard_demo_text.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
@@ -58,7 +59,8 @@ class _VanillaDashboardCustomersPageState
       action: VanillaButton(
         label: 'Add customer',
         leadingIcon: RemixIcons.plus,
-        onPressed: () => _toast(context, 'Customer invitation started'),
+        onPressed: () =>
+            vanillaDashboardToast(context, 'Customer invitation started'),
       ),
       children: [
         WrapBox(
@@ -89,7 +91,7 @@ class _VanillaDashboardCustomersPageState
                   VanillaButton.ghost(
                     size: .small,
                     label: 'Export',
-                    onPressed: () => _toast(
+                    onPressed: () => vanillaDashboardToast(
                       context,
                       'Export prepared for ${_selectedIds.length} customers',
                     ),
@@ -194,7 +196,8 @@ class _VanillaDashboardOrdersPageState
       action: VanillaButton(
         label: 'Export',
         leadingIcon: RemixIcons.download,
-        onPressed: () => _toast(context, 'Order export prepared'),
+        onPressed: () =>
+            vanillaDashboardToast(context, 'Order export prepared'),
       ),
       children: [
         Box(
@@ -279,7 +282,7 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
           .spacing(VanillaTokens.s2),
       children: [
         VanillaAvatar(label: value.initials),
-        Flexible(child: _Text(value.name, emphasized: true)),
+        Flexible(child: VanillaDashboardText(value.name, emphasized: true)),
       ],
     ),
   ),
@@ -287,13 +290,14 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     id: 'email',
     label: 'Email',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.email),
+    cellBuilder: (_, value) => VanillaDashboardText(value.email),
   ),
   RemixDataTableColumn(
     id: 'plan',
     label: 'Plan',
     width: const FixedColumnWidth(110),
-    cellBuilder: (_, value) => _Text(value.plan, emphasized: true),
+    cellBuilder: (_, value) =>
+        VanillaDashboardText(value.plan, emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'status',
@@ -307,7 +311,7 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     sortable: true,
     width: const FixedColumnWidth(118),
     cellBuilder: (_, value) {
-      return _Text(registryDashboardShortDate(value.joinedAt));
+      return VanillaDashboardText(registryDashboardShortDate(value.joinedAt));
     },
   ),
   RemixDataTableColumn(
@@ -326,20 +330,22 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
     id: 'id',
     label: 'Order',
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(value.id, emphasized: true),
+    cellBuilder: (_, value) => VanillaDashboardText(value.id, emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'customer',
     label: 'Customer',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, value) => _Text(value.customer, emphasized: true),
+    cellBuilder: (_, value) =>
+        VanillaDashboardText(value.customer, emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'date',
     label: 'Date',
     sortable: true,
     width: const FixedColumnWidth(120),
-    cellBuilder: (_, value) => _Text(registryDashboardShortDate(value.date)),
+    cellBuilder: (_, value) =>
+        VanillaDashboardText(registryDashboardShortDate(value.date)),
   ),
   RemixDataTableColumn(
     id: 'amount',
@@ -347,8 +353,10 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
     sortable: true,
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, value) =>
-        _Text('\$${value.amount.toStringAsFixed(2)}', emphasized: true),
+    cellBuilder: (_, value) => VanillaDashboardText(
+      '\$${value.amount.toStringAsFixed(2)}',
+      emphasized: true,
+    ),
   ),
   RemixDataTableColumn(
     id: 'status',
@@ -392,7 +400,8 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
     RemixMenuDivider(),
     RemixMenuItem(value: 'archive', label: 'Archive'),
   ],
-  onSelected: (action) => _toast(context, '$action selected for $value'),
+  onSelected: (action) =>
+      vanillaDashboardToast(context, '$action selected for $value'),
 );
 
 Widget _status(String value) => switch (value) {
@@ -433,8 +442,12 @@ class _Page extends StatelessWidget {
                     .crossAxisAlignment(.start)
                     .spacing(VanillaTokens.s1),
                 children: [
-                  _Text(title, token: VanillaTokens.text3xl, emphasized: true),
-                  _Text(description, muted: true),
+                  VanillaDashboardText(
+                    title,
+                    token: VanillaTokens.text3xl,
+                    emphasized: true,
+                  ),
+                  VanillaDashboardText(description, muted: true),
                 ],
               ),
             ),
@@ -477,7 +490,10 @@ class _Empty extends StatelessWidget {
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)
               .spacing(VanillaTokens.s1),
-          children: [_Text(title, emphasized: true), _Text(body, muted: true)],
+          children: [
+            VanillaDashboardText(title, emphasized: true),
+            VanillaDashboardText(body, muted: true),
+          ],
         ),
         ?action,
       ],
@@ -485,31 +501,4 @@ class _Empty extends StatelessWidget {
   );
 }
 
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.token = VanillaTokens.textSm,
-    this.emphasized = false,
-    this.muted = false,
-  });
-  final String value;
-  final TextStyleToken token;
-  final bool emphasized;
-  final bool muted;
-  @override
-  Widget build(BuildContext context) => StyledText(
-    value,
-    style: TextStyler()
-        .style(token.mix())
-        .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
-        .color(
-          muted ? VanillaTokens.mutedForeground() : VanillaTokens.foreground(),
-        ),
-  );
-}
-
-void _toast(BuildContext context, String title) => showRemixToast(
-  context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
-);
 void _noop() {}

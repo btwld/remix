@@ -540,6 +540,12 @@ const defaultPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_text.dart',
+          target: 'recipes/dashboard/dashboard_demo_text.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
           source: 'recipes/dashboard/dashboard_demo_records.dart',
           target: 'recipes/dashboard/dashboard_demo_records_page.dart',
           sourceTypeWord: 'Registry',

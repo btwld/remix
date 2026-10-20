@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
   # Workspace resolution uses the local packages during development; these
   # hosted constraints keep the app manifest deployable outside the workspace.
   remix: ^1.0.0-beta.11

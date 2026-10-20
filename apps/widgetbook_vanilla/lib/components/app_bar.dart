@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook_vanilla/ui/ui.dart';
 
@@ -8,14 +9,14 @@ Widget buildVanillaAppBarUseCase(BuildContext context) => Scaffold(
     alignment: Alignment.topCenter,
     child: VanillaAppBar(
       leading: VanillaIconButton.ghost(
-        icon: Icons.arrow_back,
+        icon: RemixIcons.arrowLeft,
         semanticLabel: 'Back',
         onPressed: () {},
       ),
       title: 'Orders',
       actions: [
         VanillaIconButton.ghost(
-          icon: Icons.search,
+          icon: VanillaIcons.magnifyingGlass,
           semanticLabel: 'Search orders',
           onPressed: () {},
         ),
