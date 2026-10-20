@@ -4,40 +4,35 @@ import 'package:remix/remix.dart';
 import 'package:demo/ui/ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-final _key = GlobalKey();
-
 @widgetbook.UseCase(name: 'Dialog Component', type: RemixDialog)
 Widget buildDividerUseCase(BuildContext context) {
-  return KeyedSubtree(
-    key: _key,
-    child: Scaffold(
-      body: Center(
-        child: Center(
-          child: FortalButton(
-            label: 'Open Dialog',
-            onPressed: () {
-              showRemixDialog(
-                context: context,
-                barrierLabel: 'Dismiss',
-                builder: (context) => Center(
-                  child: FortalDialog(
-                    title: 'Revoke access',
-                    description:
-                        'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
-                    actions: [
-                      FortalButton.ghost(
-                        label: 'Cancel',
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FortalButton(label: 'Revoke access', onPressed: () {}),
-                    ],
-                  ),
+  return Scaffold(
+    body: Center(
+      child: Center(
+        child: FortalButton(
+          label: 'Open Dialog',
+          onPressed: () {
+            showRemixDialog(
+              context: context,
+              barrierLabel: 'Dismiss',
+              builder: (context) => Center(
+                child: FortalDialog(
+                  title: 'Revoke access',
+                  description:
+                      'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
+                  actions: [
+                    FortalButton.ghost(
+                      label: 'Cancel',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FortalButton(label: 'Revoke access', onPressed: () {}),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     ),

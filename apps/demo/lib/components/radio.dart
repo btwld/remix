@@ -5,65 +5,60 @@ import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-final _key = GlobalKey();
-
 enum Theme { dark, light, system }
 
 @widgetbook.UseCase(name: 'Radio Component', type: RemixRadio)
 Widget buildRadioUseCase(BuildContext context) {
-  return KeyedSubtree(
-    key: _key,
-    child: Scaffold(
-      body: Center(
-        child: ListenableBuilder(
-          listenable: _state,
-          builder: (context, child) {
-            return RemixRadioGroup<Theme>(
-              groupValue: _state.value,
-              onChanged: (value) => _state.value = value!,
-              child: Column(
-                mainAxisAlignment: .start,
-                crossAxisAlignment: .start,
-                mainAxisSize: .min,
-                children: Theme.values
-                    .map(
-                      (theme) => Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          mainAxisSize: .min,
-                          children: [
-                            FortalRadio(
-                              semanticLabel: 'Option',
-                              variant: context.knobs.object.dropdown(
-                                label: 'variant',
-                                options: FortalRadioVariant.values,
-                                labelBuilder: (variant) => variant.name,
-                              ),
-                              size: context.knobs.object.dropdown(
-                                label: 'size',
-                                options: FortalRadioSize.values,
-                                labelBuilder: (size) => size.name,
-                                initialOption: FortalRadioSize.size2,
-                              ),
-                              value: theme,
-                              enabled: context.knobs.boolean(
-                                label: 'Enabled',
-                                initialValue: true,
-                              ),
+  return Scaffold(
+    body: Center(
+      child: ListenableBuilder(
+        listenable: _state,
+        builder: (context, child) {
+          return RemixRadioGroup<Theme>(
+            groupValue: _state.value,
+            onChanged: (value) => _state.value = value!,
+            child: Column(
+              mainAxisAlignment: .start,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
+              children: Theme.values
+                  .map(
+                    (theme) => Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Row(
+                        mainAxisSize: .min,
+                        children: [
+                          FortalRadio(
+                            semanticLabel: 'Option',
+                            variant: context.knobs.object.dropdown(
+                              label: 'variant',
+                              options: FortalRadioVariant.values,
+                              labelBuilder: (variant) => variant.name,
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${theme.name[0].toUpperCase()}${theme.name.substring(1)}',
+                            size: context.knobs.object.dropdown(
+                              label: 'size',
+                              options: FortalRadioSize.values,
+                              labelBuilder: (size) => size.name,
+                              initialOption: FortalRadioSize.size2,
                             ),
-                          ],
-                        ),
+                            value: theme,
+                            enabled: context.knobs.boolean(
+                              label: 'Enabled',
+                              initialValue: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${theme.name[0].toUpperCase()}${theme.name.substring(1)}',
+                          ),
+                        ],
                       ),
-                    )
-                    .toList(),
-              ),
-            );
-          },
-        ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+        },
       ),
     ),
   );

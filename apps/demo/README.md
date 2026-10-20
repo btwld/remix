@@ -14,6 +14,3 @@ fvm dart run melos bootstrap
 cd apps/demo
 fvm flutter run -d chrome
 ```
-
-See [PREVIEW.md](PREVIEW.md) for the macOS preview workflow and component
-inventory.
