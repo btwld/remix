@@ -222,12 +222,14 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => BadgeStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory BadgeStyler.radialGradient({
     required List<Color> colors,
@@ -237,6 +239,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => BadgeStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -245,6 +248,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory BadgeStyler.sweepGradient({
     required List<Color> colors,
@@ -253,6 +257,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => BadgeStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -260,6 +265,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory BadgeStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -267,12 +273,14 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => BadgeStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory BadgeStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -282,6 +290,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => BadgeStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -290,6 +299,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory BadgeStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -298,6 +308,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => BadgeStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -305,6 +316,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory BadgeStyler.transform(
     Matrix4 value, {
@@ -477,6 +489,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -485,6 +498,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -497,6 +511,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -507,6 +522,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -518,6 +534,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -527,6 +544,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -537,6 +555,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -545,6 +564,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -557,6 +577,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -567,6 +588,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -578,6 +600,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -587,6 +610,7 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

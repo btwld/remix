@@ -261,12 +261,14 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TooltipStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TooltipStyler.radialGradient({
     required List<Color> colors,
@@ -276,6 +278,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TooltipStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -284,6 +287,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TooltipStyler.sweepGradient({
     required List<Color> colors,
@@ -292,6 +296,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TooltipStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -299,6 +304,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TooltipStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -306,12 +312,14 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TooltipStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TooltipStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -321,6 +329,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TooltipStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -329,6 +338,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TooltipStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -337,6 +347,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TooltipStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -344,6 +355,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TooltipStyler.transform(
     Matrix4 value, {
@@ -516,6 +528,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -524,6 +537,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -536,6 +550,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -546,6 +561,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -557,6 +573,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -566,6 +583,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -576,6 +594,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -584,6 +603,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -596,6 +616,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -606,6 +627,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -617,6 +639,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -626,6 +649,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

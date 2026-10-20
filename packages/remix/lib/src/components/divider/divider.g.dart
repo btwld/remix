@@ -197,12 +197,14 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DividerStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DividerStyler.radialGradient({
     required List<Color> colors,
@@ -212,6 +214,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DividerStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -220,6 +223,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DividerStyler.sweepGradient({
     required List<Color> colors,
@@ -228,6 +232,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DividerStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -235,6 +240,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DividerStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -242,12 +248,14 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DividerStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DividerStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -257,6 +265,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DividerStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -265,6 +274,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DividerStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -273,6 +283,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DividerStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -280,6 +291,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DividerStyler.transform(
     Matrix4 value, {
@@ -452,6 +464,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -460,6 +473,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -472,6 +486,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -482,6 +497,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -493,6 +509,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -502,6 +519,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -512,6 +530,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -520,6 +539,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -532,6 +552,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -542,6 +563,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -553,6 +575,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -562,6 +585,7 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

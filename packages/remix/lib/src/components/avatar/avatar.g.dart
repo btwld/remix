@@ -227,12 +227,14 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AvatarStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AvatarStyler.radialGradient({
     required List<Color> colors,
@@ -242,6 +244,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AvatarStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -250,6 +253,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AvatarStyler.sweepGradient({
     required List<Color> colors,
@@ -258,6 +262,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AvatarStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -265,6 +270,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AvatarStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -272,12 +278,14 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AvatarStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AvatarStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -287,6 +295,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AvatarStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -295,6 +304,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AvatarStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -303,6 +313,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AvatarStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -310,6 +321,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AvatarStyler.transform(
     Matrix4 value, {
@@ -482,6 +494,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -490,6 +503,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -502,6 +516,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -512,6 +527,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -523,6 +539,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -532,6 +549,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -542,6 +560,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -550,6 +569,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -562,6 +582,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -572,6 +593,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -583,6 +605,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -592,6 +615,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
