@@ -151,6 +151,33 @@ void main() {
       expect(explicitIcon.size, 13);
     },
   );
+
+  testWidgets(
+    'RemixDefaultContentStyle keeps ancestor wrapping when the spec leaves it unset',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: DefaultTextStyle(
+            style: TextStyle(),
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            textWidthBasis: TextWidthBasis.longestLine,
+            child: RemixDefaultContentStyle(
+              text: StyleSpec(spec: TextSpec()),
+              child: Text('Inherited'),
+            ),
+          ),
+        ),
+      );
+
+      final inherited = DefaultTextStyle.of(
+        tester.element(find.text('Inherited')),
+      );
+      expect(inherited.softWrap, isFalse);
+      expect(inherited.overflow, TextOverflow.ellipsis);
+      expect(inherited.textWidthBasis, TextWidthBasis.longestLine);
+    },
+  );
 }
 
 Color? _boxColor(BoxSpec spec) {

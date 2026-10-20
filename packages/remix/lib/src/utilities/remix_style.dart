@@ -46,10 +46,10 @@ final class RemixDefaultContentStyle extends StatelessWidget {
       current = DefaultTextStyle.merge(
         style: textSpec.style ?? const TextStyle(),
         textAlign: textSpec.textAlign,
-        softWrap: textSpec.softWrap ?? true,
-        overflow: textSpec.overflow ?? TextOverflow.clip,
+        softWrap: textSpec.softWrap,
+        overflow: textSpec.overflow,
         maxLines: textSpec.maxLines,
-        textWidthBasis: textSpec.textWidthBasis ?? TextWidthBasis.parent,
+        textWidthBasis: textSpec.textWidthBasis,
         textHeightBehavior: textSpec.textHeightBehavior,
         child: current,
       );
