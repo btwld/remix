@@ -11,9 +11,6 @@ import 'package:flutter/widgets.dart';
 /// provide builders that return non-hit-testable widgets, but the component
 /// needs to ensure consistent interaction behavior.
 ///
-/// The widget is designed to be invisible in the widget inspector to reduce
-/// debugging noise, as it's purely an implementation detail.
-///
 /// Example usage:
 /// ```dart
 /// // Instead of:
@@ -32,21 +29,6 @@ class HitTestableContainer extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return _RenderHitTestableContainer();
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    // Hide this implementation detail from the widget inspector
-    // to reduce noise during debugging
-    properties.add(
-      DiagnosticsProperty<String>(
-        'inspector',
-        'hidden',
-        description: 'Hidden from widget inspector as implementation detail',
-        level: DiagnosticLevel.hidden,
-      ),
-    );
   }
 }
 
@@ -81,15 +63,6 @@ class _RenderHitTestableContainer extends RenderProxyBox {
     // Only paint the child, no additional decoration
     if (child != null) {
       context.paintChild(child!, offset);
-    }
-  }
-
-  @override
-  void debugPaintSize(PaintingContext context, Offset offset) {
-    // Don't paint debug information to keep it truly invisible
-    // Only paint child's debug info if debugging is enabled
-    if (child != null) {
-      super.debugPaintSize(context, offset);
     }
   }
 }

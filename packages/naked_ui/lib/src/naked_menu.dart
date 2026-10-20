@@ -111,9 +111,6 @@ class _NakedMenuScope<T> extends OverlayScope<T> {
 }
 
 /// Widget-based menu action that binds to the nearest [NakedMenu] scope.
-///
-/// This enables fully declarative composition inside [NakedMenu.overlayBuilder]
-/// without relying on the data-driven [NakedMenuItem] list.
 class NakedMenuItem<T> extends OverlayItem<T, NakedMenuItemState<T>> {
   /// Creates a menu item associated with [value].
   const NakedMenuItem({

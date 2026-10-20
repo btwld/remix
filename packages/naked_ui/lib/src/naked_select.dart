@@ -117,9 +117,6 @@ class _NakedSelectScope<T> extends OverlayScope<T> {
 }
 
 /// Widget-based select option that binds to the nearest [NakedSelect] scope.
-///
-/// This enables fully declarative composition inside [NakedSelect.overlayBuilder]
-/// without relying on the data-driven approach.
 class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
   /// Creates a selectable option associated with [value].
   const NakedSelectOption({

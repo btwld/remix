@@ -1,5 +1,3 @@
-// ignore_for_file: no-empty-block
-
 import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/services.dart';
@@ -436,37 +434,15 @@ class _NakedTabState extends State<NakedTab>
     }
   }
 
-  /// Maximum iterations for focus traversal to prevent infinite loops.
-  static const int _maxFocusIterations = 100;
-
-  void _focusFirstTab() {
-    final scope = FocusScope.of(context);
-    final direction = _scope.orientation == Axis.horizontal
-        ? TraversalDirection.left
-        : TraversalDirection.up;
-    scope.focusInDirection(direction);
-    for (
-      int i = 0;
-      i < _maxFocusIterations && scope.focusInDirection(direction);
-      i++
-    ) {
-      // Continue until the first tab or the safety bound is reached.
-    }
-  }
-
-  void _focusLastTab() {
-    final scope = FocusScope.of(context);
-    final direction = _scope.orientation == Axis.horizontal
-        ? TraversalDirection.right
-        : TraversalDirection.down;
-    scope.focusInDirection(direction);
-    for (
-      int i = 0;
-      i < _maxFocusIterations && scope.focusInDirection(direction);
-      i++
-    ) {
-      // Continue until the last tab or the safety bound is reached.
-    }
+  void _focusTabEdge({required bool last}) {
+    final current = FocusManager.instance.primaryFocus;
+    if (current == null) return;
+    final policy = FocusTraversalGroup.maybeOfNode(current);
+    if (policy == null) return;
+    final target = last
+        ? policy.findLastFocus(current, ignoreCurrentFocus: true)
+        : policy.findFirstFocus(current, ignoreCurrentFocus: true);
+    target?.requestFocus();
   }
 
   @override
@@ -545,8 +521,8 @@ class _NakedTabState extends State<NakedTab>
       actions: NakedIntentActions.tab.actions(
         onActivate: () => _handleTap(),
         onDirectionalFocus: _handleDirectionalFocus,
-        onFirstFocus: () => _focusFirstTab(),
-        onLastFocus: () => _focusLastTab(),
+        onFirstFocus: () => _focusTabEdge(last: false),
+        onLastFocus: () => _focusTabEdge(last: true),
       ),
       child: semanticContent,
     );

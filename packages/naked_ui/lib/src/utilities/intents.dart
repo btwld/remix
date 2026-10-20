@@ -38,9 +38,6 @@ class NakedIntentActions {
 
   /// Intent bindings for dialog dismissal.
   static const _DialogIntentActions dialog = _DialogIntentActions();
-
-  /// Intent bindings for slider value changes.
-  static const _SliderIntentActions slider = _SliderIntentActions();
 }
 
 // Intent helpers for button and activation-based widgets
@@ -51,7 +48,7 @@ class _ButtonIntentActions {
   Map<ShortcutActivator, Intent> get shortcuts => _buttonShortcuts;
 
   Map<Type, Action<Intent>> actions({required VoidCallback onPressed}) =>
-      _activation(onPressed, includeButtonIntent: true);
+      _activation(onPressed);
 }
 
 class _LinkIntentActions {
@@ -73,7 +70,7 @@ class _CheckboxIntentActions {
   Map<ShortcutActivator, Intent> get shortcuts => _buttonShortcuts;
 
   Map<Type, Action<Intent>> actions({required VoidCallback onToggle}) =>
-      _activation(onToggle, includeButtonIntent: true);
+      _activation(onToggle);
 }
 
 class _ToggleIntentActions {
@@ -82,7 +79,7 @@ class _ToggleIntentActions {
   Map<ShortcutActivator, Intent> get shortcuts => _buttonShortcuts;
 
   Map<Type, Action<Intent>> actions({required VoidCallback onToggle}) =>
-      _activation(onToggle, includeButtonIntent: true);
+      _activation(onToggle);
 }
 
 class _AccordionIntentActions {
@@ -91,7 +88,7 @@ class _AccordionIntentActions {
   Map<ShortcutActivator, Intent> get shortcuts => _buttonShortcuts;
 
   Map<Type, Action<Intent>> actions({required VoidCallback onToggle}) =>
-      _activation(onToggle, includeButtonIntent: true);
+      _activation(onToggle);
 }
 
 // Intent helpers for tab widgets
@@ -107,7 +104,7 @@ class _TabIntentActions {
     VoidCallback? onFirstFocus,
     VoidCallback? onLastFocus,
   }) {
-    final map = _activation(onActivate, includeButtonIntent: true);
+    final map = _activation(onActivate);
     map[DirectionalFocusIntent] = CallbackAction<DirectionalFocusIntent>(
       onInvoke: (intent) => onDirectionalFocus(intent.direction),
     );
@@ -277,76 +274,6 @@ class _DialogIntentActions {
   };
 }
 
-// Intent helpers for slider widgets
-
-class _SliderIntentActions {
-  const _SliderIntentActions();
-
-  Map<ShortcutActivator, Intent> shortcuts({required bool isRTL}) =>
-      isRTL ? _sliderShortcutsRtl : _sliderShortcutsLtr;
-
-  Map<Type, Action<Intent>> actions({
-    required ValueChanged<double> onChanged,
-    required double Function(bool isShift) calculateStep,
-    required double Function(double value) normalizeValue,
-    required double currentValue,
-    required double minValue,
-    required double maxValue,
-    required bool enableFeedback,
-  }) {
-    return {
-      _SliderIncrementIntent: _SliderAdjustAction<_SliderIncrementIntent>(
-        onChanged: onChanged,
-        calculateStep: calculateStep,
-        normalizeValue: normalizeValue,
-        getCurrentValue: () => currentValue,
-        enableFeedback: enableFeedback,
-        stepMultiplier: 1,
-      ),
-      _SliderDecrementIntent: _SliderAdjustAction<_SliderDecrementIntent>(
-        onChanged: onChanged,
-        calculateStep: calculateStep,
-        normalizeValue: normalizeValue,
-        getCurrentValue: () => currentValue,
-        enableFeedback: enableFeedback,
-        stepMultiplier: -1,
-      ),
-      _SliderShiftIncrementIntent:
-          _SliderAdjustAction<_SliderShiftIncrementIntent>(
-            onChanged: onChanged,
-            calculateStep: calculateStep,
-            normalizeValue: normalizeValue,
-            getCurrentValue: () => currentValue,
-            enableFeedback: enableFeedback,
-            stepMultiplier: 1,
-            isShiftPressed: true,
-          ),
-      _SliderShiftDecrementIntent:
-          _SliderAdjustAction<_SliderShiftDecrementIntent>(
-            onChanged: onChanged,
-            calculateStep: calculateStep,
-            normalizeValue: normalizeValue,
-            getCurrentValue: () => currentValue,
-            enableFeedback: enableFeedback,
-            stepMultiplier: -1,
-            isShiftPressed: true,
-          ),
-      _SliderSetToMinIntent: _SliderSetBoundAction<_SliderSetToMinIntent>(
-        onChanged: onChanged,
-        getTargetValue: () => minValue,
-        getCurrentValue: () => currentValue,
-        enableFeedback: enableFeedback,
-      ),
-      _SliderSetToMaxIntent: _SliderSetBoundAction<_SliderSetToMaxIntent>(
-        onChanged: onChanged,
-        getTargetValue: () => maxValue,
-        getCurrentValue: () => currentValue,
-        enableFeedback: enableFeedback,
-      ),
-    };
-  }
-}
-
 // Shared shortcut definitions and helper functions
 
 const Map<ShortcutActivator, Intent> _buttonShortcuts =
@@ -399,8 +326,6 @@ const Map<ShortcutActivator, Intent> _selectShortcuts =
       SingleActivator(LogicalKeyboardKey.escape): DismissIntent(),
       SingleActivator(LogicalKeyboardKey.arrowDown): NextFocusIntent(),
       SingleActivator(LogicalKeyboardKey.arrowUp): PreviousFocusIntent(),
-      SingleActivator(LogicalKeyboardKey.home): _FirstFocusIntent(),
-      SingleActivator(LogicalKeyboardKey.end): _LastFocusIntent(),
       SingleActivator(LogicalKeyboardKey.pageUp): _PageUpIntent(),
       SingleActivator(LogicalKeyboardKey.pageDown): _PageDownIntent(),
       SingleActivator(LogicalKeyboardKey.arrowDown, alt: true):
@@ -413,72 +338,14 @@ const Map<ShortcutActivator, Intent> _dialogShortcuts =
       SingleActivator(LogicalKeyboardKey.escape): DismissIntent(),
     };
 
-const Map<ShortcutActivator, Intent> _sliderShortcutsLtr =
-    <ShortcutActivator, Intent>{
-      SingleActivator(LogicalKeyboardKey.arrowRight): _SliderIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowLeft): _SliderDecrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowLeft, shift: true):
-          _SliderShiftDecrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowRight, shift: true):
-          _SliderShiftIncrementIntent(),
-
-      SingleActivator(LogicalKeyboardKey.arrowUp): _SliderIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowUp, shift: true):
-          _SliderShiftIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowDown): _SliderDecrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowDown, shift: true):
-          _SliderShiftDecrementIntent(),
-
-      SingleActivator(LogicalKeyboardKey.home): _SliderSetToMinIntent(),
-      SingleActivator(LogicalKeyboardKey.end): _SliderSetToMaxIntent(),
-
-      SingleActivator(LogicalKeyboardKey.pageUp): _SliderShiftIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.pageDown):
-          _SliderShiftDecrementIntent(),
-    };
-
-const Map<ShortcutActivator, Intent> _sliderShortcutsRtl =
-    <ShortcutActivator, Intent>{
-      SingleActivator(LogicalKeyboardKey.arrowLeft): _SliderIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowRight): _SliderDecrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowRight, shift: true):
-          _SliderShiftDecrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowLeft, shift: true):
-          _SliderShiftIncrementIntent(),
-
-      SingleActivator(LogicalKeyboardKey.arrowUp): _SliderIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowUp, shift: true):
-          _SliderShiftIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowDown): _SliderDecrementIntent(),
-      SingleActivator(LogicalKeyboardKey.arrowDown, shift: true):
-          _SliderShiftDecrementIntent(),
-
-      SingleActivator(LogicalKeyboardKey.home): _SliderSetToMinIntent(),
-      SingleActivator(LogicalKeyboardKey.end): _SliderSetToMaxIntent(),
-
-      SingleActivator(LogicalKeyboardKey.pageUp): _SliderShiftIncrementIntent(),
-      SingleActivator(LogicalKeyboardKey.pageDown):
-          _SliderShiftDecrementIntent(),
-    };
-
-Map<Type, Action<Intent>> _activation(
-  VoidCallback handler, {
-  bool includeButtonIntent = false,
-}) {
-  final map = <Type, Action<Intent>>{
+Map<Type, Action<Intent>> _activation(VoidCallback handler) {
+  return <Type, Action<Intent>>{
     ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) => handler()),
-  };
-
-  if (includeButtonIntent) {
-    map[ButtonActivateIntent] = CallbackAction<ButtonActivateIntent>(
+    ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
       onInvoke: (_) => handler(),
-    );
-  }
-
-  return map;
+    ),
+  };
 }
-
-// Custom intent definitions for keyboard navigation and slider actions
 
 /// Intent: activate a Link without inheriting Button/Space behavior.
 class _LinkActivateIntent extends Intent {
@@ -508,92 +375,4 @@ class _PageDownIntent extends Intent {
 /// Intent: Open overlay/dropdown.
 class _OpenOverlayIntent extends Intent {
   const _OpenOverlayIntent();
-}
-
-/// Intent: increment slider value by one step.
-class _SliderIncrementIntent extends Intent {
-  const _SliderIncrementIntent();
-}
-
-/// Intent: decrement slider value by one step.
-class _SliderDecrementIntent extends Intent {
-  const _SliderDecrementIntent();
-}
-
-/// Intent: increment slider value by a large step (Shift + Arrow).
-class _SliderShiftIncrementIntent extends _SliderIncrementIntent {
-  const _SliderShiftIncrementIntent();
-}
-
-/// Intent: decrement slider value by a large step (Shift + Arrow).
-class _SliderShiftDecrementIntent extends _SliderDecrementIntent {
-  const _SliderShiftDecrementIntent();
-}
-
-/// Intent: set slider value to minimum.
-class _SliderSetToMinIntent extends Intent {
-  const _SliderSetToMinIntent();
-}
-
-/// Intent: set slider value to maximum.
-class _SliderSetToMaxIntent extends Intent {
-  const _SliderSetToMaxIntent();
-}
-
-/// Action: handles keyboard increment/decrement intents.
-/// Uses [stepMultiplier] to determine direction: 1 for increment, -1 for decrement.
-class _SliderAdjustAction<T extends Intent> extends Action<T> {
-  final ValueChanged<double> onChanged;
-  final double Function(bool isShift) calculateStep;
-  final double Function(double value) normalizeValue;
-  final double Function() getCurrentValue;
-  final bool enableFeedback;
-  final bool isShiftPressed;
-  final int stepMultiplier;
-
-  _SliderAdjustAction({
-    required this.onChanged,
-    required this.calculateStep,
-    required this.normalizeValue,
-    required this.getCurrentValue,
-    required this.enableFeedback,
-    required this.stepMultiplier,
-    this.isShiftPressed = false,
-  });
-
-  @override
-  void invoke(T intent) {
-    final step = calculateStep(isShiftPressed) * stepMultiplier;
-    final currentValue = getCurrentValue();
-    final newValue = normalizeValue(currentValue + step);
-    if (enableFeedback && newValue != currentValue) {
-      HapticFeedback.selectionClick();
-    }
-    onChanged(newValue);
-  }
-}
-
-/// Action: handles keyboard set-to-min/max intents.
-class _SliderSetBoundAction<T extends Intent> extends Action<T> {
-  final ValueChanged<double> onChanged;
-  final double Function() getTargetValue;
-  final double Function() getCurrentValue;
-  final bool enableFeedback;
-
-  _SliderSetBoundAction({
-    required this.onChanged,
-    required this.getTargetValue,
-    required this.getCurrentValue,
-    required this.enableFeedback,
-  });
-
-  @override
-  void invoke(T intent) {
-    final targetValue = getTargetValue();
-    final currentValue = getCurrentValue();
-    if (enableFeedback && currentValue != targetValue) {
-      HapticFeedback.selectionClick();
-    }
-    onChanged(targetValue);
-  }
 }

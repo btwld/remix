@@ -65,9 +65,7 @@ mixin WidgetStatesMixin<T extends StatefulWidget> on State<T> {
   /// Called during initialization and when widget updates.
   @protected
   // ignore: no-empty-block
-  void initializeWidgetStates() {
-    // Default implementation does nothing - override in concrete widgets
-  }
+  void initializeWidgetStates() {}
 
   @override
   @mustCallSuper
@@ -228,10 +226,8 @@ mixin FocusNodeMixin<T extends StatefulWidget> on State<T> {
   void didUpdateWidget(covariant T oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // BEFORE: snapshot and (later) detach listener safely
     final FocusNode? newExternal = widgetProvidedNode;
 
-    // Nothing changed wrt external node identity → no swap needed
     if (identical(newExternal, _lastExternalNode)) {
       return;
     }
@@ -239,28 +235,21 @@ mixin FocusNodeMixin<T extends StatefulWidget> on State<T> {
     final oldEffective = _effectiveFocusNode!;
     final bool hadFocus = oldEffective.hasFocus;
 
-    // Detach BEFORE we might dispose the old node
     oldEffective.removeListener(_notifyFocusChanged);
 
-    // Transition handling
     if (_lastExternalNode == null && newExternal != null) {
-      // internal -> external
       _internalFocusNode?.dispose();
       _internalFocusNode = null;
     } else if (_lastExternalNode != null && newExternal == null) {
-      // external -> internal
       _internalFocusNode = FocusNode(debugLabel: focusNodeDebugLabel);
     }
     _lastExternalNode = newExternal;
 
-    // AFTER: recompute from the updated fields using a different initializer
     final newEffective = _lastExternalNode ?? _internalFocusNode!;
     _effectiveFocusNode = newEffective;
 
-    // Reattach listener to the current effective node
     newEffective.addListener(_notifyFocusChanged);
 
-    // Preserve focus across the swap
     if (hadFocus) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && identical(_effectiveFocusNode, newEffective)) {
