@@ -311,8 +311,6 @@ registries:
       sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
-    const generated = '$uiPath/components/button.g.dart';
-    final relativeToLib = generated.substring('lib/'.length);
     final build = runner.calls.singleWhere(
       (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
     );
@@ -320,7 +318,9 @@ registries:
       build.arguments.where(
         (argument) => argument.startsWith('--build-filter='),
       ),
-      {'--build-filter=package:consumer/$relativeToLib'},
+      {
+        '--build-filter=package:consumer/design_system/components/button.g.dart',
+      },
     );
   });
 
