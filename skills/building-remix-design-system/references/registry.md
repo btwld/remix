@@ -59,8 +59,8 @@ application.
   Vanilla catalog** at the revision you test against — read them from
   [`registry/vanilla/registry.yaml` on `registry-stable`](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/registry.yaml)
   rather than copying a version from memory. Upgrade them together.
-- `@MixWidget` recipes need no `build.yaml`; consumers do not get one either.
-  Keep recipes on `@MixWidget` so installation stays build-config-free.
+- `@MixWidget` recipe installs stay build-config-free. `@MixableSpec` installs
+  write a consumer `build.yaml` that enables the spec-styler builder.
 - Commit the generated `.g.dart` parts so the package analyzes and tests; they
   are not templates.
 

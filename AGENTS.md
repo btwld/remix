@@ -59,7 +59,7 @@ system SDK is older.
 - `dart run melos run ci:checks`: every contract checker, in seconds.
 - `dart run melos run docs:check`: after editing `docs/` or `skills/`; rejects
   retired APIs and compiles published Dart examples.
-- `dart run melos run ci`: the full local gate, matching CI.
+- `dart run melos run ci`: the local scripts, in sequence. The `icons` and `cli-windows` jobs are CI-only.
 
 ## Conventions
 

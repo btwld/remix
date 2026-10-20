@@ -214,10 +214,6 @@ melos:
       description: Verify shared dependency constraints match the melos bootstrap config
 
     analyze:
-      # The shared `dart-actions` workflow already runs an analyzer step, so
-      # this is not what guards `main`. It exists so `melos run ci` -- the
-      # documented local gate -- reports the same failures a pull request
-      # would, instead of deferring them to a push.
       run: dart analyze
       description: Analyze every workspace package
 
@@ -228,16 +224,11 @@ melos:
       run: dart format --output=none --set-exit-if-changed .
       description: Verify every Dart source matches the formatter
 
-    # `ci` is the whole verification surface, and every step below is one CI
-    # job. Running it here executes them in sequence; .github/workflows/ci.yaml
-    # runs the same six scripts as parallel jobs, which is what took the
-    # pipeline from ~20 minutes of sequential work to roughly its slowest job.
+    # `ci` runs the scripts below in sequence. CI runs those scripts as
+    # parallel jobs. The `icons` and `cli-windows` jobs are CI-only.
     #
-    # The split is therefore a contract, not a convenience: a step added here
-    # but not wired into the workflow would never run on CI, and would look
-    # green because nothing reports a job that does not exist.
-    # tool/check_ci_coverage.dart fails when the two drift, and runs inside
-    # `ci:checks` so it cannot be forgotten.
+    # tool/check_ci_coverage.dart fails when a `ci` step and the workflow's
+    # `melos run` list drift, and runs inside `ci:checks`.
     #
     # Group by cost, not by theme. The two open-code presets are separate steps
     # purely because they are ~5 minutes each and independent, and together

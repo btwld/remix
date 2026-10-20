@@ -3,8 +3,9 @@
 ///
 /// ```shell
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal]
-///     [--source both|hosted|checkout] [--item dashboard_demo|dashboard_shell]
-///     [--hosted-cli] [--keep]
+///     [--source both|hosted|checkout]
+///     [--item dashboard_demo|dashboard_shell|icons]
+///     [--icon-library remix|lucide] [--hosted-cli] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -988,8 +989,9 @@ _Failure? _verifyFocusedDependencies(
   );
 }
 
-/// Each surface must compile with only its own dependency closure. The full
-/// gallery installs every item and would otherwise mask an omitted dependency.
+/// Each surface is installed with only its own dependency closure, then its
+/// installed file references are checked. The full gallery installs every item
+/// and would otherwise mask an omitted dependency.
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
@@ -1043,9 +1045,7 @@ Future<_Failure?> _checkIndependentItems({
     final problems = _installedReferenceProblems(ui, files, preset);
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
-    _step(
-      'Independent $item installed, generated, and analyzed with its own dependencies.',
-    );
+    _step('Independent $item installed and its file references checked.');
   }
   return null;
 }

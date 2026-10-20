@@ -5,7 +5,7 @@ name: CI
 # them in parallel costs the slowest job rather than their sum -- which is what
 # took this pipeline from ~20 minutes to roughly the length of `open-code`.
 #
-# Jobs are sized by cost, not by theme: `checks` bundles nine contract checkers
+# Jobs are sized by cost, not by theme: `checks` bundles the contract checkers
 # that together take seconds, while the two open-code presets get a job each
 # purely because they are ~5 minutes apiece and were half the old wall clock.
 #

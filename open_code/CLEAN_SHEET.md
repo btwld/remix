@@ -30,8 +30,7 @@ order, adds its hosted dependencies, exports the authored files, and generates
 **Since:** the styled component catalog has grown on the same two mechanisms —
 one authored file plus one generated part per item, every item depending on
 `theme`. Nothing in the decision below changed to accommodate them: no schema
-field and no installer branch. The token vocabulary moved once, when the chart
-item added `chart1`-`chart5` to reach the current twenty.
+field and no installer branch.
 Compound components (a checkbox group option, a tab bar with its tabs and
 panels) fit by declaring more than one `@MixWidget` in the same file. The
 current catalog is listed in `docs/open-code.mdx`.
@@ -101,9 +100,6 @@ The installer still protects application source:
 - generation targets the parts declared by resolved items, plus every
   already-installed adapter, so adding one item cannot delete another
   item's generated part.
-
-This is enough distribution machinery for a growing catalog without pretending
-the MVP has an update system.
 
 ## Dependency cost
 
