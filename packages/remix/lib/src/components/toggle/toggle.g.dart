@@ -213,12 +213,14 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToggleStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToggleStyler.radialGradient({
     required List<Color> colors,
@@ -228,6 +230,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToggleStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -236,6 +239,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToggleStyler.sweepGradient({
     required List<Color> colors,
@@ -244,6 +248,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToggleStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -251,6 +256,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToggleStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -258,12 +264,14 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToggleStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToggleStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -273,6 +281,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToggleStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -281,6 +290,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToggleStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -289,6 +299,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToggleStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -296,6 +307,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToggleStyler.row() => ToggleStyler().row();
   factory ToggleStyler.column() => ToggleStyler().column();
@@ -470,6 +482,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -478,6 +491,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -490,6 +504,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -500,6 +515,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -511,6 +527,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -520,6 +537,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -530,6 +548,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -538,6 +557,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -550,6 +570,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -560,6 +581,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -571,6 +593,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -580,6 +603,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

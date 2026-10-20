@@ -249,12 +249,14 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DisclosureStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DisclosureStyler.radialGradient({
     required List<Color> colors,
@@ -264,6 +266,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DisclosureStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -272,6 +275,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DisclosureStyler.sweepGradient({
     required List<Color> colors,
@@ -280,6 +284,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DisclosureStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -287,6 +292,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DisclosureStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -294,12 +300,14 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DisclosureStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DisclosureStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -309,6 +317,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DisclosureStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -317,6 +326,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DisclosureStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -325,6 +335,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DisclosureStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -332,6 +343,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DisclosureStyler.transform(
     Matrix4 value, {
@@ -504,6 +516,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       BoxStyler().linearGradient(
@@ -512,6 +525,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -524,6 +538,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       BoxStyler().radialGradient(
@@ -534,6 +549,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -545,6 +561,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       BoxStyler().sweepGradient(
@@ -554,6 +571,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -564,6 +582,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       BoxStyler().foregroundLinearGradient(
@@ -572,6 +591,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -584,6 +604,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       BoxStyler().foregroundRadialGradient(
@@ -594,6 +615,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -605,6 +627,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       BoxStyler().foregroundSweepGradient(
@@ -614,6 +637,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

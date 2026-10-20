@@ -314,12 +314,14 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataListStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataListStyler.radialGradient({
     required List<Color> colors,
@@ -329,6 +331,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataListStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -337,6 +340,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataListStyler.sweepGradient({
     required List<Color> colors,
@@ -345,6 +349,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataListStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -352,6 +357,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataListStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -359,12 +365,14 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataListStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataListStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -374,6 +382,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataListStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -382,6 +391,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataListStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -390,6 +400,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataListStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -397,6 +408,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataListStyler.transform(
     Matrix4 value, {
@@ -569,6 +581,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -577,6 +590,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -589,6 +603,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -599,6 +614,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -610,6 +626,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -619,6 +636,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -629,6 +647,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -637,6 +656,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -649,6 +669,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -659,6 +680,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -670,6 +692,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -679,6 +702,7 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

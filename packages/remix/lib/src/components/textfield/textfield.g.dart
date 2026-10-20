@@ -473,12 +473,14 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TextFieldStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TextFieldStyler.radialGradient({
     required List<Color> colors,
@@ -488,6 +490,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TextFieldStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -496,6 +499,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TextFieldStyler.sweepGradient({
     required List<Color> colors,
@@ -504,6 +508,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TextFieldStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -511,6 +516,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TextFieldStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -518,12 +524,14 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TextFieldStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TextFieldStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -533,6 +541,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TextFieldStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -541,6 +550,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TextFieldStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -549,6 +559,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TextFieldStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -556,6 +567,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TextFieldStyler.transform(
     Matrix4 value, {
@@ -728,6 +740,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -736,6 +749,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -748,6 +762,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -758,6 +773,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -769,6 +785,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -778,6 +795,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -788,6 +806,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -796,6 +815,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -808,6 +828,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -818,6 +839,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -829,6 +851,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -838,6 +861,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

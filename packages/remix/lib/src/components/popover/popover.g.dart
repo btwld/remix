@@ -220,12 +220,14 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => PopoverStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory PopoverStyler.radialGradient({
     required List<Color> colors,
@@ -235,6 +237,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => PopoverStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -243,6 +246,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory PopoverStyler.sweepGradient({
     required List<Color> colors,
@@ -251,6 +255,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => PopoverStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -258,6 +263,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory PopoverStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -265,12 +271,14 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => PopoverStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory PopoverStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -280,6 +288,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => PopoverStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -288,6 +297,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory PopoverStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -296,6 +306,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => PopoverStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -303,6 +314,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory PopoverStyler.transform(
     Matrix4 value, {
@@ -475,6 +487,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -483,6 +496,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -495,6 +509,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -505,6 +520,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -516,6 +532,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -525,6 +542,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -535,6 +553,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -543,6 +562,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -555,6 +575,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -565,6 +586,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -576,6 +598,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -585,6 +608,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

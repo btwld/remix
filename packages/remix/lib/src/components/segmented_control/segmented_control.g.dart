@@ -355,12 +355,14 @@ class SegmentedControlStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlStyler.radialGradient({
     required List<Color> colors,
@@ -370,6 +372,7 @@ class SegmentedControlStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -378,6 +381,7 @@ class SegmentedControlStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlStyler.sweepGradient({
     required List<Color> colors,
@@ -386,6 +390,7 @@ class SegmentedControlStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -393,6 +398,7 @@ class SegmentedControlStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -400,12 +406,14 @@ class SegmentedControlStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -415,6 +423,7 @@ class SegmentedControlStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -423,6 +432,7 @@ class SegmentedControlStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -431,6 +441,7 @@ class SegmentedControlStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -438,6 +449,7 @@ class SegmentedControlStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlStyler.transform(
     Matrix4 value, {
@@ -613,6 +625,7 @@ class SegmentedControlStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -621,6 +634,7 @@ class SegmentedControlStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -633,6 +647,7 @@ class SegmentedControlStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -643,6 +658,7 @@ class SegmentedControlStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -654,6 +670,7 @@ class SegmentedControlStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -663,6 +680,7 @@ class SegmentedControlStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -673,6 +691,7 @@ class SegmentedControlStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -681,6 +700,7 @@ class SegmentedControlStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -693,6 +713,7 @@ class SegmentedControlStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -703,6 +724,7 @@ class SegmentedControlStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -714,6 +736,7 @@ class SegmentedControlStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -723,6 +746,7 @@ class SegmentedControlStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1031,12 +1055,14 @@ class SegmentedControlItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlItemStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlItemStyler.radialGradient({
     required List<Color> colors,
@@ -1046,6 +1072,7 @@ class SegmentedControlItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlItemStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -1054,6 +1081,7 @@ class SegmentedControlItemStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlItemStyler.sweepGradient({
     required List<Color> colors,
@@ -1062,6 +1090,7 @@ class SegmentedControlItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlItemStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -1069,6 +1098,7 @@ class SegmentedControlItemStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlItemStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -1076,12 +1106,14 @@ class SegmentedControlItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlItemStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlItemStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -1091,6 +1123,7 @@ class SegmentedControlItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlItemStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -1099,6 +1132,7 @@ class SegmentedControlItemStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlItemStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -1107,6 +1141,7 @@ class SegmentedControlItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SegmentedControlItemStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -1114,6 +1149,7 @@ class SegmentedControlItemStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SegmentedControlItemStyler.transform(
     Matrix4 value, {
@@ -1292,6 +1328,7 @@ class SegmentedControlItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -1300,6 +1337,7 @@ class SegmentedControlItemStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1312,6 +1350,7 @@ class SegmentedControlItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -1322,6 +1361,7 @@ class SegmentedControlItemStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1333,6 +1373,7 @@ class SegmentedControlItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -1342,6 +1383,7 @@ class SegmentedControlItemStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1352,6 +1394,7 @@ class SegmentedControlItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -1360,6 +1403,7 @@ class SegmentedControlItemStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1372,6 +1416,7 @@ class SegmentedControlItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -1382,6 +1427,7 @@ class SegmentedControlItemStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1393,6 +1439,7 @@ class SegmentedControlItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -1402,6 +1449,7 @@ class SegmentedControlItemStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
