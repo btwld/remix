@@ -85,6 +85,9 @@ class RemixBoxShadow {
 }
 
 /// Mix representation of [RemixBoxShadow] with token-aware fields.
+///
+/// Named constructors share names with the chainable methods, so the same word
+/// starts a dot shorthand or continues a chain.
 @immutable
 class RemixBoxShadowMix extends Mix<RemixBoxShadow> {
   RemixBoxShadowMix({
@@ -128,10 +131,6 @@ class RemixBoxShadowMix extends Mix<RemixBoxShadow> {
       );
 
   /// Which of the shadow shapes this is: a drop shadow or an inner shadow.
-  ///
-  /// Named so a shadow can be written as a dot shorthand wherever one is
-  /// expected, matching [RemixBoxEffectsMix]. See [kind] for the chainable
-  /// counterpart that continues the same expression.
   factory RemixBoxShadowMix.kind(RemixBoxShadowKind value) =>
       RemixBoxShadowMix(kind: value);
 
@@ -162,10 +161,6 @@ class RemixBoxShadowMix extends Mix<RemixBoxShadow> {
   final Prop<double>? $shapeInset;
 
   /// Chainable counterpart of [RemixBoxShadowMix.kind].
-  ///
-  /// A named constructor and an instance method may share a name in Dart, so
-  /// the same word works as the entry point and as a link in a chain:
-  /// `.shadows([.color(black).blurRadius(12)])`.
   RemixBoxShadowMix kind(RemixBoxShadowKind value) =>
       merge(RemixBoxShadowMix(kind: value));
 
@@ -615,10 +610,6 @@ class RemixBoxEffectLayerMix extends Mix<RemixBoxEffectLayerSpec> {
        $shadows = shadows;
 
   /// The shadows this layer paints.
-  ///
-  /// Named so a layer can be written as a dot shorthand wherever one is
-  /// expected, matching [RemixBoxEffectsMix]:
-  /// `.containerEffects(.behindContent(.shadows([shadow])))`.
   factory RemixBoxEffectLayerMix.shadows(List<RemixBoxShadowMix> value) =>
       RemixBoxEffectLayerMix(shadows: value);
 
@@ -640,10 +631,6 @@ class RemixBoxEffectLayerMix extends Mix<RemixBoxEffectLayerSpec> {
   final Prop<List<RemixBoxShadow>>? $shadows;
 
   /// Chainable counterpart of [RemixBoxEffectLayerMix.shadows].
-  ///
-  /// A named constructor and an instance method may share a name in Dart, so
-  /// the same word works as the entry point and as a link in a chain:
-  /// `.behindContent(.gradients([gradient]).shadows([shadow]))`.
   RemixBoxEffectLayerMix shadows(List<RemixBoxShadowMix> value) =>
       merge(RemixBoxEffectLayerMix(shadows: value));
 
@@ -840,9 +827,6 @@ class RemixBoxEffectsMix extends Mix<RemixBoxEffectsSpec> {
        $outlineOffset = outlineOffset;
 
   /// Blurs whatever is painted behind the box.
-  ///
-  /// Named so `containerEffects(.backdropBlur(64))` reads as one compound
-  /// value, matching the Mix styler policy for compound arguments.
   factory RemixBoxEffectsMix.backdropBlur(double value) =>
       RemixBoxEffectsMix(backdropBlur: value);
 
@@ -869,10 +853,6 @@ class RemixBoxEffectsMix extends Mix<RemixBoxEffectsSpec> {
   final Prop<double>? $outlineOffset;
 
   /// Chainable counterpart of [RemixBoxEffectsMix.backdropBlur].
-  ///
-  /// A named constructor and an instance method may share a name in Dart, so
-  /// the same word works as the entry point and as a link in a chain:
-  /// `.containerEffects(.backdropBlur(64).outlineOffset(2))`.
   RemixBoxEffectsMix backdropBlur(double value) =>
       merge(RemixBoxEffectsMix(backdropBlur: value));
 

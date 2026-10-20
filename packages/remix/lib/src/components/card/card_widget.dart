@@ -1,11 +1,6 @@
 part of 'card.dart';
 
-/// A Material Design card component.
-///
-/// A card is a sheet of Material used to represent some related information,
-/// for example an album, a geographical location, a meal, contact details, etc.
-///
-/// This is a Remix version of the standard Material Card widget, with customizable styling.
+/// A styled surface for related content.
 ///
 /// ## Example
 ///
@@ -18,7 +13,7 @@ part of 'card.dart';
 /// )
 /// ```
 class RemixCard extends StatelessWidget {
-  /// Creates a Material Design card.
+  /// Creates a card.
   const RemixCard({
     super.key,
     this.child,

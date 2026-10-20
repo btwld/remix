@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-// Inspired by Lemonsqueezy
-// https://www.lemonsqueezy.com/wedges/docs/components/input
-
 void main() {
   runApp(
     WidgetsApp(

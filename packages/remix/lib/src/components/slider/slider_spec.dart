@@ -12,9 +12,6 @@ class SliderSpec with _$SliderSpec {
   static const double defaultTrackStrokeWidth =
       _remixSliderDefaultTrackThickness;
 
-  /// Preferred alias for [defaultTrackStrokeWidth].
-  static const double defaultTrackThickness = _remixSliderDefaultTrackThickness;
-
   /// Layout boundary for the complete track.
   @override
   final StyleSpec<BoxSpec> track;

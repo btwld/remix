@@ -156,7 +156,7 @@ class TextFieldSpec with _$TextFieldSpec {
   /// const spec = TextFieldSpec(
   ///   textAlign: TextAlign.center,
   ///   cursorWidth: 3.0,
-  ///   cursorColor: Colors.blue,
+  ///   cursorColor: Color(0xFF2196F3),
   /// );
   /// ```
   const TextFieldSpec({

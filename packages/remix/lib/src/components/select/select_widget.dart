@@ -1,9 +1,5 @@
 part of 'select.dart';
 
-// ============================================================================
-// DATA CLASSES - Trigger and Select Item
-// ============================================================================
-
 /// Data class representing a select trigger.
 ///
 /// Used with [RemixSelect] to define the trigger button that opens the dropdown.
@@ -61,10 +57,6 @@ class RemixSelectItem<T> {
     this.semanticLabel,
   });
 }
-
-// ============================================================================
-// REMIX SELECT - Main select widget
-// ============================================================================
 
 /// A customizable select component with data-driven API.
 ///
@@ -414,10 +406,6 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
     );
   }
 }
-
-// ============================================================================
-// INTERNAL WIDGETS - Trigger, Item, and Label
-// ============================================================================
 
 /// Internal widget for rendering the select trigger.
 class _RemixSelectTriggerWidget extends StatelessWidget {
