@@ -44,6 +44,21 @@ const _neutralTextInputPlaceholder = ContextToken<Color>(
   _resolveNeutralTextInputPlaceholder,
 );
 
+Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
+    UiTokens.accent12.resolve(context).withValues(alpha: alpha);
+
+final _softTextFieldPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.60),
+);
+
+final _softTextAreaPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.65),
+);
+
+final _softTextInputDisabledPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.5),
+);
+
 /// Ui-themed preset for [RemixTextField].
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler uiTextFieldStyle({
@@ -70,7 +85,10 @@ TextFieldStyler uiTextFieldStyle({
   final recipe = switch (variant) {
     .classic => _uiApplyClassicTextInput(base),
     .surface => _uiApplySurfaceTextInput(base),
-    .soft => _uiApplySoftTextInput(base, placeholderOpacity: 0.60),
+    .soft => _uiApplySoftTextInput(
+      base,
+      placeholder: _softTextFieldPlaceholder,
+    ),
   };
 
   return recipe
@@ -167,7 +185,7 @@ TextFieldStyler _uiApplySurfaceTextInput(TextFieldStyler base) =>
 
 TextFieldStyler _uiApplySoftTextInput(
   TextFieldStyler base, {
-  required double placeholderOpacity,
+  required ContextToken<Color> placeholder,
 }) => base
     .merge(
       TextFieldStyler(
@@ -184,11 +202,7 @@ TextFieldStyler _uiApplySoftTextInput(
     )
     .textColor(UiTokens.accent12())
     .text(.selectionColor(UiTokens.accentA5()))
-    .onEnabled(
-      .hintText(
-        .color(UiTokens.accent12().withValues(alpha: placeholderOpacity)),
-      ),
-    )
+    .onEnabled(.hintText(.color(placeholder())))
     .wrap(.iconTheme(color: UiTokens.accent10()))
     .color(UiTokens.accentA3())
     .containerEffects(
@@ -226,7 +240,7 @@ TextFieldStyler _uiNeutralTextInputDisabledStyle() =>
 
 TextFieldStyler _uiSoftTextInputDisabledStyle() =>
     _uiTextInputDisabledBaseStyle().hintText(
-      .color(UiTokens.accent12().withValues(alpha: 0.5)),
+      .color(_softTextInputDisabledPlaceholder()),
     );
 
 TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
@@ -323,7 +337,7 @@ TextFieldStyler uiTextAreaStyle({
   final recipe = switch (variant) {
     .classic => _uiApplyClassicTextInput(base),
     .surface => _uiApplySurfaceTextInput(base),
-    .soft => _uiApplySoftTextInput(base, placeholderOpacity: 0.65),
+    .soft => _uiApplySoftTextInput(base, placeholder: _softTextAreaPlaceholder),
   };
 
   return recipe

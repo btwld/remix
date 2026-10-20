@@ -31,11 +31,6 @@ part 'disclosure.g.dart';
 /// are typed by `package:naked_ui`, which this layer does not depend on.
 /// Reach for `RemixDisclosure` directly on the rare call site that needs a
 /// state-aware trigger or a custom transition.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state,
-/// not by depth: an override that must beat the hovered trigger has to be
-/// declared with `.onHovered(...)` too.
 @MixWidget(
   target: RemixDisclosure.new,
   widgetParameters: .only({

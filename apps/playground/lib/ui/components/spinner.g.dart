@@ -15,9 +15,6 @@ part of 'spinner.dart';
 /// The content color is `foreground` rather than `primary`. A spinner most
 /// often replaces text while something loads, so it should read at the same
 /// weight as the text it stands in for.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class PlaygroundSpinner extends StatelessWidget {
   const PlaygroundSpinner({
     super.key,

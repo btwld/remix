@@ -36,17 +36,6 @@ part of 'popover.dart';
 ///   ),
 /// )
 /// ```
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// VanillaPopover(
-///   style: PopoverStyler().width(360),
-///   popoverChild: const Text('A wider panel for a longer form.'),
-///   child: const Text('Details'),
-/// )
-/// ```
 class VanillaPopover extends StatelessWidget {
   const VanillaPopover({
     super.key,

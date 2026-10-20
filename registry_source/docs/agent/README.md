@@ -4,7 +4,7 @@ Unstyled Flutter widgets for long-running agent work: compose a prompt, follow
 a transcript, pause for permission, and inspect execution and plans.
 
 The eight surfaces are application-owned source in the default CLI registry.
-See [ADR 0001](docs/adr/0001-package-boundary.md) for the private authoring
+See [ADR 0001](../adr/agent/0001-package-boundary.md) for the private authoring
 package boundary and the runtime/recipe split. They are available from both
 existing presets; there is no separate Agent preset.
 

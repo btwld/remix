@@ -22,11 +22,6 @@ part of 'textfield.dart';
 /// handles and magnifier. Any application with a `Navigator` — `MaterialApp`,
 /// `CupertinoApp`, or a `WidgetsApp` with routes — already has one. A bare
 /// `WidgetsApp(builder: ...)` does not, and has to supply an `Overlay` itself.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's error outline has to be
-/// declared as an error fragment too.
 class PlaygroundTextField extends StatelessWidget {
   const PlaygroundTextField({
     super.key,
@@ -279,8 +274,6 @@ class PlaygroundTextField extends StatelessWidget {
 /// resting box (at least 64px, with 8px above and below the text), and
 /// accessories pinned to the first line instead of floating in the middle of a
 /// growing one.
-///
-/// [style] is merged **last**, exactly as it is for the single-line field.
 class PlaygroundTextArea extends StatelessWidget {
   const PlaygroundTextArea({
     super.key,

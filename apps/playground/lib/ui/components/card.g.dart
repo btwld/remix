@@ -21,16 +21,6 @@ part of 'card.dart';
 /// corners, a small shadow, and a 24px inset. `card` is one of the vocabulary's
 /// thirty-three tokens precisely so a theme can set cards apart from the page
 /// without touching this recipe.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// PlaygroundCard(
-///   style: CardStyler().color(PlaygroundTokens.muted()),
-///   child: summary,
-/// )
-/// ```
 class PlaygroundCard extends StatelessWidget {
   const PlaygroundCard({
     super.key,

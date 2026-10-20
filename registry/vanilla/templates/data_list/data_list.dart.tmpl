@@ -21,9 +21,6 @@ part 'data_list.g.dart';
 /// both are decided by the page it sits on — a caller who wants a denser block
 /// overrides the spacings through [style].
 ///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
 /// ```dart
 /// {{typePrefix}}DataList(
 ///   items: const [

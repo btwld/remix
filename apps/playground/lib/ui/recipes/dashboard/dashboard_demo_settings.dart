@@ -176,7 +176,7 @@ class _PlaygroundDashboardSettingsPageState
           ),
           _section(
             'Appearance',
-            'Tune the default preset theme with meaningful native values.',
+            'Choose light, dark, or match the system.',
             ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)

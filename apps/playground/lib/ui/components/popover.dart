@@ -37,17 +37,6 @@ part 'popover.g.dart';
 ///   ),
 /// )
 /// ```
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// PlaygroundPopover(
-///   style: PopoverStyler().width(360),
-///   popoverChild: const Text('A wider panel for a longer form.'),
-///   child: const Text('Details'),
-/// )
-/// ```
 @MixWidget(target: RemixPopover.new)
 PopoverStyler playgroundPopoverStyle({
   PopoverStyler style = const PopoverStyler.create(),

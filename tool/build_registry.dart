@@ -591,19 +591,17 @@ const fortalPreset = PresetSpec(
       exports: ['theme/theme.dart'],
     ),
   ],
-  copiedItems: [
-    CopiedItemSpec(
+  copiedItems: [],
+  fileItems: [
+    FileItemSpec(
       name: 'icons',
-      templatePath: 'templates/icons/icons.dart.tmpl',
-      target: '@ui/icons.dart',
-      registryDependencies: ['theme'],
+      file: 'icons.dart',
       packages: const {},
+      registryDependencies: ['theme'],
       exports: ['icons.dart'],
     ),
   ],
-  // Authored for the package's own use. The registry item copies the default
-  // preset's icons template instead, so this file owns no item.
-  ignoredSourceFiles: {'icons.dart'},
+  ignoredSourceFiles: {},
   floorPackages: {
     'remix',
     'mix_annotations',

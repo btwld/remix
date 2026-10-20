@@ -15,11 +15,6 @@ part of 'switch.dart';
 ///
 /// `RemixSwitch` requires a `semanticLabel` because a switch has no visible
 /// text of its own. That is a Remix rule, not a recipe choice.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's on-track has to be
-/// declared as a selected fragment too (`SwitchStyler().onSelected(...)`).
 class PlaygroundSwitch extends StatelessWidget {
   const PlaygroundSwitch({
     super.key,

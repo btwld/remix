@@ -24,14 +24,6 @@ part of 'icon_button.dart';
 /// accessible name of its own. That is a Remix rule, not a recipe choice, and
 /// it is why the generated widget has one required named argument beyond the
 /// icon.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. Because [variant] is a non-nullable
-/// enum, the generator also emits one named constructor per enum value.
-///
-/// State fragments merge by state, not by depth: an override that must beat
-/// the recipe's hover fill has to be declared as a hover fragment too
-/// (`IconButtonStyler().onHovered(...)`).
 class PlaygroundIconButton extends StatelessWidget {
   const PlaygroundIconButton({
     super.key,

@@ -15,14 +15,6 @@ part of 'badge.dart';
 /// It takes no size. A badge sits inline beside other content and reads at
 /// one scale; a size axis would have to be threaded through every call site
 /// for no gain.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. Because [variant] is a non-nullable
-/// enum, the generator also emits one named constructor per enum value:
-///
-/// ```dart
-/// PlaygroundBadge.destructive(label: 'Failing')
-/// ```
 class PlaygroundBadge extends StatelessWidget {
   const PlaygroundBadge({
     super.key,

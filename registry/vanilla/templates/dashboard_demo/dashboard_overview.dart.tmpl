@@ -15,7 +15,7 @@ import 'dashboard_demo_charts.dart';
 import 'dashboard_overview_base.dart';
 import 'dashboard_sample_data.dart';
 
-/// The default-preset dashboard overview.
+/// Revenue, orders, and recent activity.
 ///
 /// Pass local [data] to replace the starter metrics, chart, and records without
 /// changing the responsive composition.

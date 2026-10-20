@@ -14,10 +14,6 @@ import 'theme_scope.dart' show UiTheme;
 ///
 /// Must be used within [UiTheme] to resolve actual values.
 class UiTokens {
-  // ============================================================================
-  // BACKGROUND AND SURFACE COLORS
-  // ============================================================================
-
   /// Page background color selected for the active brightness.
   static const colorBackground = ColorToken('ui.color.background');
 
@@ -44,10 +40,6 @@ class UiTokens {
   /// Dark overlay for modals and dialogs.
   static const colorOverlay = ColorToken('ui.color.overlay');
 
-  // ============================================================================
-  // FUNCTIONAL ACCENT COLORS
-  // ============================================================================
-
   /// Subtle accent surface for soft button variants and chips.
   static const accentSurface = ColorToken('ui.accent.surface');
 
@@ -64,10 +56,6 @@ class UiTokens {
 
   /// High contrast foreground for solid accent backgrounds.
   static const accentContrast = ColorToken('ui.accent.contrast');
-
-  // ============================================================================
-  // FOCUS AND INTERACTION STATES
-  // ============================================================================
 
   /// Solid focus ring color (accent step 8).
   static const focus8 = ColorToken('ui.focus.8');
@@ -86,19 +74,6 @@ class UiTokens {
   static const error11 = ColorToken('ui.error.11');
   static const error12 = ColorToken('ui.error.12');
   static const errorA7 = ColorToken('ui.error.a7');
-
-  // ============================================================================
-  // ACCENT COLOR SCALE (12 STEPS)
-  // ============================================================================
-  //
-  // Ui uses a 12-step color scale (inherited from Radix Themes) that provides semantic meaning:
-  //
-  // Steps 1-2:  App backgrounds (subtle → more visible)
-  // Steps 3-5:  Component backgrounds (rest → hover → active)
-  // Steps 6-8:  Borders (subtle → component → hover)
-  // Steps 9-10: Solid backgrounds (default → hover)
-  // Steps 11-12: Text (low contrast → high contrast)
-  //
 
   /// Accent step 1 - App background, most subtle.
   static const accent1 = ColorToken('ui.accent.1');
@@ -136,15 +111,6 @@ class UiTokens {
   /// Accent step 12 - High contrast text.
   static const accent12 = ColorToken('ui.accent.12');
 
-  // ============================================================================
-  // GRAY COLOR SCALE (12 STEPS)
-  // ============================================================================
-  //
-  // The gray scale follows the same 12-step semantic structure as accent colors,
-  // but provides neutral colors for text, borders, and backgrounds.
-  // The specific gray variant (slate, mauve, sage, etc.) is chosen in the theme.
-  //
-
   /// Gray step 1 - Page background.
   static const gray1 = ColorToken('ui.gray.1');
 
@@ -164,44 +130,23 @@ class UiTokens {
   static const gray6 = ColorToken('ui.gray.6');
 
   /// Gray step 7 - Standard borders and outlines.
-  ///
-  /// Primary border color for form inputs, cards,
-  /// and component boundaries.
   static const gray7 = ColorToken('ui.gray.7');
 
   /// Gray step 8 - Borders on hover and focus.
-  ///
-  /// Interactive border states and stronger separators
-  /// that need more visual weight.
   static const gray8 = ColorToken('ui.gray.8');
 
   /// Gray step 9 - Solid neutral backgrounds.
-  ///
-  /// For neutral buttons, badges, and other elements
-  /// that need a solid background without accent color.
   static const gray9 = ColorToken('ui.gray.9');
 
   /// Gray step 10 - Solid neutral backgrounds on hover.
-  ///
-  /// Hover state for neutral solid backgrounds,
-  /// providing interactive feedback.
   static const gray10 = ColorToken('ui.gray.10');
 
   /// Gray step 11 - Low contrast text and secondary content.
-  ///
-  /// For secondary text, placeholders, and content that should
-  /// be readable but not prominent.
   static const gray11 = ColorToken('ui.gray.11');
 
   /// Gray step 12 - High contrast text and primary content.
-  ///
-  /// Primary text color for body content, headings, and any text
-  /// that needs maximum readability and prominence.
   static const gray12 = ColorToken('ui.gray.12');
 
-  // ============================================================================
-  // GRAY ROLE TOKENS (parity with generated JSON roles)
-  // ============================================================================
   /// Neutral surface baseline for the selected gray scale (matches JSON surface)
   static const graySurface = ColorToken('ui.gray.surface');
 
@@ -213,10 +158,6 @@ class UiTokens {
 
   /// Contrast color for content over neutral solid backgrounds (white)
   static const grayContrast = ColorToken('ui.gray.contrast');
-
-  // ============================================================================
-  // ALPHA VARIANTS (FULL 12-STEP FOR ACCENT AND GRAY)
-  // ============================================================================
 
   // Accent alpha steps a1..a12
   static const accentA1 = ColorToken('ui.accent.a1');
@@ -245,11 +186,6 @@ class UiTokens {
   static const grayA10 = ColorToken('ui.gray.a10');
   static const grayA11 = ColorToken('ui.gray.a11');
   static const grayA12 = ColorToken('ui.gray.a12');
-
-  // ============================================================================
-  // NEUTRALS FOR SHADOWS (HELPER TOKENS)
-  // ============================================================================
-  /// Gray alpha steps are declared above (grayA1..grayA12).
 
   /// Black alpha steps used in layered shadows.
   static const blackA1 = ColorToken('ui.black.a1');
@@ -289,65 +225,31 @@ class UiTokens {
   static const grayStroke6 = ColorToken('ui.gray.stroke.6');
   static const grayStroke7 = ColorToken('ui.gray.stroke.7');
 
-  // ============================================================================
-  // SPACING SCALE (9 STEPS)
-  // ============================================================================
-  //
-  // A consistent spacing scale based on 4px increments.
-  //
-
   /// Space step 1 - 4px.
-  ///
-  /// Smallest spacing for tight layouts, borders,
-  /// and fine-grained adjustments.
   static const space1 = SpaceToken('ui.space.1');
 
   /// Space step 2 - 8px.
-  ///
-  /// Small spacing for component padding and margins.
-  /// Good for button padding and form element spacing.
   static const space2 = SpaceToken('ui.space.2');
 
   /// Space step 3 - 12px.
-  ///
-  /// Medium-small spacing for comfortable padding
-  /// and moderate element separation.
   static const space3 = SpaceToken('ui.space.3');
 
   /// Space step 4 - 16px.
-  ///
-  /// Standard spacing for most layouts. Good default
-  /// for card padding and section margins.
   static const space4 = SpaceToken('ui.space.4');
 
   /// Space step 5 - 24px.
-  ///
-  /// Medium spacing for generous padding and
-  /// comfortable separation between sections.
   static const space5 = SpaceToken('ui.space.5');
 
   /// Space step 6 - 32px.
-  ///
-  /// Large spacing for significant visual separation
-  /// and generous component padding.
   static const space6 = SpaceToken('ui.space.6');
 
   /// Space step 7 - 40px.
-  ///
-  /// Extra large spacing for major layout sections
-  /// and prominent visual separation.
   static const space7 = SpaceToken('ui.space.7');
 
   /// Space step 8 - 48px.
-  ///
-  /// Very large spacing for significant page sections
-  /// and major layout boundaries.
   static const space8 = SpaceToken('ui.space.8');
 
   /// Space step 9 - 64px.
-  ///
-  /// Maximum spacing for major page sections
-  /// and substantial layout separation.
   static const space9 = SpaceToken('ui.space.9');
 
   /// Spinner size 3 - 20px at 100% scaling.
@@ -530,44 +432,22 @@ class UiTokens {
   static const selectGhostMarginX3 = DoubleToken('ui.select.ghost-margin-x.3');
   static const selectGhostMarginY3 = DoubleToken('ui.select.ghost-margin-y.3');
 
-  // ============================================================================
-  // BORDER RADIUS SCALE (6 STEPS + FULL)
-  // ============================================================================
-
   /// Radius step 1 - 3px.
-  ///
-  /// Subtle rounding for small elements like buttons
-  /// and form inputs. Provides gentle softening of corners.
   static const radius1 = RadiusToken('ui.radius.1');
 
   /// Radius step 2 - 4px.
-  ///
-  /// Small radius for compact components and minor rounding.
-  /// Good for small badges and tight layouts.
   static const radius2 = RadiusToken('ui.radius.2');
 
   /// Radius step 3 - 6px.
-  ///
-  /// Medium radius for standard components like buttons
-  /// and cards. Balances modern look with usability.
   static const radius3 = RadiusToken('ui.radius.3');
 
   /// Radius step 4 - 8px.
-  ///
-  /// Large radius for prominent components and generous rounding.
-  /// Good for larger buttons and feature cards.
   static const radius4 = RadiusToken('ui.radius.4');
 
   /// Radius step 5 - 12px.
-  ///
-  /// Extra large radius for major components and modern aesthetics.
-  /// Suitable for large cards and prominent interface elements.
   static const radius5 = RadiusToken('ui.radius.5');
 
   /// Radius step 6 - 16px.
-  ///
-  /// Very large radius for distinctive styling and major components.
-  /// Creates a soft, friendly appearance for large interface elements.
   static const radius6 = RadiusToken('ui.radius.6');
 
   /// Theme-level full radius, enabled only by [UiRadius.full].
@@ -603,14 +483,7 @@ class UiTokens {
   /// Radius step 2 promoted to the control-thumb radius when larger.
   static const radius2OrThumb = RadiusToken('ui.radius.2-or-thumb');
 
-  // ============================================================================
-  // ELEVATION SHADOWS (6 LEVELS)
-  // ============================================================================
-
   /// Shadow level 1 - Subtle elevation.
-  ///
-  /// Minimal shadow for slight elevation effects.
-  /// Good for cards and buttons in their resting state.
   static const shadow1 = BoxShadowToken('ui.shadow.1');
 
   /// Exact layered shadow level 1, including inset layers.
@@ -625,9 +498,6 @@ class UiTokens {
   );
 
   /// Shadow level 2 - Low elevation.
-  ///
-  /// Light shadow for gentle elevation and hover states.
-  /// Suitable for interactive elements and small modals.
   static const shadow2 = BoxShadowToken('ui.shadow.2');
 
   /// Shadow-2 painted on SegmentedControl's fixed one-pixel inset shape.
@@ -635,27 +505,15 @@ class UiTokens {
       RemixBoxShadowListToken('ui.segmented-control.classic.indicator-shadows');
 
   /// Shadow level 3 - Medium elevation.
-  ///
-  /// Moderate shadow for clear visual separation.
-  /// Good for dropdowns, tooltips, and floating elements.
   static const shadow3 = BoxShadowToken('ui.shadow.3');
 
   /// Shadow level 4 - High elevation.
-  ///
-  /// Prominent shadow for important floating content.
-  /// Suitable for modal dialogs and important overlays.
   static const shadow4 = BoxShadowToken('ui.shadow.4');
 
   /// Shadow level 5 - Very high elevation.
-  ///
-  /// Strong shadow for primary modals and major overlays.
-  /// Creates clear hierarchy and focus on important content.
   static const shadow5 = BoxShadowToken('ui.shadow.5');
 
   /// Shadow level 6 - Maximum elevation.
-  ///
-  /// Maximum shadow depth for critical dialogs and notifications.
-  /// Ensures content appears above all other interface elements.
   static const shadow6 = BoxShadowToken('ui.shadow.6');
 
   /// Card classic outer and inset-pseudo-element shadow lists.
@@ -752,58 +610,25 @@ class UiTokens {
   static const cardGhostMargin4 = DoubleToken('ui.card.ghost.margin.4');
   static const cardGhostMargin5 = DoubleToken('ui.card.ghost.margin.5');
 
-  // ============================================================================
-  // BORDER AND STROKE WIDTHS
-  // ============================================================================
-
   /// Standard border width (1px).
-  ///
-  /// Default border thickness for most components like inputs,
-  /// cards, and dividers. Provides clear boundaries without visual weight.
   static const borderWidth1 = SpaceToken('ui.border.width.1');
 
   /// Thick border width (2px).
-  ///
-  /// Heavier border for emphasis, selected states, and components
-  /// that need stronger visual definition.
   static const borderWidth2 = SpaceToken('ui.border.width.2');
 
   /// Focus ring border width (2px).
-  ///
-  /// Standard width for focus outlines to ensure accessibility
-  /// compliance and clear keyboard navigation feedback.
   static const focusRingWidth = SpaceToken('ui.focus.ring.width');
 
   /// Focus ring offset distance from element edge.
-  ///
-  /// Space between the component border and focus ring,
-  /// ensuring the focus indicator doesn't interfere with the element.
   static const focusRingOffset = SpaceToken('ui.focus.ring.offset');
 
-  // ============================================================================
-  // TYPOGRAPHY SCALE (9 LEVELS)
-  // ============================================================================
-  //
-  // Text sizes with carefully tuned line heights and letter spacing
-  // for optimal readability across all scales.
-  //
-
   /// Text size 1 - 12px (Small labels and metadata).
-  ///
-  /// Smallest readable text for labels, captions, and secondary metadata.
-  /// Includes tight letter spacing for improved legibility at small sizes.
   static const text1 = TextStyleToken('ui.text.1');
 
   /// Text size 2 - 14px (Standard UI text).
-  ///
-  /// Default size for most interface text including buttons,
-  /// form labels, and secondary content.
   static const text2 = TextStyleToken('ui.text.2');
 
   /// Text size 3 - 16px (Body text and primary content).
-  ///
-  /// Ideal for body text and primary content. Provides excellent
-  /// readability for extended reading on all device types.
   static const text3 = TextStyleToken('ui.text.3');
 
   /// Accordion size-2 text (15px with a 20px line box at 100% scaling).
@@ -813,83 +638,39 @@ class UiTokens {
   static const accordionText2 = TextStyleToken('ui.accordion.text.2');
 
   /// Text size 4 - 18px (Prominent body text).
-  ///
-  /// For important content that needs more visual weight than
-  /// standard body text but isn't quite a heading.
   static const text4 = TextStyleToken('ui.text.4');
 
   /// Text size 5 - 20px (Small headings).
-  ///
-  /// For minor headings, subheadings, and content that needs
-  /// to stand out from body text.
   static const text5 = TextStyleToken('ui.text.5');
 
   /// Text size 6 - 24px (Medium headings).
-  ///
-  /// Standard heading size for section titles and important content.
-  /// Good balance between prominence and page economy.
   static const text6 = TextStyleToken('ui.text.6');
 
   /// Text size 7 - 28px (Large headings).
-  ///
-  /// For major page headings and important announcements.
-  /// Creates strong visual hierarchy and draws attention.
   static const text7 = TextStyleToken('ui.text.7');
 
   /// Text size 8 - 35px (Extra large headings).
-  ///
-  /// For hero text, page titles, and major content sections.
-  /// Strong negative letter spacing improves appearance at large sizes.
   static const text8 = TextStyleToken('ui.text.8');
 
   /// Text size 9 - 60px (Display text).
-  ///
-  /// Maximum text size for hero sections and display typography.
-  /// Includes significant negative letter spacing and tight line height.
   static const text9 = TextStyleToken('ui.text.9');
 
-  // ============================================================================
-  // FONT WEIGHT TOKENS
-  // ============================================================================
-
   /// Light font weight (300).
-  ///
-  /// Optional lighter weight occasionally used in display typography or
-  /// subdued text. Provided for parity with Radix token set.
   static const fontWeightLight = FontWeightToken('ui.font.weight.light');
 
   /// Regular font weight (400).
-  ///
-  /// Standard weight for body text and most interface elements.
-  /// Provides good readability without visual strain.
   static const fontWeightRegular = FontWeightToken('ui.font.weight.regular');
 
   /// Medium font weight (500).
-  ///
-  /// Slightly heavier than regular for UI elements that need
-  /// more visual weight, like active states and button text.
   static const fontWeightMedium = FontWeightToken('ui.font.weight.medium');
 
   /// Bold font weight (700).
-  ///
-  /// For headings and content that needs strong emphasis.
-  /// Provides clear hierarchy without being too heavy.
   static const fontWeightBold = FontWeightToken('ui.font.weight.bold');
 
-  // ============================================================================
-  // ANIMATION DURATIONS
-  // ============================================================================
-
   /// Fast animation duration (100ms).
-  ///
-  /// For quick micro-interactions like hover states and button presses.
-  /// Provides immediate feedback without feeling sluggish.
   static const transitionFast = DurationToken('ui.transition.fast');
 
   /// Slow animation duration (300ms).
-  ///
-  /// For more substantial transitions like modal appearances,
-  /// page transitions, and complex state changes.
   static const transitionSlow = DurationToken('ui.transition.slow');
 
   /// One leg of the Radix Skeleton pulse.

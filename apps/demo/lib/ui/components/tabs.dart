@@ -97,10 +97,7 @@ TabStyler fortalTabStyle({
       .onFocusVisible(
         // Solid `focus-8` where the other three rings use alpha `focus-a8`.
         // See fortalFocusRing: unresolved whether that is intentional.
-        TabStyler().fortalFocusRing(
-          color: FortalTokens.focus8(),
-          strokeAlign: null,
-        ),
+        TabStyler().fortalFocusRing(color: FortalTokens.focus8()),
       )
       .onSelected(
         .label(

@@ -18,10 +18,6 @@ import 'radix_colors.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
-// ============================================================================
-// FUNCTIONAL / COMPUTED IMPLEMENTATIONS
-// ============================================================================
-
 /// Computes solid focus ring color (accent step 8).
 Color computeFocus8(RadixColorScale accent) => accent.step(8);
 
@@ -30,10 +26,6 @@ Color computeFocusA5(RadixColorScale accent) => accent.alphaStep(5);
 
 /// Computes translucent focus ring color (accent alpha step 8).
 Color computeFocusA8(RadixColorScale accent) => accent.alphaStep(8);
-
-// ============================================================================
-// BACKGROUND / PANEL / OVERLAY
-// ============================================================================
 
 /// Computes primary page background color.
 ///
@@ -405,10 +397,6 @@ RemixBoxShadow _shadow(
   blurRadius: blur,
   spreadRadius: spread,
 );
-
-// ============================================================================
-// RESOLVER (merged from resolver.dart)
-// ============================================================================
 
 /// Container for all computed Fortal theme colors and scales.
 ///

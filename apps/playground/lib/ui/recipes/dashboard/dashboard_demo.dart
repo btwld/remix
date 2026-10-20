@@ -29,11 +29,7 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
-/// Full default-preset dashboard demo.
-///
-/// This is the open-code default-preset equivalent of the Fortal product
-/// dashboard starter: it includes the same Overview, Chat, Customers, Orders,
-/// and Settings destinations, built with the default preset vocabulary.
+/// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 class PlaygroundDashboardDemo extends StatefulWidget {
   const PlaygroundDashboardDemo({
     super.key,

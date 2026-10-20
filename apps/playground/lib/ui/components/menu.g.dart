@@ -23,11 +23,6 @@ part of 'menu.dart';
 /// components have separate update stories — but the values are meant to
 /// match, so a menu and a popover anchored to adjacent buttons do not read as
 /// two systems.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat a row's hover fill has to be declared
-/// as a hover fragment too.
 class PlaygroundMenu<T> extends StatelessWidget {
   const PlaygroundMenu({
     super.key,

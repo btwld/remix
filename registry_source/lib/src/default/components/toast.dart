@@ -57,9 +57,6 @@ enum VanillaToastVariant {
 ///
 /// The action and the close button reuse this application's Button and
 /// IconButton recipes, so they keep their own hover, focus, and press states.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 @MixWidget(target: RemixToast.new)
 ToastStyler vanillaToastStyle({
   VanillaToastVariant variant = .neutral,

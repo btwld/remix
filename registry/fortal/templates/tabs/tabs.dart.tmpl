@@ -97,10 +97,7 @@ TabStyler {{valuePrefix}}TabStyle({
       .onFocusVisible(
         // Solid `focus-8` where the other three rings use alpha `focus-a8`.
         // See {{valuePrefix}}FocusRing: unresolved whether that is intentional.
-        TabStyler().{{valuePrefix}}FocusRing(
-          color: {{typePrefix}}Tokens.focus8(),
-          strokeAlign: null,
-        ),
+        TabStyler().{{valuePrefix}}FocusRing(color: {{typePrefix}}Tokens.focus8()),
       )
       .onSelected(
         .label(

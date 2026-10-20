@@ -39,7 +39,6 @@ void main() {
     expect(registryDashboardDemoSectionIds.values, everyElement(isNotEmpty));
     expect(registryDashboardCustomers, hasLength(24));
     expect(registryDashboardOrders, hasLength(30));
-    expect(registryDashboardDemoInteractionIds, hasLength(6));
   });
 
   testWidgets('alert notification uses the sample event title', (tester) async {

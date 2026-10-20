@@ -12,7 +12,7 @@ import '../../components/sidebar_layout.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 
-/// A dashboard shell styled with the Vanilla preset.
+/// Sidebar, top bar, and the page beside them.
 ///
 /// The host manages navigation values and page state. Provide [onSearchChanged]
 /// to display the search field.

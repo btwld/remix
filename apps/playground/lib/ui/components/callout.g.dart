@@ -21,17 +21,6 @@ part of 'callout.dart';
 ///
 /// There are no interaction fragments. A callout is not a control — anything
 /// actionable inside it is a separate button or link with its own recipe.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. Because [variant] is a non-nullable
-/// enum, the generator also emits one named constructor per enum value:
-///
-/// ```dart
-/// PlaygroundCallout.destructive(
-///   icon: warningGlyph,
-///   text: 'This deletes the workspace for everyone.',
-/// )
-/// ```
 class PlaygroundCallout extends StatelessWidget {
   const PlaygroundCallout({
     super.key,
