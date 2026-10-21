@@ -91,27 +91,16 @@ class _MenuExampleState extends State<MenuExample> {
     return MenuStyler()
         .trigger(
           MenuTriggerStyler()
-              .padding(EdgeInsetsMix.symmetric(horizontal: 14))
-              .decoration(
-                BoxDecorationMix()
-                    .color(Colors.white)
-                    .borderRadius(
-                      BorderRadiusMix.all(const Radius.circular(12)),
-                    )
-                    .border(
-                      BorderMix.all(
-                        BorderSideMix(color: Colors.blueGrey.shade100),
-                      ),
-                    )
-                    .boxShadow([
-                      BoxShadowMix(
-                        color: Colors.blueGrey.withValues(alpha: 0.1),
-                        blurRadius: 3,
-                        offset: const Offset(0, 3),
-                      ),
-                    ]),
+              .padding(.horizontal(14))
+              .color(Colors.white)
+              .borderRadius(.circular(12))
+              .border(.color(Colors.blueGrey.shade100))
+              .shadow(
+                .color(
+                  Colors.blueGrey.withValues(alpha: 0.1),
+                ).blurRadius(3).offset(x: 0, y: 3),
               )
-              .constraints(BoxConstraintsMix(minHeight: 40))
+              .minHeight(40)
               .label(
                 TextStyler()
                     .color(Colors.blueGrey.shade700)

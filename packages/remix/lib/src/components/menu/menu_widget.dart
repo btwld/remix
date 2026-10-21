@@ -1,9 +1,5 @@
 part of 'menu.dart';
 
-// ============================================================================
-// DATA CLASSES - Trigger and Menu Item Hierarchy
-// ============================================================================
-
 /// Configuration for a [RemixMenu] trigger.
 ///
 /// This is a configuration object, not a widget. The same object is the trigger
@@ -316,10 +312,6 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
   const RemixMenuDivider({super.key});
 }
 
-// ============================================================================
-// REMIX MENU - Main menu widget
-// ============================================================================
-
 /// An overlay menu configured with trigger and item data.
 /// All styling is centralized in [MenuStyler] and passed directly to children.
 ///
@@ -336,7 +328,6 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///     RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
 ///   ],
 ///   onSelected: (value) => debugPrint('Selected: $value'),
-///   style: fortalMenuStyle(),
 /// )
 ///
 /// // Advanced usage - provide controller for programmatic control
@@ -559,10 +550,6 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
     );
   }
 }
-
-// ============================================================================
-// INTERNAL WIDGETS - Render data classes to actual widgets
-// ============================================================================
 
 enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu }
 

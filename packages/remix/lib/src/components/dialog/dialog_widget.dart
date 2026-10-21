@@ -43,13 +43,13 @@ WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
 ///     title: 'Delete Item',
 ///     description: 'Are you sure you want to delete this item?',
 ///     actions: [
-///       TextButton(
+///       RemixButton(
+///         label: 'Cancel',
 ///         onPressed: () => Navigator.pop(context, 'cancel'),
-///         child: Text('Cancel'),
 ///       ),
-///       TextButton(
+///       RemixButton(
+///         label: 'Delete',
 ///         onPressed: () => Navigator.pop(context, 'delete'),
-///         child: Text('Delete'),
 ///       ),
 ///     ],
 ///   ),

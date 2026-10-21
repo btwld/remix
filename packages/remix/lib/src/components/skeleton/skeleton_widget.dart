@@ -32,7 +32,7 @@ const _fallbackPulseOpacity = 0.5;
 /// RemixSkeleton(
 ///   loading: isLoading,
 ///   style: SkeletonStyler().container(
-///     BoxStyler().color(Colors.black12).borderRadius(.circular(4)),
+///     BoxStyler().color(Color(0x1F000000)).borderRadius(.circular(4)),
 ///   ),
 ///   child: const Text('Jane Appleseed'),
 /// )
