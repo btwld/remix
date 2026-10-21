@@ -121,17 +121,21 @@ TextFieldStyler _base() => TextFieldStyler()
         size: PlaygroundTokens.icon,
       ),
     )
-    .onFocusVisible(_focusVisibleStyle())
+    .onFocused(_focusStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
 
-/// The keyboard focus ring: a 3px band of `ring` at half strength, with the
-/// field's own outline turned `ring`.
+/// The focus ring: a 3px band of `ring` at half strength, with the field's own
+/// outline turned `ring`.
+///
+/// It follows any focus, not just keyboard focus: browsers treat a focused
+/// text input as `:focus-visible` even after a click, so shadcn's input rings
+/// on click too.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
 /// box without taking layout space, so focusing a field never reflows the form
 /// it sits in.
-TextFieldStyler _focusVisibleStyle() => TextFieldStyler()
+TextFieldStyler _focusStyle() => TextFieldStyler()
     .containerEffects(playgroundFocusRing())
     .border(playgroundFocusBorder());
 
@@ -153,7 +157,7 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
       .helperText(.color(PlaygroundTokens.destructive()))
       // An invalid field that takes focus rings in its own red and keeps its
       // red outline.
-      .onFocusVisible(
+      .onFocused(
         TextFieldStyler()
             .containerEffects(
               playgroundFocusRing(

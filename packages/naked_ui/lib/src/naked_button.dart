@@ -126,7 +126,6 @@ class _NakedButtonState extends State<NakedButton>
     with WidgetStatesMixin<NakedButton>, FocusNodeMixin<NakedButton> {
   Timer? _keyboardPressTimer;
 
-  // Simple derived state - no over-engineering
   bool get _isInteractive =>
       widget.enabled &&
       (widget.onPressed != null || widget.onLongPress != null);
@@ -148,7 +147,6 @@ class _NakedButtonState extends State<NakedButton>
 
     widget.onPressed!();
 
-    // Visual feedback for keyboard activation
     updatePressState(true, widget.onPressChange);
 
     _cleanupKeyboardTimer();
@@ -176,7 +174,6 @@ class _NakedButtonState extends State<NakedButton>
       Feedback.forLongPress(context);
     }
 
-    // Only call user's handler if they provided one
     widget.onLongPress?.call();
   }
 
@@ -193,7 +190,6 @@ class _NakedButtonState extends State<NakedButton>
 
   @override
   void initializeWidgetStates() {
-    // Set initial disabled state based on interactive state
     updateDisabledState(!_isInteractive);
   }
 
@@ -201,7 +197,6 @@ class _NakedButtonState extends State<NakedButton>
   void didUpdateWidget(covariant NakedButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Only update if interactive state actually changed
     final wasInteractive =
         oldWidget.enabled &&
         (oldWidget.onPressed != null || oldWidget.onLongPress != null);
@@ -209,10 +204,8 @@ class _NakedButtonState extends State<NakedButton>
     if (wasInteractive != _isInteractive) {
       updateDisabledState(!_isInteractive);
 
-      // Clean up if becoming non-interactive
       if (!_isInteractive) {
         _cleanupKeyboardTimer();
-        // Force clear pressed state when disabled
         updatePressState(false, widget.onPressChange);
       }
     }
@@ -221,7 +214,7 @@ class _NakedButtonState extends State<NakedButton>
   @override
   void dispose() {
     _cleanupKeyboardTimer();
-    super.dispose(); // Mixins handle their cleanup
+    super.dispose();
   }
 
   @override

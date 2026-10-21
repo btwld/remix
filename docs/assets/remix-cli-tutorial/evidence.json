@@ -425,10 +425,6 @@
         "The virtual clipboard cannot inspect the operating system clipboard. The browser review confirmed YAML values and a 58-character clipboard read.",
         "The narrow frames validate the tutorial layout, not the sample application."
       ]
-    },
-    "preview": {
-      "file": "tutorial-preview.jpg",
-      "sha256": "0a841b84199550677fda1ca7345da17103e6a60a73648f7d9065140f09ea315c"
     }
   },
   "widgets_app_migration": {

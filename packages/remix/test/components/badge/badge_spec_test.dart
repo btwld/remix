@@ -228,13 +228,6 @@ void main() {
         );
       });
 
-      test('can be converted to string for debugging', () {
-        const spec = BadgeSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
-
       test('toString includes all properties', () {
         const spec = BadgeSpec();
         final stringRepresentation = spec.toString();

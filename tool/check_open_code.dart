@@ -3,8 +3,9 @@
 ///
 /// ```shell
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal]
-///     [--source both|hosted|checkout] [--item dashboard_demo|dashboard_shell]
-///     [--hosted-cli] [--keep]
+///     [--source both|hosted|checkout]
+///     [--item dashboard_demo|dashboard_shell|icons]
+///     [--icon-library remix|lucide] [--hosted-cli] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs

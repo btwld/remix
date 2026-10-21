@@ -1120,13 +1120,14 @@ bool _workspaceContains(Directory workspaceRoot, String resolvedPackage) {
   return configured?.resolveSymbolicLinksSync() == resolvedPackage;
 }
 
-// Package URIs preserve spaces and URI characters. Quote glob syntax so each
-// filter selects one generated file, even when the UI path contains brackets.
+// Package URIs are relative to lib/ and preserve spaces and URI characters.
+// Quote glob syntax so each filter selects one generated file, even when the
+// UI path contains brackets.
 String _generationFilter(String packageName, String target) => Uri(
   scheme: 'package',
   pathSegments: [
     packageName,
-    ...p.posix.split(Glob.quote(target.substring(uiTargetPrefix.length))),
+    ...p.posix.split(Glob.quote(target.substring('lib/'.length))),
   ],
 ).toString();
 

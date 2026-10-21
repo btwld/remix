@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-// Inspired by Carbon design system
-// https://carbondesignsystem.com/components/checkbox/usage/
-
 void main() {
   runApp(
     WidgetsApp(

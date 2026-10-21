@@ -49,13 +49,10 @@ jobs:
       - uses: ./.github/actions/setup-docs
 
       - name: Validate documentation
-        run: |
-          dart run tool/generate_fortal_catalog.dart --check
-          python3 tool/check_example_hosts.py
-          python3 -m unittest discover -s tool -p 'test_example_hosts.py'
-          python3 tool/check_tutorial_assets.py
-          python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
-          pnpm --dir apps/docs typecheck
+        run: dart run melos run docs:check
+
+      - name: Type check documentation
+        run: pnpm --dir apps/docs typecheck
 
       - name: Build documentation and component catalog
         working-directory: apps/docs

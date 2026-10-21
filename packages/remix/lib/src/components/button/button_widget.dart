@@ -125,15 +125,12 @@ class RemixButton extends StatelessWidget {
   final bool autofocus;
 
   /// The label text to display in the button.
-  /// If [textBuilder] is provided, this is ignored.
   final String label;
 
   /// The leading icon to display in the button (before the text).
-  /// If [leadingIconBuilder] is provided, this is ignored.
   final IconData? leadingIcon;
 
   /// The trailing icon to display in the button (after the text).
-  /// If [trailingIconBuilder] is provided, this is ignored.
   final IconData? trailingIcon;
 
   /// Builder for customizing the text rendering.

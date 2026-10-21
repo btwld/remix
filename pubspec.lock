@@ -475,18 +475,18 @@ packages:
     dependency: transitive
     description:
       name: mix
-      sha256: ab19c799a280830cf9facd4818a81187506beaafce0e10ca99d6125c325decfb
+      sha256: ffe33b382135998fee8f211b835bf5881c7c23ba1aa1e0ca289d26d352ac9f69
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.5"
+    version: "2.3.0"
   mix_annotations:
     dependency: transitive
     description:
       name: mix_annotations
-      sha256: "955ea7a1b647f96033315585cbe3ca94f5204216787eb11884e566d720ce7d86"
+      sha256: "13e574f43b98d38b6a94733b6222f2a5a26b0e00a8854dacb27fed1b2e9f2721"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.1"
+    version: "2.2.0"
   mix_chart:
     dependency: transitive
     description:

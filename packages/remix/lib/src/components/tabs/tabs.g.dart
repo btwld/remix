@@ -332,12 +332,14 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabBarStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabBarStyler.radialGradient({
     required List<Color> colors,
@@ -347,6 +349,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabBarStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -355,6 +358,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabBarStyler.sweepGradient({
     required List<Color> colors,
@@ -363,6 +367,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabBarStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -370,6 +375,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabBarStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -377,12 +383,14 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabBarStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabBarStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -392,6 +400,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabBarStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -400,6 +409,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabBarStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -408,6 +418,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabBarStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -415,6 +426,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabBarStyler.row() => TabBarStyler().row();
   factory TabBarStyler.column() => TabBarStyler().column();
@@ -589,6 +601,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -597,6 +610,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -609,6 +623,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -619,6 +634,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -630,6 +646,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -639,6 +656,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -649,6 +667,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -657,6 +676,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -669,6 +689,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -679,6 +700,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -690,6 +712,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -699,6 +722,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -957,12 +981,14 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabStyler.radialGradient({
     required List<Color> colors,
@@ -972,6 +998,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -980,6 +1007,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabStyler.sweepGradient({
     required List<Color> colors,
@@ -988,6 +1016,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -995,6 +1024,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -1002,12 +1032,14 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -1017,6 +1049,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -1025,6 +1058,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -1033,6 +1067,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -1040,6 +1075,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabStyler.row() => TabStyler().row();
   factory TabStyler.column() => TabStyler().column();
@@ -1211,6 +1247,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -1219,6 +1256,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1231,6 +1269,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -1241,6 +1280,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1252,6 +1292,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -1261,6 +1302,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1271,6 +1313,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -1279,6 +1322,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1291,6 +1335,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -1301,6 +1346,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1312,6 +1358,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -1321,6 +1368,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1653,12 +1701,14 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabViewStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabViewStyler.radialGradient({
     required List<Color> colors,
@@ -1668,6 +1718,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabViewStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -1676,6 +1727,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabViewStyler.sweepGradient({
     required List<Color> colors,
@@ -1684,6 +1736,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabViewStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -1691,6 +1744,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabViewStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -1698,12 +1752,14 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabViewStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabViewStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -1713,6 +1769,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabViewStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -1721,6 +1778,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabViewStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -1729,6 +1787,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => TabViewStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -1736,6 +1795,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory TabViewStyler.transform(
     Matrix4 value, {
@@ -1908,6 +1968,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -1916,6 +1977,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1928,6 +1990,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -1938,6 +2001,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1949,6 +2013,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -1958,6 +2023,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1968,6 +2034,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -1976,6 +2043,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1988,6 +2056,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -1998,6 +2067,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2009,6 +2079,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -2018,6 +2089,7 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

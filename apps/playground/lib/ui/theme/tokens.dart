@@ -99,7 +99,7 @@ abstract final class PlaygroundTokens {
   /// dark one, where a control has to stand out from a card's hairline.
   static const input = ColorToken('playground.color.input');
 
-  /// Focus color: the keyboard focus ring and a focused control's border.
+  /// Focus color: the focus ring and a focused control's border.
   ///
   /// Recipes draw the ring at half strength and turn a bordered control's
   /// outline to full strength. Give it a brand color here and every control's
@@ -353,7 +353,7 @@ abstract final class PlaygroundTokens {
   /// A selection mark: the line under the current tab.
   static const double strokeIndicator = 2;
 
-  /// The keyboard focus ring stroke width.
+  /// The focus ring stroke width.
   static const double strokeRing = 3;
 
   /// A disabled control fades to half strength, and keeps its colors.

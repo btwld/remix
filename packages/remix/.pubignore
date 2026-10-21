@@ -2,6 +2,5 @@ pubspec_overrides.yaml
 .vscode/*
 .cursor/*
 docs/*
-scripts/*
 test/*
 tool/*

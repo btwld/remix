@@ -181,9 +181,6 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
     if (phase != _BoxEffectPaintPhase.outer) {
       _paintInnerLayers(canvas, rect, shape);
     }
-    if (phase == _BoxEffectPaintPhase.all) {
-      _paintOutline(canvas, shape);
-    }
   }
 
   void _paintOuterShadows(Canvas canvas, RRect shape) {
@@ -314,9 +311,7 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
     includeOuterShadows:
         phase != _BoxEffectPaintPhase.inner &&
         phase != _BoxEffectPaintPhase.outline,
-    includeOutline:
-        phase == _BoxEffectPaintPhase.all ||
-        phase == _BoxEffectPaintPhase.outline,
+    includeOutline: phase == _BoxEffectPaintPhase.outline,
     outline: outline,
     outlineOffset: outlineOffset,
   );

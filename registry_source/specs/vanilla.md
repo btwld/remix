@@ -124,7 +124,8 @@ Tailwind's `transition` default, `cubic-bezier(0.4, 0, 0.2, 1)`.
 
 **Focus.** `focus-visible:ring-[3px] ring-ring/50`: a 3px band of `ring` at 50%,
 drawn outside the control with no offset. A control with a border also turns
-its border `ring` (`focus-visible:border-ring`).
+its border `ring` (`focus-visible:border-ring`). Text fields and text areas
+ring on any focus, including a click (see Deviations).
 
 **Disabled.** Opacity 0.5; colors are unchanged.
 
@@ -193,6 +194,7 @@ the steps above. The source column names the file under
 | Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
 | Focus ring | `ring/50`, 3px | `ring` at 50%, 3px | Matches the reference, which is below the 3:1 non-text floor: about 1.5:1 on the light page and 1.85:1 on the dark. The old Vanilla `focusRing` cleared 3:1. Raise the band's alpha in the recipes, or darken `ring`, where focus visibility matters more than matching. |
+| Text field and text area focus | `focus-visible:` | any focus (`onFocused`) | Browsers treat a focused text input as `:focus-visible` even after a click, but Mix's `onFocusVisible` does not, so the recipe keys the ring on `onFocused` to show it on click as the reference does. Other controls stay on `onFocusVisible`. |
 | Callout, destructive | description at `destructive/90` | one text color for the whole callout | `CalloutSpec` has a single text role, so the description cannot take its own color. |
 | Current filled tab, dark | `bg-input/30` over the list | `input` at 30% pre-blended over `muted`, opaque | Flutter paints the tab's `shadow-sm` under the whole box, so a translucent fill would show it through and darken the tab. Tabs have no effects layer to move the shadow to. |
 | App bar | no `ui/` primitive | the header the Vanilla dashboard already shipped | shadcn builds page headers inline in its blocks. Vanilla keeps the dashboard's metrics so the `app_bar` item and the dashboard shell look the same, and names the row height `vanillaAppBarToolbarHeight` so a sidebar header can line up with it. |

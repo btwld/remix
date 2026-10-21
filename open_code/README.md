@@ -76,7 +76,7 @@ for the global `remix` command):
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.11`. Until that release is available,
+Both presets require Remix `^1.0.0-beta.12`. Until that release is available,
 add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml
@@ -209,9 +209,7 @@ dart run remix_cli:remix add button --overwrite
 ```
 
 Overwrite is requested-item-only. Overwriting Button does not overwrite its
-Theme dependency. The CLI has no registry lockfile, content hash, remote
-registry, or automatic update command in this MVP; updates are an explicit
-diff-and-overwrite decision.
+Theme dependency. The CLI has no content hash in this MVP.
 
 ## Generated source
 

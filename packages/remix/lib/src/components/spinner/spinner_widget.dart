@@ -12,8 +12,8 @@ part of 'spinner.dart';
 /// RemixSpinner(
 ///   style: SpinnerStyler(
 ///     size: 32,
-///     indicatorColor: Colors.blue,
-///     trackColor: Colors.blue.withValues(alpha: 0.2),
+///     indicatorColor: Color(0xFF2196F3),
+///     trackColor: Color(0x332196F3),
 ///   ),
 /// )
 /// ```
@@ -142,8 +142,4 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
       },
     );
   }
-}
-
-Widget createSpinnerWidget(SpinnerSpec spec) {
-  return _SpinnerSpecWidget(spec: spec);
 }

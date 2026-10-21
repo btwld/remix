@@ -7,7 +7,7 @@ operator action, not something the builder performs.
 
 ## Validate the candidate
 
-With the pinned Flutter 3.44.0 SDK:
+With the pinned Flutter 3.44.0 SDK (`icons` and `cli-windows` are CI-only):
 
 ```shell
 fvm flutter pub get

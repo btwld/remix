@@ -388,12 +388,6 @@ void main() {
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
-      test('styles with different properties are not equal', () {
-        const style1 = CalloutStyler.create();
-        final style2 = CalloutStyler();
-        expect(style1, equals(style2));
-      });
-
       test('styles with same properties are equal', () {
         final style1 = CalloutStyler();
         final style2 = CalloutStyler();

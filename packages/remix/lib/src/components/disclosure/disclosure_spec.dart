@@ -46,5 +46,3 @@ class DisclosureSpec with _$DisclosureSpec {
     );
   }
 }
-
-typedef RemixDisclosureSpec = DisclosureSpec;

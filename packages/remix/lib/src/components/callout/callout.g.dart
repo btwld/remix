@@ -228,12 +228,14 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CalloutStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CalloutStyler.radialGradient({
     required List<Color> colors,
@@ -243,6 +245,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CalloutStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -251,6 +254,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CalloutStyler.sweepGradient({
     required List<Color> colors,
@@ -259,6 +263,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CalloutStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -266,6 +271,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CalloutStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -273,12 +279,14 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CalloutStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CalloutStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -288,6 +296,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CalloutStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -296,6 +305,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CalloutStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -304,6 +314,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CalloutStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -311,6 +322,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CalloutStyler.row() => CalloutStyler().row();
   factory CalloutStyler.column() => CalloutStyler().column();
@@ -486,6 +498,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -494,6 +507,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -506,6 +520,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -516,6 +531,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -527,6 +543,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -536,6 +553,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -546,6 +564,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -554,6 +573,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -566,6 +586,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -576,6 +597,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -587,6 +609,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -596,6 +619,7 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

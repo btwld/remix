@@ -277,12 +277,14 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AccordionStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AccordionStyler.radialGradient({
     required List<Color> colors,
@@ -292,6 +294,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AccordionStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -300,6 +303,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AccordionStyler.sweepGradient({
     required List<Color> colors,
@@ -308,6 +312,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AccordionStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -315,6 +320,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AccordionStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -322,12 +328,14 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AccordionStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AccordionStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -337,6 +345,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AccordionStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -345,6 +354,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AccordionStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -353,6 +363,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AccordionStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -360,6 +371,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AccordionStyler.row() => AccordionStyler().row();
   factory AccordionStyler.column() => AccordionStyler().column();
@@ -536,6 +548,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       FlexBoxStyler().linearGradient(
@@ -544,6 +557,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -556,6 +570,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       FlexBoxStyler().radialGradient(
@@ -566,6 +581,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -577,6 +593,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       FlexBoxStyler().sweepGradient(
@@ -586,6 +603,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -596,6 +614,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       FlexBoxStyler().foregroundLinearGradient(
@@ -604,6 +623,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -616,6 +636,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       FlexBoxStyler().foregroundRadialGradient(
@@ -626,6 +647,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -637,6 +659,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return trigger(
       FlexBoxStyler().foregroundSweepGradient(
@@ -646,6 +669,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

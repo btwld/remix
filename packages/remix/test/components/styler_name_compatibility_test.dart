@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -9,408 +11,192 @@ import 'package:remix/remix.dart';
 /// this file is the exhaustive name-level contract for the migration.
 void main() {
   group('deprecated Remix*Styler aliases', () {
-    test('RemixAccordionStyler aliases AccordionStyler', () {
-      // ignore: deprecated_member_use
-      final RemixAccordionStyler legacy = RemixAccordionStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixAccordionStyler.create();
-
-      final AccordionStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, AccordionStyler);
-      expect(legacy.merge(emptyLegacy), isA<AccordionStyler>());
-    });
-
-    test('RemixAvatarStyler aliases AvatarStyler', () {
-      // ignore: deprecated_member_use
-      final RemixAvatarStyler legacy = RemixAvatarStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixAvatarStyler.create();
-
-      final AvatarStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, AvatarStyler);
-      expect(legacy.merge(emptyLegacy), isA<AvatarStyler>());
-    });
-
-    test('RemixBadgeStyler aliases BadgeStyler', () {
-      // ignore: deprecated_member_use
-      final RemixBadgeStyler legacy = RemixBadgeStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixBadgeStyler.create();
-
-      final BadgeStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, BadgeStyler);
-      expect(legacy.merge(emptyLegacy), isA<BadgeStyler>());
-    });
-
-    test('RemixButtonStyler aliases ButtonStyler', () {
-      // ignore: deprecated_member_use
-      final RemixButtonStyler legacy = RemixButtonStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixButtonStyler.create();
-
-      final ButtonStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, ButtonStyler);
-      expect(legacy.merge(emptyLegacy), isA<ButtonStyler>());
-    });
-
-    test('RemixCalloutStyler aliases CalloutStyler', () {
-      // ignore: deprecated_member_use
-      final RemixCalloutStyler legacy = RemixCalloutStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixCalloutStyler.create();
-
-      final CalloutStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, CalloutStyler);
-      expect(legacy.merge(emptyLegacy), isA<CalloutStyler>());
-    });
-
-    test('RemixCardStyler aliases CardStyler', () {
-      // ignore: deprecated_member_use
-      final RemixCardStyler legacy = RemixCardStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixCardStyler.create();
-
-      final CardStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, CardStyler);
-      expect(legacy.merge(emptyLegacy), isA<CardStyler>());
-    });
-
-    test('RemixCheckboxStyler aliases CheckboxStyler', () {
-      // ignore: deprecated_member_use
-      final RemixCheckboxStyler legacy = RemixCheckboxStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixCheckboxStyler.create();
-
-      final CheckboxStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, CheckboxStyler);
-      expect(legacy.merge(emptyLegacy), isA<CheckboxStyler>());
-    });
-
-    test('RemixDialogStyler aliases DialogStyler', () {
-      // ignore: deprecated_member_use
-      final RemixDialogStyler legacy = RemixDialogStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixDialogStyler.create();
-
-      final DialogStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, DialogStyler);
-      expect(legacy.merge(emptyLegacy), isA<DialogStyler>());
-    });
-
-    test('RemixDividerStyler aliases DividerStyler', () {
-      // ignore: deprecated_member_use
-      final RemixDividerStyler legacy = RemixDividerStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixDividerStyler.create();
-
-      final DividerStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, DividerStyler);
-      expect(legacy.merge(emptyLegacy), isA<DividerStyler>());
-    });
-
-    test('RemixIconButtonStyler aliases IconButtonStyler', () {
-      // ignore: deprecated_member_use
-      final RemixIconButtonStyler legacy = RemixIconButtonStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixIconButtonStyler.create();
-
-      final IconButtonStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, IconButtonStyler);
-      expect(legacy.merge(emptyLegacy), isA<IconButtonStyler>());
-    });
-
-    test('RemixMenuStyler aliases MenuStyler', () {
-      // ignore: deprecated_member_use
-      final RemixMenuStyler legacy = RemixMenuStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixMenuStyler.create();
-
-      final MenuStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, MenuStyler);
-      expect(legacy.merge(emptyLegacy), isA<MenuStyler>());
-    });
-
-    test('RemixMenuTriggerStyler aliases MenuTriggerStyler', () {
-      // ignore: deprecated_member_use
-      final RemixMenuTriggerStyler legacy = RemixMenuTriggerStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixMenuTriggerStyler.create();
-
-      final MenuTriggerStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, MenuTriggerStyler);
-      expect(legacy.merge(emptyLegacy), isA<MenuTriggerStyler>());
-    });
-
-    test('RemixMenuItemStyler aliases MenuItemStyler', () {
-      // ignore: deprecated_member_use
-      final RemixMenuItemStyler legacy = RemixMenuItemStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixMenuItemStyler.create();
-
-      final MenuItemStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, MenuItemStyler);
-      expect(legacy.merge(emptyLegacy), isA<MenuItemStyler>());
-    });
-
-    test('RemixPopoverStyler aliases PopoverStyler', () {
-      // ignore: deprecated_member_use
-      final RemixPopoverStyler legacy = RemixPopoverStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixPopoverStyler.create();
-
-      final PopoverStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, PopoverStyler);
-      expect(legacy.merge(emptyLegacy), isA<PopoverStyler>());
-    });
-
-    test('RemixProgressStyler aliases ProgressStyler', () {
-      // ignore: deprecated_member_use
-      final RemixProgressStyler legacy = RemixProgressStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixProgressStyler.create();
-
-      final ProgressStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, ProgressStyler);
-      expect(legacy.merge(emptyLegacy), isA<ProgressStyler>());
-    });
-
-    test('RemixRadioStyler aliases RadioStyler', () {
-      // ignore: deprecated_member_use
-      final RemixRadioStyler legacy = RemixRadioStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixRadioStyler.create();
-
-      final RadioStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, RadioStyler);
-      expect(legacy.merge(emptyLegacy), isA<RadioStyler>());
-    });
-
-    test('RemixSelectStyler aliases SelectStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSelectStyler legacy = RemixSelectStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSelectStyler.create();
-
-      final SelectStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SelectStyler);
-      expect(legacy.merge(emptyLegacy), isA<SelectStyler>());
-    });
-
-    test('RemixSelectTriggerStyler aliases SelectTriggerStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSelectTriggerStyler legacy = RemixSelectTriggerStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSelectTriggerStyler.create();
-
-      final SelectTriggerStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SelectTriggerStyler);
-      expect(legacy.merge(emptyLegacy), isA<SelectTriggerStyler>());
-    });
-
-    test('RemixSelectContentStyler aliases SelectContentStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSelectContentStyler legacy = RemixSelectContentStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSelectContentStyler.create();
-
-      final SelectContentStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SelectContentStyler);
-      expect(legacy.merge(emptyLegacy), isA<SelectContentStyler>());
-    });
-
-    test('RemixSelectMenuItemStyler aliases SelectMenuItemStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSelectMenuItemStyler legacy = RemixSelectMenuItemStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSelectMenuItemStyler.create();
-
-      final SelectMenuItemStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SelectMenuItemStyler);
-      expect(legacy.merge(emptyLegacy), isA<SelectMenuItemStyler>());
-    });
-
-    test('RemixSliderStyler aliases SliderStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSliderStyler legacy = RemixSliderStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSliderStyler.create();
-
-      final SliderStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SliderStyler);
-      expect(legacy.merge(emptyLegacy), isA<SliderStyler>());
-    });
-
-    test('RemixSpinnerStyler aliases SpinnerStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSpinnerStyler legacy = RemixSpinnerStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSpinnerStyler.create();
-
-      final SpinnerStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SpinnerStyler);
-      expect(legacy.merge(emptyLegacy), isA<SpinnerStyler>());
-    });
-
-    test('RemixSwitchStyler aliases SwitchStyler', () {
-      // ignore: deprecated_member_use
-      final RemixSwitchStyler legacy = RemixSwitchStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixSwitchStyler.create();
-
-      final SwitchStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, SwitchStyler);
-      expect(legacy.merge(emptyLegacy), isA<SwitchStyler>());
-    });
-
-    test('RemixTabBarStyler aliases TabBarStyler', () {
-      // ignore: deprecated_member_use
-      final RemixTabBarStyler legacy = RemixTabBarStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixTabBarStyler.create();
-
-      final TabBarStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, TabBarStyler);
-      expect(legacy.merge(emptyLegacy), isA<TabBarStyler>());
-    });
-
-    test('RemixTabStyler aliases TabStyler', () {
-      // ignore: deprecated_member_use
-      final RemixTabStyler legacy = RemixTabStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixTabStyler.create();
-
-      final TabStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, TabStyler);
-      expect(legacy.merge(emptyLegacy), isA<TabStyler>());
-    });
-
-    test('RemixTabViewStyler aliases TabViewStyler', () {
-      // ignore: deprecated_member_use
-      final RemixTabViewStyler legacy = RemixTabViewStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixTabViewStyler.create();
-
-      final TabViewStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, TabViewStyler);
-      expect(legacy.merge(emptyLegacy), isA<TabViewStyler>());
-    });
-
-    test('RemixTextFieldStyler aliases TextFieldStyler', () {
-      // ignore: deprecated_member_use
-      final RemixTextFieldStyler legacy = RemixTextFieldStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixTextFieldStyler.create();
-
-      final TextFieldStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, TextFieldStyler);
-      expect(legacy.merge(emptyLegacy), isA<TextFieldStyler>());
-    });
-
-    test('RemixToggleStyler aliases ToggleStyler', () {
-      // ignore: deprecated_member_use
-      final RemixToggleStyler legacy = RemixToggleStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixToggleStyler.create();
-
-      final ToggleStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, ToggleStyler);
-      expect(legacy.merge(emptyLegacy), isA<ToggleStyler>());
-    });
-
-    test('RemixToggleGroupStyler aliases ToggleGroupStyler', () {
-      // ignore: deprecated_member_use
-      final RemixToggleGroupStyler legacy = RemixToggleGroupStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixToggleGroupStyler.create();
-
-      final ToggleGroupStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, ToggleGroupStyler);
-      expect(legacy.merge(emptyLegacy), isA<ToggleGroupStyler>());
-    });
-
-    test('RemixToggleGroupItemStyler aliases ToggleGroupItemStyler', () {
-      // ignore: deprecated_member_use
-      final RemixToggleGroupItemStyler legacy = RemixToggleGroupItemStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixToggleGroupItemStyler.create();
-
-      final ToggleGroupItemStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, ToggleGroupItemStyler);
-      expect(legacy.merge(emptyLegacy), isA<ToggleGroupItemStyler>());
-    });
-
-    test('RemixTooltipStyler aliases TooltipStyler', () {
-      // ignore: deprecated_member_use
-      final RemixTooltipStyler legacy = RemixTooltipStyler();
-      // ignore: deprecated_member_use
-      const emptyLegacy = RemixTooltipStyler.create();
-
-      final TooltipStyler canonical = legacy;
-
-      expect(canonical, same(legacy));
-      expect(legacy.runtimeType, TooltipStyler);
-      expect(legacy.merge(emptyLegacy), isA<TooltipStyler>());
-    });
+    expectStylerAlias<AccordionStyler>(
+      'RemixAccordionStyler',
+      RemixAccordionStyler.new,
+      RemixAccordionStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<AvatarStyler>(
+      'RemixAvatarStyler',
+      RemixAvatarStyler.new,
+      RemixAvatarStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<BadgeStyler>(
+      'RemixBadgeStyler',
+      RemixBadgeStyler.new,
+      RemixBadgeStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<ButtonStyler>(
+      'RemixButtonStyler',
+      RemixButtonStyler.new,
+      RemixButtonStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<CalloutStyler>(
+      'RemixCalloutStyler',
+      RemixCalloutStyler.new,
+      RemixCalloutStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<CardStyler>(
+      'RemixCardStyler',
+      RemixCardStyler.new,
+      RemixCardStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<CheckboxStyler>(
+      'RemixCheckboxStyler',
+      RemixCheckboxStyler.new,
+      RemixCheckboxStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<DialogStyler>(
+      'RemixDialogStyler',
+      RemixDialogStyler.new,
+      RemixDialogStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<DividerStyler>(
+      'RemixDividerStyler',
+      RemixDividerStyler.new,
+      RemixDividerStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<IconButtonStyler>(
+      'RemixIconButtonStyler',
+      RemixIconButtonStyler.new,
+      RemixIconButtonStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<MenuStyler>(
+      'RemixMenuStyler',
+      RemixMenuStyler.new,
+      RemixMenuStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<MenuTriggerStyler>(
+      'RemixMenuTriggerStyler',
+      RemixMenuTriggerStyler.new,
+      RemixMenuTriggerStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<MenuItemStyler>(
+      'RemixMenuItemStyler',
+      RemixMenuItemStyler.new,
+      RemixMenuItemStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<PopoverStyler>(
+      'RemixPopoverStyler',
+      RemixPopoverStyler.new,
+      RemixPopoverStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<ProgressStyler>(
+      'RemixProgressStyler',
+      RemixProgressStyler.new,
+      RemixProgressStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<RadioStyler>(
+      'RemixRadioStyler',
+      RemixRadioStyler.new,
+      RemixRadioStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SelectStyler>(
+      'RemixSelectStyler',
+      RemixSelectStyler.new,
+      RemixSelectStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SelectTriggerStyler>(
+      'RemixSelectTriggerStyler',
+      RemixSelectTriggerStyler.new,
+      RemixSelectTriggerStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SelectContentStyler>(
+      'RemixSelectContentStyler',
+      RemixSelectContentStyler.new,
+      RemixSelectContentStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SelectMenuItemStyler>(
+      'RemixSelectMenuItemStyler',
+      RemixSelectMenuItemStyler.new,
+      RemixSelectMenuItemStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SliderStyler>(
+      'RemixSliderStyler',
+      RemixSliderStyler.new,
+      RemixSliderStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SpinnerStyler>(
+      'RemixSpinnerStyler',
+      RemixSpinnerStyler.new,
+      RemixSpinnerStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<SwitchStyler>(
+      'RemixSwitchStyler',
+      RemixSwitchStyler.new,
+      RemixSwitchStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<TabBarStyler>(
+      'RemixTabBarStyler',
+      RemixTabBarStyler.new,
+      RemixTabBarStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<TabStyler>(
+      'RemixTabStyler',
+      RemixTabStyler.new,
+      RemixTabStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<TabViewStyler>(
+      'RemixTabViewStyler',
+      RemixTabViewStyler.new,
+      RemixTabViewStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<TextFieldStyler>(
+      'RemixTextFieldStyler',
+      RemixTextFieldStyler.new,
+      RemixTextFieldStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<ToggleStyler>(
+      'RemixToggleStyler',
+      RemixToggleStyler.new,
+      RemixToggleStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<ToggleGroupStyler>(
+      'RemixToggleGroupStyler',
+      RemixToggleGroupStyler.new,
+      RemixToggleGroupStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<ToggleGroupItemStyler>(
+      'RemixToggleGroupItemStyler',
+      RemixToggleGroupItemStyler.new,
+      RemixToggleGroupItemStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
+    expectStylerAlias<TooltipStyler>(
+      'RemixTooltipStyler',
+      RemixTooltipStyler.new,
+      RemixTooltipStyler.create,
+      (legacy, other) => legacy.merge(other),
+    );
   });
 
   group('legacy Remix*Spec typedefs', () {
@@ -537,5 +323,23 @@ void main() {
     test('RemixTooltipSpec aliases TooltipSpec', () {
       expect(RemixTooltipSpec, TooltipSpec);
     });
+  });
+}
+
+/// One alias case: construct, `create()`, `runtimeType`, and `merge`.
+///
+/// [construct] and [create] are tear-offs of the deprecated export, so dropping
+/// that export fails this library at compile time.
+void expectStylerAlias<T>(
+  String legacyName,
+  T Function() construct,
+  T Function() create,
+  T Function(T legacy, T other) merge,
+) {
+  test('$legacyName aliases ${construct().runtimeType}', () {
+    final legacy = construct();
+
+    expect(legacy.runtimeType, T);
+    expect(merge(legacy, create()), isA<T>());
   });
 }

@@ -261,12 +261,14 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ButtonStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ButtonStyler.radialGradient({
     required List<Color> colors,
@@ -276,6 +278,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ButtonStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -284,6 +287,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ButtonStyler.sweepGradient({
     required List<Color> colors,
@@ -292,6 +296,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ButtonStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -299,6 +304,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ButtonStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -306,12 +312,14 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ButtonStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ButtonStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -321,6 +329,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ButtonStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -329,6 +338,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ButtonStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -337,6 +347,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ButtonStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -344,6 +355,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ButtonStyler.row() => ButtonStyler().row();
   factory ButtonStyler.column() => ButtonStyler().column();
@@ -518,6 +530,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -526,6 +539,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -538,6 +552,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -548,6 +563,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -559,6 +575,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -568,6 +585,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -578,6 +596,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -586,6 +605,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -598,6 +618,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -608,6 +629,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -619,6 +641,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -628,6 +651,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

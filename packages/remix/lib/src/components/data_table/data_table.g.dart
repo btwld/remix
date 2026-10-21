@@ -468,12 +468,14 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataTableStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataTableStyler.radialGradient({
     required List<Color> colors,
@@ -483,6 +485,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataTableStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -491,6 +494,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataTableStyler.sweepGradient({
     required List<Color> colors,
@@ -499,6 +503,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataTableStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -506,6 +511,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataTableStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -513,12 +519,14 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataTableStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataTableStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -528,6 +536,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataTableStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -536,6 +545,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataTableStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -544,6 +554,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DataTableStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -551,6 +562,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DataTableStyler.transform(
     Matrix4 value, {
@@ -723,6 +735,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -731,6 +744,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -743,6 +757,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -753,6 +768,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -764,6 +780,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -773,6 +790,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -783,6 +801,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -791,6 +810,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -803,6 +823,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -813,6 +834,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -824,6 +846,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -833,6 +856,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

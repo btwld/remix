@@ -259,12 +259,14 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DialogStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DialogStyler.radialGradient({
     required List<Color> colors,
@@ -274,6 +276,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DialogStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -282,6 +285,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DialogStyler.sweepGradient({
     required List<Color> colors,
@@ -290,6 +294,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DialogStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -297,6 +302,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DialogStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -304,12 +310,14 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DialogStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DialogStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -319,6 +327,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DialogStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -327,6 +336,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DialogStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -335,6 +345,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => DialogStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -342,6 +353,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory DialogStyler.transform(
     Matrix4 value, {
@@ -514,6 +526,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -522,6 +535,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -534,6 +548,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -544,6 +559,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -555,6 +571,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -564,6 +581,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -574,6 +592,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -582,6 +601,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -594,6 +614,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -604,6 +625,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -615,6 +637,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -624,6 +647,7 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

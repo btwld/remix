@@ -10,12 +10,12 @@ the [CLI tutorial](/tutorials/settings-screen).
 ## Installation
 
 These docs describe the code in this repository, whose Remix package version
-is `1.0.0-beta.11`. Do not substitute a stable `1.0.0` dependency: the repository
+is `1.0.0-beta.12`. Do not substitute a stable `1.0.0` dependency: the repository
 version is a prerelease, not evidence that a stable release exists.
 
 For this checkout, use Flutter 3.44.0 and its bundled Dart 3.12.0, matching
-`.fvmrc`. The runtime package's consumer floor is Flutter 3.41 / Dart 3.11;
-the CLI and this repository's development workflow use the newer toolchain.
+`.fvmrc`. Remix needs the same floor, Flutter 3.44 / Dart 3.12, because it
+depends on Mix 2.3.0.
 
 Create an application, then add the local runtime package. Replace
 `/path/to/remix` with the absolute path to your checkout:

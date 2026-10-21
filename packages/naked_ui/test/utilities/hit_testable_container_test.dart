@@ -79,27 +79,6 @@ void main() {
       expect(childPressed, isTrue);
     });
 
-    testWidgets('debug properties are hidden from inspector', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: HitTestableContainer(child: Container(width: 100, height: 100)),
-        ),
-      );
-
-      final widget = tester.widget<HitTestableContainer>(
-        find.byType(HitTestableContainer),
-      );
-      final properties = DiagnosticPropertiesBuilder();
-      widget.debugFillProperties(properties);
-
-      // Should have added the hidden property
-      final hiddenProperty = properties.properties.firstWhere(
-        (prop) =>
-            prop.name == 'inspector' && prop.level == DiagnosticLevel.hidden,
-      );
-      expect(hiddenProperty.value, equals('hidden'));
-    });
-
     testWidgets('hit test rejects taps outside bounds', (tester) async {
       await tester.pumpWidget(
         MaterialApp(

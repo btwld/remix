@@ -82,6 +82,46 @@ void main() {
         );
       }
 
+      testWidgets(
+        'mouse secondary click does not draw handles',
+        (tester) async {
+          final controller = TextEditingController(text: 'hello world');
+          addTearDown(controller.dispose);
+          await tester.pumpRemixApp(
+            SizedBox(width: 300, child: RemixTextField(controller: controller)),
+          );
+
+          final editable = find.byType(EditableText);
+          final rightClick = await tester.startGesture(
+            tester.getTopLeft(editable) + const Offset(45, 8),
+            kind: PointerDeviceKind.mouse,
+            buttons: kSecondaryMouseButton,
+          );
+          await tester.pump(const Duration(milliseconds: 100));
+          await rightClick.up();
+          await tester.pumpAndSettle();
+
+          expect(
+            tester.widget<EditableText>(editable).focusNode.hasFocus,
+            isTrue,
+          );
+          // The selection overlay may keep handles mounted but faded out.
+          final visibleHandles = find
+              .byKey(const ValueKey('remix-text-selection-handle'))
+              .evaluate()
+              .where(
+                (handle) =>
+                    handle
+                        .findAncestorWidgetOfExactType<FadeTransition>()!
+                        .opacity
+                        .value >
+                    0,
+              );
+          expect(visibleHandles, isEmpty);
+        },
+        variant: TargetPlatformVariant.desktop(),
+      );
+
       testWidgets('keeps caller controls and disabled selection', (
         tester,
       ) async {
@@ -389,22 +429,19 @@ void main() {
     });
 
     group('Styling', () {
-      testWidgets('applies custom text color', (tester) async {
+      testWidgets('applies color to the container background', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(style: TextFieldStyler().color(Colors.red)),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
-      });
-
-      testWidgets('applies custom background color', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTextField(style: TextFieldStyler().color(Colors.grey)),
+        final boxDecorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+        expect(
+          boxDecorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
         );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTextField), findsOneWidget);
       });
 
       testWidgets('applies custom padding', (tester) async {
