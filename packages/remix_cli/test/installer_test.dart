@@ -292,6 +292,38 @@ registries:
     },
   );
 
+  test('generated build filter strips the lib/ directory', () async {
+    final caseRoot = createFlutterPackage();
+    addTearDown(() => caseRoot.deleteSync(recursive: true));
+    const uiPath = 'lib/design_system';
+    await Installer(
+      projectRoot: caseRoot,
+      writeOut: (_) {},
+      sources: const FixtureOfficialResolver(),
+    ).initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: uiPath),
+    );
+    final runner = happyRunner(caseRoot, addMissingDependencies: true);
+    await Installer(
+      projectRoot: caseRoot,
+      writeOut: (_) {},
+      processRunner: runner,
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+
+    final build = runner.calls.singleWhere(
+      (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
+    );
+    expect(
+      build.arguments.where(
+        (argument) => argument.startsWith('--build-filter='),
+      ),
+      {
+        '--build-filter=package:consumer/design_system/components/button.g.dart',
+      },
+    );
+  });
+
   test(
     'identical add is a successful no-op for authored and generated files',
     () async {
