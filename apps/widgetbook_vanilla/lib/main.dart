@@ -29,7 +29,10 @@ class VanillaThemeAddon extends ThemeAddon<ThemeData> {
         themes: [
           WidgetbookTheme(
             name: 'light',
-            data: ThemeData(brightness: .light),
+            data: ThemeData(
+              brightness: .light,
+              scaffoldBackgroundColor: Colors.white,
+            ),
           ),
           WidgetbookTheme(
             name: 'dark',

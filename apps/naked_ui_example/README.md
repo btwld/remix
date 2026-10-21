@@ -31,8 +31,12 @@ Behavior coverage is aggregated in `integration_test/all_tests.dart`:
 flutter test integration_test/all_tests.dart -d macos
 ```
 
-Web disclosure semantics are a separate entry point:
+Web disclosure semantics are a separate entry point. Flutter runs web
+integration tests only through `flutter drive`, with `chromedriver` listening
+on port 4444:
 
 ```bash
-flutter test integration_test/web_disclosure_semantics.dart -d chrome
+flutter drive -d chrome \
+  --driver=test_driver/integration_test.dart \
+  --target=integration_test/web_disclosure_semantics.dart
 ```
