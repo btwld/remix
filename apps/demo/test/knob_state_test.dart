@@ -61,54 +61,47 @@ void main() {
     );
   });
 
-  testWidgets('select keeps its selection across a knob rebuild', (
+  testWidgets('select keeps its selection when a knob remounts the story', (
     tester,
   ) async {
-    late StateSetter rebuild;
-    var size = FortalSelectSize.size2;
+    final state = WidgetbookState(
+      root: WidgetbookRoot(children: const []),
+      queryParams: {},
+    );
+    addTearDown(state.dispose);
 
+    // Widgetbook rebuilds a story under ValueKey(state.uri), so every knob
+    // change remounts it; only a GlobalKey keeps the story's state.
     await tester.pumpWidget(
-      FortalTheme(
-        child: WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, _, _) => builder(context),
-          ),
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              rebuild = setState;
-              return SelectExample(
-                variant: .surface,
-                size: size,
-                placeholder: 'Select item...',
-              );
-            },
+      WidgetbookScope(
+        state: state,
+        child: MaterialApp(
+          home: FortalTheme(
+            child: ListenableBuilder(
+              listenable: state,
+              builder: (context, _) => KeyedSubtree(
+                key: ValueKey(state.uri),
+                child: const Builder(builder: buildSelectUseCase),
+              ),
+            ),
           ),
         ),
       ),
     );
 
-    expect(find.text('Apple'), findsOneWidget);
-    expect(find.text('Banana'), findsNothing);
-
     await tester.tap(find.byType(RemixSelect<String>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Banana'));
     await tester.pumpAndSettle();
-
     expect(find.text('Banana'), findsOneWidget);
-    expect(find.text('Apple'), findsNothing);
 
-    rebuild(() => size = FortalSelectSize.size3);
-    await tester.pump();
+    state.updateQueryField(group: 'knobs', field: 'size', value: 'size3');
+    await tester.pumpAndSettle();
 
     final select = tester.widget<FortalSelect<String>>(
       find.byType(FortalSelect<String>),
     );
-    expect(select.selectedValue, 'Banana');
     expect(select.size, FortalSelectSize.size3);
-    expect(find.text('Banana'), findsOneWidget);
-    expect(find.text('Apple'), findsNothing);
+    expect(select.selectedValue, 'Banana');
   });
 }

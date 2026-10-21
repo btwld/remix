@@ -5,9 +5,14 @@ import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
+// Widgetbook remounts a story on every knob change; the GlobalKey keeps the
+// selection across those remounts.
+final _key = GlobalKey();
+
 @widgetbook.UseCase(name: 'Select Component', type: RemixSelect)
 Widget buildSelectUseCase(BuildContext context) {
   return SelectExample(
+    key: _key,
     variant: context.knobs.object.dropdown(
       label: 'variant',
       options: FortalSelectVariant.values,
