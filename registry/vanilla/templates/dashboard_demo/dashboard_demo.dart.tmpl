@@ -88,13 +88,11 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
 
   /// [brightness]'s inherited values, or the preset default, with [radius].
   {{typePrefix}}ThemeData _themeWithRadius(Brightness brightness, double radius) {
-    final inherited = {{typePrefix}}Theme.maybeOf(context);
-    final base = inherited != null && inherited.brightness == brightness
-        ? inherited
-        : switch (brightness) {
-            Brightness.light => const {{typePrefix}}ThemeData.light(),
-            Brightness.dark => const {{typePrefix}}ThemeData.dark(),
-          };
+    final themes = {{typePrefix}}Theme.themesOf(context);
+    final base = switch (brightness) {
+      Brightness.light => themes?.light ?? const {{typePrefix}}ThemeData.light(),
+      Brightness.dark => themes?.dark ?? const {{typePrefix}}ThemeData.dark(),
+    };
     return base.copyWith(radius: Radius.circular(radius));
   }
 

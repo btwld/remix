@@ -90,13 +90,11 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
 
   /// [brightness]'s inherited values, or the preset default, with [radius].
   PlaygroundThemeData _themeWithRadius(Brightness brightness, double radius) {
-    final inherited = PlaygroundTheme.maybeOf(context);
-    final base = inherited != null && inherited.brightness == brightness
-        ? inherited
-        : switch (brightness) {
-            Brightness.light => const PlaygroundThemeData.light(),
-            Brightness.dark => const PlaygroundThemeData.dark(),
-          };
+    final themes = PlaygroundTheme.themesOf(context);
+    final base = switch (brightness) {
+      Brightness.light => themes?.light ?? const PlaygroundThemeData.light(),
+      Brightness.dark => themes?.dark ?? const PlaygroundThemeData.dark(),
+    };
     return base.copyWith(radius: Radius.circular(radius));
   }
 

@@ -671,6 +671,37 @@ void main() {
     });
   }
 
+  testWidgets('settings radius keeps a host\'s custom dark theme', (
+    tester,
+  ) async {
+    const customBackground = Color(0xFF123456);
+    await _pumpDashboard(
+      tester,
+      preset: .defaultPreset,
+      initialPage: RegistryDashboardDemoPage.settings,
+      darkTheme: const VanillaThemeData.dark().copyWith(
+        background: customBackground,
+      ),
+    );
+
+    final slider = find.byType(RemixSlider);
+    await tester.ensureVisible(slider);
+    await tester.drag(slider, const Offset(160, 0));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      MixScope.tokenOf(
+        VanillaTokens.background,
+        tester.element(find.textContaining('Control radius')),
+      ),
+      customBackground,
+    );
+  });
+
   testWidgets('settings radius slider changes the resolved radius', (
     tester,
   ) async {
@@ -806,11 +837,13 @@ Future<void> _pumpDashboard(
   Widget? account,
   double width = 1200,
   double height = 800,
+  VanillaThemeData? darkTheme,
 }) => _pump(
   tester,
   preset: preset,
   width: width,
   height: height,
+  darkTheme: darkTheme,
   child: switch (preset) {
     .defaultPreset => VanillaDashboardDemo(
       key: ValueKey(initialPage),
@@ -838,6 +871,7 @@ Future<void> _pump(
   required double height,
   required Widget child,
   TextScaler textScaler = TextScaler.noScaling,
+  VanillaThemeData? darkTheme,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = Size(width, height);
@@ -858,7 +892,11 @@ Future<void> _pump(
   );
 
   await tester.pumpWidget(switch (preset) {
-    .defaultPreset => VanillaTheme(mode: VanillaThemeMode.light, child: app),
+    .defaultPreset => VanillaTheme(
+      mode: VanillaThemeMode.light,
+      darkTheme: darkTheme,
+      child: app,
+    ),
     .fortal => FortalTheme(child: app),
   });
   await tester.pump();

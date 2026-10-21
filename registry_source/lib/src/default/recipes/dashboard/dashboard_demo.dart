@@ -88,13 +88,11 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
 
   /// [brightness]'s inherited values, or the preset default, with [radius].
   VanillaThemeData _themeWithRadius(Brightness brightness, double radius) {
-    final inherited = VanillaTheme.maybeOf(context);
-    final base = inherited != null && inherited.brightness == brightness
-        ? inherited
-        : switch (brightness) {
-            Brightness.light => const VanillaThemeData.light(),
-            Brightness.dark => const VanillaThemeData.dark(),
-          };
+    final themes = VanillaTheme.themesOf(context);
+    final base = switch (brightness) {
+      Brightness.light => themes?.light ?? const VanillaThemeData.light(),
+      Brightness.dark => themes?.dark ?? const VanillaThemeData.dark(),
+    };
     return base.copyWith(radius: Radius.circular(radius));
   }
 
