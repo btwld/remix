@@ -812,4 +812,61 @@ void main() {
       ),
     );
   });
+
+  group('Selection handles', () {
+    testWidgets(
+      'mouse secondary click does not show touch handles',
+      (tester) async {
+        final controller = TextEditingController(text: 'hello world');
+        addTearDown(controller.dispose);
+        await _pumpApp(
+          tester,
+          child: SizedBox(
+            width: 300,
+            child: NakedTextField(controller: controller, builder: _builder()),
+          ),
+        );
+
+        final rightClick = await tester.startGesture(
+          tester.getTopLeft(find.byType(EditableText)) + const Offset(24, 8),
+          kind: PointerDeviceKind.mouse,
+          buttons: kSecondaryMouseButton,
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        await rightClick.up();
+        await tester.pumpAndSettle();
+
+        final field = _getEditableText(tester);
+        expect(field.focusNode.hasFocus, isTrue);
+        expect(field.showSelectionHandles, isFalse);
+      },
+      variant: TargetPlatformVariant.desktop(),
+    );
+
+    testWidgets(
+      'touch long press shows handles',
+      (tester) async {
+        final controller = TextEditingController(text: 'hello world');
+        addTearDown(controller.dispose);
+        await _pumpApp(
+          tester,
+          child: SizedBox(
+            width: 300,
+            child: NakedTextField(controller: controller, builder: _builder()),
+          ),
+        );
+
+        await tester.longPressAt(
+          tester.getTopLeft(find.byType(EditableText)) + const Offset(24, 8),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_getEditableText(tester).showSelectionHandles, isTrue);
+      },
+      variant: const TargetPlatformVariant({
+        TargetPlatform.android,
+        TargetPlatform.iOS,
+      }),
+    );
+  });
 }

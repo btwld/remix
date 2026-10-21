@@ -540,12 +540,14 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectStyler.radialGradient({
     required List<Color> colors,
@@ -555,6 +557,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -563,6 +566,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectStyler.sweepGradient({
     required List<Color> colors,
@@ -571,6 +575,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -578,6 +583,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -585,12 +591,14 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -600,6 +608,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -608,6 +617,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -616,6 +626,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -623,6 +634,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectStyler.transform(
     Matrix4 value, {
@@ -795,6 +807,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return menuContainer(
       FlexBoxStyler().linearGradient(
@@ -803,6 +816,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -815,6 +829,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return menuContainer(
       FlexBoxStyler().radialGradient(
@@ -825,6 +840,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -836,6 +852,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return menuContainer(
       FlexBoxStyler().sweepGradient(
@@ -845,6 +862,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -855,6 +873,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return menuContainer(
       FlexBoxStyler().foregroundLinearGradient(
@@ -863,6 +882,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -875,6 +895,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return menuContainer(
       FlexBoxStyler().foregroundRadialGradient(
@@ -885,6 +906,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -896,6 +918,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return menuContainer(
       FlexBoxStyler().foregroundSweepGradient(
@@ -905,6 +928,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1222,12 +1246,14 @@ class SelectTriggerStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectTriggerStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectTriggerStyler.radialGradient({
     required List<Color> colors,
@@ -1237,6 +1263,7 @@ class SelectTriggerStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectTriggerStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -1245,6 +1272,7 @@ class SelectTriggerStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectTriggerStyler.sweepGradient({
     required List<Color> colors,
@@ -1253,6 +1281,7 @@ class SelectTriggerStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectTriggerStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -1260,6 +1289,7 @@ class SelectTriggerStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectTriggerStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -1267,12 +1297,14 @@ class SelectTriggerStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectTriggerStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectTriggerStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -1282,6 +1314,7 @@ class SelectTriggerStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectTriggerStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -1290,6 +1323,7 @@ class SelectTriggerStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectTriggerStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -1298,6 +1332,7 @@ class SelectTriggerStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectTriggerStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -1305,6 +1340,7 @@ class SelectTriggerStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectTriggerStyler.row() => SelectTriggerStyler().row();
   factory SelectTriggerStyler.column() => SelectTriggerStyler().column();
@@ -1481,6 +1517,7 @@ class SelectTriggerStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -1489,6 +1526,7 @@ class SelectTriggerStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1501,6 +1539,7 @@ class SelectTriggerStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -1511,6 +1550,7 @@ class SelectTriggerStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1522,6 +1562,7 @@ class SelectTriggerStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -1531,6 +1572,7 @@ class SelectTriggerStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1541,6 +1583,7 @@ class SelectTriggerStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -1549,6 +1592,7 @@ class SelectTriggerStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1561,6 +1605,7 @@ class SelectTriggerStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -1571,6 +1616,7 @@ class SelectTriggerStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1582,6 +1628,7 @@ class SelectTriggerStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -1591,6 +1638,7 @@ class SelectTriggerStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1961,12 +2009,14 @@ class SelectContentStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectContentStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectContentStyler.radialGradient({
     required List<Color> colors,
@@ -1976,6 +2026,7 @@ class SelectContentStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectContentStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -1984,6 +2035,7 @@ class SelectContentStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectContentStyler.sweepGradient({
     required List<Color> colors,
@@ -1992,6 +2044,7 @@ class SelectContentStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectContentStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -1999,6 +2052,7 @@ class SelectContentStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectContentStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -2006,12 +2060,14 @@ class SelectContentStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectContentStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectContentStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -2021,6 +2077,7 @@ class SelectContentStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectContentStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -2029,6 +2086,7 @@ class SelectContentStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectContentStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -2037,6 +2095,7 @@ class SelectContentStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectContentStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -2044,6 +2103,7 @@ class SelectContentStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectContentStyler.transform(
     Matrix4 value, {
@@ -2216,6 +2276,7 @@ class SelectContentStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -2224,6 +2285,7 @@ class SelectContentStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2236,6 +2298,7 @@ class SelectContentStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -2246,6 +2309,7 @@ class SelectContentStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2257,6 +2321,7 @@ class SelectContentStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -2266,6 +2331,7 @@ class SelectContentStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2276,6 +2342,7 @@ class SelectContentStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -2284,6 +2351,7 @@ class SelectContentStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2296,6 +2364,7 @@ class SelectContentStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -2306,6 +2375,7 @@ class SelectContentStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2317,6 +2387,7 @@ class SelectContentStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -2326,6 +2397,7 @@ class SelectContentStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2565,12 +2637,14 @@ class SelectMenuItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectMenuItemStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectMenuItemStyler.radialGradient({
     required List<Color> colors,
@@ -2580,6 +2654,7 @@ class SelectMenuItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectMenuItemStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -2588,6 +2663,7 @@ class SelectMenuItemStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectMenuItemStyler.sweepGradient({
     required List<Color> colors,
@@ -2596,6 +2672,7 @@ class SelectMenuItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectMenuItemStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -2603,6 +2680,7 @@ class SelectMenuItemStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectMenuItemStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -2610,12 +2688,14 @@ class SelectMenuItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectMenuItemStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectMenuItemStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -2625,6 +2705,7 @@ class SelectMenuItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectMenuItemStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -2633,6 +2714,7 @@ class SelectMenuItemStyler
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectMenuItemStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -2641,6 +2723,7 @@ class SelectMenuItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SelectMenuItemStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -2648,6 +2731,7 @@ class SelectMenuItemStyler
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SelectMenuItemStyler.row() => SelectMenuItemStyler().row();
   factory SelectMenuItemStyler.column() => SelectMenuItemStyler().column();
@@ -2824,6 +2908,7 @@ class SelectMenuItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -2832,6 +2917,7 @@ class SelectMenuItemStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2844,6 +2930,7 @@ class SelectMenuItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -2854,6 +2941,7 @@ class SelectMenuItemStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2865,6 +2953,7 @@ class SelectMenuItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -2874,6 +2963,7 @@ class SelectMenuItemStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2884,6 +2974,7 @@ class SelectMenuItemStyler
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -2892,6 +2983,7 @@ class SelectMenuItemStyler
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2904,6 +2996,7 @@ class SelectMenuItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -2914,6 +3007,7 @@ class SelectMenuItemStyler
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -2925,6 +3019,7 @@ class SelectMenuItemStyler
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -2934,6 +3029,7 @@ class SelectMenuItemStyler
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

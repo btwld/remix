@@ -66,7 +66,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.
   `TextArea` is a multiline facade with `minLines: 2`, `maxLines: null`,
-  `expands`/`obscureText` fixed to `false`.
+  `expands`/`obscureText` fixed to `false`. Vanilla and Fortal recipes ring
+  the field with `onFocused`, so a click shows the ring. Other controls use
+  `onFocusVisible`.
 - **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but
   inert. `positioning` defaults to

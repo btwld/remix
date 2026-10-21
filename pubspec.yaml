@@ -73,18 +73,17 @@ melos:
       # contract; Fortal registry generation copies its floors from the default
       # registry rather than publishing this internal manifest.
       dependencies:
-        # beta.5 is the floor, not a preference: mix_generator 2.2.0-beta.3
-        # emits `implements StylerFieldMetadata`, and that symbol first ships
-        # in mix 2.2.0-beta.5. Lowering this constraint compiles here but
-        # breaks any consumer that resolves beta.4.
-        mix: ^2.2.0-beta.5
+        # 2.3.0 is the floor, not a preference: Remix uses FocusVisibility and
+        # FocusVisibilityScope, which first ship in mix 2.3.0, and relies on its
+        # pointer-aware onFocusVisible.
+        mix: ^2.3.0
         mix_annotations: ^2.2.0-beta.1
         mix_chart: ^0.0.1-beta.3
         cupertino_icons: ^1.0.8
         pub_semver: ^2.2.0
         yaml: ^3.1.3
-        naked_ui: ^1.2.1
-        remix: ^1.0.0-beta.11
+        naked_ui: ^1.2.2
+        remix: ^1.0.0-beta.12
         remix_ui_icons: ^0.1.0
         remix_ui_fonts: ^0.1.0
         widgetbook: ^3.25.0

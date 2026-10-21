@@ -249,12 +249,14 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => IconButtonStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory IconButtonStyler.radialGradient({
     required List<Color> colors,
@@ -264,6 +266,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => IconButtonStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -272,6 +275,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory IconButtonStyler.sweepGradient({
     required List<Color> colors,
@@ -280,6 +284,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => IconButtonStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -287,6 +292,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory IconButtonStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -294,12 +300,14 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => IconButtonStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory IconButtonStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -309,6 +317,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => IconButtonStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -317,6 +326,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory IconButtonStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -325,6 +335,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => IconButtonStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -332,6 +343,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory IconButtonStyler.transform(
     Matrix4 value, {
@@ -504,6 +516,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -512,6 +525,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -524,6 +538,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -534,6 +549,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -545,6 +561,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -554,6 +571,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -564,6 +582,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -572,6 +591,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -584,6 +604,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -594,6 +615,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -605,6 +627,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -614,6 +637,7 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

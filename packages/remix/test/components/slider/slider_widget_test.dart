@@ -607,6 +607,41 @@ void main() {
         });
       }
 
+      testWidgets(
+        'thumb focus effect hides after a pointer press until keyboard input',
+        (tester) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+          await tester.pumpRemixApp(
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 200,
+                child: RemixSlider(
+                  value: 0.5,
+                  onChanged: (value) {},
+                  focusNode: focusNode,
+                  style: _sliderFocusStyle(),
+                ),
+              ),
+            ),
+          );
+          focusNode.requestFocus();
+          await tester.pumpAndSettle();
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 3);
+
+          await tester.tapAt(const Offset(400, 400), kind: .mouse);
+          await tester.pumpAndSettle();
+          expect(focusNode.hasFocus, isTrue);
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 0);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+          await tester.pumpAndSettle();
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 3);
+        },
+        variant: const TargetPlatformVariant({.macOS}),
+      );
+
       testWidgets('forced focus state renders the thumb focus effect', (
         tester,
       ) async {

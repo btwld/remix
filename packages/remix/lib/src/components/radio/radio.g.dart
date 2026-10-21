@@ -223,12 +223,14 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => RadioStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory RadioStyler.radialGradient({
     required List<Color> colors,
@@ -238,6 +240,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => RadioStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -246,6 +249,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory RadioStyler.sweepGradient({
     required List<Color> colors,
@@ -254,6 +258,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => RadioStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -261,6 +266,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory RadioStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -268,12 +274,14 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => RadioStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory RadioStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -283,6 +291,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => RadioStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -291,6 +300,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory RadioStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -299,6 +309,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => RadioStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -306,6 +317,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory RadioStyler.transform(
     Matrix4 value, {
@@ -478,6 +490,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -486,6 +499,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -498,6 +512,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -508,6 +523,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -519,6 +535,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -528,6 +545,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -538,6 +556,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -546,6 +565,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -558,6 +578,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -568,6 +589,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -579,6 +601,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -588,6 +611,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

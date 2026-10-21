@@ -275,12 +275,14 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ProgressStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ProgressStyler.radialGradient({
     required List<Color> colors,
@@ -290,6 +292,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ProgressStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -298,6 +301,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ProgressStyler.sweepGradient({
     required List<Color> colors,
@@ -306,6 +310,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ProgressStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -313,6 +318,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ProgressStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -320,12 +326,14 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ProgressStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ProgressStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -335,6 +343,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ProgressStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -343,6 +352,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ProgressStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -351,6 +361,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ProgressStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -358,6 +369,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ProgressStyler.transform(
     Matrix4 value, {
@@ -530,6 +542,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -538,6 +551,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -550,6 +564,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -560,6 +575,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -571,6 +587,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -580,6 +597,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -590,6 +608,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -598,6 +617,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -610,6 +630,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -620,6 +641,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -631,6 +653,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -640,6 +663,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

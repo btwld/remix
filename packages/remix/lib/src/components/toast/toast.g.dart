@@ -276,12 +276,14 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToastStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToastStyler.radialGradient({
     required List<Color> colors,
@@ -291,6 +293,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToastStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -299,6 +302,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToastStyler.sweepGradient({
     required List<Color> colors,
@@ -307,6 +311,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToastStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -314,6 +319,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToastStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -321,12 +327,14 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToastStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToastStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -336,6 +344,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToastStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -344,6 +353,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToastStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -352,6 +362,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => ToastStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -359,6 +370,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory ToastStyler.row() => ToastStyler().row();
   factory ToastStyler.column() => ToastStyler().column();
@@ -533,6 +545,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -541,6 +554,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -553,6 +567,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -563,6 +578,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -574,6 +590,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -583,6 +600,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -593,6 +611,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -601,6 +620,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -613,6 +633,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -623,6 +644,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -634,6 +656,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -643,6 +666,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

@@ -296,12 +296,14 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SidebarStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SidebarStyler.radialGradient({
     required List<Color> colors,
@@ -311,6 +313,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SidebarStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -319,6 +322,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SidebarStyler.sweepGradient({
     required List<Color> colors,
@@ -327,6 +331,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SidebarStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -334,6 +339,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SidebarStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -341,12 +347,14 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SidebarStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SidebarStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -356,6 +364,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SidebarStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -364,6 +373,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SidebarStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -372,6 +382,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SidebarStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -379,6 +390,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SidebarStyler.row() => SidebarStyler().row();
   factory SidebarStyler.column() => SidebarStyler().column();
@@ -554,6 +566,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -562,6 +575,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -574,6 +588,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -584,6 +599,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -595,6 +611,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -604,6 +621,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -614,6 +632,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -622,6 +641,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -634,6 +654,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -644,6 +665,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -655,6 +677,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -664,6 +687,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

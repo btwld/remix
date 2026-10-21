@@ -315,7 +315,8 @@ fails generation.
 
 **Focus rings: outline effects, not borders.** `.onFocused(.border(...))`
 replaces the variant's border and shifts layout by the border width. Paint the
-ring outside the box on keyboard focus only:
+ring outside the box on keyboard focus only; `onFocusVisible` hides it after a
+pointer press until the next keyboard input:
 
 <!-- dart-excerpt: continuation of components/button.dart -->
 
@@ -328,6 +329,9 @@ ButtonStyler _focusRing() => ButtonStyler().containerEffects(
   ).outlineOffset(2.0),
 );
 ```
+
+Text inputs ring on any focus, as browsers do, so key their ring on
+`onFocused` instead.
 
 **Derived colors: `ContextToken`, not `withValues`.**
 `AcmeTokens.interactivePrimary().withValues(alpha: 0.9)` records a Mix directive that
