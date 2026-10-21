@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.0-beta.12
 
 ### Breaking changes
 
@@ -22,6 +22,8 @@
   toggle group, segmented control, and menu items update when input switches
   between pointer and keyboard. Vanilla text fields still ring on click, as
   browsers do for text inputs. Requires `mix` 2.3.0.
+- Require `naked_ui ^1.2.2`: one tooltip at a time, and no touch selection
+  handles after a mouse right-click in text fields.
 
 ## 1.0.0-beta.11
 
