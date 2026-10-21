@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../registry.dart';
-import '../src/example_button.dart';
 
 const _chrome = Color(0xFFE7E0EC);
 const _border = Color(0xFFCAC4D0);
@@ -239,34 +238,10 @@ class _DemoScaffold extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             color: _chrome,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    demo.title,
-                    style: const TextStyle(fontSize: 16),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                ExampleButton(
-                  label: 'Fullscreen',
-                  subtle: true,
-                  onPressed: () {
-                    final uri = Uri(path: '/#/${'component'}/${demo.id}');
-                    // On the web this opens the gh-pages URL; locally it’s fine.
-                    debugPrint(uri.toString());
-                  },
-                ),
-                if (demo.sourceUrl != null)
-                  ExampleButton(
-                    label: 'Source',
-                    subtle: true,
-                    onPressed: () {
-                      // A real app might use url_launcher; we avoid runtime deps here.
-                      debugPrint('Source: ${demo.sourceUrl}');
-                    },
-                  ),
-              ],
+            child: Text(
+              demo.title,
+              style: const TextStyle(fontSize: 16),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         Expanded(

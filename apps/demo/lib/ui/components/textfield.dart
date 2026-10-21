@@ -44,6 +44,21 @@ const _neutralTextInputPlaceholder = ContextToken<Color>(
   _resolveNeutralTextInputPlaceholder,
 );
 
+Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
+    FortalTokens.accent12.resolve(context).withValues(alpha: alpha);
+
+final _softTextFieldPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.60),
+);
+
+final _softTextAreaPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.65),
+);
+
+final _softTextInputDisabledPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.5),
+);
+
 /// Fortal-themed preset for [RemixTextField].
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler fortalTextFieldStyle({
@@ -70,7 +85,10 @@ TextFieldStyler fortalTextFieldStyle({
   final recipe = switch (variant) {
     .classic => _fortalApplyClassicTextInput(base),
     .surface => _fortalApplySurfaceTextInput(base),
-    .soft => _fortalApplySoftTextInput(base, placeholderOpacity: 0.60),
+    .soft => _fortalApplySoftTextInput(
+      base,
+      placeholder: _softTextFieldPlaceholder,
+    ),
   };
 
   return recipe
@@ -169,7 +187,7 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
 
 TextFieldStyler _fortalApplySoftTextInput(
   TextFieldStyler base, {
-  required double placeholderOpacity,
+  required ContextToken<Color> placeholder,
 }) => base
     .merge(
       TextFieldStyler(
@@ -186,11 +204,7 @@ TextFieldStyler _fortalApplySoftTextInput(
     )
     .textColor(FortalTokens.accent12())
     .text(.selectionColor(FortalTokens.accentA5()))
-    .onEnabled(
-      .hintText(
-        .color(FortalTokens.accent12().withValues(alpha: placeholderOpacity)),
-      ),
-    )
+    .onEnabled(.hintText(.color(placeholder())))
     .wrap(.iconTheme(color: FortalTokens.accent10()))
     .color(FortalTokens.accentA3())
     .containerEffects(
@@ -238,7 +252,7 @@ TextFieldStyler _fortalNeutralTextInputDisabledStyle() =>
 
 TextFieldStyler _fortalSoftTextInputDisabledStyle() =>
     _fortalTextInputDisabledBaseStyle().hintText(
-      .color(FortalTokens.accent12().withValues(alpha: 0.5)),
+      .color(_softTextInputDisabledPlaceholder()),
     );
 
 TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
@@ -339,7 +353,10 @@ TextFieldStyler fortalTextAreaStyle({
   final recipe = switch (variant) {
     .classic => _fortalApplyClassicTextInput(base),
     .surface => _fortalApplySurfaceTextInput(base),
-    .soft => _fortalApplySoftTextInput(base, placeholderOpacity: 0.65),
+    .soft => _fortalApplySoftTextInput(
+      base,
+      placeholder: _softTextAreaPlaceholder,
+    ),
   };
 
   return recipe

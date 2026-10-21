@@ -29,11 +29,7 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
-/// Full default-preset dashboard demo.
-///
-/// This is the open-code default-preset equivalent of the Fortal product
-/// dashboard starter: it includes the same Overview, Chat, Customers, Orders,
-/// and Settings destinations, built with the default preset vocabulary.
+/// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 class PlaygroundDashboardDemo extends StatefulWidget {
   const PlaygroundDashboardDemo({
     super.key,
@@ -71,6 +67,10 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
   /// The appearance the toggle chose, or null to follow the scope this demo
   /// is placed in.
   bool? _dark;
+
+  /// Base corner radius chosen from Settings, or null to keep the inherited
+  /// theme's radius.
+  double? _radius;
   Brightness? _ambientBrightness;
   bool _notificationsRead = false;
 
@@ -87,6 +87,16 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
   bool get _isDark =>
       _dark ??
       (PlaygroundTheme.maybeOf(context)?.brightness == Brightness.dark);
+
+  /// [brightness]'s inherited values, or the preset default, with [radius].
+  PlaygroundThemeData _themeWithRadius(Brightness brightness, double radius) {
+    final themes = PlaygroundTheme.themesOf(context);
+    final base = switch (brightness) {
+      Brightness.light => themes?.light ?? const PlaygroundThemeData.light(),
+      Brightness.dark => themes?.dark ?? const PlaygroundThemeData.dark(),
+    };
+    return base.copyWith(radius: Radius.circular(radius));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,12 +153,20 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
         .settings => PlaygroundDashboardSettingsPage(
           darkMode: _dark,
           onDarkModeChanged: (value) => setState(() => _dark = value),
+          onRadiusChanged: (value) => setState(() => _radius = value),
         ),
       },
     );
     if (!widget.builtInChrome) return demo;
+    final radius = _radius;
     return PlaygroundTheme(
       mode: _isDark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
+      // One explicit half would be reused for the other brightness. Copy the
+      // radius onto both so light and dark keep their own colors.
+      theme: radius == null ? null : _themeWithRadius(Brightness.light, radius),
+      darkTheme: radius == null
+          ? null
+          : _themeWithRadius(Brightness.dark, radius),
       child: Box(
         style: BoxStyler().color(PlaygroundTokens.background()),
         child: RemixToastScope(style: playgroundToastStyle(), child: demo),
@@ -265,17 +283,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
               onChanged: (value) => setState(() => _dark = value),
             ),
             const PlaygroundDivider(),
-            ColumnBox(
-              style: FlexBoxStyler()
-                  .crossAxisAlignment(.stretch)
-                  .spacing(PlaygroundTokens.s2),
-              children: [
-                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-                _settingLine('Accent color', 'Neutral'),
-                _settingLine('Radius', 'Medium'),
-                _settingLine('Density', 'Comfortable'),
-              ],
-            ),
+            _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
           ],
         ),
       ),

@@ -26,7 +26,7 @@ Widget buildRemixDisclosureUseCase(BuildContext context) {
             ),
             triggerBuilder: (context, state, child) =>
                 _DisclosureTrigger(expanded: state.isExpanded, child: child!),
-            style: _remixDisclosureStyle(Theme.of(context).colorScheme),
+            style: _remixDisclosureStyle(),
           ),
         ),
       ),
@@ -101,8 +101,8 @@ Widget buildDisclosureCatalogUseCase(BuildContext context) {
   );
 }
 
-DisclosureStyler _remixDisclosureStyle(ColorScheme colors) {
-  final border = BorderSideMix(color: colors.outlineVariant, width: 1);
+DisclosureStyler _remixDisclosureStyle() {
+  final border = BorderSideMix(color: FortalTokens.gray6(), width: 1);
 
   return DisclosureStyler()
       .container(
@@ -110,14 +110,14 @@ DisclosureStyler _remixDisclosureStyle(ColorScheme colors) {
             .clipBehavior(.antiAlias)
             .borderRadius(.circular(12))
             .border(.all(border))
-            .color(colors.surface),
+            .color(FortalTokens.colorSurface()),
       )
       .trigger(
         BoxStyler()
             .width(.infinity)
             .alignment(.centerLeft)
             .padding(.all(16))
-            .color(colors.surfaceContainerLow),
+            .color(FortalTokens.gray2()),
       )
       .content(
         BoxStyler()
@@ -128,24 +128,20 @@ DisclosureStyler _remixDisclosureStyle(ColorScheme colors) {
             ),
       )
       .onHovered(
-        DisclosureStyler().trigger(
-          BoxStyler().color(colors.surfaceContainerHighest),
-        ),
+        DisclosureStyler().trigger(BoxStyler().color(FortalTokens.gray3())),
       )
       .onPressed(
-        DisclosureStyler().trigger(
-          BoxStyler().color(colors.secondaryContainer),
-        ),
+        DisclosureStyler().trigger(BoxStyler().color(FortalTokens.gray4())),
       )
       .onFocusVisible(
         DisclosureStyler().trigger(
           BoxStyler().border(
-            .all(BorderSideMix(color: colors.primary, width: 2)),
+            .all(BorderSideMix(color: FortalTokens.accent9(), width: 2)),
           ),
         ),
       )
       .onDisabled(
-        DisclosureStyler().trigger(BoxStyler().color(colors.surfaceContainer)),
+        DisclosureStyler().trigger(BoxStyler().color(FortalTokens.gray3())),
       );
 }
 

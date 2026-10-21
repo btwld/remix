@@ -268,6 +268,8 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_records.dart"
       - source: templates/dashboard_demo/dashboard_overview.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_overview.dart"
+      - source: templates/dashboard_demo/dashboard_demo_text.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_text.dart"
       - source: templates/dashboard_demo/dashboard_demo_records_page.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_records_page.dart"
       - source: templates/dashboard_demo/dashboard_demo_settings.dart.tmpl

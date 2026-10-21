@@ -15,7 +15,10 @@ import '../../components/select.dart';
 import '../../components/slider.dart';
 import '../../components/switch.dart';
 import '../../components/textfield.dart';
+import '../../theme/theme_data.dart';
+import '../../theme/theme_scope.dart';
 import '../../theme/tokens.dart';
+import 'dashboard_demo_text.dart';
 
 enum _Appearance { light, dark, system }
 
@@ -24,10 +27,14 @@ class PlaygroundDashboardSettingsPage extends StatefulWidget {
     super.key,
     this.darkMode,
     this.onDarkModeChanged,
+    this.onRadiusChanged,
   });
 
   final bool? darkMode;
   final ValueChanged<bool?>? onDarkModeChanged;
+
+  /// Called with the base corner radius, in logical pixels, as the slider moves.
+  final ValueChanged<double>? onRadiusChanged;
 
   @override
   State<PlaygroundDashboardSettingsPage> createState() =>
@@ -40,7 +47,7 @@ class _PlaygroundDashboardSettingsPageState
   bool _weeklyDigest = false;
   String _language = 'en';
   _Appearance _appearance = .system;
-  double _radius = 8;
+  double? _radius;
   bool _dangerZoneExpanded = false;
 
   _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
@@ -50,6 +57,13 @@ class _PlaygroundDashboardSettingsPageState
           true => .dark,
           null => .system,
         };
+
+  /// The slider's value: the user's drag, otherwise the active theme's
+  /// [PlaygroundThemeData.radius].
+  double _resolvedRadius(BuildContext context) =>
+      _radius ??
+      PlaygroundTheme.maybeOf(context)?.radius.x ??
+      const PlaygroundThemeData.light().radius.x;
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -67,12 +81,12 @@ class _PlaygroundDashboardSettingsPageState
                 .crossAxisAlignment(.start)
                 .spacing(PlaygroundTokens.s1),
             children: const [
-              _Text(
+              PlaygroundDashboardText(
                 'Settings',
                 token: PlaygroundTokens.text3xl,
                 emphasized: true,
               ),
-              _Text(
+              PlaygroundDashboardText(
                 'Manage your profile, preferences, and workspace.',
                 muted: true,
               ),
@@ -120,7 +134,10 @@ class _PlaygroundDashboardSettingsPageState
                   style: BoxStyler().alignment(.centerStart),
                   child: PlaygroundButton(
                     label: 'Save changes',
-                    onPressed: () => _toast(context, 'Profile settings saved'),
+                    onPressed: () => playgroundDashboardToast(
+                      context,
+                      'Profile settings saved',
+                    ),
                   ),
                 ),
               ],
@@ -159,7 +176,7 @@ class _PlaygroundDashboardSettingsPageState
           ),
           _section(
             'Appearance',
-            'Tune the default preset theme with meaningful native values.',
+            'Choose light, dark, or match the system.',
             ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)
@@ -175,7 +192,10 @@ class _PlaygroundDashboardSettingsPageState
                       .crossAxisAlignment(.start)
                       .spacing(PlaygroundTokens.s2),
                   children: [
-                    const _Text('Color mode', emphasized: true),
+                    const PlaygroundDashboardText(
+                      'Color mode',
+                      emphasized: true,
+                    ),
                     PlaygroundSegmentedControl<_Appearance>(
                       semanticLabel: 'Color mode',
                       selectedValue: _resolvedAppearance,
@@ -206,16 +226,19 @@ class _PlaygroundDashboardSettingsPageState
                       .crossAxisAlignment(.stretch)
                       .spacing(PlaygroundTokens.s2),
                   children: [
-                    _Text(
-                      'Control radius · ${_radius.round()}px',
+                    PlaygroundDashboardText(
+                      'Control radius · ${_resolvedRadius(context).round()}px',
                       emphasized: true,
                     ),
                     PlaygroundSlider(
-                      value: _radius,
+                      value: _resolvedRadius(context),
                       min: 0,
                       max: 16,
                       snapDivisions: 16,
-                      onChanged: (value) => setState(() => _radius = value),
+                      onChanged: (value) {
+                        setState(() => _radius = value);
+                        widget.onRadiusChanged?.call(value);
+                      },
                     ),
                   ],
                 ),
@@ -230,14 +253,19 @@ class _PlaygroundDashboardSettingsPageState
             semanticHint: 'Shows destructive workspace actions',
             trigger: PlaygroundDisclosureTrigger(
               expanded: _dangerZoneExpanded,
-              child: const _Text('Danger zone', emphasized: true),
+              child: const PlaygroundDashboardText(
+                'Danger zone',
+                emphasized: true,
+              ),
             ),
             content: ColumnBox(
               style: FlexBoxStyler()
                   .crossAxisAlignment(.stretch)
                   .spacing(PlaygroundTokens.s3),
               children: [
-                const _Text('Destructive workspace actions cannot be undone.'),
+                const PlaygroundDashboardText(
+                  'Destructive workspace actions cannot be undone.',
+                ),
                 Box(
                   style: BoxStyler().alignment(.centerStart),
                   child: PlaygroundButton.destructive(
@@ -274,7 +302,7 @@ class _PlaygroundDashboardSettingsPageState
       ),
     );
     if (!mounted || confirmed != true) return;
-    _toast(context, 'Demo workspace was not deleted');
+    playgroundDashboardToast(context, 'Demo workspace was not deleted');
   }
 }
 
@@ -290,8 +318,12 @@ Widget _section(String title, String description, Widget child) =>
                 .crossAxisAlignment(.start)
                 .spacing(PlaygroundTokens.s1),
             children: [
-              _Text(title, token: PlaygroundTokens.textLg, emphasized: true),
-              _Text(description, muted: true),
+              PlaygroundDashboardText(
+                title,
+                token: PlaygroundTokens.textLg,
+                emphasized: true,
+              ),
+              PlaygroundDashboardText(description, muted: true),
             ],
           ),
           child,
@@ -310,44 +342,13 @@ Widget _preference(String title, String description, Widget trailing) => RowBox(
             .crossAxisAlignment(.start)
             .spacing(PlaygroundTokens.s0_5),
         children: [
-          _Text(title, emphasized: true),
-          _Text(description, muted: true),
+          PlaygroundDashboardText(title, emphasized: true),
+          PlaygroundDashboardText(description, muted: true),
         ],
       ),
     ),
     trailing,
   ],
-);
-
-class _Text extends StatelessWidget {
-  const _Text(
-    this.value, {
-    this.token = PlaygroundTokens.textSm,
-    this.emphasized = false,
-    this.muted = false,
-  });
-  final String value;
-  final TextStyleToken token;
-  final bool emphasized;
-  final bool muted;
-
-  @override
-  Widget build(BuildContext context) => StyledText(
-    value,
-    style: TextStyler()
-        .style(token.mix())
-        .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
-        .color(
-          muted
-              ? PlaygroundTokens.mutedForeground()
-              : PlaygroundTokens.foreground(),
-        ),
-  );
-}
-
-void _toast(BuildContext context, String title) => showRemixToast(
-  context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
 );
 
 class PlaygroundDisclosureTrigger extends StatelessWidget {

@@ -225,9 +225,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                                 .spacing(2),
                             children: [
                               FortalText(
-                                event.kind == .alert
-                                    ? 'Order ORD-1047 requires review.'
-                                    : event.title,
+                                event.title,
                                 size: .size2,
                                 weight: _notificationsRead ? .regular : .medium,
                               ),

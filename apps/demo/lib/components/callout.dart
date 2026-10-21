@@ -1,5 +1,4 @@
 import 'package:demo/helpers/catalog.dart';
-import 'package:flutter/material.dart' as m;
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:demo/ui/ui.dart';
@@ -17,7 +16,7 @@ Widget buildCalloutUseCase(BuildContext context) {
         child: SizedBox(
           width: 300,
           child: FortalCallout(
-            icon: m.Icons.info_outline,
+            icon: Icons.info_outline,
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalCalloutVariant.values,
@@ -50,7 +49,7 @@ Widget buildCalloutCatalogUseCase(BuildContext context) {
       width: 220,
       child: FortalCallout(
         text: 'Callout',
-        icon: m.Icons.info_outline,
+        icon: Icons.info_outline,
         size: FortalCalloutSize.values[column],
         variant: FortalCalloutVariant.values[row],
       ),

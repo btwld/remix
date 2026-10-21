@@ -19,9 +19,6 @@ part of 'tooltip.dart';
 /// is a transient label, not a panel a reader can act in, and inverting it —
 /// `foreground` fill, `background` text — is what makes that difference legible
 /// at a glance without a second token.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class VanillaTooltip extends StatelessWidget {
   const VanillaTooltip({
     super.key,

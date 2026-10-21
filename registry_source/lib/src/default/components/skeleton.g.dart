@@ -25,9 +25,6 @@ part of 'skeleton.dart';
 ///
 /// It is an `accent` block with `radiusMd` corners that pulses to half
 /// strength, so a loading block reads as scenery rather than as content.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class VanillaSkeleton extends StatelessWidget {
   const VanillaSkeleton({
     super.key,

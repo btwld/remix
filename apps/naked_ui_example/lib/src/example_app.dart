@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/// The application host shared by every example in `lib/api` and `lib/doc`.
+/// The application host shared by every example in `lib/api`.
 ///
 /// Each example keeps its own `main()` so it can be run on its own, but the
 /// host itself is identical across all of them: a neutral `WidgetsApp`, a page

@@ -18,9 +18,6 @@ part of 'dialog.dart';
 /// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
 /// in `mutedForeground` 8px below it, and the decisions sit at the trailing
 /// edge 16px below that.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class VanillaDialog extends StatelessWidget {
   const VanillaDialog({
     super.key,

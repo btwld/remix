@@ -29,11 +29,7 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
-/// Full default-preset dashboard demo.
-///
-/// This is the open-code default-preset equivalent of the Fortal product
-/// dashboard starter: it includes the same Overview, Chat, Customers, Orders,
-/// and Settings destinations, built with the default preset vocabulary.
+/// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 class {{typePrefix}}DashboardDemo extends StatefulWidget {
   const {{typePrefix}}DashboardDemo({
     super.key,
@@ -70,6 +66,10 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   /// The appearance the toggle chose, or null to follow the scope this demo
   /// is placed in.
   bool? _dark;
+
+  /// Base corner radius chosen from Settings, or null to keep the inherited
+  /// theme's radius.
+  double? _radius;
   Brightness? _ambientBrightness;
   bool _notificationsRead = false;
 
@@ -85,6 +85,16 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
 
   bool get _isDark =>
       _dark ?? ({{typePrefix}}Theme.maybeOf(context)?.brightness == Brightness.dark);
+
+  /// [brightness]'s inherited values, or the preset default, with [radius].
+  {{typePrefix}}ThemeData _themeWithRadius(Brightness brightness, double radius) {
+    final themes = {{typePrefix}}Theme.themesOf(context);
+    final base = switch (brightness) {
+      Brightness.light => themes?.light ?? const {{typePrefix}}ThemeData.light(),
+      Brightness.dark => themes?.dark ?? const {{typePrefix}}ThemeData.dark(),
+    };
+    return base.copyWith(radius: Radius.circular(radius));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,12 +151,20 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         .settings => {{typePrefix}}DashboardSettingsPage(
           darkMode: _dark,
           onDarkModeChanged: (value) => setState(() => _dark = value),
+          onRadiusChanged: (value) => setState(() => _radius = value),
         ),
       },
     );
     if (!widget.builtInChrome) return demo;
+    final radius = _radius;
     return {{typePrefix}}Theme(
       mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
+      // One explicit half would be reused for the other brightness. Copy the
+      // radius onto both so light and dark keep their own colors.
+      theme: radius == null ? null : _themeWithRadius(Brightness.light, radius),
+      darkTheme: radius == null
+          ? null
+          : _themeWithRadius(Brightness.dark, radius),
       child: Box(
         style: BoxStyler().color({{typePrefix}}Tokens.background()),
         child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
@@ -263,17 +281,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
               onChanged: (value) => setState(() => _dark = value),
             ),
             const {{typePrefix}}Divider(),
-            ColumnBox(
-              style: FlexBoxStyler()
-                  .crossAxisAlignment(.stretch)
-                  .spacing({{typePrefix}}Tokens.s2),
-              children: [
-                _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
-                _settingLine('Accent color', 'Neutral'),
-                _settingLine('Radius', 'Medium'),
-                _settingLine('Density', 'Comfortable'),
-              ],
-            ),
+            _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
           ],
         ),
       ),

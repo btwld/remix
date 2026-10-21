@@ -15,7 +15,7 @@ import '../../components/divider.dart';
 import '../../components/progress.dart';
 import '../../theme/tokens.dart';
 
-/// The default-preset dashboard overview.
+/// Revenue, orders, and recent activity.
 ///
 /// Pass local [data] to replace the starter metrics, chart, and records without
 /// changing the responsive composition.

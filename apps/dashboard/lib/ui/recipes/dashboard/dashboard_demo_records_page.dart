@@ -94,16 +94,9 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
                   UiButton.ghost(
                     size: .size1,
                     label: 'Archive',
-                    onPressed: () => showRemixToast(
+                    onPressed: () => _toast(
                       context,
-                      RemixToastData(
-                        title: '${_selectedIds.length} customers archived',
-                        icon: RemixIcons.checkCircled,
-                        action: const RemixToastAction(
-                          label: 'Undo',
-                          onPressed: _noop,
-                        ),
-                      ),
+                      '${_selectedIds.length} customers archived',
                     ),
                   ),
                 ],
@@ -417,4 +410,3 @@ void _toast(BuildContext context, String title) => showRemixToast(
   context,
   RemixToastData(title: title, icon: RemixIcons.checkCircled),
 );
-void _noop() {}

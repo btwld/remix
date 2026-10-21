@@ -18,32 +18,6 @@ part 'checkbox.g.dart';
 /// behavior, the minimum tap target, and the checkbox accessibility
 /// semantics — this recipe never reimplements any of that.
 ///
-/// `@MixWidget(target: RemixCheckbox.new)` generates `PlaygroundCheckbox`
-/// into `checkbox.g.dart`: an adapter whose constructor is this function's
-/// parameters plus every safe `RemixCheckbox` parameter, and whose `build`
-/// calls `RemixCheckbox(style: playgroundCheckboxStyle(...), ...)`. Unlike
-/// Button there is no `variant` parameter, so the generator emits no named
-/// constructors: a checkbox has one look, and its meaningful axes are the
-/// runtime states below.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// PlaygroundCheckbox(
-///   selected: subscribed,
-///   label: 'Email me',
-///   style: CheckboxStyler().onSelected(
-///     CheckboxStyler().color(const Color(0xFF7C3AED)),
-///   ),
-///   onChanged: (value) => setState(() => subscribed = value),
-/// )
-/// ```
-///
-/// State fragments merge by state, not by depth: an override that must beat
-/// the recipe's checked fill has to be declared as a selected fragment too
-/// (`CheckboxStyler().onSelected(...)`).
-///
 /// There is deliberately no hover or pressed fragment. A button needs them
 /// because nothing else about it changes on tap; a checkbox flips its own
 /// state, and that is the feedback. The pointer cursor Remix sets says it can

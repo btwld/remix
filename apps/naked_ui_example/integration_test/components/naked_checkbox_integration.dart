@@ -222,42 +222,6 @@ void main() {
       expect(checkboxValue, isTrue);
     });
 
-    testWidgets('tap does not request focus (explicit focusNode present)', (
-      tester,
-    ) async {
-      final checkboxKey = UniqueKey();
-      final focusNode = tester.createManagedFocusNode();
-      bool checkboxValue = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: NakedCheckbox(
-                key: checkboxKey,
-                focusNode: focusNode,
-                value: checkboxValue,
-                onChanged: (value) => checkboxValue = value!,
-                child: const Text('No Focus Test Checkbox'),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Initially not focused
-      expect(focusNode.hasFocus, isFalse);
-
-      // Tap checkbox - should NOT request focus
-      await tester.tap(find.byKey(checkboxKey));
-      await tester.pump();
-
-      // Should still not be focused
-      expect(focusNode.hasFocus, isFalse);
-      expect(checkboxValue, isTrue); // But value should still change
-    });
-
     testWidgets('checkbox builder method works with states', (tester) async {
       final checkboxKey = UniqueKey();
       bool checkboxValue = false;

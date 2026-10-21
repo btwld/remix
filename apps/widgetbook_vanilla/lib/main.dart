@@ -47,13 +47,7 @@ class VanillaThemeAddon extends ThemeAddon<ThemeData> {
             data: theme,
             child: VanillaTheme(
               mode: theme.brightness == Brightness.dark ? .dark : .light,
-              child: ColoredBox(
-                color: theme.scaffoldBackgroundColor,
-                child: DefaultTextStyle(
-                  style: theme.textTheme.bodyMedium!,
-                  child: child,
-                ),
-              ),
+              child: child,
             ),
           );
         },

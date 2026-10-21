@@ -37,11 +37,6 @@ part of 'radio.dart';
 ///
 /// `RemixRadio` requires a `semanticLabel` because it renders no text of its
 /// own — the visible label beside it belongs to the caller's layout.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's chosen dot has to be
-/// declared as a selected fragment too (`RadioStyler().onSelected(...)`).
 class VanillaRadio<T> extends StatelessWidget {
   const VanillaRadio({
     super.key,

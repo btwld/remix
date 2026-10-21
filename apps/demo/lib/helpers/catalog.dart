@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:demo/ui/ui.dart';
 
 /// A labelled matrix for reviewing every enum combination of a Fortal preset
 /// at once.
@@ -43,7 +44,7 @@ class CatalogMatrix extends StatelessWidget {
   Widget build(BuildContext context) {
     final labelStyle = DefaultTextStyle.of(
       context,
-    ).style.copyWith(fontSize: 11, color: Colors.grey);
+    ).style.copyWith(fontSize: 11, color: FortalTokens.gray11.resolve(context));
     final showRowLabels = rows.any((label) => label.isNotEmpty);
 
     return Scaffold(

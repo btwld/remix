@@ -8,7 +8,7 @@ void main() async {
 
 class RadixColorGenerator {
   static const String jsonPath = 'radix_colors.generated.json';
-  static const String outputPath = 'lib/src/theme/radix_colors.dart';
+  static const String outputPath = 'lib/src/fortal/theme/radix_colors.dart';
   const RadixColorGenerator();
   void _generateColorInstance(
     StringBuffer buffer,
@@ -272,42 +272,6 @@ class RadixColorScale {
   final ColorSwatch<int> alpha;
 
   const RadixColorScale(this.solid, this.alpha);
-
-  /// The most subtle background color (step 1).
-  Color get appBackground => step(1);
-
-  /// Subtle background with slightly more presence (step 2).
-  Color get subtleBackground => step(2);
-
-  /// Default background for interactive components (step 3).
-  Color get componentBackground => step(3);
-
-  /// Background color for components on hover (step 4).
-  Color get componentBackgroundHover => step(4);
-
-  /// Background color for active/pressed components (step 5).
-  Color get componentBackgroundActive => step(5);
-
-  /// Subtle border color for gentle separation (step 6).
-  Color get subtleBorder => step(6);
-
-  /// Standard border color for components (step 7).
-  Color get componentBorder => step(7);
-
-  /// Border color for hover and focus states (step 8).
-  Color get componentBorderHover => step(8);
-
-  /// Primary solid background color (step 9).
-  Color get solidBackground => step(9);
-
-  /// Solid background color on hover (step 10).
-  Color get solidBackgroundHover => step(10);
-
-  /// Low contrast text color (step 11).
-  Color get lowContrastText => step(11);
-
-  /// High contrast text color (step 12).
-  Color get highContrastText => step(12);
 
   /// Gets a solid color from the 12-step scale.
   ///

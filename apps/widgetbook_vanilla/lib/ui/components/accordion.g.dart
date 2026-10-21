@@ -41,11 +41,6 @@ part of 'accordion.dart';
 /// which comes from `package:naked_ui` — a package this layer does not depend
 /// on. Use `title` with the icons, or reach for `RemixAccordion` directly on
 /// the rare call site that needs to build its own trigger row.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's open title has to be
-/// declared as an expanded fragment too (`AccordionStyler().onExpanded(...)`).
 class VanillaAccordion<T> extends StatelessWidget {
   const VanillaAccordion({
     super.key,

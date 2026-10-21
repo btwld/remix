@@ -46,14 +46,6 @@ enum VanillaToggleSize {
 /// by its full-strength content, and a toggle that is on stays on when hovered.
 /// An outline toggle hovers onto `accent` instead, and keeps its outline in
 /// every state.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. Because [variant] is a non-nullable
-/// enum, the generator also emits one named constructor per enum value.
-///
-/// State fragments merge by state, not by depth: an override that must beat
-/// the recipe's on fill has to be declared as a selected fragment too
-/// (`ToggleStyler().onSelected(...)`).
 @MixWidget(target: RemixToggle.new)
 ToggleStyler vanillaToggleStyle({
   VanillaToggleVariant variant = .ghost,

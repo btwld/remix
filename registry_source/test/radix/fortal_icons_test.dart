@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
   testWidgets('FortalIcons remains a rendering-compatible RemixIcons alias', (
