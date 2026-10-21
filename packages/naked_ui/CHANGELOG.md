@@ -4,6 +4,8 @@
 
 - Remove the remaining direct Material imports and unused Material icon-font
   declaration. Public APIs and application font bundling are unchanged.
+- Do not show touch selection handles in `NakedTextField` after a mouse
+  secondary click, matching Flutter's `TextField`.
 
 ## 1.2.1
 

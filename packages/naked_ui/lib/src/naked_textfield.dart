@@ -556,7 +556,10 @@ class _NakedTextFieldState extends State<NakedTextField>
   }
 
   bool _shouldShowSelectionHandles(SelectionChangedCause? cause) {
-    if (!_selectionGestureDetectorBuilder.shouldShowSelectionToolbar) {
+    // A mouse secondary click can show the selection menu but not the touch
+    // handles, so check both, as Flutter's TextField does.
+    if (!_selectionGestureDetectorBuilder.shouldShowSelectionToolbar ||
+        !_selectionGestureDetectorBuilder.shouldShowSelectionHandles) {
       return false;
     }
     if (cause == SelectionChangedCause.keyboard) return false;
