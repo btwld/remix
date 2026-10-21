@@ -989,9 +989,8 @@ _Failure? _verifyFocusedDependencies(
   );
 }
 
-/// Each surface is installed with only its own dependency closure, then its
-/// installed file references are checked. The full gallery installs every item
-/// and would otherwise mask an omitted dependency.
+/// Each surface must compile with only its own dependency closure. The full
+/// gallery installs every item and would otherwise mask an omitted dependency.
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
@@ -1045,7 +1044,9 @@ Future<_Failure?> _checkIndependentItems({
     final problems = _installedReferenceProblems(ui, files, preset);
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
-    _step('Independent $item installed and its file references checked.');
+    _step(
+      'Independent $item installed, generated, and analyzed with its own dependencies.',
+    );
   }
   return null;
 }
