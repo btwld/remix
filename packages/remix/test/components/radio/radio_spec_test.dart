@@ -134,13 +134,6 @@ void main() {
           unorderedEquals(['container', 'indicator', 'containerEffects']),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        const spec = RadioSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
 
     group('Edge Cases and Error Handling', () {

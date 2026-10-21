@@ -289,12 +289,6 @@ void main() {
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
-      test('styles with different properties are not equal', () {
-        const style1 = BadgeStyler.create();
-        final style2 = BadgeStyler();
-        expect(style1, equals(style2));
-      });
-
       test('styles with same properties are equal', () {
         final style1 = BadgeStyler();
         final style2 = BadgeStyler();

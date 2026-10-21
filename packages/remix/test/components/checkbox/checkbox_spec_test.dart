@@ -270,13 +270,6 @@ void main() {
         );
       });
 
-      test('can be converted to string for debugging', () {
-        const spec = CheckboxSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
-
       test('toString includes all properties', () {
         const spec = CheckboxSpec();
         final stringRepresentation = spec.toString();

@@ -429,22 +429,19 @@ void main() {
     });
 
     group('Styling', () {
-      testWidgets('applies custom text color', (tester) async {
+      testWidgets('applies color to the container background', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(style: TextFieldStyler().color(Colors.red)),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
-      });
-
-      testWidgets('applies custom background color', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTextField(style: TextFieldStyler().color(Colors.grey)),
+        final boxDecorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+        expect(
+          boxDecorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
         );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTextField), findsOneWidget);
       });
 
       testWidgets('applies custom padding', (tester) async {

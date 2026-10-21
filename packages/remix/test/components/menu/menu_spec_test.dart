@@ -153,13 +153,6 @@ void main() {
           unorderedEquals(['container', 'label', 'icon']),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        const spec = MenuTriggerSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
   });
 
@@ -474,13 +467,6 @@ void main() {
           ]),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        const spec = MenuSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
   });
 
@@ -647,13 +633,6 @@ void main() {
             'indicator',
           ]),
         );
-      });
-
-      test('can be converted to string for debugging', () {
-        const spec = MenuItemSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
       });
     });
 

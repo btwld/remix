@@ -154,13 +154,6 @@ void main() {
           unorderedEquals(['trigger', 'content', 'menuContainer', 'item']),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        const spec = SelectSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
 
     group('Edge Cases and Error Handling', () {
@@ -330,13 +323,6 @@ void main() {
           ]),
         );
       });
-
-      test('can be converted to string for debugging', () {
-        const spec = SelectTriggerSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
     });
   });
 
@@ -472,13 +458,6 @@ void main() {
           builder.properties.map((property) => property.name),
           unorderedEquals(['container', 'text', 'indicator', 'icon']),
         );
-      });
-
-      test('can be converted to string for debugging', () {
-        const spec = SelectMenuItemSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
       });
     });
   });

@@ -155,17 +155,6 @@ void main() {
         expect(find.byIcon(Icons.check_circle), findsOneWidget);
         expect(find.byType(StyledText), findsNothing);
       });
-
-      testWidgets('null text with icon still renders icon', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: '', icon: Icons.star));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byIcon(Icons.star), findsOneWidget);
-        expect(find.byType(StyledText), findsNothing);
-      });
     });
 
     group('Icon Variations', () {
@@ -440,10 +429,6 @@ void main() {
           () => RemixCallout(text: null, child: null),
           throwsAssertionError,
         );
-      });
-
-      test('assertion error when text is null and child is null', () {
-        expect(() => RemixCallout(), throwsAssertionError);
       });
     });
   });

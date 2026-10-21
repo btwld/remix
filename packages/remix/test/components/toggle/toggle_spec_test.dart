@@ -173,13 +173,6 @@ void main() {
         );
       });
 
-      test('can be converted to string for debugging', () {
-        const spec = ToggleSpec();
-
-        expect(spec.toString(), isA<String>());
-        expect(spec.toString(), isNotEmpty);
-      });
-
       test('diagnostic properties are properly formatted', () {
         const spec = ToggleSpec();
         final builder = DiagnosticPropertiesBuilder();
