@@ -10,7 +10,7 @@ const _consumerFloor = {'sdk': '>=3.11.0 <4.0.0', 'flutter': '>=3.41.0'};
 
 /// The floor for consumer packages that depend on `mix`.
 ///
-/// Matches `mix` 2.3.0, the oldest release `remix` accepts. Declaring less
+/// Matches `mix` 2.3.1, the oldest release `remix` accepts. Declaring less
 /// would claim support for a Flutter on which `remix` cannot resolve.
 const _mixConsumerFloor = {'sdk': '>=3.12.0 <4.0.0', 'flutter': '>=3.44.0'};
 

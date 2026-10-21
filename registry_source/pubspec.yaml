@@ -27,7 +27,7 @@ dependencies:
   # The workspace resolves this to the sibling source package. The derived
   # registry owns the hosted Remix floor installed into consumer applications.
   remix: ^1.0.0-beta.12
-  mix: ^2.3.0
+  mix: ^2.3.1
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.3
   remix_ui_icons: ^0.1.0
