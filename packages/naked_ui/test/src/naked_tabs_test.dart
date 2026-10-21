@@ -657,6 +657,7 @@ void main() {
     Widget threeTabHarness({
       required String initialSelected,
       Axis orientation = Axis.horizontal,
+      TextDirection textDirection = TextDirection.ltr,
       ValueChanged<String>? onChangedSpy,
       Key? tab1Key,
       Key? tab2Key,
@@ -668,7 +669,7 @@ void main() {
         builder: (context, child) => child ?? const SizedBox.shrink(),
         pageRouteBuilder: _defaultPageRouteBuilder,
         home: Directionality(
-          textDirection: TextDirection.ltr,
+          textDirection: textDirection,
           child: StatefulBuilder(
             builder: (context, setState) {
               void handleChanged(String id) {
@@ -878,6 +879,35 @@ void main() {
       await tester.pump();
       expect(last.hasPrimaryFocus, isTrue);
       expect(after.hasFocus, isFalse);
+    });
+
+    testWidgets('Home and End follow widget order in horizontal RTL', (
+      tester,
+    ) async {
+      final changes = <String>[];
+      final tab2 = UniqueKey();
+
+      await tester.pumpWidget(
+        threeTabHarness(
+          initialSelected: 'tab2',
+          textDirection: TextDirection.rtl,
+          onChangedSpy: changes.add,
+          tab2Key: tab2,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(tab2));
+      await tester.pump();
+      changes.clear();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.home);
+      await tester.pump();
+      expect(changes.last, 'tab1');
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pump();
+      expect(changes.last, 'tab3');
     });
   });
 
