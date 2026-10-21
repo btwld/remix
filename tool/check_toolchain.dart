@@ -4,10 +4,15 @@ import 'package:yaml/yaml.dart';
 
 /// The floor required by code that reaches consumer applications.
 ///
-/// Matches `mix` and `naked_ui` so the three can be installed together on the
-/// oldest Flutter any of them supports. It is the true minimum of the shipped
-/// package code and the Fortal source copied by the CLI.
+/// It is the true minimum of the shipped package code that does not depend on
+/// `mix`, so `naked_ui` and the asset packages install on older Flutter.
 const _consumerFloor = {'sdk': '>=3.11.0 <4.0.0', 'flutter': '>=3.41.0'};
+
+/// The floor for consumer packages that depend on `mix`.
+///
+/// Matches `mix` 2.3.0, the oldest release `remix` accepts. Declaring less
+/// would claim support for a Flutter on which `remix` cannot resolve.
+const _mixConsumerFloor = {'sdk': '>=3.12.0 <4.0.0', 'flutter': '>=3.44.0'};
 
 /// The floor everything workspace-only declares.
 ///
@@ -28,10 +33,12 @@ const _pureDartFloor = {'sdk': '>=3.12.0 <4.0.0'};
 /// application-owned Fortal preset. Every other member gets [_workspaceFloor].
 const _consumerFloorPackages = {
   'packages/naked_ui',
-  'packages/remix',
   'packages/remix_ui_fonts',
   'packages/remix_ui_icons',
 };
+
+/// Consumer packages that depend on `mix` and get [_mixConsumerFloor].
+const _mixConsumerPackages = {'packages/remix'};
 
 /// Workspace tools that intentionally declare no Flutter environment key.
 const _pureDartPackages = {'packages/remix_cli'};
@@ -62,7 +69,10 @@ void main() {
     return;
   }
 
-  final unknown = _consumerFloorPackages.difference(members.toSet());
+  final unknown = {
+    ..._consumerFloorPackages,
+    ..._mixConsumerPackages,
+  }.difference(members.toSet());
   final unknownPureDart = _pureDartPackages.difference(members.toSet());
   if (unknown.isNotEmpty || unknownPureDart.isNotEmpty) {
     stderr.writeln(
@@ -125,7 +135,7 @@ void main() {
       stderr.writeln('- $failure');
     }
     stderr.writeln(
-      'Both floors are declared in tool/check_toolchain.dart. Change them '
+      'The floors are declared in tool/check_toolchain.dart. Change them '
       'there first, then update the pubspecs to match.',
     );
     exitCode = 1;
@@ -133,19 +143,26 @@ void main() {
     return;
   }
 
+  final workspaceOnly =
+      members.length +
+      1 -
+      _consumerFloorPackages.length -
+      _mixConsumerPackages.length -
+      _pureDartPackages.length;
   stdout.writeln(
     'Toolchain floors are consistent: ${_consumerFloorPackages.length} '
     'consumer-source packages on Flutter ${_consumerFloor['flutter']}, '
+    '${_mixConsumerPackages.length} Mix consumer on Flutter '
+    '${_mixConsumerFloor['flutter']}, '
     '${_pureDartPackages.length} pure-Dart tool on Dart '
-    '${_pureDartFloor['sdk']}, and '
-    '${members.length + 1 - _consumerFloorPackages.length - _pureDartPackages.length} '
-    'workspace-only packages '
+    '${_pureDartFloor['sdk']}, and $workspaceOnly workspace-only packages '
     'on Flutter ${_workspaceFloor['flutter']}.',
   );
 }
 
 Map<String, String> _expectedFloor(String relativePath) {
   if (_consumerFloorPackages.contains(relativePath)) return _consumerFloor;
+  if (_mixConsumerPackages.contains(relativePath)) return _mixConsumerFloor;
   if (_pureDartPackages.contains(relativePath)) return _pureDartFloor;
   return _workspaceFloor;
 }

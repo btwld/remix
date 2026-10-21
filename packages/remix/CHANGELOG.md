@@ -2,9 +2,17 @@
 
 ### Breaking changes
 
+- Require Flutter 3.44 and Dart 3.12, the floor of `mix` 2.3.0. Applications
+  on older Flutter keep resolving 1.0.0-beta.11.
 - Rename `RemixStyleSpecBuilder.trackFocusHighlightMode` to
-  `trackFocusVisibility`. It now rebuilds on Mix's `FocusVisibility` instead
-  of Flutter's focus highlight mode.
+  `trackFocusVisibility`. It now mounts Mix's `FocusVisibilityScope` instead
+  of tracking Flutter's focus highlight mode.
+
+### Features
+
+- Generated styler gradient factories (`linearGradient`, `radialGradient`,
+  `sweepGradient`, and their `foreground…` forms) accept `transform`, as Mix's
+  instance methods do.
 
 ### Fixes
 

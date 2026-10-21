@@ -65,7 +65,7 @@ ContextToken<Color> playgroundByBrightness({
 final _byBrightness =
     <(MixToken<Color>, MixToken<Color>), ContextToken<Color>>{};
 
-/// The keyboard focus ring: a 3px band of `ring` at half strength.
+/// The focus ring: a 3px band of `ring` at half strength.
 ///
 /// A 3px band of [color] at [alpha] (or [dark] in a dark theme), drawn
 /// outside the control with no offset, for a spec's Remix effects slot:
