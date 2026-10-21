@@ -353,7 +353,7 @@ failures before treating a screenshot as evidence that the sample works.
 
 ## Troubleshooting and evidence
 
-- **Pub cannot resolve beta.10:** check the absolute checkout path in `pubspec_overrides.yaml`.
+- **Pub cannot resolve `remix`:** the samples depend on `^1.0.0-beta.9` and resolve it through the absolute checkout path in `pubspec_overrides.yaml`; check that path.
 - **Missing generated class:** inspect the add command's generation error and the recipe's `part` declaration.
 - **Missing overlay or incorrect dialog text:** restore the complete sample's application host and scope placement.
 - **No `primary` constructor:** use the Vanilla sample, which this pinned walkthrough selects as `default`, or the `solid` constructor with `fortal`.

@@ -14,9 +14,6 @@
 #
 # Excluding them does not weaken coverage: the checker runs `flutter analyze`
 # over that exact source in the assembled app, where its dependencies are real.
-# `open_code/templates/` is deliberately *not* excluded -- it has no pubspec of
-# its own, so it analyzes in this context against the workspace's `remix` and
-# `mix_annotations`.
 analyzer:
   exclude:
     - open_code/fixture/**

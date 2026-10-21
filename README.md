@@ -260,6 +260,7 @@ Available components:
 - **IconButton** - Icon-based actions
 - **Switch** - Toggle controls
 - **Toggle** - Two-state on/off buttons
+- **Toggle Group** - Single-select options with roving keyboard focus
 - **Checkbox** - Multiple selection
 - **CheckboxGroup** - Coordinated multiple selection with composable checkbox visuals
 - **Radio** - Single selection from a group
@@ -282,15 +283,20 @@ Available components:
 - **Spinner** - Loading states
 
 ### Layout & Navigation
+- **App Bar** - Page header with a title, actions, and optional leading and bottom content
+- **Link** - Styled text that navigates when activated
 - **Tabs** - Tabbed navigation
 - **Accordion** - Collapsible content sections
 - **Disclosure** - A standalone trigger and inline expandable panel
 - **Menu** - Context menus and dropdowns
+- **Sidebar** - Navigation panel with a header, scrolling destinations, and a footer
 - **SegmentedControl** - Equal-segment controlled single selection
 
 ### Overlays
 - **Dialog** - Modal dialogs
+- **Popover** - Anchored overlay for supplementary content
 - **Tooltip** - Contextual help
+- **Toast** - Queued nonmodal notifications
 - **Callout** - Highlighted information blocks
 
 ## Who is Remix for?
