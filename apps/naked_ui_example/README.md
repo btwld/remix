@@ -17,99 +17,26 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Testing
 
-This example app includes comprehensive unit and integration tests for all Naked UI components.
-
-### Quick Start - Running Tests
-
-From the project root directory:
+From this directory, widget tests in `test/` (including goldens under `test/goldens/`) run with:
 
 ```bash
-# Run unit tests only
-dart tool/test.dart
-
-# Run all tests (unit + integration)
-dart tool/test.dart --all
-
-# Run integration tests only
-dart tool/test.dart --integration
-
-# Run specific component tests
-dart tool/test.dart --component=button
-dart tool/test.dart --component=textfield
-
-# Get detailed output for debugging
-dart tool/test.dart --all --verbose
+flutter test
 ```
 
-### Test Types
+That is the command `melos run ci:flutter` runs for this package. It does not run `integration_test/`.
 
-#### Unit Tests
-- Fast, isolated tests for widget behavior
-- Located in `test/widget_test.dart`
-- Run automatically on every test command
+Behavior coverage is aggregated in `integration_test/all_tests.dart`:
 
-#### Integration Tests
-- Full UI automation tests on macOS
-- Test real user interactions: hover, click, keyboard navigation
-- Located in `integration_test/components/`
-- Require macOS platform for UI testing
+```bash
+flutter test integration_test/all_tests.dart -d macos
+```
 
-### Available Integration Test Components
+Web disclosure semantics are a separate entry point. Flutter runs web
+integration tests only through `flutter drive`, with `chromedriver` listening
+on port 4444:
 
-- **button** - NakedButton interactions and states
-- **checkbox** - NakedCheckbox toggle and accessibility
-- **radio** - NakedRadio selection and groups
-- **slider** - NakedSlider dragging and value changes
-- **textfield** - NakedTextField input and validation
-- **select** - NakedSelect dropdown and selection
-- **popover** - NakedPopover positioning and dismissal
-- **tooltip** - NakedTooltip display and timing
-- **menu** - NakedMenu navigation and actions
-- **accordion** - NakedAccordion expand/collapse
-- **tabs** - NakedTabs switching and keyboard nav
-- **dialog** - NakedDialog modal behavior
-
-### Prerequisites
-
-1. **macOS platform support** (for integration tests):
-   ```bash
-   flutter create --platforms=macos .
-   ```
-
-2. **Flutter dependencies up to date**:
-   ```bash
-   flutter pub get
-   ```
-
-### Troubleshooting
-
-#### Integration Tests Hang or Fail
-
-1. **Check app runs manually first**:
-   ```bash
-   flutter run -d macos
-   ```
-
-2. **Run individual component tests**:
-   ```bash
-   dart tool/test.dart --component=button
-   ```
-
-3. **Use verbose output for details**:
-   ```bash
-   dart tool/test.dart --integration --verbose
-   ```
-
-#### Common Issues
-
-- **Timeout errors**: Integration tests have 5-minute timeout
-- **macOS permissions**: Grant screen recording/accessibility permissions if prompted
-- **Focus issues**: Tests automatically clean up focus state between runs
-- **Gesture cleanup**: Improved hover simulation prevents test interference
-
-#### Test Environment
-
-- **Platform**: macOS required for integration tests
-- **Timeout**: 5 minutes for full integration suite
-- **Environment**: `RUN_INTEGRATION=1` set automatically
-- **Reporter**: Compact by default, expanded with `--verbose`
+```bash
+flutter drive -d chrome \
+  --driver=test_driver/integration_test.dart \
+  --target=integration_test/web_disclosure_semantics.dart
+```

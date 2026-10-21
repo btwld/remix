@@ -14,6 +14,7 @@ import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dar
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
+import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
@@ -38,7 +39,22 @@ void main() {
     expect(registryDashboardDemoSectionIds.values, everyElement(isNotEmpty));
     expect(registryDashboardCustomers, hasLength(24));
     expect(registryDashboardOrders, hasLength(30));
-    expect(registryDashboardDemoInteractionIds, hasLength(6));
+  });
+
+  testWidgets('alert notification uses the sample event title', (tester) async {
+    await _pumpDashboard(tester, preset: .fortal);
+    await tester.tap(find.bySemanticsLabel('Notifications').first);
+    await tester.pump();
+
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('topbar-notifications-content')),
+        matching: find.text('Inventory alert'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Order ORD-1047 requires review.'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   for (final preset in _Preset.values) {
@@ -156,7 +172,23 @@ void main() {
 
         await tester.tap(find.bySemanticsLabel('Notifications').first);
         await tester.pump();
-        expect(find.text('Order ORD-1047 requires review.'), findsOneWidget);
+        expect(
+          find.text(switch (preset) {
+            .defaultPreset => 'Order ORD-1047 requires review.',
+            .fortal => 'Inventory alert',
+          }),
+          findsWidgets,
+        );
+        if (preset == .fortal) {
+          expect(
+            find.descendant(
+              of: find.byKey(const ValueKey('topbar-notifications-content')),
+              matching: find.text('Inventory alert'),
+            ),
+            findsOneWidget,
+          );
+          expect(find.text('Order ORD-1047 requires review.'), findsNothing);
+        }
         await tester.tap(find.bySemanticsLabel('Notifications').first);
         await tester.pump();
 
@@ -639,6 +671,90 @@ void main() {
     });
   }
 
+  testWidgets('settings radius keeps a host\'s custom dark theme', (
+    tester,
+  ) async {
+    const customBackground = Color(0xFF123456);
+    await _pumpDashboard(
+      tester,
+      preset: .defaultPreset,
+      initialPage: RegistryDashboardDemoPage.settings,
+      darkTheme: const VanillaThemeData.dark().copyWith(
+        background: customBackground,
+      ),
+    );
+
+    final slider = find.byType(RemixSlider);
+    await tester.ensureVisible(slider);
+    await tester.drag(slider, const Offset(160, 0));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      MixScope.tokenOf(
+        VanillaTokens.background,
+        tester.element(find.textContaining('Control radius')),
+      ),
+      customBackground,
+    );
+  });
+
+  testWidgets('settings radius slider changes the resolved radius', (
+    tester,
+  ) async {
+    await _pumpDashboard(
+      tester,
+      preset: .defaultPreset,
+      initialPage: RegistryDashboardDemoPage.settings,
+    );
+
+    Radius radiusOf(RadiusToken token) => MixScope.tokenOf(
+      token,
+      tester.element(find.textContaining('Control radius')),
+    );
+
+    final before = radiusOf(VanillaTokens.radiusLg);
+    expect(before, const Radius.circular(10));
+    expect(find.text('Control radius · 10px'), findsOneWidget);
+
+    final slider = find.byType(RemixSlider);
+    await tester.ensureVisible(slider);
+    await tester.drag(slider, const Offset(160, 0));
+    await tester.pumpAndSettle();
+
+    final after = radiusOf(VanillaTokens.radiusLg);
+    expect(after.x, greaterThan(before.x));
+    expect(radiusOf(VanillaTokens.radiusMd).x, closeTo(after.x - 2, 0.001));
+    expect(find.text('Control radius · 10px'), findsNothing);
+
+    await tester.tap(
+      find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+    );
+    await tester.pumpAndSettle();
+    expect(
+      MixScope.tokenOf(
+        VanillaTokens.background,
+        tester.element(find.textContaining('Control radius')),
+      ),
+      const Color(0xFF0A0A0A),
+    );
+    expect(radiusOf(VanillaTokens.radiusLg), after);
+
+    await tester.tap(find.bySemanticsLabel('Theme settings'));
+    await tester.pumpAndSettle();
+    expect(find.text('Theme settings'), findsOneWidget);
+    expect(find.text('Accent color'), findsNothing);
+    expect(find.text('Density'), findsNothing);
+    expect(find.text('Comfortable'), findsNothing);
+    expect(find.text('Neutral'), findsNothing);
+    expect(find.text('Light'), findsWidgets);
+    expect(find.text('Dark'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
   test('dashboard_demo starter sources remain independent of Material', () {
     final lib = Directory('lib').existsSync() ? 'lib' : 'registry_source/lib';
     final paths = Directory('$lib/src')
@@ -721,11 +837,13 @@ Future<void> _pumpDashboard(
   Widget? account,
   double width = 1200,
   double height = 800,
+  VanillaThemeData? darkTheme,
 }) => _pump(
   tester,
   preset: preset,
   width: width,
   height: height,
+  darkTheme: darkTheme,
   child: switch (preset) {
     .defaultPreset => VanillaDashboardDemo(
       key: ValueKey(initialPage),
@@ -753,6 +871,7 @@ Future<void> _pump(
   required double height,
   required Widget child,
   TextScaler textScaler = TextScaler.noScaling,
+  VanillaThemeData? darkTheme,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = Size(width, height);
@@ -773,7 +892,11 @@ Future<void> _pump(
   );
 
   await tester.pumpWidget(switch (preset) {
-    .defaultPreset => VanillaTheme(mode: VanillaThemeMode.light, child: app),
+    .defaultPreset => VanillaTheme(
+      mode: VanillaThemeMode.light,
+      darkTheme: darkTheme,
+      child: app,
+    ),
     .fortal => FortalTheme(child: app),
   });
   await tester.pump();

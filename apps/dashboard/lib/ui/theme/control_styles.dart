@@ -29,20 +29,12 @@ extension UiFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
   /// the pinned Chromium probes capture computed styles only, not
   /// `:focus-visible`, so it cannot be settled from the reference fixtures.
   /// Preserved as-is rather than unified on a guess.
-  ///
-  /// Tabs also leaves [strokeAlign] unset, but that is not a second
-  /// difference: `BorderSide` itself defaults to `strokeAlignInside`, so unset
-  /// and explicit resolve to the same -1.0. The parameter is nullable only so
-  /// tabs can keep expressing it as absent.
-  T uiFocusRing({
-    Color? color,
-    double? strokeAlign = BorderSide.strokeAlignInside,
-  }) => border(
+  T uiFocusRing({Color? color}) => border(
     .all(
       BorderSideMix(
         color: color ?? _focusRingColor(),
         width: _focusRingWidth(),
-        strokeAlign: strokeAlign,
+        strokeAlign: BorderSide.strokeAlignInside,
       ),
     ),
   );

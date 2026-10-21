@@ -102,11 +102,6 @@ class VanillaTabBar extends StatelessWidget {
 /// is darker than the list it would lift out of. In the line list the current
 /// tab is underlined in `foreground` instead.
 ///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's current tab has to be
-/// declared as a selected fragment too (`TabStyler().onSelected(...)`).
-///
 /// `builder` is deliberately not forwarded to the generated
 /// `VanillaTab`. Its type is `ValueWidgetBuilder<NakedTabState>`, and
 /// `NakedTabState` comes from `package:naked_ui`, which this layer does not

@@ -9,9 +9,10 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 final _key = GlobalKey();
 
 void _showToast(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
+  showRemixToast(
+    context,
+    RemixToastData(
+      title: message,
       duration: const Duration(milliseconds: 1200),
     ),
   );
@@ -22,25 +23,39 @@ Widget buildIconButtonUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
     child: Scaffold(
-      body: Center(
-        child: FortalIconButton(
-          onPressed: () {
-            _showToast(context, 'RemixIconButton pressed');
-          },
-          semanticLabel: 'Add',
-          enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
-          loading: context.knobs.boolean(label: 'Loading', initialValue: false),
-          icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
-          size: context.knobs.object.dropdown(
-            label: 'size',
-            options: FortalIconButtonSize.values,
-            labelBuilder: (size) => size.name,
-            initialOption: FortalIconButtonSize.size2,
-          ),
-          variant: context.knobs.object.dropdown(
-            label: 'variant',
-            options: FortalIconButtonVariant.values,
-            labelBuilder: (variant) => variant.name,
+      body: RemixToastScope(
+        style: fortalToastStyle(),
+        child: Builder(
+          builder: (context) => Center(
+            child: FortalIconButton(
+              onPressed: () => _showToast(context, 'RemixIconButton pressed'),
+              semanticLabel: 'Add',
+              enabled: context.knobs.boolean(
+                label: 'Enabled',
+                initialValue: true,
+              ),
+              loading: context.knobs.boolean(
+                label: 'Loading',
+                initialValue: false,
+              ),
+              icon:
+                  context.knobs.iconData(
+                    label: 'Icon',
+                    initialValue: Icons.add,
+                  ) ??
+                  Icons.add,
+              size: context.knobs.object.dropdown(
+                label: 'size',
+                options: FortalIconButtonSize.values,
+                labelBuilder: (size) => size.name,
+                initialOption: FortalIconButtonSize.size2,
+              ),
+              variant: context.knobs.object.dropdown(
+                label: 'variant',
+                options: FortalIconButtonVariant.values,
+                labelBuilder: (variant) => variant.name,
+              ),
+            ),
           ),
         ),
       ),

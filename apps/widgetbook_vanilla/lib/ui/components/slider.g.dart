@@ -22,11 +22,6 @@ part of 'slider.dart';
 /// `package:naked_ui` — a package this layer does not depend on. Reach for
 /// `RemixSlider` directly on the rare call site that needs to reword the
 /// announced value.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the recipe's hover thumb has to be
-/// declared as a hover fragment too (`SliderStyler().onHovered(...)`).
 class VanillaSlider extends StatelessWidget {
   const VanillaSlider({
     super.key,

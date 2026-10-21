@@ -22,16 +22,6 @@ part of 'divider.dart';
 /// It is also not named `variant`, so the generator emits no named
 /// constructors for it — an axis is a value a caller computes, not a
 /// hand-written choice.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// PlaygroundDivider(
-///   orientation: Axis.vertical,
-///   style: DividerStyler().color(PlaygroundTokens.muted()),
-/// )
-/// ```
 class PlaygroundDivider extends StatelessWidget {
   const PlaygroundDivider({
     super.key,

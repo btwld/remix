@@ -49,7 +49,6 @@ class Demo {
   final String title;
   final String category;
   final WidgetBuilder builder;
-  final String? sourceUrl;
   final List<String> tags;
 
   const Demo({
@@ -57,7 +56,6 @@ class Demo {
     required this.title,
     required this.category,
     required this.builder,
-    this.sourceUrl,
     this.tags = const [],
   });
 }
@@ -69,8 +67,6 @@ class DemoRegistry {
       title: 'Button – Basic',
       category: 'Button',
       builder: (_) => const button_basic_example.ButtonExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_button.0.dart',
       tags: ['button'],
     ),
     Demo(
@@ -78,8 +74,6 @@ class DemoRegistry {
       title: 'Button – Simple Builder',
       category: 'Button',
       builder: (_) => const button_builder_example.SimpleBuilderExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_button.1.dart',
       tags: ['button', 'builder'],
     ),
     Demo(
@@ -87,8 +81,6 @@ class DemoRegistry {
       title: 'Combobox – Basic',
       category: 'Combobox',
       builder: (_) => const combobox_example.ComboboxExample(),
-      sourceUrl:
-          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_combobox.0.dart',
       tags: ['combobox', 'autocomplete'],
     ),
     Demo(
@@ -96,8 +88,6 @@ class DemoRegistry {
       title: 'Checkbox – Basic',
       category: 'Checkbox',
       builder: (_) => const checkbox_basic_example.CheckboxExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_checkbox.0.dart',
       tags: ['checkbox'],
     ),
     Demo(
@@ -105,8 +95,6 @@ class DemoRegistry {
       title: 'Radio – Basic',
       category: 'Radio',
       builder: (_) => const radio_basic_example.RadioExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_radio.0.dart',
       tags: ['radio'],
     ),
     Demo(
@@ -114,8 +102,6 @@ class DemoRegistry {
       title: 'Scrollbar – Basic',
       category: 'Scrollbar',
       builder: (_) => const scrollbar_example.ScrollbarExample(),
-      sourceUrl:
-          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_scrollbar.0.dart',
       tags: ['scrollbar'],
     ),
     Demo(
@@ -123,8 +109,6 @@ class DemoRegistry {
       title: 'Select – Basic',
       category: 'Select',
       builder: (_) => const select_example.SimpleSelectExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_select.0.dart',
       tags: ['select'],
     ),
     Demo(
@@ -132,8 +116,6 @@ class DemoRegistry {
       title: 'Select – Checkmark',
       category: 'Select',
       builder: (_) => const select_checkmark_example.CheckmarkSelectExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_select.1.dart',
       tags: ['select', 'checkmark'],
     ),
     Demo(
@@ -141,8 +123,6 @@ class DemoRegistry {
       title: 'Select – Cyberpunk',
       category: 'Select',
       builder: (_) => const select_cyberpunk_example.CyberpunkSelectExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_select.2.dart',
       tags: ['select', 'cyberpunk', 'glow'],
     ),
     Demo(
@@ -150,8 +130,6 @@ class DemoRegistry {
       title: 'Tabs – Basic',
       category: 'Tabs',
       builder: (_) => const tabs_example.TabsExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_tabs.0.dart',
       tags: ['tabs'],
     ),
     Demo(
@@ -159,8 +137,6 @@ class DemoRegistry {
       title: 'Slider – Basic',
       category: 'Slider',
       builder: (_) => const slider_example.SliderExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_slider.0.dart',
       tags: ['slider'],
     ),
     Demo(
@@ -168,8 +144,6 @@ class DemoRegistry {
       title: 'TextField – Basic',
       category: 'TextField',
       builder: (_) => const textfield_example.TextFieldExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_textfield.0.dart',
       tags: ['textfield'],
     ),
     Demo(
@@ -177,8 +151,6 @@ class DemoRegistry {
       title: 'Menubar – Basic',
       category: 'Menubar',
       builder: (_) => const menubar_example.MenubarExample(),
-      sourceUrl:
-          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_menubar.0.dart',
       tags: ['menubar', 'menu'],
     ),
     Demo(
@@ -186,8 +158,6 @@ class DemoRegistry {
       title: 'Menu – Basic',
       category: 'Menu',
       builder: (_) => const menu_example.SimpleMenuExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_menu.0.dart',
       tags: ['menu'],
     ),
     Demo(
@@ -195,8 +165,6 @@ class DemoRegistry {
       title: 'Accordion – Basic',
       category: 'Accordion',
       builder: (_) => const accordion_example.AccordionExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_accordion.0.dart',
       tags: ['accordion'],
     ),
     Demo(
@@ -204,8 +172,6 @@ class DemoRegistry {
       title: 'Dialog – Basic',
       category: 'Dialog',
       builder: (_) => const dialog_basic_example.DialogExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_dialog.0.dart',
       tags: ['dialog'],
     ),
     Demo(
@@ -213,8 +179,6 @@ class DemoRegistry {
       title: 'Dialog – Alert',
       category: 'Dialog',
       builder: (_) => const dialog_basic_example.AlertDialogExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_dialog.0.dart',
       tags: ['dialog', 'alert'],
     ),
     Demo(
@@ -222,8 +186,6 @@ class DemoRegistry {
       title: 'Disclosure – Controlled and uncontrolled',
       category: 'Disclosure',
       builder: (_) => const disclosure_example.DisclosureExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_disclosure.0.dart',
       tags: ['disclosure', 'expansion', 'accessibility'],
     ),
     Demo(
@@ -231,8 +193,6 @@ class DemoRegistry {
       title: 'Link – Interaction states',
       category: 'Link',
       builder: (_) => const link_example.LinkExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_link.0.dart',
       tags: ['link', 'navigation', 'accessibility'],
     ),
     Demo(
@@ -240,8 +200,6 @@ class DemoRegistry {
       title: 'Popover – Basic',
       category: 'Popover',
       builder: (_) => const popover_example.PopoverExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_popover.0.dart',
       tags: ['popover'],
     ),
     Demo(
@@ -249,8 +207,6 @@ class DemoRegistry {
       title: 'Toggle – Basic',
       category: 'Toggle',
       builder: (_) => const toggle_example.ToggleButtonExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_toggle.0.dart',
       tags: ['toggle'],
     ),
     Demo(
@@ -258,8 +214,6 @@ class DemoRegistry {
       title: 'Toast – Stacked notifications',
       category: 'Toast',
       builder: (_) => const toast_example.ToastExample(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_toast.0.dart',
       tags: ['toast', 'notification', 'overlay', 'accessibility'],
     ),
     Demo(
@@ -267,8 +221,6 @@ class DemoRegistry {
       title: 'Tooltip – Basic',
       category: 'Tooltip',
       builder: (_) => const tooltip_example.TooltipExample(),
-      sourceUrl:
-          'https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_tooltip.0.dart',
       tags: ['tooltip', 'overlay'],
     ),
     Demo(
@@ -276,8 +228,6 @@ class DemoRegistry {
       title: 'Semantics - Playground',
       category: 'Semantics',
       builder: (_) => const semantics_playground.SemanticsPlayground(),
-      sourceUrl:
-          'https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_semantics_playground.dart',
       tags: ['semantics', 'accessibility', 'a11y'],
     ),
   ];

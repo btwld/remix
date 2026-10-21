@@ -225,9 +225,7 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
                                 .spacing(2),
                             children: [
                               {{typePrefix}}Text(
-                                event.kind == .alert
-                                    ? 'Order ORD-1047 requires review.'
-                                    : event.title,
+                                event.title,
                                 size: .size2,
                                 weight: _notificationsRead ? .regular : .medium,
                               ),

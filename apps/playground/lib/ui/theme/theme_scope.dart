@@ -65,6 +65,24 @@ class PlaygroundTheme extends StatelessWidget {
       .dependOnInheritedWidgetOfExactType<_PlaygroundInheritedTheme>()
       ?.data;
 
+  /// The light and dark values the closest scope resolved, or `null` when no
+  /// [PlaygroundTheme] is installed.
+  ///
+  /// A nested scope that adjusts one value, such as the radius, starts from
+  /// these instead of the stock presets so a host's custom pair survives.
+  static ({PlaygroundThemeData light, PlaygroundThemeData dark})? themesOf(
+    BuildContext context,
+  ) {
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<_PlaygroundInheritedTheme>();
+    if (scope == null) return null;
+
+    return (
+      light: scope.baseTheme ?? scope.data,
+      dark: scope.darkTheme ?? scope.data,
+    );
+  }
+
   /// The closest [PlaygroundThemeData].
   ///
   /// Throws when no [PlaygroundTheme] is installed above [context]; use

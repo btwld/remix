@@ -20,11 +20,6 @@ part of 'select.dart';
 /// same radius, same heights as the text field — because that is what it is.
 /// The panel matches the menu's, so a select and a menu opened side by side
 /// do not read as two systems.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. State fragments merge by state, not
-/// by depth: an override that must beat the trigger's focus ring has to be
-/// declared as a focus fragment too.
 class VanillaSelect<T> extends StatelessWidget {
   const VanillaSelect({
     super.key,

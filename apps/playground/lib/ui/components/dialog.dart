@@ -19,9 +19,6 @@ part 'dialog.g.dart';
 /// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
 /// in `mutedForeground` 8px below it, and the decisions sit at the trailing
 /// edge 16px below that.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 @MixWidget(target: RemixDialog.new)
 DialogStyler playgroundDialogStyle({
   DialogStyler style = const DialogStyler.create(),

@@ -32,9 +32,6 @@ part of 'data_table.dart';
 /// row drops it so the table does not draw a second line on top of its own
 /// bottom edge. A row under the pointer sits on `muted` at half strength and a
 /// selected row on `muted`.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class VanillaDataTable<T> extends StatelessWidget {
   const VanillaDataTable({
     super.key,

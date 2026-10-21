@@ -1,7 +1,7 @@
 # Fortal Scripts
 
 Development utilities for regenerating Fortal's Radix color data. Both scripts
-are run from this package root (`registry_source/fortal/`) and write paths
+are run from this package root (`registry_source/`) and write paths
 relative to it.
 
 These are **not** part of `melos run ci`. The Radix color table is pinned to
@@ -20,7 +20,7 @@ radix_colors.generated.json          # checked in; excluded from the published a
         │
         │  generate_radix_colors.dart
         ▼
-lib/src/theme/radix_colors.dart   # checked in; shipped
+lib/src/fortal/theme/radix_colors.dart   # checked in; shipped
 ```
 
 ### `extract_radix_tokens.dart`
@@ -44,7 +44,7 @@ The tarball URL and its integrity hash are recorded in
 ### `generate_radix_colors.dart`
 
 Renders `radix_colors.generated.json` into the Dart swatch table at
-`lib/src/theme/radix_colors.dart`.
+`lib/src/fortal/theme/radix_colors.dart`.
 
 ```sh
 fvm dart run scripts/generate_radix_colors.dart

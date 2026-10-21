@@ -39,18 +39,6 @@ part 'sidebar.g.dart';
 /// while hovered or current, and the current one is set at medium weight.
 /// Everything shares one 8px inset, so labels, destinations, and the footer
 /// line up on one left edge.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// VanillaSidebar(
-///   style: SidebarStyler().width(_shellSidebarWidth),
-///   sections: sections,
-///   selectedValue: current,
-///   onSelected: go,
-/// )
-/// ```
 @MixWidget(target: RemixSidebar.new)
 SidebarStyler vanillaSidebarStyle({
   SidebarStyler style = const SidebarStyler.create(),

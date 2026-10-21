@@ -186,7 +186,7 @@ void main() {
     final vanillaDemo = checker.focusedInventoryForTest('dashboard_demo');
     expect(
       vanillaDemo.where((path) => path.startsWith('recipes/dashboard/')),
-      hasLength(12),
+      hasLength(13),
     );
     final fortalDemo = checker.focusedInventoryForTest(
       'dashboard_demo',

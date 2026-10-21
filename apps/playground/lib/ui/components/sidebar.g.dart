@@ -36,18 +36,6 @@ part of 'sidebar.dart';
 /// while hovered or current, and the current one is set at medium weight.
 /// Everything shares one 8px inset, so labels, destinations, and the footer
 /// line up on one left edge.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// PlaygroundSidebar(
-///   style: SidebarStyler().width(_shellSidebarWidth),
-///   sections: sections,
-///   selectedValue: current,
-///   onSelected: go,
-/// )
-/// ```
 class PlaygroundSidebar<T extends Object> extends StatelessWidget {
   const PlaygroundSidebar({
     super.key,

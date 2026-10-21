@@ -20,9 +20,7 @@ Widget buildRadioUseCase(BuildContext context) {
           builder: (context, child) {
             return RemixRadioGroup<Theme>(
               groupValue: _state.value,
-              onChanged: (value) {
-                _state.update(value!);
-              },
+              onChanged: (value) => _state.value = value!,
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .start,
@@ -71,16 +69,7 @@ Widget buildRadioUseCase(BuildContext context) {
   );
 }
 
-class _ThemeState extends ValueNotifier<Theme> {
-  _ThemeState(super.value);
-
-  void update(Theme value) {
-    this.value = value;
-    notifyListeners();
-  }
-}
-
-_ThemeState _state = _ThemeState(Theme.dark);
+final _state = ValueNotifier(Theme.dark);
 
 @widgetbook.UseCase(name: 'Catalog', type: RemixRadio)
 Widget buildRadioCatalogUseCase(BuildContext context) {

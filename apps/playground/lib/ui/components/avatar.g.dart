@@ -28,9 +28,6 @@ part of 'avatar.dart';
 /// avatar stands for a person or an organisation, and that is a circle in
 /// every system this application is likely to sit beside; a theme that wants
 /// squircles overrides `borderRadius` in one place.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class PlaygroundAvatar extends StatelessWidget {
   const PlaygroundAvatar({
     super.key,

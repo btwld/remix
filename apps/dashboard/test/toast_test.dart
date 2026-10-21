@@ -195,11 +195,6 @@ Future<BuildContext> _pumpDashboard(WidgetTester tester) async {
   return tester.element(find.byType(UiDashboardDemo));
 }
 
-/// Advances past the toast entrance/exit transitions (180ms / 120ms) without
-/// `pumpAndSettle()`, which never completes on the full [DashboardApp]: the
-/// gallery display page's `UiSkeleton` keeps a `repeat(reverse: true)`
-/// shimmer animation running even while offstage in the shell's
-/// `IndexedStack`.
 Future<void> _settle(WidgetTester tester) async {
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));

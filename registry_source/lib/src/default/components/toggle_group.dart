@@ -51,10 +51,6 @@ enum VanillaToggleGroupSize {
 /// `RemixToggleGroupItem` resolves against. That is what makes an option in a
 /// loop impossible to leave unstyled, and it is why this file has one
 /// `@MixWidget` rather than two.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it. Because [variant] is a non-nullable
-/// enum, the generator also emits one named constructor per enum value.
 @MixWidget(target: RemixToggleGroup.new)
 ToggleGroupStyler vanillaToggleGroupStyle({
   VanillaToggleGroupVariant variant = .ghost,

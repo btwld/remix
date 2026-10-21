@@ -23,9 +23,6 @@ part of 'segmented_control.dart';
 /// It takes no variant. The whole point of the component is one shape — a
 /// recessed track with a raised current segment — and a second look would be
 /// a toggle group wearing the wrong name.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it.
 class PlaygroundSegmentedControl<T extends Object> extends StatelessWidget {
   const PlaygroundSegmentedControl({
     super.key,

@@ -95,16 +95,9 @@ class _{{typePrefix}}DashboardCustomersPageState
                   {{typePrefix}}Button.ghost(
                     size: .size1,
                     label: 'Archive',
-                    onPressed: () => showRemixToast(
+                    onPressed: () => _toast(
                       context,
-                      RemixToastData(
-                        title: '${_selectedIds.length} customers archived',
-                        icon: {{icon:checkCircled}},
-                        action: const RemixToastAction(
-                          label: 'Undo',
-                          onPressed: _noop,
-                        ),
-                      ),
+                      '${_selectedIds.length} customers archived',
                     ),
                   ),
                 ],
@@ -427,4 +420,3 @@ void _toast(BuildContext context, String title) => showRemixToast(
   context,
   RemixToastData(title: title, icon: {{icon:checkCircled}}),
 );
-void _noop() {}

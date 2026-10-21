@@ -69,16 +69,6 @@ const registryDashboardDemoSectionIds = {
   ],
 };
 
-/// The interaction identifiers exercised by the parity test suite.
-const registryDashboardDemoInteractionIds = <String>[
-  'navigate-and-retain-page-state',
-  'search-local-and-global',
-  'sort-select-bulk-undo-paginate',
-  'filter-export-row-actions',
-  'agent-success-permission-failure-retry-stop-copy-follow',
-  'appearance-notifications-theme-account',
-];
-
 /// The sidebar sections and destinations for the dashboard demo.
 final registryDashboardDemoSections =
     List<RemixSidebarSection<RegistryDashboardDemoPage>>.unmodifiable([

@@ -42,21 +42,16 @@ void main() {
     );
   });
 
-  test('tabs keeps solid focus-8 and an unset strokeAlign', () {
-    // The one caller that differs. `strokeAlign: null` must stay absent rather
-    // than pick up the parameter default — passing null explicitly is what
-    // bypasses it.
+  test('tabs keeps solid focus-8', () {
     expect(
-      TabStyler().fortalFocusRing(
-        color: FortalTokens.focus8(),
-        strokeAlign: null,
-      ),
+      TabStyler().fortalFocusRing(color: FortalTokens.focus8()),
       equals(
         TabStyler().border(
           .all(
             BorderSideMix(
               color: FortalTokens.focus8(),
               width: FortalTokens.focusRingWidth(),
+              strokeAlign: BorderSide.strokeAlignInside,
             ),
           ),
         ),

@@ -44,6 +44,21 @@ const _neutralTextInputPlaceholder = ContextToken<Color>(
   _resolveNeutralTextInputPlaceholder,
 );
 
+Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
+    {{typePrefix}}Tokens.accent12.resolve(context).withValues(alpha: alpha);
+
+final _softTextFieldPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.60),
+);
+
+final _softTextAreaPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.65),
+);
+
+final _softTextInputDisabledPlaceholder = ContextToken<Color>(
+  (context) => _resolveAccent12Alpha(context, 0.5),
+);
+
 /// {{typePrefix}}-themed preset for [RemixTextField].
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler {{valuePrefix}}TextFieldStyle({
@@ -70,7 +85,10 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
   final recipe = switch (variant) {
     .classic => _{{valuePrefix}}ApplyClassicTextInput(base),
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
-    .soft => _{{valuePrefix}}ApplySoftTextInput(base, placeholderOpacity: 0.60),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(
+      base,
+      placeholder: _softTextFieldPlaceholder,
+    ),
   };
 
   return recipe
@@ -169,7 +187,7 @@ TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
 
 TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
   TextFieldStyler base, {
-  required double placeholderOpacity,
+  required ContextToken<Color> placeholder,
 }) => base
     .merge(
       TextFieldStyler(
@@ -186,11 +204,7 @@ TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
     )
     .textColor({{typePrefix}}Tokens.accent12())
     .text(.selectionColor({{typePrefix}}Tokens.accentA5()))
-    .onEnabled(
-      .hintText(
-        .color({{typePrefix}}Tokens.accent12().withValues(alpha: placeholderOpacity)),
-      ),
-    )
+    .onEnabled(.hintText(.color(placeholder())))
     .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()))
     .color({{typePrefix}}Tokens.accentA3())
     .containerEffects(
@@ -238,7 +252,7 @@ TextFieldStyler _{{valuePrefix}}NeutralTextInputDisabledStyle() =>
 
 TextFieldStyler _{{valuePrefix}}SoftTextInputDisabledStyle() =>
     _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
-      .color({{typePrefix}}Tokens.accent12().withValues(alpha: 0.5)),
+      .color(_softTextInputDisabledPlaceholder()),
     );
 
 TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
@@ -339,7 +353,10 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
   final recipe = switch (variant) {
     .classic => _{{valuePrefix}}ApplyClassicTextInput(base),
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
-    .soft => _{{valuePrefix}}ApplySoftTextInput(base, placeholderOpacity: 0.65),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(
+      base,
+      placeholder: _softTextAreaPlaceholder,
+    ),
   };
 
   return recipe

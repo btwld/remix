@@ -23,16 +23,6 @@ part of 'progress.dart';
 /// Both are fully rounded rather than sharing the theme's control radius. The
 /// theme radius is authored for 32-40px controls; on an 8px bar anything
 /// short of a full round reads as a rendering artifact.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
-///
-/// ```dart
-/// PlaygroundProgress(
-///   value: 0.4,
-///   style: ProgressStyler().indicatorColor(PlaygroundTokens.destructive()),
-/// )
-/// ```
 class PlaygroundProgress extends StatelessWidget {
   const PlaygroundProgress({
     super.key,

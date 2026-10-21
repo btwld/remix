@@ -10,7 +10,7 @@ class IconDataKnob extends Knob<IconData?> {
   List<Field> get fields => [
     ObjectDropdownField<IconDataEnum>(
       name: label,
-      initialValue: IconDataEnum.none,
+      initialValue: _enumFromIcon(initialValue),
       labelBuilder: (value) => value.name,
       values: IconDataEnum.values,
     ),
@@ -19,14 +19,12 @@ class IconDataKnob extends Knob<IconData?> {
   @override
   IconData? valueFromQueryGroup(Map<String, String> group) {
     final iconDataString = group[label];
-    if (iconDataString != null) {
-      final iconDataEnum = IconDataEnum.values.firstWhere(
-        (e) => e.toString() == 'IconDataEnum.$iconDataString',
-        orElse: () => IconDataEnum.home,
-      );
-      return _iconDataFromEnum(iconDataEnum);
-    }
-    return null;
+    if (iconDataString == null) return initialValue;
+    final iconDataEnum = IconDataEnum.values.firstWhere(
+      (e) => e.toString() == 'IconDataEnum.$iconDataString',
+      orElse: () => IconDataEnum.home,
+    );
+    return _iconDataFromEnum(iconDataEnum);
   }
 
   IconData? _iconDataFromEnum(IconDataEnum iconDataEnum) {
@@ -41,8 +39,16 @@ class IconDataKnob extends Knob<IconData?> {
   }
 }
 
+IconDataEnum _enumFromIcon(IconData? icon) {
+  if (icon == Icons.home) return IconDataEnum.home;
+  if (icon == Icons.settings) return IconDataEnum.settings;
+  if (icon == Icons.favorite) return IconDataEnum.favorite;
+  if (icon == Icons.add) return IconDataEnum.add;
+  if (icon == Icons.delete) return IconDataEnum.delete;
+  return IconDataEnum.none;
+}
+
 extension IconDataKnobBuilder on KnobsBuilder {
   IconData? iconData({required String label, IconData? initialValue}) =>
-      onKnobAdded(IconDataKnob(label: label, initialValue: initialValue)) ??
-      initialValue;
+      onKnobAdded(IconDataKnob(label: label, initialValue: initialValue));
 }
