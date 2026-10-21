@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -25,8 +26,13 @@ const _defaultTooltipAnimationStyle = AnimationStyle(
 /// [semanticLabel] maps to [RawTooltip.semanticsTooltip].
 ///
 /// Pass a [GlobalKey] to [tooltipKey] to show the tooltip imperatively via
-/// [RawTooltipState.ensureTooltipVisible]. [onOpenChanged] reports the visible
-/// state of the animation and does not control visibility.
+/// [RawTooltipState.ensureTooltipVisible]. [onOpenChanged] reports visibility
+/// and does not control it.
+///
+/// Only one [NakedTooltip] is visible at a time. Hover, focus, touch, or
+/// [tooltipKey] activation replaces the visible tooltip without moving focus,
+/// and the replaced tooltip disappears without an exit animation. Tooltips
+/// using the deprecated parameters below are not replaced.
 ///
 /// Setting any of the deprecated [open], [useRootOverlay], or
 /// [disableHoverableContent] parameters uses the legacy 1.1.0 implementation.
@@ -97,8 +103,9 @@ class NakedTooltip extends StatefulWidget {
 
   /// A callback invoked when the tooltip visible state changes.
   ///
-  /// [RawTooltip] owns visibility. Notifications arrive after the current
-  /// frame and stop when this widget is disposed.
+  /// [RawTooltip] owns visibility. A tooltip replaced by another reports
+  /// `false` at once. Notifications arrive after the current frame and stop
+  /// when this widget is disposed.
   ///
   /// When the deprecated [open] parameter is non-null, this callback requests a
   /// state change that the caller applies by updating [open].
@@ -172,8 +179,17 @@ class _NakedTooltipState extends State<NakedTooltip> {
   static final Set<_NakedTooltipState> _mountedTooltips =
       <_NakedTooltipState>{};
 
+  // The most recently activated tooltip. Hover, focus, touch, and command
+  // activation each supersede the previous one, hiding it.
+  static _NakedTooltipState? _current;
+
   final _childKey = GlobalKey();
   final _internalTooltipKey = GlobalKey<RawTooltipState>();
+  // Hides the overlay content as soon as another tooltip takes over, so the
+  // previous bubble's exit animation never overlaps the next bubble.
+  final _superseded = ValueNotifier<bool>(false);
+  // Whether RawTooltip's animation is not dismissed, including while closing.
+  bool _rawOpen = false;
   bool _visible = false;
   CurvedAnimation? _rawAnimation;
 
@@ -184,12 +200,6 @@ class _NakedTooltipState extends State<NakedTooltip> {
   bool _focusWithin = false;
   bool _triggerHovered = false;
   bool _contentHovered = false;
-  // Focus is holding the tooltip open; mouse exits must not close it.
-  bool _heldByFocus = false;
-  // Tracks whether pointer hover ever engaged this tooltip during its current
-  // open cycle so imperatively/manually opened tooltips are not dismissed as
-  // stale hover state when hovering another tooltip.
-  bool _hoveredWhileOpen = false;
   late OverlayPlacement _placement = _initialPlacement(widget.positioning);
   OverlayPlacement? _pendingPlacement;
 
@@ -269,6 +279,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
         widget.positioning.alignment != oldWidget.positioning.alignment) {
       _placement = _initialPlacement(widget.positioning);
     }
+    if (_usesLegacyTooltip && identical(_current, this)) _current = null;
     if (oldWidget.open != null && widget.open == null && _usesLegacyTooltip) {
       _visible = oldWidget.open!;
     }
@@ -281,7 +292,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
           if (mounted && !_usesLegacyTooltip) _show();
         });
       } else if (_visible) {
-        _reportVisibility(false);
+        _setVisible(false);
       }
     }
   }
@@ -289,61 +300,88 @@ class _NakedTooltipState extends State<NakedTooltip> {
   @override
   void dispose() {
     _mountedTooltips.remove(this);
+    if (identical(_current, this)) _current = null;
     _focusTimer?.cancel();
+    _superseded.dispose();
     super.dispose();
   }
 
   void _show() => _tooltipKey.currentState?.ensureTooltipVisible();
 
-  // RawTooltip cannot close a single tooltip, so this closes every open one.
-  // Snapshot any other actively held or hovered tooltips and restore them.
-  void _dismiss() {
-    _heldByFocus = false;
-    _hoveredWhileOpen = false;
-    final toRestore = <(_NakedTooltipState, bool, bool)>[
-      for (final tooltip in _mountedTooltips)
-        if (!identical(tooltip, this) &&
-            !tooltip._usesLegacyTooltip &&
-            tooltip._visible &&
-            (tooltip._heldByFocus ||
-                tooltip._triggerHovered ||
-                tooltip._contentHovered ||
-                !tooltip._hoveredWhileOpen ||
-                tooltip.widget.triggerMode == TooltipTriggerMode.manual))
-          (tooltip, tooltip._heldByFocus, tooltip._hoveredWhileOpen),
-    ];
-    RawTooltip.dismissAllToolTips();
-    for (final (tooltip, wasHeldByFocus, wasHoveredWhileOpen) in toRestore) {
-      if (wasHeldByFocus) tooltip._heldByFocus = true;
-      if (wasHoveredWhileOpen) tooltip._hoveredWhileOpen = true;
-      tooltip._show();
+  Iterable<_NakedTooltipState> get _others => _mountedTooltips.where(
+    (tooltip) => !identical(tooltip, this) && !tooltip._usesLegacyTooltip,
+  );
+
+  // Makes this the only tooltip that may be visible. RawTooltip already
+  // dismisses unhovered tooltips when another trigger is hovered, so hover
+  // passes dismissOthers: false. Focus and touch activation pass true.
+  void _activate({required bool dismissOthers}) {
+    _current = this;
+    _superseded.value = false;
+    var othersOpen = false;
+    for (final tooltip in _others) {
+      tooltip._supersede();
+      othersOpen = othersOpen || tooltip._rawOpen;
     }
+    if (dismissOthers && othersOpen) {
+      // RawTooltip can only dismiss every tooltip. The others are hidden
+      // already, so reopen this one if it was open.
+      final wasOpen = _rawOpen;
+      RawTooltip.dismissAllToolTips();
+      if (wasOpen) _show();
+    }
+    _syncVisibility();
   }
 
-  void _preserveNonHoverTooltips() {
-    final toPreserve = <_NakedTooltipState>[
-      for (final tooltip in _mountedTooltips)
-        if (!identical(tooltip, this) &&
-            !tooltip._usesLegacyTooltip &&
-            tooltip._visible &&
-            (tooltip._heldByFocus ||
-                !tooltip._hoveredWhileOpen ||
-                tooltip.widget.triggerMode == TooltipTriggerMode.manual))
-          tooltip,
-    ];
-    if (toPreserve.isEmpty) return;
-    // RawTooltip._handleMouseEnter dismisses all other unhovered tooltips when
-    // a new trigger is hovered. Reopen any focus-held or manually opened
-    // tooltips in a microtask after RawTooltip processes the enter event.
-    scheduleMicrotask(() {
-      for (final tooltip in toPreserve) {
-        if (!tooltip.mounted) continue;
-        if (tooltip._heldByFocus ||
-            !tooltip._hoveredWhileOpen ||
-            tooltip.widget.triggerMode == TooltipTriggerMode.manual) {
-          tooltip._show();
-        }
+  void _supersede() {
+    // A pending focus show must not take over from the new tooltip.
+    _focusTimer?.cancel();
+    _focusTimer = null;
+    if (_rawOpen) _superseded.value = true;
+    _syncVisibility();
+  }
+
+  // RawTooltip opened this tooltip without an activation seen here, such as a
+  // command through tooltipKey.
+  void _claim() {
+    _current = this;
+    if (!_others.any((tooltip) => tooltip._rawOpen)) {
+      _superseded.value = false;
+      return;
+    }
+    // This can run while the overlay builds, when the other tooltips cannot
+    // rebuild. Stay hidden for this frame and take over after it.
+    _superseded.value = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _rawOpen && identical(_current, this)) {
+        _activate(dismissOthers: true);
       }
+    });
+  }
+
+  void _handleRawStatus(AnimationStatus status) {
+    final open = !status.isDismissed;
+    // RawTooltip can also reopen a tooltip that is still closing.
+    final reopened = open && (!_rawOpen || status == AnimationStatus.forward);
+    _rawOpen = open;
+    if (!open) {
+      _contentHovered = false;
+      _superseded.value = false;
+    } else if (reopened && !identical(_current, this)) {
+      _claim();
+    }
+    _syncVisibility();
+  }
+
+  void _syncVisibility() => _setVisible(_rawOpen && !_superseded.value);
+
+  void _setVisible(bool visible) {
+    if (_visible == visible) return;
+    _visible = visible;
+    // The overlay can first report its status during build. Deliver from the
+    // owner so closing survives overlay removal, but not tooltip disposal.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) widget.onOpenChanged?.call(visible);
     });
   }
 
@@ -358,20 +396,17 @@ class _NakedTooltipState extends State<NakedTooltip> {
       } else {
         _focusTimer = Timer(widget.hoverDelay, _holdForFocus);
       }
+    } else if (widget.dismissDelay == Duration.zero) {
+      _closeForBlur();
     } else {
-      _heldByFocus = false;
-      if (widget.dismissDelay == Duration.zero) {
-        _closeForBlur();
-      } else {
-        _focusTimer = Timer(widget.dismissDelay, _closeForBlur);
-      }
+      _focusTimer = Timer(widget.dismissDelay, _closeForBlur);
     }
   }
 
   void _holdForFocus() {
     _focusTimer = null;
     if (!mounted || !_focusWithin) return;
-    _heldByFocus = true;
+    _activate(dismissOthers: true);
     // Also cancels a dismissal RawTooltip has already scheduled.
     _show();
   }
@@ -379,29 +414,32 @@ class _NakedTooltipState extends State<NakedTooltip> {
   void _closeForBlur() {
     _focusTimer = null;
     if (!mounted || _focusWithin || _triggerHovered || _contentHovered) return;
-    if (_visible) _dismiss();
+    // A replaced tooltip is hidden, so this cannot close its replacement.
+    if (_visible) RawTooltip.dismissAllToolTips();
   }
 
   void _handlePointerExit() {
     // RawTooltip schedules, or with a zero dismissDelay performs, its own
-    // dismissal on pointer exit. Reopen afterwards while focus holds it.
+    // dismissal on pointer exit. Reopen afterwards while focus holds it,
+    // unless another tooltip has taken over or Escape dismissed it.
     if (!_focusWithin) return;
     scheduleMicrotask(() {
-      if (!mounted || !_focusWithin) return;
-      _heldByFocus = true;
-      _show();
+      if (mounted && _focusWithin && identical(_current, this)) _show();
     });
   }
 
   static const _escapeActivator = SingleActivator(LogicalKeyboardKey.escape);
 
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
-    // Leave Escape to enclosing dismiss actions while the tooltip is closed.
-    if (!_visible ||
+    // Leave Escape to enclosing dismiss actions while no tooltip is visible.
+    // Otherwise close the visible tooltip, which may belong to another
+    // trigger, and keep focus from reopening the focused trigger's tooltip.
+    if (!(_current?._visible ?? false) ||
         !_escapeActivator.accepts(event, HardwareKeyboard.instance)) {
       return KeyEventResult.ignored;
     }
-    _dismiss();
+    _current = null;
+    RawTooltip.dismissAllToolTips();
 
     return KeyEventResult.handled;
   }
@@ -418,23 +456,6 @@ class _NakedTooltipState extends State<NakedTooltip> {
       if (mounted && next != null && next != _placement) {
         setState(() => _placement = next);
       }
-    });
-  }
-
-  void _reportVisibility(bool visible) {
-    if (_visible == visible) return;
-    _visible = visible;
-    if (visible) {
-      _hoveredWhileOpen = _triggerHovered || _contentHovered;
-    } else {
-      _heldByFocus = false;
-      _contentHovered = false;
-      _hoveredWhileOpen = false;
-    }
-    // The overlay can first report visibility during build. Deliver from the
-    // owner so closing survives overlay removal, but not tooltip disposal.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) widget.onOpenChanged?.call(visible);
     });
   }
 
@@ -493,18 +514,16 @@ class _NakedTooltipState extends State<NakedTooltip> {
           placement: _placement,
           child: MouseRegion(
             opaque: false,
-            onEnter: (_) {
-              _contentHovered = true;
-              if (_visible) _hoveredWhileOpen = true;
-            },
+            onEnter: (_) => _contentHovered = true,
             onExit: (_) {
               _contentHovered = false;
               _handlePointerExit();
             },
             child: _NakedTooltipOverlay(
               animation: animation,
+              superseded: _superseded,
               overlayBuilder: widget.overlayBuilder,
-              onOpenChanged: _reportVisibility,
+              onStatusChanged: _handleRawStatus,
               excludeSemantics: widget.excludeSemantics,
               excludeOverlaySemantics: widget.excludeOverlaySemantics,
               semanticLabel: widget.semanticLabel,
@@ -518,7 +537,11 @@ class _NakedTooltipState extends State<NakedTooltip> {
       enableTapToDismiss: widget.enableTapToDismiss,
       triggerMode: widget.triggerMode,
       enableFeedback: widget.enableFeedback,
-      onTriggered: widget.onTriggered,
+      onTriggered: () {
+        // RawTooltip shows the tooltip right after this callback.
+        _activate(dismissOthers: true);
+        widget.onTriggered?.call();
+      },
       animationStyle: animationStyle,
       positionDelegate: (position) {
         final placement = _resolvePlacement(
@@ -536,8 +559,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
       opaque: false,
       onEnter: (_) {
         _triggerHovered = true;
-        if (_visible) _hoveredWhileOpen = true;
-        _preserveNonHoverTooltips();
+        _activate(dismissOthers: false);
       },
       onExit: (_) {
         _triggerHovered = false;
@@ -582,16 +604,18 @@ OverlayPlacement _resolvePlacement(
 class _NakedTooltipOverlay extends StatefulWidget {
   const _NakedTooltipOverlay({
     required this.animation,
+    required this.superseded,
     required this.overlayBuilder,
-    required this.onOpenChanged,
+    required this.onStatusChanged,
     required this.excludeSemantics,
     required this.excludeOverlaySemantics,
     required this.semanticLabel,
   });
 
   final Animation<double> animation;
+  final ValueListenable<bool> superseded;
   final TooltipComponentBuilder overlayBuilder;
-  final ValueChanged<bool> onOpenChanged;
+  final ValueChanged<AnimationStatus> onStatusChanged;
   final bool excludeSemantics;
   final bool? excludeOverlaySemantics;
   final String? semanticLabel;
@@ -601,42 +625,45 @@ class _NakedTooltipOverlay extends StatefulWidget {
 }
 
 class _NakedTooltipOverlayState extends State<_NakedTooltipOverlay> {
-  // A zero-duration show on a still-mounted overlay jumps from dismissed
-  // straight to completed, so any status but dismissed means visible.
-  void _handleStatusChanged(AnimationStatus status) =>
-      widget.onOpenChanged(!status.isDismissed);
-
   @override
   void initState() {
     super.initState();
-    widget.animation.addStatusListener(_handleStatusChanged);
-    if (!widget.animation.isDismissed) widget.onOpenChanged(true);
+    widget.animation.addStatusListener(widget.onStatusChanged);
+    if (!widget.animation.isDismissed) {
+      widget.onStatusChanged(widget.animation.status);
+    }
   }
 
   @override
   void didUpdateWidget(covariant _NakedTooltipOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.animation != oldWidget.animation) {
-      oldWidget.animation.removeStatusListener(_handleStatusChanged);
-      widget.animation.addStatusListener(_handleStatusChanged);
+      oldWidget.animation.removeStatusListener(widget.onStatusChanged);
+      widget.animation.addStatusListener(widget.onStatusChanged);
     }
   }
 
   @override
   void dispose() {
-    widget.animation.removeStatusListener(_handleStatusChanged);
+    widget.animation.removeStatusListener(widget.onStatusChanged);
     // Replacing the raw tooltip's key removes its overlay without reversing.
-    widget.onOpenChanged(false);
+    widget.onStatusChanged(AnimationStatus.dismissed);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final child = widget.overlayBuilder(context, widget.animation);
-    final excludeOverlaySemantics =
-        widget.excludeSemantics ||
-        (widget.excludeOverlaySemantics ??
-            (widget.semanticLabel?.trim().isNotEmpty ?? false));
-    return excludeOverlaySemantics ? ExcludeSemantics(child: child) : child;
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.superseded,
+      builder: (context, superseded, _) {
+        if (superseded) return const SizedBox.shrink();
+        final child = widget.overlayBuilder(context, widget.animation);
+        final excludeOverlaySemantics =
+            widget.excludeSemantics ||
+            (widget.excludeOverlaySemantics ??
+                (widget.semanticLabel?.trim().isNotEmpty ?? false));
+        return excludeOverlaySemantics ? ExcludeSemantics(child: child) : child;
+      },
+    );
   }
 }

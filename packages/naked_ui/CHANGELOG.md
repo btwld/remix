@@ -4,6 +4,13 @@
 
 - Remove the remaining direct Material imports and unused Material icon-font
   declaration. Public APIs and application font bundling are unchanged.
+- Show one `NakedTooltip` at a time. Hover, focus, touch, and `tooltipKey`
+  activation now replace the visible tooltip, which disappears at once instead
+  of fading out under the next one. This reverses 1.2.1, which kept a focused
+  or `tooltipKey`-opened tooltip visible while another trigger was hovered.
+- A replaced `NakedTooltip` no longer reopens when the newer one closes, and a
+  newer activation cancels a pending focus show. Escape closes the visible
+  tooltip even when another trigger has focus.
 - Do not show touch selection handles in `NakedTextField` after a mouse
   secondary click, matching Flutter's `TextField`.
 
