@@ -4,17 +4,22 @@ import 'package:demo/ui/ui.dart';
 
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
+final _key = GlobalKey();
+
 @widgetbook.UseCase(name: 'Tooltip Component', type: RemixTooltip)
 Widget buildTooltipUseCase(BuildContext context) {
-  return Scaffold(
-    body: Center(
-      child: SizedBox(
-        height: 300,
-        width: 300,
-        child: Center(
-          child: FortalTooltip(
-            tooltipChild: const Text('Tooltip content'),
-            child: FortalButton(label: 'Hover me', onPressed: () {}),
+  return KeyedSubtree(
+    key: _key,
+    child: Scaffold(
+      body: Center(
+        child: SizedBox(
+          height: 300,
+          width: 300,
+          child: Center(
+            child: FortalTooltip(
+              tooltipChild: const Text('Tooltip content'),
+              child: FortalButton(label: 'Hover me', onPressed: () {}),
+            ),
           ),
         ),
       ),

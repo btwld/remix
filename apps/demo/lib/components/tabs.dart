@@ -4,49 +4,53 @@ import 'package:remix/remix.dart';
 import 'package:demo/ui/ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
+final _key = GlobalKey();
 final _tabState = ValueNotifier('tab1');
 
 @widgetbook.UseCase(name: 'Tabs Component', type: RemixTabs)
 Widget buildTabsUseCase(BuildContext context) {
-  return Scaffold(
-    body: Center(
-      child: SizedBox(
-        height: 300,
-        width: 300,
-        child: Center(
-          child: ListenableBuilder(
-            listenable: _tabState,
-            builder: (context, child) {
-              return RemixTabs(
-                selectedTabId: _tabState.value,
-                onChanged: (id) => _tabState.value = id,
-                child: ColumnBox(
-                  style: FlexBoxStyler().spacing(12),
-                  children: [
-                    FortalTabBar(
-                      child: RowBox(
+  return KeyedSubtree(
+    key: _key,
+    child: Scaffold(
+      body: Center(
+        child: SizedBox(
+          height: 300,
+          width: 300,
+          child: Center(
+            child: ListenableBuilder(
+              listenable: _tabState,
+              builder: (context, child) {
+                return RemixTabs(
+                  selectedTabId: _tabState.value,
+                  onChanged: (id) => _tabState.value = id,
+                  child: ColumnBox(
+                    style: FlexBoxStyler().spacing(12),
+                    children: [
+                      FortalTabBar(
+                        child: RowBox(
+                          children: [
+                            FortalTab(tabId: 'tab1', label: 'Tab 1'),
+                            FortalTab(tabId: 'tab2', label: 'Tab 2'),
+                          ],
+                        ),
+                      ),
+                      const RowBox(
                         children: [
-                          FortalTab(tabId: 'tab1', label: 'Tab 1'),
-                          FortalTab(tabId: 'tab2', label: 'Tab 2'),
+                          FortalTabView(
+                            tabId: 'tab1',
+                            child: Text('Content of tab 1'),
+                          ),
+                          FortalTabView(
+                            tabId: 'tab2',
+                            child: Text('Content of tab 2'),
+                          ),
                         ],
                       ),
-                    ),
-                    const RowBox(
-                      children: [
-                        FortalTabView(
-                          tabId: 'tab1',
-                          child: Text('Content of tab 1'),
-                        ),
-                        FortalTabView(
-                          tabId: 'tab2',
-                          child: Text('Content of tab 2'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

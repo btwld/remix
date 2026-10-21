@@ -5,6 +5,8 @@ import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
+final _key = GlobalKey();
+
 @widgetbook.UseCase(name: 'Avatar Component', type: RemixAvatar)
 Widget buildAvatarUseCase(BuildContext context) {
   final imageUrl = context.knobs.string(
@@ -12,29 +14,32 @@ Widget buildAvatarUseCase(BuildContext context) {
     initialValue: 'https://i.pravatar.cc/150?img=48',
   );
 
-  return Scaffold(
-    body: Center(
-      child: Row(
-        mainAxisAlignment: .center,
-        children: [
-          FortalAvatar(
-            label: 'LF',
-            foregroundImage: imageUrl.isNotEmpty
-                ? NetworkImage(imageUrl)
-                : null,
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalAvatarVariant.values,
-              labelBuilder: (variant) => variant.name,
+  return KeyedSubtree(
+    key: _key,
+    child: Scaffold(
+      body: Center(
+        child: Row(
+          mainAxisAlignment: .center,
+          children: [
+            FortalAvatar(
+              label: 'LF',
+              foregroundImage: imageUrl.isNotEmpty
+                  ? NetworkImage(imageUrl)
+                  : null,
+              variant: context.knobs.object.dropdown(
+                label: 'variant',
+                options: FortalAvatarVariant.values,
+                labelBuilder: (variant) => variant.name,
+              ),
+              size: context.knobs.object.dropdown(
+                label: 'size',
+                options: FortalAvatarSize.values,
+                labelBuilder: (size) => size.name,
+                initialOption: FortalAvatarSize.size3,
+              ),
             ),
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalAvatarSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalAvatarSize.size3,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
