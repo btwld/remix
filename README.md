@@ -96,14 +96,14 @@ button(
 Add Remix to your project:
 
 ```bash
-flutter pub add remix:^1.0.0-beta.11
+flutter pub add remix:^1.0.0-beta.12
 ```
 
 Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0-beta.11
+  remix: ^1.0.0-beta.12
 ```
 
 ### Your First Component

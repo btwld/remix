@@ -1,11 +1,5 @@
 ## 1.0.0-beta.12
 
- - **FIX**(remix): adopt Mix 2.3.0 focus visibility (#307).
- - **FIX**(naked-ui): hide touch selection handles after a mouse right-click (#293).
- - **FIX**(naked-ui): complete direct Material boundary cleanup (#292).
-
-## Unreleased
-
 ### Breaking changes
 
 - Require Flutter 3.44 and Dart 3.12, the floor of `mix` 2.3.0. Applications
@@ -28,6 +22,8 @@
   toggle group, segmented control, and menu items update when input switches
   between pointer and keyboard. Vanilla text fields still ring on click, as
   browsers do for text inputs. Requires `mix` 2.3.0.
+- Require `naked_ui ^1.2.2`: one tooltip at a time, and no touch selection
+  handles after a mouse right-click in text fields.
 
 ## 1.0.0-beta.11
 
