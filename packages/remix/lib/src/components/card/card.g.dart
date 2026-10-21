@@ -211,12 +211,14 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CardStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CardStyler.radialGradient({
     required List<Color> colors,
@@ -226,6 +228,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CardStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -234,6 +237,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CardStyler.sweepGradient({
     required List<Color> colors,
@@ -242,6 +246,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CardStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -249,6 +254,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CardStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -256,12 +262,14 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CardStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CardStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -271,6 +279,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CardStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -279,6 +288,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CardStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -287,6 +297,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CardStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -294,6 +305,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CardStyler.transform(
     Matrix4 value, {
@@ -466,6 +478,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -474,6 +487,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -486,6 +500,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -496,6 +511,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -507,6 +523,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -516,6 +533,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -526,6 +544,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -534,6 +553,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -546,6 +566,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -556,6 +577,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -567,6 +589,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -576,6 +599,7 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

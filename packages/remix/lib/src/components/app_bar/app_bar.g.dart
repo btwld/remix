@@ -279,12 +279,14 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AppBarStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AppBarStyler.radialGradient({
     required List<Color> colors,
@@ -294,6 +296,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AppBarStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -302,6 +305,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AppBarStyler.sweepGradient({
     required List<Color> colors,
@@ -310,6 +314,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AppBarStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -317,6 +322,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AppBarStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -324,12 +330,14 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AppBarStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AppBarStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -339,6 +347,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AppBarStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -347,6 +356,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AppBarStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -355,6 +365,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => AppBarStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -362,6 +373,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory AppBarStyler.transform(
     Matrix4 value, {
@@ -534,6 +546,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -542,6 +555,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -554,6 +568,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -564,6 +579,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -575,6 +591,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -584,6 +601,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -594,6 +612,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -602,6 +621,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -614,6 +634,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -624,6 +645,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -635,6 +657,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -644,6 +667,7 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

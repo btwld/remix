@@ -444,12 +444,14 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuTriggerStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuTriggerStyler.radialGradient({
     required List<Color> colors,
@@ -459,6 +461,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuTriggerStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -467,6 +470,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuTriggerStyler.sweepGradient({
     required List<Color> colors,
@@ -475,6 +479,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuTriggerStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -482,6 +487,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuTriggerStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -489,12 +495,14 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuTriggerStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuTriggerStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -504,6 +512,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuTriggerStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -512,6 +521,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuTriggerStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -520,6 +530,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuTriggerStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -527,6 +538,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuTriggerStyler.row() => MenuTriggerStyler().row();
   factory MenuTriggerStyler.column() => MenuTriggerStyler().column();
@@ -703,6 +715,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -711,6 +724,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -723,6 +737,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -733,6 +748,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -744,6 +760,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -753,6 +770,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -763,6 +781,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -771,6 +790,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -783,6 +803,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -793,6 +814,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -804,6 +826,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -813,6 +836,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1387,12 +1411,14 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuItemStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuItemStyler.radialGradient({
     required List<Color> colors,
@@ -1402,6 +1428,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuItemStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -1410,6 +1437,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuItemStyler.sweepGradient({
     required List<Color> colors,
@@ -1418,6 +1446,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuItemStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -1425,6 +1454,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuItemStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -1432,12 +1462,14 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuItemStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuItemStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -1447,6 +1479,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuItemStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -1455,6 +1488,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuItemStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -1463,6 +1497,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => MenuItemStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -1470,6 +1505,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory MenuItemStyler.row() => MenuItemStyler().row();
   factory MenuItemStyler.column() => MenuItemStyler().column();
@@ -1646,6 +1682,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().linearGradient(
@@ -1654,6 +1691,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1666,6 +1704,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().radialGradient(
@@ -1676,6 +1715,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1687,6 +1727,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().sweepGradient(
@@ -1696,6 +1737,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1706,6 +1748,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundLinearGradient(
@@ -1714,6 +1757,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1726,6 +1770,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundRadialGradient(
@@ -1736,6 +1781,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -1747,6 +1793,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       FlexBoxStyler().foregroundSweepGradient(
@@ -1756,6 +1803,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

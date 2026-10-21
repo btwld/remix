@@ -348,12 +348,14 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SliderStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SliderStyler.radialGradient({
     required List<Color> colors,
@@ -363,6 +365,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SliderStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -371,6 +374,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SliderStyler.sweepGradient({
     required List<Color> colors,
@@ -379,6 +383,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SliderStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -386,6 +391,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SliderStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -393,12 +399,14 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SliderStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SliderStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -408,6 +416,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SliderStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -416,6 +425,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SliderStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -424,6 +434,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SliderStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -431,6 +442,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SliderStyler.transform(
     Matrix4 value, {
@@ -603,6 +615,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return thumb(
       BoxStyler().linearGradient(
@@ -611,6 +624,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -623,6 +637,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return thumb(
       BoxStyler().radialGradient(
@@ -633,6 +648,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -644,6 +660,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return thumb(
       BoxStyler().sweepGradient(
@@ -653,6 +670,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -663,6 +681,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return thumb(
       BoxStyler().foregroundLinearGradient(
@@ -671,6 +690,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -683,6 +703,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return thumb(
       BoxStyler().foregroundRadialGradient(
@@ -693,6 +714,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -704,6 +726,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return thumb(
       BoxStyler().foregroundSweepGradient(
@@ -713,6 +736,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

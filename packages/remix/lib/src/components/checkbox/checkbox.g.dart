@@ -262,12 +262,14 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CheckboxStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CheckboxStyler.radialGradient({
     required List<Color> colors,
@@ -277,6 +279,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CheckboxStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -285,6 +288,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CheckboxStyler.sweepGradient({
     required List<Color> colors,
@@ -293,6 +297,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CheckboxStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -300,6 +305,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CheckboxStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -307,12 +313,14 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CheckboxStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CheckboxStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -322,6 +330,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CheckboxStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -330,6 +339,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CheckboxStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -338,6 +348,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => CheckboxStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -345,6 +356,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory CheckboxStyler.transform(
     Matrix4 value, {
@@ -517,6 +529,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -525,6 +538,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -537,6 +551,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -547,6 +562,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -558,6 +574,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -567,6 +584,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -577,6 +595,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -585,6 +604,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -597,6 +617,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -607,6 +628,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -618,6 +640,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -627,6 +650,7 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }

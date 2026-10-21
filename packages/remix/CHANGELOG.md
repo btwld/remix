@@ -1,3 +1,28 @@
+## Unreleased
+
+### Breaking changes
+
+- Require Flutter 3.44 and Dart 3.12, the floor of `mix` 2.3.0. Applications
+  on older Flutter keep resolving 1.0.0-beta.11.
+- Rename `RemixStyleSpecBuilder.trackFocusHighlightMode` to
+  `trackFocusVisibility`. It now mounts Mix's `FocusVisibilityScope` instead
+  of tracking Flutter's focus highlight mode.
+
+### Features
+
+- Generated styler gradient factories (`linearGradient`, `radialGradient`,
+  `sweepGradient`, and their `foreground…` forms) accept `transform`, as Mix's
+  instance methods do.
+
+### Fixes
+
+- Hide focus rings after a pointer press until the next keyboard input,
+  through Mix 2.3.0's `onFocusVisible`. On desktop, clicking a tab, slider
+  thumb, select, or menu trigger no longer leaves a ring. The slider thumb,
+  toggle group, segmented control, and menu items update when input switches
+  between pointer and keyboard. Vanilla text fields still ring on click, as
+  browsers do for text inputs. Requires `mix` 2.3.0.
+
 ## 1.0.0-beta.11
 
 ### Breaking changes

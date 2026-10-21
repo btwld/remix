@@ -237,12 +237,14 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SwitchStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SwitchStyler.radialGradient({
     required List<Color> colors,
@@ -252,6 +254,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SwitchStyler().radialGradient(
     colors: colors,
     stops: stops,
@@ -260,6 +263,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SwitchStyler.sweepGradient({
     required List<Color> colors,
@@ -268,6 +272,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SwitchStyler().sweepGradient(
     colors: colors,
     stops: stops,
@@ -275,6 +280,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SwitchStyler.foregroundLinearGradient({
     required List<Color> colors,
@@ -282,12 +288,14 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SwitchStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SwitchStyler.foregroundRadialGradient({
     required List<Color> colors,
@@ -297,6 +305,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SwitchStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
@@ -305,6 +314,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     focal: focal,
     focalRadius: focalRadius,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SwitchStyler.foregroundSweepGradient({
     required List<Color> colors,
@@ -313,6 +323,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) => SwitchStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
@@ -320,6 +331,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     startAngle: startAngle,
     endAngle: endAngle,
     tileMode: tileMode,
+    transform: transform,
   );
   factory SwitchStyler.transform(
     Matrix4 value, {
@@ -492,6 +504,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().linearGradient(
@@ -500,6 +513,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -512,6 +526,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().radialGradient(
@@ -522,6 +537,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -533,6 +549,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().sweepGradient(
@@ -542,6 +559,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -552,6 +570,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundLinearGradient(
@@ -560,6 +579,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
         begin: begin,
         end: end,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -572,6 +592,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundRadialGradient(
@@ -582,6 +603,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
         focal: focal,
         focalRadius: focalRadius,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
@@ -593,6 +615,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
+    GradientTransform? transform,
   }) {
     return container(
       BoxStyler().foregroundSweepGradient(
@@ -602,6 +625,7 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
         startAngle: startAngle,
         endAngle: endAngle,
         tileMode: tileMode,
+        transform: transform,
       ),
     );
   }
