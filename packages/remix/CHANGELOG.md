@@ -1,3 +1,9 @@
+## 1.0.0-beta.12
+
+ - **FIX**(remix): adopt Mix 2.3.0 focus visibility (#307).
+ - **FIX**(naked-ui): hide touch selection handles after a mouse right-click (#293).
+ - **FIX**(naked-ui): complete direct Material boundary cleanup (#292).
+
 ## Unreleased
 
 ### Breaking changes
