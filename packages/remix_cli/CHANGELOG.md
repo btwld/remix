@@ -1,3 +1,12 @@
+## Unreleased
+
+### Fixes
+
+- Make fewer GitHub API requests, which GitHub limits to 60 an hour without a
+  token. A registry pinned to a full commit SHA now resolves with no API
+  request, and a branch or tag with one instead of two. A missing repository
+  and a missing ref are still reported separately.
+
 ## 0.1.0
 
 Initial release of `remix_cli`: a command-line tool that installs editable Remix

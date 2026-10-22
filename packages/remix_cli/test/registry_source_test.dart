@@ -244,14 +244,12 @@ void main() {
           await registry.template(catalog.items['button']!.files.single),
           contains('{{typePrefix}}Button'),
         );
-        expect(
-          requests
-              .where((uri) => uri.host == 'api.github.com')
-              .last
-              .pathSegments
-              .last,
-          ref ?? 'main',
-        );
+        final api = requests.where((uri) => uri.host == 'api.github.com');
+        if (ref == sha) {
+          expect(api, isEmpty);
+        } else {
+          expect(api.last.pathSegments.last, ref ?? 'main');
+        }
       },
     );
   }
@@ -314,6 +312,62 @@ void main() {
       }
     },
   );
+
+  group('GitHub API use', () {
+    late List<Uri> requests;
+    late GitHubSources resolver;
+
+    setUp(() {
+      requests = [];
+      resolver = GitHubSources(
+        transport: (uri) async {
+          requests.add(uri);
+          return uri.path.contains('/commits/')
+              ? RegistryResponse(200, jsonEncode({'sha': sha}))
+              : const RegistryResponse(200, '{"default_branch":"main"}');
+        },
+      );
+    });
+
+    test('a full commit SHA resolves without any request', () async {
+      final source = await resolver.resolve(repository: 'owner/repo', ref: sha);
+      expect(source.revision, sha);
+      expect(source.ref, sha);
+      expect(requests, isEmpty);
+    });
+
+    test('a named ref resolves with one commit lookup', () async {
+      final source = await resolver.resolve(
+        repository: 'owner/repo',
+        ref: 'main',
+      );
+      expect(source.revision, sha);
+      expect(requests.map((uri) => uri.path), [
+        '/repos/owner/repo/commits/main',
+      ]);
+    });
+
+    test('no ref reads the default branch, then resolves it', () async {
+      final source = await resolver.resolve(repository: 'owner/repo');
+      expect(source.ref, 'main');
+      expect(requests.map((uri) => uri.path), [
+        '/repos/owner/repo',
+        '/repos/owner/repo/commits/main',
+      ]);
+    });
+
+    test('a short or uppercase SHA still goes through the API', () async {
+      await resolver.resolve(
+        repository: 'owner/repo',
+        ref: sha.substring(0, 7),
+      );
+      await resolver.resolve(repository: 'owner/repo', ref: 'A' * 40);
+      expect(requests.map((uri) => uri.pathSegments.last), [
+        'aaaaaaa',
+        'A' * 40,
+      ]);
+    });
+  });
 
   test('a missing ref reads as not found; other 422s stay failures', () async {
     Future<RegistrySource> resolveWith(RegistryResponse commit) =>

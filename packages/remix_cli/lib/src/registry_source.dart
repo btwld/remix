@@ -162,11 +162,20 @@ abstract interface class RegistrySources {
   RegistryReader open(RegistrySource pin, String preset);
 }
 
+final _fullCommitSha = RegExp(r'^[0-9a-f]{40}$');
+
 final class GitHubSources implements RegistrySources {
   const GitHubSources({this.transport = githubTransport});
   final RegistryTransport transport;
 
-  Future<String> _read(Uri uri, {String missing = 'file'}) async {
+  /// Reads [uri]. A 404 reports [missing]; GitHub's unknown-commit 422 reports
+  /// [missingRef] when given, so a missing ref reads apart from a missing
+  /// repository.
+  Future<String> _read(
+    Uri uri, {
+    String missing = 'file',
+    String? missingRef,
+  }) async {
     final RegistryResponse response;
     try {
       response = await transport(uri);
@@ -186,8 +195,9 @@ final class GitHubSources implements RegistrySources {
       );
     }
     if (response.statusCode == 404 || _isUnknownCommit(response)) {
+      final what = response.statusCode == 404 ? missing : missingRef ?? missing;
       throw FormatException(
-        'GitHub $missing not found: $uri. Check that the repository is public and the source exists.',
+        'GitHub $what not found: $uri. Check that the repository is public and the source exists.',
       );
     }
     if (response.statusCode != 200) {
@@ -212,9 +222,19 @@ final class GitHubSources implements RegistrySources {
     validateRegistryPath(path);
     if (ref != null && ref.isEmpty)
       throw const FormatException('Registry ref must not be empty.');
-    final metadata = await _api('/repos/$repository');
+    // A full commit SHA is already immutable, so it needs no API lookup. A
+    // missing commit surfaces on the first file read instead.
+    if (ref != null && _fullCommitSha.hasMatch(ref)) {
+      return RegistrySource(
+        repository: repository,
+        path: path,
+        ref: ref,
+        revision: ref,
+      );
+    }
     var requested = ref;
     if (requested == null) {
+      final metadata = await _api('/repos/$repository');
       final branch = metadata is Map ? metadata['default_branch'] : null;
       if (branch is! String || branch.isEmpty) {
         throw const FormatException('GitHub repository has no default branch.');
@@ -233,7 +253,8 @@ final class GitHubSources implements RegistrySources {
             requested,
           ],
         ),
-        missing: 'ref $requested',
+        missing: 'repository',
+        missingRef: 'ref $requested',
       ),
     );
     final sha = commit is Map ? commit['sha'] : null;
