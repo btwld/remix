@@ -1,3 +1,11 @@
+## 1.2.3
+
+### Fixes
+
+- In right-to-left `NakedTabBar`s, Home and End now move focus to the first
+  and last tab, matching the arrow keys, instead of the tabs at the visual
+  left and right edges.
+
 ## 1.2.2
 
 ### Fixes
