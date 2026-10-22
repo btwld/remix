@@ -1,9 +1,19 @@
-## Unreleased
+## 1.0.0-beta.13
 
 ### Breaking changes
 
 - Remove `createSpinnerWidget`, `SliderSpec.defaultTrackThickness`, and
   `RemixDisclosureSpec`.
+
+### Fixes
+
+- App bars, badges, data lists, data tables, and links keep the text wrapping
+  and overflow of an enclosing `DefaultTextStyle` when their content spec
+  leaves them unset.
+- Require `mix ^2.3.1`: when a value cannot be converted to a `Mix`, the
+  latest source now wins.
+- Require `naked_ui ^1.2.3`: Home and End in right-to-left tab bars move to
+  the first and last tab.
 
 ## 1.0.0-beta.12
 
