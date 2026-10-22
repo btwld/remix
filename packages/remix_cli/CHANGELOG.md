@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixes
+
+- Make fewer GitHub API requests: a full commit SHA needs none, and a branch or
+  tag needs one instead of two.
+
 ## 0.1.0
 
 Initial release of `remix_cli`: a command-line tool that installs editable Remix
