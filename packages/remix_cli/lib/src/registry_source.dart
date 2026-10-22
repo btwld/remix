@@ -168,9 +168,8 @@ final class GitHubSources implements RegistrySources {
   const GitHubSources({this.transport = githubTransport});
   final RegistryTransport transport;
 
-  /// Reads [uri]. A 404 reports [missing]; GitHub's unknown-commit 422 reports
-  /// [missingRef] when given, so a missing ref reads apart from a missing
-  /// repository.
+  /// Reads [uri], reporting a 404 as [missing] and GitHub's unknown-commit 422
+  /// as [missingRef], or [missing] when that is null.
   Future<String> _read(
     Uri uri, {
     String missing = 'file',

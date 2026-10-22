@@ -2,10 +2,8 @@
 
 ### Fixes
 
-- Make fewer GitHub API requests, which GitHub limits to 60 an hour without a
-  token. A registry pinned to a full commit SHA now resolves with no API
-  request, and a branch or tag with one instead of two. A missing repository
-  and a missing ref are still reported separately.
+- Make fewer GitHub API requests: a full commit SHA needs none, and a branch or
+  tag needs one instead of two.
 
 ## 0.1.0
 
