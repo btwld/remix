@@ -1,3 +1,10 @@
+## 1.0.0-beta.13
+
+> Note: This release has breaking changes.
+
+ - **FIX**(remix): keep ancestor text wrapping when the content spec is unset (#296).
+ - **BREAKING** **REFACTOR**(remix): drop unused scripts and stale public docs (#299).
+
 ## Unreleased
 
 ### Breaking changes
