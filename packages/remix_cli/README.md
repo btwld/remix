@@ -59,7 +59,7 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.12`, which `add` declares for you.
+Both presets require Remix `^1.0.0-beta.13`, which `add` declares for you.
 
 Global activation is convenient for experiments. Registry content remains
 pinned per project in `remix.yaml`:
