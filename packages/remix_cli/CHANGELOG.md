@@ -1,4 +1,7 @@
-## 0.1.1
+## 1.0.0-beta.0
+
+First 1.0 pre-release. Stable `0.1.0` stays published; this beta is opt-in,
+the same way Remix publishes `1.0.0-beta`.
 
 ### Fixes
 

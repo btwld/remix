@@ -1,2 +1,2 @@
 /// The version of the CLI.
-const remixCliVersion = '0.1.1';
+const remixCliVersion = '1.0.0-beta.0';
