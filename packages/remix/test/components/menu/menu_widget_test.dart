@@ -6,6 +6,8 @@ import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixBoxAdapter;
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -1061,6 +1063,178 @@ void main() {
       final item = tester.getRect(find.text('Copy'));
       expect(item.top, greaterThanOrEqualTo(trigger.bottom));
       expect(item.left, closeTo(trigger.left, 0.01));
+    });
+  });
+
+  group('RemixMenu anchor width', () {
+    Widget menu({
+      required double triggerWidth,
+      MenuStyler? style,
+      OverlayPositionConfig? positioning,
+      List<RemixMenuItemData<String>>? items,
+    }) {
+      return SizedBox(
+        width: triggerWidth,
+        child: RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items:
+              items ?? const [RemixMenuItem<String>(value: 'a', label: 'Copy')],
+          style: style ?? MenuStyler(),
+          positioning:
+              positioning ??
+              const OverlayPositionConfig(side: .bottom, alignment: .center),
+        ),
+      );
+    }
+
+    Future<void> open(WidgetTester tester) async {
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+    }
+
+    Rect triggerRect(WidgetTester tester) =>
+        tester.getRect(find.byType(RemixMenu<String>));
+
+    Rect panelRect(WidgetTester tester, String label) => tester.getRect(
+      find
+          .ancestor(
+            of: find.text(label),
+            matching: find.byType(RemixBoxAdapter),
+          )
+          .last,
+    );
+
+    final minWidthOverlay = MenuStyler().overlay(
+      FlexBoxStyler().minWidth(remixAnchorWidth()),
+    );
+
+    testWidgets('minWidth grows the panel to the trigger width', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        menu(triggerWidth: 240, style: minWidthOverlay),
+      );
+      await open(tester);
+
+      expect(triggerRect(tester).width, 240);
+      expect(panelRect(tester, 'Copy').width, 240);
+    });
+
+    testWidgets('width and maxWidth resolve to the trigger width', (
+      tester,
+    ) async {
+      const label =
+          'A very long menu item label that is wider than any trigger';
+      const items = [RemixMenuItem<String>(value: 'a', label: label)];
+
+      await tester.pumpRemixApp(
+        menu(
+          triggerWidth: 240,
+          items: items,
+          style: MenuStyler().overlay(
+            FlexBoxStyler().width(remixAnchorWidth()),
+          ),
+        ),
+      );
+      await open(tester);
+      expect(panelRect(tester, label).width, 240);
+
+      await tester.pumpRemixApp(
+        menu(
+          triggerWidth: 240,
+          items: items,
+          style: MenuStyler().overlay(
+            FlexBoxStyler().maxWidth(remixAnchorWidth()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(panelRect(tester, label).width, 240);
+    });
+
+    testWidgets('leaves the panel content-sized when the token is unused', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(menu(triggerWidth: 240));
+      await open(tester);
+
+      expect(panelRect(tester, 'Copy').width, lessThan(240));
+    });
+
+    testWidgets('follows a trigger resize while open', (tester) async {
+      await tester.pumpRemixApp(
+        menu(triggerWidth: 240, style: minWidthOverlay),
+      );
+      await open(tester);
+      expect(panelRect(tester, 'Copy').width, 240);
+
+      await tester.pumpRemixApp(
+        menu(triggerWidth: 320, style: minWidthOverlay),
+      );
+      await tester.pumpAndSettle();
+
+      expect(triggerRect(tester).width, 320);
+      expect(panelRect(tester, 'Copy').width, 320);
+    });
+
+    for (final direction in TextDirection.values) {
+      testWidgets('aligns the panel flush with the trigger in $direction', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          menu(
+            triggerWidth: 200,
+            style: minWidthOverlay,
+            positioning: const OverlayPositionConfig(
+              side: .bottom,
+              alignment: .start,
+            ),
+          ),
+          textDirection: direction,
+        );
+        await open(tester);
+
+        final trigger = triggerRect(tester);
+        final panel = panelRect(tester, 'Copy');
+        expect(panel.left, closeTo(trigger.left, 0.01));
+        expect(panel.right, closeTo(trigger.right, 0.01));
+        expect(panel.top, greaterThanOrEqualTo(trigger.bottom));
+      });
+    }
+
+    testWidgets('submenus reuse the width resolved for the root panel', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1200, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final menuController = MenuController();
+      final submenuController = MenuController();
+
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 240,
+          child: RemixMenu<String>(
+            controller: menuController,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            style: minWidthOverlay,
+            items: [
+              RemixMenuSubmenu<String>(
+                controller: submenuController,
+                label: 'More',
+                items: const [
+                  RemixMenuItem(value: 'archive', label: 'Archive'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      menuController.open();
+      await tester.pumpAndSettle();
+      submenuController.open();
+      await tester.pumpAndSettle();
+
+      expect(panelRect(tester, 'Archive').width, 240);
     });
   });
 

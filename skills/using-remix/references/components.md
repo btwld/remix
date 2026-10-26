@@ -74,7 +74,11 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   inert. `positioning` defaults to
   `OverlayPositionConfig(side: .bottom, alignment: .center)`.
   `RemixSelectTrigger` and `RemixSelectItem<T>` are data classes, not
-  widgets.
+  widgets. The menu is as wide as its content unless a style opts in with
+  `remixAnchorWidth()` (for example
+  `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
+  which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
+  overlays and to `0` anywhere else, `RemixPopover` included.
 
 ## Data display
 
@@ -181,7 +185,8 @@ routes and require a caller-provided `Navigator`; toasts require a
   content; the builder receives `NakedMenuState` and must return
   non-interactive content — never a nested button. The same
   `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no separate
-  Fortal trigger type.
+  Fortal trigger type. Size the panel from the trigger with
+  `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null

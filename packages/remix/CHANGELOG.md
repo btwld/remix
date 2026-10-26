@@ -1,3 +1,13 @@
+## Unreleased
+
+### Features
+
+- Add `remixAnchorWidth`, a token that resolves to the width of the trigger
+  that opened the surrounding `RemixSelect` or `RemixMenu` overlay, and to 0
+  elsewhere. Pass it to `minWidth`, `width`, or `maxWidth` in a select
+  `content` or `menuContainer` style, or a menu `overlay` style, to size the
+  panel from its trigger. Without it panels stay content-sized.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
