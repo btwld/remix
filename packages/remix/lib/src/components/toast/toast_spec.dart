@@ -1,5 +1,19 @@
 part of 'toast.dart';
 
+/// Where a [RemixToast] places its action relative to the message.
+enum RemixToastActionPlacement {
+  /// Beside the message, before the close button.
+  ///
+  /// A toast too narrow for that row at the current text scale falls back to
+  /// [below].
+  inline,
+
+  /// Under the title and description, aligned with their start. The icon,
+  /// message, and close button align to the top of the row, so the close
+  /// button stays at the trailing top corner.
+  below,
+}
+
 /// Resolved visual values for a [RemixToast].
 ///
 /// [action] and [closeButton] deliberately hold *unresolved* styles, which the
@@ -44,6 +58,14 @@ class ToastSpec with _$ToastSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
+  /// Where the action sits relative to the message.
+  ///
+  /// Null means [RemixToastActionPlacement.inline]. Being a spec field, a
+  /// variant can switch it, for example
+  /// `ToastStyler().onBreakpoint(.mobile, ToastStyler().actionPlacement(.below))`.
+  @override
+  final RemixToastActionPlacement? actionPlacement;
+
   const ToastSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<FlexBoxSpec>? content,
@@ -53,6 +75,7 @@ class ToastSpec with _$ToastSpec {
     this.action,
     this.closeButton,
     this.containerEffects,
+    this.actionPlacement,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        content = content ?? const StyleSpec(spec: FlexBoxSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),

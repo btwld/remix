@@ -76,7 +76,7 @@ class RemixToast extends StatelessWidget {
   final ToastSpec? styleSpec;
 
   /// The toast width, in logical pixels at the default text size, below which
-  /// the action and close button drop beneath the message.
+  /// an inline action drops beneath the message.
   ///
   /// About 160 for the chrome around the message (padding, icon, action, and
   /// close button) plus about 120 for a message column that stays readable.
@@ -89,6 +89,21 @@ class RemixToast extends StatelessWidget {
     Widget child,
   ) {
     return style == null ? child : StyleProvider<S>(style: style, child: child);
+  }
+
+  /// [container] with its cross axis aligned to the start, so the icon and
+  /// close button sit on the first line of a message with the action below it.
+  static StyleSpec<FlexBoxSpec> _alignedToTop(
+    StyleSpec<FlexBoxSpec> container,
+  ) {
+    final flex = container.spec.flex ?? const StyleSpec(spec: FlexSpec());
+    return container.copyWith(
+      spec: container.spec.copyWith(
+        flex: flex.copyWith(
+          spec: flex.spec.copyWith(crossAxisAlignment: .start),
+        ),
+      ),
+    );
   }
 
   Widget _buildContent(BuildContext context, ToastSpec spec) {
@@ -110,27 +125,79 @@ class RemixToast extends StatelessWidget {
             child: StyledIcon(icon: icon, styleSpec: spec.icon),
           )
         : null;
-    final controls = <Widget>[
-      if (action != null)
-        _inheritStyle<ButtonSpec>(
-          spec.action,
-          RemixButton(label: action.label, onPressed: action.onPressed),
-        ),
-      if (onDismiss != null)
-        _inheritStyle<IconButtonSpec>(
-          spec.closeButton,
-          RemixIconButton(
-            icon: null,
-            iconBuilder: (context, iconSpec, _) => RemixPathIcon(
-              glyph: RemixPathGlyph.cross,
-              styleSpec: StyleSpec(spec: iconSpec),
+    final actionButton = action == null
+        ? null
+        : _inheritStyle<ButtonSpec>(
+            spec.action,
+            RemixButton(label: action.label, onPressed: action.onPressed),
+          );
+    final closeButton = onDismiss == null
+        ? null
+        : _inheritStyle<IconButtonSpec>(
+            spec.closeButton,
+            RemixIconButton(
+              icon: null,
+              iconBuilder: (context, iconSpec, _) => RemixPathIcon(
+                glyph: RemixPathGlyph.cross,
+                styleSpec: StyleSpec(spec: iconSpec),
+              ),
+              semanticLabel: dismissLabel!,
+              onPressed: onDismiss,
             ),
-            semanticLabel: dismissLabel!,
-            onPressed: onDismiss,
-          ),
-        ),
-    ];
+          );
 
+    Widget row({required bool actionBelow}) {
+      if (!actionBelow) {
+        return RemixFlexBoxAdapter(
+          styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
+          children: [
+            ?leading,
+            // A loose fit lets long messages wrap while short ones keep their
+            // intrinsic width.
+            Flexible(child: message),
+            ?actionButton,
+            ?closeButton,
+          ],
+        );
+      }
+
+      // Both orders below differ from the geometry: the close button shares
+      // the first line with the title, yet it follows the action when read
+      // and when tabbing.
+      return FocusTraversalGroup(
+        policy: WidgetOrderTraversalPolicy(),
+        child: RemixFlexBoxAdapter(
+          styleSpec: _alignedToTop(spec.container),
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
+          children: [
+            ?leading,
+            Flexible(
+              child: Semantics(
+                container: true,
+                explicitChildNodes: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: spec.container.spec.flex?.spec.spacing ?? 0,
+                  children: [message, ?actionButton],
+                ),
+              ),
+            ),
+            ?closeButton,
+          ],
+        ),
+      );
+    }
+
+    if (actionButton == null) return row(actionBelow: false);
+    if (spec.actionPlacement == .below) return row(actionBelow: true);
+
+    // An inline action needs a row wide enough for it. LayoutBuilder cannot
+    // report intrinsic sizes, so such a toast must not sit under an
+    // IntrinsicWidth or IntrinsicHeight; set the placement to `below` there.
     return LayoutBuilder(
       builder: (context, parentConstraints) {
         // The container applies its own constraints below this builder, so
@@ -140,58 +207,7 @@ class RemixToast extends StatelessWidget {
             (styleConstraints?.enforce(parentConstraints) ?? parentConstraints)
                 .maxWidth;
         final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
-        final stackControls =
-            controls.isNotEmpty && width < _minInlineWidth * textScale;
-        if (!stackControls) {
-          return RemixFlexBoxAdapter(
-            styleSpec: spec.container,
-            direction: Axis.horizontal,
-            containerEffects: spec.containerEffects,
-            children: [
-              ?leading,
-              // A loose fit lets long messages wrap while short ones keep
-              // their intrinsic width.
-              Flexible(child: message),
-              ...controls,
-            ],
-          );
-        }
-
-        // Too narrow to share a row with the message: the controls trail it on
-        // their own row, so the message keeps the full width beside the icon.
-        // Children stay in reading order, so semantics traversal is unchanged.
-        final flex = spec.container.spec.flex;
-        final gap = flex?.spec.spacing ?? 0;
-        return RemixFlexBoxAdapter(
-          styleSpec: spec.container,
-          direction: Axis.horizontal,
-          containerEffects: spec.containerEffects,
-          children: [
-            Flexible(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: gap,
-                children: [
-                  RowBox(
-                    styleSpec: StyleSpec(spec: FlexBoxSpec(flex: flex)),
-                    children: [
-                      ?leading,
-                      Flexible(child: message),
-                    ],
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.end,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: gap,
-                    runSpacing: gap,
-                    children: controls,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
+        return row(actionBelow: width < _minInlineWidth * textScale);
       },
     );
   }
