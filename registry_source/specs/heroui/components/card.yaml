@@ -1,0 +1,25 @@
+component: Card
+widget: HeroUiCard, HeroUiCardTitle, HeroUiCardDescription
+target: "RemixCard; HeroUiCardTitle, HeroUiCardDescription compose Mix StyledText"
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/card.css]
+anatomy: [container, title, description]
+variants: [default (defaultCard), secondary, tertiary, transparent]
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - surface, surface-secondary, surface-tertiary, surface shadow
+  - radius-panel, foreground (title), muted (description), text-sm
+measurements:
+  - {what: padding, value: 16, cite: card-default}
+  - {what: radius, value: 24, cite: "card-default (radius-panel: min(32px, radius-3xl))"}
+  - {what: height with header, content, and footer, value: "148 = 16 + 24 + 20 + 12 + 24 + 12 + 24 + 16", cite: card-default}
+  - {what: shadow, value: "surface shadow on every fill but transparent", cite: "card-default, card-transparent"}
+  - {what: title, value: "14/24 medium foreground", cite: "card.css .card__title (text-sm leading-6 font-medium text-foreground)"}
+  - {what: description, value: "14/20 muted", cite: "card.css .card__description (text-sm leading-5 text-muted)"}
+approximations:
+  - RemixCard holds one child, so the header, content, and footer are plain widgets in a column spaced 12 (gap-3); only the title and description carry styles.
+  - HeroUI's default variant is defaultCard.
+  - HeroUiCardTitle equals HeroUiTypography(type bodySm, weight medium) and exists for parity with Card.Title; the description's leading-5 is the text-sm token's own 20/14, so it sets no height of its own.

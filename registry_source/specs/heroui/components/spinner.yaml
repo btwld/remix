@@ -1,0 +1,21 @@
+component: Spinner
+widget: HeroUiSpinner
+target: RemixSpinner
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/spinner.css, dist/themes/shared/theme.css]
+anatomy: [ring]
+variants: [accent, current, danger, success, warning]
+sizes: {supported: [sm, md, lg, xl], default: md}
+states: [spinning]
+tokens: [accent, danger, success, warning]
+measurements:
+  - {what: sizes, value: "16, 24, 32, 40", cite: spinner-accent-*}
+  - {what: ring, value: "center radius 9, thickness 3 at 24px (scales)", cite: "spinner icon paths"}
+  - {what: duration, value: "750ms linear", cite: "--animate-spin-fast"}
+  - {what: inline spinner, value: "a pending control's sm ring in the control's text colour", cite: "spinner-accent-sm for the size; button-pending, close-button-pending (color)"}
+approximations:
+  - heroUiInlineSpinnerStyle(color) is HeroUI's Spinner with color current and size sm inside a pending control. The current colour skips the accent default and the given colour replaces the inherited icon colour, which Remix's spinner does not read.
+  - Remix draws a solid 120 degree arc on HeroUI's ring; upstream fades a full ring.
+  - The spinner keeps spinning under reduced motion, because RemixSpinner does not read that setting; upstream stops it.

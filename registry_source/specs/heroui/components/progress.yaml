@@ -1,0 +1,26 @@
+component: Progress
+widget: HeroUiProgress
+target: RemixProgress
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/progress-bar.css, dist/components/meter.css]
+anatomy: [track, fill]
+variants: [default (defaultColor), accent, success, warning, danger]
+sizes: {supported: [sm, md, lg], default: md}
+states: [determinate]
+tokens:
+  - default (track), default-foreground, accent, success, warning, danger (fill)
+  - radius-xs, radius-sm, radius-md
+measurements:
+  - {what: track, value: "360 wide fixture; 4, 8, 12 high with radius 2, 4, 6 for sm, md, lg", cite: "progress-accent-sm-track, progress-accent-md-track, progress-accent-lg-track"}
+  - {what: fill, value: "the same height and radius, 60% of the track", cite: "progress-accent-sm-fill, progress-accent-md-fill, progress-accent-lg-fill"}
+  - {what: fill colors, value: "default-foreground, accent, success, warning, danger", cite: "progress-default-md-fill, progress-accent-md-fill, progress-success-md-fill, progress-warning-md-fill, progress-danger-md-fill"}
+  - {what: track color, value: default, cite: progress-accent-md-track}
+  - {what: width at 375, value: "327; fill 196.19", cite: "progress-accent-md-track (375), progress-accent-md-fill (375)"}
+approximations:
+  - HeroUI's Meter shares every style value with the progress bar (meter.css repeats progress-bar.css), so it is this recipe.
+  - The label and the value output are the app's composition; upstream's root adds them above the track (28, 32 and 36 high with a 20px label row and a 4px gap, `progress-accent-md-root`), and RemixProgress is the bar alone.
+  - "RemixProgress needs a value, so the indeterminate bar is not mapped: its fill is `w-2/5` (144 of 360, `progress-indeterminate-md-fill`) and sweeps for 1.5s."
+  - The fill does not animate its 300ms width change.
+  - RemixProgress has no enabled state, so `status-disabled` is not reachable.

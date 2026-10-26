@@ -1,0 +1,30 @@
+component: CheckboxGroup
+widget: HeroUiCheckboxGroup, HeroUiCheckboxGroupItem
+target: RemixCheckboxGroup, RemixCheckboxGroupItem
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/checkbox-group.css, dist/components/checkbox.css, dist/components/label.css, dist/components/field-error.css]
+anatomy: [label, options, description, error]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, selected, invalid, disabled]
+tokens:
+  - the checkbox's tokens (see checkbox.yaml)
+  - foreground, danger (group label), muted (group description), danger (group error)
+measurements:
+  - {what: option control, value: "the checkbox recipe: 16 control, radius 6", cite: "checkbox-group-primary-a-control"}
+  - {what: option label, value: "14/20 medium", cite: checkbox-group-primary-a-label}
+  - {what: control-label gap, value: 12, cite: checkbox-group-primary-a-content}
+  - {what: option spacing, value: "16 before each option, none before the group description", cite: "checkbox-group.css; checkbox-group-primary (148 = 20 + 16 + 40 + 16 + 40 + 16)"}
+  - {what: group description, value: "12/16 muted", cite: description.css}
+  - {what: invalid labels, value: danger, cite: checkbox-primary-invalid-label}
+  - {what: group error, value: "12/16 danger, 4px inset, after the description", cite: "field-error.css; search-primary-intrinsic-invalid-error"}
+  - {what: disabled option, value: 0.5, cite: checkbox-primary-disabled}
+approximations:
+  - The item recipe is the checkbox recipe on `RemixCheckboxGroupItem`, which carries its own label and a 24px tap target.
+  - Each option row is 24px tall (the touch target); upstream's content row is 20, so a group is 4px taller per option than `checkbox-group-primary`.
+  - The per-option description line that upstream has (`checkbox-group-primary-a-description`) is not offered, unlike the radio and switch groups; `RemixCheckboxGroupItem` takes one label.
+  - Group-level `invalid` reaches the label, the options, and the error line; upstream scopes it through context. The description stays and `errorText` follows it, as in the radio group.
+  - The required asterisk (`label--required`) is the app's, in the label text.
+  - Keyboard traversal is Tab through every option, as in a native checkbox group; React Aria's roving model is not reproduced.
