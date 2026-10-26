@@ -491,25 +491,28 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<MenuSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          builder: (context, spec) {
-            final inherited = Style.maybeOf<MenuSpec>(context);
-            final effectiveStyle = inherited is MenuStyler
-                ? inherited.merge(style)
-                : style;
-            return _RemixMenuItemsPanel<T>(
-              items: widget.items,
-              overlayStyleSpec: spec.overlay,
-              containerEffects: spec.containerEffects,
-              dividerStyleSpec: spec.divider,
-              hasRootSelectionCallback: widget.onSelected != null,
-              itemStyles: widget.styleSpec == null
-                  ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
-                  : _RemixMenuItemStyles.fromSpec(spec),
-            );
-          },
+        return RemixAnchorScope(
+          size: info.anchorRect.size,
+          child: RemixStyleSpecBuilder<MenuSpec>(
+            style: style,
+            styleSpec: widget.styleSpec,
+            builder: (context, spec) {
+              final inherited = Style.maybeOf<MenuSpec>(context);
+              final effectiveStyle = inherited is MenuStyler
+                  ? inherited.merge(style)
+                  : style;
+              return _RemixMenuItemsPanel<T>(
+                items: widget.items,
+                overlayStyleSpec: spec.overlay,
+                containerEffects: spec.containerEffects,
+                dividerStyleSpec: spec.divider,
+                hasRootSelectionCallback: widget.onSelected != null,
+                itemStyles: widget.styleSpec == null
+                    ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
+                    : _RemixMenuItemStyles.fromSpec(spec),
+              );
+            },
+          ),
         );
       },
       controller: _effectiveController,

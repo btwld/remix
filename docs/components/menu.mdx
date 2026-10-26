@@ -318,6 +318,56 @@ that panel directly contains a checkbox or radio group. Nested submenu panels
 decide this independently. A custom `trailingIcon` replaces the default
 directional submenu chevron.
 
+## Match the trigger width
+
+A menu panel is as wide as its widest row. `remixAnchorWidth` is the width of
+the trigger that opened the menu, so the panel can follow it, like CSS
+`min-width: var(--trigger-width)`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TriggerWidthMenuExample extends StatelessWidget {
+  const TriggerWidthMenuExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 240,
+      child: RemixMenu<String>(
+        trigger: const RemixMenuTrigger(label: 'Actions'),
+        positioning: const OverlayPositionConfig(
+          side: .bottom,
+          alignment: .start,
+        ),
+        style: MenuStyler().overlay(
+          FlexBoxStyler().minWidth(remixAnchorWidth()),
+        ),
+        items: const [
+          RemixMenuItem(value: 'copy', label: 'Copy'),
+          RemixMenuItem(value: 'paste', label: 'Paste'),
+        ],
+        onSelected: (value) => debugPrint(value),
+      ),
+    );
+  }
+}
+```
+
+- Pass it to `minWidth` for a panel at least as wide as the trigger, `width`
+  for exactly as wide, or `maxWidth` for no wider. The panel follows the
+  trigger if it resizes while open.
+- It is opt-in. Without it the panel stays as wide as its content.
+- The token resolves where the style is built. `RemixMenu` and `RemixSelect`
+  build their menu styles inside the overlay, so it works in the menu
+  `overlay` style. A style resolved outside the overlay, such as the trigger's
+  or a `RemixPopover`'s, reads `0`.
+- Submenu panels reuse the style resolved for the root panel, so they take the
+  root trigger's width.
+- A panel wider than its trigger is centered below it by default. Use
+  `alignment: .start`, as above, to align the edges.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -526,7 +576,8 @@ Configures the trigger button style.
 
 #### `overlay(FlexBoxStyler value)`
 
-Configures the menu overlay container style.
+Configures the menu overlay container style. Its `width`, `minWidth`, and
+`maxWidth` accept `remixAnchorWidth()` to follow the trigger width.
 
 #### `item(MenuItemStyler value)`
 

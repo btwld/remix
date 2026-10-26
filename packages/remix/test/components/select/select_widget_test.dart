@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixBoxAdapter;
 
 import '../../helpers/test_helpers.dart';
 
@@ -988,6 +990,182 @@ void main() {
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
       });
+    });
+
+    group('Anchor width', () {
+      Widget select({
+        required double triggerWidth,
+        SelectStyler? style,
+        String label = 'A',
+        OverlayPositionConfig? positioning,
+      }) {
+        return SizedBox(
+          width: triggerWidth,
+          child: RemixSelect<String>(
+            onChanged: (_) {},
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: [RemixSelectItem(value: 'a', label: label)],
+            style: style ?? SelectStyler(),
+            positioning:
+                positioning ??
+                const OverlayPositionConfig(side: .bottom, alignment: .center),
+          ),
+        );
+      }
+
+      Future<void> open(WidgetTester tester) async {
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+      }
+
+      Rect triggerRect(WidgetTester tester) =>
+          tester.getRect(find.byType(RemixSelect<String>));
+
+      Rect panelRect(WidgetTester tester, String label) => tester.getRect(
+        find
+            .ancestor(
+              of: find.text(label),
+              matching: find.byType(RemixBoxAdapter),
+            )
+            .last,
+      );
+
+      final minWidthContent = SelectStyler().content(
+        SelectContentStyler().minWidth(remixAnchorWidth()),
+      );
+
+      testWidgets('minWidth grows the panel to the trigger width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          select(triggerWidth: 240, style: minWidthContent),
+        );
+        await open(tester);
+
+        expect(triggerRect(tester).width, 240);
+        expect(panelRect(tester, 'A').width, 240);
+      });
+
+      testWidgets('width and maxWidth resolve to the trigger width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          select(
+            triggerWidth: 240,
+            label: 'A very long option label that is wider than any trigger',
+            style: SelectStyler().content(
+              SelectContentStyler().width(remixAnchorWidth()),
+            ),
+          ),
+        );
+        await open(tester);
+        expect(
+          panelRect(
+            tester,
+            'A very long option label that is wider than any trigger',
+          ).width,
+          240,
+        );
+
+        await tester.pumpRemixApp(
+          select(
+            triggerWidth: 240,
+            label: 'A very long option label that is wider than any trigger',
+            style: SelectStyler().content(
+              SelectContentStyler().maxWidth(remixAnchorWidth()),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          panelRect(
+            tester,
+            'A very long option label that is wider than any trigger',
+          ).width,
+          240,
+        );
+      });
+
+      testWidgets('keeps the content width when it exceeds the trigger', (
+        tester,
+      ) async {
+        const label = 'A very long option label that is wider than any trigger';
+        await tester.pumpRemixApp(
+          select(triggerWidth: 120, label: label, style: minWidthContent),
+        );
+        await open(tester);
+
+        expect(panelRect(tester, label).width, greaterThan(120));
+      });
+
+      testWidgets('leaves the panel content-sized when the token is unused', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(select(triggerWidth: 240));
+        await open(tester);
+
+        expect(panelRect(tester, 'A').width, lessThan(240));
+      });
+
+      testWidgets('follows a trigger resize while open', (tester) async {
+        await tester.pumpRemixApp(
+          select(triggerWidth: 240, style: minWidthContent),
+        );
+        await open(tester);
+        expect(panelRect(tester, 'A').width, 240);
+
+        await tester.pumpRemixApp(
+          select(triggerWidth: 320, style: minWidthContent),
+        );
+        await tester.pumpAndSettle();
+
+        expect(triggerRect(tester).width, 320);
+        expect(panelRect(tester, 'A').width, 320);
+      });
+
+      testWidgets('keeps the larger of a preset minimum and the trigger', (
+        tester,
+      ) async {
+        final presetMinimum = SelectStyler().content(
+          SelectContentStyler().minWidth(300),
+        );
+        final style = presetMinimum.menuContainer(
+          FlexBoxStyler().minWidth(remixAnchorWidth()),
+        );
+
+        await tester.pumpRemixApp(select(triggerWidth: 240, style: style));
+        await open(tester);
+        expect(panelRect(tester, 'A').width, 300);
+
+        await tester.pumpRemixApp(select(triggerWidth: 400, style: style));
+        await tester.pumpAndSettle();
+        expect(panelRect(tester, 'A').width, 400);
+      });
+
+      for (final direction in TextDirection.values) {
+        testWidgets('aligns the panel flush with the trigger in $direction', (
+          tester,
+        ) async {
+          await tester.pumpRemixApp(
+            select(
+              triggerWidth: 200,
+              style: minWidthContent,
+              positioning: const OverlayPositionConfig(
+                side: .bottom,
+                alignment: .start,
+              ),
+            ),
+            textDirection: direction,
+          );
+          await open(tester);
+
+          final trigger = triggerRect(tester);
+          final panel = panelRect(tester, 'A');
+          expect(panel.left, closeTo(trigger.left, 0.01));
+          expect(panel.right, closeTo(trigger.right, 0.01));
+          expect(panel.top, greaterThanOrEqualTo(trigger.bottom));
+        });
+      }
     });
 
     group('Layout Constraints', () {

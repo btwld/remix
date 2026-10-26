@@ -114,7 +114,7 @@ class _SelectExampleState extends State<SelectExample> {
         )
         .menuContainer(
           FlexBoxStyler()
-              .width(200)
+              .minWidth(remixAnchorWidth())
               .margin(.vertical(5))
               .padding(.all(6))
               .color(Colors.white)
@@ -124,6 +124,68 @@ class _SelectExampleState extends State<SelectExample> {
 }
 ```
 </CodeGroup>
+
+## Match the trigger width
+
+A select menu is as wide as its widest option. `remixAnchorWidth` is the width
+of the trigger that opened the menu, so a width on the menu can follow it, like
+CSS `min-width: var(--trigger-width)`:
+
+<CodeGroup title="Menu at least as wide as the trigger" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TriggerWidthSelectExample extends StatefulWidget {
+  const TriggerWidthSelectExample({super.key});
+
+  @override
+  State<TriggerWidthSelectExample> createState() =>
+      _TriggerWidthSelectExampleState();
+}
+
+class _TriggerWidthSelectExampleState extends State<TriggerWidthSelectExample> {
+  String? _selectedValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 280,
+      child: RemixSelect<String>(
+        trigger: const RemixSelectTrigger(placeholder: 'Pick a fruit'),
+        items: const [
+          RemixSelectItem(value: 'apple', label: 'Apple'),
+          RemixSelectItem(value: 'fig', label: 'Fig'),
+        ],
+        selectedValue: _selectedValue,
+        positioning: const OverlayPositionConfig(
+          side: .bottom,
+          alignment: .start,
+        ),
+        style: SelectStyler().content(
+          SelectContentStyler().minWidth(remixAnchorWidth()),
+        ),
+        onChanged: (value) => setState(() => _selectedValue = value),
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+- Pass it to `minWidth` for a menu at least as wide as the trigger, `width` for
+  exactly as wide, or `maxWidth` for no wider. The menu follows the trigger if
+  it resizes while open.
+- It is opt-in. Without it the menu stays as wide as its content.
+- The token resolves where the style is built. `RemixSelect` and `RemixMenu`
+  build their menu styles inside the overlay, so use it in the select `content`
+  and `menuContainer` styles or the menu `overlay` style. A style resolved
+  outside the overlay, such as the trigger's or a `RemixPopover`'s, reads `0`.
+- Merging a `minWidth` into `content` replaces a minimum already set there by a
+  preset. Put the token on `menuContainer` instead to keep that minimum: both
+  apply and the larger wins.
+- A menu wider than its trigger is centered below it by default. Use
+  `alignment: .start`, as above, to align the edges.
 
 ## Fortal widgets
 
@@ -283,6 +345,12 @@ Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 
 ### Select Style Methods
+
+#### `content(SelectContentStyler value)`
+
+Configures the box around the menu: its fill, border, padding, and
+constraints. Its `width`, `minWidth`, and `maxWidth` accept
+`remixAnchorWidth()` to follow the trigger width.
 
 #### `menuContainer(FlexBoxStyler value)`
 
