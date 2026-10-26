@@ -381,16 +381,13 @@ void main() {
       'explicit label and hint replace descendants without duplication',
       (tester) async {
         final handle = tester.ensureSemantics();
-        final focusNode = FocusNode();
-        addTearDown(focusNode.dispose);
         await tester.pumpWidget(
           buildApp(
-            NakedDisclosure(
-              focusNode: focusNode,
+            const NakedDisclosure(
               semanticLabel: 'Accessible details',
               semanticHint: 'Shows technical information',
-              child: const Text('Visible details'),
-              panel: const Text('Panel'),
+              child: Text('Visible details'),
+              panel: Text('Panel'),
             ),
           ),
         );
@@ -401,8 +398,6 @@ void main() {
         expect(data.hint, 'Shows technical information');
         expect(data.label, isNot(contains('Visible details')));
         expect(data.flagsCollection.isButton, isTrue);
-        expect(data.flagsCollection.isFocused, Tristate.isFalse);
-        expect(data.hasAction(SemanticsAction.focus), isTrue);
         expect(data.hasAction(SemanticsAction.tap), isTrue);
         final root = tester.getSemantics(find.byType(Scaffold));
         expect(
@@ -423,17 +418,9 @@ void main() {
           1,
         );
 
-        focusNode.requestFocus();
-        await tester.pump();
-        expect(
-          tester
-              .getSemantics(find.text('Visible details'))
-              .getSemanticsData()
-              .flagsCollection
-              .isFocused,
-          Tristate.isTrue,
-        );
         await tester.tap(find.text('Visible details'));
+        await tester.pump();
+        // The controlled panel's semantics settle a frame later on the web.
         await tester.pump();
         final expanded = tester.getSemantics(find.text('Visible details'));
         expect(
@@ -448,6 +435,38 @@ void main() {
         handle.dispose();
       },
     );
+
+    testWidgets('an explicit label keeps the focus action and focused state', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      await tester.pumpWidget(
+        buildApp(
+          NakedDisclosure(
+            focusNode: focusNode,
+            semanticLabel: 'Accessible details',
+            child: const Text('Visible details'),
+            panel: const Text('Panel'),
+          ),
+        ),
+      );
+
+      SemanticsData trigger() =>
+          tester.getSemantics(find.text('Visible details')).getSemanticsData();
+      expect(trigger().hasAction(SemanticsAction.focus), isTrue);
+      expect(trigger().flagsCollection.isFocused, Tristate.isFalse);
+
+      tester.semantics.performAction(
+        find.semantics.byLabel('Accessible details'),
+        SemanticsAction.focus,
+      );
+      await tester.pump();
+      expect(focusNode.hasFocus, isTrue);
+      expect(trigger().flagsCollection.isFocused, Tristate.isTrue);
+      handle.dispose();
+    });
 
     testWidgets(
       'explicit labels remain disabled when interaction is unavailable',
