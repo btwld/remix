@@ -3,6 +3,7 @@ import 'dart:ui' show SemanticsRole;
 import 'package:flutter/widgets.dart';
 
 import 'utilities/intents.dart';
+import 'utilities/reduced_motion.dart';
 
 /// Displays an urgent modal alert dialog without default styling.
 ///
@@ -20,6 +21,9 @@ import 'utilities/intents.dart';
 /// is never disposed by Naked UI. For irreversible work, prefer the least
 /// destructive action; long structured content may instead use a non-action
 /// focus target near its beginning.
+///
+/// Like [showNakedDialog], the route's transitions are skipped while reduced
+/// motion is requested.
 Future<T?> showNakedAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -154,6 +158,13 @@ class _NakedAlertDialogFocusState extends State<_NakedAlertDialogFocus> {
 ///
 /// Returns a [Future] with the value passed to [Navigator.pop], or null if dismissed.
 ///
+/// The route's transitions, including the barrier fade, are skipped while the
+/// user asks to reduce motion: when [MediaQueryData.disableAnimations] is set
+/// or the platform reports `AccessibilityFeatures.reduceMotion`, which iOS
+/// sets for Reduce Motion. [transitionDuration] is then ignored and
+/// [transitionBuilder] sees a completed animation. The setting is read when
+/// the dialog opens and again when it is dismissed.
+///
 /// Example:
 /// ```dart
 /// final result = await showNakedDialog<String>(
@@ -190,7 +201,8 @@ Future<T?> showNakedDialog<T>({
   );
 
   return navigator.push<T>(
-    RawDialogRoute<T>(
+    _NakedDialogRoute<T>(
+      reducedMotion: reducedMotionOf(context),
       pageBuilder:
           (
             BuildContext routeContext,
@@ -218,6 +230,40 @@ Future<T?> showNakedDialog<T>({
           traversalEdgeBehavior ?? TraversalEdgeBehavior.closedLoop,
     ),
   );
+}
+
+class _NakedDialogRoute<T> extends RawDialogRoute<T> {
+  _NakedDialogRoute({
+    required bool reducedMotion,
+    required super.pageBuilder,
+    required super.barrierDismissible,
+    required super.barrierColor,
+    required super.barrierLabel,
+    required super.transitionDuration,
+    required super.transitionBuilder,
+    required super.settings,
+    required super.requestFocus,
+    required super.anchorPoint,
+    required super.traversalEdgeBehavior,
+  }) : _reducedMotion = reducedMotion;
+
+  bool _reducedMotion;
+
+  @override
+  Duration get transitionDuration =>
+      _reducedMotion ? Duration.zero : super.transitionDuration;
+
+  @override
+  bool didPop(T? result) {
+    // The route's controller fixes its durations when the route is installed.
+    final context = subtreeContext;
+    if (context != null) {
+      _reducedMotion = reducedMotionOf(context);
+      controller!.reverseDuration = reverseTransitionDuration;
+    }
+
+    return super.didPop(result);
+  }
 }
 
 /// Provides modal dialog semantics and accessibility.
