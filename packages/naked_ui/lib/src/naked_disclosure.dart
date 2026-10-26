@@ -464,7 +464,12 @@ class _NakedDisclosureState extends State<NakedDisclosure>
                 : null,
             behavior: HitTestBehavior.opaque,
             excludeFromSemantics: true,
-            child: trigger,
+            // Replace only the visual trigger's name. The surrounding Focus
+            // still contributes focusability and focus actions to the button.
+            child: ExcludeSemantics(
+              excluding: hasReplacementLabel,
+              child: trigger,
+            ),
           );
 
           final focusableTrigger = NakedFocusableDetector(
@@ -497,7 +502,6 @@ class _NakedDisclosureState extends State<NakedDisclosure>
                 : null,
             label: hasReplacementLabel ? semanticLabel : null,
             hint: widget.semanticHint,
-            excludeSemantics: hasReplacementLabel,
             onTap: _isInteractive ? _handleTap : null,
             child: focusableTrigger,
           );

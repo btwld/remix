@@ -1,3 +1,11 @@
+## Unreleased
+
+### Fixes
+
+- Keep the focus action and focused state on a `NakedDisclosure` trigger that
+  sets `semanticLabel`. The label still replaces the trigger's visual content
+  for assistive technology, but no longer drops focus semantics.
+
 ## 1.2.3
 
 ### Fixes
