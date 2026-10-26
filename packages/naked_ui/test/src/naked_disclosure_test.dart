@@ -169,6 +169,34 @@ void main() {
   });
 
   group('interaction and shared state', () {
+    testWidgets('explicit-label trigger keeps Tab, Space, Enter, and pointer', (
+      tester,
+    ) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      await tester.pumpMaterialWidget(
+        NakedDisclosure(
+          focusNode: focusNode,
+          semanticLabel: 'Accessible details',
+          child: const Text('Visible details'),
+          panel: const Text('Panel'),
+        ),
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(focusNode.hasFocus, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+      expect(find.text('Panel'), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+      expect(find.text('Panel'), findsNothing);
+      await tester.tap(find.text('Visible details'));
+      await tester.pump();
+      expect(find.text('Panel'), findsOneWidget);
+    });
+
     testWidgets('activates with pointer, Enter, Space, and numpad Enter', (
       tester,
     ) async {
