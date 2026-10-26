@@ -464,8 +464,9 @@ class _NakedDisclosureState extends State<NakedDisclosure>
                 : null,
             behavior: HitTestBehavior.opaque,
             excludeFromSemantics: true,
-            // Replace only the visual trigger's name. The surrounding Focus
-            // still contributes focusability and focus actions to the button.
+            // Hide only the visual trigger's own semantics so the label
+            // replaces it. The surrounding Focus still gives the button its
+            // focusability and focus action.
             child: ExcludeSemantics(
               excluding: hasReplacementLabel,
               child: trigger,
