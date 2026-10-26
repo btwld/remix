@@ -46,7 +46,10 @@ void main() {
       final spec = tester.resolvedSpecOf<SelectTriggerSpec>(
         find.text('Choose'),
       );
-      expect(spec.containerEffects?.overContent, isNull);
+      expect(
+        spec.containerEffects?.outline.style ?? BorderStyle.none,
+        BorderStyle.none,
+      );
     });
   });
 
@@ -261,19 +264,14 @@ void main() {
         states: {WidgetState.focused},
       );
       final tokens = await _tokens(tester);
-      final ring = focused.trigger.spec.containerEffects!.overContent!;
+      final effects = focused.trigger.spec.containerEffects!;
 
-      expect(ring.shadows, hasLength(2));
-      expect(ring.shadows.first.kind, RemixBoxShadowKind.outer);
-      expect(ring.shadows.last.kind, RemixBoxShadowKind.inset);
-      expect(
-        ring.shadows.map((shadow) => shadow.color),
-        everyElement(tokens.focus8),
-      );
-      expect(
-        ring.shadows.map((shadow) => shadow.spreadRadius),
-        everyElement(1),
-      );
+      // Radix: `outline: 2px solid var(--focus-8); outline-offset: -1px`, so
+      // the 2px band runs from 1px inside the edge to 1px outside it.
+      expect(effects.outline.color, tokens.focus8);
+      expect(effects.outline.width, 2);
+      expect(effects.outlineOffset, -1);
+      expect(effects.overContent, isNull);
     });
 
     testWidgets(

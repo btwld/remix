@@ -12,6 +12,15 @@ enum FortalSliderSize { size1, size2, size3 }
 /// Radix Themes slider variants.
 enum FortalSliderVariant { classic, surface, soft }
 
+/// The accent-3 halo between a focused thumb and its ring.
+///
+/// Radix paints the thumb's focus as `0 0 0 3px accent-3, 0 0 0 5px focus-8`:
+/// a 3px halo with the ring on top of it. The ring starts where the halo ends
+/// and is [FortalTokens.focusRingWidth] wide. The halo is its own 3px, not the
+/// 2px `outline-offset` of the other outward rings, so it is not
+/// [FortalTokens.focusRingOffset].
+const _thumbFocusHalo = 3.0;
+
 /// Fortal slider with Radix-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
 SliderStyler fortalSliderStyle({
@@ -31,11 +40,16 @@ SliderStyler fortalSliderStyle({
       )
       .thickness(metrics.trackSize)
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
+        fortalFocusOutline(
+          FortalTokens.focus8(),
+          offset: _thumbFocusHalo,
+        ).overContent(
           RemixBoxEffectLayerMix(
             shadows: [
-              RemixBoxShadowMix(color: FortalTokens.accent3(), spreadRadius: 3),
-              RemixBoxShadowMix(color: FortalTokens.focus8(), spreadRadius: 5),
+              RemixBoxShadowMix(
+                color: FortalTokens.accent3(),
+                spreadRadius: _thumbFocusHalo,
+              ),
             ],
           ),
         ),
@@ -285,8 +299,9 @@ SliderStyler _fortalSliderDisabled(
         ),
       )
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
+        RemixBoxEffectsMix(
+          overContent: RemixBoxEffectLayerMix(shadows: const []),
+          outline: BorderSideMix(style: BorderStyle.none),
         ),
       )
       .blendMode(BlendMode.multiply);
