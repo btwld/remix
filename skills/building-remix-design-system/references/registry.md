@@ -2,7 +2,9 @@
 
 How a design system becomes a Remix registry: repository layout, authoring
 rules, derivation, the catalog format, and the publish-and-test loop. Examples
-use a system named "Acme" registered as `@acme`.
+use a third-party system named "Acme" registered as `@acme`. For a first-party
+preset in `btwld/remix`, follow `open_code/ADDING_PRESETS.md` in that checkout:
+reuse its authoring package, builder, and checkout consumer harness.
 
 ## Table of Contents
 
@@ -60,7 +62,9 @@ application.
   [`registry/vanilla/registry.yaml` on `registry-stable`](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/registry.yaml)
   rather than copying a version from memory. Upgrade them together.
 - `@MixWidget` recipe installs stay build-config-free. `@MixableSpec` installs
-  write a consumer `build.yaml` that enables the spec-styler builder.
+  write a consumer `build.yaml` that enables the spec-styler builder, scoped to
+  installed paths; existing filters and exclusions are checked. Prefer
+  `@MixWidget` wherever it expresses the target API.
 - Commit the generated `.g.dart` parts so the package analyzes and tests; they
   are not templates.
 
@@ -87,8 +91,13 @@ word of its own:
 | `const title = 'ACME';` | not replaced; ships as written | **no** |
 | file `acme_button.dart` or `AcmeButton.dart` | file names are not rendered | **no** |
 
-Write prose as "this design system"; keep upstream package names and
-provenance out of shipped source (they belong in `specs/` and the ADR).
+Write ordinary prose as "this design system"; keep research provenance in
+`specs/` and the ADR. **Required license, copyright, attribution, and change
+notices are an exception:** preserve them verbatim in the installed source,
+not only in private authoring records. Choose an authoring word that does not
+collide with those notices, or explicitly protect the notice text in the
+derivation and test its byte preservation. Never replace an upstream rights
+holder's name with the consumer prefix.
 
 **Imports.** Templates may import:
 
@@ -101,7 +110,8 @@ provenance out of shipped source (they belong in `specs/` and the ADR).
 - any other package the item declares under `dependencies`, as the official
   Vanilla catalog does for `mix_chart` (declare
   `naked_ui` with the constraint `remix` uses when a component needs behavior
-  Remix does not wrap);
+  Remix does not wrap; third-party registries only, first-party presets
+  compose or defer);
 - relative imports of files the same item or its dependencies install.
 
 **Fonts, icons, and assets.** The CLI writes Dart files into the UI folder
@@ -285,8 +295,11 @@ Item design rules:
 
 ## 6. Publish and test
 
-The CLI reads registries from GitHub only. Test every catalog or template
-change from a pushed branch in a scratch application initialized with the
+The production CLI reads registries from GitHub only. The Remix repository's
+internal checkout harness tests first-party changes without a push; it does
+not expose a local-registry CLI flag. For third-party distribution, when a
+push is authorized, test catalog or template changes from that branch in a
+scratch application initialized with the
 `vanilla` preset (the CLI refuses a Flutter older than its minimum and names
 the version it needs):
 
@@ -336,8 +349,8 @@ it should install only `@acme/*` items.
 
 | Not supported | Consequence |
 | --- | --- |
-| A preset other than `vanilla` or `fortal` | `registry add` fails: the project's preset must exist in every registry |
-| Private repositories, GitHub Enterprise, HTTP or local registries | publish publicly; test through pushed branches |
+| Initializing a preset absent from the official index | `init` resolves the official registry; accepting a preset identifier is not proof that the registry serves it. Every registered registry must offer the project's selected preset. |
+| Private repositories, GitHub Enterprise, HTTP or local registries in the production CLI | use public GitHub for distribution; first-party maintainers also have an internal checkout test harness |
 | Placeholders other than `{{typePrefix}}`, `{{valuePrefix}}`, and `{{icon:…}}` | installation fails with an unsupported-token error |
 | Changing a consumer's `defaultRegistry` from the CLI | consumers name items explicitly: `add @acme/button` |
 | An offline cache | installs need network access to github.com |

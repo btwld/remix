@@ -3,9 +3,13 @@
 See [pinned GitHub registries](REGISTRIES.md) for namespaces, revision updates,
 migration, and independent registry releases.
 
+For a new first-party design language, follow [Adding a preset](ADDING_PRESETS.md):
+source pinning, appearance evidence, and the builder, consumer, and CI
+integration required before a preset is installable.
+
 ## Current implementation
 
-The GitHub distribution provides two presets, `vanilla` and `fortal`. Both registry manifests
+The checkout derives three presets: `vanilla`, `fortal`, and `heroui`. Registry manifests
 and all templates are derived from analyzer-checked Dart by
 `tool/build_registry.dart`; none of the templates are hand-authored.
 
@@ -13,11 +17,13 @@ and all templates are derived from analyzer-checked Dart by
 registry_source/                 one private workspace package
   lib/src/default/              Vanilla theme, components, Agent recipes
   lib/src/fortal/               Fortal theme, components, Agent recipes
+  lib/src/heroui/               HeroUI theme and components
   lib/src/agent/                shared Agent behavior, models, support
   lib/src/dashboard/            shared dashboard composition
 registry/
   vanilla/                     derived registry.yaml and templates/
   fortal/                      derived registry.yaml and templates/
+  heroui/                      derived registry.yaml and templates/
 ```
 
 The accepted [registry-source ADR](../registry_source/docs/adr/fortal/0002-registry-source.md)
@@ -25,10 +31,13 @@ records the hard cutoff. The old package names are not consumer dependencies.
 Agent behavior stays private during authoring and installs as editable source;
 it is not a separately published runtime package.
 
+HeroUI styles Remix components; its scope and family map are recorded in
+[HeroUI ADR 0002](../registry_source/docs/adr/heroui/0002-reference-design-over-remix.md).
+
 ## Consumer contract
 
 A preset is chosen once at initialization. Theme tokens and component variants
-belong to that preset, so a consumer cannot mix the two preset trees.
+belong to that preset, so a consumer cannot mix preset trees.
 
 ```shell
 dart run remix_cli:remix init --prefix Acme --preset fortal
@@ -55,7 +64,8 @@ registries:
 resolved at install. Publish the CLI that understands those placeholders
 before publishing a registry that contains them.
 
-The index exposes `vanilla` and `fortal`; `default` was the name an earlier
+The checkout index exposes `vanilla`, `fortal`, and `heroui`; the served stable
+index gains a new preset only after registry promotion. `default` was the name an earlier
 prerelease used for `vanilla` and is not a preset any registry serves.
 Installed type names and token IDs use the consumer prefix, for example
 `AcmeButton` and `acme.accent.9`.
@@ -78,7 +88,9 @@ theme scope, routes, authentication, and persistence.
 Installed Dart imports the public `remix` API, not `registry_source`.
 `mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
 that use them. Vanilla's `theme` also declares `remix_ui_fonts`, because its
-themes set the type in Geist and Geist Mono; Fortal pins no font family. Items
+themes set the type in Geist and Geist Mono. HeroUI's `typography` item declares
+that package for Geist Mono Code/CodeBlock (a platform-font approximation);
+Fortal pins no font family. Items
 with generated parts declare the generation dependencies; the consumer generates
 its own adapters rather than copying authoring outputs.
 
@@ -108,9 +120,9 @@ dart run melos run open-code:registry:build
 dart run melos run open-code:registry:check
 ```
 
-The build command derives both presets. The check runs builder tests and
+The build command derives every preset. The check runs builder tests and
 compares the complete output trees, including unexpected or missing files.
-`--preset vanilla` or `--preset fortal` selects one preset when invoking
+`--preset vanilla`, `fortal`, or `heroui` selects one preset when invoking
 `tool/build_registry.dart` directly.
 
 ## Repository consumers
@@ -136,7 +148,7 @@ dart run melos run ci
 
 CI includes analysis, clean generation, formatting, registry derivation,
 parity, docs, package tests, installed-source comparisons, and fresh checkout
-consumers for both presets. Passing checkout checks does not establish hosted
+consumers for every preset. Passing checkout checks does not establish hosted
 release installability.
 
 [RELEASING.md](RELEASING.md) describes package dry-runs, hosted runtime checks,
@@ -154,3 +166,11 @@ of the source-tree migration.
 
 The original five-commit preset plan is preserved in Git history; it is not a
 pending execution checklist for this implementation.
+
+
+## HeroUI review surface
+
+`open_code/heroui_fixture` is the installed-source gallery for HeroUI. Run the
+consumer checker with `--preset heroui --source checkout --keep`; the retained
+app uses the `Acme` prefix. Worksheets live in `registry_source/specs/heroui/`
+and upstream evidence in `registry_source/reference/heroui_3_2_6/`.
