@@ -2,15 +2,17 @@ part of 'toast.dart';
 
 /// Where a [RemixToast] places its action relative to the message.
 enum RemixToastActionPlacement {
-  /// Beside the message, before the close button.
+  /// Beside the message, before the close button, while the message has room.
   ///
-  /// A toast too narrow for that row at the current text scale falls back to
-  /// [below].
+  /// A toast too narrow for that row at the current text scale uses the
+  /// [below] arrangement instead; a squeezed message is never wanted, so
+  /// there is no way to keep the row at that width.
   inline,
 
-  /// Under the title and description, aligned with their start. The icon,
-  /// message, and close button align to the top of the row, so the close
-  /// button stays at the trailing top corner.
+  /// Under the title and description, aligned with their start.
+  ///
+  /// The icon, message, and close button align to the top of the row, so the
+  /// close button stays on the first line, after the message.
   below,
 }
 
@@ -60,9 +62,11 @@ class ToastSpec with _$ToastSpec {
 
   /// Where the action sits relative to the message.
   ///
-  /// Null means [RemixToastActionPlacement.inline]. Being a spec field, a
-  /// variant can switch it, for example
-  /// `ToastStyler().onBreakpoint(.mobile, ToastStyler().actionPlacement(.below))`.
+  /// Null means [RemixToastActionPlacement.inline], which keeps the action in
+  /// the row while the message has room and otherwise uses the
+  /// [RemixToastActionPlacement.below] arrangement. Being a spec field, a
+  /// variant can switch it, for example `ToastStyler().onBreakpoint(
+  /// Breakpoint.maxWidth(768), ToastStyler().actionPlacement(.below))`.
   @override
   final RemixToastActionPlacement? actionPlacement;
 

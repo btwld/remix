@@ -232,6 +232,63 @@ void main() {
         expect(toast(tester).width, 200);
       });
 
+      testWidgets('subtracts the container margin from the width it measures', (
+        tester,
+      ) async {
+        await pumpToast(tester, availableWidth: 300);
+        expect(action(tester).top, lessThan(description(tester).bottom));
+
+        // 40 on each side leaves 220, below the cutoff, although the parent
+        // still offers 300.
+        await pumpToast(
+          tester,
+          availableWidth: 300,
+          style: ToastStyler().margin(.all(40)),
+        );
+        expect(tester.takeException(), isNull);
+        expect(
+          action(tester).top,
+          greaterThanOrEqualTo(description(tester).bottom),
+        );
+      });
+
+      testWidgets('keeps the same buttons when the layout flips', (
+        tester,
+      ) async {
+        await pumpToast(tester);
+        final actionElement = tester.element(find.byType(RemixButton));
+        final closeElement = tester.element(find.byType(RemixIconButton));
+
+        // Each step flips the arrangement: the narrow fallback, the placement
+        // style, and the text scale, in both directions.
+        for (final (width, scale, style) in [
+          (200.0, 1.0, null),
+          (800.0, 1.0, null),
+          (800.0, 1.0, below),
+          (800.0, 1.0, null),
+          (400.0, 2.0, null),
+          (400.0, 1.0, null),
+        ]) {
+          final wasBelow = action(tester).top >= description(tester).bottom;
+          await pumpToast(
+            tester,
+            availableWidth: width,
+            textScale: scale,
+            style: style,
+          );
+
+          expect(
+            action(tester).top >= description(tester).bottom,
+            isNot(wasBelow),
+          );
+          expect(tester.element(find.byType(RemixButton)), same(actionElement));
+          expect(
+            tester.element(find.byType(RemixIconButton)),
+            same(closeElement),
+          );
+        }
+      });
+
       testWidgets('raises the fallback width with the text scale', (
         tester,
       ) async {
@@ -252,7 +309,7 @@ void main() {
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
         final style = ToastStyler().onBreakpoint(
-          const Breakpoint.maxWidth(767),
+          const Breakpoint.maxWidth(768),
           below,
         );
 
