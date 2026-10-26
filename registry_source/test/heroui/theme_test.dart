@@ -258,30 +258,31 @@ void main() {
     expect(fromOverlay, green);
   });
 
-  testWidgets('the scope rebuilds for brightness, not other MediaQuery fields', (
-    tester,
-  ) async {
-    var scopeBuilds = 0;
-    debugOnRebuildDirtyWidget = (element, _) {
-      if (element.widget is HeroUiTheme) scopeBuilds++;
-    };
-    addTearDown(() => debugOnRebuildDirtyWidget = null);
-    const scope = HeroUiTheme(child: SizedBox());
-    Widget host(MediaQueryData data) => MediaQuery(
-      data: data,
-      child: const Directionality(textDirection: .ltr, child: scope),
-    );
+  testWidgets(
+    'the scope rebuilds for brightness, not other MediaQuery fields',
+    (tester) async {
+      var scopeBuilds = 0;
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (element.widget is HeroUiTheme) scopeBuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = null);
+      const scope = HeroUiTheme(child: SizedBox());
+      Widget host(MediaQueryData data) => MediaQuery(
+        data: data,
+        child: const Directionality(textDirection: .ltr, child: scope),
+      );
 
-    await tester.pumpWidget(host(const MediaQueryData()));
-    scopeBuilds = 0;
-    await tester.pumpWidget(
-      host(const MediaQueryData(viewInsets: EdgeInsets.only(bottom: 300))),
-    );
-    expect(scopeBuilds, 0, reason: 'keyboard insets');
+      await tester.pumpWidget(host(const MediaQueryData()));
+      scopeBuilds = 0;
+      await tester.pumpWidget(
+        host(const MediaQueryData(viewInsets: EdgeInsets.only(bottom: 300))),
+      );
+      expect(scopeBuilds, 0, reason: 'keyboard insets');
 
-    await tester.pumpWidget(
-      host(const MediaQueryData(platformBrightness: .dark)),
-    );
-    expect(scopeBuilds, 1, reason: 'system mode follows brightness');
-  });
+      await tester.pumpWidget(
+        host(const MediaQueryData(platformBrightness: .dark)),
+      );
+      expect(scopeBuilds, 1, reason: 'system mode follows brightness');
+    },
+  );
 }
