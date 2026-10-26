@@ -37,6 +37,10 @@ void main() {
     expect(scope.dismissLabel, 'Dismiss notification');
     expect(toast.style, isA<ToastStyler>());
     expect(const ToastSpec(), isA<ToastSpec>());
+    expect(
+      ToastStyler().actionPlacement(RemixToastActionPlacement.below),
+      isA<ToastStyler>(),
+    );
     expect(controller.isAttached, isFalse);
     expect(
       RemixToastDismissReason.values,
