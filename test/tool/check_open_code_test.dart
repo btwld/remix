@@ -67,7 +67,7 @@ void main() {
     });
 
     test('either preset can select an explicit source', () {
-      for (final preset in ['vanilla', 'fortal']) {
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
             '--preset',
@@ -410,16 +410,68 @@ import 'package:flutter/widgets.dart'
     });
   });
 
-  test('only Vanilla requires the fonts package in an installed app', () {
-    expect(
-      checker.requiredRuntimeDependenciesForTest('vanilla'),
-      contains('remix_ui_fonts'),
-    );
-    expect(
-      checker.requiredRuntimeDependenciesForTest('fortal'),
-      isNot(contains('remix_ui_fonts')),
-    );
-  });
+  test(
+    'Vanilla and HeroUI require their delivered fonts in a full install',
+    () {
+      expect(
+        checker.requiredRuntimeDependenciesForTest('vanilla'),
+        contains('remix_ui_fonts'),
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('heroui'),
+        contains('remix_ui_fonts'),
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('fortal'),
+        isNot(contains('remix_ui_fonts')),
+      );
+    },
+  );
+
+  test(
+    'HeroUI has its own small fixture, catalog, and dependency contract',
+    () {
+      expect(
+        checker.fixtureContractProblem(
+          Directory('open_code/heroui_fixture'),
+          preset: 'heroui',
+        ),
+        isNull,
+      );
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'heroui'),
+        isNull,
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('heroui'),
+        unorderedEquals([
+          'remix',
+          'mix_annotations',
+          'remix_ui_fonts',
+          'remix_ui_icons',
+        ]),
+      );
+      final app = Directory('${sandbox.path}/heroui');
+      _writeInstalledUi(app, preset: 'heroui');
+      expect(checker.installedUiProblem(app, preset: 'heroui'), isNull);
+      File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
+      expect(
+        checker.installedUiProblem(app, preset: 'heroui'),
+        contains('unnecessary'),
+      );
+      expect(
+        checker.parseConsumerCheckOptions([
+          '--preset',
+          'heroui',
+          '--source',
+          'checkout',
+          '--item',
+          'dashboard_demo',
+        ]),
+        isNull,
+      );
+    },
+  );
 
   test('retained failure reporting includes the temporary directory', () {
     expect(
@@ -460,7 +512,8 @@ dev_dependencies:
 void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
   final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
-  File('${app.path}/build.yaml').writeAsStringSync('''targets:
+  if (preset != 'heroui')
+    File('${app.path}/build.yaml').writeAsStringSync('''targets:
   \$default:
     builders:
       mix_generator:spec_styler_generator:

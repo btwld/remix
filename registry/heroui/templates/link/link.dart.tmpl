@@ -1,0 +1,47 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'link.g.dart';
+
+/// HeroUI recipe for [RemixLink].
+///
+/// The label inherits its size from the surrounding text, as `.link` does.
+@MixWidget(target: RemixLink.new)
+LinkStyler {{valuePrefix}}LinkStyle({LinkStyler style = const LinkStyler.create()}) =>
+    LinkStyler()
+        .borderRadius(.all({{typePrefix}}Tokens.radiusXl()))
+        .label(
+          .fontWeight(.w500)
+              .color({{typePrefix}}Tokens.link())
+              .decoration(.none)
+              .decorationThickness(_underlineThickness),
+        )
+        .onHovered(
+          LinkStyler().label(
+            .decoration(.underline).decorationColor(_hoverUnderline()),
+          ),
+        )
+        .onPressed(
+          LinkStyler().label(
+            .decoration(.underline).decorationColor({{typePrefix}}Tokens.muted()),
+          ),
+        )
+        .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+        .animate(_colorMotion)
+        .onDisabled(LinkStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
+        .merge(style);
+
+/// `decoration-[1.5px]`.
+const _underlineThickness = 1.5;
+
+/// `decoration-muted/50` while hovered.
+final _hoverUnderline = {{valuePrefix}}Alpha({{typePrefix}}Tokens.muted, .5);
+
+/// `color 100ms var(--ease-smooth)`.
+const _colorMotion = CurveAnimationConfig(
+  duration: Duration(milliseconds: 100),
+  curve: {{typePrefix}}Tokens.easeSmooth,
+);
