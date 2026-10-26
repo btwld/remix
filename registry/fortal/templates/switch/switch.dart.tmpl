@@ -64,13 +64,9 @@ SwitchStyler _{{valuePrefix}}SwitchBaseStyler({{typePrefix}}SwitchSize size) {
       .thumbColor(const Color(0xFFFFFFFF))
       .onFocusVisible(
         .trackEffects(
-          RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: {{typePrefix}}Tokens.focus8(),
-              width: 2,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-            outlineOffset: 2,
+          {{valuePrefix}}FocusOutline(
+            {{typePrefix}}Tokens.focus8(),
+            offset: {{typePrefix}}Tokens.focusRingOffset(),
           ),
         ),
       );

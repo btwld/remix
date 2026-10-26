@@ -3,12 +3,15 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
-/// A CSS outline that does not affect layout.
+/// A token-width CSS outline that does not affect layout.
+///
+/// Callers pass an inset offset explicitly; outward rings use
+/// [FortalTokens.focusRingOffset] so a scoped override can change them.
 RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
     RemixBoxEffectsMix(
       outline: BorderSideMix(
         color: color,
-        width: 2,
+        width: FortalTokens.focusRingWidth(),
         strokeAlign: BorderSide.strokeAlignInside,
       ),
       outlineOffset: offset,

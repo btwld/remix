@@ -25,16 +25,7 @@ CardStyler uiCardStyle({
       .borderRadius(.all(metrics.radius))
       .clipBehavior(Clip.antiAlias)
       .onFocusVisible(
-        .containerEffects(
-          RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: UiTokens.focus8(),
-              width: 2,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-            outlineOffset: -1,
-          ),
-        ),
+        .containerEffects(uiFocusOutline(UiTokens.focus8(), offset: -1)),
       );
 
   return (switch (variant) {
