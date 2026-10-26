@@ -94,20 +94,20 @@ class SaveButton extends StatelessWidget {
 - **Pausing.** The countdown stops while the pointer is over the toast, while focus is inside it, and while the app is in the background. Resuming restarts the full duration.
 - **Replacement.** Showing `RemixToastData` with the same non-null `id` as a visible or queued toast updates it in place and restarts its lifetime; the earlier handle closes with `replaced`.
 - **Placement.** Six `RemixToastPlacement` values. Start and end follow the text direction, and the newest toast sits nearest the edge. The stack clears the safe area and the keyboard.
-- **Action placement.** `RemixToastActionPlacement.inline`, the default, keeps the icon, message, action, and close button in one row. `below` puts the action under the title and description, aligned with their start, and aligns the icon, message, and close button to the top of the row, so the close button stays at the trailing top corner. A toast without an action ignores the setting.
-- **Narrow fallback.** An inline toast uses the `below` arrangement when its width, including its style max width, is too small for one row at the current text scale (about 280 logical pixels at the default text size). Larger text raises that width. Because it measures its width with a `LayoutBuilder`, an inline toast with an action cannot be sized by an `IntrinsicWidth` or `IntrinsicHeight` ancestor; set `below` there.
+- **Action placement.** `RemixToastActionPlacement.inline`, the default, keeps the action in the row with the icon, message, and close button while the message has room. `below` puts the action under the title and description, aligned with their start, and aligns the icon, message, and close button to the top of the row, so the close button stays on the first line, after the message. A toast without an action ignores the setting.
+- **Narrow fallback.** An inline toast that is too narrow for one row uses the `below` arrangement. The width counts the container's margin and its style max width, and the cutoff is about 280 logical pixels at the default text size; larger text raises it. A squeezed message is never wanted, so `inline` cannot keep the row below that width. Because the toast measures its width with a `LayoutBuilder`, one with an inline action cannot be sized by an `IntrinsicWidth` or `IntrinsicHeight` ancestor; set `below` there.
 - **Theme.** Toasts render through one overlay portal, so they inherit the scope's `MixScope` tokens and update live when the theme changes.
 
 ### Action placement by screen width
 
-`actionPlacement` is a spec field, so a style can vary it with any Mix variant. This one stacks the action on narrow screens and keeps one row elsewhere:
+`actionPlacement` is a spec field, so a style can vary it with any Mix variant. This one puts the action below the message on viewports up to 768 logical pixels wide:
 
-<CodeGroup title="Stacked action on narrow screens" defaultLanguage="dart">
+<CodeGroup title="Action below the message on narrow viewports" defaultLanguage="dart">
 ```dart
 import 'package:remix/remix.dart';
 
-ToastStyler stackedOnMobile() => ToastStyler().onBreakpoint(
-  Breakpoint.mobile,
+ToastStyler stackedOnNarrowScreens() => ToastStyler().onBreakpoint(
+  Breakpoint.maxWidth(768),
   ToastStyler().actionPlacement(RemixToastActionPlacement.below),
 );
 ```
@@ -233,7 +233,7 @@ RemixToast remixToastConstructor({
 ```
 </CodeGroup>
 
-`RemixToast` is the stateless surface the scope builds for each toast. Build it directly for a custom presenter or a static preview.
+`RemixToast` is the surface the scope builds for each toast. Build it directly for a custom presenter or a static preview.
 
 ## Properties
 
@@ -303,4 +303,4 @@ Styles the close button, resolved against its own states.
 
 #### `actionPlacement(RemixToastActionPlacement value)`
 
-Chooses where the action sits: `inline` beside the message (the default) or `below` it. An inline toast that is too narrow for one row uses `below` anyway.
+Chooses where the action sits: `inline` (the default) keeps it in the row while the message has room, and otherwise uses the `below` arrangement; `below` always puts it under the message.

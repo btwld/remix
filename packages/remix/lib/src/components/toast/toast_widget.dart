@@ -1,6 +1,6 @@
 part of 'toast.dart';
 
-/// A stateless notification surface: an optional icon, a title, an optional
+/// A notification surface: an optional icon, a title, an optional
 /// description, an optional action, and an optional close button.
 ///
 /// [RemixToastScope] builds one for every visible toast and owns its
@@ -16,7 +16,7 @@ part of 'toast.dart';
 ///   dismissLabel: 'Dismiss notification',
 /// )
 /// ```
-class RemixToast extends StatelessWidget {
+class RemixToast extends StatefulWidget {
   const RemixToast({
     super.key,
     required this.title,
@@ -75,6 +75,16 @@ class RemixToast extends StatelessWidget {
   /// Optional raw style spec that bypasses fluent style resolution.
   final ToastSpec? styleSpec;
 
+  @override
+  State<RemixToast> createState() => _RemixToastState();
+}
+
+class _RemixToastState extends State<RemixToast> {
+  // The buttons keep their elements, and so their focus, when the layout flips
+  // between the arrangements, which are different widget trees.
+  final _actionKey = GlobalKey();
+  final _closeKey = GlobalKey();
+
   /// The toast width, in logical pixels at the default text size, below which
   /// an inline action drops beneath the message.
   ///
@@ -110,39 +120,47 @@ class RemixToast extends StatelessWidget {
     Widget message = ColumnBox(
       styleSpec: spec.content,
       children: [
-        StyledText(title, styleSpec: spec.title),
-        if (description case final description?)
+        StyledText(widget.title, styleSpec: spec.title),
+        if (widget.description case final description?)
           StyledText(description, styleSpec: spec.description),
       ],
     );
-    if (excludeMessageSemantics) message = ExcludeSemantics(child: message);
+    if (widget.excludeMessageSemantics) {
+      message = ExcludeSemantics(child: message);
+    }
 
-    final action = this.action;
-    final onDismiss = this.onDismiss;
+    final action = widget.action;
+    final onDismiss = widget.onDismiss;
 
-    final leading = icon != null || spec.icon.spec.icon != null
+    final leading = widget.icon != null || spec.icon.spec.icon != null
         ? ExcludeSemantics(
-            child: StyledIcon(icon: icon, styleSpec: spec.icon),
+            child: StyledIcon(icon: widget.icon, styleSpec: spec.icon),
           )
         : null;
     final actionButton = action == null
         ? null
-        : _inheritStyle<ButtonSpec>(
-            spec.action,
-            RemixButton(label: action.label, onPressed: action.onPressed),
+        : KeyedSubtree(
+            key: _actionKey,
+            child: _inheritStyle<ButtonSpec>(
+              spec.action,
+              RemixButton(label: action.label, onPressed: action.onPressed),
+            ),
           );
     final closeButton = onDismiss == null
         ? null
-        : _inheritStyle<IconButtonSpec>(
-            spec.closeButton,
-            RemixIconButton(
-              icon: null,
-              iconBuilder: (context, iconSpec, _) => RemixPathIcon(
-                glyph: RemixPathGlyph.cross,
-                styleSpec: StyleSpec(spec: iconSpec),
+        : KeyedSubtree(
+            key: _closeKey,
+            child: _inheritStyle<IconButtonSpec>(
+              spec.closeButton,
+              RemixIconButton(
+                icon: null,
+                iconBuilder: (context, iconSpec, _) => RemixPathIcon(
+                  glyph: RemixPathGlyph.cross,
+                  styleSpec: StyleSpec(spec: iconSpec),
+                ),
+                semanticLabel: widget.dismissLabel!,
+                onPressed: onDismiss,
               ),
-              semanticLabel: dismissLabel!,
-              onPressed: onDismiss,
             ),
           );
 
@@ -200,12 +218,15 @@ class RemixToast extends StatelessWidget {
     // IntrinsicWidth or IntrinsicHeight; set the placement to `below` there.
     return LayoutBuilder(
       builder: (context, parentConstraints) {
-        // The container applies its own constraints below this builder, so
-        // enforce them here to measure the width the toast will actually get.
-        final styleConstraints = spec.container.spec.box?.spec.constraints;
+        // The container applies its margin and then its own constraints below
+        // this builder, so apply both here to measure the width the toast will
+        // actually get.
+        final box = spec.container.spec.box?.spec;
+        final available = parentConstraints.deflate(
+          box?.margin ?? EdgeInsets.zero,
+        );
         final width =
-            (styleConstraints?.enforce(parentConstraints) ?? parentConstraints)
-                .maxWidth;
+            (box?.constraints?.enforce(available) ?? available).maxWidth;
         final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
         return row(actionBelow: width < _minInlineWidth * textScale);
       },
@@ -215,8 +236,8 @@ class RemixToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RemixStyleSpecBuilder<ToastSpec>(
-      style: composeStyle(style),
-      styleSpec: styleSpec,
+      style: RemixToast.composeStyle(widget.style),
+      styleSpec: widget.styleSpec,
       builder: _buildContent,
     );
   }
