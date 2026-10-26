@@ -328,4 +328,34 @@ void main() {
       expect(scopeBuilds, 1, reason: 'system mode follows brightness');
     },
   );
+
+  testWidgets('a scope above any MediaQuery supplies one from the view', (
+    tester,
+  ) async {
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+    late Brightness brightness;
+    MediaQueryData? media;
+    await tester.pumpWidget(
+      RawView(
+        view: tester.view,
+        child: Directionality(
+          textDirection: .ltr,
+          child: FortalTheme(
+            child: Builder(
+              builder: (context) {
+                brightness = FortalTheme.of(context).brightness;
+                media = MediaQuery.maybeOf(context);
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      ),
+      wrapWithView: false,
+    );
+
+    expect(media, isNotNull);
+    expect(brightness, Brightness.dark);
+  });
 }
