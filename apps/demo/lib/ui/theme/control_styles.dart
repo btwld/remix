@@ -5,8 +5,10 @@ import 'tokens.dart';
 
 /// A token-width CSS outline that does not affect layout.
 ///
-/// Callers pass an inset offset explicitly; outward rings use
-/// [FortalTokens.focusRingOffset] so a scoped override can change them.
+/// Outward rings at Radix's 2px gap pass [FortalTokens.focusRingOffset]. Every
+/// other offset is a Radix literal and does not follow that token: the inset
+/// `-1` of fields, cards, selects and soft buttons, and the slider thumb's 3px
+/// halo.
 RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
     RemixBoxEffectsMix(
       outline: BorderSideMix(
