@@ -94,6 +94,7 @@ class SaveButton extends StatelessWidget {
 - **Pausing.** The countdown stops while the pointer is over the toast, while focus is inside it, and while the app is in the background. Resuming restarts the full duration.
 - **Replacement.** Showing `RemixToastData` with the same non-null `id` as a visible or queued toast updates it in place and restarts its lifetime; the earlier handle closes with `replaced`.
 - **Placement.** Six `RemixToastPlacement` values. Start and end follow the text direction, and the newest toast sits nearest the edge. The stack clears the safe area and the keyboard.
+- **Narrow layout.** A toast keeps its icon, message, action, and close button in one row. When the toast's width, including its style max width, is too small for that row at the current text scale, the action and close button move to their own row below the message so the message keeps the full width. Larger text raises that width. The action keeps its place before the close button.
 - **Theme.** Toasts render through one overlay portal, so they inherit the scope's `MixScope` tokens and update live when the theme changes.
 
 ## Accessibility
