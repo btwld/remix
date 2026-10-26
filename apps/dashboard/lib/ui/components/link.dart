@@ -139,7 +139,10 @@ LinkStyler _uiLinkStateStyle(
       );
   if (focused) {
     style = style.containerEffects(
-      uiFocusOutline(uiResolveColor(context, UiTokens.focus8), offset: 2),
+      uiFocusOutline(
+        uiResolveColor(context, UiTokens.focus8),
+        offset: UiTokens.focusRingOffset(),
+      ),
     );
   }
 

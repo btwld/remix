@@ -149,7 +149,7 @@ LinkStyler _{{valuePrefix}}LinkStateStyle(
     style = style.containerEffects(
       {{valuePrefix}}FocusOutline(
         {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.focus8),
-        offset: 2,
+        offset: {{typePrefix}}Tokens.focusRingOffset(),
       ),
     );
   }

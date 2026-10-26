@@ -62,13 +62,9 @@ RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
     ),
   ).onFocusVisible(
     .containerEffects(
-      RemixBoxEffectsMix(
-        outline: BorderSideMix(
-          color: FortalTokens.focus8(),
-          width: 2,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        outlineOffset: 2,
+      fortalFocusOutline(
+        FortalTokens.focus8(),
+        offset: FortalTokens.focusRingOffset(),
       ),
     ),
   );

@@ -321,7 +321,7 @@ FortalBaseButtonStateStyles fortalBaseButtonStateStyles({
     .ghost => FortalTokens.focus8(),
   };
   final focusOffset = switch (variant) {
-    .classic || .solid => 2.0,
+    .classic || .solid => FortalTokens.focusRingOffset(),
     .soft || .surface || .outline || .ghost => -1.0,
   };
 

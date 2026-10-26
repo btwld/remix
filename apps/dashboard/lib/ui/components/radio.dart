@@ -62,14 +62,7 @@ RadioStyler _uiRadioBaseStyler(UiRadioSize size) {
     ),
   ).onFocusVisible(
     .containerEffects(
-      RemixBoxEffectsMix(
-        outline: BorderSideMix(
-          color: UiTokens.focus8(),
-          width: 2,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        outlineOffset: 2,
-      ),
+      uiFocusOutline(UiTokens.focus8(), offset: UiTokens.focusRingOffset()),
     ),
   );
 }

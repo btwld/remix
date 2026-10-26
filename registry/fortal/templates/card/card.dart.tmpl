@@ -26,14 +26,7 @@ CardStyler {{valuePrefix}}CardStyle({
       .clipBehavior(Clip.antiAlias)
       .onFocusVisible(
         .containerEffects(
-          RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: {{typePrefix}}Tokens.focus8(),
-              width: 2,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-            outlineOffset: -1,
-          ),
+          {{valuePrefix}}FocusOutline({{typePrefix}}Tokens.focus8(), offset: -1),
         ),
       );
 
