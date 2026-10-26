@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../helpers/reduced_motion.dart';
 import '../test_helpers.dart';
 
 const _triggerKey = Key('animation-trigger');
@@ -258,15 +259,142 @@ void main() {
       expect(_opacity(tester), closeTo(Curves.easeIn.transform(0.5), 0.01));
     });
   });
+
+  group('NakedTooltip reduced motion', () {
+    const slow = AnimationStyle(
+      curve: Curves.linear,
+      duration: Duration(milliseconds: 400),
+      reverseDuration: Duration(milliseconds: 400),
+    );
+
+    Future<ReducedMotionSwitch> pumpTooltip(WidgetTester tester) async {
+      final reducedMotion = ReducedMotionSwitch(tester);
+      await tester.pumpMaterialWidget(
+        reducedMotion.wrap(Center(child: _tooltip(slow))),
+      );
+      return reducedMotion;
+    }
+
+    testWidgets('shows and hides over the given durations by default', (
+      tester,
+    ) async {
+      await pumpTooltip(tester);
+      final mouse = await _hover(tester);
+      expect(_opacity(tester), 0);
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+
+      await mouse.moveTo(Offset.zero);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+      expect(find.text('Tooltip'), findsNothing);
+    });
+
+    for (final request in ReducedMotionRequest.values) {
+      group('with ${request.label}', () {
+        testWidgets('shows and hides at once', (tester) async {
+          final reducedMotion = await pumpTooltip(tester);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          final mouse = await _hover(tester);
+          expect(_opacity(tester), 1);
+
+          await mouse.moveTo(Offset.zero);
+          await tester.pump();
+          expect(find.text('Tooltip'), findsNothing);
+        });
+
+        testWidgets('shows and hides at once once requested while open', (
+          tester,
+        ) async {
+          final reducedMotion = await pumpTooltip(tester);
+          final mouse = await _hover(tester);
+          await tester.pumpAndSettle();
+
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          await mouse.moveTo(Offset.zero);
+          await tester.pump();
+          expect(find.text('Tooltip'), findsNothing);
+
+          await mouse.moveTo(tester.getCenter(find.byKey(_triggerKey)));
+          await tester.pump();
+          expect(_opacity(tester), 1);
+        });
+
+        testWidgets('animates again once withdrawn while open', (tester) async {
+          final reducedMotion = await pumpTooltip(tester);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          final mouse = await _hover(tester);
+          expect(_opacity(tester), 1);
+
+          reducedMotion.set(request, on: false);
+          await tester.pump();
+          await mouse.moveTo(Offset.zero);
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 200));
+          expect(_opacity(tester), closeTo(0.5, 0.01));
+          await tester.pumpAndSettle();
+          expect(find.text('Tooltip'), findsNothing);
+
+          await mouse.moveTo(tester.getCenter(find.byKey(_triggerKey)));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 200));
+          expect(_opacity(tester), closeTo(0.5, 0.01));
+        });
+
+        testWidgets('applies before the first show', (tester) async {
+          final reducedMotion = await pumpTooltip(tester);
+          await tester.tapAt(Offset.zero);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          await _hover(tester);
+          expect(_opacity(tester), 1);
+        });
+
+        testWidgets('applies to a controlled tooltip', (tester) async {
+          final reducedMotion = ReducedMotionSwitch(tester);
+          final open = ValueNotifier<bool>(false);
+          addTearDown(open.dispose);
+          await tester.pumpMaterialWidget(
+            reducedMotion.wrap(
+              Center(
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: open,
+                  builder: (_, isOpen, _) => _tooltip(slow, open: isOpen),
+                ),
+              ),
+            ),
+          );
+
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          open.value = true;
+          await tester.pump();
+          await tester.pump();
+          expect(_opacity(tester), 1);
+        });
+      });
+    }
+  });
 }
 
 NakedTooltip _tooltip(
   AnimationStyle style, {
   GlobalKey<RawTooltipState>? tooltipKey,
   ValueChanged<bool>? onOpenChanged,
+  bool? open,
   Widget? child,
 }) => NakedTooltip(
   tooltipKey: tooltipKey,
+  // ignore: deprecated_member_use_from_same_package
+  open: open,
   onOpenChanged: onOpenChanged,
   dismissDelay: Duration.zero,
   animationStyle: style,

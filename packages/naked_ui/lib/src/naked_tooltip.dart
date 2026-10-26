@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 
 import 'legacy_naked_tooltip.dart';
 import 'utilities/positioning.dart';
+import 'utilities/reduced_motion.dart';
 
 const _defaultTooltipAnimationStyle = AnimationStyle(
   curve: Curves.fastOutSlowIn,
@@ -150,6 +151,12 @@ class NakedTooltip extends StatefulWidget {
   ///
   /// Missing durations default to 150ms for showing and 75ms for hiding.
   /// The reverse curve defaults to the flipped show curve.
+  ///
+  /// While the user asks to reduce motion, the tooltip shows and hides at once
+  /// whatever the durations. That is when [MediaQueryData.disableAnimations]
+  /// is set or the platform reports `AccessibilityFeatures.reduceMotion`,
+  /// which iOS sets for Reduce Motion. A change applies to the next show or
+  /// hide.
   final AnimationStyle animationStyle;
 
   /// Whether the tooltip is inserted into the root overlay.
@@ -175,7 +182,8 @@ class NakedTooltip extends StatefulWidget {
   State<NakedTooltip> createState() => _NakedTooltipState();
 }
 
-class _NakedTooltipState extends State<NakedTooltip> {
+class _NakedTooltipState extends State<NakedTooltip>
+    with WidgetsBindingObserver {
   static final Set<_NakedTooltipState> _mountedTooltips =
       <_NakedTooltipState>{};
 
@@ -191,6 +199,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
   // Whether RawTooltip's animation is not dismissed, including while closing.
   bool _rawOpen = false;
   bool _visible = false;
+  bool _reducedMotion = false;
   CurvedAnimation? _rawAnimation;
 
   // RawTooltip has no focus trigger, Escape binding, or placement callback.
@@ -221,8 +230,8 @@ class _NakedTooltipState extends State<NakedTooltip> {
     return _defaultTooltipAnimationStyle.copyWith(
       curve: curve,
       reverseCurve: style.reverseCurve ?? curve.flipped,
-      duration: style.duration,
-      reverseDuration: style.reverseDuration,
+      duration: _reducedMotion ? Duration.zero : style.duration,
+      reverseDuration: _reducedMotion ? Duration.zero : style.reverseDuration,
     );
   }
 
@@ -261,10 +270,29 @@ class _NakedTooltipState extends State<NakedTooltip> {
     }
   }
 
+  void _updateReducedMotion() {
+    _reducedMotion = reducedMotionOf(context);
+    _syncAnimationStyle();
+  }
+
   @override
   void initState() {
     super.initState();
     _mountedTooltips.add(this);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateReducedMotion();
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() {
+    if (reducedMotionOf(context) != _reducedMotion) {
+      setState(_updateReducedMotion);
+    }
   }
 
   @override
@@ -299,6 +327,7 @@ class _NakedTooltipState extends State<NakedTooltip> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _mountedTooltips.remove(this);
     if (identical(_current, this)) _current = null;
     _focusTimer?.cancel();
@@ -481,7 +510,12 @@ class _NakedTooltipState extends State<NakedTooltip> {
     triggerMode: widget.triggerMode,
     enableFeedback: widget.enableFeedback,
     onTriggered: widget.onTriggered,
-    animationStyle: widget.animationStyle,
+    animationStyle: _reducedMotion
+        ? widget.animationStyle.copyWith(
+            duration: Duration.zero,
+            reverseDuration: Duration.zero,
+          )
+        : widget.animationStyle,
     positioning: widget.positioning,
     useRootOverlay: widget.useRootOverlay,
     semanticLabel: widget.semanticLabel,
