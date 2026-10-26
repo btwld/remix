@@ -75,6 +75,15 @@ class RemixToast extends StatelessWidget {
   /// Optional raw style spec that bypasses fluent style resolution.
   final ToastSpec? styleSpec;
 
+  /// The toast width, in logical pixels at the default text size, below which
+  /// the action and close button drop beneath the message.
+  ///
+  /// About 160 for the chrome around the message (padding, icon, action, and
+  /// close button) plus about 120 for a message column that stays readable.
+  /// The text scale multiplies it, because larger text widens the controls and
+  /// narrows what is left for the message.
+  static const _minInlineWidth = 280.0;
+
   static Widget _inheritStyle<S extends Spec<S>>(
     Style<S>? style,
     Widget child,
@@ -96,37 +105,94 @@ class RemixToast extends StatelessWidget {
     final action = this.action;
     final onDismiss = this.onDismiss;
 
-    return RemixFlexBoxAdapter(
-      styleSpec: spec.container,
-      direction: Axis.horizontal,
-      containerEffects: spec.containerEffects,
-      children: [
-        if (icon != null || spec.icon.spec.icon != null)
-          ExcludeSemantics(
+    final leading = icon != null || spec.icon.spec.icon != null
+        ? ExcludeSemantics(
             child: StyledIcon(icon: icon, styleSpec: spec.icon),
-          ),
-        // A loose fit lets long messages wrap while short ones keep their
-        // intrinsic width.
-        Flexible(child: message),
-        if (action != null)
-          _inheritStyle<ButtonSpec>(
-            spec.action,
-            RemixButton(label: action.label, onPressed: action.onPressed),
-          ),
-        if (onDismiss != null)
-          _inheritStyle<IconButtonSpec>(
-            spec.closeButton,
-            RemixIconButton(
-              icon: null,
-              iconBuilder: (context, iconSpec, _) => RemixPathIcon(
-                glyph: RemixPathGlyph.cross,
-                styleSpec: StyleSpec(spec: iconSpec),
-              ),
-              semanticLabel: dismissLabel!,
-              onPressed: onDismiss,
+          )
+        : null;
+    final controls = <Widget>[
+      if (action != null)
+        _inheritStyle<ButtonSpec>(
+          spec.action,
+          RemixButton(label: action.label, onPressed: action.onPressed),
+        ),
+      if (onDismiss != null)
+        _inheritStyle<IconButtonSpec>(
+          spec.closeButton,
+          RemixIconButton(
+            icon: null,
+            iconBuilder: (context, iconSpec, _) => RemixPathIcon(
+              glyph: RemixPathGlyph.cross,
+              styleSpec: StyleSpec(spec: iconSpec),
             ),
+            semanticLabel: dismissLabel!,
+            onPressed: onDismiss,
           ),
-      ],
+        ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, parentConstraints) {
+        // The container applies its own constraints below this builder, so
+        // enforce them here to measure the width the toast will actually get.
+        final styleConstraints = spec.container.spec.box?.spec.constraints;
+        final width =
+            (styleConstraints?.enforce(parentConstraints) ?? parentConstraints)
+                .maxWidth;
+        final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
+        final stackControls =
+            controls.isNotEmpty && width < _minInlineWidth * textScale;
+        if (!stackControls) {
+          return RemixFlexBoxAdapter(
+            styleSpec: spec.container,
+            direction: Axis.horizontal,
+            containerEffects: spec.containerEffects,
+            children: [
+              ?leading,
+              // A loose fit lets long messages wrap while short ones keep
+              // their intrinsic width.
+              Flexible(child: message),
+              ...controls,
+            ],
+          );
+        }
+
+        // Too narrow to share a row with the message: the controls trail it on
+        // their own row, so the message keeps the full width beside the icon.
+        // Children stay in reading order, so semantics traversal is unchanged.
+        final flex = spec.container.spec.flex;
+        final gap = flex?.spec.spacing ?? 0;
+        return RemixFlexBoxAdapter(
+          styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
+          children: [
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: gap,
+                children: [
+                  RowBox(
+                    styleSpec: StyleSpec(spec: FlexBoxSpec(flex: flex)),
+                    children: [
+                      ?leading,
+                      Flexible(child: message),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: gap,
+                    runSpacing: gap,
+                    children: controls,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

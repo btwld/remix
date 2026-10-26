@@ -1,3 +1,13 @@
+## Unreleased
+
+### Fixes
+
+- `RemixToast` moves its action and close button below the message on their
+  own row when the toast is too narrow to share a row, so the message is no
+  longer squeezed beside them. The breakpoint follows the width the toast
+  gets, including its style max width, and grows with the text scale. Wider
+  toasts keep the single row.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
