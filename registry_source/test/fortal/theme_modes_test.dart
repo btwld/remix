@@ -300,4 +300,32 @@ void main() {
     expect(rendered().color, foreground);
     expect(rendered().fontSize, 16);
   });
+
+  testWidgets(
+    'the scope rebuilds for brightness, not other MediaQuery fields',
+    (tester) async {
+      var scopeBuilds = 0;
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (element.widget is FortalTheme) scopeBuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = null);
+      const scope = FortalTheme(child: SizedBox());
+      Widget host(MediaQueryData data) => MediaQuery(
+        data: data,
+        child: const Directionality(textDirection: .ltr, child: scope),
+      );
+
+      await tester.pumpWidget(host(const MediaQueryData()));
+      scopeBuilds = 0;
+      await tester.pumpWidget(
+        host(const MediaQueryData(viewInsets: EdgeInsets.only(bottom: 300))),
+      );
+      expect(scopeBuilds, 0, reason: 'keyboard insets');
+
+      await tester.pumpWidget(
+        host(const MediaQueryData(platformBrightness: .dark)),
+      );
+      expect(scopeBuilds, 1, reason: 'system mode follows brightness');
+    },
+  );
 }
