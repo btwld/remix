@@ -60,7 +60,9 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
       .indicator(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocusVisible(
         .containerEffects(
-          RemixBoxEffectsMix.overContent(_fortalSelectFocusRing()),
+          // `outline: 2px solid focus-8; outline-offset: -1px`: the ring
+          // straddles the trigger edge.
+          fortalFocusOutline(FortalTokens.focus8(), offset: -1),
         ),
       )
       .merge(_fortalSelectTriggerSizeStyler(variant, size));
@@ -128,19 +130,6 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
             .padding(.horizontal(FortalTokens.space4())),
     },
   };
-}
-
-RemixBoxEffectLayerMix _fortalSelectFocusRing() {
-  return RemixBoxEffectLayerMix(
-    shadows: [
-      RemixBoxShadowMix(color: FortalTokens.focus8(), spreadRadius: 1),
-      RemixBoxShadowMix(
-        kind: RemixBoxShadowKind.inset,
-        color: FortalTokens.focus8(),
-        spreadRadius: 1,
-      ),
-    ],
-  );
 }
 
 SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
