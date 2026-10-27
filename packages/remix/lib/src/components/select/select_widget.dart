@@ -394,7 +394,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
               builder: (context, spec) => RemixBoxAdapter(
                 styleSpec: spec.container,
                 containerEffects: spec.containerEffects,
-                child: ColumnBox(
+                child: _ScrollableOptions(
                   styleSpec: widget.menuContainer,
                   children: widget.children,
                 ),
@@ -403,6 +403,38 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           ),
         );
       },
+    );
+  }
+}
+
+/// The option column inside the frame of the menu container.
+///
+/// The menu container's box and the content container around it frame a scroll
+/// view, so their padding, decoration, and constraints stay put while the
+/// options scroll. Only the column of options moves, and it shrinks to fit when
+/// it is shorter than the room the frames leave.
+class _ScrollableOptions extends StatelessWidget {
+  const _ScrollableOptions({required this.styleSpec, required this.children});
+
+  final StyleSpec<FlexBoxSpec> styleSpec;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return StyleSpecBuilder<FlexBoxSpec>(
+      styleSpec: styleSpec,
+      builder: (context, spec) => Box(
+        styleSpec: spec.box ?? const StyleSpec(spec: BoxSpec()),
+        child: SingleChildScrollView(
+          // Otherwise the overlay attaches to the host page's primary scroll
+          // controller, which a list on the page may already use.
+          primary: false,
+          child: ColumnBox(
+            styleSpec: StyleSpec(spec: FlexBoxSpec(flex: spec.flex)),
+            children: children,
+          ),
+        ),
+      ),
     );
   }
 }
