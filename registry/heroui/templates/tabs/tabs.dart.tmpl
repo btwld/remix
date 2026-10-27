@@ -55,9 +55,9 @@ TabStyler {{valuePrefix}}TabStyle({
       result
           .borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
           .onSelected(
-            _selected(
-              {{typePrefix}}Tokens.segmentForeground,
-            ).color({{typePrefix}}Tokens.segment()).shadows({{valuePrefix}}SurfaceBoxShadows),
+            _selected({{typePrefix}}Tokens.segmentForeground)
+                .color({{typePrefix}}Tokens.segment())
+                .containerEffects({{valuePrefix}}SurfaceEffects()),
           ),
     // The `h-0.5` indicator is the bottom edge, transparent until selected;
     // the top padding keeps the label centered in the tab.

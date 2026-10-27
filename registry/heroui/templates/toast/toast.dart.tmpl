@@ -15,10 +15,14 @@ enum {{typePrefix}}ToastVariant { defaultToast, accent, success, warning, danger
 ///
 /// Stacking, timing, and dismissal stay with Remix. The action is HeroUI's
 /// default button, as in `Toast` (`toast-default-action`): beside the message
-/// above 768px and under it from 768px down. Below 640px it adds `mt-2` by
-/// restating the whole button style, because an `action` replaces rather than
-/// merges; a caller's own `action` there must be an `onBreakpoint` fragment
-/// too.
+/// above 768px and under it from 768px down. Below 640px it adds `mt-2`
+/// through a second `action`.
+///
+/// An `action` replaces rather than merges, so a caller who styles it restates
+/// `{{valuePrefix}}ButtonStyle()` in their `action`, and again, with `.margin(.top(2))`,
+/// in an `onNot(ContextVariant.breakpoint(Breakpoint.minWidth(
+/// {{typePrefix}}Tokens.breakpointSm)), ...)` fragment; without that fragment the
+/// recipe's own action wins below 640px.
 @MixWidget(target: RemixToast.new)
 ToastStyler {{valuePrefix}}ToastStyle({
   {{typePrefix}}ToastVariant variant = .defaultToast,
@@ -78,8 +82,10 @@ ToastStyler {{valuePrefix}}ToastStyle({
         const Breakpoint.maxWidth({{typePrefix}}Tokens.breakpointMd),
         ToastStyler().actionPlacement(.below),
       )
-      .onBreakpoint(
-        const Breakpoint.maxWidth(_belowSm),
+      .onNot(
+        ContextVariant.breakpoint(
+          const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointSm),
+        ),
         ToastStyler().action({{valuePrefix}}ButtonStyle().margin(.top(_actionMargin))),
       )
       .merge(style);
@@ -107,10 +113,8 @@ const _paddingY = 12.0;
 const _gap = 6.0;
 
 /// `.toast__action`: `mt-2 sm:mt-0`. A stacked action is already `gap-1.5`
-/// below the message, so the margin adds the rest of `mt-2` below `sm`, whose
-/// `maxWidth` is the pixel before 640.
+/// below the message, so the margin adds the rest of `mt-2` below `sm`.
 const _actionMargin = 8 - _gap;
-const _belowSm = {{typePrefix}}Tokens.breakpointSm - 1;
 
 /// `.toast__indicator` `size-4` with `p-1`, and `.toast__close-button`
 /// `size-5`.
