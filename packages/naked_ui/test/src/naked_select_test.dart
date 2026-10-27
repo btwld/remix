@@ -808,6 +808,127 @@ void main() {
     );
   });
 
+  group('Panel height', () {
+    const triggerKey = Key('trigger');
+    const panelKey = Key('panel');
+    const sideOffset = 8.0;
+
+    Widget buildPanelSelect({
+      Alignment alignment = Alignment.topCenter,
+      OverlayAlignment overlayAlignment = OverlayAlignment.center,
+      TextDirection textDirection = TextDirection.ltr,
+      int options = 30,
+      bool constrainToAvailableHeight = true,
+    }) {
+      return Directionality(
+        textDirection: textDirection,
+        child: Align(
+          alignment: alignment,
+          child: NakedSelect<int>(
+            onChanged: (_) {},
+            positioning: OverlayPositionConfig(
+              alignment: overlayAlignment,
+              sideOffset: sideOffset,
+            ),
+            constrainToAvailableHeight: constrainToAvailableHeight,
+            builder: (context, state, child) =>
+                const SizedBox(key: triggerKey, width: 120, height: 40),
+            overlayBuilder: (context, info) => SingleChildScrollView(
+              key: panelKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < options; i++)
+                    NakedSelectOption<int>(
+                      value: i,
+                      child: SizedBox(
+                        width: 120,
+                        height: 40,
+                        child: Text('Option $i'),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Future<({Rect trigger, Rect panel})> openPanel(WidgetTester tester) async {
+      await tester.tap(find.byKey(triggerKey));
+      await tester.pumpAndSettle();
+
+      return (
+        trigger: tester.getRect(find.byKey(triggerKey)),
+        panel: tester.getRect(find.byKey(panelKey)),
+      );
+    }
+
+    double screenHeight(WidgetTester tester) =>
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+
+    testWidgets('fits a long panel below a trigger near the top', (
+      tester,
+    ) async {
+      await tester.pumpMaterialWidget(buildPanelSelect());
+      final (:trigger, :panel) = await openPanel(tester);
+
+      expect(panel.top, trigger.bottom + sideOffset);
+      expect(panel.bottom, screenHeight(tester));
+      expect(panel.overlaps(trigger), isFalse);
+    });
+
+    testWidgets('flips above and fits when the trigger is near the bottom', (
+      tester,
+    ) async {
+      await tester.pumpMaterialWidget(
+        buildPanelSelect(alignment: Alignment.bottomCenter),
+      );
+      final (:trigger, :panel) = await openPanel(tester);
+
+      expect(panel.bottom, trigger.top - sideOffset);
+      expect(panel.top, 0);
+      expect(panel.overlaps(trigger), isFalse);
+    });
+
+    testWidgets('keeps a short panel at its natural height', (tester) async {
+      await tester.pumpMaterialWidget(
+        buildPanelSelect(alignment: Alignment.center, options: 3),
+      );
+      final (:trigger, :panel) = await openPanel(tester);
+
+      expect(panel.top, trigger.bottom + sideOffset);
+      expect(panel.height, 120);
+    });
+
+    testWidgets('lets a panel grow to the whole overlay when not constrained', (
+      tester,
+    ) async {
+      await tester.pumpMaterialWidget(
+        buildPanelSelect(constrainToAvailableHeight: false),
+      );
+      final (:trigger, :panel) = await openPanel(tester);
+
+      expect(panel.height, screenHeight(tester));
+      expect(panel.overlaps(trigger), isTrue);
+    });
+
+    testWidgets('fits the same space in right-to-left layouts', (tester) async {
+      await tester.pumpMaterialWidget(
+        buildPanelSelect(
+          overlayAlignment: OverlayAlignment.start,
+          textDirection: TextDirection.rtl,
+        ),
+      );
+      final (:trigger, :panel) = await openPanel(tester);
+
+      expect(panel.right, trigger.right);
+      expect(panel.top, trigger.bottom + sideOffset);
+      expect(panel.bottom, screenHeight(tester));
+    });
+  });
+
   group('Selection Behavior', () {
     testWidgets(
       'keeps menu open when closeOnSelect is false',

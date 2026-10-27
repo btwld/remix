@@ -1,3 +1,18 @@
+## Unreleased
+
+### Fixes
+
+- Add `constrainToAvailableHeight` to `NakedSelect`, `NakedMenu`,
+  `AnchoredOverlay`, and `OverlayPositioner` (default `false`, so nothing
+  changes until it is set). A panel placed above or below its trigger is then
+  laid out no taller than the space on that side, after `sideOffset` and
+  `collisionPadding`, instead of as tall as the whole overlay, so a tall panel
+  no longer slides over its trigger and a scroll view inside it scrolls beside
+  the trigger. With collision avoidance on, that side is the one with more
+  room, which the panel flips to when it is not the preferred side. Content that
+  cannot scroll overflows the shorter panel, and placements to the left or
+  right of the trigger are not capped.
+
 ## 1.2.3
 
 ### Fixes

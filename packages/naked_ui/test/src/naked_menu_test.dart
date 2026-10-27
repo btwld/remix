@@ -608,6 +608,115 @@ void main() {
         expect(innerFocus.hasFocus, isTrue);
       });
     });
+
+    group('Panel height', () {
+      const triggerKey = Key('trigger');
+      const panelKey = Key('panel');
+      const sideOffset = 8.0;
+
+      Widget tallPanel({int items = 30}) => SingleChildScrollView(
+        key: panelKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < items; i++)
+              NakedMenuItem<String>(
+                value: 'item $i',
+                child: SizedBox(width: 120, height: 40, child: Text('Item $i')),
+              ),
+          ],
+        ),
+      );
+
+      Widget buildPanelMenu(
+        MenuController controller, {
+        Alignment alignment = Alignment.topLeft,
+        int items = 30,
+        bool constrainToAvailableHeight = true,
+      }) {
+        return Align(
+          alignment: alignment,
+          child: NakedMenu<String>(
+            controller: controller,
+            positioning: const OverlayPositionConfig(
+              side: OverlaySide.bottom,
+              sideOffset: sideOffset,
+            ),
+            constrainToAvailableHeight: constrainToAvailableHeight,
+            builder: (context, state, child) =>
+                const SizedBox(key: triggerKey, width: 120, height: 40),
+            overlayBuilder: (context, info) => tallPanel(items: items),
+          ),
+        );
+      }
+
+      double screenHeight(WidgetTester tester) =>
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+
+      Future<({Rect trigger, Rect panel})> openPanel(
+        WidgetTester tester,
+        MenuController controller,
+      ) async {
+        controller.open();
+        await tester.pumpAndSettle();
+
+        return (
+          trigger: tester.getRect(find.byKey(triggerKey)),
+          panel: tester.getRect(find.byKey(panelKey)),
+        );
+      }
+
+      testWidgets('fits a long menu below a trigger near the top', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(buildPanelMenu(controller));
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.top, trigger.bottom + sideOffset);
+        expect(panel.bottom, screenHeight(tester));
+        expect(panel.overlaps(trigger), isFalse);
+      });
+
+      testWidgets('flips above and fits when the trigger is near the bottom', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          buildPanelMenu(controller, alignment: Alignment.bottomLeft),
+        );
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.bottom, trigger.top - sideOffset);
+        expect(panel.top, 0);
+        expect(panel.overlaps(trigger), isFalse);
+      });
+
+      testWidgets(
+        'lets a menu grow to the whole overlay when not constrained',
+        (tester) async {
+          final controller = MenuController();
+          await tester.pumpMaterialWidget(
+            buildPanelMenu(controller, constrainToAvailableHeight: false),
+          );
+          final (:trigger, :panel) = await openPanel(tester, controller);
+
+          expect(panel.height, screenHeight(tester));
+          expect(panel.overlaps(trigger), isTrue);
+        },
+      );
+
+      testWidgets('keeps a short menu at its natural height', (tester) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          buildPanelMenu(controller, alignment: Alignment.centerLeft, items: 3),
+        );
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.top, trigger.bottom + sideOffset);
+        expect(panel.height, 120);
+      });
+    });
   });
 
   group('NakedMenuContent', () {
