@@ -9,6 +9,15 @@ import 'helpers/builder_state_scope.dart';
 
 void main() {
   const kMenuKey = Key('menu');
+  const viewportKey = Key('options viewport');
+
+  bool isInViewport(WidgetTester tester, int index) {
+    final viewport = tester.getRect(find.byKey(viewportKey));
+    final option = tester.getRect(
+      find.widgetWithText(NakedSelectOption<String>, 'Option $index'),
+    );
+    return option.top >= viewport.top && option.bottom <= viewport.bottom;
+  }
 
   // Helper function to build select widget
   Widget buildSelect<T>({
@@ -361,14 +370,14 @@ void main() {
       expect(find.text('Apple'), findsOneWidget);
       expect(find.text('Banana'), findsOneWidget);
 
-      // Navigate to first item with arrow down, then press Enter to select
+      // The select opens on the first option; arrow down moves to the second
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
 
       // Verify selection was made and overlay closed
-      expect(selectedValue, 'apple');
+      expect(selectedValue, 'banana');
       expect(find.text('Apple'), findsNothing);
     });
 
@@ -405,9 +414,7 @@ void main() {
       await tester.tap(find.text('Select option'));
       await tester.pumpAndSettle();
 
-      // Focus the first option
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
+      // The select opens on the first option
       expect(focusStates.indexWhere((focused) => focused), 0);
 
       // Press PageDown to jump forward
@@ -456,7 +463,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Navigate to a later option using multiple arrow downs
-      for (int i = 0; i < 12; i++) {
+      for (int i = 0; i < 11; i++) {
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
         await tester.pumpAndSettle();
       }
@@ -562,7 +569,6 @@ void main() {
 
     group('Home and End with a scrolling option list', () {
       const optionCount = 30;
-      const viewportKey = Key('options viewport');
       late ScrollController scrollController;
       late List<bool> focusStates;
 
@@ -609,14 +615,6 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      bool isInViewport(WidgetTester tester, int index) {
-        final viewport = tester.getRect(find.byKey(viewportKey));
-        final option = tester.getRect(
-          find.widgetWithText(NakedSelectOption<String>, 'Option $index'),
-        );
-        return option.top >= viewport.top && option.bottom <= viewport.bottom;
-      }
-
       testWidgets('End focuses the last option and scrolls it into view', (
         tester,
       ) async {
@@ -648,7 +646,6 @@ void main() {
 
     group('Focus on open', () {
       const optionCount = 30;
-      const viewportKey = Key('options viewport');
       late ScrollController scrollController;
       late FocusNode triggerFocusNode;
       late List<bool> focusStates;
@@ -670,6 +667,7 @@ void main() {
         bool closeOnSelect = true,
         Set<int> disabled = const {},
         bool lazy = false,
+        FocusNode? searchFocusNode,
       }) {
         Widget buildOption(int index) => NakedSelectOption<String>(
           value: 'option$index',
@@ -687,22 +685,29 @@ void main() {
           closeOnSelect: closeOnSelect,
           triggerFocusNode: triggerFocusNode,
           builder: (context, state, child) => const Text('Select option'),
-          overlayBuilder: (context, info) => SizedBox(
-            key: viewportKey,
-            height: 120,
-            child: lazy
-                ? ListView.builder(
-                    controller: scrollController,
-                    itemExtent: 40,
-                    itemCount: optionCount,
-                    itemBuilder: (context, index) => buildOption(index),
-                  )
-                : SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      children: List.generate(optionCount, buildOption),
-                    ),
-                  ),
+          overlayBuilder: (context, info) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (searchFocusNode != null)
+                _SelfFocusingField(focusNode: searchFocusNode),
+              SizedBox(
+                key: viewportKey,
+                height: 120,
+                child: lazy
+                    ? ListView.builder(
+                        controller: scrollController,
+                        itemExtent: 40,
+                        itemCount: optionCount,
+                        itemBuilder: (context, index) => buildOption(index),
+                      )
+                    : SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          children: List.generate(optionCount, buildOption),
+                        ),
+                      ),
+              ),
+            ],
           ),
         );
       }
@@ -721,14 +726,6 @@ void main() {
       int? focusedOption() {
         final index = focusStates.indexWhere((focused) => focused);
         return index < 0 ? null : index;
-      }
-
-      bool isInViewport(WidgetTester tester, int index) {
-        final viewport = tester.getRect(find.byKey(viewportKey));
-        final option = tester.getRect(
-          find.widgetWithText(NakedSelectOption<String>, 'Option $index'),
-        );
-        return option.top >= viewport.top && option.bottom <= viewport.bottom;
       }
 
       testWidgets('opens on the selected option', (tester) async {
@@ -786,39 +783,45 @@ void main() {
         expect(isInViewport(tester, 0), isTrue);
       });
 
-      testWidgets('opens on the container without a selected option', (
+      testWidgets('opens on the first option without a selected option', (
         tester,
       ) async {
-        await tester.pumpMaterialWidget(Center(child: buildOptionSelect()));
+        String? selected;
+        await tester.pumpMaterialWidget(
+          Center(
+            child: buildOptionSelect(onChanged: (value) => selected = value),
+          ),
+        );
 
         await open(tester);
 
-        expect(focusedOption(), isNull);
+        expect(focusedOption(), 0);
         expect(scrollController.offset, 0);
         await press(tester, LogicalKeyboardKey.arrowDown);
-        expect(focusedOption(), 0);
+        expect(focusedOption(), 1);
+        await press(tester, LogicalKeyboardKey.arrowUp);
+        await press(tester, LogicalKeyboardKey.enter);
+        expect(selected, 'option0');
       });
 
       testWidgets(
-        'opens on the container when the selected option is disabled',
+        'opens on the first enabled option when the selected option is disabled',
         (tester) async {
           await tester.pumpMaterialWidget(
             Center(
-              child: buildOptionSelect(value: 'option15', disabled: {15}),
+              child: buildOptionSelect(value: 'option15', disabled: {0, 15}),
             ),
           );
 
           await open(tester);
 
-          expect(focusedOption(), isNull);
+          expect(focusedOption(), 1);
           expect(scrollController.offset, 0);
-          await press(tester, LogicalKeyboardKey.arrowDown);
-          expect(focusedOption(), 0);
         },
       );
 
       testWidgets(
-        'opens on the container when a lazy list has not built the selected option',
+        'opens on the first option when a lazy list has not built the selected option',
         (tester) async {
           await tester.pumpMaterialWidget(
             Center(child: buildOptionSelect(value: 'option15', lazy: true)),
@@ -827,11 +830,32 @@ void main() {
           await open(tester);
 
           expect(find.text('Option 15'), findsNothing);
-          expect(focusedOption(), isNull);
-          await press(tester, LogicalKeyboardKey.arrowDown);
           expect(focusedOption(), 0);
         },
       );
+
+      for (final value in ['option15', null]) {
+        testWidgets('keeps focus on a field the panel focuses itself '
+            '${value == null ? 'without' : 'with'} a selected option', (
+          tester,
+        ) async {
+          final searchFocusNode = FocusNode();
+          addTearDown(searchFocusNode.dispose);
+          await tester.pumpMaterialWidget(
+            Center(
+              child: buildOptionSelect(
+                value: value,
+                searchFocusNode: searchFocusNode,
+              ),
+            ),
+          );
+
+          await open(tester);
+
+          expect(searchFocusNode.hasPrimaryFocus, isTrue);
+          expect(focusedOption(), isNull);
+        });
+      }
 
       testWidgets('Escape returns focus to the trigger', (tester) async {
         await tester.pumpMaterialWidget(
@@ -1681,4 +1705,29 @@ void main() {
       tester.expectCursor(SystemMouseCursors.help, on: key);
     });
   });
+}
+
+class _SelfFocusingField extends StatefulWidget {
+  const _SelfFocusingField({required this.focusNode});
+
+  final FocusNode focusNode;
+
+  @override
+  State<_SelfFocusingField> createState() => _SelfFocusingFieldState();
+}
+
+class _SelfFocusingFieldState extends State<_SelfFocusingField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.focusNode.requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      focusNode: widget.focusNode,
+      child: const SizedBox(height: 40, child: Text('Search')),
+    );
+  }
 }

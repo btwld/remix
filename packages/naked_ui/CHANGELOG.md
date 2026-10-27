@@ -9,9 +9,12 @@
   from an open `NakedMenubar` menu, scroll the newly focused item into view the
   same way. A target that is already visible stays where it is.
 - `NakedSelect` now opens with focus on the selected option, scrolled into
-  view, so Arrow Up and Arrow Down continue from it instead of from the first
-  option. Without a selected option, with a disabled one, or when a lazily
-  built list has not built it, focus still starts on the overlay container.
+  view, so Arrow Up and Arrow Down continue from it instead of from the ends of
+  the list. A select without a selected option, or whose selected option is
+  disabled or not built yet in a lazy list, opens on its first enabled option:
+  the first Arrow Down reaches the second option and Enter selects the first,
+  where focus used to start on the overlay container. Focus stays on a field in
+  the panel that has already taken it.
 
 ## 1.2.3
 
