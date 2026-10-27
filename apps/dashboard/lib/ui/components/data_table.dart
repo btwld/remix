@@ -137,9 +137,22 @@ BoxStyler _uiDataTableHeaderRow() => _uiDataTableRowDivider().onFocusVisible(
   BoxStyler().onBuilder(_uiDataTableHeaderRing),
 );
 
+/// A zero-width [BorderSide] is a hairline, so a ring of width zero draws
+/// nothing and leaves the divider alone.
 BoxStyler _uiDataTableHeaderRing(BuildContext context) {
-  final ring = uiFocusRingDecoration(context);
-  return ring == null ? BoxStyler() : BoxStyler().foregroundDecoration(ring);
+  final width = UiTokens.focusRingWidth.resolve(context);
+  if (width <= 0) return BoxStyler();
+  return BoxStyler().foregroundDecoration(
+    BoxDecorationMix(
+      border: BoxBorderMix.all(
+        BorderSideMix(
+          color: UiTokens.focus8(),
+          width: width,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+      ),
+    ),
+  );
 }
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints

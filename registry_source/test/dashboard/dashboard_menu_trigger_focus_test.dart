@@ -86,18 +86,158 @@ void main() {
     );
   });
 
-  testWidgets('the sidebar account row rings on keyboard focus', (
-    tester,
-  ) async {
-    await expectRingOnFocus(
+  group('the sidebar account row', () {
+    /// Hosts the row in a sidebar footer, as the dashboard shell does, on an
+    /// opaque page, and returns what the tests probe.
+    Future<
+      ({
+        GlobalKey boundary,
+        Rect row,
+        Rect avatar,
+        Element avatarElement,
+        Pixels idle,
+      })
+    >
+    pumpRow(
+      WidgetTester tester, {
+      required FortalThemeMode mode,
+      Map<SpaceToken, double>? ringTokens,
+    }) async {
+      final boundary = GlobalKey();
+      await tester.pumpRemixApp(
+        FortalTheme(
+          mode: mode,
+          child: MixScope.inherit(
+            spaces: ringTokens,
+            child: RepaintBoundary(
+              key: boundary,
+              child: ColoredBox(
+                color: mode == .dark
+                    ? const Color(0xFF000000)
+                    : const Color(0xFFFFFFFF),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SizedBox(
+                    width: 256,
+                    height: 320,
+                    child: FortalSidebar<String>(
+                      selectedValue: null,
+                      sections: const [],
+                      footer: const FortalDashboardSidebarAccount(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return (
+        boundary: boundary,
+        row: tester.getRect(
+          find.descendant(
+            of: find.byKey(const ValueKey('sidebar-account-trigger')),
+            matching: find.byType(RowBox),
+          ),
+        ),
+        avatar: tester.getRect(find.byType(FortalAvatar)),
+        avatarElement: tester.element(find.byType(FortalAvatar)),
+        idle: await capturePixels(tester, boundary),
+      );
+    }
+
+    Color pixelAt(
+      GlobalKey boundary,
+      WidgetTester tester,
+      Pixels pixels,
+      Offset p,
+    ) {
+      final device =
+          (p - tester.getTopLeft(find.byKey(boundary))) * pixelScale.toDouble();
+      return pixels.at(device.dx.round(), device.dy.round());
+    }
+
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      testWidgets(
+        'rings around its content without covering it in ${mode.name}',
+        (tester) async {
+          final row = await pumpRow(tester, mode: mode);
+
+          await tab(tester);
+          await tester.pumpAndSettle();
+          final focused = await capturePixels(tester, row.boundary);
+          final focus8 = MixScope.tokenOf(
+            FortalTokens.focus8,
+            tester.element(find.byType(FortalAvatar)),
+          );
+          Color idle(Offset p) => pixelAt(row.boundary, tester, row.idle, p);
+          Color after(Offset p) => pixelAt(row.boundary, tester, focused, p);
+
+          // The ring sits 2px off the row and is 2px wide: 3px out is ring,
+          // 1px out is the gap, and 1px in is the row's own content.
+          for (final edge in <Offset Function(double out)>[
+            (out) => Offset(row.row.center.dx, row.row.top - out),
+            (out) => Offset(row.row.center.dx, row.row.bottom + out),
+            (out) => Offset(row.row.left - out, row.row.center.dy),
+            (out) => Offset(row.row.right + out, row.row.center.dy),
+          ]) {
+            expectNearColor(after(edge(3)), focus8);
+            expectNearColor(after(edge(1)), idle(edge(1)));
+          }
+          // The avatar's own pixels, including its left edge, are untouched.
+          for (final inside in [
+            row.avatar.centerLeft.translate(1, 0),
+            row.avatar.center,
+            row.avatar.centerRight.translate(-1, 0),
+          ]) {
+            expectNearColor(after(inside), idle(inside));
+          }
+          expect(tester.getRect(find.byType(FortalAvatar)), row.avatar);
+        },
+      );
+    }
+
+    testWidgets('keeps the state of its content when it takes focus', (
       tester,
-      child: const SizedBox(width: 256, child: FortalDashboardSidebarAccount()),
-      trigger: find.descendant(
-        of: find.byKey(const ValueKey('sidebar-account-trigger')),
-        matching: find.byType(RowBox),
-      ),
-      focus: () => tab(tester),
-    );
+    ) async {
+      final row = await pumpRow(tester, mode: .light);
+
+      await tab(tester);
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.element(find.byType(FortalAvatar)),
+        same(row.avatarElement),
+      );
+      expect(tester.getRect(find.byType(FortalAvatar)), row.avatar);
+    });
+
+    testWidgets('draws nothing at a ring width of zero', (tester) async {
+      final row = await pumpRow(
+        tester,
+        mode: .light,
+        ringTokens: {FortalTokens.focusRingWidth: 0},
+      );
+
+      await tab(tester);
+      await tester.pumpAndSettle();
+      final focused = await capturePixels(tester, row.boundary);
+
+      for (final edge in <Offset>[
+        Offset(row.row.center.dx, row.row.top - 2.5),
+        Offset(row.row.center.dx, row.row.bottom + 2.5),
+        Offset(row.row.left - 2.5, row.row.center.dy),
+        Offset(row.row.right + 2.5, row.row.center.dy),
+        Offset(row.row.center.dx, row.row.top - 0.5),
+        Offset(row.row.center.dx, row.row.bottom + 0.5),
+      ]) {
+        expectNearColor(
+          pixelAt(row.boundary, tester, focused, edge),
+          pixelAt(row.boundary, tester, row.idle, edge),
+        );
+      }
+    });
   });
 
   testWidgets('the top-bar account avatar rings on keyboard focus', (

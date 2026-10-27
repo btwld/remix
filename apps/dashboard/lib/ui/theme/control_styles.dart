@@ -32,24 +32,6 @@ RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
 RemixBoxEffectsMix uiTabFocusOutline() =>
     uiFocusOutline(UiTokens.focus8(), offset: -2);
 
-/// The `focus-8` ring as a foreground decoration, for a box that takes no box
-/// effects: a data-table header row and the content of a menu trigger. It is
-/// null at a ring width of zero, because a zero-width [BorderSide] is a
-/// hairline.
-BoxDecorationMix? uiFocusRingDecoration(BuildContext context) {
-  final width = UiTokens.focusRingWidth.resolve(context);
-  if (width <= 0) return null;
-  return BoxDecorationMix(
-    border: BoxBorderMix.all(
-      BorderSideMix(
-        color: UiTokens.focus8(),
-        width: width,
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
-    ),
-  );
-}
-
 /// A one-pixel inset stroke, optionally layered over a fill.
 RemixBoxEffectLayerMix uiInsetSurface({required List<Color> strokes}) =>
     RemixBoxEffectLayerMix(

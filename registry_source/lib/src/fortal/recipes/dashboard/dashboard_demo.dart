@@ -59,42 +59,53 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
       key: const ValueKey('sidebar-account-trigger'),
       trigger: RemixMenuTrigger.builder(
         label: 'Workspace account menu',
-        builder: (_, _, _) => RowBox(
-          style: FlexBoxStyler()
-              .minHeight(48)
-              .crossAxisAlignment(.center)
-              .spacing(10)
-              .onFocusVisible(FlexBoxStyler().onBuilder(_accountRowFocusRing)),
-          children: [
-            const FortalAvatar(label: 'LF', size: .size2),
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler()
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.start),
-                children: [
-                  const FortalText(
-                    'Leo Farias',
-                    size: .size2,
-                    weight: .medium,
-                    softWrap: false,
-                    truncate: true,
+        builder: (_, _, _) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.all(FortalTokens.radius2()))
+              .onFocusVisible(
+                CardStyler().containerEffects(
+                  fortalFocusOutline(
+                    FortalTokens.focus8(),
+                    offset: FortalTokens.focusRingOffset(),
                   ),
-                  StyledText(
-                    'Northstar workspace',
-                    style: dashboardText(
-                      .size1,
-                      tone: .muted,
-                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                  ),
-                ],
+                ),
               ),
-            ),
-            StyledIcon(
-              icon: RemixIcons.dotsHorizontal,
-              style: IconStyler().size(18).color(FortalTokens.gray11()),
-            ),
-          ],
+          child: RowBox(
+            style: FlexBoxStyler()
+                .minHeight(48)
+                .crossAxisAlignment(.center)
+                .spacing(10),
+            children: [
+              const FortalAvatar(label: 'LF', size: .size2),
+              Expanded(
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.start),
+                  children: [
+                    const FortalText(
+                      'Leo Farias',
+                      size: .size2,
+                      weight: .medium,
+                      softWrap: false,
+                      truncate: true,
+                    ),
+                    StyledText(
+                      'Northstar workspace',
+                      style: dashboardText(
+                        .size1,
+                        tone: .muted,
+                      ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                    ),
+                  ],
+                ),
+              ),
+              StyledIcon(
+                icon: RemixIcons.dotsHorizontal,
+                style: IconStyler().size(18).color(FortalTokens.gray11()),
+              ),
+            ],
+          ),
         ),
       ),
       actions: const [
@@ -113,13 +124,6 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
       ),
     ),
   );
-}
-
-FlexBoxStyler _accountRowFocusRing(BuildContext context) {
-  final ring = fortalFocusRingDecoration(context);
-  return ring == null
-      ? FlexBoxStyler()
-      : FlexBoxStyler().foregroundDecoration(ring);
 }
 
 /// Application-owned toolbar actions supplied to the Fortal dashboard shell.
@@ -314,7 +318,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                 style: _toolbarButtonStyle,
                 focusNode: menu.focusNode,
                 onPressed: menu.toggle,
-                icon: RemixIcons.person,
+                icon: null,
                 iconBuilder: (_, _, _) =>
                     const FortalAvatar(label: 'LF', size: .size2),
               ),
