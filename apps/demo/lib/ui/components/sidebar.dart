@@ -97,7 +97,16 @@ SidebarStyler fortalSidebarStyle({
                 right: destinationRightPadding,
               ),
             )
-            .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
+            .container(.mainAxisSize(.max).mainAxisAlignment(.start))
+            // RemixSidebar paints a destination's container but not its
+            // containerEffects, so the toggle's ring is drawn as a border here.
+            .onFocusVisible(
+              ToggleStyler().border(
+                .color(FortalTokens.focusA8())
+                    .width(FortalTokens.focusRingWidth())
+                    .strokeAlign(BorderSide.strokeAlignInside),
+              ),
+            ),
   ).merge(style);
 }
 

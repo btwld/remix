@@ -35,7 +35,8 @@ ToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
       .merge(_fortalToggleSizeStyler(size));
 }
 
-ToggleStyler _fortalToggleFocusStyler() => ToggleStyler().fortalFocusRing();
+ToggleStyler _fortalToggleFocusStyler() =>
+    ToggleStyler().containerEffects(fortalInsetFocusOutline());
 
 ToggleStyler _fortalToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()

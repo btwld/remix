@@ -15,7 +15,7 @@ void main() {
 
     expect(_containerColor(hovered.spec), hovered.grayA3);
     expect(_containerColor(focusedHovered.spec), focusedHovered.accentA3);
-    expect(_containerBorder(focusedHovered.spec)?.top.width, 2);
+    expect(focusedHovered.spec.containerEffects?.outline.width, 2);
   });
 }
 
@@ -53,9 +53,6 @@ Future<({TabSpec spec, Color grayA3, Color accentA3})> _resolve(
 Color? _containerColor(TabSpec spec) {
   return _containerDecoration(spec)?.color;
 }
-
-Border? _containerBorder(TabSpec spec) =>
-    _containerDecoration(spec)?.border as Border?;
 
 BoxDecoration? _containerDecoration(TabSpec spec) =>
     spec.container.spec.box?.spec.decoration as BoxDecoration?;

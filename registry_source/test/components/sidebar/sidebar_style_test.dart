@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
@@ -155,6 +156,44 @@ void main() {
     await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));
     await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
     semantics.dispose();
+  });
+
+  testWidgets('a destination focused from the keyboard shows the focus ring', (
+    tester,
+  ) async {
+    final previousStrategy = FocusManager.instance.highlightStrategy;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
+    addTearDown(
+      () => FocusManager.instance.highlightStrategy = previousStrategy,
+    );
+    await tester.pumpRemixApp(
+      FortalSidebar<String>(
+        sections: _sections,
+        selectedValue: 'overview',
+        onSelected: (_) {},
+      ),
+    );
+
+    final idle = tester.resolvedSpecOf<ToggleSpec>(find.text('Customers'));
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+    final focused = tester.resolvedSpecOf<ToggleSpec>(find.text('Customers'));
+
+    expect(
+      (idle.container.spec.box?.spec.decoration as BoxDecoration?)?.border,
+      isNull,
+    );
+    final border =
+        (focused.container.spec.box?.spec.decoration as BoxDecoration?)?.border
+            as Border?;
+    final context = tester.element(find.text('Customers'));
+    expect(border?.top.color, MixScope.tokenOf(FortalTokens.focusA8, context));
+    expect(
+      border?.top.width,
+      MixScope.tokenOf(FortalTokens.focusRingWidth, context),
+    );
   });
 
   testWidgets('high contrast keeps selected content distinct', (tester) async {

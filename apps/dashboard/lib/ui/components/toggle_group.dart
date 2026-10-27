@@ -65,7 +65,9 @@ ToggleGroupStyler uiToggleGroupStyle({
               .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
-        .onFocusVisible(ToggleGroupItemStyler().uiFocusRing())
+        .onFocusVisible(
+          ToggleGroupItemStyler().containerEffects(uiInsetFocusOutline()),
+        )
         .onDisabled(
           ToggleGroupItemStyler()
               .color(UiTokens.grayA3())
