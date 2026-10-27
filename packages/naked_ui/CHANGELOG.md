@@ -52,6 +52,16 @@
 - The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
   from an open `NakedMenubar` menu, scroll the newly focused item into view the
   same way. A target that is already visible stays where it is.
+- Add `constrainToAvailableHeight` to `NakedSelect`, `NakedMenu`, and
+  `OverlayPositioner` (default `false`, so nothing changes until it is set). A
+  panel placed above or below its trigger is then laid out no taller than the
+  space on that side, after `sideOffset` and `collisionPadding`, instead of as
+  tall as the whole overlay, so a tall panel no longer slides over its trigger
+  and a scroll view inside it scrolls beside the trigger. With collision
+  avoidance on, the larger side bounds the layout; the panel stays on the
+  preferred side when it fits there, otherwise it flips. Content that cannot
+  scroll overflows the shorter panel, and placements to the left or right of the
+  trigger are not capped.
 
 ## 1.2.3
 
