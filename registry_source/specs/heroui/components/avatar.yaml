@@ -1,0 +1,26 @@
+component: Avatar
+widget: HeroUiAvatar
+target: RemixAvatar
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/avatar.css]
+anatomy: [container, label, icon, images]
+variants: [default (defaultAvatar), soft]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest]
+tokens:
+  - default (default variant fill)
+  - "colors (HeroUiColor): default (defaultColor), accent, success, warning, danger"
+  - "-soft fill and -soft-foreground label per colour; default-soft for the default colour"
+  - radius-2xl, radius-3xl, text-xs, text-sm, text-base
+measurements:
+  - {what: size, value: "sm 32, md 40, lg 48 (heroUiAvatarDimension, shared with the avatar group)", cite: "avatar-default-accent-sm, -md, -lg"}
+  - {what: radius, value: "sm 16, md 24, lg 24", cite: "avatar-default-accent-sm, -md, -lg"}
+  - {what: fallback label, value: "sm 12, md 14/20, lg 16, medium", cite: "avatar-fallback-default-accent-md; avatar.css .avatar__fallback sizes"}
+  - {what: soft fill, value: "the colour's -soft token over the whole avatar", cite: "avatar-fallback-soft-accent-md (the root is transparent)"}
+  - {what: fill and label colour, value: "default fill or soft tint per colour; label in the colour's soft foreground", cite: "avatar-fallback-<variant>-<color>-md backgroundColor and color, light and dark"}
+approximations:
+  - The label is HeroUI's Avatar.Fallback; images are Remix's foregroundImage and backgroundImage, which fall back to the label when they fail.
+  - The 150ms fade-in of a loaded image (avatar__image) is not reproduced.
+  - HeroUI's default variant is defaultAvatar.

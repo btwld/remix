@@ -1,0 +1,22 @@
+component: Separator
+widget: HeroUiSeparator
+target: RemixDivider
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/separator.css]
+anatomy: [line]
+variants: [default (defaultSeparator), secondary, tertiary]
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - separator, separator-secondary, separator-tertiary
+  - radius-sm
+measurements:
+  - {what: fill, value: "separator, separator-secondary, separator-tertiary", cite: "separator-<orientation>-<variant> backgroundColor, light and dark"}
+  - {what: thickness, value: 1, cite: "separator-horizontal-default (1 tall), separator-vertical-default (1 wide)"}
+  - {what: radius, value: 4, cite: separator-horizontal-default}
+  - {what: vertical minimum length, value: 8, cite: separator-vertical-default}
+approximations:
+  - A horizontal separator spans its parent's width and a vertical one its parent's height (w-full, self-stretch) through a fractional size; give the parent a bounded extent.
+  - HeroUI's default variant is defaultSeparator; orientation is Flutter's Axis.

@@ -7,12 +7,13 @@ This example is installed by `remix_cli`. It gives an application editable
 theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
-The two registry trees live in
-`registry/vanilla/` and `registry/fortal/`, and they are the only ones: the CLI
+The registry trees live in
+`registry/vanilla/`, `registry/fortal/`, and `registry/heroui/`: the CLI
 ships no catalog of its own, and there is no second registry copy under
 `open_code/`. `open_code/fixture/` proves the Vanilla preset, while
 `open_code/fortal_fixture/` proves Fortal with every generated widget and
-known Radix Themes 3.3.0 color values. A behavioral package can be styled from
+known Radix Themes 3.3.0 color values, and `open_code/heroui_fixture/` proves
+HeroUI with every generated widget. A behavioral package can be styled from
 the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
@@ -47,6 +48,13 @@ the optional `chart` extension, plus `accordion`, `app_bar`, `avatar`, `badge`, 
 layout with no `Spec` and no generated adapter, pairing an installed
 `sidebar` with a header and body.
 
+The `heroui` preset follows HeroUI's names, adding `alert`, `avatar_group`,
+`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
+`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`toggle_button`, and `toggle_button_group` to shared names such as `button` and
+`select`.
+
 `dashboard_shell` installs a reusable, host-controlled shell plus its shared
 composition source. It pulls in the existing app-bar, sidebar layout,
 sidebar, icon-button, icon, and text-field items; it does not install charts, tables,
@@ -54,7 +62,7 @@ sample data, routes, or an application entry point.
 
 `dashboard_demo` installs that shell plus the five destinations of the
 reference product dashboard: Overview, Chat, Customers, Orders, and Settings.
-It uses the same `UiDashboardDemo` API in both presets, renders each preset's
+It uses the same `UiDashboardDemo` API in the Vanilla and Fortal presets, renders each preset's
 native component variants, and still leaves the host's app, theme scope,
 routes, authentication, persistence, and real search behavior in the
 application.
@@ -76,7 +84,7 @@ for the global `remix` command):
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.13`. Until that release is available,
+Every preset requires Remix `^1.0.0-beta.13`. Until that release is available,
 add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml
@@ -164,7 +172,7 @@ that builder for the installed source paths in `build.yaml`, preserving other
 settings and comments. Explicit disabled builders or excluded source fail in
 preflight instead of being overridden. Dry-run/diff remain read-only.
 
-Agent behavior is available in both presets. Add a bare surface for
+Agent behavior is available in the Vanilla and Fortal presets. Add a bare surface for
 behavior-only source, or `<component>_recipe` for the surface plus its complete
 preset-specific styling bundle. Each recipe is authored as Dart in its preset's
 source (`registry_source/lib/src/{default,fortal}/recipes/`) against the Agent
@@ -345,7 +353,7 @@ checkout CLI with prefix `Acme`, adds every item, and verifies generation,
 analysis, and consumer tests against checkout Remix.
 
 After Remix is published, run `fvm dart run melos run open-code:release:check`
-to verify both presets with hosted Remix. The direct checker defaults to both
+to verify every preset with hosted Remix. The direct checker defaults to both
 sources. Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.

@@ -1,0 +1,26 @@
+component: TextArea
+widget: HeroUiTextArea
+target: RemixTextArea
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/textarea.css, dist/components/textfield.css, dist/components/input-group.css]
+anatomy: [label, field container, input, placeholder, description or error]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, focus, error, disabled]
+tokens:
+  - the text field's tokens (see textfield.yaml)
+measurements:
+  - {what: area, value: "two lines: 56 high at 1024 px, 64 at 375 px", cite: textarea-primary-full-rest}
+  - {what: minimum height, value: 38, cite: textarea-primary-full-rest}
+  - {what: padding and radius, value: "12 x 8, 12", cite: textarea-primary-full-rest}
+  - {what: text, value: "16/24 below 640px, 14/20 above", cite: textarea-primary-full-rest}
+  - {what: fill and shadow, value: "as the text field: field-background and surface shadow (primary), default (secondary)", cite: "textarea-primary-full-rest, textarea-secondary-full-rest"}
+  - {what: error fill, value: "field-focus (primary), default (secondary)", cite: "textarea-primary-full-invalid, textarea-secondary-full-invalid"}
+  - {what: error and focus rings, value: "the text field's: 1px danger outline, 2px when focused", cite: "textarea.css status-invalid-field; input-invalid-focus"}
+  - {what: disabled opacity, value: 0.5, cite: textarea-primary-full-disabled}
+approximations:
+  - The area reuses the text field recipe; `.textarea` repeats `.input` and adds `min-height`.
+  - Remix's area starts at two lines (`minLines`) and grows with the text; upstream's browser resize handle is not drawn.
+  - The content is top-aligned (`crossAxisAlignment: start`), as `.input-group:has(textarea)` does; a bare `.textarea` has no such rule.

@@ -18,3 +18,4 @@ analyzer:
   exclude:
     - open_code/fixture/**
     - open_code/fortal_fixture/**
+    - open_code/heroui_fixture/**

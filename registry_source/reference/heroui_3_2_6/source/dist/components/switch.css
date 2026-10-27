@@ -1,0 +1,237 @@
+/* Switch base styles */
+.switch {
+  @apply flex flex-col items-start gap-1 no-highlight;
+
+  /* Cursor */
+  cursor: var(--cursor-interactive);
+
+  /* Default tokens for switch control states */
+  --switch-control-bg: var(--default);
+  --switch-control-bg-hover: color-mix(in oklab, var(--switch-control-bg), transparent 20%);
+  --switch-control-bg-pressed: var(--switch-control-bg-hover);
+  --switch-control-bg-checked: var(--accent);
+  --switch-control-bg-checked-hover: var(--accent-hover);
+
+  /* Disabled state */
+  &[data-disabled="true"] {
+    @apply status-disabled;
+
+    [data-slot="description"],
+    [data-slot="field-error"] {
+      @apply status-disabled;
+    }
+
+    .switch__thumb {
+      @apply bg-default-foreground/20;
+    }
+  }
+
+  /* Field-level help text below the control + label row */
+  & > [data-slot="description"] {
+    @apply w-full min-w-0 ps-[calc(2.5rem+0.75rem)];
+  }
+
+  & > [data-slot="field-error"] {
+    @apply w-full min-w-0 ps-[calc(2.5rem+0.75rem)] text-xs text-muted;
+  }
+
+  &.switch--sm > [data-slot="description"] {
+    @apply ps-[calc(2rem+0.75rem)];
+  }
+
+  &.switch--sm > [data-slot="field-error"] {
+    @apply ps-[calc(2rem+0.75rem)];
+  }
+
+  &.switch--lg > [data-slot="description"] {
+    @apply ps-[calc(3rem+0.75rem)];
+  }
+
+  &.switch--lg > [data-slot="field-error"] {
+    @apply ps-[calc(3rem+0.75rem)];
+  }
+
+  /* Disabled + Selected state */
+  &:disabled[aria-checked="true"],
+  &:disabled[data-selected="true"],
+  &[data-disabled="true"][aria-checked="true"],
+  &[data-disabled="true"][data-selected="true"],
+  &[aria-disabled="true"][aria-checked="true"],
+  &[aria-disabled="true"][data-selected="true"] {
+    .switch__thumb {
+      opacity: 0.4;
+    }
+  }
+}
+
+/* Size variants - default is medium */
+.switch--sm {
+  /* Small size modifier */
+}
+
+.switch--md {
+  /* Medium size - no styles as this is the default */
+}
+
+.switch--lg {
+  /* Large size modifier */
+}
+
+/* Switch control (track) */
+.switch__control {
+  /* Default size (medium) */
+  @apply relative flex shrink-0 items-center overflow-hidden rounded-xl;
+  height: 1.25rem; /* 20px on desktop (14px base), 20px on mobile (16px base) - scales with font-size */
+  width: 2.5rem; /* 35px on desktop, 40px on mobile - scales with font-size */
+
+  background-color: var(--switch-control-bg);
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    background-color 250ms var(--ease-smooth),
+    box-shadow 150ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  /* Focus states */
+  .switch:focus-visible &,
+  .switch:has([data-slot="switch-content"][data-focus-visible="true"]) &,
+  .switch [data-slot="switch-content"][data-focus-visible="true"] & {
+    @apply status-focused;
+  }
+
+  /* Hover states */
+  .switch:hover &,
+  .switch:has([data-slot="switch-content"][data-hovered="true"]) &,
+  .switch [data-slot="switch-content"][data-hovered="true"] & {
+    background-color: var(--switch-control-bg-hover);
+  }
+
+  /* Pressed states */
+  .switch:active &,
+  .switch:has([data-slot="switch-content"][data-pressed="true"]) &,
+  .switch [data-slot="switch-content"][data-pressed="true"] & {
+    background-color: var(--switch-control-bg-pressed);
+    @apply motion-reduce:transform-none;
+  }
+
+  /* Checked states */
+  .switch[aria-checked="true"] &,
+  .switch[data-selected="true"] & {
+    background-color: var(--switch-control-bg-checked);
+  }
+
+  /* Checked + Hover states */
+  .switch[aria-checked="true"]:hover &,
+  .switch[data-selected="true"]:hover &,
+  .switch[aria-checked="true"][data-hovered="true"] &,
+  .switch[data-selected="true"][data-hovered="true"] &,
+  .switch:has([data-slot="switch-content"][data-hovered="true"])[data-selected="true"] & {
+    background-color: var(--switch-control-bg-checked-hover);
+  }
+
+  /* Checked + Pressed states */
+  .switch[aria-checked="true"]:active &,
+  .switch[data-selected="true"]:active &,
+  .switch[aria-checked="true"][data-pressed="true"] &,
+  .switch[data-selected="true"][data-pressed="true"] &,
+  .switch:has([data-slot="switch-content"][data-pressed="true"])[data-selected="true"] & {
+    background-color: var(--switch-control-bg-checked-hover);
+  }
+}
+
+/* Switch content — the clickable label (control + label text) */
+.switch__content {
+  @apply relative inline-flex cursor-[inherit] items-center gap-3 text-sm font-medium text-foreground outline-none select-none no-highlight;
+}
+
+/* Size-specific control dimensions */
+.switch--sm .switch__control {
+  @apply rounded-lg;
+  height: 1rem; /* ~14px on desktop, ~16px on mobile */
+  width: 2rem; /* ~32px on desktop, ~36px on mobile */
+}
+
+.switch--md .switch__control {
+  /* No styles as this is the default size */
+}
+
+.switch--lg .switch__control {
+  height: 1.5rem; /* ~21px on desktop, ~24px on mobile */
+  width: 3rem; /* ~48px on desktop, ~56px on mobile */
+}
+
+/* Switch thumb */
+.switch__thumb {
+  /* Default size (medium) with margin-based positioning */
+  @apply ms-0.5 flex origin-center rounded-lg bg-white text-black shadow-field;
+  height: 1rem; /* ~14px on desktop, ~16px on mobile */
+  width: 1.375rem; /* ~19px on desktop, ~22px on mobile */
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    margin 300ms var(--ease-out-fluid),
+    background-color 200ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  /* Selected/checked state - use margin instead of translate */
+  .switch[aria-checked="true"] &,
+  .switch[data-selected="true"] & {
+    @apply ms-[calc(100%-1.5rem)] bg-accent-foreground text-accent;
+    box-shadow:
+      0px 0px 5px 0px rgb(0 0 0 / 0.02),
+      0px 2px 10px 0px rgb(0 0 0 / 0.06),
+      0px 0px 1px 0px rgb(0 0 0 / 0.3);
+  }
+
+  .switch:active &,
+  .switch[data-pressed="true"] & {
+  }
+}
+
+/* Size-specific thumb dimensions */
+.switch--sm .switch__thumb {
+  @apply rounded-md;
+  height: 0.75rem; /* ~10.5px on desktop, ~12px on mobile */
+  width: 1.03125rem; /* ~14.4px on desktop, ~16.5px on mobile - maintains 1.375:1 ratio */
+
+  /* Small selected state positioning */
+  .switch[aria-checked="true"] &,
+  .switch[data-selected="true"] & {
+    @apply ms-[calc(100%-1.15625rem)];
+  }
+}
+
+.switch--lg .switch__thumb {
+  @apply rounded-xl;
+  height: 1.25rem; /* ~17.5px on desktop, ~20px on mobile */
+  width: 1.71875rem; /* ~24px on desktop, ~27.5px on mobile - maintains 1.375:1 ratio */
+
+  /* Large selected state positioning */
+  .switch[aria-checked="true"] &,
+  .switch[data-selected="true"] & {
+    @apply ms-[calc(100%-1.84375rem)];
+  }
+}
+
+/* Switch thumb content container */
+.switch__thumb > * {
+  @apply flex size-full items-center justify-center;
+}
+
+.switch [data-slot="label"] {
+  @apply select-none;
+}
+
+.switch__content [data-slot="label"] {
+  cursor: var(--cursor-interactive);
+}
+
+.switch [data-slot="description"] {
+  @apply cursor-default select-none;
+}

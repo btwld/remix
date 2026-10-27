@@ -52,14 +52,17 @@ iconLibrary: lucide # remix (default) or lucide
 ```
 
 The CLI adds `lucide_flutter` instead of `remix_ui_icons` when it is selected.
-The choice applies at install. Four items use icons (`icons`,
-`dashboard_shell`, `dashboard_demo`, `support`). To switch an installed
-project, change the setting and reinstall every one of them you have, in one
-command; `--overwrite` rewrites only the items named:
+The choice applies at install. In Vanilla and Fortal four items use icons
+(`icons`, `dashboard_shell`, `dashboard_demo`, `support`); in HeroUI three do
+(`breadcrumbs`, `close_button`, `search_field`) and there is no `icons` item.
+To switch an installed project, change the setting and reinstall every one of
+them you have, in one command; `--overwrite` rewrites only the items named:
 
 ```bash
-remix add icons dashboard_shell dashboard_demo support --diff
+remix add icons dashboard_shell dashboard_demo support --diff       # Vanilla, Fortal
 remix add icons dashboard_shell dashboard_demo support --overwrite
+remix add breadcrumbs close_button search_field --diff              # HeroUI
+remix add breadcrumbs close_button search_field --overwrite
 ```
 
 Icons referenced in application code are not rewritten. The CLI that

@@ -1,0 +1,75 @@
+import 'dart:math' as math;
+import 'dart:ui';
+
+/// CSS Color 4 `color-mix(in oklab, ...)`, including percentage normalization,
+/// alpha premultiplication, and the alpha multiplier when weights sum below 1.
+/// Extended sRGB is retained; clipping is left to Flutter's output surface.
+Color {{valuePrefix}}MixOklab(Color first, Color second, double a, double b) {
+  final total = a + b;
+  assert(total > 0);
+  final p = a / total;
+  final q = b / total;
+  final alpha = first.a * p + second.a * q;
+  if (alpha == 0) return const Color(0x00000000);
+  final one = _oklab(first);
+  final two = _oklab(second);
+  final lab = List<double>.generate(
+    3,
+    (i) => (one[i] * first.a * p + two[i] * second.a * q) / alpha,
+  );
+  final l = math
+      .pow(lab[0] + .3963377774 * lab[1] + .2158037573 * lab[2], 3)
+      .toDouble();
+  final m = math
+      .pow(lab[0] - .1055613458 * lab[1] - .0638541728 * lab[2], 3)
+      .toDouble();
+  final s = math
+      .pow(lab[0] - .0894841775 * lab[1] - 1.291485548 * lab[2], 3)
+      .toDouble();
+  return Color.from(
+    alpha: alpha * math.min(total, 1),
+    red: _encode(4.0767416621 * l - 3.3077115913 * m + .2309699292 * s),
+    green: _encode(-1.2684380046 * l + 2.6097574011 * m - .3413193965 * s),
+    blue: _encode(-.0041960863 * l - .7034186147 * m + 1.707614701 * s),
+    colorSpace: ColorSpace.extendedSRGB,
+  );
+}
+
+double _decode(double x) =>
+    x.sign *
+    (x.abs() <= .04045
+        ? x.abs() / 12.92
+        : math.pow((x.abs() + .055) / 1.055, 2.4).toDouble());
+double _encode(double x) =>
+    x.sign *
+    (x.abs() <= .0031308
+        ? 12.92 * x.abs()
+        : 1.055 * math.pow(x.abs(), 1 / 2.4) - .055);
+double _cbrt(double x) => x.sign * math.pow(x.abs(), 1 / 3);
+List<double> _oklab(Color color) {
+  final c = color.withValues(colorSpace: ColorSpace.extendedSRGB);
+  final r = _decode(c.r), g = _decode(c.g), b = _decode(c.b);
+  final l = _cbrt(.4122214708 * r + .5363325363 * g + .0514459929 * b);
+  final m = _cbrt(.2119034982 * r + .6806995451 * g + .1073969566 * b);
+  final s = _cbrt(.0883024619 * r + .2817188376 * g + .6299787005 * b);
+  return [
+    .2104542553 * l + .793617785 * m - .0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + .4505937099 * s,
+    .0259040371 * l + .7827717662 * m - .808675766 * s,
+  ];
+}
+
+/// Rendering boundary: Flutter 3.44 Color.lerp rejects extendedSRGB colors.
+/// Keep full-precision source/formula colors in ThemeData.colors, but hand Mix
+/// sRGB paint values (floating-point, not 8-bit quantized). Output gamut is
+/// explicitly channel-clipped here, not claimed as CSS perceptual gamut mapping.
+Color {{valuePrefix}}PaintColor(Color value) {
+  final srgb = value.withValues(colorSpace: ColorSpace.extendedSRGB);
+  return Color.from(
+    alpha: srgb.a,
+    red: srgb.r.clamp(0, 1),
+    green: srgb.g.clamp(0, 1),
+    blue: srgb.b.clamp(0, 1),
+    colorSpace: ColorSpace.sRGB,
+  );
+}

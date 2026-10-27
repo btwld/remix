@@ -1,0 +1,26 @@
+component: Alert
+widget: HeroUiAlert
+target: RemixCallout
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/alert.css]
+anatomy: [container, indicator, title]
+variants: [default (defaultStatus), accent, success, warning, danger]
+sizes: {supported: [], default: null}
+states: [static]
+tokens:
+  - surface and surface shadow, radius-panel
+  - foreground (default), accent-soft-foreground, success-soft-foreground, warning-soft-foreground, danger-soft-foreground
+  - text-sm
+measurements:
+  - {what: container, value: "full width, padding 16 x 12, gap 16; 48 high around a title only", cite: "alert-default-short-root"}
+  - {what: radius and shadow, value: "24, surface shadow (none in dark)", cite: "alert-default-short-root"}
+  - {what: indicator, value: "24 with a 16 icon", cite: "alert-default-short-indicator, alert-default-short-icon"}
+  - {what: title, value: "14/24 medium", cite: "alert-default-short-title"}
+  - {what: status colors, value: "title and icon in foreground (default) or the status's soft foreground", cite: "alert-default-short-title, alert-accent-short-title, alert-success-short-title, alert-warning-short-title, alert-danger-short-title"}
+  - {what: width at 375, value: 327 in the fixture column, cite: "alert-default-short-root (375)"}
+approximations:
+  - The status picks the title and icon color through a `status` parameter, HeroUI's prop name.
+  - RemixCallout holds one text or one child, so a title with a description (68 high upstream, `alert-default-root`) is the app's composition inside `child`; the description is `text-sm text-muted` (`alert-default-description`).
+  - HeroUI's per-status default icons are not supplied; pass `icon`.

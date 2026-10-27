@@ -2,3 +2,4 @@ schema: 1
 presets:
   vanilla: vanilla/registry.yaml
   fortal: fortal/registry.yaml
+  heroui: heroui/registry.yaml

@@ -1,0 +1,49 @@
+component: TextField
+widget: HeroUiTextField
+target: RemixTextField
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages:
+    - dist/components/textfield.css
+    - dist/components/input.css
+    - dist/components/label.css
+    - dist/components/description.css
+    - dist/components/field-error.css
+    - dist/utilities/index.css
+anatomy: [label, field container, input, placeholder, description or error]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, focus, error, disabled]
+tokens:
+  - field-background, field-hover, field-focus (primary), field shadow (primary)
+  - default, default-hover (secondary rest, hover, focus)
+  - field-focus (primary error fill), default (secondary error fill)
+  - field-foreground (text and caret), field-placeholder, foreground (label), muted (description)
+  - danger (error ring, label, message), focus (ring), radius-field
+measurements:
+  - {what: field height, value: "40 below 640px, 36 above", cite: input-primary-rest}
+  - {what: field padding, value: "12 x 8", cite: input-primary-rest}
+  - {what: field radius, value: 12, cite: input-primary-rest}
+  - {what: input text, value: "16/24 below 640px, 14/20 above", cite: input-primary-rest}
+  - {what: label, value: "14/20 medium foreground", cite: label.css}
+  - {what: description, value: "12/16 muted", cite: description.css}
+  - {what: "label, field, and description stack", value: "gap 4; 80 high at 1024 px, 84 at 375 px", cite: textfield-primary-rest}
+  - {what: field fill, value: "field-background (primary), default (secondary)", cite: "input-primary-rest, input-secondary-rest"}
+  - {what: field shadow, value: "surface shadow on primary in light, none in dark and on secondary", cite: "input-primary-rest, input-secondary-rest"}
+  - {what: hover fill, value: "field-hover (primary), default-hover (secondary)", cite: "input.css .input:hover:not(:focus), .input--secondary hover"}
+  - {what: focus ring, value: "2px focus against the field, no offset", cite: "input.css status-focused-field; utilities/index.css focus-field-ring"}
+  - {what: error fill, value: "field-focus (primary), default (secondary)", cite: "input.css .input[data-invalid], .input--secondary[data-invalid]"}
+  - {what: error ring, value: "1px danger outline", cite: "utilities/index.css invalid-field-ring (input-primary-invalid carries no outline key)"}
+  - {what: error ring focused, value: "2px danger, no outline", cite: "input-invalid-focus; utilities/index.css invalid-field-ring"}
+  - {what: hovered error fill, value: "the hover fill: the hover selector outranks [data-invalid]", cite: "input.css .input:hover:not(:focus):not(:focus-visible) over .input[data-invalid]"}
+  - {what: error message inset, value: 4, cite: search-primary-intrinsic-invalid-error}
+  - {what: error message, value: "12/16 danger", cite: search-primary-intrinsic-invalid-error}
+  - {what: disabled opacity, value: "0.5 on the field and its label, not the description", cite: "input-primary-disabled, label.css"}
+approximations:
+  - Remix's `error` flag is HeroUI's `invalid`. `textfield.css` hides the description while invalid and shows a FieldError in its place, which reveals over 350ms. The recipe keeps one `helperText` line, so the app passes the error message there; it turns danger with the `px-1` inset. Radio, checkbox, and switch groups differ: they keep the description beside an error line.
+  - The required asterisk (`label--required`) is the app's, in the label text.
+  - The default theme's field border is 0px wide, so `field-border` and its hover and focus colors are not drawn.
+  - Fill and ring changes share one 150ms ease-smooth transition; upstream eases the shadow with ease-out.
+  - The caret takes the text color, as a browser's does; its width and blink are Remix's.
+  - The textfield `full-width` modifier is the parent's constraint.
