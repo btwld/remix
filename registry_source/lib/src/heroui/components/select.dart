@@ -69,8 +69,10 @@ SelectTriggerStyler _trigger(
   return result;
 }
 
-/// `.select__popover`: `bg-overlay`, `min(32px, var(--radius-3xl))`.
+/// `.select__popover`: `min-w-(--trigger-width)`, `bg-overlay`,
+/// `min(32px, var(--radius-3xl))`.
 final _content = SelectContentStyler()
+    .minWidth(remixAnchorWidth())
     .color(HeroUiTokens.overlay())
     .borderRadius(.all(HeroUiTokens.radiusPanel()))
     .containerEffects(heroUiSurfaceEffects(overlay: true));

@@ -26,9 +26,10 @@ measurements:
   - {what: trigger fill, value: "field-background (primary), default (secondary)", cite: "select-primary-rest-select-trigger, select-secondary-rest-select-trigger"}
   - {what: popover fill and shadow, value: "overlay and the overlay shadow", cite: select-primary-keyboard-open-select-popover}
   - {what: item focus ring, value: "2px background gap, then a 2px focus ring", cite: "select-primary-keyboard-open-list-box-item:Apple"}
+  - {what: popover width, value: "at least the trigger's: 320 for a 320 trigger", cite: "select-primary-keyboard-open-select-popover; select.css min-w-(--trigger-width)"}
 approximations:
   - "The trigger's padding is physical, so the indicator inset does not mirror in right-to-left. Mix cannot merge directional padding with a caller's physical padding, which would make a caller `style` with `padding(.all(..))` throw."
-  - The popover is as wide as its content; upstream's is at least the trigger's width (`min-w-(--trigger-width)`), which RemixSelect cannot express.
+  - "A popover wider than its trigger is centered under it by Remix's default `positioning`; React Aria starts it at the trigger's start edge. Pass `OverlayPositionConfig(side: .bottom, alignment: .start)` for that."
   - The popover appears without upstream's 150ms fade and zoom.
   - "The chevron is Remix's glyph at 11px, centered in the 16px slot's place (about 11 x 5.9 ink against 10.5 x 5.9). It flips when open without upstream's 150ms rotation."
   - The trigger's optional leading icon is Remix's and is not styled; HeroUI has none.
