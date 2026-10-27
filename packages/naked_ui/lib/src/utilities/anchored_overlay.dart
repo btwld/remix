@@ -13,8 +13,9 @@ import 'positioning.dart';
 ///
 /// 1. Placement: [OverlayPositioner] puts [child] next to the anchor.
 /// 2. Outside taps: a [TapRegion] in the menu's group closes the overlay.
-/// 3. Focus and keys: the overlay is a focus scope that takes focus on open
-///    and handles Escape, Arrow Up/Down, Home, and End.
+/// 3. Focus and keys: the overlay is a focus scope that takes focus on open,
+///    on its container unless [initialFocusNode] asks for an item, and
+///    handles Escape, Arrow Up/Down, Home, and End.
 ///
 /// Escape and outside taps close the nearest [MenuController], so they reach
 /// [RawMenuAnchor.onCloseRequested] like the closes [RawMenuAnchor] starts
@@ -39,6 +40,7 @@ class AnchoredOverlay extends StatefulWidget {
     this.positioning = const OverlayPositionConfig(),
     this.constrainToAvailableHeight = false,
     this.closeOnTapOutside = true,
+    this.initialFocusNode,
     required this.child,
   });
 
@@ -55,6 +57,15 @@ class AnchoredOverlay extends StatefulWidget {
 
   /// Whether a tap outside the menu's tap region closes the overlay.
   final bool closeOnTapOutside;
+
+  /// The item that takes focus once the overlay is built, in place of the
+  /// container.
+  ///
+  /// When this node is not attached to an item or cannot take focus, the first
+  /// item that can take focus does. The item is revealed in the scrollables
+  /// that contain it. Focus stays put when something inside the overlay already
+  /// holds it, and on the container when no item can take it.
+  final FocusNode? initialFocusNode;
 
   /// The overlay panel.
   final Widget child;
@@ -104,19 +115,42 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.initialFocusNode != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _focusInitial());
+    }
+  }
+
+  @override
   void dispose() {
     _containerFocusNode.dispose();
     super.dispose();
   }
 
+  FocusNode? _findBoundary(FocusNode from, {required bool last}) {
+    final policy = FocusTraversalGroup.maybeOfNode(from);
+    if (policy == null) return null;
+    return last
+        ? policy.findLastFocus(from, ignoreCurrentFocus: true)
+        : policy.findFirstFocus(from, ignoreCurrentFocus: true);
+  }
+
+  void _focusInitial() {
+    if (!mounted) return;
+    final focused = _containerFocusNode.enclosingScope?.focusedChild;
+    if (focused != null && focused != _containerFocusNode) return;
+    final item = widget.initialFocusNode!;
+    final target = item.context?.mounted == true && item.canRequestFocus
+        ? item
+        : _findBoundary(_containerFocusNode, last: false);
+    if (target != null) requestFocusInView(target);
+  }
+
   void _focusBoundary({required bool last}) {
     final current = FocusManager.instance.primaryFocus;
     if (current == null) return;
-    final policy = FocusTraversalGroup.maybeOfNode(current);
-    if (policy == null) return;
-    final target = last
-        ? policy.findLastFocus(current, ignoreCurrentFocus: true)
-        : policy.findFirstFocus(current, ignoreCurrentFocus: true);
+    final target = _findBoundary(current, last: last);
     if (target != null) requestFocusInView(target);
   }
 

@@ -84,6 +84,7 @@ class _NakedSelectScope<T> extends OverlayScope<T> {
     required this.close,
     required this.closeOnSelect,
     required this.enabled,
+    required this.selectedOptionFocusNode,
     this.onChanged,
     this.value,
   });
@@ -102,6 +103,9 @@ class _NakedSelectScope<T> extends OverlayScope<T> {
   final VoidCallback close;
   final bool closeOnSelect;
   final bool enabled;
+
+  /// The focus node of the selected option, which receives focus on open.
+  final FocusNode selectedOptionFocusNode;
   final ValueChanged<T?>? onChanged;
 
   final T? value;
@@ -117,6 +121,9 @@ class _NakedSelectScope<T> extends OverlayScope<T> {
 }
 
 /// Widget-based select option that binds to the nearest [NakedSelect] scope.
+///
+/// The [value] of each option must be unique within its [NakedSelect]: options
+/// with equal values all show as selected and share one focus node.
 class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
   /// Creates a selectable option associated with [value].
   const NakedSelectOption({
@@ -147,6 +154,7 @@ class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
       effectiveEnabled: effectiveEnabled,
       isSelected: isSelected,
       semanticsRole: SemanticsRole.menuItem,
+      focusNode: isSelected ? scope.selectedOptionFocusNode : null,
       mapStates: (states) {
         return NakedSelectOptionState<T>(states: states, value: value);
       },
@@ -172,10 +180,13 @@ class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
 /// - **PageUp/PageDown**: Move focus by ~10 traversal steps (policy-driven)
 ///
 /// ### Focus Management
-/// When the overlay opens, focus transfers to the overlay container but does NOT
-/// automatically focus the first item. Users must use arrow keys to navigate to
-/// items before selecting them. This follows Flutter Material patterns where
-/// explicit navigation is required.
+/// When the overlay opens, focus moves to the selected option, which scrolls
+/// into view, so Arrow Up and Arrow Down continue from it. Without a selected
+/// option, or when it is disabled or not built yet, focus moves to the first
+/// item that can take focus: a lazily built list builds only the options near
+/// its initial scroll offset. A field in the overlay that requests focus while
+/// the overlay builds keeps it, but a `TextField` with `autofocus: true`
+/// requests it after the build and loses it to the initial focus.
 ///
 /// The focus behavior ensures:
 /// - Keyboard-only users can access all functionality
@@ -247,6 +258,9 @@ class NakedSelect<T> extends StatefulWidget {
   final RawMenuAnchorOverlayBuilder overlayBuilder;
 
   /// Single selection value.
+  ///
+  /// Matches the [NakedSelectOption] with an equal value, so option values must
+  /// be unique.
   final T? value;
 
   /// Callback for single selection changes.
@@ -349,6 +363,9 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     with OverlayStateMixin<NakedSelect<T>> {
   // ignore: dispose-fields
   late final MenuController _menuController;
+  final _selectedOptionFocusNode = FocusNode(
+    debugLabel: 'NakedSelect selected option',
+  );
 
   /// Number of items to jump when pressing PageUp/PageDown.
   static const int _pageJumpSize = 10;
@@ -357,6 +374,12 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
   void initState() {
     super.initState();
     _menuController = MenuController();
+  }
+
+  @override
+  void dispose() {
+    _selectedOptionFocusNode.dispose();
+    super.dispose();
   }
 
   T? get _effectiveValue => widget.value;
@@ -491,6 +514,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
           positioning: widget.positioning,
           constrainToAvailableHeight: widget.constrainToAvailableHeight,
           closeOnTapOutside: widget.closeOnClickOutside,
+          initialFocusNode: _selectedOptionFocusNode,
           child: Semantics(
             role: SemanticsRole.menu,
             container: true,
@@ -503,6 +527,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
                 close: () => _requestOpen(false),
                 closeOnSelect: widget.closeOnSelect,
                 enabled: _isEnabled,
+                selectedOptionFocusNode: _selectedOptionFocusNode,
                 onChanged: _handleSelection,
                 value: _effectiveValue,
                 child: Builder(
