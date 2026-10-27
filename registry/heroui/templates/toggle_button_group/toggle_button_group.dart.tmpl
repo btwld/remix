@@ -13,7 +13,8 @@ part 'toggle_button_group.g.dart';
 /// Remix's group selects one item at a time; HeroUI's also offers multiple
 /// selection. Items share the toggle button's looks without its pressed scale
 /// (`.toggle-button-group .toggle-button:active`). The focus ring is drawn
-/// inside each item, as upstream's `ring-inset`, so the group's clip keeps it.
+/// inside each item, as upstream's `ring-inset`, so the group's clip keeps it,
+/// except at the joined pill's rounded ends.
 @MixWidget(target: RemixToggleGroup.new)
 ToggleGroupStyler {{valuePrefix}}ToggleButtonGroupStyle({
   {{typePrefix}}ToggleButtonVariant variant = .defaultToggle,
