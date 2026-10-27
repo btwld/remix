@@ -149,7 +149,7 @@ the steps above. The source column names the file under
 | Text area | min-h 64; px 12, py 8 | `textarea.tsx` |
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
 | Select trigger | the text field's metrics, gap 8; chevron 10 at 50% (see Deviations) | `select.tsx` |
-| Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128 | `select.tsx` |
+| Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128, never narrower than the trigger (the default `item-aligned` position) | `select.tsx` |
 | Select item | h 32; px 8, py 6 (see Deviations); radius sm; highlight accent; check 10 muted-fg | `select.tsx` |
 | Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
 | Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary; label `text-sm` w500, gap 12 | `radio-group.tsx`, `label.tsx` |
