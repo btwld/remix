@@ -320,11 +320,14 @@ directional submenu chevron.
 
 ## Long menus
 
-The panel scrolls when its items are taller than the room the overlay has, and
-every submenu panel scrolls the same way. A `maxHeight` on the `overlay` style
-caps the panel; without one the panel grows to the room the overlay has. A menu
-that fits keeps the size of its items, and the overlay's padding, decoration,
-and effects stay in place while the items scroll.
+The panel scrolls when its items are taller than the room beside the trigger.
+It is laid out no taller than the room above or below the trigger, after the
+`positioning` `sideOffset` and `collisionPadding`, and opens on the side with
+more room, so a long menu scrolls there instead of covering the trigger. Every
+submenu panel scrolls the same way, within the room the overlay has. A
+`maxHeight` on the `overlay` style caps the panel lower still. A menu that fits
+keeps the size of its items, and the overlay's padding, decoration, and effects
+stay in place while the items scroll.
 
 ```dart
 import 'package:remix/remix.dart';

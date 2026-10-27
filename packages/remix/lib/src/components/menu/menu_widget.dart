@@ -524,6 +524,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       closeOnClickOutside: widget.closeOnClickOutside,
       triggerFocusNode: widget.triggerFocusNode,
       positioning: widget.positioning,
+      constrainToAvailableHeight: true,
       semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,
       // Render trigger from RemixMenuTrigger data
