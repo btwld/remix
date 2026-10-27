@@ -1449,6 +1449,47 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
       });
 
+      testWidgets('opens on the selected item', (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [
+              RemixSelectItem(value: 'a', label: 'Option A'),
+              RemixSelectItem(value: 'b', label: 'Option B'),
+              RemixSelectItem(value: 'c', label: 'Option C'),
+            ],
+            selectedValue: 'b',
+            focusNode: focusNode,
+            onChanged: (_) {},
+          ),
+        );
+        await tester.pumpAndSettle();
+        focusNode.requestFocus();
+        await tester.pump();
+
+        bool isFocused(String label) {
+          final focused = FocusManager.instance.primaryFocus?.context;
+          return find
+              .descendant(
+                of: find.byElementPredicate((element) => element == focused),
+                matching: find.text(label),
+              )
+              .evaluate()
+              .isNotEmpty;
+        }
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(isFocused('Option B'), isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pumpAndSettle();
+        expect(isFocused('Option C'), isTrue);
+      });
+
       testWidgets('option activation changes selection', (tester) async {
         String? selected;
         await tester.pumpRemixApp(

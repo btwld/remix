@@ -109,12 +109,14 @@ abstract class OverlayItem<T, S extends NakedState> extends StatelessWidget {
     bool? isChecked,
     bool? inMutuallyExclusiveGroup,
     SemanticsRole? semanticsRole,
+    FocusNode? focusNode,
     required S Function(Set<WidgetState> states) mapStates,
   }) {
     final button = Builder(
       builder: (context) => NakedButton(
         onPressed: onPressed,
         enabled: effectiveEnabled,
+        focusNode: focusNode,
         semanticLabel: semanticLabel,
         onHoverChange: (hovered) {
           if (hovered) {

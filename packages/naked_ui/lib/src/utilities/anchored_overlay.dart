@@ -13,8 +13,9 @@ import 'positioning.dart';
 ///
 /// 1. Placement: [OverlayPositioner] puts [child] next to the anchor.
 /// 2. Outside taps: a [TapRegion] in the menu's group closes the overlay.
-/// 3. Focus and keys: the overlay is a focus scope that takes focus on open
-///    and handles Escape, Arrow Up/Down, Home, and End.
+/// 3. Focus and keys: the overlay is a focus scope that takes focus on open,
+///    on [initialFocus] when that item can take it and on its container
+///    otherwise, and handles Escape, Arrow Up/Down, Home, and End.
 ///
 /// Escape and outside taps close the nearest [MenuController], so they reach
 /// [RawMenuAnchor.onCloseRequested] like the closes [RawMenuAnchor] starts
@@ -38,6 +39,7 @@ class AnchoredOverlay extends StatefulWidget {
     required this.info,
     this.positioning = const OverlayPositionConfig(),
     this.closeOnTapOutside = true,
+    this.initialFocus,
     required this.child,
   });
 
@@ -49,6 +51,14 @@ class AnchoredOverlay extends StatefulWidget {
 
   /// Whether a tap outside the menu's tap region closes the overlay.
   final bool closeOnTapOutside;
+
+  /// The item that takes focus once the overlay is built, in place of the
+  /// container.
+  ///
+  /// The item is revealed in every ancestor [Scrollable]. When no item is
+  /// attached to this node, or the item cannot take focus, the container
+  /// takes focus instead.
+  final FocusNode? initialFocus;
 
   /// The overlay panel.
   final Widget child;
@@ -98,9 +108,27 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.initialFocus != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _focusInitial());
+    }
+  }
+
+  @override
   void dispose() {
     _containerFocusNode.dispose();
     super.dispose();
+  }
+
+  void _focusInitial() {
+    if (!mounted) return;
+    final item = widget.initialFocus!;
+    if (item.context?.mounted == true && item.canRequestFocus) {
+      requestFocusInView(item);
+    } else {
+      _containerFocusNode.requestFocus();
+    }
   }
 
   void _focusBoundary({required bool last}) {
@@ -138,7 +166,7 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
                 ),
                 child: Focus(
                   focusNode: _containerFocusNode,
-                  autofocus: true,
+                  autofocus: widget.initialFocus == null,
                   canRequestFocus: true,
                   skipTraversal: true,
                   includeSemantics: false,
