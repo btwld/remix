@@ -605,7 +605,6 @@ void main() {
 
         _scrollPosition(tester).jumpTo(60);
         await tester.pump();
-        await tester.pump();
 
         final after = submenuTriggerRect(tester);
         expect(after.top, before.top - 60);
