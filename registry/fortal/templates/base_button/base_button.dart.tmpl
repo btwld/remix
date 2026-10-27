@@ -321,7 +321,7 @@ final class {{typePrefix}}BaseButtonStateStyles {
     .ghost => {{typePrefix}}Tokens.focus8(),
   };
   final focusOffset = switch (variant) {
-    .classic || .solid => 2.0,
+    .classic || .solid => {{typePrefix}}Tokens.focusRingOffset(),
     .soft || .surface || .outline || .ghost => -1.0,
   };
 

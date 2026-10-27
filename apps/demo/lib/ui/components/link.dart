@@ -149,7 +149,7 @@ LinkStyler _fortalLinkStateStyle(
     style = style.containerEffects(
       fortalFocusOutline(
         fortalResolveColor(context, FortalTokens.focus8),
-        offset: 2,
+        offset: FortalTokens.focusRingOffset(),
       ),
     );
   }

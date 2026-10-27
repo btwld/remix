@@ -62,13 +62,9 @@ RadioStyler _{{valuePrefix}}RadioBaseStyler({{typePrefix}}RadioSize size) {
     ),
   ).onFocusVisible(
     .containerEffects(
-      RemixBoxEffectsMix(
-        outline: BorderSideMix(
-          color: {{typePrefix}}Tokens.focus8(),
-          width: 2,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        outlineOffset: 2,
+      {{valuePrefix}}FocusOutline(
+        {{typePrefix}}Tokens.focus8(),
+        offset: {{typePrefix}}Tokens.focusRingOffset(),
       ),
     ),
   );

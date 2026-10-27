@@ -269,9 +269,11 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
         ),
       ],
     ),
+    // Merged after the `onFocused` ring, so it is also the ring while an
+    // errored field is focused and has to read the same width token.
     outline: BorderSideMix(
       color: FortalTokens.error8(),
-      width: 2,
+      width: FortalTokens.focusRingWidth(),
       strokeAlign: BorderSide.strokeAlignInside,
     ),
     outlineOffset: -1,
