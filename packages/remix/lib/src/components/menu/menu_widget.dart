@@ -658,6 +658,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       styleSpec: overlayStyleSpec,
       direction: Axis.vertical,
       containerEffects: containerEffects,
+      scrollable: true,
       children: snapshot
           .map(
             (item) => switch (item) {
