@@ -11,7 +11,7 @@ const _radixOffset = 2.0;
 const _insetOffset = -1.0;
 
 /// Radix's slider thumb rings `0 0 0 3px accent-3, 0 0 0 5px focus-8`: a 3px
-/// halo, then the ring on top of it. The halo is not `outline-offset: 2px`, so
+/// halo, then the ring outside it. The halo is not `outline-offset: 2px`, so
 /// it does not follow the offset token.
 const _sliderHalo = 3.0;
 
@@ -133,9 +133,9 @@ void main() {
 
         // The ring starts where the halo ends and is as wide as the token, so
         // its outer edge is the halo plus the width: 5px at Radix's 2px.
-        expect(ring.overContent!.shadows, hasLength(1), reason: reason);
+        expect(ring.behindContent!.shadows, hasLength(1), reason: reason);
         expect(
-          ring.overContent!.shadows.single.spreadRadius,
+          ring.behindContent!.shadows.single.spreadRadius,
           _sliderHalo,
           reason: reason,
         );
@@ -156,7 +156,7 @@ void main() {
       );
 
       expect(ring.outline.style, BorderStyle.none);
-      expect(ring.overContent!.shadows, isEmpty);
+      expect(ring.behindContent!.shadows, isEmpty);
     },
   );
 

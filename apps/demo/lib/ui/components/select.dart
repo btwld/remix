@@ -61,8 +61,12 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
       .onFocusVisible(
         .containerEffects(
           // `outline: 2px solid focus-8; outline-offset: -1px`: the ring
-          // straddles the trigger edge.
-          fortalFocusOutline(FortalTokens.focus8(), offset: -1),
+          // straddles the trigger edge. The soft trigger swaps the color for
+          // accent-8.
+          fortalFocusOutline(switch (variant) {
+            .soft => FortalTokens.accent8(),
+            .surface || .ghost => FortalTokens.focus8(),
+          }, offset: -1),
         ),
       )
       .merge(_fortalSelectTriggerSizeStyler(variant, size));

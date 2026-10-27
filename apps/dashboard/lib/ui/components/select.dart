@@ -59,8 +59,12 @@ SelectTriggerStyler _uiSelectTriggerStyler(
       .onFocusVisible(
         .containerEffects(
           // `outline: 2px solid focus-8; outline-offset: -1px`: the ring
-          // straddles the trigger edge.
-          uiFocusOutline(UiTokens.focus8(), offset: -1),
+          // straddles the trigger edge. The soft trigger swaps the color for
+          // accent-8.
+          uiFocusOutline(switch (variant) {
+            .soft => UiTokens.accent8(),
+            .surface || .ghost => UiTokens.focus8(),
+          }, offset: -1),
         ),
       )
       .merge(_uiSelectTriggerSizeStyler(variant, size));
