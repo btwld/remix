@@ -20,11 +20,13 @@ part of 'data_table.dart';
 /// scope, so `onHovered` / `onSelected` / `onPressed` variants on [bodyRow],
 /// [bodyCell], [selectionCell], [headerRow], [headerCell], [headerLabel], and
 /// [sortIcon] evaluate against that row (or that sortable header) instead of
-/// the table as a whole. A header that is not sortable has no state of its
-/// own, so it never matches those variants, whatever state encloses the table.
-/// That is why there is no separate `selectedBodyRow` region:
-/// `bodyRow(BoxStyler().onSelected(...))` already expresses it, and it
+/// the table as a whole. That is why there is no separate `selectedBodyRow`
+/// region: `bodyRow(BoxStyler().onSelected(...))` already expresses it, and it
 /// additionally composes with hover, focus, and press.
+///
+/// A header that is not sortable has no state of its own. Its regions and any
+/// custom [RemixDataTableColumn.header] content resolve those variants against
+/// an empty state, whatever state encloses the table.
 ///
 /// ## Composed controls
 ///

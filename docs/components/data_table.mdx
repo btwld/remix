@@ -410,6 +410,9 @@ Required. Builds this column's cell for one row.
 
 Exactly one is required. `label` renders with the table's header typography;
 `header` renders arbitrary content and additionally requires `semanticLabel`.
+Content of a header that is not sortable resolves widget-state variants against
+an empty state, so a plain Mix widget there does not react to its own hover or
+press. Wrap it in its own `Pressable` if it should.
 
 #### `semanticLabel` → `String?`
 

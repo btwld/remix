@@ -261,6 +261,40 @@ void main() {
       expect(disclosure.style, same(style));
     });
 
+    testWidgets('content takes onDisabled from its own region, not from the '
+        'disabled trigger', (tester) async {
+      const probeKey = ValueKey('content-probe');
+      await tester.pumpRemixApp(
+        RemixDisclosure(
+          enabled: false,
+          defaultExpanded: true,
+          trigger: const Text('Trigger'),
+          content: SizedBox.square(
+            dimension: 10,
+            child: Box(
+              key: probeKey,
+              style: BoxStyler()
+                  .color(Colors.grey)
+                  .onDisabled(.color(Colors.red)),
+            ),
+          ),
+          style: DisclosureStyler()
+              .content(.color(Colors.blue))
+              .onDisabled(.content(.color(Colors.green))),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(_boxColors(tester, find.byKey(probeKey)), contains(Colors.green));
+      final probe = tester.widget<Container>(
+        find.descendant(
+          of: find.byKey(probeKey),
+          matching: find.byType(Container),
+        ),
+      );
+      expect((probe.decoration as BoxDecoration?)?.color, Colors.grey);
+    });
+
     final triggerActivations = <String, Future<void> Function(WidgetTester)>{
       'hover': (tester) async {
         final gesture = await tester.createGesture(kind: .mouse);

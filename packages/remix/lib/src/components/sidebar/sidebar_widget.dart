@@ -460,7 +460,16 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
                     Semantics(
                       container: true,
                       explicitChildNodes: true,
-                      child: Box(styleSpec: spec.header, child: header),
+                      child: Box(
+                        styleSpec: spec.header,
+                        // The scope above belongs to the sidebar's own
+                        // regions; header and footer content is not disabled
+                        // with the destinations.
+                        child: WidgetStateProvider(
+                          states: const {},
+                          child: header,
+                        ),
+                      ),
                     ),
                   if (hasBoundedHeight)
                     Expanded(child: SingleChildScrollView(child: landmark))
@@ -470,7 +479,13 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
                     Semantics(
                       container: true,
                       explicitChildNodes: true,
-                      child: Box(styleSpec: spec.footer, child: footer),
+                      child: Box(
+                        styleSpec: spec.footer,
+                        child: WidgetStateProvider(
+                          states: const {},
+                          child: footer,
+                        ),
+                      ),
                     ),
                 ],
               );
