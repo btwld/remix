@@ -8,8 +8,9 @@ import 'package:remix/src/utilities/remix_path_icon.dart';
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
-/// The single coloured [Box] in the tree is the outer panel: every test that
-/// uses this styles `container(...)` and nothing else that paints a fill.
+/// The single [Box] with a resolved fill: every test that uses this colours one
+/// region, usually `container(...)`. A [Box] built from a `style:` carries no
+/// resolved spec, so probes placed in the content are not counted.
 Color? _panelColor(WidgetTester tester) {
   return tester
       .widgetList<Box>(find.byType(Box))
@@ -696,6 +697,37 @@ void main() {
 
         // Content should still not be visible
         expect(find.text('Content'), findsNothing);
+      });
+
+      testWidgets('expanded content takes onDisabled from its own region, not '
+          'from the disabled item', (tester) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            initialExpandedValues: const ['item1'],
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Disabled Item',
+              enabled: false,
+              style: AccordionStyler()
+                  .content(.color(Colors.blue))
+                  .onDisabled(.content(.color(Colors.green))),
+              child: SizedBox.square(
+                dimension: 10,
+                child: Box(
+                  key: _probeKey,
+                  style: BoxStyler()
+                      .color(Colors.grey)
+                      .onDisabled(.color(Colors.red)),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.green);
+        expect(_probeColor(tester), Colors.grey);
       });
     });
 
