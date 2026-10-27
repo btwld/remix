@@ -53,7 +53,7 @@ AccordionStyler _uiAccordionBaseStyler(UiAccordionSize size) {
 }
 
 AccordionStyler _uiAccordionFocusStyler() {
-  return AccordionStyler().triggerEffects(uiInsetFocusOutline());
+  return AccordionStyler().triggerEffects(uiTabFocusOutline());
 }
 
 AccordionStyler _uiAccordionDisabledStyler() {

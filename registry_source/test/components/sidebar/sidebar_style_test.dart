@@ -251,7 +251,7 @@ void main() {
                 destination.topLeft;
             final focused = await capturePixels(tester, boundary);
             final ring = MixScope.tokenOf(
-              FortalTokens.focusA8,
+              FortalTokens.focus8,
               tester.element(find.bySemanticsLabel(target)),
             );
 
@@ -286,10 +286,7 @@ void main() {
               (inside) =>
                   Offset(destination.right - inside, destination.center.dy),
             ]) {
-              expectNearColor(
-                pixel(focused, at(1)),
-                Color.alphaBlend(ring, pixel(idle, at(1))),
-              );
+              expectNearColor(pixel(focused, at(1)), ring);
               expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
               expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
             }

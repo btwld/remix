@@ -140,19 +140,21 @@ call-form mechanics (`.mix()`, `.resolve(context)`).
 Fortal focus rings are outlines painted over the control through box effects
 (`containerEffects`, or `triggerEffects` on an accordion or disclosure), so
 focusing a control never changes its size. They draw at the `focusRingWidth`
-token (2). An outward ring sits at the `focusRingOffset` token (2); an inset
-ring keeps Radix's literal offset, `-1` for fields, cards, selects and soft
-buttons and `-2` for tabs.
+token (2), in `focus-8` or, for Radix's soft variants, the accent.
 
-- Tabs ring in `focus-8`, as Radix does. Toggles, toggle-group items, and
-  accordion and disclosure triggers have no Radix counterpart. They ring in
-  `focus-a8` at the same inset `-2`, so the clip of a toggle group or a panel
-  never crops the ring.
+- Classic and solid buttons and icon buttons, checkboxes, radios, switches, and
+  links draw outward, at the `focusRingOffset` token (2).
+- Inset rings keep Radix's literal offset: `-1` for fields, cards, selects,
+  segmented control items, and the soft, surface, outline, and ghost buttons
+  and icon buttons, and `-2` for tabs.
+- Toggles, toggle-group items, accordion and disclosure triggers, and sidebar
+  destinations have no Radix counterpart. They borrow the tab ring, `focus-8` at
+  `-2`, which lies inside the box at the default width, so the clip of a toggle
+  group or a panel does not crop it. A sidebar destination rings the same way
+  expanded, collapsed, and at the edge of a scrolling sidebar.
 - A sortable data-table header rings in `focus-8` inside its own cell, like a
   tab. Radix has no sortable header; this is a Fortal extension, since a
   focusable header needs a visible focus indicator. The ring replaces the
   divider on the cell's bottom edge while focused, and a stateful custom header
   keeps its state across focus. A focusable control nested in the header keeps
   the ring lit while it holds focus. At `focusRingWidth: 0` nothing is drawn.
-- A `RemixSidebar` destination takes the toggle's ring, so it rings the same
-  way expanded, collapsed, and at the edge of a scrolling sidebar.

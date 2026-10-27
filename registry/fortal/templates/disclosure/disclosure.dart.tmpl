@@ -87,7 +87,7 @@ DisclosureStyler _{{valuePrefix}}DisclosureSurfaceStyler({{typePrefix}}Disclosur
       .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
       .onFocusVisible(
-        DisclosureStyler().triggerEffects({{valuePrefix}}InsetFocusOutline()),
+        DisclosureStyler().triggerEffects({{valuePrefix}}TabFocusOutline()),
       )
       .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
 }
@@ -132,7 +132,7 @@ DisclosureStyler _{{valuePrefix}}DisclosureSoftStyler({{typePrefix}}DisclosureSi
       .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
       .onFocusVisible(
-        DisclosureStyler().triggerEffects({{valuePrefix}}InsetFocusOutline()),
+        DisclosureStyler().triggerEffects({{valuePrefix}}TabFocusOutline()),
       )
       .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
 }

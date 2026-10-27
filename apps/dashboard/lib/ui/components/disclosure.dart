@@ -84,7 +84,7 @@ DisclosureStyler _uiDisclosureSurfaceStyler(UiDisclosureSize size) {
       )
       .onHovered(.trigger(.color(UiTokens.gray2())))
       .onPressed(.trigger(.color(UiTokens.gray3())))
-      .onFocusVisible(DisclosureStyler().triggerEffects(uiInsetFocusOutline()))
+      .onFocusVisible(DisclosureStyler().triggerEffects(uiTabFocusOutline()))
       .onDisabled(_uiDisclosureDisabledStyler());
 }
 
@@ -127,7 +127,7 @@ DisclosureStyler _uiDisclosureSoftStyler(UiDisclosureSize size) {
       )
       .onHovered(.trigger(.color(UiTokens.accent3())))
       .onPressed(.trigger(.color(UiTokens.accent4())))
-      .onFocusVisible(DisclosureStyler().triggerEffects(uiInsetFocusOutline()))
+      .onFocusVisible(DisclosureStyler().triggerEffects(uiTabFocusOutline()))
       .onDisabled(_uiDisclosureDisabledStyler());
 }
 
