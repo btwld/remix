@@ -892,8 +892,10 @@ class _SidebarDestinationContent extends StatelessWidget {
     // content changes here; the interactive NakedToggle remains mounted.
     if (motion.expansion == 1 && !motion.isAnimating) {
       final textWidget = StyledText(label, styleSpec: spec.label);
-      return RowBox(
+      return RemixFlexBoxAdapter(
         styleSpec: spec.container,
+        direction: Axis.horizontal,
+        containerEffects: spec.containerEffects,
         children: [
           ?iconWidget,
           if (hasBoundedWidth) Flexible(child: textWidget) else textWidget,
@@ -940,10 +942,12 @@ class _SidebarDestinationContent extends StatelessWidget {
       ),
     );
 
-    return RowBox(
+    return RemixFlexBoxAdapter(
       styleSpec: railAtRest
           ? _centeredContainer(context, spec.container)
           : spec.container,
+      direction: Axis.horizontal,
+      containerEffects: spec.containerEffects,
       children: [if (hasBoundedWidth) Flexible(child: inner) else inner],
     );
   }

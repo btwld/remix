@@ -59,6 +59,13 @@
   overlay, Escape, outside taps, focus return, and expanded semantics, which
   merge onto the button. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
   do not apply to a control trigger, and a `semanticLabel` asserts.
+  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
+  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
+  disclosure, `containerEffects` still covers the whole panel and
+  `triggerEffects` covers only the trigger, including the widget a custom
+  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
+  group styled with `clipBehavior` (every shipped preset sets one) crops an
+  outside ring on its end items; use a negative `outlineOffset` there.
 
 ### Fixes
 
