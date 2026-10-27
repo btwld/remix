@@ -432,7 +432,7 @@ void main() {
       testWidgets('a caller action restates the button style in its base and '
           'in the below-640 fragment', (tester) async {
         const override = Color(0xFF00FF00);
-        final below640 = ContextVariant.breakpoint(
+        final fromSm = ContextVariant.breakpoint(
           const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
         );
         final wide = heroUiCase('toast-default-action');
@@ -462,7 +462,7 @@ void main() {
           heroUiButtonStyle().color(override),
         );
         final complete = restated.onNot(
-          below640,
+          fromSm,
           ToastStyler().action(
             heroUiButtonStyle().color(override).margin(.top(2)),
           ),
