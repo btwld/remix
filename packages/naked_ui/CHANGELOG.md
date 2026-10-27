@@ -5,6 +5,21 @@
 - Keep the focus action and focused state on a `NakedDisclosure` trigger that
   sets `semanticLabel`. The label still replaces the trigger's visual content
   for assistive technology, but no longer drops focus semantics.
+- `showNakedDialog`, `showNakedAlertDialog`, `NakedTooltip`, `NakedDisclosure`,
+  and `NakedToastScope` now skip their transitions when the user asks to reduce
+  motion, whatever durations they were given. They honor both
+  `MediaQuery.disableAnimations` and the platform's Reduce Motion setting, which
+  iOS reports separately and `disableAnimations` does not reflect. Until now
+  `NakedDisclosure` and `NakedToastScope` honored only the former, and dialogs
+  and tooltips neither.
+  - A dialog reads the setting when it opens and when it is dismissed. One that
+    opened without motion also closes without it.
+  - A tooltip and a toast apply a change to their next show or hide. A
+    disclosure also completes a transition already running.
+- A modal `NakedDialog` shown without a transition, with a zero
+  `transitionDuration` or under reduced motion, no longer hides the dismissible
+  barrier's "Dismiss" node from screen readers. `showNakedDialog` now wraps the
+  dialog page in a semantics container.
 
 ## 1.2.3
 
