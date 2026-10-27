@@ -170,7 +170,9 @@ final segmentedStyle = ToggleGroupStyler(
 </CodeGroup>
 
 A group that does not clip can use a positive offset to draw the ring outside
-the item.
+the item. Items paint in order, so a filled item after the focused one covers
+that side of an outside ring; in joined rows use the inset ring, or leave a gap
+of at least the ring's offset plus width.
 
 ## Constructor
 
