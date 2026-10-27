@@ -182,8 +182,10 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
-    PlaygroundPopover(
-      semanticLabel: 'Notifications',
+    _PlaygroundHeaderPopover(
+      icon: RemixIcons.bell,
+      semanticLabel: 'Open notifications',
+      showBadge: !_notificationsRead,
       popoverChild: Box(
         style: BoxStyler()
             .width(PlaygroundTokens.popoverWidth)
@@ -232,31 +234,10 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
           ],
         ),
       ),
-      child: StackBox(
-        style: StackBoxStyler().clipBehavior(.none),
-        children: [
-          const PlaygroundIconButton.ghost(
-            icon: RemixIcons.bell,
-            semanticLabel: 'Open notifications',
-          ),
-          if (!_notificationsRead)
-            Positioned(
-              right: 8,
-              top: 8,
-              child: IgnorePointer(
-                child: Box(
-                  style: BoxStyler()
-                      .size(7, 7)
-                      .borderRadius(.circular(99))
-                      .color(PlaygroundTokens.primary()),
-                ),
-              ),
-            ),
-        ],
-      ),
     ),
-    PlaygroundPopover(
-      semanticLabel: 'Theme settings',
+    _PlaygroundHeaderPopover(
+      icon: RemixIcons.gear,
+      semanticLabel: 'Open theme settings',
       popoverChild: Box(
         style: BoxStyler()
             .width(PlaygroundTokens.popoverWidth)
@@ -287,10 +268,6 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
             _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
           ],
         ),
-      ),
-      child: const PlaygroundIconButton.ghost(
-        icon: RemixIcons.gear,
-        semanticLabel: 'Open theme settings',
       ),
     ),
   ];
@@ -329,6 +306,73 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
           time,
           style: _textStyle(token: PlaygroundTokens.textXs, muted: true),
         ),
+      ],
+    ),
+  );
+}
+
+/// A header icon button that opens a popover.
+///
+/// The button owns activation (`openOnTap: false`), so the popover adds no
+/// focus stop of its own, and the one node shared with `triggerFocusNode` is
+/// what closing returns focus to.
+class _PlaygroundHeaderPopover extends StatefulWidget {
+  const _PlaygroundHeaderPopover({
+    required this.icon,
+    required this.semanticLabel,
+    required this.popoverChild,
+    this.showBadge = false,
+  });
+
+  final IconData icon;
+  final String semanticLabel;
+  final Widget popoverChild;
+  final bool showBadge;
+
+  @override
+  State<_PlaygroundHeaderPopover> createState() =>
+      _PlaygroundHeaderPopoverState();
+}
+
+class _PlaygroundHeaderPopoverState extends State<_PlaygroundHeaderPopover> {
+  final _controller = MenuController();
+  final _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => PlaygroundPopover(
+    controller: _controller,
+    openOnTap: false,
+    triggerFocusNode: _focusNode,
+    popoverChild: widget.popoverChild,
+    child: StackBox(
+      style: StackBoxStyler().clipBehavior(.none),
+      children: [
+        PlaygroundIconButton.ghost(
+          icon: widget.icon,
+          semanticLabel: widget.semanticLabel,
+          focusNode: _focusNode,
+          onPressed: () =>
+              _controller.isOpen ? _controller.close() : _controller.open(),
+        ),
+        if (widget.showBadge)
+          Positioned(
+            right: 8,
+            top: 8,
+            child: IgnorePointer(
+              child: Box(
+                style: BoxStyler()
+                    .size(7, 7)
+                    .borderRadius(.circular(99))
+                    .color(PlaygroundTokens.primary()),
+              ),
+            ),
+          ),
       ],
     ),
   );

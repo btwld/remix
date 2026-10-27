@@ -231,14 +231,7 @@ void main() {
       testWidgets('the dashboard account trigger rings outside itself', (
         tester,
       ) async {
-        tester.view.devicePixelRatio = 1;
-        tester.view.physicalSize = const Size(1200, 800);
-        addTearDown(tester.view.reset);
-        await _pumpFrame(
-          tester,
-          theme.data,
-          Overlay.wrap(child: const VanillaDashboardDemo(initialPage: .orders)),
-        );
+        await _pumpDashboard(tester, theme.data);
         const workspace = 'Northstar workspace';
         final probe = _Probe(
           tester,
@@ -255,6 +248,32 @@ void main() {
           includes: (part) => [part.centerLeft.translate(-1.5, 0)],
         );
       });
+
+      for (final label in const ['Open notifications', 'Open theme settings'])
+        testWidgets('the dashboard $label button rings outside itself', (
+          tester,
+        ) async {
+          await _pumpDashboard(tester, theme.data);
+          final button = find.byWidgetPredicate(
+            (widget) =>
+                widget is VanillaIconButton && widget.semanticLabel == label,
+          );
+          final popover = find.ancestor(
+            of: button,
+            matching: find.byType(VanillaPopover),
+          );
+          final stop = FocusManager.instance.rootScope.traversalDescendants
+              .singleWhere(
+                (node) => _isInside(node.context, tester.element(popover)),
+              );
+          final probe = _Probe(tester, theme.data, stop);
+
+          await probe.expectRing(
+            part: button,
+            neighbor: find.byType(VanillaIconButton).first,
+            includes: (part) => [part.centerLeft.translate(-1.5, 0)],
+          );
+        });
 
       testWidgets('a disclosure rings its trigger, not the opened section', (
         tester,
@@ -316,6 +335,30 @@ Future<_Probe> _pump(
   );
 
   return _Probe(tester, theme, focusNode);
+}
+
+/// Pumps the built-in dashboard chrome on a desktop-sized view.
+Future<void> _pumpDashboard(WidgetTester tester, VanillaThemeData theme) async {
+  tester.view.devicePixelRatio = 1;
+  tester.view.physicalSize = const Size(1200, 800);
+  addTearDown(tester.view.reset);
+
+  await _pumpFrame(
+    tester,
+    theme,
+    Overlay.wrap(child: const VanillaDashboardDemo(initialPage: .orders)),
+  );
+}
+
+bool _isInside(BuildContext? context, Element root) {
+  if (context == null) return false;
+  var inside = identical(context, root);
+  context.visitAncestorElements((ancestor) {
+    inside = identical(ancestor, root);
+    return !inside;
+  });
+
+  return inside;
 }
 
 /// Pumps [child] under [theme] inside the frame the probe captures.
