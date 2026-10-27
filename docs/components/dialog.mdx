@@ -190,7 +190,9 @@ Both functions open and close the dialog at once when the user asks to reduce
 motion: `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion
 setting is on (iOS reports it separately). `transitionDuration` is then ignored
 and `transitionBuilder` receives a completed animation. The setting is read when
-the dialog opens and again when it is dismissed.
+the dialog opens and again when it is dismissed. A dialog that opened without
+motion also closes without it, and a request made while it is open skips the
+exit.
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">

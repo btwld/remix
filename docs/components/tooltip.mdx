@@ -108,7 +108,9 @@ closes the tooltip and keeps focus on the trigger.
 
 The tooltip shows and hides at once when the user asks to reduce motion:
 `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion setting is
-on (iOS reports it separately). A change applies to the next show or hide.
+on (iOS reports it separately). A change applies to the next show or hide, and a
+tooltip that has not been shown yet when the setting is turned off may still show
+once without motion.
 
 ## Fortal widgets
 
