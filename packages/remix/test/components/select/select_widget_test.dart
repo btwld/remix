@@ -1950,7 +1950,7 @@ void main() {
         await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
         expect(_isInView(tester, 7), isFalse);
 
-        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 8);
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 7);
 
         expect(_focusedOptionValue(), 'item7');
         expect(_isInView(tester, 7), isTrue);
@@ -1968,7 +1968,7 @@ void main() {
           onChanged: (value) => selected = value,
         );
 
-        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 20);
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 19);
         expect(_focusedOptionValue(), 'item19');
         expect(_isInView(tester, 19), isTrue);
 
@@ -1981,7 +1981,7 @@ void main() {
 
         await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 12);
         expect(_panelScrollPosition(tester).pixels, greaterThan(0));
-        await _pressKey(tester, LogicalKeyboardKey.arrowUp, times: 11);
+        await _pressKey(tester, LogicalKeyboardKey.arrowUp, times: 12);
 
         expect(_focusedOptionValue(), 'item0');
         expect(_isInView(tester, 0), isTrue);
