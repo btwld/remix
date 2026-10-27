@@ -777,6 +777,118 @@ void main() {
       expect(proposedValues, isEmpty);
     });
 
+    group('in a horizontally scrolling list', () {
+      const optionCount = 20;
+      const optionWidth = 100.0;
+      const viewportKey = Key('options viewport');
+      late ScrollController scrollController;
+      late List<FocusNode> focusNodes;
+
+      setUp(() {
+        scrollController = ScrollController();
+        focusNodes = List.generate(
+          optionCount,
+          (index) => FocusNode(debugLabel: 'option $index'),
+        );
+      });
+
+      tearDown(() {
+        scrollController.dispose();
+        for (final node in focusNodes) {
+          node.dispose();
+        }
+      });
+
+      Future<void> pumpScrollingGroup(WidgetTester tester) async {
+        await tester.pumpMaterialWidget(
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              key: viewportKey,
+              width: 3 * optionWidth,
+              height: 40,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: scrollController,
+                child: NakedToggleGroup<String>(
+                  selectedValue: 'option0',
+                  onChanged: (_) {},
+                  child: Row(
+                    children: [
+                      for (var index = 0; index < optionCount; index++)
+                        NakedToggleOption<String>(
+                          value: 'option$index',
+                          focusNode: focusNodes[index],
+                          child: SizedBox(
+                            key: Key('option$index'),
+                            width: optionWidth,
+                            height: 40,
+                            child: Center(child: Text('Option $index')),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      bool isInViewport(WidgetTester tester, int index) {
+        final viewport = tester.getRect(find.byKey(viewportKey));
+        final option = tester.getRect(find.byKey(Key('option$index')));
+        return option.left >= viewport.left && option.right <= viewport.right;
+      }
+
+      testWidgets('End focuses the last option and scrolls it into view', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes.first.requestFocus();
+        await tester.pump();
+        expect(isInViewport(tester, optionCount - 1), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes.last.hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, optionCount - 1), isTrue);
+      });
+
+      testWidgets('Home focuses the first option and scrolls it into view', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes.last.requestFocus();
+        await tester.pump();
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+        expect(isInViewport(tester, 0), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.home);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes.first.hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, 0), isTrue);
+      });
+
+      testWidgets('arrow keys scroll the next option into view', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes[2].requestFocus();
+        await tester.pump();
+        expect(isInViewport(tester, 3), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes[3].hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, 3), isTrue);
+      });
+    });
+
     testWidgets('vertical groups claim only Up and Down', (tester) async {
       final optionA = FocusNode(debugLabel: 'option A');
       final optionB = FocusNode(debugLabel: 'option B');

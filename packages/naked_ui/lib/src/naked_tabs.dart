@@ -442,7 +442,7 @@ class _NakedTabState extends State<NakedTab>
     final target = last
         ? policy.findLastFocus(current, ignoreCurrentFocus: true)
         : policy.findFirstFocus(current, ignoreCurrentFocus: true);
-    target?.requestFocus();
+    if (target != null) policy.requestFocusCallback(target);
   }
 
   @override
