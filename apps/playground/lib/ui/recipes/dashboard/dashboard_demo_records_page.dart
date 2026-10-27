@@ -385,9 +385,13 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
       semanticLabel: 'Actions for $value',
       focusNode: menu.focusNode,
       onPressed: menu.toggle,
-      style: IconButtonStyler().icon(
-        .color(PlaygroundTokens.mutedForeground()),
-      ),
+      style: IconButtonStyler()
+          .icon(.color(PlaygroundTokens.mutedForeground()))
+          .merge(
+            menu.isOpen
+                ? IconButtonStyler().color(PlaygroundTokens.muted())
+                : null,
+          ),
     ),
   ),
   items: const [

@@ -382,7 +382,13 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
       semanticLabel: 'Actions for $value',
       focusNode: menu.focusNode,
       onPressed: menu.toggle,
-      style: IconButtonStyler().icon(.color(VanillaTokens.mutedForeground())),
+      style: IconButtonStyler()
+          .icon(.color(VanillaTokens.mutedForeground()))
+          .merge(
+            menu.isOpen
+                ? IconButtonStyler().color(VanillaTokens.muted())
+                : null,
+          ),
     ),
   ),
   items: const [
