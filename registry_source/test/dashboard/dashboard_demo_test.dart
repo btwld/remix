@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -55,6 +56,108 @@ void main() {
     );
     expect(find.text('Order ORD-1047 requires review.'), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  group('Fortal data-table kebab', () {
+    Future<({Finder kebab, Finder button, String name})> pumpKebab(
+      WidgetTester tester,
+    ) async {
+      await _pumpDashboard(
+        tester,
+        preset: .fortal,
+        initialPage: RegistryDashboardDemoPage.customers,
+      );
+      final customer = tester
+          .widget<RemixDataTable<RegistryDashboardCustomer>>(
+            find.byType(RemixDataTable<RegistryDashboardCustomer>),
+          )
+          .rows
+          .first;
+      final kebab = find.byKey(ValueKey('customer-actions-${customer.id}'));
+      return (
+        kebab: kebab,
+        button: find.descendant(
+          of: kebab,
+          matching: find.byType(RemixIconButton),
+        ),
+        name: 'Actions for ${customer.name}',
+      );
+    }
+
+    testWidgets('is a real button announced once, with the expanded state', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final (:kebab, :button, :name) = await pumpKebab(tester);
+
+      expect(button, findsOneWidget);
+      expect(find.semantics.byLabel(name), findsOne);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(
+          label: name,
+          isButton: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      await tester.tap(kebab);
+      await tester.pumpAndSettle();
+
+      expect(find.text('View profile'), findsOneWidget);
+      expect(find.semantics.byLabel(name), findsOne);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: name, hasExpandedState: true, isExpanded: true),
+      );
+      expect(tester.takeException(), isNull);
+      semantics.dispose();
+    });
+
+    testWidgets('is one tab stop that Enter opens and Escape returns to', (
+      tester,
+    ) async {
+      final (:kebab, :button, name: _) = await pumpKebab(tester);
+      bool inKebab() => find
+          .descendant(
+            of: kebab,
+            matching: find.byElementPredicate(
+              (element) =>
+                  element == FocusManager.instance.primaryFocus?.context,
+            ),
+          )
+          .evaluate()
+          .isNotEmpty;
+      final control = tester.widget<RemixIconButton>(button).focusNode!
+        ..requestFocus();
+      await tester.pump();
+      expect(inKebab(), isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(inKebab(), isFalse);
+
+      control.requestFocus();
+      await tester.pump();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pump();
+      expect(inKebab(), isFalse);
+
+      control.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(find.text('View profile'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('View profile'), findsNothing);
+      expect(control.hasPrimaryFocus, isTrue);
+    });
   });
 
   for (final preset in _Preset.values) {
