@@ -1,5 +1,6 @@
+import 'dart:typed_data';
+
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
@@ -10,8 +11,9 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../helpers/test_helpers.dart';
 
-/// Focus details of `@radix-ui/themes@3.3.0` that the ring-token work does not
-/// cover: which color a ring takes and which layer it paints in.
+/// Focus rings of the Fortal recipes against `@radix-ui/themes@3.3.0`: the
+/// color each variant rings in, the layer the slider thumb's halo paints in, and
+/// the dashboard accent swatch's ring.
 void main() {
   late FocusHighlightStrategy previousStrategy;
 
@@ -106,55 +108,67 @@ void main() {
       }
     });
 
-    testWidgets('keeps the thumb 1px edge visible over the halo', (
-      tester,
-    ) async {
-      final node = FocusNode();
-      addTearDown(node.dispose);
-      final slider = GlobalKey();
-      await tester.pumpRemixApp(
-        RepaintBoundary(
-          key: slider,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: SizedBox(
-              width: 200,
-              child: FortalSlider(
-                value: 0.5,
-                onChanged: (_) {},
-                focusNode: node,
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      for (final radius in FortalRadius.values) {
+        testWidgets(
+          'keeps the thumb 1px edge above the halo at ${radius.name} radius '
+          'in ${mode.name} mode',
+          (tester) async {
+            final node = FocusNode();
+            addTearDown(node.dispose);
+            final slider = GlobalKey();
+            await tester.pumpRemixApp(
+              FortalTheme(
+                mode: mode,
+                radius: radius,
+                child: RepaintBoundary(
+                  key: slider,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: SizedBox(
+                      width: 200,
+                      child: FortalSlider(
+                        value: 0.5,
+                        onChanged: (_) {},
+                        focusNode: node,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      );
-      node.requestFocus();
-      await tester.pump();
+            );
+            node.requestFocus();
+            await tester.pump();
 
-      final context = tester.element(find.byType(FortalSlider));
-      final accent3 = MixScope.tokenOf(FortalTokens.accent3, context);
-      final blackA4 = MixScope.tokenOf(FortalTokens.blackA4, context);
-      final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
-      final pixels = await _capture(tester, slider);
-      final thumb = tester.getCenter(find.byType(FortalSlider));
-      final origin = tester.getTopLeft(find.byKey(slider));
+            final context = tester.element(find.byType(FortalSlider));
+            final accent3 = MixScope.tokenOf(FortalTokens.accent3, context);
+            final blackA4 = MixScope.tokenOf(FortalTokens.blackA4, context);
+            final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
+            final pixels = await _capture(tester, slider);
+            final thumb = tester.getCenter(find.byType(FortalSlider));
+            final origin = tester.getTopLeft(find.byKey(slider));
 
-      // Walk up the thumb's center column from its white fill. At 4x the
-      // surface thumb's 1px `black-a4` edge, the 3px halo and the 2px ring are
-      // 4, 12 and 8 device pixels tall.
-      var y = ((thumb.dy - origin.dy) * _scale).round();
-      final x = ((thumb.dx - origin.dx) * _scale).round();
-      while (pixels.at(x, y) == const Color(0xFFFFFFFF)) {
-        y--;
+            // Walk up the thumb's center column from its white fill. At 4x the
+            // thumb's 1px `black-a4` edge is 4 device pixels, the 3px halo
+            // shows 8 beyond that edge, and the 2px ring is 8. Each sample is
+            // the center of a band, so it holds whether or not the thumb's top
+            // row is anti-aliased.
+            var y = ((thumb.dy - origin.dy) * _scale).round();
+            final x = ((thumb.dx - origin.dx) * _scale).round();
+            while (pixels.at(x, y) == const Color(0xFFFFFFFF)) {
+              y--;
+            }
+            final edge = y - 1;
+            final halo = y - 4 - 4;
+            final ring = y - 4 - 8 - 4;
+
+            _expectNear(pixels.at(x, edge), Color.alphaBlend(blackA4, accent3));
+            _expectNear(pixels.at(x, halo), accent3);
+            _expectNear(pixels.at(x, ring), focus8);
+          },
+        );
       }
-      final edge = y - 1;
-      final halo = y - 4 - 6;
-      final ring = y - 4 - 12 - 4;
-
-      _expectNear(pixels.at(x, edge), Color.alphaBlend(blackA4, accent3));
-      _expectNear(pixels.at(x, halo), accent3);
-      _expectNear(pixels.at(x, ring), focus8);
-    });
+    }
   });
 
   group('accent swatch', () {
@@ -165,27 +179,47 @@ void main() {
     // focused swatch rings in accent-9 whether or not it is checked.
     late GlobalKey panel;
 
-    Future<void> pumpPanel(WidgetTester tester) async {
+    /// Pumps the panel the way the dashboard hosts it: the popover in a 400px
+    /// vertical scroll view, the settings page in a horizontal one. A scroll
+    /// view clips at the panel's own edge once the panel overflows it, so the
+    /// vertical host is shorter than the panel. The margin around it lets a
+    /// capture show what the clip removes.
+    Future<void> pumpPanel(
+      WidgetTester tester, {
+      Map<SpaceToken, double>? ringTokens,
+      Axis scroll = Axis.vertical,
+    }) async {
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       panel = GlobalKey();
-      // Hosted as the dashboard's theme popover does: in a scroll view that
-      // clips at the panel's own edge.
       await tester.pumpRemixApp(
         RepaintBoundary(
           key: panel,
-          child: SizedBox(
-            width: 400,
-            child: FortalDashboardThemeScope(
-              settings: const FortalThemeSettings(),
-              onChanged: (_) {},
-              child: const SingleChildScrollView(child: FortalThemePanel()),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: 400,
+              height: scroll == Axis.vertical ? 300 : null,
+              child: MixScope.inherit(
+                spaces: ringTokens,
+                child: FortalDashboardThemeScope(
+                  settings: const FortalThemeSettings(),
+                  onChanged: (_) {},
+                  child: SingleChildScrollView(
+                    scrollDirection: scroll,
+                    child: const FortalThemePanel(),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       );
     }
+
+    Color panelToken(WidgetTester tester, ColorToken token) =>
+        MixScope.tokenOf(token, tester.element(find.byType(FortalThemePanel)));
 
     void focusSwatch(WidgetTester tester, String accent) {
       final check = find.descendant(
@@ -195,9 +229,9 @@ void main() {
       Focus.of(tester.element(check)).requestFocus();
     }
 
-    /// The colors at 1px, 3px and 5px past the swatch's right edge, or its
-    /// left edge when [left]: the gap, the ring (2px to 4px out) and the page.
-    Future<({Color gap, Color ring, Color page})> probe(
+    /// Captures the panel and returns the color [out] logical pixels past the
+    /// right edge of [accent]'s swatch, or its left edge when [left].
+    Future<Color Function(double out)> probe(
       WidgetTester tester,
       String accent, {
       bool left = false,
@@ -208,21 +242,22 @@ void main() {
       final origin = tester.getTopLeft(find.byKey(panel));
       final radius = tester.getSize(swatch).width / 2;
       final y = ((center.dy - origin.dy) * _scale).round();
-      Color at(double out) => pixels.at(
+      return (out) => pixels.at(
         ((center.dx - origin.dx + (left ? -1 : 1) * (radius + out)) * _scale)
             .round(),
         y,
       );
-      return (gap: at(1), ring: at(3), page: at(5));
     }
 
+    // At Radix's defaults the gap is 0-2px out, the ring 2-4px, and the page
+    // is beyond: 1, 3 and 5 are the centers.
     testWidgets('an idle swatch draws no ring', (tester) async {
       await pumpPanel(tester);
 
-      final colors = await probe(tester, 'grass');
+      final at = await probe(tester, 'grass');
 
-      expect(colors.gap, colors.page);
-      expect(colors.ring, colors.page);
+      expect(at(1), at(5));
+      expect(at(3), at(5));
     });
 
     testWidgets('the selected swatch rings in gray-12, 2px off its edge', (
@@ -230,14 +265,10 @@ void main() {
     ) async {
       await pumpPanel(tester);
 
-      final colors = await probe(tester, 'indigo');
-      final gray12 = MixScope.tokenOf(
-        FortalTokens.gray12,
-        tester.element(find.byType(FortalThemePanel)),
-      );
+      final at = await probe(tester, 'indigo');
 
-      expect(colors.gap, colors.page);
-      _expectNear(colors.ring, gray12);
+      expect(at(1), at(5));
+      _expectNear(at(3), panelToken(tester, FortalTokens.gray12));
     });
 
     testWidgets('a focused swatch rings in the panel accent', (tester) async {
@@ -245,14 +276,10 @@ void main() {
       focusSwatch(tester, 'grass');
       await tester.pump();
 
-      final colors = await probe(tester, 'grass');
-      final accent9 = MixScope.tokenOf(
-        FortalTokens.accent9,
-        tester.element(find.byType(FortalThemePanel)),
-      );
+      final at = await probe(tester, 'grass');
 
-      expect(colors.gap, colors.page);
-      _expectNear(colors.ring, accent9);
+      expect(at(1), at(5));
+      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('focus stays visible on the selected swatch', (tester) async {
@@ -260,13 +287,9 @@ void main() {
       focusSwatch(tester, 'indigo');
       await tester.pump();
 
-      final colors = await probe(tester, 'indigo');
-      final accent9 = MixScope.tokenOf(
-        FortalTokens.accent9,
-        tester.element(find.byType(FortalThemePanel)),
-      );
+      final at = await probe(tester, 'indigo');
 
-      _expectNear(colors.ring, accent9);
+      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('the ring shows on the first column of the panel', (
@@ -276,13 +299,9 @@ void main() {
       focusSwatch(tester, 'gray');
       await tester.pump();
 
-      final colors = await probe(tester, 'gray', left: true);
-      final accent9 = MixScope.tokenOf(
-        FortalTokens.accent9,
-        tester.element(find.byType(FortalThemePanel)),
-      );
+      final at = await probe(tester, 'gray', left: true);
 
-      _expectNear(colors.ring, accent9);
+      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('the ring does not change the swatch layout', (tester) async {
@@ -295,51 +314,75 @@ void main() {
 
       expect(tester.getRect(swatch), idle);
     });
-  });
 
-  testWidgets('a focused sortable table header draws a focus-8 ring', (
-    tester,
-  ) async {
-    // Radix's Table has no sortable header; its focusable controls ring in
-    // `outline: 2px solid var(--focus-8)` (link.css:12-18). The ring sits
-    // inside the cell and paints over it, so the header keeps its size.
-    await tester.pumpRemixApp(
-      FortalDataTable<String>(
-        rows: const ['one'],
-        columns: [
-          RemixDataTableColumn<String>(
-            id: 'value',
-            label: 'Value',
-            sortable: true,
-            cellBuilder: (context, row) => Text(row),
-          ),
-        ],
-        onSortChanged: (_) {},
-      ),
-    );
-    final context = tester.element(find.byType(FortalDataTable<String>));
-    final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
-    final width = MixScope.tokenOf(FortalTokens.focusRingWidth, context);
-    final header = find.byType(Pressable);
+    testWidgets('a wider and farther ring still clears the panel edge', (
+      tester,
+    ) async {
+      await pumpPanel(
+        tester,
+        ringTokens: {
+          FortalTokens.focusRingWidth: 3,
+          FortalTokens.focusRingOffset: 3,
+        },
+      );
+      focusSwatch(tester, 'gray');
+      await tester.pump();
 
-    // Dividers carry only a bottom side, so a top side marks a ring.
-    List<BorderSide> rings() => [
-      for (final box in tester.widgetList<Box>(find.byType(Box)))
-        if ((box.styleSpec?.spec.foregroundDecoration as BoxDecoration?)
-            case BoxDecoration(border: final Border border))
-          if (border.top.style == BorderStyle.solid) border.top,
-    ];
+      // The gap is 0-3px out, the ring 3-6px, and the page is beyond.
+      final at = await probe(tester, 'gray', left: true);
 
-    expect(rings(), isEmpty);
-    final idle = tester.getSize(header);
+      expect(at(1.5), at(7));
+      expect(at(2.5), at(7));
+      _expectNear(at(3.5), panelToken(tester, FortalTokens.accent9));
+      _expectNear(at(5.5), panelToken(tester, FortalTokens.accent9));
+      expect(at(6.5), at(7));
+    });
 
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.pump();
+    for (final (width, offset) in [(2.0, 2.0), (3.0, 3.0)]) {
+      testWidgets('the panel content stays 360 wide at ring width $width and '
+          'offset $offset', (tester) async {
+        await pumpPanel(
+          tester,
+          scroll: Axis.horizontal,
+          ringTokens: {
+            FortalTokens.focusRingWidth: width,
+            FortalTokens.focusRingOffset: offset,
+          },
+        );
 
-    expect(rings().map((side) => (side.color, side.width, side.strokeAlign)), [
-      (focus8, width, BorderSide.strokeAlignInside),
-    ]);
-    expect(tester.getSize(header), idle);
+        final content = find.descendant(
+          of: find.byKey(const ValueKey('theme-panel')),
+          matching: find.byType(ColumnBox),
+        );
+
+        expect(tester.getSize(content.first).width, 360);
+      });
+    }
+
+    for (final offset in [0.0, 2.0]) {
+      testWidgets('a zero-width ring draws nothing at offset $offset', (
+        tester,
+      ) async {
+        await pumpPanel(
+          tester,
+          ringTokens: {
+            FortalTokens.focusRingWidth: 0,
+            FortalTokens.focusRingOffset: offset,
+          },
+        );
+        focusSwatch(tester, 'grass');
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+        // Indigo is selected and grass is focused.
+        for (final accent in ['indigo', 'grass']) {
+          final at = await probe(tester, accent);
+          for (final out in [0.5, 1.0, 2.0, 3.0, 4.0]) {
+            expect(at(out), at(6), reason: '$accent $out px out');
+          }
+        }
+      });
+    }
   });
 }
 

@@ -56,7 +56,7 @@ DataTableStyler uiDataTableStyle({
           style: UiTokens.text1.mix(),
         ).fontWeight(UiTokens.fontWeightRegular()).color(UiTokens.gray11()),
       )
-      .headerCell(_uiDataTableHeaderCell(metrics))
+      .headerCell(_uiDataTableCell(metrics))
       .bodyCell(_uiDataTableCell(metrics))
       // The selection column is a Ui extension with no Radix counterpart.
       // It carries no padding of its own, so the composed checkbox's
@@ -124,25 +124,6 @@ _UiDataTableMetrics _uiDataTableMetrics(UiDataTableSize size) => switch (size) {
 BoxStyler _uiDataTableCell(_UiDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
-
-/// A sortable header takes focus, which Radix draws as
-/// `outline: 2px solid var(--focus-8)`. The outline paints over its element and
-/// reserves no space, so the ring is a foreground border like the row divider,
-/// kept inside the cell where the neighboring cells cannot cover it.
-BoxStyler _uiDataTableHeaderCell(_UiDataTableMetrics metrics) =>
-    _uiDataTableCell(metrics).onFocusVisible(
-      BoxStyler().foregroundDecoration(
-        BoxDecorationMix(
-          border: BoxBorderMix.all(
-            BorderSideMix(
-              color: UiTokens.focus8(),
-              width: UiTokens.focusRingWidth(),
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-          ),
-        ),
-      ),
-    );
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the
