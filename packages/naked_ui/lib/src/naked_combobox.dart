@@ -4,6 +4,7 @@ import 'dart:ui' show SemanticsRole;
 import 'package:flutter/widgets.dart';
 
 import 'base/overlay_base.dart';
+import 'utilities/focus_in_view.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
 
@@ -161,22 +162,66 @@ class NakedComboboxOption<T extends Object>
     final isSelected = scope.value == value;
     final effectiveEnabled = enabled && scope.enabled;
 
-    return buildButton(
-      onPressed: effectiveEnabled ? () => scope.onSelected(value) : null,
-      effectiveEnabled: effectiveEnabled,
-      isSelected: isSelected,
-      mapStates: (states) {
-        final effective = <WidgetState>{...states};
-        if (isHighlighted) effective.add(WidgetState.focused);
+    return _RevealWhenHighlighted(
+      highlighted: isHighlighted,
+      child: buildButton(
+        onPressed: effectiveEnabled ? () => scope.onSelected(value) : null,
+        effectiveEnabled: effectiveEnabled,
+        isSelected: isSelected,
+        mapStates: (states) {
+          final effective = <WidgetState>{...states};
+          if (isHighlighted) effective.add(WidgetState.focused);
 
-        return NakedComboboxOptionState<T>(
-          states: effective,
-          value: value,
-          isHighlighted: isHighlighted,
-        );
-      },
+          return NakedComboboxOptionState<T>(
+            states: effective,
+            value: value,
+            isHighlighted: isHighlighted,
+          );
+        },
+      ),
     );
   }
+}
+
+/// Scrolls its child just far enough into view once it becomes highlighted.
+///
+/// [RawAutocomplete] highlights an option without moving focus, so nothing
+/// else scrolls a highlighted option that sits outside a scrolling options
+/// list.
+class _RevealWhenHighlighted extends StatefulWidget {
+  const _RevealWhenHighlighted({
+    required this.highlighted,
+    required this.child,
+  });
+
+  final bool highlighted;
+  final Widget child;
+
+  @override
+  State<_RevealWhenHighlighted> createState() => _RevealWhenHighlightedState();
+}
+
+class _RevealWhenHighlightedState extends State<_RevealWhenHighlighted> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.highlighted) _reveal();
+  }
+
+  @override
+  void didUpdateWidget(_RevealWhenHighlighted oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.highlighted && !oldWidget.highlighted) _reveal();
+  }
+
+  void _reveal() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) revealInView(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// Reports options-view mount and unmount without reading private

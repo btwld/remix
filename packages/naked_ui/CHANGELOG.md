@@ -61,6 +61,10 @@
 - Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
   hovering a submenu row also opens it after its delay, only when the pointer
   moves over it, no longer when a list scrolls under a resting pointer.
+- `NakedCombobox` now scrolls the highlighted option just far enough into view
+  when arrow keys highlight it, instead of leaving it outside a scrolling
+  options list. Focus stays on the field, and an option that is already
+  visible does not scroll the list or the page.
 
 ## 1.2.3
 
