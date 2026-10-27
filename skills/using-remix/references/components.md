@@ -179,7 +179,13 @@ routes and require a caller-provided `Navigator`; toasts require a
   `RemixMenuItemData<T>` list), and `RemixMenuDivider<T>`. Use
   `RemixMenuTrigger.builder(label:, icon:, builder:)` for custom visual
   content; the builder receives `NakedMenuState` and must return
-  non-interactive content — never a nested button. The same
+  non-interactive content — never a nested button. Use
+  `RemixMenuTrigger.control(builder: (context, menu) => ...)` when the
+  trigger is a real button such as `FortalButton`: pass `menu.focusNode` as
+  its `focusNode` and `menu.toggle` as its `onPressed` (`menu` also exposes
+  `isOpen` and `controller`). The button keeps its own look, label, and
+  enabled state, `MenuStyler.trigger` and `RemixMenu.semanticLabel` do not
+  apply to it, and `RemixMenuTrigger.label` is null. The same
   `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no separate
   Fortal trigger type.
 - **Toast** — base Remix exposes `RemixToastScope` and
