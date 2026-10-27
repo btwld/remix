@@ -58,7 +58,7 @@ DataTableStyler fortalDataTableStyle({
             .fontWeight(FortalTokens.fontWeightRegular())
             .color(FortalTokens.gray11()),
       )
-      .headerCell(_fortalDataTableCell(metrics))
+      .headerCell(_fortalDataTableHeaderCell(metrics))
       .bodyCell(_fortalDataTableCell(metrics))
       // The selection column is a Fortal extension with no Radix counterpart.
       // It carries no padding of its own, so the composed checkbox's
@@ -127,6 +127,31 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
 BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
+
+/// Radix's Table has no sortable header, so a focusable one takes Fortal's own
+/// ring: the `focus-8` ring of a tab, drawn inside the cell. A foreground
+/// border paints over the cell and reserves no space.
+///
+/// The border is always present and transparent at rest, and focus changes only
+/// its color. A decoration that appeared on focus would swap the cell's root
+/// widget and rebuild a stateful custom header from scratch.
+BoxStyler _fortalDataTableHeaderCell(_FortalDataTableMetrics metrics) =>
+    _fortalDataTableCell(metrics)
+        .merge(_fortalDataTableHeaderRing(const Color(0x00000000)))
+        .onFocusVisible(_fortalDataTableHeaderRing(FortalTokens.focus8()));
+
+BoxStyler _fortalDataTableHeaderRing(Color color) =>
+    BoxStyler().foregroundDecoration(
+      BoxDecorationMix(
+        border: BoxBorderMix.all(
+          BorderSideMix(
+            color: color,
+            width: FortalTokens.focusRingWidth(),
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+      ),
+    );
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the

@@ -1130,7 +1130,8 @@
         "The mapped family is named data_table publicly but cites Radix Table. The recipe maps size and variant onto cell padding, minimum cell height, typography, radius, the gray-a5 row divider, bold column headers, and the surface panel, border, gray-a2 header background, and suppressed last-row divider.",
         "Radix Table is a passive layout. Controlled sorting, page-scoped selection, pagination, row hover, arbitrary row actions, and horizontal scrolling are Flutter and Fortal extensions with no Radix counterpart, built from existing accent and gray control tokens.",
         "Radix row-header cells use normal weight, but Flutter 3.44 exposes no row-header semantics role and the v1 data-driven API carries no row-header model, so .rt-TableRowHeaderCell is cited and deferred instead of fabricated.",
-        "Row background and divider are painted per cell exactly as .rt-TableCell does upstream, because Flutter's Table has no widget between the table and its cells."
+        "Row background and divider are painted per cell exactly as .rt-TableCell does upstream, because Flutter's Table has no widget between the table and its cells.",
+        "Radix Themes 3.3.0 draws nothing on a focused table header: table.css has no focus rule and the Table has no sortable header. A sortable header is a Fortal extension and a focusable control, so it rings in focus-8 at the focus ring width, inside its cell like a tab. The ring is a foreground border that is transparent at rest, so focus changes only its color and never remounts a stateful custom header. The row divider paints over the ring's last pixel, tinting it gray-a5."
       ],
       "coverage": {
         "enums": [
