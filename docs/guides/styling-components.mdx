@@ -45,6 +45,67 @@ The animation applies to style transitions, including the color and scale in
 this example. It does not supply application behavior such as saving data or
 deciding when a loading state begins.
 
+## Reduced motion
+
+Remix reads two signals. `MediaQuery.disableAnimations` is set by Android and
+desktop settings and can be overridden for a subtree. The platform's
+accessibility `reduceMotion` is the only flag iOS Reduce Motion sets. Motion is
+reduced when either is on. A `MediaQuery` override can force reduced motion on
+for a subtree, but it cannot turn the platform's `reduceMotion` off.
+
+The select menu, accordion panel, spinner, skeleton, and sidebar follow both
+signals. Dialogs, tooltips, disclosure, and toast get their motion from Naked
+UI, so they follow whichever signals the installed Naked UI release reads.
+
+Read the same preference for your own motion with `RemixReducedMotionBuilder`.
+Its builder runs again when either signal changes.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget fadingPanel({required bool open, required Widget child}) {
+  return RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) => AnimatedOpacity(
+      opacity: open ? 1 : 0,
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 300),
+      child: child,
+    ),
+  );
+}
+```
+
+Style animations declared with `.animate(...)`, including those in installed
+presets, are driven by Mix, which never reads reduced motion and gives Remix no
+point to intercept it. Flutter already shortens Mix's curve animations while the
+platform's `disableAnimations` is set. Springs, iOS Reduce Motion, and a
+`MediaQuery` override leave them running. Choose the animation yourself while
+`reduceMotion` is true. Mix keeps the old animation driver while a style is
+moving, so dropping `.animate` takes effect once the style settles:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget saveButton(VoidCallback save) {
+  final base = ButtonStyler()
+      .color(Colors.blue)
+      .onHovered(.color(Colors.blue.shade700));
+
+  return RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) => RemixButton(
+      label: 'Save',
+      onPressed: save,
+      style: reduceMotion
+          ? base
+          : base.animate(AnimationConfig.spring(300.ms)),
+    ),
+  );
+}
+```
+
 ## Reuse a base style
 
 ```dart

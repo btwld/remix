@@ -288,12 +288,16 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       semanticValue: selectedItem?.semanticLabel ?? selectedItem?.label,
       positioning: widget.positioning,
       onOpen: () {
-        animationController.forward();
+        if (remixReducedMotionOf(context)) {
+          animationController.value = 1;
+        } else {
+          animationController.forward();
+        }
         widget.onOpen?.call();
       },
       onCloseRequested: (hide) {
         // Naked owns open state. Play the reverse visual, then complete close.
-        if (animationController.value == 0) {
+        if (animationController.value == 0 || remixReducedMotionOf(context)) {
           hide();
           return;
         }
