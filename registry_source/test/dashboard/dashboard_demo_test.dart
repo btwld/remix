@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -10,6 +11,8 @@ import 'package:registry_source/src/agent/components/permission.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
+import 'package:registry_source/src/default/components/icon_button.dart';
+import 'package:registry_source/src/default/components/menu.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/default/theme/theme_data.dart';
@@ -55,6 +58,60 @@ void main() {
     );
     expect(find.text('Order ORD-1047 requires review.'), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('an order row opens its actions from a real icon button', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await _pumpDashboard(
+      tester,
+      preset: .defaultPreset,
+      initialPage: RegistryDashboardDemoPage.orders,
+    );
+    const label = 'Actions for ORD-1048';
+    final button = find.byWidgetPredicate(
+      (widget) => widget is VanillaIconButton && widget.semanticLabel == label,
+    );
+    expect(button, findsOneWidget);
+    final menu = find.ancestor(
+      of: button,
+      matching: find.byType(VanillaMenu<String>),
+    );
+
+    expect(find.semantics.byLabel(label), findsOne);
+    expect(_focusStops(tester, menu), 1);
+    expect(
+      tester.getSemantics(button),
+      isSemantics(
+        label: label,
+        isButton: true,
+        isFocusable: true,
+        hasEnabledState: true,
+        isEnabled: true,
+        hasExpandedState: true,
+        isExpanded: false,
+      ),
+    );
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Archive'), findsOneWidget);
+    expect(
+      tester.getSemantics(button),
+      isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Archive'), findsNothing);
+    expect(
+      tester.getSemantics(button),
+      isSemantics(label: label, isFocused: true),
+    );
+    semantics.dispose();
   });
 
   for (final preset in _Preset.values) {
@@ -916,4 +973,18 @@ double _transformAngleIn(WidgetTester tester, Finder ancestor) {
   return math
       .atan2(transform.transform.entry(1, 0), transform.transform.entry(0, 0))
       .abs();
+}
+
+/// How many focus stops sit inside [root].
+int _focusStops(WidgetTester tester, Finder root) {
+  final rootElement = tester.element(root);
+
+  return FocusManager.instance.rootScope.traversalDescendants.where((node) {
+    var inside = false;
+    node.context?.visitAncestorElements((ancestor) {
+      inside = identical(ancestor, rootElement);
+      return !inside;
+    });
+    return inside;
+  }).length;
 }

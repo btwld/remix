@@ -6,6 +6,7 @@ import '../../components/avatar.dart';
 import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/data_table.dart';
+import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/segmented_control.dart';
 import '../../components/textfield.dart';
@@ -377,23 +378,15 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
 ];
 
 Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
-  trigger: RemixMenuTrigger.builder(
-    label: 'Actions for $value',
-    icon: RemixIcons.dotsHorizontal,
-    builder: (_, _, _) => Semantics(
-      label: 'Actions for $value',
-      button: true,
-      child: Box(
-        style: BoxStyler()
-            .size(28, 28)
-            .alignment(.center)
-            .borderRadius(.all(PlaygroundTokens.radiusSm())),
-        child: StyledIcon(
-          icon: RemixIcons.dotsHorizontal,
-          style: IconStyler()
-              .size(PlaygroundTokens.icon)
-              .color(PlaygroundTokens.mutedForeground()),
-        ),
+  trigger: RemixMenuTrigger.control(
+    builder: (_, menu) => PlaygroundIconButton.ghost(
+      size: .small,
+      icon: RemixIcons.dotsHorizontal,
+      semanticLabel: 'Actions for $value',
+      focusNode: menu.focusNode,
+      onPressed: menu.toggle,
+      style: IconButtonStyler().icon(
+        .color(PlaygroundTokens.mutedForeground()),
       ),
     ),
   ),
