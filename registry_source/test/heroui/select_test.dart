@@ -251,6 +251,22 @@ void main() {
       );
     });
 
+    testWidgets('the popover is as wide as the trigger in $mode', (
+      tester,
+    ) async {
+      await tester.pumpHeroUi(_select(), mode: mode);
+      await tester.tap(find.text('Choose'));
+      await tester.pumpAndSettle();
+      final popover = heroUiCase(
+        'select-primary-keyboard-open-select-popover',
+        mode: mode,
+      );
+      final surface = find
+          .ancestor(of: find.text('Apple'), matching: find.byType(DecoratedBox))
+          .last;
+      expect(tester.getSize(surface).width, popover.size.width);
+    });
+
     testWidgets('hovering an item fills it with default in $mode', (
       tester,
     ) async {
