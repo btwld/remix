@@ -667,28 +667,44 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 /// Set [openOnTap] to false to use a control you already have instead, such as
 /// a button from your design system. The menu then draws no button and adds no
 /// activation or focus stop, so the control opens and closes the menu through
-/// [controller] and carries [triggerFocusNode] to receive focus when the menu
-/// closes.
+/// [controller] and carries [triggerFocusNode], which receives focus when the
+/// menu closes. Pass one control: the menu merges its semantics into a single
+/// node that also carries the expanded state, so do not wrap it in
+/// [MergeSemantics].
+///
+/// Keep the controller and focus node in a [State] and dispose the node:
 /// ```dart
-/// final menuController = MenuController();
-/// final triggerFocus = FocusNode();
-/// NakedMenu<String>(
-///   controller: menuController,
-///   openOnTap: false,
-///   triggerFocusNode: triggerFocus,
-///   child: NakedButton(
-///     focusNode: triggerFocus,
-///     onPressed: () => menuController.isOpen
-///         ? menuController.close()
-///         : menuController.open(),
-///     child: Text('Menu'),
-///   ),
-///   overlayBuilder: (context, info) => Column(
-///     children: [
-///       NakedMenu.Item(value: 'copy', child: Text('Copy')),
-///     ],
-///   ),
-/// )
+/// class _ActionsMenuState extends State<ActionsMenu> {
+///   final _controller = MenuController();
+///   final _triggerFocus = FocusNode();
+///
+///   @override
+///   void dispose() {
+///     _triggerFocus.dispose();
+///     super.dispose();
+///   }
+///
+///   @override
+///   Widget build(BuildContext context) {
+///     return NakedMenu<String>(
+///       controller: _controller,
+///       openOnTap: false,
+///       triggerFocusNode: _triggerFocus,
+///       child: NakedButton(
+///         focusNode: _triggerFocus,
+///         onPressed: () =>
+///             _controller.isOpen ? _controller.close() : _controller.open(),
+///         child: const Text('Menu'),
+///       ),
+///       overlayBuilder: (context, info) => Column(
+///         mainAxisSize: MainAxisSize.min,
+///         children: [
+///           NakedMenu.Item(value: 'copy', child: const Text('Copy')),
+///         ],
+///       ),
+///     );
+///   }
+/// }
 /// ```
 ///
 /// See also:
@@ -719,6 +735,11 @@ class NakedMenu<T> extends StatefulWidget {
   }) : assert(
          child != null || builder != null,
          'Either child or builder must be provided',
+       ),
+       assert(
+         openOnTap || semanticLabel == null,
+         'semanticLabel labels the built-in trigger. With openOnTap false, '
+         'label the control instead.',
        );
 
   /// Type alias for [NakedMenuItem] for cleaner API access.
@@ -782,18 +803,22 @@ class NakedMenu<T> extends StatefulWidget {
   ///
   /// When false, [child] or [builder] is the caller's own control. The menu
   /// adds no button, tap or keyboard activation, or focus stop of its own, so
-  /// the control must open and close the menu through [controller]. Attach
-  /// [triggerFocusNode] to the control so that opening and closing the menu
-  /// move focus to it. The menu's expanded state still merges onto the
-  /// control's semantics node; [semanticLabel] has no effect.
+  /// the control must open and close the menu through [controller], and
+  /// [triggerFocusNode] belongs on the control so focus returns to it when the
+  /// menu closes. The [builder] receives no widget states in this mode; only
+  /// [NakedMenuState.isOpen] is meaningful.
   ///
-  /// Must be true for a menu inside a [NakedMenubar].
+  /// The menu merges the control's semantics into one node that carries the
+  /// expanded state. Pass a single control and do not wrap it in
+  /// [MergeSemantics]. Label the control itself: [semanticLabel] must be null.
+  ///
+  /// Must be true for a menu that is an item of a [NakedMenubar].
   final bool openOnTap;
 
   /// Optional focus node for the trigger.
   ///
-  /// The node is focused when the menu opens and closes. With [openOnTap] set
-  /// to false, attach it to the caller's own control.
+  /// Focus returns to this node when the menu closes. With [openOnTap] set to
+  /// false, attach it to the caller's own control.
   final FocusNode? triggerFocusNode;
 
   /// Overlay positioning configuration.
@@ -801,7 +826,8 @@ class NakedMenu<T> extends StatefulWidget {
 
   /// Semantic label for the menu trigger.
   ///
-  /// Ignored when [openOnTap] is false: the caller's control owns its label.
+  /// Must be null when [openOnTap] is false: the caller's control owns its
+  /// label.
   final String? semanticLabel;
 
   /// Whether to exclude this widget from the semantic tree.
@@ -910,9 +936,13 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
     final menubar = NakedMenubarScope.maybeOf(context);
     _menubar = menubar;
     _syncMenubarRegistration();
+    // A menu inside a bar menu's panel also sees the bar's scope, but only a
+    // bar item sits directly under the bar's own anchor group.
     assert(
-      widget.openOnTap || menubar == null,
-      'NakedMenu.openOnTap cannot be false inside a NakedMenubar.',
+      widget.openOnTap ||
+          menubar == null ||
+          !identical(MenuController.maybeOf(context), menubar.controller),
+      'NakedMenu.openOnTap cannot be false for an item of a NakedMenubar.',
     );
     final triggerFocusNode = menubar == null
         ? widget.triggerFocusNode
@@ -978,7 +1008,11 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         ? ExcludeSemantics(child: trigger)
         : menubar != null
         ? trigger
-        : Semantics(expanded: _isOpen, child: trigger);
+        : widget.openOnTap
+        ? Semantics(expanded: _isOpen, child: trigger)
+        : MergeSemantics(
+            child: Semantics(expanded: _isOpen, child: trigger),
+          );
 
     return RawMenuAnchor(
       controller: widget.controller,

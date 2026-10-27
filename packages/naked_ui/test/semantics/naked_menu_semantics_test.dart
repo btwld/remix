@@ -143,19 +143,26 @@ void main() {
     });
 
     group('openOnTap: false', () {
-      Widget buildOwnButtonMenu(MenuController controller) {
+      Widget buildMenu(
+        MenuController controller,
+        Widget Function(VoidCallback toggle) control,
+      ) {
         return NakedMenu<String>(
           controller: controller,
           openOnTap: false,
-          child: NakedButton(
-            onPressed: () =>
-                controller.isOpen ? controller.close() : controller.open(),
-            child: const Text('Actions'),
+          child: control(
+            () => controller.isOpen ? controller.close() : controller.open(),
           ),
           overlayBuilder: (context, info) =>
               const NakedMenuItem<String>(value: 'item', child: Text('Item')),
         );
       }
+
+      Widget buildOwnButtonMenu(MenuController controller) => buildMenu(
+        controller,
+        (toggle) =>
+            NakedButton(onPressed: toggle, child: const Text('Actions')),
+      );
 
       testWidgets('the caller\'s button is the only button node and carries '
           'the expanded state', (tester) async {
@@ -209,6 +216,53 @@ void main() {
 
         handle.dispose();
       });
+
+      final controls = <String, Widget Function(VoidCallback toggle)>{
+        'a Material TextButton': (toggle) =>
+            TextButton(onPressed: toggle, child: const Text('Actions')),
+        'a NakedButton in Semantics(container: true)': (toggle) => Semantics(
+          container: true,
+          child: NakedButton(onPressed: toggle, child: const Text('Actions')),
+        ),
+        'a NakedButton in MergeSemantics': (toggle) => MergeSemantics(
+          child: NakedButton(onPressed: toggle, child: const Text('Actions')),
+        ),
+      };
+
+      for (final MapEntry(key: shape, value: control) in controls.entries) {
+        testWidgets('the expanded state lands on the button node of $shape', (
+          tester,
+        ) async {
+          final handle = tester.ensureSemantics();
+          final controller = MenuController();
+
+          await tester.pumpWidget(
+            _buildTestApp(buildMenu(controller, control)),
+          );
+
+          SemanticsData actionsButton() {
+            final buttons = collectSemanticsNodes(semanticsRootOf(tester), (
+              node,
+            ) {
+              final data = node.getSemanticsData();
+              return data.flagsCollection.isButton && data.label == 'Actions';
+            });
+            expect(buttons, hasLength(1));
+            return buttons.single.getSemanticsData();
+          }
+
+          for (final expanded in [Tristate.isFalse, Tristate.isTrue]) {
+            final data = actionsButton();
+            expect(data.flagsCollection.isExpanded, expanded);
+            expect(data.hasAction(SemanticsAction.tap), isTrue);
+            await tester.tap(find.text('Actions'));
+            await tester.pumpAndSettle();
+          }
+          expect(actionsButton().flagsCollection.isExpanded, Tristate.isFalse);
+
+          handle.dispose();
+        });
+      }
 
       testWidgets('a non-interactive child is not exposed as a button', (
         tester,

@@ -777,32 +777,54 @@ void main() {
         expect(find.text('Item'), findsNothing);
       });
 
-      testWidgets(
-        'Escape closes the menu and focus returns to the triggerFocusNode '
-        'on the caller\'s control',
-        (tester) async {
-          final controller = MenuController();
-          final node = FocusNode();
-          addTearDown(node.dispose);
-          await tester.pumpMaterialWidget(
-            menu(
-              controller: controller,
-              triggerFocusNode: node,
-              child: ownButton(controller, focusNode: node),
-            ),
-          );
+      final closers =
+          <String, Future<void> Function(WidgetTester, MenuController)>{
+            'Escape': (tester, _) => tester.pressEsc(),
+            'selecting an item': (tester, _) async {
+              await tester.tap(find.text('Item'));
+              await tester.pumpAndSettle();
+            },
+            'tapping outside the menu': (tester, _) async {
+              await tester.tapAt(const Offset(10, 10));
+              await tester.pumpAndSettle();
+            },
+            'controller.close()': (tester, controller) async {
+              controller.close();
+              await tester.pumpAndSettle();
+            },
+          };
 
-          await tester.tap(find.text('Trigger'));
-          await tester.pumpAndSettle();
-          expect(find.text('Item'), findsOneWidget);
+      for (final MapEntry(key: closer, value: close) in closers.entries) {
+        testWidgets(
+          'closing with $closer returns focus to the triggerFocusNode on the '
+          'caller\'s control',
+          (tester) async {
+            final controller = MenuController();
+            final node = FocusNode();
+            addTearDown(node.dispose);
+            await tester.pumpMaterialWidget(
+              Center(
+                child: menu(
+                  controller: controller,
+                  triggerFocusNode: node,
+                  child: ownButton(controller, focusNode: node),
+                ),
+              ),
+            );
 
-          await tester.pressEsc();
+            await tester.tap(find.text('Trigger'));
+            await tester.pumpAndSettle();
+            expect(find.text('Item'), findsOneWidget);
+            expect(node.hasPrimaryFocus, isFalse);
 
-          expect(controller.isOpen, isFalse);
-          expect(find.text('Item'), findsNothing);
-          expect(node.hasPrimaryFocus, isTrue);
-        },
-      );
+            await close(tester, controller);
+
+            expect(controller.isOpen, isFalse);
+            expect(find.text('Item'), findsNothing);
+            expect(node.hasPrimaryFocus, isTrue);
+          },
+        );
+      }
 
       testWidgets('the builder sees whether the menu is open', (tester) async {
         final controller = MenuController();
@@ -839,7 +861,7 @@ void main() {
         expect(find.text('Item'), findsOneWidget);
       });
 
-      testWidgets('asserts when placed inside a NakedMenubar', (tester) async {
+      testWidgets('asserts for an item of a NakedMenubar', (tester) async {
         await tester.pumpMaterialWidget(
           NakedMenubar(child: menu(controller: MenuController())),
         );
@@ -850,6 +872,53 @@ void main() {
             (error) => error.message,
             'message',
             contains('openOnTap'),
+          ),
+        );
+      });
+
+      testWidgets('is allowed inside the panel of a NakedMenubar menu', (
+        tester,
+      ) async {
+        final file = MenuController();
+        final nested = MenuController();
+        await tester.pumpMaterialWidget(
+          NakedMenubar(
+            child: NakedMenu<String>(
+              controller: file,
+              child: const Text('File'),
+              overlayBuilder: (context, info) =>
+                  menu(controller: nested, child: ownButton(nested)),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('File'));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        expect(find.text('Trigger'), findsOneWidget);
+
+        await tester.tap(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        expect(nested.isOpen, isTrue);
+        expect(find.text('Item'), findsOneWidget);
+      });
+
+      testWidgets('asserts when semanticLabel is set', (tester) async {
+        expect(
+          () => NakedMenu<String>(
+            controller: MenuController(),
+            openOnTap: false,
+            semanticLabel: 'Actions',
+            child: const Text('Trigger'),
+            overlayBuilder: (context, info) => const SizedBox.shrink(),
+          ),
+          throwsA(
+            isA<AssertionError>().having(
+              (error) => error.message,
+              'message',
+              contains('semanticLabel'),
+            ),
           ),
         );
       });
