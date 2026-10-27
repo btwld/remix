@@ -81,6 +81,22 @@
   widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
   existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
   `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
+### Breaking changes
+
+- `RemixMenuTrigger.label` is now `String?`, because a control trigger has no
+  label. Code that reads `trigger.label` must handle null. The
+  `RemixMenuTrigger` and `RemixMenuTrigger.builder` constructors still require
+  a label.
+
+### Features
+
+- Add `RemixMenuTrigger.control`, so a real button such as a styled
+  `RemixButton` can be the menu trigger. Its builder receives a
+  `RemixMenuTriggerHandle` with `isOpen`, `controller`, `focusNode`, and
+  `toggle()`; pass `focusNode` and `toggle` to the button. The menu keeps the
+  overlay, Escape, outside taps, focus return, and expanded semantics, which
+  merge onto the button. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
+  do not apply to a control trigger, and a `semanticLabel` asserts.
 
 ## 1.0.0-beta.13
 
