@@ -288,8 +288,21 @@ void main() {
       ),
     );
     expect(tester.takeException(), isNull);
-    expect(find.text('Switch 1'), findsOneWidget);
-    expect(find.text('Switch 2'), findsOneWidget);
+    final group = tester.getRect(find.byType(HeroUiSwitchGroup));
+    expect(group.size.isFinite, isTrue);
+    for (final text in ['Switches', 'Switch 1', 'Switch 2']) {
+      final label = tester.getRect(find.text(text));
+      expect(
+        group.top <= label.top && label.bottom <= group.bottom,
+        isTrue,
+        reason: text,
+      );
+      expect(
+        group.left <= label.left && label.right <= group.right,
+        isTrue,
+        reason: text,
+      );
+    }
   });
 
   testWidgets('tapping a switch label toggles that switch', (tester) async {
