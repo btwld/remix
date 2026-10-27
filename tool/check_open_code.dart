@@ -243,7 +243,7 @@ const _herouiPreset = _PresetContract(
   fixtureDirectory: 'heroui_fixture',
   registryItems: _herouiRegistryItems,
   foundationItems: {'theme'},
-  independentItems: _herouiRegistryItems,
+  independentItems: null,
   specStylerItems: [],
   requiredRuntimeDependencies: [
     'remix',
@@ -308,7 +308,13 @@ final class _PresetContract {
 
   final List<String> requiredDevDependencies;
   final Set<String> foundationItems;
-  final List<String> independentItems;
+
+  /// Items installed alone in a fresh app, so an omitted dependency cannot
+  /// hide behind the full gallery. Each one costs a `remix init`, and a fresh
+  /// init makes one unauthenticated GitHub API request (60 an hour). `null`
+  /// derives the list from `registry.yaml`: the items whose dependencies name
+  /// anything besides a foundation item.
+  final List<String>? independentItems;
   final List<String> specStylerItems;
 
   /// Packages the installed `lib/ui` source may import.
@@ -390,6 +396,20 @@ final class _PresetContract {
       'ui.dart',
       for (final key in closure) ..._allFiles(items, key),
     }.toList();
+  }
+
+  List<String> independentInstalls([Directory? repositoryRoot]) {
+    final listed = independentItems;
+    if (listed != null) return listed;
+    final items = _loadItems(repositoryRoot);
+    return [
+      for (final key in items.keys.cast<String>())
+        if (!foundationItems.contains(key) &&
+            ((items[key] as YamlMap)['registryDependencies'] as YamlList? ??
+                    const [])
+                .any((dependency) => !foundationItems.contains(dependency)))
+          key,
+    ];
   }
 
   List<String> get installedUiFiles {
@@ -854,20 +874,18 @@ Future<_Failure?> _checkInTemporaryApp({
     }
     generated.deleteSync();
   }
-  final regenerate = preset.generatedAppFiles.isEmpty
-      ? null
-      : await _runProcess(
-          sdk.dart,
-          [
-            'run',
-            'build_runner',
-            'build',
-            for (final relative in preset.generatedAppFiles)
-              '--build-filter=$relative',
-          ],
-          workingDirectory: app.path,
-          environment: environment,
-        );
+  final regenerate = await _runProcess(
+    sdk.dart,
+    [
+      'run',
+      'build_runner',
+      'build',
+      for (final relative in preset.generatedAppFiles)
+        '--build-filter=$relative',
+    ],
+    workingDirectory: app.path,
+    environment: environment,
+  );
   if (regenerate != null) {
     return _Failure('build_runner failed against current Remix source');
   }
@@ -1084,7 +1102,7 @@ Future<_Failure?> _checkIndependentItems({
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  for (final item in preset.independentItems) {
+  for (final item in preset.independentInstalls()) {
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
@@ -1863,6 +1881,12 @@ String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
 /// Returns the hosted runtime dependencies a preset's installed app declares.
 List<String> requiredRuntimeDependenciesForTest(String preset) =>
     _presetByName(preset).requiredRuntimeDependencies;
+
+/// Returns the items a preset installs alone, for focused regression tests.
+List<String> independentInstallsForTest(
+  String preset, {
+  Directory? repositoryRoot,
+}) => _presetByName(preset).independentInstalls(repositoryRoot);
 
 /// Returns the expected installed UI inventory for focused regression tests.
 List<String> installedUiFilesForTest({String preset = 'vanilla'}) =>

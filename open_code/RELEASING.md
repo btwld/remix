@@ -103,6 +103,13 @@ fvm dart run tool/check_open_code.dart --preset fortal --source hosted --hosted-
 fvm dart run tool/check_open_code.dart --preset heroui --source hosted --hosted-cli
 ```
 
+Every item a preset installs alone starts a fresh `remix init`, and an `init`
+that resolves the registry by branch name makes one unauthenticated GitHub API
+request; GitHub allows 60 an hour. The three presets' commands together use
+most of that, so keep each preset's list of independently installed items
+short. HeroUI's is derived from its registry: the items that depend on an item
+besides the theme.
+
 ## Rollback and migration
 
 Restore the previously committed `remix.yaml` revision to select an older

@@ -66,7 +66,7 @@ void main() {
       expect(options.item, isNull);
     });
 
-    test('either preset can select an explicit source', () {
+    test('every preset can select an explicit source', () {
       for (final preset in ['vanilla', 'fortal', 'heroui']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
@@ -220,6 +220,78 @@ void main() {
     );
 
     expect(checker.fixtureContractProblem(fixture, preset: 'fortal'), isNull);
+  });
+
+  group('independent installs', () {
+    test('Vanilla and Fortal install the Agent and dashboard items alone', () {
+      for (final preset in ['vanilla', 'fortal']) {
+        final items = checker.independentInstallsForTest(preset);
+
+        expect(items, hasLength(18), reason: preset);
+        expect(
+          items,
+          containsAll(['activity', 'transcript_recipe', 'dashboard_demo']),
+          reason: preset,
+        );
+      }
+    });
+
+    test('HeroUI installs alone only the items with a multi-item closure', () {
+      // Every fresh `remix init` is one unauthenticated GitHub API request, so
+      // the list stays short: these are the items that depend on another item
+      // besides the theme, and they include every item that uses an icon.
+      expect(
+        checker.independentInstallsForTest('heroui'),
+        unorderedEquals([
+          'avatar_group',
+          'breadcrumbs',
+          'button',
+          'button_group',
+          'checkbox_group',
+          'close_button',
+          'input_group',
+          'radio_group',
+          'search_field',
+          'switch_group',
+          'table',
+          'textarea',
+          'toast',
+          'toggle_button_group',
+        ]),
+      );
+    });
+
+    test('a derived list follows the registry dependencies', () {
+      final root = Directory('${sandbox.path}/repo');
+      final registry = File('${root.path}/registry/heroui/registry.yaml');
+      registry.parent.createSync(recursive: true);
+      registry.writeAsStringSync('''
+schema: 2
+items:
+  theme:
+    files: []
+  solo:
+    registryDependencies:
+      - theme
+    files: []
+  base:
+    files: []
+  composite:
+    registryDependencies:
+      - theme
+      - base
+    files: []
+  uses_composite:
+    registryDependencies:
+      - composite
+    files: []
+''');
+
+      expect(
+        checker.independentInstallsForTest('heroui', repositoryRoot: root),
+        ['composite', 'uses_composite'],
+      );
+    });
   });
 
   group('registry coverage', () {
@@ -512,7 +584,7 @@ dev_dependencies:
 void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
   final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
-  if (preset != 'heroui')
+  if (preset != 'heroui') {
     File('${app.path}/build.yaml').writeAsStringSync('''targets:
   \$default:
     builders:
@@ -528,6 +600,7 @@ void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
           - lib/ui/components/plan.dart
           - lib/ui/components/transcript.dart
 ''');
+  }
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);
