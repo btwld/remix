@@ -21,8 +21,12 @@ library;
 
 import 'dart:io';
 
+import 'package:remix_cli/src/ownership.dart';
+import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/registry_graph.dart';
 import 'package:yaml/yaml.dart';
 
+import '../packages/remix_cli/test/checkout_registry.dart';
 import 'compile_registry_consumer.dart';
 
 /// Deliberate source edits, keyed by `consumer/item`.
@@ -149,9 +153,37 @@ Future<List<String>> _compare(
     if (items == null) continue;
     final directory = _stage(root, consumer, staging);
     final filter = _consumers[consumer];
-    final expected = items.keys.cast<String>().where(
-      (key) => filter == null || filter(key, items[key] as YamlMap),
-    );
+    final expected = items.keys
+        .cast<String>()
+        .where((key) => filter == null || filter(key, items[key] as YamlMap))
+        .toList();
+    // These repository fixtures predate ownership tracking. Attest their
+    // configured provenance only in the staged copy, then compare each item
+    // independently so dependency customizations keep their own verdict.
+    // Copying any existing record below ensures known conflicts still fail.
+    try {
+      final config = ProjectConfig.parse(
+        File('${directory.path}/remix.yaml').readAsStringSync(),
+        packageRoot: directory,
+      );
+      final graph = await RegistryGraph.resolve(
+        config,
+        expected,
+        CheckoutSources(Directory('${root.path}/registry')),
+      );
+      final ownership = OwnershipPlan.resolve(
+        config,
+        graph.items,
+        requestedNames: graph.items.map((item) => item.name).toSet(),
+        adopt: true,
+      );
+      File(
+        '${directory.path}/$ownershipFileName',
+      ).writeAsStringSync(ownership.after);
+    } on Object catch (error) {
+      problems.add('$consumer: staged ownership preflight failed: $error');
+      continue;
+    }
     for (final key in expected) {
       final label = '$consumer/$key';
       unknown.remove(label);
@@ -220,7 +252,12 @@ Directory _stage(Directory root, String consumer, Directory staging) {
   final target = Directory('${staging.path}/${consumer.split('/').last}')
     ..createSync(recursive: true);
 
-  for (final name in ['remix.yaml', 'build.yaml', 'analysis_options.yaml']) {
+  for (final name in [
+    'remix.yaml',
+    ownershipFileName,
+    'build.yaml',
+    'analysis_options.yaml',
+  ]) {
     final file = File('${source.path}/$name');
     if (file.existsSync()) file.copySync('${target.path}/$name');
   }
