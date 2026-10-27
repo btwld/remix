@@ -1027,8 +1027,11 @@ void main() {
               of: find.text(label),
               matching: find.byType(RemixBoxAdapter),
             )
-            .last,
+            .first,
       );
+
+      const longLabel =
+          'A very long option label that is wider than any trigger';
 
       final minWidthContent = SelectStyler().content(
         SelectContentStyler().minWidth(remixAnchorWidth()),
@@ -1052,50 +1055,37 @@ void main() {
         await tester.pumpRemixApp(
           select(
             triggerWidth: 240,
-            label: 'A very long option label that is wider than any trigger',
+            label: longLabel,
             style: SelectStyler().content(
               SelectContentStyler().width(remixAnchorWidth()),
             ),
           ),
         );
         await open(tester);
-        expect(
-          panelRect(
-            tester,
-            'A very long option label that is wider than any trigger',
-          ).width,
-          240,
-        );
+        expect(panelRect(tester, longLabel).width, 240);
 
         await tester.pumpRemixApp(
           select(
             triggerWidth: 240,
-            label: 'A very long option label that is wider than any trigger',
+            label: longLabel,
             style: SelectStyler().content(
               SelectContentStyler().maxWidth(remixAnchorWidth()),
             ),
           ),
         );
         await tester.pumpAndSettle();
-        expect(
-          panelRect(
-            tester,
-            'A very long option label that is wider than any trigger',
-          ).width,
-          240,
-        );
+        expect(panelRect(tester, longLabel).width, 240);
       });
 
       testWidgets('keeps the content width when it exceeds the trigger', (
         tester,
       ) async {
-        const label = 'A very long option label that is wider than any trigger';
         await tester.pumpRemixApp(
-          select(triggerWidth: 120, label: label, style: minWidthContent),
+          select(triggerWidth: 120, label: longLabel, style: minWidthContent),
         );
         await open(tester);
 
-        expect(panelRect(tester, label).width, greaterThan(120));
+        expect(panelRect(tester, longLabel).width, greaterThan(120));
       });
 
       testWidgets('leaves the panel content-sized when the token is unused', (
@@ -1123,32 +1113,68 @@ void main() {
         expect(panelRect(tester, 'A').width, 320);
       });
 
-      testWidgets('keeps the larger of a preset minimum and the trigger', (
-        tester,
-      ) async {
-        final presetMinimum = SelectStyler().content(
-          SelectContentStyler().minWidth(300),
-        );
-        final style = presetMinimum.menuContainer(
-          FlexBoxStyler().minWidth(remixAnchorWidth()),
+      group('with a preset that pads and bounds the content box', () {
+        final preset = SelectStyler().content(
+          SelectContentStyler()
+              .padding(.all(4))
+              .border(.color(const Color(0xFFE5E5E5)).width(1))
+              .minWidth(128),
         );
 
-        await tester.pumpRemixApp(select(triggerWidth: 240, style: style));
-        await open(tester);
-        expect(panelRect(tester, 'A').width, 300);
+        Future<double> panelWidth(
+          WidgetTester tester,
+          double triggerWidth,
+          SelectStyler style,
+        ) async {
+          await tester.pumpRemixApp(
+            select(triggerWidth: triggerWidth, style: preset.merge(style)),
+          );
+          await open(tester);
+          final width = panelRect(tester, 'A').width;
+          await tester.tapAt(const Offset(5, 5));
+          await tester.pumpAndSettle();
+          return width;
+        }
 
-        await tester.pumpRemixApp(select(triggerWidth: 400, style: style));
-        await tester.pumpAndSettle();
-        expect(panelRect(tester, 'A').width, 400);
+        testWidgets('a box modifier keeps the larger of the minimum and the '
+            'trigger', (tester) async {
+          final style = SelectStyler().content(
+            SelectContentStyler().wrap(
+              .box(BoxStyler().minWidth(remixAnchorWidth())),
+            ),
+          );
+
+          expect(await panelWidth(tester, 240, style), 240);
+          expect(await panelWidth(tester, 100, style), 128);
+          expect(await panelWidth(tester, 400, style), 400);
+        });
+
+        testWidgets('a minWidth merged into content replaces the minimum', (
+          tester,
+        ) async {
+          expect(await panelWidth(tester, 240, minWidthContent), 240);
+          expect(await panelWidth(tester, 100, minWidthContent), 100);
+        });
+
+        testWidgets('menuContainer sits inside the padding and border', (
+          tester,
+        ) async {
+          final style = SelectStyler().menuContainer(
+            FlexBoxStyler().minWidth(remixAnchorWidth()),
+          );
+
+          expect(await panelWidth(tester, 240, style), 250);
+        });
       });
 
       for (final direction in TextDirection.values) {
-        testWidgets('aligns the panel flush with the trigger in $direction', (
+        testWidgets('aligns a wider panel to the start edge in $direction', (
           tester,
         ) async {
           await tester.pumpRemixApp(
             select(
-              triggerWidth: 200,
+              triggerWidth: 120,
+              label: 'Wider than the trigger',
               style: minWidthContent,
               positioning: const OverlayPositionConfig(
                 side: .bottom,
@@ -1160,9 +1186,14 @@ void main() {
           await open(tester);
 
           final trigger = triggerRect(tester);
-          final panel = panelRect(tester, 'A');
-          expect(panel.left, closeTo(trigger.left, 0.01));
-          expect(panel.right, closeTo(trigger.right, 0.01));
+          final panel = panelRect(tester, 'Wider than the trigger');
+          expect(panel.width, greaterThan(trigger.width));
+          switch (direction) {
+            case TextDirection.ltr:
+              expect(panel.left, closeTo(trigger.left, 0.01));
+            case TextDirection.rtl:
+              expect(panel.right, closeTo(trigger.right, 0.01));
+          }
           expect(panel.top, greaterThanOrEqualTo(trigger.bottom));
         });
       }

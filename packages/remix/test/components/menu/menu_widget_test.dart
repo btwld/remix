@@ -1070,7 +1070,6 @@ void main() {
     Widget menu({
       required double triggerWidth,
       MenuStyler? style,
-      OverlayPositionConfig? positioning,
       List<RemixMenuItemData<String>>? items,
     }) {
       return SizedBox(
@@ -1080,9 +1079,6 @@ void main() {
           items:
               items ?? const [RemixMenuItem<String>(value: 'a', label: 'Copy')],
           style: style ?? MenuStyler(),
-          positioning:
-              positioning ??
-              const OverlayPositionConfig(side: .bottom, alignment: .center),
         ),
       );
     }
@@ -1101,7 +1097,7 @@ void main() {
             of: find.text(label),
             matching: find.byType(RemixBoxAdapter),
           )
-          .last,
+          .first,
     );
 
     final minWidthOverlay = MenuStyler().overlay(
@@ -1178,26 +1174,33 @@ void main() {
     });
 
     for (final direction in TextDirection.values) {
-      testWidgets('aligns the panel flush with the trigger in $direction', (
+      testWidgets('aligns a wider panel to the start edge in $direction', (
         tester,
       ) async {
         await tester.pumpRemixApp(
           menu(
-            triggerWidth: 200,
+            triggerWidth: 120,
             style: minWidthOverlay,
-            positioning: const OverlayPositionConfig(
-              side: .bottom,
-              alignment: .start,
-            ),
+            items: const [
+              RemixMenuItem<String>(
+                value: 'a',
+                label: 'Wider than the trigger',
+              ),
+            ],
           ),
           textDirection: direction,
         );
         await open(tester);
 
         final trigger = triggerRect(tester);
-        final panel = panelRect(tester, 'Copy');
-        expect(panel.left, closeTo(trigger.left, 0.01));
-        expect(panel.right, closeTo(trigger.right, 0.01));
+        final panel = panelRect(tester, 'Wider than the trigger');
+        expect(panel.width, greaterThan(trigger.width));
+        switch (direction) {
+          case TextDirection.ltr:
+            expect(panel.left, closeTo(trigger.left, 0.01));
+          case TextDirection.rtl:
+            expect(panel.right, closeTo(trigger.right, 0.01));
+        }
         expect(panel.top, greaterThanOrEqualTo(trigger.bottom));
       });
     }

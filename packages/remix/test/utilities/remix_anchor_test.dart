@@ -15,7 +15,7 @@ Widget _scoped({
     child: Align(
       alignment: Alignment.topLeft,
       child: RemixAnchorScope(
-        size: Size(width, 40),
+        width: width,
         child: Box(key: _boxKey, style: style, child: child),
       ),
     ),
@@ -66,7 +66,7 @@ void main() {
           builder: (context) {
             outside = remixAnchorWidth.resolve(context);
             return RemixAnchorScope(
-              size: const Size(240, 40),
+              width: 240,
               child: Builder(
                 builder: (context) {
                   inside = remixAnchorWidth.resolve(context);
@@ -82,7 +82,7 @@ void main() {
       expect(outside, 0);
     });
 
-    testWidgets('rebuilds dependents when the anchor size changes', (
+    testWidgets('rebuilds dependents when the anchor width changes', (
       tester,
     ) async {
       final reader = Builder(
@@ -90,7 +90,7 @@ void main() {
       );
       Widget scoped(double width) => Directionality(
         textDirection: TextDirection.ltr,
-        child: RemixAnchorScope(size: Size(width, 40), child: reader),
+        child: RemixAnchorScope(width: width, child: reader),
       );
 
       await tester.pumpWidget(scoped(240));

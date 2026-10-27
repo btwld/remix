@@ -74,7 +74,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   inert. `positioning` defaults to
   `OverlayPositionConfig(side: .bottom, alignment: .center)`.
   `RemixSelectTrigger` and `RemixSelectItem<T>` are data classes, not
-  widgets. The menu is as wide as its content unless a style opts in with
+  widgets. The menu keeps the width its styles give it unless one opts in with
   `remixAnchorWidth()` (for example
   `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
   which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
