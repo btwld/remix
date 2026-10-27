@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
@@ -7,7 +10,10 @@ import 'support.dart';
 
 /// A part that rings on keyboard focus draws the ring around itself and moves
 /// nothing: neither the part nor what sits beside it changes size or position,
-/// and the ring is absent until the part is focus-visible.
+/// and the ring appears only once the part is focus-visible.
+///
+/// The ring is read from the rendered pixels, so the test holds however a
+/// recipe or a Remix part chooses to paint it.
 void main() {
   for (final theme in vanillaThemes) {
     group(theme.name, () {
@@ -185,6 +191,42 @@ void main() {
         );
       });
 
+      testWidgets('a sidebar destination rings outside itself', (tester) async {
+        final probe = await _pump(
+          tester,
+          theme.data,
+          (node) => SizedBox(
+            width: 280,
+            height: 120,
+            child: VanillaSidebar<String>(
+              selectedValue: 'billing',
+              onSelected: (_) {},
+              sections: [
+                RemixSidebarSection(
+                  label: 'Workspace',
+                  destinations: [
+                    RemixSidebarDestination(
+                      value: 'overview',
+                      label: 'Overview',
+                      focusNode: node,
+                    ),
+                    const RemixSidebarDestination(
+                      value: 'billing',
+                      label: 'Billing',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+        await probe.expectRing(
+          part: find.byType(VanillaSidebar<String>),
+          includes: (_) => [probe.focusNode.rect.centerLeft.translate(-1.5, 0)],
+        );
+      });
+
       testWidgets('a disclosure rings its trigger, not the opened section', (
         tester,
       ) async {
@@ -215,6 +257,7 @@ void main() {
 }
 
 const _neighbor = ValueKey('neighbor');
+const _frame = ValueKey('frame');
 
 /// Pumps the widget [build] returns above a [_neighbor], on a keyboard-driven
 /// focus highlight, so a focused part is focus-visible.
@@ -231,19 +274,22 @@ Future<_Probe> _pump(
   addTearDown(focusNode.dispose);
 
   await tester.pumpWidget(
-    VanillaTheme(
-      theme: theme,
-      child: hostOf(
-        Center(
-          child: SizedBox(
-            width: 320,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                build(focusNode),
-                const SizedBox(key: _neighbor, width: 40, height: 10),
-              ],
+    RepaintBoundary(
+      key: _frame,
+      child: VanillaTheme(
+        theme: theme,
+        child: hostOf(
+          Center(
+            child: SizedBox(
+              width: 320,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  build(focusNode),
+                  const SizedBox(key: _neighbor, width: 40, height: 10),
+                ],
+              ),
             ),
           ),
         ),
@@ -264,24 +310,21 @@ final class _Probe {
 
   /// Focuses the part and checks that it rings without moving anything.
   ///
-  /// [includes] and [excludes] are points, in global coordinates, that the
-  /// ring's band must and must not cover.
+  /// [includes] are points, in global coordinates, where the ring must be
+  /// painted: each pixel there turns into the ring's color laid over what it
+  /// showed before. At each of [excludes] the pixel must not change at all.
   Future<void> expectRing({
     required Finder part,
     Iterable<Offset> Function(Rect part) includes = _none,
     Iterable<Offset> Function(Rect part) excludes = _none,
   }) async {
-    final ring = tint(theme.ring, 0.5);
     final rect = tester.getRect(part);
     final neighbor = tester.getRect(find.byKey(_neighbor));
-    expect(
-      tester.renderObject(part),
-      isNot(_paintsPath(ring)),
-      reason: 'a part that is not focused draws no ring',
-    );
+    final before = await _capture();
 
     focusNode.requestFocus();
     await tester.pumpAndSettle();
+    final after = await _capture();
 
     expect(tester.getRect(part), rect, reason: 'the part keeps its box');
     expect(
@@ -289,35 +332,72 @@ final class _Probe {
       neighbor,
       reason: 'the part does not push what sits beside it',
     );
-    expect(
-      tester.renderObject(part),
-      _paintsPath(
-        ring,
-        includes: [for (final point in includes(rect)) point - rect.topLeft],
-        excludes: [for (final point in excludes(rect)) point - rect.topLeft],
-      ),
-      reason: 'a focus-visible part draws the ring',
+    final ring = tint(theme.ring, 0.5);
+    for (final point in includes(rect)) {
+      final resting = before.colorAt(point);
+      expect(
+        after.colorAt(point),
+        isNot(_isColor(resting)),
+        reason: 'focusing the part paints something at $point',
+      );
+      expect(
+        after.colorAt(point),
+        _isColor(Color.alphaBlend(ring, resting)),
+        reason: 'what it paints at $point is the ring over what was there',
+      );
+    }
+    for (final point in excludes(rect)) {
+      expect(
+        after.colorAt(point),
+        _isColor(before.colorAt(point)),
+        reason: 'the ring stays off $point',
+      );
+    }
+  }
+
+  Future<_Pixels> _capture() async {
+    final boundary = tester.renderObject<RenderRepaintBoundary>(
+      find.byKey(_frame),
+    );
+    final pixels = await tester.runAsync(() async {
+      final image = await boundary.toImage();
+      final data = await image.toByteData();
+      final pixels = _Pixels(image.width, data!);
+      image.dispose();
+      return pixels;
+    });
+
+    return pixels!;
+  }
+}
+
+Iterable<Offset> _none(Rect part) => const [];
+
+/// A frame of logical pixels, one per physical pixel.
+final class _Pixels {
+  const _Pixels(this.width, this._rgba);
+
+  final int width;
+  final ByteData _rgba;
+
+  Color colorAt(Offset point) {
+    final offset = (point.dy.floor() * width + point.dx.floor()) * 4;
+
+    return Color.fromARGB(
+      _rgba.getUint8(offset + 3),
+      _rgba.getUint8(offset),
+      _rgba.getUint8(offset + 1),
+      _rgba.getUint8(offset + 2),
     );
   }
 }
 
-/// Matches a render object that draws a path of [color] covering every
-/// [includes] point and none of the [excludes] points.
-///
-/// Other paths may be drawn before it, such as a tab's underline.
-PaintPattern _paintsPath(
-  Color color, {
-  Iterable<Offset> includes = const [],
-  Iterable<Offset> excludes = const [],
-}) => paints
-  ..something((method, arguments) {
-    if (method != #drawPath) return false;
-    final path = arguments[0] as Path;
-    final paint = arguments[1] as Paint;
+/// Matches [expected] to within a level or two per channel, which is what
+/// blending and rounding leave.
+Matcher _isColor(Color expected) => predicate<Color>((actual) {
+  int channel(Color color, int shift) => (color.toARGB32() >> shift) & 0xFF;
 
-    return paint.color.toARGB32() == color.toARGB32() &&
-        includes.every(path.contains) &&
-        !excludes.any(path.contains);
-  });
-
-Iterable<Offset> _none(Rect part) => const [];
+  return [0, 8, 16, 24].every(
+    (shift) => (channel(actual, shift) - channel(expected, shift)).abs() <= 2,
+  );
+}, 'is $expected');
