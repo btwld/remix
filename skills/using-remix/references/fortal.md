@@ -148,10 +148,11 @@ buttons and `-2` for tabs.
   accordion and disclosure triggers have no Radix counterpart. They ring in
   `focus-a8` at the same inset `-2`, so the clip of a toggle group or a panel
   never crops the ring.
-- A sortable data-table header rings in `focus-8` inside its cell, like a tab.
-  Radix has no sortable header; this is a Fortal extension, since a focusable
-  header needs a visible focus indicator. The ring is a border that is
-  transparent at rest, so a stateful custom header keeps its state across
-  focus. The row divider tints the ring's last pixel.
+- A sortable data-table header rings in `focus-8` inside its own cell, like a
+  tab. Radix has no sortable header; this is a Fortal extension, since a
+  focusable header needs a visible focus indicator. The ring replaces the
+  divider on the cell's bottom edge while focused, and a stateful custom header
+  keeps its state across focus. A focusable control nested in the header keeps
+  the ring lit while it holds focus. At `focusRingWidth: 0` nothing is drawn.
 - A `RemixSidebar` destination takes the toggle's ring, so it rings the same
   way expanded, collapsed, and at the edge of a scrolling sidebar.
