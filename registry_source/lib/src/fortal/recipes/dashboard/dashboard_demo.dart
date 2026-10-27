@@ -57,42 +57,44 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
     ),
     child: FortalActionMenu(
       key: const ValueKey('sidebar-account-trigger'),
-      semanticLabel: 'Workspace account menu',
-      trigger: RowBox(
-        style: FlexBoxStyler()
-            .minHeight(48)
-            .crossAxisAlignment(.center)
-            .spacing(10),
-        children: [
-          const FortalAvatar(label: 'LF', size: .size2),
-          Expanded(
-            child: ColumnBox(
-              style: FlexBoxStyler()
-                  .mainAxisSize(.min)
-                  .crossAxisAlignment(.start),
-              children: [
-                const FortalText(
-                  'Leo Farias',
-                  size: .size2,
-                  weight: .medium,
-                  softWrap: false,
-                  truncate: true,
-                ),
-                StyledText(
-                  'Northstar workspace',
-                  style: dashboardText(
-                    .size1,
-                    tone: .muted,
-                  ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                ),
-              ],
+      trigger: RemixMenuTrigger.builder(
+        label: 'Workspace account menu',
+        builder: (_, _, _) => RowBox(
+          style: FlexBoxStyler()
+              .minHeight(48)
+              .crossAxisAlignment(.center)
+              .spacing(10),
+          children: [
+            const FortalAvatar(label: 'LF', size: .size2),
+            Expanded(
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.start),
+                children: [
+                  const FortalText(
+                    'Leo Farias',
+                    size: .size2,
+                    weight: .medium,
+                    softWrap: false,
+                    truncate: true,
+                  ),
+                  StyledText(
+                    'Northstar workspace',
+                    style: dashboardText(
+                      .size1,
+                      tone: .muted,
+                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                  ),
+                ],
+              ),
             ),
-          ),
-          StyledIcon(
-            icon: RemixIcons.dotsHorizontal,
-            style: IconStyler().size(18).color(FortalTokens.gray11()),
-          ),
-        ],
+            StyledIcon(
+              icon: RemixIcons.dotsHorizontal,
+              style: IconStyler().size(18).color(FortalTokens.gray11()),
+            ),
+          ],
+        ),
       ),
       actions: const [
         FortalAction(value: 'profile', label: 'View profile'),
@@ -293,13 +295,16 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
         if (!compact)
           FortalActionMenu(
             key: const ValueKey('topbar-account-trigger'),
-            semanticLabel: 'Account menu',
             positioning: const OverlayPositionConfig(
               side: .bottom,
               alignment: .end,
               sideOffset: 8,
             ),
-            trigger: const FortalAvatar(label: 'LF', size: .size2),
+            trigger: RemixMenuTrigger.builder(
+              label: 'Account menu',
+              builder: (_, _, _) =>
+                  const FortalAvatar(label: 'LF', size: .size2),
+            ),
             actions: const [
               FortalAction(value: 'profile', label: 'Profile'),
               FortalAction(value: 'preferences', label: 'Preferences'),

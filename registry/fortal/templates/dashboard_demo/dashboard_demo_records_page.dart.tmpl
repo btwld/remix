@@ -309,9 +309,8 @@ final _customerColumns = <RemixDataTableColumn<{{typePrefix}}DashboardCustomer>>
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (context, customer) => {{typePrefix}}ActionMenu(
       key: ValueKey('customer-actions-${customer.id}'),
-      semanticLabel: 'Actions for ${customer.name}',
       positioning: {{valuePrefix}}DataTableActionsPositioning,
-      trigger: {{valuePrefix}}DataTableActionsTrigger,
+      trigger: {{valuePrefix}}DataTableActionsTrigger('Actions for ${customer.name}'),
       actions: const [
         {{typePrefix}}Action(value: 'view', label: 'View profile'),
         {{typePrefix}}Action(value: 'email', label: 'Send email'),
@@ -370,9 +369,8 @@ final _orderColumns = <RemixDataTableColumn<{{typePrefix}}DashboardOrder>>[
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (context, order) => {{typePrefix}}ActionMenu(
       key: ValueKey('order-actions-${order.id}'),
-      semanticLabel: 'Actions for ${order.id}',
       positioning: {{valuePrefix}}DataTableActionsPositioning,
-      trigger: {{valuePrefix}}DataTableActionsTrigger,
+      trigger: {{valuePrefix}}DataTableActionsTrigger('Actions for ${order.id}'),
       actions: const [
         {{typePrefix}}Action(value: 'view', label: 'View order'),
         {{typePrefix}}Action(value: 'receipt', label: 'Download receipt'),
