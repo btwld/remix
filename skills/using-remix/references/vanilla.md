@@ -107,10 +107,11 @@ families carry over.
   lands on the hover fill.
 - **Toggle** — on is `accent` with `accentForeground`; a ghost toggle hovers
   onto `muted` with `mutedForeground`. There is no selected border.
-- **Radio and Switch** — pass `label` for visible text. It sits inside the
-  control's tap target, focus ring, and accessible name, and is set as a form
-  label: `textSm` at medium weight in `foreground`, 12px from a radio's circle
-  and 8px from a switch's track. Without a `label`, give a `semanticLabel`.
+- **Radio and Switch** — pass `label` for visible text. It is part of the
+  control's tap and focus target and gives its accessible name, and it is set
+  as a form label: `textSm` at medium weight in `foreground`, 12px from a
+  radio's circle and 8px from a switch's track. The focus ring wraps the circle
+  or track only. Without a `label`, give a `semanticLabel`.
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
   `filled` (the default) is a recessed pill list, `line` an underline.

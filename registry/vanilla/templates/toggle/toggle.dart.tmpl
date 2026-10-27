@@ -103,8 +103,6 @@ ToggleStyler _variantStyle({{typePrefix}}ToggleVariant variant) => switch (varia
   .ghost => ToggleStyler().onHovered(
     _content({{typePrefix}}Tokens.mutedForeground()).color({{typePrefix}}Tokens.muted()),
   ),
-  // No shadow: a decoration shadow under a transparent control shows through
-  // it as a gray wash.
   .outline =>
     ToggleStyler()
         .border(

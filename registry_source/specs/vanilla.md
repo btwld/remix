@@ -125,7 +125,8 @@ Tailwind's `transition` default, `cubic-bezier(0.4, 0, 0.2, 1)`.
 **Focus.** `focus-visible:ring-[3px] ring-ring/50`: a 3px band of `ring` at 50%,
 drawn outside the control with no offset. A control with a border also turns
 its border `ring` (`focus-visible:border-ring`). Text fields and text areas
-ring on any focus, including a click (see Deviations).
+ring on any focus, including a click (see Deviations). A toggle-group option
+draws the band inside itself (see Deviations).
 
 **Disabled.** Opacity 0.5; colors are unchanged.
 
@@ -191,9 +192,10 @@ the steps above. The source column names the file under
 | Checkbox, select, and menu 9×9 glyphs | `size-3.5` (14) / `size-4` (16) | 10 (`VanillaTokens.s2_5`) | The reference sizes padded 24×24 Lucide icons; Remix draws edge-to-edge 9×9 paths (`thickCheck`, `chevronDown`, `thickChevronRight`), which match the painted mark at 10. |
 | Select item horizontal padding | `pl-2 pr-8` (8 / 32) | `px-2` (8) | CSS positions the check mark inside the 32px right gutter (`right-2`); Remix lays the check mark out in the row after the label, so `px-2` places it 8px from the trailing edge. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
-| Toggle and toggle group, outline | `shadow-xs` | no shadow | Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that draw `shadow-xs` in the effects layer cut the box out as CSS does; the toggle group's strip has no effects layer, and the toggle's outline variant does not use its own for a shadow. |
+| Toggle and toggle group, outline | `shadow-xs` | no shadow | Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that draw `shadow-xs` in the effects layer cut the box out as CSS does; the toggle group's strip has no effects layer, and the toggle's outline variant has one but does not draw the shadow there yet. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
 | Focus ring | `ring/50`, 3px | `ring` at 50%, 3px | Matches the reference, which is below the 3:1 non-text floor: about 1.5:1 on the light page and 1.85:1 on the dark. The old Vanilla `focusRing` cleared 3:1. Raise the band's alpha in the recipes, or darken `ring`, where focus visibility matters more than matching. |
+| Toggle group option focus | band drawn outside, the focused item lifted with `focus-visible:z-10` | the same 3px band drawn inside the option | The group clips its options to the rounded strip, which would crop an outside band on the first and last option, and a filled neighbor painted after the focused option would cover its side of one. A recipe cannot lift an option above its neighbors, so the band goes inside. |
 | Text field and text area focus | `focus-visible:` | any focus (`onFocused`) | Browsers treat a focused text input as `:focus-visible` even after a click, but Mix's `onFocusVisible` does not, so the recipe keys the ring on `onFocused` to show it on click as the reference does. Other controls stay on `onFocusVisible`. |
 | Callout, destructive | description at `destructive/90` | one text color for the whole callout | `CalloutSpec` has a single text role, so the description cannot take its own color. |
 | Current filled tab, dark | `bg-input/30` over the list | `input` at 30% pre-blended over `muted`, opaque | Flutter paints the tab's `shadow-sm` under the whole box, so a translucent fill would show it through and darken the tab. The shadow stays a decoration shadow rather than moving to the tab's effects layer. |
