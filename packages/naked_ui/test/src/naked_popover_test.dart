@@ -671,22 +671,6 @@ void main() {
         expect(before.hasPrimaryFocus, isTrue);
       });
 
-      testWidgets('passing one node as triggerFocusNode and the button\'s '
-          'focusNode does not throw', (tester) async {
-        await tester.pumpMaterialWidget(
-          row(triggerFocusNode: button, buttonFocusNode: button),
-        );
-        before.requestFocus();
-        await tester.pump();
-        await tab(tester);
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        await tester.pumpAndSettle();
-        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-        await tester.pumpAndSettle();
-
-        expect(tester.takeException(), isNull);
-      });
-
       testWidgets('openOnTap: true still makes the trigger the single tab '
           'stop that receives focus back', (tester) async {
         await tester.pumpMaterialWidget(

@@ -86,9 +86,10 @@ accessibility semantics. The popover adds no tab stop of its own, so the
 control stays the only one. Pass the control's own `FocusNode` as both its
 `focusNode` and `triggerFocusNode` so that closing the popover returns focus to
 it; without `triggerFocusNode`, focus returns to whatever had it before the
-popover opened. Give an interactive child its own accessible name and action,
-or provide an equivalent accessible control elsewhere. The popover preserves
-those semantics and adds its expanded/collapsed state.
+popover opened. Sharing one node this way needs naked_ui 1.3.0 or later;
+earlier releases throw. Give an interactive child its own accessible name and
+action, or provide an equivalent accessible control elsewhere. The popover
+preserves those semantics and adds its expanded/collapsed state.
 
 `onOpenRequested` and `onCloseRequested` can delay or animate a transition.
 The request callbacks must invoke their provided `showOverlay` or `hideOverlay`
