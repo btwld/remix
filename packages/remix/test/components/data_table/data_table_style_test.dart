@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
@@ -57,11 +58,13 @@ Widget _table({
   Set<Object> selected = const {},
   double minimumWidth = 0,
   List<RemixDataTableColumn<_Record>>? columns,
+  ValueChanged<RemixDataTableSort>? onSortChanged,
 }) {
   return RemixDataTable<_Record>(
     rows: rows,
     columns: columns ?? _columns(),
     minimumWidth: minimumWidth,
+    onSortChanged: onSortChanged,
     rowId: selectable ? (row) => row.id : null,
     selectedRowIds: selected,
     onSelectionChanged: selectable ? (_) {} : null,
@@ -459,6 +462,124 @@ void main() {
       );
 
       expect(tester.getSize(_tableFinder), unselected);
+    });
+  });
+
+  group('outside widget state', () {
+    const idle = Color(0xFF111111);
+    const lit = Color(0xFFEE2222);
+    const probeKey = ValueKey('outside-state-probe');
+
+    BoxStyler boxStyle({required bool hover}) {
+      final base = BoxStyler().color(idle);
+      final reacting = BoxStyler().color(lit);
+
+      return hover ? base.onHovered(reacting) : base.onFocusVisible(reacting);
+    }
+
+    DataTableStyler tableStyle({required bool hover}) {
+      final label = TextStyler().color(idle);
+      final reacting = TextStyler().color(lit);
+
+      return DataTableStyler()
+          .headerRow(boxStyle(hover: hover))
+          .headerCell(boxStyle(hover: hover))
+          .selectionCell(boxStyle(hover: hover))
+          .bodyRow(boxStyle(hover: hover))
+          .bodyCell(boxStyle(hover: hover))
+          .headerLabel(
+            hover ? label.onHovered(reacting) : label.onFocusVisible(reacting),
+          );
+    }
+
+    Color? probeColor(WidgetTester tester) {
+      final container = tester.widget<Container>(
+        find.descendant(
+          of: find.byKey(probeKey),
+          matching: find.byType(Container),
+        ),
+      );
+
+      return (container.decoration as BoxDecoration?)?.color;
+    }
+
+    for (final hover in [false, true]) {
+      final state = hover ? 'hover' : 'keyboard focus';
+
+      testWidgets('static headers ignore an enclosing $state scope', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          Pressable(
+            onPress: () {},
+            child: SizedBox(
+              width: 400,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox.square(
+                    dimension: 10,
+                    child: Box(
+                      key: probeKey,
+                      style: boxStyle(hover: hover),
+                    ),
+                  ),
+                  _table(selectable: true, style: tableStyle(hover: hover)),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        if (hover) {
+          final pointer = TestPointer(1, PointerDeviceKind.mouse);
+          await tester.sendEventToBinding(
+            pointer.hover(tester.getCenter(find.text('Name'))),
+          );
+        } else {
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        }
+        await tester.pump();
+
+        expect(probeColor(tester), lit);
+        final colors = _boxColors(tester);
+        expect(colors, contains(idle));
+        expect(colors, isNot(contains(lit)));
+        expect(tester.widget<Text>(find.text('Name')).style?.color, idle);
+        expect(tester.widget<Text>(find.text('Id')).style?.color, idle);
+      });
+    }
+
+    testWidgets('a sortable header resolves its own focus', (tester) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 400,
+          child: _table(
+            columns: [
+              RemixDataTableColumn<_Record>(
+                id: 'name',
+                label: 'Name',
+                sortable: true,
+                cellBuilder: (context, row) => Text(row.name),
+              ),
+              RemixDataTableColumn<_Record>(
+                id: 'id',
+                label: 'Id',
+                cellBuilder: (context, row) => Text(row.id),
+              ),
+            ],
+            onSortChanged: (_) {},
+            style: tableStyle(hover: false),
+          ),
+        ),
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      expect(_boxColors(tester).where((c) => c == lit), hasLength(2));
+      expect(tester.widget<Text>(find.text('Name')).style?.color, lit);
+      expect(tester.widget<Text>(find.text('Id')).style?.color, idle);
     });
   });
 

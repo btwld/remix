@@ -460,7 +460,16 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
                     Semantics(
                       container: true,
                       explicitChildNodes: true,
-                      child: Box(styleSpec: spec.header, child: header),
+                      child: Box(
+                        styleSpec: spec.header,
+                        // The scope above belongs to the sidebar's own
+                        // regions; header and footer content is not disabled
+                        // with the destinations.
+                        child: WidgetStateProvider(
+                          states: const {},
+                          child: header,
+                        ),
+                      ),
                     ),
                   if (hasBoundedHeight)
                     Expanded(child: SingleChildScrollView(child: landmark))
@@ -470,7 +479,13 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
                     Semantics(
                       container: true,
                       explicitChildNodes: true,
-                      child: Box(styleSpec: spec.footer, child: footer),
+                      child: Box(
+                        styleSpec: spec.footer,
+                        child: WidgetStateProvider(
+                          states: const {},
+                          child: footer,
+                        ),
+                      ),
                     ),
                 ],
               );
@@ -877,8 +892,10 @@ class _SidebarDestinationContent extends StatelessWidget {
     // content changes here; the interactive NakedToggle remains mounted.
     if (motion.expansion == 1 && !motion.isAnimating) {
       final textWidget = StyledText(label, styleSpec: spec.label);
-      return RowBox(
+      return RemixFlexBoxAdapter(
         styleSpec: spec.container,
+        direction: Axis.horizontal,
+        containerEffects: spec.containerEffects,
         children: [
           ?iconWidget,
           if (hasBoundedWidth) Flexible(child: textWidget) else textWidget,
@@ -925,10 +942,12 @@ class _SidebarDestinationContent extends StatelessWidget {
       ),
     );
 
-    return RowBox(
+    return RemixFlexBoxAdapter(
       styleSpec: railAtRest
           ? _centeredContainer(context, spec.container)
           : spec.container,
+      direction: Axis.horizontal,
+      containerEffects: spec.containerEffects,
       children: [if (hasBoundedWidth) Flexible(child: inner) else inner],
     );
   }
