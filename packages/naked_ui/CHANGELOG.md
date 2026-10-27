@@ -2,11 +2,12 @@
 
 ### Fixes
 
-- Home and End now scroll the newly focused item into view, as the arrow keys
-  already do, in `NakedSelect`, `NakedMenu`, and other anchored overlays with
-  scrolling content, in `NakedTabBar`, and in `NakedMenubar`.
-- `NakedToggleGroup` scrolls the newly focused option into view when the arrow
-  keys, Home, or End move focus.
+- Home and End now scroll the newly focused item just far enough into view in
+  `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
+  content, in `NakedTabBar`, and in `NakedMenubar`.
+- The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
+  from an open `NakedMenubar` menu, scroll the newly focused item into view the
+  same way. A target that is already visible stays where it is.
 
 ## 1.2.3
 
