@@ -265,6 +265,33 @@ void main() {
     expect(a.top, b.top);
   });
 
+  testWidgets('a labeled group lays out under IntrinsicHeight', (tester) async {
+    await _pump(
+      tester,
+      IntrinsicHeight(
+        child: HeroUiSwitchGroup(
+          label: 'Switches',
+          items: [
+            HeroUiSwitchOption(
+              selected: false,
+              label: 'Switch 1',
+              description: 'Help text',
+              onChanged: (_) {},
+            ),
+            HeroUiSwitchOption(
+              selected: true,
+              label: 'Switch 2',
+              onChanged: (_) {},
+            ),
+          ],
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text('Switch 1'), findsOneWidget);
+    expect(find.text('Switch 2'), findsOneWidget);
+  });
+
   testWidgets('tapping a switch label toggles that switch', (tester) async {
     final selected = [false, true];
     await _pump(

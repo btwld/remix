@@ -312,6 +312,24 @@ void main() {
     });
   }
 
+  // An AlertDialog's content sits under an IntrinsicWidth.
+  testWidgets('a labeled group lays out under IntrinsicWidth', (tester) async {
+    await _pump(
+      tester,
+      IntrinsicWidth(
+        child: HeroUiRadioGroup<String>(
+          groupValue: 'a',
+          onChanged: (_) {},
+          label: 'Choose radio',
+          options: _options,
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text('Alpha'), findsOneWidget);
+    expect(find.text('Gamma'), findsOneWidget);
+  });
+
   testWidgets('tapping an option label selects it through Remix', (
     tester,
   ) async {
