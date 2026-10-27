@@ -2,6 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+// `RemixFlexBoxAdapter` is `@internal` to `remix`, but this sibling package's
+// tests need it to read the container spec Remix resolved for a Fortal recipe.
+// Suppressed per-use below, so a future accidental internal-member use still
+// gets flagged.
+import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
@@ -271,12 +276,10 @@ void main() {
         tester.getSize(find.byIcon(Icons.tune)),
         Size.square(contentIconSize),
       );
-      final triggerRow = tester.widget<RowBox>(
-        find
-            .ancestor(of: find.text('Options'), matching: find.byType(RowBox))
-            .first,
+      expect(
+        _rowAround(tester, 'Options').styleSpec.spec.flex?.spec.spacing,
+        triggerGap,
       );
-      expect(triggerRow.styleSpec?.spec.flex?.spec.spacing, triggerGap);
     });
   }
 
@@ -366,8 +369,20 @@ void main() {
 }
 
 Color? _menuRowColor(WidgetTester tester, String label) {
-  final row = tester.widget<FlexBox>(
-    find.ancestor(of: find.text(label), matching: find.byType(FlexBox)).first,
-  );
-  return (row.styleSpec?.spec.box?.spec.decoration as BoxDecoration?)?.color;
+  final box = _rowAround(tester, label).styleSpec.spec.box;
+  return (box?.spec.decoration as BoxDecoration?)?.color;
 }
+
+/// The Remix row that owns the container spec of the trigger or item labelled
+/// [label].
+// ignore: invalid_use_of_internal_member
+RemixFlexBoxAdapter _rowAround(WidgetTester tester, String label) =>
+    tester.widget(
+      find
+          .ancestor(
+            of: find.text(label),
+            // ignore: invalid_use_of_internal_member
+            matching: find.byType(RemixFlexBoxAdapter),
+          )
+          .first,
+    );

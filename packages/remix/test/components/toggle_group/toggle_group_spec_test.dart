@@ -51,7 +51,7 @@ void main() {
       expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
       expect(spec.label, isA<StyleSpec<TextSpec>>());
       expect(spec.icon, isA<StyleSpec<IconSpec>>());
-      expect(spec.props, hasLength(3));
+      expect(spec.props, hasLength(4));
     });
 
     test('copyWith and lerp preserve value semantics', () {

@@ -75,6 +75,7 @@ typedef _$TabBarSpecMethods = _$TabBarSpec; // ignore: unused_element
 
 mixin _$TabSpec implements Spec<TabSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
@@ -84,11 +85,13 @@ mixin _$TabSpec implements Spec<TabSpec>, Diagnosticable {
   @override
   TabSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
     return TabSpec(
       container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -98,13 +101,18 @@ mixin _$TabSpec implements Spec<TabSpec>, Diagnosticable {
   TabSpec lerp(TabSpec? other, double t) {
     return TabSpec(
       container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [container, containerEffects, label, icon];
 
   @override
   bool operator ==(Object other) {
@@ -147,6 +155,7 @@ mixin _$TabSpec implements Spec<TabSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
@@ -879,22 +888,26 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
         IconStyleMixin<TabStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const TabStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
+       $containerEffects = containerEffects,
        $label = label,
        $icon = icon;
 
   TabStyler({
     FlexBoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
@@ -902,6 +915,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     List<VariantStyle<TabSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          variants: variants,
@@ -911,6 +925,8 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
 
   factory TabStyler.container(FlexBoxStyler value) =>
       TabStyler().container(value);
+  factory TabStyler.containerEffects(RemixBoxEffectsMix value) =>
+      TabStyler().containerEffects(value);
   factory TabStyler.label(TextStyler value) => TabStyler().label(value);
   factory TabStyler.icon(IconStyler value) => TabStyler().icon(value);
   factory TabStyler.color(Color value) => TabStyler().color(value);
@@ -1448,6 +1464,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'containerEffects',
     'label',
     'icon',
     'animation',
@@ -1458,6 +1475,11 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
   /// Sets the container.
   TabStyler container(FlexBoxStyler value) {
     return merge(TabStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  TabStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(TabStyler(containerEffects: value));
   }
 
   /// Sets the label.
@@ -1537,6 +1559,10 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
   TabStyler merge(TabStyler? other) {
     return TabStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -1550,6 +1576,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
   StyleSpec<TabSpec> resolve(BuildContext context) {
     final spec = TabSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
     );
@@ -1566,6 +1593,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('icon', $icon));
   }
@@ -1573,6 +1601,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
   @override
   List<Object?> get props => [
     $container,
+    $containerEffects,
     $label,
     $icon,
     $animation,

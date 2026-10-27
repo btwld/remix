@@ -367,6 +367,42 @@ class TriggerWidthMenuExample extends StatelessWidget {
 - A panel wider than its trigger starts at the trigger's start edge by default,
   and follows the text direction.
 
+## Focus rings
+
+`MenuTriggerStyler.containerEffects` and `MenuItemStyler.containerEffects`
+paint an outline around the trigger or a row without taking layout space, so
+focus does not resize either. `MenuStyler.containerEffects` is separate: it
+paints the popup panel.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final menuRing = RemixBoxEffectsMix(
+  outline: BorderSideMix(color: Colors.indigo, width: 2),
+  outlineOffset: 2,
+);
+
+final ringedMenuStyle = MenuStyler()
+    .trigger(
+      MenuTriggerStyler().onFocusVisible(
+        MenuTriggerStyler().containerEffects(menuRing),
+      ),
+    )
+    .item(
+      MenuItemStyler().onFocusVisible(
+        MenuItemStyler().containerEffects(menuRing),
+      ),
+    );
+```
+
+A popup that clips (`clipBehavior` on `overlay`) crops an outside row ring at
+its edge. Pad the popup by at least the ring's offset plus width, or use a
+negative `outlineOffset` to draw the row ring inside the row.
+
+A `RemixMenuTrigger.builder` that returns a different widget instead of its
+child replaces the styled trigger and its effects.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:

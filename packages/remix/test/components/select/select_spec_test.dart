@@ -442,8 +442,9 @@ void main() {
       test('props list contains all properties', () {
         const spec = SelectMenuItemSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.icon));
       });
@@ -456,7 +457,13 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['container', 'text', 'indicator', 'icon']),
+          unorderedEquals([
+            'container',
+            'containerEffects',
+            'text',
+            'indicator',
+            'icon',
+          ]),
         );
       });
     });

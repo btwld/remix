@@ -38,6 +38,12 @@ class ToggleGroupItemSpec with _$ToggleGroupItemSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
+  /// Outline and paint layers drawn around [container] without affecting
+  /// layout, such as a focus ring.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
   /// Text style for the optional label.
   @override
   final StyleSpec<TextSpec> label;
@@ -48,11 +54,27 @@ class ToggleGroupItemSpec with _$ToggleGroupItemSpec {
 
   const ToggleGroupItemSpec({
     StyleSpec<FlexBoxSpec>? container,
+    this.containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  ToggleGroupItemSpec lerp(ToggleGroupItemSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Backward-compatible name for [ToggleGroupItemSpec].

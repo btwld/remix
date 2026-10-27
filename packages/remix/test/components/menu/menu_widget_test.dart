@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxAdapter;
+    show RemixBoxAdapter, RemixFlexBoxAdapter;
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -76,7 +76,7 @@ void main() {
 
         expect(openStates, isNotEmpty);
         expect(openStates.first, isFalse);
-        expect(receivedChild, isA<RowBox>());
+        expect(receivedChild, isA<RemixFlexBoxAdapter>());
         expect(find.text('Options'), findsOneWidget);
         expect(find.byIcon(Icons.more_vert), findsOneWidget);
 
@@ -649,13 +649,16 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
-      final trigger = tester.widget<RowBox>(
+      final trigger = tester.widget<RemixFlexBoxAdapter>(
         find
-            .ancestor(of: find.text('Options'), matching: find.byType(RowBox))
+            .ancestor(
+              of: find.text('Options'),
+              matching: find.byType(RemixFlexBoxAdapter),
+            )
             .first,
       );
       expect(
-        trigger.styleSpec!.spec.box!.spec.padding,
+        trigger.styleSpec.spec.box!.spec.padding,
         const EdgeInsets.all(20),
       );
     });
@@ -678,12 +681,15 @@ void main() {
       expect(find.byType(RemixMenu<String>), findsOneWidget);
       await tester.tap(find.text('Options'));
       await tester.pumpAndSettle();
-      final item = tester.widget<FlexBox>(
+      final item = tester.widget<RemixFlexBoxAdapter>(
         find
-            .ancestor(of: find.text('Copy'), matching: find.byType(FlexBox))
+            .ancestor(
+              of: find.text('Copy'),
+              matching: find.byType(RemixFlexBoxAdapter),
+            )
             .first,
       );
-      expect(item.styleSpec!.spec.box!.spec.padding, const EdgeInsets.all(12));
+      expect(item.styleSpec.spec.box!.spec.padding, const EdgeInsets.all(12));
     });
 
     testWidgets('applies menu-level default item style', (tester) async {
@@ -2241,7 +2247,10 @@ void main() {
       await tester.pump();
 
       Finder rowFor(String label) => find
-          .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+          .ancestor(
+            of: find.text(label),
+            matching: find.byType(RemixFlexBoxAdapter),
+          )
           .first;
       final first = tester.getRect(rowFor('First radio'));
       final second = tester.getRect(rowFor('Second radio'));
@@ -2301,15 +2310,15 @@ void main() {
         await tester.tap(find.text('Options'));
         await tester.pump();
 
-        final beforeRow = find
-            .ancestor(of: find.text('Before'), matching: find.byType(FlexBox))
+        Finder rowFor(String label) => find
+            .ancestor(
+              of: find.text(label),
+              matching: find.byType(RemixFlexBoxAdapter),
+            )
             .first;
-        final radioRow = find
-            .ancestor(of: find.text('Radio'), matching: find.byType(FlexBox))
-            .first;
-        final afterRow = find
-            .ancestor(of: find.text('After'), matching: find.byType(FlexBox))
-            .first;
+        final beforeRow = rowFor('Before');
+        final radioRow = rowFor('Radio');
+        final afterRow = rowFor('After');
         expect(
           tester.getSize(beforeRow).height,
           tester.getSize(radioRow).height,
@@ -2383,16 +2392,17 @@ void main() {
       await tester.tap(find.text('More'));
       await tester.pump();
 
-      final rootRow = tester.widget<FlexBox>(
-        find
-            .ancestor(of: find.text('More'), matching: find.byType(FlexBox))
-            .first,
-      );
-      final nestedRow = tester.widget<FlexBox>(
-        find
-            .ancestor(of: find.text('Nested'), matching: find.byType(FlexBox))
-            .first,
-      );
+      RemixFlexBoxAdapter rowFor(String label) =>
+          tester.widget<RemixFlexBoxAdapter>(
+            find
+                .ancestor(
+                  of: find.text(label),
+                  matching: find.byType(RemixFlexBoxAdapter),
+                )
+                .first,
+          );
+      final rootRow = rowFor('More');
+      final nestedRow = rowFor('Nested');
       expect(rootRow.children.first, isA<Visibility>());
       expect(nestedRow.children.first, isA<Expanded>());
     });
@@ -2430,9 +2440,12 @@ void main() {
       await tester.pump();
 
       Finder slotFor(String label) {
-        final row = tester.widget<FlexBox>(
+        final row = tester.widget<RemixFlexBoxAdapter>(
           find
-              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .ancestor(
+                of: find.text(label),
+                matching: find.byType(RemixFlexBoxAdapter),
+              )
               .first,
         );
         return find.byWidget(row.children.first);
@@ -2480,9 +2493,12 @@ void main() {
           ('Unchecked', false),
         ]) {
           final row = find
-              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .ancestor(
+                of: find.text(label),
+                matching: find.byType(RemixFlexBoxAdapter),
+              )
               .first;
-          final slot = tester.widget<FlexBox>(row).children.first;
+          final slot = tester.widget<RemixFlexBoxAdapter>(row).children.first;
 
           expect(
             slot,

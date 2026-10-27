@@ -571,6 +571,13 @@ Sets single icon shadow
 
 Configures the menu item container style.
 
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures an outline and paint layers drawn around the item row without
+taking layout space, such as a focus ring in `onFocusVisible`. When the popup
+content clips (`clipBehavior` on its container), an outside ring is cropped at
+the popup edge; use a negative `outlineOffset` to draw it inside the row.
+
 #### `text(TextStyler value)`
 
 Sets menu item text styling.
