@@ -98,6 +98,22 @@ void main() {
 
       await _tap(tester, find.text('Copy link'));
       expect(find.text('Share project'), findsNothing);
+      // The button shares its focus node with the popover, so it takes focus
+      // back.
+      expect(_focused('Open popover'), findsOneWidget);
+    });
+
+    testWidgets('the dropdown button opens its menu and a row reports its '
+        'action', (tester) async {
+      await _pumpGallery(tester, width: 1024);
+      expect(find.text('Last action: none'), findsOneWidget);
+
+      await _tap(tester, find.text('Actions'));
+      expect(find.text('Duplicate'), findsOneWidget);
+
+      await _tap(tester, find.text('Duplicate'));
+      expect(find.text('Last action: copy'), findsOneWidget);
+      expect(_focused('Actions'), findsOneWidget);
     });
 
     testWidgets('a toast appears from the app-level scope', (tester) async {
@@ -184,6 +200,14 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.tap(finder);
   await tester.pump(const Duration(milliseconds: 400));
 }
+
+/// [label] inside the control that has primary focus.
+Finder _focused(String label) => find.descendant(
+  of: find.byElementPredicate(
+    (element) => element == FocusManager.instance.primaryFocus?.context,
+  ),
+  matching: find.text(label),
+);
 
 Widget _host(Widget child) {
   return WidgetsApp(
