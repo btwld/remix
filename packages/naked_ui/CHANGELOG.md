@@ -50,6 +50,10 @@
 - The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
   from an open `NakedMenubar` menu, scroll the newly focused item into view the
   same way. A target that is already visible stays where it is.
+- `NakedSelect` now opens with focus on the selected option, scrolled into
+  view, so Arrow Up and Arrow Down continue from it instead of from the first
+  option. Without a selected option, with a disabled one, or when a lazily
+  built list has not built it, focus still starts on the overlay container.
 
 ## 1.2.3
 
