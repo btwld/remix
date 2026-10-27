@@ -55,9 +55,9 @@ TabStyler heroUiTabStyle({
       result
           .borderRadius(.all(HeroUiTokens.radius3xl()))
           .onSelected(
-            _selected(
-              HeroUiTokens.segmentForeground,
-            ).color(HeroUiTokens.segment()).shadows(heroUiSurfaceBoxShadows),
+            _selected(HeroUiTokens.segmentForeground)
+                .color(HeroUiTokens.segment())
+                .containerEffects(heroUiSurfaceEffects()),
           ),
     // The `h-0.5` indicator is the bottom edge, transparent until selected;
     // the top padding keeps the label centered in the tab.

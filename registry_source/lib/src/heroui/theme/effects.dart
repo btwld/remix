@@ -57,12 +57,6 @@ RemixBoxEffectsMix heroUiSurfaceEffects({bool overlay = false}) =>
 
 const heroUiSurfaceShadow = RemixBoxShadowListToken('heroUi.shadow.surface');
 
-/// `--surface-shadow` for stylers without an effects slot (tabs, toggles).
-///
-/// Dark mode defines no surface shadow; these low-alpha black shadows are not
-/// visible on its dark surfaces, so one list serves both modes.
-final heroUiSurfaceBoxShadows = _boxShadows(heroUiShadows(Brightness.light));
-
 /// `--overlay-shadow` for stylers without an effects slot (tooltip).
 ///
 /// Dark mode adds a 1px inset hairline that a box shadow cannot draw, so the
