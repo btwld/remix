@@ -119,8 +119,8 @@ ToggleStyler _variantStyle(
       PlaygroundTokens.mutedForeground(),
     ).color(PlaygroundTokens.muted()),
   ),
-  // No shadow: `ToggleSpec` has no effects layer, and a decoration shadow under
-  // a transparent control shows through it as a gray wash.
+  // No shadow: a decoration shadow under a transparent control shows through
+  // it as a gray wash.
   .outline =>
     ToggleStyler()
         .border(
@@ -141,16 +141,11 @@ ToggleStyler _content(Color foreground) =>
 
 /// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// A *foreground* decoration rather than the box border: `ToggleSpec` has no
-/// `containerEffects` layer to paint an outline into, and Flutter insets a
-/// container's content by its border widths — so adding a real border on
-/// focus would nudge the label. The decoration strokes outside the box, so
-/// the ring sits where an outline would and takes no layout space. The
-/// outline variant also turns its own border `ring`.
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the
+/// toggle without taking layout space, so focusing one never reflows the row
+/// it sits in. The outline variant also turns its own border `ring`.
 ToggleStyler _focusVisibleStyle(PlaygroundToggleVariant variant) {
-  final ring = ToggleStyler().foregroundDecoration(
-    playgroundFocusRingDecoration(),
-  );
+  final ring = ToggleStyler().containerEffects(playgroundFocusRing());
 
   return switch (variant) {
     .ghost => ring,
@@ -164,5 +159,5 @@ ToggleStyler _focusVisibleStyle(PlaygroundToggleVariant variant) {
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
-    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .containerEffects(.outline(.style(.none)))
     .wrap(.opacity(PlaygroundTokens.disabledOpacity));
