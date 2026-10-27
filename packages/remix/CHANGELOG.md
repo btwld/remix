@@ -1,3 +1,21 @@
+## Unreleased
+
+### Features
+
+- Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
+  inside the control's pointer, hover, press, focus, and single semantics
+  target and used as its accessible name, as `RemixCheckbox.label` is.
+  `RadioStyler` and `SwitchStyler` gain `label`, `labelSpacing` (default 8),
+  and the `labelColor`, `labelFontSize`, and other label style helpers. Both
+  widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
+  existing layouts are unchanged; pass `Size.square(48)` to meet touch target
+  guidance.
+- `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel` are now
+  `String?` and optional when `label` supplies the accessible name. One of
+  `label` and `semanticLabel` is still required, now checked by an assertion
+  rather than the type system. Code that reads either property as a
+  non-null `String` needs a null check.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes

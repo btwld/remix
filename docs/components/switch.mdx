@@ -39,7 +39,7 @@ class _SwitchExampleState extends State<SwitchExample> {
   @override
   Widget build(BuildContext context) {
     return RemixSwitch(
-      semanticLabel: 'Toggle',
+      label: 'Notifications',
       style: style,
       selected: _selected.value,
       onChanged: (value) {
@@ -108,12 +108,12 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
       children: [
         FortalSwitch.surface(
           selected: _value,
-          semanticLabel: 'Notifications',
+          label: 'Surface',
           onChanged: (v) => setState(() => _value = v),
         ),
         FortalSwitch.soft(
           selected: _value,
-          semanticLabel: 'Notifications',
+          label: 'Soft',
           onChanged: (v) => setState(() => _value = v),
         ),
       ],
@@ -136,7 +136,9 @@ import 'package:remix/remix.dart';
 RemixSwitch remixSwitchConstructor({
   Key? key,
   required bool selected,
-  required String semanticLabel,
+  String? label,
+  String? semanticLabel,
+  Size minimumTapTargetSize = Size.zero,
   ValueChanged<bool>? onChanged,
   bool enabled = true,
   bool enableFeedback = true,
@@ -190,9 +192,17 @@ Optional. The focus node for the switch.
 
 Optional. Whether the switch should automatically request focus when it is created.
 
-#### `semanticLabel` → `String`
+#### `label` → `String?`
 
-Required. The accessible name announced for this switch. Must be nonblank — an adjacent `Text` label is not the accessible name.
+Optional. A visible label included in the same pointer, hover, press, focus, and semantics target as the switch. It becomes the accessible name unless `semanticLabel` overrides it. Provide `label` or `semanticLabel`; neither may be blank.
+
+#### `semanticLabel` → `String?`
+
+Optional. Overrides the accessible name derived from `label`, or names the switch when there is no `label`. Must be nonblank — an adjacent `Text` is not the accessible name.
+
+#### `minimumTapTargetSize` → `Size`
+
+Optional. Minimum pointer, focus, and semantics target size. Defaults to `Size.zero`, which keeps the switch's own geometry. Pass `Size.square(48)` to satisfy common Android and iOS target-size guidance.
 
 #### `excludeSemantics` → `bool`
 
@@ -220,6 +230,18 @@ Configures the switch track container style.
 #### `alignment(Alignment value)`
 
 Sets container alignment
+
+#### `label(TextStyler value)`
+
+Sets the visible label text style.
+
+#### `labelSpacing(double value)`
+
+Sets the gap between the switch and its visible label. Defaults to 8 logical pixels.
+
+#### `labelColor(Color value)`
+
+Sets the visible label color through the generated `LabelStyleMixin` API.
 
 #### `trackColor(Color value)`
 
@@ -269,6 +291,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call({..., required String semanticLabel, bool excludeSemantics = false, ...})`
+#### `call({..., String? label, String? semanticLabel, Size minimumTapTargetSize = Size.zero, bool excludeSemantics = false, ...})`
 
 Creates a `RemixSwitch` widget with this style applied.

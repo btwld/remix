@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -28,6 +29,22 @@ extension WidgetTesterHelpers on WidgetTester {
       ),
     );
   }
+}
+
+/// Every semantics node in the subtree of [root], [root] included.
+List<SemanticsNode> semanticsSubtree(SemanticsNode root) {
+  final nodes = <SemanticsNode>[];
+
+  void visit(SemanticsNode node) {
+    nodes.add(node);
+    node.visitChildren((child) {
+      visit(child);
+      return true;
+    });
+  }
+
+  visit(root);
+  return nodes;
 }
 
 class MockBuildContext extends BuildContext {

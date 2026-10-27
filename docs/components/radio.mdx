@@ -44,22 +44,8 @@ class _RadioExampleState extends State<RadioExample> {
         spacing: 16,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            spacing: 8,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RemixRadio<String>(value: 'option1', semanticLabel: 'Option 1', style: style),
-              const Text('Option 1'),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RemixRadio<String>(value: 'option2', semanticLabel: 'Option 2', style: style),
-              const Text('Option 2'),
-            ],
-          ),
+          RemixRadio<String>(value: 'option1', label: 'Option 1', style: style),
+          RemixRadio<String>(value: 'option2', label: 'Option 2', style: style),
         ],
       ),
     );
@@ -137,26 +123,8 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
       onChanged: (value) => setState(() => _selected = value),
       child: Column(
         children: [
-          Row(
-            children: [
-              FortalRadio.surface(
-                value: 'surface',
-                semanticLabel: 'Surface',
-              ),
-              const SizedBox(width: 8),
-              const Text('Surface'),
-            ],
-          ),
-          Row(
-            children: [
-              FortalRadio.soft(
-                value: 'soft',
-                semanticLabel: 'Soft',
-              ),
-              const SizedBox(width: 8),
-              const Text('Soft'),
-            ],
-          ),
+          FortalRadio.surface(value: 'surface', label: 'Surface'),
+          FortalRadio.soft(value: 'soft', label: 'Soft'),
         ],
       ),
     );
@@ -187,7 +155,9 @@ RemixRadioGroup<T> remixRadioGroupConstructor<T>({
 RemixRadio<T> remixRadioConstructor<T>({
   Key? key,
   required T value,
-  required String semanticLabel,
+  String? label,
+  String? semanticLabel,
+  Size minimumTapTargetSize = Size.zero,
   bool enabled = true,
   bool toggleable = false,
   MouseCursor? mouseCursor,
@@ -252,18 +222,40 @@ Optional. The focus node for the radio button.
 
 Optional. The mouse cursor to use when hovering over the radio button.
 
-#### `semanticLabel` → `String`
+#### `label` → `String?`
 
-Required. The accessible name announced for this radio button. Must be nonblank — an adjacent `Text` label is not the accessible name.
+Optional. A visible label included in the same pointer, hover, press, focus, and semantics target as the radio button. It becomes the accessible name unless `semanticLabel` overrides it. Provide `label` or `semanticLabel`; neither may be blank.
+
+#### `semanticLabel` → `String?`
+
+Optional. Overrides the accessible name derived from `label`, or names the radio button when there is no `label`. Must be nonblank — an adjacent `Text` is not the accessible name.
+
+#### `minimumTapTargetSize` → `Size`
+
+Optional. Minimum pointer, focus, and semantics target size. Defaults to `Size.zero`, which keeps the radio button's own geometry. Pass `Size.square(48)` to satisfy common Android and iOS target-size guidance.
 
 #### `excludeSemantics` → `bool`
 
 Optional. Whether to hide the radio button and its visual subtree from the semantics tree. Defaults to `false`.
 
 
+### Style Methods
+
 #### `indicator(BoxStyler value)`
 
 Sets indicator styling (selected fill).
+
+#### `label(TextStyler value)`
+
+Sets the visible label text style.
+
+#### `labelSpacing(double value)`
+
+Sets the gap between the radio button and its visible label. Defaults to 8 logical pixels.
+
+#### `labelColor(Color value)`
+
+Sets the visible label color through the generated `LabelStyleMixin` API.
 
 #### `alignment(Alignment value)`
 
@@ -309,6 +301,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call<T>({Key? key, required T value, required String semanticLabel, bool enabled = true, bool toggleable = false, MouseCursor? mouseCursor, FocusNode? focusNode, bool autofocus = false, bool excludeSemantics = false})`
+#### `call<T>({Key? key, required T value, String? label, String? semanticLabel, Size minimumTapTargetSize = Size.zero, bool enabled = true, bool toggleable = false, MouseCursor? mouseCursor, FocusNode? focusNode, bool autofocus = false, bool excludeSemantics = false})`
 
 Creates a `RemixRadio<T>` widget with this style applied.

@@ -9,6 +9,8 @@ part of 'switch.dart';
 mixin _$SwitchSpec implements Spec<SwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
+  StyleSpec<TextSpec> get label;
+  double get labelSpacing;
   RemixBoxEffectsSpec? get trackEffects;
   RemixBoxEffectsSpec? get thumbEffects;
 
@@ -19,12 +21,16 @@ mixin _$SwitchSpec implements Spec<SwitchSpec>, Diagnosticable {
   SwitchSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
+    StyleSpec<TextSpec>? label,
+    double? labelSpacing,
     RemixBoxEffectsSpec? trackEffects,
     RemixBoxEffectsSpec? thumbEffects,
   }) {
     return SwitchSpec(
       container: container ?? this.container,
       thumb: thumb ?? this.thumb,
+      label: label ?? this.label,
+      labelSpacing: labelSpacing ?? this.labelSpacing,
       trackEffects: trackEffects ?? this.trackEffects,
       thumbEffects: thumbEffects ?? this.thumbEffects,
     );
@@ -35,13 +41,22 @@ mixin _$SwitchSpec implements Spec<SwitchSpec>, Diagnosticable {
     return SwitchSpec(
       container: container.lerp(other?.container, t),
       thumb: thumb.lerp(other?.thumb, t),
+      label: label.lerp(other?.label, t),
+      labelSpacing: MixOps.lerp(labelSpacing, other?.labelSpacing, t),
       trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
       thumbEffects: MixOps.lerpSnap(thumbEffects, other?.thumbEffects, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, thumb, trackEffects, thumbEffects];
+  List<Object?> get props => [
+    container,
+    thumb,
+    label,
+    labelSpacing,
+    trackEffects,
+    thumbEffects,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -85,6 +100,8 @@ mixin _$SwitchSpec implements Spec<SwitchSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('thumb', thumb))
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DoubleProperty('labelSpacing', labelSpacing))
       ..add(DiagnosticsProperty('trackEffects', trackEffects))
       ..add(DiagnosticsProperty('thumbEffects', thumbEffects));
   }
@@ -100,16 +117,20 @@ typedef _$SwitchSpecMethods = _$SwitchSpec; // ignore: unused_element
 // **************************************************************************
 
 class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
-    with RemixBoxStylerMixin<SwitchStyler>
+    with RemixBoxStylerMixin<SwitchStyler>, LabelStyleMixin<SwitchStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
+  final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<double>? $labelSpacing;
   final Prop<RemixBoxEffectsSpec>? $trackEffects;
   final Prop<RemixBoxEffectsSpec>? $thumbEffects;
 
   const SwitchStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? thumb,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<double>? labelSpacing,
     Prop<RemixBoxEffectsSpec>? trackEffects,
     Prop<RemixBoxEffectsSpec>? thumbEffects,
     super.variants,
@@ -117,12 +138,16 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     super.animation,
   }) : $container = container,
        $thumb = thumb,
+       $label = label,
+       $labelSpacing = labelSpacing,
        $trackEffects = trackEffects,
        $thumbEffects = thumbEffects;
 
   SwitchStyler({
     BoxStyler? container,
     BoxStyler? thumb,
+    TextStyler? label,
+    double? labelSpacing,
     RemixBoxEffectsMix? trackEffects,
     RemixBoxEffectsMix? thumbEffects,
     AnimationConfig? animation,
@@ -131,6 +156,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   }) : this.create(
          container: Prop.maybeMix(container),
          thumb: Prop.maybeMix(thumb),
+         label: Prop.maybeMix(label),
+         labelSpacing: Prop.maybe(labelSpacing),
          trackEffects: Prop.maybeMix(trackEffects),
          thumbEffects: Prop.maybeMix(thumbEffects),
          variants: variants,
@@ -141,6 +168,9 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   factory SwitchStyler.container(BoxStyler value) =>
       SwitchStyler().container(value);
   factory SwitchStyler.thumb(BoxStyler value) => SwitchStyler().thumb(value);
+  factory SwitchStyler.label(TextStyler value) => SwitchStyler().label(value);
+  factory SwitchStyler.labelSpacing(double value) =>
+      SwitchStyler().labelSpacing(value);
   factory SwitchStyler.trackEffects(RemixBoxEffectsMix value) =>
       SwitchStyler().trackEffects(value);
   factory SwitchStyler.thumbEffects(RemixBoxEffectsMix value) =>
@@ -638,6 +668,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   Set<String> get $stylerFieldNames => const {
     'container',
     'thumb',
+    'label',
+    'labelSpacing',
     'trackEffects',
     'thumbEffects',
     'animation',
@@ -653,6 +685,17 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   /// Sets the thumb.
   SwitchStyler thumb(BoxStyler value) {
     return merge(SwitchStyler(thumb: value));
+  }
+
+  /// Sets the label.
+  @override
+  SwitchStyler label(TextStyler value) {
+    return merge(SwitchStyler(label: value));
+  }
+
+  /// Sets the labelSpacing.
+  SwitchStyler labelSpacing(double value) {
+    return merge(SwitchStyler(labelSpacing: value));
   }
 
   /// Sets the trackEffects.
@@ -691,7 +734,9 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   RemixSwitch call({
     Key? key,
     required bool selected,
-    required String semanticLabel,
+    String? label,
+    String? semanticLabel,
+    Size minimumTapTargetSize = Size.zero,
     ValueChanged<bool>? onChanged,
     bool enabled = true,
     bool enableFeedback = true,
@@ -704,7 +749,9 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
       key: key,
       style: this,
       selected: selected,
+      label: label,
       semanticLabel: semanticLabel,
+      minimumTapTargetSize: minimumTapTargetSize,
       onChanged: onChanged,
       enabled: enabled,
       enableFeedback: enableFeedback,
@@ -721,6 +768,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     return SwitchStyler.create(
       container: MixOps.merge($container, other?.$container),
       thumb: MixOps.merge($thumb, other?.$thumb),
+      label: MixOps.merge($label, other?.$label),
+      labelSpacing: MixOps.merge($labelSpacing, other?.$labelSpacing),
       trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
       thumbEffects: MixOps.merge($thumbEffects, other?.$thumbEffects),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -735,6 +784,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     final spec = SwitchSpec(
       container: MixOps.resolve(context, $container),
       thumb: MixOps.resolve(context, $thumb),
+      label: MixOps.resolve(context, $label),
+      labelSpacing: MixOps.resolve(context, $labelSpacing),
       trackEffects: MixOps.resolve(context, $trackEffects),
       thumbEffects: MixOps.resolve(context, $thumbEffects),
     );
@@ -752,6 +803,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('thumb', $thumb))
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('labelSpacing', $labelSpacing))
       ..add(DiagnosticsProperty('trackEffects', $trackEffects))
       ..add(DiagnosticsProperty('thumbEffects', $thumbEffects));
   }
@@ -760,6 +813,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   List<Object?> get props => [
     $container,
     $thumb,
+    $label,
+    $labelSpacing,
     $trackEffects,
     $thumbEffects,
     $animation,
