@@ -318,6 +318,22 @@ that panel directly contains a checkbox or radio group. Nested submenu panels
 decide this independently. A custom `trailingIcon` replaces the default
 directional submenu chevron.
 
+## Long menus
+
+The panel scrolls when its items are taller than the room the overlay has, and
+every submenu panel scrolls the same way. A `maxHeight` on the `overlay` style
+caps the panel; without one the panel grows to the room the overlay has. A menu
+that fits keeps the size of its items, and the overlay's padding, decoration,
+and effects stay in place while the items scroll.
+
+```dart
+import 'package:remix/remix.dart';
+
+void main() {
+  MenuStyler().overlay(FlexBoxStyler().maxHeight(320));
+}
+```
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
