@@ -30,6 +30,5 @@ approximations:
   - The selected tab paints its own pill or underline; upstream slides one indicator.
   - Tabs size to their content; upstream stretches them across a wider list.
   - "The secondary tab's `h-0.5` indicator is its own bottom edge, transparent until selected, with top padding to keep the label centered."
-  - The surface shadow on the selected pill also applies in dark mode, where it is not visible.
   - The 8px gap between list and panel (`.tabs` gap-2) belongs to the app's layout.
   - Tab separators (`Tabs.Separator`) and vertical orientation are not styled.

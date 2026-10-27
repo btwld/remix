@@ -166,8 +166,13 @@ void main() {
         final before = tester.getSize(find.byType(HeroUiTab).first);
         final label = tester.getRect(find.text('One'));
         expect(
-          tester.resolvedSpecOf<TabSpec>(find.text('One')).containerEffects,
-          isNull,
+          tester
+                  .resolvedSpecOf<TabSpec>(find.text('One'))
+                  .containerEffects
+                  ?.outline
+                  .width ??
+              0,
+          0,
           reason: variant.name,
         );
 
@@ -238,21 +243,39 @@ void main() {
     );
   }
 
-  testWidgets('the selected pill carries the upstream surface shadow', (
-    tester,
-  ) async {
-    await tester.pumpHeroUi(_tabs(.primary));
-    await tester.pumpAndSettle();
-    final pill = _box(
-      tester.resolvedSpecOf<TabSpec>(find.text('One')).container.spec,
-    );
-    expect(
-      pill.boxShadow,
-      cssShadows(
-        heroUiCase('tabs-primary-rest-tabs-indicator').styles['boxShadow']!,
-      ),
-    );
-  });
+  for (final mode in ['light', 'dark']) {
+    testWidgets('only the selected pill carries the upstream surface shadow '
+        'in $mode', (tester) async {
+      await tester.pumpHeroUi(_tabs(.primary), mode: mode);
+      await tester.pumpAndSettle();
+      final selected = tester.resolvedSpecOf<TabSpec>(find.text('One'));
+      final idle = tester.resolvedSpecOf<TabSpec>(find.text('Two'));
+
+      // `--surface-shadow` is a token: the light layers, and none in dark.
+      expect(
+        behindShadows(selected.containerEffects),
+        upstreamSurfaceShadow(mode),
+      );
+      expect(behindShadows(idle.containerEffects), isEmpty);
+      expect(_box(selected.container.spec).boxShadow, isNull);
+    });
+
+    testWidgets('a focused selected pill keeps its shadow and gains the ring '
+        'in $mode', (tester) async {
+      await tester.pumpHeroUi(_tabs(.primary), mode: mode);
+      await tester.pumpAndSettle();
+      await tester.focusWithTab();
+
+      final effects = tester
+          .resolvedSpecOf<TabSpec>(find.text('One'))
+          .containerEffects;
+      expectFocusRing(
+        effects,
+        heroUiCase('tabs-primary-keyboard-three-tabs-tab:Three', mode: mode),
+      );
+      expect(behindShadows(effects), upstreamSurfaceShadow(mode));
+    });
+  }
 
   testWidgets('the panel pads its content like upstream', (tester) async {
     await tester.pumpHeroUi(_tabs(.primary));
