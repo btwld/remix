@@ -11,7 +11,8 @@ placement, and theme selection shared with the Vanilla preset, see the
 
 Sections: [Presets and recipes](#presets-and-recipes) ·
 [Typography](#typography) · [Scope and theme config](#scope-and-theme-config) ·
-[Token rules](#token-rules) · [Focus rings](#focus-rings).
+[Token rules](#token-rules) · [Select](#select) ·
+[Focus rings](#focus-rings).
 
 ## Presets and recipes
 
@@ -134,6 +135,23 @@ the rules that are not obvious from a token's name:
 
 See [Styling](styling.md#styling-with-installed-tokens) for the token
 call-form mechanics (`.mix()`, `.resolve(context)`).
+
+## Select
+
+`FortalSelect`'s panel is at least as wide as its trigger, as in Radix
+(`min-width: var(--radix-select-trigger-width)`), through
+`SelectContentStyler().minWidth(remixAnchorWidth())`. A longer option still
+widens it. A `style:` that gives the content a `maxWidth` below the trigger's
+width must also set `minWidth`, which replaces the minimum, because a minimum
+above a maximum is invalid:
+
+```dart
+import 'package:remix/remix.dart';
+
+final narrowPanel = SelectStyler().content(
+  SelectContentStyler().maxWidth(160).minWidth(0),
+);
+```
 
 ## Focus rings
 

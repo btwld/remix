@@ -278,6 +278,47 @@ void main() {
     }
   });
 
+  group('Fortal Select panel width override', () {
+    testWidgets('a maxWidth below the trigger works once minWidth is reset', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 280,
+          child: FortalSelect<String>(
+            style: SelectStyler().content(
+              SelectContentStyler().maxWidth(120).minWidth(0),
+            ),
+            trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+            items: const [
+              RemixSelectItem(
+                value: 'a',
+                label: 'An option label wider than the cap',
+              ),
+            ],
+            onChanged: (_) {},
+            positioning: const OverlayPositionConfig(
+              side: .bottom,
+              alignment: .start,
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byType(RemixSelect<String>));
+      await tester.pumpAndSettle();
+
+      final panel = find
+          .ancestor(
+            of: find.text('An option label wider than the cap'),
+            // ignore: invalid_use_of_internal_member
+            matching: find.byType(RemixBoxAdapter),
+          )
+          .last;
+      expect(tester.getSize(panel).width, 120);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   group('Fortal Select state recipes', () {
     testWidgets('surface trigger uses exact idle, open, and disabled roles', (
       tester,

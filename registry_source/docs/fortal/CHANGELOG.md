@@ -1,5 +1,15 @@
 ## Unreleased
 
+- **Breaking:** Fortal focus rings on toggles, toggle-group items, tabs, accordion and disclosure triggers, and sidebar destinations are outlines painted through `containerEffects` (`triggerEffects` on accordion and disclosure), so focusing no longer resizes or moves the part. Toggles, toggle groups, accordion, disclosure, and sidebar destinations ring in `focus-8`, where they rang in `focus-a8`. `fortalFocusRing`, `FortalFocusRing`, and `FortalFocusRingFlexBox` are removed: put `fortalTabFocusOutline()` (or `fortalFocusOutline(color, offset:)`) in `containerEffects` or `triggerEffects`.
+
+- **Breaking:** `FortalActionMenu` takes a `RemixMenuTrigger` instead of `semanticLabel` and a `trigger` widget, and `fortalDataTableActionsTrigger` is a function of the accessible label that returns a `RemixMenuTrigger`. The data-table kebab and the top-bar account menu are real buttons through `RemixMenuTrigger.control`; the sidebar account row stays a visual trigger and now rings on keyboard focus.
+
+- **Breaking:** The Fortal select panel is at least as wide as its trigger (`minWidth(remixAnchorWidth())`, Radix `select.css:45`). A `maxWidth` below the trigger width must also set `minWidth`.
+
+- Add a `focus-8` ring to a focused sortable data-table header. Radix draws none; a focusable header needs a visible focus indicator.
+
+- These changes need remix 1.0.0-beta.14 and naked_ui 1.3.0. Overwrite these installed items together: `theme`, `toggle`, `toggle_group`, `tabs`, `accordion`, `disclosure`, `data_table`, `select`, and `dashboard_demo`. `sidebar` needs no overwrite: its destinations take the new ring from `toggle`.
+
 - Add `fortalAppBarStyle` and generated `FortalAppBar` with a solid panel surface, 64px (`space9`) toolbar height, bottom border, `space4` insets, and bold `size4` title. Update `FortalDashboardShell` to use `FortalAppBar` and align its sidebar header height to `space9`.
 
 - Add `FortalTheme.theme`, `darkTheme`, and `mode`, with light/dark data constructors, live system appearance, and nested theme-pair inheritance. The outermost `FortalTheme` sets `DefaultTextStyle` and `IconTheme(color: gray12)`, and a nested `FortalTheme` whose `brightness` or `gray` differs from its parent recolors both `DefaultTextStyle` and `IconTheme` to the new `gray12`. **Breaking:** rename `FortalScope` to `FortalTheme` and remove scope `brightness` and config `createScope`; use `mode` and `theme`. Direct design options such as `accent` remain supported.
