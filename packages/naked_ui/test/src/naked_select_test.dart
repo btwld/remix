@@ -921,6 +921,74 @@ void main() {
         expect(focusedOption(), 4);
       });
 
+      testWidgets(
+        'a resting mouse leaves item focus alone while the list scrolls',
+        (tester) async {
+          await tester.pumpMaterialWidget(
+            Center(child: buildOptionSelect(value: 'option15')),
+          );
+          await open(tester);
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          final resting = tester.getCenter(find.byKey(viewportKey));
+          await mouse.addPointer(location: resting);
+          await tester.pumpAndSettle();
+          expect(focusedOption(), 15);
+          await mouse.moveTo(resting);
+          await tester.pumpAndSettle();
+          expect(focusedOption(), 15);
+
+          await press(tester, LogicalKeyboardKey.arrowDown);
+
+          expect(focusedOption(), 16);
+          await press(tester, LogicalKeyboardKey.arrowDown);
+          expect(focusedOption(), 17);
+        },
+      );
+
+      testWidgets('moving the mouse onto an option clears item focus', (
+        tester,
+      ) async {
+        await tester.pumpMaterialWidget(
+          Center(child: buildOptionSelect(value: 'option15')),
+        );
+        await open(tester);
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        addTearDown(mouse.removePointer);
+        await mouse.addPointer(location: Offset.zero);
+        expect(focusedOption(), 15);
+
+        await mouse.moveTo(tester.getCenter(find.byKey(viewportKey)));
+        await tester.pumpAndSettle();
+
+        expect(focusedOption(), isNull);
+      });
+
+      testWidgets('moving the mouse onto a disabled option keeps item focus', (
+        tester,
+      ) async {
+        await tester.pumpMaterialWidget(
+          Center(
+            child: buildOptionSelect(value: 'option15', disabled: {14}),
+          ),
+        );
+        await open(tester);
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        addTearDown(mouse.removePointer);
+        await mouse.addPointer(location: Offset.zero);
+
+        await mouse.moveTo(
+          tester.getCenter(
+            find.widgetWithText(NakedSelectOption<String>, 'Option 14'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(focusedOption(), 15);
+      });
+
       testWidgets('does not scroll a page that holds the overlay', (
         tester,
       ) async {

@@ -113,37 +113,42 @@ abstract class OverlayItem<T, S extends NakedState> extends StatelessWidget {
     required S Function(Set<WidgetState> states) mapStates,
   }) {
     final button = Builder(
-      builder: (context) => NakedButton(
-        onPressed: onPressed,
-        enabled: effectiveEnabled,
-        focusNode: focusNode,
-        semanticLabel: semanticLabel,
-        onHoverChange: (hovered) {
-          if (hovered) {
+      builder: (context) => Listener(
+        behavior: HitTestBehavior.translucent,
+        // Unlike a hover enter, a hover only arrives when the pointer moves, not
+        // when content scrolls under a resting pointer.
+        onPointerHover: (event) {
+          if (effectiveEnabled && event.delta != Offset.zero) {
             AnchoredOverlay.clearItemFocus(context);
           }
         },
-        child: child,
-        builder: builder == null
-            ? null
-            : (context, buttonState, child) {
-                final effectiveStates = <WidgetState>{...buttonState.states};
-                if (isSelected == true || isChecked == true) {
-                  effectiveStates.add(WidgetState.selected);
-                }
+        child: NakedButton(
+          onPressed: onPressed,
+          enabled: effectiveEnabled,
+          focusNode: focusNode,
+          semanticLabel: semanticLabel,
+          child: child,
+          builder: builder == null
+              ? null
+              : (context, buttonState, child) {
+                  final effectiveStates = <WidgetState>{...buttonState.states};
+                  if (isSelected == true || isChecked == true) {
+                    effectiveStates.add(WidgetState.selected);
+                  }
 
-                // Install a NakedStateScope<S> for the mapped item state so the
-                // builder honors the public invariant: every ValueWidgetBuilder<S>
-                // receives a context containing a matching NakedStateScope<S>,
-                // making S.of(context) and S.controllerOf(context) resolve to the
-                // item state without leaking the internal NakedButton scope.
-                // Mirrors how the NakedSelect trigger scopes NakedSelectState.
-                return NakedStateScopeBuilder<S>(
-                  value: mapStates(effectiveStates),
-                  child: child,
-                  builder: builder,
-                );
-              },
+                  // Install a NakedStateScope<S> for the mapped item state so the
+                  // builder honors the public invariant: every ValueWidgetBuilder<S>
+                  // receives a context containing a matching NakedStateScope<S>,
+                  // making S.of(context) and S.controllerOf(context) resolve to the
+                  // item state without leaking the internal NakedButton scope.
+                  // Mirrors how the NakedSelect trigger scopes NakedSelectState.
+                  return NakedStateScopeBuilder<S>(
+                    value: mapStates(effectiveStates),
+                    child: child,
+                    builder: builder,
+                  );
+                },
+        ),
       ),
     );
 

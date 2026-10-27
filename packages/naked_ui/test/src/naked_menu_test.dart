@@ -1018,6 +1018,70 @@ void main() {
         },
       );
 
+      testWidgets(
+        'a resting mouse does not clear keyboard focus while the items scroll',
+        (tester) async {
+          final controller = MenuController();
+          final scrollController = ScrollController();
+          addTearDown(scrollController.dispose);
+          const panelKey = Key('panel');
+          final focused = List<bool>.filled(5, false);
+
+          await tester.pumpMaterialWidget(
+            Align(
+              alignment: Alignment.topLeft,
+              child: NakedMenu<String>(
+                controller: controller,
+                builder: (context, state, child) => const Text('Open'),
+                overlayBuilder: (context, info) => SizedBox(
+                  key: panelKey,
+                  height: 60,
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: List.generate(
+                        5,
+                        (index) => NakedMenuItem<String>(
+                          value: 'item$index',
+                          builder: (context, state, child) {
+                            focused[index] = state.isFocused;
+                            return child!;
+                          },
+                          child: SizedBox(
+                            width: 120,
+                            height: 30,
+                            child: Text('Item $index'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          await mouse.addPointer(
+            location:
+                tester.getTopLeft(find.byKey(panelKey)) + const Offset(10, 15),
+          );
+          await tester.pumpAndSettle();
+
+          for (var press = 0; press < 3; press++) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+            await tester.pumpAndSettle();
+          }
+
+          expect(scrollController.offset, greaterThan(0));
+          expect(focused.indexWhere((isFocused) => isFocused), 2);
+        },
+      );
+
       testWidgets('Arrow Down and Up move through items and wrap', (
         tester,
       ) async {
