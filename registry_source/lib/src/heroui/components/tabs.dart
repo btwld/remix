@@ -31,8 +31,7 @@ TabBarStyler heroUiTabBarStyle({
 /// HeroUI recipe for [RemixTab].
 ///
 /// The selected tab paints the indicator itself; upstream slides one shared
-/// indicator between tabs. A transparent ring-width border is always present
-/// so focus and selection recolor it without moving the label.
+/// indicator between tabs.
 @MixWidget(target: RemixTab.new)
 TabStyler heroUiTabStyle({
   HeroUiTabsVariant variant = .primary,
@@ -40,8 +39,7 @@ TabStyler heroUiTabStyle({
 }) {
   final result = TabStyler()
       .height(_height)
-      .padding(.horizontal(heroUiInsideRing(_paddingX)))
-      .border(heroUiRingBorder())
+      .padding(.horizontal(_paddingX))
       .mainAxisAlignment(.center)
       .label(
         .style(
@@ -61,16 +59,23 @@ TabStyler heroUiTabStyle({
               HeroUiTokens.segmentForeground,
             ).color(HeroUiTokens.segment()).shadows(heroUiSurfaceBoxShadows),
           ),
-    // The `h-0.5` indicator is the ring-width bottom edge, recolored.
-    .secondary => result.onSelected(
-      _selected(
-        HeroUiTokens.foreground,
-      ).border(.bottom(.color(HeroUiTokens.accent()))),
-    ),
+    // The `h-0.5` indicator is the bottom edge, transparent until selected;
+    // the top padding keeps the label centered in the tab.
+    .secondary =>
+      result
+          .padding(.top(_indicatorWidth))
+          .border(
+            .bottom(.color(HeroUiTokens.transparent).width(_indicatorWidth)),
+          )
+          .onSelected(
+            _selected(
+              HeroUiTokens.foreground,
+            ).border(.bottom(.color(HeroUiTokens.accent()))),
+          ),
   };
 
   return styled
-      .onFocusVisible(TabStyler().border(heroUiRingBorder(focused: true)))
+      .onFocusVisible(TabStyler().containerEffects(heroUiFocusRing()))
       .onDisabled(TabStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))
       .merge(style);
 }
@@ -90,10 +95,11 @@ const _height = 32.0;
 const _paddingX = 16.0;
 const _hoverOpacity = .7;
 
-/// `.tabs__list`: `p-1`; the secondary list's `border-b`; `.tabs__panel`:
-/// `p-2`.
+/// `.tabs__list`: `p-1`; the secondary list's `border-b` and its `h-0.5`
+/// indicator; `.tabs__panel`: `p-2`.
 const _listPadding = 4.0;
 const _ruleWidth = 1.0;
+const _indicatorWidth = 2.0;
 const _panelPadding = 8.0;
 
 /// The list container's `calc(var(--radius) * 2.5)`.

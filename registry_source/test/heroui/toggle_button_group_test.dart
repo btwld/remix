@@ -107,8 +107,8 @@ void main() {
                     .height,
                 group.size.height,
               );
-              // The item's own box: the label plus the paddings and the
-              // ring border, at the measured height.
+              // The item's own box: the label plus the paddings, at the
+              // measured height.
               final box = tester.getSize(_itemBox(_one));
               expect(box.height, item.size.height);
               expect(
@@ -280,23 +280,28 @@ void main() {
       );
     }
 
-    testWidgets('keyboard focus insets the ring without resizing in $mode', (
-      tester,
-    ) async {
-      await _pump(tester, _group(), mode: mode);
-      final before = tester.getSize(
-        find.byType(HeroUiToggleButtonGroup<String>),
-      );
-      await tester.focusWithTab();
-      final border =
-          _decoration(_item(tester).container.spec)!.border! as Border;
-      expect(border.top.width, HeroUiTokens.focusWidth);
-      expect(border.top.color, heroUiToken(HeroUiTokens.focus, mode));
-      expect(
-        tester.getSize(find.byType(HeroUiToggleButtonGroup<String>)),
-        before,
-      );
-    });
+    // `.toggle-button-group .toggle-button` focus is `ring-inset` with no
+    // offset: the ring of the close button's `status-focused` capture, inside.
+    for (final detached in [false, true]) {
+      testWidgets('keyboard focus draws the ring inside the item without '
+          'resizing, ${detached ? 'detached' : 'joined'}, in $mode', (
+        tester,
+      ) async {
+        await _pump(tester, _group(detached: detached), mode: mode);
+        expect(_item(tester).containerEffects?.isEmpty ?? true, isTrue);
+        final before = tester.getSize(_itemBox(_one));
+        final label = tester.getRect(find.text(_one));
+
+        await tester.focusWithTab();
+        expectInsetFocusRing(
+          _item(tester).containerEffects,
+          heroUiCase('close-button-focus', mode: mode, state: true),
+        );
+        expect(_decoration(_item(tester).container.spec)?.border, isNull);
+        expect(tester.getSize(_itemBox(_one)), before);
+        expect(tester.getRect(find.text(_one)), label);
+      });
+    }
 
     testWidgets('a disabled item dims in $mode', (tester) async {
       await _pump(tester, _group(secondEnabled: false), mode: mode);

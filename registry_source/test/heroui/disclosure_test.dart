@@ -18,14 +18,8 @@ Widget _disclosure({
   content: const Text('Body'),
 );
 
-/// Browser colors are 8-bit; recipe colors come from the theme tokens.
-const _colorTolerance = 1.5 / 255;
-
 DisclosureSpec _spec(WidgetTester tester) =>
     tester.resolvedSpecOf<DisclosureSpec>(find.text('Toggle'));
-
-Border _ring(WidgetTester tester) =>
-    (_spec(tester).trigger.spec.decoration! as BoxDecoration).border! as Border;
 
 void main() {
   for (final mode in ['light', 'dark']) {
@@ -54,33 +48,20 @@ void main() {
       expect(tester.getSize(inset).height, body.size.height);
     });
 
-    testWidgets('keyboard focus rings the trigger without moving it in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring around the trigger '
+        'without moving it in $mode', (tester) async {
       await tester.pumpHeroUi(_disclosure(), mode: mode);
       await tester.pumpAndSettle();
       final before = tester.getRect(find.text('Toggle'));
-      expect(_ring(tester).top.color.a, 0);
-      expect(_ring(tester).top.width, HeroUiTokens.focusWidth);
+      expect(_spec(tester).triggerEffects?.isEmpty ?? true, isTrue);
+      expect(_spec(tester).trigger.spec.decoration, isNull);
 
       await tester.focusWithTab();
-      // disclosure-closed-focus-trigger: a background gap, then the focus
-      // ring. The recipe draws the focus colour as a ring-width inside border.
-      final layers = cssRemixShadows(
-        heroUiCase(
-          'disclosure-closed-focus-trigger',
-          mode: mode,
-          state: true,
-        ).styles['boxShadow']!,
+      expectFocusRing(
+        _spec(tester).triggerEffects,
+        heroUiCase('disclosure-closed-focus-trigger', mode: mode, state: true),
       );
-      expect(
-        _ring(tester).top.color,
-        isSameColorAs(layers.last.color, threshold: _colorTolerance),
-      );
-      expect(
-        _ring(tester).top.width,
-        layers.last.spreadRadius - layers.first.spreadRadius,
-      );
+      expect(_spec(tester).trigger.spec.decoration, isNull);
       expect(tester.getRect(find.text('Toggle')), before);
     });
 

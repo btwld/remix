@@ -82,10 +82,8 @@ enum HeroUiToggleButtonSize {
 /// breakpoint and icons at `sm`. [iconOnly] makes the button square, for a
 /// toggle with an icon and no label.
 ///
-/// A transparent ring-width border is always present so keyboard focus
-/// recolors it without moving the label; upstream draws the ring outside,
-/// which the toggle styler cannot. The pressed scale shares the 100ms fill
-/// motion; upstream eases `transform` over 250ms.
+/// The pressed scale shares the 100ms fill motion; upstream eases `transform`
+/// over 250ms.
 @MixWidget(target: RemixToggle.new)
 ToggleStyler heroUiToggleButtonStyle({
   HeroUiToggleButtonVariant variant = .defaultToggle,
@@ -110,7 +108,6 @@ ToggleStyler heroUiToggleButtonStyle({
             icon: IconStyler().size(size.icon.mobile).color(foreground),
           )
           .height(size.height.mobile)
-          .border(heroUiRingBorder())
           .borderRadius(.all(HeroUiTokens.radius3xl()))
           .color(fill)
           .onBreakpoint(
@@ -130,7 +127,7 @@ ToggleStyler heroUiToggleButtonStyle({
               const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
               ToggleStyler().width(size.height.desktop),
             )
-      : result.padding(.horizontal(heroUiInsideRing(size.paddingX)));
+      : result.padding(.horizontal(size.paddingX));
 
   return result
       .onHovered(ToggleStyler().color(hover))
@@ -143,7 +140,7 @@ ToggleStyler heroUiToggleButtonStyle({
             .onHovered(ToggleStyler().color(HeroUiTokens.accentSoftHover()))
             .onPressed(ToggleStyler().color(HeroUiTokens.accentSoftHover())),
       )
-      .onFocusVisible(ToggleStyler().border(heroUiRingBorder(focused: true)))
+      .onFocusVisible(ToggleStyler().containerEffects(heroUiFocusRing()))
       .onDisabled(ToggleStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))
       .animate(HeroUiTokens.fillMotion)
       .merge(style);

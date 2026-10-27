@@ -271,6 +271,22 @@ void expectFocusRing(RemixBoxEffectsSpec? effects, HeroUiCase measured) {
   expectColorNear(over.single.color, gap.color, reason: 'gap');
 }
 
+/// Expects the recipe's ring to be a measured one drawn inside the part, as
+/// `ring-inset` does: the ring's width and color, on the part's own edge, with
+/// no background gap.
+void expectInsetFocusRing(RemixBoxEffectsSpec? effects, HeroUiCase measured) {
+  final [gap, ring] = [
+    for (final shadow in cssRemixShadows(measured.styles['boxShadow']!))
+      if (shadow.blurRadius == 0 && shadow.spreadRadius > 0) shadow,
+  ];
+  final width = ring.spreadRadius - gap.spreadRadius;
+  expect(effects, isNotNull, reason: measured.id);
+  expect(effects!.outline.width, width, reason: measured.id);
+  expect(effects.outlineOffset, -width, reason: measured.id);
+  expectColorNear(effects.outline.color, ring.color, reason: 'ring');
+  expect(effects.overContent?.shadows ?? const [], isEmpty);
+}
+
 /// The alpha of a CSS color such as `oklab(... / 0.8)`.
 double cssAlpha(String css) => cssColor(css).a;
 

@@ -12,10 +12,8 @@ part of 'toggle_button.dart';
 /// breakpoint and icons at `sm`. [iconOnly] makes the button square, for a
 /// toggle with an icon and no label.
 ///
-/// A transparent ring-width border is always present so keyboard focus
-/// recolors it without moving the label; upstream draws the ring outside,
-/// which the toggle styler cannot. The pressed scale shares the 100ms fill
-/// motion; upstream eases `transform` over 250ms.
+/// The pressed scale shares the 100ms fill motion; upstream eases `transform`
+/// over 250ms.
 class HeroUiToggleButton extends StatelessWidget {
   const HeroUiToggleButton({
     super.key,
