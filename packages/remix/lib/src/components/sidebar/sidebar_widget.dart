@@ -536,7 +536,7 @@ final class SidebarAnimation {
 }
 
 class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     value: 1,
@@ -566,9 +566,24 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (RemixReducedMotion.of(context)) _controller.value = 1;
+    _settleWhenReduced();
+  }
+
+  // MediaQuery does not notify when the platform's reduceMotion changes, so a
+  // transition already under way finishes at once only through the observer.
+  @override
+  void didChangeAccessibilityFeatures() => _settleWhenReduced();
+
+  void _settleWhenReduced() {
+    if (remixReducedMotionOf(context)) _controller.value = 1;
   }
 
   @override
@@ -586,7 +601,7 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
         (widget.collapsed ? style.reverseDuration : null) ??
         style.duration ??
         const Duration(milliseconds: 200);
-    if (RemixReducedMotion.of(context) ||
+    if (remixReducedMotionOf(context) ||
         duration == Duration.zero ||
         (!targetChanged && !_controller.isAnimating)) {
       _controller.value = 1;
@@ -598,6 +613,7 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
   }

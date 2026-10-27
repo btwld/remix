@@ -781,6 +781,32 @@ void main() {
         expect(tester.binding.hasScheduledFrame, isFalse);
       });
 
+      testWidgets('pulses without a MediaQuery ancestor', (tester) async {
+        // `View` supplies a MediaQuery; `RawView` is the view without one.
+        await tester.pumpWidget(
+          RawView(
+            view: tester.view,
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: RemixSkeleton(style: _pulseStyle()),
+            ),
+          ),
+          wrapWithView: false,
+        );
+        expect(
+          find.descendant(
+            of: find.byType(RawView),
+            matching: find.byType(MediaQuery),
+          ),
+          findsNothing,
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(tester.takeException(), isNull);
+        expect(_pulseDecoration(tester).color, isSameColorAs(_midColor));
+      });
+
       testWidgets('stays on the base frame when the platform reduces motion', (
         tester,
       ) async {
