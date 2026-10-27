@@ -116,7 +116,7 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
     final target = last
         ? policy.findLastFocus(current, ignoreCurrentFocus: true)
         : policy.findFirstFocus(current, ignoreCurrentFocus: true);
-    target?.requestFocus();
+    if (target != null) policy.requestFocusCallback(target);
   }
 
   @override

@@ -559,6 +559,92 @@ void main() {
       const values = ['a', 'b', 'c'];
       expect(selectedValue, values[focusedIndex]);
     });
+
+    group('Home and End with a scrolling option list', () {
+      const optionCount = 30;
+      const viewportKey = Key('options viewport');
+      late ScrollController scrollController;
+      late List<bool> focusStates;
+
+      setUp(() {
+        scrollController = ScrollController();
+        focusStates = List<bool>.filled(optionCount, false);
+      });
+
+      tearDown(() => scrollController.dispose());
+
+      Future<void> openScrollingSelect(WidgetTester tester) async {
+        await tester.pumpMaterialWidget(
+          Center(
+            child: NakedSelect<String>(
+              onChanged: (_) {},
+              builder: (context, state, child) => const Text('Select option'),
+              overlayBuilder: (context, info) => SizedBox(
+                key: viewportKey,
+                height: 120,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: List.generate(
+                      optionCount,
+                      (index) => NakedSelectOption<String>(
+                        value: 'option$index',
+                        builder: (context, state, child) {
+                          focusStates[index] = state.isFocused;
+                          return child!;
+                        },
+                        child: SizedBox(
+                          height: 40,
+                          child: Text('Option $index'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('Select option'));
+        await tester.pumpAndSettle();
+      }
+
+      bool isInViewport(WidgetTester tester, int index) {
+        final viewport = tester.getRect(find.byKey(viewportKey));
+        final option = tester.getRect(
+          find.widgetWithText(NakedSelectOption<String>, 'Option $index'),
+        );
+        return option.top >= viewport.top && option.bottom <= viewport.bottom;
+      }
+
+      testWidgets('End focuses the last option and scrolls it into view', (
+        tester,
+      ) async {
+        await openScrollingSelect(tester);
+        expect(isInViewport(tester, optionCount - 1), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pumpAndSettle();
+
+        expect(focusStates.indexWhere((focused) => focused), optionCount - 1);
+        expect(isInViewport(tester, optionCount - 1), isTrue);
+      });
+
+      testWidgets('Home focuses the first option and scrolls it into view', (
+        tester,
+      ) async {
+        await openScrollingSelect(tester);
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+        expect(isInViewport(tester, 0), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.home);
+        await tester.pumpAndSettle();
+
+        expect(focusStates.indexWhere((focused) => focused), 0);
+        expect(isInViewport(tester, 0), isTrue);
+      });
+    });
   });
 
   group('Interaction States', () {

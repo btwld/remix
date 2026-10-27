@@ -44,6 +44,11 @@
 - Keep a menu nested in a menubar panel out of the bar's trigger traversal and
   focus/hover activation. A nested caller-owned control still opens its menu
   only through its own activation.
+### Fixes
+
+- In `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
+  content, Home and End now scroll the newly focused item into view, as the
+  arrow keys already do.
 
 ## 1.2.3
 
