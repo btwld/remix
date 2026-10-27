@@ -17,7 +17,7 @@
 ///
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
-/// core up to four.
+/// core, never fewer than two or more than four.
 library;
 
 import 'dart:convert';
@@ -453,9 +453,9 @@ int? _positiveInt(String text) {
   return value != null && value > 0 ? value : null;
 }
 
-/// The default cap on concurrent installs. Each one ends in a `build_runner`
-/// build, so more workers than this compete for memory instead of finishing
-/// sooner.
+/// The default cap on concurrent installs. Each is a `pub get`, an analyzer
+/// run, and, for items with generated files, a `build_runner` build; past a few
+/// at once they contend for CPU and memory instead of finishing sooner.
 const _maxDefaultJobs = 4;
 
 /// How many independent items are installed at once: [requested] (`--jobs`),
@@ -1053,8 +1053,10 @@ _Failure? _verifyFocusedDependencies(
 /// Each surface must compile with only its own dependency closure. The full
 /// gallery installs every item and would otherwise mask an omitted dependency.
 ///
-/// The items share nothing: each gets its own directory, resolution, and
-/// generator run, so up to [jobs] of them are installed at once.
+/// Each item gets its own directory, resolution, and generator run, and shares
+/// only the pub cache and the Flutter SDK, so up to [jobs] of them are
+/// installed at once. Concurrent `flutter` calls queue on the SDK's startup
+/// lock, which slows them without blocking them.
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
@@ -1064,8 +1066,10 @@ Future<_Failure?> _checkIndependentItems({
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
+  const items = _independentRegistryItems;
 
   Future<_Failure?> checkItem(String item, StringSink log) async {
+    final elapsed = Stopwatch()..start();
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
@@ -1112,22 +1116,15 @@ Future<_Failure?> _checkIndependentItems({
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
     _step(
-      'Independent $item installed, generated, and analyzed with its own dependencies.',
+      'Independent $item installed, generated, and analyzed with its own '
+      'dependencies (${elapsed.elapsed.inSeconds}s).',
       log,
     );
     return null;
   }
 
-  _step(
-    'Checking ${_independentRegistryItems.length} independent items, up to '
-    '$jobs at a time.',
-  );
-  return runPooled(
-    _independentRegistryItems,
-    limit: jobs,
-    out: stdout,
-    work: checkItem,
-  );
+  _step('Checking ${items.length} independent items, up to $jobs at a time.');
+  return runPooled(items, limit: jobs, out: stdout, work: checkItem);
 }
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
@@ -1135,18 +1132,23 @@ Future<_Failure?> _checkIndependentItems({
 ///
 /// Each call gets its own log, and the logs reach [out] in input order as soon
 /// as every earlier one has, so the output does not depend on which task
-/// finished first. After a failure no further input is started; the tasks
-/// already running are awaited, so nothing outlives the call, and their logs
-/// are still written.
+/// finished first. After a failure or an exception no further input is
+/// started; the tasks already running are awaited, so nothing outlives the
+/// call, and their logs are still written.
+///
+/// An exception from [work] is rethrown after that, but only when no earlier
+/// input failed or threw, so the outcome is the one a serial run would reach.
 Future<F?> runPooled<T, F extends Object>(
   List<T> inputs, {
   required int limit,
   required StringSink out,
   required Future<F?> Function(T input, StringSink log) work,
 }) async {
+  if (limit < 1) throw ArgumentError.value(limit, 'limit', 'must be positive');
   final logs = [for (final _ in inputs) StringBuffer()];
   final finished = List.filled(inputs.length, false);
   final failures = <int, F>{};
+  final errors = <int, (Object, StackTrace)>{};
   var started = 0;
   var written = 0;
   var stopped = false;
@@ -1160,9 +1162,9 @@ Future<F?> runPooled<T, F extends Object>(
           failures[index] = failure;
           stopped = true;
         }
-      } catch (_) {
+      } catch (error, stackTrace) {
+        errors[index] = (error, stackTrace);
         stopped = true;
-        rethrow;
       } finally {
         finished[index] = true;
         while (written < inputs.length && finished[written]) {
@@ -1175,7 +1177,12 @@ Future<F?> runPooled<T, F extends Object>(
   await Future.wait([
     for (var slot = 0; slot < min(limit, inputs.length); slot += 1) worker(),
   ]);
-  return failures.isEmpty ? null : failures[failures.keys.reduce(min)];
+  final problems = [...failures.keys, ...errors.keys];
+  if (problems.isEmpty) return null;
+  final first = problems.reduce(min);
+  final error = errors[first];
+  if (error != null) Error.throwWithStackTrace(error.$1, error.$2);
+  return failures[first];
 }
 
 /// The checkout packages a preset's install resolves locally: Remix, its
@@ -1842,15 +1849,17 @@ Future<_Failure?> _runProcess(
   } on ProcessException catch (error) {
     return _Failure('could not start `$executable`: ${error.message}');
   }
-  // A process that fills a pipe nobody reads never exits, so both pipes are
-  // drained alongside the exit code.
+  // A process that fills a pipe nobody reads never exits, and one that reads
+  // stdin never would, so stdin is closed and both pipes are drained alongside
+  // the exit code.
   const decoder = Utf8Decoder(allowMalformed: true);
-  final drained = log == null
-      ? const <Future<void>>[]
-      : [
-          process.stdout.transform(decoder).forEach(log.write),
-          process.stderr.transform(decoder).forEach(log.write),
-        ];
+  final drained = <Future<Object?>>[
+    if (log != null) ...[
+      process.stdin.close(),
+      process.stdout.transform(decoder).forEach(log.write),
+      process.stderr.transform(decoder).forEach(log.write),
+    ],
+  ];
   final code = await process.exitCode;
   await Future.wait(drained);
   if (code == 0) return null;

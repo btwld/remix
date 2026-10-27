@@ -307,6 +307,52 @@ void main() {
         expect(started, [0, 1]);
       },
     );
+
+    test(
+      "an earlier input's failure outlasts a later input's exception",
+      () async {
+        final result = checker.runPooled<int, String>(
+          [0, 1],
+          limit: 2,
+          out: out,
+          work: (input, log) async {
+            if (input == 1) throw StateError('later input');
+            return tasks.run(input, log);
+          },
+        );
+        await _settle();
+
+        tasks.finish(0, 'first input');
+
+        expect(await result, 'first input');
+      },
+    );
+
+    test(
+      "an earlier input's exception outlasts a later input's failure",
+      () async {
+        final result = checker.runPooled<int, String>(
+          [0, 1],
+          limit: 2,
+          out: out,
+          work: (input, log) async {
+            if (input == 1) return 'later input';
+            await _settle();
+            await _settle();
+            throw StateError('first input');
+          },
+        );
+
+        await expectLater(result, throwsA(isA<StateError>()));
+      },
+    );
+
+    test('a limit below one is rejected instead of running nothing', () {
+      for (final limit in [0, -1]) {
+        expect(pool(3, limit: limit), throwsArgumentError);
+      }
+      expect(tasks.started, isEmpty);
+    });
   });
 
   test('--icon-library swaps the icon package in the Vanilla contract', () {
