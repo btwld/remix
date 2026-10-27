@@ -326,8 +326,16 @@ void main() {
       ),
     );
     expect(tester.takeException(), isNull);
-    expect(find.text('Alpha'), findsOneWidget);
-    expect(find.text('Gamma'), findsOneWidget);
+    final group = tester.getRect(find.byType(HeroUiRadioGroup<String>));
+    expect(group.size.isFinite, isTrue);
+    for (final text in ['Choose radio', 'Alpha', 'Beta', 'Gamma']) {
+      final label = tester.getRect(find.text(text));
+      expect(
+        group.left <= label.left && label.right <= group.right,
+        isTrue,
+        reason: text,
+      );
+    }
   });
 
   testWidgets('tapping an option label selects it through Remix', (
