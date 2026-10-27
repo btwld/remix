@@ -24,6 +24,10 @@ part of 'data_table.dart';
 /// region: `bodyRow(BoxStyler().onSelected(...))` already expresses it, and it
 /// additionally composes with hover, focus, and press.
 ///
+/// A header that is not sortable has no state of its own. Its regions and any
+/// custom [RemixDataTableColumn.header] content resolve those variants against
+/// an empty state, whatever state encloses the table.
+///
 /// ## Composed controls
 ///
 /// [selectionCheckbox], [pageButton], and [pageSizeSelect] deliberately hold
