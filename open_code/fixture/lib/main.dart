@@ -661,7 +661,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                   children: [
                     AcmeSwitch(
                       selected: _notifications,
-                      semanticLabel: 'Notifications',
+                      label: 'Notifications',
                       onChanged: (value) => setState(() {
                         _notifications = value;
                         _lastAction = 'switch -> $value';
@@ -670,7 +670,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                     const AcmeSwitch(
                       selected: true,
                       enabled: false,
-                      semanticLabel: 'Disabled switch',
+                      label: 'Disabled switch',
                     ),
                   ],
                 ),
@@ -690,20 +690,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       for (final plan in const ['free', 'pro'])
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            AcmeRadio<String>(value: plan, semanticLabel: plan),
-                            const SizedBox(width: 8),
-                            Text(
-                              plan,
-                              style: TextStyle(color: data.foreground),
-                            ),
-                          ],
-                        ),
+                        AcmeRadio<String>(value: plan, label: plan),
                       const AcmeRadio<String>(
                         value: 'enterprise',
-                        semanticLabel: 'Enterprise',
+                        label: 'Enterprise',
                         enabled: false,
                       ),
                     ],

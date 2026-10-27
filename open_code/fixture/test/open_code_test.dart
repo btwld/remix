@@ -3692,6 +3692,30 @@ void main() {
       );
       handle.dispose();
     });
+
+    testWidgets('the label is part of the switch and names it', (tester) async {
+      final handle = tester.ensureSemantics();
+      final changes = <bool>[];
+
+      await _pumpInScope(
+        tester,
+        AcmeSwitch(
+          selected: false,
+          label: 'Notifications',
+          onChanged: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Notifications'));
+      await tester.pumpAndSettle();
+
+      expect(changes, [true]);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Notifications')),
+        isSemantics(hasEnabledState: true, isEnabled: true, isToggled: true),
+      );
+      handle.dispose();
+    });
   });
 
   group('acmeRadioStyle', () {
@@ -3766,8 +3790,8 @@ void main() {
                 child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AcmeRadio<String>(value: 'free', semanticLabel: 'Free'),
-                    AcmeRadio<String>(value: 'pro', semanticLabel: 'Pro'),
+                    AcmeRadio<String>(value: 'free', label: 'Free'),
+                    AcmeRadio<String>(value: 'pro', label: 'Pro'),
                   ],
                 ),
               ),
@@ -3777,7 +3801,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.bySemanticsLabel('Pro'));
+      await tester.tap(find.text('Pro'));
       await tester.pumpAndSettle();
 
       expect(chosen, 'pro');
