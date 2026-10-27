@@ -43,7 +43,7 @@ ButtonStyler heroUiButtonStyle({
   final palette = _palette(variant);
 
   var result = ButtonStyler()
-      .height(metrics.height)
+      .height(metrics.height.mobile)
       .padding(.horizontal(metrics.paddingX))
       .mainAxisAlignment(.center)
       .spacing(_iconSpacing)
@@ -62,7 +62,7 @@ ButtonStyler heroUiButtonStyle({
       )
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
-        ButtonStyler().height(metrics.desktopHeight),
+        ButtonStyler().height(metrics.height.desktop),
       )
       // `:active` is declared before `:hover`, so a pointer press shows the
       // hover fill while the scale still applies.
@@ -100,7 +100,7 @@ IconButtonStyler heroUiIconButtonStyle({
   final palette = _palette(variant);
 
   var result = IconButtonStyler()
-      .size(metrics.height, metrics.height)
+      .size(metrics.height.mobile, metrics.height.mobile)
       .alignment(.center)
       .borderRadius(.all(HeroUiTokens.radius3xl()))
       .color(palette.fill)
@@ -112,7 +112,7 @@ IconButtonStyler heroUiIconButtonStyle({
       )
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
-        IconButtonStyler().size(metrics.desktopHeight, metrics.desktopHeight),
+        IconButtonStyler().size(metrics.height.desktop, metrics.height.desktop),
       )
       .onPressed(
         IconButtonStyler()
@@ -136,8 +136,7 @@ IconButtonStyler heroUiIconButtonStyle({
 }
 
 typedef _Metrics = ({
-  double height,
-  double desktopHeight,
+  HeroUiResponsive height,
   double paddingX,
   TextStyleToken text,
   double icon,
@@ -148,24 +147,21 @@ typedef _Metrics = ({
 /// the pressed scale is each size's `:active` transform.
 _Metrics _metrics(HeroUiButtonSize size) => switch (size) {
   .sm => (
-    height: 36,
-    desktopHeight: 32,
+    height: (mobile: 36, desktop: 32),
     paddingX: 12,
     text: HeroUiTokens.textSm,
     icon: _iconFromSm,
     pressedScale: .98,
   ),
   .md => (
-    height: 40,
-    desktopHeight: 36,
+    height: (mobile: 40, desktop: 36),
     paddingX: 16,
     text: HeroUiTokens.textSm,
     icon: _iconUpToSm,
     pressedScale: .97,
   ),
   .lg => (
-    height: 44,
-    desktopHeight: 40,
+    height: (mobile: 44, desktop: 40),
     paddingX: 16,
     text: HeroUiTokens.textBase,
     icon: _iconUpToSm,

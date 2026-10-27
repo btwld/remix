@@ -92,8 +92,8 @@ class HeroUiThemeData {
     return Map<MixToken<Object?>, Object>.unmodifiable({
       for (final token in [..._shared.keys, ..._modeColors.keys])
         token: heroUiPaintColor(_resolve(token, resolved)),
-      heroUiSurfaceShadow: heroUiShadows(brightness, false),
-      heroUiOverlayShadow: heroUiShadows(brightness, true),
+      heroUiSurfaceShadow: heroUiShadows(brightness),
+      heroUiOverlayShadow: heroUiShadows(brightness, overlay: true),
       HeroUiTokens.radiusXs: Radius.circular(radius * 0.25),
       HeroUiTokens.radiusSm: Radius.circular(radius * 0.5),
       HeroUiTokens.radiusMd: Radius.circular(radius * 0.75),

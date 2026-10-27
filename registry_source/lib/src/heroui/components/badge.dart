@@ -87,6 +87,12 @@ BadgeStyler _style({
 }) {
   final metrics = _metrics(size);
   final palette = _palette(variant, color);
+  var label = TextStyler()
+      .style(metrics.text.mix())
+      .height(metrics.lineHeight)
+      .fontWeight(.w500)
+      .color(palette.foreground);
+  if (size == .sm) label = label.fontSize(_smFontSize);
 
   return BadgeStyler()
       .alignment(.center)
@@ -96,13 +102,7 @@ BadgeStyler _style({
       .borderRadius(.all(metrics.radius))
       .border(.color(HeroUiTokens.background()).width(_borderWidth))
       .color(palette.fill)
-      .label(
-        .style(metrics.text.mix())
-            .fontSize(metrics.fontSize)
-            .height(metrics.lineHeight)
-            .fontWeight(.w500)
-            .color(palette.foreground),
-      )
+      .label(label)
       .merge(style);
 }
 
@@ -110,7 +110,6 @@ typedef _Metrics = ({
   double minSize,
   Radius radius,
   TextStyleToken text,
-  double fontSize,
   double lineHeight,
 });
 
@@ -121,24 +120,25 @@ _Metrics _metrics(HeroUiBadgeSize size) => switch (size) {
     minSize: 16,
     radius: HeroUiTokens.radiusXl(),
     text: HeroUiTokens.textXs,
-    fontSize: 10,
     lineHeight: 1.34,
   ),
   .md => (
     minSize: 28,
     radius: HeroUiTokens.radius3xl(),
     text: HeroUiTokens.textXs,
-    fontSize: 12,
     lineHeight: 1.34,
   ),
   .lg => (
     minSize: 32,
     radius: HeroUiTokens.radius2xl(),
     text: HeroUiTokens.textSm,
-    fontSize: 14,
     lineHeight: 1.43,
   ),
 };
+
+/// `--sm` sets `text-[10px]` over the `text-xs` token; the other sizes use
+/// their token's size.
+const _smFontSize = 10.0;
 
 /// `.badge__label` adds `px-0.5`; `border: 1px solid var(--background)`.
 const _labelInset = 2.0;

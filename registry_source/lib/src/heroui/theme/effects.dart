@@ -35,7 +35,7 @@ RemixBoxEffectsMix heroUiInvalidRing({bool focused = false}) =>
     RemixBoxEffectsMix(
       outline: BorderSideMix(
         color: HeroUiTokens.danger(),
-        width: focused ? HeroUiTokens.focusWidth : 1,
+        width: focused ? HeroUiTokens.focusWidth : HeroUiTokens.invalidWidth,
       ),
       outlineOffset: 0,
       overContent: RemixBoxEffectLayerMix(shadows: const []),
@@ -56,16 +56,14 @@ const heroUiSurfaceShadow = RemixBoxShadowListToken('heroUi.shadow.surface');
 ///
 /// Dark mode defines no surface shadow; these low-alpha black shadows are not
 /// visible on its dark surfaces, so one list serves both modes.
-final heroUiSurfaceBoxShadows = _boxShadows(
-  heroUiShadows(Brightness.light, false),
-);
+final heroUiSurfaceBoxShadows = _boxShadows(heroUiShadows(Brightness.light));
 
 /// `--overlay-shadow` for stylers without an effects slot (tooltip).
 ///
 /// Dark mode adds a 1px inset hairline that a box shadow cannot draw, so the
 /// light layers serve both modes.
 final heroUiOverlayBoxShadows = _boxShadows(
-  heroUiShadows(Brightness.light, true),
+  heroUiShadows(Brightness.light, overlay: true),
 );
 
 List<BoxShadowMix> _boxShadows(List<RemixBoxShadow> shadows) => [
@@ -80,7 +78,12 @@ List<BoxShadowMix> _boxShadows(List<RemixBoxShadow> shadows) => [
 
 const heroUiOverlayShadow = RemixBoxShadowListToken('heroUi.shadow.overlay');
 
-List<RemixBoxShadow> heroUiShadows(Brightness brightness, bool overlay) {
+/// The layers of `--surface-shadow`, or of `--overlay-shadow` when [overlay]
+/// is set, in [brightness].
+List<RemixBoxShadow> heroUiShadows(
+  Brightness brightness, {
+  bool overlay = false,
+}) {
   if (brightness == Brightness.dark) {
     return overlay
         ? const [

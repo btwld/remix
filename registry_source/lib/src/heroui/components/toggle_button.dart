@@ -32,10 +32,6 @@ enum HeroUiToggleButtonVariant {
   final ColorToken foreground;
 }
 
-/// A value that changes at a breakpoint: [mobile] by default, [desktop] from
-/// the one the CSS names.
-typedef HeroUiResponsive = ({double mobile, double desktop});
-
 /// HeroUI toggle button sizes, with the `.toggle-button` and `--sm`/`--lg`
 /// metrics of each. Heights step down from `md` (768px), icons from `sm`
 /// (640px).

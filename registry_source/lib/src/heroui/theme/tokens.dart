@@ -1,6 +1,10 @@
 import 'package:flutter/animation.dart';
 import 'package:remix/remix.dart';
 
+/// A value that changes at a breakpoint: [mobile] by default, [desktop] from
+/// the one the CSS names.
+typedef HeroUiResponsive = ({double mobile, double desktop});
+
 /// Semantic names from the pinned HeroUI web theme.
 abstract final class HeroUiTokens {
   static const white = ColorToken('heroUi.color.white');
@@ -131,6 +135,9 @@ abstract final class HeroUiTokens {
   /// `focus-ring`: `ring-2` with `--ring-offset-width: 2px`.
   static const focusWidth = 2.0;
   static const ringOffset = 2.0;
+
+  /// `invalid-field-ring`: a 1px outline.
+  static const invalidWidth = 1.0;
 
   /// `--ease-smooth` (CSS `ease`) and Tailwind's `--ease-out`.
   static const easeSmooth = Curves.ease;

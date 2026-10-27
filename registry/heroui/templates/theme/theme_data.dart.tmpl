@@ -92,8 +92,8 @@ class {{typePrefix}}ThemeData {
     return Map<MixToken<Object?>, Object>.unmodifiable({
       for (final token in [..._shared.keys, ..._modeColors.keys])
         token: {{valuePrefix}}PaintColor(_resolve(token, resolved)),
-      {{valuePrefix}}SurfaceShadow: {{valuePrefix}}Shadows(brightness, false),
-      {{valuePrefix}}OverlayShadow: {{valuePrefix}}Shadows(brightness, true),
+      {{valuePrefix}}SurfaceShadow: {{valuePrefix}}Shadows(brightness),
+      {{valuePrefix}}OverlayShadow: {{valuePrefix}}Shadows(brightness, overlay: true),
       {{typePrefix}}Tokens.radiusXs: Radius.circular(radius * 0.25),
       {{typePrefix}}Tokens.radiusSm: Radius.circular(radius * 0.5),
       {{typePrefix}}Tokens.radiusMd: Radius.circular(radius * 0.75),
