@@ -11,7 +11,7 @@ placement, and theme selection shared with the Vanilla preset, see the
 
 Sections: [Presets and recipes](#presets-and-recipes) ·
 [Typography](#typography) · [Scope and theme config](#scope-and-theme-config) ·
-[Token rules](#token-rules).
+[Token rules](#token-rules) · [Focus rings](#focus-rings).
 
 ## Presets and recipes
 
@@ -134,3 +134,21 @@ the rules that are not obvious from a token's name:
 
 See [Styling](styling.md#styling-with-installed-tokens) for the token
 call-form mechanics (`.mix()`, `.resolve(context)`).
+
+## Focus rings
+
+Fortal focus rings are outlines painted over the control through box effects
+(`containerEffects`, or `triggerEffects` on an accordion or disclosure), so
+focusing a control never changes its size. They draw at the `focusRingWidth`
+token (2). An outward ring sits at the `focusRingOffset` token (2); an inset
+ring keeps Radix's literal offset, `-1` for fields, cards, selects and soft
+buttons and `-2` for tabs.
+
+- Tabs ring in `focus-8`, as Radix does. Toggles, toggle-group items, and
+  accordion and disclosure triggers have no Radix counterpart. They ring in
+  `focus-a8` at the same inset `-2`, so the clip of a toggle group or a panel
+  never crops the ring.
+- A `RemixSidebar` destination is the exception. The sidebar paints a
+  destination's container but not its `containerEffects`, so Fortal draws that
+  ring as an inside border, and a focused destination grows by twice the ring
+  width.

@@ -87,9 +87,11 @@ TabStyler uiTabStyle({
             .onFocusVisible(.color(UiTokens.accentA3())),
       )
       .onFocusVisible(
-        // Solid `focus-8` where the other three rings use alpha `focus-a8`.
-        // See uiFocusRing: unresolved whether that is intentional.
-        TabStyler().uiFocusRing(color: UiTokens.focus8()),
+        // base-tab-list.css:126-129: `outline: 2px solid var(--focus-8);
+        // outline-offset: -2px` on the inner trigger.
+        TabStyler().containerEffects(
+          uiFocusOutline(UiTokens.focus8(), offset: -2),
+        ),
       )
       .onSelected(
         .label(
