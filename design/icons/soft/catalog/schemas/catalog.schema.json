@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schemaVersion", "family", "pack", "version", "status", "counts", "icons"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"type": "integer"},
+    "family": {"type": "string"},
+    "pack": {"const": "soft"},
+    "nameStatus": {"type": "string"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "public": {"const": false},
+    "counts": {
+      "type": "object",
+      "required": ["icons", "drawings"],
+      "properties": {
+        "icons": {"const": 12},
+        "drawings": {"const": 72}
+      }
+    },
+    "icons": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "category", "pairModel", "meaning", "availability", "review"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "label": {"type": "string"},
+          "category": {"type": "string"},
+          "pairModel": {"enum": ["weight", "silhouette"]},
+          "meaning": {"type": "string", "minLength": 10},
+          "keywords": {"type": "array"},
+          "availability": {
+            "const": {
+              "soft": {
+                "appearances": ["outline", "filled"],
+                "opticalSizes": [12, 16, 24]
+              }
+            }
+          },
+          "review": {"type": "object"}
+        }
+      }
+    }
+  }
+}

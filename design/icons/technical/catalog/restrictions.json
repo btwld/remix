@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "warning-visible-label",
+      "icon": "warning",
+      "pack": "technical",
+      "status": "concept-level-restriction",
+      "owner": null,
+      "reviewer": null,
+      "reason": "Visible text label required at every master and appearance, including scaled uses. Geometry improvements do not lift this rule.",
+      "sizes": {
+        "12": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "0ed3f642439432468729efebb85277b16d231ffab34061e3c498f48dc02c56db",
+            "exceptionIds": []
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "d89bcbc1bf0b3501cebbb9159fb4beb690776f4320e47ef537e20c63351815f9",
+            "exceptionIds": []
+          }
+        },
+        "16": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "fb9ad70f73917edddff81c4b9e66c337083da27045ecc26d579c9c310064186c",
+            "exceptionIds": [
+              "warning-gap-16"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "a1b7f36d4f12600aaec41ef4ece685b420bd4d29138dbdf12c1879c58af35676",
+            "exceptionIds": []
+          }
+        },
+        "24": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "475e049507e6cf76d5311c0beb074b9bbbdafbbea5abd4c06295fb1c84f8332f",
+            "exceptionIds": [
+              "warning-gap-24"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "86a77ce469629c7bb3362cdb77fc57970e73366a25ea1784679aacf2d7d78df1",
+            "exceptionIds": []
+          }
+        }
+      }
+    }
+  ]
+}

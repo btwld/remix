@@ -1,0 +1,22 @@
+{
+  "name": "vector-ui-angular-web-pilot",
+  "version": "0.5.0-pilot.2",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./index.mjs",
+    "./icons/*": "./icons/*.mjs",
+    "./render": "./render.mjs",
+    "./usage": "./usage.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "render.mjs",
+    "data.mjs",
+    "icons",
+    "usage.mjs",
+    "usage-data.mjs"
+  ]
+}

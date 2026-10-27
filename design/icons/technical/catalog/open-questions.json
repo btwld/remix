@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "questions": [
+    {
+      "id": "search-as-viewfinder",
+      "icons": [
+        "search"
+      ],
+      "question": "Is a chamfered-square viewfinder still recognizable as Search next to crop/frame/view tools?"
+    },
+    {
+      "id": "cad-star-as-favorite",
+      "icons": [
+        "star"
+      ],
+      "question": "Does a regular (not optically shifted) five-point star read as Favorite, or as a CAD/badge mark?"
+    },
+    {
+      "id": "plus-keyline-mixed-toolbar",
+      "icons": [
+        "plus"
+      ],
+      "question": "Should Technical plus keep its tighter inset, or share Angular's outer keyline in mixed-pack toolbars?"
+    },
+    {
+      "id": "density-12-link-branch",
+      "icons": [
+        "link",
+        "branch"
+      ],
+      "question": "Are 12 px Link shackles and Branch junction boxes recognizable at native size, or must they stay labeled-only?"
+    }
+  ]
+}

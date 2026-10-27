@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vector UI Technical calibration catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "family",
+    "pack",
+    "version",
+    "status",
+    "counts",
+    "packs",
+    "releaseApproval",
+    "icons"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "family": { "type": "string", "minLength": 1 },
+    "pack": { "const": "technical" },
+    "nameStatus": { "type": "string" },
+    "version": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "counts": {
+      "type": "object",
+      "required": ["icons", "drawings"],
+      "additionalProperties": false,
+      "properties": {
+        "icons": { "const": 12 },
+        "drawings": { "const": 72 }
+      }
+    },
+    "packs": { "type": "object" },
+    "releaseApproval": {
+      "type": "object",
+      "required": ["publicReleaseApproved", "promotedToPublicCatalog"],
+      "properties": {
+        "publicReleaseApproved": { "const": false },
+        "promotedToPublicCatalog": { "const": false }
+      }
+    },
+    "icons": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12
+    }
+  }
+}

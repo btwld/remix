@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "family": "Vector UI",
+  "pack": "soft",
+  "nameStatus": "working-name",
+  "version": "0.1.0-soft-pilot",
+  "status": "calibration-pilot-not-public",
+  "public": false,
+  "counts": {
+    "icons": 12,
+    "drawings": 72
+  },
+  "icons": [
+    {
+      "id": "home",
+      "label": "Home",
+      "category": "navigation",
+      "pairModel": "silhouette",
+      "meaning": "Home or top-level destination. Do not substitute for Back.",
+      "keywords": ["dashboard", "main"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Rounded roof (acute join) and CORNER_TOKEN body. 16 px door is narrower and sits lower so the outline still reads as a house.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Find content. A heavier lens still has an open center.",
+      "keywords": ["find", "lookup"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Circular lens and capsule handle. The octagon is Angular; Soft must not use it.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "plus",
+      "label": "Plus",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Add or create. Distinct from expand and zoom-in.",
+      "keywords": ["add", "new", "create"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two crossing capsules. Round terminals are the Soft tell versus Angular square caps.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-right",
+      "label": "Arrow right",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "A literal right arrow. Navigation direction must be chosen by the application.",
+      "keywords": ["next", "forward"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Round-capped shaft and round-joined chevron. 12 px filled lengthens the head so the tip still reads as direction.",
+        "usage": "The application chooses left/right; artwork does not auto-mirror."
+      }
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "category": "people-communication",
+      "pairModel": "silhouette",
+      "meaning": "A person or profile.",
+      "keywords": ["person", "account"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Circular head and stadium-shouldered body. Angular uses an octagonal head.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A document. Not a duplicate action.",
+      "keywords": ["document", "page"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Soft-folded page: moderate dog-ear with CORNER_TOKEN on page corners and an outline crease along the fold. Content bar at 24 px only. 12 px filled has no crease (a slit would look like damage); the cut itself is the fold.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A date or calendar.",
+      "keywords": ["date", "schedule"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Rounded body, capsule tabs, one date mark at 12 and two at 16/24. No header slit.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "sliders",
+      "label": "Sliders",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "Adjust parameters. Not a funnel filter or gear glyph.",
+      "keywords": ["settings", "adjust", "controls"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Circular knobs on stadium rails. Two rows at every native size.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "A warning requiring a visible text label in every supported appearance and native size.",
+      "keywords": ["caution", "attention"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Rounded triangle with capsule stem and circular dot. Visible-label restriction is concept-level.",
+        "usageRestriction": "warning-visible-label"
+      }
+    },
+    {
+      "id": "link",
+      "label": "Link",
+      "category": "content",
+      "pairModel": "weight",
+      "meaning": "A link or related resource. Not external navigation by itself.",
+      "keywords": ["url", "chain"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two overlapping loops. At 12 px the rings sit on a diagonal so filled weight does not read as a peanut or a horizontal infinity. 16/24 use rotated stadiums. 12 px can still be mistaken for infinity; keep a visible label.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A branching relationship. Use a visible label, especially at 12 px.",
+      "keywords": ["workflow", "fork"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Three circular nodes and round-joined connectors. Angular uses square nodes.",
+        "usage": "Keep a visible label, especially at 12 px. This is a usage note, not the Warning restriction record."
+      }
+    },
+    {
+      "id": "star",
+      "label": "Star",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "Favorite or rating, with context. Distinct from Focus.",
+      "keywords": ["favorite", "rating"],
+      "availability": {"soft": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Five-point star with round points and round inner notches. STAR_JOIN is ~0.5× outline (0.65 / 0.85 / 1.0); 1.0×+ join collapses mass. Outer radius is sized so filled 24 mass tracks Angular (~0.27 of canvas) rather than sitting ~30% light.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    }
+  ]
+}

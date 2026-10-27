@@ -1,0 +1,95 @@
+{
+  "technical": {
+    "outlineWidth": {
+      "12": 1.0,
+      "16": 1.5,
+      "24": 2.0
+    },
+    "openGlyphFilledWidth": {
+      "12": 2.0,
+      "16": 2.5,
+      "24": 3.0
+    },
+    "meaningfulGapTarget": {
+      "12": 1.0,
+      "16": 1.5,
+      "24": 2.0
+    },
+    "chamfer": {
+      "12": 1.0,
+      "16": 1.5,
+      "24": 2.0
+    },
+    "chamferPartOverrides": [
+      {
+        "icon": "branch",
+        "nativeSize": 12,
+        "declared": 1.0,
+        "used": 0.75,
+        "exceptionId": "branch-chamfer-12"
+      },
+      {
+        "icon": "branch",
+        "nativeSize": 16,
+        "declared": 1.5,
+        "used": 1.0,
+        "exceptionId": "branch-chamfer-16"
+      },
+      {
+        "icon": "branch",
+        "nativeSize": 24,
+        "declared": 2.0,
+        "used": 1.5,
+        "exceptionId": "branch-chamfer-24"
+      },
+      {
+        "icon": "sliders",
+        "nativeSize": 12,
+        "declared": 1.0,
+        "used": 0.75,
+        "exceptionId": "sliders-chamfer-12"
+      },
+      {
+        "icon": "sliders",
+        "nativeSize": 16,
+        "declared": 1.5,
+        "used": 1.0,
+        "exceptionId": "sliders-chamfer-16"
+      },
+      {
+        "icon": "sliders",
+        "nativeSize": 24,
+        "declared": 2.0,
+        "used": 1.5,
+        "exceptionId": "sliders-chamfer-24"
+      }
+    ],
+    "oddWidthCentering": {
+      "policy": "canvas-center",
+      "twelvePxOutlinePlus": "half-pixel-edges",
+      "note": "1px bar at 12 remains centered at 6 (edges 5.5-6.5). Not Angular's 5-6 integer split.",
+      "exceptionId": "plus-12-outline-centered-odd-width"
+    },
+    "padding": {
+      "12": 1.0,
+      "16": 1.5,
+      "24": 2.0
+    },
+    "pathCommands": [
+      "M",
+      "L",
+      "Z"
+    ],
+    "masterSelection": {
+      "12": 12,
+      "14": 16,
+      "16": 16,
+      "20": 24,
+      "24": 24,
+      "32": 24
+    },
+    "corners": "systematic 45-degree plate chamfer",
+    "terminals": "square-cut bars; plates chamfered",
+    "diagonals": "45-degree plus warning and star metaphor exceptions"
+  }
+}
