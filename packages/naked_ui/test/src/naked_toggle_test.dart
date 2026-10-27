@@ -997,6 +997,71 @@ void main() {
       expect(tester.getTopLeft(find.byKey(const Key('option1'))), before);
     });
 
+    testWidgets('arrow keys scroll a strip and the page below the fold', (
+      tester,
+    ) async {
+      final pageController = ScrollController();
+      final stripController = ScrollController();
+      final focusNodes = List.generate(10, (_) => FocusNode());
+      addTearDown(pageController.dispose);
+      addTearDown(stripController.dispose);
+      for (final node in focusNodes) {
+        addTearDown(node.dispose);
+      }
+
+      await tester.pumpMaterialWidget(
+        SingleChildScrollView(
+          controller: pageController,
+          child: Column(
+            children: [
+              const SizedBox(height: 1000),
+              SizedBox(
+                key: const Key('strip'),
+                width: 300,
+                height: 40,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: stripController,
+                  child: NakedToggleGroup<String>(
+                    selectedValue: 'option0',
+                    onChanged: (_) {},
+                    child: Row(
+                      children: [
+                        for (var index = 0; index < focusNodes.length; index++)
+                          NakedToggleOption<String>(
+                            value: 'option$index',
+                            focusNode: focusNodes[index],
+                            child: SizedBox(
+                              key: Key('option$index'),
+                              width: 100,
+                              height: 40,
+                              child: Text('Option $index'),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 1000),
+            ],
+          ),
+        ),
+      );
+      focusNodes[2].requestFocus();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+
+      final page = tester.getRect(find.byType(SingleChildScrollView).first);
+      final strip = tester.getRect(find.byKey(const Key('strip')));
+      final option = tester.getRect(find.byKey(const Key('option3')));
+      expect(focusNodes[3].hasPrimaryFocus, isTrue);
+      expect(option.left >= strip.left && option.right <= strip.right, isTrue);
+      expect(strip.top >= page.top && strip.bottom <= page.bottom, isTrue);
+    });
+
     testWidgets('vertical groups claim only Up and Down', (tester) async {
       final optionA = FocusNode(debugLabel: 'option A');
       final optionB = FocusNode(debugLabel: 'option B');

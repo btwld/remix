@@ -277,8 +277,7 @@ void main() {
         );
         await tester.tap(find.text('Fruit'));
         await tester.pumpAndSettle();
-        // Start away from both edges.
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        // The select opens on the first option; start away from both edges.
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
         await tester.pump();
 

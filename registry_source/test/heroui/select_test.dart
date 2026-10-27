@@ -220,8 +220,6 @@ void main() {
       await tester.focusWithTab();
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
       final item = heroUiCase(
         'select-primary-keyboard-open-list-box-item:Apple',
         mode: mode,

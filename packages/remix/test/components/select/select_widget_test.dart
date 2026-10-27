@@ -1753,6 +1753,45 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
       });
 
+      for (final (selectedValue, opensOn, thenOn, name) in [
+        ('b', 'b', 'c', 'opens on the selected item'),
+        (null, 'a', 'b', 'opens on the first item without a selection'),
+      ]) {
+        testWidgets(name, (tester) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [
+                RemixSelectItem(value: 'a', label: 'Option A'),
+                RemixSelectItem(value: 'b', label: 'Option B'),
+                RemixSelectItem(value: 'c', label: 'Option C'),
+              ],
+              selectedValue: selectedValue,
+              focusNode: focusNode,
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+          focusNode.requestFocus();
+          await tester.pump();
+
+          String? focusedValue() => FocusManager.instance.primaryFocus?.context
+              ?.findAncestorWidgetOfExactType<NakedSelectOption<String>>()
+              ?.value;
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pumpAndSettle();
+          expect(focusedValue(), opensOn);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+          await tester.pumpAndSettle();
+          expect(focusedValue(), thenOn);
+        });
+      }
+
       testWidgets('option activation changes selection', (tester) async {
         String? selected;
         await tester.pumpRemixApp(
@@ -1911,7 +1950,7 @@ void main() {
         await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
         expect(_isInView(tester, 7), isFalse);
 
-        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 8);
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 7);
 
         expect(_focusedOptionValue(), 'item7');
         expect(_isInView(tester, 7), isTrue);
@@ -1929,7 +1968,7 @@ void main() {
           onChanged: (value) => selected = value,
         );
 
-        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 20);
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 19);
         expect(_focusedOptionValue(), 'item19');
         expect(_isInView(tester, 19), isTrue);
 
@@ -1942,7 +1981,7 @@ void main() {
 
         await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 12);
         expect(_panelScrollPosition(tester).pixels, greaterThan(0));
-        await _pressKey(tester, LogicalKeyboardKey.arrowUp, times: 11);
+        await _pressKey(tester, LogicalKeyboardKey.arrowUp, times: 12);
 
         expect(_focusedOptionValue(), 'item0');
         expect(_isInView(tester, 0), isTrue);

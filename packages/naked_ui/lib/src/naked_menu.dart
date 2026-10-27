@@ -432,8 +432,14 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 
   void _handleTriggerEnter() {
     _isTriggerHovered = true;
-    AnchoredOverlay.clearItemFocus(context);
     _cancelAncestorHoverTimers();
+  }
+
+  // Hover enter also fires when items scroll under a resting pointer, so only
+  // a hover that moves the pointer takes focus away and opens the submenu.
+  void _handleTriggerHover(PointerHoverEvent event) {
+    if (!widget.enabled || event.delta == Offset.zero) return;
+    AnchoredOverlay.clearItemFocus(context);
     _scheduleHoverOpen();
   }
 
@@ -559,6 +565,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
     );
     final trigger = MouseRegion(
       onEnter: (_) => _handleTriggerEnter(),
+      onHover: _handleTriggerHover,
       onExit: (_) => _handleTriggerExit(),
       child: MergeSemantics(
         child: Semantics(
@@ -730,6 +737,7 @@ class NakedMenu<T> extends StatefulWidget {
     this.openOnTap = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
+    this.constrainToAvailableHeight = false,
     this.semanticLabel,
     this.excludeSemantics = false,
   }) : assert(
@@ -823,6 +831,17 @@ class NakedMenu<T> extends StatefulWidget {
 
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
+
+  /// Whether to lay the overlay panel out no taller than the space above or
+  /// below the trigger.
+  ///
+  /// By default the panel can be as tall as the whole overlay, so one taller
+  /// than the space beside the trigger slides over the trigger. When true, the
+  /// panel is capped at the space on the side [positioning] resolves to, after
+  /// its side offset and collision padding, so a scrollable panel scrolls
+  /// there. Content that cannot scroll overflows the capped panel. See
+  /// [OverlayPositioner.constrainToAvailableHeight].
+  final bool constrainToAvailableHeight;
 
   /// Semantic label for the menu trigger.
   ///
@@ -1048,6 +1067,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         return AnchoredOverlay(
           info: info,
           positioning: widget.positioning,
+          constrainToAvailableHeight: widget.constrainToAvailableHeight,
           closeOnTapOutside: widget.closeOnClickOutside,
           child: panel,
         );
