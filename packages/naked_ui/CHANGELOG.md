@@ -62,9 +62,13 @@
   hovering a submenu row also opens it after its delay, only when the pointer
   moves over it, no longer when a list scrolls under a resting pointer.
 - `NakedCombobox` now scrolls the highlighted option just far enough into view
-  when arrow keys highlight it, instead of leaving it outside a scrolling
-  options list. Focus stays on the field, and an option that is already
-  visible does not scroll the list or the page.
+  when the arrow keys highlight it and when the options view opens, instead of
+  leaving it outside a scrolling options list. Focus stays on the field, an
+  option that is already visible does not scroll the list or the page, and
+  scrolling by hand is not undone. Opening replaces a scroll offset you gave
+  the list when the highlighted option is outside it, and in a lazily built
+  list such as `ListView.builder` a highlighted option that is not built, such
+  as the last option after Ctrl or Cmd with ArrowDown, is not revealed.
 
 ## 1.2.3
 

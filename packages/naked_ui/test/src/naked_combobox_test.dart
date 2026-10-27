@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -259,9 +260,12 @@ void main() {
       required ScrollController list,
       Axis axis = Axis.vertical,
       TextDirection textDirection = TextDirection.ltr,
+      bool lazy = false,
+      bool keyed = false,
       Widget Function(Widget combobox)? host,
     }) async {
       Widget option(String value) => NakedComboboxOption<String>(
+        key: keyed ? ValueKey('keyed $value') : null,
         value: value,
         builder: (context, state, child) => SizedBox(
           key: ValueKey(value),
@@ -272,7 +276,10 @@ void main() {
       );
 
       final combobox = NakedCombobox<String>(
-        optionsBuilder: (value) => [for (var i = 0; i < 30; i++) 'option $i'],
+        optionsBuilder: (value) => [
+          for (var i = 0; i < 30; i++)
+            if ('option $i'.contains(value.text)) 'option $i',
+        ],
         fieldBuilder: (context, state, controller, focusNode, submit) =>
             SizedBox(
               width: 200,
@@ -282,22 +289,32 @@ void main() {
                 onSubmitted: (_) => submit(),
               ),
             ),
-        overlayBuilder: (context, options) => Align(
-          alignment: AlignmentDirectional.topStart,
-          child: SizedBox(
-            key: listKey,
-            width: axis == Axis.horizontal ? listExtent : null,
-            height: axis == Axis.horizontal ? optionExtent : listExtent,
-            child: SingleChildScrollView(
-              controller: list,
-              scrollDirection: axis,
-              child: Flex(
-                direction: axis,
-                children: [for (final value in options) option(value)],
-              ),
+        overlayBuilder: (context, options) {
+          final values = options.toList();
+          return Align(
+            alignment: AlignmentDirectional.topStart,
+            child: SizedBox(
+              key: listKey,
+              width: axis == Axis.horizontal ? listExtent : null,
+              height: axis == Axis.horizontal ? optionExtent : listExtent,
+              child: lazy
+                  ? ListView.builder(
+                      controller: list,
+                      itemExtent: optionExtent,
+                      itemCount: values.length,
+                      itemBuilder: (context, index) => option(values[index]),
+                    )
+                  : SingleChildScrollView(
+                      controller: list,
+                      scrollDirection: axis,
+                      child: Flex(
+                        direction: axis,
+                        children: [for (final value in values) option(value)],
+                      ),
+                    ),
             ),
-          ),
-        ),
+          );
+        },
       );
 
       await tester.pumpMaterialWidget(
@@ -389,28 +406,32 @@ void main() {
       expect(list.offset, optionExtent);
     });
 
-    testWidgets('a rebuild does not pull the list back to the highlight', (
-      tester,
-    ) async {
-      final list = ScrollController();
-      addTearDown(list.dispose);
-      await pumpScrollingCombobox(tester, list: list);
-      await openOptions(tester);
-      for (var index = 1; index <= 5; index++) {
-        await press(tester, LogicalKeyboardKey.arrowDown);
-      }
-      list.jumpTo(0);
-      await tester.pump();
+    for (final keyed in [false, true]) {
+      testWidgets(
+        'filtering leaves a list scrolled away from the highlight alone '
+        '(keyed: $keyed)',
+        (tester) async {
+          final list = ScrollController();
+          addTearDown(list.dispose);
+          await pumpScrollingCombobox(tester, list: list, keyed: keyed);
+          await openOptions(tester);
+          for (var index = 1; index <= 5; index++) {
+            await press(tester, LogicalKeyboardKey.arrowDown);
+          }
+          list.jumpTo(0);
+          await tester.pump();
 
-      await tester.enterText(find.byType(TextField), 'op');
-      await tester.pump();
-      await tester.pump();
+          await tester.enterText(find.byType(TextField), 'option 1');
+          await tester.pump();
+          await tester.pump();
 
-      expect(find.text('hi:option 5'), findsOneWidget);
-      expect(list.offset, 0);
-    });
+          expect(find.text('hi:option 14'), findsOneWidget);
+          expect(list.offset, 0);
+        },
+      );
+    }
 
-    testWidgets('reopening reveals the option that is still highlighted', (
+    testWidgets('reopening with ArrowDown reveals the highlighted option', (
       tester,
     ) async {
       final list = ScrollController();
@@ -428,37 +449,125 @@ void main() {
       expectHighlightedInView(tester, 6);
     });
 
-    testWidgets('keeps a scrolled page where it is', (tester) async {
-      // The options view renders in the nearest Overlay. One inside the page
-      // puts the page's viewport on the options' render ancestry, so a reveal
-      // that over-scrolls reaches the page.
+    testWidgets('reopening by typing reveals a highlight that did not move', (
+      tester,
+    ) async {
       final list = ScrollController();
-      final page = ScrollController();
       addTearDown(list.dispose);
-      addTearDown(page.dispose);
+      await pumpScrollingCombobox(tester, list: list);
+      await openOptions(tester);
+      for (var index = 1; index <= 5; index++) {
+        await press(tester, LogicalKeyboardKey.arrowDown);
+      }
+      await press(tester, LogicalKeyboardKey.escape);
+      expect(find.byKey(listKey), findsNothing);
+
+      await tester.enterText(find.byType(TextField), 'op');
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byKey(listKey), findsOneWidget);
+      expectHighlightedInView(tester, 5);
+    });
+
+    group('in a lazily built list', () {
+      // Cached options sit outside the viewport, which `find` skips by default.
+      final firstOption = find.byKey(
+        const ValueKey('option 0'),
+        skipOffstage: false,
+      );
+
+      // The highlighted option 0 is disposed once the list is far from it.
+      Future<ScrollController> pumpScrolledAway(WidgetTester tester) async {
+        final list = ScrollController();
+        addTearDown(list.dispose);
+        await pumpScrollingCombobox(tester, list: list, lazy: true);
+        await openOptions(tester);
+        list.jumpTo(300);
+        await tester.pump();
+        expect(firstOption, findsNothing);
+        return list;
+      }
+
+      testWidgets('a wheel scroll back toward the highlight is not undone', (
+        tester,
+      ) async {
+        final list = await pumpScrolledAway(tester);
+        final wheel = TestPointer(1, PointerDeviceKind.mouse);
+        await tester.sendEventToBinding(
+          wheel.hover(tester.getCenter(find.byKey(listKey))),
+        );
+
+        await tester.sendEventToBinding(wheel.scroll(const Offset(0, -40)));
+        await tester.pump();
+        await tester.pump();
+
+        expect(firstOption, findsOneWidget);
+        expect(list.offset, 260);
+      });
+
+      testWidgets('a drag back toward the highlight is not undone', (
+        tester,
+      ) async {
+        final list = await pumpScrolledAway(tester);
+
+        await tester.drag(find.byKey(listKey), const Offset(0, 60));
+        await tester.pump();
+        await tester.pump();
+
+        expect(firstOption, findsOneWidget);
+        expect(list.offset, inExclusiveRange(150, 300));
+      });
+
+      testWidgets('jumping back toward the highlight is not undone', (
+        tester,
+      ) async {
+        final list = await pumpScrolledAway(tester);
+
+        list.jumpTo(200);
+        await tester.pump();
+        await tester.pump();
+
+        expect(firstOption, findsOneWidget);
+        expect(list.offset, 200);
+      });
+    });
+
+    testWidgets('keeps the scrolled route and page of a nested Navigator', (
+      tester,
+    ) async {
+      final list = ScrollController();
+      final route = ScrollController();
+      final pages = PageController();
+      addTearDown(list.dispose);
+      addTearDown(route.dispose);
+      addTearDown(pages.dispose);
       await pumpScrollingCombobox(
         tester,
         list: list,
-        host: (combobox) => SingleChildScrollView(
-          controller: page,
-          child: Column(
-            children: [
-              const SizedBox(height: 1000),
-              SizedBox(
-                height: 300,
-                child: Overlay.wrap(
-                  child: Align(
-                    alignment: AlignmentDirectional.topStart,
-                    child: combobox,
+        host: (combobox) => PageView(
+          controller: pages,
+          children: [
+            Navigator(
+              onGenerateRoute: (settings) => MaterialPageRoute<void>(
+                settings: settings,
+                builder: (context) => SingleChildScrollView(
+                  controller: route,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 1000),
+                      combobox,
+                      const SizedBox(height: 1000),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 1000),
-            ],
-          ),
+            ),
+            const SizedBox.shrink(),
+          ],
         ),
       );
-      page.jumpTo(900);
+      route.jumpTo(800);
       await tester.pump();
       await openOptions(tester);
 
@@ -466,7 +575,9 @@ void main() {
         await press(tester, LogicalKeyboardKey.arrowDown);
         expectHighlightedInView(tester, index);
       }
-      expect(page.offset, 900);
+
+      expect(route.offset, 800);
+      expect(pages.offset, 0);
     });
 
     for (final textDirection in TextDirection.values) {
