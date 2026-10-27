@@ -56,7 +56,7 @@ DataTableStyler uiDataTableStyle({
           style: UiTokens.text1.mix(),
         ).fontWeight(UiTokens.fontWeightRegular()).color(UiTokens.gray11()),
       )
-      .headerCell(_uiDataTableCell(metrics))
+      .headerCell(_uiDataTableHeaderCell(metrics))
       .bodyCell(_uiDataTableCell(metrics))
       // The selection column is a Ui extension with no Radix counterpart.
       // It carries no padding of its own, so the composed checkbox's
@@ -124,6 +124,31 @@ _UiDataTableMetrics _uiDataTableMetrics(UiDataTableSize size) => switch (size) {
 BoxStyler _uiDataTableCell(_UiDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
+
+/// Radix's Table has no sortable header, so a focusable one takes Ui's own
+/// ring: the `focus-8` ring of a tab, drawn inside the cell. A foreground
+/// border paints over the cell and reserves no space.
+///
+/// The border is always present and transparent at rest, and focus changes only
+/// its color. A decoration that appeared on focus would swap the cell's root
+/// widget and rebuild a stateful custom header from scratch.
+BoxStyler _uiDataTableHeaderCell(_UiDataTableMetrics metrics) =>
+    _uiDataTableCell(metrics)
+        .merge(_uiDataTableHeaderRing(const Color(0x00000000)))
+        .onFocusVisible(_uiDataTableHeaderRing(UiTokens.focus8()));
+
+BoxStyler _uiDataTableHeaderRing(Color color) =>
+    BoxStyler().foregroundDecoration(
+      BoxDecorationMix(
+        border: BoxBorderMix.all(
+          BorderSideMix(
+            color: color,
+            width: UiTokens.focusRingWidth(),
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+      ),
+    );
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the
