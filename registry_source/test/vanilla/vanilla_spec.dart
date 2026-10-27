@@ -1075,6 +1075,17 @@ final _radioTargets = <SpecTarget>[
     expected: (theme) => _hairline(theme.input),
   ),
   _radio(
+    'label',
+    source: 'label.tsx: text-sm font-medium; radio-group demo: gap-3',
+    read: (spec) => (
+      spec.spec.label.spec.style?.fontSize,
+      spec.spec.label.spec.style?.fontWeight,
+      spec.spec.label.spec.style?.color,
+      spec.spec.labelSpacing,
+    ),
+    expected: (theme) => (14.0, FontWeight.w500, theme.foreground, 12.0),
+  ),
+  _radio(
     'dot',
     states: const {WidgetState.selected},
     source: 'radio-group.tsx: CircleIcon size-2 fill-primary',
@@ -1122,6 +1133,17 @@ final _switchTargets = <SpecTarget>[
       _hairline(const Color(0x00000000)),
       _effectShadows(VanillaShadow.xs),
     ),
+  ),
+  _switch(
+    'label',
+    source: 'label.tsx: text-sm font-medium; switch demo: space-x-2',
+    read: (spec) => (
+      spec.spec.label.spec.style?.fontSize,
+      spec.spec.label.spec.style?.fontWeight,
+      spec.spec.label.spec.style?.color,
+      spec.spec.labelSpacing,
+    ),
+    expected: (theme) => (14.0, FontWeight.w500, theme.foreground, 8.0),
   ),
   _switch(
     'off track',

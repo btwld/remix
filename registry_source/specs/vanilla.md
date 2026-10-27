@@ -152,8 +152,8 @@ the steps above. The source column names the file under
 | Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128 | `select.tsx` |
 | Select item | h 32; px 8, py 6 (see Deviations); radius sm; highlight accent; check 10 muted-fg | `select.tsx` |
 | Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
-| Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary | `radio-group.tsx` |
-| Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border | `switch.tsx` |
+| Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary; label `text-sm` w500, gap 12 | `radio-group.tsx`, `label.tsx` |
+| Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border; label `text-sm` w500, gap 8 | `switch.tsx`, `label.tsx` |
 | Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover and focus | `slider.tsx` |
 | Tabs (filled) | list h 36, p 3, radius lg, muted; tab radius md, px 8, py 4, gap 6; inactive foreground/60; active background + `shadow-sm` | `tabs.tsx` |
 | Tabs (line) | transparent list; active tab marked by a 2px `foreground` underline | `tabs.tsx` (`variant=line`) |
