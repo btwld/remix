@@ -1,3 +1,22 @@
+## Unreleased
+
+### Features
+
+- Add `RemixReducedMotion`. Its builder receives whether the user asked for
+  reduced motion and rebuilds when that changes; `RemixReducedMotion.of`
+  reads it where a transition starts. It combines
+  `MediaQuery.disableAnimations` with the platform's accessibility
+  `reduceMotion`, the only flag iOS Reduce Motion sets.
+
+### Fixes
+
+- Honor reduced motion in components that hard-code their own motion. The
+  select menu and accordion panel now open and close without a transition, and
+  `RemixSpinner` holds a static frame. Skeleton and sidebar, which already
+  followed `MediaQuery.disableAnimations`, now follow iOS Reduce Motion too.
+  Style animations declared with `.animate(...)` are driven by Mix and are not
+  affected.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes

@@ -781,6 +781,49 @@ void main() {
         expect(tester.binding.hasScheduledFrame, isFalse);
       });
 
+      testWidgets('stays on the base frame when the platform reduces motion', (
+        tester,
+      ) async {
+        addTearDown(
+          tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+        );
+        tester.platformDispatcher.accessibilityFeaturesTestValue =
+            const FakeAccessibilityFeatures(reduceMotion: true);
+        await _pumpSkeleton(tester, RemixSkeleton(style: _pulseStyle()));
+
+        expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
+        expect(tester.binding.hasScheduledFrame, isFalse);
+
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
+      });
+
+      testWidgets('follows the platform reduceMotion while mounted', (
+        tester,
+      ) async {
+        addTearDown(
+          tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+        );
+        await _pumpSkeleton(tester, RemixSkeleton(style: _pulseStyle()));
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(_pulseDecoration(tester).color, isSameColorAs(_midColor));
+
+        tester.platformDispatcher.accessibilityFeaturesTestValue =
+            const FakeAccessibilityFeatures(reduceMotion: true);
+        await tester.pump();
+        await tester.pump();
+
+        expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
+        expect(tester.binding.hasScheduledFrame, isFalse);
+
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseDecoration(tester).color, isSameColorAs(_midColor));
+      });
+
       testWidgets('resumes pulsing when reduced motion turns off', (
         tester,
       ) async {

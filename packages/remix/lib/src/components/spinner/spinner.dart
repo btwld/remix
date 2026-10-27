@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 
+import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 
 part 'spinner_painter.dart';

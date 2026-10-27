@@ -86,6 +86,15 @@ class FortalSpinnerExample extends StatelessWidget {
   See the [fortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/spinner.dart) for all available options.
 </Info>
 
+## Reduced motion
+
+When the user asks for reduced motion, the spinner stops and paints a
+static frame; it turns again if the preference changes while it is mounted.
+Give a spinner that carries meaning a `semanticsLabel` so assistive
+technology still announces it. See
+[`RemixReducedMotion`](/guides/styling-components#reduced-motion) for the
+signals Remix reads.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart

@@ -404,6 +404,28 @@ void main() {
     },
   );
 
+  testWidgets('the platform reduceMotion makes the next transition immediate', (
+    tester,
+  ) async {
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    final key = GlobalKey<_HostState>();
+    await tester.pumpWidget(_Host(key: key));
+    key.currentState!.update(collapsed: true);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(key.currentState!.motion!.expansion, inExclusiveRange(0, 1));
+    await tester.pumpAndSettle();
+
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(reduceMotion: true);
+    key.currentState!.update(collapsed: false);
+    await tester.pump();
+    await tester.pump();
+
+    expect(key.currentState!.motion!.expansion, 1);
+    expect(key.currentState!.motion!.isAnimating, isFalse);
+  });
+
   testWidgets(
     'AnimationStyle configures both directions without a second driver',
     (tester) async {

@@ -543,7 +543,6 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
   );
   late double _fromExpansion = widget.collapsed ? 0 : 1;
   late double _fromOpacity = _fromExpansion;
-  bool _reduceMotion = false;
 
   SidebarAnimation _frame(bool collapsed, AnimationStyle style) {
     final end = collapsed ? 0.0 : 1.0;
@@ -569,8 +568,7 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (_reduceMotion) _controller.value = 1;
+    if (RemixReducedMotion.of(context)) _controller.value = 1;
   }
 
   @override
@@ -588,7 +586,7 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
         (widget.collapsed ? style.reverseDuration : null) ??
         style.duration ??
         const Duration(milliseconds: 200);
-    if (_reduceMotion ||
+    if (RemixReducedMotion.of(context) ||
         duration == Duration.zero ||
         (!targetChanged && !_controller.isAnimating)) {
       _controller.value = 1;

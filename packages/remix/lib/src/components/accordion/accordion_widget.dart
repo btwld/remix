@@ -299,12 +299,22 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     bool isExpanded,
     Widget panel,
   ) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
-      transitionBuilder: _config.transitionBuilder,
-      child: isExpanded
-          ? Box(styleSpec: spec.content, child: panel)
-          : const SizedBox.shrink(),
+    return RemixReducedMotion(
+      builder: (context, reduceMotion) => AnimatedSwitcher(
+        duration: reduceMotion
+            ? Duration.zero
+            : const Duration(milliseconds: 200),
+        // AnimatedSwitcher fixes a child's exit duration as the child enters,
+        // so a panel that entered before the preference changed would still
+        // fade out. Drop outgoing panels from the layout instead.
+        layoutBuilder: reduceMotion
+            ? (current, _) => AnimatedSwitcher.defaultLayoutBuilder(current, [])
+            : AnimatedSwitcher.defaultLayoutBuilder,
+        transitionBuilder: _config.transitionBuilder,
+        child: isExpanded
+            ? Box(styleSpec: spec.content, child: panel)
+            : const SizedBox.shrink(),
+      ),
     );
   }
 
