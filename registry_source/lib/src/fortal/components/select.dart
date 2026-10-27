@@ -214,6 +214,8 @@ SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
     .size2 || .size3 => FortalTokens.radius4(),
   };
   return SelectContentStyler()
+      // select.css:45: `min-width: var(--radix-select-trigger-width)`.
+      .minWidth(remixAnchorWidth())
       .padding(
         .all(switch (size) {
           .size1 => FortalTokens.space1(),

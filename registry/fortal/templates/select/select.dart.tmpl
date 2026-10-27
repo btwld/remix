@@ -214,6 +214,8 @@ SelectContentStyler _{{valuePrefix}}SelectContentStyler({{typePrefix}}SelectSize
     .size2 || .size3 => {{typePrefix}}Tokens.radius4(),
   };
   return SelectContentStyler()
+      // select.css:45: `min-width: var(--radix-select-trigger-width)`.
+      .minWidth(remixAnchorWidth())
       .padding(
         .all(switch (size) {
           .size1 => {{typePrefix}}Tokens.space1(),
