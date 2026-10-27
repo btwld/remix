@@ -69,6 +69,15 @@
   the list when the highlighted option is outside it, and in a lazily built
   list such as `ListView.builder` a highlighted option that is not built, such
   as the last option after Ctrl or Cmd with ArrowDown, is not revealed.
+### Fixes
+
+- End slider interactions safely when thumbs or interaction configuration
+  change or the slider is disabled. Preserve one start/end sequence and the
+  last requested values across controlled rebuilds.
+- Retain slider keyboard focus when semantics are excluded, and preserve
+  surviving external focus nodes when thumbs change.
+- Add `NakedSliderTrack` to map input to an inset painted rail while retaining
+  the full slider hit target.
 
 ## 1.2.3
 
