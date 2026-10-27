@@ -592,8 +592,7 @@ final _toggleTargets = <SpecTarget>[
     read: (spec) => flexDecorationOf(spec.spec.container)?.border,
     expected: (theme) => _hairline(theme.input),
   ),
-  // Deviation: no `shadow-xs`. A decoration shadow under a transparent fill
-  // reads as a gray wash.
+  // Deviation: no `shadow-xs` (see specs/vanilla.md).
   _toggle(
     'outline has no decoration shadow',
     variant: .outline,

@@ -594,7 +594,8 @@ Then adjust any code of your own that read the old names:
   `UiThemeData.light().copyWith(...)` instead.
 - `UiTokens.focusRing` is `UiTokens.ring`. Recipes draw the ring at half
   strength, 3px wide with no offset, and turn a bordered control's outline
-  `ring` while it has focus.
+  `ring` while it has focus. A toggle-group option draws the band inside
+  itself, because the group clips its options.
 - `uiFocusRingDecoration()` is gone. `UiTab`, `UiToggle`, `UiToggleGroup`,
   `UiMenu`, `UiAccordion`, and `UiDisclosure` draw their rings with
   `uiFocusRing()` through `containerEffects` (`triggerEffects` on the

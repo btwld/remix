@@ -111,29 +111,26 @@ ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
         .icon(.size(PlaygroundTokens.icon));
 
 /// The variant's outline and its hover.
-ToggleStyler _variantStyle(
-  PlaygroundToggleVariant variant,
-) => switch (variant) {
-  .ghost => ToggleStyler().onHovered(
-    _content(
-      PlaygroundTokens.mutedForeground(),
-    ).color(PlaygroundTokens.muted()),
-  ),
-  // No shadow: a decoration shadow under a transparent control shows through
-  // it as a gray wash.
-  .outline =>
-    ToggleStyler()
-        .border(
-          .color(
-            PlaygroundTokens.input(),
-          ).width(PlaygroundTokens.strokeHairline),
-        )
-        .onHovered(
-          _content(
-            PlaygroundTokens.accentForeground(),
-          ).color(PlaygroundTokens.accent()),
-        ),
-};
+ToggleStyler _variantStyle(PlaygroundToggleVariant variant) =>
+    switch (variant) {
+      .ghost => ToggleStyler().onHovered(
+        _content(
+          PlaygroundTokens.mutedForeground(),
+        ).color(PlaygroundTokens.muted()),
+      ),
+      .outline =>
+        ToggleStyler()
+            .border(
+              .color(
+                PlaygroundTokens.input(),
+              ).width(PlaygroundTokens.strokeHairline),
+            )
+            .onHovered(
+              _content(
+                PlaygroundTokens.accentForeground(),
+              ).color(PlaygroundTokens.accent()),
+            ),
+    };
 
 /// Applies one content color to the label and the icons.
 ToggleStyler _content(Color foreground) =>
