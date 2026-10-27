@@ -23,6 +23,12 @@ class AccordionSpec with _$AccordionSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> trigger;
+
+  /// Outline and paint layers drawn around [trigger] only, so a focus ring
+  /// does not wrap the revealed content.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? triggerEffects;
   @override
   final StyleSpec<IconSpec> leadingIcon;
   @override
@@ -36,6 +42,7 @@ class AccordionSpec with _$AccordionSpec {
     StyleSpec<BoxSpec>? container,
     this.containerEffects,
     StyleSpec<FlexBoxSpec>? trigger,
+    this.triggerEffects,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? trailingIcon,
@@ -58,6 +65,11 @@ class AccordionSpec with _$AccordionSpec {
       containerEffects: RemixBoxEffectsSpec.lerpNullable(
         containerEffects,
         other.containerEffects,
+        t,
+      ),
+      triggerEffects: RemixBoxEffectsSpec.lerpNullable(
+        triggerEffects,
+        other.triggerEffects,
         t,
       ),
     );

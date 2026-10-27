@@ -110,8 +110,10 @@ class RemixToggle extends StatelessWidget {
           controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
             return LayoutBuilder(
-              builder: (context, constraints) => RowBox(
+              builder: (context, constraints) => RemixFlexBoxAdapter(
                 styleSpec: spec.container,
+                direction: Axis.horizontal,
+                containerEffects: spec.containerEffects,
                 children: [
                   if (icon != null)
                     StyledIcon(icon: icon, styleSpec: spec.icon),

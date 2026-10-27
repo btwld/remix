@@ -318,6 +318,39 @@ that panel directly contains a checkbox or radio group. Nested submenu panels
 decide this independently. A custom `trailingIcon` replaces the default
 directional submenu chevron.
 
+## Focus rings
+
+`MenuTriggerStyler.containerEffects` and `MenuItemStyler.containerEffects`
+paint an outline around the trigger or a row without taking layout space, so
+focus does not resize either. `MenuStyler.containerEffects` is separate: it
+paints the popup panel.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final menuRing = RemixBoxEffectsMix(
+  outline: BorderSideMix(color: Colors.indigo, width: 2),
+  outlineOffset: 2,
+);
+
+final ringedMenuStyle = MenuStyler()
+    .trigger(
+      MenuTriggerStyler().onFocusVisible(
+        MenuTriggerStyler().containerEffects(menuRing),
+      ),
+    )
+    .item(
+      MenuItemStyler().onFocusVisible(
+        MenuItemStyler().containerEffects(menuRing),
+      ),
+    );
+```
+
+A popup that clips (`clipBehavior` on `overlay`) crops an outside row ring at
+its edge. Pad the popup by at least the ring's offset plus width, or use a
+negative `outlineOffset` to draw the row ring inside the row.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:

@@ -472,8 +472,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   }
 
   Widget _buildDefaultTrigger(MenuTriggerSpec triggerSpec) {
-    return RowBox(
+    return RemixFlexBoxAdapter(
       styleSpec: triggerSpec.container,
+      direction: Axis.horizontal,
+      containerEffects: triggerSpec.containerEffects,
       children: [
         if (widget.trigger.icon != null)
           StyledIcon(icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
@@ -916,8 +918,9 @@ class _RemixMenuItemContent extends StatelessWidget {
       );
     }
 
-    return FlexBox(
+    return RemixFlexBoxAdapter(
       styleSpec: spec.container,
+      containerEffects: spec.containerEffects,
       children: [
         if (reserveChoiceSlot)
           Visibility.maintain(
