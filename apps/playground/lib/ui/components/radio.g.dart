@@ -42,7 +42,9 @@ class PlaygroundRadio<T> extends StatelessWidget {
     super.key,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -55,7 +57,11 @@ class PlaygroundRadio<T> extends StatelessWidget {
 
   final T value;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final bool enabled;
 
@@ -75,7 +81,9 @@ class PlaygroundRadio<T> extends StatelessWidget {
       key: this.key,
       style: playgroundRadioStyle(style: this.style),
       value: this.value,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       enabled: this.enabled,
       toggleable: this.toggleable,
       mouseCursor: this.mouseCursor,

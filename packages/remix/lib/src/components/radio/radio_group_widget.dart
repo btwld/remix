@@ -20,27 +20,15 @@ part of 'radio.dart';
 ///   },
 ///   child: Column(
 ///     children: [
-///       Row(
-///         children: [
-///           RemixRadio<String>(
-///             value: 'option1',
-///             semanticLabel: 'Option 1',
-///             style: radioStyle,
-///           ),
-///           const SizedBox(width: 8),
-///           const Text('Option 1'),
-///         ],
+///       RemixRadio<String>(
+///         value: 'option1',
+///         label: 'Option 1',
+///         style: radioStyle,
 ///       ),
-///       Row(
-///         children: [
-///           RemixRadio<String>(
-///             value: 'option2',
-///             semanticLabel: 'Option 2',
-///             style: radioStyle,
-///           ),
-///           const SizedBox(width: 8),
-///           const Text('Option 2'),
-///         ],
+///       RemixRadio<String>(
+///         value: 'option2',
+///         label: 'Option 2',
+///         style: radioStyle,
 ///       ),
 ///     ],
 ///   ),

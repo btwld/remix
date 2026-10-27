@@ -62,6 +62,25 @@
   accordion trigger, and disclosure trigger content keeps its state when a
   style adds or removes a decoration such as a focus ring. Previously such a
   change rebuilt the part's content from scratch.
+### Breaking changes
+
+- `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel`, and the
+  matching parameters of `RadioStyler.call`, `SwitchStyler.call`, and
+  generated preset wrappers, are now `String?`. Code that reads them as a
+  non-null `String` needs a null check. A radio or switch must still have a
+  `label` or a `semanticLabel`; that rule is now a debug-mode assert instead
+  of a required parameter.
+
+### Features
+
+- Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
+  inside the control's pointer, hover, press, focus, and single semantics
+  target and used as its accessible name, as `RemixCheckbox.label` is.
+  `RadioStyler` and `SwitchStyler` gain `label`, `labelSpacing` (default 8),
+  and the `labelColor`, `labelFontSize`, and other label style helpers. Both
+  widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
+  existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
+  `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
 
 ## 1.0.0-beta.13
 
