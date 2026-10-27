@@ -3706,14 +3706,16 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Notifications')),
+        isSemantics(hasEnabledState: true, isEnabled: true, isToggled: false),
+      );
+
       await tester.tap(find.text('Notifications'));
       await tester.pumpAndSettle();
 
       expect(changes, [true]);
-      expect(
-        tester.getSemantics(find.bySemanticsLabel('Notifications')),
-        isSemantics(hasEnabledState: true, isEnabled: true, isToggled: true),
-      );
       handle.dispose();
     });
   });
