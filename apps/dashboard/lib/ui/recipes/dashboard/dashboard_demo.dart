@@ -60,7 +60,8 @@ class UiDashboardSidebarAccount extends StatelessWidget {
           style: FlexBoxStyler()
               .minHeight(48)
               .crossAxisAlignment(.center)
-              .spacing(10),
+              .spacing(10)
+              .onFocusVisible(FlexBoxStyler().onBuilder(_accountRowFocusRing)),
           children: [
             const UiAvatar(label: 'LF', size: .size2),
             Expanded(
@@ -109,6 +110,13 @@ class UiDashboardSidebarAccount extends StatelessWidget {
       ),
     ),
   );
+}
+
+FlexBoxStyler _accountRowFocusRing(BuildContext context) {
+  final ring = uiFocusRingDecoration(context);
+  return ring == null
+      ? FlexBoxStyler()
+      : FlexBoxStyler().foregroundDecoration(ring);
 }
 
 /// Application-owned toolbar actions supplied to the Ui dashboard shell.
@@ -297,9 +305,16 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
               alignment: .end,
               sideOffset: 8,
             ),
-            trigger: RemixMenuTrigger.builder(
-              label: 'Account menu',
-              builder: (_, _, _) => const UiAvatar(label: 'LF', size: .size2),
+            trigger: RemixMenuTrigger.control(
+              builder: (_, menu) => RemixIconButton(
+                semanticLabel: 'Account menu',
+                style: _toolbarButtonStyle,
+                focusNode: menu.focusNode,
+                onPressed: menu.toggle,
+                icon: RemixIcons.person,
+                iconBuilder: (_, _, _) =>
+                    const UiAvatar(label: 'LF', size: .size2),
+              ),
             ),
             actions: const [
               UiAction(value: 'profile', label: 'Profile'),

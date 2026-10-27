@@ -684,9 +684,9 @@ void main() {
       of: topBar,
       matching: find.byKey(const ValueKey('remix-icon-button-surface')),
     );
-    // Theme, notifications, and theme panel; the collapse control lives in
-    // the sidebar header.
-    expect(surfaces, findsNWidgets(3));
+    // Appearance, notifications, theme panel, and the account menu; the
+    // collapse control lives in the sidebar header.
+    expect(surfaces, findsNWidgets(4));
 
     void expectSquareSurfaces() {
       for (final surface in surfaces.evaluate()) {

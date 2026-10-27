@@ -63,7 +63,8 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
           style: FlexBoxStyler()
               .minHeight(48)
               .crossAxisAlignment(.center)
-              .spacing(10),
+              .spacing(10)
+              .onFocusVisible(FlexBoxStyler().onBuilder(_accountRowFocusRing)),
           children: [
             const {{typePrefix}}Avatar(label: 'LF', size: .size2),
             Expanded(
@@ -112,6 +113,13 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
       ),
     ),
   );
+}
+
+FlexBoxStyler _accountRowFocusRing(BuildContext context) {
+  final ring = {{valuePrefix}}FocusRingDecoration(context);
+  return ring == null
+      ? FlexBoxStyler()
+      : FlexBoxStyler().foregroundDecoration(ring);
 }
 
 /// Application-owned toolbar actions supplied to the {{typePrefix}} dashboard shell.
@@ -300,10 +308,16 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
               alignment: .end,
               sideOffset: 8,
             ),
-            trigger: RemixMenuTrigger.builder(
-              label: 'Account menu',
-              builder: (_, _, _) =>
-                  const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+            trigger: RemixMenuTrigger.control(
+              builder: (_, menu) => RemixIconButton(
+                semanticLabel: 'Account menu',
+                style: _toolbarButtonStyle,
+                focusNode: menu.focusNode,
+                onPressed: menu.toggle,
+                icon: {{icon:person}},
+                iconBuilder: (_, _, _) =>
+                    const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+              ),
             ),
             actions: const [
               {{typePrefix}}Action(value: 'profile', label: 'Profile'),
