@@ -1,3 +1,14 @@
+## Unreleased
+
+### Features
+
+- Add `NakedMenu.openOnTap` (default `true`). Set it to `false` to use your own
+  control as the trigger: the menu then draws no `NakedButton`, adds no tap or
+  keyboard activation or focus stop, and leaves opening and closing to the
+  `controller`. Attach `triggerFocusNode` to the control so the menu can focus
+  it, and the expanded state still merges onto the control's semantics. It
+  cannot be `false` inside a `NakedMenubar`.
+
 ## 1.2.3
 
 ### Fixes

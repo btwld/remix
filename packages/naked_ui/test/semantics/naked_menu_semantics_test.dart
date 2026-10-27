@@ -142,6 +142,100 @@ void main() {
       handle.dispose();
     });
 
+    group('openOnTap: false', () {
+      Widget buildOwnButtonMenu(MenuController controller) {
+        return NakedMenu<String>(
+          controller: controller,
+          openOnTap: false,
+          child: NakedButton(
+            onPressed: () =>
+                controller.isOpen ? controller.close() : controller.open(),
+            child: const Text('Actions'),
+          ),
+          overlayBuilder: (context, info) =>
+              const NakedMenuItem<String>(value: 'item', child: Text('Item')),
+        );
+      }
+
+      testWidgets('the caller\'s button is the only button node and carries '
+          'the expanded state', (tester) async {
+        final handle = tester.ensureSemantics();
+        final controller = MenuController();
+
+        await tester.pumpWidget(_buildTestApp(buildOwnButtonMenu(controller)));
+
+        final buttons = collectSemanticsNodes(
+          semanticsRootOf(tester),
+          (node) => node.getSemanticsData().flagsCollection.isButton,
+        );
+        expect(buttons, hasLength(1));
+        expect(
+          tester.getSemantics(find.text('Actions')),
+          matchesSemantics(
+            label: 'Actions',
+            isButton: true,
+            hasEnabledState: true,
+            isEnabled: true,
+            isFocusable: true,
+            hasExpandedState: true,
+            isExpanded: false,
+            hasTapAction: true,
+            hasFocusAction: true,
+          ),
+        );
+
+        await tester.tap(find.text('Actions'));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester
+              .getSemantics(find.text('Actions'))
+              .getSemanticsData()
+              .flagsCollection
+              .isExpanded,
+          Tristate.isTrue,
+        );
+        await tester.tap(find.text('Actions'));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester
+              .getSemantics(find.text('Actions'))
+              .getSemanticsData()
+              .flagsCollection
+              .isExpanded,
+          Tristate.isFalse,
+        );
+
+        handle.dispose();
+      });
+
+      testWidgets('a non-interactive child is not exposed as a button', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+
+        await tester.pumpWidget(
+          _buildTestApp(
+            NakedMenu<String>(
+              controller: MenuController(),
+              openOnTap: false,
+              child: const Text('Avatar'),
+              overlayBuilder: (context, info) => const SizedBox.shrink(),
+            ),
+          ),
+        );
+
+        final data = tester
+            .getSemantics(find.text('Avatar'))
+            .getSemanticsData();
+        expect(data.flagsCollection.isButton, isFalse);
+        expect(data.hasAction(SemanticsAction.tap), isFalse);
+
+        handle.dispose();
+      });
+    });
+
     testWidgets('menu opens and closes semantics', (tester) async {
       final handle = tester.ensureSemantics();
 

@@ -608,6 +608,252 @@ void main() {
         expect(innerFocus.hasFocus, isTrue);
       });
     });
+
+    group('openOnTap: false', () {
+      Widget menu({
+        required MenuController controller,
+        bool openOnTap = false,
+        Widget child = const Text('Trigger'),
+        ValueWidgetBuilder<NakedMenuState>? builder,
+        FocusNode? triggerFocusNode,
+        ValueChanged<String>? onSelected,
+      }) {
+        return NakedMenu<String>(
+          controller: controller,
+          openOnTap: openOnTap,
+          triggerFocusNode: triggerFocusNode,
+          onSelected: onSelected,
+          child: builder == null ? child : null,
+          builder: builder,
+          overlayBuilder: (context, info) =>
+              const NakedMenuItem<String>(value: 'item', child: Text('Item')),
+        );
+      }
+
+      NakedButton ownButton(MenuController controller, {FocusNode? focusNode}) {
+        return NakedButton(
+          focusNode: focusNode,
+          onPressed: () =>
+              controller.isOpen ? controller.close() : controller.open(),
+          child: const Text('Trigger'),
+        );
+      }
+
+      testWidgets('tapping the child does not open the menu', (tester) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(menu(controller: controller));
+
+        await tester.tap(find.text('Trigger'));
+        await tester.pumpAndSettle();
+
+        expect(controller.isOpen, isFalse);
+        expect(find.text('Item'), findsNothing);
+      });
+
+      testWidgets('the controller opens the menu and items select and close', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final selected = <String>[];
+        await tester.pumpMaterialWidget(
+          menu(controller: controller, onSelected: selected.add),
+        );
+
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(find.text('Item'), findsOneWidget);
+
+        await tester.tap(find.text('Item'));
+        await tester.pumpAndSettle();
+
+        expect(selected, ['item']);
+        expect(controller.isOpen, isFalse);
+        expect(find.text('Item'), findsNothing);
+      });
+
+      testWidgets('the menu draws no trigger button of its own', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final trigger = find.descendant(
+          of: find.byType(NakedMenu<String>),
+          matching: find.byType(NakedButton),
+        );
+
+        await tester.pumpMaterialWidget(menu(controller: controller));
+        expect(trigger, findsNothing);
+
+        await tester.pumpMaterialWidget(
+          menu(controller: controller, openOnTap: true),
+        );
+        expect(trigger, findsOneWidget);
+      });
+
+      testWidgets('Enter and Space on the focused child do not open the menu', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final node = FocusNode();
+        addTearDown(node.dispose);
+        await tester.pumpMaterialWidget(
+          menu(
+            controller: controller,
+            child: Focus(focusNode: node, child: const Text('Trigger')),
+          ),
+        );
+
+        node.requestFocus();
+        await tester.pump();
+
+        for (final key in [
+          LogicalKeyboardKey.enter,
+          LogicalKeyboardKey.space,
+        ]) {
+          await tester.sendKeyEvent(key);
+          await tester.pumpAndSettle();
+          expect(controller.isOpen, isFalse, reason: '$key opened the menu');
+          expect(find.text('Item'), findsNothing);
+        }
+      });
+
+      testWidgets('adds no focus stop of its own', (tester) async {
+        final before = FocusNode();
+        final menuNode = FocusNode();
+        final after = FocusNode();
+        addTearDown(before.dispose);
+        addTearDown(menuNode.dispose);
+        addTearDown(after.dispose);
+        final controller = MenuController();
+
+        Widget row({required bool openOnTap}) => Column(
+          children: [
+            NakedButton(
+              focusNode: before,
+              onPressed: () {},
+              child: const Text('Before'),
+            ),
+            menu(
+              controller: controller,
+              openOnTap: openOnTap,
+              triggerFocusNode: menuNode,
+            ),
+            NakedButton(
+              focusNode: after,
+              onPressed: () {},
+              child: const Text('After'),
+            ),
+          ],
+        );
+
+        await tester.pumpMaterialWidget(row(openOnTap: false));
+        before.requestFocus();
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(after.hasPrimaryFocus, isTrue);
+
+        await tester.pumpMaterialWidget(row(openOnTap: true));
+        before.requestFocus();
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(menuNode.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('the caller\'s control toggles the menu', (tester) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          menu(controller: controller, child: ownButton(controller)),
+        );
+
+        await tester.tap(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(controller.isOpen, isTrue);
+        expect(find.text('Item'), findsOneWidget);
+
+        await tester.tap(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(controller.isOpen, isFalse);
+        expect(find.text('Item'), findsNothing);
+      });
+
+      testWidgets(
+        'Escape closes the menu and focus returns to the triggerFocusNode '
+        'on the caller\'s control',
+        (tester) async {
+          final controller = MenuController();
+          final node = FocusNode();
+          addTearDown(node.dispose);
+          await tester.pumpMaterialWidget(
+            menu(
+              controller: controller,
+              triggerFocusNode: node,
+              child: ownButton(controller, focusNode: node),
+            ),
+          );
+
+          await tester.tap(find.text('Trigger'));
+          await tester.pumpAndSettle();
+          expect(find.text('Item'), findsOneWidget);
+
+          await tester.pressEsc();
+
+          expect(controller.isOpen, isFalse);
+          expect(find.text('Item'), findsNothing);
+          expect(node.hasPrimaryFocus, isTrue);
+        },
+      );
+
+      testWidgets('the builder sees whether the menu is open', (tester) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          menu(
+            controller: controller,
+            builder: (context, state, child) =>
+                Text(state.isOpen ? 'open' : 'closed'),
+          ),
+        );
+        expect(find.text('closed'), findsOneWidget);
+
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(find.text('open'), findsOneWidget);
+
+        controller.close();
+        await tester.pumpAndSettle();
+        expect(find.text('closed'), findsOneWidget);
+      });
+
+      testWidgets('the default still opens the menu when the child is tapped', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          menu(controller: controller, openOnTap: true),
+        );
+
+        await tester.tap(find.text('Trigger'));
+        await tester.pumpAndSettle();
+
+        expect(controller.isOpen, isTrue);
+        expect(find.text('Item'), findsOneWidget);
+      });
+
+      testWidgets('asserts when placed inside a NakedMenubar', (tester) async {
+        await tester.pumpMaterialWidget(
+          NakedMenubar(child: menu(controller: MenuController())),
+        );
+
+        expect(
+          tester.takeException(),
+          isA<AssertionError>().having(
+            (error) => error.message,
+            'message',
+            contains('openOnTap'),
+          ),
+        );
+      });
+    });
   });
 
   group('NakedMenuContent', () {
