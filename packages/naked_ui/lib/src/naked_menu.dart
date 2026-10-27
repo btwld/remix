@@ -626,7 +626,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 /// The menu follows Flutter's standard keyboard navigation patterns:
 ///
 /// ### Opening and Closing
-/// - **Space/Enter on trigger**: Opens the overlay
+/// - **Space/Enter on trigger**: Opens the overlay (unless [openOnTap] is false)
 /// - **Escape**: Closes the overlay and returns focus to trigger
 /// - **Click outside**: Closes the overlay (if [closeOnClickOutside] is true)
 ///
@@ -662,6 +662,35 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 /// )
 /// ```
 ///
+/// ### Using your own control as the trigger
+/// By default the menu wraps [child] or [builder] in its own [NakedButton].
+/// Set [openOnTap] to false to use a control you already have instead, such as
+/// a button from your design system. The menu then draws no button and adds no
+/// activation or focus stop, so the control opens and closes the menu through
+/// [controller] and carries [triggerFocusNode] to receive focus when the menu
+/// closes.
+/// ```dart
+/// final menuController = MenuController();
+/// final triggerFocus = FocusNode();
+/// NakedMenu<String>(
+///   controller: menuController,
+///   openOnTap: false,
+///   triggerFocusNode: triggerFocus,
+///   child: NakedButton(
+///     focusNode: triggerFocus,
+///     onPressed: () => menuController.isOpen
+///         ? menuController.close()
+///         : menuController.open(),
+///     child: Text('Menu'),
+///   ),
+///   overlayBuilder: (context, info) => Column(
+///     children: [
+///       NakedMenu.Item(value: 'copy', child: Text('Copy')),
+///     ],
+///   ),
+/// )
+/// ```
+///
 /// See also:
 /// - [NakedMenuItem], for individual actionable items
 /// - [NakedSelect], for selection-based menus with similar keyboard behavior
@@ -682,6 +711,7 @@ class NakedMenu<T> extends StatefulWidget {
     this.consumeOutsideTaps = true,
     this.useRootOverlay = false,
     this.closeOnClickOutside = true,
+    this.openOnTap = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
     this.semanticLabel,
@@ -745,13 +775,33 @@ class NakedMenu<T> extends StatefulWidget {
   /// Whether to target the root overlay instead of the nearest ancestor.
   final bool useRootOverlay;
 
+  /// Whether the menu draws its own trigger button.
+  ///
+  /// When true, [child] or [builder] renders inside a [NakedButton] that opens
+  /// and closes the menu on tap, Enter, and Space.
+  ///
+  /// When false, [child] or [builder] is the caller's own control. The menu
+  /// adds no button, tap or keyboard activation, or focus stop of its own, so
+  /// the control must open and close the menu through [controller]. Attach
+  /// [triggerFocusNode] to the control so that opening and closing the menu
+  /// move focus to it. The menu's expanded state still merges onto the
+  /// control's semantics node; [semanticLabel] has no effect.
+  ///
+  /// Must be true for a menu inside a [NakedMenubar].
+  final bool openOnTap;
+
   /// Optional focus node for the trigger.
+  ///
+  /// The node is focused when the menu opens and closes. With [openOnTap] set
+  /// to false, attach it to the caller's own control.
   final FocusNode? triggerFocusNode;
 
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
   /// Semantic label for the menu trigger.
+  ///
+  /// Ignored when [openOnTap] is false: the caller's control owns its label.
   final String? semanticLabel;
 
   /// Whether to exclude this widget from the semantic tree.
@@ -860,36 +910,49 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
     final menubar = NakedMenubarScope.maybeOf(context);
     _menubar = menubar;
     _syncMenubarRegistration();
+    assert(
+      widget.openOnTap || menubar == null,
+      'NakedMenu.openOnTap cannot be false inside a NakedMenubar.',
+    );
     final triggerFocusNode = menubar == null
         ? widget.triggerFocusNode
         : effectiveFocusNode;
-    Widget button = NakedButton(
-      onPressed: _toggle,
-      focusNode: triggerFocusNode,
-      semanticLabel: widget.semanticLabel,
-      child: widget.child,
-      builder: (context, buttonState, child) {
-        final menuState = NakedMenuState(
-          states: buttonState.states,
-          isOpen: _isOpen,
-        );
+    Widget trigger = widget.openOnTap
+        ? NakedButton(
+            onPressed: _toggle,
+            focusNode: triggerFocusNode,
+            semanticLabel: widget.semanticLabel,
+            child: widget.child,
+            builder: (context, buttonState, child) {
+              final menuState = NakedMenuState(
+                states: buttonState.states,
+                isOpen: _isOpen,
+              );
 
-        final trigger = NakedStateScopeBuilder(
-          value: menuState,
-          child: widget.child,
-          builder: widget.builder,
-        );
+              final content = NakedStateScopeBuilder(
+                value: menuState,
+                child: widget.child,
+                builder: widget.builder,
+              );
 
-        return widget.semanticLabel == null
-            ? trigger
-            : ExcludeSemantics(child: trigger);
-      },
-    );
+              return widget.semanticLabel == null
+                  ? content
+                  : ExcludeSemantics(child: content);
+            },
+          )
+        : NakedStateScopeBuilder(
+            value: NakedMenuState(
+              states: const <WidgetState>{},
+              isOpen: _isOpen,
+            ),
+            child: widget.child,
+            builder: widget.builder,
+          );
 
     if (menubar != null) {
       // Left/Right and Home/End on a focused trigger are handled by the bar's
       // own Shortcuts/Actions above this widget. Only Up/Down live here.
-      button = MouseRegion(
+      trigger = MouseRegion(
         onEnter: (_) => _handleMenubarHover(),
         child: Shortcuts(
           shortcuts: NakedIntentActions.menubar.triggerShortcuts,
@@ -903,7 +966,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
               child: Semantics(
                 role: SemanticsRole.menuItem,
                 expanded: _isOpen,
-                child: button,
+                child: trigger,
               ),
             ),
           ),
@@ -912,10 +975,10 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
     }
 
     Widget menuChild = widget.excludeSemantics
-        ? ExcludeSemantics(child: button)
+        ? ExcludeSemantics(child: trigger)
         : menubar != null
-        ? button
-        : Semantics(expanded: _isOpen, child: button);
+        ? trigger
+        : Semantics(expanded: _isOpen, child: trigger);
 
     return RawMenuAnchor(
       controller: widget.controller,
