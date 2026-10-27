@@ -74,6 +74,11 @@ class RemixSwitch extends StatelessWidget {
   ///
   /// The label is also used as the accessible name unless [semanticLabel]
   /// overrides it.
+  ///
+  /// A labeled control cannot be measured by a parent that asks for intrinsic
+  /// size, such as [IntrinsicWidth], [IntrinsicHeight], or the horizontal
+  /// layout of `RemixDataList`. Under such a parent, compose the label beside
+  /// the control and name the control with [semanticLabel].
   final String? label;
 
   /// Accessible name for this switch.
@@ -85,7 +90,8 @@ class RemixSwitch extends StatelessWidget {
 
   /// Minimum pointer, focus, and semantics target size.
   ///
-  /// Defaults to [Size.zero], which keeps the switch's own geometry. Pass
+  /// Defaults to [Size.zero], which keeps the switch's own geometry, unlike
+  /// `RemixCheckbox`, which defaults to `Size.square(48)`. Pass
   /// `Size.square(48)` to meet platform tap target guidelines.
   final Size minimumTapTargetSize;
 
