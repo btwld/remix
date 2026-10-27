@@ -19,7 +19,8 @@ final class RemixMenuTriggerHandle {
   /// The controller that opens and closes the menu.
   final MenuController controller;
 
-  /// The focus node the menu focuses when it opens and closes.
+  /// The node that receives focus when the menu closes. On open, focus moves
+  /// into the menu panel.
   ///
   /// Pass it to the control as its `focusNode`. It is
   /// [RemixMenu.triggerFocusNode] when that is set, otherwise a node the menu
@@ -83,7 +84,9 @@ class RemixMenuTrigger {
   ///
   /// The control owns its look and accessible name, so [MenuStyler.trigger] and
   /// [RemixMenu.semanticLabel] do not apply to it. The menu merges its expanded
-  /// state onto the control's semantics.
+  /// state onto the control's semantics. The builder must return a single
+  /// control, because everything it returns is merged into one semantics node:
+  /// a split button or a loading button would merge its labels and actions.
   const RemixMenuTrigger.control({required RemixMenuControlBuilder builder})
     : control = builder,
       label = null,
@@ -101,7 +104,7 @@ class RemixMenuTrigger {
   /// Optional custom trigger content. Null for the standard trigger.
   final ValueWidgetBuilder<NakedMenuState>? builder;
 
-  /// The caller's own button. Null unless built with
+  /// The builder of the caller's own button. Null unless built with
   /// [RemixMenuTrigger.control].
   final RemixMenuControlBuilder? control;
 }
@@ -591,7 +594,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       'give the control its own label.',
     );
 
-    final menu = NakedMenu<T>(
+    return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
         return RemixStyleSpecBuilder<MenuSpec>(
@@ -665,10 +668,6 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
         );
       },
     );
-
-    // NakedMenu puts the expanded state above its trigger. Merging folds it
-    // onto a control that forms its own semantics node.
-    return control == null ? menu : MergeSemantics(child: menu);
   }
 }
 

@@ -183,9 +183,12 @@ routes and require a caller-provided `Navigator`; toasts require a
   `RemixMenuTrigger.control(builder: (context, menu) => ...)` when the
   trigger is a real button such as `FortalButton`: pass `menu.focusNode` as
   its `focusNode` and `menu.toggle` as its `onPressed` (`menu` also exposes
-  `isOpen` and `controller`). The button keeps its own look, label, and
-  enabled state, `MenuStyler.trigger` and `RemixMenu.semanticLabel` do not
-  apply to it, and `RemixMenuTrigger.label` is null. The same
+  `isOpen` and `controller`). The builder must return a single control,
+  because everything it returns is merged into one semantics node (a split
+  button or a loading button would merge labels and actions). The button
+  keeps its own look, label, and enabled state, `MenuStyler.trigger` and
+  `RemixMenu.semanticLabel` do not apply to it, and
+  `RemixMenuTrigger.label` is null. The same
   `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no separate
   Fortal trigger type.
 - **Toast** — base Remix exposes `RemixToastScope` and
