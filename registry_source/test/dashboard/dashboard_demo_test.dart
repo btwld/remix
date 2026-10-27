@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -80,18 +81,7 @@ void main() {
       matching: find.byType(VanillaMenu<String>),
     );
 
-    Color? fill() {
-      final provider = tester.widget<StyleSpecProvider<IconButtonSpec>>(
-        find
-            .descendant(
-              of: button,
-              matching: find.byType(StyleSpecProvider<IconButtonSpec>),
-            )
-            .first,
-      );
-      return (provider.spec.spec.container.spec.decoration as BoxDecoration?)
-          ?.color;
-    }
+    Color? fill() => _fillOf(_specOf(tester, button));
 
     final muted = VanillaTheme.of(tester.element(button)).muted;
 
@@ -136,6 +126,59 @@ void main() {
     );
     semantics.dispose();
   });
+
+  for (final dark in const [false, true]) {
+    testWidgets('the open kebab keeps its look under the pointer in '
+        '${dark ? 'dark' : 'light'}', (tester) async {
+      await _pumpDashboard(
+        tester,
+        preset: .defaultPreset,
+        initialPage: RegistryDashboardDemoPage.orders,
+      );
+      if (dark) {
+        await tester.tap(
+          find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+        );
+        await tester.pumpAndSettle();
+      }
+      final button = find.byWidgetPredicate(
+        (widget) =>
+            widget is VanillaIconButton &&
+            widget.semanticLabel == 'Actions for ORD-1048',
+      );
+      final theme = VanillaTheme.of(tester.element(button));
+      expect(theme.brightness, dark ? Brightness.dark : Brightness.light);
+
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(button));
+      await tester.pumpAndSettle();
+      final hovered = _specOf(tester, button);
+      expect(
+        hovered.icon.spec.color,
+        theme.accentForeground,
+        reason: 'the pointer is on the closed button',
+      );
+
+      await pointer.down(tester.getCenter(button));
+      await pointer.up();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Archive'), findsOneWidget);
+      final open = _specOf(tester, button);
+      expect(_fillOf(open), theme.muted);
+      expect(open.icon.spec.color, theme.mutedForeground);
+
+      await pointer.down(tester.getCenter(button));
+      await tester.pump();
+      final pressed = _specOf(tester, button);
+      expect(_fillOf(pressed), theme.muted, reason: 'pressed while open');
+      expect(pressed.icon.spec.color, theme.mutedForeground);
+      await pointer.up();
+      await tester.pumpAndSettle();
+    });
+  }
 
   for (final (label, panelText) in const [
     ('Open notifications', 'Order ORD-1047 requires review.'),
@@ -1063,6 +1106,22 @@ double _transformAngleIn(WidgetTester tester, Finder ancestor) {
       .atan2(transform.transform.entry(1, 0), transform.transform.entry(0, 0))
       .abs();
 }
+
+/// The spec the icon button under [button] resolved.
+IconButtonSpec _specOf(WidgetTester tester, Finder button) => tester
+    .widget<StyleSpecProvider<IconButtonSpec>>(
+      find
+          .descendant(
+            of: button,
+            matching: find.byType(StyleSpecProvider<IconButtonSpec>),
+          )
+          .first,
+    )
+    .spec
+    .spec;
+
+Color? _fillOf(IconButtonSpec spec) =>
+    (spec.container.spec.decoration as BoxDecoration?)?.color;
 
 /// How many focus stops sit inside [root].
 int _focusStops(WidgetTester tester, Finder root) {
