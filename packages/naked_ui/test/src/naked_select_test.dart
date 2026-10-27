@@ -548,11 +548,7 @@ void main() {
       await tester.tap(find.text('Select option'));
       await tester.pumpAndSettle();
 
-      // Focus first option
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-
-      // Press PageDown (should go to last option since fewer than 10 items)
+      // Press PageDown from the first option the select opens on
       await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
       await tester.pumpAndSettle();
 
@@ -688,8 +684,6 @@ void main() {
           overlayBuilder: (context, info) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (searchFocusNode != null)
-                _SelfFocusingField(focusNode: searchFocusNode),
               SizedBox(
                 key: viewportKey,
                 height: 120,
@@ -707,6 +701,8 @@ void main() {
                         ),
                       ),
               ),
+              if (searchFocusNode != null)
+                _SelfFocusingField(focusNode: searchFocusNode),
             ],
           ),
         );

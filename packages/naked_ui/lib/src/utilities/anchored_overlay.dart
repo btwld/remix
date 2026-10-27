@@ -62,8 +62,8 @@ class AnchoredOverlay extends StatefulWidget {
   /// container.
   ///
   /// When this node is not attached to an item or cannot take focus, the first
-  /// item that can take focus does. The item is revealed in every ancestor
-  /// [Scrollable]. Focus stays put when something inside the overlay already
+  /// item that can take focus does. The item is revealed in the scrollables
+  /// that contain it. Focus stays put when something inside the overlay already
   /// holds it, and on the container when no item can take it.
   final FocusNode? initialFocusNode;
 

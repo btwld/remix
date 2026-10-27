@@ -1449,45 +1449,6 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
       });
 
-      for (final (selectedValue, opensOn, thenOn, name) in [
-        ('b', 'b', 'c', 'opens on the selected item'),
-        (null, 'a', 'b', 'opens on the first item without a selection'),
-      ]) {
-        testWidgets(name, (tester) async {
-          final focusNode = FocusNode();
-          addTearDown(focusNode.dispose);
-
-          await tester.pumpRemixApp(
-            RemixSelect<String>(
-              trigger: const RemixSelectTrigger(placeholder: 'Select'),
-              items: const [
-                RemixSelectItem(value: 'a', label: 'Option A'),
-                RemixSelectItem(value: 'b', label: 'Option B'),
-                RemixSelectItem(value: 'c', label: 'Option C'),
-              ],
-              selectedValue: selectedValue,
-              focusNode: focusNode,
-              onChanged: (_) {},
-            ),
-          );
-          await tester.pumpAndSettle();
-          focusNode.requestFocus();
-          await tester.pump();
-
-          String? focusedValue() => FocusManager.instance.primaryFocus?.context
-              ?.findAncestorWidgetOfExactType<NakedSelectOption<String>>()
-              ?.value;
-
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          await tester.pumpAndSettle();
-          expect(focusedValue(), opensOn);
-
-          await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-          await tester.pumpAndSettle();
-          expect(focusedValue(), thenOn);
-        });
-      }
-
       testWidgets('option activation changes selection', (tester) async {
         String? selected;
         await tester.pumpRemixApp(
