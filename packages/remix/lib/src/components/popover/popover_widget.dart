@@ -41,9 +41,16 @@ class RemixPopover extends StatelessWidget {
   final bool useRootOverlay;
 
   /// Whether tapping or activating [child] toggles the popover.
+  ///
+  /// When false, [child] is the caller's own control, such as a button. The
+  /// popover adds no tap or keyboard activation and no focus stop, so the
+  /// control opens and closes it through [controller].
   final bool openOnTap;
 
   /// Optional focus node for the trigger.
+  ///
+  /// When [openOnTap] is false, attach it to the control in [child] so that
+  /// closing the popover returns focus to it.
   final FocusNode? triggerFocusNode;
 
   /// Called after the popover opens.
