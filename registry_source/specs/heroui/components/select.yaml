@@ -30,6 +30,7 @@ measurements:
 approximations:
   - "The trigger's padding is physical, so the indicator inset does not mirror in right-to-left. Mix cannot merge directional padding with a caller's physical padding, which would make a caller `style` with `padding(.all(..))` throw."
   - "Remix centers a popover wider than its trigger under it by default (`positioning`). The pinned reference measures the popover only at the trigger's own width (320), where start and center alignment coincide, so upstream's placement of a wider popover is not recorded. Pass `OverlayPositionConfig(side: .bottom, alignment: .start)` to align the edges."
+  - "Once the list is long enough to scroll, Remix clips it at the scroll view, inside the popover's padding, so the outside row ring loses its sides and the edge rows lose their outer edge."
   - The popover appears without upstream's 150ms fade and zoom.
   - "The chevron is Remix's glyph at 11px, centered in the 16px slot's place (about 11 x 5.9 ink against 10.5 x 5.9). It flips when open without upstream's 150ms rotation."
   - The trigger's optional leading icon is Remix's and is not styled; HeroUI has none.
