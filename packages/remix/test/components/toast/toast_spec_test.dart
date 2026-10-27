@@ -14,6 +14,7 @@ void main() {
       expect(spec.action, isNull);
       expect(spec.closeButton, isNull);
       expect(spec.containerEffects, isNull);
+      expect(spec.actionPlacement, isNull);
       expect(spec, const ToastSpec());
     });
 
@@ -28,6 +29,25 @@ void main() {
 
       expect(spec.action, same(action));
       expect(spec.closeButton, same(closeButton));
+    });
+
+    test('copyWith replaces the action placement', () {
+      final spec = const ToastSpec().copyWith(
+        actionPlacement: RemixToastActionPlacement.below,
+      );
+
+      expect(spec.actionPlacement, RemixToastActionPlacement.below);
+      expect(spec, isNot(const ToastSpec()));
+    });
+
+    test('lerp snaps the action placement', () {
+      const start = ToastSpec(
+        actionPlacement: RemixToastActionPlacement.inline,
+      );
+      const end = ToastSpec(actionPlacement: RemixToastActionPlacement.below);
+
+      expect(start.lerp(end, 0.25).actionPlacement, start.actionPlacement);
+      expect(start.lerp(end, 0.75).actionPlacement, end.actionPlacement);
     });
 
     test('lerp snaps composed styles and interpolates effects', () {

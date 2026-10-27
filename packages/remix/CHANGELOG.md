@@ -1,3 +1,25 @@
+## Unreleased
+
+### Features
+
+- Add `ToastSpec.actionPlacement`, `ToastStyler.actionPlacement`, and
+  `RemixToastActionPlacement`. `inline` (the default) keeps the action in the
+  row while the message has room and otherwise uses the `below` arrangement;
+  `below` always puts the action under the title and description, aligned with
+  their start, with the close button on the first line after the message. It
+  is a spec field, so a style can switch it with a variant such as
+  `onBreakpoint`.
+
+### Fixes
+
+- `RemixToast` stacks an inline action below the message when the toast is
+  too narrow to share a row, so the message is no longer squeezed beside it.
+  The cutoff follows the width the toast gets, including its margin and style
+  max width, and grows with the text scale. Wider toasts keep the single row.
+  A toast with an inline action measures its width, so it does not support
+  intrinsic sizing (`IntrinsicWidth`, `IntrinsicHeight`); set
+  `actionPlacement` to `below` where that is needed.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
