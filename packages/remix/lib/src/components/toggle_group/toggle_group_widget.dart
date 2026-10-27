@@ -266,8 +266,10 @@ class _RemixToggleGroupItemWidget<T> extends StatelessWidget {
                 child: StyleSpecBuilder<ToggleGroupItemSpec>(
                   styleSpec: _resolveStyle(context),
                   builder: (context, spec) {
-                    return RowBox(
+                    return RemixFlexBoxAdapter(
                       styleSpec: spec.container,
+                      direction: Axis.horizontal,
+                      containerEffects: spec.containerEffects,
                       children: [
                         if (data.icon != null)
                           StyledIcon(icon: data.icon!, styleSpec: spec.icon),

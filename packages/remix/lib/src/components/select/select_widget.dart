@@ -502,8 +502,10 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
           builder: (context, spec) => StyleSpecBuilder<SelectMenuItemSpec>(
             styleSpec: spec.item,
             builder: (context, item) => ExcludeSemantics(
-              child: RowBox(
+              child: RemixFlexBoxAdapter(
                 styleSpec: item.container,
+                direction: Axis.horizontal,
+                containerEffects: item.containerEffects,
                 children: [
                   Expanded(child: StyledText(data.label, styleSpec: item.text)),
                   if (state.isSelected)

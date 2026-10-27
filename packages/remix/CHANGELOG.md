@@ -1,3 +1,16 @@
+## Unreleased
+
+### Features
+
+- Add `containerEffects` to `TabStyler`, `ToggleStyler`,
+  `ToggleGroupItemStyler`, `SelectMenuItemStyler`, `MenuItemStyler`, and
+  `MenuTriggerStyler`, and `triggerEffects` to `AccordionStyler` and
+  `DisclosureStyler`. An outline or paint layer draws around the part without
+  taking layout space, so a focus ring no longer resizes the part or shifts its
+  neighbors. On the accordion and disclosure, `containerEffects` still covers
+  the whole panel and `triggerEffects` covers only the trigger. A toggle group
+  clips its items, so ring an end item with a negative `outlineOffset`.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes

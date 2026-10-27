@@ -10,6 +10,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<FlexBoxSpec> get trigger;
+  RemixBoxEffectsSpec? get triggerEffects;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<TextSpec> get title;
   StyleSpec<IconSpec> get trailingIcon;
@@ -23,6 +24,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? container,
     RemixBoxEffectsSpec? containerEffects,
     StyleSpec<FlexBoxSpec>? trigger,
+    RemixBoxEffectsSpec? triggerEffects,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? trailingIcon,
@@ -32,6 +34,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
       trigger: trigger ?? this.trigger,
+      triggerEffects: triggerEffects ?? this.triggerEffects,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       title: title ?? this.title,
       trailingIcon: trailingIcon ?? this.trailingIcon,
@@ -49,6 +52,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
         t,
       ),
       trigger: trigger.lerp(other?.trigger, t),
+      triggerEffects: MixOps.lerpSnap(triggerEffects, other?.triggerEffects, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       title: title.lerp(other?.title, t),
       trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
@@ -61,6 +65,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
     container,
     containerEffects,
     trigger,
+    triggerEffects,
     leadingIcon,
     title,
     trailingIcon,
@@ -110,6 +115,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(DiagnosticsProperty('triggerEffects', triggerEffects))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
@@ -132,6 +138,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
+  final Prop<RemixBoxEffectsSpec>? $triggerEffects;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
@@ -141,6 +148,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<FlexBoxSpec>>? trigger,
+    Prop<RemixBoxEffectsSpec>? triggerEffects,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<IconSpec>>? trailingIcon,
@@ -151,6 +159,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   }) : $container = container,
        $containerEffects = containerEffects,
        $trigger = trigger,
+       $triggerEffects = triggerEffects,
        $leadingIcon = leadingIcon,
        $title = title,
        $trailingIcon = trailingIcon,
@@ -160,6 +169,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     FlexBoxStyler? trigger,
+    RemixBoxEffectsMix? triggerEffects,
     IconStyler? leadingIcon,
     TextStyler? title,
     IconStyler? trailingIcon,
@@ -171,6 +181,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
          container: Prop.maybeMix(container),
          containerEffects: Prop.maybeMix(containerEffects),
          trigger: Prop.maybeMix(trigger),
+         triggerEffects: Prop.maybeMix(triggerEffects),
          leadingIcon: Prop.maybeMix(leadingIcon),
          title: Prop.maybeMix(title),
          trailingIcon: Prop.maybeMix(trailingIcon),
@@ -186,6 +197,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       AccordionStyler().containerEffects(value);
   factory AccordionStyler.trigger(FlexBoxStyler value) =>
       AccordionStyler().trigger(value);
+  factory AccordionStyler.triggerEffects(RemixBoxEffectsMix value) =>
+      AccordionStyler().triggerEffects(value);
   factory AccordionStyler.leadingIcon(IconStyler value) =>
       AccordionStyler().leadingIcon(value);
   factory AccordionStyler.title(TextStyler value) =>
@@ -751,6 +764,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     'container',
     'containerEffects',
     'trigger',
+    'triggerEffects',
     'leadingIcon',
     'title',
     'trailingIcon',
@@ -773,6 +787,11 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   /// Sets the trigger.
   AccordionStyler trigger(FlexBoxStyler value) {
     return merge(AccordionStyler(trigger: value));
+  }
+
+  /// Sets the triggerEffects.
+  AccordionStyler triggerEffects(RemixBoxEffectsMix value) {
+    return merge(AccordionStyler(triggerEffects: value));
   }
 
   /// Sets the leadingIcon.
@@ -869,6 +888,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
         other?.$containerEffects,
       ),
       trigger: MixOps.merge($trigger, other?.$trigger),
+      triggerEffects: MixOps.merge($triggerEffects, other?.$triggerEffects),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       title: MixOps.merge($title, other?.$title),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
@@ -886,6 +906,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       container: MixOps.resolve(context, $container),
       containerEffects: MixOps.resolve(context, $containerEffects),
       trigger: MixOps.resolve(context, $trigger),
+      triggerEffects: MixOps.resolve(context, $triggerEffects),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       title: MixOps.resolve(context, $title),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
@@ -906,6 +927,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('trigger', $trigger))
+      ..add(DiagnosticsProperty('triggerEffects', $triggerEffects))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
@@ -917,6 +939,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     $container,
     $containerEffects,
     $trigger,
+    $triggerEffects,
     $leadingIcon,
     $title,
     $trailingIcon,

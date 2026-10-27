@@ -269,8 +269,9 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     final leadingIcon = _config.leadingIcon;
     final title = _config.title;
 
-    return FlexBox(
+    return RemixFlexBoxAdapter(
       styleSpec: spec.trigger,
+      containerEffects: spec.triggerEffects,
       children: [
         if (leadingIcon != null)
           StyledIcon(icon: leadingIcon, styleSpec: spec.leadingIcon),

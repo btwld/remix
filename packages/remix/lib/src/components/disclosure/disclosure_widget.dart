@@ -26,8 +26,10 @@ final class _RemixDisclosureTrigger extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Box(
-      styleSpec: _RemixDisclosureStyleScope.of(context).trigger,
+    final spec = _RemixDisclosureStyleScope.of(context);
+    return RemixBoxAdapter(
+      styleSpec: spec.trigger,
+      containerEffects: spec.triggerEffects,
       child: child,
     );
   }
