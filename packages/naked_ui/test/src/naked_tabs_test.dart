@@ -911,6 +911,167 @@ void main() {
     });
   });
 
+  group('Home/End with a scrolling tab bar', () {
+    const tabCount = 20;
+    const tabWidth = 100.0;
+    const viewportKey = Key('tab bar viewport');
+    late ScrollController scrollController;
+    late List<FocusNode> focusNodes;
+
+    setUp(() {
+      scrollController = ScrollController();
+      focusNodes = List.generate(
+        tabCount,
+        (index) => FocusNode(debugLabel: 'tab $index'),
+      );
+    });
+
+    tearDown(() {
+      scrollController.dispose();
+      for (final node in focusNodes) {
+        node.dispose();
+      }
+    });
+
+    Future<void> pumpScrollingTabs(WidgetTester tester) async {
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFF000000),
+          pageRouteBuilder: _defaultPageRouteBuilder,
+          builder: (context, child) => child ?? const SizedBox.shrink(),
+          home: Align(
+            alignment: Alignment.topLeft,
+            child: NakedTabs(
+              selectedTabId: 'tab0',
+              onChanged: (_) {},
+              child: SizedBox(
+                key: viewportKey,
+                width: 3 * tabWidth,
+                height: 40,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: scrollController,
+                  child: NakedTabBar(
+                    child: Row(
+                      children: [
+                        for (var index = 0; index < tabCount; index++)
+                          NakedTab(
+                            tabId: 'tab$index',
+                            focusNode: focusNodes[index],
+                            child: SizedBox(
+                              key: Key('tab$index'),
+                              width: tabWidth,
+                              height: 40,
+                              child: Center(child: Text('Tab $index')),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    bool isInViewport(WidgetTester tester, int index) {
+      final viewport = tester.getRect(find.byKey(viewportKey));
+      final tab = tester.getRect(find.byKey(Key('tab$index')));
+      return tab.left >= viewport.left && tab.right <= viewport.right;
+    }
+
+    testWidgets('End focuses the last tab and scrolls it into view', (
+      tester,
+    ) async {
+      await pumpScrollingTabs(tester);
+      focusNodes.first.requestFocus();
+      await tester.pump();
+      expect(isInViewport(tester, tabCount - 1), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+
+      expect(focusNodes.last.hasPrimaryFocus, isTrue);
+      expect(isInViewport(tester, tabCount - 1), isTrue);
+    });
+
+    testWidgets('Home focuses the first tab and scrolls it into view', (
+      tester,
+    ) async {
+      await pumpScrollingTabs(tester);
+      focusNodes.last.requestFocus();
+      await tester.pump();
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      expect(isInViewport(tester, 0), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.home);
+      await tester.pumpAndSettle();
+
+      expect(focusNodes.first.hasPrimaryFocus, isTrue);
+      expect(isInViewport(tester, 0), isTrue);
+    });
+
+    testWidgets('End keeps a scrolled page where it is', (tester) async {
+      final pageController = ScrollController();
+      addTearDown(pageController.dispose);
+
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFF000000),
+          pageRouteBuilder: _defaultPageRouteBuilder,
+          builder: (context, child) => child ?? const SizedBox.shrink(),
+          home: SingleChildScrollView(
+            controller: pageController,
+            child: NakedTabs(
+              selectedTabId: 'tab0',
+              onChanged: (_) {},
+              child: Column(
+                children: [
+                  const SizedBox(height: 1000),
+                  NakedTabBar(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var index = 0; index < 3; index++)
+                          NakedTab(
+                            tabId: 'tab$index',
+                            focusNode: focusNodes[index],
+                            child: SizedBox(
+                              key: Key('tab$index'),
+                              width: tabWidth,
+                              height: 40,
+                              child: Center(child: Text('Tab $index')),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 1000),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      pageController.jumpTo(800);
+      await tester.pump();
+      focusNodes.first.requestFocus();
+      await tester.pump();
+      final before = tester.getTopLeft(find.byKey(const Key('tab2')));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+
+      expect(focusNodes[2].hasPrimaryFocus, isTrue);
+      expect(tester.getTopLeft(find.byKey(const Key('tab2'))), before);
+    });
+  });
+
   group('Focus iteration limits', () {
     testWidgets('Home/End keys on single tab complete without infinite loop', (
       tester,

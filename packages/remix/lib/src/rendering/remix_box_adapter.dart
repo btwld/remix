@@ -79,12 +79,31 @@ final class RemixFlexBoxAdapter extends StatelessWidget {
     required this.styleSpec,
     this.direction,
     this.containerEffects,
+    this.scrollable = false,
     this.children = const [],
-  });
+  }) : assert(
+         !scrollable || direction == Axis.vertical,
+         'Only a vertical flex box can scroll.',
+       );
 
   final StyleSpec<FlexBoxSpec> styleSpec;
   final Axis? direction;
   final RemixBoxEffectsSpec? containerEffects;
+
+  /// Whether the children scroll when they are taller than the room the box
+  /// leaves them.
+  ///
+  /// The box's padding, decoration, constraints, and effects frame the scroll
+  /// view and stay put while the children move. The children's column sizes to
+  /// its content inside the scroll view, so main-axis alignment and a maximal
+  /// main-axis size have no free space to distribute. Requires a vertical
+  /// [direction].
+  ///
+  /// The scroll view is meant for overlay panels: it does not attach to the
+  /// host page's primary scroll controller or notify the host page, and it
+  /// clamps at the ends without overscroll effects.
+  final bool scrollable;
+
   final List<Widget> children;
 
   @override
@@ -109,9 +128,39 @@ final class RemixFlexBoxAdapter extends StatelessWidget {
         return RemixBoxAdapter(
           styleSpec: spec.box ?? const StyleSpec(spec: BoxSpec()),
           containerEffects: effects,
-          child: content,
+          child: scrollable ? _ContainedScrollView(child: content) : content,
         );
       },
+    );
+  }
+}
+
+/// A vertical scroll view that stays inside the overlay panel it scrolls.
+class _ContainedScrollView extends StatelessWidget {
+  const _ContainedScrollView({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    // The overlay sits under the host page in the widget tree. Without the
+    // listener, its scrolling would reach the page's app bar and scrollbars as
+    // though the page's own list had scrolled.
+    return NotificationListener<ViewportNotificationMixin>(
+      onNotification: (_) => true,
+      child: ScrollConfiguration(
+        // Like Flutter's own menus: stop at the ends rather than bounce or
+        // stretch. The scrollbar stays.
+        behavior: ScrollConfiguration.of(
+          context,
+        ).copyWith(overscroll: false, physics: const ClampingScrollPhysics()),
+        child: SingleChildScrollView(
+          // Otherwise the overlay attaches to the host page's primary scroll
+          // controller, which a list on the page may already use.
+          primary: false,
+          child: child,
+        ),
+      ),
     );
   }
 }

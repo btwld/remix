@@ -388,6 +388,54 @@ void main() {
       expect(lifecycle.disposeCount, 0);
     });
 
+    testWidgets('keeps the scroll position when the effects route changes', (
+      tester,
+    ) async {
+      Widget build(RemixBoxEffectsSpec? effects) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: RemixFlexBoxAdapter(
+            styleSpec: const StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(
+                  spec: BoxSpec(
+                    constraints: BoxConstraints.tightFor(
+                      width: 80,
+                      height: 100,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            direction: Axis.vertical,
+            containerEffects: effects,
+            scrollable: true,
+            children: [
+              for (var i = 0; i < 10; i++)
+                const SizedBox(height: 50, width: 80),
+            ],
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(build(null));
+      await tester.drag(find.byType(Scrollable), const Offset(0, -120));
+      await tester.pump();
+      final position = tester.state<ScrollableState>(find.byType(Scrollable));
+      expect(position.position.pixels, 120);
+
+      await tester.pumpWidget(
+        build(
+          const RemixBoxEffectsSpec(
+            outline: BorderSide(color: Colors.red, width: 1),
+          ),
+        ),
+      );
+
+      expect(tester.state<ScrollableState>(find.byType(Scrollable)), position);
+      expect(position.position.pixels, 120);
+    });
+
     testWidgets('preserves state across positive and negative margins', (
       tester,
     ) async {
