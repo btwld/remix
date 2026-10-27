@@ -17,7 +17,9 @@ class HeroUiRadio<T> extends StatelessWidget {
     this.invalid = false,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -31,7 +33,9 @@ class HeroUiRadio<T> extends StatelessWidget {
     this.invalid = false,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -45,7 +49,9 @@ class HeroUiRadio<T> extends StatelessWidget {
     this.invalid = false,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -62,7 +68,11 @@ class HeroUiRadio<T> extends StatelessWidget {
 
   final T value;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final bool enabled;
 
@@ -86,7 +96,9 @@ class HeroUiRadio<T> extends StatelessWidget {
         style: this.style,
       ),
       value: this.value,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       enabled: this.enabled,
       toggleable: this.toggleable,
       mouseCursor: this.mouseCursor,
