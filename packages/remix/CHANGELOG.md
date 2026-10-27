@@ -35,6 +35,10 @@
   including a sidebar transition already under way. Style animations declared
   with `.animate(...)` are driven by Mix and are not affected.
 - `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
+### Fixes
+
+- `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
+  not on every `MediaQuery` change such as keyboard insets.
 
 ## 1.0.0-beta.13
 
