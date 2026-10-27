@@ -147,6 +147,29 @@ void main() {
     });
   });
 
+  test(
+    'ownership consumer check requires Vanilla checkout and the checkout CLI',
+    () {
+      expect(
+        checker.parseConsumerCheckOptions([
+          '--source',
+          'checkout',
+          '--item',
+          'ownership',
+        ])!.item,
+        'ownership',
+      );
+      for (final arguments in [
+        ['--item', 'ownership'],
+        ['--source', 'hosted', '--item', 'ownership'],
+        ['--source', 'checkout', '--preset', 'fortal', '--item', 'ownership'],
+        ['--source', 'checkout', '--hosted-cli', '--item', 'ownership'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(arguments), isNull);
+      }
+    },
+  );
+
   test('--icon-library swaps the icon package in the Vanilla contract', () {
     final options = checker.parseConsumerCheckOptions([
       '--source',

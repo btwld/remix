@@ -380,6 +380,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
       final selected = arguments[++index];
       if (selected != 'dashboard_demo' &&
           selected != 'dashboard_shell' &&
+          selected != 'ownership' &&
           selected != 'icons') {
         return null;
       }
@@ -421,7 +422,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   if (hostedCli && source != RemixSource.hosted) return null;
   if (item != null && source != RemixSource.checkout) return null;
-  if (item == 'icons' && preset.name != 'vanilla') return null;
+  if ((item == 'icons' || item == 'ownership') && preset.name != 'vanilla')
+    return null;
   return ConsumerCheckOptions(
     keep: keep,
     preset: preset.name,
@@ -438,8 +440,8 @@ Future<void> main(List<String> arguments) async {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
       '[--preset vanilla|fortal] [--source both|hosted|checkout] '
-      '[--item dashboard_demo|dashboard_shell|icons (requires --source '
-      'checkout; icons is vanilla)] [--icon-library remix|lucide] '
+      '[--item dashboard_demo|dashboard_shell|icons|ownership (requires --source '
+      'checkout; icons/ownership are vanilla)] [--icon-library remix|lucide] '
       '[--hosted-cli (requires --source hosted)] [--keep]',
     );
     exitCode = 64;
@@ -547,7 +549,7 @@ Future<_Failure?> _run(
       ..writeln('Review local source against the registry:')
       ..writeln(
         '  cd ${app.path} && ${sdk.dart} run remix_cli:remix add '
-        '${item ?? preset.registryItems.first} --diff',
+        '${item == 'ownership' ? '@addon/extra_button' : item ?? preset.registryItems.first} --diff',
       );
   }
 
@@ -649,6 +651,14 @@ Future<_Failure?> _checkInTemporaryApp({
   if (init != null) return _Failure('remix init failed in the fresh app');
   _writeIconLibrary(app, iconLibrary);
 
+  if (item == 'ownership') {
+    return _checkOwnershipComposition(
+      sdk: sdk,
+      app: app,
+      fixtureRoot: fixtureRoot,
+      environment: environment,
+    );
+  }
   if (item != null) {
     return _checkFocusedItem(
       sdk: sdk,
@@ -811,6 +821,106 @@ Future<_Failure?> _checkInTemporaryApp({
     _step('Current-source regeneration matches the committed Acme adapter.');
   }
 
+  return _analyzeAndTest(
+    sdk: sdk,
+    app: app,
+    dependencySource: 'current checkout',
+    environment: environment,
+  );
+}
+
+/// Real processes and generated adapters; only registry transport is local.
+Future<_Failure?> _checkOwnershipComposition({
+  required _Toolchain sdk,
+  required Directory app,
+  required Directory fixtureRoot,
+  required Map<String, String> environment,
+}) async {
+  final fixtureFailure = _applyFocusedFixture(
+    app: app,
+    fixtureRoot: fixtureRoot,
+    item: 'ownership',
+  );
+  if (fixtureFailure != null) return fixtureFailure;
+  environment['REMIX_REGISTRY_OWNERSHIP_PROBE'] = '1';
+  Future<_Failure?> cli(List<String> arguments) => _runProcess(
+    sdk.dart,
+    ['run', 'remix_cli:remix', ...arguments],
+    workingDirectory: app.path,
+    environment: environment,
+  );
+  final buttonInstall = await cli(['add', 'button']);
+  if (buttonInstall != null) return buttonInstall;
+  final customized = <String, String>{};
+  for (final relative in ['components/button.dart', 'theme/tokens.dart']) {
+    final file = File('${app.path}/lib/ui/$relative');
+    final source =
+        '${file.readAsStringSync()}// consumer customization retained\n';
+    file.writeAsStringSync(source);
+    customized[relative] = source;
+  }
+  final register = await cli([
+    'registry',
+    'add',
+    '@addon',
+    '--repository',
+    'fixture/addon',
+    '--ref',
+    'v1',
+  ]);
+  if (register != null) return register;
+  final manifest = File('${app.path}/pubspec.yaml');
+  manifest.writeAsStringSync(
+    manifest.readAsStringSync().replaceFirst(
+      'mix_annotations: ^2.2.0-beta.1',
+      "mix_annotations: '>=2.2.0-beta.1 <3.0.0' # consumer constraint",
+    ),
+  );
+  final pubspec = manifest.readAsStringSync();
+  for (final arguments in [
+    ['add', '@addon/extra_button', '--dry-run'],
+    ['add', '@addon/extra_button', '--diff'],
+    ['add', '@addon/extra_button'],
+    ['add', '@addon/extra_button', '--overwrite'],
+    ['add', 'button'],
+  ]) {
+    final failure = await cli(arguments);
+    if (failure != null) return failure;
+    for (final entry in customized.entries) {
+      if (File('${app.path}/lib/ui/${entry.key}').readAsStringSync() !=
+          entry.value) {
+        return _Failure('Additive install replaced customized ${entry.key}.');
+      }
+    }
+  }
+  if (File('${app.path}/pubspec.yaml').readAsStringSync() != pubspec) {
+    return _Failure(
+      'Additive registry changed customized dependency declarations.',
+    );
+  }
+  for (final target in [
+    'components/button.g.dart',
+    'addons/extra_button.g.dart',
+  ]) {
+    if (!File('${app.path}/lib/ui/$target').existsSync()) {
+      return _Failure('Additive install removed generated $target.');
+    }
+  }
+  final ownership =
+      jsonDecode(File('${app.path}/remix.ownership.json').readAsStringSync())
+          as Map;
+  final targets = ownership['targets'] as Map;
+  if (targets['lib/ui/addons/extra_button.g.dart'] !=
+          'fixture/addon/registry#vanilla/extra_button' ||
+      targets['lib/ui/components/button.g.dart'] !=
+          'btwld/remix/registry#vanilla/button') {
+    return _Failure(
+      'Composition did not retain distinct generated-target owners.',
+    );
+  }
+  _step(
+    'Separate disjoint registries retained custom recipes, tokens, dependencies, adapters and owners.',
+  );
   return _analyzeAndTest(
     sdk: sdk,
     app: app,
