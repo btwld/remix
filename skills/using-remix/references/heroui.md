@@ -64,20 +64,93 @@ child), `HeroUiAvatarGroup`, `HeroUiBreadcrumbs`, `HeroUiButtonGroup`,
 `HeroUiCardDescription`, `HeroUiAccordionGroup` (one surface card around
 accordion items), and the field layouts `HeroUiCheckboxGroup`,
 `HeroUiRadioGroup`, `HeroUiSwitchGroup`, `HeroUiFieldLayout`, and
-`HeroUiControlRow`.
+`HeroUiDescribedControl`.
 
-A radio's or switch's label is composed beside the bare Remix control, so it is
-not a tap target; checkbox labels are, because `RemixCheckbox` takes a label.
+A checkbox's, radio's, or switch's label is the control's own `label`, inside
+its tap target: pointing at it hovers, presses, and toggles the control, and
+one accessibility node carries the name. Pass `semanticLabel` instead only when
+you draw the label yourself. The groups compose the description beneath a
+radio or switch outside the target, as HeroUI does.
+
 A search field is `HeroUiSearchField` with `HeroUiSearchIcon` as `leading` and
 a `HeroUiSearchClearButton` as `trailing`; the app clears its controller and
 decides when the button shows.
 
 ## Overlays
 
-- Open a popover from a `HeroUiButton` with `openOnTap: false` and a
-  `MenuController` driven from the button's `onPressed`.
-- `RemixMenu` draws its own trigger button, so a dropdown's trigger is a label,
-  not a `HeroUiButton`.
+- Open a popover from a `HeroUiButton` with `openOnTap: false`, a
+  `MenuController` driven from the button's `onPressed`, and one `FocusNode`
+  given to both the popover's `triggerFocusNode` and the button's `focusNode`,
+  so the button is the only tab stop and takes focus back on close:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+class ShareButton extends StatefulWidget {
+  const ShareButton({super.key});
+
+  @override
+  State<ShareButton> createState() => _ShareButtonState();
+}
+
+class _ShareButtonState extends State<ShareButton> {
+  final _controller = MenuController();
+  final _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => HeroUiPopover(
+    controller: _controller,
+    triggerFocusNode: _focusNode,
+    openOnTap: false,
+    popoverChild: const Text('Anyone with the link can view.'),
+    child: HeroUiButton.secondary(
+      label: 'Share',
+      focusNode: _focusNode,
+      onPressed: _controller.open,
+    ),
+  );
+}
+```
+
+- A dropdown's trigger is a `HeroUiButton` through `RemixMenuTrigger.control`;
+  give the button the handle's `focusNode` and `toggle`:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+Widget actions() => HeroUiDropdown<String>(
+  trigger: RemixMenuTrigger.control(
+    builder: (context, menu) => HeroUiButton.secondary(
+      label: 'Actions',
+      focusNode: menu.focusNode,
+      onPressed: menu.toggle,
+    ),
+  ),
+  items: const [
+    RemixMenuItem(value: 'edit', label: 'Edit'),
+    RemixMenuItem(value: 'delete', label: 'Delete'),
+  ],
+);
+```
+
+  A label or builder trigger (`RemixMenuTrigger(label:)`) gets the bare
+  `.dropdown__trigger` look instead.
+- A select's popover is at least as wide as its trigger. A popover wider than
+  the trigger is centered under it; pass
+  `positioning: OverlayPositionConfig(side: .bottom, alignment: .start)` to
+  start it at the trigger's edge, as HeroUI does.
+- A toast puts its action under the message at 768px and below, and the action
+  gains HeroUI's `mt-2` below 640px. That action style is restated whole under
+  640px, so a caller's own `action` there must be an `onBreakpoint` fragment.
 - A modal's backdrop is the route barrier: pass `HeroUiTokens.backdrop`
   resolved from context as the dialog's barrier color.
 - Overlays keep the theme through `HeroUiTheme`'s `InheritedTheme.wrap`;
@@ -111,7 +184,9 @@ and their `*Foreground`, `*Hover`, and `*Soft` forms; radii `radiusXs` through
 `radius4xl`, `radiusField`, `radiusPanel`; text `textXs`, `textSm`, `textBase`;
 motion curves `easeSmooth`, `easeOut`, `easeOutQuart`, `easeOutFluid`; and
 the transitions `fillMotion`, `smoothMotion`, `selectionMotion`, and
-`transformMotion`.
+`transformMotion`. These transitions run whatever the OS motion setting, because
+Mix's `.animate` does not read it yet (btwld/mix#1070); Remix's own select,
+accordion, spinner, and dialog motion honors it.
 Derive a translucent colour with `heroUiAlpha(token, alpha)` held in a
 top-level final, never `token().withValues(...)`.
 
