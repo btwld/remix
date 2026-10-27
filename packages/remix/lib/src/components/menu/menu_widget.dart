@@ -492,7 +492,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
         return RemixAnchorScope(
-          size: info.anchorRect.size,
+          width: info.anchorRect.width,
           child: RemixStyleSpecBuilder<MenuSpec>(
             style: style,
             styleSpec: widget.styleSpec,

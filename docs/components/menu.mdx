@@ -337,10 +337,6 @@ class TriggerWidthMenuExample extends StatelessWidget {
       width: 240,
       child: RemixMenu<String>(
         trigger: const RemixMenuTrigger(label: 'Actions'),
-        positioning: const OverlayPositionConfig(
-          side: .bottom,
-          alignment: .start,
-        ),
         style: MenuStyler().overlay(
           FlexBoxStyler().minWidth(remixAnchorWidth()),
         ),
@@ -358,15 +354,18 @@ class TriggerWidthMenuExample extends StatelessWidget {
 - Pass it to `minWidth` for a panel at least as wide as the trigger, `width`
   for exactly as wide, or `maxWidth` for no wider. The panel follows the
   trigger if it resizes while open.
-- It is opt-in. Without it the panel stays as wide as its content.
+- It is opt-in. Without it the panel keeps the width its styles give it.
 - The token resolves where the style is built. `RemixMenu` and `RemixSelect`
   build their menu styles inside the overlay, so it works in the menu
   `overlay` style. A style resolved outside the overlay, such as the trigger's
   or a `RemixPopover`'s, reads `0`.
 - Submenu panels reuse the style resolved for the root panel, so they take the
   root trigger's width.
-- A panel wider than its trigger is centered below it by default. Use
-  `alignment: .start`, as above, to align the edges.
+- On a single box, a `minWidth` larger than its `maxWidth` is invalid in Flutter
+  and throws in debug. With the token that only happens once the trigger is
+  wider than the maximum, so keep a ceiling on a different box than the token.
+- A panel wider than its trigger starts at the trigger's start edge by default,
+  and follows the text direction.
 
 ## Fortal widgets
 

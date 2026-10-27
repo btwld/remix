@@ -114,7 +114,7 @@ class _SelectExampleState extends State<SelectExample> {
         )
         .menuContainer(
           FlexBoxStyler()
-              .minWidth(remixAnchorWidth())
+              .width(200)
               .margin(.vertical(5))
               .padding(.all(6))
               .color(Colors.white)
@@ -176,14 +176,20 @@ class _TriggerWidthSelectExampleState extends State<TriggerWidthSelectExample> {
 - Pass it to `minWidth` for a menu at least as wide as the trigger, `width` for
   exactly as wide, or `maxWidth` for no wider. The menu follows the trigger if
   it resizes while open.
-- It is opt-in. Without it the menu stays as wide as its content.
+- It is opt-in. Without it the menu keeps the width its styles give it.
 - The token resolves where the style is built. `RemixSelect` and `RemixMenu`
   build their menu styles inside the overlay, so use it in the select `content`
   and `menuContainer` styles or the menu `overlay` style. A style resolved
   outside the overlay, such as the trigger's or a `RemixPopover`'s, reads `0`.
-- Merging a `minWidth` into `content` replaces a minimum already set there by a
-  preset. Put the token on `menuContainer` instead to keep that minimum: both
-  apply and the larger wins.
+- Merging a `minWidth` into `content` replaces a minimum a preset set there.
+  To keep it, apply the token as a box modifier:
+  `SelectContentStyler().wrap(.box(BoxStyler().minWidth(remixAnchorWidth())))`
+  makes the menu the larger of the preset's minimum and the trigger width. Do
+  not put the token on `menuContainer`: that box sits inside the padding and
+  border of `content`, so the menu ends up that much wider than the trigger.
+- On a single box, a `minWidth` larger than its `maxWidth` is invalid in Flutter
+  and throws in debug. With the token that only happens once the trigger is
+  wider than the maximum, so keep a ceiling on a different box than the token.
 - A menu wider than its trigger is centered below it by default. Use
   `alignment: .start`, as above, to align the edges.
 
