@@ -66,7 +66,7 @@ ToggleGroupStyler uiToggleGroupStyle({
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
         .onFocusVisible(
-          ToggleGroupItemStyler().containerEffects(uiInsetFocusOutline()),
+          ToggleGroupItemStyler().containerEffects(uiTabFocusOutline()),
         )
         .onDisabled(
           ToggleGroupItemStyler()

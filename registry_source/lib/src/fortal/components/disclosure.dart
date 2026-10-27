@@ -87,7 +87,7 @@ DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
       .onHovered(.trigger(.color(FortalTokens.gray2())))
       .onPressed(.trigger(.color(FortalTokens.gray3())))
       .onFocusVisible(
-        DisclosureStyler().triggerEffects(fortalInsetFocusOutline()),
+        DisclosureStyler().triggerEffects(fortalTabFocusOutline()),
       )
       .onDisabled(_fortalDisclosureDisabledStyler());
 }
@@ -132,7 +132,7 @@ DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
       .onHovered(.trigger(.color(FortalTokens.accent3())))
       .onPressed(.trigger(.color(FortalTokens.accent4())))
       .onFocusVisible(
-        DisclosureStyler().triggerEffects(fortalInsetFocusOutline()),
+        DisclosureStyler().triggerEffects(fortalTabFocusOutline()),
       )
       .onDisabled(_fortalDisclosureDisabledStyler());
 }

@@ -4,8 +4,9 @@ import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
 /// Radix draws every focus ring 2px wide. Outward rings sit 2px off the
-/// element; inset rings (fields, soft/outline buttons, cards, select) sit -1px
-/// inside it and tabs -2px. Neither inset offset moves with the offset token.
+/// element. Inset rings (fields, cards, selects, and the soft, surface, outline
+/// and ghost buttons) sit -1px inside it and tabs -2px, as do the parts that
+/// borrow the tab ring. Neither inset offset moves with the offset token.
 const _radixWidth = 2.0;
 const _radixOffset = 2.0;
 const _insetOffset = -1.0;
@@ -180,25 +181,19 @@ void main() {
     }
   });
 
-  testWidgets('inside rings are drawn in the focus colour', (tester) async {
-    // Tabs ring in solid focus-8 (base-tab-list.css:126-129); the Fortal-only
-    // parts ring in focus-a8.
-    final (colors, focusA8, focus8) = await _resolveFocused(
+  testWidgets('inside rings are drawn in focus-8', (tester) async {
+    final (colors, focus8) = await _resolveFocused(
       tester,
       overridden: false,
       (context) => (
         _insideRings(
           context,
         ).map((name, effects) => MapEntry(name, effects.outline.color)),
-        MixScope.tokenOf(FortalTokens.focusA8, context),
         MixScope.tokenOf(FortalTokens.focus8, context),
       ),
     );
 
-    expect(colors, {
-      for (final name in colors.keys) name: focusA8,
-      'tab': focus8,
-    });
+    expect(colors, {for (final name in colors.keys) name: focus8});
   });
 
   testWidgets(

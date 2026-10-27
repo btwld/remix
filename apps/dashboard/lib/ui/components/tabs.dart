@@ -86,13 +86,7 @@ TabStyler uiTabStyle({
             .color(UiTokens.grayA3())
             .onFocusVisible(.color(UiTokens.accentA3())),
       )
-      .onFocusVisible(
-        // base-tab-list.css:126-129: `outline: 2px solid var(--focus-8);
-        // outline-offset: -2px` on the inner trigger.
-        TabStyler().containerEffects(
-          uiFocusOutline(UiTokens.focus8(), offset: -2),
-        ),
-      )
+      .onFocusVisible(TabStyler().containerEffects(uiTabFocusOutline()))
       .onSelected(
         .label(
               .color(UiTokens.gray12())

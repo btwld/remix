@@ -5,10 +5,13 @@ import 'tokens.dart';
 
 /// A token-width CSS outline that does not affect layout.
 ///
-/// Outward rings at Radix's 2px gap pass [UiTokens.focusRingOffset]. Every
-/// other offset is a Radix literal and does not follow that token: the inset
-/// `-1` of fields, cards, selects and soft buttons, the inset `-2` of tabs, and
-/// the slider thumb's 3px halo.
+/// Every ring is [UiTokens.focusRingWidth] wide. The classic and solid
+/// buttons and icon buttons, checkboxes, radios, switches, and links draw it
+/// outside at Radix's 2px gap and pass [UiTokens.focusRingOffset]. The
+/// other offsets are literals that do not follow that token: `-1` for fields,
+/// cards, selects, segmented control items, and the soft, surface, outline, and
+/// ghost buttons and icon buttons, `-2` for [uiTabFocusOutline], and the
+/// slider thumb's 3px halo.
 RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
     RemixBoxEffectsMix(
       outline: BorderSideMix(
@@ -19,14 +22,15 @@ RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
       outlineOffset: offset,
     );
 
-/// The ring drawn inside the box of a toggle, toggle-group item, disclosure or
-/// accordion trigger.
+/// The ring of a Radix tab: `outline: 2px solid var(--focus-8)` at
+/// `outline-offset: -2px` (`base-tab-list.css:126-129`).
 ///
-/// Radix Themes ships none of these, so they share the inset `-2` ring of its
-/// tabs, in `focus-a8`. It stays inside the box because toggle groups and
-/// accordion and disclosure panels clip an outside ring.
-RemixBoxEffectsMix uiInsetFocusOutline() =>
-    uiFocusOutline(UiTokens.focusA8(), offset: -2);
+/// Toggles, toggle-group items, accordion and disclosure triggers, and sidebar
+/// destinations have no Radix counterpart and share it. At the default width it
+/// lies inside the box, so the clip of a toggle group or an accordion or
+/// disclosure panel does not crop it.
+RemixBoxEffectsMix uiTabFocusOutline() =>
+    uiFocusOutline(UiTokens.focus8(), offset: -2);
 
 /// A one-pixel inset stroke, optionally layered over a fill.
 RemixBoxEffectLayerMix uiInsetSurface({required List<Color> strokes}) =>

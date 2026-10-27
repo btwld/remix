@@ -18,7 +18,6 @@ typedef _Part = ({
   Widget Function() build,
   Finder root,
   Finder box,
-  ColorToken ring,
 });
 
 final _parts = <_Part>[
@@ -29,7 +28,6 @@ final _parts = <_Part>[
     root: find.byType(FortalToggle),
     // ignore: invalid_use_of_internal_member
     box: find.byType(RemixFlexBoxAdapter),
-    ring: FortalTokens.focusA8,
   ),
   (
     name: 'outline toggle',
@@ -38,7 +36,6 @@ final _parts = <_Part>[
     root: find.byType(FortalToggle),
     // ignore: invalid_use_of_internal_member
     box: find.byType(RemixFlexBoxAdapter),
-    ring: FortalTokens.focusA8,
   ),
   (
     name: 'toggle group end item',
@@ -53,7 +50,6 @@ final _parts = <_Part>[
     root: find.byType(FortalToggleGroup<String>),
     // ignore: invalid_use_of_internal_member
     box: find.byType(RemixFlexBoxAdapter).first,
-    ring: FortalTokens.focusA8,
   ),
   (
     name: 'tab',
@@ -69,7 +65,6 @@ final _parts = <_Part>[
     root: find.byType(FortalTab),
     // ignore: invalid_use_of_internal_member
     box: find.byType(RemixFlexBoxAdapter),
-    ring: FortalTokens.focus8,
   ),
   (
     name: 'disclosure trigger',
@@ -85,7 +80,6 @@ final _parts = <_Part>[
       // ignore: invalid_use_of_internal_member
       matching: find.byType(RemixBoxAdapter),
     ),
-    ring: FortalTokens.focusA8,
   ),
   (
     name: 'accordion trigger',
@@ -101,7 +95,6 @@ final _parts = <_Part>[
     root: find.byType(FortalAccordion<String>),
     // ignore: invalid_use_of_internal_member
     box: find.byType(RemixFlexBoxAdapter),
-    ring: FortalTokens.focusA8,
   ),
 ];
 
@@ -182,7 +175,10 @@ void main() {
 
         await focusWithKeyboard(tester);
         final focused = await capturePixels(tester, boundary);
-        final ring = MixScope.tokenOf(part.ring, tester.element(part.box));
+        final ring = MixScope.tokenOf(
+          FortalTokens.focus8,
+          tester.element(part.box),
+        );
 
         // Each probe is the middle of an edge, `inside` logical pixels in from
         // it. The 2px ring covers 1, the box past the ring starts at 3, and -1
@@ -200,10 +196,7 @@ void main() {
         }
 
         for (final at in edges) {
-          expectNearColor(
-            pixel(focused, at(1)),
-            Color.alphaBlend(ring, pixel(idle, at(1))),
-          );
+          expectNearColor(pixel(focused, at(1)), ring);
           expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
           expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
         }

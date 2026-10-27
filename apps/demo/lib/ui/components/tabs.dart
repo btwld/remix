@@ -94,13 +94,7 @@ TabStyler fortalTabStyle({
             .color(FortalTokens.grayA3())
             .onFocusVisible(.color(FortalTokens.accentA3())),
       )
-      .onFocusVisible(
-        // base-tab-list.css:126-129: `outline: 2px solid var(--focus-8);
-        // outline-offset: -2px` on the inner trigger.
-        TabStyler().containerEffects(
-          fortalFocusOutline(FortalTokens.focus8(), offset: -2),
-        ),
-      )
+      .onFocusVisible(TabStyler().containerEffects(fortalTabFocusOutline()))
       .onSelected(
         .label(
               .color(FortalTokens.gray12())

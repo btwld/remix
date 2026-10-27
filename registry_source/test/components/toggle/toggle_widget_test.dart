@@ -172,7 +172,7 @@ void main() {
             FocusHighlightStrategy.alwaysTraditional;
         final focusRingColor = await resolveInFortalTheme(
           tester,
-          (context) => MixScope.tokenOf(FortalTokens.focusA8, context),
+          (context) => MixScope.tokenOf(FortalTokens.focus8, context),
         );
 
         Future<Color?> ringColorFor({required bool selected}) async {

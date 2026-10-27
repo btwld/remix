@@ -70,7 +70,7 @@ ToggleGroupStyler fortalToggleGroupStyle({
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
         .onFocusVisible(
-          ToggleGroupItemStyler().containerEffects(fortalInsetFocusOutline()),
+          ToggleGroupItemStyler().containerEffects(fortalTabFocusOutline()),
         )
         .onDisabled(
           ToggleGroupItemStyler()
