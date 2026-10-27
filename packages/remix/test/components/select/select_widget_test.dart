@@ -1021,13 +1021,15 @@ void main() {
       Rect triggerRect(WidgetTester tester) =>
           tester.getRect(find.byType(RemixSelect<String>));
 
+      // The panel is the outermost box above a row's label; a row may draw
+      // its own box inside it.
       Rect panelRect(WidgetTester tester, String label) => tester.getRect(
         find
             .ancestor(
               of: find.text(label),
               matching: find.byType(RemixBoxAdapter),
             )
-            .first,
+            .last,
       );
 
       const longLabel =
