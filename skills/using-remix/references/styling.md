@@ -121,6 +121,18 @@ differs:
 | `items:` (Menu/Select) | `entries:` |
 | `ButtonStyler` | the deprecated `RemixButtonStyler` alias |
 
+## Reduced motion
+
+Remix components skip their own motion (select menu, accordion panel, spinner,
+and, through Naked UI, dialogs and tooltips) when the user asks for reduced
+motion.
+`RemixReducedMotion(builder: (context, reduceMotion) => ...)` exposes the same
+preference and rebuilds when it changes; `RemixReducedMotion.of(context)` reads
+it where a transition starts. It combines `MediaQuery.disableAnimations` with
+the platform's `reduceMotion`, the only flag iOS Reduce Motion sets. Style
+`.animate(...)` is driven by Mix and does not read the preference: leave
+`.animate` off the style when `reduceMotion` is true.
+
 ## Reusable and dynamic app styles
 
 ```dart

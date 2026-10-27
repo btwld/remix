@@ -274,10 +274,11 @@ return unchanged. No loading or progress role is fabricated.
 
 ### Reduced motion
 
-The pulse honours the platform animation preference through
-`MediaQuery.disableAnimationsOf`. When animations are disabled the placeholder
-paints its base frame and schedules no further frames, and it resumes pulsing if
-the preference changes back while it is mounted.
+The pulse honours the user's reduced-motion preference through
+[`RemixReducedMotion`](/guides/styling-components#reduced-motion), which reads
+`MediaQuery.disableAnimations` and the platform's `reduceMotion`. When motion is
+reduced the placeholder paints its base frame and schedules no further frames,
+and it resumes pulsing if the preference changes back while it is mounted.
 
 ### Text direction
 
@@ -299,7 +300,7 @@ Checked against the pinned `@radix-ui/themes@3.3.0` `skeleton.css`.
   is deliberately unopinionated and draws nothing until the container gets a
   size or fill; the Fortal recipe supplies the token default.
 - Radix has no reduced-motion behavior for Skeleton; honouring
-  `MediaQuery.disableAnimationsOf` is a Flutter adaptation.
+  `RemixReducedMotion` is a Flutter adaptation.
 - Radix pins its pulse to gray alpha 3 → 4 over 1000 ms. `FortalSkeleton`
   matches those values. A raw Remix style leaves the colors to the caller:
   with a plain `color` and a

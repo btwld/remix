@@ -74,6 +74,7 @@ export 'src/rendering/remix_box_effects.dart'
         RemixBoxEffectsMix;
 
 export 'src/utilities/remix_placement.dart' show RemixPlacement;
+export 'src/utilities/remix_reduced_motion.dart' show RemixReducedMotion;
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'

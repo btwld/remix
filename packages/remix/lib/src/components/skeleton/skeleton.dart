@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 
+import '../../utilities/remix_reduced_motion.dart';
+
 part 'skeleton_spec.dart';
 part 'skeleton_widget.dart';
 part 'skeleton.g.dart';
