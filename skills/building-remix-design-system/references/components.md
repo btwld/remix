@@ -351,7 +351,9 @@ select, menu, accordion, or disclosure container, or a bounded sidebar's scroll
 region; a ring outside the part is cropped at that edge. Items also paint in order, so
 a filled item after the focused one covers that side of an outside ring. Draw it
 inside with a negative `outlineOffset` equal to the ring width, or pad the
-clipping container by the offset plus the width.
+clipping container by the offset plus the width. Padding does not help once a
+select or menu list scrolls: the scroll view clips at its own edges, inside the
+panel's padding, so draw row rings inside.
 
 **Derived colors: `ContextToken`, not `withValues`.**
 `AcmeTokens.interactivePrimary().withValues(alpha: 0.9)` records a Mix directive that
