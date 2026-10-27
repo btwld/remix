@@ -69,7 +69,8 @@ String? _focusedOptionValue() => FocusManager.instance.primaryFocus?.context
     ?.value;
 
 /// Opens a [RemixSelect] whose options are all [_optionHeight] tall and whose
-/// panel is painted in [_panelColor].
+/// panel is painted in [_panelColor], inside the page that [host] builds around
+/// it.
 Future<void> _pumpOpenSelect(
   WidgetTester tester, {
   required int optionCount,
@@ -77,6 +78,7 @@ Future<void> _pumpOpenSelect(
   double padding = 0,
   FlexBoxStyler? menuContainer,
   ValueChanged<String?>? onChanged,
+  Widget Function(Widget select) host = _centered,
 }) async {
   var content = SelectContentStyler().color(_panelColor).padding(.all(padding));
   if (maxHeight != null) content = content.maxHeight(maxHeight);
@@ -85,20 +87,28 @@ Future<void> _pumpOpenSelect(
       .item(SelectMenuItemStyler().height(_optionHeight));
   if (menuContainer != null) style = style.menuContainer(menuContainer);
 
-  await tester.pumpRemixApp(
-    RemixSelect<String>(
-      trigger: const RemixSelectTrigger(placeholder: 'Select'),
-      style: style,
-      onChanged: onChanged ?? (_) {},
-      items: [
-        for (var i = 0; i < optionCount; i++)
-          RemixSelectItem(value: 'item$i', label: 'Item $i'),
-      ],
+  await tester.pumpWidget(
+    MixScope.empty(
+      child: MaterialApp(
+        home: host(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            style: style,
+            onChanged: onChanged ?? (_) {},
+            items: [
+              for (var i = 0; i < optionCount; i++)
+                RemixSelectItem(value: 'item$i', label: 'Item $i'),
+            ],
+          ),
+        ),
+      ),
     ),
   );
   await tester.tap(find.byType(RemixSelect<String>));
   await tester.pumpAndSettle();
 }
+
+Widget _centered(Widget select) => Scaffold(body: Center(child: select));
 
 Future<void> _pressKey(
   WidgetTester tester,
@@ -1766,6 +1776,117 @@ void main() {
         expect(find.text('Item 0'), findsOneWidget);
         expect(hostController.positions, hasLength(1));
       });
+
+      testWidgets('scrolling does not notify the host page', (tester) async {
+        final received = <Notification>[];
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          host: (select) => Scaffold(
+            body: NotificationListener<Notification>(
+              onNotification: (notification) {
+                if (notification is ViewportNotificationMixin) {
+                  received.add(notification);
+                }
+                return false;
+              },
+              child: Center(child: select),
+            ),
+          ),
+        );
+
+        await tester.drag(_selectPanel(), const Offset(0, -150));
+        await tester.pumpAndSettle();
+
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        expect(received, isEmpty);
+      });
+
+      testWidgets('scrolling does not scroll the app bar under', (
+        tester,
+      ) async {
+        double appBarElevation() => tester
+            .widget<Material>(
+              find
+                  .descendant(
+                    of: find.byType(AppBar),
+                    matching: find.byType(Material),
+                  )
+                  .first,
+            )
+            .elevation;
+
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          host: (select) => Scaffold(
+            appBar: AppBar(title: const Text('Page')),
+            body: Center(child: select),
+          ),
+        );
+        final restingElevation = appBarElevation();
+
+        await tester.drag(_selectPanel(), const Offset(0, -150));
+        await tester.pumpAndSettle();
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        expect(appBarElevation(), restingElevation);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(appBarElevation(), restingElevation);
+      });
+
+      testWidgets('does not stretch or glow past the ends', (tester) async {
+        await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+
+        expect(
+          find.descendant(
+            of: _selectPanel(),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is StretchingOverscrollIndicator ||
+                  widget is GlowingOverscrollIndicator,
+            ),
+          ),
+          findsNothing,
+        );
+      });
+
+      testWidgets(
+        'stops at the ends instead of bouncing',
+        (tester) async {
+          await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+          final position = _panelScrollPosition(tester);
+
+          final gesture = await tester.startGesture(
+            tester.getCenter(_selectPanel()),
+          );
+          await gesture.moveBy(const Offset(0, 100));
+          await tester.pump();
+          expect(position.pixels, position.minScrollExtent);
+
+          await gesture.moveBy(const Offset(0, -3000));
+          await tester.pump();
+          expect(position.pixels, position.maxScrollExtent);
+
+          await gesture.up();
+          await tester.pumpAndSettle();
+          expect(position.pixels, position.maxScrollExtent);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+      );
+
+      testWidgets('keeps a scrollbar on desktop', (tester) async {
+        await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+
+        expect(
+          find.descendant(of: _selectPanel(), matching: find.byType(Scrollbar)),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }, variant: TargetPlatformVariant.desktop());
     });
   });
 }
