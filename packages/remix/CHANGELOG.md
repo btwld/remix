@@ -1,3 +1,12 @@
+## Unreleased
+
+### Fixes
+
+- `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
+  on the content or menu container, instead of overflowing. A short list still
+  shrinks to its options, and the container's padding and decoration stay in
+  place while the options scroll.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
