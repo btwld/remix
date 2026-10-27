@@ -139,9 +139,22 @@ BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) => BoxStyler()
 BoxStyler _fortalDataTableHeaderRow() => _fortalDataTableRowDivider()
     .onFocusVisible(BoxStyler().onBuilder(_fortalDataTableHeaderRing));
 
+/// A zero-width [BorderSide] is a hairline, so a ring of width zero draws
+/// nothing and leaves the divider alone.
 BoxStyler _fortalDataTableHeaderRing(BuildContext context) {
-  final ring = fortalFocusRingDecoration(context);
-  return ring == null ? BoxStyler() : BoxStyler().foregroundDecoration(ring);
+  final width = FortalTokens.focusRingWidth.resolve(context);
+  if (width <= 0) return BoxStyler();
+  return BoxStyler().foregroundDecoration(
+    BoxDecorationMix(
+      border: BoxBorderMix.all(
+        BorderSideMix(
+          color: FortalTokens.focus8(),
+          width: width,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+      ),
+    ),
+  );
 }
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints

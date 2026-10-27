@@ -59,42 +59,53 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
       key: const ValueKey('sidebar-account-trigger'),
       trigger: RemixMenuTrigger.builder(
         label: 'Workspace account menu',
-        builder: (_, _, _) => RowBox(
-          style: FlexBoxStyler()
-              .minHeight(48)
-              .crossAxisAlignment(.center)
-              .spacing(10)
-              .onFocusVisible(FlexBoxStyler().onBuilder(_accountRowFocusRing)),
-          children: [
-            const {{typePrefix}}Avatar(label: 'LF', size: .size2),
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler()
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.start),
-                children: [
-                  const {{typePrefix}}Text(
-                    'Leo Farias',
-                    size: .size2,
-                    weight: .medium,
-                    softWrap: false,
-                    truncate: true,
+        builder: (_, _, _) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.all({{typePrefix}}Tokens.radius2()))
+              .onFocusVisible(
+                CardStyler().containerEffects(
+                  {{valuePrefix}}FocusOutline(
+                    {{typePrefix}}Tokens.focus8(),
+                    offset: {{typePrefix}}Tokens.focusRingOffset(),
                   ),
-                  StyledText(
-                    'Northstar workspace',
-                    style: dashboardText(
-                      .size1,
-                      tone: .muted,
-                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                  ),
-                ],
+                ),
               ),
-            ),
-            StyledIcon(
-              icon: {{icon:dotsHorizontal}},
-              style: IconStyler().size(18).color({{typePrefix}}Tokens.gray11()),
-            ),
-          ],
+          child: RowBox(
+            style: FlexBoxStyler()
+                .minHeight(48)
+                .crossAxisAlignment(.center)
+                .spacing(10),
+            children: [
+              const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+              Expanded(
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.start),
+                  children: [
+                    const {{typePrefix}}Text(
+                      'Leo Farias',
+                      size: .size2,
+                      weight: .medium,
+                      softWrap: false,
+                      truncate: true,
+                    ),
+                    StyledText(
+                      'Northstar workspace',
+                      style: dashboardText(
+                        .size1,
+                        tone: .muted,
+                      ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                    ),
+                  ],
+                ),
+              ),
+              StyledIcon(
+                icon: {{icon:dotsHorizontal}},
+                style: IconStyler().size(18).color({{typePrefix}}Tokens.gray11()),
+              ),
+            ],
+          ),
         ),
       ),
       actions: const [
@@ -113,13 +124,6 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
       ),
     ),
   );
-}
-
-FlexBoxStyler _accountRowFocusRing(BuildContext context) {
-  final ring = {{valuePrefix}}FocusRingDecoration(context);
-  return ring == null
-      ? FlexBoxStyler()
-      : FlexBoxStyler().foregroundDecoration(ring);
 }
 
 /// Application-owned toolbar actions supplied to the {{typePrefix}} dashboard shell.
@@ -314,7 +318,7 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
                 style: _toolbarButtonStyle,
                 focusNode: menu.focusNode,
                 onPressed: menu.toggle,
-                icon: {{icon:person}},
+                icon: null,
                 iconBuilder: (_, _, _) =>
                     const {{typePrefix}}Avatar(label: 'LF', size: .size2),
               ),

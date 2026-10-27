@@ -56,42 +56,53 @@ class UiDashboardSidebarAccount extends StatelessWidget {
       key: const ValueKey('sidebar-account-trigger'),
       trigger: RemixMenuTrigger.builder(
         label: 'Workspace account menu',
-        builder: (_, _, _) => RowBox(
-          style: FlexBoxStyler()
-              .minHeight(48)
-              .crossAxisAlignment(.center)
-              .spacing(10)
-              .onFocusVisible(FlexBoxStyler().onBuilder(_accountRowFocusRing)),
-          children: [
-            const UiAvatar(label: 'LF', size: .size2),
-            Expanded(
-              child: ColumnBox(
-                style: FlexBoxStyler()
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.start),
-                children: [
-                  const UiText(
-                    'Leo Farias',
-                    size: .size2,
-                    weight: .medium,
-                    softWrap: false,
-                    truncate: true,
+        builder: (_, _, _) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.all(UiTokens.radius2()))
+              .onFocusVisible(
+                CardStyler().containerEffects(
+                  uiFocusOutline(
+                    UiTokens.focus8(),
+                    offset: UiTokens.focusRingOffset(),
                   ),
-                  StyledText(
-                    'Northstar workspace',
-                    style: dashboardText(
-                      .size1,
-                      tone: .muted,
-                    ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                  ),
-                ],
+                ),
               ),
-            ),
-            StyledIcon(
-              icon: RemixIcons.dotsHorizontal,
-              style: IconStyler().size(18).color(UiTokens.gray11()),
-            ),
-          ],
+          child: RowBox(
+            style: FlexBoxStyler()
+                .minHeight(48)
+                .crossAxisAlignment(.center)
+                .spacing(10),
+            children: [
+              const UiAvatar(label: 'LF', size: .size2),
+              Expanded(
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.start),
+                  children: [
+                    const UiText(
+                      'Leo Farias',
+                      size: .size2,
+                      weight: .medium,
+                      softWrap: false,
+                      truncate: true,
+                    ),
+                    StyledText(
+                      'Northstar workspace',
+                      style: dashboardText(
+                        .size1,
+                        tone: .muted,
+                      ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                    ),
+                  ],
+                ),
+              ),
+              StyledIcon(
+                icon: RemixIcons.dotsHorizontal,
+                style: IconStyler().size(18).color(UiTokens.gray11()),
+              ),
+            ],
+          ),
         ),
       ),
       actions: const [
@@ -110,13 +121,6 @@ class UiDashboardSidebarAccount extends StatelessWidget {
       ),
     ),
   );
-}
-
-FlexBoxStyler _accountRowFocusRing(BuildContext context) {
-  final ring = uiFocusRingDecoration(context);
-  return ring == null
-      ? FlexBoxStyler()
-      : FlexBoxStyler().foregroundDecoration(ring);
 }
 
 /// Application-owned toolbar actions supplied to the Ui dashboard shell.
@@ -311,7 +315,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                 style: _toolbarButtonStyle,
                 focusNode: menu.focusNode,
                 onPressed: menu.toggle,
-                icon: RemixIcons.person,
+                icon: null,
                 iconBuilder: (_, _, _) =>
                     const UiAvatar(label: 'LF', size: .size2),
               ),
