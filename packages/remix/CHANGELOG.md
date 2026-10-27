@@ -40,10 +40,13 @@
   `MenuTriggerStyler`, and `triggerEffects` to `AccordionStyler` and
   `DisclosureStyler`. An outline or paint layer draws around the part without
   taking layout space, so a focus ring no longer resizes the part or shifts its
-  neighbors. On the accordion and disclosure, `containerEffects` still covers
-  the whole panel and `triggerEffects` covers only the trigger. A toggle group
-  styled with `clipBehavior` (every shipped preset sets one) crops an outside
-  ring on its end items; use a negative `outlineOffset` there.
+  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
+  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
+  disclosure, `containerEffects` still covers the whole panel and
+  `triggerEffects` covers only the trigger, including the widget a custom
+  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
+  group styled with `clipBehavior` (every shipped preset sets one) crops an
+  outside ring on its end items; use a negative `outlineOffset` there.
 - Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
   inside the control's pointer, hover, press, focus, and single semantics
   target and used as its accessible name, as `RemixCheckbox.label` is.
@@ -59,13 +62,6 @@
   overlay, Escape, outside taps, focus return, and expanded semantics, which
   merge onto the button. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
   do not apply to a control trigger, and a `semanticLabel` asserts.
-  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
-  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
-  disclosure, `containerEffects` still covers the whole panel and
-  `triggerEffects` covers only the trigger, including the widget a custom
-  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
-  group styled with `clipBehavior` (every shipped preset sets one) crops an
-  outside ring on its end items; use a negative `outlineOffset` there.
 
 ### Fixes
 
