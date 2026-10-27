@@ -114,6 +114,91 @@ void main() {
       expect(triggerFocusNode.hasFocus, isTrue);
     });
 
+    // NakedPopover wraps the child of an openOnTap: false popover in its own
+    // focusable Focus. These tests pin that wrapper's effect on a button child:
+    // it is an extra tab stop, and it, not the button, takes focus back when
+    // the popover closes.
+    group('openOnTap: false with a button child', () {
+      Future<FocusNode> pumpButtonPopover(WidgetTester tester) async {
+        final controller = MenuController();
+        final before = FocusNode();
+        final after = FocusNode();
+        addTearDown(before.dispose);
+        addTearDown(after.dispose);
+        await tester.pumpRemixApp(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Focus(focusNode: before, child: const SizedBox(height: 20)),
+              RemixPopover(
+                controller: controller,
+                openOnTap: false,
+                popoverChild: const Text('Popover content'),
+                child: RemixButton(
+                  label: 'Open popover',
+                  onPressed: () => controller.isOpen
+                      ? controller.close()
+                      : controller.open(),
+                ),
+              ),
+              Focus(focusNode: after, child: const SizedBox(height: 20)),
+            ],
+          ),
+        );
+        return before..requestFocus();
+      }
+
+      Future<FocusNode> tab(WidgetTester tester) async {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        return FocusManager.instance.primaryFocus!;
+      }
+
+      bool isInsideButton(FocusNode node) =>
+          node.context!.findAncestorWidgetOfExactType<RemixButton>() != null;
+
+      testWidgets('the wrapper is a tab stop ahead of the button', (
+        tester,
+      ) async {
+        final before = await pumpButtonPopover(tester);
+        await tester.pump();
+
+        final wrapper = await tab(tester);
+        expect(isInsideButton(wrapper), isFalse);
+        expect(find.byType(RemixButton), findsOneWidget);
+
+        final button = await tab(tester);
+        expect(isInsideButton(button), isTrue);
+        expect(button.ancestors, contains(wrapper));
+
+        final next = await tab(tester);
+        expect(isInsideButton(next), isFalse);
+        expect(next, isNot(same(before)));
+        expect(next, isNot(same(wrapper)));
+      });
+
+      testWidgets('closing returns focus to the wrapper, not the button', (
+        tester,
+      ) async {
+        await pumpButtonPopover(tester);
+        await tester.pump();
+        final wrapper = await tab(tester);
+        final button = await tab(tester);
+        expect(button.hasPrimaryFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Popover content'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Popover content'), findsNothing);
+        expect(FocusManager.instance.primaryFocus, same(wrapper));
+        expect(button.hasFocus, isFalse);
+      });
+    });
+
     testWidgets('forwards the trigger semantic label', (tester) async {
       final semantics = tester.ensureSemantics();
 
