@@ -153,7 +153,5 @@ buttons and `-2` for tabs.
   header needs a visible focus indicator. The ring is a border that is
   transparent at rest, so a stateful custom header keeps its state across
   focus. The row divider tints the ring's last pixel.
-- A `RemixSidebar` destination is the exception. The sidebar paints a
-  destination's container but not its `containerEffects`, so Fortal draws that
-  ring as an inside border, and a focused destination grows by twice the ring
-  width.
+- A `RemixSidebar` destination takes the toggle's ring, so it rings the same
+  way expanded, collapsed, and at the edge of a scrolling sidebar.

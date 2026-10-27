@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../helpers/pixels.dart';
 import '../../helpers/test_helpers.dart';
 
 const _sections = <RemixSidebarSection<String>>[
@@ -158,42 +159,145 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('a destination focused from the keyboard shows the focus ring', (
-    tester,
-  ) async {
-    final previousStrategy = FocusManager.instance.highlightStrategy;
-    FocusManager.instance.highlightStrategy =
-        FocusHighlightStrategy.alwaysTraditional;
-    addTearDown(
-      () => FocusManager.instance.highlightStrategy = previousStrategy,
-    );
-    await tester.pumpRemixApp(
-      FortalSidebar<String>(
-        sections: _sections,
-        selectedValue: 'overview',
-        onSelected: (_) {},
-      ),
-    );
+  group('keyboard focus on a destination', () {
+    late FocusHighlightStrategy previousStrategy;
 
-    final idle = tester.resolvedSpecOf<ToggleSpec>(find.text('Customers'));
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.pump();
-    final focused = tester.resolvedSpecOf<ToggleSpec>(find.text('Customers'));
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+    });
 
-    expect(
-      (idle.container.spec.box?.spec.decoration as BoxDecoration?)?.border,
-      isNull,
-    );
-    final border =
-        (focused.container.spec.box?.spec.decoration as BoxDecoration?)?.border
-            as Border?;
-    final context = tester.element(find.text('Customers'));
-    expect(border?.top.color, MixScope.tokenOf(FortalTokens.focusA8, context));
-    expect(
-      border?.top.width,
-      MixScope.tokenOf(FortalTokens.focusRingWidth, context),
-    );
+    tearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
+
+    // The sidebar is shorter than its destinations, so reaching the fifth one
+    // scrolls it flush against the edge of the scroll region.
+    const labels = [
+      'Home',
+      'Customers',
+      'Orders',
+      'Reports',
+      'Billing',
+      'Team',
+      'Logs',
+      'Settings',
+    ];
+    const target = 'Billing';
+
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      for (final collapsed in [false, true]) {
+        testWidgets(
+          'rings the destination without moving its content in ${mode.name}, '
+          '${collapsed ? 'collapsed' : 'expanded'}',
+          (tester) async {
+            final semantics = tester.ensureSemantics();
+            final boundary = GlobalKey();
+            await tester.pumpRemixApp(
+              FortalTheme(
+                mode: mode,
+                child: RepaintBoundary(
+                  key: boundary,
+                  child: ColoredBox(
+                    color: mode == .dark
+                        ? const Color(0xFF000000)
+                        : const Color(0xFFFFFFFF),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SizedBox(
+                        width: collapsed ? 72 : 256,
+                        height: 220,
+                        child: FortalSidebar<String>(
+                          collapsed: collapsed,
+                          animationStyle: AnimationStyle.noAnimation,
+                          selectedValue: 'Home',
+                          onSelected: (_) {},
+                          sections: [
+                            RemixSidebarSection(
+                              destinations: [
+                                for (final label in labels)
+                                  RemixSidebarDestination(
+                                    value: label,
+                                    label: label,
+                                    icon: label == target
+                                        ? Icons.star_outline
+                                        : Icons.circle_outlined,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+            final idleSize = tester.getSize(find.bySemanticsLabel(target));
+
+            for (var i = 0; i <= labels.indexOf(target); i++) {
+              await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            }
+            await tester.pumpAndSettle();
+            final scroll = tester.state<ScrollableState>(
+              find.descendant(
+                of: find.byType(FortalSidebar<String>),
+                matching: find.byType(Scrollable),
+              ),
+            );
+            expect(scroll.position.pixels, greaterThan(0));
+            final destination = tester.getRect(find.bySemanticsLabel(target));
+            final focusedIcon =
+                tester.getTopLeft(find.byIcon(Icons.star_outline)) -
+                destination.topLeft;
+            final focused = await capturePixels(tester, boundary);
+            final ring = MixScope.tokenOf(
+              FortalTokens.focusA8,
+              tester.element(find.bySemanticsLabel(target)),
+            );
+
+            FocusManager.instance.primaryFocus!.unfocus();
+            await tester.pumpAndSettle();
+            final idle = await capturePixels(tester, boundary);
+
+            expect(tester.getRect(find.bySemanticsLabel(target)), destination);
+            expect(destination.size, idleSize);
+            expect(
+              tester.getTopLeft(find.byIcon(Icons.star_outline)) -
+                  destination.topLeft,
+              focusedIcon,
+            );
+
+            // Each probe is the middle of an edge, `inside` logical pixels in
+            // from it: the 2px ring covers 1, the destination past it starts at
+            // 3, and -1 is outside the destination.
+            final origin = tester.getTopLeft(find.byKey(boundary));
+            Color pixel(Pixels pixels, Offset logical) {
+              final device = (logical - origin) * pixelScale.toDouble();
+              return pixels.at(device.dx.round(), device.dy.round());
+            }
+
+            for (final at in <Offset Function(double inside)>[
+              (inside) =>
+                  Offset(destination.center.dx, destination.top + inside),
+              (inside) =>
+                  Offset(destination.center.dx, destination.bottom - inside),
+              (inside) =>
+                  Offset(destination.left + inside, destination.center.dy),
+              (inside) =>
+                  Offset(destination.right - inside, destination.center.dy),
+            ]) {
+              expectNearColor(
+                pixel(focused, at(1)),
+                Color.alphaBlend(ring, pixel(idle, at(1))),
+              );
+              expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
+              expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
+            }
+            semantics.dispose();
+          },
+        );
+      }
+    }
   });
 
   testWidgets('high contrast keeps selected content distinct', (tester) async {
