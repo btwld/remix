@@ -382,13 +382,7 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
       semanticLabel: 'Actions for $value',
       focusNode: menu.focusNode,
       onPressed: menu.toggle,
-      style: IconButtonStyler()
-          .icon(.color(VanillaTokens.mutedForeground()))
-          .merge(
-            menu.isOpen
-                ? IconButtonStyler().color(VanillaTokens.muted())
-                : null,
-          ),
+      style: _kebabStyle(open: menu.isOpen),
     ),
   ),
   items: const [
@@ -400,6 +394,20 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
   onSelected: (action) =>
       vanillaDashboardToast(context, '$action selected for $value'),
 );
+
+/// The kebab: a muted glyph, filled with `muted` while its menu is open. Hover
+/// and press come after the base in Mix, so the open look repeats there to stay
+/// in force under the pointer.
+IconButtonStyler _kebabStyle({required bool open}) {
+  final resting = IconButtonStyler().icon(
+    .color(VanillaTokens.mutedForeground()),
+  );
+  if (!open) return resting;
+
+  final filled = resting.color(VanillaTokens.muted());
+
+  return filled.onHovered(filled).onPressed(filled);
+}
 
 Widget _status(String value) => switch (value) {
   'active' || 'paid' => VanillaBadge(label: value),

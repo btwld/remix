@@ -385,13 +385,7 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
       semanticLabel: 'Actions for $value',
       focusNode: menu.focusNode,
       onPressed: menu.toggle,
-      style: IconButtonStyler()
-          .icon(.color(PlaygroundTokens.mutedForeground()))
-          .merge(
-            menu.isOpen
-                ? IconButtonStyler().color(PlaygroundTokens.muted())
-                : null,
-          ),
+      style: _kebabStyle(open: menu.isOpen),
     ),
   ),
   items: const [
@@ -403,6 +397,20 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
   onSelected: (action) =>
       playgroundDashboardToast(context, '$action selected for $value'),
 );
+
+/// The kebab: a muted glyph, filled with `muted` while its menu is open. Hover
+/// and press come after the base in Mix, so the open look repeats there to stay
+/// in force under the pointer.
+IconButtonStyler _kebabStyle({required bool open}) {
+  final resting = IconButtonStyler().icon(
+    .color(PlaygroundTokens.mutedForeground()),
+  );
+  if (!open) return resting;
+
+  final filled = resting.color(PlaygroundTokens.muted());
+
+  return filled.onHovered(filled).onPressed(filled);
+}
 
 Widget _status(String value) => switch (value) {
   'active' || 'paid' => PlaygroundBadge(label: value),
