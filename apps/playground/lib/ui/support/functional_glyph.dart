@@ -160,7 +160,7 @@ class _LoadingGlyphState extends State<_LoadingGlyph>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final animate =
-        !(MediaQuery.maybeOf(context)?.disableAnimations ?? false) &&
+        !(MediaQuery.maybeDisableAnimationsOf(context) ?? false) &&
         TickerMode.valuesOf(context).enabled;
     if (animate) {
       if (!_turns.isAnimating) _turns.repeat();
