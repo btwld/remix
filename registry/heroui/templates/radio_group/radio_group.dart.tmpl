@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/theme.dart';
 import 'field_layout.dart';
 import 'radio.dart';
 
@@ -73,15 +74,13 @@ class {{typePrefix}}RadioGroup<T> extends StatelessWidget {
   }
 
   Widget _row({{typePrefix}}RadioOption<T> option, {required bool optionEnabled}) =>
-      {{typePrefix}}ControlRow(
-        controlWidth: {{valuePrefix}}RadioSize,
-        invalid: invalid,
+      {{typePrefix}}DescribedControl(
+        descriptionInset: {{valuePrefix}}RadioSize + {{valuePrefix}}ControlGap,
         enabled: optionEnabled,
-        label: option.label,
         description: option.description,
         control: {{typePrefix}}Radio<T>(
           value: option.value,
-          semanticLabel: option.label,
+          label: option.label,
           variant: variant,
           invalid: invalid,
           enabled: optionEnabled,

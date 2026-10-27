@@ -10,10 +10,11 @@ part 'radio.g.dart';
 /// `secondary` on the default fill.
 enum {{typePrefix}}RadioVariant { primary, secondary }
 
-/// HeroUI recipe for [RemixRadio], the bare control.
+/// HeroUI recipe for [RemixRadio].
 ///
-/// Labels and descriptions are the app's composition; see `{{typePrefix}}RadioGroup`.
-/// [invalid] paints the error treatment; validation stays with the app.
+/// The label sits inside the control's tap target. A description beneath it is
+/// `{{typePrefix}}RadioGroup`'s. [invalid] paints the error treatment and turns the
+/// label danger; validation stays with the app.
 @MixWidget(target: RemixRadio.new)
 RadioStyler {{valuePrefix}}RadioStyle({
   {{typePrefix}}RadioVariant variant = .primary,
@@ -24,6 +25,7 @@ RadioStyler {{valuePrefix}}RadioStyle({
     .primary => {{valuePrefix}}PrimaryFieldFill,
     .secondary => {{valuePrefix}}SecondaryFieldFill,
   };
+  final label = invalid ? {{typePrefix}}Tokens.danger : {{typePrefix}}Tokens.foreground;
 
   var result =
       RadioStyler(
@@ -33,6 +35,8 @@ RadioStyler {{valuePrefix}}RadioStyle({
                 .borderRadius(.all({{typePrefix}}Tokens.radiusLg())),
             indicator: _dot(_dotScale),
           )
+          .label({{valuePrefix}}LabelText.color(label()))
+          .labelSpacing({{valuePrefix}}ControlGap)
           .color(field.rest())
           // The unselected dot is `bg-field-hover` while hovered, which fills the
           // whole control.
@@ -60,12 +64,16 @@ RadioStyler {{valuePrefix}}RadioStyle({
   }
 
   return result
-      .onDisabled(RadioStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
+      .onDisabled(
+        RadioStyler()
+            .label(.color({{valuePrefix}}DisabledLabelColor(danger: invalid)()))
+            .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      )
       .merge(style);
 }
 
 /// `.radio__control`: `size-4`. Also the description indent in
-/// `{{typePrefix}}RadioGroup`.
+/// `{{typePrefix}}RadioGroup`, with the label gap.
 const {{valuePrefix}}RadioSize = 16.0;
 
 /// The selected dot, `scale: 0.4286` of the control, and `0.5714` while pressed.
