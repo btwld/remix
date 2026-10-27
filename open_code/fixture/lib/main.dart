@@ -143,9 +143,18 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   final RemixAccordionController<String> _sections =
       RemixAccordionController<String>();
 
-  /// Drives the popover from its trigger button. See the popover below for
-  /// why `openOnTap` alone does not work when the trigger is a button.
+  /// Toggles the filter popover from its button.
   final MenuController _filters = MenuController();
+
+  /// Shared by the button and the popover, so the button is the only tab stop
+  /// and takes focus back when the popover closes.
+  final FocusNode _filtersFocus = FocusNode(debugLabel: 'Filter');
+
+  @override
+  void dispose() {
+    _filtersFocus.dispose();
+    super.dispose();
+  }
 
   void _record(String action) => setState(() => _lastAction = action);
 
@@ -824,13 +833,13 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                         onPressed: () => _record('tooltip anchor'),
                       ),
                     ),
-                    // The trigger drives the popover through a controller
-                    // rather than relying on `openOnTap`. `RemixPopover`
-                    // opens on a tap of its own child, and a button with its
-                    // own `onPressed` consumes that tap before the popover
-                    // sees it — a trigger built the obvious way never opens.
+                    // The button owns activation (`openOnTap: false`), so the
+                    // popover adds no focus stop of its own; `triggerFocusNode`
+                    // is the button's node, which closing returns focus to.
                     AcmePopover(
                       controller: _filters,
+                      openOnTap: false,
+                      triggerFocusNode: _filtersFocus,
                       popoverChild: Text(
                         'Filters go here.',
                         style: TextStyle(color: data.foreground),
@@ -838,6 +847,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       semanticLabel: 'Filters',
                       child: AcmeButton.outline(
                         label: 'Filter',
+                        focusNode: _filtersFocus,
                         onPressed: () {
                           _filters.isOpen ? _filters.close() : _filters.open();
                           _record('popover');
