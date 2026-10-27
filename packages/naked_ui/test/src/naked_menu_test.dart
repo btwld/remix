@@ -1082,6 +1082,105 @@ void main() {
         },
       );
 
+      testWidgets(
+        'a resting mouse neither clears focus nor opens a submenu row that '
+        'scrolls under it',
+        (tester) async {
+          final controller = MenuController();
+          final scrollController = ScrollController();
+          addTearDown(scrollController.dispose);
+          const panelKey = Key('panel');
+          final focused = List<bool>.filled(5, false);
+          await tester.pumpMaterialWidget(
+            _scrollingMenuWithSubmenu(
+              controller: controller,
+              scrollController: scrollController,
+              panelKey: panelKey,
+              focused: focused,
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          await mouse.addPointer(
+            location:
+                tester.getTopLeft(find.byKey(panelKey)) + const Offset(10, 15),
+          );
+          await tester.pumpAndSettle();
+
+          for (var press = 0; press < 4; press++) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+            await tester.pumpAndSettle();
+          }
+          await tester.pump(const Duration(milliseconds: 200));
+          await tester.pump();
+
+          expect(scrollController.offset, greaterThan(0));
+          expect(focused.indexWhere((isFocused) => isFocused), 3);
+          expect(find.text('Child item'), findsNothing);
+        },
+      );
+
+      testWidgets('moving the mouse onto a disabled submenu row keeps focus', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final focused = List<bool>.filled(5, false);
+        await tester.pumpMaterialWidget(
+          _scrollingMenuWithSubmenu(
+            controller: controller,
+            focused: focused,
+            panelHeight: 150,
+            submenuEnabled: false,
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pumpAndSettle();
+        expect(focused.indexWhere((isFocused) => isFocused), 0);
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        addTearDown(mouse.removePointer);
+        await mouse.addPointer(location: Offset.zero);
+
+        await mouse.moveTo(tester.getCenter(find.text('More')));
+        await tester.pump(const Duration(milliseconds: 200));
+
+        expect(focused.indexWhere((isFocused) => isFocused), 0);
+      });
+
+      testWidgets(
+        'a hover that does not move the pointer does not open a submenu',
+        (tester) async {
+          final controller = MenuController();
+          await tester.pumpMaterialWidget(
+            _scrollingMenuWithSubmenu(
+              controller: controller,
+              focused: List<bool>.filled(5, false),
+              panelHeight: 150,
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          final resting = tester.getCenter(find.text('More'));
+          await mouse.addPointer(location: resting);
+          await tester.pump();
+
+          await mouse.moveTo(resting);
+          await tester.pump(const Duration(milliseconds: 200));
+          await tester.pump();
+
+          expect(find.text('Child item'), findsNothing);
+        },
+      );
+
       testWidgets('Arrow Down and Up move through items and wrap', (
         tester,
       ) async {
@@ -1312,6 +1411,58 @@ void main() {
   // since NakedMenuItem requires the menu scope to function properly.
   // See tests like "calls onMenuClose when menu item is selected" and
   // "keeps menu open when closeOnActivate is false on menu item".
+}
+
+Widget _scrollingMenuWithSubmenu({
+  required MenuController controller,
+  required List<bool> focused,
+  ScrollController? scrollController,
+  Key? panelKey,
+  double panelHeight = 60,
+  bool submenuEnabled = true,
+}) {
+  return Align(
+    alignment: Alignment.topLeft,
+    child: NakedMenu<String>(
+      controller: controller,
+      builder: (context, state, child) => const Text('Open'),
+      overlayBuilder: (context, info) => SizedBox(
+        key: panelKey,
+        height: panelHeight,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              for (var index = 0; index < 5; index++)
+                if (index == 2)
+                  NakedMenuSubmenu<String>(
+                    enabled: submenuEnabled,
+                    child: const SizedBox(
+                      width: 120,
+                      height: 30,
+                      child: Text('More'),
+                    ),
+                    overlayBuilder: _submenuContent,
+                  )
+                else
+                  NakedMenuItem<String>(
+                    value: 'item$index',
+                    builder: (context, state, child) {
+                      focused[index] = state.isFocused;
+                      return child!;
+                    },
+                    child: SizedBox(
+                      width: 120,
+                      height: 30,
+                      child: Text('Item $index'),
+                    ),
+                  ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 Widget _submenuContent(BuildContext context, RawMenuOverlayInfo info) =>

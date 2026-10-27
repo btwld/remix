@@ -432,8 +432,14 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 
   void _handleTriggerEnter() {
     _isTriggerHovered = true;
-    AnchoredOverlay.clearItemFocus(context);
     _cancelAncestorHoverTimers();
+  }
+
+  // Hover enter also fires when items scroll under a resting pointer, so only
+  // a hover that moves the pointer takes focus away and opens the submenu.
+  void _handleTriggerHover(PointerHoverEvent event) {
+    if (!widget.enabled || event.delta == Offset.zero) return;
+    AnchoredOverlay.clearItemFocus(context);
     _scheduleHoverOpen();
   }
 
@@ -559,6 +565,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
     );
     final trigger = MouseRegion(
       onEnter: (_) => _handleTriggerEnter(),
+      onHover: _handleTriggerHover,
       onExit: (_) => _handleTriggerExit(),
       child: MergeSemantics(
         child: Semantics(
