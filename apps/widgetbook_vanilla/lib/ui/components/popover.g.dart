@@ -18,20 +18,24 @@ part of 'popover.dart';
 /// surface every floating panel shares: the page color in the light theme and a
 /// step lighter than the page in the dark one.
 ///
-/// One composition trap worth knowing: `RemixPopover` opens on a tap of its
-/// own `child`, so a trigger that handles its own taps never lets the popover
-/// see one. A `VanillaButton` with an `onPressed` is exactly that, and a
-/// popover built the obvious way silently never opens. Drive it from a
-/// `MenuController` when the trigger has to be a button:
+/// `RemixPopover` opens on a tap of its own `child`, which a button with its
+/// own `onPressed` consumes first. For a button trigger, set `openOnTap:
+/// false`, toggle a `MenuController` from the button, and give the popover and
+/// the button one `FocusNode`, so the button is the only tab stop and takes
+/// focus back when the popover closes:
 ///
 /// ```dart
 /// final filters = MenuController();
+/// final filtersFocus = FocusNode();
 ///
 /// VanillaPopover(
 ///   controller: filters,
+///   openOnTap: false,
+///   triggerFocusNode: filtersFocus,
 ///   popoverChild: const Text('Filters go here.'),
 ///   child: VanillaButton.outline(
 ///     label: 'Filter',
+///     focusNode: filtersFocus,
 ///     onPressed: () => filters.isOpen ? filters.close() : filters.open(),
 ///   ),
 /// )

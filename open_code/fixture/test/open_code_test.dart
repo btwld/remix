@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -4974,10 +4975,8 @@ void main() {
   });
 
   group('acmePopover opens', () {
-    // The gallery shipped a popover that could not open: `RemixPopover` opens
-    // on a tap of its own child, and the button used as the trigger consumed
-    // that tap first. Nothing failed — the panel simply never appeared, and
-    // the only assertion covering it checked that the trigger rendered.
+    // A popover that cannot open fails silently: the panel simply never
+    // appears. Each way of triggering it is opened for real.
 
     testWidgets('a plain child opens it on tap', (tester) async {
       await _pumpInScope(
@@ -4999,31 +4998,46 @@ void main() {
       expect(find.text('Filters go here.'), findsOneWidget);
     });
 
-    testWidgets('a button trigger needs a controller', (tester) async {
+    testWidgets('a button trigger is the only tab stop and gets focus back', (
+      tester,
+    ) async {
       final controller = MenuController();
+      final focusNode = FocusNode(debugLabel: 'filter');
+      addTearDown(focusNode.dispose);
 
       await _pumpInScope(
         tester,
         _overlaid(
           AcmePopover(
             controller: controller,
+            openOnTap: false,
+            triggerFocusNode: focusNode,
             popoverChild: const Text('Filters go here.'),
             semanticLabel: 'Filters',
             child: AcmeButton.outline(
               label: 'Filter',
-              onPressed: () => controller.open(),
+              focusNode: focusNode,
+              onPressed: () =>
+                  controller.isOpen ? controller.close() : controller.open(),
             ),
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // The button consumes the tap, so `openOnTap` never fires — this is the
-      // trap. The controller is what makes the trigger work.
+      expect(_focusStops(tester, find.byType(AcmePopover)), 1);
+
       await tester.tap(find.text('Filter'));
       await tester.pumpAndSettle();
 
       expect(find.text('Filters go here.'), findsOneWidget);
+      expect(focusNode.hasFocus, isFalse, reason: 'focus moves into the panel');
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Filters go here.'), findsNothing);
+      expect(focusNode.hasFocus, isTrue, reason: 'focus returns to the button');
     });
   });
 
@@ -6002,6 +6016,20 @@ Widget _host(Widget child) =>
 /// tests that focus a field add one rather than reaching for `MaterialApp`.
 Widget _overlaid(Widget child) =>
     Overlay(initialEntries: [OverlayEntry(builder: (_) => child)]);
+
+/// How many focus stops sit inside the widget [root] finds.
+int _focusStops(WidgetTester tester, Finder root) {
+  final rootElement = tester.element(root);
+
+  return FocusManager.instance.rootScope.traversalDescendants.where((node) {
+    var inside = false;
+    node.context?.visitAncestorElements((ancestor) {
+      inside = identical(ancestor, rootElement);
+      return !inside;
+    });
+    return inside;
+  }).length;
+}
 
 /// Renders [child] and hands its context back, so a test can read inherited
 /// values from exactly where a real widget would.
