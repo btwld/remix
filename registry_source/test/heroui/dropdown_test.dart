@@ -1,6 +1,10 @@
+import 'dart:ui' show Tristate;
+
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/dropdown.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
@@ -68,6 +72,25 @@ BoxDecoration _decoration(MenuItemSpec spec) =>
 Finder get _popover => find
     .ancestor(of: find.text('Apple'), matching: find.byType(DecoratedBox))
     .last;
+
+/// A dropdown whose trigger is a [HeroUiButton], the way Remix hands a real
+/// control to the menu.
+Widget _buttonDropdown({
+  required List<RemixMenuTriggerHandle> handles,
+  bool enabled = true,
+}) => HeroUiDropdown<String>(
+  trigger: RemixMenuTrigger.control(
+    builder: (context, menu) {
+      handles.add(menu);
+      return HeroUiButton.secondary(
+        label: 'Actions',
+        focusNode: menu.focusNode,
+        onPressed: enabled ? menu.toggle : null,
+      );
+    },
+  ),
+  items: const [RemixMenuItem(value: 'apple', label: 'Apple')],
+);
 
 /// `transform: scale(0.98)` on a pressed row and `scale(0.97)` on the
 /// pressed trigger (`menu-item.css`, `dropdown.css`).
@@ -404,6 +427,76 @@ void main() {
       await press.up();
     });
   }
+
+  testWidgets('a HeroUiButton is the trigger: one tab stop that opens the menu '
+      'and takes focus back', (tester) async {
+    final handles = <RemixMenuTriggerHandle>[];
+    await tester.pumpHeroUi(_buttonDropdown(handles: handles));
+
+    await tester.focusWithTab();
+    expect(handles.last.focusNode.hasPrimaryFocus, isTrue);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsOneWidget);
+    expect(handles.last.isOpen, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsNothing);
+    expect(handles.last.focusNode.hasPrimaryFocus, isTrue);
+
+    // The button is the only tab stop, so Tab comes back to it.
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pumpAndSettle();
+    expect(handles.last.focusNode.hasPrimaryFocus, isTrue);
+  });
+
+  testWidgets('a HeroUiButton trigger keeps the button recipe and is one '
+      'expandable semantics node', (tester) async {
+    final handles = <RemixMenuTriggerHandle>[];
+    await tester.pumpHeroUi(_buttonDropdown(handles: handles));
+    final semantics = tester.ensureSemantics();
+    final button = find.byType(HeroUiButton);
+
+    final spec = tester.resolvedSpecOf<ButtonSpec>(find.text('Actions'));
+    expect(
+      (spec.container.spec.boxSpec.decoration as BoxDecoration).color,
+      heroUiToken(HeroUiTokens.defaultColor),
+    );
+    expect(tester.getSize(button).height, 36);
+
+    bool hasExpandedState(SemanticsNode node) =>
+        node.getSemanticsData().flagsCollection.isExpanded != Tristate.none;
+    expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+    expect(
+      tester.getSemantics(find.text('Actions')),
+      isSemantics(
+        label: 'Actions',
+        isButton: true,
+        hasTapAction: true,
+        hasExpandedState: true,
+        isExpanded: false,
+      ),
+    );
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+    expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+    expect(
+      tester.getSemantics(find.text('Actions')),
+      isSemantics(label: 'Actions', hasExpandedState: true, isExpanded: true),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('a disabled HeroUiButton trigger does not open the menu', (
+    tester,
+  ) async {
+    await tester.pumpHeroUi(_buttonDropdown(handles: [], enabled: false));
+    await tester.tap(find.byType(HeroUiButton));
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsNothing);
+  });
 
   testWidgets('selecting a row reports its value through Remix', (
     tester,
