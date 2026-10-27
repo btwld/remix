@@ -46,8 +46,6 @@
   tab stop, a node that is not attached to the control receives no focus, and
   with a `Focus` child and a different `triggerFocusNode` the child's own node
   is the tab stop.
-### Fixes
-
 - Home and End now scroll the newly focused item just far enough into view in
   `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
   content, in `NakedTabBar`, and in `NakedMenubar`.
