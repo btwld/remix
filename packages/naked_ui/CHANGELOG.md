@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Features
+
+- Add `NakedMenu.openOnTap` (default `true`). Set it to `false` to use your own
+  control as the trigger: the menu then draws no `NakedButton`, adds no tap or
+  keyboard activation or focus stop, and leaves opening and closing to the
+  `controller`. Attach `triggerFocusNode` to the control so focus returns to it
+  when the menu closes. The menu merges the control's semantics into one node
+  that carries the expanded state, so do not wrap the control in
+  `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
+  for an item of a `NakedMenubar`.
+
 ### Fixes
 
 - Keep the focus action and focused state on a `NakedDisclosure` trigger that
@@ -20,16 +31,6 @@
   `transitionDuration` or under reduced motion, no longer hides the dismissible
   barrier's "Dismiss" node from screen readers. `showNakedDialog` now wraps the
   dialog page in a semantics container.
-### Features
-
-- Add `NakedMenu.openOnTap` (default `true`). Set it to `false` to use your own
-  control as the trigger: the menu then draws no `NakedButton`, adds no tap or
-  keyboard activation or focus stop, and leaves opening and closing to the
-  `controller`. Attach `triggerFocusNode` to the control so focus returns to it
-  when the menu closes. The menu merges the control's semantics into one node
-  that carries the expanded state, so do not wrap the control in
-  `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
-  for an item of a `NakedMenubar`.
 - `NakedPopover` with `openOnTap: false` no longer wraps its child in a focus
   stop of its own. A button or other control passed as the child is now the only
   tab stop, and closing the popover returns focus to it instead of to the

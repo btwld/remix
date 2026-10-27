@@ -1,5 +1,18 @@
 ## Unreleased
 
+### Breaking changes
+
+- `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel`, and the
+  matching parameters of `RadioStyler.call`, `SwitchStyler.call`, and
+  generated preset wrappers, are now `String?`. Code that reads them as a
+  non-null `String` needs a null check. A radio or switch must still have a
+  `label` or a `semanticLabel`; that rule is now a debug-mode assert instead
+  of a required parameter.
+- `RemixMenuTrigger.label` is now `String?`, because a control trigger has no
+  label. Code that reads `trigger.label` must handle null. The
+  `RemixMenuTrigger` and `RemixMenuTrigger.builder` constructors still require
+  a label.
+
 ### Features
 
 - Add `ToastSpec.actionPlacement`, `ToastStyler.actionPlacement`, and
@@ -9,36 +22,12 @@
   their start, with the close button on the first line after the message. It
   is a spec field, so a style can switch it with a variant such as
   `onBreakpoint`.
-
-### Fixes
-
-- `RemixToast` stacks an inline action below the message when the toast is
-  too narrow to share a row, so the message is no longer squeezed beside it.
-  The cutoff follows the width the toast gets, including its margin and style
-  max width, and grows with the text scale. Wider toasts keep the single row.
-  A toast with an inline action measures its width, so it does not support
-  intrinsic sizing (`IntrinsicWidth`, `IntrinsicHeight`); set
-  `actionPlacement` to `below` where that is needed.
 - Add `RemixReducedMotionBuilder`. Its builder receives whether the user asked
   for reduced motion and rebuilds when that changes. It combines
   `MediaQuery.disableAnimations` with the platform's accessibility
   `reduceMotion`, the only flag iOS Reduce Motion sets. A `MediaQuery`
   override can force reduced motion on but cannot turn the platform's
   `reduceMotion` off.
-
-### Fixes
-
-- Honor reduced motion in components that hard-code their own motion. The
-  select menu and accordion panel now open and close without a transition, and
-  `RemixSpinner` holds a static frame. Skeleton and sidebar, which already
-  followed `MediaQuery.disableAnimations`, now follow iOS Reduce Motion too,
-  including a sidebar transition already under way. Style animations declared
-  with `.animate(...)` are driven by Mix and are not affected.
-- `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
-### Fixes
-
-- `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
-  not on every `MediaQuery` change such as keyboard insets.
 - Add `remixAnchorWidth`, a token that resolves to the width of the trigger of
   the surrounding `RemixSelect` or `RemixMenu`, and to 0 elsewhere. Pass it to
   `minWidth`, `width`, or `maxWidth` to size the panel from its trigger, for
@@ -55,24 +44,6 @@
   the whole panel and `triggerEffects` covers only the trigger. A toggle group
   styled with `clipBehavior` (every shipped preset sets one) crops an outside
   ring on its end items; use a negative `outlineOffset` there.
-
-### Fixes
-
-- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
-  accordion trigger, and disclosure trigger content keeps its state when a
-  style adds or removes a decoration such as a focus ring. Previously such a
-  change rebuilt the part's content from scratch.
-### Breaking changes
-
-- `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel`, and the
-  matching parameters of `RadioStyler.call`, `SwitchStyler.call`, and
-  generated preset wrappers, are now `String?`. Code that reads them as a
-  non-null `String` needs a null check. A radio or switch must still have a
-  `label` or a `semanticLabel`; that rule is now a debug-mode assert instead
-  of a required parameter.
-
-### Features
-
 - Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
   inside the control's pointer, hover, press, focus, and single semantics
   target and used as its accessible name, as `RemixCheckbox.label` is.
@@ -81,15 +52,6 @@
   widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
   existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
   `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
-### Breaking changes
-
-- `RemixMenuTrigger.label` is now `String?`, because a control trigger has no
-  label. Code that reads `trigger.label` must handle null. The
-  `RemixMenuTrigger` and `RemixMenuTrigger.builder` constructors still require
-  a label.
-
-### Features
-
 - Add `RemixMenuTrigger.control`, so a real button such as a styled
   `RemixButton` can be the menu trigger. Its builder receives a
   `RemixMenuTriggerHandle` with `isOpen`, `controller`, `focusNode`, and
@@ -97,6 +59,29 @@
   overlay, Escape, outside taps, focus return, and expanded semantics, which
   merge onto the button. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
   do not apply to a control trigger, and a `semanticLabel` asserts.
+
+### Fixes
+
+- `RemixToast` stacks an inline action below the message when the toast is
+  too narrow to share a row, so the message is no longer squeezed beside it.
+  The cutoff follows the width the toast gets, including its margin and style
+  max width, and grows with the text scale. Wider toasts keep the single row.
+  A toast with an inline action measures its width, so it does not support
+  intrinsic sizing (`IntrinsicWidth`, `IntrinsicHeight`); set
+  `actionPlacement` to `below` where that is needed.
+- Honor reduced motion in components that hard-code their own motion. The
+  select menu and accordion panel now open and close without a transition, and
+  `RemixSpinner` holds a static frame. Skeleton and sidebar, which already
+  followed `MediaQuery.disableAnimations`, now follow iOS Reduce Motion too,
+  including a sidebar transition already under way. Style animations declared
+  with `.animate(...)` are driven by Mix and are not affected.
+- `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
+- `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
+  not on every `MediaQuery` change such as keyboard insets.
+- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
+  accordion trigger, and disclosure trigger content keeps its state when a
+  style adds or removes a decoration such as a focus ring. Previously such a
+  change rebuilt the part's content from scratch.
 
 ## 1.0.0-beta.13
 
