@@ -108,6 +108,12 @@
   place while the options scroll. The options column now sizes to its content
   inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max` on
   `menuContainer` no longer distribute free vertical space.
+- `RemixMenu` and its submenus scroll a list taller than their overlay or than
+  a `maxHeight` on the `overlay` style, instead of overflowing. A short menu
+  still shrinks to its items, and the panel's padding, decoration, and effects
+  stay in place while the items scroll. The items column now sizes to its
+  content inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max`
+  on `overlay` no longer distribute free vertical space.
 
 ## 1.0.0-beta.13
 

@@ -401,8 +401,10 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
               builder: (context, spec) => RemixBoxAdapter(
                 styleSpec: spec.container,
                 containerEffects: spec.containerEffects,
-                child: _ScrollableOptions(
+                child: RemixFlexBoxAdapter(
                   styleSpec: widget.menuContainer,
+                  direction: Axis.vertical,
+                  scrollable: true,
                   children: widget.children,
                 ),
               ),
@@ -410,54 +412,6 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           ),
         );
       },
-    );
-  }
-}
-
-/// The option column inside the frame of the menu container.
-///
-/// The menu container's box and the content container around it frame a scroll
-/// view, so their padding, decoration, and constraints stay put while the
-/// options scroll. Only the column of options moves, and it shrinks to fit when
-/// it is shorter than the room the frames leave. The column sizes to its
-/// content inside the scroll view, so the menu container's main-axis alignment
-/// and a maximal main-axis size have no free space to distribute.
-class _ScrollableOptions extends StatelessWidget {
-  const _ScrollableOptions({required this.styleSpec, required this.children});
-
-  final StyleSpec<FlexBoxSpec> styleSpec;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return StyleSpecBuilder<FlexBoxSpec>(
-      styleSpec: styleSpec,
-      builder: (context, spec) => Box(
-        styleSpec: spec.box ?? const StyleSpec(spec: BoxSpec()),
-        // The overlay sits under the host page in the widget tree. Without
-        // this, its scrolling would reach the page's app bar and scrollbars as
-        // though the page's own list had scrolled.
-        child: NotificationListener<ViewportNotificationMixin>(
-          onNotification: (_) => true,
-          child: ScrollConfiguration(
-            // Like Flutter's own menus: stop at the ends rather than bounce or
-            // stretch. The scrollbar stays.
-            behavior: ScrollConfiguration.of(context).copyWith(
-              overscroll: false,
-              physics: const ClampingScrollPhysics(),
-            ),
-            child: SingleChildScrollView(
-              // Otherwise the overlay attaches to the host page's primary
-              // scroll controller, which a list on the page may already use.
-              primary: false,
-              child: ColumnBox(
-                styleSpec: StyleSpec(spec: FlexBoxSpec(flex: spec.flex)),
-                children: children,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

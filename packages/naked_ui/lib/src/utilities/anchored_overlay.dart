@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'focus_in_view.dart';
 import 'intents.dart';
 import 'positioning.dart';
 
@@ -110,7 +111,7 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
     final target = last
         ? policy.findLastFocus(current, ignoreCurrentFocus: true)
         : policy.findFirstFocus(current, ignoreCurrentFocus: true);
-    target?.requestFocus();
+    if (target != null) requestFocusInView(target);
   }
 
   @override
