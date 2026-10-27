@@ -71,23 +71,36 @@ class NakedPopoverState extends NakedState {
 /// [openOnTap] to false to use a control you already have instead, such as a
 /// button from your design system. The popover then adds no activation or focus
 /// stop, so the control opens and closes it through [controller] and carries
-/// [triggerFocusNode] to receive focus when the popover closes.
+/// [triggerFocusNode], which receives focus when the popover closes.
+///
+/// Keep the controller and focus node in a [State] and dispose the node:
 /// ```dart
-/// final popoverController = MenuController();
-/// final triggerFocus = FocusNode();
-/// NakedPopover(
-///   controller: popoverController,
-///   openOnTap: false,
-///   triggerFocusNode: triggerFocus,
-///   popoverBuilder: (context, info) => Text('Popover content'),
-///   child: NakedButton(
-///     focusNode: triggerFocus,
-///     onPressed: () => popoverController.isOpen
-///         ? popoverController.close()
-///         : popoverController.open(),
-///     child: Text('Open'),
-///   ),
-/// )
+/// class _FiltersPopoverState extends State<FiltersPopover> {
+///   final _controller = MenuController();
+///   final _triggerFocus = FocusNode();
+///
+///   @override
+///   void dispose() {
+///     _triggerFocus.dispose();
+///     super.dispose();
+///   }
+///
+///   @override
+///   Widget build(BuildContext context) {
+///     return NakedPopover(
+///       controller: _controller,
+///       openOnTap: false,
+///       triggerFocusNode: _triggerFocus,
+///       popoverBuilder: (context, info) => const Text('Popover content'),
+///       child: NakedButton(
+///         focusNode: _triggerFocus,
+///         onPressed: () =>
+///             _controller.isOpen ? _controller.close() : _controller.open(),
+///         child: const Text('Open'),
+///       ),
+///     );
+///   }
+/// }
 /// ```
 ///
 /// See also:
@@ -159,10 +172,15 @@ class NakedPopover extends StatefulWidget {
 
   /// Focus node for the trigger widget.
   ///
-  /// The popover focuses it when the popover closes. With [openOnTap] set to
-  /// false, attach it to the caller's own control, and use the same node as that
-  /// control's own focus node. Without it, closing the popover returns focus to
-  /// whatever had it before the popover opened.
+  /// When [openOnTap] is true, the popover's own trigger carries it.
+  ///
+  /// When [openOnTap] is false, attach it to the caller's own control, and use
+  /// the same node as that control's own focus node. Opening the popover
+  /// focuses it, so closing the popover returns focus to the control. Without
+  /// it, closing returns focus to whatever had it before the popover opened.
+  /// Inside another popover's or menu's overlay, [RawMenuAnchor] focuses the
+  /// node only for the outermost anchor, so a nested popover opened without
+  /// focusing its control also returns focus to whatever had it before opening.
   final FocusNode? triggerFocusNode;
 
   /// Called when the popover opens.
@@ -203,7 +221,8 @@ class _NakedPopoverState extends State<NakedPopover>
   // ignore: dispose-fields
   final _internalMenuController = MenuController();
 
-  // Internal node used when the child does not already provide a Focus.
+  // Node for the built-in trigger (openOnTap: true) when neither
+  // triggerFocusNode nor a Focus child provides one.
   final _internalTriggerNode = FocusNode(
     debugLabel: 'NakedPopover trigger (internal)',
   );

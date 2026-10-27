@@ -81,10 +81,18 @@
 - `NakedPopover` with `openOnTap: false` no longer wraps its child in a focus
   stop of its own. A button or other control passed as the child is now the only
   tab stop, and closing the popover returns focus to it instead of to the
-  wrapper. Attach `triggerFocusNode` to the control, using the same node as the
-  control's own `focusNode`; sharing one node between the two no longer throws.
-  Without `triggerFocusNode`, closing returns focus to whatever had it before
-  the popover opened. The default `openOnTap: true` is unchanged.
+  wrapper, so a screen reader no longer lands on an unlabelled focusable wrapper
+  after the popover closes. Attach `triggerFocusNode` to the control, using the
+  same node as the control's own `focusNode`; sharing one node between the two
+  no longer throws. Without `triggerFocusNode`, closing returns focus to
+  whatever had it before the popover opened. The default `openOnTap: true` is
+  unchanged.
+- Because `NakedPopover` with `openOnTap: false` no longer attaches
+  `triggerFocusNode` itself, a child that cannot take focus (such as `Text`, or
+  a disabled button, which the wrapper used to make focusable) is no longer a
+  tab stop, a node that is not attached to the control receives no focus, and
+  with a `Focus` child and a different `triggerFocusNode` the child's own node
+  is the tab stop.
 
 ## 1.2.3
 
