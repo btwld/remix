@@ -105,92 +105,109 @@ void main() {
 
   for (final axis in Axis.values) {
     for (final removeEarlier in [false, true]) {
-      testWidgets(
-        '$axis removing ${removeEarlier ? "earlier" : "active"} thumb ends the session',
-        (tester) async {
-          var values = <double>[20, 50, 80];
-          final first = FocusNode();
-          final middle = FocusNode();
-          final last = FocusNode();
-          for (final node in [first, middle, last]) {
-            addTearDown(node.dispose);
-          }
-          var nodes = <FocusNode>[first, middle, last];
-          late StateSetter rebuild;
-          final starts = <List<double>>[];
-          final ends = <List<double>>[];
-          final changes = <List<double>>[];
-          final dragging = <bool>[];
-          NakedSliderState? state;
-          await tester.pumpWidget(
-            host(
-              StatefulBuilder(
-                builder: (context, setState) {
-                  rebuild = setState;
-                  return NakedSlider(
-                    values: values,
-                    focusNodes: nodes,
-                    orientation: axis,
-                    minSpacing: 10,
-                    onChanged: changes.add,
-                    onChangeStart: starts.add,
-                    onChangeEnd: ends.add,
-                    onDragChange: dragging.add,
-                    builder: (context, snapshot, _) {
-                      state = snapshot;
-                      return SizedBox(
-                        width: axis == Axis.horizontal ? 200 : 48,
-                        height: axis == Axis.horizontal ? 48 : 200,
-                      );
-                    },
-                  );
-                },
+      for (final inPlace in [false, true]) {
+        testWidgets(
+          '$axis removing ${removeEarlier ? "earlier" : "active"} thumb inPlace=$inPlace ends the session',
+          (tester) async {
+            var values = <double>[20, 50, 80];
+            final first = FocusNode();
+            final middle = FocusNode();
+            final last = FocusNode();
+            for (final node in [first, middle, last]) {
+              addTearDown(node.dispose);
+            }
+            var nodes = <FocusNode>[first, middle, last];
+            late StateSetter rebuild;
+            final starts = <List<double>>[];
+            final ends = <List<double>>[];
+            final changes = <List<double>>[];
+            final dragging = <bool>[];
+            NakedSliderState? state;
+            await tester.pumpWidget(
+              host(
+                StatefulBuilder(
+                  builder: (context, setState) {
+                    rebuild = setState;
+                    return NakedSlider(
+                      values: values,
+                      focusNodes: nodes,
+                      orientation: axis,
+                      minSpacing: 10,
+                      onChanged: changes.add,
+                      onChangeStart: starts.add,
+                      onChangeEnd: ends.add,
+                      onDragChange: dragging.add,
+                      builder: (context, snapshot, _) {
+                        state = snapshot;
+                        return SizedBox(
+                          width: axis == Axis.horizontal ? 200 : 48,
+                          height: axis == Axis.horizontal ? 48 : 200,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          );
-          final rect = tester.getRect(find.byType(NakedSlider));
-          Offset point(double value) => axis == Axis.horizontal
-              ? Offset(rect.left + 2 * value, rect.center.dy)
-              : Offset(rect.center.dx, rect.bottom - 2 * value);
-          final gesture = await tester.startGesture(point(80));
-          await gesture.moveTo(point(95));
-          await tester.pump();
-          expect(last.hasFocus, isTrue);
-          final requested = List<double>.of(changes.last);
-          rebuild(() {
-            values = removeEarlier ? [50, 80] : [20, 50];
-            nodes = removeEarlier ? [middle, last] : [first, middle];
-          });
-          await tester.pump();
-          final count = changes.length;
-          expect(state!.isDragging, isFalse);
-          expect(state!.activeThumbIndex, isNull);
-          await gesture.moveTo(point(60));
-          await gesture.up();
-          await tester.pump();
-          expect(tester.takeException(), isNull);
-          expect(changes, hasLength(count));
-          expect(starts, [
-            [20, 50, 80],
-          ]);
-          expect(ends, [requested]);
-          expect(dragging, [true, false]);
-          for (final values in changes) {
-            expect(values, hasLength(3));
-            expect(values.last, inInclusiveRange(60, 100));
-          }
-          if (removeEarlier) {
-            expect(last.hasPrimaryFocus, isTrue);
-            expect(state!.focusedThumbIndex, 1);
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+            );
+            final rect = tester.getRect(find.byType(NakedSlider));
+            Offset point(double value) => axis == Axis.horizontal
+                ? Offset(rect.left + 2 * value, rect.center.dy)
+                : Offset(rect.center.dx, rect.bottom - 2 * value);
+            final gesture = await tester.startGesture(point(80));
+            await gesture.moveTo(point(95));
             await tester.pump();
-            expect(changes.last, [50, 79]);
-          }
-          await tester.pumpWidget(const SizedBox());
-          // The slider must leave ownership of external nodes to the caller.
-          last.addListener(() {});
-        },
-      );
+            expect(last.hasFocus, isTrue);
+            final requested = List<double>.of(changes.last);
+            rebuild(() {
+              final nextValues = <double>[
+                ...(removeEarlier ? [50, 80] : [20, 50]),
+              ];
+              final nextNodes = removeEarlier
+                  ? [middle, last]
+                  : [first, middle];
+              if (inPlace) {
+                values
+                  ..clear()
+                  ..addAll(nextValues);
+                nodes
+                  ..clear()
+                  ..addAll(nextNodes);
+              } else {
+                values = nextValues;
+                nodes = nextNodes;
+              }
+            });
+            await tester.pump();
+            final count = changes.length;
+            expect(state!.isDragging, isFalse);
+            expect(state!.activeThumbIndex, isNull);
+            await gesture.moveTo(point(60));
+            await gesture.up();
+            await tester.pump();
+            expect(tester.takeException(), isNull);
+            expect(changes, hasLength(count));
+            expect(starts, [
+              [20, 50, 80],
+            ]);
+            expect(ends, [requested]);
+            expect(dragging, [true, false]);
+            for (final values in changes) {
+              expect(values, hasLength(3));
+              expect(values.last, inInclusiveRange(60, 100));
+            }
+            if (removeEarlier) {
+              expect(last.hasPrimaryFocus, isTrue);
+              expect(state!.focusedThumbIndex, 1);
+              await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+              await tester.pump();
+              expect(changes.last, [50, 79]);
+            }
+            await tester.pumpWidget(const SizedBox());
+            // The slider must leave ownership of external nodes to the caller.
+            last.addListener(() {});
+          },
+        );
+      }
     }
 
     for (final accept in [false, true]) {
@@ -284,6 +301,55 @@ void main() {
       });
     }
   }
+
+  testWidgets(
+    'in-place focus node reorder preserves external ownership and focus',
+    (tester) async {
+      final external = FocusNode();
+      addTearDown(external.dispose);
+      final nodes = <FocusNode?>[null, external];
+      final changes = <List<double>>[];
+      final focusChanges = <bool>[];
+      late StateSetter rebuild;
+      NakedSliderState? state;
+      await tester.pumpWidget(
+        host(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+              return NakedSlider(
+                values: const [20, 80],
+                focusNodes: nodes,
+                onChanged: changes.add,
+                onFocusChange: focusChanges.add,
+                builder: (context, snapshot, _) {
+                  state = snapshot;
+                  return const SizedBox(width: 200, height: 48);
+                },
+              );
+            },
+          ),
+        ),
+      );
+      external.requestFocus();
+      await tester.pump();
+      rebuild(() {
+        nodes[0] = external;
+        nodes[1] = null;
+      });
+      await tester.pump();
+      expect(external.hasPrimaryFocus, isTrue);
+      expect(state!.focusedThumbIndex, 0);
+      expect(focusChanges, [true]);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes, [
+        [21, 80],
+      ]);
+      await tester.pumpWidget(const SizedBox());
+      external.addListener(() {});
+    },
+  );
 
   for (final removeCallback in [false, true]) {
     testWidgets(

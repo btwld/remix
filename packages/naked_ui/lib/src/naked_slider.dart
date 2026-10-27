@@ -394,19 +394,20 @@ class _NakedSliderState extends State<NakedSlider>
     });
   }
 
-  bool _focusConfigurationChanged(NakedSlider oldWidget) {
-    if (oldWidget.values.length != widget.values.length) return true;
-    final oldNodes = oldWidget.focusNodes;
-    final newNodes = widget.focusNodes;
-    if (identical(oldNodes, newNodes)) return false;
+  bool _focusConfigurationChanged() {
+    // Compare with mounted nodes: callers may mutate the supplied lists before
+    // rebuilding, so oldWidget can already contain the new configuration.
+    if (_effectiveFocusNodes.length != widget.values.length) return true;
     for (var index = 0; index < widget.values.length; index++) {
-      if (!identical(oldNodes?[index], newNodes?[index])) return true;
+      final node = _effectiveFocusNodes[index];
+      final oldExternal = _ownedFocusNodes.contains(node) ? null : node;
+      if (!identical(oldExternal, widget.focusNodes?[index])) return true;
     }
 
     return false;
   }
 
-  void _replaceFocusNodes(NakedSlider oldWidget) {
+  void _replaceFocusNodes() {
     final oldOwned = _ownedFocusNodes;
     final oldEffective = _effectiveFocusNodes;
     final transferIndex = _focusedThumbIndex;
@@ -435,7 +436,7 @@ class _NakedSliderState extends State<NakedSlider>
     final transferNode =
         focusedNode != null &&
             !_effectiveFocusNodes.contains(focusedNode) &&
-            oldWidget.values.length == widget.values.length &&
+            oldEffective.length == widget.values.length &&
             transferIndex != null
         ? _effectiveFocusNodes[transferIndex]
         : null;
@@ -474,7 +475,7 @@ class _NakedSliderState extends State<NakedSlider>
       ),
       'values must be finite, ascending, in range, and honor minSpacing',
     );
-    final focusChanged = _focusConfigurationChanged(oldWidget);
+    final focusChanged = _focusConfigurationChanged();
     // Values have no stable identity across topology/configuration changes.
     // End the old transaction before adopting the new controlled contract.
     if (focusChanged ||
@@ -487,7 +488,7 @@ class _NakedSliderState extends State<NakedSlider>
         oldWidget.inverted != widget.inverted) {
       _finishPointerInteraction(deferCallbacks: true);
     }
-    if (focusChanged) _replaceFocusNodes(oldWidget);
+    if (focusChanged) _replaceFocusNodes();
 
     _workingValues = List<double>.of(widget.values);
     syncWidgetStates();

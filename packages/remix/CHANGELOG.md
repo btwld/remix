@@ -1,10 +1,3 @@
-## Unreleased
-
-### Fixes
-
-- Map slider pointer input to its painted rail, including thumb and track
-  clearance, so grabbing a thumb does not change its value before movement.
-
 ## 1.0.0-beta.13
 
 ### Breaking changes
