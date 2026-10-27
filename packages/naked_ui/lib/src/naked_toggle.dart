@@ -632,7 +632,7 @@ class _ToggleGroupController<T> {
   void _focus(_ToggleGroupEntry<T> entry) {
     if (!entry.effectiveEnabled) return;
     _setTarget(entry);
-    entry.focusNode.requestFocus();
+    FocusTraversalPolicy.defaultTraversalRequestFocusCallback(entry.focusNode);
   }
 
   _ToggleGroupEntry<T>? _findRepairTarget({

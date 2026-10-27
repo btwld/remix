@@ -339,6 +339,106 @@ void main() {
     expect(nodeA.hasFocus, isTrue);
   });
 
+  group('in a horizontally scrolling bar', () {
+    const menuCount = 20;
+    const triggerWidth = 100.0;
+    const viewportKey = Key('bar viewport');
+    late ScrollController scrollController;
+    late List<FocusNode> triggerNodes;
+
+    setUp(() {
+      scrollController = ScrollController();
+      triggerNodes = List.generate(
+        menuCount,
+        (index) => FocusNode(debugLabel: 'trigger $index'),
+      );
+    });
+
+    tearDown(() {
+      scrollController.dispose();
+      for (final node in triggerNodes) {
+        node.dispose();
+      }
+    });
+
+    Future<void> pumpScrollingBar(WidgetTester tester) async {
+      await tester.pumpMaterialWidget(
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            key: viewportKey,
+            width: 3 * triggerWidth,
+            height: 48,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: scrollController,
+              child: NakedMenubar(
+                child: Row(
+                  children: [
+                    for (var index = 0; index < menuCount; index++)
+                      NakedMenu<String>(
+                        controller: MenuController(),
+                        triggerFocusNode: triggerNodes[index],
+                        builder: (context, state, child) => SizedBox(
+                          key: Key('trigger$index'),
+                          width: triggerWidth,
+                          height: 48,
+                          child: Center(child: Text('Menu $index')),
+                        ),
+                        overlayBuilder: (context, info) =>
+                            NakedMenu.Item<String>(
+                              value: 'item$index',
+                              child: Text('Item $index'),
+                            ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    bool isInViewport(WidgetTester tester, int index) {
+      final viewport = tester.getRect(find.byKey(viewportKey));
+      final trigger = tester.getRect(find.byKey(Key('trigger$index')));
+      return trigger.left >= viewport.left && trigger.right <= viewport.right;
+    }
+
+    testWidgets('End focuses the last trigger and scrolls it into view', (
+      tester,
+    ) async {
+      await pumpScrollingBar(tester);
+      triggerNodes.first.requestFocus();
+      await tester.pump();
+      expect(isInViewport(tester, menuCount - 1), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+
+      expect(triggerNodes.last.hasPrimaryFocus, isTrue);
+      expect(isInViewport(tester, menuCount - 1), isTrue);
+    });
+
+    testWidgets('Home focuses the first trigger and scrolls it into view', (
+      tester,
+    ) async {
+      await pumpScrollingBar(tester);
+      triggerNodes.last.requestFocus();
+      await tester.pump();
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      expect(isInViewport(tester, 0), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.home);
+      await tester.pumpAndSettle();
+
+      expect(triggerNodes.first.hasPrimaryFocus, isTrue);
+      expect(isInViewport(tester, 0), isTrue);
+    });
+  });
+
   testWidgets(
     'closed bar menus do not receive onCloseRequested when a sibling opens',
     (tester) async {

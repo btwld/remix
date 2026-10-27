@@ -46,9 +46,11 @@
   only through its own activation.
 ### Fixes
 
-- In `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
-  content, Home and End now scroll the newly focused item into view, as the
-  arrow keys already do.
+- Home and End now scroll the newly focused item into view, as the arrow keys
+  already do, in `NakedSelect`, `NakedMenu`, and other anchored overlays with
+  scrolling content, in `NakedTabBar`, and in `NakedMenubar`.
+- `NakedToggleGroup` scrolls the newly focused option into view when the arrow
+  keys, Home, or End move focus.
 
 ## 1.2.3
 

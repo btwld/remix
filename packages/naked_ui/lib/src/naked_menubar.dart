@@ -40,7 +40,9 @@ class MenubarTriggers {
   /// Moves focus to the first or last trigger.
   void focusEdge({required bool last}) {
     if (_nodes.isEmpty) return;
-    (last ? _nodes.last : _nodes.first).requestFocus();
+    FocusTraversalPolicy.defaultTraversalRequestFocusCallback(
+      last ? _nodes.last : _nodes.first,
+    );
   }
 }
 
