@@ -144,13 +144,31 @@ Widget actions() => HeroUiDropdown<String>(
 
   A label or builder trigger (`RemixMenuTrigger(label:)`) gets the bare
   `.dropdown__trigger` look instead.
-- A select's popover is at least as wide as its trigger. A popover wider than
-  the trigger is centered under it; pass
+- A select's popover is at least as wide as its trigger. Remix centers a wider
+  popover under the trigger by default; pass
   `positioning: OverlayPositionConfig(side: .bottom, alignment: .start)` to
-  start it at the trigger's edge, as HeroUI does.
+  align the edges.
 - A toast puts its action under the message at 768px and below, and the action
-  gains HeroUI's `mt-2` below 640px. That action style is restated whole under
-  640px, so a caller's own `action` there must be an `onBreakpoint` fragment.
+  gains HeroUI's `mt-2` below 640px through a second `action`. An `action`
+  replaces rather than merges, so a caller who styles it restates
+  `heroUiButtonStyle()` in the base `action` and again, with the margin, below
+  640px; otherwise the recipe's own action wins there:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+ToastStyler brandedAction(Color color) => ToastStyler()
+    .action(heroUiButtonStyle().color(color))
+    .onNot(
+      ContextVariant.breakpoint(
+        const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+      ),
+      ToastStyler().action(heroUiButtonStyle().color(color).margin(.top(2))),
+    );
+```
+
 - A modal's backdrop is the route barrier: pass `HeroUiTokens.backdrop`
   resolved from context as the dialog's barrier color.
 - Overlays keep the theme through `HeroUiTheme`'s `InheritedTheme.wrap`;
@@ -184,9 +202,9 @@ and their `*Foreground`, `*Hover`, and `*Soft` forms; radii `radiusXs` through
 `radius4xl`, `radiusField`, `radiusPanel`; text `textXs`, `textSm`, `textBase`;
 motion curves `easeSmooth`, `easeOut`, `easeOutQuart`, `easeOutFluid`; and
 the transitions `fillMotion`, `smoothMotion`, `selectionMotion`, and
-`transformMotion`. These transitions run whatever the OS motion setting, because
-Mix's `.animate` does not read it yet (btwld/mix#1070); Remix's own select,
-accordion, spinner, and dialog motion honors it.
+`transformMotion`. These transitions run whatever the OS motion setting: Mix
+2.3.1's `.animate` does not read reduced motion, and that is tracked as a Mix
+follow-up. Remix's own select, accordion, spinner, and dialog motion honors it.
 Derive a translucent colour with `heroUiAlpha(token, alpha)` held in a
 top-level final, never `token().withValues(...)`.
 
