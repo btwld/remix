@@ -324,6 +324,30 @@ void main() {
       Rect panelRect(WidgetTester tester) =>
           tester.getRect(find.byKey(childKey));
 
+      testWidgets('follows the option as it is turned on and off', (
+        tester,
+      ) async {
+        double panelHeight() => tester.getSize(find.byKey(childKey)).height;
+        Future<void> pump({required bool constrain}) async {
+          await tester.pumpWidget(
+            buildHarness(
+              targetRect: const Rect.fromLTWH(100, 100, 50, 30),
+              positioning: const OverlayPositionConfig(sideOffset: 6),
+              constrainToAvailableHeight: constrain,
+              child: scrollingPanel(),
+            ),
+          );
+          await tester.pump();
+        }
+
+        await pump(constrain: false);
+        expect(panelHeight(), 300);
+        await pump(constrain: true);
+        expect(panelHeight(), 164);
+        await pump(constrain: false);
+        expect(panelHeight(), 300);
+      });
+
       testWidgets('fits a tall panel between the anchor and the edge', (
         tester,
       ) async {

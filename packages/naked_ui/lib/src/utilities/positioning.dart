@@ -189,12 +189,13 @@ class OverlayPositioner extends StatefulWidget {
   /// true, a child placed above or below the anchor is laid out no taller than
   /// the space on that side, after [OverlayPositionConfig.sideOffset] and
   /// [OverlayPositionConfig.collisionPadding], so a scrollable panel scrolls
-  /// there instead. With collision avoidance on, that is the side with more
-  /// room, which the overlay flips to when it is not the preferred side.
+  /// there instead. With collision avoidance on, the larger side bounds the
+  /// layout; the panel stays on the preferred side when it fits there,
+  /// otherwise it flips.
   ///
   /// Content that cannot scroll overflows the capped height. Placements to
   /// the left or right of the anchor are not capped, because shifting already
-  /// keeps them within the overlay without covering the anchor.
+  /// keeps them beside the anchor rather than over it.
   final bool constrainToAvailableHeight;
 
   /// Called after layout when the resolved placement changes.
@@ -325,8 +326,9 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
 /// Measured like [resolveOverlayPlacement] places the overlay: past
 /// [OverlayPositionConfig.sideOffset] and inside
 /// [OverlayPositionConfig.collisionPadding]. The overlay is laid out before it
-/// is placed, so with collision avoidance the larger side bounds it, and the
-/// flip then picks that side whenever the preferred one is smaller.
+/// is placed, so with collision avoidance the larger side bounds the layout;
+/// the panel stays on the preferred side when it fits there, otherwise it
+/// flips.
 double _availableHeight(
   Rect targetRect,
   double boundsHeight,
