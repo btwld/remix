@@ -374,6 +374,89 @@ void main() {
         expect(lastFocused, isTrue);
         expect(after.hasFocus, isFalse);
       });
+
+      group('Home and End with a scrolling item list', () {
+        const itemCount = 30;
+        const viewportKey = Key('items viewport');
+        late MenuController controller;
+        late ScrollController scrollController;
+        late List<bool> focusStates;
+
+        setUp(() {
+          controller = MenuController();
+          scrollController = ScrollController();
+          focusStates = List<bool>.filled(itemCount, false);
+        });
+
+        tearDown(() => scrollController.dispose());
+
+        Future<void> openScrollingMenu(WidgetTester tester) async {
+          await tester.pumpMaterialWidget(
+            NakedMenu<String>(
+              controller: controller,
+              builder: (context, state, child) => const Text('Open'),
+              overlayBuilder: (context, info) => SizedBox(
+                key: viewportKey,
+                height: 120,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: List.generate(
+                      itemCount,
+                      (index) => NakedMenuItem<String>(
+                        value: 'item$index',
+                        builder: (context, state, child) {
+                          focusStates[index] = state.isFocused;
+                          return child!;
+                        },
+                        child: SizedBox(height: 40, child: Text('Item $index')),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+        }
+
+        bool isInViewport(WidgetTester tester, int index) {
+          final viewport = tester.getRect(find.byKey(viewportKey));
+          final item = tester.getRect(
+            find.widgetWithText(NakedMenuItem<String>, 'Item $index'),
+          );
+          return item.top >= viewport.top && item.bottom <= viewport.bottom;
+        }
+
+        testWidgets('End focuses the last item and scrolls it into view', (
+          tester,
+        ) async {
+          await openScrollingMenu(tester);
+          expect(isInViewport(tester, itemCount - 1), isFalse);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.end);
+          await tester.pumpAndSettle();
+
+          expect(focusStates.indexWhere((focused) => focused), itemCount - 1);
+          expect(isInViewport(tester, itemCount - 1), isTrue);
+        });
+
+        testWidgets('Home focuses the first item and scrolls it into view', (
+          tester,
+        ) async {
+          await openScrollingMenu(tester);
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          await tester.pumpAndSettle();
+          expect(isInViewport(tester, 0), isFalse);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.home);
+          await tester.pumpAndSettle();
+
+          expect(focusStates.indexWhere((focused) => focused), 0);
+          expect(isInViewport(tester, 0), isTrue);
+        });
+      });
     });
 
     group('Structured items and submenus', () {

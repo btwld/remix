@@ -1,3 +1,11 @@
+## Unreleased
+
+### Fixes
+
+- In `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
+  content, Home and End now scroll the newly focused item into view, as the
+  arrow keys already do.
+
 ## 1.2.3
 
 ### Fixes
