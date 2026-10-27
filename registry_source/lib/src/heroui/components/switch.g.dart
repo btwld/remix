@@ -15,7 +15,9 @@ class HeroUiSwitch extends StatelessWidget {
     this.size = .md,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -31,7 +33,11 @@ class HeroUiSwitch extends StatelessWidget {
 
   final bool selected;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final ValueChanged<bool>? onChanged;
 
@@ -53,7 +59,9 @@ class HeroUiSwitch extends StatelessWidget {
       key: this.key,
       style: heroUiSwitchStyle(size: this.size, style: this.style),
       selected: this.selected,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       onChanged: this.onChanged,
       enabled: this.enabled,
       enableFeedback: this.enableFeedback,
