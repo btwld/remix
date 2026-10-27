@@ -290,6 +290,35 @@ void main() {
       expect(popoverTop, _closeTo(triggerBottom));
     });
 
+    testWidgets('lets content grow taller than the space beside the trigger', (
+      tester,
+    ) async {
+      const triggerKey = Key('trigger');
+      BoxConstraints? constraints;
+
+      await tester.pumpMaterialWidget(
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: NakedPopover(
+            popoverBuilder: (context, info) => LayoutBuilder(
+              builder: (context, value) {
+                constraints = value;
+                return const SizedBox(width: 100, height: 400);
+              },
+            ),
+            child: const SizedBox(key: triggerKey, width: 80, height: 40),
+          ),
+        ),
+      );
+      await tester.tap(find.byKey(triggerKey));
+      await tester.pumpAndSettle();
+
+      expect(
+        constraints?.maxHeight,
+        tester.view.physicalSize.height / tester.view.devicePixelRatio,
+      );
+    });
+
     testWidgets('can position against a separate keyed anchor', (tester) async {
       final anchorKey = GlobalKey();
       const triggerKey = Key('separate-trigger');

@@ -1006,6 +1006,132 @@ void main() {
         );
       });
     });
+
+    group('Panel height', () {
+      const triggerKey = Key('trigger');
+      const panelKey = Key('panel');
+      const sideOffset = 8.0;
+
+      Widget tallPanel({int items = 30}) => SingleChildScrollView(
+        key: panelKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < items; i++)
+              NakedMenuItem<String>(
+                value: 'item $i',
+                child: SizedBox(width: 120, height: 40, child: Text('Item $i')),
+              ),
+          ],
+        ),
+      );
+
+      // A null [constrainToAvailableHeight] leaves the argument out so the
+      // widget's own default applies.
+      Widget buildPanelMenu(
+        MenuController controller, {
+        Alignment alignment = Alignment.topLeft,
+        int items = 30,
+        bool? constrainToAvailableHeight,
+      }) {
+        const positioning = OverlayPositionConfig(
+          side: OverlaySide.bottom,
+          sideOffset: sideOffset,
+        );
+        Widget builder(BuildContext context, NakedMenuState state, Widget? _) =>
+            const SizedBox(key: triggerKey, width: 120, height: 40);
+        Widget overlayBuilder(BuildContext context, RawMenuOverlayInfo info) =>
+            tallPanel(items: items);
+
+        return Align(
+          alignment: alignment,
+          child: constrainToAvailableHeight == null
+              ? NakedMenu<String>(
+                  controller: controller,
+                  positioning: positioning,
+                  builder: builder,
+                  overlayBuilder: overlayBuilder,
+                )
+              : NakedMenu<String>(
+                  controller: controller,
+                  positioning: positioning,
+                  constrainToAvailableHeight: constrainToAvailableHeight,
+                  builder: builder,
+                  overlayBuilder: overlayBuilder,
+                ),
+        );
+      }
+
+      double screenHeight(WidgetTester tester) =>
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+
+      Future<({Rect trigger, Rect panel})> openPanel(
+        WidgetTester tester,
+        MenuController controller,
+      ) async {
+        controller.open();
+        await tester.pumpAndSettle();
+
+        return (
+          trigger: tester.getRect(find.byKey(triggerKey)),
+          panel: tester.getRect(find.byKey(panelKey)),
+        );
+      }
+
+      testWidgets('fits a long menu below a trigger near the top', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          buildPanelMenu(controller, constrainToAvailableHeight: true),
+        );
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.top, trigger.bottom + sideOffset);
+        expect(panel.bottom, screenHeight(tester));
+        expect(panel.overlaps(trigger), isFalse);
+      });
+
+      testWidgets('flips above and fits when the trigger is near the bottom', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          buildPanelMenu(
+            controller,
+            alignment: Alignment.bottomLeft,
+            constrainToAvailableHeight: true,
+          ),
+        );
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.bottom, trigger.top - sideOffset);
+        expect(panel.top, 0);
+        expect(panel.overlaps(trigger), isFalse);
+      });
+
+      testWidgets('lets a menu grow to the whole overlay by default', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(buildPanelMenu(controller));
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.height, screenHeight(tester));
+        expect(panel.overlaps(trigger), isTrue);
+      });
+
+      testWidgets('keeps a short menu at its natural height', (tester) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(
+          buildPanelMenu(controller, alignment: Alignment.centerLeft, items: 3),
+        );
+        final (:trigger, :panel) = await openPanel(tester, controller);
+
+        expect(panel.top, trigger.bottom + sideOffset);
+        expect(panel.height, 120);
+      });
+    });
   });
 
   group('NakedMenuContent', () {
@@ -1333,6 +1459,169 @@ void main() {
         },
       );
 
+      testWidgets(
+        'a resting mouse does not clear keyboard focus while the items scroll',
+        (tester) async {
+          final controller = MenuController();
+          final scrollController = ScrollController();
+          addTearDown(scrollController.dispose);
+          const panelKey = Key('panel');
+          final focused = List<bool>.filled(5, false);
+
+          await tester.pumpMaterialWidget(
+            Align(
+              alignment: Alignment.topLeft,
+              child: NakedMenu<String>(
+                controller: controller,
+                builder: (context, state, child) => const Text('Open'),
+                overlayBuilder: (context, info) => SizedBox(
+                  key: panelKey,
+                  height: 60,
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: List.generate(
+                        5,
+                        (index) => NakedMenuItem<String>(
+                          value: 'item$index',
+                          builder: (context, state, child) {
+                            focused[index] = state.isFocused;
+                            return child!;
+                          },
+                          child: SizedBox(
+                            width: 120,
+                            height: 30,
+                            child: Text('Item $index'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          await mouse.addPointer(
+            location:
+                tester.getTopLeft(find.byKey(panelKey)) + const Offset(10, 15),
+          );
+          await tester.pumpAndSettle();
+
+          for (var press = 0; press < 3; press++) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+            await tester.pumpAndSettle();
+          }
+
+          expect(scrollController.offset, greaterThan(0));
+          expect(focused.indexWhere((isFocused) => isFocused), 2);
+        },
+      );
+
+      testWidgets(
+        'a resting mouse neither clears focus nor opens a submenu row that '
+        'scrolls under it',
+        (tester) async {
+          final controller = MenuController();
+          final scrollController = ScrollController();
+          addTearDown(scrollController.dispose);
+          const panelKey = Key('panel');
+          final focused = List<bool>.filled(5, false);
+          await tester.pumpMaterialWidget(
+            _scrollingMenuWithSubmenu(
+              controller: controller,
+              scrollController: scrollController,
+              panelKey: panelKey,
+              focused: focused,
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          await mouse.addPointer(
+            location:
+                tester.getTopLeft(find.byKey(panelKey)) + const Offset(10, 15),
+          );
+          await tester.pumpAndSettle();
+
+          for (var press = 0; press < 4; press++) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+            await tester.pumpAndSettle();
+          }
+          await tester.pump(const Duration(milliseconds: 200));
+          await tester.pump();
+
+          expect(scrollController.offset, greaterThan(0));
+          expect(focused.indexWhere((isFocused) => isFocused), 3);
+          expect(find.text('Child item'), findsNothing);
+        },
+      );
+
+      testWidgets('moving the mouse onto a disabled submenu row keeps focus', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final focused = List<bool>.filled(5, false);
+        await tester.pumpMaterialWidget(
+          _scrollingMenuWithSubmenu(
+            controller: controller,
+            focused: focused,
+            panelHeight: 150,
+            submenuEnabled: false,
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pumpAndSettle();
+        expect(focused.indexWhere((isFocused) => isFocused), 0);
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        addTearDown(mouse.removePointer);
+        await mouse.addPointer(location: Offset.zero);
+
+        await mouse.moveTo(tester.getCenter(find.text('More')));
+        await tester.pump(const Duration(milliseconds: 200));
+
+        expect(focused.indexWhere((isFocused) => isFocused), 0);
+      });
+
+      testWidgets(
+        'a hover that does not move the pointer does not open a submenu',
+        (tester) async {
+          final controller = MenuController();
+          await tester.pumpMaterialWidget(
+            _scrollingMenuWithSubmenu(
+              controller: controller,
+              focused: List<bool>.filled(5, false),
+              panelHeight: 150,
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          addTearDown(mouse.removePointer);
+          final resting = tester.getCenter(find.text('More'));
+          await mouse.addPointer(location: resting);
+          await tester.pump();
+
+          await mouse.moveTo(resting);
+          await tester.pump(const Duration(milliseconds: 200));
+          await tester.pump();
+
+          expect(find.text('Child item'), findsNothing);
+        },
+      );
+
       testWidgets('Arrow Down and Up move through items and wrap', (
         tester,
       ) async {
@@ -1563,6 +1852,58 @@ void main() {
   // since NakedMenuItem requires the menu scope to function properly.
   // See tests like "calls onMenuClose when menu item is selected" and
   // "keeps menu open when closeOnActivate is false on menu item".
+}
+
+Widget _scrollingMenuWithSubmenu({
+  required MenuController controller,
+  required List<bool> focused,
+  ScrollController? scrollController,
+  Key? panelKey,
+  double panelHeight = 60,
+  bool submenuEnabled = true,
+}) {
+  return Align(
+    alignment: Alignment.topLeft,
+    child: NakedMenu<String>(
+      controller: controller,
+      builder: (context, state, child) => const Text('Open'),
+      overlayBuilder: (context, info) => SizedBox(
+        key: panelKey,
+        height: panelHeight,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              for (var index = 0; index < 5; index++)
+                if (index == 2)
+                  NakedMenuSubmenu<String>(
+                    enabled: submenuEnabled,
+                    child: const SizedBox(
+                      width: 120,
+                      height: 30,
+                      child: Text('More'),
+                    ),
+                    overlayBuilder: _submenuContent,
+                  )
+                else
+                  NakedMenuItem<String>(
+                    value: 'item$index',
+                    builder: (context, state, child) {
+                      focused[index] = state.isFocused;
+                      return child!;
+                    },
+                    child: SizedBox(
+                      width: 120,
+                      height: 30,
+                      child: Text('Item $index'),
+                    ),
+                  ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 Widget _submenuContent(BuildContext context, RawMenuOverlayInfo info) =>

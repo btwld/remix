@@ -10,6 +10,16 @@
   that carries the expanded state, so do not wrap the control in
   `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
   for an item of a `NakedMenubar`.
+- Add `constrainToAvailableHeight` to `NakedSelect`, `NakedMenu`, and
+  `OverlayPositioner` (default `false`, so nothing changes until it is set). A
+  panel placed above or below its trigger is then laid out no taller than the
+  space on that side, after `sideOffset` and `collisionPadding`, instead of as
+  tall as the whole overlay, so a tall panel no longer slides over its trigger
+  and a scroll view inside it scrolls beside the trigger. With collision
+  avoidance on, the larger side bounds the layout; the panel stays on the
+  preferred side when it fits there, otherwise it flips. Content that cannot
+  scroll overflows the shorter panel, and placements to the left or right of the
+  trigger are not capped.
 
 ### Fixes
 
@@ -52,6 +62,25 @@
 - The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
   from an open `NakedMenubar` menu, scroll the newly focused item into view the
   same way. A target that is already visible stays where it is.
+- `NakedCombobox` now scrolls the highlighted option just far enough into view
+  when the arrow keys highlight it and when the options view opens, instead of
+  leaving it outside a scrolling options list. Focus stays on the field, an
+  option that is already visible does not scroll the list or the page, and
+  scrolling by hand is not undone. Opening replaces a scroll offset you gave
+  the list when the highlighted option is outside it, and in a lazily built
+  list such as `ListView.builder` a highlighted option that is not built, such
+  as the last option after Ctrl or Cmd with ArrowDown, is not revealed.
+- `NakedSelect` now opens with focus on the selected option, scrolled into
+  view, so Arrow Up and Arrow Down continue from it instead of from the ends of
+  the list. A select without a selected option, or whose selected option is
+  disabled or not built yet in a lazy list, opens on the first item that can
+  take focus, normally its first enabled option: the first Arrow Down reaches
+  the second option and Enter selects the first, where focus used to start on
+  the overlay container. A field in the panel that requests focus while the
+  panel builds keeps it.
+- Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
+  hovering a submenu row also opens it after its delay, only when the pointer
+  moves over it, no longer when a list scrolls under a resting pointer.
 
 ## 1.2.3
 
