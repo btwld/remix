@@ -32,6 +32,24 @@ RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
 RemixBoxEffectsMix fortalTabFocusOutline() =>
     fortalFocusOutline(FortalTokens.focus8(), offset: -2);
 
+/// The `focus-8` ring as a foreground decoration, for a box that takes no box
+/// effects: a data-table header row and the content of a menu trigger. It is
+/// null at a ring width of zero, because a zero-width [BorderSide] is a
+/// hairline.
+BoxDecorationMix? fortalFocusRingDecoration(BuildContext context) {
+  final width = FortalTokens.focusRingWidth.resolve(context);
+  if (width <= 0) return null;
+  return BoxDecorationMix(
+    border: BoxBorderMix.all(
+      BorderSideMix(
+        color: FortalTokens.focus8(),
+        width: width,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+    ),
+  );
+}
+
 /// A one-pixel inset stroke, optionally layered over a fill.
 RemixBoxEffectLayerMix fortalInsetSurface({required List<Color> strokes}) =>
     RemixBoxEffectLayerMix(
