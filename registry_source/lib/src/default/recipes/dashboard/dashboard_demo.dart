@@ -438,7 +438,11 @@ class _VanillaAccount extends StatelessWidget {
             .borderRadius(.all(VanillaTokens.radiusMd()))
             .border(.all(.color(VanillaTokens.border())))
             .color(VanillaTokens.card())
-            .onFocusVisible(CardStyler().containerEffects(vanillaFocusRing())),
+            .onFocusVisible(
+              CardStyler()
+                  .containerEffects(vanillaFocusRing())
+                  .border(vanillaFocusBorder()),
+            ),
         child: RowBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)

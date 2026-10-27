@@ -442,7 +442,9 @@ class _PlaygroundAccount extends StatelessWidget {
             .border(.all(.color(PlaygroundTokens.border())))
             .color(PlaygroundTokens.card())
             .onFocusVisible(
-              CardStyler().containerEffects(playgroundFocusRing()),
+              CardStyler()
+                  .containerEffects(playgroundFocusRing())
+                  .border(playgroundFocusBorder()),
             ),
         child: RowBox(
           style: FlexBoxStyler()

@@ -239,13 +239,21 @@ void main() {
           Focus.of(tester.element(find.text(workspace))),
         );
 
-        await probe.expectRing(
-          part: find.ancestor(
-            of: find.text(workspace),
-            matching: find.byType(VanillaMenu<String>),
-          ),
+        final row = find.ancestor(
+          of: find.text(workspace),
+          matching: find.byType(VanillaMenu<String>),
+        );
+
+        final focused = await probe.expectRing(
+          part: row,
           neighbor: find.text(workspace),
           includes: (part) => [part.centerLeft.translate(-1.5, 0)],
+        );
+
+        expect(
+          focused.colorAt(tester.getRect(row).centerLeft.translate(0.5, 0)),
+          _isColor(Color.alphaBlend(theme.data.ring, theme.data.card)),
+          reason: 'the row\'s own border turns ring',
         );
       });
 
@@ -396,7 +404,7 @@ final class _Probe {
   /// [includes] are points, in global coordinates, where the ring must be
   /// painted: each pixel there turns into the ring's color laid over what it
   /// showed before. At each of [excludes] the pixel must not change at all.
-  Future<void> expectRing({
+  Future<_Pixels> expectRing({
     required Finder part,
     Finder? neighbor,
     Iterable<Offset> Function(Rect part) includes = _none,
@@ -438,6 +446,8 @@ final class _Probe {
         reason: 'the ring stays off $point',
       );
     }
+
+    return after;
   }
 
   Future<_Pixels> _capture() async {

@@ -438,7 +438,11 @@ class _{{typePrefix}}Account extends StatelessWidget {
             .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
             .border(.all(.color({{typePrefix}}Tokens.border())))
             .color({{typePrefix}}Tokens.card())
-            .onFocusVisible(CardStyler().containerEffects({{valuePrefix}}FocusRing())),
+            .onFocusVisible(
+              CardStyler()
+                  .containerEffects({{valuePrefix}}FocusRing())
+                  .border({{valuePrefix}}FocusBorder()),
+            ),
         child: RowBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)
