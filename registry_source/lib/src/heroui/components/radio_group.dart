@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/theme.dart';
 import 'field_layout.dart';
 import 'radio.dart';
 
@@ -73,15 +74,13 @@ class HeroUiRadioGroup<T> extends StatelessWidget {
   }
 
   Widget _row(HeroUiRadioOption<T> option, {required bool optionEnabled}) =>
-      HeroUiControlRow(
-        controlWidth: heroUiRadioSize,
-        invalid: invalid,
+      HeroUiDescribedControl(
+        descriptionInset: heroUiRadioSize + heroUiControlGap,
         enabled: optionEnabled,
-        label: option.label,
         description: option.description,
         control: HeroUiRadio<T>(
           value: option.value,
-          semanticLabel: option.label,
+          label: option.label,
           variant: variant,
           invalid: invalid,
           enabled: optionEnabled,

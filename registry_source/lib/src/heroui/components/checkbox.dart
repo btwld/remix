@@ -39,7 +39,7 @@ CheckboxStyler heroUiCheckboxStyle({
       .color(field.rest())
       .indicator(.size(_checkmark).color(mark()))
       .label(heroUiLabelText.color(label()))
-      .labelSpacing(_gap)
+      .labelSpacing(heroUiControlGap)
       .onSelected(.color(fill()))
       .onIndeterminate(.color(fill()).indicator(.size(_indeterminate)))
       .onFocusVisible(.containerEffects(heroUiFocusRing()))
@@ -77,9 +77,8 @@ CheckboxStyler heroUiCheckboxStyle({
 /// `touch-target`: the 24px square around the 16px control.
 const heroUiCheckboxTapTarget = Size.square(24);
 
-/// `.checkbox__control`'s `size-4` and the content row's `gap-3`.
+/// `.checkbox__control`: `size-4`.
 const _control = 16.0;
-const _gap = 12.0;
 
 /// The check mark svg's `size-2.5` and the indeterminate line's `size-3`
 /// (`checkbox.css`). Remix's glyphs nearly fill their box, so the box sizes

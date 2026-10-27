@@ -6,13 +6,17 @@ part of 'switch.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// HeroUI recipe for [RemixSwitch], the bare control.
+/// HeroUI recipe for [RemixSwitch].
 ///
-/// Labels and descriptions are the app's composition; see `HeroUiSwitchGroup`.
+/// The label sits inside the control's tap target. A description beneath it is
+/// `HeroUiSwitchGroup`'s. [invalid] turns the label danger, as
+/// `[data-invalid] .label`; `switch.css` has no invalid treatment for the
+/// control itself.
 class HeroUiSwitch extends StatelessWidget {
   const HeroUiSwitch({
     super.key,
     this.size = .md,
+    this.invalid = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
     this.label,
@@ -28,6 +32,8 @@ class HeroUiSwitch extends StatelessWidget {
   });
 
   final HeroUiSwitchSize size;
+
+  final bool invalid;
 
   final SwitchStyler style;
 
@@ -57,7 +63,11 @@ class HeroUiSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSwitch(
       key: this.key,
-      style: heroUiSwitchStyle(size: this.size, style: this.style),
+      style: heroUiSwitchStyle(
+        size: this.size,
+        invalid: this.invalid,
+        style: this.style,
+      ),
       selected: this.selected,
       label: this.label,
       semanticLabel: this.semanticLabel,

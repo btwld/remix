@@ -54,7 +54,7 @@ Future<void> _pump(
 TextStyle _style(WidgetTester tester, Finder text) =>
     tester.widget<Text>(text).style!;
 
-Finder _item(int index) => find.byType(HeroUiControlRow).at(index);
+Finder _item(int index) => find.byType(HeroUiDescribedControl).at(index);
 
 Finder _control(int index) => find
     .descendant(
@@ -286,20 +286,22 @@ void main() {
         'radio-primary-vertical-disabled-a-description',
         mode: mode,
       );
-      double product(Map<String, String> styles, Map<String, String> parent) =>
-          double.parse(styles['opacity']!) * double.parse(parent['opacity']!);
 
+      // The radio dims its control and label together; the label's own
+      // `status-disabled` is its color's alpha.
+      final rootOpacity = double.parse(root.styles['opacity']!);
+      expect(tester.opacityAbove(_control(0)), rootOpacity);
+      expect(tester.opacityAbove(find.text('Alpha')), rootOpacity);
       expect(
-        tester.opacityAbove(_control(0)),
-        double.parse(root.styles['opacity']!),
-      );
-      expect(
-        tester.opacityAbove(find.text('Alpha')),
-        closeTo(product(label.styles, root.styles), .001),
+        _style(tester, find.text('Alpha')).color!.a,
+        closeTo(double.parse(label.styles['opacity']!), .001),
       );
       expect(
         tester.opacityAbove(find.text('Help text').first),
-        closeTo(product(description.styles, root.styles), .001),
+        closeTo(
+          double.parse(description.styles['opacity']!) * rootOpacity,
+          .001,
+        ),
       );
       // The group label dims once; the group help is untouched.
       expect(
@@ -309,6 +311,24 @@ void main() {
       expect(tester.opacityAbove(find.text('Group help')), 1);
     });
   }
+
+  testWidgets('tapping an option label selects it through Remix', (
+    tester,
+  ) async {
+    var value = 'a';
+    await _pump(
+      tester,
+      StatefulBuilder(
+        builder: (context, setState) => _group(
+          groupValue: value,
+          onChanged: (next) => setState(() => value = next!),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Beta'));
+    await tester.pumpAndSettle();
+    expect(value, 'b');
+  });
 
   testWidgets('tapping a control selects through Remix', (tester) async {
     var value = 'a';
