@@ -94,6 +94,14 @@
   trigger's state.
 - `RemixSidebar` header and footer content no longer resolves `onDisabled`
   variants when the sidebar is disabled. The sidebar's own regions still do.
+### Fixes
+
+- `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
+  on the content or menu container, instead of overflowing. A short list still
+  shrinks to its options, and the container's padding and decoration stay in
+  place while the options scroll. The options column now sizes to its content
+  inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max` on
+  `menuContainer` no longer distribute free vertical space.
 
 ## 1.0.0-beta.13
 

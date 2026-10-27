@@ -193,6 +193,21 @@ class _TriggerWidthSelectExampleState extends State<TriggerWidthSelectExample> {
 - A menu wider than its trigger is centered below it by default. Use
   `alignment: .start`, as above, to align the edges.
 
+## Long lists
+
+The option list scrolls when it is taller than the panel. A `maxHeight` on the
+`content` style, or on `menuContainer`, caps the panel; without one the panel
+grows to the room the overlay has. Padding and decoration on either container
+stay in place while the options scroll.
+
+```dart
+import 'package:remix/remix.dart';
+
+void main() {
+  SelectStyler().content(SelectContentStyler().maxHeight(320));
+}
+```
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
