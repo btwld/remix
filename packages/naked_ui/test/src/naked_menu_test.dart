@@ -628,25 +628,39 @@ void main() {
         ),
       );
 
+      // A null [constrainToAvailableHeight] leaves the argument out so the
+      // widget's own default applies.
       Widget buildPanelMenu(
         MenuController controller, {
         Alignment alignment = Alignment.topLeft,
         int items = 30,
-        bool constrainToAvailableHeight = true,
+        bool? constrainToAvailableHeight,
       }) {
+        const positioning = OverlayPositionConfig(
+          side: OverlaySide.bottom,
+          sideOffset: sideOffset,
+        );
+        Widget builder(BuildContext context, NakedMenuState state, Widget? _) =>
+            const SizedBox(key: triggerKey, width: 120, height: 40);
+        Widget overlayBuilder(BuildContext context, RawMenuOverlayInfo info) =>
+            tallPanel(items: items);
+
         return Align(
           alignment: alignment,
-          child: NakedMenu<String>(
-            controller: controller,
-            positioning: const OverlayPositionConfig(
-              side: OverlaySide.bottom,
-              sideOffset: sideOffset,
-            ),
-            constrainToAvailableHeight: constrainToAvailableHeight,
-            builder: (context, state, child) =>
-                const SizedBox(key: triggerKey, width: 120, height: 40),
-            overlayBuilder: (context, info) => tallPanel(items: items),
-          ),
+          child: constrainToAvailableHeight == null
+              ? NakedMenu<String>(
+                  controller: controller,
+                  positioning: positioning,
+                  builder: builder,
+                  overlayBuilder: overlayBuilder,
+                )
+              : NakedMenu<String>(
+                  controller: controller,
+                  positioning: positioning,
+                  constrainToAvailableHeight: constrainToAvailableHeight,
+                  builder: builder,
+                  overlayBuilder: overlayBuilder,
+                ),
         );
       }
 
@@ -670,7 +684,9 @@ void main() {
         tester,
       ) async {
         final controller = MenuController();
-        await tester.pumpMaterialWidget(buildPanelMenu(controller));
+        await tester.pumpMaterialWidget(
+          buildPanelMenu(controller, constrainToAvailableHeight: true),
+        );
         final (:trigger, :panel) = await openPanel(tester, controller);
 
         expect(panel.top, trigger.bottom + sideOffset);
@@ -683,7 +699,11 @@ void main() {
       ) async {
         final controller = MenuController();
         await tester.pumpMaterialWidget(
-          buildPanelMenu(controller, alignment: Alignment.bottomLeft),
+          buildPanelMenu(
+            controller,
+            alignment: Alignment.bottomLeft,
+            constrainToAvailableHeight: true,
+          ),
         );
         final (:trigger, :panel) = await openPanel(tester, controller);
 
@@ -692,19 +712,16 @@ void main() {
         expect(panel.overlaps(trigger), isFalse);
       });
 
-      testWidgets(
-        'lets a menu grow to the whole overlay when not constrained',
-        (tester) async {
-          final controller = MenuController();
-          await tester.pumpMaterialWidget(
-            buildPanelMenu(controller, constrainToAvailableHeight: false),
-          );
-          final (:trigger, :panel) = await openPanel(tester, controller);
+      testWidgets('lets a menu grow to the whole overlay by default', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpMaterialWidget(buildPanelMenu(controller));
+        final (:trigger, :panel) = await openPanel(tester, controller);
 
-          expect(panel.height, screenHeight(tester));
-          expect(panel.overlaps(trigger), isTrue);
-        },
-      );
+        expect(panel.height, screenHeight(tester));
+        expect(panel.overlaps(trigger), isTrue);
+      });
 
       testWidgets('keeps a short menu at its natural height', (tester) async {
         final controller = MenuController();
