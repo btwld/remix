@@ -79,8 +79,24 @@ void main() {
       matching: find.byType(VanillaMenu<String>),
     );
 
+    Color? fill() {
+      final provider = tester.widget<StyleSpecProvider<IconButtonSpec>>(
+        find
+            .descendant(
+              of: button,
+              matching: find.byType(StyleSpecProvider<IconButtonSpec>),
+            )
+            .first,
+      );
+      return (provider.spec.spec.container.spec.decoration as BoxDecoration?)
+          ?.color;
+    }
+
+    final muted = VanillaTheme.of(tester.element(button)).muted;
+
     expect(find.semantics.byLabel(label), findsOne);
     expect(_focusStops(tester, menu), 1);
+    expect(fill(), isNot(muted));
     expect(
       tester.getSemantics(button),
       isSemantics(
@@ -99,6 +115,11 @@ void main() {
 
     expect(find.text('Archive'), findsOneWidget);
     expect(
+      fill(),
+      muted,
+      reason: 'the button is filled while its menu is open',
+    );
+    expect(
       tester.getSemantics(button),
       isSemantics(label: label, hasExpandedState: true, isExpanded: true),
     );
@@ -107,6 +128,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Archive'), findsNothing);
+    expect(fill(), isNot(muted), reason: 'the fill goes with the menu');
     expect(
       tester.getSemantics(button),
       isSemantics(label: label, isFocused: true),
