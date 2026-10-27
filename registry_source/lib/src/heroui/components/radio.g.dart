@@ -6,10 +6,11 @@ part of 'radio.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// HeroUI recipe for [RemixRadio], the bare control.
+/// HeroUI recipe for [RemixRadio].
 ///
-/// Labels and descriptions are the app's composition; see `HeroUiRadioGroup`.
-/// [invalid] paints the error treatment; validation stays with the app.
+/// The label sits inside the control's tap target. A description beneath it is
+/// `HeroUiRadioGroup`'s. [invalid] paints the error treatment and turns the
+/// label danger; validation stays with the app.
 class HeroUiRadio<T> extends StatelessWidget {
   const HeroUiRadio({
     super.key,

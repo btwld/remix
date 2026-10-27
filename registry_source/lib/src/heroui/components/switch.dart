@@ -17,15 +17,20 @@ enum HeroUiSwitchSize {
   final double trackWidth;
 }
 
-/// HeroUI recipe for [RemixSwitch], the bare control.
+/// HeroUI recipe for [RemixSwitch].
 ///
-/// Labels and descriptions are the app's composition; see `HeroUiSwitchGroup`.
+/// The label sits inside the control's tap target. A description beneath it is
+/// `HeroUiSwitchGroup`'s. [invalid] turns the label danger, as
+/// `[data-invalid] .label`; `switch.css` has no invalid treatment for the
+/// control itself.
 @MixWidget(target: RemixSwitch.new)
 SwitchStyler heroUiSwitchStyle({
   HeroUiSwitchSize size = .md,
+  bool invalid = false,
   SwitchStyler style = const SwitchStyler.create(),
 }) {
   final metrics = _metricsFor(size);
+  final label = invalid ? HeroUiTokens.danger : HeroUiTokens.foreground;
   return SwitchStyler(
         container: BoxStyler()
             .size(size.trackWidth, metrics.trackHeight)
@@ -36,6 +41,8 @@ SwitchStyler heroUiSwitchStyle({
             .borderRadius(.all(metrics.thumbRadius())),
         thumbEffects: heroUiSurfaceEffects(),
       )
+      .label(heroUiLabelText.color(label()))
+      .labelSpacing(heroUiControlGap)
       .trackColor(HeroUiTokens.defaultColor())
       .thumbColor(HeroUiTokens.white())
       .onSelected(
@@ -53,6 +60,7 @@ SwitchStyler heroUiSwitchStyle({
         // The thumb dims again: `bg-default-foreground/20`, or `opacity: 0.4`
         // once selected.
         SwitchStyler()
+            .label(.color(heroUiDisabledLabelColor(danger: invalid)()))
             .thumbColor(_disabledThumb())
             .onSelected(
               SwitchStyler()

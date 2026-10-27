@@ -326,7 +326,7 @@ final _cases = <_WidgetCase>[
     {
       AcmeRadioGroup<String>,
       AcmeFieldLayout,
-      AcmeControlRow,
+      AcmeDescribedControl,
       AcmeRadio<String>,
     },
   ),
