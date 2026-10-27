@@ -14,7 +14,11 @@ enum HeroUiToastVariant { defaultToast, accent, success, warning, danger }
 /// HeroUI recipe for [RemixToast] and, as its `style`, [RemixToastScope].
 ///
 /// Stacking, timing, and dismissal stay with Remix. The action is HeroUI's
-/// default button, as in `Toast` (`toast-default-action`).
+/// default button, as in `Toast` (`toast-default-action`): beside the message
+/// above 768px and under it from 768px down. Below 640px it adds `mt-2` by
+/// restating the whole button style, because an `action` replaces rather than
+/// merges; a caller's own `action` there must be an `onBreakpoint` fragment
+/// too.
 @MixWidget(target: RemixToast.new)
 ToastStyler heroUiToastStyle({
   HeroUiToastVariant variant = .defaultToast,
@@ -70,6 +74,14 @@ ToastStyler heroUiToastStyle({
       )
       .action(heroUiButtonStyle())
       .closeButton(_closeButton)
+      .onBreakpoint(
+        const Breakpoint.maxWidth(HeroUiTokens.breakpointMd),
+        ToastStyler().actionPlacement(.below),
+      )
+      .onBreakpoint(
+        const Breakpoint.maxWidth(_belowSm),
+        ToastStyler().action(heroUiButtonStyle().margin(.top(_actionMargin))),
+      )
       .merge(style);
 }
 
@@ -93,6 +105,12 @@ final _closeButton = heroUiCloseButtonStyle()
 const _paddingX = 16.0;
 const _paddingY = 12.0;
 const _gap = 6.0;
+
+/// `.toast__action`: `mt-2 sm:mt-0`. A stacked action is already `gap-1.5`
+/// below the message, so the margin adds the rest of `mt-2` below `sm`, whose
+/// `maxWidth` is the pixel before 640.
+const _actionMargin = 8 - _gap;
+const _belowSm = HeroUiTokens.breakpointSm - 1;
 
 /// `.toast__indicator` `size-4` with `p-1`, and `.toast__close-button`
 /// `size-5`.
