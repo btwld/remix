@@ -550,6 +550,213 @@ void main() {
       });
     });
 
+    group('openOnTap: false with the caller\'s control', () {
+      late FocusNode before;
+      late FocusNode after;
+      late FocusNode button;
+      late MenuController controller;
+
+      setUp(() {
+        before = FocusNode(debugLabel: 'before popover');
+        after = FocusNode(debugLabel: 'after popover');
+        button = FocusNode(debugLabel: 'caller button');
+        controller = MenuController();
+        addTearDown(before.dispose);
+        addTearDown(after.dispose);
+        addTearDown(button.dispose);
+      });
+
+      Widget row({FocusNode? triggerFocusNode, FocusNode? buttonFocusNode}) {
+        return Column(
+          children: [
+            Focus(focusNode: before, child: const SizedBox(height: 20)),
+            NakedPopover(
+              controller: controller,
+              openOnTap: false,
+              triggerFocusNode: triggerFocusNode,
+              popoverBuilder: (context, info) => const Text('Popover Content'),
+              child: NakedButton(
+                focusNode: buttonFocusNode,
+                onPressed: () =>
+                    controller.isOpen ? controller.close() : controller.open(),
+                child: const SizedBox(
+                  width: 100,
+                  height: 40,
+                  child: Text('Trigger'),
+                ),
+              ),
+            ),
+            Focus(focusNode: after, child: const SizedBox(height: 20)),
+          ],
+        );
+      }
+
+      Future<void> tab(WidgetTester tester) async {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+      }
+
+      testWidgets('the button is the only trigger tab stop', (tester) async {
+        await tester.pumpMaterialWidget(
+          row(triggerFocusNode: button, buttonFocusNode: button),
+        );
+        before.requestFocus();
+        await tester.pump();
+
+        await tab(tester);
+        expect(button.hasPrimaryFocus, isTrue);
+
+        await tab(tester);
+        expect(after.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets(
+        'the button is the only tab stop without a triggerFocusNode',
+        (tester) async {
+          await tester.pumpMaterialWidget(row(buttonFocusNode: button));
+          before.requestFocus();
+          await tester.pump();
+
+          await tab(tester);
+          expect(button.hasPrimaryFocus, isTrue);
+
+          await tab(tester);
+          expect(after.hasPrimaryFocus, isTrue);
+        },
+      );
+
+      testWidgets('Enter opens the popover and Escape returns focus to the '
+          'button that carries triggerFocusNode', (tester) async {
+        await tester.pumpMaterialWidget(
+          row(triggerFocusNode: button, buttonFocusNode: button),
+        );
+        before.requestFocus();
+        await tester.pump();
+        await tab(tester);
+        expect(button.hasPrimaryFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Popover Content'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Popover Content'), findsNothing);
+        expect(button.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('Escape moves focus to the button that carries '
+          'triggerFocusNode when it was not focused before opening', (
+        tester,
+      ) async {
+        await tester.pumpMaterialWidget(
+          row(triggerFocusNode: button, buttonFocusNode: button),
+        );
+        before.requestFocus();
+        await tester.pump();
+
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(button.hasFocus, isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(button.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('Escape returns focus to the button without a '
+          'triggerFocusNode', (tester) async {
+        await tester.pumpMaterialWidget(row(buttonFocusNode: button));
+        before.requestFocus();
+        await tester.pump();
+        await tab(tester);
+        expect(button.hasPrimaryFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Popover Content'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Popover Content'), findsNothing);
+        expect(button.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('without a triggerFocusNode, Escape returns focus to '
+          'whatever had it before opening', (tester) async {
+        await tester.pumpMaterialWidget(row(buttonFocusNode: button));
+        before.requestFocus();
+        await tester.pump();
+
+        controller.open();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Popover Content'), findsNothing);
+        expect(before.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('passing one node as triggerFocusNode and the button\'s '
+          'focusNode does not throw', (tester) async {
+        await tester.pumpMaterialWidget(
+          row(triggerFocusNode: button, buttonFocusNode: button),
+        );
+        before.requestFocus();
+        await tester.pump();
+        await tab(tester);
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('openOnTap: true still makes the trigger the single tab '
+          'stop that receives focus back', (tester) async {
+        await tester.pumpMaterialWidget(
+          Column(
+            children: [
+              Focus(focusNode: before, child: const SizedBox(height: 20)),
+              NakedPopover(
+                controller: controller,
+                triggerFocusNode: button,
+                popoverBuilder: (context, info) =>
+                    const Text('Popover Content'),
+                child: const SizedBox(
+                  width: 100,
+                  height: 40,
+                  child: Text('Trigger'),
+                ),
+              ),
+              Focus(focusNode: after, child: const SizedBox(height: 20)),
+            ],
+          ),
+        );
+        before.requestFocus();
+        await tester.pump();
+
+        await tab(tester);
+        expect(button.hasPrimaryFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Popover Content'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(find.text('Popover Content'), findsNothing);
+        expect(button.hasPrimaryFocus, isTrue);
+
+        await tab(tester);
+        expect(after.hasPrimaryFocus, isTrue);
+      });
+    });
+
     group('lifecycle callbacks', () {
       testWidgets('calls onOpen when popover opens', (tester) async {
         bool onOpenCalled = false;
