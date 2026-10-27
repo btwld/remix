@@ -18,7 +18,7 @@ measurements:
   - {what: vertical group, value: "items stack, first and last rounded at the ends", cite: "group-vertical-joined-auto-md, group-vertical-joined-auto-md-a"}
   - {what: item colors, value: "the toggle button's: default fill, accent-soft when selected, accent-soft-hover under the pointer", cite: "toggle-button.css; toggle-button-group.css"}
   - {what: icon-only item, value: "square: icon size-5 below 640px, size-4 above", cite: "toggle-default-md-icon-rest; toggle-button.css svg size-5 sm:size-4"}
-  - {what: focus ring, value: "inset, within the item", cite: "toggle-button-group.css ring-inset"}
+  - {what: focus ring, value: "2px, inset within the item, no background gap; drawn as an outline at offset -2 so the group's clip keeps it", cite: "toggle-button-group.css ring-inset; close-button-focus"}
   - {what: disabled item, value: 0.5, cite: toggle-default-md-label-disabled}
 approximations:
   - Remix's group selects one item at a time; HeroUI's `selectionMode="multiple"` is not built.
@@ -26,4 +26,3 @@ approximations:
   - The 1px separators between joined items (`ToggleButtonGroup.Separator`) are not drawn.
   - The `fullWidth` modifier (`flex-1` items) is not supported.
   - "`iconOnly` and `detached` apply to every item; mix sizes or shapes with each item's `style`."
-  - Items use the toggle button's 2px inside border for focus, which is also how upstream insets the ring in a group.

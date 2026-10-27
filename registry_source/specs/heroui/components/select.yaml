@@ -31,5 +31,4 @@ approximations:
   - The popover is as wide as its content; upstream's is at least the trigger's width (`min-w-(--trigger-width)`), which RemixSelect cannot express.
   - The popover appears without upstream's 150ms fade and zoom.
   - "The chevron is Remix's glyph at 11px, centered in the 16px slot's place (about 11 x 5.9 ink against 10.5 x 5.9). It flips when open without upstream's 150ms rotation."
-  - Item keyboard focus is a 2px inside border in the focus color, without the background gap; SelectMenuItemStyler has no outline effect.
   - The trigger's optional leading icon is Remix's and is not styled; HeroUI has none.

@@ -21,5 +21,4 @@ approximations:
   - The indicator and its -180 degree turn (`disclosure-open-indicator`) belong to the trigger content; `triggerBuilder` receives the expanded state for it.
   - The trigger has no layout of its own upstream (`disclosure-closed-trigger` is a bare 49.6 x 40 inline-block; a HeroUI Button trigger is 97.5 x 36), so its size is the app's.
   - The panel animates height and opacity with one curve, ease-out-quad; the CSS uses ease-out for opacity.
-  - The focus ring is a 2px inside border in the focus color, without the background gap, and it makes the trigger 4px larger; DisclosureStyler's trigger has no outline effect.
   - Disclosure groups are not mapped.

@@ -102,41 +102,4 @@ void main() {
       expect(plain.resolve(context), Radius.circular(radius * 1.5));
     }
   });
-
-  testWidgets('the ring border is transparent at rest and focus-coloured '
-      'when focused, at the ring width', (tester) async {
-    Border border(WidgetTester tester) =>
-        (tester
-                        .widget<DecoratedBox>(
-                          find
-                              .ancestor(
-                                of: find.text('ring'),
-                                matching: find.byType(DecoratedBox),
-                              )
-                              .first,
-                        )
-                        .decoration
-                    as BoxDecoration)
-                .border!
-            as Border;
-
-    for (final mode in ['light', 'dark']) {
-      for (final focused in [false, true]) {
-        await tester.pumpHeroUi(
-          Box(
-            style: BoxStyler().border(heroUiRingBorder(focused: focused)),
-            child: const Text('ring'),
-          ),
-          mode: mode,
-        );
-        final side = border(tester).top;
-        expect(side.width, HeroUiTokens.focusWidth);
-        if (focused) {
-          expect(side.color, heroUiToken(HeroUiTokens.focus, mode));
-        } else {
-          expect(side.color.a, 0);
-        }
-      }
-    }
-  });
 }

@@ -69,24 +69,6 @@ Finder get _popover => find
     .ancestor(of: find.text('Apple'), matching: find.byType(DecoratedBox))
     .last;
 
-/// The ring of a focused measured row: a background gap, then the focus
-/// colour. The recipe draws the focus colour as a ring-width inside border.
-({Color color, double width}) _measuredRing(String mode) {
-  final layers = cssRemixShadows(
-    heroUiCase(
-      'dropdown-default-keyboard-open-menu-item:Apple',
-      mode: mode,
-    ).styles['boxShadow']!,
-  );
-  return (
-    color: layers.last.color,
-    width: layers.last.spreadRadius - layers.first.spreadRadius,
-  );
-}
-
-/// Browser colors are 8-bit; recipe colors come from the theme tokens.
-const _colorTolerance = 1.5 / 255;
-
 /// `transform: scale(0.98)` on a pressed row and `scale(0.97)` on the
 /// pressed trigger (`menu-item.css`, `dropdown.css`).
 const _itemPressedScale = .98;
@@ -222,55 +204,58 @@ void main() {
       );
     });
 
-    testWidgets('keyboard focus rings a row without moving it in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring around a row without '
+        'moving it in $mode', (tester) async {
       await tester.pumpHeroUi(_dropdown(), mode: mode);
       await tester.focusWithTab();
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
       final before = tester.getRect(find.text('Apple'));
-      Border ring() => _decoration(_item(tester, 'Apple')).border! as Border;
-      final measured = _measuredRing(mode);
+      final size = tester.getSize(
+        find
+            .ancestor(of: find.text('Apple'), matching: find.byType(Padding))
+            .first,
+      );
+      final measured = heroUiCase(
+        'dropdown-default-keyboard-open-menu-item:Apple',
+        mode: mode,
+      );
+      expect(_item(tester, 'Apple').containerEffects?.isEmpty ?? true, isTrue);
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
-      expect(
-        ring().top.color,
-        isSameColorAs(measured.color, threshold: _colorTolerance),
-      );
-      expect(ring().top.width, measured.width);
+      expectFocusRing(_item(tester, 'Apple').containerEffects, measured);
+      expect(_decoration(_item(tester, 'Apple')).border, isNull);
       expect(tester.getRect(find.text('Apple')), before);
+      expect(
+        tester.getSize(
+          find
+              .ancestor(of: find.text('Apple'), matching: find.byType(Padding))
+              .first,
+        ),
+        size,
+      );
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
-      expect(
-        ring().top.color,
-        isNot(isSameColorAs(measured.color, threshold: _colorTolerance)),
-      );
+      expect(_item(tester, 'Apple').containerEffects?.isEmpty ?? true, isTrue);
       expect(tester.getRect(find.text('Apple')), before);
     });
 
-    testWidgets('keyboard focus rings the trigger in place in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring around the trigger '
+        'without moving it in $mode', (tester) async {
       await tester.pumpHeroUi(_dropdown(), mode: mode);
-      Border ring() =>
-          (tester
-                          .resolvedSpecOf<MenuTriggerSpec>(find.text('Actions'))
-                          .container
-                          .spec
-                          .boxSpec
-                          .decoration!
-                      as BoxDecoration)
-                  .border!
-              as Border;
+      MenuTriggerSpec spec() =>
+          tester.resolvedSpecOf<MenuTriggerSpec>(find.text('Actions'));
 
       final before = tester.getRect(find.text('Actions'));
-      expect(ring().top.color.a, 0);
+      expect(spec().containerEffects?.isEmpty ?? true, isTrue);
       await tester.focusWithTab();
-      expect(ring().top.color, heroUiToken(HeroUiTokens.focus, mode));
-      expect(ring().top.width, HeroUiTokens.focusWidth);
+      expectFocusRing(
+        spec().containerEffects,
+        heroUiCase('close-button-focus', mode: mode, state: true),
+      );
+      expect(spec().container.spec.boxSpec.decoration, isNull);
       expect(tester.getRect(find.text('Actions')), before);
     });
 

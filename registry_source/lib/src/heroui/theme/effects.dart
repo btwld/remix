@@ -26,6 +26,11 @@ RemixBoxEffectsMix heroUiFocusRing({
       : null,
 );
 
+/// `focus-ring` with `ring-inset`: the ring drawn inside the part, for parts
+/// whose parent clips an outside ring, such as the items of a joined toggle
+/// group.
+final heroUiInsetFocusRing = heroUiFocusRing(offset: -HeroUiTokens.focusWidth);
+
 /// `invalid-field-ring`: a 1px danger outline with no offset.
 ///
 /// [focused] is the 2px ring of a field that takes focus itself (a select
@@ -127,22 +132,6 @@ List<RemixBoxShadow> heroUiShadows(
           RemixBoxShadow(color: Color.fromRGBO(0, 0, 0, .06), blurRadius: 1),
         ];
 }
-
-/// `focus-ring` as a border, for parts whose styler has no `containerEffects`
-/// (tab, toggle, select and menu items, accordion and disclosure triggers).
-///
-/// Transparent at rest and recoloured on keyboard focus, so nothing shifts;
-/// pair it with [heroUiInsideRing] on the padding.
-BorderMix heroUiRingBorder({bool focused = false}) => BorderMix.all(
-  BorderSideMix(
-    color: focused ? HeroUiTokens.focus() : HeroUiTokens.transparent,
-    width: HeroUiTokens.focusWidth,
-  ),
-);
-
-/// A content inset less the ring border that sits inside it: `px-4` is
-/// `heroUiInsideRing(16)`.
-double heroUiInsideRing(double inset) => inset - HeroUiTokens.focusWidth;
 
 /// [source] at [alpha] of its own opacity: Tailwind `bg-x/N` and
 /// `color-mix(in srgb, x N%, transparent)`.

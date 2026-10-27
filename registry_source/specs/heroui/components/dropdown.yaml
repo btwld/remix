@@ -29,7 +29,6 @@ approximations:
   - Standalone Menu (menu.css) is deferred. It is a different list (`p-1 gap-1`, items `px-2`; measured `menu-default-rest-menu`), and RemixMenu always draws a trigger, so a bare menu has no Remix target.
   - RemixMenu renders `trigger` as non-interactive content inside its own button, so it cannot host a HeroUiButton; the recipe styles that content as the bare `.dropdown__trigger` and `style` can add chrome. A button trigger would need RemixMenu to accept a child like RemixPopover does.
   - RemixMenu has no `enabled`, so the trigger's disabled style is not reachable.
-  - Row and trigger focus is a 2px inside border in the focus color, without the background gap; MenuItemStyler and MenuTriggerStyler have no outline effect. The trigger border makes it 4px larger than bare content.
   - The popover's `max-w-[48svw]` is viewport-relative and is not modeled.
   - The separator spans the menu; HeroUI insets it to 94%.
   - The CSS sets no size for content icons; leading icons are 16px in the label colour (HeroUI's examples use `size-4`), and the trailing submenu chevron is 14px muted (`submenu-indicator svg size-3.5`).

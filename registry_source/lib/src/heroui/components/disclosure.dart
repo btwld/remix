@@ -18,15 +18,8 @@ DisclosureStyler heroUiDisclosureStyle({
   ),
   DisclosureStyler style = const DisclosureStyler.create(),
 }) => DisclosureStyler()
-    // A transparent ring-width border is always present so keyboard focus
-    // recolors it in place.
-    .trigger(BoxStyler().border(heroUiRingBorder()))
     .content(BoxStyler().padding(.all(_bodyPadding)))
-    .onFocusVisible(
-      DisclosureStyler().trigger(
-        BoxStyler().border(heroUiRingBorder(focused: true)),
-      ),
-    )
+    .onFocusVisible(DisclosureStyler().triggerEffects(heroUiFocusRing()))
     .onDisabled(
       DisclosureStyler().trigger(
         BoxStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),

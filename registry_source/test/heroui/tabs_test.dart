@@ -43,26 +43,8 @@ Widget _tabs(
 BoxDecoration _box(FlexBoxSpec spec) =>
     spec.boxSpec.decoration! as BoxDecoration;
 
-/// Browser colors are 8-bit; recipe colors come from the theme tokens.
-const _colorTolerance = 1.5 / 255;
-
 /// `tabs__tab` hover: `opacity-70` on unselected tabs.
 const _hoverOpacity = .7;
-
-/// The focus ring of a measured tab: a background gap, then the focus colour.
-/// The recipe draws the focus colour as a ring-width inside border.
-({Color color, double width}) _measuredRing(String mode) {
-  final layers = cssRemixShadows(
-    heroUiCase(
-      'tabs-primary-keyboard-three-tabs-tab:Three',
-      mode: mode,
-    ).styles['boxShadow']!,
-  );
-  return (
-    color: layers.last.color,
-    width: layers.last.spreadRadius - layers.first.spreadRadius,
-  );
-}
 
 void main() {
   test('variants follow HeroUI', () {
@@ -176,27 +158,56 @@ void main() {
       expectCssColor(idle.label.spec.style!.color!, idleCase.styles['color']!);
     });
 
-    testWidgets('keyboard focus colors the ring without resizing in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring without resizing in '
+        '$mode', (tester) async {
       for (final variant in HeroUiTabsVariant.values) {
         await tester.pumpHeroUi(_tabs(variant), mode: mode);
         await tester.pumpAndSettle();
         final before = tester.getSize(find.byType(HeroUiTab).first);
-        await tester.focusWithTab();
-
-        final ring = _measuredRing(mode);
-        final spec = tester.resolvedSpecOf<TabSpec>(find.text('One'));
-        final border = _box(spec.container.spec).border! as Border;
+        final label = tester.getRect(find.text('One'));
         expect(
-          border.top.color,
-          isSameColorAs(ring.color, threshold: _colorTolerance),
+          tester.resolvedSpecOf<TabSpec>(find.text('One')).containerEffects,
+          isNull,
           reason: variant.name,
         );
-        expect(border.top.width, ring.width, reason: variant.name);
+
+        await tester.focusWithTab();
+        final spec = tester.resolvedSpecOf<TabSpec>(find.text('One'));
+        expectFocusRing(
+          spec.containerEffects,
+          heroUiCase('tabs-primary-keyboard-three-tabs-tab:Three', mode: mode),
+        );
         expect(
           tester.getSize(find.byType(HeroUiTab).first),
           before,
+          reason: variant.name,
+        );
+        expect(tester.getRect(find.text('One')), label, reason: variant.name);
+      }
+    });
+
+    testWidgets('only the secondary tab reserves its indicator edge, and the '
+        'label stays centered, in $mode', (tester) async {
+      final indicator = heroUiCase(
+        'tabs-secondary-rest-tabs-indicator',
+        mode: mode,
+      );
+      for (final variant in HeroUiTabsVariant.values) {
+        await tester.pumpHeroUi(_tabs(variant), mode: mode);
+        await tester.pumpAndSettle();
+        final border = _box(
+          tester.resolvedSpecOf<TabSpec>(find.text('Two')).container.spec,
+        ).border;
+        if (variant == .primary) {
+          expect(border, isNull);
+        } else {
+          expect((border! as Border).bottom.width, indicator.size.height);
+          expect((border as Border).bottom.color.a, 0);
+          expect(border.top, BorderSide.none);
+        }
+        expect(
+          tester.getCenter(find.text('Two')).dy,
+          tester.getCenter(find.byType(HeroUiTab).last).dy,
           reason: variant.name,
         );
       }
