@@ -39,6 +39,13 @@
 
 - `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
   not on every `MediaQuery` change such as keyboard insets.
+- Add `remixAnchorWidth`, a token that resolves to the width of the trigger of
+  the surrounding `RemixSelect` or `RemixMenu`, and to 0 elsewhere. Pass it to
+  `minWidth`, `width`, or `maxWidth` to size the panel from its trigger, for
+  example `SelectContentStyler().minWidth(remixAnchorWidth())` or
+  `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`. Submenu
+  panels get the root trigger's width. Panels are unchanged unless a style uses
+  it.
 
 ## 1.0.0-beta.13
 

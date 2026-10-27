@@ -272,10 +272,13 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<SelectSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          builder: (context, spec) => _buildOverlayMenu(spec, style),
+        return RemixAnchorScope(
+          width: info.anchorRect.width,
+          child: RemixStyleSpecBuilder<SelectSpec>(
+            style: style,
+            styleSpec: widget.styleSpec,
+            builder: (context, spec) => _buildOverlayMenu(spec, style),
+          ),
         );
       },
       value: widget.selectedValue,
