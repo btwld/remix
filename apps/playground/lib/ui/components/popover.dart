@@ -23,23 +23,34 @@ part 'popover.g.dart';
 /// own `onPressed` consumes first. For a button trigger, set `openOnTap:
 /// false`, toggle a `MenuController` from the button, and give the popover and
 /// the button one `FocusNode`, so the button is the only tab stop and takes
-/// focus back when the popover closes:
+/// focus back when the popover closes. Keep the controller and the node in a
+/// `State` and dispose the node there:
 ///
 /// ```dart
-/// final filters = MenuController();
-/// final filtersFocus = FocusNode();
+/// class _FiltersState extends State<Filters> {
+///   final _controller = MenuController();
+///   final _triggerFocus = FocusNode();
 ///
-/// PlaygroundPopover(
-///   controller: filters,
-///   openOnTap: false,
-///   triggerFocusNode: filtersFocus,
-///   popoverChild: const Text('Filters go here.'),
-///   child: PlaygroundButton.outline(
-///     label: 'Filter',
-///     focusNode: filtersFocus,
-///     onPressed: () => filters.isOpen ? filters.close() : filters.open(),
-///   ),
-/// )
+///   @override
+///   void dispose() {
+///     _triggerFocus.dispose();
+///     super.dispose();
+///   }
+///
+///   @override
+///   Widget build(BuildContext context) => PlaygroundPopover(
+///     controller: _controller,
+///     openOnTap: false,
+///     triggerFocusNode: _triggerFocus,
+///     popoverChild: const Text('Filters go here.'),
+///     child: PlaygroundButton.outline(
+///       label: 'Filter',
+///       focusNode: _triggerFocus,
+///       onPressed: () =>
+///           _controller.isOpen ? _controller.close() : _controller.open(),
+///     ),
+///   );
+/// }
 /// ```
 @MixWidget(target: RemixPopover.new)
 PopoverStyler playgroundPopoverStyle({

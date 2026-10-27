@@ -844,7 +844,6 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                         'Filters go here.',
                         style: TextStyle(color: data.foreground),
                       ),
-                      semanticLabel: 'Filters',
                       child: AcmeButton.outline(
                         label: 'Filter',
                         focusNode: _filtersFocus,

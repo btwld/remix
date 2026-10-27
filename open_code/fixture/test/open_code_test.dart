@@ -5018,7 +5018,6 @@ void main() {
             openOnTap: false,
             triggerFocusNode: focusNode,
             popoverChild: const Text('Filters go here.'),
-            semanticLabel: 'Filters',
             child: AcmeButton.outline(
               label: 'Filter',
               focusNode: focusNode,
