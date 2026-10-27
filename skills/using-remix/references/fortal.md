@@ -158,7 +158,8 @@ final narrowPanel = SelectStyler().content(
 Fortal focus rings are outlines painted over the control through box effects
 (`containerEffects`, or `triggerEffects` on an accordion or disclosure), so
 focusing a control never changes its size. They draw at the `focusRingWidth`
-token (2), in `focus-8` or, for Radix's soft variants, the accent.
+token (2), in `focus-8` or, for Radix's soft variants, the accent. A disabled
+field rings in `gray-8`, and an errored one in `error-8`.
 
 - Classic and solid buttons and icon buttons, checkboxes, radios, switches, and
   links draw outward, at the `focusRingOffset` token (2).
