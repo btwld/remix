@@ -162,8 +162,13 @@ class _NakedAlertDialogFocusState extends State<_NakedAlertDialogFocus> {
 /// user asks to reduce motion: when [MediaQueryData.disableAnimations] is set
 /// or the platform reports `AccessibilityFeatures.reduceMotion`, which iOS
 /// sets for Reduce Motion. [transitionDuration] is then ignored and
-/// [transitionBuilder] sees a completed animation. The setting is read when
-/// the dialog opens and again when it is dismissed.
+/// [transitionBuilder] sees a completed animation.
+///
+/// The setting is read from [context] when the dialog opens and from the
+/// dialog's own subtree when it is dismissed. A dialog that opened without
+/// motion also closes without it, and a request made while it is open skips the
+/// exit. Withdrawing the request while the dialog is open does not bring the
+/// exit back.
 ///
 /// Example:
 /// ```dart
@@ -210,7 +215,13 @@ Future<T?> showNakedDialog<T>({
             Animation<double> secondaryAnimation,
           ) {
             final Widget content = builder(routeContext);
-            Widget wrapped = FocusTraversalGroup(child: content);
+            // Keeps the BlockSemantics in a modal NakedDialog from also hiding
+            // the barrier's dismiss node when the page is visible on the first
+            // frame, as it is under reduced motion.
+            Widget wrapped = Semantics(
+              container: true,
+              child: FocusTraversalGroup(child: content),
+            );
 
             if (barrierDismissible) {
               wrapped = _withDialogDismissShortcut(routeContext, wrapped);
@@ -258,7 +269,7 @@ class _NakedDialogRoute<T> extends RawDialogRoute<T> {
     // The route's controller fixes its durations when the route is installed.
     final context = subtreeContext;
     if (context != null) {
-      _reducedMotion = reducedMotionOf(context);
+      _reducedMotion = _reducedMotion || reducedMotionOf(context);
       controller!.reverseDuration = reverseTransitionDuration;
     }
 

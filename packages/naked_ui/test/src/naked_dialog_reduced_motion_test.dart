@@ -17,9 +17,11 @@ class _Host {
 
   Future<void> open({
     Duration transitionDuration = const Duration(milliseconds: 400),
+    String? barrierLabel,
   }) => showNakedDialog<void>(
     context: context,
     barrierColor: Colors.black54,
+    barrierLabel: barrierLabel,
     transitionDuration: transitionDuration,
     transitionBuilder: _fade,
     builder: (_) => const NakedDialog(
@@ -82,28 +84,16 @@ void main() {
 
     for (final request in ReducedMotionRequest.values) {
       group('with ${request.label}', () {
-        testWidgets('opens and closes at once', (tester) async {
-          final host = await _pumpHost(tester);
-          host.reducedMotion.set(request, on: true);
-          await tester.pump();
-
-          unawaited(host.open());
-          await tester.pump();
-          expect(find.byKey(_contentKey), findsOneWidget);
-          expect(_opacity(tester), 1);
-
-          host.pop();
-          await tester.pump();
-          expect(find.byKey(_contentKey), findsNothing);
-        });
-
-        testWidgets('ignores an explicit transition duration', (tester) async {
+        testWidgets('opens and closes at once whatever the duration', (
+          tester,
+        ) async {
           final host = await _pumpHost(tester);
           host.reducedMotion.set(request, on: true);
           await tester.pump();
 
           unawaited(host.open(transitionDuration: const Duration(seconds: 2)));
           await tester.pump();
+          expect(find.byKey(_contentKey), findsOneWidget);
           expect(_opacity(tester), 1);
 
           host.pop();
@@ -124,7 +114,7 @@ void main() {
           expect(find.byKey(_contentKey), findsNothing);
         });
 
-        testWidgets('closes with the transition once withdrawn while open', (
+        testWidgets('still closes at once when withdrawn while open', (
           tester,
         ) async {
           final host = await _pumpHost(tester);
@@ -132,18 +122,58 @@ void main() {
           await tester.pump();
           unawaited(host.open());
           await tester.pump();
-          expect(_opacity(tester), 1);
 
           host.reducedMotion.set(request, on: false);
           await tester.pump();
           host.pop();
           await tester.pump();
-          await tester.pump(const Duration(milliseconds: 200));
-          expect(find.byKey(_contentKey), findsOneWidget);
-          expect(_opacity(tester), closeTo(0.5, 0.01));
-          await tester.pumpAndSettle();
           expect(find.byKey(_contentKey), findsNothing);
         });
+      });
+    }
+
+    testWidgets('animates again for a dialog opened after withdrawal', (
+      tester,
+    ) async {
+      final host = await _pumpHost(tester);
+      host.reducedMotion.set(
+        ReducedMotionRequest.platformReduceMotion,
+        on: true,
+      );
+      await tester.pump();
+      host.reducedMotion.set(
+        ReducedMotionRequest.platformReduceMotion,
+        on: false,
+      );
+      await tester.pump();
+
+      unawaited(host.open());
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
+    });
+
+    for (final request in ReducedMotionRequest.values) {
+      testWidgets('exposes the dismissible barrier to semantics with '
+          '${request.label}', (tester) async {
+        final handle = tester.ensureSemantics();
+        try {
+          final host = await _pumpHost(tester);
+          host.reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          unawaited(host.open(barrierLabel: 'Dismiss dialog'));
+          await tester.pump();
+          expect(find.bySemanticsLabel('Dismiss dialog'), findsOneWidget);
+          await tester.pumpAndSettle();
+          expect(find.bySemanticsLabel('Dismiss dialog'), findsOneWidget);
+
+          await tester.tapAt(const Offset(5, 5));
+          await tester.pump();
+          expect(find.byKey(_contentKey), findsNothing);
+        } finally {
+          handle.dispose();
+        }
       });
     }
 

@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../helpers/reduced_motion.dart';
+
 const _toastSize = Size(200, 40);
 
 /// A bare WidgetsApp with a caller-owned Overlay: no Material, no Navigator.
@@ -731,6 +733,123 @@ void main() {
       await tester.pump();
       expect(_toast('a'), findsNothing);
     });
+  });
+
+  group('NakedToastScope reduced motion', () {
+    const slow = AnimationStyle(
+      curve: Curves.linear,
+      duration: Duration(milliseconds: 400),
+      reverseDuration: Duration(milliseconds: 400),
+    );
+
+    double fade(WidgetTester tester) => tester
+        .widget<FadeTransition>(
+          find.descendant(
+            of: find.byKey(const ValueKey('toast-a')),
+            matching: find.byType(FadeTransition),
+          ),
+        )
+        .opacity
+        .value;
+
+    Future<
+      ({
+        ReducedMotionSwitch reducedMotion,
+        NakedToastController<String> controller,
+      })
+    >
+    pumpScope(WidgetTester tester) async {
+      final reducedMotion = ReducedMotionSwitch(tester);
+      final controller = _controller();
+      await tester.pumpWidget(
+        _host(
+          reducedMotion.wrap(
+            NakedToastScope<String>(
+              controller: controller,
+              animationStyle: slow,
+              toastBuilder: (context, toast, animation) => KeyedSubtree(
+                key: ValueKey('toast-${toast.data}'),
+                child: FadeTransition(
+                  opacity: animation,
+                  child: SizedBox.fromSize(
+                    size: _toastSize,
+                    child: Text(toast.data),
+                  ),
+                ),
+              ),
+              child: const SizedBox.expand(),
+            ),
+          ),
+        ),
+      );
+      return (reducedMotion: reducedMotion, controller: controller);
+    }
+
+    testWidgets('enters and exits over the given durations by default', (
+      tester,
+    ) async {
+      final (:controller, reducedMotion: _) = await pumpScope(tester);
+
+      final handle = controller.show(_request('a'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(fade(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+
+      handle.dismiss();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(fade(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+      expect(_toast('a'), findsNothing);
+    });
+
+    for (final request in ReducedMotionRequest.values) {
+      group('with ${request.label}', () {
+        testWidgets('enters and exits at once', (tester) async {
+          final (:controller, :reducedMotion) = await pumpScope(tester);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          final handle = controller.show(_request('a'));
+          await tester.pump();
+          expect(fade(tester), 1);
+
+          handle.dismiss();
+          await tester.pump();
+          await tester.pump();
+          expect(_toast('a'), findsNothing);
+        });
+
+        testWidgets('exits at once when requested while visible', (
+          tester,
+        ) async {
+          final (:controller, :reducedMotion) = await pumpScope(tester);
+          final handle = controller.show(_request('a'));
+          await tester.pumpAndSettle();
+
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          handle.dismiss();
+          await tester.pump();
+          await tester.pump();
+          expect(_toast('a'), findsNothing);
+        });
+
+        testWidgets('animates again once withdrawn', (tester) async {
+          final (:controller, :reducedMotion) = await pumpScope(tester);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          reducedMotion.set(request, on: false);
+          await tester.pump();
+
+          controller.show(_request('a'));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 200));
+          expect(fade(tester), closeTo(0.5, 0.01));
+        });
+      });
+    }
   });
 }
 

@@ -156,7 +156,8 @@ class NakedTooltip extends StatefulWidget {
   /// whatever the durations. That is when [MediaQueryData.disableAnimations]
   /// is set or the platform reports `AccessibilityFeatures.reduceMotion`,
   /// which iOS sets for Reduce Motion. A change applies to the next show or
-  /// hide.
+  /// hide. A tooltip that has not been shown yet when the setting is turned
+  /// off may still show once without motion.
   final AnimationStyle animationStyle;
 
   /// Whether the tooltip is inserted into the root overlay.

@@ -293,6 +293,15 @@ void main() {
       expect(find.text('Tooltip'), findsNothing);
     });
 
+    testWidgets('ignores platform changes once removed', (tester) async {
+      final reducedMotion = await pumpTooltip(tester);
+      await tester.pumpMaterialWidget(const SizedBox.shrink());
+
+      reducedMotion.set(ReducedMotionRequest.platformReduceMotion, on: true);
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    });
+
     for (final request in ReducedMotionRequest.values) {
       group('with ${request.label}', () {
         testWidgets('shows and hides at once', (tester) async {
@@ -308,23 +317,24 @@ void main() {
           expect(find.text('Tooltip'), findsNothing);
         });
 
-        testWidgets('shows and hides at once once requested while open', (
-          tester,
-        ) async {
-          final reducedMotion = await pumpTooltip(tester);
-          final mouse = await _hover(tester);
-          await tester.pumpAndSettle();
+        testWidgets(
+          'shows and hides at once after being requested while open',
+          (tester) async {
+            final reducedMotion = await pumpTooltip(tester);
+            final mouse = await _hover(tester);
+            await tester.pumpAndSettle();
 
-          reducedMotion.set(request, on: true);
-          await tester.pump();
-          await mouse.moveTo(Offset.zero);
-          await tester.pump();
-          expect(find.text('Tooltip'), findsNothing);
+            reducedMotion.set(request, on: true);
+            await tester.pump();
+            await mouse.moveTo(Offset.zero);
+            await tester.pump();
+            expect(find.text('Tooltip'), findsNothing);
 
-          await mouse.moveTo(tester.getCenter(find.byKey(_triggerKey)));
-          await tester.pump();
-          expect(_opacity(tester), 1);
-        });
+            await mouse.moveTo(tester.getCenter(find.byKey(_triggerKey)));
+            await tester.pump();
+            expect(_opacity(tester), 1);
+          },
+        );
 
         testWidgets('animates again once withdrawn while open', (tester) async {
           final reducedMotion = await pumpTooltip(tester);

@@ -9,6 +9,9 @@ import 'package:flutter/widgets.dart';
 /// [WidgetsBindingObserver.didChangeAccessibilityFeatures].
 ///
 /// Registers [context] as a dependent of the [MediaQuery] flag and the [View].
+///
+/// Remix's `RemixReducedMotionBuilder` uses the same definition; keep the two
+/// in step.
 bool reducedMotionOf(BuildContext context) {
   final dispatcher = View.maybeOf(context)?.platformDispatcher;
 

@@ -7,6 +7,7 @@ import 'mixins/naked_mixins.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
+import 'utilities/reduced_motion.dart';
 import 'utilities/state.dart';
 
 /// Builds a transition around a disclosure panel.
@@ -155,7 +156,12 @@ class NakedDisclosure extends StatefulWidget {
 
   /// Optional transition applied to the panel.
   ///
-  /// Without a transition builder, expansion and collapse are immediate.
+  /// Without a transition builder, expansion and collapse are immediate. They
+  /// are also immediate while the user asks to reduce motion: when
+  /// [MediaQueryData.disableAnimations] is set or the platform reports
+  /// `AccessibilityFeatures.reduceMotion`, which iOS sets for Reduce Motion.
+  /// A transition already running when the setting is turned on completes at
+  /// once.
   final NakedDisclosureTransitionBuilder? transitionBuilder;
 
   /// Curves and durations used by [transitionBuilder].
@@ -169,7 +175,8 @@ class _NakedDisclosureState extends State<NakedDisclosure>
     with
         WidgetStatesMixin<NakedDisclosure>,
         FocusNodeMixin<NakedDisclosure>,
-        SingleTickerProviderStateMixin<NakedDisclosure> {
+        SingleTickerProviderStateMixin<NakedDisclosure>,
+        WidgetsBindingObserver {
   static int _nextPanelSemanticsIdentifier = 0;
 
   Timer? _keyboardPressTimer;
@@ -237,6 +244,7 @@ class _NakedDisclosureState extends State<NakedDisclosure>
       vsync: this,
     );
     _animation = _createAnimation();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   CurvedAnimation _createAnimation() => CurvedAnimation(
@@ -245,14 +253,24 @@ class _NakedDisclosureState extends State<NakedDisclosure>
     reverseCurve: _reverseCurve,
   );
 
+  void _updateAnimationsDisabled() {
+    _animationsDisabled = reducedMotionOf(context);
+    _applyExpansion();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final animationsDisabled =
-        MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    if (_animationsDisabled == animationsDisabled) return;
-    _animationsDisabled = animationsDisabled;
-    _applyExpansion();
+    if (reducedMotionOf(context) != _animationsDisabled) {
+      _updateAnimationsDisabled();
+    }
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() {
+    if (reducedMotionOf(context) != _animationsDisabled) {
+      setState(_updateAnimationsDisabled);
+    }
   }
 
   @override
@@ -428,6 +446,7 @@ class _NakedDisclosureState extends State<NakedDisclosure>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _cleanupKeyboardPress();
     _panelFocusNode.dispose();
     _animation.dispose();
