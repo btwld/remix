@@ -5,7 +5,7 @@
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal]
 ///     [--source both|hosted|checkout]
 ///     [--item dashboard_demo|dashboard_shell|icons]
-///     [--icon-library remix|lucide] [--hosted-cli] [--keep]
+///     [--icon-library remix|lucide] [--hosted-cli] [--jobs N] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -14,10 +14,15 @@
 /// hosted Remix first, then regenerates against the checkout. CI selects the
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
+///
+/// The independent-item installs run in parallel: `--jobs N` or
+/// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
+/// core, never fewer than two or more than four.
 library;
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:yaml/yaml.dart';
 
@@ -339,6 +344,7 @@ final class ConsumerCheckOptions {
     required this.hostedCli,
     required this.item,
     this.iconLibrary = 'remix',
+    this.jobs,
   });
 
   final bool keep;
@@ -346,6 +352,9 @@ final class ConsumerCheckOptions {
   final RemixSource source;
   final bool hostedCli;
   final String? item;
+
+  /// Independent items installed at once, or null to resolve the default.
+  final int? jobs;
 
   /// The `iconLibrary` written to the fresh app's remix.yaml before install.
   final String iconLibrary;
@@ -360,6 +369,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var hostedCli = false;
   var iconLibrary = 'remix';
   var sawIconLibrary = false;
+  int? jobs;
   String? item;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
@@ -371,6 +381,12 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     if (argument == '--keep') {
       if (keep) return null;
       keep = true;
+      continue;
+    }
+    if (argument == '--jobs') {
+      if (jobs != null || index + 1 >= arguments.length) return null;
+      jobs = _positiveInt(arguments[++index]);
+      if (jobs == null) return null;
       continue;
     }
     if (argument == '--item') {
@@ -419,6 +435,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   if (hostedCli && source != RemixSource.hosted) return null;
   if (item != null && source != RemixSource.checkout) return null;
+  if (item != null && jobs != null) return null;
   if (item == 'icons' && preset.name != 'vanilla') return null;
   return ConsumerCheckOptions(
     keep: keep,
@@ -427,7 +444,35 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     hostedCli: hostedCli,
     item: item,
     iconLibrary: iconLibrary,
+    jobs: jobs,
   );
+}
+
+int? _positiveInt(String text) {
+  final value = int.tryParse(text);
+  return value != null && value > 0 ? value : null;
+}
+
+/// The default cap on concurrent installs. Each is a `pub get`, an analyzer
+/// run, and, for items with generated files, a `build_runner` build; past a few
+/// at once they contend for CPU and memory instead of finishing sooner.
+const _maxDefaultJobs = 4;
+
+/// How many independent items are installed at once: [requested] (`--jobs`),
+/// else [fromEnvironment] (`REMIX_OPEN_CODE_JOBS`), else one per processor up
+/// to [_maxDefaultJobs], never fewer than two.
+///
+/// Null when [requested] is absent and [fromEnvironment] is not a positive
+/// integer, so a misspelled override fails the run instead of silently falling
+/// back to the default.
+int? resolveJobs({
+  int? requested,
+  String? fromEnvironment,
+  required int processors,
+}) {
+  if (requested != null) return requested;
+  if (fromEnvironment != null) return _positiveInt(fromEnvironment);
+  return min(max(processors, 2), _maxDefaultJobs);
 }
 
 Future<void> main(List<String> arguments) async {
@@ -438,8 +483,19 @@ Future<void> main(List<String> arguments) async {
       '[--preset vanilla|fortal] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell|icons (requires --source '
       'checkout; icons is vanilla)] [--icon-library remix|lucide] '
-      '[--hosted-cli (requires --source hosted)] [--keep]',
+      '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
+      '[--keep]',
     );
+    exitCode = 64;
+    return;
+  }
+  final jobs = resolveJobs(
+    requested: parsed.jobs,
+    fromEnvironment: Platform.environment['REMIX_OPEN_CODE_JOBS'],
+    processors: Platform.numberOfProcessors,
+  );
+  if (jobs == null) {
+    stderr.writeln('REMIX_OPEN_CODE_JOBS must be a positive integer.');
     exitCode = 64;
     return;
   }
@@ -453,6 +509,7 @@ Future<void> main(List<String> arguments) async {
     source: parsed.source,
     hostedCli: parsed.hostedCli,
     item: parsed.item,
+    jobs: jobs,
   );
   if (failure != null) {
     stderr.writeln('open-code check failed: ${failure.message}');
@@ -468,6 +525,7 @@ Future<_Failure?> _run(
   required bool hostedCli,
   required String? item,
   required String iconLibrary,
+  required int jobs,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -510,6 +568,7 @@ Future<_Failure?> _run(
       hostedCli: hostedCli,
       item: item,
       iconLibrary: iconLibrary,
+      jobs: jobs,
     );
     if (checkFailure != null) {
       return _retainedFailure(parent, checkFailure);
@@ -563,6 +622,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required bool hostedCli,
   required String? item,
   required String iconLibrary,
+  required int jobs,
 }) async {
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
@@ -657,6 +717,7 @@ Future<_Failure?> _checkInTemporaryApp({
     app: app,
     preset: preset,
     environment: environment,
+    jobs: jobs,
   );
   if (independent != null) return independent;
 
@@ -991,15 +1052,24 @@ _Failure? _verifyFocusedDependencies(
 
 /// Each surface must compile with only its own dependency closure. The full
 /// gallery installs every item and would otherwise mask an omitted dependency.
+///
+/// Each item gets its own directory, resolution, and generator run, and shares
+/// only the pub cache and the Flutter SDK, so up to [jobs] of them are
+/// installed at once. Concurrent `flutter` calls queue on the SDK's startup
+/// lock, which slows them without blocking them.
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
   required _PresetContract preset,
   required Map<String, String> environment,
+  required int jobs,
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  for (final item in _independentRegistryItems) {
+  const items = _independentRegistryItems;
+
+  Future<_Failure?> checkItem(String item, StringSink log) async {
+    final elapsed = Stopwatch()..start();
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
@@ -1028,6 +1098,7 @@ Future<_Failure?> _checkIndependentItems({
         command,
         workingDirectory: isolated.path,
         environment: environment,
+        log: log,
       );
       if (failure != null)
         return _Failure('Independent $item install failed: ${failure.message}');
@@ -1045,10 +1116,73 @@ Future<_Failure?> _checkIndependentItems({
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
     _step(
-      'Independent $item installed, generated, and analyzed with its own dependencies.',
+      'Independent $item installed, generated, and analyzed with its own '
+      'dependencies (${elapsed.elapsed.inSeconds}s).',
+      log,
     );
+    return null;
   }
-  return null;
+
+  _step('Checking ${items.length} independent items, up to $jobs at a time.');
+  return runPooled(items, limit: jobs, out: stdout, work: checkItem);
+}
+
+/// Runs [work] for every input with at most [limit] in flight, and returns the
+/// failure of the earliest input that failed, or null.
+///
+/// Each call gets its own log, and the logs reach [out] in input order as soon
+/// as every earlier one has, so the output does not depend on which task
+/// finished first. After a failure or an exception no further input is
+/// started; the tasks already running are awaited, so nothing outlives the
+/// call, and their logs are still written.
+///
+/// An exception from [work] is rethrown after that, but only when no earlier
+/// input failed or threw, so the outcome is the one a serial run would reach.
+Future<F?> runPooled<T, F extends Object>(
+  List<T> inputs, {
+  required int limit,
+  required StringSink out,
+  required Future<F?> Function(T input, StringSink log) work,
+}) async {
+  if (limit < 1) throw ArgumentError.value(limit, 'limit', 'must be positive');
+  final logs = [for (final _ in inputs) StringBuffer()];
+  final finished = List.filled(inputs.length, false);
+  final failures = <int, F>{};
+  final errors = <int, (Object, StackTrace)>{};
+  var started = 0;
+  var written = 0;
+  var stopped = false;
+
+  Future<void> worker() async {
+    while (!stopped && started < inputs.length) {
+      final index = started++;
+      try {
+        final failure = await work(inputs[index], logs[index]);
+        if (failure != null) {
+          failures[index] = failure;
+          stopped = true;
+        }
+      } catch (error, stackTrace) {
+        errors[index] = (error, stackTrace);
+        stopped = true;
+      } finally {
+        finished[index] = true;
+        while (written < inputs.length && finished[written]) {
+          out.write(logs[written++]);
+        }
+      }
+    }
+  }
+
+  await Future.wait([
+    for (var slot = 0; slot < min(limit, inputs.length); slot += 1) worker(),
+  ]);
+  final problems = [...failures.keys, ...errors.keys];
+  if (problems.isEmpty) return null;
+  final first = problems.reduce(min);
+  final error = errors[first];
+  if (error != null) Error.throwWithStackTrace(error.$1, error.$2);
+  return failures[first];
 }
 
 /// The checkout packages a preset's install resolves locally: Remix, its
@@ -1681,11 +1815,17 @@ bool _isWithin(String path, String parent) =>
 
 String _basename(String path) => path.split(Platform.pathSeparator).last;
 
+/// Runs a process, streaming its output to this process' stdio.
+///
+/// Concurrent callers pass a [log] instead: inherited stdio from several
+/// processes at once interleaves into an unreadable log, so the output goes to
+/// the buffer for the caller to emit as one block.
 Future<_Failure?> _runProcess(
   String executable,
   List<String> arguments, {
   required String workingDirectory,
   Map<String, String>? environment,
+  StringSink? log,
 }) async {
   final harness = environment?['REMIX_REGISTRY_CONSUMER_CLI'];
   if (harness != null &&
@@ -1694,7 +1834,7 @@ Future<_Failure?> _runProcess(
       arguments[1] == 'remix_cli:remix') {
     arguments = ['run', harness, ...arguments.skip(2)];
   }
-  stdout.writeln('\$ $executable ${arguments.join(' ')}');
+  (log ?? stdout).writeln('\$ $executable ${arguments.join(' ')}');
   final Process process;
   try {
     process = await Process.start(
@@ -1702,12 +1842,26 @@ Future<_Failure?> _runProcess(
       arguments,
       workingDirectory: workingDirectory,
       environment: environment,
-      mode: ProcessStartMode.inheritStdio,
+      mode: log == null
+          ? ProcessStartMode.inheritStdio
+          : ProcessStartMode.normal,
     );
   } on ProcessException catch (error) {
     return _Failure('could not start `$executable`: ${error.message}');
   }
+  // A process that fills a pipe nobody reads never exits, and one that reads
+  // stdin never would, so stdin is closed and both pipes are drained alongside
+  // the exit code.
+  const decoder = Utf8Decoder(allowMalformed: true);
+  final drained = <Future<Object?>>[
+    if (log != null) ...[
+      process.stdin.close(),
+      process.stdout.transform(decoder).forEach(log.write),
+      process.stderr.transform(decoder).forEach(log.write),
+    ],
+  ];
   final code = await process.exitCode;
+  await Future.wait(drained);
   if (code == 0) return null;
   return _Failure('`$executable ${arguments.join(' ')}` exited $code');
 }
@@ -1813,7 +1967,8 @@ _Failure _retainedFailure(
   exitCode: problem is _Failure ? problem.exitCode : 1,
 );
 
-void _step(String message) => stdout.writeln('✓ $message');
+void _step(String message, [StringSink? sink]) =>
+    (sink ?? stdout).writeln('✓ $message');
 
 final class _Toolchain {
   const _Toolchain({
