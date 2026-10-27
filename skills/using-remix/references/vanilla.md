@@ -121,6 +121,9 @@ families carry over.
   `RemixMenuTrigger.control(builder: ...)` and give the button the handle's
   `focusNode` and `toggle` as its `focusNode` and `onPressed`; the button then
   owns the look and accessible name, and `<Prefix>Menu` styles only the panel.
+  A `RemixMenuTrigger.builder` replaces the styled trigger, ring included, so
+  its content draws its own `onFocusVisible` ring, as the dashboard's account
+  row does with `RemixCard` and `<prefix>FocusRing()`.
 - **Toast** — style lives on the scope:
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)
