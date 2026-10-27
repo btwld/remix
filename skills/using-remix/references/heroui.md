@@ -151,21 +151,22 @@ Widget actions() => HeroUiDropdown<String>(
 - A toast puts its action under the message at 768px and below, and the action
   gains HeroUI's `mt-2` below 640px through a second `action`. An `action`
   replaces rather than merges, so a caller who styles it restates
-  `heroUiButtonStyle()` in the base `action` and again, with the margin, below
-  640px; otherwise the recipe's own action wins there:
+  the button style, with its variant, in the base `action` and again, with the
+  margin, below 640px; otherwise the recipe's own action wins there:
 
 ```dart
-import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
-ToastStyler brandedAction(Color color) => ToastStyler()
-    .action(heroUiButtonStyle().color(color))
+ToastStyler secondaryAction() => ToastStyler()
+    .action(heroUiButtonStyle(variant: .secondary))
     .onNot(
       ContextVariant.breakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
       ),
-      ToastStyler().action(heroUiButtonStyle().color(color).margin(.top(2))),
+      ToastStyler().action(
+        heroUiButtonStyle(variant: .secondary).margin(.top(2)),
+      ),
     );
 ```
 
@@ -203,8 +204,8 @@ and their `*Foreground`, `*Hover`, and `*Soft` forms; radii `radiusXs` through
 motion curves `easeSmooth`, `easeOut`, `easeOutQuart`, `easeOutFluid`; and
 the transitions `fillMotion`, `smoothMotion`, `selectionMotion`, and
 `transformMotion`. These transitions run whatever the OS motion setting: Mix
-2.3.1's `.animate` does not read reduced motion, and that is tracked as a Mix
-follow-up. Remix's own select, accordion, spinner, and dialog motion honors it.
+2.3.1's `.animate` does not read reduced motion. Remix's own select,
+accordion, spinner, and dialog motion honors it.
 Derive a translucent colour with `heroUiAlpha(token, alpha)` held in a
 top-level final, never `token().withValues(...)`.
 
