@@ -45,7 +45,10 @@ RadioStyler fortalRadioStyle({
   }).merge(style);
 }
 
-RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
+RadioStyler _fortalRadioBaseStyler(
+  FortalRadioSize size, {
+  required Color focusColor,
+}) {
   final metrics = _fortalRadioMetrics(size);
   return RadioStyler(
     container: .size(
@@ -62,10 +65,7 @@ RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
     ),
   ).onFocusVisible(
     .containerEffects(
-      fortalFocusOutline(
-        FortalTokens.focus8(),
-        offset: FortalTokens.focusRingOffset(),
-      ),
+      fortalFocusOutline(focusColor, offset: FortalTokens.focusRingOffset()),
     ),
   );
 }
@@ -77,7 +77,7 @@ RadioStyler _fortalRadioClassicStyler(
   final selectedColor = highContrast
       ? FortalTokens.accent12()
       : FortalTokens.accentIndicator();
-  return _fortalRadioBaseStyler(size)
+  return _fortalRadioBaseStyler(size, focusColor: FortalTokens.focus8())
       .color(FortalTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
@@ -149,7 +149,7 @@ RadioStyler _fortalRadioSurfaceStyler(
   FortalRadioSize size, {
   required bool highContrast,
 }) {
-  return _fortalRadioBaseStyler(size)
+  return _fortalRadioBaseStyler(size, focusColor: FortalTokens.focus8())
       .color(FortalTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -202,7 +202,7 @@ RadioStyler _fortalRadioSoftStyler(
   FortalRadioSize size, {
   required bool highContrast,
 }) {
-  return _fortalRadioBaseStyler(size)
+  return _fortalRadioBaseStyler(size, focusColor: FortalTokens.accentA8())
       .color(FortalTokens.accentA4())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),

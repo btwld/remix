@@ -45,7 +45,7 @@ RadioStyler uiRadioStyle({
   }).merge(style);
 }
 
-RadioStyler _uiRadioBaseStyler(UiRadioSize size) {
+RadioStyler _uiRadioBaseStyler(UiRadioSize size, {required Color focusColor}) {
   final metrics = _uiRadioMetrics(size);
   return RadioStyler(
     container: .size(
@@ -62,7 +62,7 @@ RadioStyler _uiRadioBaseStyler(UiRadioSize size) {
     ),
   ).onFocusVisible(
     .containerEffects(
-      uiFocusOutline(UiTokens.focus8(), offset: UiTokens.focusRingOffset()),
+      uiFocusOutline(focusColor, offset: UiTokens.focusRingOffset()),
     ),
   );
 }
@@ -74,7 +74,7 @@ RadioStyler _uiRadioClassicStyler(
   final selectedColor = highContrast
       ? UiTokens.accent12()
       : UiTokens.accentIndicator();
-  return _uiRadioBaseStyler(size)
+  return _uiRadioBaseStyler(size, focusColor: UiTokens.focus8())
       .color(UiTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
@@ -144,7 +144,7 @@ RadioStyler _uiRadioSurfaceStyler(
   UiRadioSize size, {
   required bool highContrast,
 }) {
-  return _uiRadioBaseStyler(size)
+  return _uiRadioBaseStyler(size, focusColor: UiTokens.focus8())
       .color(UiTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -186,7 +186,7 @@ RadioStyler _uiRadioSurfaceStyler(
 }
 
 RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
-  return _uiRadioBaseStyler(size)
+  return _uiRadioBaseStyler(size, focusColor: UiTokens.accentA8())
       .color(UiTokens.accentA4())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),

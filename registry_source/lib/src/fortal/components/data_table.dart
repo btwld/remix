@@ -58,7 +58,7 @@ DataTableStyler fortalDataTableStyle({
             .fontWeight(FortalTokens.fontWeightRegular())
             .color(FortalTokens.gray11()),
       )
-      .headerCell(_fortalDataTableCell(metrics))
+      .headerCell(_fortalDataTableHeaderCell(metrics))
       .bodyCell(_fortalDataTableCell(metrics))
       // The selection column is a Fortal extension with no Radix counterpart.
       // It carries no padding of its own, so the composed checkbox's
@@ -127,6 +127,25 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
 BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
+
+/// A sortable header takes focus, which Radix draws as
+/// `outline: 2px solid var(--focus-8)`. The outline paints over its element and
+/// reserves no space, so the ring is a foreground border like the row divider,
+/// kept inside the cell where the neighboring cells cannot cover it.
+BoxStyler _fortalDataTableHeaderCell(_FortalDataTableMetrics metrics) =>
+    _fortalDataTableCell(metrics).onFocusVisible(
+      BoxStyler().foregroundDecoration(
+        BoxDecorationMix(
+          border: BoxBorderMix.all(
+            BorderSideMix(
+              color: FortalTokens.focus8(),
+              width: FortalTokens.focusRingWidth(),
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+          ),
+        ),
+      ),
+    );
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the
