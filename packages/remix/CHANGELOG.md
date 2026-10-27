@@ -85,6 +85,11 @@
   accordion trigger, and disclosure trigger content keeps its state when a
   style adds or removes a decoration such as a focus ring. Previously such a
   change rebuilt the part's content from scratch.
+- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
+  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
+  `AlertDialog` content. It previously asserted "LayoutBuilder does not
+  support returning intrinsic dimensions" in debug mode and collapsed in
+  release mode.
 - Data-table headers without `sortable`, including the selection header, no
   longer read widget state from outside the table. A table inside a focused,
   hovered, or pressed ancestor, such as a `Pressable`, no longer lights their
@@ -103,6 +108,12 @@
   place while the options scroll. The options column now sizes to its content
   inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max` on
   `menuContainer` no longer distribute free vertical space.
+- `RemixMenu` and its submenus scroll a list taller than their overlay or than
+  a `maxHeight` on the `overlay` style, instead of overflowing. A short menu
+  still shrinks to its items, and the panel's padding, decoration, and effects
+  stay in place while the items scroll. The items column now sizes to its
+  content inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max`
+  on `overlay` no longer distribute free vertical space.
 
 ## 1.0.0-beta.13
 

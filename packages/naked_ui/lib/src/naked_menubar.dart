@@ -2,6 +2,7 @@ import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/widgets.dart';
 
+import 'utilities/focus_in_view.dart';
 import 'utilities/intents.dart';
 
 /// Focus nodes for the triggers in one [NakedMenubar], in tree order.
@@ -34,13 +35,13 @@ class MenubarTriggers {
     if (index < 0 || _nodes.length < 2) return;
     final delta = forward ? 1 : -1;
     final next = _nodes[(index + delta + _nodes.length) % _nodes.length];
-    next.requestFocus();
+    requestFocusInView(next);
   }
 
   /// Moves focus to the first or last trigger.
   void focusEdge({required bool last}) {
     if (_nodes.isEmpty) return;
-    (last ? _nodes.last : _nodes.first).requestFocus();
+    requestFocusInView(last ? _nodes.last : _nodes.first);
   }
 }
 
