@@ -57,8 +57,9 @@
   the first Arrow Down reaches the second option and Enter selects the first,
   where focus used to start on the overlay container. Focus stays on a field in
   the panel that has already taken it.
-- Items in `NakedSelect` and `NakedMenu` clear keyboard focus when the pointer
-  moves over them, no longer when a list scrolls under a resting pointer.
+- Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
+  hovering a submenu row also opens it after its delay, only when the pointer
+  moves over it, no longer when a list scrolls under a resting pointer.
 
 ## 1.2.3
 
