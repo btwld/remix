@@ -326,8 +326,7 @@ void main() {
       expect(tester.takeException(), isNull);
 
       // The surface variant's last row merges lastBodyRow over bodyRow, so
-      // exactly one of the three rendered dividers is suppressed. A divider
-      // draws only its bottom edge, which tells it from a header's focus ring.
+      // exactly one of the three rendered dividers is suppressed.
       final dividers = tester
           .widgetList<Box>(find.byType(Box))
           .map(
@@ -336,7 +335,6 @@ void main() {
                     ?.border,
           )
           .whereType<Border>()
-          .where((border) => border.top.style == BorderStyle.none)
           .map((border) => border.bottom.style)
           .toList();
       expect(dividers, hasLength(3));
