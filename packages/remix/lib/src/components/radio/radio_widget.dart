@@ -71,11 +71,6 @@ class RemixRadio<T> extends StatelessWidget {
   ///
   /// The label is also used as the accessible name unless [semanticLabel]
   /// overrides it.
-  ///
-  /// A labeled control cannot be measured by a parent that asks for intrinsic
-  /// size, such as [IntrinsicWidth], [IntrinsicHeight], or the horizontal
-  /// layout of `RemixDataList`. Under such a parent, compose the label beside
-  /// the control and name the control with [semanticLabel].
   final String? label;
 
   /// Accessible name for this radio.

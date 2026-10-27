@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart' show NakedToggle;
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
     show RemixBoxAdapter, RemixFlexBoxAdapter;
@@ -188,6 +189,26 @@ final List<_Part> _parts = [
     open: null,
   ),
   (
+    name: 'Accordion custom trigger',
+    label: 'Custom',
+    adapter: RemixBoxAdapter,
+    build: (ring, node) => RemixAccordionGroup<String>(
+      controller: RemixAccordionController<String>(),
+      child: RemixAccordion<String>(
+        value: 'a',
+        focusNode: node,
+        builder: (context, state) =>
+            const Padding(padding: EdgeInsets.all(8), child: Text('Custom')),
+        style: AccordionStyler().onFocusVisible(
+          AccordionStyler().triggerEffects(ring),
+        ),
+        child: const Text('Content'),
+      ),
+    ),
+    focus: _focusNode,
+    open: null,
+  ),
+  (
     name: 'Disclosure trigger',
     label: 'Trigger',
     adapter: RemixBoxAdapter,
@@ -198,6 +219,23 @@ final List<_Part> _parts = [
       style: DisclosureStyler()
           .padding(.all(8))
           .onFocusVisible(DisclosureStyler().triggerEffects(ring)),
+    ),
+    focus: _focusNode,
+    open: null,
+  ),
+  (
+    name: 'Disclosure custom trigger',
+    label: 'Custom',
+    adapter: RemixBoxAdapter,
+    build: (ring, node) => RemixDisclosure(
+      trigger: const Text('Trigger'),
+      triggerBuilder: (context, state, child) =>
+          const Padding(padding: EdgeInsets.all(8), child: Text('Custom')),
+      content: const Text('Content'),
+      focusNode: node,
+      style: DisclosureStyler().onFocusVisible(
+        DisclosureStyler().triggerEffects(ring),
+      ),
     ),
     focus: _focusNode,
     open: null,
@@ -256,6 +294,47 @@ List<Rect> _adapterRects(WidgetTester tester) => [
           (element.renderObject! as RenderBox).size,
 ];
 
+Widget _sidebar({required bool collapsed, required FocusNode node}) => _harness(
+  SizedBox(
+    height: 300,
+    child: RemixSidebar<String>(
+      expandedWidth: 256,
+      collapsedWidth: 72,
+      collapsed: collapsed,
+      showTooltips: false,
+      selectedValue: 'home',
+      onSelected: (_) {},
+      sections: [
+        RemixSidebarSection(
+          label: 'Workspace',
+          destinations: [
+            RemixSidebarDestination(
+              value: 'home',
+              label: 'Overview',
+              icon: Icons.home,
+              focusNode: node,
+            ),
+            const RemixSidebarDestination(
+              value: 'settings',
+              label: 'Settings',
+              icon: Icons.settings,
+            ),
+          ],
+        ),
+      ],
+      style: SidebarStyler()
+          .content(FlexBoxStyler().padding(.all(12)))
+          .destination(
+            SidebarDestinationStyler()
+                .padding(.all(8))
+                .onFocusVisible(
+                  SidebarDestinationStyler().containerEffects(_ring()),
+                ),
+          ),
+    ),
+  ),
+);
+
 void _useTraditionalFocus() {
   final previous = FocusManager.instance.highlightStrategy;
   addTearDown(() => FocusManager.instance.highlightStrategy = previous);
@@ -305,8 +384,12 @@ void main() {
     }
 
     for (final part in _parts.where(
-      (part) =>
-          const {'Accordion trigger', 'Disclosure trigger'}.contains(part.name),
+      (part) => const {
+        'Accordion trigger',
+        'Accordion custom trigger',
+        'Disclosure trigger',
+        'Disclosure custom trigger',
+      }.contains(part.name),
     )) {
       testWidgets('${part.name} ring hugs the trigger, not the panel', (
         tester,
@@ -418,6 +501,69 @@ void main() {
           _rgba(_ringColor),
         );
       });
+    });
+  });
+
+  group('sidebar destination', () {
+    final destination = find.ancestor(
+      of: find.byIcon(Icons.home),
+      matching: find.byType(NakedToggle),
+    );
+
+    Future<void> expectRingOnFocus(
+      WidgetTester tester, {
+      required bool collapsed,
+    }) async {
+      _useTraditionalFocus();
+      final node = FocusNode();
+      addTearDown(node.dispose);
+
+      await tester.pumpWidget(_sidebar(collapsed: collapsed, node: node));
+      await tester.pumpAndSettle();
+      final rect = tester.getRect(destination);
+      final iconRect = tester.getRect(find.byIcon(Icons.home));
+
+      expect(
+        _outsideRingPixel(await _capture(tester), rect),
+        isNot(_rgba(_ringColor)),
+        reason: 'idle',
+      );
+
+      await _focusNode(tester, node);
+
+      expect(tester.getRect(destination), rect, reason: 'destination bounds');
+      expect(tester.getRect(find.byIcon(Icons.home)), iconRect, reason: 'icon');
+      expect(
+        _outsideRingPixel(await _capture(tester), rect),
+        _rgba(_ringColor),
+        reason: 'focused',
+      );
+    }
+
+    testWidgets('paints its ring on focus when expanded', (tester) async {
+      await expectRingOnFocus(tester, collapsed: false);
+    });
+
+    testWidgets('paints its ring on focus when collapsed', (tester) async {
+      await expectRingOnFocus(tester, collapsed: true);
+    });
+
+    testWidgets('keeps painting its ring while the sidebar animates', (
+      tester,
+    ) async {
+      _useTraditionalFocus();
+      final node = FocusNode();
+      addTearDown(node.dispose);
+
+      await tester.pumpWidget(_sidebar(collapsed: false, node: node));
+      await _focusNode(tester, node);
+      await tester.pumpWidget(_sidebar(collapsed: true, node: node));
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(
+        _outsideRingPixel(await _capture(tester), tester.getRect(destination)),
+        _rgba(_ringColor),
+      );
     });
   });
 

@@ -265,6 +265,13 @@ A destination's `style` merges after the panel's default destination style, so
 local exceptions retain shared hover, focus, selected, and disabled variants.
 A raw `SidebarSpec` is authoritative and bypasses both fluent layers.
 
+`SidebarDestinationStyler` is a `ToggleStyler`, so `containerEffects` draws an
+outline around a destination without taking layout space, collapsed or expanded.
+Put a focus ring in an `onFocusVisible` variant. In a bounded-height sidebar the
+destinations scroll, and the scroll region crops a ring drawn outside a
+destination at its edge: keep the ring within the `content` padding, or use a
+negative `outlineOffset`.
+
 <CodeGroup title="Fluent styling" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';

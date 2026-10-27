@@ -40,10 +40,13 @@
   `MenuTriggerStyler`, and `triggerEffects` to `AccordionStyler` and
   `DisclosureStyler`. An outline or paint layer draws around the part without
   taking layout space, so a focus ring no longer resizes the part or shifts its
-  neighbors. On the accordion and disclosure, `containerEffects` still covers
-  the whole panel and `triggerEffects` covers only the trigger. A toggle group
-  styled with `clipBehavior` (every shipped preset sets one) crops an outside
-  ring on its end items; use a negative `outlineOffset` there.
+  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
+  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
+  disclosure, `containerEffects` still covers the whole panel and
+  `triggerEffects` covers only the trigger, including the widget a custom
+  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
+  group styled with `clipBehavior` (every shipped preset sets one) crops an
+  outside ring on its end items; use a negative `outlineOffset` there.
 - Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
   inside the control's pointer, hover, press, focus, and single semantics
   target and used as its accessible name, as `RemixCheckbox.label` is.
@@ -82,6 +85,11 @@
   accordion trigger, and disclosure trigger content keeps its state when a
   style adds or removes a decoration such as a focus ring. Previously such a
   change rebuilt the part's content from scratch.
+- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
+  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
+  `AlertDialog` content. It previously asserted "LayoutBuilder does not
+  support returning intrinsic dimensions" in debug mode and collapsed in
+  release mode.
 - Data-table headers without `sortable`, including the selection header, no
   longer read widget state from outside the table. A table inside a focused,
   hovered, or pressed ancestor, such as a `Pressable`, no longer lights their
@@ -94,6 +102,12 @@
   trigger's state.
 - `RemixSidebar` header and footer content no longer resolves `onDisabled`
   variants when the sidebar is disabled. The sidebar's own regions still do.
+- `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
+  on the content or menu container, instead of overflowing. A short list still
+  shrinks to its options, and the container's padding and decoration stay in
+  place while the options scroll. The options column now sizes to its content
+  inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max` on
+  `menuContainer` no longer distribute free vertical space.
 
 ## 1.0.0-beta.13
 

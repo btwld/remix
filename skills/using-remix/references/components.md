@@ -64,10 +64,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `labelSpacing` (default 8) and the label style is `.label(...)` /
   `.labelColor(...)`. The target is the control's own size unless
   `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
-  48x48), so opt in with `Size.square(48)` for touch. A labeled Checkbox,
-  Radio, or Switch cannot be measured by intrinsic-sizing parents
-  (`IntrinsicWidth`, `IntrinsicHeight`, the horizontal `RemixDataList`); there,
-  compose the label beside the control and pass `semanticLabel`.
+  48x48), so opt in with `Size.square(48)` for touch.
 - **CheckboxGroup** — keyboard model deliberately differs from Radix Themes:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML

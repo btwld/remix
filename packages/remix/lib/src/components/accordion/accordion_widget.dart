@@ -348,9 +348,14 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         // The panel is mounted inside the trigger's state scope, which belongs
         // to the trigger alone.
         child: WidgetStateProvider(states: const {}, child: _config.child),
-        builder:
-            _config.builder ??
-            (context, state) => _buildDefaultTrigger(spec, state),
+        builder: (context, state) => switch (_config.builder) {
+          final builder? => RemixBoxAdapter(
+            styleSpec: const StyleSpec(spec: BoxSpec()),
+            containerEffects: spec.triggerEffects,
+            child: builder(context, state),
+          ),
+          null => _buildDefaultTrigger(spec, state),
+        },
       ),
     );
   }
