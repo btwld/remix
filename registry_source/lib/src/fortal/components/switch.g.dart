@@ -15,7 +15,9 @@ class FortalSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -32,7 +34,9 @@ class FortalSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -49,7 +53,9 @@ class FortalSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -66,7 +72,9 @@ class FortalSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -86,7 +94,11 @@ class FortalSwitch extends StatelessWidget {
 
   final bool selected;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final ValueChanged<bool>? onChanged;
 
@@ -113,7 +125,9 @@ class FortalSwitch extends StatelessWidget {
         style: this.style,
       ),
       selected: this.selected,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       onChanged: this.onChanged,
       enabled: this.enabled,
       enableFeedback: this.enableFeedback,

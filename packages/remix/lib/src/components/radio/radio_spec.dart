@@ -4,14 +4,26 @@ part of 'radio.dart';
 ///
 /// The spec is populated by [RadioStyler] and consumed by the widget when
 /// building the control. It provides two [StyleSpec] segments representing the
-/// container (outer ring) and the indicator fill shown when the radio is selected.
-@MixableSpec(target: RemixRadio.new, extraStylerMixins: [RemixBoxStylerMixin])
+/// container (outer ring), the indicator fill shown when the radio is selected,
+/// and the optional visible label.
+@MixableSpec(
+  target: RemixRadio.new,
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin],
+)
 class RadioSpec with _$RadioSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
   final StyleSpec<BoxSpec> indicator;
+
+  /// Styling specification for the optional visible radio label.
+  @override
+  final StyleSpec<TextSpec> label;
+
+  /// Gap between the radio and its optional visible label.
+  @override
+  final double labelSpacing;
 
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
@@ -20,16 +32,20 @@ class RadioSpec with _$RadioSpec {
   const RadioSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
+    StyleSpec<TextSpec>? label,
+    double? labelSpacing,
     this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
-       indicator = indicator ?? const StyleSpec(spec: BoxSpec());
+       indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
+       label = label ?? const StyleSpec(spec: TextSpec()),
+       labelSpacing = labelSpacing ?? 8;
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
   RadioSpec lerp(RadioSpec? other, double t) {
+    if (other == null) return this;
     final generated = super.lerp(other, t);
-    if (other == null) return generated;
     return generated.copyWith(
       containerEffects: RemixBoxEffectsSpec.lerpNullable(
         containerEffects,

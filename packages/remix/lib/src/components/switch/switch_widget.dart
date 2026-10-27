@@ -6,7 +6,7 @@ part of 'switch.dart';
 ///
 /// ```dart
 /// RemixSwitch(
-///   semanticLabel: 'Enable feature',
+///   label: 'Enable feature',
 ///   selected: _isEnabled,
 ///   onChanged: (value) {
 ///     setState(() {
@@ -19,7 +19,9 @@ class RemixSwitch extends StatelessWidget {
   const RemixSwitch({
     super.key,
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -29,9 +31,14 @@ class RemixSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const SwitchStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : assert(label != '', 'RemixSwitch.label must not be empty.'),
+       assert(
          semanticLabel != '',
          'RemixSwitch.semanticLabel must be a nonblank accessible name.',
+       ),
+       assert(
+         label != null || semanticLabel != null,
+         'RemixSwitch requires a label or a semanticLabel.',
        );
 
   /// Whether this switch is enabled.
@@ -63,11 +70,24 @@ class RemixSwitch extends StatelessWidget {
   /// Whether the switch should automatically request focus when it is created.
   final bool autofocus;
 
+  /// Optional visible label included in the switch's interaction target.
+  ///
+  /// The label is also used as the accessible name unless [semanticLabel]
+  /// overrides it.
+  final String? label;
+
   /// Accessible name for this switch.
   ///
-  /// Required and must be nonblank. A bare switch must not be unnamed;
-  /// do not rely on adjacent [Text] as the accessible composition.
-  final String semanticLabel;
+  /// Defaults to [label]. At least one of the two is required and neither may
+  /// be blank. A bare switch must not be unnamed; do not rely on adjacent
+  /// [Text] as the accessible composition.
+  final String? semanticLabel;
+
+  /// Minimum pointer, focus, and semantics target size.
+  ///
+  /// Defaults to [Size.zero], which keeps the switch's own geometry. Pass
+  /// `Size.square(48)` to meet platform tap target guidelines.
+  final Size minimumTapTargetSize;
 
   /// Whether to hide the switch and its visual subtree from semantics.
   final bool excludeSemantics;
@@ -86,8 +106,18 @@ class RemixSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(
-      semanticLabel.trim().isNotEmpty,
+      label == null || label!.trim().isNotEmpty,
+      'RemixSwitch.label must not be blank.',
+    );
+    assert(
+      semanticLabel == null || semanticLabel!.trim().isNotEmpty,
       'RemixSwitch.semanticLabel must be a nonblank accessible name.',
+    );
+    assert(
+      minimumTapTargetSize.isFinite &&
+          minimumTapTargetSize.width >= 0 &&
+          minimumTapTargetSize.height >= 0,
+      'RemixSwitch.minimumTapTargetSize must be finite and non-negative.',
     );
     // Forwarded raw: NakedToggle derives interactivity from
     // enabled && onChanged != null itself.
@@ -99,7 +129,7 @@ class RemixSwitch extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
+      semanticLabel: semanticLabel ?? label,
       asSwitch: true,
       excludeSemantics: excludeSemantics,
       builder: (context, state, _) {
@@ -108,13 +138,25 @@ class RemixSwitch extends StatelessWidget {
           styleSpec: styleSpec,
           controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
-            return RemixBoxAdapter(
+            final track = RemixBoxAdapter(
               styleSpec: spec.container,
               containerEffects: spec.trackEffects,
               child: RemixBoxAdapter(
                 styleSpec: spec.thumb,
                 containerEffects: spec.thumbEffects,
               ),
+            );
+
+            if (label == null && minimumTapTargetSize == Size.zero) {
+              return track;
+            }
+
+            return RemixLabeledControl(
+              control: track,
+              label: label,
+              labelSpec: spec.label,
+              labelSpacing: spec.labelSpacing,
+              minimumTapTargetSize: minimumTapTargetSize,
             );
           },
         );

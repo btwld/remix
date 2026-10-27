@@ -11,16 +11,26 @@ void main() {
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.thumb, isA<StyleSpec<BoxSpec>>());
+        expect(spec.label, isA<StyleSpec<TextSpec>>());
+        expect(spec.labelSpacing, 8);
       });
 
       test('creates spec with provided parameters', () {
         final container = StyleSpec(spec: BoxSpec());
         final thumb = StyleSpec(spec: BoxSpec());
+        final label = StyleSpec(spec: TextSpec(maxLines: 2));
 
-        final spec = SwitchSpec(container: container, thumb: thumb);
+        final spec = SwitchSpec(
+          container: container,
+          thumb: thumb,
+          label: label,
+          labelSpacing: 12,
+        );
 
         expect(spec.container, equals(container));
         expect(spec.thumb, equals(thumb));
+        expect(spec.label, equals(label));
+        expect(spec.labelSpacing, 12);
       });
     });
 
@@ -113,6 +123,13 @@ void main() {
         expect(result.container.spec.padding, EdgeInsets.all(8.0));
         expect(result.thumb.spec.padding, EdgeInsets.all(4.0));
       });
+
+      test('interpolates label spacing', () {
+        const start = SwitchSpec(labelSpacing: 8);
+        const end = SwitchSpec(labelSpacing: 16);
+
+        expect(start.lerp(end, 0.5).labelSpacing, 12);
+      });
     });
 
     group('Equality and Props', () {
@@ -148,9 +165,11 @@ void main() {
       test('props list contains all properties', () {
         const spec = SwitchSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.thumb));
+        expect(spec.props, contains(spec.label));
+        expect(spec.props, contains(spec.labelSpacing));
       });
     });
 
@@ -164,6 +183,8 @@ void main() {
           unorderedEquals([
             'container',
             'thumb',
+            'label',
+            'labelSpacing',
             'trackEffects',
             'thumbEffects',
           ]),

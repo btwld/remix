@@ -58,6 +58,13 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   default `null`. Leaving them unset does not mean "no icon": Remix falls
   back to its own built-in glyphs, `RemixPathGlyph.thickCheck` and
   `RemixPathGlyph.thickDividerHorizontal`, not a blank state.
+- **Radio and Switch** — `label` is drawn inside the same pointer, hover,
+  press, focus, and semantics target as the control and is its accessible
+  name; `semanticLabel` overrides it. Pass at least one of the two. The gap is
+  `labelSpacing` (default 8) and the label style is `.label(...)` /
+  `.labelColor(...)`. The target is the control's own size unless
+  `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
+  48x48), so opt in with `Size.square(48)` for touch.
 - **CheckboxGroup** — keyboard model deliberately differs from Radix Themes:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
