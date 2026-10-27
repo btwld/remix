@@ -592,13 +592,35 @@ final _toggleTargets = <SpecTarget>[
     read: (spec) => flexDecorationOf(spec.spec.container)?.border,
     expected: (theme) => _hairline(theme.input),
   ),
-  // Deviation: no `shadow-xs` (see specs/vanilla.md).
   _toggle(
-    'outline has no decoration shadow',
+    'outline shadow',
     variant: .outline,
-    source: 'toggle.tsx: outline, shadow-xs (see specs/vanilla.md)',
-    read: (spec) => flexDecorationOf(spec.spec.container)?.boxShadow,
-    expected: (_) => anyOf(isNull, isEmpty),
+    source: 'toggle.tsx: outline, shadow-xs',
+    read: (spec) => (
+      flexDecorationOf(spec.spec.container)?.boxShadow,
+      spec.spec.containerEffects?.behindContent?.shadows,
+    ),
+    expected: (_) => (anyOf(isNull, isEmpty), _effectShadows(VanillaShadow.xs)),
+  ),
+  _toggle(
+    'ghost has no shadow',
+    source: 'toggle.tsx: default variant has no shadow',
+    read: (spec) => (
+      flexDecorationOf(spec.spec.container)?.boxShadow,
+      spec.spec.containerEffects?.behindContent?.shadows,
+    ),
+    expected: (_) => (anyOf(isNull, isEmpty), anyOf(isNull, isEmpty)),
+  ),
+  _toggle(
+    'outline keeps its shadow while focused',
+    variant: .outline,
+    states: const {WidgetState.focused},
+    source: 'toggle.tsx: shadow-xs and focus-visible:ring-[3px] together',
+    read: (spec) => (
+      spec.spec.containerEffects?.behindContent?.shadows,
+      spec.spec.containerEffects?.outline,
+    ),
+    expected: (theme) => (_effectShadows(VanillaShadow.xs), _focusRing(theme)),
   ),
   _toggle(
     'outline hover',

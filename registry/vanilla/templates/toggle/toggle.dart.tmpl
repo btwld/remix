@@ -108,6 +108,9 @@ ToggleStyler _variantStyle({{typePrefix}}ToggleVariant variant) => switch (varia
         .border(
           .color({{typePrefix}}Tokens.input()).width({{typePrefix}}Tokens.strokeHairline),
         )
+        // In the effects layer rather than the decoration: the toggle is
+        // transparent, and a decoration shadow would show through it.
+        .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects))
         .onHovered(
           _content(
             {{typePrefix}}Tokens.accentForeground(),
