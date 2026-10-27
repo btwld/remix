@@ -11,10 +11,11 @@
 - `NakedSelect` now opens with focus on the selected option, scrolled into
   view, so Arrow Up and Arrow Down continue from it instead of from the ends of
   the list. A select without a selected option, or whose selected option is
-  disabled or not built yet in a lazy list, opens on its first enabled option:
-  the first Arrow Down reaches the second option and Enter selects the first,
-  where focus used to start on the overlay container. Focus stays on a field in
-  the panel that has already taken it.
+  disabled or not built yet in a lazy list, opens on the first item that can
+  take focus, normally its first enabled option: the first Arrow Down reaches
+  the second option and Enter selects the first, where focus used to start on
+  the overlay container. A field in the panel that requests focus while the
+  panel builds keeps it.
 - Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
   hovering a submenu row also opens it after its delay, only when the pointer
   moves over it, no longer when a list scrolls under a resting pointer.

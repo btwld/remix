@@ -183,9 +183,10 @@ class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
 /// When the overlay opens, focus moves to the selected option, which scrolls
 /// into view, so Arrow Up and Arrow Down continue from it. Without a selected
 /// option, or when it is disabled or not built yet, focus moves to the first
-/// option that can take it: a lazily built list builds only the options near
-/// its initial scroll offset. Focus stays on anything inside the overlay that
-/// already holds it, such as a search field.
+/// item that can take focus: a lazily built list builds only the options near
+/// its initial scroll offset. A field in the overlay that requests focus while
+/// the overlay builds keeps it, but a `TextField` with `autofocus: true`
+/// requests it after the build and loses it to the initial focus.
 ///
 /// The focus behavior ensures:
 /// - Keyboard-only users can access all functionality

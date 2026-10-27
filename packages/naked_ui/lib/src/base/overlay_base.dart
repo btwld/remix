@@ -115,8 +115,10 @@ abstract class OverlayItem<T, S extends NakedState> extends StatelessWidget {
     final button = Builder(
       builder: (context) => Listener(
         behavior: HitTestBehavior.translucent,
-        // Unlike a hover enter, a hover only arrives when the pointer moves, not
-        // when content scrolls under a resting pointer.
+        // Hover enter also fires when content scrolls under a resting pointer,
+        // so clear focus on a hover that moves the pointer. The engine already
+        // drops hovers that do not move it; the delta check guards synthetic
+        // ones.
         onPointerHover: (event) {
           if (effectiveEnabled && event.delta != Offset.zero) {
             AnchoredOverlay.clearItemFocus(context);
