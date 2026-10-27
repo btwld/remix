@@ -63,7 +63,7 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
     final child = this.child;
     if (child == null && !loading) return const SizedBox.shrink();
 
-    Widget pulse() => RemixReducedMotion(
+    Widget pulse() => RemixReducedMotionBuilder(
       builder: (context, reduceMotion) =>
           _SkeletonPulse(spec: spec, reduceMotion: reduceMotion),
     );

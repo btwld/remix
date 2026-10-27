@@ -299,7 +299,7 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     bool isExpanded,
     Widget panel,
   ) {
-    return RemixReducedMotion(
+    return RemixReducedMotionBuilder(
       builder: (context, reduceMotion) => AnimatedSwitcher(
         duration: reduceMotion
             ? Duration.zero

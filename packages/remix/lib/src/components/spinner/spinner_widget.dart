@@ -2,8 +2,8 @@ part of 'spinner.dart';
 
 /// An animated loading indicator with Mix styling.
 ///
-/// When reduced motion is requested (see [RemixReducedMotion]) the indicator
-/// stops and paints a static frame.
+/// When reduced motion is requested (see [RemixReducedMotionBuilder]) the
+/// indicator stops and paints a static frame.
 ///
 /// ## Examples
 ///
@@ -47,7 +47,7 @@ class RemixSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spinner = RemixReducedMotion(
+    final spinner = RemixReducedMotionBuilder(
       builder: (context, reduceMotion) => RemixStyleSpecBuilder<SpinnerSpec>(
         style: style,
         styleSpec: styleSpec,
@@ -93,9 +93,7 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
 
   void _syncMotion() {
     if (widget.reduceMotion) {
-      controller
-        ..stop()
-        ..value = 0;
+      controller.value = 0;
     } else if (!controller.isAnimating) {
       controller.repeat();
     }

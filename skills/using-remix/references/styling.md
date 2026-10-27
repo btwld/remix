@@ -123,15 +123,17 @@ differs:
 
 ## Reduced motion
 
-Remix components skip their own motion (select menu, accordion panel, spinner,
-and, through Naked UI, dialogs and tooltips) when the user asks for reduced
-motion.
-`RemixReducedMotion(builder: (context, reduceMotion) => ...)` exposes the same
-preference and rebuilds when it changes; `RemixReducedMotion.of(context)` reads
-it where a transition starts. It combines `MediaQuery.disableAnimations` with
-the platform's `reduceMotion`, the only flag iOS Reduce Motion sets. Style
-`.animate(...)` is driven by Mix and does not read the preference: leave
-`.animate` off the style when `reduceMotion` is true.
+The select menu, accordion panel, spinner, skeleton, and sidebar skip their
+motion when `MediaQuery.disableAnimations` or the platform's `reduceMotion` is
+set; iOS Reduce Motion sets only the latter. Dialogs, tooltips, disclosure, and
+toast get their motion from Naked UI and follow the signals the installed
+Naked UI release reads.
+`RemixReducedMotionBuilder(builder: (context, reduceMotion) => ...)` exposes the
+same preference and rebuilds when either signal changes. A `MediaQuery`
+override can force it on but cannot turn the platform's `reduceMotion` off.
+Style `.animate(...)` is driven by Mix, which never reads the preference: choose
+the animation yourself while `reduceMotion` is true, and expect the change to
+take effect once the style stops moving.
 
 ## Reusable and dynamic app styles
 

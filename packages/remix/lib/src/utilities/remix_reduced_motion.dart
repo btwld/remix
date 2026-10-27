@@ -1,5 +1,20 @@
 import 'package:flutter/widgets.dart';
 
+/// Whether motion is reduced under [context]: [MediaQueryData.disableAnimations]
+/// is set, or the platform reports its accessibility `reduceMotion` feature.
+///
+/// Registers [context] as a dependent of the [MediaQuery] flag and the [View].
+/// Neither notifies when the platform's `reduceMotion` changes, so a widget
+/// that must follow it observes
+/// [WidgetsBindingObserver.didChangeAccessibilityFeatures], as
+/// [RemixReducedMotionBuilder] does.
+bool remixReducedMotionOf(BuildContext context) {
+  final dispatcher = View.maybeOf(context)?.platformDispatcher;
+
+  return (MediaQuery.maybeDisableAnimationsOf(context) ?? false) ||
+      (dispatcher?.accessibilityFeatures.reduceMotion ?? false);
+}
+
 /// Builds with whether the user asked for reduced motion, and rebuilds when
 /// that changes.
 ///
@@ -7,42 +22,37 @@ import 'package:flutter/widgets.dart';
 /// how Android and desktop report "remove animations" and how an application
 /// overrides it for a subtree, or when the platform's accessibility
 /// `reduceMotion` feature is set. iOS Reduce Motion only sets `reduceMotion`,
-/// so reading [MediaQueryData.disableAnimations] alone misses it, and
-/// [MediaQuery] does not notify its dependents when it changes.
+/// so reading [MediaQueryData.disableAnimations] alone misses it.
+///
+/// A [MediaQuery] override can force reduced motion on for a subtree. It
+/// cannot turn the platform's `reduceMotion` off.
 ///
 /// ```dart
-/// RemixReducedMotion(
-///   builder: (context, reduceMotion) => AnimatedSwitcher(
-///     duration: reduceMotion ? Duration.zero : const Duration(milliseconds: 200),
+/// RemixReducedMotionBuilder(
+///   builder: (context, reduceMotion) => AnimatedOpacity(
+///     opacity: visible ? 1 : 0,
+///     duration: reduceMotion
+///         ? Duration.zero
+///         : const Duration(milliseconds: 200),
 ///     child: child,
 ///   ),
 /// )
 /// ```
-class RemixReducedMotion extends StatefulWidget {
-  const RemixReducedMotion({super.key, required this.builder});
+class RemixReducedMotionBuilder extends StatefulWidget {
+  const RemixReducedMotionBuilder({super.key, required this.builder});
 
   /// Builds the subtree for the current preference.
   final Widget Function(BuildContext context, bool reduceMotion) builder;
 
-  /// Whether motion is reduced at the moment of the call.
-  ///
-  /// Use this where a transition starts, such as showing a route or handling
-  /// a tap. Called from `build`, it rebuilds for [MediaQueryData] changes but
-  /// not for the platform's `reduceMotion`; use [RemixReducedMotion] when the
-  /// UI itself depends on the preference.
-  static bool of(BuildContext context) {
-    final dispatcher = View.maybeOf(context)?.platformDispatcher;
-
-    return (MediaQuery.maybeDisableAnimationsOf(context) ?? false) ||
-        (dispatcher?.accessibilityFeatures.reduceMotion ?? false);
-  }
-
   @override
-  State<RemixReducedMotion> createState() => _RemixReducedMotionState();
+  State<RemixReducedMotionBuilder> createState() =>
+      _RemixReducedMotionBuilderState();
 }
 
-class _RemixReducedMotionState extends State<RemixReducedMotion>
+class _RemixReducedMotionBuilderState extends State<RemixReducedMotionBuilder>
     with WidgetsBindingObserver {
+  bool? _reduceMotion;
+
   @override
   void initState() {
     super.initState();
@@ -56,9 +66,14 @@ class _RemixReducedMotionState extends State<RemixReducedMotion>
   }
 
   @override
-  void didChangeAccessibilityFeatures() => setState(() {});
+  void didChangeAccessibilityFeatures() {
+    if (remixReducedMotionOf(context) != _reduceMotion) setState(() {});
+  }
 
   @override
-  Widget build(BuildContext context) =>
-      widget.builder(context, RemixReducedMotion.of(context));
+  Widget build(BuildContext context) {
+    final reduceMotion = _reduceMotion = remixReducedMotionOf(context);
+
+    return widget.builder(context, reduceMotion);
+  }
 }
