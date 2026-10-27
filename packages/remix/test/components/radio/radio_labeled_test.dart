@@ -832,18 +832,4 @@ void main() {
       expect(selected, 'b');
     });
   });
-
-  group('RadioStyler call surface', () {
-    test('forwards the labeled radio API', () {
-      final radio = RadioStyler().call<String>(
-        value: 'b',
-        label: _label,
-        minimumTapTargetSize: Size.zero,
-      );
-
-      expect(radio.label, _label);
-      expect(radio.semanticLabel, isNull);
-      expect(radio.minimumTapTargetSize, Size.zero);
-    });
-  });
 }

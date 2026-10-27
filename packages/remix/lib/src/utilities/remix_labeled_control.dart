@@ -2,8 +2,11 @@ import 'package:flutter/foundation.dart' show internal;
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
-/// Lays out a binary control with an optional visible label after it, centered
-/// in a target of at least [minimumTapTargetSize].
+/// Lays out a binary control with an optional visible label after it, inside a
+/// target of at least [minimumTapTargetSize].
+///
+/// An unlabeled control is centered in the target. A labeled row starts at the
+/// leading edge and is centered vertically.
 ///
 /// Returned from the builder of a Naked behavior widget, the label, the gap,
 /// and the target padding take part in the control's pointer, hover, press, and

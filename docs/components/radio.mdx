@@ -224,7 +224,7 @@ Optional. The mouse cursor to use when hovering over the radio button.
 
 #### `label` → `String?`
 
-Optional. A visible label included in the same pointer, hover, press, focus, and semantics target as the radio button. It becomes the accessible name unless `semanticLabel` overrides it. Provide `label` or `semanticLabel`; neither may be blank.
+Optional. A visible label included in the same pointer, hover, press, focus, and semantics target as the radio button. It becomes the accessible name unless `semanticLabel` overrides it. Provide `label` or `semanticLabel`; neither may be blank. A labeled control cannot be measured by a parent that asks for intrinsic size, such as `IntrinsicWidth`, `IntrinsicHeight`, or the horizontal layout of `RemixDataList`. Under such a parent, compose the label beside the control and name the control with `semanticLabel`.
 
 #### `semanticLabel` → `String?`
 
@@ -232,7 +232,7 @@ Optional. Overrides the accessible name derived from `label`, or names the radio
 
 #### `minimumTapTargetSize` → `Size`
 
-Optional. Minimum pointer, focus, and semantics target size. Defaults to `Size.zero`, which keeps the radio button's own geometry. Pass `Size.square(48)` to satisfy common Android and iOS target-size guidance.
+Optional. Minimum pointer, focus, and semantics target size. Defaults to `Size.zero`, which keeps the radio button's own geometry, unlike `RemixCheckbox`, which defaults to `Size.square(48)`. Pass `Size.square(48)` to satisfy common Android and iOS target-size guidance.
 
 #### `excludeSemantics` → `bool`
 

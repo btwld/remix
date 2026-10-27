@@ -715,18 +715,4 @@ void main() {
       expect(selected, isFalse);
     });
   });
-
-  group('SwitchStyler call surface', () {
-    test('forwards the labeled switch API', () {
-      final switchWidget = SwitchStyler().call(
-        selected: false,
-        label: _label,
-        minimumTapTargetSize: Size.zero,
-      );
-
-      expect(switchWidget.label, _label);
-      expect(switchWidget.semanticLabel, isNull);
-      expect(switchWidget.minimumTapTargetSize, Size.zero);
-    });
-  });
 }

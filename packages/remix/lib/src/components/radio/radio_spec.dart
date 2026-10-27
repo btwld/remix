@@ -3,7 +3,7 @@ part of 'radio.dart';
 /// Defines the resolved styling structure for [RemixRadio].
 ///
 /// The spec is populated by [RadioStyler] and consumed by the widget when
-/// building the control. It provides two [StyleSpec] segments representing the
+/// building the control. It provides three [StyleSpec] segments representing the
 /// container (outer ring), the indicator fill shown when the radio is selected,
 /// and the optional visible label.
 @MixableSpec(
