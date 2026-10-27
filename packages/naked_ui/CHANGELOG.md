@@ -8,6 +8,10 @@
 - The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
   from an open `NakedMenubar` menu, scroll the newly focused item into view the
   same way. A target that is already visible stays where it is.
+- `NakedCombobox` now scrolls the highlighted option just far enough into view
+  when arrow keys highlight it, instead of leaving it outside a scrolling
+  options list. Focus stays on the field, and an option that is already
+  visible does not scroll the list or the page.
 
 ## 1.2.3
 
