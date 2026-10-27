@@ -463,7 +463,10 @@ void main() {
       (spec.container.spec.boxSpec.decoration as BoxDecoration).color,
       heroUiToken(HeroUiTokens.defaultColor),
     );
-    expect(tester.getSize(button).height, 36);
+    expect(
+      tester.getSize(button).height,
+      heroUiCase('button-secondary-md').size.height,
+    );
 
     bool hasExpandedState(SemanticsNode node) =>
         node.getSemanticsData().flagsCollection.isExpanded != Tristate.none;
