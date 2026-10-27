@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
+import 'utilities/focus_in_view.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
@@ -442,7 +443,7 @@ class _NakedTabState extends State<NakedTab>
     final target = last
         ? policy.findLastFocus(current, ignoreCurrentFocus: true)
         : policy.findFirstFocus(current, ignoreCurrentFocus: true);
-    if (target != null) policy.requestFocusCallback(target);
+    if (target != null) requestFocusInView(target);
   }
 
   @override

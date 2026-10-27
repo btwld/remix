@@ -1014,6 +1014,62 @@ void main() {
       expect(focusNodes.first.hasPrimaryFocus, isTrue);
       expect(isInViewport(tester, 0), isTrue);
     });
+
+    testWidgets('End keeps a scrolled page where it is', (tester) async {
+      final pageController = ScrollController();
+      addTearDown(pageController.dispose);
+
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFF000000),
+          pageRouteBuilder: _defaultPageRouteBuilder,
+          builder: (context, child) => child ?? const SizedBox.shrink(),
+          home: SingleChildScrollView(
+            controller: pageController,
+            child: NakedTabs(
+              selectedTabId: 'tab0',
+              onChanged: (_) {},
+              child: Column(
+                children: [
+                  const SizedBox(height: 1000),
+                  NakedTabBar(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var index = 0; index < 3; index++)
+                          NakedTab(
+                            tabId: 'tab$index',
+                            focusNode: focusNodes[index],
+                            child: SizedBox(
+                              key: Key('tab$index'),
+                              width: tabWidth,
+                              height: 40,
+                              child: Center(child: Text('Tab $index')),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 1000),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      pageController.jumpTo(800);
+      await tester.pump();
+      focusNodes.first.requestFocus();
+      await tester.pump();
+      final before = tester.getTopLeft(find.byKey(const Key('tab2')));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+
+      expect(focusNodes[2].hasPrimaryFocus, isTrue);
+      expect(tester.getTopLeft(find.byKey(const Key('tab2'))), before);
+    });
   });
 
   group('Focus iteration limits', () {
