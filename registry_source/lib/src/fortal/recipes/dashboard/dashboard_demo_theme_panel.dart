@@ -31,11 +31,18 @@ class FortalThemePanel extends StatelessWidget {
       ),
     );
 
+    // A swatch ring reaches its offset plus its width past the swatch. The
+    // hosting scroll views clip at the panel's edge, so the panel insets its
+    // content by that much and grows by the same amount to stay 360 wide.
+    final ringReach =
+        MixScope.tokenOf(FortalTokens.focusRingOffset, context) +
+        MixScope.tokenOf(FortalTokens.focusRingWidth, context);
+
     return Box(
       key: const ValueKey('theme-panel'),
-      // Insets the swatch rings, which reach 4px past a swatch at Radix's
-      // defaults, from the edge where the hosting scroll views clip.
-      style: BoxStyler().width(360).padding(.horizontal(4)),
+      style: BoxStyler()
+          .width(360 + 2 * ringReach)
+          .padding(.horizontal(ringReach)),
       child: ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(18),
         children: [
@@ -197,25 +204,28 @@ class _AccentSwatch extends StatelessWidget {
   /// outline-offset: 2px`. A toggle has no outline slot, so the ring is a
   /// foreground border pushed off the edge: a stroke align of
   /// `1 + 2 * offset / width` starts the stroke [offset] outside the box,
-  /// and a foreground border reserves no layout space.
+  /// and a foreground border reserves no layout space. A zero [width] draws
+  /// no ring, and has no stroke align to compute.
   static ToggleStyler _ring(
     Color color, {
     required double width,
     required double offset,
-  }) => ToggleStyler(
-    container: FlexBoxStyler().foregroundDecoration(
-      BoxDecorationMix(
-        shape: BoxShape.circle,
-        border: BoxBorderMix.all(
-          BorderSideMix(
-            color: color,
-            width: width,
-            strokeAlign: 1 + 2 * offset / width,
+  }) => width <= 0
+      ? ToggleStyler()
+      : ToggleStyler(
+          container: FlexBoxStyler().foregroundDecoration(
+            BoxDecorationMix(
+              shape: BoxShape.circle,
+              border: BoxBorderMix.all(
+                BorderSideMix(
+                  color: color,
+                  width: width,
+                  strokeAlign: 1 + 2 * offset / width,
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-    ),
-  );
+        );
 
   final FortalAccentColor accent;
   final bool selected;
