@@ -287,6 +287,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       semanticLabel: widget.semanticLabel,
       semanticValue: selectedItem?.semanticLabel ?? selectedItem?.label,
       positioning: widget.positioning,
+      constrainToAvailableHeight: true,
       onOpen: () {
         animationController.forward();
         widget.onOpen?.call();
