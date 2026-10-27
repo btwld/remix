@@ -98,7 +98,8 @@ and `borderRadius` to the trigger. Style the other parts explicitly:
 - `triggerEffects(...)` — an outline, such as a focus ring, around the trigger
   alone; `containerEffects` wraps the revealed content too. When `container`
   clips, an outside ring is cropped at the panel edge; use a negative
-  `outlineOffset` to draw it inside the trigger.
+  `outlineOffset` to draw it inside the trigger. It also wraps the output of a
+  custom `triggerBuilder`.
 - `onExpanded(...)` / `onCollapsed(...)`
 - `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`
 

@@ -336,9 +336,14 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         onPressChange: _handlePressChange,
         semanticLabel: _config.semanticLabel ?? _config.title,
         child: _config.child,
-        builder:
-            _config.builder ??
-            (context, state) => _buildDefaultTrigger(spec, state),
+        builder: (context, state) => switch (_config.builder) {
+          final builder? => RemixBoxAdapter(
+            styleSpec: const StyleSpec(spec: BoxSpec()),
+            containerEffects: spec.triggerEffects,
+            child: builder(context, state),
+          ),
+          null => _buildDefaultTrigger(spec, state),
+        },
       ),
     );
   }
