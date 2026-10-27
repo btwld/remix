@@ -174,6 +174,7 @@ void main() {
     Widget buildHarness({
       Rect targetRect = const Rect.fromLTWH(100, 100, 50, 30),
       OverlayPositionConfig positioning = const OverlayPositionConfig(),
+      bool constrainToAvailableHeight = false,
       TextDirection textDirection = TextDirection.ltr,
       ValueChanged<OverlayPlacement>? onPlacementChanged,
       Widget? child,
@@ -189,6 +190,7 @@ void main() {
               child: OverlayPositioner(
                 targetRect: targetRect,
                 positioning: positioning,
+                constrainToAvailableHeight: constrainToAvailableHeight,
                 onPlacementChanged: onPlacementChanged,
                 child:
                     child ??
@@ -283,6 +285,196 @@ void main() {
       expect(childConstraints?.minHeight, 0);
       expect(childConstraints?.maxWidth, 400);
       expect(childConstraints?.maxHeight, 300);
+    });
+
+    group('constrainToAvailableHeight', () {
+      // Taller than the 300 high overlay, like a long list that scrolls.
+      Widget scrollingPanel({double itemHeight = 40, int items = 20}) =>
+          SingleChildScrollView(
+            key: childKey,
+            child: Column(
+              children: [
+                for (var i = 0; i < items; i++)
+                  SizedBox(width: 80, height: itemHeight),
+              ],
+            ),
+          );
+
+      Future<void> pumpPanel(
+        WidgetTester tester, {
+        required Rect targetRect,
+        OverlayPositionConfig positioning = const OverlayPositionConfig(),
+        TextDirection textDirection = TextDirection.ltr,
+        Widget? panel,
+        ValueChanged<OverlayPlacement>? onPlacementChanged,
+      }) async {
+        await tester.pumpWidget(
+          buildHarness(
+            targetRect: targetRect,
+            positioning: positioning,
+            constrainToAvailableHeight: true,
+            textDirection: textDirection,
+            onPlacementChanged: onPlacementChanged,
+            child: panel ?? scrollingPanel(),
+          ),
+        );
+        await tester.pump();
+      }
+
+      Rect panelRect(WidgetTester tester) =>
+          tester.getRect(find.byKey(childKey));
+
+      testWidgets('fits a tall panel between the anchor and the edge', (
+        tester,
+      ) async {
+        const target = Rect.fromLTWH(100, 100, 50, 30);
+        await pumpPanel(
+          tester,
+          targetRect: target,
+          positioning: const OverlayPositionConfig(sideOffset: 6),
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(100, 136, 80, 164));
+        expect(panelRect(tester).overlaps(target), isFalse);
+      });
+
+      testWidgets('flips above and fits when there is more room above', (
+        tester,
+      ) async {
+        OverlayPlacement? placement;
+        const target = Rect.fromLTWH(100, 200, 50, 30);
+        await pumpPanel(
+          tester,
+          targetRect: target,
+          positioning: const OverlayPositionConfig(sideOffset: 6),
+          onPlacementChanged: (value) => placement = value,
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(100, 0, 80, 194));
+        expect(placement?.side, OverlaySide.top);
+        expect(placement?.wasFlipped, isTrue);
+      });
+
+      testWidgets('stays on a preferred top side with more room', (
+        tester,
+      ) async {
+        OverlayPlacement? placement;
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 200, 50, 30),
+          positioning: const OverlayPositionConfig(
+            side: OverlaySide.top,
+            sideOffset: 6,
+          ),
+          onPlacementChanged: (value) => placement = value,
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(100, 0, 80, 194));
+        expect(placement?.wasFlipped, isFalse);
+      });
+
+      testWidgets('keeps the collision padding clear', (tester) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 100, 50, 30),
+          positioning: const OverlayPositionConfig(
+            sideOffset: 4,
+            collisionPadding: EdgeInsets.fromLTRB(0, 10, 0, 12),
+          ),
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(100, 134, 80, 154));
+      });
+
+      testWidgets('leaves a panel that fits unchanged', (tester) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 100, 50, 30),
+          panel: SizedBox(key: childKey, width: 80, height: 40),
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(100, 130, 80, 40));
+      });
+
+      testWidgets('does not shrink a panel that fits on the other side', (
+        tester,
+      ) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 200, 50, 30),
+          panel: SizedBox(key: childKey, width: 80, height: 120),
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(100, 80, 80, 120));
+      });
+
+      testWidgets(
+        'measures the preferred side when collisions are not avoided',
+        (tester) async {
+          OverlayPlacement? placement;
+          await pumpPanel(
+            tester,
+            targetRect: const Rect.fromLTWH(100, 240, 50, 30),
+            positioning: const OverlayPositionConfig(avoidCollisions: false),
+            onPlacementChanged: (value) => placement = value,
+          );
+
+          expect(panelRect(tester), const Rect.fromLTWH(100, 270, 80, 30));
+          expect(placement?.side, OverlaySide.bottom);
+        },
+      );
+
+      testWidgets('never lays the child out with a negative height', (
+        tester,
+      ) async {
+        BoxConstraints? constraints;
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 290, 50, 20),
+          positioning: const OverlayPositionConfig(
+            sideOffset: 5,
+            avoidCollisions: false,
+          ),
+          panel: LayoutBuilder(
+            builder: (context, value) {
+              constraints = value;
+              return const SizedBox(width: 80, height: 40);
+            },
+          ),
+        );
+
+        expect(constraints?.maxHeight, 0);
+      });
+
+      testWidgets('does not cap a placement beside the anchor', (tester) async {
+        BoxConstraints? constraints;
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 100, 50, 30),
+          positioning: const OverlayPositionConfig(side: OverlaySide.right),
+          panel: LayoutBuilder(
+            builder: (context, value) {
+              constraints = value;
+              return const SizedBox(width: 80, height: 40);
+            },
+          ),
+        );
+
+        expect(constraints?.maxHeight, 300);
+      });
+
+      testWidgets('fits the same height in right-to-left layouts', (
+        tester,
+      ) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 100, 50, 30),
+          positioning: const OverlayPositionConfig(sideOffset: 6),
+          textDirection: TextDirection.rtl,
+        );
+
+        expect(panelRect(tester), const Rect.fromLTWH(70, 136, 80, 164));
+      });
     });
   });
 

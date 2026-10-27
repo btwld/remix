@@ -171,6 +171,7 @@ class OverlayPositioner extends StatefulWidget {
     super.key,
     required this.targetRect,
     this.positioning = const OverlayPositionConfig(),
+    this.constrainToAvailableHeight = false,
     this.onPlacementChanged,
     required this.child,
   });
@@ -180,6 +181,21 @@ class OverlayPositioner extends StatefulWidget {
 
   /// Side, alignment, offset, and collision configuration for the overlay.
   final OverlayPositionConfig positioning;
+
+  /// Whether to cap the child's height at the space beside the anchor.
+  ///
+  /// By default the child may be as tall as the whole overlay, so a panel
+  /// taller than the space beside the anchor is shifted over the anchor. When
+  /// true, a child placed above or below the anchor is laid out no taller than
+  /// the space on that side, after [OverlayPositionConfig.sideOffset] and
+  /// [OverlayPositionConfig.collisionPadding], so a scrollable panel scrolls
+  /// there instead. With collision avoidance on, that is the side with more
+  /// room, which the overlay flips to when it is not the preferred side.
+  ///
+  /// Content that cannot scroll overflows the capped height. Placements to
+  /// the left or right of the anchor are not capped, because shifting already
+  /// keeps them within the overlay without covering the anchor.
+  final bool constrainToAvailableHeight;
 
   /// Called after layout when the resolved placement changes.
   final ValueChanged<OverlayPlacement>? onPlacementChanged;
@@ -243,6 +259,7 @@ class _OverlayPositionerState extends State<OverlayPositioner> {
       delegate: _OverlayPositionerDelegate(
         targetRect: widget.targetRect,
         positioning: widget.positioning,
+        constrainToAvailableHeight: widget.constrainToAvailableHeight,
         textDirection: Directionality.of(context),
         onPlacement: _reportPlacement,
       ),
@@ -255,18 +272,29 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
   const _OverlayPositionerDelegate({
     required this.targetRect,
     required this.positioning,
+    required this.constrainToAvailableHeight,
     required this.textDirection,
     required this.onPlacement,
   });
 
   final Rect targetRect;
   final OverlayPositionConfig positioning;
+  final bool constrainToAvailableHeight;
   final TextDirection textDirection;
   final ValueChanged<OverlayPlacement> onPlacement;
 
   @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      constraints.loosen();
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    final loose = constraints.loosen();
+    if (!constrainToAvailableHeight) return loose;
+
+    return loose.copyWith(
+      maxHeight: math.min(
+        loose.maxHeight,
+        _availableHeight(targetRect, loose.maxHeight, positioning),
+      ),
+    );
+  }
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
@@ -286,8 +314,40 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
   bool shouldRelayout(_OverlayPositionerDelegate oldDelegate) =>
       targetRect != oldDelegate.targetRect ||
       positioning != oldDelegate.positioning ||
+      constrainToAvailableHeight != oldDelegate.constrainToAvailableHeight ||
       textDirection != oldDelegate.textDirection ||
       onPlacement != oldDelegate.onPlacement;
+}
+
+/// The tallest an overlay can be above or below [targetRect] without leaving
+/// the space beside it, or infinity for a left or right placement.
+///
+/// Measured like [resolveOverlayPlacement] places the overlay: past
+/// [OverlayPositionConfig.sideOffset] and inside
+/// [OverlayPositionConfig.collisionPadding]. The overlay is laid out before it
+/// is placed, so with collision avoidance the larger side bounds it, and the
+/// flip then picks that side whenever the preferred one is smaller.
+double _availableHeight(
+  Rect targetRect,
+  double boundsHeight,
+  OverlayPositionConfig positioning,
+) {
+  final padding = positioning.collisionPadding;
+  final below =
+      boundsHeight -
+      padding.bottom -
+      targetRect.bottom -
+      positioning.sideOffset;
+  final above = targetRect.top - positioning.sideOffset - padding.top;
+  final available = switch (positioning.side) {
+    OverlaySide.bottom =>
+      positioning.avoidCollisions ? math.max(below, above) : below,
+    OverlaySide.top =>
+      positioning.avoidCollisions ? math.max(above, below) : above,
+    OverlaySide.left || OverlaySide.right => double.infinity,
+  };
+
+  return math.max(0, available);
 }
 
 /// Resolves an anchored overlay position, including collision flip and shift.
