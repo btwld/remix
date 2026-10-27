@@ -82,6 +82,20 @@
   accordion trigger, and disclosure trigger content keeps its state when a
   style adds or removes a decoration such as a focus ring. Previously such a
   change rebuilt the part's content from scratch.
+### Fixes
+
+- Data-table headers without `sortable`, including the selection header, no
+  longer read widget state from outside the table. A table inside a focused,
+  hovered, or pressed ancestor, such as a `Pressable`, no longer lights their
+  `onFocusVisible`, `onHovered`, or `onPressed` styles. Sortable headers still
+  resolve against their own state. Content of a non-sortable header's custom
+  `header` resolves widget-state variants against an empty state, so wrap a
+  widget in its own `Pressable` if it should react to its own hover or press.
+- Accordion and disclosure content no longer resolves widget-state variants
+  against the trigger, so widgets in the panel no longer change with the
+  trigger's state.
+- `RemixSidebar` header and footer content no longer resolves `onDisabled`
+  variants when the sidebar is disabled. The sidebar's own regions still do.
 
 ## 1.0.0-beta.13
 
