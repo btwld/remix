@@ -13,6 +13,7 @@ import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
 import 'package:registry_source/src/default/components/icon_button.dart';
 import 'package:registry_source/src/default/components/menu.dart';
+import 'package:registry_source/src/default/components/popover.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/default/theme/theme_data.dart';
@@ -136,6 +137,68 @@ void main() {
     semantics.dispose();
   });
 
+  for (final (label, panelText) in const [
+    ('Open notifications', 'Order ORD-1047 requires review.'),
+    ('Open theme settings', 'Theme settings'),
+  ]) {
+    testWidgets('the $label button is its popover\'s one focus stop and '
+        'toggles it', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpDashboard(tester, preset: .defaultPreset);
+      final button = find.byWidgetPredicate(
+        (widget) =>
+            widget is VanillaIconButton && widget.semanticLabel == label,
+      );
+      final popover = find.ancestor(
+        of: button,
+        matching: find.byType(VanillaPopover),
+      );
+
+      expect(_focusStops(tester, popover), 1);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(
+          label: label,
+          isButton: true,
+          isFocusable: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.text(panelText), findsOneWidget);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.text(panelText), findsNothing, reason: 'it closes again');
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: label, hasExpandedState: true, isExpanded: false),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.text(panelText), findsOneWidget);
+      expect(_hasFocusWithin(tester, button), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text(panelText), findsNothing);
+      expect(_hasFocusWithin(tester, button), isTrue);
+      semantics.dispose();
+    });
+  }
+
   for (final preset in _Preset.values) {
     group(preset.name, () {
       testWidgets('overview renders coherent sample data', (tester) async {
@@ -249,7 +312,11 @@ void main() {
         await tester.pump();
         expect(find.bySemanticsLabel('Use light appearance'), findsOneWidget);
 
-        await tester.tap(find.bySemanticsLabel('Notifications').first);
+        final notifications = switch (preset) {
+          .defaultPreset => 'Open notifications',
+          .fortal => 'Notifications',
+        };
+        await tester.tap(find.bySemanticsLabel(notifications).first);
         await tester.pump();
         expect(
           find.text(switch (preset) {
@@ -268,7 +335,7 @@ void main() {
           );
           expect(find.text('Order ORD-1047 requires review.'), findsNothing);
         }
-        await tester.tap(find.bySemanticsLabel('Notifications').first);
+        await tester.tap(find.bySemanticsLabel(notifications).first);
         await tester.pump();
 
         await _pumpDashboard(
@@ -822,7 +889,7 @@ void main() {
     );
     expect(radiusOf(VanillaTokens.radiusLg), after);
 
-    await tester.tap(find.bySemanticsLabel('Theme settings'));
+    await tester.tap(find.bySemanticsLabel('Open theme settings'));
     await tester.pumpAndSettle();
     expect(find.text('Theme settings'), findsOneWidget);
     expect(find.text('Accent color'), findsNothing);
@@ -1001,12 +1068,24 @@ double _transformAngleIn(WidgetTester tester, Finder ancestor) {
 int _focusStops(WidgetTester tester, Finder root) {
   final rootElement = tester.element(root);
 
-  return FocusManager.instance.rootScope.traversalDescendants.where((node) {
-    var inside = false;
-    node.context?.visitAncestorElements((ancestor) {
-      inside = identical(ancestor, rootElement);
-      return !inside;
-    });
-    return inside;
-  }).length;
+  return FocusManager.instance.rootScope.traversalDescendants
+      .where((node) => _isInside(node.context, rootElement))
+      .length;
+}
+
+/// Whether the primary focus sits inside [root].
+bool _hasFocusWithin(WidgetTester tester, Finder root) => _isInside(
+  FocusManager.instance.primaryFocus?.context,
+  tester.element(root),
+);
+
+bool _isInside(BuildContext? context, Element root) {
+  if (context == null) return false;
+  var inside = identical(context, root);
+  context.visitAncestorElements((ancestor) {
+    inside = identical(ancestor, root);
+    return !inside;
+  });
+
+  return inside;
 }
