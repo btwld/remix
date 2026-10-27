@@ -124,6 +124,12 @@ families carry over.
   A `RemixMenuTrigger.builder` replaces the styled trigger, ring included, so
   its content draws its own `onFocusVisible` ring, as the dashboard's account
   row does with `RemixCard` and `<prefix>FocusRing()`.
+- **Popover** — `<Prefix>Popover` opens on a tap of its own child, which a
+  button with its own `onPressed` consumes. To open it from a real button, set
+  `openOnTap: false`, toggle a `MenuController` from the button, and pass one
+  `FocusNode` as the popover's `triggerFocusNode` and the button's `focusNode`.
+  Keep the controller and node in a `State` and dispose the node there. The
+  button is then the only tab stop and gets focus back when the popover closes.
 - **Toast** — style lives on the scope:
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)

@@ -278,7 +278,9 @@ void main() {
 
           await probe.expectRing(
             part: button,
-            neighbor: find.byType(VanillaIconButton).first,
+            neighbor: find
+                .byKey(const ValueKey('dashboard-appearance-toggle'))
+                .first,
             includes: (part) => [part.centerLeft.translate(-1.5, 0)],
           );
         });
@@ -468,7 +470,7 @@ final class _Probe {
 
 Iterable<Offset> _none(Rect part) => const [];
 
-/// A frame of logical pixels, one per physical pixel.
+/// A frame captured at one pixel per logical pixel.
 final class _Pixels {
   const _Pixels(this.width, this._rgba);
 
