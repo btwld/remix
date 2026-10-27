@@ -339,6 +339,182 @@ void main() {
     expect(nodeA.hasFocus, isTrue);
   });
 
+  group('in a horizontally scrolling bar', () {
+    const menuCount = 20;
+    const triggerWidth = 100.0;
+    const viewportKey = Key('bar viewport');
+    late ScrollController scrollController;
+    late List<MenuController> controllers;
+    late List<FocusNode> triggerNodes;
+
+    setUp(() {
+      scrollController = ScrollController();
+      controllers = List.generate(menuCount, (_) => MenuController());
+      triggerNodes = List.generate(
+        menuCount,
+        (index) => FocusNode(debugLabel: 'trigger $index'),
+      );
+    });
+
+    tearDown(() {
+      scrollController.dispose();
+      for (final node in triggerNodes) {
+        node.dispose();
+      }
+    });
+
+    Future<void> pumpScrollingBar(WidgetTester tester) async {
+      await tester.pumpMaterialWidget(
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            key: viewportKey,
+            width: 3 * triggerWidth,
+            height: 48,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: scrollController,
+              child: NakedMenubar(
+                child: Row(
+                  children: [
+                    for (var index = 0; index < menuCount; index++)
+                      NakedMenu<String>(
+                        controller: controllers[index],
+                        triggerFocusNode: triggerNodes[index],
+                        builder: (context, state, child) => SizedBox(
+                          key: Key('trigger$index'),
+                          width: triggerWidth,
+                          height: 48,
+                          child: Center(child: Text('Menu $index')),
+                        ),
+                        overlayBuilder: (context, info) =>
+                            NakedMenu.Item<String>(
+                              value: 'item$index',
+                              child: Text('Item $index'),
+                            ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    bool isInViewport(WidgetTester tester, int index) {
+      final viewport = tester.getRect(find.byKey(viewportKey));
+      final trigger = tester.getRect(find.byKey(Key('trigger$index')));
+      return trigger.left >= viewport.left && trigger.right <= viewport.right;
+    }
+
+    testWidgets('End focuses the last trigger and scrolls it into view', (
+      tester,
+    ) async {
+      await pumpScrollingBar(tester);
+      triggerNodes.first.requestFocus();
+      await tester.pump();
+      expect(isInViewport(tester, menuCount - 1), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+
+      expect(triggerNodes.last.hasPrimaryFocus, isTrue);
+      expect(isInViewport(tester, menuCount - 1), isTrue);
+    });
+
+    testWidgets('Home focuses the first trigger and scrolls it into view', (
+      tester,
+    ) async {
+      await pumpScrollingBar(tester);
+      triggerNodes.last.requestFocus();
+      await tester.pump();
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      expect(isInViewport(tester, 0), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.home);
+      await tester.pumpAndSettle();
+
+      expect(triggerNodes.first.hasPrimaryFocus, isTrue);
+      expect(isInViewport(tester, 0), isTrue);
+    });
+
+    testWidgets(
+      'arrow keys from an open menu scroll the next trigger into view',
+      (tester) async {
+        await pumpScrollingBar(tester);
+        await tester.tap(find.byKey(const Key('trigger2')));
+        await tester.pumpAndSettle();
+        expect(controllers[2].isOpen, isTrue);
+        expect(isInViewport(tester, 3), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+
+        expect(isInViewport(tester, 3), isTrue);
+        expect(controllers[3].isOpen, isTrue);
+        expect(find.text('Item 3'), findsOneWidget);
+        final trigger = tester.getRect(find.byKey(const Key('trigger3')));
+        final item = tester.getRect(find.text('Item 3'));
+        expect(item.left, inInclusiveRange(trigger.left, trigger.right));
+        expect(item.top, greaterThanOrEqualTo(trigger.bottom));
+        expect(controllers[2].isOpen, isFalse);
+      },
+    );
+
+    testWidgets('End keeps a scrolled page where it is', (tester) async {
+      final pageController = ScrollController();
+      addTearDown(pageController.dispose);
+
+      await tester.pumpMaterialWidget(
+        SingleChildScrollView(
+          controller: pageController,
+          child: Column(
+            children: [
+              const SizedBox(height: 1000),
+              NakedMenubar(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var index = 0; index < 3; index++)
+                      NakedMenu<String>(
+                        controller: controllers[index],
+                        triggerFocusNode: triggerNodes[index],
+                        builder: (context, state, child) => SizedBox(
+                          key: Key('trigger$index'),
+                          width: triggerWidth,
+                          height: 48,
+                          child: Center(child: Text('Menu $index')),
+                        ),
+                        overlayBuilder: (context, info) =>
+                            NakedMenu.Item<String>(
+                              value: 'item$index',
+                              child: Text('Item $index'),
+                            ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 1000),
+            ],
+          ),
+        ),
+      );
+      pageController.jumpTo(800);
+      await tester.pump();
+      triggerNodes.first.requestFocus();
+      await tester.pump();
+      final before = tester.getTopLeft(find.byKey(const Key('trigger2')));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+
+      expect(triggerNodes[2].hasPrimaryFocus, isTrue);
+      expect(tester.getTopLeft(find.byKey(const Key('trigger2'))), before);
+    });
+  });
+
   testWidgets(
     'closed bar menus do not receive onCloseRequested when a sibling opens',
     (tester) async {
