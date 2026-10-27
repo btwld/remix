@@ -114,6 +114,12 @@
   stay in place while the items scroll. The items column now sizes to its
   content inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max`
   on `overlay` no longer distribute free vertical space.
+- `RemixSelect` and `RemixMenu` panels are laid out no taller than the space
+  above or below the trigger, after the positioning's `sideOffset` and
+  `collisionPadding`, instead of as tall as the whole overlay. A long list now
+  scrolls beside the trigger rather than sliding over it, and opens on the side
+  with more room. A panel that fits is unchanged, and so is a submenu, which
+  keeps the room the overlay has.
 
 ## 1.0.0-beta.13
 
