@@ -457,6 +457,7 @@ final _cases = <_Case>[
       spec.spec.destination.spec.container,
       label: spec.spec.destination.spec.label.spec.style,
       icon: spec.spec.destination.spec.icon.spec.color,
+      effects: spec.spec.destination.spec.containerEffects,
     ),
   ),
   _resolved<DataTableSpec>(
