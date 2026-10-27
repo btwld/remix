@@ -167,7 +167,6 @@ of the source-tree migration.
 The original five-commit preset plan is preserved in Git history; it is not a
 pending execution checklist for this implementation.
 
-
 ## HeroUI review surface
 
 `open_code/heroui_fixture` is the installed-source gallery for HeroUI. Run the

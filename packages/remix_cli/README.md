@@ -5,9 +5,9 @@ migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
 Choose the neutral `vanilla` preset, the Radix Themes-inspired `fortal`
-preset, or the HeroUI-inspired `heroui` preset at initialization. Remix remains the behavior dependency; the
-application owns its tokens, theme values, component recipes, and generated
-adapters.
+preset, or the HeroUI-inspired `heroui` preset at initialization. Remix
+remains the behavior dependency; the application owns its tokens, theme values,
+component recipes, and generated adapters.
 
 The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
 component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
@@ -267,7 +267,8 @@ use `--diff` and explicit `--overwrite` for template updates.
 
 ### Add the full dashboard demo
 
-Initialize either preset, then use the same item and public dashboard API:
+Initialize the Vanilla or Fortal preset (HeroUI ships no dashboard), then use
+the same item and public dashboard API:
 
 ```shell
 dart run remix_cli:remix init --prefix Ui --preset vanilla
@@ -293,7 +294,8 @@ Installed recipe source follows the normal update contract. Re-running `add
 dashboard_demo` preserves local edits. Inspect a newer template with `--diff`, and
 use `--overwrite` only when deliberately replacing the installed recipe.
 
-Contributors can reproduce the isolated consumer gates for either preset:
+Contributors can reproduce the isolated dashboard consumer gates for Vanilla
+and Fortal:
 
 ```shell
 dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep

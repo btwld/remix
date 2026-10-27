@@ -1,8 +1,9 @@
 name: registry_source
 description: >
   The authored source of the bundled Remix registry: the default, Fortal, and
-  HeroUI presets and the Agent behavior they style. Never published; it exists to be
-  analyzed, tested, and derived into `registry/`.
+  HeroUI presets, and the Agent behavior the default and Fortal presets style.
+  Never published; it exists to be analyzed, tested, and derived into
+  `registry/`.
 publish_to: none
 resolution: workspace
 
@@ -11,9 +12,9 @@ resolution: workspace
 #
 # `lib/src/default` is authored under the word `Vanilla`, `lib/src/fortal`
 # under `Fortal`, and `lib/src/heroui` under `HeroUi`; the builder swaps each
-# for the consumer's prefix and asserts
-# the round trip on every file. `lib/src/agent` is authored under `Agent`, and
-# the recipes in each preset import it by relative path.
+# for the consumer's prefix and asserts the round trip on every file.
+# `lib/src/agent` is authored under `Agent`, and the default and Fortal recipes
+# import it by relative path.
 
 # The workspace floor rather than the consumer floor: the default preset's
 # `sidebar_layout` uses private named parameters, a Dart 3.12 feature, and

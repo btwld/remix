@@ -906,9 +906,9 @@ Set<String> _agentTypeNames(Directory workspaceRoot) {
 /// byte-for-byte. `Ui*` is the prefix `remix init` installs under, so each
 /// such type name is renamed back to its authoring word: an Agent surface's
 /// word is `Agent`; every other name belongs to the named HeroUI/Fortal
-/// preset, or the default Vanilla preset otherwise. Value names under `ui*` have no example yet, so they are left
-/// alone and fail as undefined. The derivation round trip separately proves
-/// that the prefixed APIs match.
+/// preset, or the default Vanilla preset otherwise. Value names under `ui*`
+/// have no example yet, so they are left alone and fail as undefined. The
+/// derivation round trip separately proves that the prefixed APIs match.
 String _validationSource(String snippet, Set<String> agentTypes) {
   if (!_applicationBarrelImport.hasMatch(snippet)) return snippet;
   final preset = _heroUiApiReference.hasMatch(snippet)

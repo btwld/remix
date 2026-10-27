@@ -787,8 +787,9 @@ The `heroui` catalog follows HeroUI's names. Beside shared names such as
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
 `field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
-and `toggle_button_group`. Families that need behavior Remix does not provide,
-such as Form and ComboBox, are not included.
+and `toggle_button_group`. It ships no `app_bar`, `sidebar`, `sidebar_layout`,
+dashboard, `chart`, or `icons` items and no Agent items. Families that need
+behavior Remix does not provide, such as Form and ComboBox, are not included.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
@@ -856,10 +857,12 @@ Edit the tokens in `UiThemeData` for a design-system change.
 Pass `palette` or `style` for a one-chart override. The UI barrel does not
 re-export `mix_chart`.
 
-`remix add icons` installs a small app-owned alias surface. Registry templates
-resolve the `iconLibrary` in `remix.yaml` to either `RemixIcons` (the default)
-or `LucideIcons`, and add the selected package. Four items use icons:
-`icons`, `dashboard_shell`, `dashboard_demo`, and `support`. To switch an
+In Vanilla and Fortal, `remix add icons` installs a small app-owned alias
+surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
+`RemixIcons` (the default) or `LucideIcons`, and add the selected package.
+Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
+`dashboard_demo`, and `support`. HeroUI has no `icons` item; its three icon
+users are `breadcrumbs`, `close_button`, and `search_field`. To switch an
 existing install, change `iconLibrary`, then reinstall every one of those you
 have installed in one command, reviewing first (`--overwrite` replaces only
 the items you name, so one left out keeps the old library):
@@ -867,6 +870,13 @@ the items you name, so one left out keeps the old library):
 ```shell
 remix add icons dashboard_shell dashboard_demo support --diff
 remix add icons dashboard_shell dashboard_demo support --overwrite
+```
+
+For HeroUI:
+
+```shell
+remix add breadcrumbs close_button search_field --diff
+remix add breadcrumbs close_button search_field --overwrite
 ```
 
 Icons you reference in your own code stay as you wrote them. Import
@@ -916,8 +926,8 @@ These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
 opt-in spec-styler builder for their installed source paths in `build.yaml`,
 preserving other builder settings and comments. Explicit exclusions or disabled
 generation are reported before writes. `--dry-run` and `--diff` remain read-only.
-Agent recipes extend both existing presets; they do not constitute a third preset
-or claim Radix component parity.
+Agent recipes extend the Vanilla and Fortal presets; they do not constitute
+another preset or claim Radix component parity.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

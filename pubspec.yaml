@@ -232,8 +232,7 @@ melos:
     # `melos run` list drift, and runs inside `ci:checks`.
     #
     # Group by cost, not by theme. The open-code presets are separate steps
-    # purely because they are ~5 minutes each and independent, and together
-    # they were half the old wall clock.
+    # purely because each takes 15 to 25 minutes and they are independent.
     ci:
       steps:
         - ci:checks
@@ -245,8 +244,8 @@ melos:
         - ci:open-code:heroui
         - ci:open-code:icons
       description: >-
-        Verify generated sources, docs, Fortal parity, tests, and the
-        open-code consumer boundary
+        Verify generated sources, docs, Fortal and HeroUI parity, tests, and
+        the open-code consumer boundary
 
     ci:checks:
       steps:
