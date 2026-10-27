@@ -334,7 +334,9 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         // whether or not the caller asked to observe presses.
         onPressChange: _handlePressChange,
         semanticLabel: _config.semanticLabel ?? _config.title,
-        child: _config.child,
+        // The panel is mounted inside the trigger's state scope, which belongs
+        // to the trigger alone.
+        child: WidgetStateProvider(states: const {}, child: _config.child),
         builder:
             _config.builder ??
             (context, state) => _buildDefaultTrigger(spec, state),

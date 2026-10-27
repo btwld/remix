@@ -96,7 +96,8 @@ and `borderRadius` to the trigger. Style the other parts explicitly:
 - `containerEffects(...)` — shadows, strokes, backdrop blur
 - `trigger(...)` / `content(...)`
 - `onExpanded(...)` / `onCollapsed(...)`
-- `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`
+- `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`;
+  these describe the trigger, so widgets in `content` do not inherit them
 
 Default transition is a 200ms top-anchored fade and size. Use
 `AnimationStyle.noAnimation` to skip it.

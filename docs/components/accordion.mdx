@@ -33,6 +33,7 @@ Widget-state variants (`onHovered`, `onPressed`, `onFocused`, `onFocusVisible`,
 `onDisabled`) describe interaction with the **trigger**, but may style any part
 of the item, including the container. The expanded content is not a separate
 hover or press target — moving the pointer into it clears the hovered state.
+Widgets you place in `child` do not inherit the trigger's widget states.
 
 <Warning>
   The top-level Box shorthand on `AccordionStyler` (`.color()`, `.padding()`,
