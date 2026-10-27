@@ -19,8 +19,7 @@
   `collisionPadding`, instead of as tall as the whole overlay. A long list now
   scrolls beside the trigger rather than sliding over it, and opens on the side
   with more room. A panel that fits is unchanged, and so is a submenu, which
-  keeps the room the overlay has. Requires naked_ui with
-  `constrainToAvailableHeight`.
+  keeps the room the overlay has.
 
 ## 1.0.0-beta.13
 
