@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/vanilla.dart';
 import 'package:remix/remix.dart';
 
@@ -227,6 +228,34 @@ void main() {
         );
       });
 
+      testWidgets('the dashboard account trigger rings outside itself', (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(1200, 800);
+        addTearDown(tester.view.reset);
+        await _pumpFrame(
+          tester,
+          theme.data,
+          Overlay.wrap(child: const VanillaDashboardDemo(initialPage: .orders)),
+        );
+        const workspace = 'Northstar workspace';
+        final probe = _Probe(
+          tester,
+          theme.data,
+          Focus.of(tester.element(find.text(workspace))),
+        );
+
+        await probe.expectRing(
+          part: find.ancestor(
+            of: find.text(workspace),
+            matching: find.byType(VanillaMenu<String>),
+          ),
+          neighbor: find.text(workspace),
+          includes: (part) => [part.centerLeft.translate(-1.5, 0)],
+        );
+      });
+
       testWidgets('a disclosure rings its trigger, not the opened section', (
         tester,
       ) async {
@@ -266,39 +295,47 @@ Future<_Probe> _pump(
   VanillaThemeData theme,
   Widget Function(FocusNode focusNode) build,
 ) async {
-  final previous = FocusManager.instance.highlightStrategy;
-  FocusManager.instance.highlightStrategy =
-      FocusHighlightStrategy.alwaysTraditional;
-  addTearDown(() => FocusManager.instance.highlightStrategy = previous);
   final focusNode = FocusNode(debugLabel: 'ring-probe');
   addTearDown(focusNode.dispose);
-
-  await tester.pumpWidget(
-    RepaintBoundary(
-      key: _frame,
-      child: VanillaTheme(
-        theme: theme,
-        child: hostOf(
-          Center(
-            child: SizedBox(
-              width: 320,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  build(focusNode),
-                  const SizedBox(key: _neighbor, width: 40, height: 10),
-                ],
-              ),
-            ),
-          ),
+  await _pumpFrame(
+    tester,
+    theme,
+    Center(
+      child: SizedBox(
+        width: 320,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            build(focusNode),
+            const SizedBox(key: _neighbor, width: 40, height: 10),
+          ],
         ),
       ),
     ),
   );
-  await tester.pumpAndSettle();
 
   return _Probe(tester, theme, focusNode);
+}
+
+/// Pumps [child] under [theme] inside the frame the probe captures.
+Future<void> _pumpFrame(
+  WidgetTester tester,
+  VanillaThemeData theme,
+  Widget child,
+) async {
+  final previous = FocusManager.instance.highlightStrategy;
+  FocusManager.instance.highlightStrategy =
+      FocusHighlightStrategy.alwaysTraditional;
+  addTearDown(() => FocusManager.instance.highlightStrategy = previous);
+
+  await tester.pumpWidget(
+    RepaintBoundary(
+      key: _frame,
+      child: VanillaTheme(theme: theme, child: hostOf(child)),
+    ),
+  );
+  await tester.pumpAndSettle();
 }
 
 final class _Probe {
@@ -310,16 +347,21 @@ final class _Probe {
 
   /// Focuses the part and checks that it rings without moving anything.
   ///
+  /// [neighbor] is what must stay put beside or inside it; it defaults to a
+  /// marker [_pump] places after the part.
+  ///
   /// [includes] are points, in global coordinates, where the ring must be
   /// painted: each pixel there turns into the ring's color laid over what it
   /// showed before. At each of [excludes] the pixel must not change at all.
   Future<void> expectRing({
     required Finder part,
+    Finder? neighbor,
     Iterable<Offset> Function(Rect part) includes = _none,
     Iterable<Offset> Function(Rect part) excludes = _none,
   }) async {
     final rect = tester.getRect(part);
-    final neighbor = tester.getRect(find.byKey(_neighbor));
+    final neighborFinder = neighbor ?? find.byKey(_neighbor);
+    final neighborRect = tester.getRect(neighborFinder);
     final before = await _capture();
 
     focusNode.requestFocus();
@@ -328,9 +370,9 @@ final class _Probe {
 
     expect(tester.getRect(part), rect, reason: 'the part keeps its box');
     expect(
-      tester.getRect(find.byKey(_neighbor)),
-      neighbor,
-      reason: 'the part does not push what sits beside it',
+      tester.getRect(neighborFinder),
+      neighborRect,
+      reason: 'the part does not push what sits beside or inside it',
     );
     final ring = tint(theme.ring, 0.5);
     for (final point in includes(rect)) {

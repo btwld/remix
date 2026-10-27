@@ -10,6 +10,7 @@ import '../../components/menu.dart';
 import '../../components/popover.dart';
 import '../../components/segmented_control.dart';
 import '../../components/toast.dart';
+import '../../theme/effects.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
 import '../../theme/tokens.dart';
@@ -385,8 +386,8 @@ class _PlaygroundAccount extends StatelessWidget {
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
       icon: RemixIcons.person,
-      builder: (context, _, _) => Box(
-        style: BoxStyler()
+      builder: (context, _, _) => RemixCard(
+        style: CardStyler()
             .padding(
               .symmetric(
                 horizontal: PlaygroundTokens.s2_5,
@@ -395,7 +396,10 @@ class _PlaygroundAccount extends StatelessWidget {
             )
             .borderRadius(.all(PlaygroundTokens.radiusMd()))
             .border(.all(.color(PlaygroundTokens.border())))
-            .color(PlaygroundTokens.card()),
+            .color(PlaygroundTokens.card())
+            .onFocusVisible(
+              CardStyler().containerEffects(playgroundFocusRing()),
+            ),
         child: RowBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)

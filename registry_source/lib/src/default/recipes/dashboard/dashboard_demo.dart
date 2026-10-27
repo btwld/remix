@@ -21,6 +21,7 @@ import '../message_recipe.dart';
 import '../permission_recipe.dart';
 import '../plan_recipe.dart';
 import '../transcript_recipe.dart';
+import '../../theme/effects.dart';
 import '../../theme/tokens.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -383,8 +384,8 @@ class _VanillaAccount extends StatelessWidget {
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
       icon: RemixIcons.person,
-      builder: (context, _, _) => Box(
-        style: BoxStyler()
+      builder: (context, _, _) => RemixCard(
+        style: CardStyler()
             .padding(
               .symmetric(
                 horizontal: VanillaTokens.s2_5,
@@ -393,7 +394,8 @@ class _VanillaAccount extends StatelessWidget {
             )
             .borderRadius(.all(VanillaTokens.radiusMd()))
             .border(.all(.color(VanillaTokens.border())))
-            .color(VanillaTokens.card()),
+            .color(VanillaTokens.card())
+            .onFocusVisible(CardStyler().containerEffects(vanillaFocusRing())),
         child: RowBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)
