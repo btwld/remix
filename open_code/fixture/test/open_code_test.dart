@@ -2122,12 +2122,9 @@ void main() {
           states: const {WidgetState.focused},
         );
 
-        // A foreground decoration, because a real border would inset the
-        // label; `TabSpec` has no effects layer to paint an outline into.
-        expect(
-          _flexForegroundBorder(spec.spec.container),
-          _focusRingBorder(theme.data),
-        );
+        // An outline, because a real border would inset the label.
+        expect(spec.spec.containerEffects?.outline, _focusRing(theme.data));
+        expect(spec.spec.containerEffects?.outlineOffset ?? 0, 0);
       });
     }
 
@@ -2137,7 +2134,7 @@ void main() {
         theme: const AcmeThemeData.light(),
       );
 
-      expect(_flexForegroundBorder(spec.spec.container), isNull);
+      expect(spec.spec.containerEffects?.outline.width ?? 0, 0);
     });
 
     testWidgets('disabled fades the tab and clears the ring', (tester) async {
@@ -2155,10 +2152,7 @@ void main() {
       );
       // Merging leaves the ring's color and width in place and turns its
       // style off, which is what stops Flutter painting it.
-      expect(
-        (_flexForegroundBorder(spec.spec.container) as Border?)?.top.style,
-        BorderStyle.none,
-      );
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
     });
 
     testWidgets('the caller style merges last', (tester) async {
@@ -3500,11 +3494,8 @@ void main() {
         states: const {WidgetState.focused},
       );
 
-      expect(_flexForegroundBorder(idle.spec.container), isNull);
-      expect(
-        _flexForegroundBorder(focused.spec.container),
-        _focusRingBorder(theme),
-      );
+      expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
+      expect(focused.spec.containerEffects?.outline, _focusRing(theme));
       // And the ring genuinely does not move the label. Measured rather than
       // inferred: asserting *how* the ring is built only proves the mechanism
       // the recipe happens to use today, while this fails for any focus
@@ -3535,10 +3526,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        _flexForegroundBorder(
-          _resolvedSpecOf<ToggleSpec>(tester).spec.container,
-        ),
-        isNotNull,
+        _resolvedSpecOf<ToggleSpec>(tester).spec.containerEffects?.outline,
+        _focusRing(theme),
       );
       expect(tester.getRect(find.text('Bold')), restingLabel);
       // The control's own footprint too. A symmetric change — extra padding,
@@ -3563,10 +3552,7 @@ void main() {
           isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
         ),
       );
-      expect(
-        (_flexForegroundBorder(spec.spec.container) as Border?)?.top.style,
-        BorderStyle.none,
-      );
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
     });
 
     testWidgets('toggling reaches the callback and reports its state', (
@@ -5281,7 +5267,9 @@ void main() {
   );
 
   group('acmeAccordionStyle states and surface', () {
-    testWidgets('focus-visible rings the section', (tester) async {
+    testWidgets('focus-visible rings the trigger, not the section', (
+      tester,
+    ) async {
       const theme = AcmeThemeData.light();
       final idle = await _resolve(tester, acmeAccordionStyle(), theme: theme);
       final focused = await _resolve(
@@ -5291,9 +5279,10 @@ void main() {
         states: const {WidgetState.focused},
       );
 
-      expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
-      expect(focused.spec.containerEffects?.outline, _focusRing(theme));
-      expect(focused.spec.containerEffects?.outlineOffset ?? 0, 0);
+      expect(idle.spec.triggerEffects?.outline.width ?? 0, 0);
+      expect(focused.spec.triggerEffects?.outline, _focusRing(theme));
+      expect(focused.spec.triggerEffects?.outlineOffset ?? 0, 0);
+      expect(focused.spec.containerEffects, isNull);
     });
 
     testWidgets('disabled fades the section and wins over focus-visible', (
@@ -5312,7 +5301,7 @@ void main() {
           isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
         ),
       );
-      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
+      expect(spec.spec.triggerEffects?.outline.style, BorderStyle.none);
     });
 
     testWidgets('forwards the curated RemixAccordion surface', (tester) async {
@@ -5927,11 +5916,6 @@ BorderSide _focusRing(AcmeThemeData theme) => BorderSide(
   width: 3,
 );
 
-/// [_focusRing] as the foreground border of a control with no effects slot.
-Border _focusRingBorder(AcmeThemeData theme) => Border.fromBorderSide(
-  _focusRing(theme).copyWith(strokeAlign: BorderSide.strokeAlignOutside),
-);
-
 /// A form control's fill: transparent, or `input` at 30% in the dark theme.
 Color _fieldFill(AcmeThemeData theme) => theme.input.withValues(
   alpha: theme.input.a * (theme.brightness == Brightness.dark ? 0.3 : 0),
@@ -6324,9 +6308,6 @@ BoxDecoration? _flexDecoration(StyleSpec<FlexBoxSpec> container) =>
 
 BoxBorder? _flexBorder(StyleSpec<FlexBoxSpec> container) =>
     _flexDecoration(container)?.border;
-
-BoxBorder? _flexForegroundBorder(StyleSpec<FlexBoxSpec> container) =>
-    (container.spec.box?.spec.foregroundDecoration as BoxDecoration?)?.border;
 
 /// Asserts [content] stays readable where the recipe actually puts it.
 ///
