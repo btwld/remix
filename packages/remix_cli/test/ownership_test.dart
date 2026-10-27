@@ -388,6 +388,18 @@ void main() {
       expect(runner.calls, isEmpty);
     },
   );
+  test('recorded symlink aliases cannot hide another durable owner', () async {
+    if (Platform.isWindows) return;
+    await add(['button', '@company/button']);
+    final alias = File('${root.path}/lib/ui/company.dart');
+    alias.deleteSync();
+    Link(alias.path).createSync('${root.path}/lib/ui/button.dart');
+    await rejected(
+      ['@company/button'],
+      AddMode.overwrite,
+      'conflicting recorded owners',
+    );
+  });
   test('managed barrel aliases cannot be adopted', () async {
     if (Platform.isWindows) return;
     Link(

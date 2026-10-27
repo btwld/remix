@@ -98,10 +98,17 @@ final class OwnershipPlan {
       return path.toLowerCase();
     }
 
-    final reservations = <String, (String, String)>{
-      for (final entry in targets.entries)
-        canonical(entry.key): (entry.key, entry.value),
-    };
+    final reservations = <String, (String, String)>{};
+    for (final entry in targets.entries) {
+      final path = canonical(entry.key);
+      final previous = reservations[path];
+      if (previous != null && previous.$2 != entry.value) {
+        throw FormatException(
+          '${entry.key} and ${previous.$1} have conflicting recorded owners and resolve to the same file. Restore their separate targets before installing.',
+        );
+      }
+      reservations[path] = (entry.key, entry.value);
+    }
     final barrel = canonical('${config.uiPath}/ui.dart');
     final planned = <String>{};
     for (final item in items) {
