@@ -9,7 +9,15 @@
   taking layout space, so a focus ring no longer resizes the part or shifts its
   neighbors. On the accordion and disclosure, `containerEffects` still covers
   the whole panel and `triggerEffects` covers only the trigger. A toggle group
-  clips its items, so ring an end item with a negative `outlineOffset`.
+  styled with `clipBehavior` (every shipped preset sets one) crops an outside
+  ring on its end items; use a negative `outlineOffset` there.
+
+### Fixes
+
+- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
+  accordion trigger, and disclosure trigger content keeps its state when a
+  style adds or removes a decoration such as a focus ring. Previously such a
+  change rebuilt the part's content from scratch.
 
 ## 1.0.0-beta.13
 
