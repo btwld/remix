@@ -348,7 +348,9 @@ without taking layout space. Use it in `onFocusVisible` for a focus ring that
 does not wrap the revealed content, unlike `containerEffects`. When the
 `container` clips, an outside ring is cropped at the panel edge; use a negative
 `outlineOffset` to draw it inside the trigger. A custom `builder` replaces the
-default trigger and its effects.
+default trigger row, but its widget is still wrapped in `triggerEffects`, so the
+ring shows around a custom trigger. The `trigger` box (padding, decoration) does
+not apply to it.
 
 #### `leadingIcon(IconStyler value)`
 

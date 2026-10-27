@@ -7,10 +7,13 @@
   `MenuTriggerStyler`, and `triggerEffects` to `AccordionStyler` and
   `DisclosureStyler`. An outline or paint layer draws around the part without
   taking layout space, so a focus ring no longer resizes the part or shifts its
-  neighbors. On the accordion and disclosure, `containerEffects` still covers
-  the whole panel and `triggerEffects` covers only the trigger. A toggle group
-  styled with `clipBehavior` (every shipped preset sets one) crops an outside
-  ring on its end items; use a negative `outlineOffset` there.
+  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
+  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
+  disclosure, `containerEffects` still covers the whole panel and
+  `triggerEffects` covers only the trigger, including the widget a custom
+  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
+  group styled with `clipBehavior` (every shipped preset sets one) crops an
+  outside ring on its end items; use a negative `outlineOffset` there.
 
 ### Fixes
 
