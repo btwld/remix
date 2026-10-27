@@ -125,6 +125,9 @@ ToggleStyler _variantStyle(PlaygroundToggleVariant variant) =>
                 PlaygroundTokens.input(),
               ).width(PlaygroundTokens.strokeHairline),
             )
+            // In the effects layer rather than the decoration: the toggle is
+            // transparent, and a decoration shadow would show through it.
+            .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
             .onHovered(
               _content(
                 PlaygroundTokens.accentForeground(),
