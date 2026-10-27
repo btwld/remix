@@ -224,9 +224,9 @@ The handle exposes:
 - `isOpen`: whether the menu is open.
 - `controller`: the `MenuController` that opens and closes the menu. It is the
   `controller` you passed to the menu, or one the menu creates.
-- `focusNode`: the node the menu focuses when it opens and closes. It is the
-  `triggerFocusNode` you passed to the menu, or a node the menu creates and
-  disposes.
+- `focusNode`: the node that receives focus when the menu closes; on open,
+  focus moves into the menu panel. It is the `triggerFocusNode` you passed to
+  the menu, or a node the menu creates and disposes.
 - `toggle()`: opens a closed menu and closes an open one.
 
 The menu keeps the overlay, Escape, outside taps, focus return to the button,
@@ -234,6 +234,10 @@ and the expanded state, which it merges onto the button's own semantics node so
 a screen reader announces one expandable button. The button keeps its look,
 accessible name, enabled state, and Enter and Space activation. Pass
 `onPressed: null` to disable it; a disabled button does not open the menu.
+
+The builder must return a single control, because everything it returns is
+merged into one semantics node. A split button or a loading button would merge
+its labels and actions into that node.
 
 `MenuStyler.trigger` and `RemixMenu.semanticLabel` do not apply to a control
 trigger, because the button owns its look and name. Setting `semanticLabel` on a
