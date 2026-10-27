@@ -85,6 +85,11 @@
   accordion trigger, and disclosure trigger content keeps its state when a
   style adds or removes a decoration such as a focus ring. Previously such a
   change rebuilt the part's content from scratch.
+- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
+  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
+  `AlertDialog` content. It previously asserted "LayoutBuilder does not
+  support returning intrinsic dimensions" in debug mode and collapsed in
+  release mode.
 - Data-table headers without `sortable`, including the selection header, no
   longer read widget state from outside the table. A table inside a focused,
   hovered, or pressed ancestor, such as a `Pressable`, no longer lights their

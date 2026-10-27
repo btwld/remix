@@ -6,7 +6,9 @@ import 'package:mix/mix.dart';
 /// target of at least [minimumTapTargetSize].
 ///
 /// An unlabeled control is centered in the target. A labeled row starts at the
-/// leading edge and is centered vertically.
+/// leading edge and is centered vertically. The label wraps within a bounded
+/// width and takes its natural width otherwise, and the row can be measured by
+/// intrinsic-sizing parents such as [IntrinsicWidth] and [IntrinsicHeight].
 ///
 /// Returned from the builder of a Naked behavior widget, the label, the gap,
 /// and the target padding take part in the control's pointer, hover, press, and
@@ -36,25 +38,18 @@ final class RemixLabeledControl extends StatelessWidget {
     final visibleLabel = label;
     final content = visibleLabel == null
         ? Align(widthFactor: 1, heightFactor: 1, child: control)
-        : LayoutBuilder(
-            builder: (context, constraints) {
-              final labelWidget = ExcludeSemantics(
-                child: StyledText(visibleLabel, styleSpec: labelSpec),
-              );
-
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  control,
-                  SizedBox(width: labelSpacing),
-                  if (constraints.hasBoundedWidth)
-                    Flexible(child: labelWidget)
-                  else
-                    labelWidget,
-                ],
-              );
-            },
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              control,
+              SizedBox(width: labelSpacing),
+              Flexible(
+                child: ExcludeSemantics(
+                  child: StyledText(visibleLabel, styleSpec: labelSpec),
+                ),
+              ),
+            ],
           );
 
     return ConstrainedBox(
