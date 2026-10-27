@@ -252,29 +252,14 @@ void expectFill(Color? actual, HeroUiCase upstream, {String? reason}) {
 /// Expects the recipe's focus ring to match a measured one: `focus-ring` is
 /// two solid spreads, a background gap then the 2px ring beyond it, drawn as
 /// an outline offset by the gap with a background-coloured shadow under it.
-void expectFocusRing(RemixBoxEffectsSpec? effects, HeroUiCase measured) {
-  final [gap, ring] = [
-    for (final shadow in cssRemixShadows(measured.styles['boxShadow']!))
-      if (shadow.blurRadius == 0 && shadow.spreadRadius > 0) shadow,
-  ];
-  expect(effects, isNotNull, reason: measured.id);
-  expect(effects!.outlineOffset, gap.spreadRadius, reason: measured.id);
-  expect(
-    effects.outline.width,
-    ring.spreadRadius - gap.spreadRadius,
-    reason: measured.id,
-  );
-  expectColorNear(effects.outline.color, ring.color, reason: 'ring');
-  final over = effects.overContent!.shadows;
-  expect(over, hasLength(1), reason: measured.id);
-  expect(over.single.spreadRadius, gap.spreadRadius, reason: measured.id);
-  expectColorNear(over.single.color, gap.color, reason: 'gap');
-}
-
-/// Expects the recipe's ring to be a measured one drawn inside the part, as
-/// `ring-inset` does: the ring's width and color, on the part's own edge, with
-/// no background gap.
-void expectInsetFocusRing(RemixBoxEffectsSpec? effects, HeroUiCase measured) {
+///
+/// An [inset] ring is `ring-inset`: the measured ring's width drawn inside the
+/// part, at offset minus that width, with no background gap.
+void expectFocusRing(
+  RemixBoxEffectsSpec? effects,
+  HeroUiCase measured, {
+  bool inset = false,
+}) {
   final [gap, ring] = [
     for (final shadow in cssRemixShadows(measured.styles['boxShadow']!))
       if (shadow.blurRadius == 0 && shadow.spreadRadius > 0) shadow,
@@ -282,9 +267,20 @@ void expectInsetFocusRing(RemixBoxEffectsSpec? effects, HeroUiCase measured) {
   final width = ring.spreadRadius - gap.spreadRadius;
   expect(effects, isNotNull, reason: measured.id);
   expect(effects!.outline.width, width, reason: measured.id);
-  expect(effects.outlineOffset, -width, reason: measured.id);
+  expect(
+    effects.outlineOffset,
+    inset ? -width : gap.spreadRadius,
+    reason: measured.id,
+  );
   expectColorNear(effects.outline.color, ring.color, reason: 'ring');
-  expect(effects.overContent?.shadows ?? const [], isEmpty);
+  final over = effects.overContent?.shadows ?? const [];
+  if (inset) {
+    expect(over, isEmpty, reason: measured.id);
+    return;
+  }
+  expect(over, hasLength(1), reason: measured.id);
+  expect(over.single.spreadRadius, gap.spreadRadius, reason: measured.id);
+  expectColorNear(over.single.color, gap.color, reason: 'gap');
 }
 
 /// The alpha of a CSS color such as `oklab(... / 0.8)`.

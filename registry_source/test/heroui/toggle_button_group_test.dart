@@ -293,9 +293,10 @@ void main() {
         final label = tester.getRect(find.text(_one));
 
         await tester.focusWithTab();
-        expectInsetFocusRing(
+        expectFocusRing(
           _item(tester).containerEffects,
           heroUiCase('close-button-focus', mode: mode, state: true),
+          inset: true,
         );
         expect(_decoration(_item(tester).container.spec)?.border, isNull);
         expect(tester.getSize(_itemBox(_one)), before);

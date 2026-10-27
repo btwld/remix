@@ -279,9 +279,10 @@ void main() {
       final before = tester.getRect(find.text('First'));
 
       await tester.focusWithTab();
-      expectInsetFocusRing(
+      expectFocusRing(
         _spec(tester).triggerEffects,
         heroUiCase('accordion-default-focus-trigger', mode: mode, state: true),
+        inset: true,
       );
       expect(tester.getRect(find.text('First')), before);
     });
