@@ -20,6 +20,14 @@
   existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
   `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
 
+### Fixes
+
+- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
+  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
+  `AlertDialog` content. It previously asserted "LayoutBuilder does not
+  support returning intrinsic dimensions" in debug mode and collapsed in
+  release mode.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
