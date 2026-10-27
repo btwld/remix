@@ -437,7 +437,9 @@ Optional. Whether activating the header emits a new sort descriptor.
 
 Sets the row chrome painted behind every cell of the header row, of a body
 row, and of the final body row. `bodyRow` variants such as `onHovered` and
-`onSelected` resolve against that row's own state.
+`onSelected` resolve against that row's own state. Header regions resolve
+against a sortable header's own state; a header that is not sortable matches
+no widget-state variant, even inside a focused or hovered ancestor.
 
 #### `headerCell(BoxStyler value)` / `bodyCell(BoxStyler value)` / `selectionCell(BoxStyler value)`
 

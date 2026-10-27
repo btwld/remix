@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -15,6 +16,20 @@ Color? _panelColor(WidgetTester tester) {
       .map((box) => (box.styleSpec?.spec.decoration as BoxDecoration?)?.color)
       .where((color) => color != null)
       .single;
+}
+
+const _probeKey = ValueKey('expanded-content-probe');
+
+/// The resolved fill of the [Box] a test places in the expanded content.
+Color? _probeColor(WidgetTester tester) {
+  final container = tester.widget<Container>(
+    find.descendant(
+      of: find.byKey(_probeKey),
+      matching: find.byType(Container),
+    ),
+  );
+
+  return (container.decoration as BoxDecoration?)?.color;
 }
 
 void main() {
@@ -597,6 +612,63 @@ void main() {
 
         expect(_panelColor(tester), Colors.blue);
       });
+
+      final triggerActivations = <String, Future<void> Function(WidgetTester)>{
+        'hover': (tester) async {
+          final gesture = await tester.createGesture(kind: .mouse);
+          await gesture.addPointer(location: Offset.zero);
+          addTearDown(gesture.removePointer);
+          await gesture.moveTo(tester.getCenter(find.text('Test Title')));
+        },
+        'press': (tester) async {
+          final gesture = await tester.startGesture(
+            tester.getCenter(find.text('Test Title')),
+          );
+          addTearDown(gesture.up);
+        },
+        'keyboard focus': (tester) =>
+            tester.sendKeyEvent(LogicalKeyboardKey.tab),
+      };
+
+      for (final MapEntry(key: name, value: activate)
+          in triggerActivations.entries) {
+        testWidgets('trigger $name styles the trigger, not widgets in the '
+            'expanded content', (tester) async {
+          await tester.pumpRemixApp(
+            RemixAccordionGroup<String>(
+              controller: RemixAccordionController<String>(),
+              initialExpandedValues: const ['item1'],
+              child: RemixAccordion<String>(
+                value: 'item1',
+                title: 'Test Title',
+                style: AccordionStyler()
+                    .container(.color(Colors.blue))
+                    .onHovered(.container(.color(Colors.green)))
+                    .onPressed(.container(.color(Colors.green)))
+                    .onFocusVisible(.container(.color(Colors.green))),
+                child: SizedBox.square(
+                  dimension: 10,
+                  child: Box(
+                    key: _probeKey,
+                    style: BoxStyler()
+                        .color(Colors.grey)
+                        .onHovered(.color(Colors.red))
+                        .onPressed(.color(Colors.red))
+                        .onFocusVisible(.color(Colors.red)),
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await activate(tester);
+          await tester.pumpAndSettle();
+
+          expect(_panelColor(tester), Colors.green);
+          expect(_probeColor(tester), Colors.grey);
+        });
+      }
     });
 
     group('Disabled State', () {

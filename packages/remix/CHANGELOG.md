@@ -1,3 +1,17 @@
+## Unreleased
+
+### Fixes
+
+- Data-table headers without `sortable`, including the selection header, no
+  longer read widget state from outside the table. A table inside a focused,
+  hovered, or pressed ancestor, such as a disclosure trigger scope, no longer
+  lights their `onFocusVisible`, `onHovered`, or `onPressed` styles. Sortable
+  headers still resolve against their own state.
+- Accordion and disclosure content no longer inherits the trigger's widget
+  state. Widgets in the panel with `onHovered`, `onPressed`, `onFocused`,
+  `onFocusVisible`, or `onDisabled` styles no longer change when the trigger
+  does.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
