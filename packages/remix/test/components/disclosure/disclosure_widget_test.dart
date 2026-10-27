@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -259,6 +260,102 @@ void main() {
 
       expect(disclosure.style, same(style));
     });
+
+    testWidgets('content takes onDisabled from its own region, not from the '
+        'disabled trigger', (tester) async {
+      const probeKey = ValueKey('content-probe');
+      await tester.pumpRemixApp(
+        RemixDisclosure(
+          enabled: false,
+          defaultExpanded: true,
+          trigger: const Text('Trigger'),
+          content: SizedBox.square(
+            dimension: 10,
+            child: Box(
+              key: probeKey,
+              style: BoxStyler()
+                  .color(Colors.grey)
+                  .onDisabled(.color(Colors.red)),
+            ),
+          ),
+          style: DisclosureStyler()
+              .content(.color(Colors.blue))
+              .onDisabled(.content(.color(Colors.green))),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(_boxColors(tester, find.byKey(probeKey)), contains(Colors.green));
+      final probe = tester.widget<Container>(
+        find.descendant(
+          of: find.byKey(probeKey),
+          matching: find.byType(Container),
+        ),
+      );
+      expect((probe.decoration as BoxDecoration?)?.color, Colors.grey);
+    });
+
+    final triggerActivations = <String, Future<void> Function(WidgetTester)>{
+      'hover': (tester) async {
+        final gesture = await tester.createGesture(kind: .mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+        await gesture.moveTo(tester.getCenter(find.text('Trigger')));
+      },
+      'press': (tester) async {
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.text('Trigger')),
+        );
+        addTearDown(gesture.up);
+      },
+      'keyboard focus': (tester) => tester.sendKeyEvent(LogicalKeyboardKey.tab),
+    };
+
+    for (final MapEntry(key: name, value: activate)
+        in triggerActivations.entries) {
+      testWidgets('trigger $name styles the trigger, not widgets in the '
+          'content', (tester) async {
+        const probeKey = ValueKey('content-probe');
+        await tester.pumpRemixApp(
+          RemixDisclosure(
+            defaultExpanded: true,
+            trigger: const Text('Trigger'),
+            content: SizedBox.square(
+              dimension: 10,
+              child: Box(
+                key: probeKey,
+                style: BoxStyler()
+                    .color(Colors.grey)
+                    .onHovered(.color(Colors.red))
+                    .onPressed(.color(Colors.red))
+                    .onFocusVisible(.color(Colors.red)),
+              ),
+            ),
+            style: DisclosureStyler()
+                .trigger(.color(Colors.blue))
+                .onHovered(.trigger(.color(Colors.green)))
+                .onPressed(.trigger(.color(Colors.green)))
+                .onFocusVisible(.trigger(.color(Colors.green))),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await activate(tester);
+        await tester.pumpAndSettle();
+
+        expect(
+          _boxColors(tester, find.text('Trigger')),
+          contains(Colors.green),
+        );
+        final probe = tester.widget<Container>(
+          find.descendant(
+            of: find.byKey(probeKey),
+            matching: find.byType(Container),
+          ),
+        );
+        expect((probe.decoration as BoxDecoration?)?.color, Colors.grey);
+      });
+    }
   });
 }
 
