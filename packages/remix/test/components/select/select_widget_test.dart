@@ -1449,46 +1449,44 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
       });
 
-      testWidgets('opens on the selected item', (tester) async {
-        final focusNode = FocusNode();
-        addTearDown(focusNode.dispose);
+      for (final (selectedValue, opensOn, thenOn, name) in [
+        ('b', 'b', 'c', 'opens on the selected item'),
+        (null, 'a', 'b', 'opens on the first item without a selection'),
+      ]) {
+        testWidgets(name, (tester) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
 
-        await tester.pumpRemixApp(
-          RemixSelect<String>(
-            trigger: const RemixSelectTrigger(placeholder: 'Select'),
-            items: const [
-              RemixSelectItem(value: 'a', label: 'Option A'),
-              RemixSelectItem(value: 'b', label: 'Option B'),
-              RemixSelectItem(value: 'c', label: 'Option C'),
-            ],
-            selectedValue: 'b',
-            focusNode: focusNode,
-            onChanged: (_) {},
-          ),
-        );
-        await tester.pumpAndSettle();
-        focusNode.requestFocus();
-        await tester.pump();
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [
+                RemixSelectItem(value: 'a', label: 'Option A'),
+                RemixSelectItem(value: 'b', label: 'Option B'),
+                RemixSelectItem(value: 'c', label: 'Option C'),
+              ],
+              selectedValue: selectedValue,
+              focusNode: focusNode,
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+          focusNode.requestFocus();
+          await tester.pump();
 
-        bool isFocused(String label) {
-          final focused = FocusManager.instance.primaryFocus?.context;
-          return find
-              .descendant(
-                of: find.byElementPredicate((element) => element == focused),
-                matching: find.text(label),
-              )
-              .evaluate()
-              .isNotEmpty;
-        }
+          String? focusedValue() => FocusManager.instance.primaryFocus?.context
+              ?.findAncestorWidgetOfExactType<NakedSelectOption<String>>()
+              ?.value;
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        await tester.pumpAndSettle();
-        expect(isFocused('Option B'), isTrue);
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pumpAndSettle();
+          expect(focusedValue(), opensOn);
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-        await tester.pumpAndSettle();
-        expect(isFocused('Option C'), isTrue);
-      });
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+          await tester.pumpAndSettle();
+          expect(focusedValue(), thenOn);
+        });
+      }
 
       testWidgets('option activation changes selection', (tester) async {
         String? selected;

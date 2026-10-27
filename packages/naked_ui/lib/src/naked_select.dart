@@ -121,6 +121,9 @@ class _NakedSelectScope<T> extends OverlayScope<T> {
 }
 
 /// Widget-based select option that binds to the nearest [NakedSelect] scope.
+///
+/// The [value] of each option must be unique within its [NakedSelect]: options
+/// with equal values all show as selected and share one focus node.
 class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
   /// Creates a selectable option associated with [value].
   const NakedSelectOption({
@@ -179,10 +182,10 @@ class NakedSelectOption<T> extends OverlayItem<T, NakedSelectOptionState<T>> {
 /// ### Focus Management
 /// When the overlay opens, focus moves to the selected option, which scrolls
 /// into view, so Arrow Up and Arrow Down continue from it. Without a selected
-/// option, focus moves to the overlay container and Arrow Down reaches the
-/// first option. The container also takes focus when the selected option is
-/// disabled or not built yet: a lazily built list builds only the options near
-/// its initial scroll offset.
+/// option, or when it is disabled or not built yet, focus moves to the first
+/// option that can take it: a lazily built list builds only the options near
+/// its initial scroll offset. Focus stays on anything inside the overlay that
+/// already holds it, such as a search field.
 ///
 /// The focus behavior ensures:
 /// - Keyboard-only users can access all functionality
@@ -254,6 +257,9 @@ class NakedSelect<T> extends StatefulWidget {
   final RawMenuAnchorOverlayBuilder overlayBuilder;
 
   /// Single selection value.
+  ///
+  /// Matches the [NakedSelectOption] with an equal value, so option values must
+  /// be unique.
   final T? value;
 
   /// Callback for single selection changes.
@@ -507,7 +513,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
           positioning: widget.positioning,
           constrainToAvailableHeight: widget.constrainToAvailableHeight,
           closeOnTapOutside: widget.closeOnClickOutside,
-          initialFocus: _selectedOptionFocusNode,
+          initialFocusNode: _selectedOptionFocusNode,
           child: Semantics(
             role: SemanticsRole.menu,
             container: true,
