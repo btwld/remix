@@ -404,6 +404,80 @@ void main() {
     },
   );
 
+  testWidgets('only a disableAnimations change rebuilds the sidebar', (
+    tester,
+  ) async {
+    final media = ValueNotifier(const MediaQueryData());
+    addTearDown(media.dispose);
+    SidebarAnimation? motion;
+    Widget host({required bool collapsed}) => ValueListenableBuilder(
+      valueListenable: media,
+      builder: (context, data, child) => MediaQuery(data: data, child: child!),
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            height: 300,
+            child: RemixSidebar<String>(
+              expandedWidth: 256,
+              collapsedWidth: 72,
+              collapsed: collapsed,
+              showTooltips: false,
+              header: Builder(
+                builder: (context) {
+                  motion = RemixSidebar.animationOf(context);
+                  return const SizedBox.shrink();
+                },
+              ),
+              selectedValue: 'home',
+              onSelected: (_) {},
+              sections: const [
+                RemixSidebarSection(
+                  destinations: [
+                    RemixSidebarDestination(
+                      value: 'home',
+                      label: 'Overview',
+                      icon: Icons.home,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(host(collapsed: false));
+    await tester.pumpWidget(host(collapsed: true));
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(motion!.isAnimating, isTrue);
+
+    var rebuilds = 0;
+    debugOnRebuildDirtyWidget = (element, _) {
+      if (element.widget is RemixSidebar<String>) rebuilds++;
+    };
+    addTearDown(() => debugOnRebuildDirtyWidget = null);
+
+    media.value = const MediaQueryData(
+      viewInsets: EdgeInsets.only(bottom: 300),
+    );
+    await tester.pump();
+    expect(rebuilds, 0);
+    expect(motion!.isAnimating, isTrue);
+
+    media.value = const MediaQueryData(
+      viewInsets: EdgeInsets.only(bottom: 300),
+      disableAnimations: true,
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(rebuilds, 1);
+    expect(motion!.isAnimating, isFalse);
+    expect(motion!.expansion, 0);
+  });
+
   testWidgets(
     'AnimationStyle configures both directions without a second driver',
     (tester) async {

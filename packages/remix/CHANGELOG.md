@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixes
+
+- `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
+  not on every `MediaQuery` change such as keyboard insets.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
