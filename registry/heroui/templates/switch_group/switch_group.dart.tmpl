@@ -50,7 +50,10 @@ class {{typePrefix}}SwitchGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = [
       for (final item in items)
-        _row(item, itemEnabled: enabled && item.enabled),
+        _row(
+          item,
+          itemEnabled: enabled && item.enabled && item.onChanged != null,
+        ),
     ];
     return {{typePrefix}}FieldLayout(
       axis: orientation,
