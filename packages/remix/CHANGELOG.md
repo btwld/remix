@@ -73,10 +73,11 @@
   intrinsic sizing (`IntrinsicWidth`, `IntrinsicHeight`); set
   `actionPlacement` to `below` where that is needed.
 - Honor reduced motion in components that hard-code their own motion. The
-  select menu and accordion panel now open and close without a transition, and
-  `RemixSpinner` holds a static frame. Skeleton and sidebar, which already
+  select menu and accordion panel now open and close without a transition,
+  including one already under way. Skeleton and sidebar, which already
   followed `MediaQuery.disableAnimations`, now follow iOS Reduce Motion too,
-  including a sidebar transition already under way. Style animations declared
+  including a sidebar transition already under way. Essential spinner motion
+  stays unchanged. Style animations declared
   with `.animate(...)` are driven by Mix and are not affected.
 - `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
 - `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,

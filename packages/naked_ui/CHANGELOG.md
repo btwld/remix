@@ -82,6 +82,10 @@
   hovering a submenu row also opens it after its delay, only when the pointer
   moves over it, no longer when a list scrolls under a resting pointer.
 
+- Keep a menu nested in a menubar panel out of the bar's trigger traversal and
+  focus/hover activation. A nested caller-owned control still opens its menu
+  only through its own activation.
+
 ## 1.2.3
 
 ### Fixes

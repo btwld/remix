@@ -72,7 +72,7 @@ class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
       helperText: helperText,
       errorText: errorText,
       invalid: invalid,
-      enabled: enabled,
+      enabled: enabled && onChanged != null,
       items: [
         for (final option in options)
           HeroUiCheckboxGroupItem<T>(
