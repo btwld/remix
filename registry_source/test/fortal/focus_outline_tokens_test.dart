@@ -4,11 +4,13 @@ import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
 /// Radix draws every focus ring 2px wide. Outward rings sit 2px off the
-/// element; inset rings (fields, soft/outline buttons, cards, select) sit -1px
-/// inside it and never move with the offset token.
+/// element. Inset rings (fields, cards, selects, and the soft, surface, outline
+/// and ghost buttons) sit -1px inside it and tabs -2px, as do the parts that
+/// borrow the tab ring. Neither inset offset moves with the offset token.
 const _radixWidth = 2.0;
 const _radixOffset = 2.0;
 const _insetOffset = -1.0;
+const _insideOffset = -2.0;
 
 /// Radix's slider thumb rings `0 0 0 3px accent-3, 0 0 0 5px focus-8`: a 3px
 /// halo, then the ring outside it. The halo is not `outline-offset: 2px`, so
@@ -160,44 +162,38 @@ void main() {
     },
   );
 
-  testWidgets('inside-border rings follow the width token', (tester) async {
+  testWidgets('inside rings follow the width token', (tester) async {
     for (final (width, overridden) in [
       (_radixWidth, false),
       (_widthOverride, true),
     ]) {
-      final widths = await _resolveFocused(tester, overridden: overridden, (
-        context,
-      ) {
-        return _ringBoxes(
-          context,
-        ).map((name, box) => MapEntry(name, _boxBorder(box)?.top.width));
-      });
+      final rings = await _resolveFocused(
+        tester,
+        overridden: overridden,
+        _insideRings,
+      );
 
-      expect(widths, {for (final name in widths.keys) name: width});
+      for (final MapEntry(key: name, value: effects) in rings.entries) {
+        final reason = '$name at width $width';
+        expect(effects.outline.width, width, reason: reason);
+        expect(effects.outlineOffset, _insideOffset, reason: reason);
+      }
     }
   });
 
-  testWidgets('inside-border rings are drawn in the focus colour', (
-    tester,
-  ) async {
-    // Guards the test above: the border it reads is the focus ring. Tabs ring
-    // in solid focus-8 where the rest use focus-a8 (see fortalFocusRing).
-    final (colors, focusA8, focus8) = await _resolveFocused(
+  testWidgets('inside rings are drawn in focus-8', (tester) async {
+    final (colors, focus8) = await _resolveFocused(
       tester,
       overridden: false,
       (context) => (
-        _ringBoxes(
+        _insideRings(
           context,
-        ).map((name, box) => MapEntry(name, _boxBorder(box)?.top.color)),
-        MixScope.tokenOf(FortalTokens.focusA8, context),
+        ).map((name, effects) => MapEntry(name, effects.outline.color)),
         MixScope.tokenOf(FortalTokens.focus8, context),
       ),
     );
 
-    expect(colors, {
-      for (final name in colors.keys) name: focusA8,
-      'tab': focus8,
-    });
+    expect(colors, {for (final name in colors.keys) name: focus8});
   });
 
   testWidgets(
@@ -243,36 +239,25 @@ void main() {
   );
 }
 
-/// The box that carries each inside-border focus ring.
-Map<String, BoxSpec?> _ringBoxes(BuildContext context) => {
-  'toggle': fortalToggleStyle().build(context).spec.container.spec.box?.spec,
+/// The effects that carry each inside focus ring.
+Map<String, RemixBoxEffectsSpec> _insideRings(BuildContext context) => {
+  'toggle': fortalToggleStyle().build(context).spec.containerEffects!,
   'toggle group item': fortalToggleGroupStyle()
       .build(context)
       .spec
       .item
       .spec
-      .container
-      .spec
-      .box
-      ?.spec,
-  'tab': fortalTabStyle().build(context).spec.container.spec.box?.spec,
+      .containerEffects!,
+  'tab': fortalTabStyle().build(context).spec.containerEffects!,
   'disclosure trigger': fortalDisclosureStyle()
       .build(context)
       .spec
-      .trigger
-      .spec,
+      .triggerEffects!,
   'accordion trigger': fortalAccordionStyle()
       .build(context)
       .spec
-      .trigger
-      .spec
-      .box
-      ?.spec,
+      .triggerEffects!,
 };
-
-/// [box]'s border, or null when it has none.
-Border? _boxBorder(BoxSpec? box) =>
-    (box?.decoration as BoxDecoration?)?.border as Border?;
 
 /// Reads [read] under [FortalTheme] with [states] active, at the theme's own
 /// ring tokens or, when [overridden], at [_widthOverride] and [_offsetOverride].

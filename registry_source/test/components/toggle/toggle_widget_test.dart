@@ -172,10 +172,10 @@ void main() {
             FocusHighlightStrategy.alwaysTraditional;
         final focusRingColor = await resolveInFortalTheme(
           tester,
-          (context) => MixScope.tokenOf(FortalTokens.focusA8, context),
+          (context) => MixScope.tokenOf(FortalTokens.focus8, context),
         );
 
-        Future<Color?> borderColorFor({required bool selected}) async {
+        Future<Color?> ringColorFor({required bool selected}) async {
           final focusNode = FocusNode();
           addTearDown(focusNode.dispose);
           await tester.pumpRemixApp(
@@ -193,11 +193,11 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(focusNode.hasFocus, isTrue);
-          return _outlineBorderColor(tester);
+          return _focusRing(tester)?.color;
         }
 
-        final unselected = await borderColorFor(selected: false);
-        final selected = await borderColorFor(selected: true);
+        final unselected = await ringColorFor(selected: false);
+        final selected = await ringColorFor(selected: true);
 
         expect(unselected, focusRingColor);
         expect(
@@ -225,24 +225,18 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        final unfocused = _outlineBorderColor(tester);
-
         focusNode.requestFocus();
         await tester.pumpAndSettle();
 
         expect(focusNode.hasFocus, isTrue);
-        expect(_outlineBorderColor(tester), unfocused);
+        expect(_focusRing(tester), isNull);
       });
     });
   });
 }
 
-Color? _outlineBorderColor(WidgetTester tester) {
-  final spec = tester.resolvedSpecOf<ToggleSpec>(find.text('T'));
-  final decoration = spec.container.spec.box?.spec.decoration;
-  if (decoration is! BoxDecoration || decoration.border is! Border) return null;
-  return (decoration.border! as Border).top.color;
-}
+BorderSide? _focusRing(WidgetTester tester) =>
+    tester.resolvedSpecOf<ToggleSpec>(find.text('T')).containerEffects?.outline;
 
 // ignore: invalid_use_of_internal_member
 final _toggleRowFinder = find.byType(RemixFlexBoxAdapter);

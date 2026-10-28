@@ -11,7 +11,8 @@ placement, and theme selection shared with the Vanilla preset, see the
 
 Sections: [Presets and recipes](#presets-and-recipes) ·
 [Typography](#typography) · [Scope and theme config](#scope-and-theme-config) ·
-[Token rules](#token-rules).
+[Token rules](#token-rules) · [Select](#select) ·
+[Focus rings](#focus-rings).
 
 ## Presets and recipes
 
@@ -134,3 +135,45 @@ the rules that are not obvious from a token's name:
 
 See [Styling](styling.md#styling-with-installed-tokens) for the token
 call-form mechanics (`.mix()`, `.resolve(context)`).
+
+## Select
+
+`FortalSelect`'s panel is at least as wide as its trigger, as in Radix
+(`min-width: var(--radix-select-trigger-width)`), through
+`SelectContentStyler().minWidth(remixAnchorWidth())`. A longer option still
+widens it. A `style:` that gives the content a `maxWidth` below the trigger's
+width must also set `minWidth`, which replaces the minimum, because a minimum
+above a maximum is invalid:
+
+```dart
+import 'package:remix/remix.dart';
+
+final narrowPanel = SelectStyler().content(
+  SelectContentStyler().maxWidth(160).minWidth(0),
+);
+```
+
+## Focus rings
+
+Fortal focus rings are outlines painted over the control through box effects
+(`containerEffects`, or `triggerEffects` on an accordion or disclosure), so
+focusing a control never changes its size. They draw at the `focusRingWidth`
+token (2), in `focus-8` or, for Radix's soft variants, the accent. A disabled
+field rings in `gray-8`, and an errored one in `error-8`.
+
+- Classic and solid buttons and icon buttons, checkboxes, radios, switches, and
+  links draw outward, at the `focusRingOffset` token (2).
+- Inset rings keep Radix's literal offset: `-1` for fields, cards, selects,
+  segmented control items, and the soft, surface, outline, and ghost buttons
+  and icon buttons, and `-2` for tabs.
+- Toggles, toggle-group items, accordion and disclosure triggers, and sidebar
+  destinations have no Radix counterpart. They borrow the tab ring, `focus-8` at
+  `-2`, which lies inside the box at the default width, so the clip of a toggle
+  group or a panel does not crop it. A sidebar destination rings the same way
+  expanded, collapsed, and at the edge of a scrolling sidebar.
+- A sortable data-table header rings in `focus-8` inside its own cell, like a
+  tab. Radix has no sortable header; this is a Fortal extension, since a
+  focusable header needs a visible focus indicator. The ring replaces the
+  divider on the cell's bottom edge while focused, and a stateful custom header
+  keeps its state across focus. A focusable control nested in the header keeps
+  the ring lit while it holds focus. At `focusRingWidth: 0` nothing is drawn.

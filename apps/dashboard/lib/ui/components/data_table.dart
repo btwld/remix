@@ -70,7 +70,7 @@ DataTableStyler uiDataTableStyle({
       .sortIcon(
         IconStyler(color: UiTokens.gray11(), size: metrics.sortIconSize),
       )
-      .headerRow(_uiDataTableRowDivider())
+      .headerRow(_uiDataTableHeaderRow())
       .bodyRow(
         _uiDataTableRowDivider()
             .color(const Color(0x00000000))
@@ -124,6 +124,36 @@ _UiDataTableMetrics _uiDataTableMetrics(UiDataTableSize size) => switch (size) {
 BoxStyler _uiDataTableCell(_UiDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
+
+/// Radix's Table has no sortable header, so a focusable one takes Ui's own
+/// ring: `focus-8` at the focus ring width, drawn inside the cell. Each header
+/// cell resolves its own row region under its own widget-state scope, so only
+/// the focused cell rings.
+///
+/// The row region already paints the divider as a foreground border, so focus
+/// only changes that decoration. A decoration that appeared on focus would swap
+/// the cell's root widget and rebuild a stateful custom header from scratch.
+BoxStyler _uiDataTableHeaderRow() => _uiDataTableRowDivider().onFocusVisible(
+  BoxStyler().onBuilder(_uiDataTableHeaderRing),
+);
+
+/// A zero-width [BorderSide] is a hairline, so a ring of width zero draws
+/// nothing and leaves the divider alone.
+BoxStyler _uiDataTableHeaderRing(BuildContext context) {
+  final width = UiTokens.focusRingWidth.resolve(context);
+  if (width <= 0) return BoxStyler();
+  return BoxStyler().foregroundDecoration(
+    BoxDecorationMix(
+      border: BoxBorderMix.all(
+        BorderSideMix(
+          color: UiTokens.focus8(),
+          width: width,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+      ),
+    ),
+  );
+}
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the
