@@ -987,6 +987,93 @@ void main() {
         expect(find.text('Item'), findsOneWidget);
       });
 
+      testWidgets('a nested control does not open its menu just by focusing', (
+        tester,
+      ) async {
+        final file = MenuController();
+        final nested = MenuController();
+        final focus = FocusNode();
+        addTearDown(focus.dispose);
+        await tester.pumpMaterialWidget(
+          NakedMenubar(
+            child: NakedMenu<String>(
+              controller: file,
+              child: const Text('File'),
+              overlayBuilder: (context, info) => menu(
+                controller: nested,
+                triggerFocusNode: focus,
+                child: ownButton(nested, focusNode: focus),
+              ),
+            ),
+          ),
+        );
+        file.open();
+        await tester.pumpAndSettle();
+        expect(nested.isOpen, isFalse);
+
+        focus.requestFocus();
+        await tester.pumpAndSettle();
+
+        expect(focus.hasPrimaryFocus, isTrue);
+        expect(nested.isOpen, isFalse);
+        expect(find.text('Item'), findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(nested.isOpen, isTrue);
+        expect(find.text('Item'), findsOneWidget);
+      });
+
+      testWidgets('a nested control is not a menubar traversal destination', (
+        tester,
+      ) async {
+        final file = MenuController();
+        final edit = MenuController();
+        final nested = MenuController();
+        final fileFocus = FocusNode();
+        final editFocus = FocusNode();
+        final nestedFocus = FocusNode();
+        addTearDown(fileFocus.dispose);
+        addTearDown(editFocus.dispose);
+        addTearDown(nestedFocus.dispose);
+        await tester.pumpMaterialWidget(
+          NakedMenubar(
+            child: Row(
+              children: [
+                NakedMenu<String>(
+                  controller: file,
+                  triggerFocusNode: fileFocus,
+                  child: const Text('File'),
+                  overlayBuilder: (context, info) => menu(
+                    controller: nested,
+                    triggerFocusNode: nestedFocus,
+                    child: ownButton(nested, focusNode: nestedFocus),
+                  ),
+                ),
+                NakedMenu<String>(
+                  controller: edit,
+                  triggerFocusNode: editFocus,
+                  child: const Text('Edit'),
+                  overlayBuilder: (context, info) => const Text('Edit panel'),
+                ),
+              ],
+            ),
+          ),
+        );
+        file.open();
+        await tester.pumpAndSettle();
+        expect(find.text('Trigger'), findsOneWidget);
+        fileFocus.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pumpAndSettle();
+
+        expect(edit.isOpen, isTrue);
+        expect(file.isOpen, isFalse);
+        expect(nested.isOpen, isFalse);
+        expect(find.text('Edit panel'), findsOneWidget);
+      });
+
       testWidgets('asserts when semanticLabel is set', (tester) async {
         expect(
           () => NakedMenu<String>(

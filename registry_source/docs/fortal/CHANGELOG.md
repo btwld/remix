@@ -9,6 +9,8 @@
 - Add a `focus-8` ring to a focused sortable data-table header. Radix draws none; a focusable header needs a visible focus indicator.
 
 - These changes need remix 1.0.0-beta.14 and naked_ui 1.3.0. Overwrite these installed items together: `theme`, `toggle`, `toggle_group`, `tabs`, `accordion`, `disclosure`, `data_table`, `select`, and `dashboard_demo`. `sidebar` needs no overwrite: its destinations take the new ring from `toggle`.
+- Keep the dashboard theme panel's edge padding nonnegative when a custom focus
+  ring offset draws the ring inside its swatch.
 
 - Add `fortalAppBarStyle` and generated `FortalAppBar` with a solid panel surface, 64px (`space9`) toolbar height, bottom border, `space4` insets, and bold `size4` title. Update `FortalDashboardShell` to use `FortalAppBar` and align its sidebar header height to `space9`.
 
