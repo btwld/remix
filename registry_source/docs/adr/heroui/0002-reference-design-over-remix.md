@@ -106,7 +106,7 @@ What differs from upstream after the move, with its attribution:
   margin and Remix keeps the container spacing (`toast.yaml`).
 - Style transitions still animate whatever the OS motion setting: Mix 2.3.1's
   `.animate` does not read reduced motion. Remix's own select, accordion,
-  spinner, and dialog motion honors it.
+  and dialog motion honors it. Essential spinner motion stays unchanged.
 
 This supersedes five rows of the table: for the four above, the "Today" cell
 and the verdict's "proposed as a separate change" and "HeroUI keeps the border
