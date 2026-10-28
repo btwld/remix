@@ -11,6 +11,12 @@
   `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
   for an item of a `NakedMenubar`.
 
+### Fixes
+
+- Keep a menu nested in a menubar panel out of the bar's trigger traversal and
+  focus/hover activation. A nested caller-owned control still opens its menu
+  only through its own activation.
+
 ## 1.2.3
 
 ### Fixes
