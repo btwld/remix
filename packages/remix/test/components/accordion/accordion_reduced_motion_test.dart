@@ -70,6 +70,25 @@ void main() {
         expect(find.text('Panel'), findsNothing);
       });
 
+      testWidgets('fades out a panel expanded under a ${request.name} request '
+          'once the request is lifted', (tester) async {
+        final harness = await MotionHarness.pump(tester, _accordion());
+        await harness.set(request, enabled: true);
+        await _toggle(tester);
+        expect(effectiveOpacity(tester, find.text('Panel')), 1);
+
+        await harness.set(request, enabled: false);
+        await _toggle(tester);
+        await tester.pump(const Duration(milliseconds: 50));
+
+        expect(
+          effectiveOpacity(tester, find.text('Panel')),
+          inExclusiveRange(0, 1),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Panel'), findsNothing);
+      });
+
       testWidgets('animates again once a ${request.name} request is lifted', (
         tester,
       ) async {
