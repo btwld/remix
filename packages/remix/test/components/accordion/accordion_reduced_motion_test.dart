@@ -87,6 +87,58 @@ void main() {
       });
     }
 
+    for (final request in MotionRequest.values) {
+      testWidgets('settles an active entrance on a ${request.name} request', (
+        tester,
+      ) async {
+        final harness = await MotionHarness.pump(tester, _accordion());
+        await _toggle(tester);
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(
+          effectiveOpacity(tester, find.text('Panel')),
+          inExclusiveRange(0, 1),
+        );
+
+        await harness.set(request, enabled: true);
+        expect(effectiveOpacity(tester, find.text('Panel')), 1);
+
+        await harness.set(request, enabled: false);
+        expect(effectiveOpacity(tester, find.text('Panel')), 1);
+      });
+
+      testWidgets('unmounts an active exit on a ${request.name} request', (
+        tester,
+      ) async {
+        final harness = await MotionHarness.pump(tester, _accordion());
+        await _toggle(tester);
+        await tester.pumpAndSettle();
+        await _toggle(tester);
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(find.text('Panel'), findsOneWidget);
+
+        await harness.set(request, enabled: true);
+        expect(find.text('Panel'), findsNothing);
+        await harness.set(request, enabled: false);
+        expect(find.text('Panel'), findsNothing);
+        await tester.pumpAndSettle();
+        expect(find.text('Panel'), findsNothing);
+      });
+    }
+
+    testWidgets('rapid re-entry does not reuse an outgoing panel identity', (
+      tester,
+    ) async {
+      await MotionHarness.pump(tester, _accordion());
+      await _toggle(tester);
+      await tester.pumpAndSettle();
+      await _toggle(tester);
+      await tester.pump(const Duration(milliseconds: 30));
+      await _toggle(tester);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Panel'), findsOneWidget);
+    });
+
     testWidgets('keeps the panel mounted when the preference changes', (
       tester,
     ) async {
@@ -109,6 +161,8 @@ void main() {
 
       await harness.set(MotionRequest.platform, enabled: true);
 
+      expect(find.text('1'), findsOneWidget);
+      await harness.set(MotionRequest.platform, enabled: false);
       expect(find.text('1'), findsOneWidget);
     });
   });

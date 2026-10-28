@@ -34,57 +34,71 @@ void main() {
     });
 
     for (final request in MotionRequest.values) {
-      testWidgets('holds a static frame on a ${request.name} request', (
-        tester,
-      ) async {
-        final harness = await MotionHarness.pump(tester, const RemixSpinner());
-        await harness.set(request, enabled: true);
-
-        await tester.pump(const Duration(milliseconds: 100));
-
-        expect(_phase(tester), 0);
-        expect(tester.binding.transientCallbackCount, 0);
-      });
-
-      testWidgets('stops and resumes with a ${request.name} request', (
+      testWidgets('keeps essential motion on a ${request.name} request', (
         tester,
       ) async {
         final harness = await MotionHarness.pump(tester, const RemixSpinner());
         await tester.pump(const Duration(milliseconds: 100));
-        expect(_phase(tester), greaterThan(0));
+        final initial = _phase(tester);
 
         await harness.set(request, enabled: true);
-        expect(_phase(tester), 0);
-        expect(tester.binding.transientCallbackCount, 0);
+        await tester.pump(const Duration(milliseconds: 100));
+        final reduced = _phase(tester);
+        expect(reduced, greaterThan(initial));
+        expect(tester.binding.transientCallbackCount, greaterThan(0));
 
         await harness.set(request, enabled: false);
         await tester.pump(const Duration(milliseconds: 100));
-        expect(_phase(tester), greaterThan(0));
+        expect(_phase(tester), greaterThan(reduced));
       });
     }
 
-    testWidgets('stays still when its duration changes', (tester) async {
-      final duration = ValueNotifier(const Duration(seconds: 1));
-      addTearDown(duration.dispose);
-      final harness = await MotionHarness.pump(
-        tester,
-        ValueListenableBuilder<Duration>(
-          valueListenable: duration,
-          builder: (_, value, _) =>
-              RemixSpinner(style: SpinnerStyler(duration: value)),
+    testWidgets('builds and turns without a MediaQuery ancestor', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        RawView(
+          view: tester.view,
+          child: MixScope.empty(
+            child: const Directionality(
+              textDirection: TextDirection.ltr,
+              child: RemixSpinner(),
+            ),
+          ),
         ),
+        wrapWithView: false,
       );
-      await harness.set(MotionRequest.platform, enabled: true);
-
-      duration.value = const Duration(milliseconds: 500);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-
-      expect(_phase(tester), 0);
-      expect(tester.binding.transientCallbackCount, 0);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(MediaQuery), findsNothing);
+      expect(tester.takeException(), isNull);
+      expect(_phase(tester), greaterThan(0));
     });
 
-    testWidgets('holds a static frame for the leaf spinner too', (
+    testWidgets(
+      'keeps turning when its duration changes under reduced motion',
+      (tester) async {
+        final duration = ValueNotifier(const Duration(seconds: 1));
+        addTearDown(duration.dispose);
+        final harness = await MotionHarness.pump(
+          tester,
+          ValueListenableBuilder<Duration>(
+            valueListenable: duration,
+            builder: (_, value, _) =>
+                RemixSpinner(style: SpinnerStyler(duration: value)),
+          ),
+        );
+        await harness.set(MotionRequest.platform, enabled: true);
+
+        duration.value = const Duration(milliseconds: 500);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 200));
+
+        expect(_phase(tester), greaterThan(0));
+        expect(tester.binding.transientCallbackCount, greaterThan(0));
+      },
+    );
+
+    testWidgets('keeps essential motion for the leaf spinner too', (
       tester,
     ) async {
       final harness = await MotionHarness.pump(
@@ -95,8 +109,8 @@ void main() {
 
       await tester.pump(const Duration(milliseconds: 100));
 
-      expect(_phase(tester), 0);
-      expect(tester.binding.transientCallbackCount, 0);
+      expect(_phase(tester), greaterThan(0));
+      expect(tester.binding.transientCallbackCount, greaterThan(0));
     });
   });
 }
