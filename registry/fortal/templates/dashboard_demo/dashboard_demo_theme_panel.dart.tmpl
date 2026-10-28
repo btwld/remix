@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
@@ -34,9 +36,11 @@ class {{typePrefix}}ThemePanel extends StatelessWidget {
     // A swatch ring reaches its offset plus its width past the swatch. The
     // hosting scroll views clip at the panel's edge, so the panel insets its
     // content by that much and grows by the same amount to stay 360 wide.
-    final ringReach =
-        MixScope.tokenOf({{typePrefix}}Tokens.focusRingOffset, context) +
-        MixScope.tokenOf({{typePrefix}}Tokens.focusRingWidth, context);
+    final ringReach = math.max(
+      0.0,
+      MixScope.tokenOf({{typePrefix}}Tokens.focusRingOffset, context) +
+          MixScope.tokenOf({{typePrefix}}Tokens.focusRingWidth, context),
+    );
 
     return Box(
       key: const ValueKey('theme-panel'),
