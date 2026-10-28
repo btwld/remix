@@ -10,6 +10,10 @@ import '../packages/remix_cli/test/checkout_registry.dart';
 
 Future<void> main(List<String> arguments) async {
   final releaseRef = Platform.environment['REMIX_REGISTRY_RELEASE_REF'];
+  // A kernel snapshot lives in the checker's temporary directory, so its
+  // Platform.script no longer identifies the checkout. Only this test entry
+  // point accepts an explicit root; the shipped CLI still uses pinned GitHub.
+  final registryRoot = Platform.environment['REMIX_REGISTRY_ROOT'];
   exitCode = await runInstallerCli(
     arguments,
     Installer(
@@ -17,7 +21,9 @@ Future<void> main(List<String> arguments) async {
       writeOut: stdout.writeln,
       sources: releaseRef == null
           ? CheckoutSources(
-              Directory.fromUri(Platform.script.resolve('../registry/')),
+              registryRoot == null
+                  ? Directory.fromUri(Platform.script.resolve('../registry/'))
+                  : Directory(registryRoot),
             )
           : _PublishedSources(releaseRef),
     ),

@@ -270,6 +270,7 @@ melos:
     ci:cli:
       steps:
         - test:cli
+        - dart test test/tool/registry_consumer_cli_test.dart
         - open-code:apps:check
       description: The pure-Dart CLI suite and the workspace consumer mirrors
 

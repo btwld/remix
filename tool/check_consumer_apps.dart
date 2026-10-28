@@ -12,7 +12,7 @@
 /// Application-owned source may be customized. Each deliberate edit belongs in
 /// [_customized]; an entry that matches the template again is also an error.
 ///
-/// Every diff runs through [_harness], the checkout-only consumer seam, so the
+/// Every diff runs through the checkout-only consumer CLI, so the
 /// comparison is against the registry bytes in *this* working tree. The apps'
 /// own `remix.yaml` pins a published commit, and reading through that pin
 /// would check the apps against source the change has not proposed -- a
@@ -23,8 +23,7 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
-/// The consumer CLI that serves the committed `registry/` instead of GitHub.
-const _harness = 'tool/registry_consumer_cli.dart';
+import 'compile_registry_consumer.dart';
 
 /// Deliberate source edits, keyed by `consumer/item`.
 const _customized = <String, String>{};
@@ -84,7 +83,16 @@ Future<String?> _run(Directory root) async {
 
   final staging = Directory.systemTemp.createTempSync('remix_consumer_apps_');
   try {
-    problems.addAll(await _compare(root, staging, unknown: unknown));
+    final snapshot = await compileRegistryConsumerCli(
+      dart: Platform.resolvedExecutable,
+      repositoryRoot: root,
+      outputDirectory: staging,
+    );
+    problems.addAll(
+      await _compare(root, staging, snapshot: snapshot, unknown: unknown),
+    );
+  } on ProcessException catch (error) {
+    return 'could not run the registry consumer CLI: $error';
   } finally {
     staging.deleteSync(recursive: true);
   }
@@ -132,6 +140,7 @@ YamlMap? _loadPresetItems(
 Future<List<String>> _compare(
   Directory root,
   Directory staging, {
+  required File snapshot,
   required Set<String> unknown,
 }) async {
   final problems = <String>[];
@@ -147,13 +156,12 @@ Future<List<String>> _compare(
       final label = '$consumer/$key';
       unknown.remove(label);
 
-      final result = await Process.run(Platform.resolvedExecutable, [
-        'run',
-        '${root.path}/$_harness',
-        'add',
-        key,
-        '--diff',
-      ], workingDirectory: directory.path);
+      final result = await Process.run(
+        Platform.resolvedExecutable,
+        [snapshot.path, 'add', key, '--diff'],
+        workingDirectory: directory.path,
+        environment: {'REMIX_REGISTRY_ROOT': '${root.path}/registry'},
+      );
       if (result.exitCode != 0) {
         // The exit code alone cannot be acted on from a CI log. Carry the
         // reason, which is where a missing Git or a preflight refusal is named.
