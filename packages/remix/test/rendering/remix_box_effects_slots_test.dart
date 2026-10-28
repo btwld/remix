@@ -113,7 +113,7 @@ final List<_Part> _parts = [
   ),
   (
     name: 'SelectMenuItem',
-    label: 'Alpha',
+    label: 'Beta',
     adapter: RemixFlexBoxAdapter,
     build: (ring, node) => RemixSelect<String>(
       trigger: const RemixSelectTrigger(placeholder: 'Pick'),
