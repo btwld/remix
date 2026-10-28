@@ -933,15 +933,21 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
   @override
   Widget build(BuildContext context) {
     final parentMenu = _NakedMenuScope.maybeOf<T>(context);
-    final menubar = NakedMenubarScope.maybeOf(context);
+    // A menu inside a bar menu's panel also inherits the bar's scope, but only
+    // a direct item belongs to the bar's anchor group and keyboard traversal.
+    final inheritedMenubar = NakedMenubarScope.maybeOf(context);
+    final menubar =
+        inheritedMenubar != null &&
+            identical(
+              MenuController.maybeOf(context),
+              inheritedMenubar.controller,
+            )
+        ? inheritedMenubar
+        : null;
     _menubar = menubar;
     _syncMenubarRegistration();
-    // A menu inside a bar menu's panel also sees the bar's scope, but only a
-    // bar item sits directly under the bar's own anchor group.
     assert(
-      widget.openOnTap ||
-          menubar == null ||
-          !identical(MenuController.maybeOf(context), menubar.controller),
+      widget.openOnTap || menubar == null,
       'NakedMenu.openOnTap cannot be false for an item of a NakedMenubar.',
     );
     final triggerFocusNode = menubar == null

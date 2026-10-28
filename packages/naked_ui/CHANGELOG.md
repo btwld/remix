@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Features
+
+- Add `NakedMenu.openOnTap` (default `true`). Set it to `false` to use your own
+  control as the trigger: the menu then draws no `NakedButton`, adds no tap or
+  keyboard activation or focus stop, and leaves opening and closing to the
+  `controller`. Attach `triggerFocusNode` to the control so focus returns to it
+  when the menu closes. The menu merges the control's semantics into one node
+  that carries the expanded state, so do not wrap the control in
+  `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
+  for an item of a `NakedMenubar`.
+
 ### Fixes
 
 - Keep the focus action and focused state on a `NakedDisclosure` trigger that
@@ -20,16 +31,9 @@
   `transitionDuration` or under reduced motion, no longer hides the dismissible
   barrier's "Dismiss" node from screen readers. `showNakedDialog` now wraps the
   dialog page in a semantics container.
-### Features
-
-- Add `NakedMenu.openOnTap` (default `true`). Set it to `false` to use your own
-  control as the trigger: the menu then draws no `NakedButton`, adds no tap or
-  keyboard activation or focus stop, and leaves opening and closing to the
-  `controller`. Attach `triggerFocusNode` to the control so focus returns to it
-  when the menu closes. The menu merges the control's semantics into one node
-  that carries the expanded state, so do not wrap the control in
-  `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
-  for an item of a `NakedMenubar`.
+- Keep a menu nested in a menubar panel out of the bar's trigger traversal and
+  focus/hover activation. A nested caller-owned control still opens its menu
+  only through its own activation.
 
 ## 1.2.3
 
