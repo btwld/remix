@@ -205,7 +205,7 @@ motion curves `easeSmooth`, `easeOut`, `easeOutQuart`, `easeOutFluid`; and
 the transitions `fillMotion`, `smoothMotion`, `selectionMotion`, and
 `transformMotion`. These transitions run whatever the OS motion setting: Mix
 2.3.1's `.animate` does not read reduced motion. Remix's own select,
-accordion, spinner, and dialog motion honors it.
+accordion, and dialog motion honors it. Essential spinner motion stays unchanged.
 Derive a translucent colour with `heroUiAlpha(token, alpha)` held in a
 top-level final, never `token().withValues(...)`.
 
