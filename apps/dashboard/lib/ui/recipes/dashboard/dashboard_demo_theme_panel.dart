@@ -199,33 +199,6 @@ class _AccentSwatch extends StatelessWidget {
           .onHovered(ToggleStyler().color(UiTokens.accent10()))
           .onPressed(ToggleStyler().color(UiTokens.accent10()));
 
-  /// Radix draws the ThemePanel swatch ring as `outline: 2px solid;
-  /// outline-offset: 2px`. A toggle has no outline slot, so the ring is a
-  /// foreground border pushed off the edge: a stroke align of
-  /// `1 + 2 * offset / width` starts the stroke [offset] outside the box,
-  /// and a foreground border reserves no layout space. A zero [width] draws
-  /// no ring, and has no stroke align to compute.
-  static ToggleStyler _ring(
-    Color color, {
-    required double width,
-    required double offset,
-  }) => width <= 0
-      ? ToggleStyler()
-      : ToggleStyler(
-          container: FlexBoxStyler().foregroundDecoration(
-            BoxDecorationMix(
-              shape: BoxShape.circle,
-              border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: color,
-                  width: width,
-                  strokeAlign: 1 + 2 * offset / width,
-                ),
-              ),
-            ),
-          ),
-        );
-
   final UiAccentColor accent;
   final bool selected;
   final VoidCallback onPressed;
@@ -237,8 +210,15 @@ class _AccentSwatch extends StatelessWidget {
     // inside the accent scope below, accent-9 would be the swatch's own color.
     final width = MixScope.tokenOf(UiTokens.focusRingWidth, context);
     final offset = MixScope.tokenOf(UiTokens.focusRingOffset, context);
-    ToggleStyler ring(ColorToken color) =>
-        _ring(MixScope.tokenOf(color, context), width: width, offset: offset);
+    ToggleStyler ring(ColorToken color) => ToggleStyler().containerEffects(
+      // Resolve every override before entering the swatch's own accent scope.
+      // The control's circular radius also shapes the outline; zero width
+      // paints nothing without a foreground-decoration workaround.
+      uiFocusOutline(
+        MixScope.tokenOf(color, context),
+        offset: offset,
+      ).outline(BorderSideMix(width: width)),
+    );
 
     return UiAccentScope(
       accent: accent,
