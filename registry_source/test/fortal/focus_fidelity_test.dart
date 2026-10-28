@@ -338,7 +338,7 @@ void main() {
       expect(at(6.5), at(7));
     });
 
-    for (final (width, offset) in [(2.0, 2.0), (3.0, 3.0)]) {
+    for (final (width, offset) in [(2.0, 2.0), (3.0, 3.0), (2.0, -3.0)]) {
       testWidgets('the panel content stays 360 wide at ring width $width and '
           'offset $offset', (tester) async {
         await pumpPanel(
@@ -359,7 +359,7 @@ void main() {
       });
     }
 
-    for (final offset in [0.0, 2.0]) {
+    for (final offset in [0.0, 2.0, -3.0]) {
       testWidgets('a zero-width ring draws nothing at offset $offset', (
         tester,
       ) async {

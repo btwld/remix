@@ -152,7 +152,7 @@ class RemixSelect<T> extends StatefulWidget {
 }
 
 class _RemixSelectState<T> extends State<RemixSelect<T>>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController animationController;
 
   @override
@@ -163,6 +163,27 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       reverseDuration: const Duration(milliseconds: 150),
       vsync: this,
     );
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _settleWhenReduced();
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() => _settleWhenReduced();
+
+  void _settleWhenReduced() {
+    if (!remixReducedMotionOf(context) || !animationController.isAnimating) {
+      return;
+    }
+    final closing = animationController.status == AnimationStatus.reverse;
+    // Complete the exit future before setting the endpoint. A canceled ticker
+    // would strand the close callback that unmounts the overlay.
+    animationController.stop(canceled: false);
+    animationController.value = closing ? 0 : 1;
   }
 
   SelectStyler _buildStyle() {
@@ -259,6 +280,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     animationController.dispose();
     super.dispose();
   }
