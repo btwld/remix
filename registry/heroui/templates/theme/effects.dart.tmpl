@@ -26,6 +26,11 @@ RemixBoxEffectsMix {{valuePrefix}}FocusRing({
       : null,
 );
 
+/// `focus-ring` with `ring-inset`: the ring drawn inside the part, for parts
+/// whose parent clips an outside ring, such as the items of a joined toggle
+/// group.
+final {{valuePrefix}}InsetFocusRing = {{valuePrefix}}FocusRing(offset: -{{typePrefix}}Tokens.focusWidth);
+
 /// `invalid-field-ring`: a 1px danger outline with no offset.
 ///
 /// [focused] is the 2px ring of a field that takes focus itself (a select
@@ -51,12 +56,6 @@ RemixBoxEffectsMix {{valuePrefix}}SurfaceEffects({bool overlay = false}) =>
     );
 
 const {{valuePrefix}}SurfaceShadow = RemixBoxShadowListToken('{{valuePrefix}}.shadow.surface');
-
-/// `--surface-shadow` for stylers without an effects slot (tabs, toggles).
-///
-/// Dark mode defines no surface shadow; these low-alpha black shadows are not
-/// visible on its dark surfaces, so one list serves both modes.
-final {{valuePrefix}}SurfaceBoxShadows = _boxShadows({{valuePrefix}}Shadows(Brightness.light));
 
 /// `--overlay-shadow` for stylers without an effects slot (tooltip).
 ///
@@ -127,22 +126,6 @@ List<RemixBoxShadow> {{valuePrefix}}Shadows(
           RemixBoxShadow(color: Color.fromRGBO(0, 0, 0, .06), blurRadius: 1),
         ];
 }
-
-/// `focus-ring` as a border, for parts whose styler has no `containerEffects`
-/// (tab, toggle, select and menu items, accordion and disclosure triggers).
-///
-/// Transparent at rest and recoloured on keyboard focus, so nothing shifts;
-/// pair it with [{{valuePrefix}}InsideRing] on the padding.
-BorderMix {{valuePrefix}}RingBorder({bool focused = false}) => BorderMix.all(
-  BorderSideMix(
-    color: focused ? {{typePrefix}}Tokens.focus() : {{typePrefix}}Tokens.transparent,
-    width: {{typePrefix}}Tokens.focusWidth,
-  ),
-);
-
-/// A content inset less the ring border that sits inside it: `px-4` is
-/// `{{valuePrefix}}InsideRing(16)`.
-double {{valuePrefix}}InsideRing(double inset) => inset - {{typePrefix}}Tokens.focusWidth;
 
 /// [source] at [alpha] of its own opacity: Tailwind `bg-x/N` and
 /// `color-mix(in srgb, x N%, transparent)`.

@@ -50,7 +50,7 @@ Future<void> _pump(
 TextStyle _style(WidgetTester tester, Finder text) =>
     tester.widget<Text>(text).style!;
 
-Finder _item(int index) => find.byType(HeroUiControlRow).at(index);
+Finder _item(int index) => find.byType(HeroUiDescribedControl).at(index);
 
 /// The track's own box, which sits inside the switch's spec provider.
 Finder _track(int index) => find
@@ -83,7 +83,7 @@ void main() {
         group.size.height,
       );
       expect(tester.getSize(_item(0)).height, item.size.height);
-      expect(tester.getSize(find.byType(HeroUiSwitch).first), control.size);
+      expect(tester.getSize(_track(0)), control.size);
 
       final text = _style(tester, find.text('Switch 1'));
       expect(text.fontSize, label.px('fontSize'));
@@ -99,7 +99,7 @@ void main() {
         reason: 'description',
       );
 
-      final track = tester.getRect(find.byType(HeroUiSwitch).first);
+      final track = tester.getRect(_track(0));
       expect(
         tester.getRect(find.text('Switch 1')).left - track.right,
         content.px('gap'),
@@ -208,21 +208,22 @@ void main() {
         'switch-md-disabled-description',
         mode: mode,
       );
-      double product(Map<String, String> styles) =>
-          double.parse(styles['opacity']!) *
-          double.parse(root.styles['opacity']!);
 
+      // The switch dims its track and label together; the label's own
+      // `status-disabled` is its color's alpha.
+      final rootOpacity = double.parse(root.styles['opacity']!);
+      expect(tester.opacityAbove(_track(0)), rootOpacity);
+      expect(tester.opacityAbove(find.text('Switch 1')), rootOpacity);
       expect(
-        tester.opacityAbove(_track(0)),
-        double.parse(root.styles['opacity']!),
-      );
-      expect(
-        tester.opacityAbove(find.text('Switch 1')),
-        closeTo(product(label.styles), .001),
+        _style(tester, find.text('Switch 1')).color!.a,
+        closeTo(double.parse(label.styles['opacity']!), .001),
       );
       expect(
         tester.opacityAbove(find.text('Help text').first),
-        closeTo(product(description.styles), .001),
+        closeTo(
+          double.parse(description.styles['opacity']!) * rootOpacity,
+          .001,
+        ),
       );
       expect(
         tester.opacityAbove(find.text('Switches')),
@@ -235,7 +236,7 @@ void main() {
     for (final size in HeroUiSwitchSize.values) {
       await _pump(tester, _group(size: size));
       final description = heroUiCase('switch-${size.name}-rest-description');
-      final track = tester.getRect(find.byType(HeroUiSwitch).first);
+      final track = tester.getRect(_track(0));
       expect(
         tester.getRect(find.text('Help text').first).left - track.left,
         description.px('paddingLeft'),
@@ -262,6 +263,62 @@ void main() {
     expect(a.left - label.right, gap);
     expect(b.left - a.right, gap);
     expect(a.top, b.top);
+  });
+
+  testWidgets('a labeled group lays out under IntrinsicHeight', (tester) async {
+    await _pump(
+      tester,
+      IntrinsicHeight(
+        child: HeroUiSwitchGroup(
+          label: 'Switches',
+          items: [
+            HeroUiSwitchOption(
+              selected: false,
+              label: 'Switch 1',
+              description: 'Help text',
+              onChanged: (_) {},
+            ),
+            HeroUiSwitchOption(
+              selected: true,
+              label: 'Switch 2',
+              onChanged: (_) {},
+            ),
+          ],
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    final group = tester.getRect(find.byType(HeroUiSwitchGroup));
+    expect(group.size.isFinite, isTrue);
+    for (final text in ['Switches', 'Switch 1', 'Switch 2']) {
+      final label = tester.getRect(find.text(text));
+      expect(
+        group.top <= label.top && label.bottom <= group.bottom,
+        isTrue,
+        reason: text,
+      );
+      expect(
+        group.left <= label.left && label.right <= group.right,
+        isTrue,
+        reason: text,
+      );
+    }
+  });
+
+  testWidgets('tapping a switch label toggles that switch', (tester) async {
+    final selected = [false, true];
+    await _pump(
+      tester,
+      StatefulBuilder(
+        builder: (context, setState) => _group(
+          selected: List.of(selected),
+          onChanged: (index, value) => setState(() => selected[index] = value),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Switch 1'));
+    await tester.pumpAndSettle();
+    expect(selected, [true, true]);
   });
 
   testWidgets('each switch keeps its own value', (tester) async {

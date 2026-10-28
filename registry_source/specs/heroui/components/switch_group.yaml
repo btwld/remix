@@ -24,7 +24,7 @@ measurements:
   - {what: disabled label, value: "0.5 again", cite: switch-md-disabled-label}
   - {what: disabled description, value: "0.5 again", cite: switch-md-disabled-description}
 approximations:
-  - "`HeroUiSwitchGroup` renders each switch as `RemixSwitch`, a 12px gap, and plain text, because `RemixSwitch` has no label and a composition may not add gestures. The label is not a tap target; the control is. A `label` on `RemixSwitch` would be the Remix API to propose."
+  - "Each switch is `HeroUiSwitch` with `label`, so a tap on the label toggles. The description is composed beneath it (`HeroUiDescribedControl`) and, as upstream's field-level description, is outside the tap target."
   - "`HeroUiSwitchOption.invalid` turns that switch's label danger, as `[data-invalid] .label`. `switch-md-invalid-error`, the muted FieldError line under the row, is not offered: an app passes the message as the description."
   - The required asterisk (`label--required`) is the app's, in the label text.
   - Each switch keeps its own value and callback; the group coordinates nothing.

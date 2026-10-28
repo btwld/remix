@@ -27,8 +27,7 @@ MenuStyler heroUiDropdownStyle({
     .merge(style);
 
 /// The `.menu-item` row: `min-h-9 gap-3 rounded-2xl`, `px-2.5` inside the
-/// dropdown popover. A transparent ring-width border is always present so
-/// keyboard focus recolors it in place.
+/// dropdown popover.
 MenuItemStyler heroUiDropdownItemStyle({
   HeroUiDropdownItemVariant variant = .defaultItem,
 }) {
@@ -40,9 +39,8 @@ MenuItemStyler heroUiDropdownItemStyle({
       .crossAxisAlignment(.center)
       .spacing(_gap)
       .minHeight(_minHeight)
-      .padding(.horizontal(heroUiInsideRing(_paddingX)))
-      .padding(.vertical(heroUiInsideRing(_paddingY)))
-      .border(heroUiRingBorder())
+      .padding(.horizontal(_paddingX))
+      .padding(.vertical(_paddingY))
       .borderRadius(.all(HeroUiTokens.radius2xl()))
       .label(.style(HeroUiTokens.textSm.mix()).fontWeight(.w500).color(label()))
       // `.menu-item__indicator` is `text-muted`, `text-danger` on danger items;
@@ -58,7 +56,7 @@ MenuItemStyler heroUiDropdownItemStyle({
       .trailingIcon(.size(_trailingIcon).color(HeroUiTokens.muted()))
       .onHovered(.color(HeroUiTokens.defaultColor()))
       .onPressed(MenuItemStyler().scale(_itemPressedScale))
-      .onFocusVisible(MenuItemStyler().border(heroUiRingBorder(focused: true)))
+      .onFocusVisible(MenuItemStyler().containerEffects(heroUiFocusRing()))
       .animate(HeroUiTokens.transformMotion)
       .onDisabled(
         MenuItemStyler()
@@ -70,9 +68,8 @@ MenuItemStyler heroUiDropdownItemStyle({
 /// `.dropdown__trigger`: a bare trigger that scales on press and shows the
 /// focus ring.
 final _trigger = MenuTriggerStyler()
-    .border(heroUiRingBorder())
     .onPressed(MenuTriggerStyler().scale(_triggerPressedScale))
-    .onFocusVisible(MenuTriggerStyler().border(heroUiRingBorder(focused: true)))
+    .onFocusVisible(MenuTriggerStyler().containerEffects(heroUiFocusRing()))
     .animate(HeroUiTokens.transformMotion);
 
 /// `.dropdown__popover` around `.dropdown__menu`: `bg-overlay` and the panel

@@ -82,10 +82,8 @@ enum {{typePrefix}}ToggleButtonSize {
 /// breakpoint and icons at `sm`. [iconOnly] makes the button square, for a
 /// toggle with an icon and no label.
 ///
-/// A transparent ring-width border is always present so keyboard focus
-/// recolors it without moving the label; upstream draws the ring outside,
-/// which the toggle styler cannot. The pressed scale shares the 100ms fill
-/// motion; upstream eases `transform` over 250ms.
+/// The pressed scale shares the 100ms fill motion; upstream eases `transform`
+/// over 250ms.
 @MixWidget(target: RemixToggle.new)
 ToggleStyler {{valuePrefix}}ToggleButtonStyle({
   {{typePrefix}}ToggleButtonVariant variant = .defaultToggle,
@@ -110,7 +108,6 @@ ToggleStyler {{valuePrefix}}ToggleButtonStyle({
             icon: IconStyler().size(size.icon.mobile).color(foreground),
           )
           .height(size.height.mobile)
-          .border({{valuePrefix}}RingBorder())
           .borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
           .color(fill)
           .onBreakpoint(
@@ -130,7 +127,7 @@ ToggleStyler {{valuePrefix}}ToggleButtonStyle({
               const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointMd),
               ToggleStyler().width(size.height.desktop),
             )
-      : result.padding(.horizontal({{valuePrefix}}InsideRing(size.paddingX)));
+      : result.padding(.horizontal(size.paddingX));
 
   return result
       .onHovered(ToggleStyler().color(hover))
@@ -143,7 +140,7 @@ ToggleStyler {{valuePrefix}}ToggleButtonStyle({
             .onHovered(ToggleStyler().color({{typePrefix}}Tokens.accentSoftHover()))
             .onPressed(ToggleStyler().color({{typePrefix}}Tokens.accentSoftHover())),
       )
-      .onFocusVisible(ToggleStyler().border({{valuePrefix}}RingBorder(focused: true)))
+      .onFocusVisible(ToggleStyler().containerEffects({{valuePrefix}}FocusRing()))
       .onDisabled(ToggleStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
       .animate({{typePrefix}}Tokens.fillMotion)
       .merge(style);

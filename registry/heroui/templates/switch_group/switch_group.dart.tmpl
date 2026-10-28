@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../theme/theme.dart';
 import 'field_layout.dart';
 import 'switch.dart';
 
@@ -61,18 +62,17 @@ class {{typePrefix}}SwitchGroup extends StatelessWidget {
   }
 
   Widget _row({{typePrefix}}SwitchOption item, {required bool itemEnabled}) =>
-      {{typePrefix}}ControlRow(
-        controlWidth: size.trackWidth,
-        invalid: item.invalid,
+      {{typePrefix}}DescribedControl(
+        descriptionInset: size.trackWidth + {{valuePrefix}}ControlGap,
         enabled: itemEnabled,
-        label: item.label,
         description: item.description,
         control: {{typePrefix}}Switch(
           size: size,
           selected: item.selected,
           onChanged: item.onChanged,
           enabled: itemEnabled,
-          semanticLabel: item.label,
+          label: item.label,
+          invalid: item.invalid,
         ),
       );
 }

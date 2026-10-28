@@ -9,8 +9,10 @@ part 'popover.g.dart';
 /// HeroUI recipe for [RemixPopover], the overlay surface.
 ///
 /// Anchoring, dismissal, and focus return stay with Remix. To open the popover
-/// from a button, set `openOnTap: false` and open it from the button's
-/// `onPressed` with the popover's `controller`.
+/// from a button, set `openOnTap: false`, open it from the button's `onPressed`
+/// with the popover's `controller`, and pass one `FocusNode` as both the
+/// popover's `triggerFocusNode` and the button's `focusNode`, so the button is
+/// the only tab stop and takes focus back on close.
 @MixWidget(target: RemixPopover.new)
 PopoverStyler {{valuePrefix}}PopoverStyle({
   PopoverStyler style = const PopoverStyler.create(),

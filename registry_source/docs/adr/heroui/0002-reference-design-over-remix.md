@@ -66,3 +66,50 @@ style transitions animate whatever the OS motion setting (as in Vanilla and
 Fortal); CSS shadow blur is passed to Flutter's `blurRadius` (as in Fortal), so
 shadows render slightly softer; the platform font replaces the browser's
 system stack; motion such as the sliding tab indicator is not reproduced.
+
+## Adoption revision — 2026-10-27
+
+The shared-library table above is the 2026-10-19 decision and stays as decided.
+The proposals it records now exist as separate changes to Remix and Naked UI
+(labels on radio and switch, the anchor width token, `containerEffects` and
+`triggerEffects`, and a control trigger for `RemixMenu`, with the Naked UI
+`NakedMenu.openOnTap` and popover focus changes under it). They come from the
+follow-up pull requests on btwld/remix and ship with the next Remix beta and
+naked_ui 1.3.0; the HeroUI registry's Remix floor moves with that release, and
+this preset needs it. The preset adopts them and four recorded approximations
+go away:
+
+| Approximation above | Now |
+| --- | --- |
+| An always-present transparent 2px inside border recolored on focus (tabs, toggles, toggle group items, select and menu rows, the menu trigger, accordion and disclosure triggers) | `heroUiFocusRing()` through `containerEffects` and `triggerEffects`: the measured background gap, then the 2px ring, drawn outside the part and taking no layout space. Padding no longer subtracts the ring width. The selected tab's surface shadow is `containerEffects(heroUiSurfaceEffects())` instead of plain box shadows, so it follows `--surface-shadow` (none in dark), combines with the ring, and matches upstream |
+| The select popover as wide as its content | `SelectContentStyler().minWidth(remixAnchorWidth())`, the port of `min-w-(--trigger-width)` |
+| Labels composed beside bare radios and switches, outside the tap target | `HeroUiRadio` and `HeroUiSwitch` pass `label`, inside the one tap target. `HeroUiControlRow` becomes `HeroUiDescribedControl`, which lays out only the description beneath the label |
+| A label-only dropdown trigger inside Remix's own button | A `HeroUiButton` through `RemixMenuTrigger.control`; label and builder triggers keep the bare `.dropdown__trigger` look |
+
+The Button-opening-a-popover row's verdict, "No gap: no shared change needed.",
+still holds for the popover. Its reason, that a dropdown trigger is a label and
+not a Button, is superseded by the control trigger above. The preset now
+documents sharing one `FocusNode` as the popover's `triggerFocusNode` and the
+button's `focusNode`, so the button is the only tab stop and takes focus back
+on close.
+
+What differs from upstream after the move, with its attribution:
+
+- A ring is an outline an enclosing clip can crop. Toggle group items draw it
+  inside the item, as `toggle-button-group.css` does (`ring-inset`). The surface
+  accordion's trigger also draws it inside, but that is an approximation:
+  `accordion.css` has no `ring-inset`, and its card clips an outside ring. The
+  card's rounded clip then crops even the inside ring at its outer corners
+  (`accordion.yaml`).
+- The toast stacks its action under the message at 768px and below
+  (`actionPlacement`) with `mt-2` below 640px. From 640 to 768 upstream has no
+  margin and Remix keeps the container spacing (`toast.yaml`).
+- Style transitions still animate whatever the OS motion setting: Mix 2.3.1's
+  `.animate` does not read reduced motion. Remix's own select, accordion,
+  spinner, and dialog motion honors it.
+
+This supersedes five rows of the table: for the four above, the "Today" cell
+and the verdict's "proposed as a separate change" and "HeroUI keeps the border
+until it ships"; for the popover row, its reason. It also supersedes the
+sentence that this change leaves Naked UI and Remix untouched. The spinner,
+check mark, and skeleton verdicts and the family map are unchanged.

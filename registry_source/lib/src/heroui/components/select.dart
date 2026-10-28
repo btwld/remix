@@ -69,19 +69,19 @@ SelectTriggerStyler _trigger(
   return result;
 }
 
-/// `.select__popover`: `bg-overlay`, `min(32px, var(--radius-3xl))`.
+/// `.select__popover`: `min-w-(--trigger-width)`, `bg-overlay`,
+/// `min(32px, var(--radius-3xl))`.
 final _content = SelectContentStyler()
+    .minWidth(remixAnchorWidth())
     .color(HeroUiTokens.overlay())
     .borderRadius(.all(HeroUiTokens.radiusPanel()))
     .containerEffects(heroUiSurfaceEffects(overlay: true));
 
-/// `.list-box-item` inside the select popover (`px-2.5`). A transparent
-/// ring-width border is always present so keyboard focus recolors it in place.
+/// `.list-box-item` inside the select popover (`px-2.5`).
 final _item = SelectMenuItemStyler()
     .minHeight(_minHeight)
-    .padding(.horizontal(heroUiInsideRing(_itemPaddingX)))
-    .padding(.vertical(heroUiInsideRing(_itemPaddingY)))
-    .border(heroUiRingBorder())
+    .padding(.horizontal(_itemPaddingX))
+    .padding(.vertical(_itemPaddingY))
     .spacing(_itemGap)
     .borderRadius(.all(HeroUiTokens.radius2xl()))
     .text(.style(HeroUiTokens.textSm.mix()).color(HeroUiTokens.foreground()))
@@ -89,9 +89,7 @@ final _item = SelectMenuItemStyler()
     .icon(.size(_itemMark).color(HeroUiTokens.defaultForeground()))
     .onHovered(.color(HeroUiTokens.defaultColor()))
     .onPressed(SelectMenuItemStyler().scale(_itemPressedScale))
-    .onFocusVisible(
-      SelectMenuItemStyler().border(heroUiRingBorder(focused: true)),
-    )
+    .onFocusVisible(SelectMenuItemStyler().containerEffects(heroUiFocusRing()))
     .onDisabled(
       SelectMenuItemStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),
     );

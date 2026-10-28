@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../theme/theme.dart';
 import 'field_layout.dart';
 import 'switch.dart';
 
@@ -61,18 +62,17 @@ class HeroUiSwitchGroup extends StatelessWidget {
   }
 
   Widget _row(HeroUiSwitchOption item, {required bool itemEnabled}) =>
-      HeroUiControlRow(
-        controlWidth: size.trackWidth,
-        invalid: item.invalid,
+      HeroUiDescribedControl(
+        descriptionInset: size.trackWidth + heroUiControlGap,
         enabled: itemEnabled,
-        label: item.label,
         description: item.description,
         control: HeroUiSwitch(
           size: size,
           selected: item.selected,
           onChanged: item.onChanged,
           enabled: itemEnabled,
-          semanticLabel: item.label,
+          label: item.label,
+          invalid: item.invalid,
         ),
       );
 }

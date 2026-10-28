@@ -43,9 +43,7 @@ AccordionStyler heroUiAccordionStyle({
             .direction(.horizontal)
             .mainAxisAlignment(.spaceBetween)
             .crossAxisAlignment(.center)
-            // `px-4 py-4`, less the always-present ring-width border.
-            .padding(.all(heroUiInsideRing(_padding)))
-            .border(heroUiRingBorder()),
+            .padding(.all(_padding)),
       )
       .title(.style(HeroUiTokens.textSm.mix()).fontWeight(.w500))
       .trailingIcon(.size(_indicator).color(HeroUiTokens.muted()))
@@ -77,9 +75,10 @@ AccordionStyler heroUiAccordionStyle({
           ),
         ),
       )
+      // The surface card clips, so its trigger rings inside.
       .onFocusVisible(
-        AccordionStyler().trigger(
-          FlexBoxStyler().border(heroUiRingBorder(focused: true)),
+        AccordionStyler().triggerEffects(
+          surface ? heroUiInsetFocusRing : heroUiFocusRing(),
         ),
       )
       .animate(_indicatorMotion)

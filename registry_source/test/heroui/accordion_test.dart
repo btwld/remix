@@ -3,15 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/src/heroui/components/accordion.dart';
-import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
 
 const _chevron = IconData(0xe5cf);
-
-/// Browser colors are 8-bit; recipe colors come from the theme tokens.
-const _colorTolerance = 1.5 / 255;
 
 String _id(HeroUiAccordionVariant variant) =>
     variant == .surface ? 'surface' : 'default';
@@ -61,10 +57,12 @@ AccordionSpec _spec(WidgetTester tester, [String title = 'First']) =>
 BoxDecoration? _decoration(StyleSpec<BoxSpec> box) =>
     box.spec.decoration as BoxDecoration?;
 
-BoxDecoration _trigger(AccordionSpec spec) =>
-    spec.trigger.spec.boxSpec.decoration! as BoxDecoration;
+BoxDecoration? _trigger(AccordionSpec spec) =>
+    spec.trigger.spec.boxSpec.decoration as BoxDecoration?;
 
-Border _triggerBorder(AccordionSpec spec) => _trigger(spec).border! as Border;
+/// The trigger's box: the padding around its title row.
+Finder get _triggerBox =>
+    find.ancestor(of: find.text('First'), matching: find.byType(Padding)).first;
 
 /// The card the group paints: its first `Container`.
 final _cardFinder = find
@@ -148,19 +146,7 @@ void main() {
           tester.getSize(find.text('First')).height,
           trigger.px('lineHeight'),
         );
-        expect(
-          tester
-              .getSize(
-                find
-                    .ancestor(
-                      of: find.text('First'),
-                      matching: find.byType(DecoratedBox),
-                    )
-                    .first,
-              )
-              .height,
-          trigger.size.height,
-        );
+        expect(tester.getSize(_triggerBox).height, trigger.size.height);
 
         // .accordion__indicator: size-4 text-muted.
         expect(spec.trailingIcon.spec.size, indicator.size.width);
@@ -211,17 +197,17 @@ void main() {
             mode: mode,
             state: true,
           );
-          expect(_trigger(_spec(tester)).color, isNull);
+          expect(_trigger(_spec(tester))?.color, isNull);
 
           await tester.hoverCenter(find.text('First'));
           expectCssColor(
-            _trigger(_spec(tester)).color!,
+            _trigger(_spec(tester))!.color!,
             hover.styles['backgroundColor']!,
           );
 
           await tester.tap(find.text('First'));
           await tester.pumpAndSettle();
-          expect(_trigger(_spec(tester)).color, isNull, reason: 'expanded');
+          expect(_trigger(_spec(tester))?.color, isNull, reason: 'expanded');
         },
         variant: desktopOnly,
       );
@@ -268,32 +254,35 @@ void main() {
       );
     });
 
-    testWidgets('keyboard focus rings the trigger without moving it in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring around the trigger '
+        'without moving it in $mode', (tester) async {
       await tester.pumpHeroUi(_accordion(), mode: mode);
       await tester.pumpAndSettle();
       final before = tester.getRect(find.text('First'));
-      expect(_triggerBorder(_spec(tester)).top.color.a, 0);
-      expect(_triggerBorder(_spec(tester)).top.width, HeroUiTokens.focusWidth);
+      final size = tester.getSize(_triggerBox);
+      expect(_spec(tester).triggerEffects?.isEmpty ?? true, isTrue);
 
       await tester.focusWithTab();
-      // accordion-default-focus-trigger: a background gap, then the focus
-      // ring. The recipe draws the focus colour as a ring-width inside border.
-      final layers = cssRemixShadows(
-        heroUiCase(
-          'accordion-default-focus-trigger',
-          mode: mode,
-          state: true,
-        ).styles['boxShadow']!,
+      expectFocusRing(
+        _spec(tester).triggerEffects,
+        heroUiCase('accordion-default-focus-trigger', mode: mode, state: true),
       );
-      expect(
-        _triggerBorder(_spec(tester)).top.color,
-        isSameColorAs(layers.last.color, threshold: _colorTolerance),
-      );
-      expect(
-        _triggerBorder(_spec(tester)).top.width,
-        layers.last.spreadRadius - layers.first.spreadRadius,
+      expect(_trigger(_spec(tester))?.border, isNull);
+      expect(tester.getRect(find.text('First')), before);
+      expect(tester.getSize(_triggerBox), size);
+    });
+
+    testWidgets('the surface card clips, so its ring is drawn inside the '
+        'trigger in $mode', (tester) async {
+      await tester.pumpHeroUi(_accordion(variant: .surface), mode: mode);
+      await tester.pumpAndSettle();
+      final before = tester.getRect(find.text('First'));
+
+      await tester.focusWithTab();
+      expectFocusRing(
+        _spec(tester).triggerEffects,
+        heroUiCase('accordion-default-focus-trigger', mode: mode, state: true),
+        inset: true,
       );
       expect(tester.getRect(find.text('First')), before);
     });
@@ -349,7 +338,7 @@ void main() {
     await tester.pumpHeroUi(_accordion(enabled: false));
     await tester.pumpAndSettle();
     await tester.hoverCenter(find.text('First'));
-    expect(_trigger(_spec(tester)).color, isNull);
+    expect(_trigger(_spec(tester))?.color, isNull);
 
     await tester.tap(find.text('First'));
     await tester.pumpAndSettle();

@@ -5,7 +5,7 @@ status: implemented
 source:
   ref: "@heroui/styles@3.2.6"
   pages: [dist/components/radio.css, dist/components/radio-group.css, dist/utilities/index.css]
-anatomy: [control, indicator]
+anatomy: [control, indicator, label]
 variants: [primary, secondary]
 sizes: {supported: [], default: null}
 states: [rest, hover, pressed, selected, invalid, focus-visible, disabled]
@@ -23,8 +23,10 @@ measurements:
   - {what: focus ring, value: "2px background gap, then a 2px focus ring", cite: radio-primary-vertical-rest-a-focus-control}
   - {what: "focus ring, invalid", value: "not captured, derived from the cascade: the accent ring replaces the danger outline", cite: "radio.css radio__control focus-visible and [data-invalid] rules"}
   - {what: disabled opacity, value: 0.5, cite: radio-primary-vertical-disabled-a}
+  - {what: label, value: "14/20 medium, foreground, 12 after the control and centered on it; inside the tap target, so pointing at it hovers and presses the control", cite: "radio-primary-vertical-rest-a-label, radio-primary-vertical-rest-a-content"}
+  - {what: "label, invalid and disabled", value: "danger when invalid; the label's color dims again to 0.5 when disabled", cite: "radio-primary-vertical-invalid-a-label, radio-primary-vertical-disabled-a-label"}
 approximations:
   - "An invalid radio keeps the accent focus ring because `.radio:has([data-focus-visible]) .radio__control` outranks `.radio[data-invalid] .radio__control`. `Invalid + Selected` in radio.css ties with it at (0,4,0) and comes later, so a selected invalid radio may keep the 1px danger outline with a wider ring gap upstream; no capture settles it."
   - Remix draws the dot only while selected, so it appears at its selected size; upstream scales it in from the full control over 200ms.
   - The press scale shares the 200ms fill transition; upstream eases `transform` over 100ms.
-  - Remix's radio is a bare control with a required `semanticLabel`; labels, descriptions, and the group label are `HeroUiRadioGroup`.
+  - "`RemixRadio.label` draws the label and names the radio. The description beneath it and the group label are `HeroUiRadioGroup`'s; a radio has no description of its own."
