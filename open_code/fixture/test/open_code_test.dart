@@ -4782,16 +4782,20 @@ void main() {
       await _pumpInScope(
         tester,
         _overlaid(
-          SizedBox(
-            width: 200,
-            child: AcmeSelect<String>(
-              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              semanticLabel: 'Plan',
-              onChanged: chosen.add,
-              items: const [
-                RemixSelectItem(value: 'free', label: 'Free'),
-                RemixSelectItem(value: 'pro', label: 'Pro'),
-              ],
+          // Center inside the entry: Overlay otherwise stretches the trigger
+          // to the viewport, leaving no space beside it for the options.
+          Center(
+            child: SizedBox(
+              width: 200,
+              child: AcmeSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+                semanticLabel: 'Plan',
+                onChanged: chosen.add,
+                items: const [
+                  RemixSelectItem(value: 'free', label: 'Free'),
+                  RemixSelectItem(value: 'pro', label: 'Pro'),
+                ],
+              ),
             ),
           ),
         ),
@@ -4800,6 +4804,7 @@ void main() {
 
       await tester.tap(find.text('Choose'));
       await tester.pumpAndSettle();
+      expect(find.text('Pro').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Pro'));
       await tester.pumpAndSettle();
 
