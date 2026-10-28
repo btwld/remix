@@ -53,9 +53,11 @@ accessibility `reduceMotion` is the only flag iOS Reduce Motion sets. Motion is
 reduced when either is on. A `MediaQuery` override can force reduced motion on
 for a subtree, but it cannot turn the platform's `reduceMotion` off.
 
-The select menu, accordion panel, spinner, skeleton, and sidebar follow both
-signals. Dialogs, tooltips, disclosure, and toast get their motion from Naked
-UI, so they follow whichever signals the installed Naked UI release reads.
+The select menu, accordion panel, skeleton, and sidebar follow both signals.
+An active select or accordion transition settles when the preference changes;
+essential spinner motion keeps running. Dialogs, tooltips, disclosure, and toast
+get their motion from Naked UI, so they follow whichever signals the installed
+Naked UI release reads.
 
 Read the same preference for your own motion with `RemixReducedMotionBuilder`.
 Its builder runs again when either signal changes.
