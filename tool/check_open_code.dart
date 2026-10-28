@@ -296,7 +296,6 @@ final class _PresetContract {
     required this.registryItems,
     this.generatedSnapshots = const {},
     this.requiredRuntimeDependencies = _baseRuntimeDependencies,
-    this.requiredDevDependencies = _requiredDevDependencies,
     this.allowedImportPackages = _baseImportPackages,
     this.foundationItems = _foundationItems,
     this.independentItems = _independentRegistryItems,
@@ -311,7 +310,6 @@ final class _PresetContract {
   /// Hosted runtime dependencies the CLI must add to the consumer, exactly.
   final List<String> requiredRuntimeDependencies;
 
-  final List<String> requiredDevDependencies;
   final Set<String> foundationItems;
 
   /// Items installed alone in a fresh app, so an omitted dependency cannot
@@ -338,7 +336,6 @@ final class _PresetContract {
       registryItems: registryItems,
       generatedSnapshots: generatedSnapshots,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
-      requiredDevDependencies: requiredDevDependencies,
       allowedImportPackages: swap(allowedImportPackages),
       foundationItems: foundationItems,
       independentItems: independentItems,
@@ -851,7 +848,7 @@ Future<_Failure?> _checkInTemporaryApp({
   final installedPackages = installedConfig as Map<String, String>;
   for (final package in [
     ...preset.requiredRuntimeDependencies,
-    ...preset.requiredDevDependencies,
+    ..._requiredDevDependencies,
     if (hostedCli) 'remix_cli',
   ]) {
     if (startsWithCheckout &&
@@ -1593,13 +1590,13 @@ _Failure? _verifyInstalledDependencies(
   );
   _expectExactKeys(
     development,
-    {'flutter_test', 'remix_cli', ...preset.requiredDevDependencies},
+    {'flutter_test', 'remix_cli', ..._requiredDevDependencies},
     'development',
     problems,
   );
   for (final package in [
     ...preset.requiredRuntimeDependencies,
-    ...preset.requiredDevDependencies,
+    ..._requiredDevDependencies,
   ]) {
     final declaration = runtime[package] ?? development[package];
     if (declaration is! String) {

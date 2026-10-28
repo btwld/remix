@@ -2,9 +2,6 @@ part of 'spinner.dart';
 
 /// An animated loading indicator with Mix styling.
 ///
-/// When reduced motion is requested (see [RemixReducedMotionBuilder]) the
-/// indicator stops and paints a static frame.
-///
 /// ## Examples
 ///
 /// ```dart
@@ -47,13 +44,10 @@ class RemixSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spinner = RemixReducedMotionBuilder(
-      builder: (context, reduceMotion) => RemixStyleSpecBuilder<SpinnerSpec>(
-        style: style,
-        styleSpec: styleSpec,
-        builder: (context, spec) =>
-            _SpinnerSpecWidget(spec: spec, reduceMotion: reduceMotion),
-      ),
+    final spinner = RemixStyleSpecBuilder<SpinnerSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) => _SpinnerSpecWidget(spec: spec),
     );
 
     if (semanticsLabel == null) return spinner;
@@ -68,10 +62,9 @@ class RemixSpinner extends StatelessWidget {
 }
 
 class _SpinnerSpecWidget extends StatefulWidget {
-  const _SpinnerSpecWidget({required this.spec, required this.reduceMotion});
+  const _SpinnerSpecWidget({required this.spec});
 
   final SpinnerSpec spec;
-  final bool reduceMotion;
 
   @override
   State createState() => _SpinnerSpecWidgetState();
@@ -87,16 +80,7 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
     controller = AnimationController(
       duration: widget.spec.duration ?? const Duration(milliseconds: 1000),
       vsync: this,
-    );
-    _syncMotion();
-  }
-
-  void _syncMotion() {
-    if (widget.reduceMotion) {
-      controller.value = 0;
-    } else if (!controller.isAnimating) {
-      controller.repeat();
-    }
+    )..repeat();
   }
 
   @override
@@ -108,9 +92,8 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
         oldWidget.spec.duration ?? const Duration(milliseconds: 1000);
     if (oldDuration != newDuration) {
       controller.duration = newDuration;
-      if (!widget.reduceMotion) controller.repeat();
+      controller.repeat();
     }
-    if (oldWidget.reduceMotion != widget.reduceMotion) _syncMotion();
   }
 
   @override

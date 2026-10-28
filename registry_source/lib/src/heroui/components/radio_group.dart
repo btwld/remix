@@ -52,9 +52,10 @@ class HeroUiRadioGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final interactive = enabled && onChanged != null;
     final items = [
       for (final option in options)
-        _row(option, optionEnabled: enabled && option.enabled),
+        _row(option, optionEnabled: interactive && option.enabled),
     ];
     return RemixRadioGroup<T>(
       groupValue: groupValue,
@@ -67,7 +68,7 @@ class HeroUiRadioGroup<T> extends StatelessWidget {
         helperText: helperText,
         errorText: errorText,
         invalid: invalid,
-        enabled: enabled,
+        enabled: interactive,
         items: items,
       ),
     );
