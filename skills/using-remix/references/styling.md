@@ -123,9 +123,10 @@ differs:
 
 ## Reduced motion
 
-The select menu, accordion panel, spinner, skeleton, and sidebar skip their
+The select menu, accordion panel, skeleton, and sidebar skip their
 motion when `MediaQuery.disableAnimations` or the platform's `reduceMotion` is
-set; iOS Reduce Motion sets only the latter. Dialogs, tooltips, disclosure, and
+set; iOS Reduce Motion sets only the latter. Essential `RemixSpinner` motion
+intentionally continues. Dialogs, tooltips, disclosure, and
 toast get their motion from Naked UI and follow the signals the installed
 Naked UI release reads.
 `RemixReducedMotionBuilder(builder: (context, reduceMotion) => ...)` exposes the
