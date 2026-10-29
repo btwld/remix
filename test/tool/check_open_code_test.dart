@@ -195,6 +195,74 @@ void main() {
     });
   });
 
+  test(
+    'production independent installs dispatch up to the requested jobs',
+    () async {
+      final app = Directory('${sandbox.path}/app')..createSync();
+      File('${app.path}/pubspec.yaml').writeAsStringSync('''
+name: dispatch_probe
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+''');
+      final probe = Directory('${sandbox.path}/probe')..createSync();
+      final release = File('${probe.path}/release');
+      final harness = File('${sandbox.path}/cli.dart')
+        ..writeAsStringSync(r'''
+import 'dart:io';
+
+Future<void> main(List<String> arguments) async {
+  if (arguments.first == 'init') {
+    final root = Platform.environment['REMIX_DISPATCH_PROBE']!;
+    final item = Directory.current.uri.pathSegments.where((s) => s.isNotEmpty).last;
+    File('$root/$item.started').writeAsStringSync('started');
+    while (!File('$root/release').existsSync()) {
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+  }
+  Directory('lib/ui').createSync(recursive: true);
+}
+''');
+      final result = checker.independentItemsProblemForTest(
+        app,
+        jobs: 2,
+        environment: {
+          'REMIX_REGISTRY_CONSUMER_CLI': harness.path,
+          'REMIX_DISPATCH_PROBE': probe.path,
+        },
+      );
+      int started() => probe
+          .listSync()
+          .whereType<File>()
+          .where((file) => file.path.endsWith('.started'))
+          .length;
+      var overlapping = 0;
+      try {
+        final deadline = Stopwatch()..start();
+        while (started() < 2 &&
+            deadline.elapsed < const Duration(seconds: 10)) {
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
+        overlapping = started();
+      } finally {
+        // Always release and await children, including when dispatch is serial.
+        release.writeAsStringSync('continue');
+      }
+      expect(await result, isNull);
+      expect(
+        overlapping,
+        2,
+        reason:
+            'the production checker must start two installs before either completes',
+      );
+      expect(
+        started(),
+        greaterThan(2),
+        reason: 'remaining items were dispatched',
+      );
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
   group('runPooled', () {
     late StringBuffer out;
     late _Tasks tasks;

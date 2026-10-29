@@ -1935,6 +1935,24 @@ String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
 List<String> requiredRuntimeDependenciesForTest(String preset) =>
     _presetByName(preset).requiredRuntimeDependencies;
 
+/// Runs the production independent-install boundary with a fixture CLI harness.
+Future<String?> independentItemsProblemForTest(
+  Directory app, {
+  required int jobs,
+  required Map<String, String> environment,
+}) async => (await _checkIndependentItems(
+  sdk: _Toolchain(
+    version: Platform.version,
+    root: File(Platform.resolvedExecutable).parent.parent.path,
+    flutter: '', // Independent installs invoke Dart, not Flutter.
+    dart: Platform.resolvedExecutable,
+  ),
+  app: app,
+  preset: _defaultPreset,
+  environment: environment,
+  jobs: jobs,
+))?.message;
+
 /// Returns the expected installed UI inventory for focused regression tests.
 List<String> installedUiFilesForTest({String preset = 'vanilla'}) =>
     _presetByName(preset).installedUiFiles;
