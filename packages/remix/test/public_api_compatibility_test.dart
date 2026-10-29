@@ -11,6 +11,16 @@ void main() {
       label: 'Receive updates',
       minimumTapTargetSize: Size.zero,
     );
+    const radio = RemixRadio<String>(
+      value: 'monthly',
+      label: 'Monthly',
+      minimumTapTargetSize: Size.zero,
+    );
+    const switchWidget = RemixSwitch(
+      selected: false,
+      label: 'Airplane mode',
+      minimumTapTargetSize: Size.zero,
+    );
     const menu = RemixMenu<String>(
       trigger: RemixMenuTrigger(label: 'Actions'),
       items: [
@@ -69,6 +79,10 @@ void main() {
     expect(card.child, isA<Text>());
     expect(checkbox.label, 'Receive updates');
     expect(checkbox.minimumTapTargetSize, Size.zero);
+    expect(radio.label, 'Monthly');
+    expect(radio.minimumTapTargetSize, Size.zero);
+    expect(switchWidget.label, 'Airplane mode');
+    expect(switchWidget.minimumTapTargetSize, Size.zero);
     expect(menu.trigger, isA<RemixMenuTrigger>());
     expect(menu.trigger.label, 'Actions');
     expect(menu.trigger.icon, isNull);

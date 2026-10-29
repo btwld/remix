@@ -1,3 +1,98 @@
+## Unreleased
+
+### Features
+
+- Add `NakedMenu.openOnTap` (default `true`). Set it to `false` to use your own
+  control as the trigger: the menu then draws no `NakedButton`, adds no tap or
+  keyboard activation or focus stop, and leaves opening and closing to the
+  `controller`. Attach `triggerFocusNode` to the control so focus returns to it
+  when the menu closes. The menu merges the control's semantics into one node
+  that carries the expanded state, so do not wrap the control in
+  `MergeSemantics`, and it must not set `semanticLabel`. It cannot be `false`
+  for an item of a `NakedMenubar`.
+- Add `constrainToAvailableHeight` to `NakedSelect`, `NakedMenu`, and
+  `OverlayPositioner` (default `false`, so nothing changes until it is set). A
+  panel placed above or below its trigger is then laid out no taller than the
+  space on that side, after `sideOffset` and `collisionPadding`, instead of as
+  tall as the whole overlay, so a tall panel no longer slides over its trigger
+  and a scroll view inside it scrolls beside the trigger. With collision
+  avoidance on, the larger side bounds the layout; the panel stays on the
+  preferred side when it fits there, otherwise it flips. Content that cannot
+  scroll overflows the shorter panel, and placements to the left or right of the
+  trigger are not capped.
+
+### Fixes
+
+- End slider interactions safely when thumbs or interaction configuration
+  change or the slider is disabled. Preserve one start/end sequence and the
+  last requested values across controlled rebuilds.
+- Retain slider keyboard focus when semantics are excluded, and preserve
+  surviving external focus nodes when thumbs change.
+- Add `NakedSliderTrack` to map input to an inset painted rail while retaining
+  the full slider hit target.
+- Keep the focus action and focused state on a `NakedDisclosure` trigger that
+  sets `semanticLabel`. The label still replaces the trigger's visual content
+  for assistive technology, but no longer drops focus semantics.
+- `showNakedDialog`, `showNakedAlertDialog`, `NakedTooltip`, `NakedDisclosure`,
+  and `NakedToastScope` now skip their transitions when the user asks to reduce
+  motion, whatever durations they were given. They honor both
+  `MediaQuery.disableAnimations` and the platform's Reduce Motion setting, which
+  iOS reports separately and `disableAnimations` does not reflect. Until now
+  `NakedDisclosure` and `NakedToastScope` honored only the former, and dialogs
+  and tooltips neither.
+  - A dialog reads the setting when it opens and when it is dismissed. One that
+    opened without motion also closes without it.
+  - A tooltip and a toast apply a change to their next show or hide. A
+    disclosure also completes a transition already running.
+- A modal `NakedDialog` shown without a transition, with a zero
+  `transitionDuration` or under reduced motion, no longer hides the dismissible
+  barrier's "Dismiss" node from screen readers. `showNakedDialog` now wraps the
+  dialog page in a semantics container.
+- `NakedPopover` with `openOnTap: false` no longer wraps its child in a focus
+  stop of its own. A button or other control passed as the child is now the only
+  tab stop, and closing the popover returns focus to it instead of to the
+  wrapper, so a screen reader no longer lands on an unlabelled focusable wrapper
+  after the popover closes. Attach `triggerFocusNode` to the control, using the
+  same node as the control's own `focusNode`; sharing one node between the two
+  no longer throws. Without `triggerFocusNode`, closing returns focus to
+  whatever had it before the popover opened. The default `openOnTap: true` is
+  unchanged.
+- Because `NakedPopover` with `openOnTap: false` no longer attaches
+  `triggerFocusNode` itself, a child that cannot take focus (such as `Text`, or
+  a disabled button, which the wrapper used to make focusable) is no longer a
+  tab stop, a node that is not attached to the control receives no focus, and
+  with a `Focus` child and a different `triggerFocusNode` the child's own node
+  is the tab stop.
+- Home and End now scroll the newly focused item just far enough into view in
+  `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
+  content, in `NakedTabBar`, and in `NakedMenubar`.
+- The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
+  from an open `NakedMenubar` menu, scroll the newly focused item into view the
+  same way. A target that is already visible stays where it is.
+- `NakedCombobox` now scrolls the highlighted option just far enough into view
+  when the arrow keys highlight it and when the options view opens, instead of
+  leaving it outside a scrolling options list. Focus stays on the field, an
+  option that is already visible does not scroll the list or the page, and
+  scrolling by hand is not undone. Opening replaces a scroll offset you gave
+  the list when the highlighted option is outside it, and in a lazily built
+  list such as `ListView.builder` a highlighted option that is not built, such
+  as the last option after Ctrl or Cmd with ArrowDown, is not revealed.
+- `NakedSelect` now opens with focus on the selected option, scrolled into
+  view, so Arrow Up and Arrow Down continue from it instead of from the ends of
+  the list. A select without a selected option, or whose selected option is
+  disabled or not built yet in a lazy list, opens on the first item that can
+  take focus, normally its first enabled option: the first Arrow Down reaches
+  the second option and Enter selects the first, where focus used to start on
+  the overlay container. A field in the panel that requests focus while the
+  panel builds keeps it.
+- Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
+  hovering a submenu row also opens it after its delay, only when the pointer
+  moves over it, no longer when a list scrolls under a resting pointer.
+
+- Keep a menu nested in a menubar panel out of the bar's trigger traversal and
+  focus/hover activation. A nested caller-owned control still opens its menu
+  only through its own activation.
+
 ## 1.2.3
 
 ### Fixes

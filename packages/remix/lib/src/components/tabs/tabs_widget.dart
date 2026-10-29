@@ -204,8 +204,9 @@ class RemixTab extends StatelessWidget {
     TabSpec spec,
     NakedTabState state,
   ) {
-    final defaultContent = FlexBox(
+    final defaultContent = RemixFlexBoxAdapter(
       styleSpec: spec.container,
+      containerEffects: spec.containerEffects,
       children: [
         if (child != null)
           child!

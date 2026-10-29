@@ -4,6 +4,7 @@ import 'dart:ui' show SemanticsRole;
 import 'package:flutter/widgets.dart';
 
 import 'base/overlay_base.dart';
+import 'utilities/focus_in_view.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
 
@@ -111,6 +112,7 @@ class _NakedComboboxScope<T extends Object> extends OverlayScope<T> {
     required super.child,
     required this.options,
     required this.onSelected,
+    required this.claimReveal,
     required this.enabled,
     this.value,
   });
@@ -126,6 +128,10 @@ class _NakedComboboxScope<T extends Object> extends OverlayScope<T> {
 
   final Iterable<T> options;
   final ValueChanged<T> onSelected;
+
+  /// Returns whether the option at the given index still has to be revealed,
+  /// and records that it is being revealed.
+  final bool Function(int index) claimReveal;
   final bool enabled;
   final T? value;
 
@@ -160,6 +166,12 @@ class NakedComboboxOption<T extends Object>
         index >= 0 && AutocompleteHighlightedOption.of(context) == index;
     final isSelected = scope.value == value;
     final effectiveEnabled = enabled && scope.enabled;
+
+    if (isHighlighted && scope.claimReveal(index)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) revealInView(context);
+      });
+    }
 
     return buildButton(
       onPressed: effectiveEnabled ? () => scope.onSelected(value) : null,
@@ -231,6 +243,16 @@ class _OverlayLifecycleState extends State<_OverlayLifecycle> {
 ///   (`down`, `up`, or `mostSpace`). [OverlayPositionConfig] does not apply.
 /// - On Flutter 3.41, a selection-only caret change after picking an option
 ///   can reopen the options list.
+///
+/// The highlighted option scrolls just far enough into view when the highlight
+/// moves and when the options view opens, without moving focus.
+///
+/// Limitations of that reveal:
+/// - Opening reveals the highlighted option too, so a scroll offset the caller
+///   gave the options list is replaced when the highlight is outside it.
+/// - In a lazily built list such as [ListView.builder], a highlighted option
+///   that is not built, such as the last option after Ctrl or Cmd with
+///   ArrowDown, is not revealed.
 ///
 /// [SemanticsRole.comboBox] is not used: on Flutter 3.41 debug semantics throw
 /// `Missing checks for role` for that role.
@@ -323,6 +345,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   TextEditingController? _listenedController;
   FocusNode? _listenedFocusNode;
   bool _focused = false;
+  int? _revealedIndex;
 
   @override
   void dispose() {
@@ -371,7 +394,14 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     widget.onOpen?.call();
   }
 
+  bool _claimReveal(int index) {
+    if (_revealedIndex == index) return false;
+    _revealedIndex = index;
+    return true;
+  }
+
   void _handleUnmount() {
+    _revealedIndex = null;
     if (!mounted || !_isOpen) return;
     setState(() => _isOpen = false);
     widget.onClose?.call();
@@ -436,6 +466,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     child: _NakedComboboxScope<T>(
       options: options,
       onSelected: onSelected,
+      claimReveal: _claimReveal,
       enabled: widget.enabled,
       value: _value,
       child: Semantics(

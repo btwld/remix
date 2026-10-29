@@ -1,0 +1,295 @@
+/* Base tabs component */
+.tabs {
+  @apply flex gap-2;
+
+  /* Orientation styles */
+  &[data-orientation="horizontal"] {
+    @apply flex-col;
+  }
+
+  &[data-orientation="vertical"] {
+    @apply flex-row;
+  }
+}
+
+/* Tab list container */
+.tabs__list-container {
+  @apply relative bg-default;
+
+  border-radius: calc(var(--radius) * 2.5);
+
+  /* Vertical scroller fills the container height so overflow detection
+     engages when the wrapper height is constrained (e.g. h-[240px]) */
+  > .tabs__list-container__scroller[data-orientation="vertical"] {
+    @apply h-full;
+  }
+
+  /* Overflow chevron buttons */
+  > .tabs__list-container__scroll-prev,
+  > .tabs__list-container__scroll-next {
+    @apply absolute z-2 hidden size-4 cursor-(--cursor-interactive) items-center justify-center rounded-full border-0 bg-transparent p-0 text-foreground outline-none;
+
+    /**
+    * Transitions
+    * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+    */
+    transition: opacity 150ms var(--ease-smooth);
+    @apply motion-reduce:transition-none;
+
+    @media (hover: hover) {
+      &:hover {
+        @apply opacity-70;
+      }
+    }
+
+    &:focus-visible {
+      @apply status-focused;
+    }
+  }
+
+  /* Chevron position - horizontal orientation */
+  &:has([data-orientation="horizontal"]) {
+    > .tabs__list-container__scroll-prev {
+      @apply start-1 top-1/2 -translate-y-1/2;
+    }
+
+    > .tabs__list-container__scroll-next {
+      @apply end-1 top-1/2 -translate-y-1/2;
+    }
+
+    > .tabs__list-container__scroll-prev,
+    > .tabs__list-container__scroll-next {
+      @apply rtl:rotate-180;
+    }
+  }
+
+  /* Chevron position - vertical orientation */
+  &:has([data-orientation="vertical"]) {
+    > .tabs__list-container__scroll-prev {
+      @apply top-1 left-1/2 -translate-x-1/2;
+    }
+
+    > .tabs__list-container__scroll-next {
+      @apply bottom-1 left-1/2 -translate-x-1/2;
+    }
+  }
+
+  /* Show chevrons only when ScrollShadow reports scrolling is possible */
+  &:has(
+      > :is(
+        [data-left-scroll="true"],
+        [data-left-right-scroll="true"],
+        [data-top-scroll="true"],
+        [data-top-bottom-scroll="true"]
+      )
+    )
+    > .tabs__list-container__scroll-prev {
+    @apply inline-flex;
+  }
+
+  &:has(
+      > :is(
+        [data-right-scroll="true"],
+        [data-left-right-scroll="true"],
+        [data-bottom-scroll="true"],
+        [data-top-bottom-scroll="true"]
+      )
+    )
+    > .tabs__list-container__scroll-next {
+    @apply inline-flex;
+  }
+}
+
+/* Tab list */
+.tabs__list {
+  @apply inline-flex p-1;
+
+  /* Horizontal orientation - grow with content so ScrollShadow can detect overflow */
+  &[data-orientation="horizontal"] {
+    @apply w-max min-w-full flex-row;
+  }
+
+  /* Vertical orientation */
+  &[data-orientation="vertical"] {
+    @apply flex-col gap-1;
+
+    .tabs__tab {
+      @apply min-w-20;
+    }
+  }
+}
+
+/* Individual tab */
+.tabs__tab {
+  @apply relative flex h-8 w-full items-center justify-center rounded-3xl px-4 text-center text-sm font-medium text-muted outline-none no-highlight;
+
+  z-index: 1;
+  cursor: var(--cursor-interactive);
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    color 150ms var(--ease-smooth),
+    background-color 150ms var(--ease-smooth),
+    box-shadow 150ms var(--ease-out),
+    opacity 150ms var(--ease-smooth);
+  @apply motion-reduce:transition-none;
+
+  /* Selected state */
+  &[data-selected="true"] {
+    @apply text-segment-foreground;
+
+    /* Hide separator on the selected tab and the one following it */
+    .tabs__separator,
+    & + .tabs__tab .tabs__separator {
+      @apply opacity-0;
+    }
+  }
+
+  /* Disabled state */
+  &:disabled,
+  &[data-disabled="true"],
+  &[aria-disabled="true"] {
+    @apply status-disabled;
+  }
+
+  /* Hover states - both approaches for compatibility */
+  @media (hover: hover) {
+    &:not([data-selected="true"]):not([data-disabled="true"]):hover,
+    &[data-hovered="true"]:not([data-selected="true"]):not([data-disabled="true"]) {
+      @apply opacity-70;
+    }
+  }
+
+  /* Focus states - comprehensive fallback */
+  &:focus-visible:not([data-focused]),
+  &[data-focus-visible="true"] {
+    @apply status-focused;
+  }
+}
+
+/* Tab content alignment - center is the default, handled by .tabs__tab.
+   Scoped to the direct child holding the tab list (the list container, or the
+   list itself when Tabs.ListContainer is omitted) so a nested Tabs inside a
+   panel keeps its own alignment. */
+.tabs--align-start > :is(.tabs__list-container, .tabs__list) .tabs__tab {
+  @apply justify-start text-start;
+}
+
+.tabs--align-end > :is(.tabs__list-container, .tabs__list) .tabs__tab {
+  @apply justify-end text-end;
+}
+
+/* Tab separator */
+.tabs__separator {
+  @apply pointer-events-none absolute rounded-sm bg-muted/25;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition: opacity 150ms var(--ease-smooth);
+  @apply motion-reduce:transition-none;
+
+  /* Horizontal tabs - vertical separator */
+  .tabs__list[data-orientation="horizontal"] & {
+    @apply start-0 top-1/4 h-1/2 w-px;
+  }
+
+  /* Vertical tabs - horizontal separator */
+  .tabs__list[data-orientation="vertical"] & {
+    @apply start-[5%] top-0 h-px w-[90%];
+  }
+}
+
+/* Tab panel */
+.tabs__panel {
+  @apply w-full p-2 outline-none;
+
+  /* Exiting animations */
+  &[data-exiting="true"] {
+    @apply absolute start-0 top-0 w-full;
+  }
+
+  /* Orientation spacing */
+  &[data-orientation="horizontal"] {
+    @apply mt-4;
+  }
+
+  &[data-orientation="vertical"] {
+    @apply ms-4;
+  }
+}
+
+/* Tab indicator - React Aria's SelectionIndicator */
+.tabs__indicator {
+  @apply absolute start-0 top-0 size-full rounded-3xl bg-segment shadow-surface;
+
+  z-index: -1;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition-duration: 250ms;
+  transition-property: translate, width, height;
+  transition-timing-function: var(--ease-out-fluid);
+  @apply motion-reduce:transition-none;
+}
+
+/* ==========================================================================
+   Secondary Variant
+   ========================================================================== */
+
+.tabs--secondary {
+  /* Container - flat, no pill. Underline on container (not list) so it stays
+     stable when the inner list scrolls horizontally inside the ScrollShadow. */
+  > .tabs__list-container {
+    @apply rounded-none bg-transparent;
+
+    /* Tab list - remove padding */
+    .tabs__list {
+      @apply p-0;
+    }
+
+    /* Hide separators in secondary variant */
+    .tabs__separator {
+      @apply hidden;
+    }
+
+    /* Tab - adjust for secondary variant */
+    .tabs__tab {
+      @apply rounded-none;
+
+      /* Selected state - use text-foreground */
+      &[data-selected="true"] {
+        @apply text-foreground;
+      }
+    }
+
+    /* Tab indicator - line style */
+    .tabs__indicator {
+      @apply rounded-none bg-accent shadow-none;
+    }
+  }
+
+  /* Horizontal orientation - bottom border + bottom line indicator */
+  &[data-orientation="horizontal"] > .tabs__list-container {
+    @apply border-b border-border;
+
+    .tabs__indicator {
+      @apply top-auto bottom-0 h-0.5;
+    }
+  }
+
+  /* Vertical orientation - left border + left line indicator */
+  &[data-orientation="vertical"] > .tabs__list-container {
+    @apply border-s border-border;
+
+    .tabs__indicator {
+      @apply start-0 top-0 h-full w-0.5;
+    }
+  }
+}

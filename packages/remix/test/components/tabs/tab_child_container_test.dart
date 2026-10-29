@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixFlexBoxAdapter;
 
 import '../../helpers/test_helpers.dart';
 
@@ -80,7 +82,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(defaultContent, isA<FlexBox>());
+    expect(defaultContent, isA<RemixFlexBoxAdapter>());
     expect(tester.getSize(find.byKey(key)), const Size(24, 24));
     expect(tester.takeException(), isNull);
   });

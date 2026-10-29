@@ -1093,6 +1093,10 @@ class _DataTableHeaderCell extends StatelessWidget {
         onPress: onSort,
         child: cell,
       );
+    } else {
+      // A static header has no state of its own. Without this scope its
+      // regions would resolve against whatever encloses the table.
+      cell = WidgetStateProvider(states: const {}, child: cell);
     }
 
     final owned = semanticLabel != null;

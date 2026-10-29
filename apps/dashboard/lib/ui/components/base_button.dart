@@ -310,7 +310,7 @@ UiBaseButtonStateStyles uiBaseButtonStateStyles({
     .classic || .solid || .surface || .outline || .ghost => UiTokens.focus8(),
   };
   final focusOffset = switch (variant) {
-    .classic || .solid => 2.0,
+    .classic || .solid => UiTokens.focusRingOffset(),
     .soft || .surface || .outline || .ghost => -1.0,
   };
 

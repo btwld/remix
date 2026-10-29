@@ -138,6 +138,12 @@ class SelectMenuItemSpec with _$SelectMenuItemSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
+
+  /// Outline and paint layers drawn around [container] without affecting
+  /// layout, such as a focus ring.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
   @override
   final StyleSpec<TextSpec> text;
   @override
@@ -147,6 +153,7 @@ class SelectMenuItemSpec with _$SelectMenuItemSpec {
 
   const SelectMenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,
+    this.containerEffects,
     StyleSpec<TextSpec>? text,
     StyleSpec<BoxSpec>? indicator,
     StyleSpec<IconSpec>? icon,
@@ -154,6 +161,21 @@ class SelectMenuItemSpec with _$SelectMenuItemSpec {
        text = text ?? const StyleSpec(spec: TextSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  SelectMenuItemSpec lerp(SelectMenuItemSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Backward-compatible name for [SelectMenuItemSpec].

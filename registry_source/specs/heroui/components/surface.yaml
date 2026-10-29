@@ -1,0 +1,20 @@
+component: Surface
+widget: HeroUiSurface
+target: composition over Mix Box
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/surface.css]
+anatomy: [container]
+variants: [transparent, default (defaultSurface), secondary, tertiary]
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - surface, surface-secondary, surface-tertiary
+  - surface-foreground, surface-secondary-foreground, surface-tertiary-foreground, foreground (transparent)
+measurements:
+  - {what: fill, value: "surface token per variant; transparent has none", cite: "surface-default, -secondary, -tertiary, -transparent"}
+  - {what: text colour, value: "the variant's foreground token, inherited by content", cite: "surface-text-default, -secondary, -tertiary, -transparent"}
+approximations:
+  - HeroUI's SurfaceContext, which lets nested fields pick a contrasting variant, is not carried; pass the variant to those components.
+  - HeroUI's default variant is defaultSurface.

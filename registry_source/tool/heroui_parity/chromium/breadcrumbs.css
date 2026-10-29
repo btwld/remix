@@ -1,0 +1,4 @@
+@import '@heroui/styles';
+@source './breadcrumbs.jsx';
+body { margin: 0; background: var(--background); color: var(--foreground); }
+#fixture { padding: 24px; }

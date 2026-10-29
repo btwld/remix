@@ -258,5 +258,61 @@ void main() {
         },
       );
     }
+
+    for (final disabledBy in ['enabled false', 'null callback']) {
+      testWidgets('$disabledBy disables the header region, not the header '
+          'content', (tester) async {
+        const headerProbe = ValueKey('header-probe');
+        const footerProbe = ValueKey('footer-probe');
+        Widget probe(Key key) => SizedBox.square(
+          dimension: 10,
+          child: Box(
+            key: key,
+            style: BoxStyler()
+                .color(Colors.grey)
+                .onDisabled(.color(Colors.red)),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          SizedBox(
+            height: 400,
+            child: RemixSidebar<String>(
+              header: probe(headerProbe),
+              footer: probe(footerProbe),
+              sections: _sections,
+              selectedValue: 'overview',
+              enabled: disabledBy != 'enabled false',
+              onSelected: disabledBy == 'null callback' ? null : (_) {},
+              style: SidebarStyler().onDisabled(
+                SidebarStyler()
+                    .header(.color(Colors.green))
+                    .footer(.color(Colors.green)),
+              ),
+            ),
+          ),
+        );
+
+        for (final key in [headerProbe, footerProbe]) {
+          final regions = tester.widgetList<Box>(
+            find.ancestor(of: find.byKey(key), matching: find.byType(Box)),
+          );
+          expect(
+            regions.map(
+              (box) =>
+                  (box.styleSpec?.spec.decoration as BoxDecoration?)?.color,
+            ),
+            contains(Colors.green),
+          );
+          final content = tester.widget<Container>(
+            find.descendant(
+              of: find.byKey(key),
+              matching: find.byType(Container),
+            ),
+          );
+          expect((content.decoration as BoxDecoration?)?.color, Colors.grey);
+        }
+      });
+    }
   });
 }

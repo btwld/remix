@@ -1,7 +1,9 @@
 # Agent worksheets and shipped recipes
 
 [`vanilla.md`](vanilla.md) is separate: it records the reference values the
-Vanilla preset is held to, and how they are enforced.
+Vanilla preset is held to, and how they are enforced. [`heroui/`](heroui/) is
+separate too: the HeroUI token inventory (`tokens.json`) and one worksheet per
+component, checked by `tool/heroui_parity/check.dart`.
 
 ## Reconciled ownership
 

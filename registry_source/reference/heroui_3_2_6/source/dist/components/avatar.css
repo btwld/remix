@@ -1,0 +1,92 @@
+/* Base avatar styles */
+.avatar {
+  @apply relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-default;
+}
+
+/* Avatar fallback element */
+.avatar__fallback {
+  @apply flex size-full items-center justify-center bg-default text-sm font-medium;
+}
+
+/* Avatar image element */
+.avatar__image {
+  @apply absolute inset-0 aspect-square size-full;
+
+  /**
+   * Transitions
+   */
+  @apply transition-opacity duration-250 motion-reduce:transition-none;
+}
+
+/* Size modifiers */
+.avatar--sm {
+  --avatar-size: 2rem; /* size-8 */
+
+  @apply size-8 rounded-2xl;
+
+  .avatar__fallback {
+    @apply text-xs;
+  }
+}
+
+.avatar--md {
+  --avatar-size: 2.5rem; /* size-10 — same as base */
+
+  /* No layout styles as this is the default size */
+}
+
+.avatar--lg {
+  --avatar-size: 3rem; /* size-12 */
+
+  @apply size-12 rounded-3xl;
+
+  .avatar__fallback {
+    @apply text-base;
+  }
+}
+
+/* Color modifiers for fallback */
+.avatar__fallback--accent {
+  @apply text-accent-soft-foreground;
+}
+
+.avatar__fallback--default {
+  @apply text-default-soft-foreground;
+}
+
+.avatar__fallback--success {
+  @apply text-success-soft-foreground;
+}
+
+.avatar__fallback--warning {
+  @apply text-warning-soft-foreground;
+}
+
+.avatar__fallback--danger {
+  @apply text-danger-soft-foreground;
+}
+
+/* Variant modifiers */
+.avatar--soft {
+  @apply bg-transparent;
+}
+
+.avatar--soft .avatar__fallback--accent {
+  @apply bg-accent-soft text-accent-soft-foreground;
+}
+
+.avatar--soft .avatar__fallback--success {
+  @apply bg-success-soft text-success-soft-foreground;
+}
+
+.avatar--soft .avatar__fallback--warning {
+  @apply bg-warning-soft text-warning-soft-foreground;
+}
+
+.avatar--soft .avatar__fallback--default {
+  @apply bg-default-soft text-default-soft-foreground;
+}
+
+.avatar--soft .avatar__fallback--danger {
+  @apply bg-danger-soft text-danger-soft-foreground;
+}

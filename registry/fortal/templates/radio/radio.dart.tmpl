@@ -45,7 +45,10 @@ RadioStyler {{valuePrefix}}RadioStyle({
   }).merge(style);
 }
 
-RadioStyler _{{valuePrefix}}RadioBaseStyler({{typePrefix}}RadioSize size) {
+RadioStyler _{{valuePrefix}}RadioBaseStyler(
+  {{typePrefix}}RadioSize size, {
+  required Color focusColor,
+}) {
   final metrics = _{{valuePrefix}}RadioMetrics(size);
   return RadioStyler(
     container: .size(
@@ -62,14 +65,7 @@ RadioStyler _{{valuePrefix}}RadioBaseStyler({{typePrefix}}RadioSize size) {
     ),
   ).onFocusVisible(
     .containerEffects(
-      RemixBoxEffectsMix(
-        outline: BorderSideMix(
-          color: {{typePrefix}}Tokens.focus8(),
-          width: 2,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        outlineOffset: 2,
-      ),
+      {{valuePrefix}}FocusOutline(focusColor, offset: {{typePrefix}}Tokens.focusRingOffset()),
     ),
   );
 }
@@ -81,7 +77,7 @@ RadioStyler _{{valuePrefix}}RadioClassicStyler(
   final selectedColor = highContrast
       ? {{typePrefix}}Tokens.accent12()
       : {{typePrefix}}Tokens.accentIndicator();
-  return _{{valuePrefix}}RadioBaseStyler(size)
+  return _{{valuePrefix}}RadioBaseStyler(size, focusColor: {{typePrefix}}Tokens.focus8())
       .color({{typePrefix}}Tokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
@@ -153,7 +149,7 @@ RadioStyler _{{valuePrefix}}RadioSurfaceStyler(
   {{typePrefix}}RadioSize size, {
   required bool highContrast,
 }) {
-  return _{{valuePrefix}}RadioBaseStyler(size)
+  return _{{valuePrefix}}RadioBaseStyler(size, focusColor: {{typePrefix}}Tokens.focus8())
       .color({{typePrefix}}Tokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -206,7 +202,7 @@ RadioStyler _{{valuePrefix}}RadioSoftStyler(
   {{typePrefix}}RadioSize size, {
   required bool highContrast,
 }) {
-  return _{{valuePrefix}}RadioBaseStyler(size)
+  return _{{valuePrefix}}RadioBaseStyler(size, focusColor: {{typePrefix}}Tokens.accentA8())
       .color({{typePrefix}}Tokens.accentA4())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),

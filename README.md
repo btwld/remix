@@ -12,7 +12,7 @@ with Mix styling.
 
 This repository publishes two skills from its [`skills/`](skills) catalog:
 
-- [`using-remix`](https://skills.sh/conceptadev/remix/using-remix) helps agents build Flutter interfaces with base Remix or the Vanilla and Fortal presets installed by `remix_cli`.
+- [`using-remix`](https://skills.sh/conceptadev/remix/using-remix) helps agents build Flutter interfaces with base Remix or the Vanilla, Fortal, and HeroUI presets installed by `remix_cli`.
 - [`building-remix-design-system`](https://skills.sh/conceptadev/remix/building-remix-design-system) helps agents build design systems on Remix and publish them as registries that applications install with `remix_cli`.
 
 List the available skills without installing them:

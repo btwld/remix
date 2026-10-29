@@ -164,6 +164,7 @@ final _dartFence = RegExp(
 final _excerptMarker = RegExp(r'dart-excerpt:');
 // A placeholder ellipsis, as opposed to a spread (`...items`, `...?items`).
 final _placeholderEllipsis = RegExp(r'\.\.\.(?![\w\[({?])');
+final _heroUiApiReference = RegExp(r'\b(?:HeroUi|heroUi)[A-Z]\w*');
 final _fortalApiReference = RegExp(r'\b(?:Fortal|fortal)[A-Z]\w*');
 final _applicationTypeName = RegExp(r'\bUi([A-Z]\w*)');
 final _agentTypeDeclaration = RegExp(
@@ -900,20 +901,26 @@ Set<String> _agentTypeNames(Directory workspaceRoot) {
 /// the analyzer-checked authoring source that barrel is installed from.
 ///
 /// The temporary validation directory has no application package. `Fortal*`
-/// and `fortal*` names match `package:registry_source/fortal.dart`
+/// and `fortal*` names match `package:registry_source/fortal.dart`; likewise
+/// `HeroUi*`/`heroUi*` match `package:registry_source/heroui.dart`
 /// byte-for-byte. `Ui*` is the prefix `remix init` installs under, so each
 /// such type name is renamed back to its authoring word: an Agent surface's
-/// word is `Agent`; every other name belongs to the preset, which is Fortal
-/// when the snippet names anything Fortal and the default Vanilla preset
-/// otherwise. Value names under `ui*` have no example yet, so they are left
-/// alone and fail as undefined. The derivation round trip separately proves
-/// that the prefixed APIs match.
+/// word is `Agent`; every other name belongs to the named HeroUI/Fortal
+/// preset, or the default Vanilla preset otherwise. Value names under `ui*`
+/// have no example yet, so they are left alone and fail as undefined. The
+/// derivation round trip separately proves that the prefixed APIs match.
 String _validationSource(String snippet, Set<String> agentTypes) {
   if (!_applicationBarrelImport.hasMatch(snippet)) return snippet;
-  final preset = _fortalApiReference.hasMatch(snippet) ? 'fortal' : 'vanilla';
-  final typeWord = '${preset[0].toUpperCase()}${preset.substring(1)}';
+  final preset = _heroUiApiReference.hasMatch(snippet)
+      ? 'heroui'
+      : _fortalApiReference.hasMatch(snippet)
+      ? 'fortal'
+      : 'vanilla';
+  final typeWord = preset == 'heroui'
+      ? 'HeroUi'
+      : '${preset[0].toUpperCase()}${preset.substring(1)}';
   var usesAgent = false;
-  var usesPreset = preset == 'fortal';
+  var usesPreset = preset != 'vanilla';
   final renamed = snippet.replaceAllMapped(_applicationTypeName, (match) {
     final name = match.group(1)!;
     if (agentTypes.contains(name)) {

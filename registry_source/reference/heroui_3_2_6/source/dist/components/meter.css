@@ -1,0 +1,112 @@
+/* ==========================================================================
+   Meter - A quantity indicator within a known range
+   ========================================================================== */
+
+/* Base styles */
+.meter {
+  @apply grid w-full gap-1;
+  grid-template-areas:
+    "label output"
+    "track track";
+  grid-template-columns: 1fr auto;
+
+  /* Default color tokens (accent) */
+  --meter-fill: var(--accent);
+
+  [data-slot="label"] {
+    @apply w-fit text-sm font-medium;
+
+    grid-area: label;
+  }
+
+  .meter__output {
+    @apply text-sm font-medium tabular-nums;
+
+    grid-area: output;
+  }
+
+  .meter__track {
+    @apply relative overflow-hidden rounded-sm bg-default;
+
+    grid-area: track;
+
+    /* Default height (matches --md) */
+    @apply h-2;
+  }
+
+  .meter__fill {
+    @apply absolute start-0 top-0 h-full rounded-sm;
+
+    background-color: var(--meter-fill);
+
+    /**
+     * Transitions
+     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+     */
+    transition: width 300ms var(--ease-out);
+    @apply motion-reduce:transition-none;
+  }
+
+  /* Disabled state */
+  &:disabled,
+  &[data-disabled="true"],
+  &[aria-disabled="true"] {
+    @apply status-disabled;
+
+    [data-slot="label"] {
+      @apply opacity-100;
+    }
+  }
+}
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+.meter--sm {
+  .meter__track {
+    @apply h-1 rounded-xs;
+  }
+
+  .meter__fill {
+    @apply rounded-xs;
+  }
+}
+
+.meter--md {
+  /* No styles as this is the default size */
+}
+
+.meter--lg {
+  .meter__track {
+    @apply h-3 rounded-md;
+  }
+
+  .meter__fill {
+    @apply rounded-md;
+  }
+}
+
+/* ==========================================================================
+   Color variants
+   ========================================================================== */
+
+.meter--default {
+  --meter-fill: var(--default-foreground);
+}
+
+.meter--accent {
+  --meter-fill: var(--accent);
+}
+
+.meter--success {
+  --meter-fill: var(--success);
+}
+
+.meter--warning {
+  --meter-fill: var(--warning);
+}
+
+.meter--danger {
+  --meter-fill: var(--danger);
+}

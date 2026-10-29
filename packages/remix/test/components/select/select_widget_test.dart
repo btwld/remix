@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixBoxAdapter;
 
 import '../../helpers/test_helpers.dart';
 
@@ -32,6 +34,100 @@ List<double> _optionOpacities(WidgetTester tester) => tester
     )
     .map((widget) => widget.opacity)
     .toList();
+
+const _panelColor = Color(0xFF123456);
+const _menuColor = Color(0xFF654321);
+const _optionHeight = 40.0;
+
+Finder _boxColored(Color color) => find.byWidgetPredicate(
+  (widget) =>
+      widget is DecoratedBox &&
+      widget.decoration is BoxDecoration &&
+      (widget.decoration as BoxDecoration).color == color,
+);
+
+/// The painted panel of an open select: the box the content style colors.
+Finder _selectPanel() => _boxColored(_panelColor);
+
+Finder _panelScrollable() =>
+    find.descendant(of: _selectPanel(), matching: find.byType(Scrollable));
+
+ScrollPosition _panelScrollPosition(WidgetTester tester) =>
+    tester.state<ScrollableState>(_panelScrollable()).position;
+
+Rect _optionRect(WidgetTester tester, int index) =>
+    tester.getRect(find.byType(NakedSelectOption<String>).at(index));
+
+bool _isInView(WidgetTester tester, int index) {
+  final viewport = tester.getRect(_panelScrollable());
+  final option = _optionRect(tester, index);
+  return option.top >= viewport.top - 0.01 &&
+      option.bottom <= viewport.bottom + 0.01;
+}
+
+/// The value of the option that holds primary focus.
+String? _focusedOptionValue() => FocusManager.instance.primaryFocus?.context
+    ?.findAncestorWidgetOfExactType<NakedSelectOption<String>>()
+    ?.value;
+
+/// Opens a [RemixSelect] whose options are all [_optionHeight] tall and whose
+/// panel is painted in [_panelColor], inside the page that [host] builds around
+/// it.
+Future<void> _pumpOpenSelect(
+  WidgetTester tester, {
+  required int optionCount,
+  double? maxHeight,
+  double padding = 0,
+  FlexBoxStyler? menuContainer,
+  ValueChanged<String?>? onChanged,
+  Widget Function(Widget select) host = _centered,
+}) async {
+  var content = SelectContentStyler().color(_panelColor).padding(.all(padding));
+  if (maxHeight != null) content = content.maxHeight(maxHeight);
+  var style = SelectStyler()
+      .content(content)
+      .item(SelectMenuItemStyler().height(_optionHeight));
+  if (menuContainer != null) style = style.menuContainer(menuContainer);
+
+  await tester.pumpWidget(
+    MixScope.empty(
+      child: MaterialApp(
+        home: host(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            style: style,
+            onChanged: onChanged ?? (_) {},
+            items: [
+              for (var i = 0; i < optionCount; i++)
+                RemixSelectItem(value: 'item$i', label: 'Item $i'),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.tap(find.byType(RemixSelect<String>));
+  await tester.pumpAndSettle();
+}
+
+Widget _centered(Widget select) => Scaffold(body: Center(child: select));
+
+Future<void> _pressKey(
+  WidgetTester tester,
+  LogicalKeyboardKey key, {
+  int times = 1,
+}) async {
+  for (var i = 0; i < times; i++) {
+    await tester.sendKeyEvent(key);
+    await tester.pumpAndSettle();
+  }
+}
+
+void _setViewSize(WidgetTester tester, Size size) {
+  tester.view.physicalSize = size;
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+}
 
 void main() {
   group('RemixSelect', () {
@@ -622,17 +718,16 @@ void main() {
         expect(find.byType(RemixSelect<String>), findsOneWidget);
         await tester.tap(find.byType(RemixSelect<String>));
         await tester.pumpAndSettle();
-        final panel = tester.widget<ColumnBox>(
-          find
-              .ancestor(
-                of: find.text('Option A'),
-                matching: find.byType(ColumnBox),
-              )
-              .first,
-        );
         expect(
-          panel.styleSpec!.spec.box!.spec.padding,
-          const EdgeInsets.all(16),
+          find.ancestor(
+            of: find.byType(Scrollable),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Padding &&
+                  widget.padding == const EdgeInsets.all(16),
+            ),
+          ),
+          findsOneWidget,
         );
       });
 
@@ -988,6 +1083,215 @@ void main() {
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
       });
+    });
+
+    group('Anchor width', () {
+      Widget select({
+        required double triggerWidth,
+        SelectStyler? style,
+        String label = 'A',
+        OverlayPositionConfig? positioning,
+      }) {
+        return SizedBox(
+          width: triggerWidth,
+          child: RemixSelect<String>(
+            onChanged: (_) {},
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: [RemixSelectItem(value: 'a', label: label)],
+            style: style ?? SelectStyler(),
+            positioning:
+                positioning ??
+                const OverlayPositionConfig(side: .bottom, alignment: .center),
+          ),
+        );
+      }
+
+      Future<void> open(WidgetTester tester) async {
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+      }
+
+      Rect triggerRect(WidgetTester tester) =>
+          tester.getRect(find.byType(RemixSelect<String>));
+
+      // The panel is the outermost box above a row's label; a row may draw
+      // its own box inside it.
+      Rect panelRect(WidgetTester tester, String label) => tester.getRect(
+        find
+            .ancestor(
+              of: find.text(label),
+              matching: find.byType(RemixBoxAdapter),
+            )
+            .last,
+      );
+
+      const longLabel =
+          'A very long option label that is wider than any trigger';
+
+      final minWidthContent = SelectStyler().content(
+        SelectContentStyler().minWidth(remixAnchorWidth()),
+      );
+
+      testWidgets('minWidth grows the panel to the trigger width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          select(triggerWidth: 240, style: minWidthContent),
+        );
+        await open(tester);
+
+        expect(triggerRect(tester).width, 240);
+        expect(panelRect(tester, 'A').width, 240);
+      });
+
+      testWidgets('width and maxWidth resolve to the trigger width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          select(
+            triggerWidth: 240,
+            label: longLabel,
+            style: SelectStyler().content(
+              SelectContentStyler().width(remixAnchorWidth()),
+            ),
+          ),
+        );
+        await open(tester);
+        expect(panelRect(tester, longLabel).width, 240);
+
+        await tester.pumpRemixApp(
+          select(
+            triggerWidth: 240,
+            label: longLabel,
+            style: SelectStyler().content(
+              SelectContentStyler().maxWidth(remixAnchorWidth()),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(panelRect(tester, longLabel).width, 240);
+      });
+
+      testWidgets('keeps the content width when it exceeds the trigger', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          select(triggerWidth: 120, label: longLabel, style: minWidthContent),
+        );
+        await open(tester);
+
+        expect(panelRect(tester, longLabel).width, greaterThan(120));
+      });
+
+      testWidgets('leaves the panel content-sized when the token is unused', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(select(triggerWidth: 240));
+        await open(tester);
+
+        expect(panelRect(tester, 'A').width, lessThan(240));
+      });
+
+      testWidgets('follows a trigger resize while open', (tester) async {
+        await tester.pumpRemixApp(
+          select(triggerWidth: 240, style: minWidthContent),
+        );
+        await open(tester);
+        expect(panelRect(tester, 'A').width, 240);
+
+        await tester.pumpRemixApp(
+          select(triggerWidth: 320, style: minWidthContent),
+        );
+        await tester.pumpAndSettle();
+
+        expect(triggerRect(tester).width, 320);
+        expect(panelRect(tester, 'A').width, 320);
+      });
+
+      group('with a preset that pads and bounds the content box', () {
+        final preset = SelectStyler().content(
+          SelectContentStyler()
+              .padding(.all(4))
+              .border(.color(const Color(0xFFE5E5E5)).width(1))
+              .minWidth(128),
+        );
+
+        Future<double> panelWidth(
+          WidgetTester tester,
+          double triggerWidth,
+          SelectStyler style,
+        ) async {
+          await tester.pumpRemixApp(
+            select(triggerWidth: triggerWidth, style: preset.merge(style)),
+          );
+          await open(tester);
+          final width = panelRect(tester, 'A').width;
+          await tester.tapAt(const Offset(5, 5));
+          await tester.pumpAndSettle();
+          return width;
+        }
+
+        testWidgets('a box modifier keeps the larger of the minimum and the '
+            'trigger', (tester) async {
+          final style = SelectStyler().content(
+            SelectContentStyler().wrap(
+              .box(BoxStyler().minWidth(remixAnchorWidth())),
+            ),
+          );
+
+          expect(await panelWidth(tester, 240, style), 240);
+          expect(await panelWidth(tester, 100, style), 128);
+          expect(await panelWidth(tester, 400, style), 400);
+        });
+
+        testWidgets('a minWidth merged into content replaces the minimum', (
+          tester,
+        ) async {
+          expect(await panelWidth(tester, 240, minWidthContent), 240);
+          expect(await panelWidth(tester, 100, minWidthContent), 100);
+        });
+
+        testWidgets('menuContainer sits inside the padding and border', (
+          tester,
+        ) async {
+          final style = SelectStyler().menuContainer(
+            FlexBoxStyler().minWidth(remixAnchorWidth()),
+          );
+
+          expect(await panelWidth(tester, 240, style), 250);
+        });
+      });
+
+      for (final direction in TextDirection.values) {
+        testWidgets('aligns a wider panel to the start edge in $direction', (
+          tester,
+        ) async {
+          await tester.pumpRemixApp(
+            select(
+              triggerWidth: 120,
+              label: 'Wider than the trigger',
+              style: minWidthContent,
+              positioning: const OverlayPositionConfig(
+                side: .bottom,
+                alignment: .start,
+              ),
+            ),
+            textDirection: direction,
+          );
+          await open(tester);
+
+          final trigger = triggerRect(tester);
+          final panel = panelRect(tester, 'Wider than the trigger');
+          expect(panel.width, greaterThan(trigger.width));
+          switch (direction) {
+            case TextDirection.ltr:
+              expect(panel.left, closeTo(trigger.left, 0.01));
+            case TextDirection.rtl:
+              expect(panel.right, closeTo(trigger.right, 0.01));
+          }
+          expect(panel.top, greaterThanOrEqualTo(trigger.bottom));
+        });
+      }
     });
 
     group('Layout Constraints', () {
@@ -1449,6 +1753,45 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
       });
 
+      for (final (selectedValue, opensOn, thenOn, name) in [
+        ('b', 'b', 'c', 'opens on the selected item'),
+        (null, 'a', 'b', 'opens on the first item without a selection'),
+      ]) {
+        testWidgets(name, (tester) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [
+                RemixSelectItem(value: 'a', label: 'Option A'),
+                RemixSelectItem(value: 'b', label: 'Option B'),
+                RemixSelectItem(value: 'c', label: 'Option C'),
+              ],
+              selectedValue: selectedValue,
+              focusNode: focusNode,
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+          focusNode.requestFocus();
+          await tester.pump();
+
+          String? focusedValue() => FocusManager.instance.primaryFocus?.context
+              ?.findAncestorWidgetOfExactType<NakedSelectOption<String>>()
+              ?.value;
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pumpAndSettle();
+          expect(focusedValue(), opensOn);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+          await tester.pumpAndSettle();
+          expect(focusedValue(), thenOn);
+        });
+      }
+
       testWidgets('option activation changes selection', (tester) async {
         String? selected;
         await tester.pumpRemixApp(
@@ -1499,6 +1842,301 @@ void main() {
           semantics.dispose();
         }
       });
+    });
+
+    group('Long lists', () {
+      testWidgets('a short list keeps the size of its options', (tester) async {
+        await _pumpOpenSelect(tester, optionCount: 3, padding: 8);
+
+        expect(tester.takeException(), isNull);
+        final panel = tester.getSize(_selectPanel());
+        expect(panel.height, 3 * _optionHeight + 2 * 8);
+        expect(panel.width, _optionRect(tester, 0).width + 2 * 8);
+      });
+
+      testWidgets('scrolls instead of overflowing past the overlay', (
+        tester,
+      ) async {
+        _setViewSize(tester, const Size(800, 300));
+        String? selected;
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 30,
+          onChanged: (value) => selected = value,
+        );
+
+        expect(tester.takeException(), isNull);
+        expect(tester.getSize(_selectPanel()).height, lessThanOrEqualTo(300));
+        expect(_panelScrollPosition(tester).maxScrollExtent, greaterThan(0));
+        expect(find.text('Item 29').hitTestable(), findsNothing);
+
+        await tester.drag(_selectPanel(), const Offset(0, -2000));
+        await tester.pumpAndSettle();
+        expect(find.text('Item 29').hitTestable(), findsOneWidget);
+
+        await tester.tap(find.text('Item 29'));
+        await tester.pumpAndSettle();
+        expect(selected, 'item29');
+      });
+
+      testWidgets('scrolls inside a content maxHeight', (tester) async {
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          padding: 10,
+        );
+
+        expect(tester.takeException(), isNull);
+        expect(tester.getSize(_selectPanel()).height, 200);
+        expect(_panelScrollPosition(tester).maxScrollExtent, greaterThan(0));
+        expect(find.text('Item 19').hitTestable(), findsNothing);
+
+        await tester.drag(_selectPanel(), const Offset(0, -2000));
+        await tester.pumpAndSettle();
+        expect(find.text('Item 19').hitTestable(), findsOneWidget);
+        expect(find.text('Item 0').hitTestable(), findsNothing);
+      });
+
+      testWidgets('container padding and decoration stay put while scrolling', (
+        tester,
+      ) async {
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          padding: 10,
+        );
+
+        final panel = tester.getRect(_selectPanel());
+        final viewport = tester.getRect(_panelScrollable());
+        expect(viewport, panel.deflate(10));
+
+        await tester.drag(_selectPanel(), const Offset(0, -150));
+        await tester.pumpAndSettle();
+
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        expect(tester.getRect(_selectPanel()), panel);
+        expect(tester.getRect(_panelScrollable()), viewport);
+      });
+
+      testWidgets('menuContainer frames the scroll view too', (tester) async {
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          menuContainer: FlexBoxStyler()
+              .color(_menuColor)
+              .padding(.all(6))
+              .maxHeight(200),
+        );
+
+        expect(tester.takeException(), isNull);
+        final menu = tester.getRect(_boxColored(_menuColor));
+        final viewport = tester.getRect(_panelScrollable());
+        expect(menu.height, 200);
+        expect(viewport, menu.deflate(6));
+
+        await tester.drag(_selectPanel(), const Offset(0, -2000));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Item 19').hitTestable(), findsOneWidget);
+        expect(tester.getRect(_boxColored(_menuColor)), menu);
+        expect(tester.getRect(_panelScrollable()), viewport);
+      });
+
+      testWidgets('arrow keys scroll the focused option into view', (
+        tester,
+      ) async {
+        await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+        expect(_isInView(tester, 7), isFalse);
+
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 7);
+
+        expect(_focusedOptionValue(), 'item7');
+        expect(_isInView(tester, 7), isTrue);
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+      });
+
+      testWidgets('the last option is reachable and selectable by keyboard', (
+        tester,
+      ) async {
+        String? selected;
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          onChanged: (value) => selected = value,
+        );
+
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 19);
+        expect(_focusedOptionValue(), 'item19');
+        expect(_isInView(tester, 19), isTrue);
+
+        await _pressKey(tester, LogicalKeyboardKey.enter);
+        expect(selected, 'item19');
+      });
+
+      testWidgets('arrow up scrolls back to the first option', (tester) async {
+        await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+
+        await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 12);
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        await _pressKey(tester, LogicalKeyboardKey.arrowUp, times: 12);
+
+        expect(_focusedOptionValue(), 'item0');
+        expect(_isInView(tester, 0), isTrue);
+        expect(_panelScrollPosition(tester).pixels, 0);
+      });
+
+      testWidgets('leaves the host primary scroll controller alone', (
+        tester,
+      ) async {
+        final hostController = ScrollController();
+        addTearDown(hostController.dispose);
+        await tester.pumpRemixApp(
+          PrimaryScrollController(
+            controller: hostController,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RemixSelect<String>(
+                  trigger: const RemixSelectTrigger(placeholder: 'Select'),
+                  onChanged: (_) {},
+                  items: [
+                    for (var i = 0; i < 30; i++)
+                      RemixSelectItem(value: 'item$i', label: 'Item $i'),
+                  ],
+                ),
+                SizedBox(
+                  height: 200,
+                  child: ListView(
+                    primary: true,
+                    children: const [SizedBox(height: 1000)],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        expect(hostController.positions, hasLength(1));
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Item 0'), findsOneWidget);
+        expect(hostController.positions, hasLength(1));
+      });
+
+      testWidgets('scrolling does not notify the host page', (tester) async {
+        final received = <Notification>[];
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          host: (select) => Scaffold(
+            body: NotificationListener<Notification>(
+              onNotification: (notification) {
+                if (notification is ViewportNotificationMixin) {
+                  received.add(notification);
+                }
+                return false;
+              },
+              child: Center(child: select),
+            ),
+          ),
+        );
+
+        await tester.drag(_selectPanel(), const Offset(0, -150));
+        await tester.pumpAndSettle();
+
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        expect(received, isEmpty);
+      });
+
+      testWidgets('scrolling does not scroll the app bar under', (
+        tester,
+      ) async {
+        double appBarElevation() => tester
+            .widget<Material>(
+              find
+                  .descendant(
+                    of: find.byType(AppBar),
+                    matching: find.byType(Material),
+                  )
+                  .first,
+            )
+            .elevation;
+
+        await _pumpOpenSelect(
+          tester,
+          optionCount: 20,
+          maxHeight: 200,
+          host: (select) => Scaffold(
+            appBar: AppBar(title: const Text('Page')),
+            body: Center(child: select),
+          ),
+        );
+        final restingElevation = appBarElevation();
+
+        await tester.drag(_selectPanel(), const Offset(0, -150));
+        await tester.pumpAndSettle();
+        expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        expect(appBarElevation(), restingElevation);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(appBarElevation(), restingElevation);
+      });
+
+      testWidgets('does not stretch or glow past the ends', (tester) async {
+        await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+
+        expect(
+          find.descendant(
+            of: _selectPanel(),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is StretchingOverscrollIndicator ||
+                  widget is GlowingOverscrollIndicator,
+            ),
+          ),
+          findsNothing,
+        );
+      });
+
+      testWidgets(
+        'stops at the ends instead of bouncing',
+        (tester) async {
+          await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+          final position = _panelScrollPosition(tester);
+
+          final gesture = await tester.startGesture(
+            tester.getCenter(_selectPanel()),
+          );
+          await gesture.moveBy(const Offset(0, 100));
+          await tester.pump();
+          expect(position.pixels, position.minScrollExtent);
+
+          await gesture.moveBy(const Offset(0, -3000));
+          await tester.pump();
+          expect(position.pixels, position.maxScrollExtent);
+
+          await gesture.up();
+          await tester.pumpAndSettle();
+          expect(position.pixels, position.maxScrollExtent);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+      );
+
+      testWidgets('keeps a scrollbar on desktop', (tester) async {
+        await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
+
+        expect(
+          find.descendant(of: _selectPanel(), matching: find.byType(Scrollbar)),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }, variant: TargetPlatformVariant.desktop());
     });
   });
 }

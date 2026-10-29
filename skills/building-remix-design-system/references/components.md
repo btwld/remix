@@ -122,8 +122,12 @@ set up every Remix design system the same way:
 
 - `AcmeTheme({theme, darkTheme, mode, child})`. `mode` selects between
   the pair; `system` reads `MediaQuery.maybePlatformBrightnessOf`, and a scope
-  mounted above any `MediaQuery` supplies one with `MediaQuery.fromView`. An
-  empty nested scope inherits the parent's pair and selection.
+  mounted above any `MediaQuery` supplies one with `MediaQuery.fromView`.
+  Detect that case with
+  `context.getElementForInheritedWidgetOfExactType<MediaQuery>()`, which does
+  not subscribe; `MediaQuery.maybeOf` would rebuild the scope on every
+  MediaQuery change. An empty nested scope inherits the parent's pair and
+  selection.
 - It installs a private `_AcmeInheritedTheme` (an `InheritedTheme`) and
   `MixScope(tokens: selected.tokens, child: child)` together.
 - `AcmeTheme.of(context)` throws a `FlutterError` naming the missing scope;
@@ -284,21 +288,23 @@ contract (`name`, `widgetParameters`, `factoryParameters`, generic targets).
 Install it with `npx skills add btwld/mix --skill mix`; without it, read
 `mix_widget_generator.dart` in the `mix_generator` package source.
 
-**Hand-written facade instead** only when the public widget needs structure
-the Remix widget cannot take, or a generated parameter would expose a
-Remix-only type the target system has no word for. A facade is a
-`StatelessWidget` in the target vocabulary that builds the recipe and passes
-it to the Remix widget's `style`.
+**Curate parameters with `widgetParameters`** before reaching for a
+hand-written facade. A facade over an existing Remix widget is the exception:
+record why in the worksheet, build the recipe inside it, and keep Remix's
+parameter names and shapes. Reference ports never adopt upstream prop shapes
+(`isSelected`/`defaultSelected`, compound children).
 
-**No Remix widget for the component.** In order of preference:
+**No Remix widget for the component.** Compose existing Remix widgets and Mix
+primitives (`Box`, `FlexBox`, `StyledText`, all re-exported by `remix`) in a
+stateless facade. If the family needs behavior that composition cannot
+supply, defer it. A third-party registry that must ship such a widget anyway
+can declare `naked_ui` on the item or author a `@MixableSpec(target: ...)`
+spec (the CLI then writes the consumer's `build.yaml`); record the choice in
+the ADR and README. First-party presets and reference ports never do this.
 
-1. Compose existing Remix widgets and Mix primitives (`Box`, `FlexBox`,
-   `StyledText`, all re-exported by `remix`) in a facade.
-2. Add behavior from Naked UI, declaring `naked_ui` on the item with the
-   constraint `remix` uses.
-3. Author a `@MixableSpec(target: ...)` spec. The CLI then writes the
-   consumer's `build.yaml` to enable that generator; record this in the ADR
-   and the README.
+For reference ports, map each upstream family to a Remix widget by role, not
+name: a label-like Chip fits `RemixBadge`, while an anchored notification
+Badge is a composition. See `references/reference-parity.md` §1–2.
 
 ## 3. Pitfalls
 
@@ -312,6 +318,9 @@ on it. With `target: RemixButton.new`, a recipe parameter with the same name
 and type as a target parameter becomes one widget field passed to both, so
 the recipe and `RemixButton` always agree. A different type for the same name
 fails generation.
+
+Map an upstream pending or busy state onto `loading`. Its focus and semantics
+are Remix's; do not rebuild the upstream contract in a facade.
 
 **Focus rings: outline effects, not borders.** `.onFocused(.border(...))`
 replaces the variant's border and shifts layout by the border width. Paint the
@@ -332,6 +341,19 @@ ButtonStyler _focusRing() => ButtonStyler().containerEffects(
 
 Text inputs ring on any focus, as browsers do, so key their ring on
 `onFocused` instead.
+
+Tab, toggle, toggle group item, select menu item, menu item, and menu trigger
+take `containerEffects` like a button, and so does a sidebar destination, which
+is a toggle. Accordion and disclosure take `triggerEffects`, because their
+`containerEffects` wraps the revealed content too. A toggle group styled with
+`clipBehavior` (every shipped preset sets one) clips its items, and so can a
+select, menu, accordion, or disclosure container, or a bounded sidebar's scroll
+region; a ring outside the part is cropped at that edge. Items also paint in order, so
+a filled item after the focused one covers that side of an outside ring. Draw it
+inside with a negative `outlineOffset` equal to the ring width, or pad the
+clipping container by the offset plus the width. Padding does not help once a
+select or menu list scrolls: the scroll view clips at its own edges, inside the
+panel's padding, so draw row rings inside.
 
 **Derived colors: `ContextToken`, not `withValues`.**
 `AcmeTokens.interactivePrimary().withValues(alpha: 0.9)` records a Mix directive that
@@ -396,7 +418,6 @@ states: [rest, hover, pressed, focus-visible, disabled, loading]
 tokens: [interactive-primary, text-on-interactive, focus, radius]
 measurements:                     # non-token values, each with a source
   - {what: medium height, value: 36, cite: "button spec p.3"}
-behavior: <keyboard, focus, screen reader, RTL notes>
 approximations: <every deviation from the source>
 ```
 
@@ -412,6 +433,10 @@ In the authoring package, pumping a `WidgetsApp` whose `builder` installs
 - disabled and loading visuals match the worksheet;
 - `AcmeTheme.of` throws without a scope and `maybeOf` returns null;
 - the token test against `specs/tokens.yaml` (`references/tokens.md` §4).
+
+For reference ports, assert geometry against measured upstream values at each
+breakpoint the source defines, and review a side-by-side capture
+(`references/reference-parity.md` §3–4).
 
 A spinner animates forever, so `pumpAndSettle` never returns in loading tests;
 use `tester.pump(const Duration(milliseconds: 100))`. Assert token-derived

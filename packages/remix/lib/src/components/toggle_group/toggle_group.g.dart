@@ -88,6 +88,7 @@ typedef _$ToggleGroupSpecMethods = _$ToggleGroupSpec; // ignore: unused_element
 mixin _$ToggleGroupItemSpec
     implements Spec<ToggleGroupItemSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
@@ -97,11 +98,13 @@ mixin _$ToggleGroupItemSpec
   @override
   ToggleGroupItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
     return ToggleGroupItemSpec(
       container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -111,13 +114,18 @@ mixin _$ToggleGroupItemSpec
   ToggleGroupItemSpec lerp(ToggleGroupItemSpec? other, double t) {
     return ToggleGroupItemSpec(
       container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [container, containerEffects, label, icon];
 
   @override
   bool operator ==(Object other) {
@@ -160,6 +168,7 @@ mixin _$ToggleGroupItemSpec
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
@@ -881,22 +890,26 @@ class ToggleGroupItemStyler
         IconStyleMixin<ToggleGroupItemStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const ToggleGroupItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
+       $containerEffects = containerEffects,
        $label = label,
        $icon = icon;
 
   ToggleGroupItemStyler({
     FlexBoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
@@ -904,6 +917,7 @@ class ToggleGroupItemStyler
     List<VariantStyle<ToggleGroupItemSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          variants: variants,
@@ -913,6 +927,8 @@ class ToggleGroupItemStyler
 
   factory ToggleGroupItemStyler.container(FlexBoxStyler value) =>
       ToggleGroupItemStyler().container(value);
+  factory ToggleGroupItemStyler.containerEffects(RemixBoxEffectsMix value) =>
+      ToggleGroupItemStyler().containerEffects(value);
   factory ToggleGroupItemStyler.label(TextStyler value) =>
       ToggleGroupItemStyler().label(value);
   factory ToggleGroupItemStyler.icon(IconStyler value) =>
@@ -1483,6 +1499,7 @@ class ToggleGroupItemStyler
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'containerEffects',
     'label',
     'icon',
     'animation',
@@ -1493,6 +1510,11 @@ class ToggleGroupItemStyler
   /// Sets the container.
   ToggleGroupItemStyler container(FlexBoxStyler value) {
     return merge(ToggleGroupItemStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  ToggleGroupItemStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(ToggleGroupItemStyler(containerEffects: value));
   }
 
   /// Sets the label.
@@ -1537,6 +1559,10 @@ class ToggleGroupItemStyler
   ToggleGroupItemStyler merge(ToggleGroupItemStyler? other) {
     return ToggleGroupItemStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -1550,6 +1576,7 @@ class ToggleGroupItemStyler
   StyleSpec<ToggleGroupItemSpec> resolve(BuildContext context) {
     final spec = ToggleGroupItemSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
     );
@@ -1566,6 +1593,7 @@ class ToggleGroupItemStyler
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('icon', $icon));
   }
@@ -1573,6 +1601,7 @@ class ToggleGroupItemStyler
   @override
   List<Object?> get props => [
     $container,
+    $containerEffects,
     $label,
     $icon,
     $animation,

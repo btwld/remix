@@ -1,0 +1,98 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'toggle_button.dart';
+
+part 'toggle_button_group.g.dart';
+
+/// HeroUI recipe for [RemixToggleGroup]: toggle buttons joined into one pill,
+/// or [detached] with a gap.
+///
+/// Remix's group selects one item at a time; HeroUI's also offers multiple
+/// selection. Items share the toggle button's looks without its pressed scale
+/// (`.toggle-button-group .toggle-button:active`). A transparent ring-width
+/// border is always present, which is also how upstream insets the ring in a
+/// group (`ring-inset`).
+@MixWidget(target: RemixToggleGroup.new)
+ToggleGroupStyler heroUiToggleButtonGroupStyle({
+  HeroUiToggleButtonVariant variant = .defaultToggle,
+  HeroUiToggleButtonSize size = .md,
+  bool iconOnly = false,
+  bool detached = false,
+  ToggleGroupStyler style = const ToggleGroupStyler.create(),
+}) {
+  final fill = variant.fill?.call() ?? HeroUiTokens.transparent;
+  final hover = variant.hover();
+  final foreground = variant.foreground();
+
+  var item =
+      ToggleGroupItemStyler(
+            container: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .mainAxisAlignment(.center)
+                .spacing(heroUiToggleButtonGap),
+            label: TextStyler()
+                .style(size.text.mix())
+                .fontWeight(.w500)
+                .color(foreground),
+            icon: IconStyler().size(size.icon.mobile).color(foreground),
+          )
+          .height(size.height.mobile)
+          .border(heroUiRingBorder())
+          .color(fill)
+          .onBreakpoint(
+            const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+            ToggleGroupItemStyler().icon(IconStyler().size(size.icon.desktop)),
+          )
+          .onBreakpoint(
+            const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
+            ToggleGroupItemStyler().height(size.height.desktop),
+          );
+
+  item = iconOnly
+      ? item
+            .width(size.height.mobile)
+            .onBreakpoint(
+              const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
+              ToggleGroupItemStyler().width(size.height.desktop),
+            )
+      : item.padding(.horizontal(heroUiInsideRing(size.paddingX)));
+
+  item = item
+      .onHovered(ToggleGroupItemStyler().color(hover))
+      .onPressed(ToggleGroupItemStyler().color(hover))
+      .onSelected(
+        ToggleGroupItemStyler()
+            .color(HeroUiTokens.accentSoft())
+            .labelColor(HeroUiTokens.accentSoftForeground())
+            .iconColor(HeroUiTokens.accentSoftForeground())
+            .onHovered(
+              ToggleGroupItemStyler().color(HeroUiTokens.accentSoftHover()),
+            )
+            .onPressed(
+              ToggleGroupItemStyler().color(HeroUiTokens.accentSoftHover()),
+            ),
+      )
+      .onFocusVisible(
+        ToggleGroupItemStyler().border(heroUiRingBorder(focused: true)),
+      )
+      .onDisabled(
+        ToggleGroupItemStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),
+      )
+      .animate(HeroUiTokens.fillMotion);
+
+  // Attached items are square inside one rounded, clipped pill.
+  return ToggleGroupStyler(
+    container: detached
+        ? FlexBoxStyler().spacing(_detachedGap)
+        : FlexBoxStyler()
+              .borderRadius(.all(HeroUiTokens.radius3xl()))
+              .clipBehavior(.antiAlias),
+    item: detached ? item.borderRadius(.all(HeroUiTokens.radius3xl())) : item,
+  ).merge(style);
+}
+
+/// `.toggle-button-group--detached`: `gap-1`.
+const _detachedGap = 4.0;

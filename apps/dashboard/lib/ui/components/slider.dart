@@ -12,6 +12,16 @@ enum UiSliderSize { size1, size2, size3 }
 /// Radix Themes slider variants.
 enum UiSliderVariant { classic, surface, soft }
 
+/// The accent-3 halo between a focused thumb and its ring.
+///
+/// Radix lists the thumb's own shadows first and then
+/// `0 0 0 3px accent-3, 0 0 0 5px focus-8`, so a 3px halo and the ring outside
+/// it paint beneath the thumb's shadows. The ring starts where the halo ends
+/// and is [UiTokens.focusRingWidth] wide. The halo is its own 3px, not the
+/// 2px `outline-offset` of the other outward rings, so it is not
+/// [UiTokens.focusRingOffset].
+const _thumbFocusHalo = 3.0;
+
 /// Ui slider with Radix-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
 SliderStyler uiSliderStyle({
@@ -31,11 +41,18 @@ SliderStyler uiSliderStyle({
       )
       .thickness(metrics.trackSize)
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
+        // Behind the content so the halo sits under the thumb's own 1px edge,
+        // which is a decoration shadow; over it, the halo would hide that edge.
+        uiFocusOutline(
+          UiTokens.focus8(),
+          offset: _thumbFocusHalo,
+        ).behindContent(
           RemixBoxEffectLayerMix(
             shadows: [
-              RemixBoxShadowMix(color: UiTokens.accent3(), spreadRadius: 3),
-              RemixBoxShadowMix(color: UiTokens.focus8(), spreadRadius: 5),
+              RemixBoxShadowMix(
+                color: UiTokens.accent3(),
+                spreadRadius: _thumbFocusHalo,
+              ),
             ],
           ),
         ),
@@ -283,8 +300,9 @@ SliderStyler _uiSliderDisabled(
         ),
       )
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
+        RemixBoxEffectsMix(
+          behindContent: RemixBoxEffectLayerMix(shadows: const []),
+          outline: BorderSideMix(style: BorderStyle.none),
         ),
       )
       .blendMode(BlendMode.multiply);
