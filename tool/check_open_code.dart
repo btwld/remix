@@ -21,6 +21,8 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
+import 'compile_registry_consumer.dart';
+
 const _fixtureAppFiles = <String>[
   'pubspec.yaml',
   'analysis_options.yaml',
@@ -567,8 +569,17 @@ Future<_Failure?> _checkInTemporaryApp({
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
       Platform.environment['REMIX_REGISTRY_RELEASE_SMOKE'] != '1') {
-    environment['REMIX_REGISTRY_CONSUMER_CLI'] =
-        '${repositoryRoot.path}/tool/registry_consumer_cli.dart';
+    final snapshot = await compileRegistryConsumerCli(
+      dart: sdk.dart,
+      repositoryRoot: repositoryRoot,
+      outputDirectory: app.parent,
+      environment: environment,
+    );
+    environment['REMIX_REGISTRY_CONSUMER_CLI'] = snapshot.path;
+    environment['REMIX_REGISTRY_ROOT'] = '${repositoryRoot.path}/registry';
+    _step(
+      'Compiled the checkout CLI; every invocation remains a fresh process.',
+    );
   }
 
   final create = await _runProcess(
@@ -1692,7 +1703,7 @@ Future<_Failure?> _runProcess(
       arguments.length >= 2 &&
       arguments[0] == 'run' &&
       arguments[1] == 'remix_cli:remix') {
-    arguments = ['run', harness, ...arguments.skip(2)];
+    arguments = [harness, ...arguments.skip(2)];
   }
   stdout.writeln('\$ $executable ${arguments.join(' ')}');
   final Process process;
