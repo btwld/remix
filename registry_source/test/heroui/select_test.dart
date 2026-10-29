@@ -227,6 +227,10 @@ void main() {
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
+      expect(item('Apple').containerEffects?.isEmpty ?? true, isTrue);
+      expect(item('Banana').containerEffects?.isEmpty ?? true, isFalse);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.pumpAndSettle();
       expectFocusRing(
         item('Apple').containerEffects,
         heroUiCase(
