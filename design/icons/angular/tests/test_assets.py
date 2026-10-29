@@ -8,6 +8,7 @@ from shapely import affinity, maximum_inscribed_circle
 from shapely.geometry import Polygon,MultiPolygon
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from tests.geometry.paths import parse_svg,parse_path
+from tools.evidence import report_directory
 from source.angular import additions,baseline
 CAT=json.loads((ROOT/'catalog/icons.json').read_text());INV=json.loads((ROOT/'generated/inventory.json').read_text());REG=json.loads((ROOT/'generated/registry.json').read_text())['paths']
 
@@ -54,7 +55,7 @@ class AssetTests(unittest.TestCase):
                     'area':round(g.area,4),'areaFraction':round(g.area/n/n,4),'centroid':[round(g.centroid.x,4),round(g.centroid.y,4)],
                     'components':len(parts),'holes':len(holes),'minimumHoleDiameter':round(min((2*maximum_inscribed_circle(h,tolerance=.001).length for h in holes),default=0),4) or None,
                     'interpretation':'diagnostic, not a visual-quality score'})
-        (ROOT/'reports/geometry-measurements.json').write_text(json.dumps(measurements,indent=2)+'\n')
+        (report_directory(ROOT)/'geometry-measurements.json').write_text(json.dumps(measurements,indent=2)+'\n')
     def test_native_rasters_and_transparency(self):
         for r in INV:
             with self.subTest(path=r['path']):
@@ -125,7 +126,7 @@ class OpticalInvariants(unittest.TestCase):
                 self.assertGreaterEqual(frame.distance(marks),w-1e-8)
                 p=list(marks.geoms);self.assertGreaterEqual(p[0].distance(p[1]),w-1e-8)
                 records.append({'icon':id,'nativeSize':n,'markToFrame':round(frame.distance(marks),5),'target':w,'status':'meets-authored-region-target'})
-        (ROOT/'reports/critical-regions.json').write_text(json.dumps(records,indent=2)+'\n')
+        (report_directory(ROOT)/'critical-regions.json').write_text(json.dumps(records,indent=2)+'\n')
     def test_new_icons_have_no_tiny_hole_pockets(self):
         for id in additions.NAMES:
             for a in ('outline','filled'):

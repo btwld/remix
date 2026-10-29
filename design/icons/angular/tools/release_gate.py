@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from tools.evidence import snapshot, verify_report
+from tools.evidence import report_directory, snapshot, verify_report
 
 
 def sha256(path: Path) -> str:
@@ -71,7 +71,7 @@ def main() -> int:
         mismatches = [path for path, digest in inventory.items() if not (ROOT / path).is_file() or sha256(ROOT / path) != digest]
         record("generated-product-integrity", not mismatches, f"Checked {len(inventory)} products; {len(mismatches)} differ or are missing.")
         for filename in ["asset-checks.json", "web-adapter.json", "rebuild.json", "pixel-regression.json"]:
-            path = ROOT / "reports" / filename
+            path = report_directory(ROOT) / filename
             result = read_json(path) if path.is_file() else {}
             fresh, problems = verify_report(result, current_evidence)
             scope_ok = ((filename != "rebuild.json" or result.get("cleanBuild") is True)
@@ -80,7 +80,7 @@ def main() -> int:
                    "; ".join(problems) if problems else "Evidence matches all current inputs and the local toolchain; a clean rebuild and unchanged baselines are required.")
 
         for browser in ["chromium", "firefox", "webkit"]:
-            path = ROOT / "reports" / f"browser-{browser}-full.json"
+            path = report_directory(ROOT) / f"browser-{browser}-full.json"
             result = read_json(path) if path.is_file() else {}
             required_loads = {"http", "file"}
             good_loads = {item["context"] for item in result.get("loading", []) if item.get("status") == "passed"}
@@ -88,27 +88,27 @@ def main() -> int:
             fresh, problems = verify_report(result, current_evidence)
             fresh = fresh and result.get("catalogHTMLSHA256") == current_html
             ok = result.get("status") == "passed" and result.get("mode") == "full" and fresh and required_loads.issubset(good_loads) and "hosted ESM consumer renders" in passed_checks
-            patch_path = ROOT / "reports" / f"audit-browser-{browser}-full.json"
+            patch_path = report_directory(ROOT) / f"audit-browser-{browser}-full.json"
             patch_result = read_json(patch_path) if patch_path.is_file() else {}
             patch_fresh, _ = verify_report(patch_result, current_evidence)
             ok = ok and patch_result.get("status") == "passed" and patch_result.get("mode") == "full" and patch_fresh
             record("full-browser-" + browser, ok, "Needs a successful full-mode report for this exact guide, including HTTP, file, and module loading. WebKit does not claim branded Safari coverage.")
 
         unpinned: list[str] = []
-        for path in sorted((ROOT / ".github/workflows").glob("*.yml")):
+        for path in sorted((ROOT.parents[2] / ".github/workflows").glob("vector-ui-icons.yml")):
             for ref in re.findall(r"(?m)^\s*-?\s*uses:\s*([^\s#]+)", path.read_text(encoding="utf-8")):
                 if not ref.startswith("./") and not re.search(r"@[0-9a-fA-F]{40}$", ref):
                     unpinned.append(ref)
-        record("immutable-ci-action-pins", not unpinned, "Unpinned references: " + ", ".join(sorted(set(unpinned))) if unpinned else "All external actions use full commit hashes; verify their provenance before approval.")
+        record("immutable-ci-action-pins", bool(list((ROOT.parents[2] / ".github/workflows").glob("vector-ui-icons.yml"))) and not unpinned, "Unpinned references: " + ", ".join(sorted(set(unpinned))) if unpinned else "All external actions use full commit hashes; verify their provenance before approval.")
 
         for stem in ["recognition", "screen-audit"]:
-            path = ROOT / "reports" / f"{stem}-approval.json"
+            path = report_directory(ROOT) / f"{stem}-approval.json"
             evidence = read_json(path) if path.is_file() else {}
             relative = evidence.get("evidenceFile", "")
-            target = (ROOT / relative).resolve() if relative else None
-            in_project = target is not None and target.is_relative_to(ROOT.resolve()) and target.is_file()
+            target = (report_directory(ROOT) / relative).resolve() if relative else None
+            in_project = target is not None and target.is_relative_to(report_directory(ROOT)) and target.is_file()
             ok = evidence.get("status") == "approved" and bool(evidence.get("reviewer")) and evidence.get("catalogSha256") == current_catalog and in_project
-            record("human-evidence-" + stem, ok, "Requires real findings, a named reviewer, a project-local evidence file, and the current catalog hash. Empty templates are not evidence.")
+            record("human-evidence-" + stem, ok, "Requires real findings, a named reviewer, an evidence-directory-local findings file, and the current catalog hash. Empty templates are not evidence.")
 
         blocked = [item["check"] for item in checks if not item["passed"]]
         report = {
@@ -121,7 +121,7 @@ def main() -> int:
             "blockers": blocked,
             "checks": checks,
         }
-        (ROOT / "reports/release-readiness.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        (report_directory(ROOT) / "release-readiness.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         print(json.dumps({"status": report["status"], "blockerCount": len(blocked), "blockers": blocked}, indent=2))
         return 2 if blocked else 0
     except (OSError, ValueError, TypeError, KeyError) as exc:

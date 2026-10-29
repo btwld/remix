@@ -1,6 +1,5 @@
 {
-  "docs/OPTICAL-REVIEW.md": "e5ea6989b76ef7c3e006f7e65ffb23916bdc55b6381eb5b56f6b6a03adad3e32",
-  "docs/catalog/index.html": "820b9473b133ccb95b280adcc88007253ceb91452db8ff237f1cda5019c561f0",
+  "docs/catalog/index.html": "f81380d4d8312a89e01f8fbf085d93f7cb62c6c4ed9b40e8af26025cc21e6979",
   "docs/catalog/proof-all.html": "d75126464692112e7e3ba445187e0b713ad504dbb2ddf0d61d3cc6f48d036172",
   "docs/catalog/proof-new.html": "7635b81add803a151ca376f355b82b65dbe70e6326449a74003c1bc0679b09e7",
   "docs/usage-restrictions.md": "4f2ac2239d3c30982a8afd05592ca8da93e5082a227531cfc3e0160d5efe4b34",
@@ -353,7 +352,7 @@
   "packages/web/icons/warning.mjs": "f94a3bc0d3392615892fb48d91ec0a4074f118cc4bb0d0dfaf1a5c8eb4df3b13",
   "packages/web/index.mjs": "f0a6eccb9d3dc6d673bdf8faa5ef6ca2eac01f0398723eea1235647802d5f938",
   "packages/web/package.json": "1d7dc9b4ac6eb62615d4f2d6302bb5fe7964dceeb64ac07c4ab618d191399de8",
-  "packages/web/render.mjs": "177734078cc6daf39b9e6e1a1a9659668b1cdad1790a6d385fd658acc6064df3",
+  "packages/web/render.mjs": "89f3746cd1127abd84e8b7a0bb56bdb5ef40ae172d1f22b21501b2038b737599",
   "packages/web/usage-data.mjs": "0f907fdaec831692a3481080bc45de334558a195dee378055a4c8327aa0c7f2e",
   "packages/web/usage.mjs": "cc7984d75c694384b3040438a0d37cab9596693d99de8db21e8cd1425e0a3205"
 }

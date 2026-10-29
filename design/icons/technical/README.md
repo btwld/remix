@@ -4,7 +4,7 @@
 
 Instrument / CAD grammar for the Vector UI family. Same canonical IDs as Angular: `home`, `search`, `plus`, `arrow-right`, `user`, `file`, `calendar`, `sliders`, `warning`, `link`, `branch`, `star`. Outline and filled; native 12 / 16 / 24. `currentColor`. No silent fallback to Angular or another size.
 
-This package is stacked on the Angular pilot ([PR #244](https://github.com/btwld/remix/pull/244)). Do not merge before that base branch lands. Do not publish.
+Technical is a sibling family in the unified `design/icons` pack. It remains private; do not publish.
 
 ## Build and check
 
@@ -33,14 +33,13 @@ See [docs/construction.md](docs/construction.md). Chamfer part overrides and the
 
 Warning keeps a **visible text label** at every master and appearance. Geometry improvements do not lift that rule.
 
-## Open questions (human review)
+## Supported-use limits
 
-Recorded in `catalog/open-questions.json` and the proof page:
-
-1. Search-as-viewfinder vs crop/frame tools
-2. CAD-regular star as Favorite
-3. Plus keyline in mixed Angular+Technical toolbars
-4. 12 px Link / Branch density
+Label Search beside crop/frame/view tools and give the CAD-regular star an
+explicit Favorite label. Technical plus retains its tighter inset; align mixed
+toolbars using control bounds. Keep visible labels on 12 px Link and Branch.
+Geometry tests do not establish recognition. These limits are maintained in
+`source/contract.py` and rendered in the comparison and proof pages.
 
 ## License
 

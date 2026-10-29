@@ -7,8 +7,8 @@ const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const escapeXML=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 const masterFor=size=>size<=12?12:size<=16?16:24;
-function icon(name,a,n,css=n){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n} ${n}" width="${css}" height="${css}" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false"><path d="${DATA.paths[name][a][n]}"/></svg>`;}
-function exported(name,a,n){return `<svg xmlns="http://www.w3.org/2000/svg" width="${n}" height="${n}" viewBox="0 0 ${n} ${n}" fill="currentColor" fill-rule="evenodd" role="img" focusable="false">\n  <title>${escapeXML(INDEX[name].label+' — '+a)}</title>\n  <path d="${DATA.paths[name][a][n]}"/>\n</svg>\n`;}
+function icon(name,a,n,css=n){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n} ${n}" width="${css}" height="${css}" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false"><path d="${escapeXML(DATA.paths[name][a][n])}"/></svg>`;}
+function exported(name,a,n){return `<svg xmlns="http://www.w3.org/2000/svg" width="${n}" height="${n}" viewBox="0 0 ${n} ${n}" fill="currentColor" fill-rule="evenodd" role="img" focusable="false">\n  <title>${escapeXML(INDEX[name].label+' — '+a)}</title>\n  <path d="${escapeXML(DATA.paths[name][a][n])}"/>\n</svg>\n`;}
 function pair(name,n,css,labels=true){return ['outline','filled'].map(a=>`<div class="pair-member">${icon(name,a,n,css)}${labels?`<small>${a.toUpperCase()}</small>`:''}</div>`).join('');}
 function refreshCatalog(){
  const q=$('#search').value.trim().toLowerCase();const group=$('#category').value;const onlyNew=$('#new-only').getAttribute('aria-pressed')==='true';

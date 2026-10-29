@@ -15,13 +15,13 @@ See W3C's button pattern and non-text contrast guidance in `SOURCES.md`. This do
 
 ## Forced colors
 
-Selected controls use the system `Highlight` / `HighlightText` pair. Normal
-controls use `ButtonFace` / `ButtonText`. SVGs inherit their control foreground;
-a surface-wide `CanvasText` override must not override a selected icon. The
-scoped `forced-color-adjust` rule protects only explicitly paired selected
-controls, not the entire page or brand palette. Test both forced light and
-forced dark schemes, labels, paths, borders, focus, and keyboard state changes.
-Emulation is not a physical Windows contrast-theme or screen-reader test.
+Selected controls use the system `Highlight` fill with `CanvasText` as the
+foreground fallback and `contrast-color(Highlight)` where supported. SVGs inherit
+the control foreground. Normal controls use `ButtonFace` / `ButtonText`.
+The scoped `forced-color-adjust` rule protects paired selected controls, not the
+whole page. Verify winning computed foregrounds, focus, and keyboard state under
+forced light and dark schemes. Emulation is not physical Windows contrast-theme
+or screen-reader certification.
 
 ## Warning usage
 

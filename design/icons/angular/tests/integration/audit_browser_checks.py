@@ -19,7 +19,7 @@ from playwright.sync_api import sync_playwright
 
 R = Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(R))
-from tools.evidence import snapshot, write_report
+from tools.evidence import report_directory, snapshot, write_report
 CAT=json.loads((R/'catalog/icons.json').read_text())
 IDS=[item['id'] for item in CAT['icons']]
 HTML=(R/'docs/catalog/index.html').read_text()
@@ -48,9 +48,9 @@ def main():
     args=parser.parse_args()
     before=snapshot(R);checks=[];loading=[];errors=[];contrasts=[]
     report={'status':'running','browser':args.browser,'mode':args.mode,'checks':checks,'loading':loading,'contrastSamples':contrasts}
-    outfile=R/f'reports/audit-browser-{args.browser}-{args.mode}.json'
+    outfile=report_directory(R)/f'audit-browser-{args.browser}-{args.mode}.json'
     outfile.write_text('{"status":"running"}\n')
-    captures=R/'review/audit-patch';captures.mkdir(parents=True,exist_ok=True)
+    captures=report_directory(R)/'captures';captures.mkdir(parents=True,exist_ok=True)
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(R)))
     threading.Thread(target=server.serve_forever,daemon=True).start()
     url=f'http://127.0.0.1:{server.server_port}/docs/catalog/index.html'
@@ -111,7 +111,7 @@ def main():
                     contrasts.append({'control':'Create item label','scheme':scheme,'app':app_index,'paintedContrast':round(contrast,3),'highContrastTextPixels':count})
                     check('primary label pixels '+scheme+str(app_index),count>=25 and contrast>=4.5,{'contrast':round(contrast,3),'pixels':count})
                 page.locator('.favorite-toggle').first.click()
-                page.locator('#interface').screenshot(path=str(captures/f'forced-{scheme}.png'))
+                page.locator('#interface').screenshot(path=str(captures/'forced-colors.png'))
                 context.close()
 
             # Every concept/native master at both scales, both device densities.
@@ -183,7 +183,7 @@ def main():
             page.set_viewport_size({'width':375,'height':1100});page.locator('.icon-card[data-icon="warning"]').click()
             page.screenshot(path=str(captures/'warning-guidance-mobile.png'))
             page.keyboard.press('Escape')
-            page.set_viewport_size({'width':1440,'height':1000});page.locator('#interface').screenshot(path=str(captures/'normal-interface.png'))
+            page.set_viewport_size({'width':1440,'height':1000});page.locator('#interface').screenshot(path=str(captures/'interface-pairs.png'))
             page.locator('#catalog').scroll_into_view_if_needed() if page.locator('#catalog').count() else page.evaluate('scrollTo(0,0)')
             page.screenshot(path=str(captures/'catalog-desktop.png'))
             check('no JavaScript errors',not errors,errors)

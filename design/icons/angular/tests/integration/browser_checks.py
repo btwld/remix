@@ -13,7 +13,7 @@ from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from playwright.sync_api import sync_playwright,TimeoutError as PWTimeout
 R=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(R))
-from tools.evidence import snapshot, write_report
+from tools.evidence import report_directory, snapshot, write_report
 CAT=json.loads((R/'catalog/icons.json').read_text()); IDS=[i['id'] for i in CAT['icons']]
 SOURCE=(R/'docs/catalog/index.html').read_text()
 
@@ -26,9 +26,10 @@ def main():
     parser.add_argument('--mode',choices=['full','content'],default='full')
     parser.add_argument('--browser',choices=['chromium','firefox','webkit'],default='chromium')
     parser.add_argument('--executable',default=None)
+    (report_directory(R)/'captures').mkdir(exist_ok=True)
     args=parser.parse_args();started=snapshot(R);checks=[];errors=[];loading=[];downloads=[]
     report={'catalogHTMLSHA256':hashlib.sha256(SOURCE.encode()).hexdigest(),'browser':args.browser,'mode':args.mode,'status':'running','checks':checks,'loading':loading,'downloads':downloads}
-    (R/f'reports/browser-{args.browser}-{args.mode}.json').write_text('{"status":"running"}\n')
+    (report_directory(R)/f'browser-{args.browser}-{args.mode}.json').write_text('{"status":"running"}\n')
     def check(name,ok,detail=None):
         checks.append({'check':name,'passed':bool(ok),**({'detail':detail} if detail else {})})
         if not ok:raise AssertionError(name+': '+str(detail))
@@ -110,7 +111,10 @@ def main():
                     downloads.append({'appearance':a,'master':16,'status':'blocked-or-unavailable'})
                     if args.mode=='full':raise
             page.locator('#code-appearance').select_option('filled');check('code view is selected appearance',page.locator('#code').input_value()==(R/'generated/angular/filled/16/help.svg').read_text())
-            page.locator('#copy-svg').click();check('copy success or fallback is visible',bool(page.locator('#copy-status').text_content().strip()))
+            page.locator('#copy-svg').click()
+            # Clipboard success and the rejected-permission fallback are async.
+            page.wait_for_function("document.querySelector('#copy-status').textContent.trim().length > 0")
+            check('copy success or fallback is visible',bool(page.locator('#copy-status').text_content().strip()))
             page.keyboard.press('Escape')
             toggle=page.locator('.favorite-toggle').first;old=toggle.bounding_box();name=toggle.get_attribute('aria-label');toggle.focus();page.keyboard.press('Space')
             check('keyboard toggle selected',toggle.get_attribute('aria-pressed')=='true')
@@ -132,14 +136,14 @@ def main():
             else:loading.append({'context':'browser-esm-consumer','status':'not-tested-in-content-mode','detail':'Node isolated imports are checked separately.'})
             check('no guide JavaScript errors',not errors,errors)
             # Captures from the current source, not synthetic or prior images.
-            load();page.set_viewport_size({'width':1440,'height':1050});page.screenshot(path=str(R/'review/catalog-desktop.png'))
-            page.locator('#interface').screenshot(path=str(R/'review/interface-pairs.png'))
-            page.set_viewport_size({'width':375,'height':900});page.evaluate('scrollTo(0,0)');page.screenshot(path=str(R/'review/catalog-mobile.png'))
-            page.locator('#theme').select_option('cobalt');page.locator('.icon-card[data-icon="gear"]').click();page.screenshot(path=str(R/'review/inspector-mobile.png'));page.keyboard.press('Escape')
+            load();page.set_viewport_size({'width':1440,'height':1050});page.screenshot(path=str(report_directory(R)/'captures/catalog-desktop.png'))
+            page.locator('#interface').screenshot(path=str(report_directory(R)/'captures/interface-pairs.png'))
+            page.set_viewport_size({'width':375,'height':900});page.evaluate('scrollTo(0,0)');page.screenshot(path=str(report_directory(R)/'captures/catalog-mobile.png'))
+            page.locator('#theme').select_option('cobalt');page.locator('.icon-card[data-icon="gear"]').click();page.screenshot(path=str(report_directory(R)/'captures/inspector-mobile.png'));page.keyboard.press('Escape')
             page.set_viewport_size({'width':1440,'height':1100})
             for mode in ['all','new']:
                 proof=(R/f'docs/catalog/proof-{mode}.html').read_text();page.set_content(proof)
-                page.screenshot(path=str(R/('review/paired-icon-sheet.png' if mode=='all' else 'review/pilot-additions.png')),full_page=True)
+                page.screenshot(path=str(report_directory(R)/('captures/paired-icon-sheet.png' if mode=='all' else 'captures/pilot-additions.png')),full_page=True)
             # Native matrix strips at 1x/2x on both high-contrast surfaces.
             paths=json.loads((R/'generated/registry.json').read_text())['paths']
             for dpr in [1,2]:
@@ -150,7 +154,7 @@ def main():
                         cells=''.join(f'<span><svg width="{n}" height="{n}" viewBox="0 0 {n} {n}" fill="currentColor" fill-rule="evenodd"><path d="{paths[id][a][str(n)]}"/></svg></span>' for n in [12,16,24] for a in ['outline','filled'])
                         rows+=f'<div class="r"><b>{id}</b>{cells}</div>'
                     doc=f'<html><head><style>body{{background:{bg};color:{fg};font:12px monospace;margin:24px}}.r{{display:grid;grid-template-columns:230px repeat(6,110px);align-items:center;min-height:44px;border-bottom:1px solid #777}}span{{display:flex;justify-content:center}}</style></head><body><h1>Native SVGs / {theme} / {dpr}× pixels</h1><p>Columns: 12 outline / filled · 16 outline / filled · 24 outline / filled</p>{rows}</body></html>'
-                    p.set_content(doc);p.screenshot(path=str(R/f'review/native-{theme}-{dpr}x.png'),full_page=True);nc.close()
+                    p.set_content(doc);p.screenshot(path=str(report_directory(R)/f'captures/native-{theme}-{dpr}x.png'),full_page=True);nc.close()
             report['status']='passed' if args.mode=='full' else 'partial-integration'
             report['interactionChecksPassed']=sum(c['passed'] for c in checks)
             report['interactionChecksFailed']=sum(not c['passed'] for c in checks)
@@ -160,7 +164,7 @@ def main():
         report['status']='failed';report['error']=str(exc);print(str(exc),file=sys.stderr)
     finally:
         server.shutdown();server.server_close()
-        report=write_report(R/f'reports/browser-{args.browser}-{args.mode}.json',report,started,R)
+        report=write_report(report_directory(R)/f'browser-{args.browser}-{args.mode}.json',report,started,R)
     print(json.dumps({k:v for k,v in report.items() if k not in ['checks','evidence']},indent=2))
     return 1 if report['status']=='failed' else 0
 

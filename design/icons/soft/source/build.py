@@ -239,8 +239,6 @@ def build() -> dict:
         else:
             rec['status'] = 'meets-gap-target'
     (ROOT / 'catalog' / 'exceptions.json').write_text(json.dumps(exceptions, indent=2) + '\n')
-    (ROOT / 'reports' / 'warning-gaps.json').parent.mkdir(parents=True, exist_ok=True)
-    (ROOT / 'reports' / 'warning-gaps.json').write_text(json.dumps(warning_raw, indent=2) + '\n')
     bind_warning_hashes(inventory, exceptions)
 
     build_catalog_html(catalog, paths, inventory)

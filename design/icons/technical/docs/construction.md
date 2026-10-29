@@ -179,7 +179,7 @@ Reviewed display sizes remain 12 / 14 / 16 / 20 / 24 / 32 with the Angular maste
 
 These are **recognition tests**, not marketing copy. A reviewer should tell the packs apart at 24 px outline without reading labels.
 
-| | Angular (exists) | Technical (this spec) | Rounded (not drawn) | Soft (not drawn) |
+| | Angular (exists) | Technical (this spec) | Rounded (not drawn) | Soft (12 icons shipped) |
 |---|---|---|---|---|
 | Corners | Sharp, or *ad hoc* chamfer / octagon | **Systematic 45° plate chamfer** | Curve radius | Larger, friendlier radius |
 | Terminals | Square from stroke buffer | Square-cut bars; plates chamfered | Round caps | Pill caps |
@@ -233,16 +233,16 @@ Why curves are not needed: Technical structure is axis-aligned plates, square-cu
 Validator implications:
 
 - Fail closed on `C`, `Q`, `A`, `S`, `T`, `H`, `V` (compact), lowercase relative commands, and any non-`[MLZ0-9.\-\s]` content.
-- Do **not** add curve support in this pilot “for completeness.” Rounded/Soft will need a curve-aware parser later; grafting it on now would let invalid Technical sneak through as ignored commands.
+- Do **not** add curve support in this pilot “for completeness.” Soft has a separate curve-aware validator. Technical retains its strict straight-path grammar; accepting curves here would weaken that contract.
 - Independent XML parse of serialized SVG: exact `svg > title + path`, `fill="currentColor"`, `fill-rule="evenodd"`, native `width`/`height`/`viewBox`, no event handlers, no images, no doctype/entities.
 - Geometry must be finite, non-empty, valid, and inside the canvas.
 - No additional path commands are introduced. If a future icon genuinely needs a curve, that is a Rounded/Soft problem or a spec revision — not a silent parser relaxation.
 
 ---
 
-## 13. Module seams (Matt Pocock: define before implementing)
+## 13. Module contracts
 
-Test these seams. Do not test private vertex lists.
+Tests exercise these contracts rather than private vertex lists.
 
 | Seam | Module | Contract |
 |---|---|---|
@@ -259,33 +259,20 @@ Implementation details (Shapely boolean order, helper names) are not the spec.
 
 ---
 
-## 14. Pilot delivery and non-goals
+## 14. Supported scope
 
-Delivered in `.context/style-pack-work/technical-pilot/`:
+Technical ships 12 concepts, 72 SVGs, catalog metadata, restrictions, exceptions,
+native proof rasters, and geometry/build validation. Soft ships a separate
+12-concept family. The unified pack comparison catalog preserves their distinct
+construction systems. Rounded, Core 120 expansion, public API promotion, and
+publication are not included.
 
-- construction source of truth
-- 72 generated SVGs (12 × 2 × 3)
-- catalog metadata, restrictions, exceptions
-- review catalog / proof page
-- seam tests, rebuild, SVG safety, optical matrix, Angular hash lock, native rasters
+## 15. Usage limits
 
-Not in this pass:
-
-- public catalog or API promotion
-- Rounded or Soft drawings
-- Core 120 expansion
-- editing PR #244 / Angular geometry
-- web helper package, sprites for production, npm publish
-
----
-
-## 15. Open design questions (do not fake answers)
-
-1. Is a chamfered-square lens still recognizable as Search next to a view/crop tool? Needs a recognition pass.
-2. Does a regular (not optically shifted) star feel too “sheriff/CAD” for Favorite?
-3. Should Technical `plus` stay on the same outer keyline as Angular for toolbar alignment, or keep the tighter inset?
-4. If warning punctuation meets the gap target, do we still keep the concept-level visible-label rule? **This spec says yes** until a recognition study says otherwise.
-5. Is 45°-only too rigid for a later 120-icon set (e.g. refresh, chat tail)?
-6. Independent design owner/reviewer: unset.
-
-Record spacing/recognition exceptions in `catalog/exceptions.json` after measurement, not before.
+Label Search when adjacent to crop/frame/view tools; its viewfinder metaphor is
+not recognition-tested. Give the CAD-regular star an explicit Favorite label.
+Technical plus retains its tighter inset; align mixed-family controls by their
+bounds. Keep visible labels on 12 px Link and Branch. Warning requires visible
+text at every master and appearance, irrespective of measured punctuation gaps.
+Record measured geometry exceptions in `catalog/exceptions.json`; tests do not
+substitute for independent approval or establish recognition.

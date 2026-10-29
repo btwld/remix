@@ -10,12 +10,12 @@ import tempfile
 from pathlib import Path
 R = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(R))
-from tools.evidence import snapshot, write_report
+from tools.evidence import report_directory, snapshot, write_report
 
 
 def main() -> int:
     before = snapshot(R)
-    destination = R / 'reports/rebuild.json'
+    destination = report_directory(R) / 'rebuild.json'
     destination.write_text('{"status":"running"}\n')
     report = {'status':'failed', 'cleanBuild':False,
               'comparison':'SHA-256 of clean-tree rebuild against existing products'}
@@ -26,11 +26,11 @@ def main() -> int:
                 raise ValueError('Existing product differs from checksum: '+rel)
         with tempfile.TemporaryDirectory(prefix='vector-ui-clean-') as directory:
             target = Path(directory)/'project'
-            shutil.copytree(R, target, ignore=shutil.ignore_patterns('.git','__pycache__','node_modules','reports','review','qa','FILE-MANIFEST.sha256'))
+            shutil.copytree(R, target, ignore=shutil.ignore_patterns('.git','__pycache__','node_modules','reports','review','qa'))
             shutil.rmtree(target/'generated')
             shutil.rmtree(target/'docs/catalog')
             shutil.rmtree(target/'packages/web/icons')
-            for rel in ['packages/web/data.mjs','packages/web/usage-data.mjs','docs/OPTICAL-REVIEW.md','docs/usage-restrictions.md','generated-sha256.json']:
+            for rel in ['packages/web/data.mjs','packages/web/usage-data.mjs','docs/usage-restrictions.md','generated-sha256.json']:
                 (target/rel).unlink(missing_ok=True)
             (target/'docs/catalog').mkdir(parents=True)
             result = subprocess.run([sys.executable, 'source/build.py'], cwd=target, capture_output=True, text=True, timeout=120)

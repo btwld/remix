@@ -16,13 +16,22 @@ Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catal
 - A self-contained guide with all 48 icons, 96 labeled examples, six display sizes, four surfaces, SVG inspection, and native downloads.
 - An ES-module helper and 48 isolated per-icon imports. No React or Vue adapter is claimed.
 - Schema, SVG safety, geometry, critical-gap, raster, export, module, and rebuild checks.
-- A GitHub Actions workflow, contribution templates, release gate, and remaining-work ledger.
+- Root GitHub Actions validation, contribution templates, and an explicit release gate.
 
 ## What is not finished
 
-The remaining **72 Core proposals**, Rounded, independent design sign-off, user-recognition testing, final name, and public publication. The distribution license is selected: BSD 3-Clause, copyright Leo Farias. The package is committed on `feat/angular-icon-family-pilot` and open as draft pull request [#244](https://github.com/btwld/remix/pull/244). No npm package was published. This is still a private pilot, not a public release.
+This private pack includes 48 Angular, 12 Soft, and 12 Technical concepts.
+Rounded, independent design approval, recognition testing, final naming, and
+publication are not included. BSD 3-Clause is selected; no package is published.
 
-**Browser evidence from the handoff host:** Firefox 144 passed the full catalog script (HTTP, file, and module loading). Its forced-colors audit originally measured the selected star at 2.941:1 on the light surface because Firefox's Highlight (`#3399FF`) with HighlightText (white) misses 3:1. The selected star and primary action keep that Highlight fill. The color rule declares `CanvasText` first and `contrast-color(Highlight)` second, because Firefox drops a lone `contrast-color()` declaration and would otherwise paint white. After that change the light selected star measures 7.141:1 and the primary label measures 7.141:1. `aria-pressed`, the name "Favorite project", the 44px target, and the 3px focus outline stay in place. Chromium 151 passed the same forced-colors audit, including HTTP and file loading; its full catalog script stopped when headless Copy SVG left `#copy-status` empty. WebKit did not launch on this Amazon Linux host. Do not describe this as cross-browser certification or branded Safari evidence.
+Forced-color selected controls retain the system Highlight fill and declare
+CanvasText before contrast-color(Highlight). Browsers without contrast-color()
+use the fallback. Browser emulation does not certify physical Windows contrast
+themes, screen readers, or branded Safari.
+
+The retained `review/audit-patch/forced-light.png` shows the shared emulated
+forced-color palette: its light and dark captures were byte-identical, so it is
+not evidence of two distinct operating-system contrast themes.
 
 ## Use the SVGs
 
@@ -59,12 +68,21 @@ The convenience API loads all icon path data. Per-icon imports reference only th
 
 ## Build and check
 
-The pinned toolchain this package was authored against is CPython 3.13, Node 22.16, Shapely 2.1.2, CairoSVG 2.8.2, and Cairo 1.18.4. The handoff checkout ran the same pins on CPython 3.12.13, Node 24.14.1, CairoSVG 2.8.2, and Cairo 1.18.0. Those are separate runtimes. Reports from one must not be relabeled as the other. Dependencies are pinned; this is not a claim that every pin is the newest release.
+Use CPython 3.13 and Node 22 with the maintained dependency pins in
+`../requirements.txt` and `requirements-dev.txt`. Cairo is provided by the host.
+Evidence records actual runtime versions; results must be rerun across toolchains.
+
+Runners write reports and captures outside the source tree. Set
+`VECTOR_UI_EVIDENCE_DIR` to an external directory shared by the runners and gate;
+the Angular evidence lives in its `angular/` subdirectory. Without that setting,
+a checkout-specific directory under the system temporary directory is used.
+No generated test or release-status report is committed.
 
 ```sh
 python -m venv .venv
 # Activate the environment using the command for your shell.
 python -m pip install -r requirements-dev.txt
+python -m playwright install --with-deps firefox
 python source/build.py
 python tools/run_checks.py
 ```
@@ -107,44 +125,33 @@ generated/sprites/       six size/appearance sprites and one combined sprite
 packages/web/            ES-module API and isolated imports
 docs/catalog/            self-contained catalog and proof pages
 docs/                    design, accessibility, review, and release instructions
-tests/                   fixtures, 17 test methods, pixel and browser checks
-reports/                 actual local results with explicit scope
+tests/                   fixtures, geometry, runtime, pixel and browser checks
 review/                  screenshots and native-size evidence
-planning/                unimplemented Core 120 proposal and user-research templates
-.github/                 CI and contribution templates
+.github/                 reusable contribution template
+../../../.github/workflows/vector-ui-icons.yml  maintained pack CI
 ```
 
-See [execution status](EXECUTION-STATUS.md), [validation report](docs/VALIDATION-REPORT.md), and [construction rules](docs/construction.md). The package is intentionally private until the open release decisions are resolved.
+See [construction rules](docs/construction.md),
+[usage restrictions](docs/usage-restrictions.md), and
+[release requirements](docs/release-checklist.md).
 
-
-## Audit patch (pilot.2)
-
-The 48 glyphs / 288 SVGs are unchanged. This patch addresses forced-colors
-controls, a coordinate-aligned inspector, native raster proofs, Warning usage
-rules, report freshness, and SVG parsing. `catalog/restrictions.json` is the
-single size/appearance-aware usage source; its hashes bind it to the reviewed
-artwork. `getIconUsage` exposes the same rule to JavaScript consumers.
+## Validate the current tree
 
 ```sh
-python source/build.py
 python tools/run_checks.py
 python tests/integration/browser_checks.py --mode full --browser chromium
 python tests/integration/audit_browser_checks.py --mode full --browser chromium
 python tools/release_gate.py
 ```
 
-Repeat both browser runners for Firefox and WebKit. A missing executable or
-failed navigation is a failure, not permission to replace full mode with a
-passing content-mode report. `--executable /path/to/chromium` is available for
-local system Chromium. Content mode is a separately labeled diagnostic only.
+Repeat both browser runners for Firefox and WebKit. Missing executables or failed
+navigation are failures; content mode is only a separately labeled diagnostic.
+Technical evidence binds source, tests, catalog, dependency pins, generated
+outputs, workflows, and runtime versions. Fingerprints are not signatures.
+Rebuilds use a clean temporary tree; validation never refreshes pixel baselines.
+Unassigned exception owners, independent design review, and real recognition
+evidence remain release blockers. Technical passes do not grant release approval.
 
-Technical reports bind all current source, tests, catalog, dependency pins,
-generated outputs, workflow files, and relevant local tool versions. Reports
-from different toolchains must be rerun, not relabeled. Build changes invalidate
-old reports. The rebuild check uses a clean temporary tree; pixel tests never
-refresh baselines in validation mode. Report fingerprints are not signatures.
-
-See `reports/AUDIT-FIXES.md` for actual patch results and test boundaries.
-Unassigned exception owners, design review, and human recognition remain
-deliberate public-release blockers. The BSD 3-Clause license is selected;
-public release is not.
+The public `./render` API treats supplied paths as SVG path-data text, XML-escaping
+attribute delimiters; it never accepts executable SVG markup. Titles are escaped
+text too. Prefer isolated generated imports for normal drawing data.

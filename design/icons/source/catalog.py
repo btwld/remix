@@ -162,15 +162,17 @@ def _exceptions(root: Path) -> str:
     )
 
 
-def _questions(root: Path) -> str:
-    payload = _load_json(root / "technical" / "catalog" / "open-questions.json")
+def _usage_limits(root: Path) -> str:
+    # Load the maintained family contract without aliasing another family's source package.
+    import runpy
+    limits = runpy.run_path(str(root / "technical/source/contract.py"))["USAGE_LIMITS"]
     items = []
-    for question in payload["questions"]:
+    for question in limits:
         icons = ", ".join(question.get("icons") or [])
         items.append(
             "<li>"
             f"<code>{_esc(question['id'])}</code> "
-            f"({_esc(icons)}): {_esc(question['question'])}"
+            f"({_esc(icons)}): {_esc(question['guidance'])}"
             "</li>"
         )
     return "<ul class=\"questions\">" + "".join(items) + "</ul>"
@@ -403,9 +405,9 @@ body:has(#surface:checked) {{
 {_exceptions(root)}
 </section>
 <section id="questions">
-<h2>Technical open questions</h2>
-<p>Carried forward from the Technical calibration. They are unanswered here.</p>
-{_questions(root)}
+<h2>Technical usage limits</h2>
+<p>Keep labels and mixed-family alignment consistent with the Technical contract.</p>
+{_usage_limits(root)}
 </section>
 {_detail(root, shared_labels)}
 {_angular_only(root, shared_labels)}

@@ -24,7 +24,7 @@ from source.contract import (
     ICONS,
     IDS,
     MASTERS,
-    OPEN_QUESTIONS,
+    USAGE_LIMITS,
     PACK,
     PILOT_VERSION,
 )
@@ -333,8 +333,8 @@ def write_proof(catalog, paths, exceptions):
     )
     q_html = "<ul>" + "".join(
         "<li><strong>%s</strong> (%s) — %s</li>"
-        % (q["id"], ", ".join(q["icons"]), q["question"])
-        for q in OPEN_QUESTIONS
+        % (q["id"], ", ".join(q["icons"]), q["guidance"])
+        for q in USAGE_LIMITS
     ) + "</ul>"
     page = """<!doctype html>
 <html lang="en">
@@ -417,8 +417,8 @@ Same semantic IDs as Angular. Not a public catalog, not a transform of Angular p
 %s
 </section>
 <section>
-<h2>Open questions for human review</h2>
-<p class="lede">Construction does not decide these. They remain named questions for a short recognition pass.</p>
+<h2>Supported-use limits</h2>
+<p class="lede">Geometry does not establish recognition. Keep these usage restrictions in product interfaces.</p>
 %s
 </section>
 <footer>Vector UI Technical calibration · %s · private review · not promoted to the public catalog.<br>
@@ -623,9 +623,6 @@ def build():
     }
     (ROOT / "catalog/styles.json").write_text(json.dumps(styles, indent=2) + "\n")
     (ROOT / "catalog/aliases.json").write_text("{}\n")
-    (ROOT / "catalog/open-questions.json").write_text(
-        json.dumps({"schemaVersion": 1, "questions": list(OPEN_QUESTIONS)}, indent=2) + "\n"
-    )
     write_proof(catalog, registry_paths, exceptions)
     write_rasters(inventory, registry_paths)
     # Hash reproducible products, not the checksum file itself (Angular

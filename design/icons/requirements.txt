@@ -1,5 +1,5 @@
 # CPython 3.13 pins for the unified pack check.
-# Browser evidence (Playwright) is not part of this suite.
+# Runtime boundary tests also use angular/requirements-dev.txt and Playwright Firefox.
 shapely==2.1.2
 cairosvg==2.8.2
 pillow==12.3.0

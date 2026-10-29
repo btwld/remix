@@ -15,5 +15,5 @@ export function renderIcon(name, label, paths, options = {}) {
   if (typeof path !== 'string') throw new RangeError(`Unavailable drawing: ${name}/${appearance}/${master}`);
   if (title !== null && (typeof title !== 'string' || !title.trim())) throw new TypeError('title must be a nonempty string or null');
   const semantics = title === null ? 'aria-hidden="true"' : `role="img" aria-label="${escapeXML(title)}"`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${master} ${master}" fill="currentColor" fill-rule="evenodd" focusable="false" ${semantics}>${title === null ? '' : `<title>${escapeXML(title)}</title>`}<path d="${path}"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${master} ${master}" fill="currentColor" fill-rule="evenodd" focusable="false" ${semantics}>${title === null ? '' : `<title>${escapeXML(title)}</title>`}<path d="${escapeXML(path)}"/></svg>`;
 }

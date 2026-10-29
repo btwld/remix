@@ -4,7 +4,7 @@
 
 12 canonical icons, two appearances, and three optical masters: **72 individual SVG drawings**. Soft is a sibling Vector UI pack, not a filter on Angular and not the planned Rounded pack.
 
-Open [`docs/catalog/index.html`](docs/catalog/index.html) for the review catalog. Grammar: [`GRAMMAR.md`](GRAMMAR.md). Self-review: [`REVIEW.md`](REVIEW.md).
+Open [`docs/catalog/index.html`](docs/catalog/index.html) for the review catalog. Grammar: [`GRAMMAR.md`](GRAMMAR.md).
 
 This package stays `private: true`. Do not publish it.
 
@@ -23,10 +23,10 @@ License: BSD 3-Clause, copyright Leo Farias, consistent with the Angular family 
 
 ## Build and check
 
-Pinned for this pack: CPython 3.12, Shapely 2.1.2, CairoSVG 2.8.2.
+Pinned for this pack: CPython 3.13, Shapely 2.1.2, CairoSVG 2.8.2.
 
 ```sh
-python3.12 -m venv .venv
+python3.13 -m venv .venv
 # Activate the environment using the command for your shell.
 python -m pip install -r requirements.txt
 python source/build.py
@@ -51,4 +51,4 @@ Warning requires a **visible text label** in every appearance and native size, i
 
 ## Out of scope
 
-Public publication, Remix catalog/web API, the remaining 36 Angular IDs, Rounded, editing PR #244.
+Public publication, Remix catalog/web API, the remaining 36 Angular IDs, Rounded. The unified pack comparison catalog includes the shipped families.

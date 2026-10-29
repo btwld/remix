@@ -10,6 +10,8 @@ import argparse
 import hashlib
 import importlib.metadata
 import json
+import os
+import tempfile
 import platform
 import subprocess
 import sys
@@ -22,6 +24,16 @@ PACKAGES = ('shapely', 'CairoSVG', 'cairocffi', 'cffi', 'Pillow', 'jsonschema',
             'jsonschema-specifications', 'referencing', 'rpds-py', 'attrs',
             'cssselect2', 'tinycss2', 'webencodings', 'defusedxml', 'playwright',
             'pyee', 'greenlet', 'typing_extensions', 'pycparser', 'numpy')
+
+
+def report_directory(root: Path = ROOT) -> Path:
+    """Ephemeral evidence, shared by runners and the release gate, never source."""
+    default = Path(tempfile.gettempdir()) / ('vector-ui-' + digest_bytes(str(root.resolve()).encode())[:12])
+    directory = Path(os.environ.get('VECTOR_UI_EVIDENCE_DIR', default)).resolve() / 'angular'
+    if directory.is_relative_to(root.resolve()):
+        raise ValueError('VECTOR_UI_EVIDENCE_DIR must be outside the family source tree')
+    directory.mkdir(parents=True, exist_ok=True)
+    return directory
 
 
 def digest_bytes(data: bytes) -> str:
@@ -48,7 +60,11 @@ def input_hashes(root: Path) -> dict[str, str]:
     paths.update(root / name for name in INPUT_FILES if (root / name).is_file())
     for pattern in ('requirements*.txt', '*lock*', 'pyproject.toml', 'package.json'):
         paths.update(p for p in root.glob(pattern) if p.is_file())
-    return {str(path.relative_to(root)): digest_bytes(path.read_bytes()) for path in sorted(paths)}
+    result = {str(path.relative_to(root)): digest_bytes(path.read_bytes()) for path in sorted(paths)}
+    workflow = root.parents[2] / '.github/workflows/vector-ui-icons.yml' if len(root.parents) > 2 else None
+    if workflow is not None and workflow.is_file():
+        result['../../../.github/workflows/vector-ui-icons.yml'] = digest_bytes(workflow.read_bytes())
+    return result
 
 
 def toolchain() -> dict:

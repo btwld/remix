@@ -1,6 +1,7 @@
-"""Regression coverage for audit F02-F05; actual browser/color tests are separate."""
+"""Geometry, evidence freshness, and real browser boundary regressions."""
 from __future__ import annotations
 import copy
+import os
 import hashlib
 import json
 import re
@@ -15,7 +16,7 @@ from shapely.geometry import Polygon
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from tests.geometry.paths import parse_svg
-from tools.evidence import snapshot, stamp_report, verify_report, differences
+from tools.evidence import report_directory, snapshot, stamp_report, verify_report, differences
 from source.restrictions import load_restrictions, usage_text, effective_catalog
 
 
@@ -89,7 +90,6 @@ class RestrictionRegression(unittest.TestCase):
         data=json.loads(re.search(r'<script type="application/json" id="icon-data">(.*?)</script>',html,re.S)[1])
         self.assertEqual(data['restrictions'],self.records)
         self.assertEqual(next(i for i in data['catalog']['icons'] if i['id']=='warning')['review']['usage'],expected)
-        self.assertIn(expected,(ROOT/'docs/OPTICAL-REVIEW.md').read_text())
         self.assertIn(expected,(ROOT/'docs/usage-restrictions.md').read_text())
         warning_notes=re.search(r'<details data-review="warning">(.*?)</details>',html,re.S)[1]
         self.assertNotIn('contextual label recommended at other sizes',warning_notes)
@@ -157,7 +157,7 @@ class EvidenceFreshnessRegression(unittest.TestCase):
             removed=root/'tests/test_sample.py';old=removed.read_bytes();removed.unlink()
             self.assertFalse(verify_report(report,snapshot(root))[0]);removed.write_bytes(old)
             # Reports and captures are outputs, not recursive inputs.
-            (root/'reports').mkdir();(root/'reports/test.json').write_text('{}')
+            (report_directory(root)/'test.json').write_text('{}')
             self.assertTrue(verify_report(report,snapshot(root))[0])
 
     def test_unstamped_tampered_runtime_and_midrun_changes_fail(self):
@@ -181,20 +181,22 @@ class EvidenceFreshnessRegression(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='stale-gate-fixture-') as directory:
             root=Path(directory)/'project'
             shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('.git','__pycache__','reports','review','qa','node_modules'))
-            (root/'reports').mkdir()
+            external=Path(directory)/'evidence'
+            env={**os.environ, 'VECTOR_UI_EVIDENCE_DIR':str(external)}
+            reports=external/'angular'; reports.mkdir(parents=True)
             start=snapshot(root)
             filenames=['asset-checks.json','web-adapter.json','rebuild.json','pixel-regression.json']
             for name in filenames:
                 report=stamp_report({'status':'passed','cleanBuild':True,'createdBaseline':False,'fixtureOnly':True},start,root)
-                (root/'reports'/name).write_text(json.dumps(report))
-            run=subprocess.run([sys.executable,'tools/release_gate.py'],cwd=root,capture_output=True,text=True,timeout=25)
+                (reports/name).write_text(json.dumps(report))
+            run=subprocess.run([sys.executable,'tools/release_gate.py'],cwd=root,capture_output=True,text=True,timeout=25,env=env)
             self.assertEqual(run.returncode,2)  # Governance stays closed.
-            checks={c['check']:c['passed'] for c in json.loads((root/'reports/release-readiness.json').read_text())['checks']}
+            checks={c['check']:c['passed'] for c in json.loads((reports/'release-readiness.json').read_text())['checks']}
             self.assertTrue(all(checks['technical-'+f] for f in filenames))
             with (root/'source/build.py').open('a') as f:f.write('\nraise RuntimeError("disposable mutation")\n')
-            run=subprocess.run([sys.executable,'tools/release_gate.py'],cwd=root,capture_output=True,text=True,timeout=25)
+            run=subprocess.run([sys.executable,'tools/release_gate.py'],cwd=root,capture_output=True,text=True,timeout=25,env=env)
             self.assertEqual(run.returncode,2)
-            checks={c['check']:c['passed'] for c in json.loads((root/'reports/release-readiness.json').read_text())['checks']}
+            checks={c['check']:c['passed'] for c in json.loads((reports/'release-readiness.json').read_text())['checks']}
             self.assertFalse(any(checks['technical-'+f] for f in filenames))
 
 
@@ -218,6 +220,85 @@ class SelectedStarContrastRegression(unittest.TestCase):
         self.assertIn('contrast-color(Highlight)', page)
         self.assertIn('aria-label="Favorite project"', page)
         self.assertIn('aria-pressed="false"', page)
+
+
+class BrowserBoundaryRegression(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from playwright.sync_api import sync_playwright
+        cls.playwright = sync_playwright().start()
+        cls.browser = cls.playwright.firefox.launch(headless=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.close()
+        cls.playwright.stop()
+
+    def test_winning_forced_colors_foreground(self):
+        # Use the generated guide and its real toggle handler, including every
+        # late stylesheet rule. Firefox exercises the CanvasText fallback and
+        # has a palette where the old HighlightText value is distinguishable.
+        for scheme in ('light', 'dark'):
+            with self.subTest(scheme=scheme):
+                context = self.browser.new_context(forced_colors='active', color_scheme=scheme)
+                try:
+                    page = context.new_page()
+                    page.set_content((ROOT/'docs/catalog/index.html').read_text())
+                    page.wait_for_function('window.__ICON_GUIDE_READY__ === true')
+                    self.assertTrue(page.evaluate("matchMedia('(forced-colors: active)').matches"))
+                    toggle = page.get_by_role('button', name='Favorite project').first
+                    toggle.click()
+                    self.assertEqual(toggle.get_attribute('aria-pressed'), 'true')
+                    colors = page.evaluate("""() => {
+                        const probe = document.createElement('span');
+                        probe.style.cssText = 'forced-color-adjust:none;color:CanvasText;color:contrast-color(Highlight)';
+                        document.body.append(probe);
+                        const expected = getComputedStyle(probe).color;
+                        probe.style.color = 'HighlightText';
+                        const previous = getComputedStyle(probe).color;
+                        probe.remove();
+                        return {expected, previous, controls: [...document.querySelectorAll(
+                            '.favorite-toggle[aria-pressed="true"], .action-primary')].map(el => ({
+                                color: getComputedStyle(el).color,
+                                fill: getComputedStyle(el.querySelector('path')).fill
+                            }))};
+                    }""")
+                    self.assertNotEqual(colors['expected'], colors['previous'], 'palette must distinguish the regression')
+                    self.assertGreater(len(colors['controls']), 1)
+                    for control in colors['controls']:
+                        self.assertEqual(control['color'], colors['expected'])
+                        self.assertEqual(control['fill'], colors['expected'])
+                finally:
+                    context.close()
+
+    def test_raw_path_and_title_are_inert_text(self):
+        # Exercise the public renderer in Node, then the actual HTML/SVG parser.
+        # A raw-path escaping mutant still builds but changes this DOM at runtime.
+        payloads = [
+            '\"/><script>document.documentElement.dataset.injected="script"</script><path d="',
+            '\" onload="document.documentElement.dataset.injected=1" data-attack="',
+        ]
+        script = """
+            import {renderIcon} from './packages/web/render.mjs';
+            const values = JSON.parse(process.argv[1]);
+            console.log(JSON.stringify(values.map(value => renderIcon('custom','Custom',
+                {outline: {24: value}}, {title: value}))));
+        """
+        result = subprocess.run(['node','--input-type=module','-e',script,json.dumps(payloads)],
+                                cwd=ROOT, capture_output=True, text=True, check=True)
+        for payload, markup in zip(payloads, json.loads(result.stdout), strict=True):
+            with self.subTest(payload=payload):
+                page = self.browser.new_page()
+                try:
+                    page.set_content(markup)
+                    self.assertEqual(page.locator('svg > path').count(), 1)
+                    self.assertEqual(page.locator('svg > title').text_content(), payload)
+                    self.assertEqual(page.locator('svg').get_attribute('aria-label'), payload)
+                    self.assertEqual(page.locator('svg > path').get_attribute('d'), payload)
+                    self.assertEqual(page.locator('script, [onload], [data-attack]').count(), 0)
+                    self.assertIsNone(page.locator('html').get_attribute('data-injected'))
+                finally:
+                    page.close()
 
 
 if __name__=='__main__':

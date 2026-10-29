@@ -306,8 +306,11 @@ class AssetTests(unittest.TestCase):
             "index.html",
         ):
             self.assertTrue((proof / name).exists(), name)
-        questions = json.loads((ROOT / "catalog/open-questions.json").read_text())["questions"]
-        qids = {q["id"] for q in questions}
+        from source.contract import USAGE_LIMITS
+        page = (proof / "index.html").read_text()
+        for limit in USAGE_LIMITS:
+            self.assertIn(limit["guidance"], page)
+        qids = {q["id"] for q in USAGE_LIMITS}
         self.assertEqual(
             qids,
             {

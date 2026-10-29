@@ -10,12 +10,12 @@ from PIL import Image,ImageChops,ImageStat
 import cairosvg,cairocffi
 R=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(R))
-from tools.evidence import snapshot, write_report
+from tools.evidence import report_directory, snapshot, write_report
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--create-baseline',action='store_true');args=p.parse_args()
     started=snapshot(R)
-    (R/'reports/pixel-regression.json').write_text('{"status":"running"}\n')
+    (report_directory(R)/'pixel-regression.json').write_text('{"status":"running"}\n')
     root=R/'tests/fixtures/native-pixels';root.mkdir(parents=True,exist_ok=True)
     inv=json.loads((R/'generated/inventory.json').read_text());fail=[];records=[]
     for row in inv:
@@ -38,6 +38,6 @@ def main():
     if args.create_baseline:
         report['status']='baseline-created'
         started=snapshot(R)  # Baseline creation never qualifies as a validation pass.
-    report=write_report(R/'reports/pixel-regression.json',report,started,R)
+    report=write_report(report_directory(R)/'pixel-regression.json',report,started,R)
     print(json.dumps({k:v for k,v in report.items() if k!='evidence'},indent=2));return 1 if report['status']=='failed' else 0
 if __name__=='__main__':raise SystemExit(main())

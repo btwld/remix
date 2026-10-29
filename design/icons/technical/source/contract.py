@@ -190,26 +190,26 @@ def select_master(display_size):
     return MASTER_FOR_DISPLAY[display_size]
 
 
-# Named questions for human review. Construction must not "decide" these.
-OPEN_QUESTIONS = (
+# Supported-use restrictions; construction tests do not establish recognition.
+USAGE_LIMITS = (
     {
         "id": "search-as-viewfinder",
         "icons": ["search"],
-        "question": "Is a chamfered-square viewfinder still recognizable as Search next to crop/frame/view tools?",
+        "guidance": "Label Search explicitly beside crop, frame, or view tools; the viewfinder metaphor is not recognition-tested.",
     },
     {
         "id": "cad-star-as-favorite",
         "icons": ["star"],
-        "question": "Does a regular (not optically shifted) five-point star read as Favorite, or as a CAD/badge mark?",
+        "guidance": "Give the CAD-regular star a Favorite label; recognition as Favorite is not established by geometry.",
     },
     {
         "id": "plus-keyline-mixed-toolbar",
         "icons": ["plus"],
-        "question": "Should Technical plus keep its tighter inset, or share Angular's outer keyline in mixed-pack toolbars?",
+        "guidance": "Technical plus keeps its tighter inset. Align mixed-family toolbars by control bounds, not by changing the drawing.",
     },
     {
         "id": "density-12-link-branch",
         "icons": ["link", "branch"],
-        "question": "Are 12 px Link shackles and Branch junction boxes recognizable at native size, or must they stay labeled-only?",
+        "guidance": "Keep visible labels for 12 px Link and Branch; native-size recognition is not established.",
     },
 )

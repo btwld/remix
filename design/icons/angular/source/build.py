@@ -66,7 +66,7 @@ def build() -> dict:
     build_catalog(catalog,paths,svg_text)
     # Hash all reproducible products, not test reports or the checksum file itself.
     products=[p for d in [generated,ROOT/'docs/catalog',web] for p in d.rglob('*') if p.is_file()]
-    products += [ROOT/'docs/OPTICAL-REVIEW.md', ROOT/'docs/usage-restrictions.md']
+    products += [ROOT/'docs/usage-restrictions.md']
     sums={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(products)}
     (ROOT/'generated-sha256.json').write_text(json.dumps(sums,indent=2)+'\n')
     print(f'Built {len(paths)} icons / {len(inventory)} SVGs / 7 sprites')
