@@ -15,21 +15,18 @@ Future<void> main(List<String> arguments) async {
   // Platform.script no longer identifies the checkout. Only this test entry
   // point accepts an explicit root; the shipped CLI still uses pinned GitHub.
   final registryRoot = Platform.environment['REMIX_REGISTRY_ROOT'];
+  final checkout = registryRoot == null
+      ? Directory.fromUri(Platform.script.resolve('../registry/'))
+      : Directory(registryRoot);
   exitCode = await runInstallerCli(
     arguments,
     Installer(
       projectRoot: Directory.current,
       writeOut: stdout.writeln,
       sources: Platform.environment['REMIX_REGISTRY_OWNERSHIP_PROBE'] == '1'
-          ? _OwnershipProbeSources(
-              Directory.fromUri(Platform.script.resolve('../registry/')),
-            )
+          ? _OwnershipProbeSources(checkout)
           : releaseRef == null
-          ? CheckoutSources(
-              registryRoot == null
-                  ? Directory.fromUri(Platform.script.resolve('../registry/'))
-                  : Directory(registryRoot),
-            )
+          ? CheckoutSources(checkout)
           : _PublishedSources(releaseRef),
     ),
     writeOut: stdout.writeln,
