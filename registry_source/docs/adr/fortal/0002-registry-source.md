@@ -5,114 +5,75 @@ Date: 2026-09-14. Status: accepted. Supersedes
 
 ## Decision
 
-Every file under `registry/**/templates/` is build
-output. One builder, `tool/build_registry.dart`, derives it from analyzer-checked
-Dart under `registry_source/`, and a drift check over the whole tree fails CI on
-any hand edit. Applications consume installed source only.
+One private authoring package, `registry_source`, owns the analyzer-checked Dart
+catalog. `tool/build_registry.dart` derives every file under
+`registry/**/templates/` and the catalog structure. Whole-tree drift checks fail
+on hand-edited generated output. Applications consume installed source, not the
+private authoring package.
 
 ```text
-packages/           what pub.dev sees: remix, remix_ui_icons, remix_cli
-registry_source/    one private package: the authored catalog
-  lib/src/default/  the default preset, authored under the word Vanilla
-  lib/src/fortal/   the Fortal preset, authored under the word Fortal
-  lib/src/agent/    Agent behavior, merged into both presets
+packages/           independently published packages
+registry_source/    private authored catalog and parity tests
+  lib/src/default/  Vanilla theme, components and recipes
+  lib/src/fortal/   Fortal theme, components and recipes
+  lib/src/agent/    shared domain behavior, models and support
+registry/           generated catalogs and templates
 ```
 
-`registry_source` is one package, not three, so nothing in it is a dependency
-of anything: the recipes reach Agent behavior by relative path. It has no
-version and no publish target. `packages/` now reads as "published".
+Recipes reach shared Agent behavior through relative imports during authoring.
+No installed item depends on `registry_source`, and it has no publish target.
+Catalog structure and templates are generated; the Vanilla catalog's dependency
+and dev-dependency floors are maintained release inputs read back by the builder. The icon mapping
+and library floors in `registry/icons.yaml` are also maintained inputs.
 
-## Distribution revision — 2026-09-19
+## Current distribution contract
 
-Registry output publishes independently through GitHub `registry-v*` releases.
-`registry/index.yaml` schema 1 selects preset catalogs; catalog schema 2 adds
-qualified dependencies while preserving the existing Dart template contract.
-New projects store schema-3 named sources and full commit pins in `remix.yaml`.
-Every fetch uses the pinned commit, and changing a pin is explicit and does not
-change installed source. The CLI remains a generic installer.
+The [registry contract](../../../../open_code/REGISTRIES.md) defines the CLI's
+catalog, template and source boundaries. `registry/index.yaml` uses schema 1;
+preset catalogs use schema 2. Projects use schema-3 `remix.yaml` with named
+registries and full commit pins. Fetches use the recorded revision, never a
+bundled fallback, and changing a pin does not change installed source.
 
-`packages/remix_cli/lib/src/registry/` is now a frozen compatibility snapshot
-for schema-1/2 projects, not builder output to refresh. Its byte-level regression
-coverage is separate from current-source drift and dependency-floor checks,
-which target `registry/`. Migration is explicit and configuration-only.
-No remote error falls back to the bundle. Cross-registry dependencies require
-project registration, and conflicting target ownership fails before writes.
+The maintained promotion workflow validates hosted runtimes before advancing
+`registry-stable`. New initialization resolves that branch to a full commit;
+existing pins stay fixed. Publication prerequisites and recovery are defined in
+[release ordering](../../../../open_code/RELEASING.md). A passing checkout
+consumer is not proof that a published dependency floor supplies new APIs.
 
-See [registry contract](../../../../open_code/REGISTRIES.md) and
-[release ordering](../../../../open_code/RELEASING.md). This revises the former
-bundled-only distribution decision; it does not change authoring ownership,
-prefix rendering, preset contents, or installed-source ownership.
+Earlier schema-1/2 project configuration and the bundled compatibility catalog
+were removed before 1.0. Projects on those retired configurations initialize a
+schema-3 configuration; installed files remain application-owned and can be
+compared with `add --diff`. There is no second bundled catalog to refresh.
 
-## Configuration revision — 2026-09-21
+## Historical rationale and supersession
 
-`packages/remix_cli/lib/src/registry/` is removed, along with `remix.yaml`
-schemas 1 and 2 and `remix registry migrate`. Remix is pre-1.0 and does not owe
-those prereleases a compatibility path, and keeping one cost more than it
-bought: the snapshot was a second catalog that drifted from `registry/` in
-silence, it let `add` bypass the pin for projects that named none, and it made
-a registry edit and its consumer update unlandable in one commit.
-
-Schema 3 is now the only readable configuration, so every read goes through a
-pin the project recorded. A project on an earlier schema deletes `remix.yaml`
-and reruns `remix init`; installed source is untouched, which is what the
-subsequent `add --diff` is for.
-
-This supersedes the preceding revision's frozen-snapshot paragraph only.
-`registry/index.yaml` schema 1 and catalog schema 2 are unchanged, as are
-authoring ownership, the derivation invariant, prefix rendering, preset
-contents, and installed-source ownership.
-
-The CLI-internal structure behind that contract — how the installer obtains
-catalogs and template bytes — is superseded by
-[the registry port lockdown](../../../../open_code/REGISTRY_PORT.md). The
-published schemas described above are unchanged.
-
-## Distribution revision — 2026-09-23
-
-The registry version is the commit hash already pinned in `remix.yaml`.
-Distribution is the CI-promoted `registry-stable` branch: merging to `main`
-validates against hosted runtimes and fast-forwards that branch. This
-supersedes the `registry-v*` sentence of the 2026-09-19 distribution revision.
-Moving `registry-stable` does not move a pin a project has already recorded.
-
-## What this reverses
-
-| record | it said | now |
+| Record | Earlier boundary | Current boundary |
 |---|---|---|
-| [PRESETS.md](../../../../open_code/PRESETS.md) decision 7 | `remix_fortal` leaves pub.dev; **the directory stays** at `packages/remix_fortal` | the source is `registry_source/lib/src/fortal`; `remix_fortal` is no longer a package name anywhere |
-| [ADR 0001](0001-authoring-package-retention.md) | retain the package; reconsider on duplicate source ownership | the trigger fired: `apps/dashboard` carried 38 installed `lib/ui/` files *and* 31 `package:remix_fortal` importers, bridged by five identity-mapped enum switches in `pages/chat_page.dart` |
-| [Agent ADR 0001](../agent/0001-package-boundary.md) | recipes are hand-authored `.tmpl` files under `open_code/agent_recipes/` | recipes are Dart in each preset's `recipes/`, analyzed against `lib/src/agent` beside them |
+| [PRESETS.md](../../../../open_code/PRESETS.md) | Private preset package retained as authoring source | Authoring lives in `registry_source/lib/src/fortal`; applications install source |
+| [ADR 0001](0001-authoring-package-retention.md) | Retain the package until duplicate ownership justified migration | The dashboard had both installed source and package importers, with enum bridges between their types; one authoring tree removed that duplication |
+| [Agent ADR 0001](../agent/0001-package-boundary.md) | Separate domain authoring and hand-authored recipe templates | Domain behavior and analyzed Dart recipes share the private authoring package; behavior remains separate from styling |
 
-Not reversed: Agent behavior stays private and installs as source. Publishing
-it was considered and rejected; the Agent ADR's "neither required nor planned"
-stands. It is not a package at all any more, only source that is tested and
-derived.
+The original default preset had 37 hand-written templates without an analyzer,
+and the 16 Agent recipes had the same weakness. Analyzer-checked source gives
+all presets one derivation contract. Prefix rendering followed by derivation
+was byte-identical before visual edits, separating source ownership from design
+changes.
 
-## Why
+Removing the private Fortal package boundary also removed application imports
+and identity-mapped enum bridges alongside already-installed `Ui*` source.
+Tests and reference fixtures stayed with the single authoring tree. Agent
+behavior still installs as editable source; a hosted Agent runtime package is
+neither required nor planned.
 
-The default preset was 37 hand-written templates with no analyzer behind them,
-and the 16 Agent recipes were the same. Both now derive from formatted,
-analyzed source, which is the rule PRESETS.md decision 3 already stated for
-Fortal. The proof for the default preset was mechanical: rendering the
-templates with the word `Vanilla` (zero collisions across the tree) and deriving
-back was byte-identical before any human edited the result.
+## Derivation and consumer invariants
 
-The Fortal move is the retention ADR's own trigger. Three applications reached
-`package:remix_fortal` directly while one of them also installed the derived
-source; the dashboard needed enum bridges to hand Fortal settings to its own
-installed `Ui*` types. Once every application installs, the package is only a
-source tree, and `packages/` should not suggest otherwise.
+Derivation is prefix substitution with an asserted round trip. An authoring
+word occurs only in replaceable identifier prefixes and token identifiers,
+including within comments. Recipes additionally rewrite shared Agent imports
+to installed relative paths and replace identifier-initial `Agent` before the
+preset's own prefix. `uiAgentComposerRecipe()` retains its domain name;
+`AgentComposerStyler` becomes the installed `UiComposerStyler`.
 
-## The invariant
-
-Derivation is plain text substitution of one word per source, asserted to
-round-trip. The authoring word must therefore appear nowhere in a source
-package except as the prefix, comments included. Recipes are the one
-two-word case: they name Agent behavior while authoring, and the builder
-rewrites the `../../agent/` import to the installed relative path and the
-identifier-initial `Agent` to the consumer prefix before the preset's own word
-goes. `uiAgentComposerRecipe()` keeps its domain name; `AgentComposerStyler`
-becomes the installed `UiComposerStyler`.
-
-`tool/check_consumer_apps.dart` fails when any `apps/*/lib` file outside
-`lib/ui/` imports `package:registry_source`.
+`tool/check_consumer_apps.dart` compares installed consumers with registry
+output and rejects `package:registry_source` imports outside owned `lib/ui/`
+source. Fresh consumer checks exercise the actual installer and generator.
