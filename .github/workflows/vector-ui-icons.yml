@@ -15,7 +15,7 @@ concurrency:
   group: vector-ui-icons-${{ github.ref }}
   cancel-in-progress: true
 env:
-  VECTOR_UI_EVIDENCE_DIR: ${{ runner.temp }}/vector-ui-evidence
+  VECTOR_UI_EVIDENCE_DIR: ${{ github.workspace }}/.context/vector-ui-evidence
 jobs:
   assets:
     runs-on: ubuntu-24.04

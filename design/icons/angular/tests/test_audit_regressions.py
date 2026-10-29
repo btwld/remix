@@ -236,8 +236,8 @@ class BrowserBoundaryRegression(unittest.TestCase):
 
     def test_winning_forced_colors_foreground(self):
         # Use the generated guide and its real toggle handler, including every
-        # late stylesheet rule. Firefox exercises the CanvasText fallback and
-        # has a palette where the old HighlightText value is distinguishable.
+        # late stylesheet rule. Firefox has a palette where the old
+        # HighlightText value is distinguishable.
         for scheme in ('light', 'dark'):
             with self.subTest(scheme=scheme):
                 context = self.browser.new_context(forced_colors='active', color_scheme=scheme)

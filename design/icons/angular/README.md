@@ -25,9 +25,10 @@ Rounded, independent design approval, recognition testing, final naming, and
 publication are not included. BSD 3-Clause is selected; no package is published.
 
 Forced-color selected controls retain the system Highlight fill and declare
-CanvasText before contrast-color(Highlight). Browsers without contrast-color()
-use the fallback. Browser emulation does not certify physical Windows contrast
-themes, screen readers, or branded Safari.
+CanvasText before contrast-color(Highlight). Supported browsers must implement
+contrast-color(); CI and the audit use the browser revisions pinned by Playwright
+1.64.1, including Chromium 156. Browser emulation does not certify physical
+Windows contrast themes, screen readers, or branded Safari.
 
 The retained `review/audit-patch/forced-light.png` shows the shared emulated
 forced-color palette: its light and dark captures were byte-identical, so it is
