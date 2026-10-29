@@ -213,23 +213,48 @@ class _RemixToastState extends State<RemixToast> {
     if (actionButton == null) return row(actionBelow: false);
     if (spec.actionPlacement == .below) return row(actionBelow: true);
 
-    // An inline action needs a row wide enough for it. LayoutBuilder cannot
-    // report intrinsic sizes, so such a toast must not sit under an
-    // IntrinsicWidth or IntrinsicHeight; set the placement to `below` there.
-    return LayoutBuilder(
-      builder: (context, parentConstraints) {
-        // The container applies its margin and then its own constraints below
-        // this builder, so apply both here to measure the width the toast will
-        // actually get.
-        final box = spec.container.spec.box?.spec;
-        final available = parentConstraints.deflate(
-          box?.margin ?? EdgeInsets.zero,
-        );
-        final width =
-            (box?.constraints?.enforce(available) ?? available).maxWidth;
-        final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
-        return row(actionBelow: width < _minInlineWidth * textScale);
-      },
+    Widget ordered(int order, Widget child) => Semantics(
+      container: true,
+      explicitChildNodes: true,
+      sortKey: OrdinalSortKey(order.toDouble()),
+      child: child,
+    );
+
+    // Keep semantic and keyboard order independent of the action's position.
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      child: FocusTraversalGroup(
+        policy: WidgetOrderTraversalPolicy(),
+        child: StyleSpecBuilder<FlexBoxSpec>(
+          styleSpec: spec.container,
+          builder: (context, container) {
+            final box = container.box?.spec;
+            final direction = Directionality.of(context);
+            final padding = (box?.padding ?? EdgeInsets.zero)
+                .add(box?.decoration?.padding ?? EdgeInsets.zero)
+                .resolve(direction);
+            final scale = MediaQuery.textScalerOf(context).scale(16) / 16;
+            return RemixBoxAdapter(
+              styleSpec: container.box ?? const StyleSpec(spec: BoxSpec()),
+              containerEffects: spec.containerEffects,
+              child: _ToastReflow(
+                flex: container.flex?.spec ?? const FlexSpec(),
+                // The box already applied margins, constraints, and padding.
+                minInlineWidth: _minInlineWidth * scale - padding.horizontal,
+                hasLeading: leading != null,
+                hasClose: closeButton != null,
+                children: [
+                  ?leading,
+                  Flexible(child: ordered(0, message)),
+                  ordered(1, actionButton),
+                  if (closeButton != null) ordered(2, closeButton),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
