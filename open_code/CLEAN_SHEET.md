@@ -2,38 +2,24 @@
 
 ## The problem
 
-Remix deliberately ships behavior without a theme. An application can use the
-opinionated `remix_fortal` preset, or it can own a design language. Owning the
-design language used to require copying a theme and hand-maintaining wrappers
-that could fall behind the Remix constructor surface.
-
-The MVP asks a narrower question: can an application own Theme and Button
-source, keep Remix as the maintained behavior dependency, and receive a
-generated forwarding adapter without adopting Fortal?
+Remix ships behavior without prescribing an application's design language.
+Applications can start with the Vanilla or Fortal registry preset, then own the
+installed theme and component recipes without maintaining forwarding wrappers
+by hand.
 
 ## Decision
 
-Yes. `remix_cli` installs authored Theme and Button source into the application,
-and `@MixWidget` generates the forwarding adapter there. The application edits
-the visual recipe; Remix still handles the difficult behavioral contract.
+`remix_cli` installs authored theme and component source into the application.
+`@MixWidget` generates forwarding adapters there, against the consumer's
+resolved Remix and Mix versions. Applications edit visual recipes while Remix
+retains rendering, behavior and accessibility machinery.
 
-The initial catalog contained only two items:
-
-```text
-theme -> button
-```
-
-Button depends on Theme. Installing Button resolves that graph in a stable
-order, adds its hosted dependencies, exports the authored files, and generates
-`button.g.dart` in the consumer.
-
-**Since:** the styled component catalog has grown on the same two mechanisms —
-one authored file plus one generated part per item, every item depending on
-`theme`. Nothing in the decision below changed to accommodate them: no schema
-field and no installer branch.
-Compound components (a checkbox group option, a tab bar with its tabs and
-panels) fit by declaring more than one `@MixWidget` in the same file. The
-current catalog is listed in `docs/open-code.mdx`.
+Theme and component dependencies are declared by registry items. The CLI
+resolves each requested dependency closure in a stable order, adds compatible
+hosted dependencies, exports authored files and generates the declared parts.
+Compound components can declare several `@MixWidget` adapters in one file;
+Agent surfaces install their domain source and opt-in recipe bundles. See the
+current catalog in `docs/open-code.mdx` and the [preset contract](PRESETS.md).
 
 ## Ownership boundary
 
@@ -46,8 +32,8 @@ current catalog is listed in `docs/open-code.mdx`.
 | Naked UI delegation | The generated adapter committed by the app |
 | Mix specs, stylers, variants, and resolution | |
 
-Nothing installed by the CLI copies Remix internals or depends on Fortal.
-Core component source imports the public `package:remix/remix.dart` surface.
+Installed component recipes use the public `package:remix/remix.dart` surface;
+they do not copy Remix internals or import the private authoring package.
 The optional chart item also imports the public `package:mix_chart/mix_chart.dart`
 surface for its data, rendering, interaction, and semantics contract.
 
@@ -83,7 +69,7 @@ Generated source is not bundled in the registry. It is emitted from the
 consumer's resolved Remix and generator versions, then compared with a
 committed Acme fixture in this repository to make drift visible.
 
-## Why a small local catalog
+## Registry and installer boundaries
 
 Registry content publishes independently on GitHub, and a project pins full
 revisions in `remix.yaml`. Schema 3 is the only readable shape, so every read
@@ -124,19 +110,14 @@ The recurring costs are visible:
 - compact 32/36/40px sizes suit web density but are below common mobile touch
   target guidance, so adopting apps must make their own density decision.
 
-## What remains outside this MVP
+## Verification and release boundary
 
-**Since 2026-09-04:** Fortal is available as a second application-owned preset.
-Its separate source tree, derivation contract, and publication transition are
-recorded in [Presets: Fortal as application-owned source](PRESETS.md). There is
-still no general component marketplace, automatic migration, or source
-lockfile. The CLI now has a tag-based publish workflow with a
-hosted consumer check.
-
-The first public release still requires package bootstrap and hosted CLI
-verification. Until then, use a checkout or staged package with checkout Remix.
-The [release instructions](RELEASING.md) define the order and required checks.
-
+The supported presets share the ownership and derivation contract in
+[PRESETS.md](PRESETS.md). Checkout consumer checks validate unshipped source;
+hosted consumer checks validate published dependency floors. Neither a local
+workspace override nor a successful checkout test certifies hosted minimum-version
+compatibility. [RELEASING.md](RELEASING.md) defines the publication order and
+required checks.
 
 ## Agent source distribution
 
@@ -144,8 +125,7 @@ Both catalogs include eight domain-specific Agent surfaces. Unlike visual
 `@MixWidget` recipes, these copy the private authoring package's
 (`registry_source/lib/src/agent`) behavior and empty anatomy specs into the
 application, and each preset styles them through recipes authored in its own
-source package. They still compose the
-public Remix primitives; they do not copy Remix internals or introduce a
+source tree. They still compose public Remix primitives; they do not copy Remix internals or introduce a
 private runtime dependency. Applications own the installed domain behavior as
 well as its appearance. The scope of future source-update diffs includes that
 behavior.

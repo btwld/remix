@@ -143,14 +143,3 @@ release installability.
 CLI publication, and verification of published registry assets. Discontinuing
 the old hosted Fortal package is a release action after those checks, not part
 of the source-tree migration.
-
-## Separate follow-ups
-
-- In-place preset switching and initialization theme knobs.
-- A standalone composed chat registry item.
-- Deliberate visual changes beyond the existing Agent recipes. The
-  [worksheet reconciliation](../registry_source/specs/README.md) distinguishes
-  reference measurements from shipped defaults.
-
-The original five-commit preset plan is preserved in Git history; it is not a
-pending execution checklist for this implementation.
