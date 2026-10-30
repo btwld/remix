@@ -126,7 +126,22 @@ Compose inside the existing host; the app owns routing and overlays.
 | Menu, select, popover, tooltip | An `Overlay`; use `Overlay.wrap` when no navigator is needed |
 | Text field / text area once focused | An `Overlay` for selection handles; a routed `WidgetsApp` provides one, a builder-only host needs `Overlay.wrap` |
 | `showRemixDialog`/`showRemixAlertDialog` | A caller-owned `Navigator` |
-| `showRemixToast`/`RemixToast` | One `RemixToastScope` above the app's `Navigator`, inside the same builder, below the theme scope |
+| `showRemixToast`/`RemixToast` | One `RemixToastScope` above the app's `Navigator`, inside the same builder, below the theme scope and an `Overlay.wrap` |
+
+The toast scope requires an `Overlay` ancestor. The Navigator's own Overlay
+is below the scope, so wrap it explicitly in the host's builder:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+Widget builder(BuildContext context, Widget? child) => FortalTheme(
+  child: Overlay.wrap(
+    child: RemixToastScope(style: fortalToastStyle(), child: child!),
+  ),
+);
+```
 
 ## Preserve behavioral roots
 
