@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../helpers/reduced_motion.dart';
 import '../test_helpers.dart';
 
 void main() {
@@ -805,6 +806,130 @@ void main() {
       await tester.tap(find.text('Trigger'));
       await tester.pump(const Duration(milliseconds: 50));
       rebuild(() => show = false);
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('reduced motion', () {
+    const panelFade = Key('panel-fade');
+    const slow = AnimationStyle(
+      curve: Curves.linear,
+      duration: Duration(milliseconds: 400),
+      reverseDuration: Duration(milliseconds: 400),
+    );
+
+    Widget disclosure() => NakedDisclosure(
+      animationStyle: slow,
+      transitionBuilder: (context, animation, child) =>
+          FadeTransition(key: panelFade, opacity: animation, child: child),
+      panel: const Text('Panel'),
+      child: const Text('Trigger'),
+    );
+
+    double fade(WidgetTester tester) =>
+        tester.widget<FadeTransition>(find.byKey(panelFade)).opacity.value;
+
+    Future<ReducedMotionSwitch> pumpDisclosure(WidgetTester tester) async {
+      final reducedMotion = ReducedMotionSwitch(tester);
+      await tester.pumpMaterialWidget(
+        reducedMotion.wrap(Center(child: disclosure())),
+      );
+      return reducedMotion;
+    }
+
+    testWidgets('expands and collapses over the given durations by default', (
+      tester,
+    ) async {
+      await pumpDisclosure(tester);
+
+      await tester.tap(find.text('Trigger'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(fade(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Trigger'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('Panel'), findsOneWidget);
+      expect(fade(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+      expect(find.text('Panel'), findsNothing);
+    });
+
+    for (final request in ReducedMotionRequest.values) {
+      group('with ${request.label}', () {
+        testWidgets('expands and collapses at once', (tester) async {
+          final reducedMotion = await pumpDisclosure(tester);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          await tester.tap(find.text('Trigger'));
+          await tester.pump();
+          expect(fade(tester), 1);
+
+          await tester.tap(find.text('Trigger'));
+          await tester.pump();
+          expect(find.text('Panel'), findsNothing);
+        });
+
+        testWidgets('completes a running collapse when requested', (
+          tester,
+        ) async {
+          final reducedMotion = await pumpDisclosure(tester);
+          await tester.tap(find.text('Trigger'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Trigger'));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 100));
+          expect(find.text('Panel'), findsOneWidget);
+
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          expect(find.text('Panel'), findsNothing);
+        });
+
+        testWidgets('animates again once withdrawn', (tester) async {
+          final reducedMotion = await pumpDisclosure(tester);
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+          reducedMotion.set(request, on: false);
+          await tester.pump();
+
+          await tester.tap(find.text('Trigger'));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 200));
+          expect(fade(tester), closeTo(0.5, 0.01));
+        });
+      });
+    }
+
+    testWidgets('rebuilds once for the platform flag, never for others', (
+      tester,
+    ) async {
+      final reducedMotion = await pumpDisclosure(tester);
+      var rebuilds = 0;
+      debugOnRebuildDirtyWidget = (element, builtOnce) {
+        if (element.widget is NakedDisclosure) rebuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = null);
+
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(boldText: true);
+      await tester.pump();
+      expect(rebuilds, 0);
+
+      reducedMotion.set(ReducedMotionRequest.platformReduceMotion, on: true);
+      await tester.pump();
+      expect(rebuilds, 1);
+    });
+
+    testWidgets('ignores platform changes once removed', (tester) async {
+      final reducedMotion = await pumpDisclosure(tester);
+      await tester.pumpMaterialWidget(const SizedBox.shrink());
+
+      reducedMotion.set(ReducedMotionRequest.platformReduceMotion, on: true);
       await tester.pump();
       expect(tester.takeException(), isNull);
     });

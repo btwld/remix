@@ -98,7 +98,10 @@ and `borderRadius` to the trigger. Style the other parts explicitly:
 - `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`
 
 Default transition is a 200ms top-anchored fade and size. Use
-`AnimationStyle.noAnimation` to skip it.
+`AnimationStyle.noAnimation` to skip it. It is also skipped while the user asks
+to reduce motion: `MediaQuery.disableAnimations` is set, or the platform's
+Reduce Motion setting is on (iOS reports it separately). A transition already
+running when the setting is turned on completes at once.
 
 ## Keyboard and accessibility
 

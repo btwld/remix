@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'utilities/naked_state_scope.dart';
+import 'utilities/reduced_motion.dart';
 import 'utilities/state.dart';
 
 /// Where a [NakedToastScope] stacks its visible toasts.
@@ -562,7 +563,10 @@ class NakedToastState<T> extends NakedState {
 /// Builds the visuals for one toast.
 ///
 /// [animation] runs from zero to one on entrance and back to zero on exit. It
-/// jumps when [MediaQuery.disableAnimationsOf] is true.
+/// jumps while the user asks to reduce motion: when
+/// [MediaQueryData.disableAnimations] is set or the platform reports
+/// `AccessibilityFeatures.reduceMotion`, which iOS sets for Reduce Motion. The
+/// setting is read when the toast enters and again when it exits.
 typedef NakedToastBuilder<T> =
     Widget Function(
       BuildContext context,
@@ -936,7 +940,7 @@ class _NakedToastItemState<T> extends State<_NakedToastItem<T>>
   }
 
   void _applyDurations() {
-    final disabled = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    final disabled = reducedMotionOf(context);
     final forward = _style.duration ?? const Duration(milliseconds: 180);
     _animationController
       ..duration = disabled ? Duration.zero : forward
@@ -969,6 +973,8 @@ class _NakedToastItemState<T> extends State<_NakedToastItem<T>>
         target.requestFocus();
       }
     }
+    // The setting may have changed while the toast was visible.
+    _applyDurations();
     _animationController.reverse().whenCompleteOrCancel(() {
       if (mounted && widget.exiting) widget.onExited(widget.entry);
     });
