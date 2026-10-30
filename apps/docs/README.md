@@ -57,15 +57,11 @@ pnpm start
 ```
 
 The packager recreates `build/pages` and adds the dashboard. The docs build
-includes `.nojekyll` and static aliases for `/remix/previews/` and the retired tutorial/guide HTML URLs.
-Old catalog `#/?` links at the docs root forward to `/remix/catalog/` with their
-query and fragment preserved; normal documentation anchors remain unchanged.
-A retirement worker replaces the old root Flutter service worker so returning
-visitors leave the cached catalog and load the docs. Catalog and dashboard
-workers retain their own scopes.
-The local server emulates directory indexes and real 404 responses under the
-Pages mount, without a single-page-app fallback. Revert the migration and rerun
-the main-branch Pages workflow to restore the previous deployment.
+includes `.nojekyll`, retired URL aliases and old catalog `#/?` forwarding.
+A retirement worker clears the former root Flutter service worker; catalog and
+dashboard workers keep their own scopes. The preview server uses real directory
+indexes/404s, without an SPA fallback. To recover the former deployment, revert
+the migration and rerun the main-branch Pages workflow.
 
 ## Theme package
 
@@ -81,20 +77,15 @@ Edit MDX and assets under `../../docs`; edit navigation in `../../docs.json`.
 That JSON file contains only `sidebar`; site settings live in `docs.config.ts`
 and colors live in `app/global.css`. Component categories use `collapsible: true`.
 The Fortal catalog generator reuses those categories; regenerate it with
-`melos docs:catalog` after changing their membership or names.
+`dart run melos run docs:catalog` after changing their membership or names.
 `pnpm content` validates evidence, stages generated MDX in `.generated/content`,
 and copies assets into `public/assets`. These directories are disposable and
 gitignored. Restart `pnpm dev` after editing canonical content to stage changes.
 
-`TutorialSource` is a build-time include, not a runtime React component. The
-four source panels read the exact Dart files from the checked sample ZIP and
-become native Fumadocs fenced blocks. Fumadocs owns highlighting, copying,
-search, navigation, and responsive layout. The small MDX compatibility map
-retains existing `Info`, `Note`, `Warning`, and single-example `CodeGroup` tags.
-
-The retired standalone tutorial and guide URLs redirect to their native MDX
-replacements. Old HTML files and their renderer dependencies remain recoverable
-from Git history, not shipped alongside the new app.
+`TutorialSource` expands checked sample-ZIP Dart into native Fumadocs fenced
+blocks at build time. [Content/evidence rules](../../docs/README.md) own tutorial
+source policy. Fumadocs provides highlighting, copying, search and layout; the
+MDX compatibility map retains existing callouts and single-example code groups.
 
 ## Live component examples
 
@@ -104,11 +95,9 @@ source. `docs/component-previews.json` selects the generated Widgetbook routes;
 directly. Edit these sources, not the generated MDX. Source panels are catalog
 examples with Fortal styling, not standalone applications.
 
-The embedded example follows the site's light/dark theme so a dark page never
-frames a white canvas. The Theme control still overrides it for comparison, and
-that explicit choice then persists across site theme changes.
-Reset example restores the first example, follows the site theme again, and
-restarts the embedded Flutter app.
+Embedded examples follow the site's light/dark theme unless overridden with
+the Theme control. Reset restores the first example, follows the site theme and
+restarts Flutter.
 
 Both `pnpm dev` and `pnpm build` build that same Flutter catalog into ignored
 `public/catalog`. `/remix/catalog/` opens the full catalog; embedded routes use

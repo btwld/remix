@@ -60,12 +60,10 @@ branch back by hand takes a force push, which that protection rejects, and
 the next push to `main` would advance the branch over the reset. Projects
 that already pinned a revision stay on it either way.
 
-To repeat the promoted-branch check locally:
-
-```shell
-REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted
-REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset fortal --source hosted
-```
+The [package release skill](../.claude/skills/releasing-a-package/SKILL.md)
+owns package-specific bump files and tag patterns. To smoke-test the promoted
+branch locally, set `REMIX_REGISTRY_RELEASE_REF=registry-stable` when running
+`tool/check_open_code.dart --source hosted` for each preset.
 
 Normal component changes require only that promotion. The same CLI installs
 the new commit after an explicit `registry update`; existing pins do not
