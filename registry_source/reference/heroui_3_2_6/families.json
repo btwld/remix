@@ -1,0 +1,470 @@
+{
+ "schema": 2,
+ "source": "@heroui/react@3.2.6 dist/components/index.d.ts",
+ "componentFamilies": 85,
+ "note": "Each upstream family maps to a Remix-backed item, a composition, or is deferred (docs/adr/heroui/0002).",
+ "families": [
+  {
+   "upstream": "accordion",
+   "status": "mapped",
+   "item": "accordion",
+   "remix": "RemixAccordion"
+  },
+  {
+   "upstream": "alert-dialog",
+   "status": "mapped",
+   "item": "modal",
+   "remix": "RemixDialog"
+  },
+  {
+   "upstream": "autocomplete",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "avatar",
+   "status": "mapped",
+   "item": "avatar",
+   "remix": "RemixAvatar"
+  },
+  {
+   "upstream": "avatar-group",
+   "status": "composed",
+   "item": "avatar_group"
+  },
+  {
+   "upstream": "badge",
+   "status": "composed",
+   "item": "badge"
+  },
+  {
+   "upstream": "breadcrumbs",
+   "status": "composed",
+   "item": "breadcrumbs"
+  },
+  {
+   "upstream": "button",
+   "status": "mapped",
+   "item": "button",
+   "remix": "RemixButton"
+  },
+  {
+   "upstream": "button-group",
+   "status": "composed",
+   "item": "button_group"
+  },
+  {
+   "upstream": "card",
+   "status": "mapped",
+   "item": "card",
+   "remix": "RemixCard"
+  },
+  {
+   "upstream": "checkbox",
+   "status": "mapped",
+   "item": "checkbox",
+   "remix": "RemixCheckbox"
+  },
+  {
+   "upstream": "checkbox-group",
+   "status": "mapped",
+   "item": "checkbox_group",
+   "remix": "RemixCheckboxGroupItem"
+  },
+  {
+   "upstream": "chip",
+   "status": "mapped",
+   "item": "chip",
+   "remix": "RemixBadge"
+  },
+  {
+   "upstream": "color-area",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "color-field",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "color-picker",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "color-slider",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "color-swatch",
+   "status": "deferred",
+   "reason": "out of scope for the preset"
+  },
+  {
+   "upstream": "color-swatch-picker",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "close-button",
+   "status": "mapped",
+   "item": "close_button",
+   "remix": "RemixIconButton"
+  },
+  {
+   "upstream": "combo-box",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "date-field",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "date-picker",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "date-range-picker",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "drawer",
+   "status": "deferred",
+   "reason": "no pinned CSS for a drawer surface"
+  },
+  {
+   "upstream": "progress-bar",
+   "status": "mapped",
+   "item": "progress",
+   "remix": "RemixProgress"
+  },
+  {
+   "upstream": "progress-circle",
+   "status": "deferred",
+   "reason": "RemixProgress is linear only"
+  },
+  {
+   "upstream": "time-field",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "disclosure",
+   "status": "mapped",
+   "item": "disclosure",
+   "remix": "RemixDisclosure"
+  },
+  {
+   "upstream": "disclosure-group",
+   "status": "deferred",
+   "reason": "out of scope for the preset"
+  },
+  {
+   "upstream": "error-message",
+   "status": "composed",
+   "item": "field_layout"
+  },
+  {
+   "upstream": "kbd",
+   "status": "composed",
+   "item": "kbd"
+  },
+  {
+   "upstream": "link",
+   "status": "mapped",
+   "item": "link",
+   "remix": "RemixLink"
+  },
+  {
+   "upstream": "popover",
+   "status": "mapped",
+   "item": "popover",
+   "remix": "RemixPopover"
+  },
+  {
+   "upstream": "scroll-shadow",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide (scroll observation)"
+  },
+  {
+   "upstream": "separator",
+   "status": "mapped",
+   "item": "separator",
+   "remix": "RemixDivider"
+  },
+  {
+   "upstream": "skeleton",
+   "status": "mapped",
+   "item": "skeleton",
+   "remix": "RemixSkeleton"
+  },
+  {
+   "upstream": "spinner",
+   "status": "mapped",
+   "item": "spinner",
+   "remix": "RemixSpinner"
+  },
+  {
+   "upstream": "surface",
+   "status": "composed",
+   "item": "surface"
+  },
+  {
+   "upstream": "toast",
+   "status": "mapped",
+   "item": "toast",
+   "remix": "RemixToast"
+  },
+  {
+   "upstream": "toggle-button",
+   "status": "mapped",
+   "item": "toggle_button",
+   "remix": "RemixToggle"
+  },
+  {
+   "upstream": "switch",
+   "status": "mapped",
+   "item": "switch",
+   "remix": "RemixSwitch"
+  },
+  {
+   "upstream": "switch-group",
+   "status": "composed",
+   "item": "switch_group"
+  },
+  {
+   "upstream": "tabs",
+   "status": "mapped",
+   "item": "tabs",
+   "remix": "RemixTabs"
+  },
+  {
+   "upstream": "tag",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "tag-group",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "toggle-button-group",
+   "status": "mapped",
+   "item": "toggle_button_group",
+   "remix": "RemixToggleGroup"
+  },
+  {
+   "upstream": "toolbar",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide (roving keyboard navigation)"
+  },
+  {
+   "upstream": "tooltip",
+   "status": "mapped",
+   "item": "tooltip",
+   "remix": "RemixTooltip"
+  },
+  {
+   "upstream": "input",
+   "status": "mapped",
+   "item": "textfield",
+   "remix": "RemixTextField"
+  },
+  {
+   "upstream": "input-group",
+   "status": "mapped",
+   "item": "input_group",
+   "remix": "RemixTextField"
+  },
+  {
+   "upstream": "textarea",
+   "status": "mapped",
+   "item": "textarea",
+   "remix": "RemixTextArea"
+  },
+  {
+   "upstream": "textfield",
+   "status": "mapped",
+   "item": "textfield",
+   "remix": "RemixTextField"
+  },
+  {
+   "upstream": "search-field",
+   "status": "mapped",
+   "item": "search_field",
+   "remix": "RemixTextField"
+  },
+  {
+   "upstream": "typography",
+   "status": "composed",
+   "item": "typography"
+  },
+  {
+   "upstream": "label",
+   "status": "composed",
+   "item": "field_layout"
+  },
+  {
+   "upstream": "description",
+   "status": "composed",
+   "item": "field_layout"
+  },
+  {
+   "upstream": "empty-state",
+   "status": "deferred",
+   "reason": "out of scope for the preset"
+  },
+  {
+   "upstream": "field-error",
+   "status": "composed",
+   "item": "field_layout"
+  },
+  {
+   "upstream": "fieldset",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide (disabled ancestry)"
+  },
+  {
+   "upstream": "form",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide (validation stays with the app)"
+  },
+  {
+   "upstream": "header",
+   "status": "deferred",
+   "reason": "out of scope for the preset"
+  },
+  {
+   "upstream": "radio",
+   "status": "mapped",
+   "item": "radio",
+   "remix": "RemixRadio"
+  },
+  {
+   "upstream": "radio-group",
+   "status": "mapped",
+   "item": "radio_group",
+   "remix": "RemixRadioGroup"
+  },
+  {
+   "upstream": "input-otp",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "alert",
+   "status": "mapped",
+   "item": "alert",
+   "remix": "RemixCallout"
+  },
+  {
+   "upstream": "list-box",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide (select reuses its item styles)"
+  },
+  {
+   "upstream": "list-box-item",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide (select reuses its item styles)"
+  },
+  {
+   "upstream": "list-box-section",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "dropdown",
+   "status": "mapped",
+   "item": "dropdown",
+   "remix": "RemixMenu"
+  },
+  {
+   "upstream": "menu",
+   "status": "deferred",
+   "reason": "RemixMenu always has a trigger; the dropdown item covers menus opened from one"
+  },
+  {
+   "upstream": "menu-item",
+   "status": "mapped",
+   "item": "dropdown",
+   "remix": "RemixMenu"
+  },
+  {
+   "upstream": "menu-section",
+   "status": "deferred",
+   "reason": "RemixMenu always has a trigger; the dropdown item covers menus opened from one"
+  },
+  {
+   "upstream": "modal",
+   "status": "mapped",
+   "item": "modal",
+   "remix": "RemixDialog"
+  },
+  {
+   "upstream": "number-field",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "pagination",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "select",
+   "status": "mapped",
+   "item": "select",
+   "remix": "RemixSelect"
+  },
+  {
+   "upstream": "meter",
+   "status": "mapped",
+   "item": "progress",
+   "remix": "RemixProgress"
+  },
+  {
+   "upstream": "slider",
+   "status": "mapped",
+   "item": "slider",
+   "remix": "RemixSlider"
+  },
+  {
+   "upstream": "table",
+   "status": "mapped",
+   "item": "table",
+   "remix": "RemixDataTable"
+  },
+  {
+   "upstream": "calendar",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "range-calendar",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "calendar-year-picker",
+   "status": "deferred",
+   "reason": "needs behavior or state Remix does not provide"
+  },
+  {
+   "upstream": "icons",
+   "status": "deferred",
+   "reason": "HeroUI icon set; presets use the registry icon table"
+  },
+  {
+   "upstream": "rac",
+   "status": "deferred",
+   "reason": "React Aria internals, not a component"
+  }
+ ]
+}

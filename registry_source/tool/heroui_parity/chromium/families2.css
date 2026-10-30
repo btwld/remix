@@ -1,0 +1,9 @@
+@import '@heroui/styles';
+@source './families2.jsx';
+body { margin: 0; padding: 24px; background: var(--background); color: var(--foreground); }
+main { display: flex; flex-direction: column; gap: 32px; }
+.case-list { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+.case { width: min(100%, 360px); }
+.case-wide { width: 100%; }
+.tooltip-stage { display: flex; flex-direction: column; align-items: center; gap: 56px; padding: 64px 0; }
+.modal-triggers { display: flex; flex-wrap: wrap; gap: 8px; }

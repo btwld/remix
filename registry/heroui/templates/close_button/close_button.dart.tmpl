@@ -1,0 +1,45 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+{{icon:import}}
+
+import '../theme/theme.dart';
+import 'spinner.dart';
+
+part 'close_button.g.dart';
+
+/// HeroUI recipe for [RemixIconButton]: the 24px `CloseButton`.
+///
+/// The cross is the project icon library's; HeroUI draws its own. Pass [icon]
+/// to replace it. [semanticLabel] defaults to "Close".
+@MixWidget(target: RemixIconButton.new)
+IconButtonStyler {{valuePrefix}}CloseButtonStyle({
+  IconData? icon = {{icon:cross2}},
+  String semanticLabel = 'Close',
+  IconButtonStyler style = const IconButtonStyler.create(),
+}) => IconButtonStyler()
+    .size(_size, _size)
+    .padding(.all(_padding))
+    .alignment(.center)
+    .borderRadius(.all({{typePrefix}}Tokens.radiusXl()))
+    .color({{typePrefix}}Tokens.defaultColor())
+    .icon(.size(_iconSize).color({{typePrefix}}Tokens.muted()))
+    .spinner({{valuePrefix}}InlineSpinnerStyle({{typePrefix}}Tokens.muted()))
+    .onPressed(
+      IconButtonStyler()
+          .scale(_pressedScale)
+          .animate({{typePrefix}}Tokens.transformMotion),
+    )
+    .onHovered(IconButtonStyler().color({{typePrefix}}Tokens.defaultHover()))
+    .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+    .animate({{typePrefix}}Tokens.fillMotion)
+    .onDisabled(IconButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
+    .merge(style);
+
+/// `h-6 w-6 p-1`, and the icon's `size-4`.
+const _size = 24.0;
+const _padding = 4.0;
+const _iconSize = 16.0;
+
+/// `transform: scale(0.93)` while pressed.
+const _pressedScale = .93;

@@ -1,0 +1,41 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'disclosure.g.dart';
+
+/// HeroUI recipe for [RemixDisclosure].
+///
+/// [animationStyle] defaults to the panel's `200ms var(--ease-out-quad)`.
+@MixWidget(target: RemixDisclosure.new)
+DisclosureStyler {{valuePrefix}}DisclosureStyle({
+  AnimationStyle animationStyle = const AnimationStyle(
+    curve: {{typePrefix}}Tokens.easeOutQuad,
+    duration: _panelDuration,
+    reverseDuration: _panelDuration,
+  ),
+  DisclosureStyler style = const DisclosureStyler.create(),
+}) => DisclosureStyler()
+    // A transparent ring-width border is always present so keyboard focus
+    // recolors it in place.
+    .trigger(BoxStyler().border({{valuePrefix}}RingBorder()))
+    .content(BoxStyler().padding(.all(_bodyPadding)))
+    .onFocusVisible(
+      DisclosureStyler().trigger(
+        BoxStyler().border({{valuePrefix}}RingBorder(focused: true)),
+      ),
+    )
+    .onDisabled(
+      DisclosureStyler().trigger(
+        BoxStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      ),
+    )
+    .merge(style);
+
+/// `.disclosure__content` `height 200ms`, `opacity 200ms`.
+const _panelDuration = Duration(milliseconds: 200);
+
+/// `.disclosure__body`: `p-2`.
+const _bodyPadding = 8.0;

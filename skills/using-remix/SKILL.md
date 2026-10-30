@@ -2,7 +2,7 @@
 name: using-remix
 description: >-
   Builds Flutter UI with the Remix component library: hand-styled `Remix*`
-  widgets or an app-installed Vanilla or Fortal preset (`remix_cli`,
+  widgets or an app-installed Vanilla, Fortal, or HeroUI preset (`remix_cli`,
   `remix.yaml`, generated `<Prefix>Button`,
   `<Prefix>Theme`). Use when setting up or updating
   preset items and registry pins, placing the theme scope, wiring overlays,
@@ -27,18 +27,18 @@ restyling this application's own installed source stays here.
 
 | Term | Meaning |
 | --- | --- |
-| preset | Vanilla or Fortal — the installed starter theme and recipes `remix_cli` copies into the app |
+| preset | Vanilla, Fortal, or HeroUI — the installed starter theme and recipes `remix_cli` copies into the app |
 | prefix | The app-chosen name (`Ui`, `Fortal`, `Acme`, ...) substituted into every generated type; recorded in `remix.yaml` |
 | recipe function | `<prefix>ButtonStyle(...)` — returns the component's `*Styler`, the source of truth for one component's look |
 | generated widget | `<Prefix>Button` — the `@MixWidget` adapter that calls the recipe function and wraps a `Remix*` widget |
 | `<item>_recipe` | A registry item bundling an unstyled agent surface (`activity`, `composer`, ...) with its preset-specific styler |
 
-## Choose base Remix, Vanilla, or Fortal
+## Choose base Remix, Vanilla, Fortal, or HeroUI
 
 Inspect `pubspec.yaml` and `remix.yaml` before assuming how a project is set
 up; `remix.yaml`'s `preset` field records the choice already made. A project
 has exactly one preset and prefix: `init` refuses a different one while
-`remix.yaml` exists, and both presets install into the same `theme/` and
+`remix.yaml` exists, and the presets install into the same `theme/` and
 `components/` files. In a Vanilla project, restyle Vanilla recipes (even per
 screen, with a nested themed scope) rather than adding Fortal.
 
@@ -47,9 +47,10 @@ screen, with a nested themed scope) rather than adding Fortal.
 | No generated source or codegen wanted | base `remix`; hand-write `Remix*` widgets and `*Styler`s |
 | A neutral, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>Theme`/`<Prefix>Tokens` |
 | Ready-made Radix Themes-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Theme` plus prefixed `<Prefix>*` widgets |
+| HeroUI web 3.2.6 visuals | `remix init --prefix HeroUi --preset heroui`; see [HeroUI](references/heroui.md) |
 | Own brand in one app, want editable tokens and recipes | Vanilla, then customize — see [Customize installed source](#customize-installed-source) |
 
-Both presets install editable application source, not a package dependency:
+All presets install editable application source, not a package dependency:
 `remix_cli` copies analyzer-checked Dart from a pinned GitHub registry into
 `lib/ui` (or `--ui-path`). Component recipes, enum variants, and tokens are
 yours to edit; nothing here is vendor-fixed.
@@ -113,7 +114,7 @@ Fortal.
 
 ## Place the theme scope
 
-Both presets' generated theme takes `theme`, `darkTheme`, `mode`, and
+Every preset's generated theme takes `theme`, `darkTheme`, `mode`, and
 `child`; Fortal's also takes `accent`, `gray`, `panelBackground`, `radius`,
 `scaling`, `hasBackground`, `orderOfModifiers`. Do not pass `data`,
 `brightness`, `lightTheme`, or `createScope` — the constructors don't accept
@@ -303,6 +304,7 @@ Read only the references needed for the task:
 | Behavior rules for a component category and doc links | [Components](references/components.md) |
 | Fortal scope/config, typography, and token rules | [Fortal](references/fortal.md) |
 | Vanilla tokens, theme values, and per-component rules | [Vanilla](references/vanilla.md) |
+| HeroUI recipes, compositions, theme overrides, and what is not included | [HeroUI](references/heroui.md) |
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 | A reusable design system published as a Remix registry | `building-remix-design-system` |

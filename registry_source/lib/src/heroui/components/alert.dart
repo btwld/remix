@@ -1,0 +1,63 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'alert.g.dart';
+
+/// HeroUI alert statuses: the title and the icon take the status color.
+enum HeroUiAlertStatus { defaultStatus, accent, success, warning, danger }
+
+/// HeroUI recipe for [RemixCallout]: an icon and a title on a surface.
+///
+/// [RemixCallout] holds one text or one custom child; a title with a
+/// description is the app's composition inside `child`.
+@MixWidget(target: RemixCallout.new)
+CalloutStyler heroUiAlertStyle({
+  HeroUiAlertStatus status = .defaultStatus,
+  CalloutStyler style = const CalloutStyler.create(),
+}) {
+  final tone = switch (status) {
+    .defaultStatus => HeroUiTokens.foreground,
+    .accent => HeroUiTokens.accentSoftForeground,
+    .success => HeroUiTokens.successSoftForeground,
+    .warning => HeroUiTokens.warningSoftForeground,
+    .danger => HeroUiTokens.dangerSoftForeground,
+  };
+
+  return CalloutStyler()
+      .direction(.horizontal)
+      .mainAxisSize(.max)
+      .crossAxisAlignment(.start)
+      .spacing(_gap)
+      .padding(.horizontal(_paddingX).vertical(_paddingY))
+      .color(HeroUiTokens.surface())
+      .borderRadius(.all(HeroUiTokens.radiusPanel()))
+      .containerEffects(heroUiSurfaceEffects())
+      // `.alert__indicator`: a `size-4` icon with `p-1` around it.
+      .icon(
+        IconStyler()
+            .size(_icon)
+            .color(tone())
+            .wrap(.padding(EdgeInsetsGeometryMix.all(_iconPadding))),
+      )
+      // `.alert__title`: `text-sm leading-6 font-medium`.
+      .text(
+        TextStyler(
+          style: HeroUiTokens.textSm.mix(),
+        ).height(_titleHeight).fontWeight(.w500).color(tone()),
+      )
+      .merge(style);
+}
+
+/// `.alert` `gap-4 px-4 py-3`.
+const _gap = 16.0;
+const _paddingX = 16.0;
+const _paddingY = 12.0;
+
+/// `.alert__indicator` `size-4` with `p-1`, and the title's `leading-6` as a
+/// multiple of its `text-sm` size.
+const _icon = 16.0;
+const _iconPadding = 4.0;
+const _titleHeight = 24 / 14;

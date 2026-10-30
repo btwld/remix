@@ -1,0 +1,113 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'modal.g.dart';
+
+/// HeroUI modal widths: `max-w-xs` to `max-w-lg`, the full-size `cover`, and
+/// the edge-to-edge `full`.
+enum {{typePrefix}}ModalSize { xs, sm, md, lg, cover, full }
+
+/// Where the dialog sits in the viewport. `auto` is a bottom sheet below the
+/// `sm` breakpoint and centered from it up.
+enum {{typePrefix}}ModalPlacement { auto, center, top, bottom }
+
+/// HeroUI recipe for [RemixDialog], the modal surface.
+///
+/// Open it with `showRemixDialog`, or `showRemixAlertDialog` for an alert; pass
+/// `{{typePrefix}}Tokens.backdrop` (resolved in the caller's context) as `barrierColor`
+/// for HeroUI's backdrop.
+@MixWidget(target: RemixDialog.new)
+DialogStyler {{valuePrefix}}ModalStyle({
+  {{typePrefix}}ModalSize size = .md,
+  {{typePrefix}}ModalPlacement placement = .auto,
+  DialogStyler style = const DialogStyler.create(),
+}) {
+  final full = size == .full;
+  final alignment = switch (placement) {
+    .auto || .bottom => Alignment.bottomCenter,
+    .center => Alignment.center,
+    .top => Alignment.topCenter,
+  };
+
+  var result = DialogStyler()
+      .wrap(_frame(full ? 0 : _inset, alignment))
+      .onBreakpoint(
+        const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointSm),
+        DialogStyler().wrap(
+          _frame(
+            full ? 0 : _insetSm,
+            placement == .auto ? Alignment.center : alignment,
+          ),
+        ),
+      )
+      .padding(.all(_padding))
+      .color({{typePrefix}}Tokens.overlay())
+      .title(
+        .style(
+          {{typePrefix}}Tokens.textBase.mix(),
+        ).fontWeight(.w500).color({{typePrefix}}Tokens.foreground()),
+      )
+      .description(
+        TextStyler(style: {{typePrefix}}Tokens.textSm.mix())
+            .color({{typePrefix}}Tokens.muted())
+            .wrap(
+              .padding(
+                EdgeInsetsGeometryMix.only(
+                  top: _bodyGap + _bodyInset,
+                  bottom: _bodyInset,
+                ),
+              ),
+            ),
+      )
+      .actions(
+        FlexBoxStyler()
+            .mainAxisAlignment(.end)
+            .crossAxisAlignment(.center)
+            .spacing(_actionsGap)
+            .margin(.top(_footerGap)),
+      );
+
+  result = switch (size) {
+    .xs => result.maxWidth(_maxWidthXs),
+    .sm => result.maxWidth(_maxWidthSm),
+    .md => result.maxWidth(_maxWidthMd),
+    .lg => result.maxWidth(_maxWidthLg),
+    .cover || .full => result.width(.infinity).height(.infinity),
+  };
+  if (!full) {
+    result = result
+        .borderRadius(.all({{typePrefix}}Tokens.radiusPanel()))
+        .containerEffects({{valuePrefix}}SurfaceEffects(overlay: true));
+  }
+
+  return result.merge(style);
+}
+
+/// The positioning wrapper `.modal__container`: inset by its padding, then
+/// aligned.
+WidgetModifierConfig _frame(double inset, Alignment alignment) =>
+    WidgetModifierConfig.padding(EdgeInsetsGeometryMix.all(inset))
+        .align(alignment: alignment)
+        .orderOfModifiers([PaddingModifier, AlignModifier]);
+
+/// `.modal__container` `p-4`, then `sm:p-10`.
+const _inset = 16.0;
+const _insetSm = 40.0;
+
+/// `.modal__dialog` `p-6`; `.modal__header + .modal__body` `mt-2`, and the
+/// body's own `p-[3px]` (`modal-md-auto-body`); `.modal__body + .modal__footer`
+/// `mt-5`; `.modal__footer` `gap-2`.
+const _padding = 24.0;
+const _bodyGap = 8.0;
+const _bodyInset = 3.0;
+const _footerGap = 20.0;
+const _actionsGap = 8.0;
+
+/// `max-w-xs`, `max-w-sm`, `max-w-md`, `max-w-lg`.
+const _maxWidthXs = 320.0;
+const _maxWidthSm = 384.0;
+const _maxWidthMd = 448.0;
+const _maxWidthLg = 512.0;

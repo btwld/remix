@@ -302,3 +302,9 @@ component_patterns_analysis.md
 # Local design review output and disposable agent worktrees
 .impeccable/
 .claude/worktrees/
+
+# HeroUI raw Chromium captures; the committed evidence is the derived
+# reference/heroui_3_2_6/measurements.json (tool/heroui_parity/slim_measurements.dart).
+registry_source/reference/heroui_3_2_6/chromium/*.json
+!registry_source/reference/heroui_3_2_6/chromium/tokens.json
+registry_source/tool/heroui_parity/chromium/out/

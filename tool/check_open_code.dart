@@ -2,7 +2,7 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset vanilla|fortal]
+/// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
 ///     [--source both|hosted|checkout]
 ///     [--item dashboard_demo|dashboard_shell|icons]
 ///     [--icon-library remix|lucide] [--hosted-cli] [--jobs N] [--keep]
@@ -200,6 +200,73 @@ const _fortalPreset = _PresetContract(
   registryItems: _fortalRegistryItems,
 );
 
+const _herouiRegistryItems = [
+  'accordion',
+  'alert',
+  'avatar',
+  'avatar_group',
+  'badge',
+  'breadcrumbs',
+  'button',
+  'button_group',
+  'card',
+  'checkbox',
+  'checkbox_group',
+  'chip',
+  'close_button',
+  'disclosure',
+  'dropdown',
+  'field_layout',
+  'input_group',
+  'kbd',
+  'link',
+  'modal',
+  'popover',
+  'progress',
+  'radio',
+  'radio_group',
+  'search_field',
+  'select',
+  'separator',
+  'skeleton',
+  'slider',
+  'spinner',
+  'surface',
+  'switch',
+  'switch_group',
+  'table',
+  'tabs',
+  'textarea',
+  'textfield',
+  'toast',
+  'toggle_button',
+  'toggle_button_group',
+  'tooltip',
+  'typography',
+];
+
+const _herouiPreset = _PresetContract(
+  name: 'heroui',
+  fixtureDirectory: 'heroui_fixture',
+  registryItems: _herouiRegistryItems,
+  foundationItems: {'theme'},
+  independentItems: null,
+  specStylerItems: [],
+  requiredRuntimeDependencies: [
+    'remix',
+    'mix_annotations',
+    'remix_ui_fonts',
+    'remix_ui_icons',
+  ],
+  allowedImportPackages: [
+    'flutter',
+    'remix',
+    'mix_annotations',
+    'remix_ui_fonts',
+    'remix_ui_icons',
+  ],
+);
+
 /// The hosted packages every preset's installed application declares. A preset
 /// that ships more, as Vanilla ships its fonts, extends this in its own
 /// [_PresetContract].
@@ -232,6 +299,9 @@ final class _PresetContract {
     this.generatedSnapshots = const {},
     this.requiredRuntimeDependencies = _baseRuntimeDependencies,
     this.allowedImportPackages = _baseImportPackages,
+    this.foundationItems = _foundationItems,
+    this.independentItems = _independentRegistryItems,
+    this.specStylerItems = _agentComponentItems,
   });
 
   final String name;
@@ -241,6 +311,16 @@ final class _PresetContract {
 
   /// Hosted runtime dependencies the CLI must add to the consumer, exactly.
   final List<String> requiredRuntimeDependencies;
+
+  final Set<String> foundationItems;
+
+  /// Items installed alone in a fresh app, so an omitted dependency cannot
+  /// hide behind the full gallery. Each one costs a `remix init`, and a fresh
+  /// init makes one unauthenticated GitHub API request (60 an hour). `null`
+  /// derives the list from `registry.yaml`: the items whose dependencies name
+  /// anything besides a foundation item.
+  final List<String>? independentItems;
+  final List<String> specStylerItems;
 
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
@@ -259,6 +339,9 @@ final class _PresetContract {
       generatedSnapshots: generatedSnapshots,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
       allowedImportPackages: swap(allowedImportPackages),
+      foundationItems: foundationItems,
+      independentItems: independentItems,
+      specStylerItems: specStylerItems,
     );
   }
 
@@ -317,6 +400,20 @@ final class _PresetContract {
       'ui.dart',
       for (final key in closure) ..._allFiles(items, key),
     }.toList();
+  }
+
+  List<String> independentInstalls([Directory? repositoryRoot]) {
+    final listed = independentItems;
+    if (listed != null) return listed;
+    final items = _loadItems(repositoryRoot);
+    return [
+      for (final key in items.keys.cast<String>())
+        if (!foundationItems.contains(key) &&
+            ((items[key] as YamlMap)['registryDependencies'] as YamlList? ??
+                    const [])
+                .any((dependency) => !foundationItems.contains(dependency)))
+          key,
+    ];
   }
 
   List<String> get installedUiFiles {
@@ -420,6 +517,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
           preset = _defaultPreset;
         case 'fortal':
           preset = _fortalPreset;
+        case 'heroui':
+          preset = _herouiPreset;
         default:
           return null;
       }
@@ -441,6 +540,11 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   if (item != null && jobs != null) return null;
   if ((item == 'icons' || item == 'ownership') && preset.name != 'vanilla')
     return null;
+  if (item != null &&
+      item != 'ownership' &&
+      !preset.registryItems.contains(item)) {
+    return null;
+  }
   return ConsumerCheckOptions(
     keep: keep,
     preset: preset.name,
@@ -484,7 +588,7 @@ Future<void> main(List<String> arguments) async {
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset vanilla|fortal] [--source both|hosted|checkout] '
+      '[--preset vanilla|fortal|heroui] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell|icons|ownership (requires --source '
       'checkout; icons/ownership are vanilla)] [--icon-library remix|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
@@ -1187,7 +1291,7 @@ Future<_Failure?> _checkIndependentItems({
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  const items = _independentRegistryItems;
+  final items = preset.independentInstalls();
 
   Future<_Failure?> checkItem(String item, StringSink log) async {
     final elapsed = Stopwatch()..start();
@@ -1478,7 +1582,7 @@ _Failure? _verifyRegistryCoverage(
     for (final key in (document['items'] as YamlMap).keys)
       if (key is String) key,
   };
-  final installed = {..._foundationItems, ...preset.registryItems};
+  final installed = {...preset.foundationItems, ...preset.registryItems};
   final problems = <String>[
     for (final item in catalogItems.difference(installed))
       'registry.yaml has $item, which this check never installs',
@@ -1672,7 +1776,7 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
           'mix_generator:spec_styler_generator': {
             'enabled': true,
             'generate_for': [
-              for (final item in _agentComponentItems)
+              for (final item in preset.specStylerItems)
                 'lib/ui/components/$item.dart',
             ]..sort(),
           },
@@ -1680,9 +1784,13 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
       },
     },
   };
-  if (!buildConfig.existsSync() ||
-      _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
-          _canonicalYaml(expected)) {
+  if (preset.specStylerItems.isEmpty && buildConfig.existsSync()) {
+    return _Failure('consumer build.yaml is unnecessary for ${preset.name}');
+  }
+  if (preset.specStylerItems.isNotEmpty &&
+      (!buildConfig.existsSync() ||
+          _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
+              _canonicalYaml(expected))) {
     return _Failure(
       'consumer build.yaml does not match the scoped Agent builder contract',
     );
@@ -2022,7 +2130,12 @@ bool _sameBytes(List<int> left, List<int> right) {
 _PresetContract _presetByName(String name) => switch (name) {
   'vanilla' => _defaultPreset,
   'fortal' => _fortalPreset,
-  _ => throw ArgumentError.value(name, 'preset', 'must be vanilla or fortal'),
+  'heroui' => _herouiPreset,
+  _ => throw ArgumentError.value(
+    name,
+    'preset',
+    'must be vanilla, fortal, or heroui',
+  ),
 };
 
 /// Returns the fixture contract error for focused regression tests.
@@ -2062,6 +2175,12 @@ Future<String?> independentItemsProblemForTest(
   environment: environment,
   jobs: jobs,
 ))?.message;
+
+/// Returns the items a preset installs alone, for focused regression tests.
+List<String> independentInstallsForTest(
+  String preset, {
+  Directory? repositoryRoot,
+}) => _presetByName(preset).independentInstalls(repositoryRoot);
 
 /// Returns the expected installed UI inventory for focused regression tests.
 List<String> installedUiFilesForTest({String preset = 'vanilla'}) =>

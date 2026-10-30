@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Base checkbox styles
+   ========================================================================== */
+
+.checkbox {
+  @apply flex flex-col items-start gap-1 outline-none no-highlight;
+
+  cursor: var(--cursor-interactive);
+
+  /* Field-level help text (siblings of the button), indented to align under the label */
+  & > [data-slot="description"],
+  & > [data-slot="field-error"] {
+    @apply w-full min-w-0 cursor-default ps-7 text-xs text-wrap wrap-break-word text-muted select-none;
+  }
+
+  [data-slot="label"] {
+    @apply select-none;
+  }
+
+  .checkbox__content [data-slot="label"] {
+    cursor: var(--cursor-interactive);
+  }
+
+  /* Disabled state */
+  &[data-disabled="true"] {
+    @apply status-disabled;
+
+    [data-slot="description"],
+    [data-slot="field-error"] {
+      @apply status-disabled;
+    }
+  }
+
+  /* Indicator styles */
+  &[data-selected="true"],
+  &[data-indeterminate="true"] {
+    .checkbox__indicator {
+      border-color: var(--accent-foreground);
+    }
+  }
+
+  /* Checkmark SVG indicator */
+  [data-slot="checkbox-default-indicator--checkmark"] {
+    @apply size-2.5 stroke-[2.5px] text-accent-foreground;
+
+    /**
+     * Transitions
+     */
+    @apply transition-all duration-200 motion-reduce:transition-none;
+  }
+
+  &[data-selected="true"] [data-slot="checkbox-default-indicator--checkmark"] {
+    transition: stroke-dashoffset 150ms linear 15ms;
+  }
+
+  /* Invalid + Selected: checkmark icon color */
+  &[data-invalid="true"][data-selected="true"] [data-slot="checkbox-default-indicator--checkmark"],
+  &[data-invalid="true"][aria-checked="true"] [data-slot="checkbox-default-indicator--checkmark"],
+  &[aria-invalid="true"][data-selected="true"] [data-slot="checkbox-default-indicator--checkmark"],
+  &[aria-invalid="true"][aria-checked="true"] [data-slot="checkbox-default-indicator--checkmark"] {
+    @apply text-danger-foreground;
+  }
+
+  /* Indeterminate line indicator */
+  &[data-indeterminate="true"] {
+    [data-slot="checkbox-default-indicator--indeterminate"] {
+      @apply size-3;
+    }
+  }
+
+  /* Invalid + Indeterminate: indeterminate icon color */
+  &[data-indeterminate="true"][data-invalid="true"]
+    [data-slot="checkbox-default-indicator--indeterminate"],
+  &[data-indeterminate="true"][aria-invalid="true"]
+    [data-slot="checkbox-default-indicator--indeterminate"] {
+    @apply text-danger-foreground;
+  }
+}
+
+/* ==========================================================================
+   Checkbox control (the square button)
+   ========================================================================== */
+
+.checkbox__control {
+  @apply relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-md border [border-width:var(--border-width-field)] border-field-border bg-field shadow-field outline-none no-highlight;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    transform 100ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  cursor: var(--cursor-interactive);
+
+  /* Background indicator pseudo-element */
+  &::before {
+    @apply pointer-events-none absolute inset-0 z-0 origin-center scale-70 rounded-md bg-accent opacity-0 content-[''];
+
+    /**
+     * Transitions
+     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+     */
+    transition:
+      scale 100ms var(--ease-linear),
+      opacity 200ms var(--ease-linear),
+      background-color 200ms var(--ease-out);
+    @apply motion-reduce:transition-none;
+  }
+
+  /* Interactive states */
+  /* Focus */
+  .checkbox:focus-visible &,
+  .checkbox:has([data-slot="checkbox-content"][data-focus-visible="true"]) &,
+  .checkbox [data-slot="checkbox-content"][data-focus-visible="true"] & {
+    @apply status-focused;
+  }
+
+  /* Hover */
+  .checkbox:hover &,
+  .checkbox:has([data-slot="checkbox-content"][data-hovered="true"]) &,
+  .checkbox [data-slot="checkbox-content"][data-hovered="true"] & {
+    @apply border-field-border-hover;
+
+    &::before {
+      @apply bg-accent-hover;
+    }
+  }
+
+  /* Pressed */
+  .checkbox:active &,
+  .checkbox:has([data-slot="checkbox-content"][data-pressed="true"]) &,
+  .checkbox [data-slot="checkbox-content"][data-pressed="true"] & {
+  }
+
+  /* Selection states */
+  /* Selected */
+  .checkbox[aria-checked="true"] &,
+  .checkbox[data-selected="true"] & {
+    @apply border-transparent text-accent-foreground;
+
+    &::before {
+      @apply scale-100 opacity-100;
+    }
+  }
+
+  /* Indeterminate */
+  .checkbox[data-indeterminate="true"] & {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Indeterminate + Pressed */
+  .checkbox:active[data-indeterminate="true"] &,
+  .checkbox[data-pressed="true"][data-indeterminate="true"] &,
+  .checkbox:has([data-slot="checkbox-content"][data-pressed="true"])[data-indeterminate="true"] & {
+    @apply bg-accent-hover;
+  }
+
+  /* Validation states */
+  /* Invalid (only when not selected/indeterminate) */
+  .checkbox[data-invalid="true"]:not([aria-checked="true"]):not([data-selected="true"]):not(
+      [data-indeterminate="true"]
+    )
+    &,
+  .checkbox[aria-invalid="true"]:not([aria-checked="true"]):not([data-selected="true"]):not(
+      [data-indeterminate="true"]
+    )
+    & {
+    @apply status-invalid-field;
+  }
+
+  /* Invalid + Selected */
+  .checkbox[data-invalid="true"][aria-checked="true"] &,
+  .checkbox[data-invalid="true"][data-selected="true"] &,
+  .checkbox[aria-invalid="true"][aria-checked="true"] &,
+  .checkbox[aria-invalid="true"][data-selected="true"] & {
+    @apply border-transparent bg-danger text-danger-foreground;
+
+    &::before {
+      @apply scale-100 bg-danger opacity-100;
+    }
+  }
+
+  /* Invalid + Indeterminate */
+  .checkbox[data-indeterminate="true"][aria-invalid="true"] &,
+  .checkbox[data-indeterminate="true"][data-invalid="true"] & {
+    @apply bg-danger text-danger-foreground;
+  }
+}
+
+/* ==========================================================================
+   Checkbox indicator
+   ========================================================================== */
+
+.checkbox__indicator {
+  @apply relative z-10 flex size-3 items-center justify-center;
+
+  & svg {
+    @apply size-full transform-gpu;
+  }
+}
+
+/* ==========================================================================
+   Variant property definitions
+   ========================================================================== */
+
+.checkbox--primary {
+  /* Default styles */
+}
+
+.checkbox--secondary .checkbox__control {
+  @apply shadow-none;
+  background-color: var(--checkbox-control-bg);
+
+  --checkbox-control-bg: var(--default);
+
+  /* Hover state */
+  .checkbox:hover &,
+  .checkbox:has([data-slot="checkbox-content"][data-hovered="true"]) &,
+  .checkbox [data-slot="checkbox-content"][data-hovered="true"] & {
+    @apply border-field-border-hover;
+  }
+}
+
+/* Checkbox content — the clickable label (control + label text) */
+.checkbox__content {
+  @apply relative inline-flex cursor-[inherit] items-center gap-3 text-sm font-medium text-foreground outline-none select-none no-highlight;
+}
+
+/* Unselected state background for secondary variant */
+.checkbox--secondary:not([aria-checked="true"]):not([data-selected="true"]):not(
+    [data-indeterminate="true"]
+  )
+  .checkbox__control {
+  background-color: var(--checkbox-control-bg);
+}
+
+/* Selected state on secondary variant */
+.checkbox--secondary[aria-checked="true"] .checkbox__control,
+.checkbox--secondary[data-selected="true"] .checkbox__control {
+  &::before {
+    @apply bg-accent;
+  }
+}
+
+/* Indeterminate state on secondary variant */
+.checkbox--secondary[data-indeterminate="true"] .checkbox__control {
+  @apply bg-accent;
+
+  &::before {
+    @apply bg-accent;
+  }
+}

@@ -844,6 +844,36 @@ const defaultAgentExtension = PresetSpec(
   composedRegistryDependencies: {},
 );
 
+/// The HeroUI web design system: a theme and recipes over Remix components.
+const herouiPreset = PresetSpec(
+  name: 'heroui',
+  sourceRoot: 'registry_source/lib/src/heroui',
+  sourcePackage: 'registry_source',
+  typeWord: 'HeroUi',
+  valueWord: 'heroUi',
+  componentDirectory: 'components',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'theme',
+      directory: 'theme',
+      requiredFile: 'theme/theme.dart',
+      packages: {'remix'},
+      exports: ['theme/theme.dart'],
+    ),
+  ],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {
+    'remix',
+    'mix_annotations',
+    'build_runner',
+    'mix_generator',
+    'remix_ui_fonts',
+  },
+  detectedPackages: ['remix_ui_fonts'],
+  composedRegistryDependencies: {},
+);
+
 /// Every remote preset and the specs that derive it, writer first.
 ///
 /// The first spec owns the preset. Any spec after it is an extension whose
@@ -851,6 +881,7 @@ const defaultAgentExtension = PresetSpec(
 const presetSpecs = <String, List<PresetSpec>>{
   'vanilla': [defaultPreset, defaultAgentExtension],
   'fortal': [fortalPreset, fortalAgentExtension],
+  'heroui': [herouiPreset],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {

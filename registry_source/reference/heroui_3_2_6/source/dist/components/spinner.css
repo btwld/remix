@@ -1,0 +1,42 @@
+/* Base spinner styles */
+.spinner {
+  @apply pointer-events-none inline-flex size-6 shrink-0 animate-spin-fast motion-reduce:animate-none;
+}
+
+/* Size variants */
+.spinner--sm {
+  @apply size-4;
+}
+
+.spinner--md {
+  /* No styles as this is the default size */
+}
+
+.spinner--lg {
+  @apply size-8;
+}
+
+.spinner--xl {
+  @apply size-10;
+}
+
+/* Color variants */
+.spinner--current {
+  color: inherit;
+}
+
+.spinner--accent {
+  color: var(--accent);
+}
+
+.spinner--danger {
+  color: var(--danger);
+}
+
+.spinner--success {
+  color: var(--success);
+}
+
+.spinner--warning {
+  color: var(--warning);
+}

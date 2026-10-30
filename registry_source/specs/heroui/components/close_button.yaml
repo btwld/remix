@@ -1,0 +1,30 @@
+component: CloseButton
+widget: HeroUiCloseButton
+target: RemixIconButton
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/close-button.css, dist/themes/shared/theme.css]
+anatomy: [container, icon, spinner]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, focus-visible, disabled, loading]
+tokens:
+  - default, default-hover, muted
+  - radius-xl, focus (ring), disabled-opacity
+measurements:
+  - {what: control, value: 24x24, cite: close-button}
+  - {what: radius, value: 12, cite: close-button}
+  - {what: padding, value: 4, cite: close-button}
+  - {what: icon size, value: 16, cite: close-button.css svg rule}
+  - {what: colours, value: "default fill, muted icon", cite: "close-button (backgroundColor, color)"}
+  - {what: hover fill, value: default-hover, cite: "close-button-hover (light and dark)"}
+  - {what: pressed scale, value: 0.93, cite: close-button-pressed (22.32 / 24)}
+  - {what: touch press, value: "scales without recoloring", cite: "close-button.css: :active sets no fill"}
+  - {what: disabled and pending opacity, value: 0.5, cite: "close-button-disabled, close-button-pending"}
+  - {what: focus ring, value: "box-shadow 0 0 0 2px background, then 0 0 0 4px focus", cite: "close-button-focus (light and dark)"}
+approximations:
+  - "The glyph is the project icon library's cross2, not HeroUI's own 16px cross; pass `icon` to replace it."
+  - Colours fade over 100ms, the press scale over 250ms with ease-out-quart (theme.css); Mix applies one animation per state, so the scale returns over 100ms.
+  - HeroUI's pending state is Remix loading, which shows an sm spinner in the muted colour over the hidden icon.
+  - The accessible name defaults to "Close".
