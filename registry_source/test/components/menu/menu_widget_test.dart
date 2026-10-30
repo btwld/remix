@@ -112,7 +112,7 @@ void main() {
     for (final size in FortalMenuSize.values) {
       for (final highContrast in [false, true]) {
         testWidgets(
-          '${variant.name} ${size.name} indicators follow Radix foreground states'
+          '${variant.name} ${size.name} indicators follow Fortal foreground states'
           '${highContrast ? ' at high contrast' : ''}',
           (tester) async {
             final controller = MenuController();
@@ -172,7 +172,7 @@ void main() {
               .soft => idleColor,
             };
             final expectedSize = switch (size) {
-              .size1 => FortalTokens.selectIndicatorSize1.resolve(context),
+              .size1 => FortalTokens.space2.resolve(context),
               .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
             };
 
@@ -200,7 +200,7 @@ void main() {
   }
 
   for (final size in FortalMenuSize.values) {
-    testWidgets('${size.name} pins the solid panel and Radix icon metrics', (
+    testWidgets('${size.name} pins the solid panel and icon metrics', (
       tester,
     ) async {
       final controller = MenuController();
@@ -233,7 +233,7 @@ void main() {
         .size2 => FortalTokens.space4.resolve(context),
       };
       final subtriggerIconSize = switch (size) {
-        .size1 => FortalTokens.selectIndicatorSize1.resolve(context),
+        .size1 => FortalTokens.space2.resolve(context),
         .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
       };
       final triggerGap = switch (size) {
@@ -241,16 +241,13 @@ void main() {
         .size2 => FortalTokens.space2.resolve(context),
       };
 
-      // Radix pins menus to the solid panel with no backdrop blur.
       final resolved = fortalMenuStyle(size: size).resolve(context).spec;
       expect(
         (resolved.overlay.spec.box?.spec.decoration as BoxDecoration?)?.color,
         FortalTokens.colorPanelSolid.resolve(context),
       );
-      expect(resolved.containerEffects, isNull);
+      expect(resolved.containerEffects?.backdropBlur, 0);
 
-      // Content icons are text-matched; the subtrigger chevron keeps the
-      // exact Radix icon size.
       expect(
         tester.getSize(find.byIcon(Icons.edit_outlined)),
         Size.square(contentIconSize),
@@ -266,7 +263,6 @@ void main() {
         subtriggerIconSize,
       );
 
-      // The trigger content mirrors the base Radix button gap and icon.
       expect(
         tester.getSize(find.byIcon(Icons.tune)),
         Size.square(contentIconSize),

@@ -7,9 +7,6 @@ import '../theme/theme.dart';
 part 'skeleton.g.dart';
 
 /// Ui recipe for [RemixSkeleton].
-///
-/// The pulse starts and rests on `grayA3` before moving toward `grayA4`;
-/// Radix's CSS `alternate-reverse` phase starts from `grayA4`.
 @MixWidget(target: RemixSkeleton.new)
 SkeletonStyler uiSkeletonStyle({
   SkeletonStyler style = const SkeletonStyler.create(),

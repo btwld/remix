@@ -14,10 +14,6 @@ enum FortalLinkUnderline { auto, always, hover, none }
 /// Takes a [context] because the focus outline's radius is em-relative to the
 /// resolved font size.
 ///
-/// [actionable] gates every state-dependent rule, matching upstream's
-/// `:where(:any-link, button)`. A non-actionable link carries no hover or
-/// focus-visible variant at all, so it stays plain accent text no matter what
-/// widget states are resolved around it.
 LinkStyler fortalLinkStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -52,6 +48,7 @@ LinkStyler fortalLinkStyle(
   ).label(.decoration(TextDecoration.none));
 
   return styleFor()
+      .wrap(fortalTouchTarget())
       .onHovered(styleFor(hovered: true))
       .onFocusVisible(focusVisible)
       .merge(style);
@@ -95,9 +92,6 @@ LinkStyler _fortalLinkStateStyle(
   );
   final fontSize = effectiveText.fontSize!;
 
-  // Every upstream underline rule is gated behind `:where(:any-link, button)`,
-  // so a link with no callback stays plain accent-coloured text. A focus-visible
-  // outline replaces the underline rather than stacking both.
   final underlined =
       actionable &&
       !focused &&
@@ -108,11 +102,6 @@ LinkStyler _fortalLinkStateStyle(
         .none => false,
       };
   if (underlined) {
-    // Radix declares the decoration colour twice for this selector and the
-    // later rule wins:
-    //   text-decoration-color: color-mix(in oklab, var(--accent-aN), var(--gray-a6))
-    // Using the accent alpha alone leaves the underline noticeably fainter, so
-    // blend it. Color.lerp is an sRGB approximation of the oklab mix.
     final accentStep = underline == FortalLinkUnderline.auto && highContrast
         ? FortalTokens.accentA6
         : FortalTokens.accentA5;
@@ -125,11 +114,6 @@ LinkStyler _fortalLinkStateStyle(
         .decoration(TextDecoration.underline)
         .decorationStyle(TextDecorationStyle.solid)
         .decorationColor(decorationColor)
-        // Upstream is `min(2px, max(1px, 0.05em))`. Flutter reads
-        // decorationThickness as a multiple of the font's own underline
-        // thickness rather than a length, so the pinned 1–2 range lands as a
-        // 1×–2× stroke instead of exact pixels; the em breakpoints still fall
-        // where Radix puts them.
         .decorationThickness(math.min(2, math.max(1, 0.05 * fontSize)));
   }
   textStyle = fortalApplyTextFlow(
@@ -146,12 +130,7 @@ LinkStyler _fortalLinkStateStyle(
         ),
       );
   if (focused) {
-    style = style.containerEffects(
-      fortalFocusOutline(
-        fortalResolveColor(context, FortalTokens.focus8),
-        offset: 2,
-      ),
-    );
+    style = style.containerEffects(fortalFocusOutline());
   }
 
   return style;

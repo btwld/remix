@@ -35,30 +35,32 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
         .direction(.horizontal)
         .mainAxisSize(.max)
         .crossAxisAlignment(.center)
-        .spacing(8)
-        .padding(.top(8)),
+        .spacing(UiTokens.space2())
+        .padding(.top(UiTokens.space2())),
   ).merge(style),
   surfaceStyle: uiCardStyle(
     size: .size2,
-    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
+    style: CardStyler().padding(.all(UiTokens.space3())).merge(surfaceStyle),
   ),
   fieldStyle: uiTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
-        .minHeight(56)
-        .padding(.all(4))
+        .minHeight(UiTokens.composerFieldMinHeight())
+        .padding(.all(UiTokens.space1()))
         .merge(fieldStyle),
   ),
   submitStyle: uiIconButtonStyle(
     size: .size2,
-    style: IconButtonStyler().size(40, 40).merge(submitStyle),
+    style: IconButtonStyler()
+        .size(UiTokens.space7(), UiTokens.space7())
+        .merge(submitStyle),
   ),
   stopStyle: uiIconButtonStyle(
     size: .size2,
     style: IconButtonStyler()
         .color(UiTokens.error9())
-        .size(40, 40)
+        .size(UiTokens.space7(), UiTokens.space7())
         .merge(stopStyle),
   ),
 );

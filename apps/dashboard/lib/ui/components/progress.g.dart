@@ -19,16 +19,6 @@ class UiProgress extends StatelessWidget {
     this.semanticsValue,
   });
 
-  const UiProgress.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const ProgressStyler.create(),
-    required this.value,
-    this.semanticsLabel,
-    this.semanticsValue,
-  }) : variant = UiProgressVariant.classic;
-
   const UiProgress.surface({
     super.key,
     this.size = .size2,

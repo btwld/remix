@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'badge.g.dart';
 
-/// Radix Themes Badge size presets.
+/// Ui Badge size presets.
 enum UiBadgeSize { size1, size2, size3 }
 
-/// Radix Themes Badge variants.
+/// Ui Badge variants.
 enum UiBadgeVariant { solid, soft, surface, outline }
 
-/// Ui-themed Badge with the Radix size, variant, and override contract.
+/// Ui-themed Badge with Ui sizes, variants, and overrides.
 @MixWidget(target: RemixBadge.new)
 BadgeStyler uiBadgeStyle({
   UiBadgeVariant variant = .soft,
@@ -32,7 +32,7 @@ BadgeStyler uiBadgeStyle({
       base
           .color(UiTokens.accentA3())
           .labelColor(
-            // Step 11 is Radix low-contrast text, not WCAG AA 4.5:1 on
+            // Step 11 is Ui secondary text, not WCAG AA 4.5:1 on
             // accentA3 over colorPanelSolid. highContrast promotes accent12.
             highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
           ),
@@ -82,7 +82,7 @@ TextStyleToken _uiBadgeText(UiBadgeSize size) => switch (size) {
 
 EdgeInsetsGeometryMix _uiBadgePadding(UiBadgeSize size) => switch (size) {
   .size1 => EdgeInsetsGeometryMix.symmetric(
-    horizontal: UiTokens.badgePaddingX1(),
+    horizontal: UiTokens.space2(),
     vertical: UiTokens.badgePaddingY1(),
   ),
   .size2 => EdgeInsetsGeometryMix.symmetric(
@@ -90,7 +90,7 @@ EdgeInsetsGeometryMix _uiBadgePadding(UiBadgeSize size) => switch (size) {
     vertical: UiTokens.space1(),
   ),
   .size3 => EdgeInsetsGeometryMix.symmetric(
-    horizontal: UiTokens.badgePaddingX3(),
+    horizontal: UiTokens.space3(),
     vertical: UiTokens.space1(),
   ),
 };

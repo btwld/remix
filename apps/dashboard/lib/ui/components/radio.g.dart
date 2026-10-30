@@ -24,22 +24,6 @@ class UiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Raised treatment with Radix's classic shadow and gradient layers.
-  const UiRadio.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const RadioStyler.create(),
-    required this.value,
-    required this.semanticLabel,
-    this.enabled = true,
-    this.toggleable = false,
-    this.mouseCursor,
-    this.focusNode,
-    this.autofocus = false,
-    this.excludeSemantics = false,
-  }) : variant = UiRadioVariant.classic;
-
   /// Surface treatment with neutral border.
   const UiRadio.surface({
     super.key,

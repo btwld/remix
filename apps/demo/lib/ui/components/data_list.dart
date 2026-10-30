@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'data_list.g.dart';
 
-/// Radix Themes DataList size presets.
+/// Fortal DataList size presets.
 enum FortalDataListSize { size1, size2, size3 }
 
 /// Fortal recipe for [RemixDataList].

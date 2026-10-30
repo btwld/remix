@@ -11,7 +11,7 @@ part 'toast.g.dart';
 /// Fortal toast size presets.
 enum FortalToastSize { size1, size2, size3 }
 
-/// Fortal toast surfaces, matching the Card surface and classic treatments.
+/// Fortal toast surfaces, with quiet and elevated floating treatments.
 enum FortalToastVariant { surface, classic }
 
 /// The color role of the leading icon.
@@ -23,8 +23,8 @@ enum FortalToastIntent { accent, neutral, error }
 
 /// Fortal-themed toast surface for [RemixToast] and [RemixToastScope].
 ///
-/// A Fortal extension: Radix Themes has no toast, so the recipe reuses the
-/// Card panel and shadow tokens. The surface caps at 360 logical pixels and
+/// Toasts use the shared floating-layer elevation scale. The surface caps at
+/// 360 logical pixels and
 /// shrinks with the available width.
 ///
 /// ```dart
@@ -61,50 +61,26 @@ ToastStyler fortalToastStyle({
           )
           .padding(.all(metrics.padding))
           .borderRadius(.all(metrics.radius))
-          .maxWidth(360)
+          .maxWidth(FortalTokens.toastMaxWidth())
           .containerEffects(
             RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
           );
 
-  return (switch (variant) {
-    .surface =>
-      base
-          .containerEffects(
-            RemixBoxEffectsMix.behindContent(_fortalToastPanel()),
-          )
-          .containerEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadows: [
-                  RemixBoxShadowMix(
-                    color: FortalTokens.grayStroke5(),
-                    spreadRadius: 1,
-                    shapeInset: 1,
-                  ),
-                ],
-              ),
-            ),
-          )
-          .decoration(
-            BoxDecorationMix.create(boxShadow: FortalTokens.shadow4.mix()),
-          ),
-    .classic =>
-      base
-          .containerEffects(
-            RemixBoxEffectsMix.behindContent(
-              _fortalToastPanel(
-                shadowToken: FortalTokens.cardClassicOuterShadows,
-              ),
-            ),
-          )
-          .containerEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadowToken: FortalTokens.cardClassicInnerShadows,
-              ),
-            ),
-          ),
-  }).merge(style);
+  return base
+      .color(FortalTokens.colorPanel())
+      .border(
+        .all(.color(FortalTokens.gray6()).width(FortalTokens.borderWidth1())),
+      )
+      .decoration(
+        BoxDecorationMix.create(
+          boxShadow:
+              (variant == .surface
+                      ? FortalTokens.shadow3
+                      : FortalTokens.shadow4)
+                  .mix(),
+        ),
+      )
+      .merge(style);
 }
 
 ({
@@ -143,15 +119,3 @@ Color _fortalToastIntentColor(FortalToastIntent intent) => switch (intent) {
   .neutral => FortalTokens.gray11(),
   .error => FortalTokens.error11(),
 };
-
-RemixBoxEffectLayerMix _fortalToastPanel({
-  RemixBoxShadowListToken? shadowToken,
-}) => RemixBoxEffectLayerMix(
-  gradients: [
-    RemixLinearGradientMix(
-      colors: [FortalTokens.colorPanel(), FortalTokens.colorPanel()],
-    ),
-  ],
-  gradientInsets: const [1],
-  shadowToken: shadowToken,
-);

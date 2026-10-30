@@ -98,9 +98,11 @@ the authoring word `Vanilla`, Fortal uses `Fortal`, and shared behavior uses
 imports to their installed relative paths. Relative source imports determine
 registry dependencies; generated parts determine adapter targets.
 
-Fortal's Radix color table remains pinned source with a parity contract. Its
-internal theme barrel excludes the unprefixed color-table globals from the
-consumer's public barrel. Hosted dependency floors are shared through the
+Fortal's palettes are generated from owned seeds by `registry_source/tool/fortal_palettes/`.
+Its independent contract lives in `registry_source/specs/fortal.md` and
+`fortal_catalog.json`. The internal theme barrel excludes unprefixed palette
+globals; `theme/fortal_colors.dart` keeps its stable data filename while its
+Dart types take the consumer prefix. Hosted dependency floors are shared through the
 Vanilla registry and checked for drift.
 
 ```shell
@@ -135,7 +137,7 @@ dart run melos run ci
 ```
 
 CI includes analysis, clean generation, formatting, registry derivation,
-parity, docs, package tests, installed-source comparisons, and fresh checkout
+Fortal's owned specification, docs, package tests, installed-source comparisons, and fresh checkout
 consumers for both presets. Passing checkout checks does not establish hosted
 release installability.
 

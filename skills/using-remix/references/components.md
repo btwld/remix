@@ -58,7 +58,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   default `null`. Leaving them unset does not mean "no icon": Remix falls
   back to its own built-in glyphs, `RemixPathGlyph.thickCheck` and
   `RemixPathGlyph.thickDividerHorizontal`, not a blank state.
-- **CheckboxGroup** — keyboard model deliberately differs from Radix Themes:
+- **CheckboxGroup** — standard Flutter keyboard model:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
   checkbox groups. The group does not rove focus with arrow keys.
