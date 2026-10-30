@@ -20,5 +20,8 @@ TooltipStyler fortalTooltipStyle({
       .padding(.horizontal(FortalTokens.space2()))
       .label(.color(FortalTokens.gray1()))
       .color(FortalTokens.gray12())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow3.mix()),
+      )
       .merge(style);
 }

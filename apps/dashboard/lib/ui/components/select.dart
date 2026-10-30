@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'select.g.dart';
 
-/// Radix Themes Select root size presets.
+/// Ui Select root size presets.
 enum UiSelectSize { size1, size2, size3 }
 
-/// Radix Themes Select variants.
+/// Ui Select variants.
 enum UiSelectVariant { surface, soft, ghost }
 
-/// Ui-themed Select with Radix-owned trigger and content configuration.
+/// Ui-themed Select with Ui-owned trigger and content configuration.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -56,16 +56,19 @@ SelectTriggerStyler _uiSelectTriggerStyler(
         }),
       )
       .indicator(.color(UiTokens.gray12()).size(size == .size3 ? 11 : 9))
-      .onFocusVisible(
-        .containerEffects(RemixBoxEffectsMix.overContent(_uiSelectFocusRing())),
-      )
-      .merge(_uiSelectTriggerSizeStyler(variant, size));
+      .onFocusVisible(.containerEffects(uiFocusOutline()))
+      .merge(_uiSelectTriggerSizeStyler(variant, size))
+      .wrap(uiTouchTarget());
 
-  return switch (variant) {
+  return (switch (variant) {
     .surface => _uiSelectSurfaceTrigger(base),
     .soft => _uiSelectSoftTrigger(base),
     .ghost => _uiSelectGhostTrigger(base),
-  };
+  }).onDisabled(
+    SelectTriggerStyler().containerEffects(
+      RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+    ),
+  );
 }
 
 TextStyler _uiSelectTriggerText(UiSelectSize size, {Color? color}) {
@@ -91,7 +94,7 @@ SelectTriggerStyler _uiSelectTriggerSizeStyler(
 ) {
   final style = SelectTriggerStyler().spacing(switch (size) {
     .size1 => UiTokens.space1(),
-    .size2 => UiTokens.selectSpace1Half(),
+    .size2 => UiTokens.space2(),
     .size3 => UiTokens.space2(),
   });
   return switch (variant) {
@@ -105,7 +108,7 @@ SelectTriggerStyler _uiSelectTriggerSizeStyler(
       .size3 =>
         style
             .padding(.horizontal(UiTokens.space3()))
-            .padding(.vertical(UiTokens.selectSpace1Half()))
+            .padding(.vertical(UiTokens.space2()))
             .margin(.horizontal(UiTokens.selectGhostMarginX3()))
             .margin(.vertical(UiTokens.selectGhostMarginY3())),
     },
@@ -120,26 +123,13 @@ SelectTriggerStyler _uiSelectTriggerSizeStyler(
   };
 }
 
-RemixBoxEffectLayerMix _uiSelectFocusRing() {
-  return RemixBoxEffectLayerMix(
-    shadows: [
-      RemixBoxShadowMix(color: UiTokens.focus8(), spreadRadius: 1),
-      RemixBoxShadowMix(
-        kind: RemixBoxShadowKind.inset,
-        color: UiTokens.focus8(),
-        spreadRadius: 1,
-      ),
-    ],
-  );
-}
-
 SelectTriggerStyler _uiSelectSurfaceTrigger(SelectTriggerStyler base) {
   return base
       .indicatorOpacity(0.9)
-      .color(UiTokens.colorSurface())
+      .color(UiTokens.gray2())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
-          uiInsetSurface(strokes: [UiTokens.grayA7()]),
+          uiInsetSurface(strokes: [UiTokens.gray7()]),
         ),
       )
       .onHovered(
@@ -231,6 +221,7 @@ SelectMenuItemStyler _uiSelectItemStyler(
 }) {
   final metrics = _uiSelectContentMetrics(size);
   final base = SelectMenuItemStyler()
+      .wrap(uiTouchTarget())
       .direction(.horizontal)
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.indicatorWidth))
@@ -259,16 +250,23 @@ SelectMenuItemStyler _uiSelectItemStyler(
     .soft => SelectMenuItemStyler().color(UiTokens.accentA4()),
   };
 
-  // Naked's focused option is Radix's roving `data-highlighted` item, not a
-  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
+      .onFocusVisible(
+        SelectMenuItemStyler().container(
+          FlexBoxStyler().uiFocusRing(radius: metrics.itemRadius),
+        ),
+      )
       .onDisabled(
-        .color(
-          const Color(0x00000000),
-        ).text(.color(UiTokens.grayA8())).iconColor(UiTokens.grayA8()),
+        SelectMenuItemStyler()
+            .container(
+              FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
+            )
+            .color(const Color(0x00000000))
+            .text(.color(UiTokens.grayA8()))
+            .iconColor(UiTokens.grayA8()),
       );
 }
 
@@ -283,7 +281,7 @@ _uiSelectContentMetrics(UiSelectSize size) => switch (size) {
   .size1 => (
     itemHeight: UiTokens.space5(),
     indicatorWidth: UiTokens.selectIndicatorWidth1(),
-    indicatorSize: UiTokens.selectIndicatorSize1(),
+    indicatorSize: UiTokens.space2(),
     itemRadius: UiTokens.radius1(),
     itemText: UiTokens.text1,
   ),

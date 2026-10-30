@@ -109,7 +109,7 @@ class SaveButton extends StatelessWidget {
 
 The application-owned Fortal preset provides `fortalToastStyle`, a recipe for the scope, and the generated `FortalToast` for static previews:
 
-`fortalToastStyle` defaults to `FortalToastVariant.classic`, `FortalToastSize.size2`, and `FortalToastIntent.accent`. The surface caps at 360 logical pixels and shrinks on narrow screens. Toast is a Fortal extension: Radix Themes has no toast, so the recipe reuses the Card panel and shadow tokens.
+`fortalToastStyle` defaults to `FortalToastVariant.classic`, `FortalToastSize.size2`, and `FortalToastIntent.accent`. The surface caps at 360 logical pixels and shrinks on narrow screens. Toast uses the shared floating-layer elevation scale; cards remain flat.
 
 <CodeGroup title="Fortal recipe" defaultLanguage="dart">
 ```dart

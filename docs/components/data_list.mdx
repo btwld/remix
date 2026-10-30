@@ -52,7 +52,7 @@ class DataListExample extends StatelessWidget {
 
 ## Fortal recipe
 
-`FortalDataList` maps the pinned Radix Themes 3.3 size typography, root row and
+`FortalDataList` supplies shared typography, root row and
 column gaps, vertical label/value gap, 120 logical-pixel horizontal label
 minimum, and normal/high-contrast label roles.
 
@@ -169,23 +169,19 @@ class DataListCustomValueExample extends StatelessWidget {
 Each item aligns its label and value cells with `start`, `center`, `end`,
 `baseline`, or `stretch`. `baseline` is the default and applies to string
 values, where both cells expose a text baseline; two deterministic
-adaptations are documented Radix deltas:
+fallbacks keep custom content deterministic:
 
 - A custom-child row requesting `baseline` maps to `start`/top, because an
   arbitrary widget may expose no text baseline.
 - Vertical orientation maps `baseline` to `start`, because stacked cells
   share no horizontal baseline.
 
-## Fortal parity boundaries
+## Composition model
 
-Radix exposes compositional Root/Item/Label/Value children plus per-label
-color, high-contrast, and width props. Remix keeps its data-driven row model,
-one shared label style, and one global `highContrast` recipe argument. Callers
-rebuild with a different size, orientation, alignment, or width at responsive
-breakpoints. CSS leading trim and its quarter-em edge offsets are not applied;
-Flutter text baselines and untrimmed bounds remain authoritative. Those are
-the only visual tolerances—mapped typography, gaps, shared columns, label
-minimum, and gray roles remain exact.
+Remix uses data-driven rows, one shared label style, and one global
+`highContrast` recipe argument. Rebuild with a different size, orientation,
+alignment, or width at responsive breakpoints. Flutter text baselines and
+untrimmed bounds determine layout.
 
 ## Semantics
 
@@ -198,7 +194,7 @@ minimum, and gray roles remain exact.
 - `excludeSemantics` removes the entire list from the semantics tree.
 
 Flutter has no definition-list role, so the list/list-item pairing is the
-documented adaptation of Radix's `dl`/`dt`/`dd` structure.
+semantic representation of label/value rows.
 
 ## Constructor
 

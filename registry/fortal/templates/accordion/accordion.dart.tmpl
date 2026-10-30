@@ -34,7 +34,7 @@ AccordionStyler {{valuePrefix}}AccordionStyle({
 // cannot partially cover their antialiased edges.
 AccordionStyler _{{valuePrefix}}AccordionBaseStyler({{typePrefix}}AccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal))
+      .trigger(.direction(.horizontal).minHeight({{typePrefix}}Tokens.touchTargetMin()))
       .leadingIcon(.color({{typePrefix}}Tokens.gray11()))
       .title(
         .fontWeight(
@@ -56,12 +56,15 @@ AccordionStyler _{{valuePrefix}}AccordionBaseStyler({{typePrefix}}AccordionSize 
       .merge(_{{valuePrefix}}AccordionSizeStyler(size));
 }
 
-AccordionStyler _{{valuePrefix}}AccordionFocusStyler() {
-  return AccordionStyler().trigger(FlexBoxStyler().{{valuePrefix}}FocusRing());
+AccordionStyler _{{valuePrefix}}AccordionFocusStyler({{typePrefix}}AccordionSize size) {
+  return AccordionStyler().container(
+    BoxStyler().{{valuePrefix}}FocusRing(radius: _{{valuePrefix}}AccordionRadius(size)),
+  );
 }
 
 AccordionStyler _{{valuePrefix}}AccordionDisabledStyler() {
   return AccordionStyler()
+      .container(BoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)))
       .trigger(.color({{typePrefix}}Tokens.grayA3()))
       .leadingIcon(.color({{typePrefix}}Tokens.gray8()))
       .title(.color({{typePrefix}}Tokens.gray8()))
@@ -94,7 +97,7 @@ AccordionStyler _{{valuePrefix}}AccordionSurfaceStyler([
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
-      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler())
+      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler(size))
       .onDisabled(_{{valuePrefix}}AccordionDisabledStyler());
 }
 
@@ -126,7 +129,7 @@ AccordionStyler _{{valuePrefix}}AccordionSoftStyler([
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
-      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler())
+      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler(size))
       .onDisabled(_{{valuePrefix}}AccordionDisabledStyler());
 }
 
@@ -157,7 +160,7 @@ AccordionStyler _{{valuePrefix}}AccordionSizeStyler({{typePrefix}}AccordionSize 
     .size2 => AccordionStyler(
       trigger: FlexBoxStyler().padding(.all({{typePrefix}}Tokens.space3())),
       leadingIcon: .size({{typePrefix}}Tokens.spinnerSize3()),
-      title: .style({{typePrefix}}Tokens.accordionText2.mix()),
+      title: .style({{typePrefix}}Tokens.text2.mix()),
       trailingIcon: .size({{typePrefix}}Tokens.spinnerSize3()),
       content: .padding(.all({{typePrefix}}Tokens.space3())),
     ),

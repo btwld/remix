@@ -7,17 +7,6 @@ part of 'data_table.dart';
 // **************************************************************************
 
 /// Ui recipe for [RemixDataTable].
-///
-/// Sizes and variants map `@radix-ui/themes@3.3.0` `table.css` exactly: cell
-/// padding, minimum cell height, typography, radius, the `gray-a5` row
-/// divider, bold column headers, the surface panel/border, the `gray-a2`
-/// header background, and the suppressed divider under a surface table's last
-/// row.
-///
-/// Sorting, selection, pagination, and row hover have no Radix counterpart —
-/// Radix's Table is a passive layout. They are Ui extensions built from
-/// existing accent/gray control tokens and are recorded as extensions in the
-/// parity manifest.
 class UiDataTable<T> extends StatelessWidget {
   const UiDataTable({
     super.key,

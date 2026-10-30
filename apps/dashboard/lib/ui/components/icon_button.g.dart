@@ -6,7 +6,7 @@ part of 'icon_button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed IconButton with the Radix size, variant, and override contract.
+/// Ui-themed IconButton with Ui sizes, variants, and overrides.
 class UiIconButton extends StatelessWidget {
   const UiIconButton({
     super.key,
@@ -29,27 +29,6 @@ class UiIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  const UiIconButton.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const IconButtonStyler.create(),
-    required this.icon,
-    required this.semanticLabel,
-    this.iconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.enableFeedback = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = UiIconButtonVariant.classic;
 
   const UiIconButton.solid({
     super.key,

@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'slider.g.dart';
 
-/// Radix Themes slider sizes.
+/// Ui slider sizes.
 enum UiSliderSize { size1, size2, size3 }
 
-/// Radix Themes slider variants.
-enum UiSliderVariant { classic, surface, soft }
+/// Ui slider variants.
+enum UiSliderVariant { surface, soft }
 
-/// Ui slider with Radix-owned size, variant, and component overrides.
+/// Ui slider with Ui-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
 SliderStyler uiSliderStyle({
   UiSliderVariant variant = .surface,
@@ -30,24 +30,9 @@ SliderStyler uiSliderStyle({
         .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
       .thickness(metrics.trackSize)
-      .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(
-            shadows: [
-              RemixBoxShadowMix(color: UiTokens.accent3(), spreadRadius: 3),
-              RemixBoxShadowMix(color: UiTokens.focus8(), spreadRadius: 5),
-            ],
-          ),
-        ),
-      );
+      .thumbFocusEffects(uiFocusOutline());
 
   final styled = switch (variant) {
-    .classic => _uiSliderClassic(
-      base,
-      trackRadius: radius,
-      thumbRadius: thumbRadius,
-      highContrast: highContrast,
-    ),
     .surface => _uiSliderSurface(
       base,
       trackRadius: radius,
@@ -76,6 +61,7 @@ SliderStyler uiSliderStyle({
         ),
         SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
       )
+      .wrap(uiTouchTarget())
       .merge(style);
 }
 
@@ -104,69 +90,7 @@ SliderStyler _uiSliderSurface(
     )
     .thumb(
       BoxStyler().decoration(
-        .boxShadow([BoxShadowMix(color: UiTokens.blackA4(), spreadRadius: 1)]),
-      ),
-    );
-
-SliderStyler _uiSliderClassic(
-  SliderStyler base, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-  required bool highContrast,
-}) => base
-    .track(.color(UiTokens.grayA3()))
-    .range(.color(UiTokens.accentTrack()))
-    .thumbColor(const Color(0xFFFFFFFF))
-    .trackEffects(
-      RemixBoxEffectsMix.overContent(
-        RemixBoxEffectLayerMix(shadowToken: UiTokens.shadow1Layers),
-      ),
-    )
-    .rangeEffects(
-      RemixBoxEffectsMix.behindContent(
-        RemixBoxEffectLayerMix(
-          gradients: _uiSliderHighContrastGradients(highContrast),
-          shadows: highContrast
-              ? [
-                  _uiSliderInset(UiTokens.grayA3()),
-                  _uiSliderInset(UiTokens.blackA2()),
-                  _uiSliderInset(
-                    UiTokens.blackA2(),
-                    offset: const Offset(0, 1.5),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                  ),
-                ]
-              : [
-                  _uiSliderInset(UiTokens.grayA3()),
-                  _uiSliderInset(UiTokens.accentA4()),
-                  _uiSliderInset(UiTokens.blackA1()),
-                  _uiSliderInset(
-                    UiTokens.blackA2(),
-                    offset: const Offset(0, 1.5),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                  ),
-                ],
-        ),
-      ),
-    )
-    .thumb(
-      BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: UiTokens.blackA3(), spreadRadius: 1),
-          BoxShadowMix(
-            color: UiTokens.blackA1(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadowMix(
-            color: UiTokens.blackA1(),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-            spreadRadius: -1,
-          ),
-        ]),
+        .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))),
       ),
     );
 
@@ -204,22 +128,7 @@ SliderStyler _uiSliderSoft(
     )
     .thumb(
       BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: UiTokens.blackA3(), spreadRadius: 1),
-          BoxShadowMix(color: UiTokens.grayA2(), spreadRadius: 1),
-          BoxShadowMix(color: UiTokens.accentA2(), spreadRadius: 1),
-          BoxShadowMix(
-            color: UiTokens.grayA4(),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-          ),
-          BoxShadowMix(
-            color: UiTokens.grayA3(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-            spreadRadius: -0.5,
-          ),
-        ]),
+        .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))),
       ),
     );
 
@@ -235,16 +144,6 @@ SliderStyler _uiSliderDisabled(
           .trackEffects(
             RemixBoxEffectsMix.behindContent(
               uiInsetSurface(strokes: [UiTokens.grayA4()]),
-            ),
-          ),
-    .classic =>
-      SliderStyler()
-          .track(.color(UiTokens.grayA3()))
-          .trackEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadowToken: UiTokens.sliderClassicDisabledTrackShadows,
-              ),
             ),
           ),
     .soft =>
@@ -271,37 +170,16 @@ SliderStyler _uiSliderDisabled(
       )
       .thumb(
         BoxStyler().decoration(
-          .boxShadow([
-            BoxShadowMix(
-              color: switch (variant) {
-                .soft => UiTokens.gray5(),
-                .classic || .surface => UiTokens.gray6(),
-              },
-              spreadRadius: 1,
-            ),
-          ]),
+          .border(
+            .all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())),
+          ),
         ),
       )
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
-        ),
+        RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
       )
       .blendMode(BlendMode.multiply);
 }
-
-RemixBoxShadowMix _uiSliderInset(
-  Color color, {
-  Offset offset = Offset.zero,
-  double blurRadius = 0,
-  double spreadRadius = 1,
-}) => RemixBoxShadowMix(
-  kind: RemixBoxShadowKind.inset,
-  color: color,
-  offset: offset,
-  blurRadius: blurRadius,
-  spreadRadius: spreadRadius,
-);
 
 List<RemixLinearGradientMix> _uiSliderHighContrastGradients(
   bool highContrast,
@@ -335,8 +213,8 @@ _UiSliderMetrics _uiSliderMetrics(UiSliderSize size) => switch (size) {
     trackRadius: UiTokens.sliderTrackRadius1(),
   ),
   .size2 => _UiSliderMetrics(
-    trackSize: UiTokens.sliderTrackSize2(),
-    thumbSize: UiTokens.sliderThumbSize2(),
+    trackSize: UiTokens.space2(),
+    thumbSize: UiTokens.space4(),
     trackRadius: UiTokens.sliderTrackRadius2(),
   ),
   .size3 => _UiSliderMetrics(

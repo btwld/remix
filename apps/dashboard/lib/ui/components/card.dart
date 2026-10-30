@@ -6,13 +6,11 @@ import '../theme/theme.dart';
 
 part 'card.g.dart';
 
-/// Radix Themes Card size presets.
+enum UiCardVariant { surface, ghost }
+
 enum UiCardSize { size1, size2, size3, size4, size5 }
 
-/// Radix Themes Card variants.
-enum UiCardVariant { surface, classic, ghost }
-
-/// Ui-themed Card with the Radix size and variant contract.
+/// Flat panels. Elevation is reserved for floating layers, never cards.
 @MixWidget(target: RemixCard.new)
 CardStyler uiCardStyle({
   UiCardVariant variant = .surface,
@@ -23,25 +21,36 @@ CardStyler uiCardStyle({
   final base = CardStyler()
       .padding(.all(metrics.padding))
       .borderRadius(.all(metrics.radius))
-      .clipBehavior(Clip.antiAlias)
-      .onFocusVisible(
-        .containerEffects(
-          RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: UiTokens.focus8(),
-              width: 2,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-            outlineOffset: -1,
-          ),
-        ),
-      );
+      .clipBehavior(.antiAlias)
+      .onFocusVisible(.containerEffects(uiFocusOutline()));
 
   return (switch (variant) {
-    .surface => _uiCardSurface(base),
-    .classic => _uiCardClassic(base),
-    .ghost => _uiCardGhost(base, metrics.ghostMargin),
-  }).merge(style);
+        .surface =>
+          base
+              .color(UiTokens.colorPanel())
+              .border(
+                .all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1())),
+              )
+              .containerEffects(
+                RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()),
+              )
+              .onHovered(.border(.all(.color(UiTokens.gray7()))))
+              .onPressed(.color(UiTokens.gray3()))
+              .onSelected(.color(UiTokens.gray3())),
+        .ghost =>
+          base
+              .margin(.all(metrics.ghostMargin))
+              .color(const Color(0x00000000))
+              .onHovered(.color(UiTokens.grayA3()))
+              .onPressed(.color(UiTokens.grayA4()))
+              .onSelected(.color(UiTokens.grayA3())),
+      })
+      .onDisabled(
+        CardStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
 ({double padding, double ghostMargin, Radius radius}) _uiCardMetrics(
@@ -73,140 +82,3 @@ CardStyler uiCardStyle({
     radius: UiTokens.radius6(),
   ),
 };
-
-CardStyler _uiCardSurface(CardStyler base) {
-  base = base.containerEffects(
-    RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()),
-  );
-  final open = CardStyler()
-      .containerEffects(RemixBoxEffectsMix.behindContent(_uiCardPanel()))
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          _uiCardSurfaceStroke(UiTokens.grayStroke7()),
-        ),
-      );
-  final activeFocus = CardStyler()
-      .containerEffects(RemixBoxEffectsMix.behindContent(_uiCardActiveFocus()))
-      .onSelected(open);
-  final pressed = CardStyler()
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          _uiCardSurfaceStroke(UiTokens.grayStroke6()),
-        ),
-      )
-      .onFocusVisible(activeFocus)
-      .onSelected(open);
-
-  return base
-      .containerEffects(RemixBoxEffectsMix.behindContent(_uiCardPanel()))
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          _uiCardSurfaceStroke(UiTokens.grayStroke5()),
-        ),
-      )
-      .onHovered(open)
-      .onPressed(pressed)
-      .onSelected(open.onPressed(open));
-}
-
-CardStyler _uiCardClassic(CardStyler base) {
-  base = base.containerEffects(
-    RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()),
-  );
-  final open = CardStyler()
-      .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          _uiCardPanel(shadowToken: UiTokens.cardClassicHoverOuterShadows),
-        ),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(
-            shadowToken: UiTokens.cardClassicHoverInnerShadows,
-          ),
-        ),
-      );
-  final pressed = CardStyler()
-      .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          RemixBoxEffectLayerMix(
-            shadowToken: UiTokens.cardClassicActiveOuterShadows,
-          ),
-        ),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(
-            shadowToken: UiTokens.cardClassicActiveInnerShadows,
-          ),
-        ),
-      )
-      .onFocusVisible(
-        .containerEffects(
-          RemixBoxEffectsMix.behindContent(_uiCardActiveFocus()),
-        ).onSelected(open),
-      )
-      .onSelected(open);
-
-  return base
-      .animate(AnimationConfig.ease(const Duration(milliseconds: 120)))
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          _uiCardPanel(shadowToken: UiTokens.cardClassicOuterShadows),
-        ),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadowToken: UiTokens.cardClassicInnerShadows),
-        ),
-      )
-      .onHovered(open)
-      .onPressed(pressed)
-      .onSelected(open.onPressed(open));
-}
-
-CardStyler _uiCardGhost(CardStyler base, double ghostMargin) {
-  final focused = CardStyler().color(UiTokens.accentA2());
-  final open = CardStyler().color(UiTokens.grayA3()).onFocusVisible(focused);
-  final pressed = CardStyler()
-      .color(UiTokens.grayA4())
-      .onFocusVisible(focused)
-      .onSelected(open);
-
-  return base
-      .margin(.all(ghostMargin))
-      .color(const Color(0x00000000))
-      .onHovered(open)
-      .onPressed(pressed)
-      .onSelected(open.onPressed(open));
-}
-
-RemixBoxEffectLayerMix _uiCardPanel({RemixBoxShadowListToken? shadowToken}) =>
-    RemixBoxEffectLayerMix(
-      gradients: [
-        RemixLinearGradientMix(
-          colors: [UiTokens.colorPanel(), UiTokens.colorPanel()],
-        ),
-      ],
-      gradientInsets: const [1],
-      shadowToken: shadowToken,
-    );
-
-RemixBoxEffectLayerMix _uiCardActiveFocus() => RemixBoxEffectLayerMix(
-  gradients: [
-    RemixLinearGradientMix(colors: [UiTokens.accentA2(), UiTokens.accentA2()]),
-    RemixLinearGradientMix(
-      colors: [UiTokens.colorPanel(), UiTokens.colorPanel()],
-    ),
-  ],
-  gradientInsets: const [1, 1],
-);
-
-RemixBoxEffectLayerMix _uiCardSurfaceStroke(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [
-        RemixBoxShadowMix(color: color, spreadRadius: 1, shapeInset: 1),
-      ],
-    );

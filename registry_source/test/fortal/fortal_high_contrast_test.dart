@@ -24,17 +24,17 @@ void main() {
 
         expect(
           _flexBoxColor(button.spec.container),
-          indigo.dark.scale.step(12),
+          ceu.dark.scale.step(12),
           reason: 'Button ${state.name} background must remain high contrast.',
         );
-        expect(_textColor(button.spec.label), slate.dark.scale.step(1));
+        expect(_textColor(button.spec.label), calcadao.dark.scale.step(1));
         expect(
           _boxColor(iconButton.spec.container),
-          indigo.dark.scale.step(12),
+          ceu.dark.scale.step(12),
           reason:
               'Icon button ${state.name} background must remain high contrast.',
         );
-        expect(iconButton.spec.icon.spec.color, slate.dark.scale.step(1));
+        expect(iconButton.spec.icon.spec.color, calcadao.dark.scale.step(1));
       }
     });
 
@@ -60,14 +60,14 @@ void main() {
 
       expect(
         _flexBoxColor(softButton.spec.container),
-        indigo.light.scale.alphaStep(3),
+        ceu.light.scale.alphaStep(3),
       );
-      expect(_flexBoxColor(surfaceButton.spec.container), indigo.light.surface);
+      expect(_flexBoxColor(surfaceButton.spec.container), ceu.light.surface);
       expect(
         _boxColor(softIconButton.spec.container),
-        indigo.light.scale.alphaStep(3),
+        ceu.light.scale.alphaStep(3),
       );
-      expect(_boxColor(surfaceIconButton.spec.container), indigo.light.surface);
+      expect(_boxColor(surfaceIconButton.spec.container), ceu.light.surface);
     });
 
     testWidgets('solid interactions meet contrast for every accent and mode', (
@@ -128,20 +128,20 @@ void main() {
           ).build(context),
         );
 
-        if (variant == .solid || variant == .classic) {
-          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
+        if (variant == .solid) {
+          expect(_boxColor(normal.spec.container), ceu.light.scale.step(9));
           expect(
             _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
+            ceu.light.scale.step(12),
           );
-          expect(normal.spec.icon.spec.color, indigo.light.contrast);
-          expect(highContrast.spec.icon.spec.color, slate.light.scale.step(1));
-        } else {
-          expect(normal.spec.icon.spec.color, indigo.light.scale.alphaStep(11));
+          expect(normal.spec.icon.spec.color, ceu.light.contrast);
           expect(
             highContrast.spec.icon.spec.color,
-            indigo.light.scale.step(12),
+            calcadao.light.scale.step(1),
           );
+        } else {
+          expect(normal.spec.icon.spec.color, ceu.light.scale.alphaStep(11));
+          expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));
         }
       }
     });
@@ -161,25 +161,16 @@ void main() {
         );
 
         if (variant == .solid) {
-          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
+          expect(_boxColor(normal.spec.container), ceu.light.scale.step(9));
           expect(
             _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
+            ceu.light.scale.step(12),
           );
-          expect(_textColor(normal.spec.label), indigo.light.contrast);
-          expect(
-            _textColor(highContrast.spec.label),
-            indigo.light.scale.step(1),
-          );
+          expect(_textColor(normal.spec.label), ceu.light.contrast);
+          expect(_textColor(highContrast.spec.label), ceu.light.scale.step(1));
         } else {
-          expect(
-            _textColor(normal.spec.label),
-            indigo.light.scale.alphaStep(11),
-          );
-          expect(
-            _textColor(highContrast.spec.label),
-            indigo.light.scale.step(12),
-          );
+          expect(_textColor(normal.spec.label), ceu.light.scale.alphaStep(11));
+          expect(_textColor(highContrast.spec.label), ceu.light.scale.step(12));
         }
       }
     });
@@ -200,10 +191,10 @@ void main() {
           ).build(context),
         );
 
-        expect(_textColor(normal.spec.text), indigo.light.scale.alphaStep(11));
-        expect(_textColor(highContrast.spec.text), indigo.light.scale.step(12));
-        expect(normal.spec.icon.spec.color, indigo.light.scale.alphaStep(11));
-        expect(highContrast.spec.icon.spec.color, indigo.light.scale.step(12));
+        expect(_textColor(normal.spec.text), ceu.light.scale.alphaStep(11));
+        expect(_textColor(highContrast.spec.text), ceu.light.scale.step(12));
+        expect(normal.spec.icon.spec.color, ceu.light.scale.alphaStep(11));
+        expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));
       }
     });
 
@@ -225,25 +216,25 @@ void main() {
           states: {WidgetState.selected},
         );
 
-        if (variant == .classic || variant == .surface) {
-          expect(_boxColor(normal.spec.container), indigo.light.indicator);
+        if (variant == .surface) {
+          expect(_boxColor(normal.spec.container), ceu.light.indicator);
           expect(
             _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
+            ceu.light.scale.step(12),
           );
-          expect(normal.spec.indicator.spec.color, indigo.light.contrast);
+          expect(normal.spec.indicator.spec.color, ceu.light.contrast);
           expect(
             highContrast.spec.indicator.spec.color,
-            indigo.light.scale.step(1),
+            ceu.light.scale.step(1),
           );
         } else {
           expect(
             normal.spec.indicator.spec.color,
-            indigo.light.scale.alphaStep(11),
+            ceu.light.scale.alphaStep(11),
           );
           expect(
             highContrast.spec.indicator.spec.color,
-            indigo.light.scale.step(12),
+            ceu.light.scale.step(12),
           );
         }
       }
@@ -267,22 +258,22 @@ void main() {
           states: {WidgetState.selected},
         );
 
-        if (variant == .classic || variant == .surface) {
-          expect(_boxColor(normal.spec.container), indigo.light.indicator);
+        if (variant == .surface) {
+          expect(_boxColor(normal.spec.container), ceu.light.indicator);
           expect(
             _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
+            ceu.light.scale.step(12),
           );
-          expect(_boxColor(normal.spec.indicator), indigo.light.contrast);
+          expect(_boxColor(normal.spec.indicator), ceu.light.contrast);
           expect(
             _boxColor(highContrast.spec.indicator),
-            indigo.light.scale.step(1),
+            ceu.light.scale.step(1),
           );
         } else {
-          expect(_boxColor(normal.spec.indicator), indigo.light.scale.step(11));
+          expect(_boxColor(normal.spec.indicator), ceu.light.scale.step(11));
           expect(
             _boxColor(highContrast.spec.indicator),
-            indigo.light.scale.step(12),
+            ceu.light.scale.step(12),
           );
         }
       }
@@ -307,21 +298,62 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .classic || .surface => indigo.light.track,
-          .soft => indigo.light.scale.alphaStep(4),
+          .surface => ceu.light.track,
+          .soft => ceu.light.scale.alphaStep(4),
         };
         final expectedHighContrast = switch (variant) {
-          .classic || .surface => indigo.light.scale.step(12),
-          .soft => indigo.light.scale.alphaStep(6),
+          .surface => ceu.light.scale.step(12),
+          .soft => ceu.light.scale.alphaStep(6),
         };
         expect(_boxColor(normal.spec.container), expectedNormal);
         expect(_boxColor(highContrast.spec.container), expectedHighContrast);
       }
     });
 
-    testWidgets('selected switches retain the exact white Radix thumb', (
+    testWidgets('pressed switches retain selection and disabled precedence', (
       tester,
     ) async {
+      for (final brightness in Brightness.values) {
+        for (final variant in FortalSwitchVariant.values) {
+          for (final highContrast in [false, true]) {
+            Future<SwitchSpec> resolve(Set<WidgetState> states) =>
+                _resolveFortalStyle(
+                  tester,
+                  (context) => fortalSwitchStyle(
+                    variant: variant,
+                    highContrast: highContrast,
+                  ).build(context).spec,
+                  brightness: brightness,
+                  states: states,
+                );
+            final pressed = await resolve({WidgetState.pressed});
+            final selectedPressed = await resolve({
+              WidgetState.selected,
+              WidgetState.pressed,
+            });
+            final disabled = await resolve({WidgetState.disabled});
+            final disabledSelectedPressed = await resolve({
+              WidgetState.disabled,
+              WidgetState.selected,
+              WidgetState.pressed,
+            });
+            expect(
+              _boxColor(selectedPressed.container),
+              isNot(_boxColor(pressed.container)),
+              reason:
+                  '$brightness/$variant must keep an on-state while pressed.',
+            );
+            expect(
+              _boxColor(disabledSelectedPressed.container),
+              _boxColor(disabled.container),
+              reason: 'Disabled must win over both press and selection.',
+            );
+          }
+        }
+      }
+    });
+
+    testWidgets('selected switches retain a white thumb', (tester) async {
       for (final variant in FortalSwitchVariant.values) {
         final highContrast = await _resolveFortalStyle(
           tester,
@@ -360,14 +392,11 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .ghost => indigo.light.scale.step(11),
-          .outline => indigo.light.scale.step(11),
+          .ghost => ceu.light.scale.step(11),
+          .outline => ceu.light.scale.step(11),
         };
         expect(_textColor(normal.spec.label), expectedNormal);
-        expect(
-          _textColor(highContrast.spec.label),
-          indigo.light.scale.step(12),
-        );
+        expect(_textColor(highContrast.spec.label), ceu.light.scale.step(12));
       }
     });
 
@@ -384,21 +413,15 @@ void main() {
         (context) => fortalSelectStyle(highContrast: true).build(context),
         states: {WidgetState.hovered},
       );
-      expect(
-        _textColor(hoveredNormal.spec.item.spec.text),
-        indigo.light.contrast,
-      );
+      expect(_textColor(hoveredNormal.spec.item.spec.text), ceu.light.contrast);
       expect(
         _textColor(hoveredHighContrast.spec.item.spec.text),
-        indigo.light.scale.step(1),
+        ceu.light.scale.step(1),
       );
-      expect(
-        hoveredNormal.spec.item.spec.icon.spec.color,
-        indigo.light.contrast,
-      );
+      expect(hoveredNormal.spec.item.spec.icon.spec.color, ceu.light.contrast);
       expect(
         hoveredHighContrast.spec.item.spec.icon.spec.color,
-        indigo.light.scale.step(1),
+        ceu.light.scale.step(1),
       );
     });
 
@@ -412,12 +435,9 @@ void main() {
 
       expect(
         _textColor(hoveredHighContrast.spec.text),
-        indigo.light.scale.step(1),
+        ceu.light.scale.step(1),
       );
-      expect(
-        hoveredHighContrast.spec.icon.spec.color,
-        indigo.light.scale.step(1),
-      );
+      expect(hoveredHighContrast.spec.icon.spec.color, ceu.light.scale.step(1));
     });
 
     testWidgets('slider variants resolve accent12 ranges', (tester) async {
@@ -435,8 +455,8 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .classic || .surface => indigo.light.indicator,
-          .soft => indigo.light.scale.step(6),
+          .surface => ceu.light.indicator,
+          .soft => ceu.light.scale.step(6),
         };
         expect(_boxColor(normal.spec.range), expectedNormal);
         final contrastGradient =
@@ -463,13 +483,13 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .classic || .surface => indigo.light.indicator,
-          .soft => indigo.light.scale.step(8),
+          .surface => ceu.light.indicator,
+          .soft => ceu.light.scale.step(8),
         };
         expect(_boxColor(normal.spec.indicator), expectedNormal);
         expect(
           _boxColor(highContrast.spec.indicator),
-          indigo.light.scale.step(12),
+          ceu.light.scale.step(12),
         );
       }
     });
@@ -501,8 +521,8 @@ void main() {
         states: {WidgetState.selected},
       );
 
-      expect(_tabUnderlineColor(normal), const Color(0xFF3E63DD));
-      expect(_tabUnderlineColor(highContrast), const Color(0xFF1F2D5C));
+      expect(_tabUnderlineColor(normal), ceu.light.scale.step(9));
+      expect(_tabUnderlineColor(highContrast), ceu.light.scale.step(12));
     });
   });
 }
@@ -510,7 +530,7 @@ void main() {
 Future<T> _resolveFortalStyle<T>(
   WidgetTester tester,
   T Function(BuildContext context) resolve, {
-  FortalAccentColor accent = .indigo,
+  FortalAccentColor accent = .ceu,
   Brightness brightness = .light,
   FortalRadius radius = .medium,
   Set<WidgetState> states = const {},

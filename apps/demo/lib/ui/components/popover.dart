@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'popover.g.dart';
 
-/// Fortal popover size presets matching Radix Themes 3.3.0.
+/// Fortal popover size presets on the shared scale.
 enum FortalPopoverSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixPopover].
@@ -32,7 +32,7 @@ PopoverStyler fortalPopoverStyle({
   };
 
   return PopoverStyler()
-      .maxWidth(480)
+      .maxWidth(FortalTokens.popoverMaxWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())

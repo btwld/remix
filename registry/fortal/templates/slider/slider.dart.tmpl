@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'slider.g.dart';
 
-/// Radix Themes slider sizes.
+/// {{typePrefix}} slider sizes.
 enum {{typePrefix}}SliderSize { size1, size2, size3 }
 
-/// Radix Themes slider variants.
-enum {{typePrefix}}SliderVariant { classic, surface, soft }
+/// {{typePrefix}} slider variants.
+enum {{typePrefix}}SliderVariant { surface, soft }
 
-/// {{typePrefix}} slider with Radix-owned size, variant, and component overrides.
+/// {{typePrefix}} slider with {{typePrefix}}-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
 SliderStyler {{valuePrefix}}SliderStyle({
   {{typePrefix}}SliderVariant variant = .surface,
@@ -30,24 +30,9 @@ SliderStyler {{valuePrefix}}SliderStyle({
         .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
       .thickness(metrics.trackSize)
-      .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(
-            shadows: [
-              RemixBoxShadowMix(color: {{typePrefix}}Tokens.accent3(), spreadRadius: 3),
-              RemixBoxShadowMix(color: {{typePrefix}}Tokens.focus8(), spreadRadius: 5),
-            ],
-          ),
-        ),
-      );
+      .thumbFocusEffects({{valuePrefix}}FocusOutline());
 
   final styled = switch (variant) {
-    .classic => _{{valuePrefix}}SliderClassic(
-      base,
-      trackRadius: radius,
-      thumbRadius: thumbRadius,
-      highContrast: highContrast,
-    ),
     .surface => _{{valuePrefix}}SliderSurface(
       base,
       trackRadius: radius,
@@ -76,6 +61,7 @@ SliderStyler {{valuePrefix}}SliderStyle({
         ),
         SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
       )
+      .wrap({{valuePrefix}}TouchTarget())
       .merge(style);
 }
 
@@ -104,71 +90,9 @@ SliderStyler _{{valuePrefix}}SliderSurface(
     )
     .thumb(
       BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: {{typePrefix}}Tokens.blackA4(), spreadRadius: 1),
-        ]),
-      ),
-    );
-
-SliderStyler _{{valuePrefix}}SliderClassic(
-  SliderStyler base, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-  required bool highContrast,
-}) => base
-    .track(.color({{typePrefix}}Tokens.grayA3()))
-    .range(.color({{typePrefix}}Tokens.accentTrack()))
-    .thumbColor(const Color(0xFFFFFFFF))
-    .trackEffects(
-      RemixBoxEffectsMix.overContent(
-        RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
-      ),
-    )
-    .rangeEffects(
-      RemixBoxEffectsMix.behindContent(
-        RemixBoxEffectLayerMix(
-          gradients: _{{valuePrefix}}SliderHighContrastGradients(highContrast),
-          shadows: highContrast
-              ? [
-                  _{{valuePrefix}}SliderInset({{typePrefix}}Tokens.grayA3()),
-                  _{{valuePrefix}}SliderInset({{typePrefix}}Tokens.blackA2()),
-                  _{{valuePrefix}}SliderInset(
-                    {{typePrefix}}Tokens.blackA2(),
-                    offset: const Offset(0, 1.5),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                  ),
-                ]
-              : [
-                  _{{valuePrefix}}SliderInset({{typePrefix}}Tokens.grayA3()),
-                  _{{valuePrefix}}SliderInset({{typePrefix}}Tokens.accentA4()),
-                  _{{valuePrefix}}SliderInset({{typePrefix}}Tokens.blackA1()),
-                  _{{valuePrefix}}SliderInset(
-                    {{typePrefix}}Tokens.blackA2(),
-                    offset: const Offset(0, 1.5),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                  ),
-                ],
+        .border(
+          .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
         ),
-      ),
-    )
-    .thumb(
-      BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: {{typePrefix}}Tokens.blackA3(), spreadRadius: 1),
-          BoxShadowMix(
-            color: {{typePrefix}}Tokens.blackA1(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadowMix(
-            color: {{typePrefix}}Tokens.blackA1(),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-            spreadRadius: -1,
-          ),
-        ]),
       ),
     );
 
@@ -206,22 +130,9 @@ SliderStyler _{{valuePrefix}}SliderSoft(
     )
     .thumb(
       BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: {{typePrefix}}Tokens.blackA3(), spreadRadius: 1),
-          BoxShadowMix(color: {{typePrefix}}Tokens.grayA2(), spreadRadius: 1),
-          BoxShadowMix(color: {{typePrefix}}Tokens.accentA2(), spreadRadius: 1),
-          BoxShadowMix(
-            color: {{typePrefix}}Tokens.grayA4(),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-          ),
-          BoxShadowMix(
-            color: {{typePrefix}}Tokens.grayA3(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-            spreadRadius: -0.5,
-          ),
-        ]),
+        .border(
+          .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
+        ),
       ),
     );
 
@@ -237,16 +148,6 @@ SliderStyler _{{valuePrefix}}SliderDisabled(
           .trackEffects(
             RemixBoxEffectsMix.behindContent(
               {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA4()]),
-            ),
-          ),
-    .classic =>
-      SliderStyler()
-          .track(.color({{typePrefix}}Tokens.grayA3()))
-          .trackEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadowToken: {{typePrefix}}Tokens.sliderClassicDisabledTrackShadows,
-              ),
             ),
           ),
     .soft =>
@@ -273,37 +174,18 @@ SliderStyler _{{valuePrefix}}SliderDisabled(
       )
       .thumb(
         BoxStyler().decoration(
-          .boxShadow([
-            BoxShadowMix(
-              color: switch (variant) {
-                .soft => {{typePrefix}}Tokens.gray5(),
-                .classic || .surface => {{typePrefix}}Tokens.gray6(),
-              },
-              spreadRadius: 1,
+          .border(
+            .all(
+              .color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()),
             ),
-          ]),
+          ),
         ),
       )
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
-        ),
+        RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
       )
       .blendMode(BlendMode.multiply);
 }
-
-RemixBoxShadowMix _{{valuePrefix}}SliderInset(
-  Color color, {
-  Offset offset = Offset.zero,
-  double blurRadius = 0,
-  double spreadRadius = 1,
-}) => RemixBoxShadowMix(
-  kind: RemixBoxShadowKind.inset,
-  color: color,
-  offset: offset,
-  blurRadius: blurRadius,
-  spreadRadius: spreadRadius,
-);
 
 List<RemixLinearGradientMix> _{{valuePrefix}}SliderHighContrastGradients(
   bool highContrast,
@@ -338,8 +220,8 @@ _{{typePrefix}}SliderMetrics _{{valuePrefix}}SliderMetrics({{typePrefix}}SliderS
         trackRadius: {{typePrefix}}Tokens.sliderTrackRadius1(),
       ),
       .size2 => _{{typePrefix}}SliderMetrics(
-        trackSize: {{typePrefix}}Tokens.sliderTrackSize2(),
-        thumbSize: {{typePrefix}}Tokens.sliderThumbSize2(),
+        trackSize: {{typePrefix}}Tokens.space2(),
+        thumbSize: {{typePrefix}}Tokens.space4(),
         trackRadius: {{typePrefix}}Tokens.sliderTrackRadius2(),
       ),
       .size3 => _{{typePrefix}}SliderMetrics(

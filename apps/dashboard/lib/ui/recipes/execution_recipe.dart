@@ -31,19 +31,25 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => UiAgentExecutionRecipe(
   style: UiExecutionStyler(
-    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+    header: FlexBoxStyler()
+        .spacing(UiTokens.space2())
+        .crossAxisAlignment(.center),
     output: BoxStyler()
         .color(UiTokens.gray3())
-        .borderRadius(.circular(6))
-        .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
-    tool: TextStyler().color(UiTokens.gray11()).fontSize(12),
-    title: TextStyler().color(UiTokens.gray12()).fontWeight(FontWeight.w600),
-    meta: TextStyler().color(UiTokens.gray11()).fontSize(12),
-    status: TextStyler().color(UiTokens.gray11()).fontSize(12),
-    toolIcon: IconStyler().color(UiTokens.gray12()).size(16),
-    statusIcon: IconStyler().color(UiTokens.accent9()).size(12),
-    indicator: IconStyler().color(UiTokens.gray12()).size(16),
+        .borderRadius(.all(UiTokens.radius3()))
+        .padding(.all(UiTokens.space3())),
+    actions: FlexBoxStyler()
+        .spacing(UiTokens.space2())
+        .padding(.top(UiTokens.space3())),
+    tool: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
+    title: TextStyler()
+        .color(UiTokens.gray12())
+        .fontWeight(UiTokens.fontWeightSemibold()),
+    meta: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
+    status: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
+    toolIcon: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
+    statusIcon: IconStyler().color(UiTokens.accent9()).size(UiTokens.space3()),
+    indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
   disclosureStyle: uiDisclosureStyle(
@@ -56,7 +62,7 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
         .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
         .content(
           BoxStyler()
-              .padding(.fromLTRB(0, 12, 0, 4))
+              .padding(.fromLTRB(0, UiTokens.space3(), 0, UiTokens.space1()))
               .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
         )
         .onHovered(.trigger(.color(const Color(0x00000000))))

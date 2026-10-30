@@ -51,11 +51,12 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
         ),
         color: {{typePrefix}}Tokens.colorSurface(),
       ),
-      clipBehavior: .hardEdge,
       mainAxisSize: .min,
-      spacing: 0,
+      spacing: {{typePrefix}}Tokens.space1(),
     ),
-    item: .alignment(.center)
+    item: ToggleGroupItemStyler()
+        .wrap({{valuePrefix}}TouchTarget())
+        .alignment(.center)
         .labelColor({{typePrefix}}Tokens.gray11())
         .iconColor({{typePrefix}}Tokens.gray11())
         .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium())
@@ -63,6 +64,9 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
         .onPressed(ToggleGroupItemStyler().color({{typePrefix}}Tokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
+              .container(
+                FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
+              )
               .color(selectedColor)
               .labelColor(selectedForeground)
               .iconColor(selectedForeground)
@@ -72,6 +76,9 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
         .onFocusVisible(ToggleGroupItemStyler().{{valuePrefix}}FocusRing())
         .onDisabled(
           ToggleGroupItemStyler()
+              .container(
+                FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
+              )
               .color({{typePrefix}}Tokens.grayA3())
               .labelColor({{typePrefix}}Tokens.gray8())
               .iconColor({{typePrefix}}Tokens.gray8()),
@@ -88,7 +95,7 @@ ToggleGroupStyler _{{valuePrefix}}ToggleGroupSizeStyler({{typePrefix}}ToggleGrou
                 FlexBoxStyler()
                     .padding(.horizontal({{typePrefix}}Tokens.space2()))
                     .padding(.vertical({{typePrefix}}Tokens.space1()))
-                    .spacing({{typePrefix}}Tokens.toggleGap1()),
+                    .spacing({{typePrefix}}Tokens.space1()),
               )
               .label(.style({{typePrefix}}Tokens.text1.mix()))
               .icon(.size({{typePrefix}}Tokens.space3())),
@@ -112,7 +119,7 @@ ToggleGroupStyler _{{valuePrefix}}ToggleGroupSizeStyler({{typePrefix}}ToggleGrou
                 FlexBoxStyler()
                     .padding(.horizontal({{typePrefix}}Tokens.space4()))
                     .padding(.vertical({{typePrefix}}Tokens.space2()))
-                    .spacing({{typePrefix}}Tokens.toggleGap3()),
+                    .spacing({{typePrefix}}Tokens.space2()),
               )
               .label(.style({{typePrefix}}Tokens.text3.mix()))
               .icon(.size({{typePrefix}}Tokens.spinnerSize3())),

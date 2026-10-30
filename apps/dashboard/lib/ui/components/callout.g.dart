@@ -6,7 +6,7 @@ part of 'callout.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Callout with the Radix size, variant, and override contract.
+/// Ui-themed Callout with Ui sizes, variants, and overrides.
 class UiCallout extends StatelessWidget {
   const UiCallout({
     super.key,

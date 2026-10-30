@@ -234,10 +234,10 @@ void main() {
     tester,
   ) async {
     final light = const AcmeThemeData.light(
-      accent: AcmeAccentColor.red,
+      accent: AcmeAccentColor.caju,
     ).copyWith(radius: AcmeRadius.large);
     final dark = const AcmeThemeData.dark(
-      accent: AcmeAccentColor.blue,
+      accent: AcmeAccentColor.ceu,
     ).copyWith(radius: AcmeRadius.large);
     for (final mode in [
       AcmeThemeMode.light,
