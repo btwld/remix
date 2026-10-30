@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'callout.g.dart';
 
-/// Radix Themes Callout size presets.
+/// {{typePrefix}} Callout size presets.
 enum {{typePrefix}}CalloutSize { size1, size2, size3 }
 
-/// Radix Themes Callout variants.
+/// {{typePrefix}} Callout variants.
 enum {{typePrefix}}CalloutVariant { soft, surface, outline }
 
-/// {{typePrefix}}-themed Callout with the Radix size, variant, and override contract.
+/// {{typePrefix}}-themed Callout with {{typePrefix}} sizes, variants, and overrides.
 @MixWidget(target: RemixCallout.new)
 CalloutStyler {{valuePrefix}}CalloutStyle({
   {{typePrefix}}CalloutVariant variant = .soft,

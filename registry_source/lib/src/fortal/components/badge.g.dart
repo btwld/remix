@@ -6,7 +6,7 @@ part of 'badge.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed Badge with the Radix size, variant, and override contract.
+/// Fortal-themed Badge with Fortal sizes, variants, and overrides.
 class FortalBadge extends StatelessWidget {
   const FortalBadge({
     super.key,

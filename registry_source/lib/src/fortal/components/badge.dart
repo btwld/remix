@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'badge.g.dart';
 
-/// Radix Themes Badge size presets.
+/// Fortal Badge size presets.
 enum FortalBadgeSize { size1, size2, size3 }
 
-/// Radix Themes Badge variants.
+/// Fortal Badge variants.
 enum FortalBadgeVariant { solid, soft, surface, outline }
 
-/// Fortal-themed Badge with the Radix size, variant, and override contract.
+/// Fortal-themed Badge with Fortal sizes, variants, and overrides.
 @MixWidget(target: RemixBadge.new)
 BadgeStyler fortalBadgeStyle({
   FortalBadgeVariant variant = .soft,
@@ -36,7 +36,7 @@ BadgeStyler fortalBadgeStyle({
       base
           .color(FortalTokens.accentA3())
           .labelColor(
-            // Step 11 is Radix low-contrast text, not WCAG AA 4.5:1 on
+            // Step 11 is Fortal secondary text, not WCAG AA 4.5:1 on
             // accentA3 over colorPanelSolid. highContrast promotes accent12.
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
@@ -89,7 +89,7 @@ TextStyleToken _fortalBadgeText(FortalBadgeSize size) => switch (size) {
 EdgeInsetsGeometryMix _fortalBadgePadding(FortalBadgeSize size) =>
     switch (size) {
       .size1 => EdgeInsetsGeometryMix.symmetric(
-        horizontal: FortalTokens.badgePaddingX1(),
+        horizontal: FortalTokens.space2(),
         vertical: FortalTokens.badgePaddingY1(),
       ),
       .size2 => EdgeInsetsGeometryMix.symmetric(
@@ -97,7 +97,7 @@ EdgeInsetsGeometryMix _fortalBadgePadding(FortalBadgeSize size) =>
         vertical: FortalTokens.space1(),
       ),
       .size3 => EdgeInsetsGeometryMix.symmetric(
-        horizontal: FortalTokens.badgePaddingX3(),
+        horizontal: FortalTokens.space3(),
         vertical: FortalTokens.space1(),
       ),
     };

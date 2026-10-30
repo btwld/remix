@@ -1,4 +1,4 @@
-/// Fortal: a Radix Themes-inspired preset theme and widget catalog for Remix.
+/// Fortal: a Fortaleza-inspired preset theme and widget catalog for Remix.
 ///
 /// Fortal is built on [package:remix](https://pub.dev/packages/remix). It adds a
 /// token scope ([FortalTheme]), the `fortal*Style()` recipes, and a matching
@@ -11,7 +11,8 @@ library;
 export 'src/fortal/icons.dart';
 
 /// THEME
-export 'src/fortal/theme/radix_colors.dart';
+export 'src/fortal/theme/fortal_colors.dart';
+export 'src/fortal/theme/palette.dart';
 export 'src/fortal/theme/theme.dart';
 export 'src/fortal/components/base_button.dart'
     hide

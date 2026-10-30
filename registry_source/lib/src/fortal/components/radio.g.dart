@@ -24,22 +24,6 @@ class FortalRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Raised treatment with Radix's classic shadow and gradient layers.
-  const FortalRadio.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const RadioStyler.create(),
-    required this.value,
-    required this.semanticLabel,
-    this.enabled = true,
-    this.toggleable = false,
-    this.mouseCursor,
-    this.focusNode,
-    this.autofocus = false,
-    this.excludeSemantics = false,
-  }) : variant = FortalRadioVariant.classic;
-
   /// Surface treatment with neutral border.
   const FortalRadio.surface({
     super.key,

@@ -24,7 +24,7 @@ import 'package:remix/src/utilities/remix_path_icon.dart';
 enum _Preset { defaultPreset, fortal }
 
 void main() {
-  test('shared parity contract matches the Fortal reference inventory', () {
+  test('shared dashboard contract matches the Fortal sample inventory', () {
     expect(RegistryDashboardDemoPage.values.map((page) => page.name), [
       'overview',
       'chat',

@@ -6,7 +6,7 @@ part of 'slider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui slider with Radix-owned size, variant, and component overrides.
+/// Ui slider with Ui-owned size, variant, and component overrides.
 class UiSlider extends StatelessWidget {
   const UiSlider({
     super.key,
@@ -29,27 +29,6 @@ class UiSlider extends StatelessWidget {
     this.semanticFormatterCallback,
     this.excludeSemantics = false,
   });
-
-  const UiSlider.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const SliderStyler.create(),
-    required this.value,
-    this.onChanged,
-    this.onChangeStart,
-    this.onChangeEnd,
-    this.min = 0.0,
-    this.max = 1.0,
-    this.enabled = true,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.snapDivisions,
-    this.semanticLabel,
-    this.semanticFormatterCallback,
-    this.excludeSemantics = false,
-  }) : variant = UiSliderVariant.classic;
 
   const UiSlider.surface({
     super.key,

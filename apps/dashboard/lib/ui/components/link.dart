@@ -14,10 +14,6 @@ enum UiLinkUnderline { auto, always, hover, none }
 /// Takes a [context] because the focus outline's radius is em-relative to the
 /// resolved font size.
 ///
-/// [actionable] gates every state-dependent rule, matching upstream's
-/// `:where(:any-link, button)`. A non-actionable link carries no hover or
-/// focus-visible variant at all, so it stays plain accent text no matter what
-/// widget states are resolved around it.
 LinkStyler uiLinkStyle(
   BuildContext context, {
   UiTextSize? size,
@@ -52,6 +48,7 @@ LinkStyler uiLinkStyle(
   ).label(.decoration(TextDecoration.none));
 
   return styleFor()
+      .wrap(uiTouchTarget())
       .onHovered(styleFor(hovered: true))
       .onFocusVisible(focusVisible)
       .merge(style);
@@ -87,9 +84,6 @@ LinkStyler _uiLinkStateStyle(
   final effectiveText = uiResolveTextToken(context, size ?? UiTextSize.size3);
   final fontSize = effectiveText.fontSize!;
 
-  // Every upstream underline rule is gated behind `:where(:any-link, button)`,
-  // so a link with no callback stays plain accent-coloured text. A focus-visible
-  // outline replaces the underline rather than stacking both.
   final underlined =
       actionable &&
       !focused &&
@@ -100,11 +94,6 @@ LinkStyler _uiLinkStateStyle(
         .none => false,
       };
   if (underlined) {
-    // Radix declares the decoration colour twice for this selector and the
-    // later rule wins:
-    //   text-decoration-color: color-mix(in oklab, var(--accent-aN), var(--gray-a6))
-    // Using the accent alpha alone leaves the underline noticeably fainter, so
-    // blend it. Color.lerp is an sRGB approximation of the oklab mix.
     final accentStep = underline == UiLinkUnderline.auto && highContrast
         ? UiTokens.accentA6
         : UiTokens.accentA5;
@@ -117,11 +106,6 @@ LinkStyler _uiLinkStateStyle(
         .decoration(TextDecoration.underline)
         .decorationStyle(TextDecorationStyle.solid)
         .decorationColor(decorationColor)
-        // Upstream is `min(2px, max(1px, 0.05em))`. Flutter reads
-        // decorationThickness as a multiple of the font's own underline
-        // thickness rather than a length, so the pinned 1–2 range lands as a
-        // 1×–2× stroke instead of exact pixels; the em breakpoints still fall
-        // where Radix puts them.
         .decorationThickness(math.min(2, math.max(1, 0.05 * fontSize)));
   }
   textStyle = uiApplyTextFlow(
@@ -138,9 +122,7 @@ LinkStyler _uiLinkStateStyle(
         ),
       );
   if (focused) {
-    style = style.containerEffects(
-      uiFocusOutline(uiResolveColor(context, UiTokens.focus8), offset: 2),
-    );
+    style = style.containerEffects(uiFocusOutline());
   }
 
   return style;

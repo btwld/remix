@@ -5,8 +5,7 @@ keywords: [flutter, remix, fortal, typography, text, heading, code, kbd, link, s
 ---
 
 Fortal ships five typography families — `FortalText`, `FortalHeading`,
-`FortalCode`, `FortalKbd`, and `FortalLink` — mapped from
-[Radix Themes 3.3.0](https://www.radix-ui.com/themes). They share one nine-step
+`FortalCode`, `FortalKbd`, and `FortalLink`. They share one nine-step
 size scale (`FortalTextSize`) and one weight enum (`FortalTextWeight`) instead
 of declaring five parallel copies.
 
@@ -15,9 +14,18 @@ These families live only in the application-owned Fortal preset. There is no
 plus your own tokens is the equivalent there. The examples assume the preset
 was initialized with `--prefix Fortal` as shown in the [Fortal overview](/fortal).
 
-For visual reference, open the [light capture](/assets/fortal-typography-light.png)
-or [dark capture](/assets/fortal-typography-dark.png). These are screenshots,
-not interactive previews.
+For visual reference, open the [light matrix](/assets/fortal-typography-light.png)
+or [dark matrix](/assets/fortal-typography-dark.png). These Calçadão captures
+show the current size and variant scales; they are not interactive previews.
+
+## Shared type scale
+
+| Step | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Size (px at 100%) | 12 | 14 | 16 | 18 | 20 | 24 | 28 | 36 | 60 |
+
+All values follow theme scaling. Accordion and disclosure labels use the same
+`text2` / `text3` tokens as the rest of the system.
 
 ## Choosing a widget
 
@@ -35,13 +43,11 @@ rather than the ambient `DefaultTextStyle`. `FortalText` also defaults to the
 regular weight token and neutral `gray-12`; `FortalHeading` defaults to size 6,
 bold, and neutral `gray-12`.
 
-This deliberately differs from Radix CSS, where an unsized `Text` renders at
-the surrounding `1em`. Fortal keeps the upstream Code and Kbd adjustments but
-anchors them to tokens: an unsized soft Code resolves
+Code and Kbd have compact, token-anchored adjustments: an unsized soft Code resolves
 `0.95 × 0.95 × text3`, and an unsized Kbd resolves `0.75 × text3`. Pass an
 explicit `size:` to select another token size.
 
-The outermost `FortalTheme` still establishes the Radix root run as a courtesy
+The outermost `FortalTheme` still establishes the root text run as a courtesy
 `DefaultTextStyle` for bare Flutter `Text`. Under `WidgetsApp`, put the scope in `builder:` so that fallback reaches routes and
 raw overlays; see [scope placement](/fortal#scope-placement). A nearer
 `DefaultTextStyle` can replace the run for bare text, but never changes Fortal
@@ -76,7 +82,7 @@ class TypographyExample extends StatelessWidget {
           spacing: 10,
           children: [
             FortalCode.soft('FortalTheme', size: FortalTextSize.size2),
-            FortalKbd.classic(
+            FortalKbd.soft(
               '⌘K',
               size: FortalTextSize.size2,
               semanticLabel: 'Command K',
@@ -110,8 +116,7 @@ line, which is what a table cell or a row with a fixed-width neighbour needs.
 `FortalText` and `FortalHeading` use neutral `gray-12` unless `accent: true`
 takes the surrounding `FortalTheme` accent at `accent-a11`; adding
 `highContrast: true` promotes it to `accent-12`. `highContrast` alone leaves
-the neutral color unchanged — the same gate Radix puts behind
-`[data-accent-color]`.
+the neutral color unchanged.
 
 `FortalKbd` is the exception: it pins its own regular weight, line box, and
 `gray-12` foreground so a key cap never follows the surrounding copy.
@@ -137,7 +142,7 @@ class TypographyVariantsExample extends StatelessWidget {
         FortalCode.soft('soft'),
         FortalCode.outline('outline'),
         FortalCode.ghost('ghost'),
-        FortalKbd.classic('⌘K', semanticLabel: 'Command K'),
+        FortalKbd.soft('⌘K', semanticLabel: 'Command K'),
         FortalKbd.soft('Esc', semanticLabel: 'Escape'),
       ],
     );
@@ -153,7 +158,7 @@ roles. A foreground composed onto the recipe overrides that ambient fallback.
 ## Headings and semantic level
 
 `headingLevel` drives the accessibility level only. Changing it never changes
-the visual `size`, which is how Radix separates `as` from `size`. A page title
+the visual `size`. A page title
 can be level 1 at size 6 while an empty-state title stays level 2 at size 3.
 
 <CodeGroup title="Heading level and size" defaultLanguage="dart">
@@ -197,8 +202,7 @@ accent colour but gives up its focus stop, link role, and activation. Give it
 `onPressed` and it becomes a real link: focusable, activatable with pointer and
 Enter, and underlined according to `underline`.
 
-Every upstream underline rule is gated behind `:where(:any-link, button)`, so a
-disabled link never underlines regardless of `underline`. For accent-coloured
+A disabled link never underlines regardless of `underline`. For accent-coloured
 text that was never meant to be followed, use `FortalText(accent: true)`.
 
 Space does **not** activate a link. That is the Button role's key; a link takes
@@ -284,28 +288,14 @@ Starting from the recipe keeps the scale, weights, and flow behaviour Fortal's
 and layers only what your project actually adds. Reaching for a bare
 `TextStyler` instead re-declares the whole type ramp locally.
 
-## Parity boundaries
+## Composition notes
 
-These are the documented differences from Radix Themes 3.3.0. They are recorded
-in the package's checked-in parity contract and verified in CI.
-
-- **No leading trim.** CSS leading trim has no Flutter primitive, so the token
-  line box is painted untrimmed.
-- **No `pretty` or `balance` wrapping.** Flutter exposes no equivalent line
-  breaker; `softWrap` and `truncate` map the `wrap`/`nowrap` pair.
-- **No responsive prop objects.** Rebuild with the value your Flutter layout
-  picks instead of passing a breakpoint map.
-- **No per-instance colour prop.** Re-scope `FortalTheme.accent` around the
-  subtree rather than colouring one run.
-- **`FortalCode` is a box, not an inline span.** Radix renders `code` inline
-  inside a text run; a Flutter box is a sibling widget, so a Code inside a
-  wrapped sentence does not reflow with it.
-- **`FortalKbd` skips the `-0.03em` nudge.** Radix nudges the cap up and aligns
-  it with `vertical-align: text-top`; a standalone Flutter box has no inline
-  baseline to align against.
-- **Link underline geometry is approximate.** Flutter reads
-  `decorationThickness` as a multiple of the font's own underline thickness
-  rather than a CSS length, and exposes no underline offset. The decoration
-  colour approximates Radix's `color-mix(in oklab, …)` with an sRGB blend.
-- **No `Em`, `Strong`, `Quote`, or `Blockquote`.** Use `FortalText` with an
-  explicit weight where Radix would use `Strong`.
+- Flutter paints the token line box without leading trim. `softWrap` and
+  `truncate` control flow; use layout constraints to select responsive values.
+- `FortalCode` and `FortalKbd` are standalone boxes, not inline text spans.
+  Compose them in a `Wrap` or row alongside text.
+- Link underline thickness follows the font's underline metrics. Keyboard
+  focus uses the shared outside ring and suppresses the underline.
+- Kbd has only the flat `soft` variant and is inert, with keyboard-key semantics.
+- Scope a named accent or generated brand palette around a subtree to change
+  color without restating its typography.

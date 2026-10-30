@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The Radix BaseButton size scale shared by Button and IconButton.
+/// The Fortal BaseButton size scale shared by Button and IconButton.
 ///
 /// Deliberate: this mirrors [FortalBaseButtonVariant]. Button and IconButton
 /// each own a size enum, so the shared metrics need a common type — passing the
@@ -22,7 +22,7 @@ final fortalBaseButtonRestMotion = AnimationConfig.ease(
   const Duration(milliseconds: 120),
 );
 
-/// Shared Radix BaseButton metrics used by Button and IconButton recipes.
+/// Shared Fortal BaseButton metrics used by Button and IconButton recipes.
 ({
   double height,
   double paddingX,
@@ -93,7 +93,7 @@ fortalBaseButtonGhostMetrics(FortalBaseButtonSize size) => switch (size) {
   ),
   .size3 => (
     paddingX: FortalTokens.space3(),
-    paddingY: FortalTokens.baseButtonGhostPaddingY3(),
+    paddingY: FortalTokens.space2(),
     marginX: FortalTokens.baseButtonGhostMarginX3(),
     marginY: FortalTokens.baseButtonGhostMarginY3(),
     gap: FortalTokens.space2(),
@@ -116,7 +116,7 @@ fortalBaseButtonGhostMetrics(FortalBaseButtonSize size) => switch (size) {
     margin: FortalTokens.iconButtonGhostMargin1(),
   ),
   .size2 => (
-    padding: FortalTokens.iconButtonGhostPadding2(),
+    padding: FortalTokens.space2(),
     margin: FortalTokens.iconButtonGhostMargin2(),
   ),
   .size3 => (
@@ -141,105 +141,6 @@ WidgetModifierConfig fortalModeAwareFilter({
 WidgetModifierConfig fortalClearFilter() =>
     fortalModeAwareFilter(light: const [], dark: const []);
 
-/// Exact classic BaseButton surface for a visual state.
-RemixBoxEffectLayerMix fortalClassicBaseButtonSurface({
-  required bool highContrast,
-  bool hovered = false,
-  bool pressed = false,
-  bool disabled = false,
-}) {
-  final inset = FortalTokens.baseButtonClassicAfterInset();
-  if (disabled) {
-    return RemixBoxEffectLayerMix(
-      gradients: [
-        RemixLinearGradientMix(
-          colors: [
-            FortalTokens.blackA1(),
-            const Color(0x00000000),
-            FortalTokens.whiteA1(),
-          ],
-          stops: const [-0.2, 0.4, 1],
-        ),
-        RemixLinearGradientMix(
-          colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
-        ),
-      ],
-      gradientInsets: [inset, inset],
-      shadowToken: FortalTokens.baseButtonClassicDisabledShadows,
-    );
-  }
-
-  final baseColor = highContrast
-      ? FortalTokens.accent12()
-      : FortalTokens.accent9();
-  final afterColor = hovered && !highContrast
-      ? FortalTokens.accent10()
-      : baseColor;
-  final pseudoGradient = RemixLinearGradientMix(
-    colors: [
-      highContrast
-          ? hovered || pressed
-                ? FortalTokens.blackA5()
-                : FortalTokens.blackA3()
-          : hovered
-          ? FortalTokens.blackA2()
-          : pressed
-          ? FortalTokens.blackA2()
-          : FortalTokens.blackA1(),
-      const Color(0x00000000),
-      highContrast
-          ? pressed
-                ? FortalTokens.whiteA3()
-                : FortalTokens.whiteA2()
-          : hovered || pressed
-          ? FortalTokens.whiteA3()
-          : FortalTokens.whiteA2(),
-    ],
-    stops: hovered && !highContrast
-        ? const [-0.15, 0.425, 1]
-        : const [0, 0.5, 1],
-  );
-  final gradients = <RemixLinearGradientMix>[
-    pseudoGradient,
-    RemixLinearGradientMix(colors: [afterColor, afterColor]),
-    if (pressed)
-      RemixLinearGradientMix(
-        colors: [FortalTokens.blackA1(), const Color(0x00000000)],
-      )
-    else ...[
-      RemixLinearGradientMix(
-        colors: [
-          const Color(0x00000000),
-          const Color(0x00000000),
-          FortalTokens.grayA4(),
-          FortalTokens.grayA4(),
-        ],
-        stops: const [0, 0.5, 0.5, 1],
-      ),
-      RemixLinearGradientMix(
-        colors: [
-          const Color(0x00000000),
-          const Color(0x00000000),
-          baseColor,
-          baseColor,
-        ],
-        stops: const [0, 0.5, 0.8, 1],
-      ),
-    ],
-  ];
-  return RemixBoxEffectLayerMix(
-    gradients: gradients,
-    gradientInsets: [inset, inset, ...List.filled(gradients.length - 2, 0)],
-    shadowToken: pressed
-        ? highContrast
-              ? FortalTokens.baseButtonClassicActiveHighContrastShadows
-              : FortalTokens.baseButtonClassicActiveShadows
-        : highContrast
-        ? FortalTokens.baseButtonClassicHighContrastShadows
-        : FortalTokens.baseButtonClassicShadows,
-  );
-}
-
 final class _FortalModeAwareFilterMix
     extends ModifierMix<RemixOrderedColorFilterModifier> {
   const _FortalModeAwareFilterMix({required this.light, required this.dark});
@@ -261,8 +162,8 @@ final class _FortalModeAwareFilterMix
   List<Object?> get props => [light, dark];
 }
 
-/// Shared Radix BaseButton variants implemented by Button and IconButton.
-enum FortalBaseButtonVariant { classic, solid, soft, surface, outline, ghost }
+/// Shared Fortal BaseButton variants implemented by Button and IconButton.
+enum FortalBaseButtonVariant { solid, soft, surface, outline, ghost }
 
 /// One visual-state style fragment from the shared BaseButton recipe.
 final class FortalBaseButtonStateStyle {
@@ -305,24 +206,11 @@ FortalBaseButtonStateStyles fortalBaseButtonStateStyles({
   required bool highContrast,
 }) {
   final states = switch (variant) {
-    .classic => _classicStateStyles(highContrast: highContrast),
     .solid => _solidStateStyles(highContrast: highContrast),
     .soft => _softStateStyles(highContrast: highContrast),
     .surface => _surfaceStateStyles(highContrast: highContrast),
     .outline => _outlineStateStyles(highContrast: highContrast),
     .ghost => _ghostStateStyles(highContrast: highContrast),
-  };
-  final focusColor = switch (variant) {
-    .soft => FortalTokens.accent8(),
-    .classic ||
-    .solid ||
-    .surface ||
-    .outline ||
-    .ghost => FortalTokens.focus8(),
-  };
-  final focusOffset = switch (variant) {
-    .classic || .solid => 2.0,
-    .soft || .surface || .outline || .ghost => -1.0,
   };
 
   return FortalBaseButtonStateStyles(
@@ -330,9 +218,7 @@ FortalBaseButtonStateStyles fortalBaseButtonStateStyles({
     hovered: states.hovered,
     pressed: states.pressed,
     disabled: states.disabled,
-    focusVisible: FortalBaseButtonStateStyle(
-      effects: fortalFocusOutline(focusColor, offset: focusOffset),
-    ),
+    focusVisible: FortalBaseButtonStateStyle(effects: fortalFocusOutline()),
     disabledFocus: FortalBaseButtonStateStyle(
       effects: RemixBoxEffectsMix.outline(
         BorderSideMix(style: BorderStyle.none),
@@ -347,51 +233,6 @@ typedef _InteractionStateStyles = ({
   FortalBaseButtonStateStyle pressed,
   FortalBaseButtonStateStyle disabled,
 });
-
-_InteractionStateStyles _classicStateStyles({required bool highContrast}) {
-  final foreground = highContrast
-      ? FortalTokens.gray1()
-      : FortalTokens.accentContrast();
-
-  return (
-    idle: FortalBaseButtonStateStyle(
-      foreground: foreground,
-      background: highContrast
-          ? FortalTokens.accent12()
-          : FortalTokens.accent9(),
-      effects: RemixBoxEffectsMix.behindContent(
-        fortalClassicBaseButtonSurface(highContrast: highContrast),
-      ),
-    ),
-    hovered: FortalBaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.behindContent(
-        fortalClassicBaseButtonSurface(
-          highContrast: highContrast,
-          hovered: true,
-        ),
-      ),
-      modifier: _hoverFilter(highContrast, classic: true),
-    ),
-    pressed: FortalBaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.behindContent(
-        fortalClassicBaseButtonSurface(
-          highContrast: highContrast,
-          pressed: true,
-        ),
-      ),
-      modifier: _pressedFilter(highContrast),
-    ),
-    disabled: FortalBaseButtonStateStyle(
-      foreground: FortalTokens.grayA8(),
-      background: FortalTokens.gray2(),
-      effects: RemixBoxEffectsMix.behindContent(
-        fortalClassicBaseButtonSurface(highContrast: false, disabled: true),
-      ),
-      spinnerOpacity: 1,
-      modifier: fortalClearFilter(),
-    ),
-  );
-}
 
 _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   final foreground = highContrast
@@ -409,7 +250,7 @@ _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
       background: highContrast
           ? FortalTokens.accent12()
           : FortalTokens.accent10(),
-      modifier: _hoverFilter(highContrast, classic: false),
+      modifier: _hoverFilter(highContrast),
     ),
     pressed: FortalBaseButtonStateStyle(
       background: highContrast
@@ -524,7 +365,7 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   ),
 );
 
-WidgetModifierConfig _hoverFilter(bool highContrast, {required bool classic}) {
+WidgetModifierConfig _hoverFilter(bool highContrast) {
   if (!highContrast) return fortalClearFilter();
 
   return fortalModeAwareFilter(
@@ -533,10 +374,10 @@ WidgetModifierConfig _hoverFilter(bool highContrast, {required bool classic}) {
       RemixCssColorFilterOperation.saturate(1.1),
       RemixCssColorFilterOperation.brightness(1.1),
     ],
-    dark: [
-      const RemixCssColorFilterOperation.contrast(0.88),
-      const RemixCssColorFilterOperation.saturate(1.3),
-      RemixCssColorFilterOperation.brightness(classic ? 1.14 : 1.18),
+    dark: const [
+      RemixCssColorFilterOperation.contrast(0.88),
+      RemixCssColorFilterOperation.saturate(1.3),
+      RemixCssColorFilterOperation.brightness(1.18),
     ],
   );
 }

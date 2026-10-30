@@ -1,0 +1,1660 @@
+{
+  "contractVersion": 1,
+  "owner": "Fortal",
+  "specification": "specs/fortal.md",
+  "theme": {
+    "enums": {
+      "accent": {
+        "values": [
+          "calcadao",
+          "mar",
+          "ceu",
+          "mangue",
+          "sol",
+          "duna",
+          "caju"
+        ],
+        "default": "calcadao"
+      },
+      "gray": {
+        "values": [
+          "calcadao"
+        ],
+        "default": "calcadao"
+      },
+      "panelBackground": {
+        "values": [
+          "solid",
+          "translucent"
+        ],
+        "default": "solid"
+      },
+      "radius": {
+        "values": [
+          "none",
+          "small",
+          "medium",
+          "large",
+          "full"
+        ],
+        "default": "medium"
+      },
+      "scaling": {
+        "values": [
+          "percent90",
+          "percent95",
+          "percent100",
+          "percent105",
+          "percent110"
+        ],
+        "default": "percent100"
+      }
+    },
+    "defaultMode": "system",
+    "pageBackground": "gray1",
+    "focusRing": {
+      "width": 2,
+      "offset": 2,
+      "color": "accent8"
+    },
+    "typeSizes": [
+      12,
+      14,
+      16,
+      18,
+      20,
+      24,
+      28,
+      36,
+      60
+    ]
+  },
+  "contrast": {
+    "solidAndHover": 4.5,
+    "secondaryOnBackground": 4.5,
+    "primaryOnFills": 7,
+    "focusOnBackground": 3
+  },
+  "families": [
+    {
+      "id": "avatar",
+      "fortalType": "FortalAvatar",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": "size3"
+        },
+        "variant": {
+          "values": [
+            "soft",
+            "solid"
+          ],
+          "default": "soft"
+        }
+      },
+      "defaults": {
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "loading",
+        "loaded",
+        "error",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/avatar/avatar_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "badge",
+      "fortalType": "FortalBadge",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size1"
+        },
+        "variant": {
+          "values": [
+            "solid",
+            "soft",
+            "surface",
+            "outline"
+          ],
+          "default": "soft"
+        }
+      },
+      "defaults": {
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/badge/badge_fortal_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "button",
+      "fortalType": "FortalButton",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "solid",
+            "soft",
+            "surface",
+            "outline",
+            "ghost"
+          ],
+          "default": "solid"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "loading": false,
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "loading",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/button/button_widget_test.dart",
+        "test/components/button/button_style_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "callout",
+      "fortalType": "FortalCallout",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "soft",
+            "surface",
+            "outline"
+          ],
+          "default": "soft"
+        }
+      },
+      "defaults": {
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/callout/callout_fortal_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "card",
+      "fortalType": "FortalCard",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5"
+          ],
+          "default": "size1"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "ghost"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "passive"
+      ],
+      "tests": [
+        "test/components/card/card_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "checkbox",
+      "fortalType": "FortalCheckbox",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "selected": false,
+        "tristate": false,
+        "highContrast": false,
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "unchecked",
+        "checked",
+        "indeterminate",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/checkbox/checkbox_labeled_test.dart",
+        "test/components/checkbox/checkbox_group_widget_test.dart",
+        "test/components/checkbox/fortal_checkbox_disabled_test.dart",
+        "test/components/checkbox/checkbox_style_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "data_table",
+      "fortalType": "FortalDataTable",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "ghost"
+          ],
+          "default": "ghost"
+        }
+      },
+      "defaults": {
+        "enabled": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "passive",
+        "hovered",
+        "selected"
+      ],
+      "tests": [
+        "test/components/data_table/data_table_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "dialog",
+      "fortalType": "FortalDialog",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size3"
+        },
+        "align": {
+          "values": [
+            "start",
+            "center"
+          ],
+          "default": "center"
+        }
+      },
+      "defaults": {
+        "width": "infinity",
+        "maxWidth": 600,
+        "modal": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "closed",
+        "open",
+        "modal"
+      ],
+      "tests": [
+        "test/components/dialog/dialog_widget_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "divider",
+      "fortalType": "FortalDivider",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size1"
+        },
+        "orientation": {
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "default": "horizontal"
+        }
+      },
+      "defaults": {
+        "color": "gray",
+        "decorative": true,
+        "thickness": 1,
+        "lengths": [
+          16,
+          32,
+          64,
+          "full"
+        ]
+      },
+      "supportedStyleProps": [
+        "color"
+      ],
+      "states": [
+        "decorative",
+        "semantic"
+      ],
+      "tests": [
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "menu",
+      "fortalType": "FortalMenu",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "solid",
+            "soft"
+          ],
+          "default": "solid"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "submenuOpenDelayMilliseconds": 100
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "closed",
+        "open",
+        "highlighted",
+        "disabled",
+        "checked",
+        "unchecked",
+        "submenuOpen",
+        "rtl",
+        "escape",
+        "focusRestored",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/menu/menu_widget_test.dart",
+        "test/components/menu/menu_style_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "icon_button",
+      "fortalType": "FortalIconButton",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "solid",
+            "soft",
+            "surface",
+            "outline",
+            "ghost"
+          ],
+          "default": "solid"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "loading": false,
+        "enabled": true,
+        "semanticLabel": "required"
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "loading",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/button/button_icon_sizing_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "popover",
+      "fortalType": "FortalPopover",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "maxWidth": 480,
+        "arrow": false
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "closed",
+        "open",
+        "escape",
+        "outsideTap",
+        "focusRestored"
+      ],
+      "tests": [
+        "test/components/popover/popover_widget_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "progress",
+      "fortalType": "FortalProgress",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "value": null,
+        "max": 100,
+        "durationMilliseconds": 5000,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "determinate",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/progress/progress_widget_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "radio",
+      "fortalType": "FortalRadio",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "unchecked",
+        "checked",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast",
+        "group"
+      ],
+      "tests": [
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "select",
+      "fortalType": "FortalSelect",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft",
+            "ghost"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "contentHighContrast": false,
+        "open": null
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "closed",
+        "open",
+        "placeholder",
+        "selected",
+        "highlighted",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/select/select_fortal_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "slider",
+      "fortalType": "FortalSlider",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "minSpacing": 0,
+        "inverted": false,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "spinner",
+      "fortalType": "FortalSpinner",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "loading": true,
+        "leafCount": 8,
+        "color": "currentColor"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "spinning",
+        "animationDisabled"
+      ],
+      "tests": [
+        "test/components/spinner/spinner_widget_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "switch",
+      "fortalType": "FortalSwitch",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "selected": false,
+        "highContrast": false,
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "unchecked",
+        "checked",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "tabs",
+      "fortalType": "FortalTabBar",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2"
+          ],
+          "default": "size2"
+        },
+        "orientation": {
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "default": "horizontal",
+          "defaultSource": "packages/remix/lib/src/components/tabs/tabs_widget.dart"
+        },
+        "activationMode": {
+          "values": [
+            "automatic",
+            "manual"
+          ],
+          "default": "automatic",
+          "defaultSource": "packages/remix/lib/src/components/tabs/tabs_widget.dart"
+        }
+      },
+      "defaults": {
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "inactive",
+        "active",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "automatic",
+        "manual",
+        "rtl",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "text_field",
+      "fortalType": "FortalTextField",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "readOnly": false,
+        "error": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "readOnly",
+        "invalid",
+        "leading",
+        "trailing"
+      ],
+      "tests": [
+        "test/components/textfield/fortal_textfield_regression_test.dart",
+        "test/components/textfield/textfield_widget_test.dart",
+        "test/components/textfield/fortal_textfield_disabled_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "skeleton",
+      "fortalType": "FortalSkeleton",
+      "enums": {},
+      "defaults": {
+        "loading": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "loading",
+        "loaded",
+        "animationDisabled"
+      ],
+      "tests": [
+        "test/components/skeleton/skeleton_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "segmented_control",
+      "fortalType": "FortalSegmentedControl",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "orientation": "horizontal",
+        "loop": true
+      },
+      "supportedStyleProps": [
+        "radius"
+      ],
+      "states": [
+        "unselected",
+        "selected",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/segmented_control/segmented_control_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "text_area",
+      "fortalType": "FortalTextArea",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "readOnly": false,
+        "error": false,
+        "maxLines": null
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "readOnly",
+        "invalid"
+      ],
+      "tests": [
+        "test/components/textfield/text_area_fortal_test.dart",
+        "test/components/textfield/textfield_widget_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "data_list",
+      "fortalType": "FortalDataList",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "orientation": {
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "default": "horizontal"
+        },
+        "alignment": {
+          "values": [
+            "start",
+            "center",
+            "end",
+            "baseline",
+            "stretch"
+          ],
+          "default": "baseline",
+          "defaultSource": "packages/remix/lib/src/components/data_list/data_list_widget.dart"
+        }
+      },
+      "defaults": {
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "highContrast",
+        "customChild",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/data_list/data_list_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "tooltip",
+      "fortalType": "FortalTooltip",
+      "enums": {},
+      "defaults": {
+        "maxWidth": 360,
+        "delayMilliseconds": 200,
+        "sideOffset": 4,
+        "collisionPadding": 10,
+        "disableHoverableContent": false,
+        "arrow": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "closed",
+        "delayedOpen",
+        "triggerHovered",
+        "focused",
+        "touch",
+        "escape"
+      ],
+      "tests": [
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "accordion",
+      "fortalType": "FortalAccordion",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "collapsed",
+        "expanded",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled"
+      ],
+      "tests": [
+        "test/components/accordion/accordion_widget_test.dart",
+        "test/components/accordion/accordion_style_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "fortalType": "FortalDisclosure",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "expanded": null,
+        "defaultExpanded": false,
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "collapsed",
+        "expanded",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled"
+      ],
+      "tests": [
+        "test/components/disclosure/disclosure_widget_test.dart",
+        "test/components/disclosure/disclosure_style_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "toggle",
+      "fortalType": "FortalToggle",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "ghost",
+            "outline"
+          ],
+          "default": "ghost"
+        }
+      },
+      "defaults": {
+        "selected": false,
+        "enabled": true,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "off",
+        "on",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/components/toggle/toggle_widget_test.dart",
+        "test/fortal/fortal_high_contrast_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "toggle_group",
+      "fortalType": "FortalToggleGroup",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "soft",
+            "surface"
+          ],
+          "default": "soft"
+        },
+        "orientation": {
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "default": "horizontal"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "loop": true,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "unselected",
+        "selected",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/toggle_group/toggle_group_widget_test.dart",
+        "test/components/toggle_group/toggle_group_style_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "text",
+      "fortalType": "FortalText",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": null
+        }
+      },
+      "defaults": {
+        "size": null,
+        "weight": null,
+        "align": null,
+        "softWrap": true,
+        "truncate": false,
+        "accent": false,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "tests": [
+        "test/components/typography/typography_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "heading",
+      "fortalType": "FortalHeading",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": "size6"
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": "bold"
+        }
+      },
+      "defaults": {
+        "headingLevel": 1,
+        "size": "size6",
+        "weight": "bold",
+        "align": null,
+        "softWrap": true,
+        "truncate": false,
+        "accent": false,
+        "highContrast": false,
+        "excludeSemantics": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated",
+        "semantic"
+      ],
+      "tests": [
+        "test/components/typography/typography_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "code",
+      "fortalType": "FortalCode",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "variant": {
+          "values": [
+            "solid",
+            "soft",
+            "outline",
+            "ghost"
+          ],
+          "default": "soft"
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": null
+        }
+      },
+      "defaults": {
+        "size": null,
+        "variant": "soft",
+        "weight": null,
+        "softWrap": true,
+        "truncate": false,
+        "accent": false,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "tests": [
+        "test/components/typography/typography_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "kbd",
+      "fortalType": "FortalKbd",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "variant": {
+          "values": [
+            "soft"
+          ],
+          "default": "soft"
+        }
+      },
+      "defaults": {
+        "size": null,
+        "variant": "soft",
+        "excludeSemantics": false
+      },
+      "supportedStyleProps": [
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "explicitDark",
+        "semantic"
+      ],
+      "tests": [
+        "test/components/typography/typography_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "link",
+      "fortalType": "FortalLink",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": null
+        },
+        "underline": {
+          "values": [
+            "auto",
+            "always",
+            "hover",
+            "none"
+          ],
+          "default": "auto"
+        }
+      },
+      "defaults": {
+        "size": null,
+        "weight": null,
+        "underline": "auto",
+        "softWrap": true,
+        "truncate": false,
+        "highContrast": false,
+        "enabled": true,
+        "autofocus": false,
+        "enableFeedback": true,
+        "excludeSemantics": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "highContrast",
+        "inert",
+        "truncated",
+        "semantic"
+      ],
+      "tests": [
+        "test/components/typography/typography_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "app_bar",
+      "fortalType": "FortalAppBar",
+      "enums": {},
+      "defaults": {},
+      "supportedStyleProps": [],
+      "states": [],
+      "tests": [
+        "test/components/app_bar/app_bar_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "toast",
+      "fortalType": "FortalToast",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "classic"
+          ],
+          "default": "classic"
+        },
+        "intent": {
+          "values": [
+            "accent",
+            "neutral",
+            "error"
+          ],
+          "default": "accent"
+        }
+      },
+      "defaults": {},
+      "supportedStyleProps": [],
+      "states": [],
+      "tests": [
+        "test/components/toast/toast_style_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "chart",
+      "fortalType": "FortalLineChart",
+      "enums": {},
+      "defaults": {},
+      "supportedStyleProps": [],
+      "states": [],
+      "tests": [
+        "test/components/chart/chart_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "sidebar",
+      "fortalType": "FortalSidebar",
+      "enums": {},
+      "defaults": {},
+      "supportedStyleProps": [],
+      "states": [],
+      "tests": [
+        "test/components/sidebar/sidebar_collapse_test.dart",
+        "test/components/sidebar/sidebar_style_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "sidebar_layout",
+      "fortalType": "FortalSidebarLayout",
+      "enums": {},
+      "defaults": {},
+      "supportedStyleProps": [],
+      "states": [],
+      "tests": [
+        "test/components/sidebar_layout/sidebar_layout_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    }
+  ],
+  "visualGate": "apps/demo/test/polish_board_golden_test.dart"
+}

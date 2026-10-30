@@ -4,9 +4,7 @@ import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
 void main() {
-  testWidgets('disabled variants resolve the Radix gray-a3 surface', (
-    tester,
-  ) async {
+  testWidgets('disabled variants resolve the gray-a3 surface', (tester) async {
     late Color expected;
     late Map<FortalCheckboxVariant, Color?> resolvedColors;
 

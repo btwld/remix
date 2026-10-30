@@ -10,7 +10,7 @@ part 'progress.g.dart';
 enum FortalProgressSize { size1, size2, size3 }
 
 /// Fortal progress color variants.
-enum FortalProgressVariant { classic, surface, soft }
+enum FortalProgressVariant { surface, soft }
 
 /// Fortal-themed preset for [RemixProgress].
 @MixWidget(target: RemixProgress.new)
@@ -21,7 +21,6 @@ ProgressStyler fortalProgressStyle({
   ProgressStyler style = const ProgressStyler.create(),
 }) {
   return (switch (variant) {
-    .classic => _fortalProgressClassicStyler(size, highContrast: highContrast),
     .surface => _fortalProgressSurfaceStyler(size, highContrast: highContrast),
     .soft => _fortalProgressSoftStyler(size, highContrast: highContrast),
   }).merge(style);
@@ -45,22 +44,6 @@ ProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
       overContent: _fortalProgressLayer(),
     ),
   );
-}
-
-ProgressStyler _fortalProgressClassicStyler(
-  FortalProgressSize size, {
-  required bool highContrast,
-}) {
-  return _fortalProgressBaseStyler(size)
-      .trackColor(FortalTokens.grayA3())
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          _fortalProgressLayer(shadowToken: FortalTokens.shadow1Layers),
-        ),
-      )
-      .indicatorColor(
-        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
-      );
 }
 
 ProgressStyler _fortalProgressSurfaceStyler(

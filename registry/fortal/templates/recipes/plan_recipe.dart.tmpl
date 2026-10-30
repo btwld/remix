@@ -20,26 +20,40 @@ final class {{typePrefix}}AgentPlanRecipe {
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
 }) => {{typePrefix}}AgentPlanRecipe(
   style: {{typePrefix}}PlanStyler(
-    viewport: BoxStyler().maxHeight(220),
+    viewport: BoxStyler().maxHeight({{typePrefix}}Tokens.planMaxHeight()),
     item: FlexBoxStyler()
-        .spacing(8)
+        .spacing({{typePrefix}}Tokens.space2())
         .crossAxisAlignment(.center)
-        .padding(.symmetric(vertical: 6)),
+        .padding(.vertical({{typePrefix}}Tokens.space2())),
     summaryTitle: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
-    itemTitle: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(14),
-    itemDetail: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+        .style({{typePrefix}}Tokens.text2.mix())
+        .fontWeight({{typePrefix}}Tokens.fontWeightSemibold()),
+    itemTitle: TextStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .style({{typePrefix}}Tokens.text2.mix()),
+    itemDetail: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .style({{typePrefix}}Tokens.text1.mix()),
     count: TextStyler()
         .color({{typePrefix}}Tokens.gray11())
-        .fontSize(12)
-        .wrap(.padding(.right(8))),
-    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
-    pendingStatus: IconStyler().color({{typePrefix}}Tokens.gray9()).size(16),
-    activeStatus: IconStyler().color({{typePrefix}}Tokens.accent9()).size(16),
-    completedStatus: IconStyler().color({{typePrefix}}Tokens.accent9()).size(16),
-    cancelledStatus: IconStyler().color({{typePrefix}}Tokens.gray9()).size(16),
+        .style({{typePrefix}}Tokens.text1.mix())
+        .wrap(.padding(.right({{typePrefix}}Tokens.space2()))),
+    indicator: IconStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .size({{typePrefix}}Tokens.space4()),
+    pendingStatus: IconStyler()
+        .color({{typePrefix}}Tokens.gray9())
+        .size({{typePrefix}}Tokens.space4()),
+    activeStatus: IconStyler()
+        .color({{typePrefix}}Tokens.accent9())
+        .size({{typePrefix}}Tokens.space4()),
+    completedStatus: IconStyler()
+        .color({{typePrefix}}Tokens.accent9())
+        .size({{typePrefix}}Tokens.space4()),
+    cancelledStatus: IconStyler()
+        .color({{typePrefix}}Tokens.gray9())
+        .size({{typePrefix}}Tokens.space4()),
   ).merge(style),
   disclosureStyle: {{valuePrefix}}DisclosureStyle(style: disclosureStyle),
 );

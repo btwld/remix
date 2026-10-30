@@ -148,7 +148,7 @@ import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
 Widget deleteButton(VoidCallback delete) => FortalTheme(
-  accent: .red,
+  accent: .caju,
   child: FortalButton.solid(label: 'Delete', onPressed: delete),
 );
 ```

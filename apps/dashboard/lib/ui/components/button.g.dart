@@ -6,7 +6,7 @@ part of 'button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Button with the Radix size, variant, and override contract.
+/// Ui-themed Button with Ui sizes, variants, and overrides.
 ///
 /// Default icon slots use the preset's icon size, not the ambient IconTheme.
 /// An explicit icon size in [style] overrides that default.
@@ -36,31 +36,6 @@ class UiButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  const UiButton.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const ButtonStyler.create(),
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = UiButtonVariant.classic;
 
   const UiButton.solid({
     super.key,

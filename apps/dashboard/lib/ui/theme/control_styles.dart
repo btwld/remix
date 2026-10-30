@@ -3,67 +3,196 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
-/// A CSS outline that does not affect layout.
-RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
-    RemixBoxEffectsMix(
-      outline: BorderSideMix(
-        color: color,
-        width: 2,
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
-      outlineOffset: offset,
-    );
+/// Ui's focus ring: solid step 8, 2px wide, with a 2px gap.
+/// Tokens resolve at the control, so nested themes and overrides work.
+/// The outline takes no layout space and never replaces the control's border.
+RemixBoxEffectsMix uiFocusOutline() => RemixBoxEffectsMix(
+  outline: BorderSideMix(
+    color: UiTokens.focus8(),
+    width: UiTokens.focusRingWidth(),
+  ),
+  outlineOffset: UiTokens.focusRingOffset(),
+);
 
-/// The focus ring for stylers that can only express a border.
-///
-/// [uiFocusOutline] is the preferred form, but it returns a
-/// [RemixBoxEffectsMix] and several stylers — `ToggleStyler`,
-/// `ToggleGroupItemStyler`, `TabStyler` — expose no `containerEffects` slot to
-/// put one in. Those recipes each re-derived the same border, so the width
-/// token lives here instead of in four places.
-extension UiFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
-  /// Applies the ring to this styler.
-  ///
-  /// [color] defaults to `focus-a8`. Tabs is the one caller that differs: it
-  /// passes the solid `focus-8`. Whether that is intentional is unresolved —
-  /// the pinned Chromium probes capture computed styles only, not
-  /// `:focus-visible`, so it cannot be settled from the reference fixtures.
-  /// Preserved as-is rather than unified on a guess.
-  T uiFocusRing({Color? color}) => border(
-    .all(
-      BorderSideMix(
-        color: color ?? _focusRingColor(),
-        width: _focusRingWidth(),
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
-    ),
-  );
+/// Keeps compact visual sizes while giving controls a 40px interaction area.
+/// This wraps the painted child inside Naked UI's existing gesture target.
+WidgetModifierConfig uiTouchTarget() =>
+    WidgetModifierConfig.modifier(const _UiTouchTargetMix());
+
+final class _UiTouchTargetMix extends ModifierMix<_UiTouchTarget> {
+  const _UiTouchTargetMix();
+
+  @override
+  _UiTouchTarget resolve(BuildContext context) =>
+      _UiTouchTarget(UiTokens.touchTargetMin.resolve(context));
+
+  @override
+  _UiTouchTargetMix merge(_UiTouchTargetMix? other) => other ?? this;
+
+  @override
+  List<Object?> get props => const [];
 }
 
-/// The same ring for a Mix [FlexBoxStyler], which sits outside Remix's
-/// `RemixBoxStylerAnchors` interface — accordion rings its trigger, not itself.
-/// Separate extension rather than a differently-named function so both read as
-/// `.uiFocusRing()`; the receiver type picks the right one.
+final class _UiTouchTarget extends WidgetModifier<_UiTouchTarget> {
+  const _UiTouchTarget(this.minimum);
+  final double minimum;
+
+  @override
+  Widget build(Widget child) => ConstrainedBox(
+    constraints: BoxConstraints(minWidth: minimum, minHeight: minimum),
+    child: Center(widthFactor: 1, heightFactor: 1, child: child),
+  );
+
+  @override
+  _UiTouchTarget copyWith({double? minimum}) =>
+      _UiTouchTarget(minimum ?? this.minimum);
+
+  @override
+  _UiTouchTarget lerp(_UiTouchTarget? other, double t) =>
+      _UiTouchTarget(minimum + ((other?.minimum ?? minimum) - minimum) * t);
+
+  @override
+  List<Object?> get props => [minimum];
+}
+
+/// The same outline for surfaces without a Remix effects slot.
+WidgetModifierConfig uiFocusRingModifier({
+  Radius? radius,
+  bool visible = true,
+}) => WidgetModifierConfig.modifier(_UiFocusRingMix(radius, visible));
+
+extension UiFocusRingToggle on ToggleStyler {
+  ToggleStyler uiFocusRing({Radius? radius}) =>
+      container(FlexBoxStyler().wrap(uiFocusRingModifier(radius: radius)));
+}
+
+extension UiFocusRingToggleGroup on ToggleGroupItemStyler {
+  ToggleGroupItemStyler uiFocusRing({Radius? radius}) =>
+      container(FlexBoxStyler().wrap(uiFocusRingModifier(radius: radius)));
+}
+
+extension UiFocusRingTab on TabStyler {
+  TabStyler uiFocusRing({Radius? radius}) =>
+      container(FlexBoxStyler().wrap(uiFocusRingModifier(radius: radius)));
+}
+
+extension UiFocusRingDisclosure on DisclosureStyler {
+  DisclosureStyler uiFocusRing({Radius? radius}) =>
+      trigger(BoxStyler().wrap(uiFocusRingModifier(radius: radius)));
+}
+
 extension UiFocusRingFlexBox on FlexBoxStyler {
-  FlexBoxStyler uiFocusRing() => border(
-    .color(
-      _focusRingColor(),
-    ).width(_focusRingWidth()).strokeAlign(BorderSide.strokeAlignInside),
-  );
+  FlexBoxStyler uiFocusRing({Radius? radius}) =>
+      wrap(uiFocusRingModifier(radius: radius));
 }
 
-Color _focusRingColor() => UiTokens.focusA8();
-double _focusRingWidth() => UiTokens.focusRingWidth();
+extension UiFocusRingBox on BoxStyler {
+  BoxStyler uiFocusRing({Radius? radius}) =>
+      wrap(uiFocusRingModifier(radius: radius));
+}
 
-/// A one-pixel inset stroke, optionally layered over a fill.
+final class _UiFocusRingMix extends ModifierMix<_UiFocusRingModifier> {
+  const _UiFocusRingMix(this.radius, this.visible);
+  final Radius? radius;
+  final bool visible;
+
+  @override
+  _UiFocusRingModifier resolve(BuildContext context) {
+    final outline = uiFocusOutline().resolve(context);
+    return _UiFocusRingModifier(
+      color: visible ? outline.outline.color : const Color(0x00000000),
+      width: outline.outline.width,
+      offset: outline.outlineOffset,
+      radius:
+          MixOps.resolve(context, Prop.maybe(radius)) ??
+          UiTokens.radius2.resolve(context),
+    );
+  }
+
+  @override
+  _UiFocusRingMix merge(_UiFocusRingMix? other) => other ?? this;
+  @override
+  List<Object?> get props => [radius, visible];
+}
+
+final class _UiFocusRingModifier extends WidgetModifier<_UiFocusRingModifier> {
+  const _UiFocusRingModifier({
+    required this.color,
+    required this.width,
+    required this.offset,
+    required this.radius,
+  });
+  final Color color;
+  final double width;
+  final double offset;
+  final Radius radius;
+
+  @override
+  _UiFocusRingModifier copyWith({
+    Color? color,
+    double? width,
+    double? offset,
+    Radius? radius,
+  }) => _UiFocusRingModifier(
+    color: color ?? this.color,
+    width: width ?? this.width,
+    offset: offset ?? this.offset,
+    radius: radius ?? this.radius,
+  );
+  @override
+  _UiFocusRingModifier lerp(_UiFocusRingModifier? other, double t) =>
+      other == null
+      ? this
+      : _UiFocusRingModifier(
+          color: Color.lerp(color, other.color, t)!,
+          width: width + (other.width - width) * t,
+          offset: offset + (other.offset - offset) * t,
+          radius: Radius.lerp(radius, other.radius, t)!,
+        );
+  @override
+  Widget build(Widget child) => CustomPaint(
+    foregroundPainter: _UiFocusPainter(color, width, offset, radius),
+    child: child,
+  );
+  @override
+  List<Object?> get props => [color, width, offset, radius];
+}
+
+class _UiFocusPainter extends CustomPainter {
+  const _UiFocusPainter(this.color, this.width, this.offset, this.radius);
+  final Color color;
+  final double width;
+  final double offset;
+  final Radius radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (color.a == 0 || width == 0) return;
+    final box = RRect.fromRectAndRadius(Offset.zero & size, radius);
+    canvas.drawDRRect(
+      box.inflate(offset + width),
+      box.inflate(offset),
+      Paint()..color = color,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_UiFocusPainter old) =>
+      color != old.color ||
+      width != old.width ||
+      offset != old.offset ||
+      radius != old.radius;
+}
+
+/// A crisp inset frame, not an elevation shadow. No blur or offset is used.
 RemixBoxEffectLayerMix uiInsetSurface({required List<Color> strokes}) =>
     RemixBoxEffectLayerMix(
       shadows: [
         for (final stroke in strokes)
           RemixBoxShadowMix(
-            kind: RemixBoxShadowKind.inset,
+            kind: .inset,
             color: stroke,
-            spreadRadius: 1,
+            spreadRadius: UiTokens.borderWidth1(),
           ),
       ],
     );

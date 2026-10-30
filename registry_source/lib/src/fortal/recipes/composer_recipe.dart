@@ -35,30 +35,34 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
         .direction(.horizontal)
         .mainAxisSize(.max)
         .crossAxisAlignment(.center)
-        .spacing(8)
-        .padding(.top(8)),
+        .spacing(FortalTokens.space2())
+        .padding(.top(FortalTokens.space2())),
   ).merge(style),
   surfaceStyle: fortalCardStyle(
     size: .size2,
-    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
+    style: CardStyler()
+        .padding(.all(FortalTokens.space3()))
+        .merge(surfaceStyle),
   ),
   fieldStyle: fortalTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
-        .minHeight(56)
-        .padding(.all(4))
+        .minHeight(FortalTokens.composerFieldMinHeight())
+        .padding(.all(FortalTokens.space1()))
         .merge(fieldStyle),
   ),
   submitStyle: fortalIconButtonStyle(
     size: .size2,
-    style: IconButtonStyler().size(40, 40).merge(submitStyle),
+    style: IconButtonStyler()
+        .size(FortalTokens.space7(), FortalTokens.space7())
+        .merge(submitStyle),
   ),
   stopStyle: fortalIconButtonStyle(
     size: .size2,
     style: IconButtonStyler()
         .color(FortalTokens.error9())
-        .size(40, 40)
+        .size(FortalTokens.space7(), FortalTokens.space7())
         .merge(stopStyle),
   ),
 );

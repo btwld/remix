@@ -234,10 +234,10 @@ void main() {
     tester,
   ) async {
     final light = const FortalThemeData.light(
-      accent: FortalAccentColor.red,
+      accent: FortalAccentColor.caju,
     ).copyWith(radius: FortalRadius.large);
     final dark = const FortalThemeData.dark(
-      accent: FortalAccentColor.blue,
+      accent: FortalAccentColor.ceu,
     ).copyWith(radius: FortalRadius.large);
     for (final mode in [
       FortalThemeMode.light,

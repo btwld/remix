@@ -7,9 +7,6 @@ part of 'tabs.dart';
 // **************************************************************************
 
 /// Fortal-themed preset for [RemixTabBar].
-///
-/// The tab-list bottom border is a single hairline at every Radix size, so this
-/// preset takes no `size` — unlike [fortalTabStyle], whose per-tab metrics vary.
 class FortalTabBar extends StatelessWidget {
   const FortalTabBar({
     super.key,
