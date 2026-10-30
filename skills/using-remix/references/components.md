@@ -58,6 +58,13 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   default `null`. Leaving them unset does not mean "no icon": Remix falls
   back to its own built-in glyphs, `RemixPathGlyph.thickCheck` and
   `RemixPathGlyph.thickDividerHorizontal`, not a blank state.
+- **Radio and Switch** — `label` is drawn inside the same pointer, hover,
+  press, focus, and semantics target as the control and is its accessible
+  name; `semanticLabel` overrides it. Pass at least one of the two. The gap is
+  `labelSpacing` (default 8) and the label style is `.label(...)` /
+  `.labelColor(...)`. The target is the control's own size unless
+  `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
+  48x48), so opt in with `Size.square(48)` for touch.
 - **CheckboxGroup** — keyboard model deliberately differs from Radix Themes:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
@@ -74,7 +81,11 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   inert. `positioning` defaults to
   `OverlayPositionConfig(side: .bottom, alignment: .center)`.
   `RemixSelectTrigger` and `RemixSelectItem<T>` are data classes, not
-  widgets.
+  widgets. The menu keeps the width its styles give it unless one opts in with
+  `remixAnchorWidth()` (for example
+  `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
+  which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
+  overlays and to `0` anywhere else, `RemixPopover` included.
 
 ## Data display
 
@@ -181,7 +192,8 @@ routes and require a caller-provided `Navigator`; toasts require a
   content; the builder receives `NakedMenuState` and must return
   non-interactive content — never a nested button. The same
   `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no separate
-  Fortal trigger type.
+  Fortal trigger type. Size the panel from the trigger with
+  `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null

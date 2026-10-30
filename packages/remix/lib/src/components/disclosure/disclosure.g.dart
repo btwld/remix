@@ -10,6 +10,7 @@ mixin _$DisclosureSpec implements Spec<DisclosureSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<BoxSpec> get trigger;
+  RemixBoxEffectsSpec? get triggerEffects;
   StyleSpec<BoxSpec> get content;
 
   @override
@@ -20,12 +21,14 @@ mixin _$DisclosureSpec implements Spec<DisclosureSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? container,
     RemixBoxEffectsSpec? containerEffects,
     StyleSpec<BoxSpec>? trigger,
+    RemixBoxEffectsSpec? triggerEffects,
     StyleSpec<BoxSpec>? content,
   }) {
     return DisclosureSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
       trigger: trigger ?? this.trigger,
+      triggerEffects: triggerEffects ?? this.triggerEffects,
       content: content ?? this.content,
     );
   }
@@ -40,12 +43,19 @@ mixin _$DisclosureSpec implements Spec<DisclosureSpec>, Diagnosticable {
         t,
       ),
       trigger: trigger.lerp(other?.trigger, t),
+      triggerEffects: MixOps.lerpSnap(triggerEffects, other?.triggerEffects, t),
       content: content.lerp(other?.content, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, containerEffects, trigger, content];
+  List<Object?> get props => [
+    container,
+    containerEffects,
+    trigger,
+    triggerEffects,
+    content,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -90,6 +100,7 @@ mixin _$DisclosureSpec implements Spec<DisclosureSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(DiagnosticsProperty('triggerEffects', triggerEffects))
       ..add(DiagnosticsProperty('content', content));
   }
 }
@@ -109,12 +120,14 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<BoxSpec>>? $trigger;
+  final Prop<RemixBoxEffectsSpec>? $triggerEffects;
   final Prop<StyleSpec<BoxSpec>>? $content;
 
   const DisclosureStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<BoxSpec>>? trigger,
+    Prop<RemixBoxEffectsSpec>? triggerEffects,
     Prop<StyleSpec<BoxSpec>>? content,
     super.variants,
     super.modifier,
@@ -122,12 +135,14 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
   }) : $container = container,
        $containerEffects = containerEffects,
        $trigger = trigger,
+       $triggerEffects = triggerEffects,
        $content = content;
 
   DisclosureStyler({
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     BoxStyler? trigger,
+    RemixBoxEffectsMix? triggerEffects,
     BoxStyler? content,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -136,6 +151,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
          container: Prop.maybeMix(container),
          containerEffects: Prop.maybeMix(containerEffects),
          trigger: Prop.maybeMix(trigger),
+         triggerEffects: Prop.maybeMix(triggerEffects),
          content: Prop.maybeMix(content),
          variants: variants,
          modifier: modifier,
@@ -148,6 +164,8 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
       DisclosureStyler().containerEffects(value);
   factory DisclosureStyler.trigger(BoxStyler value) =>
       DisclosureStyler().trigger(value);
+  factory DisclosureStyler.triggerEffects(RemixBoxEffectsMix value) =>
+      DisclosureStyler().triggerEffects(value);
   factory DisclosureStyler.content(BoxStyler value) =>
       DisclosureStyler().content(value);
   factory DisclosureStyler.alignment(AlignmentGeometry value) =>
@@ -651,6 +669,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     'container',
     'containerEffects',
     'trigger',
+    'triggerEffects',
     'content',
     'animation',
     'modifier',
@@ -670,6 +689,11 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
   /// Sets the trigger.
   DisclosureStyler trigger(BoxStyler value) {
     return merge(DisclosureStyler(trigger: value));
+  }
+
+  /// Sets the triggerEffects.
+  DisclosureStyler triggerEffects(RemixBoxEffectsMix value) {
+    return merge(DisclosureStyler(triggerEffects: value));
   }
 
   /// Sets the content.
@@ -761,6 +785,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
         other?.$containerEffects,
       ),
       trigger: MixOps.merge($trigger, other?.$trigger),
+      triggerEffects: MixOps.merge($triggerEffects, other?.$triggerEffects),
       content: MixOps.merge($content, other?.$content),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -775,6 +800,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
       container: MixOps.resolve(context, $container),
       containerEffects: MixOps.resolve(context, $containerEffects),
       trigger: MixOps.resolve(context, $trigger),
+      triggerEffects: MixOps.resolve(context, $triggerEffects),
       content: MixOps.resolve(context, $content),
     );
 
@@ -792,6 +818,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('trigger', $trigger))
+      ..add(DiagnosticsProperty('triggerEffects', $triggerEffects))
       ..add(DiagnosticsProperty('content', $content));
   }
 
@@ -800,6 +827,7 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     $container,
     $containerEffects,
     $trigger,
+    $triggerEffects,
     $content,
     $animation,
     $modifier,

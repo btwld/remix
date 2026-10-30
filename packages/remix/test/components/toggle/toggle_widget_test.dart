@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixFlexBoxAdapter;
 
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
@@ -361,8 +363,8 @@ void main() {
 
         expect(find.byType(RemixToggle), findsOneWidget);
         final container = tester
-            .widget<RowBox>(find.byType(RowBox))
-            .styleSpec!
+            .widget<RemixFlexBoxAdapter>(find.byType(RemixFlexBoxAdapter))
+            .styleSpec
             .spec
             .box!
             .spec;
@@ -453,8 +455,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final decorations = tester
-            .widgetList<RowBox>(find.byType(RowBox))
-            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+            .widgetList<RemixFlexBoxAdapter>(find.byType(RemixFlexBoxAdapter))
+            .map((box) => box.styleSpec.spec.box?.spec.decoration);
 
         expect(
           decorations,

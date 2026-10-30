@@ -155,8 +155,9 @@ void main() {
       test('props list contains all properties', () {
         const spec = ToggleSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
       });
@@ -169,7 +170,7 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['container', 'label', 'icon']),
+          unorderedEquals(['container', 'containerEffects', 'label', 'icon']),
         );
       });
 
@@ -180,10 +181,11 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(3));
+        expect(properties, hasLength(4));
 
         final propertyNames = properties.map((p) => p.name).toList();
         expect(propertyNames, contains('container'));
+        expect(propertyNames, contains('containerEffects'));
         expect(propertyNames, contains('label'));
         expect(propertyNames, contains('icon'));
       });

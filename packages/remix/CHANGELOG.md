@@ -1,3 +1,67 @@
+## Unreleased
+
+### Breaking changes
+
+- `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel`, and the
+  matching parameters of `RadioStyler.call`, `SwitchStyler.call`, and
+  generated preset wrappers, are now `String?`. Code that reads them as a
+  non-null `String` needs a null check. A radio or switch must still have a
+  `label` or a `semanticLabel`; that rule is now a debug-mode assert instead
+  of a required parameter.
+
+### Features
+
+- Add `ToastSpec.actionPlacement`, `ToastStyler.actionPlacement`, and
+  `RemixToastActionPlacement`. `inline` (the default) keeps the action in the
+  row while the message has room and otherwise uses the `below` arrangement;
+  `below` always puts the action under the title and description, aligned with
+  their start, with the close button on the first line after the message. It
+  is a spec field, so a style can switch it with a variant such as
+  `onBreakpoint`.
+- Add `remixAnchorWidth`, a token that resolves to the width of the trigger of
+  the surrounding `RemixSelect` or `RemixMenu`, and to 0 elsewhere. Pass it to
+  `minWidth`, `width`, or `maxWidth` to size the panel from its trigger, for
+  example `SelectContentStyler().minWidth(remixAnchorWidth())` or
+  `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`. Submenu
+  panels get the root trigger's width. Panels are unchanged unless a style uses
+  it.
+- Add `containerEffects` to `TabStyler`, `ToggleStyler`,
+  `ToggleGroupItemStyler`, `SelectMenuItemStyler`, `MenuItemStyler`, and
+  `MenuTriggerStyler`, and `triggerEffects` to `AccordionStyler` and
+  `DisclosureStyler`. An outline or paint layer draws around the part without
+  taking layout space, so a focus ring no longer resizes the part or shifts its
+  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
+  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
+  disclosure, `containerEffects` still covers the whole panel and
+  `triggerEffects` covers only the trigger, including the widget a custom
+  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
+  group styled with `clipBehavior` (every shipped preset sets one) crops an
+  outside ring on its end items; use a negative `outlineOffset` there.
+- Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
+  inside the control's pointer, hover, press, focus, and single semantics
+  target and used as its accessible name, as `RemixCheckbox.label` is.
+  `RadioStyler` and `SwitchStyler` gain `label`, `labelSpacing` (default 8),
+  and the `labelColor`, `labelFontSize`, and other label style helpers. Both
+  widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
+  existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
+  `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
+
+### Fixes
+
+- `RemixToast` stacks an inline action below the message when the toast is
+  too narrow to share a row, so the message is no longer squeezed beside it.
+  The cutoff follows the width the toast gets, including its margin and style
+  max width, and grows with the text scale. Wider toasts keep the single row.
+- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
+  accordion trigger, and disclosure trigger content keeps its state when a
+  style adds or removes a decoration such as a focus ring. Previously such a
+  change rebuilt the part's content from scratch.
+- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
+  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
+  `AlertDialog` content. It previously asserted "LayoutBuilder does not
+  support returning intrinsic dimensions" in debug mode and collapsed in
+  release mode.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes

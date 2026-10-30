@@ -13,6 +13,12 @@ class MenuTriggerSpec with _$MenuTriggerSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
+  /// Outline and paint layers drawn around [container] without affecting
+  /// layout, such as a focus ring.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
   /// Text style for the trigger label.
   @override
   final StyleSpec<TextSpec> label;
@@ -24,11 +30,27 @@ class MenuTriggerSpec with _$MenuTriggerSpec {
   /// Creates a trigger spec with default empty child specs.
   const MenuTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
+    this.containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  MenuTriggerSpec lerp(MenuTriggerSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Backward-compatible name for [MenuTriggerSpec].
@@ -160,6 +182,12 @@ class MenuItemSpec with _$MenuItemSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
+  /// Outline and paint layers drawn around [container] without affecting
+  /// layout, such as a focus ring.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
   /// Text style for the item label.
   @override
   final StyleSpec<TextSpec> label;
@@ -179,6 +207,7 @@ class MenuItemSpec with _$MenuItemSpec {
   /// Creates an item spec with default empty child specs.
   const MenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,
+    this.containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
@@ -188,6 +217,21 @@ class MenuItemSpec with _$MenuItemSpec {
        leadingIcon = leadingIcon ?? const StyleSpec(spec: IconSpec()),
        trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  MenuItemSpec lerp(MenuItemSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Backward-compatible name for [MenuItemSpec].

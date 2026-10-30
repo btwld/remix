@@ -73,6 +73,7 @@ export 'src/rendering/remix_box_effects.dart'
         RemixBoxEffectsSpec,
         RemixBoxEffectsMix;
 
+export 'src/utilities/remix_anchor.dart' show remixAnchorWidth;
 export 'src/utilities/remix_placement.dart' show RemixPlacement;
 
 /// STYLER CONVENIENCES

@@ -333,6 +333,17 @@ ButtonStyler _focusRing() => ButtonStyler().containerEffects(
 Text inputs ring on any focus, as browsers do, so key their ring on
 `onFocused` instead.
 
+Tab, toggle, toggle group item, select menu item, menu item, and menu trigger
+take `containerEffects` like a button, and so does a sidebar destination, which
+is a toggle. Accordion and disclosure take `triggerEffects`, because their
+`containerEffects` wraps the revealed content too. A toggle group styled with
+`clipBehavior` (every shipped preset sets one) clips its items, and so can a
+select, menu, accordion, or disclosure container, or a bounded sidebar's scroll
+region; a ring outside the part is cropped at that edge. Items also paint in order, so
+a filled item after the focused one covers that side of an outside ring. Draw it
+inside with a negative `outlineOffset` equal to the ring width, or pad the
+clipping container by the offset plus the width.
+
 **Derived colors: `ContextToken`, not `withValues`.**
 `AcmeTokens.interactivePrimary().withValues(alpha: 0.9)` records a Mix directive that
 survives every later merge, so a caller who replaces the hover fill still gets

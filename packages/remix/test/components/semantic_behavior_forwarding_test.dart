@@ -88,6 +88,41 @@ void main() {
     });
 
     testWidgets(
+      'RemixRadio names itself from label unless semanticLabel wins',
+      (tester) async {
+        Future<NakedRadio<String>> pumpRadio(Widget radio) async {
+          await tester.pumpRemixApp(
+            RemixRadioGroup<String>(
+              groupValue: 'a',
+              onChanged: (_) {},
+              child: radio,
+            ),
+          );
+          return tester.widget<NakedRadio<String>>(
+            find.byType(NakedRadio<String>),
+          );
+        }
+
+        expect(
+          (await pumpRadio(
+            const RemixRadio<String>(value: 'a', label: 'Visible'),
+          )).semanticLabel,
+          'Visible',
+        );
+        expect(
+          (await pumpRadio(
+            const RemixRadio<String>(
+              value: 'a',
+              label: 'Visible',
+              semanticLabel: 'Spoken',
+            ),
+          )).semanticLabel,
+          'Spoken',
+        );
+      },
+    );
+
+    testWidgets(
       'RemixSlider and SliderStyler.call map scalar semantics to one thumb',
       (tester) async {
         final defaultSlider = SliderStyler().call(value: 0.25);
@@ -393,6 +428,33 @@ void main() {
           itemCount,
           1,
           reason: 'overlay items stay in the semantics tree',
+        );
+      },
+    );
+
+    testWidgets(
+      'RemixSwitch names itself from label unless semanticLabel wins',
+      (tester) async {
+        Future<NakedToggle> pumpSwitch(Widget switchWidget) async {
+          await tester.pumpRemixApp(switchWidget);
+          return tester.widget<NakedToggle>(find.byType(NakedToggle));
+        }
+
+        expect(
+          (await pumpSwitch(
+            const RemixSwitch(selected: false, label: 'Visible'),
+          )).semanticLabel,
+          'Visible',
+        );
+        expect(
+          (await pumpSwitch(
+            const RemixSwitch(
+              selected: false,
+              label: 'Visible',
+              semanticLabel: 'Spoken',
+            ),
+          )).semanticLabel,
+          'Spoken',
         );
       },
     );
