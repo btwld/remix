@@ -85,6 +85,8 @@ clears an inherited custom palette. See the palette tool README for the command.
   The helper reads `focusRingWidth` and `focusRingOffset`; it never changes
   layout or replaces a variant's border. Text inputs show it on focus; other
   controls show it on keyboard-visible focus. Disabled controls do not ring.
+  Sortable table headers measure the outline from inside their cell padding,
+  keeping the complete ring visible within the table's rounded clip.
 
 ## Components
 

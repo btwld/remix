@@ -56,10 +56,13 @@ final class _FortalTouchTarget extends WidgetModifier<_FortalTouchTarget> {
 }
 
 /// The same outline for surfaces without a Remix effects slot.
+/// [inset] measures from content inside an edge-to-edge clipped surface.
 WidgetModifierConfig fortalFocusRingModifier({
   Radius? radius,
   bool visible = true,
-}) => WidgetModifierConfig.modifier(_FortalFocusRingMix(radius, visible));
+  double inset = 0,
+}) =>
+    WidgetModifierConfig.modifier(_FortalFocusRingMix(radius, visible, inset));
 
 extension FortalFocusRingToggle on ToggleStyler {
   ToggleStyler fortalFocusRing({Radius? radius}) =>
@@ -87,14 +90,15 @@ extension FortalFocusRingFlexBox on FlexBoxStyler {
 }
 
 extension FortalFocusRingBox on BoxStyler {
-  BoxStyler fortalFocusRing({Radius? radius}) =>
-      wrap(fortalFocusRingModifier(radius: radius));
+  BoxStyler fortalFocusRing({Radius? radius, double inset = 0}) =>
+      wrap(fortalFocusRingModifier(radius: radius, inset: inset));
 }
 
 final class _FortalFocusRingMix extends ModifierMix<_FortalFocusRingModifier> {
-  const _FortalFocusRingMix(this.radius, this.visible);
+  const _FortalFocusRingMix(this.radius, this.visible, this.inset);
   final Radius? radius;
   final bool visible;
+  final double inset;
 
   @override
   _FortalFocusRingModifier resolve(BuildContext context) {
@@ -103,6 +107,7 @@ final class _FortalFocusRingMix extends ModifierMix<_FortalFocusRingModifier> {
       color: visible ? outline.outline.color : const Color(0x00000000),
       width: outline.outline.width,
       offset: outline.outlineOffset,
+      inset: MixOps.resolve(context, Prop.value(inset)) ?? 0,
       radius:
           MixOps.resolve(context, Prop.maybe(radius)) ??
           FortalTokens.radius2.resolve(context),
@@ -112,7 +117,7 @@ final class _FortalFocusRingMix extends ModifierMix<_FortalFocusRingModifier> {
   @override
   _FortalFocusRingMix merge(_FortalFocusRingMix? other) => other ?? this;
   @override
-  List<Object?> get props => [radius, visible];
+  List<Object?> get props => [radius, visible, inset];
 }
 
 final class _FortalFocusRingModifier
@@ -122,11 +127,13 @@ final class _FortalFocusRingModifier
     required this.width,
     required this.offset,
     required this.radius,
+    required this.inset,
   });
   final Color color;
   final double width;
   final double offset;
   final Radius radius;
+  final double inset;
 
   @override
   _FortalFocusRingModifier copyWith({
@@ -134,11 +141,13 @@ final class _FortalFocusRingModifier
     double? width,
     double? offset,
     Radius? radius,
+    double? inset,
   }) => _FortalFocusRingModifier(
     color: color ?? this.color,
     width: width ?? this.width,
     offset: offset ?? this.offset,
     radius: radius ?? this.radius,
+    inset: inset ?? this.inset,
   );
   @override
   _FortalFocusRingModifier lerp(_FortalFocusRingModifier? other, double t) =>
@@ -149,27 +158,38 @@ final class _FortalFocusRingModifier
           width: width + (other.width - width) * t,
           offset: offset + (other.offset - offset) * t,
           radius: Radius.lerp(radius, other.radius, t)!,
+          inset: inset + (other.inset - inset) * t,
         );
   @override
   Widget build(Widget child) => CustomPaint(
-    foregroundPainter: _FortalFocusPainter(color, width, offset, radius),
+    foregroundPainter: _FortalFocusPainter(color, width, offset, radius, inset),
     child: child,
   );
   @override
-  List<Object?> get props => [color, width, offset, radius];
+  List<Object?> get props => [color, width, offset, radius, inset];
 }
 
 class _FortalFocusPainter extends CustomPainter {
-  const _FortalFocusPainter(this.color, this.width, this.offset, this.radius);
+  const _FortalFocusPainter(
+    this.color,
+    this.width,
+    this.offset,
+    this.radius,
+    this.inset,
+  );
   final Color color;
   final double width;
   final double offset;
   final Radius radius;
+  final double inset;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (color.a == 0 || width == 0) return;
-    final box = RRect.fromRectAndRadius(Offset.zero & size, radius);
+    final box = RRect.fromRectAndRadius(
+      (Offset.zero & size).deflate(inset),
+      radius,
+    );
     canvas.drawDRRect(
       box.inflate(offset + width),
       box.inflate(offset),
@@ -182,7 +202,8 @@ class _FortalFocusPainter extends CustomPainter {
       color != old.color ||
       width != old.width ||
       offset != old.offset ||
-      radius != old.radius;
+      radius != old.radius ||
+      inset != old.inset;
 }
 
 /// A crisp inset frame, not an elevation shadow. No blur or offset is used.

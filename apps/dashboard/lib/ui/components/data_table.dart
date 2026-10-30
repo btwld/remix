@@ -44,7 +44,12 @@ DataTableStyler uiDataTableStyle({
           style: UiTokens.text1.mix(),
         ).fontWeight(UiTokens.fontWeightRegular()).color(UiTokens.gray11()),
       )
-      .headerCell(_uiDataTableCell(metrics))
+      .headerCell(
+        _uiDataTableCell(metrics).onFocusVisible(
+          // Keep the common outline inside the padding of clipped tables.
+          BoxStyler().uiFocusRing(inset: UiTokens.space2()),
+        ),
+      )
       .bodyCell(_uiDataTableCell(metrics))
       .selectionCell(BoxStyler().alignment(Alignment.center))
       .headerMinHeight(metrics.minHeight)
@@ -82,7 +87,7 @@ _UiDataTableMetrics _uiDataTableMetrics(UiDataTableSize size) => switch (size) {
   .size1 => (
     paddingX: UiTokens.space2(),
     paddingY: UiTokens.space2(),
-    minHeight: UiTokens.space7(),
+    minHeight: UiTokens.touchTargetMin(),
     sortIconSize: UiTokens.dataTableSortIconSize1(),
     radius: UiTokens.radius3(),
     text: UiTokens.text2,

@@ -130,7 +130,8 @@ class UiTheme extends StatelessWidget {
       return _resolveUiTheme(
         UiThemeConfig(
           accent: accent ?? config.accent,
-          accentPalette: accentPalette ?? config.accentPalette,
+          accentPalette:
+              accentPalette ?? (accent == null ? config.accentPalette : null),
           gray: gray ?? config.gray,
           brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,

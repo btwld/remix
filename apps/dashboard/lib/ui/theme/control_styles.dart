@@ -56,10 +56,12 @@ final class _UiTouchTarget extends WidgetModifier<_UiTouchTarget> {
 }
 
 /// The same outline for surfaces without a Remix effects slot.
+/// [inset] measures from content inside an edge-to-edge clipped surface.
 WidgetModifierConfig uiFocusRingModifier({
   Radius? radius,
   bool visible = true,
-}) => WidgetModifierConfig.modifier(_UiFocusRingMix(radius, visible));
+  double inset = 0,
+}) => WidgetModifierConfig.modifier(_UiFocusRingMix(radius, visible, inset));
 
 extension UiFocusRingToggle on ToggleStyler {
   ToggleStyler uiFocusRing({Radius? radius}) =>
@@ -87,14 +89,15 @@ extension UiFocusRingFlexBox on FlexBoxStyler {
 }
 
 extension UiFocusRingBox on BoxStyler {
-  BoxStyler uiFocusRing({Radius? radius}) =>
-      wrap(uiFocusRingModifier(radius: radius));
+  BoxStyler uiFocusRing({Radius? radius, double inset = 0}) =>
+      wrap(uiFocusRingModifier(radius: radius, inset: inset));
 }
 
 final class _UiFocusRingMix extends ModifierMix<_UiFocusRingModifier> {
-  const _UiFocusRingMix(this.radius, this.visible);
+  const _UiFocusRingMix(this.radius, this.visible, this.inset);
   final Radius? radius;
   final bool visible;
+  final double inset;
 
   @override
   _UiFocusRingModifier resolve(BuildContext context) {
@@ -103,6 +106,7 @@ final class _UiFocusRingMix extends ModifierMix<_UiFocusRingModifier> {
       color: visible ? outline.outline.color : const Color(0x00000000),
       width: outline.outline.width,
       offset: outline.outlineOffset,
+      inset: MixOps.resolve(context, Prop.value(inset)) ?? 0,
       radius:
           MixOps.resolve(context, Prop.maybe(radius)) ??
           UiTokens.radius2.resolve(context),
@@ -112,7 +116,7 @@ final class _UiFocusRingMix extends ModifierMix<_UiFocusRingModifier> {
   @override
   _UiFocusRingMix merge(_UiFocusRingMix? other) => other ?? this;
   @override
-  List<Object?> get props => [radius, visible];
+  List<Object?> get props => [radius, visible, inset];
 }
 
 final class _UiFocusRingModifier extends WidgetModifier<_UiFocusRingModifier> {
@@ -121,11 +125,13 @@ final class _UiFocusRingModifier extends WidgetModifier<_UiFocusRingModifier> {
     required this.width,
     required this.offset,
     required this.radius,
+    required this.inset,
   });
   final Color color;
   final double width;
   final double offset;
   final Radius radius;
+  final double inset;
 
   @override
   _UiFocusRingModifier copyWith({
@@ -133,11 +139,13 @@ final class _UiFocusRingModifier extends WidgetModifier<_UiFocusRingModifier> {
     double? width,
     double? offset,
     Radius? radius,
+    double? inset,
   }) => _UiFocusRingModifier(
     color: color ?? this.color,
     width: width ?? this.width,
     offset: offset ?? this.offset,
     radius: radius ?? this.radius,
+    inset: inset ?? this.inset,
   );
   @override
   _UiFocusRingModifier lerp(_UiFocusRingModifier? other, double t) =>
@@ -148,27 +156,38 @@ final class _UiFocusRingModifier extends WidgetModifier<_UiFocusRingModifier> {
           width: width + (other.width - width) * t,
           offset: offset + (other.offset - offset) * t,
           radius: Radius.lerp(radius, other.radius, t)!,
+          inset: inset + (other.inset - inset) * t,
         );
   @override
   Widget build(Widget child) => CustomPaint(
-    foregroundPainter: _UiFocusPainter(color, width, offset, radius),
+    foregroundPainter: _UiFocusPainter(color, width, offset, radius, inset),
     child: child,
   );
   @override
-  List<Object?> get props => [color, width, offset, radius];
+  List<Object?> get props => [color, width, offset, radius, inset];
 }
 
 class _UiFocusPainter extends CustomPainter {
-  const _UiFocusPainter(this.color, this.width, this.offset, this.radius);
+  const _UiFocusPainter(
+    this.color,
+    this.width,
+    this.offset,
+    this.radius,
+    this.inset,
+  );
   final Color color;
   final double width;
   final double offset;
   final Radius radius;
+  final double inset;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (color.a == 0 || width == 0) return;
-    final box = RRect.fromRectAndRadius(Offset.zero & size, radius);
+    final box = RRect.fromRectAndRadius(
+      (Offset.zero & size).deflate(inset),
+      radius,
+    );
     canvas.drawDRRect(
       box.inflate(offset + width),
       box.inflate(offset),
@@ -181,7 +200,8 @@ class _UiFocusPainter extends CustomPainter {
       color != old.color ||
       width != old.width ||
       offset != old.offset ||
-      radius != old.radius;
+      radius != old.radius ||
+      inset != old.inset;
 }
 
 /// A crisp inset frame, not an elevation shadow. No blur or offset is used.

@@ -169,26 +169,53 @@ void main() {
           return const SizedBox();
         },
       );
-      await tester.pumpWidget(
-        FortalTheme(
-          accentPalette: mar,
-          mode: .light,
-          child: Column(
-            children: [
-              capture('root'),
-              FortalTheme(child: capture('inherited')),
-              FortalTheme(accent: .caju, child: capture('named')),
-              FortalTheme(accentPalette: ceu, child: capture('custom')),
-            ],
-          ),
-        ),
+      Widget configured(
+        String name, {
+        FortalAccentColor? accent,
+        FortalColorTheme? accentPalette,
+      }) => FortalTheme(
+        theme: const FortalThemeData.light(accentPalette: mar),
+        darkTheme: const FortalThemeData.dark(accentPalette: sol),
+        accent: accent,
+        accentPalette: accentPalette,
+        child: capture(name),
       );
-      expect(captured, {
-        'root': mar.light.scale.step(9),
-        'inherited': mar.light.scale.step(9),
-        'named': caju.light.scale.step(9),
-        'custom': ceu.light.scale.step(9),
-      });
+      for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+        await tester.pumpWidget(
+          FortalTheme(
+            accentPalette: mar,
+            mode: mode,
+            child: Column(
+              children: [
+                capture('root'),
+                FortalTheme(child: capture('inherited')),
+                FortalTheme(accent: .caju, child: capture('named')),
+                FortalTheme(accentPalette: ceu, child: capture('custom')),
+                configured('configured'),
+                configured('configured-named', accent: .caju),
+                configured(
+                  'configured-custom',
+                  accent: .caju,
+                  accentPalette: ceu,
+                ),
+              ],
+            ),
+          ),
+        );
+        final dark = mode == FortalThemeMode.dark;
+        final inherited = dark ? mar.dark : mar.light;
+        final named = dark ? caju.dark : caju.light;
+        final custom = dark ? ceu.dark : ceu.light;
+        expect(captured, {
+          'root': inherited.scale.step(9),
+          'inherited': inherited.scale.step(9),
+          'named': named.scale.step(9),
+          'custom': custom.scale.step(9),
+          'configured': (dark ? sol.dark : mar.light).scale.step(9),
+          'configured-named': named.scale.step(9),
+          'configured-custom': custom.scale.step(9),
+        });
+      }
       expect(
         const FortalThemeData.light(
           accentPalette: mar,

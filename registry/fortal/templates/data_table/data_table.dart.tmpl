@@ -46,7 +46,12 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
             .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
             .color({{typePrefix}}Tokens.gray11()),
       )
-      .headerCell(_{{valuePrefix}}DataTableCell(metrics))
+      .headerCell(
+        _{{valuePrefix}}DataTableCell(metrics).onFocusVisible(
+          // Keep the common outline inside the padding of clipped tables.
+          BoxStyler().{{valuePrefix}}FocusRing(inset: {{typePrefix}}Tokens.space2()),
+        ),
+      )
       .bodyCell(_{{valuePrefix}}DataTableCell(metrics))
       .selectionCell(BoxStyler().alignment(Alignment.center))
       .headerMinHeight(metrics.minHeight)
@@ -85,7 +90,7 @@ _{{typePrefix}}DataTableMetrics _{{valuePrefix}}DataTableMetrics({{typePrefix}}D
       .size1 => (
         paddingX: {{typePrefix}}Tokens.space2(),
         paddingY: {{typePrefix}}Tokens.space2(),
-        minHeight: {{typePrefix}}Tokens.space7(),
+        minHeight: {{typePrefix}}Tokens.touchTargetMin(),
         sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize1(),
         radius: {{typePrefix}}Tokens.radius3(),
         text: {{typePrefix}}Tokens.text2,

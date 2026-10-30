@@ -56,10 +56,13 @@ final class _{{typePrefix}}TouchTarget extends WidgetModifier<_{{typePrefix}}Tou
 }
 
 /// The same outline for surfaces without a Remix effects slot.
+/// [inset] measures from content inside an edge-to-edge clipped surface.
 WidgetModifierConfig {{valuePrefix}}FocusRingModifier({
   Radius? radius,
   bool visible = true,
-}) => WidgetModifierConfig.modifier(_{{typePrefix}}FocusRingMix(radius, visible));
+  double inset = 0,
+}) =>
+    WidgetModifierConfig.modifier(_{{typePrefix}}FocusRingMix(radius, visible, inset));
 
 extension {{typePrefix}}FocusRingToggle on ToggleStyler {
   ToggleStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
@@ -87,14 +90,15 @@ extension {{typePrefix}}FocusRingFlexBox on FlexBoxStyler {
 }
 
 extension {{typePrefix}}FocusRingBox on BoxStyler {
-  BoxStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
-      wrap({{valuePrefix}}FocusRingModifier(radius: radius));
+  BoxStyler {{valuePrefix}}FocusRing({Radius? radius, double inset = 0}) =>
+      wrap({{valuePrefix}}FocusRingModifier(radius: radius, inset: inset));
 }
 
 final class _{{typePrefix}}FocusRingMix extends ModifierMix<_{{typePrefix}}FocusRingModifier> {
-  const _{{typePrefix}}FocusRingMix(this.radius, this.visible);
+  const _{{typePrefix}}FocusRingMix(this.radius, this.visible, this.inset);
   final Radius? radius;
   final bool visible;
+  final double inset;
 
   @override
   _{{typePrefix}}FocusRingModifier resolve(BuildContext context) {
@@ -103,6 +107,7 @@ final class _{{typePrefix}}FocusRingMix extends ModifierMix<_{{typePrefix}}Focus
       color: visible ? outline.outline.color : const Color(0x00000000),
       width: outline.outline.width,
       offset: outline.outlineOffset,
+      inset: MixOps.resolve(context, Prop.value(inset)) ?? 0,
       radius:
           MixOps.resolve(context, Prop.maybe(radius)) ??
           {{typePrefix}}Tokens.radius2.resolve(context),
@@ -112,7 +117,7 @@ final class _{{typePrefix}}FocusRingMix extends ModifierMix<_{{typePrefix}}Focus
   @override
   _{{typePrefix}}FocusRingMix merge(_{{typePrefix}}FocusRingMix? other) => other ?? this;
   @override
-  List<Object?> get props => [radius, visible];
+  List<Object?> get props => [radius, visible, inset];
 }
 
 final class _{{typePrefix}}FocusRingModifier
@@ -122,11 +127,13 @@ final class _{{typePrefix}}FocusRingModifier
     required this.width,
     required this.offset,
     required this.radius,
+    required this.inset,
   });
   final Color color;
   final double width;
   final double offset;
   final Radius radius;
+  final double inset;
 
   @override
   _{{typePrefix}}FocusRingModifier copyWith({
@@ -134,11 +141,13 @@ final class _{{typePrefix}}FocusRingModifier
     double? width,
     double? offset,
     Radius? radius,
+    double? inset,
   }) => _{{typePrefix}}FocusRingModifier(
     color: color ?? this.color,
     width: width ?? this.width,
     offset: offset ?? this.offset,
     radius: radius ?? this.radius,
+    inset: inset ?? this.inset,
   );
   @override
   _{{typePrefix}}FocusRingModifier lerp(_{{typePrefix}}FocusRingModifier? other, double t) =>
@@ -149,27 +158,38 @@ final class _{{typePrefix}}FocusRingModifier
           width: width + (other.width - width) * t,
           offset: offset + (other.offset - offset) * t,
           radius: Radius.lerp(radius, other.radius, t)!,
+          inset: inset + (other.inset - inset) * t,
         );
   @override
   Widget build(Widget child) => CustomPaint(
-    foregroundPainter: _{{typePrefix}}FocusPainter(color, width, offset, radius),
+    foregroundPainter: _{{typePrefix}}FocusPainter(color, width, offset, radius, inset),
     child: child,
   );
   @override
-  List<Object?> get props => [color, width, offset, radius];
+  List<Object?> get props => [color, width, offset, radius, inset];
 }
 
 class _{{typePrefix}}FocusPainter extends CustomPainter {
-  const _{{typePrefix}}FocusPainter(this.color, this.width, this.offset, this.radius);
+  const _{{typePrefix}}FocusPainter(
+    this.color,
+    this.width,
+    this.offset,
+    this.radius,
+    this.inset,
+  );
   final Color color;
   final double width;
   final double offset;
   final Radius radius;
+  final double inset;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (color.a == 0 || width == 0) return;
-    final box = RRect.fromRectAndRadius(Offset.zero & size, radius);
+    final box = RRect.fromRectAndRadius(
+      (Offset.zero & size).deflate(inset),
+      radius,
+    );
     canvas.drawDRRect(
       box.inflate(offset + width),
       box.inflate(offset),
@@ -182,7 +202,8 @@ class _{{typePrefix}}FocusPainter extends CustomPainter {
       color != old.color ||
       width != old.width ||
       offset != old.offset ||
-      radius != old.radius;
+      radius != old.radius ||
+      inset != old.inset;
 }
 
 /// A crisp inset frame, not an elevation shadow. No blur or offset is used.

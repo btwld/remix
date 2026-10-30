@@ -46,7 +46,12 @@ DataTableStyler fortalDataTableStyle({
             .fontWeight(FortalTokens.fontWeightRegular())
             .color(FortalTokens.gray11()),
       )
-      .headerCell(_fortalDataTableCell(metrics))
+      .headerCell(
+        _fortalDataTableCell(metrics).onFocusVisible(
+          // Keep the common outline inside the padding of clipped tables.
+          BoxStyler().fortalFocusRing(inset: FortalTokens.space2()),
+        ),
+      )
       .bodyCell(_fortalDataTableCell(metrics))
       .selectionCell(BoxStyler().alignment(Alignment.center))
       .headerMinHeight(metrics.minHeight)
@@ -85,7 +90,7 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
       .size1 => (
         paddingX: FortalTokens.space2(),
         paddingY: FortalTokens.space2(),
-        minHeight: FortalTokens.space7(),
+        minHeight: FortalTokens.touchTargetMin(),
         sortIconSize: FortalTokens.dataTableSortIconSize1(),
         radius: FortalTokens.radius3(),
         text: FortalTokens.text2,

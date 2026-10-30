@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
@@ -360,6 +362,148 @@ void main() {
         const Size(48 * 0.9, 48 * 0.9),
       );
     });
+
+    testWidgets('compact sortable headers retain a 40px target when scaled', (
+      tester,
+    ) async {
+      RemixDataTableSort? sort;
+      await tester.pumpWidget(
+        FortalTheme(
+          scaling: .percent90,
+          child: WidgetsApp(
+            color: Colors.black,
+            builder: (context, child) => Align(
+              child: SizedBox(
+                width: 400,
+                child: FortalDataTable<String>(
+                  size: .size1,
+                  rows: const ['one'],
+                  columns: [
+                    RemixDataTableColumn<String>(
+                      id: 'value',
+                      label: 'Value',
+                      sortable: true,
+                      cellBuilder: (context, row) => Text(row),
+                    ),
+                  ],
+                  onSortChanged: (value) => sort = value,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final header = tester.getRect(find.byType(Pressable));
+      await tester.tapAt(header.center + const Offset(0, 19));
+      expect(
+        sort,
+        const RemixDataTableSort(columnId: 'value', direction: .ascending),
+      );
+      expect(header.height, greaterThanOrEqualTo(40));
+    });
+
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      for (final variant in FortalDataTableVariant.values) {
+        testWidgets(
+          '${mode.name} ${variant.name} headers show an unclipped keyboard ring',
+          (tester) async {
+            final previous = FocusManager.instance.highlightStrategy;
+            FocusManager.instance.highlightStrategy =
+                FocusHighlightStrategy.automatic;
+            addTearDown(
+              () => FocusManager.instance.highlightStrategy = previous,
+            );
+            RemixDataTableSort? sort;
+            await tester.pumpWidget(
+              FortalTheme(
+                mode: mode,
+                scaling: .percent90,
+                child: WidgetsApp(
+                  color: Colors.black,
+                  pageRouteBuilder: <T>(settings, builder) =>
+                      PageRouteBuilder<T>(
+                        settings: settings,
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            builder(context),
+                      ),
+                  home: Align(
+                    child: SizedBox(
+                      width: 400,
+                      child: FortalDataTable<String>(
+                        size: .size1,
+                        variant: variant,
+                        rows: const ['one'],
+                        columns: [
+                          RemixDataTableColumn<String>(
+                            id: 'value',
+                            label: 'Value',
+                            sortable: true,
+                            cellBuilder: (context, row) => Text(row),
+                          ),
+                        ],
+                        onSortChanged: (value) => sort = value,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+
+            final header = find.byType(Pressable);
+            final ring = find.descendant(
+              of: header,
+              matching: find.byWidgetPredicate(
+                (widget) =>
+                    widget is CustomPaint && widget.foregroundPainter != null,
+              ),
+            );
+            final before = tester.getRect(header);
+            expect(ring, findsNothing);
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pumpAndSettle();
+            expect(
+              WidgetStateProvider.of(
+                tester.element(find.text('Value')),
+              )!.states,
+              contains(WidgetState.focused),
+            );
+            expect(ring, findsOneWidget);
+            expect(tester.getRect(header), before);
+
+            final paint = tester.renderObject<RenderCustomPaint>(ring);
+            final context = tester.element(header);
+            final inset = FortalTokens.space2.resolve(context);
+            final bounds = Offset.zero & paint.size;
+            final content = RRect.fromRectAndRadius(
+              bounds.deflate(inset),
+              FortalTokens.radius2.resolve(context),
+            );
+            final outer = content.inflate(4);
+            expect(bounds.contains(outer.outerRect.topLeft), isTrue);
+            expect(bounds.contains(outer.outerRect.bottomRight), isTrue);
+            expect(
+              paint,
+              paints..drrect(
+                outer: outer,
+                inner: content.inflate(2),
+                color: FortalTokens.focus8.resolve(context),
+              ),
+            );
+
+            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+            expect(
+              sort,
+              const RemixDataTableSort(
+                columnId: 'value',
+                direction: .ascending,
+              ),
+            );
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
 
     testWidgets('cell content inherits the gray-12 body typography', (
       tester,
