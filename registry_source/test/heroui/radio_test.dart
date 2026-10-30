@@ -274,6 +274,124 @@ void main() {
     });
   }
 
+  group('with a label', () {
+    const label = 'Alpha';
+
+    Widget labeled({bool invalid = false, ValueChanged<String?>? onChanged}) =>
+        RemixRadioGroup<String>(
+          groupValue: 'b',
+          onChanged: onChanged ?? (_) {},
+          child: HeroUiRadio<String>(
+            value: 'a',
+            label: label,
+            invalid: invalid,
+          ),
+        );
+
+    Finder control() => find
+        .descendant(
+          of: find.byType(HeroUiRadio<String>),
+          matching: find.byType(StyleSpecBuilder<BoxSpec>),
+        )
+        .first;
+
+    RadioSpec spec(WidgetTester tester) =>
+        tester.resolvedSpecOf<RadioSpec>(control());
+
+    for (final mode in _modes) {
+      testWidgets('the label matches the upstream label and content row in '
+          '$mode', (tester) async {
+        await _pump(tester, labeled(), mode: mode);
+        final upstream = heroUiCase(
+          'radio-primary-vertical-rest-a-label',
+          mode: mode,
+        );
+        final content = heroUiCase(
+          'radio-primary-vertical-rest-a-content',
+          mode: mode,
+        );
+        final style = tester.widget<Text>(find.text(label)).style!;
+        expect(style.fontSize, upstream.px('fontSize'));
+        expect(style.fontSize! * style.height!, upstream.px('lineHeight'));
+        expect(style.fontWeight, FontWeight.w500);
+        expectCssColor(
+          style.color!,
+          upstream.styles['color']!,
+          reason: 'label',
+        );
+
+        final box = tester.getRect(control());
+        final text = tester.getRect(find.text(label));
+        expect(text.left - box.right, content.px('gap'));
+        expect(text.center.dy, box.center.dy);
+      });
+
+      testWidgets('an invalid radio turns its label danger in $mode', (
+        tester,
+      ) async {
+        await _pump(tester, labeled(invalid: true), mode: mode);
+        final upstream = heroUiCase(
+          'radio-primary-vertical-invalid-a-label',
+          mode: mode,
+        );
+        expectCssColor(
+          tester.widget<Text>(find.text(label)).style!.color!,
+          upstream.styles['color']!,
+          reason: 'label',
+        );
+      });
+
+      // The label is inside the one target: pointing at it hovers and presses
+      // the control, and only the control scales.
+      testWidgets('hovering the label fills the control in $mode', (
+        tester,
+      ) async {
+        await _pump(tester, labeled(), mode: mode);
+        await tester.hoverCenter(find.text(label));
+        expect(
+          _fill(spec(tester).container.spec),
+          heroUiToken(HeroUiTokens.fieldHover, mode),
+        );
+      }, variant: desktopOnly);
+
+      testWidgets('pressing the label scales the control and not the label '
+          'in $mode', (tester) async {
+        await _pump(tester, labeled(), mode: mode);
+        final pressed = heroUiCase(
+          'radio-primary-vertical-rest-a-pressed',
+          mode: mode,
+          state: true,
+        );
+        final rest = heroUiCase(
+          'radio-primary-vertical-rest-a-control',
+          mode: mode,
+        );
+        final press = await tester.pressCenter(find.text(label));
+        expect(
+          spec(tester).container.spec.transform!.entry(0, 0),
+          closeTo(pressed.size.width / rest.size.width, .001),
+        );
+        expect(
+          find.ancestor(of: find.text(label), matching: find.byType(Transform)),
+          findsNothing,
+        );
+        await press.up();
+      });
+    }
+
+    testWidgets('tapping the label selects, and the radio is one node named '
+        'by it', (tester) async {
+      final semantics = tester.ensureSemantics();
+      String? picked;
+      await _pump(tester, labeled(onChanged: (value) => picked = value));
+      expect(find.semantics.byLabel(label), findsOne);
+
+      await tester.tap(find.text(label));
+      expect(picked, 'a');
+      semantics.dispose();
+    });
+  });
+
   testWidgets('selecting through Remix moves the selection', (tester) async {
     var value = 'a';
     await _pump(

@@ -130,10 +130,6 @@ BoxDecoration? decorationOf(StyleSpec<BoxSpec> box) =>
 BoxDecoration? flexDecorationOf(StyleSpec<FlexBoxSpec> box) =>
     box.spec.box?.spec.decoration as BoxDecoration?;
 
-/// The foreground decoration of a flex box.
-BoxDecoration? flexForegroundOf(StyleSpec<FlexBoxSpec> box) =>
-    box.spec.box?.spec.foregroundDecoration as BoxDecoration?;
-
 /// The box half of a flex box.
 BoxSpec? boxOf(StyleSpec<FlexBoxSpec> box) => box.spec.box?.spec;
 

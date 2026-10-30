@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -10,6 +12,9 @@ import 'package:registry_source/src/agent/components/permission.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
+import 'package:registry_source/src/default/components/icon_button.dart';
+import 'package:registry_source/src/default/components/menu.dart';
+import 'package:registry_source/src/default/components/popover.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/default/theme/theme_data.dart';
@@ -55,6 +60,288 @@ void main() {
     );
     expect(find.text('Order ORD-1047 requires review.'), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('an order row opens its actions from a real icon button', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await _pumpDashboard(
+      tester,
+      preset: .defaultPreset,
+      initialPage: RegistryDashboardDemoPage.orders,
+    );
+    const label = 'Actions for ORD-1048';
+    final button = find.byWidgetPredicate(
+      (widget) => widget is VanillaIconButton && widget.semanticLabel == label,
+    );
+    expect(button, findsOneWidget);
+    final menu = find.ancestor(
+      of: button,
+      matching: find.byType(VanillaMenu<String>),
+    );
+
+    Color? fill() => _fillOf(_specOf(tester, button));
+
+    final muted = VanillaTheme.of(tester.element(button)).muted;
+
+    expect(find.semantics.byLabel(label), findsOne);
+    expect(_focusStops(tester, menu), 1);
+    expect(fill(), isNot(muted));
+    expect(
+      tester.getSemantics(button),
+      isSemantics(
+        label: label,
+        isButton: true,
+        isFocusable: true,
+        hasEnabledState: true,
+        isEnabled: true,
+        hasExpandedState: true,
+        isExpanded: false,
+      ),
+    );
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Archive'), findsOneWidget);
+    expect(
+      fill(),
+      muted,
+      reason: 'the button is filled while its menu is open',
+    );
+    expect(
+      tester.getSemantics(button),
+      isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Archive'), findsNothing);
+    expect(fill(), isNot(muted), reason: 'the fill goes with the menu');
+    expect(
+      tester.getSemantics(button),
+      isSemantics(label: label, isFocused: true),
+    );
+    semantics.dispose();
+  });
+
+  for (final dark in const [false, true]) {
+    testWidgets('the open kebab keeps its look under the pointer in '
+        '${dark ? 'dark' : 'light'}', (tester) async {
+      await _pumpDashboard(
+        tester,
+        preset: .defaultPreset,
+        initialPage: RegistryDashboardDemoPage.orders,
+      );
+      if (dark) {
+        await tester.tap(
+          find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+        );
+        await tester.pumpAndSettle();
+      }
+      final button = find.byWidgetPredicate(
+        (widget) =>
+            widget is VanillaIconButton &&
+            widget.semanticLabel == 'Actions for ORD-1048',
+      );
+      final theme = VanillaTheme.of(tester.element(button));
+      expect(theme.brightness, dark ? Brightness.dark : Brightness.light);
+
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(button));
+      await tester.pumpAndSettle();
+      final hovered = _specOf(tester, button);
+      expect(
+        hovered.icon.spec.color,
+        theme.accentForeground,
+        reason: 'the pointer is on the closed button',
+      );
+
+      await pointer.down(tester.getCenter(button));
+      await pointer.up();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Archive'), findsOneWidget);
+      final open = _specOf(tester, button);
+      expect(_fillOf(open), theme.muted);
+      expect(open.icon.spec.color, theme.mutedForeground);
+
+      await pointer.down(tester.getCenter(button));
+      await tester.pump();
+      final pressed = _specOf(tester, button);
+      expect(_fillOf(pressed), theme.muted, reason: 'pressed while open');
+      expect(pressed.icon.spec.color, theme.mutedForeground);
+      await pointer.up();
+      await tester.pumpAndSettle();
+    });
+  }
+
+  for (final (label, panelText) in const [
+    ('Open notifications', 'Order ORD-1047 requires review.'),
+    ('Open theme settings', 'Theme settings'),
+  ]) {
+    testWidgets('the $label button is its popover\'s one focus stop and '
+        'toggles it', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpDashboard(tester, preset: .defaultPreset);
+      final button = find.byWidgetPredicate(
+        (widget) =>
+            widget is VanillaIconButton && widget.semanticLabel == label,
+      );
+      final popover = find.ancestor(
+        of: button,
+        matching: find.byType(VanillaPopover),
+      );
+
+      expect(_focusStops(tester, popover), 1);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(
+          label: label,
+          isButton: true,
+          isFocusable: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.text(panelText), findsOneWidget);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.text(panelText), findsNothing, reason: 'it closes again');
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: label, hasExpandedState: true, isExpanded: false),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.text(panelText), findsOneWidget);
+      expect(_hasFocusWithin(tester, button), isFalse);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text(panelText), findsNothing);
+      expect(_hasFocusWithin(tester, button), isTrue);
+      semantics.dispose();
+    });
+  }
+
+  group('Fortal data-table kebab', () {
+    Future<({Finder kebab, Finder button, String name})> pumpKebab(
+      WidgetTester tester,
+    ) async {
+      await _pumpDashboard(
+        tester,
+        preset: .fortal,
+        initialPage: RegistryDashboardDemoPage.customers,
+      );
+      final customer = tester
+          .widget<RemixDataTable<RegistryDashboardCustomer>>(
+            find.byType(RemixDataTable<RegistryDashboardCustomer>),
+          )
+          .rows
+          .first;
+      final kebab = find.byKey(ValueKey('customer-actions-${customer.id}'));
+      return (
+        kebab: kebab,
+        button: find.descendant(
+          of: kebab,
+          matching: find.byType(RemixIconButton),
+        ),
+        name: 'Actions for ${customer.name}',
+      );
+    }
+
+    testWidgets('is a real button announced once, with the expanded state', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final (:kebab, :button, :name) = await pumpKebab(tester);
+
+      expect(button, findsOneWidget);
+      expect(find.semantics.byLabel(name), findsOne);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(
+          label: name,
+          isButton: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      await tester.tap(kebab);
+      await tester.pumpAndSettle();
+
+      expect(find.text('View profile'), findsOneWidget);
+      expect(find.semantics.byLabel(name), findsOne);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: name, hasExpandedState: true, isExpanded: true),
+      );
+      expect(tester.takeException(), isNull);
+      semantics.dispose();
+    });
+
+    testWidgets('is one tab stop that Enter opens and Escape returns to', (
+      tester,
+    ) async {
+      final (:kebab, :button, name: _) = await pumpKebab(tester);
+      bool inKebab() => find
+          .descendant(
+            of: kebab,
+            matching: find.byElementPredicate(
+              (element) =>
+                  element == FocusManager.instance.primaryFocus?.context,
+            ),
+          )
+          .evaluate()
+          .isNotEmpty;
+      final control = tester.widget<RemixIconButton>(button).focusNode!
+        ..requestFocus();
+      await tester.pump();
+      expect(inKebab(), isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(inKebab(), isFalse);
+
+      control.requestFocus();
+      await tester.pump();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pump();
+      expect(inKebab(), isFalse);
+
+      control.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(find.text('View profile'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('View profile'), findsNothing);
+      expect(control.hasPrimaryFocus, isTrue);
+    });
   });
 
   for (final preset in _Preset.values) {
@@ -170,7 +457,11 @@ void main() {
         await tester.pump();
         expect(find.bySemanticsLabel('Use light appearance'), findsOneWidget);
 
-        await tester.tap(find.bySemanticsLabel('Notifications').first);
+        final notifications = switch (preset) {
+          .defaultPreset => 'Open notifications',
+          .fortal => 'Notifications',
+        };
+        await tester.tap(find.bySemanticsLabel(notifications).first);
         await tester.pump();
         expect(
           find.text(switch (preset) {
@@ -189,7 +480,7 @@ void main() {
           );
           expect(find.text('Order ORD-1047 requires review.'), findsNothing);
         }
-        await tester.tap(find.bySemanticsLabel('Notifications').first);
+        await tester.tap(find.bySemanticsLabel(notifications).first);
         await tester.pump();
 
         await _pumpDashboard(
@@ -743,7 +1034,7 @@ void main() {
     );
     expect(radiusOf(VanillaTokens.radiusLg), after);
 
-    await tester.tap(find.bySemanticsLabel('Theme settings'));
+    await tester.tap(find.bySemanticsLabel('Open theme settings'));
     await tester.pumpAndSettle();
     expect(find.text('Theme settings'), findsOneWidget);
     expect(find.text('Accent color'), findsNothing);
@@ -916,4 +1207,46 @@ double _transformAngleIn(WidgetTester tester, Finder ancestor) {
   return math
       .atan2(transform.transform.entry(1, 0), transform.transform.entry(0, 0))
       .abs();
+}
+
+/// The spec the icon button under [button] resolved.
+IconButtonSpec _specOf(WidgetTester tester, Finder button) => tester
+    .widget<StyleSpecProvider<IconButtonSpec>>(
+      find
+          .descendant(
+            of: button,
+            matching: find.byType(StyleSpecProvider<IconButtonSpec>),
+          )
+          .first,
+    )
+    .spec
+    .spec;
+
+Color? _fillOf(IconButtonSpec spec) =>
+    (spec.container.spec.decoration as BoxDecoration?)?.color;
+
+/// How many focus stops sit inside [root].
+int _focusStops(WidgetTester tester, Finder root) {
+  final rootElement = tester.element(root);
+
+  return FocusManager.instance.rootScope.traversalDescendants
+      .where((node) => _isInside(node.context, rootElement))
+      .length;
+}
+
+/// Whether the primary focus sits inside [root].
+bool _hasFocusWithin(WidgetTester tester, Finder root) => _isInside(
+  FocusManager.instance.primaryFocus?.context,
+  tester.element(root),
+);
+
+bool _isInside(BuildContext? context, Element root) {
+  if (context == null) return false;
+  var inside = identical(context, root);
+  context.visitAncestorElements((ancestor) {
+    inside = identical(ancestor, root);
+    return !inside;
+  });
+
+  return inside;
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/src/heroui/components/switch.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
@@ -17,10 +18,23 @@ Widget _switch({
   size: size,
   selected: selected,
   enabled: enabled,
-  semanticLabel: 'Notifications',
+  semanticLabel: _label,
   onChanged: onChanged ?? (_) {},
   style: style,
 );
+
+Widget _labeledSwitch({
+  bool selected = false,
+  bool invalid = false,
+  ValueChanged<bool>? onChanged,
+}) => HeroUiSwitch(
+  selected: selected,
+  invalid: invalid,
+  label: _label,
+  onChanged: onChanged ?? (_) {},
+);
+
+const _label = 'Notifications';
 
 Future<void> _pump(
   WidgetTester tester,
@@ -233,6 +247,88 @@ void main() {
       );
     });
   }
+
+  for (final mode in _modes) {
+    testWidgets('the label matches the upstream label and content row in '
+        '$mode', (tester) async {
+      await _pump(tester, _labeledSwitch(), mode: mode);
+      final label = heroUiCase('switch-md-rest-label', mode: mode);
+      final content = heroUiCase('switch-group-vertical-a-content', mode: mode);
+      final style = tester.widget<Text>(find.text(_label)).style!;
+      expect(style.fontSize, label.px('fontSize'));
+      expect(style.fontSize! * style.height!, label.px('lineHeight'));
+      expect(style.fontWeight, FontWeight.w500);
+      expectCssColor(style.color!, label.styles['color']!, reason: 'label');
+
+      final track = tester.getRect(_track);
+      final text = tester.getRect(find.text(_label));
+      expect(text.left - track.right, content.px('gap'));
+      expect(text.center.dy, track.center.dy);
+    });
+
+    testWidgets('an invalid switch turns only the label danger in $mode', (
+      tester,
+    ) async {
+      await _pump(tester, _labeledSwitch(invalid: true), mode: mode);
+      final label = heroUiCase('switch-md-invalid-label', mode: mode);
+      expectCssColor(
+        tester.widget<Text>(find.text(_label)).style!.color!,
+        label.styles['color']!,
+        reason: 'label',
+      );
+      expect(
+        (_spec(tester).container.spec.decoration as BoxDecoration).color,
+        heroUiToken(HeroUiTokens.defaultColor, mode),
+      );
+    });
+
+    // The label is inside the one target: hovering or pressing it moves the
+    // track through the same states as pointing at the track.
+    testWidgets('hovering the label fades the track in $mode', (tester) async {
+      await _pump(tester, _labeledSwitch(), mode: mode);
+      final hovered = heroUiCase(
+        'switch-md-rest-hover',
+        mode: mode,
+        state: true,
+      );
+      await tester.hoverCenter(find.text(_label));
+      expectCssColor(
+        (_spec(tester).container.spec.decoration as BoxDecoration).color!,
+        hovered.styles['backgroundColor']!,
+        reason: 'hover',
+      );
+    }, variant: desktopOnly);
+
+    testWidgets('pressing the label takes the pressed track colors in $mode', (
+      tester,
+    ) async {
+      await _pump(tester, _labeledSwitch(), mode: mode);
+      final pressed = heroUiCase(
+        'switch-md-rest-pressed',
+        mode: mode,
+        state: true,
+      );
+      final press = await tester.pressCenter(find.text(_label));
+      expectCssColor(
+        (_spec(tester).container.spec.decoration as BoxDecoration).color!,
+        pressed.styles['backgroundColor']!,
+        reason: 'pressed',
+      );
+      await press.up();
+    });
+  }
+
+  testWidgets('tapping the label toggles, and the switch is one node named by '
+      'it', (tester) async {
+    final semantics = tester.ensureSemantics();
+    bool? value;
+    await _pump(tester, _labeledSwitch(onChanged: (next) => value = next));
+    expect(find.semantics.byLabel(_label), findsOne);
+
+    await tester.tap(find.text(_label));
+    expect(value, isTrue);
+    semantics.dispose();
+  });
 
   testWidgets('tapping toggles through Remix and slides the thumb', (
     tester,

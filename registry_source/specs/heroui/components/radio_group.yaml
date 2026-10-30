@@ -27,8 +27,7 @@ measurements:
   - {what: disabled option label, value: "0.5 again", cite: radio-primary-vertical-disabled-a-label}
   - {what: disabled option description, value: "0.5 again", cite: radio-primary-vertical-disabled-a-description}
 approximations:
-  - "`HeroUiRadioGroup` renders each option as the radio, a 12px gap, and plain text, because `RemixRadio` has no label and a composition may not add gestures. The label is not a tap target; the control is."
-  - A `label` and `labelSpacing` on `RemixRadio`, as `RemixCheckbox` has, would let a tap on the label select. It passes the ADR 0002 tests (not expressible by composition, useful to every preset, additive) and is not built here.
+  - "Each option is `HeroUiRadio` with `label`, so a tap on the label selects. The description is composed beneath it (`HeroUiDescribedControl`) and, as upstream's field-level description, is outside the tap target."
   - "While invalid, `errorText` shows after `helperText`, which stays: `radio-group.css` has no rule hiding the description, unlike `textfield.css`."
   - The required asterisk (`label--required`) is the app's, in the label text.
   - Without a group label, the first option has no top margin; the CSS gives every radio `mt-4`.

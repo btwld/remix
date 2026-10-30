@@ -35,7 +35,8 @@ ToggleStyler _{{valuePrefix}}ToggleBaseStyler({{typePrefix}}ToggleSize size) {
       .merge(_{{valuePrefix}}ToggleSizeStyler(size));
 }
 
-ToggleStyler _{{valuePrefix}}ToggleFocusStyler() => ToggleStyler().{{valuePrefix}}FocusRing();
+ToggleStyler _{{valuePrefix}}ToggleFocusStyler() =>
+    ToggleStyler().containerEffects({{valuePrefix}}TabFocusOutline());
 
 ToggleStyler _{{valuePrefix}}ToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()

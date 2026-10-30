@@ -94,11 +94,7 @@ TabStyler {{valuePrefix}}TabStyle({
             .color({{typePrefix}}Tokens.grayA3())
             .onFocusVisible(.color({{typePrefix}}Tokens.accentA3())),
       )
-      .onFocusVisible(
-        // Solid `focus-8` where the other three rings use alpha `focus-a8`.
-        // See {{valuePrefix}}FocusRing: unresolved whether that is intentional.
-        TabStyler().{{valuePrefix}}FocusRing(color: {{typePrefix}}Tokens.focus8()),
-      )
+      .onFocusVisible(TabStyler().containerEffects({{valuePrefix}}TabFocusOutline()))
       .onSelected(
         .label(
               .color({{typePrefix}}Tokens.gray12())

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/toast.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
@@ -43,6 +44,14 @@ BoxDecoration _box(ToastSpec spec) =>
     spec.container.spec.boxSpec.decoration! as BoxDecoration;
 
 final _closeButton = find.byType(RemixIconButton);
+
+/// The action button without the margin around it.
+final _actionSurface = find
+    .descendant(
+      of: find.byType(RemixButton),
+      matching: find.byType(DecoratedBox),
+    )
+    .first;
 
 /// The cross is the one `CustomPaint` inside the button, so it resolves the
 /// button spec at rest and while a focus ring wraps the surface.
@@ -336,10 +345,7 @@ void main() {
         final button = tester.resolvedSpecOf<ButtonSpec>(find.text('Undo'));
 
         // Button md is h-10, md:h-9; the toast adds no styling of its own.
-        expect(
-          tester.getSize(find.byType(RemixButton)).height,
-          action.size.height,
-        );
+        expect(tester.getSize(_actionSurface).height, action.size.height);
         expectCssColor(
           boxFill(button.container.spec.box!)!,
           action.styles['backgroundColor']!,
@@ -347,6 +353,141 @@ void main() {
       });
     }
   }
+
+  for (final mode in ['light', 'dark']) {
+    testWidgets('the action sits under the message at 375 px as upstream in '
+        '$mode', (tester) async {
+      await tester.pumpHeroUi(
+        _toast(onAction: () {}, viewport: 375),
+        width: 375,
+        mode: mode,
+      );
+      await tester.pumpAndSettle();
+      final root = heroUiCase('toast-default-root', mode: mode, width: 375);
+      final description = heroUiCase(
+        'toast-default-description',
+        mode: mode,
+        width: 375,
+      );
+      final action = heroUiCase('toast-default-action', mode: mode, width: 375);
+
+      expect(tester.getSize(find.byType(RemixToast)), root.size);
+      final text = tester.getRect(find.text('Changes are live.'));
+      final button = tester.getRect(_actionSurface);
+      expect(button.left, text.left);
+      expect(
+        button.top - text.bottom,
+        action.rect.top - description.rect.bottom,
+      );
+    });
+  }
+
+  group(
+    'the action placement follows max-width: 768px and mt-2 below 640px',
+    () {
+      /// The action's surface and the description above it, at [viewport].
+      Future<({Rect text, Rect action})> place(
+        WidgetTester tester,
+        double viewport, {
+        ToastStyler style = const ToastStyler.create(),
+      }) async {
+        await tester.pumpHeroUi(
+          _toast(onAction: () {}, style: style),
+          width: viewport,
+        );
+        await tester.pumpAndSettle();
+        return (
+          text: tester.getRect(find.text('Changes are live.')),
+          action: tester.getRect(_actionSurface),
+        );
+      }
+
+      for (final viewport in [375.0, 639.5, 640.0, 768.0]) {
+        testWidgets('is below the message at $viewport px', (tester) async {
+          final placed = await place(tester, viewport);
+          expect(placed.action.left, placed.text.left);
+          expect(placed.action.top, greaterThanOrEqualTo(placed.text.bottom));
+        });
+      }
+
+      testWidgets('is beside the message at 769 px', (tester) async {
+        final placed = await place(tester, 769);
+        expect(placed.action.left, greaterThanOrEqualTo(placed.text.right));
+      });
+
+      testWidgets('adds mt-2 below 640 px, to the last fraction, and nothing '
+          'from 640 px', (tester) async {
+        double gap(({Rect text, Rect action}) placed) =>
+            placed.action.top - placed.text.bottom;
+        final root = heroUiCase('toast-default-root');
+
+        // Stacked, the gap is the toast's own `gap-1.5`; `mt-2` brings it to 8.
+        expect(gap(await place(tester, 375)), 8);
+        expect(gap(await place(tester, 639.5)), 8);
+        expect(gap(await place(tester, 640)), root.px('gap'));
+      });
+
+      // An `action` replaces rather than merges, in the base style and in the
+      // below-640 fragment the recipe declares.
+      testWidgets('a caller action restates the button style in its base and '
+          'in the below-640 fragment', (tester) async {
+        const override = Color(0xFF00FF00);
+        final fromSm = ContextVariant.breakpoint(
+          const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+        );
+        final wide = heroUiCase('toast-default-action');
+        final narrow = heroUiCase('toast-default-action', width: 375);
+        final narrowText = heroUiCase('toast-default-description', width: 375);
+
+        Future<({Color? fill, double height, double gap})> measure(
+          double viewport,
+          ToastStyler style,
+        ) async {
+          final placed = await place(tester, viewport, style: style);
+          return (
+            fill: boxFill(
+              tester
+                  .resolvedSpecOf<ButtonSpec>(find.text('Undo'))
+                  .container
+                  .spec
+                  .box!,
+            ),
+            height: placed.action.height,
+            gap: placed.action.top - placed.text.bottom,
+          );
+        }
+
+        final colorOnly = ToastStyler().action(ButtonStyler().color(override));
+        final restated = ToastStyler().action(
+          heroUiButtonStyle().color(override),
+        );
+        final complete = restated.onNot(
+          fromSm,
+          ToastStyler().action(
+            heroUiButtonStyle().color(override).margin(.top(2)),
+          ),
+        );
+
+        // From 640 px only the base action applies: the color alone drops the
+        // button's size, the restated style keeps it.
+        final partial = await measure(1024, colorOnly);
+        expect(partial.fill, override);
+        expect(partial.height, lessThan(wide.size.height));
+        final whole = await measure(1024, restated);
+        expect((whole.fill, whole.height), (override, wide.size.height));
+
+        // Below 640 px the recipe's own action wins unless the caller restates
+        // it, with the margin, in the same fragment.
+        final recipeWins = await measure(375, restated);
+        expect(recipeWins.fill, isNot(override));
+        final full = await measure(375, complete);
+        expect(full.fill, override);
+        expect(full.height, narrow.size.height);
+        expect(full.gap, narrow.rect.top - narrowText.rect.bottom);
+        expect((await measure(639.5, complete)).fill, override);
+      });
+    },
+  );
 
   testWidgets('the close button and the action work through Remix', (
     tester,

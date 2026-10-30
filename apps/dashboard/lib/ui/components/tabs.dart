@@ -86,11 +86,7 @@ TabStyler uiTabStyle({
             .color(UiTokens.grayA3())
             .onFocusVisible(.color(UiTokens.accentA3())),
       )
-      .onFocusVisible(
-        // Solid `focus-8` where the other three rings use alpha `focus-a8`.
-        // See uiFocusRing: unresolved whether that is intentional.
-        TabStyler().uiFocusRing(color: UiTokens.focus8()),
-      )
+      .onFocusVisible(TabStyler().containerEffects(uiTabFocusOutline()))
       .onSelected(
         .label(
               .color(UiTokens.gray12())

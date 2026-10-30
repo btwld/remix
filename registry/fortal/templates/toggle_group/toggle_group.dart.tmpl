@@ -69,7 +69,9 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
               .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
-        .onFocusVisible(ToggleGroupItemStyler().{{valuePrefix}}FocusRing())
+        .onFocusVisible(
+          ToggleGroupItemStyler().containerEffects({{valuePrefix}}TabFocusOutline()),
+        )
         .onDisabled(
           ToggleGroupItemStyler()
               .color({{typePrefix}}Tokens.grayA3())

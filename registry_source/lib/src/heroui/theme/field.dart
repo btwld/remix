@@ -22,6 +22,10 @@ final heroUiErrorText = heroUiDescriptionText
 
 const _errorPaddingX = 4.0;
 
+/// `.checkbox__content`, `.radio__content`, `.switch__content`: `gap-3` between
+/// a control and its label.
+const heroUiControlGap = 12.0;
+
 /// The color of a disabled field's label: `status-disabled` dims the whole
 /// field, and `.label` in a disabled field dims its text again (`label.css`).
 ///

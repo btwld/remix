@@ -17,22 +17,8 @@ Widget buildVanillaRadioUseCase(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8,
-                children: [
-                  VanillaRadio<String>(value: 'free', semanticLabel: 'Free'),
-                  Text('Free'),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8,
-                children: [
-                  VanillaRadio<String>(value: 'pro', semanticLabel: 'Pro'),
-                  Text('Pro'),
-                ],
-              ),
+              VanillaRadio<String>(value: 'free', label: 'Free'),
+              VanillaRadio<String>(value: 'pro', label: 'Pro'),
             ],
           ),
         ),

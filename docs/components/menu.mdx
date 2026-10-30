@@ -164,8 +164,20 @@ class AccountMenuExample extends StatelessWidget {
     return FortalMenu<String>(
       trigger: RemixMenuTrigger.builder(
         label: 'Account menu',
-        builder: (context, state, defaultTrigger) =>
-            const FortalAvatar(label: 'LF'),
+        // The builder replaces the styled trigger, so it draws its own ring.
+        builder: (context, state, defaultTrigger) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.circular(999))
+              .onFocusVisible(
+                CardStyler().containerEffects(
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(color: Colors.indigo, width: 2),
+                    outlineOffset: 2,
+                  ),
+                ),
+              ),
+          child: const FortalAvatar(label: 'LF'),
+        ),
       ),
       items: const [
         RemixMenuItem(value: 'profile', label: 'View profile'),
@@ -469,7 +481,9 @@ are long enough to scroll, the list clips at its own edges, inside the popup's
 padding, so only an inside ring stays whole.
 
 A `RemixMenuTrigger.builder` that returns a different widget instead of its
-child replaces the styled trigger and its effects.
+child replaces the styled trigger and its effects, so the returned content has
+to draw its own focus ring, as the avatar example above does. A builder runs
+under the menu's widget states, so `onFocusVisible` on its styles works.
 
 ## Long menus
 

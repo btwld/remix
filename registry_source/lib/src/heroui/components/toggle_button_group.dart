@@ -12,9 +12,9 @@ part 'toggle_button_group.g.dart';
 ///
 /// Remix's group selects one item at a time; HeroUI's also offers multiple
 /// selection. Items share the toggle button's looks without its pressed scale
-/// (`.toggle-button-group .toggle-button:active`). A transparent ring-width
-/// border is always present, which is also how upstream insets the ring in a
-/// group (`ring-inset`).
+/// (`.toggle-button-group .toggle-button:active`). The focus ring is drawn
+/// inside each item, as upstream's `ring-inset`, so the group's clip keeps it,
+/// except at the joined pill's rounded ends.
 @MixWidget(target: RemixToggleGroup.new)
 ToggleGroupStyler heroUiToggleButtonGroupStyle({
   HeroUiToggleButtonVariant variant = .defaultToggle,
@@ -40,7 +40,6 @@ ToggleGroupStyler heroUiToggleButtonGroupStyle({
             icon: IconStyler().size(size.icon.mobile).color(foreground),
           )
           .height(size.height.mobile)
-          .border(heroUiRingBorder())
           .color(fill)
           .onBreakpoint(
             const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
@@ -58,7 +57,7 @@ ToggleGroupStyler heroUiToggleButtonGroupStyle({
               const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
               ToggleGroupItemStyler().width(size.height.desktop),
             )
-      : item.padding(.horizontal(heroUiInsideRing(size.paddingX)));
+      : item.padding(.horizontal(size.paddingX));
 
   item = item
       .onHovered(ToggleGroupItemStyler().color(hover))
@@ -76,7 +75,7 @@ ToggleGroupStyler heroUiToggleButtonGroupStyle({
             ),
       )
       .onFocusVisible(
-        ToggleGroupItemStyler().border(heroUiRingBorder(focused: true)),
+        ToggleGroupItemStyler().containerEffects(heroUiInsetFocusRing),
       )
       .onDisabled(
         ToggleGroupItemStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),

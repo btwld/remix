@@ -1,6 +1,3 @@
-import 'dart:typed_data';
-
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
@@ -9,6 +6,7 @@ import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_them
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../helpers/pixels.dart';
 import '../helpers/test_helpers.dart';
 
 /// Focus rings of the Fortal recipes against `@radix-ui/themes@3.3.0`: the
@@ -144,7 +142,7 @@ void main() {
             final accent3 = MixScope.tokenOf(FortalTokens.accent3, context);
             final blackA4 = MixScope.tokenOf(FortalTokens.blackA4, context);
             final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
-            final pixels = await _capture(tester, slider);
+            final pixels = await capturePixels(tester, slider);
             final thumb = tester.getCenter(find.byType(FortalSlider));
             final origin = tester.getTopLeft(find.byKey(slider));
 
@@ -153,8 +151,8 @@ void main() {
             // shows 8 beyond that edge, and the 2px ring is 8. Each sample is
             // the center of a band, so it holds whether or not the thumb's top
             // row is anti-aliased.
-            var y = ((thumb.dy - origin.dy) * _scale).round();
-            final x = ((thumb.dx - origin.dx) * _scale).round();
+            var y = ((thumb.dy - origin.dy) * pixelScale).round();
+            final x = ((thumb.dx - origin.dx) * pixelScale).round();
             while (pixels.at(x, y) == const Color(0xFFFFFFFF)) {
               y--;
             }
@@ -162,9 +160,12 @@ void main() {
             final halo = y - 4 - 4;
             final ring = y - 4 - 8 - 4;
 
-            _expectNear(pixels.at(x, edge), Color.alphaBlend(blackA4, accent3));
-            _expectNear(pixels.at(x, halo), accent3);
-            _expectNear(pixels.at(x, ring), focus8);
+            expectNearColor(
+              pixels.at(x, edge),
+              Color.alphaBlend(blackA4, accent3),
+            );
+            expectNearColor(pixels.at(x, halo), accent3);
+            expectNearColor(pixels.at(x, ring), focus8);
           },
         );
       }
@@ -236,14 +237,15 @@ void main() {
       String accent, {
       bool left = false,
     }) async {
-      final pixels = await _capture(tester, panel);
+      final pixels = await capturePixels(tester, panel);
       final swatch = find.byKey(ValueKey('accent-$accent'));
       final center = tester.getCenter(swatch);
       final origin = tester.getTopLeft(find.byKey(panel));
       final radius = tester.getSize(swatch).width / 2;
-      final y = ((center.dy - origin.dy) * _scale).round();
+      final y = ((center.dy - origin.dy) * pixelScale).round();
       return (out) => pixels.at(
-        ((center.dx - origin.dx + (left ? -1 : 1) * (radius + out)) * _scale)
+        ((center.dx - origin.dx + (left ? -1 : 1) * (radius + out)) *
+                pixelScale)
             .round(),
         y,
       );
@@ -268,7 +270,7 @@ void main() {
       final at = await probe(tester, 'indigo');
 
       expect(at(1), at(5));
-      _expectNear(at(3), panelToken(tester, FortalTokens.gray12));
+      expectNearColor(at(3), panelToken(tester, FortalTokens.gray12));
     });
 
     testWidgets('a focused swatch rings in the panel accent', (tester) async {
@@ -279,7 +281,7 @@ void main() {
       final at = await probe(tester, 'grass');
 
       expect(at(1), at(5));
-      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
+      expectNearColor(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('focus stays visible on the selected swatch', (tester) async {
@@ -289,7 +291,7 @@ void main() {
 
       final at = await probe(tester, 'indigo');
 
-      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
+      expectNearColor(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('the ring shows on the first column of the panel', (
@@ -301,7 +303,7 @@ void main() {
 
       final at = await probe(tester, 'gray', left: true);
 
-      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
+      expectNearColor(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('the ring does not change the swatch layout', (tester) async {
@@ -333,8 +335,8 @@ void main() {
 
       expect(at(1.5), at(7));
       expect(at(2.5), at(7));
-      _expectNear(at(3.5), panelToken(tester, FortalTokens.accent9));
-      _expectNear(at(5.5), panelToken(tester, FortalTokens.accent9));
+      expectNearColor(at(3.5), panelToken(tester, FortalTokens.accent9));
+      expectNearColor(at(5.5), panelToken(tester, FortalTokens.accent9));
       expect(at(6.5), at(7));
     });
 
@@ -384,53 +386,6 @@ void main() {
       });
     }
   });
-}
-
-/// Pixels per logical pixel in [_capture].
-const _scale = 4;
-
-/// An RGBA capture of a repaint boundary.
-final class _Pixels {
-  const _Pixels(this._data, this._width);
-
-  final ByteData _data;
-  final int _width;
-
-  Color at(int x, int y) {
-    final offset = (y * _width + x) * 4;
-    return Color.fromARGB(
-      _data.getUint8(offset + 3),
-      _data.getUint8(offset),
-      _data.getUint8(offset + 1),
-      _data.getUint8(offset + 2),
-    );
-  }
-}
-
-/// Renders the repaint boundary at [key] at [_scale] times its logical size.
-Future<_Pixels> _capture(WidgetTester tester, GlobalKey key) async {
-  final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(key));
-  return (await tester.runAsync(() async {
-    final image = await boundary.toImage(pixelRatio: _scale.toDouble());
-    final data = (await image.toByteData())!;
-    return _Pixels(data, image.width);
-  }))!;
-}
-
-/// Passes when every channel of [actual] is within 2/255 of [expected].
-void _expectNear(Color actual, Color expected) {
-  for (final (name, a, e) in [
-    ('red', actual.r, expected.r),
-    ('green', actual.g, expected.g),
-    ('blue', actual.b, expected.b),
-    ('alpha', actual.a, expected.a),
-  ]) {
-    expect(
-      (a - e).abs() * 255,
-      lessThanOrEqualTo(2),
-      reason: '$name of $actual is not near $expected',
-    );
-  }
 }
 
 /// Reads [read] under [FortalTheme] with the focused state forced on and, when

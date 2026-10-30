@@ -5,10 +5,13 @@ import 'tokens.dart';
 
 /// A token-width CSS outline that does not affect layout.
 ///
-/// Outward rings at Radix's 2px gap pass [UiTokens.focusRingOffset]. Every
-/// other offset is a Radix literal and does not follow that token: the inset
-/// `-1` of fields, cards, selects and soft buttons, and the slider thumb's 3px
-/// halo.
+/// Every ring is [UiTokens.focusRingWidth] wide. The classic and solid
+/// buttons and icon buttons, checkboxes, radios, switches, and links draw it
+/// outside at Radix's 2px gap and pass [UiTokens.focusRingOffset]. The
+/// other offsets are literals that do not follow that token: `-1` for fields,
+/// cards, selects, segmented control items, and the soft, surface, outline, and
+/// ghost buttons and icon buttons, `-2` for [uiTabFocusOutline], and the
+/// slider thumb's 3px halo.
 RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
     RemixBoxEffectsMix(
       outline: BorderSideMix(
@@ -19,46 +22,15 @@ RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
       outlineOffset: offset,
     );
 
-/// The focus ring for stylers that can only express a border.
+/// The ring of a Radix tab: `outline: 2px solid var(--focus-8)` at
+/// `outline-offset: -2px` (`base-tab-list.css:126-129`).
 ///
-/// [uiFocusOutline] is the preferred form, but it returns a
-/// [RemixBoxEffectsMix] and several stylers — `ToggleStyler`,
-/// `ToggleGroupItemStyler`, `TabStyler` — expose no `containerEffects` slot to
-/// put one in. Those recipes each re-derived the same border, so the width
-/// token lives here instead of in four places.
-extension UiFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
-  /// Applies the ring to this styler.
-  ///
-  /// [color] defaults to `focus-a8`. Tabs is the one caller that differs: it
-  /// passes the solid `focus-8`. Whether that is intentional is unresolved —
-  /// the pinned Chromium probes capture computed styles only, not
-  /// `:focus-visible`, so it cannot be settled from the reference fixtures.
-  /// Preserved as-is rather than unified on a guess.
-  T uiFocusRing({Color? color}) => border(
-    .all(
-      BorderSideMix(
-        color: color ?? _focusRingColor(),
-        width: _focusRingWidth(),
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
-    ),
-  );
-}
-
-/// The same ring for a Mix [FlexBoxStyler], which sits outside Remix's
-/// `RemixBoxStylerAnchors` interface — accordion rings its trigger, not itself.
-/// Separate extension rather than a differently-named function so both read as
-/// `.uiFocusRing()`; the receiver type picks the right one.
-extension UiFocusRingFlexBox on FlexBoxStyler {
-  FlexBoxStyler uiFocusRing() => border(
-    .color(
-      _focusRingColor(),
-    ).width(_focusRingWidth()).strokeAlign(BorderSide.strokeAlignInside),
-  );
-}
-
-Color _focusRingColor() => UiTokens.focusA8();
-double _focusRingWidth() => UiTokens.focusRingWidth();
+/// Toggles, toggle-group items, accordion and disclosure triggers, and sidebar
+/// destinations have no Radix counterpart and share it. At the default width it
+/// lies inside the box, so the clip of a toggle group or an accordion or
+/// disclosure panel does not crop it.
+RemixBoxEffectsMix uiTabFocusOutline() =>
+    uiFocusOutline(UiTokens.focus8(), offset: -2);
 
 /// A one-pixel inset stroke, optionally layered over a fill.
 RemixBoxEffectLayerMix uiInsetSurface({required List<Color> strokes}) =>

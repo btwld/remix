@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/popover.dart';
 import 'package:remix/remix.dart';
 
@@ -13,11 +14,13 @@ const _content = Key('content');
 Widget _popover({
   PopoverStyler style = const PopoverStyler.create(),
   MenuController? controller,
+  FocusNode? triggerFocusNode,
   bool openOnTap = true,
   Widget? trigger,
 }) => HeroUiPopover(
   style: style,
   controller: controller,
+  triggerFocusNode: triggerFocusNode,
   openOnTap: openOnTap,
   popoverChild: const SizedBox(
     key: _content,
@@ -70,19 +73,27 @@ void main() {
     });
   }
 
-  testWidgets('a button trigger opens the popover through its controller', (
-    tester,
-  ) async {
+  testWidgets('a HeroUiButton trigger sharing one focus node is the only tab '
+      'stop and takes focus back on close', (tester) async {
     final controller = MenuController();
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
     await tester.pumpHeroUi(
       _popover(
         controller: controller,
+        triggerFocusNode: focusNode,
         openOnTap: false,
-        trigger: RemixButton(label: 'Open', onPressed: controller.open),
+        trigger: HeroUiButton(
+          label: 'Open',
+          focusNode: focusNode,
+          onPressed: controller.open,
+        ),
       ),
     );
     expect(find.byKey(_content), findsNothing);
 
+    await tester.focusWithTab();
+    expect(focusNode.hasPrimaryFocus, isTrue);
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
     expect(find.byKey(_content), findsOneWidget);
@@ -90,6 +101,10 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.byKey(_content), findsNothing);
+    expect(focusNode.hasPrimaryFocus, isTrue);
+
+    await tester.focusWithTab();
+    expect(focusNode.hasPrimaryFocus, isTrue);
   });
 
   testWidgets('tapping the trigger opens and an outside tap closes', (

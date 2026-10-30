@@ -57,7 +57,7 @@ AccordionStyler _{{valuePrefix}}AccordionBaseStyler({{typePrefix}}AccordionSize 
 }
 
 AccordionStyler _{{valuePrefix}}AccordionFocusStyler() {
-  return AccordionStyler().trigger(FlexBoxStyler().{{valuePrefix}}FocusRing());
+  return AccordionStyler().triggerEffects({{valuePrefix}}TabFocusOutline());
 }
 
 AccordionStyler _{{valuePrefix}}AccordionDisabledStyler() {

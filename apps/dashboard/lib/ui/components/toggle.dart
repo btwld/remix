@@ -35,7 +35,8 @@ ToggleStyler _uiToggleBaseStyler(UiToggleSize size) {
       .merge(_uiToggleSizeStyler(size));
 }
 
-ToggleStyler _uiToggleFocusStyler() => ToggleStyler().uiFocusRing();
+ToggleStyler _uiToggleFocusStyler() =>
+    ToggleStyler().containerEffects(uiTabFocusOutline());
 
 ToggleStyler _uiToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()

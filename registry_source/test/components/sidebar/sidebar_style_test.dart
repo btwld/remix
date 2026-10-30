@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../helpers/pixels.dart';
 import '../../helpers/test_helpers.dart';
 
 const _sections = <RemixSidebarSection<String>>[
@@ -155,6 +157,144 @@ void main() {
     await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));
     await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
     semantics.dispose();
+  });
+
+  group('keyboard focus on a destination', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+    });
+
+    tearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
+
+    // The sidebar is shorter than its destinations, so reaching the fifth one
+    // scrolls it flush against the edge of the scroll region.
+    const labels = [
+      'Home',
+      'Customers',
+      'Orders',
+      'Reports',
+      'Billing',
+      'Team',
+      'Logs',
+      'Settings',
+    ];
+    const target = 'Billing';
+
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      for (final collapsed in [false, true]) {
+        testWidgets(
+          'rings the destination without moving its content in ${mode.name}, '
+          '${collapsed ? 'collapsed' : 'expanded'}',
+          (tester) async {
+            final semantics = tester.ensureSemantics();
+            final boundary = GlobalKey();
+            await tester.pumpRemixApp(
+              FortalTheme(
+                mode: mode,
+                child: RepaintBoundary(
+                  key: boundary,
+                  child: ColoredBox(
+                    color: mode == .dark
+                        ? const Color(0xFF000000)
+                        : const Color(0xFFFFFFFF),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SizedBox(
+                        width: collapsed ? 72 : 256,
+                        height: 220,
+                        child: FortalSidebar<String>(
+                          collapsed: collapsed,
+                          animationStyle: AnimationStyle.noAnimation,
+                          selectedValue: 'Home',
+                          onSelected: (_) {},
+                          sections: [
+                            RemixSidebarSection(
+                              destinations: [
+                                for (final label in labels)
+                                  RemixSidebarDestination(
+                                    value: label,
+                                    label: label,
+                                    icon: label == target
+                                        ? Icons.star_outline
+                                        : Icons.circle_outlined,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+            final idleSize = tester.getSize(find.bySemanticsLabel(target));
+
+            for (var i = 0; i <= labels.indexOf(target); i++) {
+              await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            }
+            await tester.pumpAndSettle();
+            final scroll = tester.state<ScrollableState>(
+              find.descendant(
+                of: find.byType(FortalSidebar<String>),
+                matching: find.byType(Scrollable),
+              ),
+            );
+            expect(scroll.position.pixels, greaterThan(0));
+            final destination = tester.getRect(find.bySemanticsLabel(target));
+            final focusedIcon =
+                tester.getTopLeft(find.byIcon(Icons.star_outline)) -
+                destination.topLeft;
+            final focused = await capturePixels(tester, boundary);
+            final ring = MixScope.tokenOf(
+              FortalTokens.focus8,
+              tester.element(find.bySemanticsLabel(target)),
+            );
+
+            FocusManager.instance.primaryFocus!.unfocus();
+            await tester.pumpAndSettle();
+            final idle = await capturePixels(tester, boundary);
+
+            expect(tester.getRect(find.bySemanticsLabel(target)), destination);
+            expect(destination.size, idleSize);
+            expect(
+              tester.getTopLeft(find.byIcon(Icons.star_outline)) -
+                  destination.topLeft,
+              focusedIcon,
+            );
+
+            // Each probe is the middle of an edge, `inside` logical pixels in
+            // from it: the 2px ring covers 1, the destination past it starts at
+            // 3, and -1 is outside the destination.
+            final origin = tester.getTopLeft(find.byKey(boundary));
+            Color pixel(Pixels pixels, Offset logical) {
+              final device = (logical - origin) * pixelScale.toDouble();
+              return pixels.at(device.dx.round(), device.dy.round());
+            }
+
+            for (final at in <Offset Function(double inside)>[
+              (inside) =>
+                  Offset(destination.center.dx, destination.top + inside),
+              (inside) =>
+                  Offset(destination.center.dx, destination.bottom - inside),
+              (inside) =>
+                  Offset(destination.left + inside, destination.center.dy),
+              (inside) =>
+                  Offset(destination.right - inside, destination.center.dy),
+            ]) {
+              expectNearColor(pixel(focused, at(1)), ring);
+              expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
+              expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
+            }
+            semantics.dispose();
+          },
+        );
+      }
+    }
   });
 
   testWidgets('high contrast keeps selected content distinct', (tester) async {

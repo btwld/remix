@@ -72,7 +72,7 @@ DataTableStyler fortalDataTableStyle({
       .sortIcon(
         IconStyler(color: FortalTokens.gray11(), size: metrics.sortIconSize),
       )
-      .headerRow(_fortalDataTableRowDivider())
+      .headerRow(_fortalDataTableHeaderRow())
       .bodyRow(
         _fortalDataTableRowDivider()
             .color(const Color(0x00000000))
@@ -127,6 +127,35 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
 BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
+
+/// Radix's Table has no sortable header, so a focusable one takes Fortal's own
+/// ring: `focus-8` at the focus ring width, drawn inside the cell. Each header
+/// cell resolves its own row region under its own widget-state scope, so only
+/// the focused cell rings.
+///
+/// The row region already paints the divider as a foreground border, so focus
+/// only changes that decoration. A decoration that appeared on focus would swap
+/// the cell's root widget and rebuild a stateful custom header from scratch.
+BoxStyler _fortalDataTableHeaderRow() => _fortalDataTableRowDivider()
+    .onFocusVisible(BoxStyler().onBuilder(_fortalDataTableHeaderRing));
+
+/// A zero-width [BorderSide] is a hairline, so a ring of width zero draws
+/// nothing and leaves the divider alone.
+BoxStyler _fortalDataTableHeaderRing(BuildContext context) {
+  final width = FortalTokens.focusRingWidth.resolve(context);
+  if (width <= 0) return BoxStyler();
+  return BoxStyler().foregroundDecoration(
+    BoxDecorationMix(
+      border: BoxBorderMix.all(
+        BorderSideMix(
+          color: FortalTokens.focus8(),
+          width: width,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+      ),
+    ),
+  );
+}
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the

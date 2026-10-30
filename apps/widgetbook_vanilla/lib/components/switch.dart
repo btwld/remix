@@ -10,7 +10,7 @@ Widget buildVanillaSwitchUseCase(BuildContext context) {
       child: StatefulBuilder(
         builder: (context, setState) => VanillaSwitch(
           selected: v,
-          semanticLabel: 'Notifications',
+          label: 'Notifications',
           onChanged: (value) => setState(() => v = value),
         ),
       ),
