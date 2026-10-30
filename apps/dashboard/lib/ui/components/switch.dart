@@ -20,9 +20,6 @@ enum UiSwitchSize {
 
 /// Ui switch color variants.
 enum UiSwitchVariant {
-  /// Raised treatment with Radix's classic shadows.
-  classic,
-
   /// Surface treatment with a visible border.
   surface,
 
@@ -39,10 +36,9 @@ SwitchStyler uiSwitchStyle({
   SwitchStyler style = const SwitchStyler.create(),
 }) {
   return (switch (variant) {
-    .classic => _uiSwitchClassicStyler(size, highContrast: highContrast),
     .surface => _uiSwitchSurfaceStyler(size, highContrast: highContrast),
     .soft => _uiSwitchSoftStyler(size, highContrast: highContrast),
-  }).merge(style);
+  }).wrap(uiTouchTarget()).merge(style);
 }
 
 SwitchStyler _uiSwitchBaseStyler(UiSwitchSize size) {
@@ -62,73 +58,7 @@ SwitchStyler _uiSwitchBaseStyler(UiSwitchSize size) {
         ),
       )
       .thumbColor(const Color(0xFFFFFFFF))
-      .onFocusVisible(
-        .trackEffects(
-          RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: UiTokens.focus8(),
-              width: 2,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-            outlineOffset: 2,
-          ),
-        ),
-      );
-}
-
-SwitchStyler _uiSwitchClassicStyler(
-  UiSwitchSize size, {
-  required bool highContrast,
-}) {
-  return _uiSwitchBaseStyler(size)
-      .trackColor(UiTokens.grayA4())
-      .trackEffects(
-        RemixBoxEffectsMix.behindContent(
-          _uiSwitchLayer(shadowToken: UiTokens.shadow1Layers),
-        ),
-      )
-      .thumb(_uiSwitchThumbStyler(selected: false, highContrast: highContrast))
-      .onSelected(
-        SwitchStyler()
-            .trackColor(
-              highContrast ? UiTokens.accent12() : UiTokens.accentTrack(),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.behindContent(
-                _uiSwitchLayer(
-                  shadows: [
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: UiTokens.grayA3(),
-                      spreadRadius: 1,
-                    ),
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: highContrast
-                          ? UiTokens.blackA2()
-                          : UiTokens.accentA4(),
-                      spreadRadius: 1,
-                    ),
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: UiTokens.blackA2(),
-                      offset: const Offset(0, 1.5),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .thumb(
-              _uiSwitchThumbStyler(selected: true, highContrast: highContrast),
-            ),
-      )
-      .onPressed(
-        SwitchStyler()
-            .trackColor(UiTokens.grayA5())
-            .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer())),
-      )
-      .onDisabled(_uiSwitchDisabledStyler(classic: true));
+      .onFocusVisible(.trackEffects(uiFocusOutline()));
 }
 
 SwitchStyler _uiSwitchSurfaceStyler(
@@ -155,6 +85,11 @@ SwitchStyler _uiSwitchSurfaceStyler(
       .onPressed(
         SwitchStyler()
             .trackColor(UiTokens.grayA4())
+            .onSelected(
+              SwitchStyler().trackColor(
+                highContrast ? UiTokens.accent12() : UiTokens.accent10(),
+              ),
+            )
             .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer())),
       )
       .onDisabled(_uiSwitchDisabledStyler());
@@ -179,6 +114,11 @@ SwitchStyler _uiSwitchSoftStyler(
       .onPressed(
         SwitchStyler()
             .trackColor(UiTokens.grayA4())
+            .onSelected(
+              SwitchStyler().trackColor(
+                highContrast ? UiTokens.accentA7() : UiTokens.accentA5(),
+              ),
+            )
             .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer())),
       )
       .onDisabled(_uiSwitchDisabledStyler(soft: true));
@@ -208,109 +148,23 @@ _uiSwitchMetrics(UiSwitchSize size) {
   return (width: width, height: height, thumbSize: thumbSize, radius: radius);
 }
 
-SwitchStyler _uiSwitchDisabledStyler({
-  bool classic = false,
-  bool soft = false,
-}) {
-  final trackColor = switch ((classic, soft)) {
-    (true, _) => UiTokens.grayA5(),
-    (_, true) => UiTokens.grayA4(),
-    _ => UiTokens.grayA3(),
-  };
-  return SwitchStyler()
-      .trackColor(trackColor)
-      .trackEffects(
-        RemixBoxEffectsMix.behindContent(
-          _uiSwitchLayer(shadowToken: classic ? UiTokens.shadow1Layers : null),
-        ),
-      )
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          classic || soft
-              ? _uiSwitchLayer(shadows: const [])
-              : _uiSwitchInsetRing(UiTokens.grayA3()),
-        ),
-      )
-      .thumb(
-        BoxStyler().decoration(
-          .boxShadow([
-            BoxShadowMix(color: UiTokens.grayA2(), spreadRadius: 1),
-            BoxShadowMix(
-              color: UiTokens.blackA1(),
-              offset: const Offset(0, 1),
-              blurRadius: 3,
-            ),
-          ]),
-        ),
-      )
-      .thumbColor(UiTokens.gray2());
-}
+SwitchStyler _uiSwitchDisabledStyler({bool soft = false}) => SwitchStyler()
+    .trackColor(soft ? UiTokens.grayA4() : UiTokens.grayA3())
+    .thumbColor(UiTokens.gray2())
+    .thumb(
+      .border(.all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1()))),
+    )
+    .trackEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
 
 BoxStyler _uiSwitchThumbStyler({
   required bool selected,
   required bool highContrast,
-}) => BoxStyler().decoration(
-  .boxShadow(
-    selected
-        ? [
-            BoxShadowMix(
-              color: UiTokens.blackA2(),
-              offset: const Offset(0, 1),
-              blurRadius: 3,
-            ),
-            BoxShadowMix(
-              color: UiTokens.blackA1(),
-              offset: const Offset(0, 2),
-              blurRadius: 4,
-              spreadRadius: -1,
-            ),
-            BoxShadowMix(
-              color: highContrast ? UiTokens.blackA2() : UiTokens.accentA4(),
-              spreadRadius: 1,
-            ),
-            BoxShadowMix(
-              color: UiTokens.blackA2(),
-              offset: const Offset(-1, 0),
-              blurRadius: 1,
-            ),
-          ]
-        : [
-            BoxShadowMix(color: UiTokens.blackA2(), spreadRadius: 1),
-            BoxShadowMix(
-              color: UiTokens.blackA1(),
-              offset: const Offset(0, 1),
-              blurRadius: 3,
-            ),
-            BoxShadowMix(
-              color: UiTokens.blackA1(),
-              offset: const Offset(0, 2),
-              blurRadius: 4,
-              spreadRadius: -1,
-            ),
-          ],
-  ),
+}) => BoxStyler().border(
+  .all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())),
 );
 
-BoxStyler _uiSwitchSoftThumbStyler(bool selected) => BoxStyler().decoration(
-  .boxShadow([
-    BoxShadowMix(color: UiTokens.blackA1(), spreadRadius: 1),
-    BoxShadowMix(
-      color: selected ? UiTokens.blackA2() : UiTokens.blackA1(),
-      offset: const Offset(0, 1),
-      blurRadius: 3,
-    ),
-    BoxShadowMix(
-      color: selected ? UiTokens.accentA3() : UiTokens.blackA1(),
-      offset: const Offset(0, 1),
-      blurRadius: 3,
-    ),
-    BoxShadowMix(
-      color: selected ? UiTokens.accentA3() : UiTokens.blackA1(),
-      offset: const Offset(0, 2),
-      blurRadius: 4,
-      spreadRadius: -1,
-    ),
-  ]),
+BoxStyler _uiSwitchSoftThumbStyler(bool selected) => BoxStyler().border(
+  .all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())),
 );
 
 RemixBoxEffectLayerMix _uiSwitchInsetRing(Color color) => _uiSwitchLayer(

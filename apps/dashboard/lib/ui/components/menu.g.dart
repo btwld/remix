@@ -6,7 +6,7 @@ part of 'menu.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui menu content with Radix-owned size, variant, and contrast behavior.
+/// Ui menu content with Ui-owned size, variant, and contrast behavior.
 class UiMenu<T> extends StatelessWidget {
   const UiMenu({
     super.key,

@@ -7,13 +7,13 @@ import '../theme/theme.dart';
 
 part 'icon_button.g.dart';
 
-/// Radix Themes IconButton size presets.
+/// Ui IconButton size presets.
 enum UiIconButtonSize { size1, size2, size3, size4 }
 
-/// Radix Themes IconButton variants.
-enum UiIconButtonVariant { classic, solid, soft, surface, outline, ghost }
+/// Ui IconButton variants.
+enum UiIconButtonVariant { solid, soft, surface, outline, ghost }
 
-/// Ui-themed IconButton with the Radix size, variant, and override contract.
+/// Ui-themed IconButton with Ui sizes, variants, and overrides.
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler uiIconButtonStyle({
   UiIconButtonVariant variant = .solid,
@@ -27,11 +27,14 @@ IconButtonStyler uiIconButtonStyle({
     highContrast: highContrast,
   );
 
-  return _applyUiIconButtonStateStyles(
-    base,
-    stateStyles,
-    pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
-  ).merge(style);
+  return _applyUiIconButtonStateStyles(base, stateStyles)
+      .wrap(uiTouchTarget())
+      .onDisabled(
+        IconButtonStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
 IconButtonStyler _uiIconButtonBaseStyler(
@@ -61,7 +64,6 @@ IconButtonStyler _uiIconButtonBaseStyler(
 
 UiBaseButtonVariant _uiBaseButtonVariant(UiIconButtonVariant variant) =>
     switch (variant) {
-      .classic => .classic,
       .solid => .solid,
       .soft => .soft,
       .surface => .surface,
@@ -78,16 +80,12 @@ UiBaseButtonSize _uiBaseButtonSize(UiIconButtonSize size) => switch (size) {
 
 IconButtonStyler _applyUiIconButtonStateStyles(
   IconButtonStyler base,
-  UiBaseButtonStateStyles stateStyles, {
-  required double? pressedPaddingTop,
-}) {
-  var pressed = _applyUiIconButtonState(
+  UiBaseButtonStateStyles stateStyles,
+) {
+  final pressed = _applyUiIconButtonState(
     IconButtonStyler().animate(uiBaseButtonActiveMotion),
     stateStyles.pressed,
   );
-  if (pressedPaddingTop != null) {
-    pressed = pressed.padding(.top(pressedPaddingTop));
-  }
 
   return _applyUiIconButtonState(
         base.animate(uiBaseButtonRestMotion),

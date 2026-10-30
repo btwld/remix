@@ -1,32 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
-/// Establishes a courtesy default text run for bare [Text] descendants.
-///
-/// `.radix-themes` is not only a token carrier upstream: `color.css` sets
-/// `color: var(--gray-12)` in the same rule as the `data-has-background` fill,
-/// and `typography.css` pins the root to `--default-font-size`
-/// (`--font-size-3`), `--default-line-height`, `--default-letter-spacing`, and
-/// `--default-font-weight`. Those resolve to exactly [FortalTokens.text3] plus
-/// [FortalTokens.gray12] at regular weight.
-///
-/// Fortal text recipes resolve and pin their own runs. This fallback keeps
-/// deliberately bare [Text] descendants aligned with Radix's root typography
-/// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
-/// through Flutter's normal inheritance.
-///
-/// Only the outermost [FortalTheme] installs this. A nested scope re-scopes
-/// tokens for its subtree and nothing more: upstream, `.radix-themes` inside
-/// another `.radix-themes` still inherits `color` and the font properties from
-/// its parent chain, and a nested scope that reinstalled the root run here
-/// would silently replace whatever `DefaultTextStyle` the subtree sits in.
-///
-/// The font family is deliberately left unset. Radix's `--default-font-family`
-/// is the platform system stack, and a null family is Flutter's equivalent;
-/// naming a concrete family here would pin every consumer to one typeface.
+/// Establishes Fortal's body text and neutral foreground at the root.
+/// Nested scopes preserve the surrounding text run; mode changes recolor it.
 Widget _fortalRootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
   required Widget child,
@@ -79,6 +59,7 @@ class FortalTheme extends StatelessWidget {
     this.darkTheme,
     this.mode,
     this.accent,
+    this.accentPalette,
     this.gray,
     this.panelBackground,
     this.radius,
@@ -97,6 +78,7 @@ class FortalTheme extends StatelessWidget {
   final FortalThemeMode? mode;
 
   final FortalAccentColor? accent;
+  final FortalColorTheme? accentPalette;
   final FortalGrayColor? gray;
   final FortalPanelBackground? panelBackground;
   final FortalRadius? radius;
@@ -149,6 +131,8 @@ class FortalTheme extends StatelessWidget {
       return _resolveFortalTheme(
         FortalThemeConfig(
           accent: accent ?? config.accent,
+          accentPalette:
+              accentPalette ?? (accent == null ? config.accentPalette : null),
           gray: gray ?? config.gray,
           brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,
@@ -215,16 +199,19 @@ FortalThemeData _resolveFortalTheme(
   FortalThemeConfig config, {
   FortalThemeData? parent,
 }) {
-  final accent = config.accent ?? parent?.accent ?? FortalAccentColor.indigo;
+  final accent = config.accent ?? parent?.accent ?? FortalAccentColor.calcadao;
 
   return FortalThemeData(
     accent: accent,
-    gray: config.gray ?? parent?.gray ?? FortalGrayColor.slate,
+    accentPalette:
+        config.accentPalette ??
+        (config.accent == null ? parent?.accentPalette : null),
+    gray: config.gray ?? parent?.gray ?? FortalGrayColor.calcadao,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??
         parent?.panelBackground ??
-        FortalPanelBackground.translucent,
+        FortalPanelBackground.solid,
     radius: config.radius ?? parent?.radius ?? FortalRadius.medium,
     scaling: config.scaling ?? parent?.scaling ?? FortalScaling.percent100,
     hasBackground: config.hasBackground ?? parent == null,
@@ -254,7 +241,7 @@ class _FortalInheritedTheme extends InheritedTheme {
   /// The captured subtree's text run is *not* synthesized here.
   /// `DefaultTextStyle` is itself an [InheritedTheme], so
   /// `InheritedTheme.capture` already carries the actual nearest ambient run
-  /// across to the new route; installing the Radix root run alongside it would
+  /// across to the new route; installing a new root run alongside it would
   /// overwrite that capture with a value the source context never had.
   @override
   Widget wrap(BuildContext context, Widget child) => _FortalInheritedTheme(

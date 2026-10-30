@@ -16,7 +16,7 @@ void main() {
 
       await tester.pumpWidget(
         FortalTheme(
-          accent: .orange,
+          accent: .sol,
           mode: .dark,
           child: Builder(
             builder: (context) {
@@ -29,7 +29,7 @@ void main() {
       );
 
       final colors = resolveFortalTokens(
-        const FortalThemeConfig(accent: .orange, brightness: .dark),
+        const FortalThemeConfig(accent: .sol, brightness: .dark),
       );
       final spec = resolved.spec;
 
@@ -41,7 +41,7 @@ void main() {
         spec.grid!.spec.stroke!.spec.color,
         colors.gray.scale.alphaStep(5),
       );
-      expect(spec.tooltip!.spec.backgroundColor, colors.colorPanelTranslucent);
+      expect(spec.tooltip!.spec.backgroundColor, colors.colorPanelSolid);
     });
 
     testWidgets('high contrast uses the Fortal step-12 palette', (
@@ -51,7 +51,7 @@ void main() {
 
       await tester.pumpWidget(
         FortalTheme(
-          accent: .indigo,
+          accent: .ceu,
           child: Builder(
             builder: (context) {
               resolved = fortalPieChartStyle(highContrast: true).build(context);
@@ -61,9 +61,7 @@ void main() {
         ),
       );
 
-      final colors = resolveFortalTokens(
-        const FortalThemeConfig(accent: .indigo),
-      );
+      final colors = resolveFortalTokens(const FortalThemeConfig(accent: .ceu));
       expect(resolved.spec.palette!.first, colors.accent.scale.step(12));
     });
 

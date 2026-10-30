@@ -32,16 +32,22 @@ final class {{typePrefix}}AgentAnswerRecipe {
 }) => {{typePrefix}}AgentAnswerRecipe(
   style: {{typePrefix}}AnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
-    feedback: BoxStyler().padding(.top(6)),
-    sourcesLabel: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(13),
-    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+    actions: FlexBoxStyler()
+        .spacing({{typePrefix}}Tokens.space2())
+        .padding(.top({{typePrefix}}Tokens.space3())),
+    feedback: BoxStyler().padding(.top({{typePrefix}}Tokens.space2())),
+    sourcesLabel: TextStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .style({{typePrefix}}Tokens.text2.mix()),
+    indicator: IconStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .size({{typePrefix}}Tokens.space4()),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
   sourcesStyle: {{valuePrefix}}DisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(12)))
+        .container(BoxStyler().margin(.top({{typePrefix}}Tokens.space3())))
         .merge(sourcesStyle),
   ),
   copyStyle: {{valuePrefix}}IconButtonStyle(

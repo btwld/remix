@@ -30,27 +30,6 @@ class FortalCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  const FortalCheckbox.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const CheckboxStyler.create(),
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.tristate = false,
-    this.checkedIcon,
-    this.uncheckedIcon,
-    this.indeterminateIcon,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.label,
-    this.semanticLabel,
-    this.minimumTapTargetSize = const Size.square(48),
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalCheckboxVariant.classic;
-
   const FortalCheckbox.surface({
     super.key,
     this.size = .size2,
@@ -159,9 +138,6 @@ class FortalCheckbox extends StatelessWidget {
 
 /// Fortal recipe for [RemixCheckboxGroupItem].
 ///
-/// Combines the mapped checkbox recipe with Radix's size-linked item label
-/// typography and `0.5em` label gap. The behavioral group remains layout
-/// transparent, so callers continue to own root direction and spacing.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle
@@ -187,24 +163,6 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  const FortalCheckboxGroupItem.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const CheckboxStyler.create(),
-    required this.value,
-    required this.label,
-    this.semanticLabel,
-    this.enabled = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.checkedIcon,
-    this.uncheckedIcon,
-    this.enableFeedback = true,
-    this.minimumTapTargetSize = const Size.square(48),
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalCheckboxVariant.classic;
 
   const FortalCheckboxGroupItem.surface({
     super.key,

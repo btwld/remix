@@ -7,9 +7,13 @@ final _wordBoundary = RegExp('([A-Z])');
 /// Turns an enum name into a display label: `size1` stays `Size1`, while
 /// `percent100` becomes `Percent100` and `formatAlignLeft` becomes
 /// `Format align left`.
-String enumLabel(Enum value) => capitalize(
-  value.name.replaceAllMapped(
-    _wordBoundary,
-    (match) => ' ${match.group(1)!.toLowerCase()}',
+String enumLabel(Enum value) => switch (value.name) {
+  'calcadao' => 'Calçadão',
+  'ceu' => 'Céu',
+  _ => capitalize(
+    value.name.replaceAllMapped(
+      _wordBoundary,
+      (match) => ' ${match.group(1)!.toLowerCase()}',
+    ),
   ),
-);
+};

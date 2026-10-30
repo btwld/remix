@@ -29,8 +29,9 @@ sufficient. ADR 0002 records why that trigger was subsequently met.
 
 ## Lasting rationale
 
-Authoring tests and Radix parity checks remain useful independently of the
-source directory. Private authoring source and workspace imports do not imply a
+Authoring tests remain useful independently of the source directory. The former
+visual-parity contract has since been replaced by [ADR 0003](0003-independent-design-system.md).
+Private authoring source and workspace imports do not imply a
 hosted release. The supported authoring and distribution contract is now ADR
 0002; this superseded decision does not prescribe a package-retention or migration
 step for current work.

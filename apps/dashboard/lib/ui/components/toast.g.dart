@@ -8,8 +8,8 @@ part of 'toast.dart';
 
 /// Ui-themed toast surface for [RemixToast] and [RemixToastScope].
 ///
-/// A Ui extension: Radix Themes has no toast, so the recipe reuses the
-/// Card panel and shadow tokens. The surface caps at 360 logical pixels and
+/// Toasts use the shared floating-layer elevation scale. The surface caps at
+/// 360 logical pixels and
 /// shrinks with the available width.
 ///
 /// ```dart

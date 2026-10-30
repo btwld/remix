@@ -8,7 +8,5 @@ export 'theme_data.dart' hide build{{typePrefix}}ScopeTokens;
 export 'theme_scope.dart';
 export 'tokens.dart';
 
-// `radix_colors.dart` deliberately stays out of this barrel because it exposes
-// bare color names such as `gray` and `red`. The public package barrel exports
-// it explicitly for compatibility; installed applications import it only from
-// `theme_data.dart`.
+// Palette constants stay out of this internal barrel to avoid bare-name
+// collisions. Consumers can import theme/fortal_colors.dart and palette.dart.

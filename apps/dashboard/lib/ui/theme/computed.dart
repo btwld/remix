@@ -1,8 +1,7 @@
 /// Ui computed tokens and functional color utilities.
 ///
 /// Implements computed role tokens (accent-contrast, accent-track, etc.) and
-/// background/overlay colors that mirror Radix Themes behavior while keeping the
-/// original Radix Colors data.
+/// background/overlay colors derived from Ui-owned palettes.
 ///
 /// Components should use these functional roles rather than raw color steps.
 library;
@@ -11,48 +10,45 @@ import 'dart:math' as math;
 import 'dart:ui' show Color, Offset;
 
 import 'package:flutter/painting.dart' show BoxShadow, ColorSwatch;
-import 'package:remix/remix.dart'
-    show MixToken, RemixBoxShadow, RemixBoxShadowKind;
+import 'package:remix/remix.dart' show MixToken, RemixBoxShadow;
 
-import 'radix_colors.dart';
+import 'fortal_colors.dart';
+import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
 /// Computes solid focus ring color (accent step 8).
-Color computeFocus8(RadixColorScale accent) => accent.step(8);
+Color computeFocus8(UiColorScale accent) => accent.step(8);
 
 /// Computes translucent text selection color (accent alpha step 5).
-Color computeFocusA5(RadixColorScale accent) => accent.alphaStep(5);
+Color computeFocusA5(UiColorScale accent) => accent.alphaStep(5);
 
 /// Computes translucent focus ring color (accent alpha step 8).
-Color computeFocusA8(RadixColorScale accent) => accent.alphaStep(8);
+Color computeFocusA8(UiColorScale accent) => accent.alphaStep(8);
 
 /// Computes primary page background color.
 ///
-/// Radix Themes uses white in light mode and gray step 1 in dark mode.
-Color computeColorBackground(RadixColorScale gray, {required bool isDark}) =>
-    isDark ? gray.step(1) : const Color(0xFFFFFFFF);
+/// Both modes use Calçadão step 1, including the warm off-white light page.
+Color computeColorBackground(UiColorScale gray, {required bool isDark}) =>
+    gray.step(1);
 
 /// Computes solid background for panels and input surfaces.
 ///
-/// Radix Themes uses white in light mode and gray step 2 in dark mode.
-Color computeColorPanelSolid(RadixColorScale gray, {required bool isDark}) =>
-    isDark ? gray.step(2) : const Color(0xFFFFFFFF);
+/// Solid panels use the neutral step 2 in both modes.
+Color computeColorPanelSolid(UiColorScale gray, {required bool isDark}) =>
+    gray.step(2);
 
 /// Computes translucent background for floating panels.
 ///
-/// Radix Themes uses 70% white in light mode and gray alpha step 2 in dark
-/// mode.
-Color computeColorPanelTranslucent(
-  RadixColorScale gray, {
-  required bool isDark,
-}) => isDark ? gray.alphaStep(2) : const Color(0xB3FFFFFF);
+/// Opt-in translucent panels composite neutral step 2 over the page.
+Color computeColorPanelTranslucent(UiColorScale gray, {required bool isDark}) =>
+    gray.alphaStep(2);
 
 /// Computes the neutral control surface color.
 ///
-/// Radix Themes uses 85% white in light mode and 25% black in dark mode.
+/// Controls use the neutral step-2 surface in the active mode.
 Color computeColorSurface({required bool isDark}) =>
-    isDark ? const Color(0x40000000) : const Color(0xD9FFFFFF);
+    (isDark ? calcadao.dark : calcadao.light).scale.step(2);
 
 /// Computes modal backdrop overlay color.
 ///
@@ -61,7 +57,7 @@ Color computeColorOverlay({required bool isDark}) =>
     isDark ? blackAlpha[8]! : blackAlpha[6]!;
 
 /// Computes the mode-aware stroke used by elevation shadows.
-Color computeShadowStroke(RadixColorScale gray, {required bool isDark}) =>
+Color computeShadowStroke(UiColorScale gray, {required bool isDark}) =>
     mixOklabPremultiplied(
       gray.alphaStep(isDark ? 6 : 3),
       gray.step(isDark ? 6 : 3),
@@ -164,247 +160,51 @@ double _encodeSrgb(double channel) => channel <= 0.0031308
     ? 12.92 * channel
     : 1.055 * math.pow(channel, 1 / 2.4).toDouble() - 0.055;
 
-/// Builds Radix Themes elevation shadows for the active brightness.
+/// Ui's floating-layer elevation scale (no inset or control shadows).
 Map<MixToken<Object?>, Object> buildUiShadows({
   required bool isDark,
   required UiThemeColors colors,
 }) {
-  if (isDark) {
-    final shadows = <String, List<RemixBoxShadow>>{
-      'shadow1': [
-        _shadow(
-          colors.gray.scale.alphaStep(3),
-          kind: .inset,
-          offset: const Offset(0, -1),
-          blur: 1,
-        ),
-        _shadow(colors.gray.scale.alphaStep(3), kind: .inset, spread: 1),
-        _shadow(
-          colors.blackAlpha[5]!,
-          kind: .inset,
-          offset: const Offset(0, 3),
-          blur: 4,
-        ),
-        _shadow(colors.gray.scale.alphaStep(4), kind: .inset, spread: 1),
-      ],
-      'shadow2': [
-        _shadow(colors.shadowStroke, spread: 1),
-        _shadow(colors.blackAlpha[3]!, blur: 0.5),
-        _shadow(colors.blackAlpha[6]!, offset: const Offset(0, 1), blur: 1),
-        _shadow(
-          colors.blackAlpha[6]!,
-          offset: const Offset(0, 2),
-          blur: 1,
-          spread: -1,
-        ),
-        _shadow(colors.blackAlpha[5]!, offset: const Offset(0, 1), blur: 3),
-      ],
-      'shadow3': [
-        _shadow(colors.shadowStroke, spread: 1),
-        _shadow(
-          colors.blackAlpha[3]!,
-          offset: const Offset(0, 2),
-          blur: 3,
-          spread: -2,
-        ),
-        _shadow(
-          colors.blackAlpha[6]!,
-          offset: const Offset(0, 3),
-          blur: 8,
-          spread: -2,
-        ),
-        _shadow(
-          colors.blackAlpha[7]!,
-          offset: const Offset(0, 4),
-          blur: 12,
-          spread: -4,
-        ),
-      ],
-      'shadow4': [
-        _shadow(colors.shadowStroke, spread: 1),
-        _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 8), blur: 40),
-        _shadow(
-          colors.blackAlpha[5]!,
-          offset: const Offset(0, 12),
-          blur: 32,
-          spread: -16,
-        ),
-      ],
-      'shadow5': [
-        _shadow(colors.shadowStroke, spread: 1),
-        _shadow(colors.blackAlpha[5]!, offset: const Offset(0, 12), blur: 60),
-        _shadow(
-          colors.blackAlpha[7]!,
-          offset: const Offset(0, 12),
-          blur: 32,
-          spread: -16,
-        ),
-      ],
-      'shadow6': [
-        _shadow(colors.shadowStroke, spread: 1),
-        _shadow(colors.blackAlpha[4]!, offset: const Offset(0, 12), blur: 60),
-        _shadow(colors.blackAlpha[6]!, offset: const Offset(0, 16), blur: 64),
-        _shadow(
-          colors.blackAlpha[11]!,
-          offset: const Offset(0, 16),
-          blur: 36,
-          spread: -20,
-        ),
-      ],
-    };
-    return _uiShadowTokens(shadows);
-  }
-
-  final shadows = <String, List<RemixBoxShadow>>{
-    'shadow1': [
-      _shadow(colors.gray.scale.alphaStep(5), kind: .inset, spread: 1),
-      _shadow(
-        colors.gray.scale.alphaStep(2),
-        kind: .inset,
-        offset: const Offset(0, 1.5),
-        blur: 2,
-      ),
-      _shadow(
-        colors.blackAlpha[2]!,
-        kind: .inset,
-        offset: const Offset(0, 1.5),
-        blur: 2,
-      ),
-    ],
-    'shadow2': [
-      _shadow(colors.shadowStroke, spread: 1),
-      _shadow(colors.blackAlpha[1]!, blur: 0.5),
-      _shadow(
-        colors.gray.scale.alphaStep(2),
-        offset: const Offset(0, 1),
-        blur: 1,
-      ),
-      _shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 2),
-        blur: 1,
-        spread: -1,
-      ),
-      _shadow(colors.blackAlpha[1]!, offset: const Offset(0, 1), blur: 3),
-    ],
-    'shadow3': [
-      _shadow(colors.shadowStroke, spread: 1),
-      _shadow(
-        colors.gray.scale.alphaStep(3),
-        offset: const Offset(0, 2),
-        blur: 3,
-        spread: -2,
-      ),
-      _shadow(
-        colors.blackAlpha[2]!,
-        offset: const Offset(0, 3),
-        blur: 12,
-        spread: -4,
-      ),
-      _shadow(
-        colors.blackAlpha[2]!,
-        offset: const Offset(0, 4),
-        blur: 16,
-        spread: -8,
-      ),
-    ],
-    'shadow4': [
-      _shadow(colors.shadowStroke, spread: 1),
-      _shadow(colors.blackAlpha[1]!, offset: const Offset(0, 8), blur: 40),
-      _shadow(
-        colors.gray.scale.alphaStep(3),
-        offset: const Offset(0, 12),
-        blur: 32,
-        spread: -16,
-      ),
-    ],
-    'shadow5': [
-      _shadow(colors.shadowStroke, spread: 1),
-      _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 12), blur: 60),
-      _shadow(
-        colors.gray.scale.alphaStep(5),
-        offset: const Offset(0, 12),
-        blur: 32,
-        spread: -16,
-      ),
-    ],
-    'shadow6': [
-      _shadow(colors.shadowStroke, spread: 1),
-      _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 12), blur: 60),
-      _shadow(
-        colors.gray.scale.alphaStep(2),
-        offset: const Offset(0, 16),
-        blur: 64,
-      ),
-      _shadow(
-        colors.gray.scale.alphaStep(7),
-        offset: const Offset(0, 16),
-        blur: 36,
-        spread: -20,
-      ),
-    ],
-  };
-  return _uiShadowTokens(shadows);
-}
-
-Map<MixToken<Object?>, Object> _uiShadowTokens(
-  Map<String, List<RemixBoxShadow>> shadows,
-) {
-  final shadow1 = shadows['shadow1']!;
-  final shadow2 = shadows['shadow2']!;
+  final color = Color.fromRGBO(0, 0, 0, isDark ? .36 : .14);
+  const geometry = [
+    (1.0, 2.0, 0.0),
+    (2.0, 6.0, -1.0),
+    (4.0, 12.0, -2.0),
+    (8.0, 20.0, -4.0),
+    (12.0, 32.0, -6.0),
+    (16.0, 48.0, -8.0),
+  ];
+  const tokens = [
+    UiTokens.shadow1,
+    UiTokens.shadow2,
+    UiTokens.shadow3,
+    UiTokens.shadow4,
+    UiTokens.shadow5,
+    UiTokens.shadow6,
+  ];
   return {
-    UiTokens.shadow1: _ordinaryShadows(shadow1),
-    UiTokens.shadow1Layers: shadow1,
-    UiTokens.shadow2: _ordinaryShadows(shadow2),
-    UiTokens.segmentedControlClassicIndicatorShadows: [
-      for (final shadow in shadow2)
-        RemixBoxShadow(
-          kind: shadow.kind,
-          color: shadow.color,
-          offset: shadow.offset,
-          blurRadius: shadow.blurRadius,
-          spreadRadius: shadow.spreadRadius,
-          shapeInset: 1,
+    for (var i = 0; i < geometry.length; i++)
+      tokens[i]: [
+        BoxShadow(
+          color: color,
+          offset: Offset(0, geometry[i].$1),
+          blurRadius: geometry[i].$2,
+          spreadRadius: geometry[i].$3,
         ),
+      ],
+    UiTokens.shadow1Layers: [
+      RemixBoxShadow(color: color, offset: const Offset(0, 1), blurRadius: 2),
     ],
-    UiTokens.shadow3: _ordinaryShadows(shadows['shadow3']!),
-    UiTokens.shadow4: _ordinaryShadows(shadows['shadow4']!),
-    UiTokens.shadow5: _ordinaryShadows(shadows['shadow5']!),
-    UiTokens.shadow6: _ordinaryShadows(shadows['shadow6']!),
   };
 }
-
-List<BoxShadow> _ordinaryShadows(List<RemixBoxShadow> shadows) => [
-  for (final shadow in shadows)
-    BoxShadow(
-      color: shadow.color,
-      offset: shadow.offset,
-      blurRadius: shadow.blurRadius,
-      spreadRadius: shadow.spreadRadius,
-    ),
-];
-
-RemixBoxShadow _shadow(
-  Color color, {
-  RemixBoxShadowKind kind = RemixBoxShadowKind.outer,
-  Offset offset = Offset.zero,
-  double blur = 0,
-  double spread = 0,
-}) => RemixBoxShadow(
-  kind: kind,
-  color: color,
-  offset: offset,
-  blurRadius: blur,
-  spreadRadius: spread,
-);
 
 /// Container for all computed Ui theme colors and scales.
 ///
 /// Holds resolved color system for a specific theme configuration.
 /// Created by [resolveUiTokens] for internal use by the token system.
 class UiThemeColors {
-  final RadixColor accent;
-  final RadixColor gray;
+  final UiColor accent;
+  final UiColor gray;
   final ColorSwatch<int> blackAlpha;
   final ColorSwatch<int> whiteAlpha;
 
@@ -438,69 +238,29 @@ class UiThemeColors {
   });
 }
 
-// Map by enum .name to generated RadixColorTheme instances (light/dark contained).
-const Map<String, RadixColorTheme> _accentThemesByName = {
-  'gray': gray,
-  'mauve': mauve,
-  'slate': slate,
-  'sage': sage,
-  'olive': olive,
-  'sand': sand,
-  'amber': amber,
-  'blue': blue,
-  'bronze': bronze,
-  'brown': brown,
-  'crimson': crimson,
-  'cyan': cyan,
-  'gold': gold,
-  'grass': grass,
-  'green': green,
-  'indigo': indigo,
-  'iris': iris,
-  'jade': jade,
-  'lime': lime,
-  'mint': mint,
-  'orange': orange,
-  'pink': pink,
-  'plum': plum,
-  'purple': purple,
-  'red': red,
-  'ruby': ruby,
-  'sky': sky,
-  'teal': teal,
-  'tomato': tomato,
-  'violet': violet,
-  'yellow': yellow,
-};
-
-const Map<String, RadixColorTheme> _grayThemesByName = {
-  'gray': gray,
-  'mauve': mauve,
-  'slate': slate,
-  'sage': sage,
-  'olive': olive,
-  'sand': sand,
+// Named palettes share the same fixed-role model.
+const Map<String, UiColorTheme> _accentThemesByName = {
+  'calcadao': calcadao,
+  'mar': mar,
+  'ceu': ceu,
+  'mangue': mangue,
+  'sol': sol,
+  'duna': duna,
+  'caju': caju,
 };
 
 /// Resolves all computed tokens for a theme configuration.
 UiThemeColors resolveUiTokens(UiThemeConfig theme) {
-  // Pick light/dark RadixColor for accent and neutral using enum .name keys
-  final accentColor = theme.accent ?? UiAccentColor.indigo;
-  final grayColor = theme.gray ?? UiGrayColor.slate;
-  final String accentName = accentColor.name;
-  final String grayName = grayColor.name;
-  final RadixColorTheme grayTheme = _grayThemesByName[grayName]!;
-  final RadixColorTheme accentTheme = accentColor == .gray
-      ? grayTheme
-      : _accentThemesByName[accentName]!;
-  final RadixColor accentRC = theme.isDark
-      ? accentTheme.dark
-      : accentTheme.light;
-  final RadixColor grayRC = theme.isDark ? grayTheme.dark : grayTheme.light;
+  final accentColor = theme.accent ?? UiAccentColor.calcadao;
+  const grayTheme = calcadao;
+  final accentTheme =
+      theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
+  final UiColor accentRC = theme.isDark ? accentTheme.dark : accentTheme.light;
+  final UiColor grayRC = theme.isDark ? grayTheme.dark : grayTheme.light;
 
   // Extract scales
-  final RadixColorScale accent = accentRC.scale;
-  final RadixColorScale gray = grayRC.scale;
+  final UiColorScale accent = accentRC.scale;
+  final UiColorScale gray = grayRC.scale;
 
   // Neutral alpha swatches
   const ColorSwatch<int> blackA = blackAlpha;

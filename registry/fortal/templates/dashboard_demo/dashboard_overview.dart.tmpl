@@ -19,7 +19,6 @@ import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview_base.dart';
 import 'dashboard_sample_data.dart';
 
-/// The {{typePrefix}} dashboard overview with Radix-native surfaces and type.
 class {{typePrefix}}DashboardOverview extends StatelessWidget {
   const {{typePrefix}}DashboardOverview({
     super.key,
@@ -259,10 +258,10 @@ class _{{typePrefix}}ActivityIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
-      .customer => ({{icon:person}}, {{typePrefix}}AccentColor.blue),
-      .order => ({{icon:box}}, {{typePrefix}}AccentColor.indigo),
-      .payment => ({{icon:checkCircled}}, {{typePrefix}}AccentColor.green),
-      .alert => ({{icon:exclamationTriangle}}, {{typePrefix}}AccentColor.amber),
+      .customer => ({{icon:person}}, {{typePrefix}}AccentColor.ceu),
+      .order => ({{icon:box}}, {{typePrefix}}AccentColor.ceu),
+      .payment => ({{icon:checkCircled}}, {{typePrefix}}AccentColor.mangue),
+      .alert => ({{icon:exclamationTriangle}}, {{typePrefix}}AccentColor.sol),
     };
 
     return {{typePrefix}}AccentScope(

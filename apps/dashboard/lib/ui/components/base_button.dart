@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The Radix BaseButton size scale shared by Button and IconButton.
+/// The Ui BaseButton size scale shared by Button and IconButton.
 ///
 /// Deliberate: this mirrors [UiBaseButtonVariant]. Button and IconButton
 /// each own a size enum, so the shared metrics need a common type — passing the
@@ -22,7 +22,7 @@ final uiBaseButtonRestMotion = AnimationConfig.ease(
   const Duration(milliseconds: 120),
 );
 
-/// Shared Radix BaseButton metrics used by Button and IconButton recipes.
+/// Shared Ui BaseButton metrics used by Button and IconButton recipes.
 ({
   double height,
   double paddingX,
@@ -93,7 +93,7 @@ uiBaseButtonGhostMetrics(UiBaseButtonSize size) => switch (size) {
   ),
   .size3 => (
     paddingX: UiTokens.space3(),
-    paddingY: UiTokens.baseButtonGhostPaddingY3(),
+    paddingY: UiTokens.space2(),
     marginX: UiTokens.baseButtonGhostMarginX3(),
     marginY: UiTokens.baseButtonGhostMarginY3(),
     gap: UiTokens.space2(),
@@ -116,7 +116,7 @@ uiBaseButtonGhostMetrics(UiBaseButtonSize size) => switch (size) {
     margin: UiTokens.iconButtonGhostMargin1(),
   ),
   .size2 => (
-    padding: UiTokens.iconButtonGhostPadding2(),
+    padding: UiTokens.space2(),
     margin: UiTokens.iconButtonGhostMargin2(),
   ),
   .size3 => (
@@ -141,99 +141,6 @@ WidgetModifierConfig uiModeAwareFilter({
 WidgetModifierConfig uiClearFilter() =>
     uiModeAwareFilter(light: const [], dark: const []);
 
-/// Exact classic BaseButton surface for a visual state.
-RemixBoxEffectLayerMix uiClassicBaseButtonSurface({
-  required bool highContrast,
-  bool hovered = false,
-  bool pressed = false,
-  bool disabled = false,
-}) {
-  final inset = UiTokens.baseButtonClassicAfterInset();
-  if (disabled) {
-    return RemixBoxEffectLayerMix(
-      gradients: [
-        RemixLinearGradientMix(
-          colors: [
-            UiTokens.blackA1(),
-            const Color(0x00000000),
-            UiTokens.whiteA1(),
-          ],
-          stops: const [-0.2, 0.4, 1],
-        ),
-        RemixLinearGradientMix(colors: [UiTokens.grayA2(), UiTokens.grayA2()]),
-      ],
-      gradientInsets: [inset, inset],
-      shadowToken: UiTokens.baseButtonClassicDisabledShadows,
-    );
-  }
-
-  final baseColor = highContrast ? UiTokens.accent12() : UiTokens.accent9();
-  final afterColor = hovered && !highContrast ? UiTokens.accent10() : baseColor;
-  final pseudoGradient = RemixLinearGradientMix(
-    colors: [
-      highContrast
-          ? hovered || pressed
-                ? UiTokens.blackA5()
-                : UiTokens.blackA3()
-          : hovered
-          ? UiTokens.blackA2()
-          : pressed
-          ? UiTokens.blackA2()
-          : UiTokens.blackA1(),
-      const Color(0x00000000),
-      highContrast
-          ? pressed
-                ? UiTokens.whiteA3()
-                : UiTokens.whiteA2()
-          : hovered || pressed
-          ? UiTokens.whiteA3()
-          : UiTokens.whiteA2(),
-    ],
-    stops: hovered && !highContrast
-        ? const [-0.15, 0.425, 1]
-        : const [0, 0.5, 1],
-  );
-  final gradients = <RemixLinearGradientMix>[
-    pseudoGradient,
-    RemixLinearGradientMix(colors: [afterColor, afterColor]),
-    if (pressed)
-      RemixLinearGradientMix(
-        colors: [UiTokens.blackA1(), const Color(0x00000000)],
-      )
-    else ...[
-      RemixLinearGradientMix(
-        colors: [
-          const Color(0x00000000),
-          const Color(0x00000000),
-          UiTokens.grayA4(),
-          UiTokens.grayA4(),
-        ],
-        stops: const [0, 0.5, 0.5, 1],
-      ),
-      RemixLinearGradientMix(
-        colors: [
-          const Color(0x00000000),
-          const Color(0x00000000),
-          baseColor,
-          baseColor,
-        ],
-        stops: const [0, 0.5, 0.8, 1],
-      ),
-    ],
-  ];
-  return RemixBoxEffectLayerMix(
-    gradients: gradients,
-    gradientInsets: [inset, inset, ...List.filled(gradients.length - 2, 0)],
-    shadowToken: pressed
-        ? highContrast
-              ? UiTokens.baseButtonClassicActiveHighContrastShadows
-              : UiTokens.baseButtonClassicActiveShadows
-        : highContrast
-        ? UiTokens.baseButtonClassicHighContrastShadows
-        : UiTokens.baseButtonClassicShadows,
-  );
-}
-
 final class _UiModeAwareFilterMix
     extends ModifierMix<RemixOrderedColorFilterModifier> {
   const _UiModeAwareFilterMix({required this.light, required this.dark});
@@ -254,8 +161,8 @@ final class _UiModeAwareFilterMix
   List<Object?> get props => [light, dark];
 }
 
-/// Shared Radix BaseButton variants implemented by Button and IconButton.
-enum UiBaseButtonVariant { classic, solid, soft, surface, outline, ghost }
+/// Shared Ui BaseButton variants implemented by Button and IconButton.
+enum UiBaseButtonVariant { solid, soft, surface, outline, ghost }
 
 /// One visual-state style fragment from the shared BaseButton recipe.
 final class UiBaseButtonStateStyle {
@@ -298,20 +205,11 @@ UiBaseButtonStateStyles uiBaseButtonStateStyles({
   required bool highContrast,
 }) {
   final states = switch (variant) {
-    .classic => _classicStateStyles(highContrast: highContrast),
     .solid => _solidStateStyles(highContrast: highContrast),
     .soft => _softStateStyles(highContrast: highContrast),
     .surface => _surfaceStateStyles(highContrast: highContrast),
     .outline => _outlineStateStyles(highContrast: highContrast),
     .ghost => _ghostStateStyles(highContrast: highContrast),
-  };
-  final focusColor = switch (variant) {
-    .soft => UiTokens.accent8(),
-    .classic || .solid || .surface || .outline || .ghost => UiTokens.focus8(),
-  };
-  final focusOffset = switch (variant) {
-    .classic || .solid => 2.0,
-    .soft || .surface || .outline || .ghost => -1.0,
   };
 
   return UiBaseButtonStateStyles(
@@ -319,9 +217,7 @@ UiBaseButtonStateStyles uiBaseButtonStateStyles({
     hovered: states.hovered,
     pressed: states.pressed,
     disabled: states.disabled,
-    focusVisible: UiBaseButtonStateStyle(
-      effects: uiFocusOutline(focusColor, offset: focusOffset),
-    ),
+    focusVisible: UiBaseButtonStateStyle(effects: uiFocusOutline()),
     disabledFocus: UiBaseButtonStateStyle(
       effects: RemixBoxEffectsMix.outline(
         BorderSideMix(style: BorderStyle.none),
@@ -337,43 +233,6 @@ typedef _InteractionStateStyles = ({
   UiBaseButtonStateStyle disabled,
 });
 
-_InteractionStateStyles _classicStateStyles({required bool highContrast}) {
-  final foreground = highContrast
-      ? UiTokens.gray1()
-      : UiTokens.accentContrast();
-
-  return (
-    idle: UiBaseButtonStateStyle(
-      foreground: foreground,
-      background: highContrast ? UiTokens.accent12() : UiTokens.accent9(),
-      effects: RemixBoxEffectsMix.behindContent(
-        uiClassicBaseButtonSurface(highContrast: highContrast),
-      ),
-    ),
-    hovered: UiBaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.behindContent(
-        uiClassicBaseButtonSurface(highContrast: highContrast, hovered: true),
-      ),
-      modifier: _hoverFilter(highContrast, classic: true),
-    ),
-    pressed: UiBaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.behindContent(
-        uiClassicBaseButtonSurface(highContrast: highContrast, pressed: true),
-      ),
-      modifier: _pressedFilter(highContrast),
-    ),
-    disabled: UiBaseButtonStateStyle(
-      foreground: UiTokens.grayA8(),
-      background: UiTokens.gray2(),
-      effects: RemixBoxEffectsMix.behindContent(
-        uiClassicBaseButtonSurface(highContrast: false, disabled: true),
-      ),
-      spinnerOpacity: 1,
-      modifier: uiClearFilter(),
-    ),
-  );
-}
-
 _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   final foreground = highContrast
       ? UiTokens.gray1()
@@ -386,7 +245,7 @@ _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
     ),
     hovered: UiBaseButtonStateStyle(
       background: highContrast ? UiTokens.accent12() : UiTokens.accent10(),
-      modifier: _hoverFilter(highContrast, classic: false),
+      modifier: _hoverFilter(highContrast),
     ),
     pressed: UiBaseButtonStateStyle(
       background: highContrast ? UiTokens.accent12() : UiTokens.accent10(),
@@ -491,7 +350,7 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   ),
 );
 
-WidgetModifierConfig _hoverFilter(bool highContrast, {required bool classic}) {
+WidgetModifierConfig _hoverFilter(bool highContrast) {
   if (!highContrast) return uiClearFilter();
 
   return uiModeAwareFilter(
@@ -500,10 +359,10 @@ WidgetModifierConfig _hoverFilter(bool highContrast, {required bool classic}) {
       RemixCssColorFilterOperation.saturate(1.1),
       RemixCssColorFilterOperation.brightness(1.1),
     ],
-    dark: [
-      const RemixCssColorFilterOperation.contrast(0.88),
-      const RemixCssColorFilterOperation.saturate(1.3),
-      RemixCssColorFilterOperation.brightness(classic ? 1.14 : 1.18),
+    dark: const [
+      RemixCssColorFilterOperation.contrast(0.88),
+      RemixCssColorFilterOperation.saturate(1.3),
+      RemixCssColorFilterOperation.brightness(1.18),
     ],
   );
 }

@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import '../components/button.dart';
 import '../components/card.dart';
 import '../components/message.dart';
+import '../theme/theme.dart';
 
 @immutable
 final class {{typePrefix}}AgentMessageRecipe {
@@ -27,16 +28,19 @@ final class {{typePrefix}}AgentMessageRecipe {
   ButtonStyler toggleStyle = const ButtonStyler.create(),
 }) => {{typePrefix}}AgentMessageRecipe(
   style: {{typePrefix}}MessageStyler(
-    row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
-    avatar: BoxStyler().size(28, 28),
-    header: BoxStyler().padding(.bottom(6)),
+    row: FlexBoxStyler().mainAxisSize(.max).spacing({{typePrefix}}Tokens.space2()),
+    avatar: BoxStyler().size(
+      {{typePrefix}}Tokens.messageAvatarSize(),
+      {{typePrefix}}Tokens.messageAvatarSize(),
+    ),
+    header: BoxStyler().padding(.bottom({{typePrefix}}Tokens.space2())),
     body: BoxStyler(),
-    footer: BoxStyler().padding(.top(4)),
-    maxWidth: 640,
+    footer: BoxStyler().padding(.top({{typePrefix}}Tokens.space1())),
+    maxWidth: {{typePrefix}}Tokens.messageContentMaxWidth(),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(style: surfaceStyle),
   collapsibleStyle: {{typePrefix}}MessageCollapsibleStyler(
-    collapsedHeight: 72,
+    collapsedHeight: {{typePrefix}}Tokens.messageCollapsedHeight(),
     container: BoxStyler(),
     clipped: BoxStyler(),
   ).merge(collapsibleStyle),

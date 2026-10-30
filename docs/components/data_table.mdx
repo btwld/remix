@@ -322,21 +322,20 @@ the visible width while the header and body scroll.
 
 ## Fortal recipe
 
-`FortalDataTable` maps Radix Themes Table exactly for the passive visuals:
+`FortalDataTable` uses token-based geometry:
 
 | Size | Cell padding | Minimum row height | Typography | Radius |
 | --- | --- | --- | --- | --- |
-| `size1` | `space2` | 36 × scaling | `text2` | `radius3` |
-| `size2` | `space3` | 44 × scaling | `text2` | `radius4` |
+| `size1` | `space2` | `space7` (40 × scaling) | `text2` | `radius3` |
+| `size2` | `space3` | `space8` (48 × scaling) | `text2` | `radius4` |
 | `size3` | `space3` / `space4` | `space8` | `text3` | `radius4` |
 
 `surface` adds the panel background, the blended `gray-a5`/`gray-6` border,
 the `gray-a2` header row, a clipped radius, and no divider under the last row.
 `ghost` keeps a transparent surface and every divider.
 
-Sorting, selection, pagination, row hover, and horizontal scrolling have no
-Radix counterpart — Radix's Table is a passive layout. They are recorded as
-Fortal extensions in the parity manifest.
+Sorting, selection, pagination, row hover, and horizontal scrolling compose
+the existing Remix behavior with Fortal accent and neutral control tokens.
 
 ## API Reference
 

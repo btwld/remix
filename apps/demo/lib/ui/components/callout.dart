@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'callout.g.dart';
 
-/// Radix Themes Callout size presets.
+/// Fortal Callout size presets.
 enum FortalCalloutSize { size1, size2, size3 }
 
-/// Radix Themes Callout variants.
+/// Fortal Callout variants.
 enum FortalCalloutVariant { soft, surface, outline }
 
-/// Fortal-themed Callout with the Radix size, variant, and override contract.
+/// Fortal-themed Callout with Fortal sizes, variants, and overrides.
 @MixWidget(target: RemixCallout.new)
 CalloutStyler fortalCalloutStyle({
   FortalCalloutVariant variant = .soft,

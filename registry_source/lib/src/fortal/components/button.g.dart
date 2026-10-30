@@ -6,7 +6,7 @@ part of 'button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed Button with the Radix size, variant, and override contract.
+/// Fortal-themed Button with Fortal sizes, variants, and overrides.
 ///
 /// Default icon slots use the preset's icon size, not the ambient IconTheme.
 /// An explicit icon size in [style] overrides that default.
@@ -36,31 +36,6 @@ class FortalButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  const FortalButton.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const ButtonStyler.create(),
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalButtonVariant.classic;
 
   const FortalButton.solid({
     super.key,

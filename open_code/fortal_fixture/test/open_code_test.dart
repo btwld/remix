@@ -7,12 +7,12 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
-  test('the default palette retains its Radix Themes 3.3.0 values', () {
+  test('the default palette retains its Fortal specification values', () {
     final colors = resolveAcmeTokens(const AcmeThemeConfig());
 
-    expect(colors.colorBackground, const Color(0xFFFFFFFF));
-    expect(colors.accent.scale.step(9), const Color(0xFF3E63DD));
-    expect(colors.gray.scale.step(12), const Color(0xFF1C2024));
+    expect(colors.colorBackground, const Color(0xFFFAFAF7));
+    expect(colors.accent.scale.step(9), const Color(0xFF13181D));
+    expect(colors.gray.scale.step(12), const Color(0xFF191B1C));
   });
 
   testWidgets('the example application renders installed source', (

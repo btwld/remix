@@ -15,10 +15,6 @@ const _segmentedControlActiveLetterSpacing3 = ContextToken<double>(
   _resolveSegmentedControlActiveLetterSpacing3,
 );
 
-/// Radix layers the track as `color-surface` under a `gray-a3`
-/// background-image. One BoxDecoration cannot stack two background fills, so
-/// the recipe pre-blends the pair; a foreground overlay would instead paint
-/// over the selected indicator fill, breaking the source z-order.
 Color _resolveSegmentedControlTrackBackground(BuildContext context) =>
     Color.alphaBlend(
       FortalTokens.grayA3.resolve(context),
@@ -41,21 +37,16 @@ const _segmentedControlDisabledTrackBackground = ContextToken<Color>(
   _resolveSegmentedControlDisabledTrackBackground,
 );
 
-/// Radix Themes SegmentedControl size presets.
+/// Fortal SegmentedControl size presets.
 enum FortalSegmentedControlSize { size1, size2, size3 }
 
-/// Radix Themes SegmentedControl variants.
-enum FortalSegmentedControlVariant { surface, classic }
+/// Fortal SegmentedControl variants.
+enum FortalSegmentedControlVariant { surface }
 
 /// Fortal recipe for [RemixSegmentedControl].
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Control and item styles may override these defaults.
-///
-/// Paints the selected item in place. It does not reproduce Radix's sliding
-/// indicator, duplicate-label crossfade, inactive separators, or max-content
-/// overflow. Changing an item's label with the selection can therefore cause a
-/// small intrinsic-width shift.
 @MixWidget(target: RemixSegmentedControl.new)
 SegmentedControlStyler fortalSegmentedControlStyle({
   FortalSegmentedControlVariant variant = .surface,
@@ -70,7 +61,6 @@ SegmentedControlStyler fortalSegmentedControlStyle({
       .minHeight(metrics.height)
       .borderRadius(.all(metrics.radius))
       .color(_segmentedControlTrackBackground())
-      .clipBehavior(.antiAlias)
       .item(item)
       .onDisabled(
         SegmentedControlStyler().color(
@@ -85,6 +75,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
   _FortalSegmentedControlMetrics metrics,
 ) {
   final base = SegmentedControlItemStyler()
+      .wrap(fortalTouchTarget())
       .minHeight(metrics.height)
       .padding(.horizontal(metrics.paddingX))
       .spacing(metrics.itemGap)
@@ -95,10 +86,6 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
             .fontWeight(FortalTokens.fontWeightRegular())
             .letterSpacing(0)
             .wordSpacing(0)
-            // Radix keeps `min-width: max-content` on the track, so a label
-            // never wraps and the track overflows a narrow parent instead.
-            // The equal-segment layout shrinks to fit, so pin one line and
-            // ellipsize to preserve the same single-line behavior.
             .maxLines(1)
             .overflow(TextOverflow.ellipsis),
       )
@@ -111,6 +98,9 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       );
   final selected = _fortalSegmentedControlSelectedItem(variant, metrics);
   final disabled = SegmentedControlItemStyler()
+      .containerEffects(
+        RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+      )
       .label(TextStyler().color(FortalTokens.grayA8()))
       .icon(IconStyler().color(FortalTokens.grayA8()));
   final disabledSelected = disabled
@@ -133,9 +123,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .onFocusVisible(
         SegmentedControlItemStyler()
             .borderRadius(.all(metrics.radius))
-            .containerEffects(
-              fortalFocusOutline(FortalTokens.focus8(), offset: -1),
-            ),
+            .containerEffects(fortalFocusOutline()),
       )
       .onDisabled(disabled.onSelected(disabledSelected));
 }
@@ -153,9 +141,6 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
           shapeInset: 1,
         ),
       ],
-    ),
-    .classic => RemixBoxEffectLayerMix(
-      shadowToken: FortalTokens.segmentedControlClassicIndicatorShadows,
     ),
   };
 

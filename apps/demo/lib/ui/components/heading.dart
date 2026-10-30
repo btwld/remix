@@ -4,12 +4,8 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Fortal-themed heading style on the Radix nine-step scale.
+/// Fortal-themed heading style on the Fortal nine-step scale.
 ///
-/// Radix's `--heading-font-size-adjust` is `1`, so headings use the raw token
-/// size; only the line box differs from body text. Each ratio below is the
-/// pinned Radix heading line height over its font size, so both scale together
-/// and the ratio stays constant across theme scaling.
 ///
 /// This is a plain recipe rather than a `@MixWidget`: a generated widget only
 /// renders the styler, and [FortalHeading] must additionally publish a native
@@ -32,7 +28,7 @@ TextStyler fortalHeadingStyle({
     .size5 => 26.0 / 20.0,
     .size6 => 30.0 / 24.0,
     .size7 => 36.0 / 28.0,
-    .size8 => 40.0 / 35.0,
+    .size8 => 40.0 / 36.0,
     .size9 => 1.0,
   };
 
@@ -57,7 +53,7 @@ TextStyler fortalHeadingStyle({
 /// Token-backed visual heading with an independent native heading level.
 ///
 /// [headingLevel] drives the accessibility level only; changing it never
-/// changes the visual [size], matching Radix.
+/// changes the visual [size], using Fortal tokens.
 class FortalHeading extends StatelessWidget {
   const FortalHeading(
     this.text, {

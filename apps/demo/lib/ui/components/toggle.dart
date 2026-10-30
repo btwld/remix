@@ -21,9 +21,19 @@ ToggleStyler fortalToggleStyle({
   ToggleStyler style = const ToggleStyler.create(),
 }) {
   return (switch (variant) {
-    .ghost => _fortalToggleGhostStyler(size, highContrast: highContrast),
-    .outline => _fortalToggleOutlineStyler(size, highContrast: highContrast),
-  }).merge(style);
+        .ghost => _fortalToggleGhostStyler(size, highContrast: highContrast),
+        .outline => _fortalToggleOutlineStyler(
+          size,
+          highContrast: highContrast,
+        ),
+      })
+      .wrap(fortalTouchTarget())
+      .onDisabled(
+        ToggleStyler().container(
+          FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+        ),
+      )
+      .merge(style);
 }
 
 ToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
@@ -110,7 +120,7 @@ ToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
           .padding(.horizontal(FortalTokens.space2()))
           .padding(.vertical(FortalTokens.space1()))
           .borderRadius(.all(FortalTokens.radius2()))
-          .spacing(FortalTokens.toggleGap1()),
+          .spacing(FortalTokens.space1()),
       label: .style(FortalTokens.text1.mix()),
       icon: .size(FortalTokens.space3()),
     ),
@@ -128,7 +138,7 @@ ToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
           .padding(.horizontal(FortalTokens.space4()))
           .padding(.vertical(FortalTokens.space2()))
           .borderRadius(.all(FortalTokens.radius3()))
-          .spacing(FortalTokens.toggleGap3()),
+          .spacing(FortalTokens.space2()),
       label: .style(FortalTokens.text3.mix()),
       icon: .size(FortalTokens.spinnerSize3()),
     ),
