@@ -60,7 +60,8 @@
   panel builds keeps it.
 - Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
   hovering a submenu row also opens it after its delay, only when the pointer
-  moves over it, no longer when a list scrolls under a resting pointer.
+  moves over it, no longer when a list scrolls under a resting pointer. Moving
+  within the submenu trigger does not restart the delay.
 - `NakedCombobox` now scrolls the highlighted option just far enough into view
   when the arrow keys highlight it and when the options view opens, instead of
   leaving it outside a scrolling options list. Focus stays on the field, an
