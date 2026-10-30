@@ -39,7 +39,7 @@ BadgeStyler uiKbdStyle(
       .color(UiTokens.gray12())
       .inherit(false);
 
-  var recipe = BadgeStyler()
+  final recipe = BadgeStyler()
       .label(textStyle)
       .minWidth(1.75 * fontSize)
       .padding(.horizontal(0.5 * fontSize).bottom(0.05 * fontSize))
