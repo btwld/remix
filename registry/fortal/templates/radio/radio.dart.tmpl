@@ -20,9 +20,6 @@ enum {{typePrefix}}RadioSize {
 
 /// {{typePrefix}} radio color variants.
 enum {{typePrefix}}RadioVariant {
-  /// Raised treatment with Radix's classic shadow and gradient layers.
-  classic,
-
   /// Surface treatment with neutral border.
   surface,
 
@@ -39,16 +36,19 @@ RadioStyler {{valuePrefix}}RadioStyle({
   RadioStyler style = const RadioStyler.create(),
 }) {
   return (switch (variant) {
-    .classic => _{{valuePrefix}}RadioClassicStyler(size, highContrast: highContrast),
-    .surface => _{{valuePrefix}}RadioSurfaceStyler(size, highContrast: highContrast),
-    .soft => _{{valuePrefix}}RadioSoftStyler(size, highContrast: highContrast),
-  }).merge(style);
+        .surface => _{{valuePrefix}}RadioSurfaceStyler(size, highContrast: highContrast),
+        .soft => _{{valuePrefix}}RadioSoftStyler(size, highContrast: highContrast),
+      })
+      .wrap({{valuePrefix}}TouchTarget())
+      .onDisabled(
+        RadioStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
-RadioStyler _{{valuePrefix}}RadioBaseStyler(
-  {{typePrefix}}RadioSize size, {
-  required Color focusColor,
-}) {
+RadioStyler _{{valuePrefix}}RadioBaseStyler({{typePrefix}}RadioSize size) {
   final metrics = _{{valuePrefix}}RadioMetrics(size);
   return RadioStyler(
     container: .size(
@@ -63,93 +63,14 @@ RadioStyler _{{valuePrefix}}RadioBaseStyler(
       behindContent: RemixBoxEffectLayerMix(),
       overContent: RemixBoxEffectLayerMix(),
     ),
-  ).onFocusVisible(
-    .containerEffects(
-      {{valuePrefix}}FocusOutline(focusColor, offset: {{typePrefix}}Tokens.focusRingOffset()),
-    ),
-  );
-}
-
-RadioStyler _{{valuePrefix}}RadioClassicStyler(
-  {{typePrefix}}RadioSize size, {
-  required bool highContrast,
-}) {
-  final selectedColor = highContrast
-      ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentIndicator();
-  return _{{valuePrefix}}RadioBaseStyler(size, focusColor: {{typePrefix}}Tokens.focus8())
-      .color({{typePrefix}}Tokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
-        ),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.gray7()]),
-        ),
-      )
-      .indicatorColor(
-        highContrast ? {{typePrefix}}Tokens.accent1() : {{typePrefix}}Tokens.accentContrast(),
-      )
-      .onSelected(
-        .color(selectedColor)
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                RemixBoxEffectLayerMix(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [
-                        {{typePrefix}}Tokens.whiteA3(),
-                        const Color(0x00000000),
-                        {{typePrefix}}Tokens.blackA3(),
-                      ],
-                    ),
-                  ],
-                  shadows: [
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: {{typePrefix}}Tokens.whiteA4(),
-                      offset: const Offset(0, 0.5),
-                      blurRadius: 0.5,
-                    ),
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: {{typePrefix}}Tokens.blackA4(),
-                      offset: const Offset(0, -0.5),
-                      blurRadius: 0.5,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .indicatorColor(
-              highContrast
-                  ? {{typePrefix}}Tokens.accent1()
-                  : {{typePrefix}}Tokens.accentContrast(),
-            ),
-      )
-      .onDisabled(
-        .color({{typePrefix}}Tokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
-              ),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor({{typePrefix}}Tokens.grayA8()),
-      );
+  ).onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()));
 }
 
 RadioStyler _{{valuePrefix}}RadioSurfaceStyler(
   {{typePrefix}}RadioSize size, {
   required bool highContrast,
 }) {
-  return _{{valuePrefix}}RadioBaseStyler(size, focusColor: {{typePrefix}}Tokens.focus8())
+  return _{{valuePrefix}}RadioBaseStyler(size)
       .color({{typePrefix}}Tokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -202,7 +123,7 @@ RadioStyler _{{valuePrefix}}RadioSoftStyler(
   {{typePrefix}}RadioSize size, {
   required bool highContrast,
 }) {
-  return _{{valuePrefix}}RadioBaseStyler(size, focusColor: {{typePrefix}}Tokens.accentA8())
+  return _{{valuePrefix}}RadioBaseStyler(size)
       .color({{typePrefix}}Tokens.accentA4())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -247,6 +168,6 @@ RadioStyler _{{valuePrefix}}RadioSoftStyler(
   ),
   .size3 => (
     size: {{typePrefix}}Tokens.checkboxSize3(),
-    indicatorSize: {{typePrefix}}Tokens.radioIndicatorSize3(),
+    indicatorSize: {{typePrefix}}Tokens.space2(),
   ),
 };

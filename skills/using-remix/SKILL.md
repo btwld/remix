@@ -18,7 +18,7 @@ description: >-
 # Using Remix
 
 Build accessible Flutter interfaces with Remix behavior plus a hand-written
-style, the neutral Vanilla starter preset, or Fortal's Radix Themes-inspired
+style, the neutral Vanilla starter preset, or Fortal's Fortaleza-inspired
 preset. To build a reusable design system for other applications and
 publish it as a Remix registry, use `building-remix-design-system`;
 restyling this application's own installed source stays here.
@@ -46,7 +46,7 @@ screen, with a nested themed scope) rather than adding Fortal.
 | --- | --- |
 | No generated source or codegen wanted | base `remix`; hand-write `Remix*` widgets and `*Styler`s |
 | A neutral, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>Theme`/`<Prefix>Tokens` |
-| Ready-made Radix Themes-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Theme` plus prefixed `<Prefix>*` widgets |
+| Ready-made Fortaleza-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Theme` plus prefixed `<Prefix>*` widgets |
 | Own brand in one app, want editable tokens and recipes | Vanilla, then customize — see [Customize installed source](#customize-installed-source) |
 
 Both presets install editable application source, not a package dependency:
@@ -78,7 +78,7 @@ dart run remix_cli:remix add button textfield
 ```
 
 ```bash
-dart run remix_cli:remix init --prefix Fortal --preset fortal   # Radix Themes preset
+dart run remix_cli:remix init --prefix Fortal --preset fortal   # Fortal preset
 ```
 
 <!-- dart-excerpt: imports only -->
@@ -195,7 +195,7 @@ Installed source has three levels of override, in order of scope:
   import 'package:flutter/widgets.dart';
   import 'ui/ui.dart';
 
-  Widget rethemed(Widget child) => FortalTheme(accent: .red, child: child);
+  Widget rethemed(Widget child) => FortalTheme(accent: .caju, child: child);
   ```
 
 - **App-wide** — edit `lib/ui/components/<item>.dart` or `lib/ui/theme/*`

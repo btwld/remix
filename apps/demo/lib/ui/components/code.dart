@@ -6,15 +6,11 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Radix Themes Code variants.
+/// Fortal Code variants.
 enum FortalCodeVariant { solid, soft, outline, ghost }
 
-/// Fortal-themed inline code on the Radix nine-step scale.
+/// Fortal-themed inline code on the Fortal nine-step scale.
 ///
-/// Geometry is em-relative to the resolved font size, so this recipe takes a
-/// [context]. An omitted [size] anchors to the root `text3` token — not the
-/// ambient `DefaultTextStyle` — while keeping upstream's separate unsized
-/// factors, so a host text run cannot change Code's geometry.
 BadgeStyler fortalCodeStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -29,9 +25,6 @@ BadgeStyler fortalCodeStyle(
   final base = fortalResolveTextToken(context, size ?? FortalTextSize.size3);
   final baseFontSize = base.fontSize!;
 
-  // Radix nests two adjustments: --code-font-size-adjust is 0.95, and
-  // --code-variant-font-size-adjust multiplies it by 0.95 again for every
-  // variant except ghost, which keeps the outer value.
   final decorated = variant != .ghost;
   final fontSize = baseFontSize * (decorated ? 0.95 * 0.95 : 0.95);
   // An explicit size keeps its token's absolute line box; the unsized path
@@ -205,7 +198,6 @@ final _ambientCodeForegroundFallbacks = Expando<bool>(
   'fortal_code_ambient_foreground',
 );
 
-/// Token-backed standalone code text with the Radix Code variants.
 ///
 /// Code carries no accessibility role: Flutter has no code semantics, and
 /// inventing one would misreport the content.

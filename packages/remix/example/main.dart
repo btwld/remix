@@ -7,7 +7,7 @@ void main() {
 
 /// Remix ships no theme: every visual decision below is a styler you author.
 ///
-/// If you would rather start from a ready-made Radix Themes-inspired palette,
+/// For a ready-made Fortaleza-inspired palette,
 /// initialize the `fortal` preset with `remix_cli` and wrap your app in the
 /// installed scope.
 class RemixExampleApp extends StatelessWidget {

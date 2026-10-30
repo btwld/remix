@@ -7,7 +7,7 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('Fortal control matrices', () {
-    test('enum domains and defaults match Radix Themes 3.3.0', () {
+    test('enum domains and defaults match Fortal specification', () {
       expect(FortalIconButtonSize.values, [
         FortalIconButtonSize.size1,
         FortalIconButtonSize.size2,
@@ -15,7 +15,6 @@ void main() {
         FortalIconButtonSize.size4,
       ]);
       expect(FortalIconButtonVariant.values, [
-        FortalIconButtonVariant.classic,
         FortalIconButtonVariant.solid,
         FortalIconButtonVariant.soft,
         FortalIconButtonVariant.surface,
@@ -28,7 +27,6 @@ void main() {
         FortalCheckboxSize.size3,
       ]);
       expect(FortalCheckboxVariant.values, [
-        FortalCheckboxVariant.classic,
         FortalCheckboxVariant.surface,
         FortalCheckboxVariant.soft,
       ]);
@@ -38,7 +36,6 @@ void main() {
         FortalRadioSize.size3,
       ]);
       expect(FortalRadioVariant.values, [
-        FortalRadioVariant.classic,
         FortalRadioVariant.surface,
         FortalRadioVariant.soft,
       ]);
@@ -48,7 +45,6 @@ void main() {
         FortalSwitchSize.size3,
       ]);
       expect(FortalSwitchVariant.values, [
-        FortalSwitchVariant.classic,
         FortalSwitchVariant.surface,
         FortalSwitchVariant.soft,
       ]);
@@ -58,7 +54,6 @@ void main() {
         FortalProgressSize.size3,
       ]);
       expect(FortalProgressVariant.values, [
-        FortalProgressVariant.classic,
         FortalProgressVariant.surface,
         FortalProgressVariant.soft,
       ]);
@@ -73,7 +68,6 @@ void main() {
         FortalTextFieldSize.size3,
       ]);
       expect(FortalTextFieldVariant.values, [
-        FortalTextFieldVariant.classic,
         FortalTextFieldVariant.surface,
         FortalTextFieldVariant.soft,
       ]);
@@ -84,7 +78,6 @@ void main() {
       ]);
       expect(FortalSegmentedControlVariant.values, [
         FortalSegmentedControlVariant.surface,
-        FortalSegmentedControlVariant.classic,
       ]);
       expect(FortalTextAreaSize.values, [
         FortalTextAreaSize.size1,
@@ -92,7 +85,6 @@ void main() {
         FortalTextAreaSize.size3,
       ]);
       expect(FortalTextAreaVariant.values, [
-        FortalTextAreaVariant.classic,
         FortalTextAreaVariant.surface,
         FortalTextAreaVariant.soft,
       ]);
@@ -126,10 +118,7 @@ void main() {
         FortalCodeVariant.outline,
         FortalCodeVariant.ghost,
       ]);
-      expect(FortalKbdVariant.values, [
-        FortalKbdVariant.classic,
-        FortalKbdVariant.soft,
-      ]);
+      expect(FortalKbdVariant.values, [FortalKbdVariant.soft]);
       expect(FortalLinkUnderline.values, [
         FortalLinkUnderline.auto,
         FortalLinkUnderline.always,
@@ -196,7 +185,7 @@ void main() {
       expect(code.size, isNull);
       expect(code.variant, FortalCodeVariant.soft);
       expect(kbd.size, isNull);
-      expect(kbd.variant, FortalKbdVariant.classic);
+      expect(kbd.variant, FortalKbdVariant.soft);
       expect(link.size, isNull);
       expect(link.underline, FortalLinkUnderline.auto);
     });
@@ -302,8 +291,8 @@ void main() {
     ) async {
       const expected = <FortalSwitchSize, (double, double, double)>{
         FortalSwitchSize.size1: (28, 16, 14),
-        FortalSwitchSize.size2: (35, 20, 18),
-        FortalSwitchSize.size3: (42, 24, 22),
+        FortalSwitchSize.size2: (36, 20, 18),
+        FortalSwitchSize.size3: (44, 24, 22),
       };
 
       for (final entry in expected.entries) {

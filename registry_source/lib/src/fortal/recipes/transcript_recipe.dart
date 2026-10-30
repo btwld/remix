@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import '../theme/theme.dart';
 import '../../agent/components/transcript.dart';
 
 @immutable
@@ -14,6 +15,6 @@ FortalAgentTranscriptRecipe fortalAgentTranscriptRecipe({
   style: AgentTranscriptStyler(
     viewport: BoxStyler(),
     item: BoxStyler(),
-    spacing: 12,
+    spacing: FortalTokens.space3(),
   ).merge(style),
 );

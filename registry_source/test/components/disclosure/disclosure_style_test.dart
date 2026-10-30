@@ -116,10 +116,8 @@ void main() {
 
       expect(_color(hovered.trigger), isNot(_color(idle.trigger)));
       expect(_color(pressed.trigger), isNot(_color(idle.trigger)));
-      expect(
-        (focused.trigger.spec.decoration as BoxDecoration).border,
-        isNotNull,
-      );
+      expect(focused.container.widgetModifiers, isNotEmpty);
+      expect(focused.trigger.spec.decoration, idle.trigger.spec.decoration);
       expect(_color(disabled.trigger), isNot(_color(idle.trigger)));
     });
   });
@@ -137,6 +135,7 @@ Future<DisclosureSpec> _resolve(
   late DisclosureSpec result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

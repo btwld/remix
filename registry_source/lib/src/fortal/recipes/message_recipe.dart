@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import '../theme/theme.dart';
 import '../../agent/components/message.dart';
 
 import '../components/button.dart';
@@ -27,16 +28,19 @@ FortalAgentMessageRecipe fortalAgentMessageRecipe({
   ButtonStyler toggleStyle = const ButtonStyler.create(),
 }) => FortalAgentMessageRecipe(
   style: AgentMessageStyler(
-    row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
-    avatar: BoxStyler().size(28, 28),
-    header: BoxStyler().padding(.bottom(6)),
+    row: FlexBoxStyler().mainAxisSize(.max).spacing(FortalTokens.space2()),
+    avatar: BoxStyler().size(
+      FortalTokens.messageAvatarSize(),
+      FortalTokens.messageAvatarSize(),
+    ),
+    header: BoxStyler().padding(.bottom(FortalTokens.space2())),
     body: BoxStyler(),
-    footer: BoxStyler().padding(.top(4)),
-    maxWidth: 640,
+    footer: BoxStyler().padding(.top(FortalTokens.space1())),
+    maxWidth: FortalTokens.messageContentMaxWidth(),
   ).merge(style),
   surfaceStyle: fortalCardStyle(style: surfaceStyle),
   collapsibleStyle: AgentMessageCollapsibleStyler(
-    collapsedHeight: 72,
+    collapsedHeight: FortalTokens.messageCollapsedHeight(),
     container: BoxStyler(),
     clipped: BoxStyler(),
   ).merge(collapsibleStyle),

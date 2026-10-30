@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
+import 'utilities/focus_in_view.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
@@ -632,7 +633,7 @@ class _ToggleGroupController<T> {
   void _focus(_ToggleGroupEntry<T> entry) {
     if (!entry.effectiveEnabled) return;
     _setTarget(entry);
-    entry.focusNode.requestFocus();
+    requestFocusInView(entry.focusNode);
   }
 
   _ToggleGroupEntry<T>? _findRepairTarget({

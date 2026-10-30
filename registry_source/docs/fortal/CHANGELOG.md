@@ -1,5 +1,14 @@
 ## Unreleased
 
+- Refresh Fortal as an independent, Fortaleza-inspired design system: seven
+  generated OKLCH palettes, neutral Calçadão defaults, Caju errors, and tested
+  contrast in both modes. Apps can generate a custom palette from one seed.
+- Remove the twelve classic control/card/inline variants, default panels to
+  solid, flatten cards and controls, fill surface fields, share a token-based
+  focus ring, and align spacing, touch targets, and the 36px type step.
+- Replace the external parity contract and color fixtures with Fortal's own
+  specification, API catalog, contrast tests, and light/dark polish-board goldens.
+
 - Keep the dashboard theme panel's edge padding nonnegative when a custom focus
   ring offset draws the ring inside its swatch.
 
@@ -9,7 +18,7 @@
 
 - **Breaking:** align icon button icon sizes to 12/16/20 pixels.
 
-- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent. Toast is a Fortal extension and is not tracked in the Radix Themes parity ledger.
+- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent.
 
 ## 1.0.0-beta.9
 

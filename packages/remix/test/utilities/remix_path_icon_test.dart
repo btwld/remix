@@ -44,7 +44,7 @@ double _perimeter(Path path) =>
     path.computeMetrics().fold(0.0, (total, metric) => total + metric.length);
 
 void main() {
-  // The parity manifest promises the exact Radix Themes 3.3.0 vector paths.
+  // Retain the default vector paths independently of preset palette choices.
   // Bounds and perimeter fingerprint the pinned nine-unit coordinates, so any
   // edit to a path constant fails here.
   const pinnedGeometry = {

@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The nine-step Radix Themes text scale supplied by [FortalTokens].
+/// The nine-step Fortal text scale supplied by [FortalTokens].
 enum FortalTextSize {
   size1,
   size2,
@@ -18,8 +18,6 @@ enum FortalTextSize {
 
 /// Font weights supported by the Fortal typography scale.
 ///
-/// Closed rather than Flutter's [FontWeight], which is an open class accepting
-/// any value from 1 to 1000; Radix ships exactly these four.
 enum FortalTextWeight { light, regular, medium, bold }
 
 TextStyleToken fortalTextSizeToken(FortalTextSize size) => switch (size) {

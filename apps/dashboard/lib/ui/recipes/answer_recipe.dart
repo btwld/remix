@@ -32,16 +32,20 @@ UiAgentAnswerRecipe uiAgentAnswerRecipe({
 }) => UiAgentAnswerRecipe(
   style: UiAnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
-    feedback: BoxStyler().padding(.top(6)),
-    sourcesLabel: TextStyler().color(UiTokens.gray12()).fontSize(13),
-    indicator: IconStyler().color(UiTokens.gray12()).size(16),
+    actions: FlexBoxStyler()
+        .spacing(UiTokens.space2())
+        .padding(.top(UiTokens.space3())),
+    feedback: BoxStyler().padding(.top(UiTokens.space2())),
+    sourcesLabel: TextStyler()
+        .color(UiTokens.gray12())
+        .style(UiTokens.text2.mix()),
+    indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
   sourcesStyle: uiDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(12)))
+        .container(BoxStyler().margin(.top(UiTokens.space3())))
         .merge(sourcesStyle),
   ),
   copyStyle: uiIconButtonStyle(variant: .ghost, size: .size1, style: copyStyle),

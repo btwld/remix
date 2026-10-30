@@ -4,7 +4,7 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the neutral `vanilla` preset or the Radix Themes-inspired `fortal`
+Choose the neutral `vanilla` preset or the Fortaleza-inspired `fortal`
 preset at initialization. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.

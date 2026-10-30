@@ -12,7 +12,7 @@ The two registry trees live in
 ships no catalog of its own, and there is no second registry copy under
 `open_code/`. `open_code/fixture/` proves the Vanilla preset, while
 `open_code/fortal_fixture/` proves Fortal with every generated widget and
-known Radix Themes 3.3.0 color values. A behavioral package can be styled from
+owned palette/default contracts. A behavioral package can be styled from
 the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
@@ -115,7 +115,7 @@ This installs the full Fortal theme and recipe as prefixed local source:
 the shared `base_button.dart` implementation used by Button and IconButton.
 No installed identifier is named Fortal, and the consumer does not declare
 direct `mix`, `naked_ui`, or `remix_fortal` dependencies. `remix` owns behavior;
-the application owns the copied Radix color table, 277-token theme, component
+the application owns the generated seven-palette theme, component
 recipes, and generated adapters.
 
 The Fortal templates are derived from analyzed Dart in

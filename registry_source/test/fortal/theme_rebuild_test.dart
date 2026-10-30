@@ -21,7 +21,7 @@ void main() {
         },
       );
 
-      Widget theme({FortalAccentColor accent = .red}) => FortalTheme(
+      Widget theme({FortalAccentColor accent = .caju}) => FortalTheme(
         mode: mode,
         child: FortalTheme(accent: accent, child: reader),
       );
@@ -32,7 +32,7 @@ void main() {
       await tester.pumpWidget(theme());
       expect(reads, 1, reason: 'same settings');
 
-      await tester.pumpWidget(theme(accent: .blue));
+      await tester.pumpWidget(theme(accent: .mar));
       expect(reads, 2, reason: 'a different accent');
     });
   }

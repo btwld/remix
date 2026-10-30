@@ -21,9 +21,16 @@ ToggleStyler uiToggleStyle({
   ToggleStyler style = const ToggleStyler.create(),
 }) {
   return (switch (variant) {
-    .ghost => _uiToggleGhostStyler(size, highContrast: highContrast),
-    .outline => _uiToggleOutlineStyler(size, highContrast: highContrast),
-  }).merge(style);
+        .ghost => _uiToggleGhostStyler(size, highContrast: highContrast),
+        .outline => _uiToggleOutlineStyler(size, highContrast: highContrast),
+      })
+      .wrap(uiTouchTarget())
+      .onDisabled(
+        ToggleStyler().container(
+          FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
+        ),
+      )
+      .merge(style);
 }
 
 ToggleStyler _uiToggleBaseStyler(UiToggleSize size) {
@@ -110,7 +117,7 @@ ToggleStyler _uiToggleSizeStyler(UiToggleSize size) {
           .padding(.horizontal(UiTokens.space2()))
           .padding(.vertical(UiTokens.space1()))
           .borderRadius(.all(UiTokens.radius2()))
-          .spacing(UiTokens.toggleGap1()),
+          .spacing(UiTokens.space1()),
       label: .style(UiTokens.text1.mix()),
       icon: .size(UiTokens.space3()),
     ),
@@ -128,7 +135,7 @@ ToggleStyler _uiToggleSizeStyler(UiToggleSize size) {
           .padding(.horizontal(UiTokens.space4()))
           .padding(.vertical(UiTokens.space2()))
           .borderRadius(.all(UiTokens.radius3()))
-          .spacing(UiTokens.toggleGap3()),
+          .spacing(UiTokens.space2()),
       label: .style(UiTokens.text3.mix()),
       icon: .size(UiTokens.spinnerSize3()),
     ),

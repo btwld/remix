@@ -34,7 +34,7 @@ AccordionStyler fortalAccordionStyle({
 // cannot partially cover their antialiased edges.
 AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal))
+      .trigger(.direction(.horizontal).minHeight(FortalTokens.touchTargetMin()))
       .leadingIcon(.color(FortalTokens.gray11()))
       .title(
         .fontWeight(
@@ -56,12 +56,15 @@ AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
       .merge(_fortalAccordionSizeStyler(size));
 }
 
-AccordionStyler _fortalAccordionFocusStyler() {
-  return AccordionStyler().trigger(FlexBoxStyler().fortalFocusRing());
+AccordionStyler _fortalAccordionFocusStyler(FortalAccordionSize size) {
+  return AccordionStyler().container(
+    BoxStyler().fortalFocusRing(radius: _fortalAccordionRadius(size)),
+  );
 }
 
 AccordionStyler _fortalAccordionDisabledStyler() {
   return AccordionStyler()
+      .container(BoxStyler().wrap(fortalFocusRingModifier(visible: false)))
       .trigger(.color(FortalTokens.grayA3()))
       .leadingIcon(.color(FortalTokens.gray8()))
       .title(.color(FortalTokens.gray8()))
@@ -94,7 +97,7 @@ AccordionStyler _fortalAccordionSurfaceStyler([
       )
       .onHovered(.trigger(.color(FortalTokens.gray2())))
       .onPressed(.trigger(.color(FortalTokens.gray3())))
-      .onFocusVisible(_fortalAccordionFocusStyler())
+      .onFocusVisible(_fortalAccordionFocusStyler(size))
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 
@@ -126,7 +129,7 @@ AccordionStyler _fortalAccordionSoftStyler([
       )
       .onHovered(.trigger(.color(FortalTokens.accent3())))
       .onPressed(.trigger(.color(FortalTokens.accent4())))
-      .onFocusVisible(_fortalAccordionFocusStyler())
+      .onFocusVisible(_fortalAccordionFocusStyler(size))
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 
@@ -157,7 +160,7 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     .size2 => AccordionStyler(
       trigger: FlexBoxStyler().padding(.all(FortalTokens.space3())),
       leadingIcon: .size(FortalTokens.spinnerSize3()),
-      title: .style(FortalTokens.accordionText2.mix()),
+      title: .style(FortalTokens.text2.mix()),
       trailingIcon: .size(FortalTokens.spinnerSize3()),
       content: .padding(.all(FortalTokens.space3())),
     ),

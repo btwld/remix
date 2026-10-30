@@ -2,7 +2,7 @@ import 'package:remix/remix.dart';
 
 import 'theme_scope.dart' show {{typePrefix}}Theme;
 
-/// Design tokens for the {{typePrefix}} UI system (powered by Radix Colors).
+/// Design tokens for the {{typePrefix}} UI system ({{typePrefix}}-owned palettes).
 ///
 /// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
 /// shadows (6-level), typography (9-size), and functional colors.
@@ -14,6 +14,34 @@ import 'theme_scope.dart' show {{typePrefix}}Theme;
 ///
 /// Must be used within [{{typePrefix}}Theme] to resolve actual values.
 class {{typePrefix}}Tokens {
+  static const activityMaxHeight = DoubleToken('{{valuePrefix}}.activity.max-height');
+  static const planMaxHeight = DoubleToken('{{valuePrefix}}.plan.max-height');
+  static const messageAvatarSize = DoubleToken('{{valuePrefix}}.message.avatar-size');
+  static const messageContentMaxWidth = DoubleToken(
+    '{{valuePrefix}}.message.content-max-width',
+  );
+  static const messageCollapsedHeight = DoubleToken(
+    '{{valuePrefix}}.message.collapsed-height',
+  );
+  static const composerFieldMinHeight = DoubleToken(
+    '{{valuePrefix}}.composer-field-min-height',
+  );
+  static const touchTargetMin = DoubleToken('{{valuePrefix}}.touch-target-min');
+  static const popoverMaxWidth = DoubleToken('{{valuePrefix}}.popover-max-width');
+  static const dialogMaxWidth = DoubleToken('{{valuePrefix}}.dialog-max-width');
+  static const toastMaxWidth = DoubleToken('{{valuePrefix}}.toast-max-width');
+  static const sidebarDestinationMinHeight = DoubleToken(
+    '{{valuePrefix}}.sidebar.destination-min-height',
+  );
+
+  /// Sort icons retain their optical sizes where the spacing scale has no step.
+  static const dataTableSortIconSize1 = DoubleToken(
+    '{{valuePrefix}}.data-table.sort-icon-size.1',
+  );
+  static const dataTableSortIconSize3 = DoubleToken(
+    '{{valuePrefix}}.data-table.sort-icon-size.3',
+  );
+
   /// Page background color selected for the active brightness.
   static const colorBackground = ColorToken('{{valuePrefix}}.color.background');
 
@@ -203,7 +231,7 @@ class {{typePrefix}}Tokens {
   static const blackA11 = ColorToken('{{valuePrefix}}.black.a11');
   static const blackA12 = ColorToken('{{valuePrefix}}.black.a12');
 
-  /// White alpha steps used by layered classic-control recipes.
+  /// White alpha steps for transparent decoration and overlays.
   static const whiteA1 = ColorToken('{{valuePrefix}}.white.a1');
   static const whiteA2 = ColorToken('{{valuePrefix}}.white.a2');
   static const whiteA3 = ColorToken('{{valuePrefix}}.white.a3');
@@ -220,7 +248,6 @@ class {{typePrefix}}Tokens {
   /// Mode-aware mixed shadow stroke.
   static const shadowStroke = ColorToken('{{valuePrefix}}.shadow.stroke');
 
-  /// Premultiplied OKLab mixes used by Radix neutral one-pixel strokes.
   static const grayStroke3 = ColorToken('{{valuePrefix}}.gray.stroke.3');
   static const grayStroke4 = ColorToken('{{valuePrefix}}.gray.stroke.4');
   static const grayStroke5 = ColorToken('{{valuePrefix}}.gray.stroke.5');
@@ -255,16 +282,7 @@ class {{typePrefix}}Tokens {
   static const space9 = SpaceToken('{{valuePrefix}}.space.9');
 
   /// Spinner size 3 - 20px at 100% scaling.
-  ///
-  /// Radix defines this as 1.25 times space 4, so it needs its own resolved
-  /// token rather than arithmetic on an unresolved token reference.
   static const spinnerSize3 = DoubleToken('{{valuePrefix}}.spinner.size.3');
-
-  /// Compact gap shared by size-1 toggle extensions (2px at 100% scaling).
-  static const toggleGap1 = DoubleToken('{{valuePrefix}}.toggle.gap.1');
-
-  /// Comfortable gap shared by size-3 toggle extensions (6px at 100%).
-  static const toggleGap3 = DoubleToken('{{valuePrefix}}.toggle.gap.3');
 
   /// Avatar sizes expressed as scaled pixels rather than spacing steps.
   static const avatarSize6 = DoubleToken('{{valuePrefix}}.avatar.size.6');
@@ -272,26 +290,12 @@ class {{typePrefix}}Tokens {
   static const avatarSize8 = DoubleToken('{{valuePrefix}}.avatar.size.8');
   static const avatarSize9 = DoubleToken('{{valuePrefix}}.avatar.size.9');
 
-  /// Avatar icon sizes are half of each resolved avatar dimension.
-  ///
-  /// These values need dedicated tokens because arithmetic on an unresolved
-  /// token reference would destroy its identity before Mix can resolve it.
-  static const avatarIconSize1 = DoubleToken('{{valuePrefix}}.avatar.icon-size.1');
-  static const avatarIconSize2 = DoubleToken('{{valuePrefix}}.avatar.icon-size.2');
   static const avatarIconSize3 = DoubleToken('{{valuePrefix}}.avatar.icon-size.3');
-  static const avatarIconSize4 = DoubleToken('{{valuePrefix}}.avatar.icon-size.4');
-  static const avatarIconSize5 = DoubleToken('{{valuePrefix}}.avatar.icon-size.5');
-  static const avatarIconSize6 = DoubleToken('{{valuePrefix}}.avatar.icon-size.6');
-  static const avatarIconSize7 = DoubleToken('{{valuePrefix}}.avatar.icon-size.7');
-  static const avatarIconSize8 = DoubleToken('{{valuePrefix}}.avatar.icon-size.8');
   static const avatarIconSize9 = DoubleToken('{{valuePrefix}}.avatar.icon-size.9');
 
-  /// Badge measurements that are fractional spacing expressions upstream.
-  static const badgePaddingX1 = DoubleToken('{{valuePrefix}}.badge.padding-x.1');
   static const badgePaddingY1 = DoubleToken('{{valuePrefix}}.badge.padding-y.1');
-  static const badgePaddingX3 = DoubleToken('{{valuePrefix}}.badge.padding-x.3');
 
-  /// Checkbox dimensions expressed as scaled pixels by Radix Themes.
+  /// Checkbox dimensions expressed as scaled pixels by {{typePrefix}}.
   static const checkboxSize1 = DoubleToken('{{valuePrefix}}.checkbox.size.1');
   static const checkboxSize3 = DoubleToken('{{valuePrefix}}.checkbox.size.3');
   static const checkboxIndicatorSize1 = DoubleToken(
@@ -300,22 +304,8 @@ class {{typePrefix}}Tokens {
   static const checkboxIndicatorSize2 = DoubleToken(
     '{{valuePrefix}}.checkbox.indicator-size.2',
   );
-  static const checkboxIndicatorSize3 = DoubleToken(
-    '{{valuePrefix}}.checkbox.indicator-size.3',
-  );
 
-  /// Checkbox-group label gaps derived from Radix's size-linked `0.5em`.
-  static const checkboxGroupItemGap1 = DoubleToken(
-    '{{valuePrefix}}.checkbox-group.item-gap.1',
-  );
-  static const checkboxGroupItemGap2 = DoubleToken(
-    '{{valuePrefix}}.checkbox-group.item-gap.2',
-  );
-  static const checkboxGroupItemGap3 = DoubleToken(
-    '{{valuePrefix}}.checkbox-group.item-gap.3',
-  );
-
-  /// Radio indicators are 40% of their control size in Radix Themes.
+  /// Radio indicators are 40% of their control size in {{typePrefix}}.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
   /// token reference would destroy its identity before Mix can resolve it.
@@ -324,9 +314,6 @@ class {{typePrefix}}Tokens {
   );
   static const radioIndicatorSize2 = DoubleToken(
     '{{valuePrefix}}.radio.indicator-size.2',
-  );
-  static const radioIndicatorSize3 = DoubleToken(
-    '{{valuePrefix}}.radio.indicator-size.3',
   );
 
   /// Checkbox radii derived from fractional radius-step expressions.
@@ -342,27 +329,18 @@ class {{typePrefix}}Tokens {
   static const switchThumbSize2 = DoubleToken('{{valuePrefix}}.switch.thumb-size.2');
   static const switchThumbSize3 = DoubleToken('{{valuePrefix}}.switch.thumb-size.3');
 
-  /// Progress geometry derived from scaled fractional upstream expressions.
   static const progressHeight2 = DoubleToken('{{valuePrefix}}.progress.height.2');
   static const progressRadius1 = RadiusToken('{{valuePrefix}}.progress.radius.1');
   static const progressRadius2 = RadiusToken('{{valuePrefix}}.progress.radius.2');
   static const progressRadius3 = RadiusToken('{{valuePrefix}}.progress.radius.3');
 
-  /// Slider geometry expressed as scaled Radix component dimensions.
   static const sliderTrackSize1 = DoubleToken('{{valuePrefix}}.slider.track-size.1');
-  static const sliderTrackSize2 = DoubleToken('{{valuePrefix}}.slider.track-size.2');
   static const sliderTrackSize3 = DoubleToken('{{valuePrefix}}.slider.track-size.3');
   static const sliderThumbSize1 = DoubleToken('{{valuePrefix}}.slider.thumb-size.1');
-  static const sliderThumbSize2 = DoubleToken('{{valuePrefix}}.slider.thumb-size.2');
   static const sliderThumbSize3 = DoubleToken('{{valuePrefix}}.slider.thumb-size.3');
   static const sliderTrackRadius1 = RadiusToken('{{valuePrefix}}.slider.track-radius.1');
   static const sliderTrackRadius2 = RadiusToken('{{valuePrefix}}.slider.track-radius.2');
   static const sliderTrackRadius3 = RadiusToken('{{valuePrefix}}.slider.track-radius.3');
-
-  /// TextField content insets after its fixed one-pixel border.
-  static const textFieldPadding1 = DoubleToken('{{valuePrefix}}.text-field.padding.1');
-  static const textFieldPadding2 = DoubleToken('{{valuePrefix}}.text-field.padding.2');
-  static const textFieldPadding3 = DoubleToken('{{valuePrefix}}.text-field.padding.3');
 
   /// TextArea metrics that cannot be expressed by existing spacing tokens.
   static const textAreaMinHeight3 = DoubleToken(
@@ -419,32 +397,15 @@ class {{typePrefix}}Tokens {
     '{{valuePrefix}}.tabs.active-letter-spacing.2',
   );
 
-  /// Table size-1 minimum cell height (36px at 100% scaling).
-  ///
-  /// Radix writes `calc(36px * var(--scaling))` literally, so no existing
-  /// spacing step expresses it.
-  static const dataTableRowHeight1 = DoubleToken('{{valuePrefix}}.data-table.height.1');
-
-  /// Table size-2 minimum cell height (44px at 100% scaling).
-  static const dataTableRowHeight2 = DoubleToken('{{valuePrefix}}.data-table.height.2');
-
   /// Table surface border - `color-mix(in oklab, gray-a5, gray-6)`.
   ///
   /// The existing `grayStroke*` tokens blend an alpha step with the *same*
   /// numbered solid step at 25%; Table blends step 5 with step 6 at 50%.
   static const dataTableBorder = ColorToken('{{valuePrefix}}.data-table.border');
 
-  /// Select's 1.5 × space-1 measurement (6px at 100% scaling).
-  static const selectSpace1Half = DoubleToken('{{valuePrefix}}.select.space.1-half');
-
   /// Select size-1 indicator column width (20px at 100% scaling).
   static const selectIndicatorWidth1 = DoubleToken(
     '{{valuePrefix}}.select.indicator-width.1',
-  );
-
-  /// Select size-1 check size (8px at 100% scaling).
-  static const selectIndicatorSize1 = DoubleToken(
-    '{{valuePrefix}}.select.indicator-size.1',
   );
 
   /// Select size-2/3 check size (10px at 100% scaling).
@@ -521,26 +482,12 @@ class {{typePrefix}}Tokens {
   static const shadow1 = BoxShadowToken('{{valuePrefix}}.shadow.1');
 
   /// Exact layered shadow level 1, including inset layers.
-  ///
-  /// This additive token powers the preset's Radix-compatible rendering while
-  /// [shadow1] retains the original Remix public token type.
   static const shadow1Layers = RemixBoxShadowListToken(
     '{{valuePrefix}}.shadow.1.layers',
   );
 
-  /// Half-opacity shadow-1 layers used by a disabled classic slider track.
-  static const sliderClassicDisabledTrackShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.slider.classic.disabled-track-shadows',
-  );
-
   /// Shadow level 2 - Low elevation.
   static const shadow2 = BoxShadowToken('{{valuePrefix}}.shadow.2');
-
-  /// Shadow-2 painted on SegmentedControl's fixed one-pixel inset shape.
-  static const segmentedControlClassicIndicatorShadows =
-      RemixBoxShadowListToken(
-        '{{valuePrefix}}.segmented-control.classic.indicator-shadows',
-      );
 
   /// Shadow level 3 - Medium elevation.
   static const shadow3 = BoxShadowToken('{{valuePrefix}}.shadow.3');
@@ -554,61 +501,6 @@ class {{typePrefix}}Tokens {
   /// Shadow level 6 - Maximum elevation.
   static const shadow6 = BoxShadowToken('{{valuePrefix}}.shadow.6');
 
-  /// Card classic outer and inset-pseudo-element shadow lists.
-  static const cardClassicOuterShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.card.classic.outer-shadows',
-  );
-  static const cardClassicInnerShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.card.classic.inner-shadows',
-  );
-  static const cardClassicHoverOuterShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.card.classic.hover.outer-shadows',
-  );
-  static const cardClassicHoverInnerShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.card.classic.hover.inner-shadows',
-  );
-  static const cardClassicActiveOuterShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.card.classic.active.outer-shadows',
-  );
-  static const cardClassicActiveInnerShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.card.classic.active.inner-shadows',
-  );
-
-  /// Mode-aware inset layers for a classic Select trigger.
-  static const selectTriggerClassicShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.select.trigger.classic.shadows',
-  );
-
-  /// Mode-aware open/hover layers for a classic Select trigger.
-  static const selectTriggerClassicHoverShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.select.trigger.classic.hover-shadows',
-  );
-
-  /// Mode-aware disabled layers shared by classic button-shaped controls.
-  static const baseButtonClassicDisabledShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.base-button.classic.disabled.shadows',
-  );
-
-  /// Mode-aware classic Button/IconButton layers.
-  static const baseButtonClassicShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.base-button.classic.shadows',
-  );
-  static const baseButtonClassicHighContrastShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.base-button.classic.high-contrast.shadows',
-  );
-  static const baseButtonClassicActiveShadows = RemixBoxShadowListToken(
-    '{{valuePrefix}}.base-button.classic.active.shadows',
-  );
-  static const baseButtonClassicActiveHighContrastShadows =
-      RemixBoxShadowListToken(
-        '{{valuePrefix}}.base-button.classic.active.high-contrast.shadows',
-      );
-  static const baseButtonClassicAfterInset = DoubleToken(
-    '{{valuePrefix}}.base-button.classic.after-inset',
-  );
-  static const baseButtonGhostPaddingY3 = DoubleToken(
-    '{{valuePrefix}}.base-button.ghost.padding-y.3',
-  );
   static const baseButtonGhostMarginX12 = DoubleToken(
     '{{valuePrefix}}.base-button.ghost.margin-x.1-2',
   );
@@ -626,9 +518,6 @@ class {{typePrefix}}Tokens {
   );
   static const baseButtonGhostMarginY4 = DoubleToken(
     '{{valuePrefix}}.base-button.ghost.margin-y.4',
-  );
-  static const iconButtonGhostPadding2 = DoubleToken(
-    '{{valuePrefix}}.icon-button.ghost.padding.2',
   );
   static const iconButtonGhostMargin1 = DoubleToken(
     '{{valuePrefix}}.icon-button.ghost.margin.1',
@@ -669,12 +558,6 @@ class {{typePrefix}}Tokens {
   /// Text size 3 - 16px (Body text and primary content).
   static const text3 = TextStyleToken('{{valuePrefix}}.text.3');
 
-  /// Accordion size-2 text (15px with a 20px line box at 100% scaling).
-  ///
-  /// Accordion is a {{typePrefix}} extension, so this intermediate size is kept
-  /// separate from the upstream Radix typography scale.
-  static const accordionText2 = TextStyleToken('{{valuePrefix}}.accordion.text.2');
-
   /// Text size 4 - 18px (Prominent body text).
   static const text4 = TextStyleToken('{{valuePrefix}}.text.4');
 
@@ -687,7 +570,7 @@ class {{typePrefix}}Tokens {
   /// Text size 7 - 28px (Large headings).
   static const text7 = TextStyleToken('{{valuePrefix}}.text.7');
 
-  /// Text size 8 - 35px (Extra large headings).
+  /// Text size 8 - 36px (Extra large headings).
   static const text8 = TextStyleToken('{{valuePrefix}}.text.8');
 
   /// Text size 9 - 60px (Display text).
@@ -704,6 +587,11 @@ class {{typePrefix}}Tokens {
   /// Medium font weight (500).
   static const fontWeightMedium = FontWeightToken('{{valuePrefix}}.font.weight.medium');
 
+  /// Semibold font weight (600).
+  static const fontWeightSemibold = FontWeightToken(
+    '{{valuePrefix}}.font.weight.semibold',
+  );
+
   /// Bold font weight (700).
   static const fontWeightBold = FontWeightToken('{{valuePrefix}}.font.weight.bold');
 
@@ -713,7 +601,6 @@ class {{typePrefix}}Tokens {
   /// Slow animation duration (300ms).
   static const transitionSlow = DurationToken('{{valuePrefix}}.transition.slow');
 
-  /// One leg of the Radix Skeleton pulse.
   static const skeletonPulseDuration = DurationToken(
     '{{valuePrefix}}.skeleton.pulse-duration',
   );

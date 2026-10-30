@@ -13,7 +13,7 @@ private authoring package.
 
 ```text
 packages/           independently published packages
-registry_source/    private authored catalog and parity tests
+registry_source/    private authored catalog and specification tests
   lib/src/default/  Vanilla theme, components and recipes
   lib/src/fortal/   Fortal theme, components and recipes
   lib/src/agent/    shared domain behavior, models and support

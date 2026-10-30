@@ -3,8 +3,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
-import '../theme/radix_colors.dart'
-    show amber, blue, cyan, green, orange, ruby, violet;
+import '../theme/fortal_colors.dart';
 import '../theme/theme.dart';
 
 part 'chart.g.dart';
@@ -27,7 +26,7 @@ const _highContrastLineWidthToken = ContextToken<double>(
 /// Returns the categorical palette used by Ui charts in the current scope.
 ///
 /// The first entry follows the configured Ui accent. Remaining entries use
-/// Radix color families selected for clear categorical separation. Set
+/// Ui color families selected for clear categorical separation. Set
 /// [highContrast] to use step 12 instead of the standard solid-color step 9.
 List<Color> resolveUiChartPalette(
   BuildContext context, {
@@ -38,7 +37,7 @@ List<Color> resolveUiChartPalette(
   final step = highContrast ? 12 : 9;
   final candidates = <Color>[
     colors.accent.scale.step(step),
-    for (final family in [cyan, orange, ruby, green, violet, amber, blue])
+    for (final family in [calcadao, mar, ceu, mangue, sol, duna, caju])
       (theme.isDark ? family.dark : family.light).scale.step(step),
   ];
 
