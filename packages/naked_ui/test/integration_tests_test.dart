@@ -1,3 +1,7 @@
+// Launches `flutter test` in a child process, which needs dart:io.
+@TestOn('vm')
+library;
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';

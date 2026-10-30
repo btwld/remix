@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -283,59 +284,43 @@ void main() {
       timeout: Timeout(Duration(seconds: 20)),
     );
 
+    testWidgets('keyboard selection with space key', (tester) async {
+      String? selected;
+      final focusNodes = [FocusNode(), FocusNode(), FocusNode()];
+      await tester.pumpMaterialWidget(
+        _radioColumn(focusNodes, (v) => selected = v),
+      );
+
+      focusNodes[0].requestFocus();
+      await tester.pump();
+      expect(selected, null);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pumpAndSettle();
+      expect(selected, 'a');
+    }, timeout: Timeout(Duration(seconds: 20)));
+
     testWidgets(
-      'keyboard selection with space and enter keys',
+      'keyboard selection with enter key',
       (tester) async {
         String? selected;
-
         final focusNodes = [FocusNode(), FocusNode(), FocusNode()];
-
         await tester.pumpMaterialWidget(
-          RadioGroup<String>(
-            groupValue: null,
-            onChanged: (v) => selected = v,
-            child: Column(
-              children: [
-                NakedRadio<String>(
-                  value: 'a',
-                  focusNode: focusNodes[0],
-                  child: const SizedBox(width: 20, height: 20),
-                ),
-                NakedRadio<String>(
-                  value: 'b',
-                  focusNode: focusNodes[1],
-                  child: const SizedBox(width: 20, height: 20),
-                ),
-                NakedRadio<String>(
-                  value: 'c',
-                  focusNode: focusNodes[2],
-                  child: const SizedBox(width: 20, height: 20),
-                ),
-              ],
-            ),
-          ),
+          _radioColumn(focusNodes, (v) => selected = v),
         );
 
-        // Focus first radio
-        focusNodes[0].requestFocus();
-        await tester.pump();
-        expect(selected, null);
-
-        // Space key selects
-        await tester.sendKeyEvent(LogicalKeyboardKey.space);
-        await tester.pumpAndSettle();
-        expect(selected, 'a');
-
-        // Focus different radio
         focusNodes[2].requestFocus();
         await tester.pumpAndSettle();
+        expect(selected, null);
 
-        // Enter key also selects
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
         await tester.pumpAndSettle();
         expect(selected, 'c');
       },
       timeout: Timeout(Duration(seconds: 20)),
+      // On the web Enter maps to ButtonActivateIntent, which RawRadio does not
+      // handle, as with a native radio.
+      skip: kIsWeb,
     );
 
     testWidgets('uses custom cursor when specified', (
@@ -482,4 +467,24 @@ void main() {
       expect(radio2State!.isSelected, isTrue);
     });
   });
+}
+
+Widget _radioColumn(
+  List<FocusNode> focusNodes,
+  ValueChanged<String?> onChanged,
+) {
+  return RadioGroup<String>(
+    groupValue: null,
+    onChanged: onChanged,
+    child: Column(
+      children: [
+        for (var i = 0; i < focusNodes.length; i++)
+          NakedRadio<String>(
+            value: 'abc'[i],
+            focusNode: focusNodes[i],
+            child: const SizedBox(width: 20, height: 20),
+          ),
+      ],
+    ),
+  );
 }
