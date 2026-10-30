@@ -6,16 +6,18 @@
 
 Flutter components with Naked UI behavior and Mix styling.
 
-- **Naked UI owns interaction:** focus, keyboard input, interaction state and accessibility.
-- **Mix owns styling:** specs, stylers, tokens, variants and animation.
-- **Remix composes both:** use `Remix*` with your own styles, or install a preset.
-- **Presets are editable app source:** choose one per app. Vanilla is neutral;
+## Core concepts
+
+- Naked UI owns interaction: focus, keyboard input, interaction state and accessibility.
+- Mix owns styling: specs, stylers, tokens, variants and animation.
+- Remix composes both: use `Remix*` with your own styles, or install a preset.
+- Presets are editable app source: choose one per app. Vanilla is neutral;
   Fortal has its own visual language. The CLI installs items and their dependencies.
-- **The app owns its UI and host:** themes, recipes, state and navigation. Supply
+- The app owns its UI and host: themes, recipes, state and navigation. Supply
   an Overlay, Navigator or toast scope where the component needs it.
-- **Registries are pinned:** `remix.yaml` records a GitHub commit. Updating that
+- Registries are pinned: `remix.yaml` records a GitHub commit. Updating that
   pin and adopting changed source are separate actions.
-- **Author once, generate and check:** private `registry_source` produces the
+- Author once, generate and check: private `registry_source` produces the
   registries; apps generate adapters. Runtime packages, registry content and
   the CLI release independently.
 

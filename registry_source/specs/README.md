@@ -14,7 +14,7 @@ not justify changing installed visuals.
 Shared behavior lives in `lib/src/agent`; styles live in
 `lib/src/{default,fortal}/recipes`. Keep benchmark citations intact when a
 preset deliberately differs. Architecture rationale lives in
-[the decision log](../../ARCHITECTURE.md#agent-behavior-stays-separate-from-preset-appearance).
+[the decision log](../../ARCHITECTURE.md#agent-behavior-separate-from-preset-appearance-agent-adr-0001).
 
 ## Change and verification
 
