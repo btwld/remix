@@ -150,6 +150,101 @@ void main() {
     }
   });
 
+  testWidgets('compact text fields accept taps above and below their paint', (
+    tester,
+  ) async {
+    for (final size in [FortalTextFieldSize.size1, FortalTextFieldSize.size2]) {
+      for (final variant in FortalTextFieldVariant.values) {
+        for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+          for (final details in [false, true]) {
+            final focus = FocusNode();
+            addTearDown(focus.dispose);
+            var taps = 0;
+            await tester.pumpWidget(
+              _textFieldHost(
+                FortalTheme(
+                  mode: mode,
+                  scaling: .percent90,
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Center(
+                      child: SizedBox(
+                        width: 200,
+                        child: FortalTextField(
+                          key: UniqueKey(),
+                          focusNode: focus,
+                          size: size,
+                          variant: variant,
+                          label: details ? 'Email' : null,
+                          helperText: details ? 'Required' : null,
+                          onTap: () => taps++,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+            final target = tester.getRect(find.byType(RemixTextField));
+            final paintCenter = tester.getCenter(find.byType(EditableText));
+            for (final edge in [-18.0, 18.0]) {
+              focus.unfocus();
+              await tester.pump(const Duration(milliseconds: 500));
+              await tester.tapAt(paintCenter + Offset(0, edge));
+              await tester.pump();
+              expect(focus.hasFocus, isTrue);
+            }
+            expect(taps, 2);
+            expect(target.height, greaterThanOrEqualTo(40));
+          }
+        }
+      }
+    }
+  });
+
+  testWidgets('expanded text-field targets preserve pointer and focus policy', (
+    tester,
+  ) async {
+    for (final (enabled, ignorePointers, canRequestFocus, expectedTaps)
+        in const [
+          (false, false, true, 0),
+          (true, true, true, 0),
+          (true, false, false, 1),
+        ]) {
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      var taps = 0;
+      await tester.pumpWidget(
+        _textFieldHost(
+          FortalTheme(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(
+                child: SizedBox(
+                  width: 200,
+                  child: FortalTextField(
+                    key: UniqueKey(),
+                    size: .size1,
+                    focusNode: focus,
+                    enabled: enabled,
+                    ignorePointers: ignorePointers,
+                    canRequestFocus: canRequestFocus,
+                    onTap: () => taps++,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      final target = tester.getRect(find.byType(RemixTextField));
+      await tester.tapAt(target.center + const Offset(0, 18));
+      await tester.pump();
+      expect(focus.hasFocus, isFalse);
+      expect(taps, expectedTaps);
+    }
+  });
+
   testWidgets(
     'focus does not change layout or replace an outline toggle border',
     (tester) async {
@@ -182,3 +277,13 @@ void main() {
     },
   );
 }
+
+Widget _textFieldHost(Widget child) => WidgetsApp(
+  key: UniqueKey(),
+  color: const Color(0xff13181d),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+  ),
+  home: child,
+);

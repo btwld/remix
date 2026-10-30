@@ -90,7 +90,9 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
           RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
-      .wrap({{valuePrefix}}TouchTarget())
+      // The input container sits inside Remix's chrome gesture detector.
+      // An outer wrapper would reserve space without accepting its taps.
+      .container(BoxStyler().wrap({{valuePrefix}}TouchTarget()))
       .merge(style);
 }
 
@@ -309,7 +311,7 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
           RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
-      .wrap({{valuePrefix}}TouchTarget())
+      .container(BoxStyler().wrap({{valuePrefix}}TouchTarget()))
       .merge(style);
 }
 

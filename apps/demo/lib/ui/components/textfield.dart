@@ -90,7 +90,9 @@ TextFieldStyler fortalTextFieldStyle({
           RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
-      .wrap(fortalTouchTarget())
+      // The input container sits inside Remix's chrome gesture detector.
+      // An outer wrapper would reserve space without accepting its taps.
+      .container(BoxStyler().wrap(fortalTouchTarget()))
       .merge(style);
 }
 
@@ -309,7 +311,7 @@ TextFieldStyler fortalTextAreaStyle({
           RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
-      .wrap(fortalTouchTarget())
+      .container(BoxStyler().wrap(fortalTouchTarget()))
       .merge(style);
 }
 
