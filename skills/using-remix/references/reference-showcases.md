@@ -1,19 +1,8 @@
 # Reference showcases
 
-Use this reference when a Remix/Fortal app must be a canonical example rather
-than only a visually convincing demo. A strong showcase proves two different
-things without confusing them:
-
-- **Product examples** show realistic composition, reuse, semantics, and
-  interaction.
-- **Coverage galleries** expose the supported component variants, sizes, and
-  exceptional states without hiding defaults.
-
-One app can contain both, but each section keeps its own contract.
-
-Sections: [Product examples](#product-examples) ·
-[Theme and contrast](#theme-and-contrast) ·
-[Coverage galleries](#coverage-galleries) · [Verification](#verification).
+Separate **product examples** (real composition and interaction) from
+**coverage galleries** (public variants, sizes and exceptional states). One app
+may contain both, with distinct contracts.
 
 ## Product examples
 
@@ -38,24 +27,13 @@ parallel component library inside the example.
 
 ## Theme and contrast
 
-Keep one correctly placed outer `FortalTheme` around the showcase's Navigator
-and Overlay, following the [scope placement guidance](../SKILL.md#place-the-theme-scope)
-in the main skill. Resolve showcase chrome from `FortalTokens` or other
-active Mix tokens rather than choosing parallel hard-coded palette values.
+Follow [theme/host placement](../SKILL.md#place-the-theme-scope). Resolve
+showcase chrome from active tokens. A nested semantic accent should inherit
+brightness, gray, radius, scaling and panel settings.
 
-Use a nested `FortalTheme(accent: ..., hasBackground: false)` when a product
-concept carries a semantic accent. Let it inherit brightness, gray, radius,
-scaling, and panel settings from the outer scope. Do not encode semantic
-meaning by inventing component variants or hard-coding palette values.
-
-`highContrast` is a content decision, not an app-wide default:
-
-- Enable it for meaningful product labels when the selected soft accent scale
-  would otherwise be too weak, especially status or interactive badges.
-- Preserve the component default in variant matrices. A gallery should reveal
-  the real default rather than silently changing every specimen.
-- If contrast itself is under review, display default and high-contrast states
-  as an explicit comparison axis.
+Built-in soft badges pass 4.5:1; review custom palettes separately. Use
+`highContrast` for product content where warranted, preserve defaults in
+variant matrices, and show a separate contrast axis when reviewing contrast.
 
 ## Coverage galleries
 
@@ -80,23 +58,11 @@ GalleryMatrix<FortalButtonVariant, FortalButtonSize>(
 )
 ```
 
-This keeps newly added enum values visible and prevents labels from drifting
-away from the specimens. Use named Fortal constructors in product code when a
-variant is fixed; the unnamed constructor is appropriate here because a
-matrix deliberately selects variants at runtime.
-
-`GalleryMatrix` itself is not a Remix or Fortal library API — it is an
-app-owned helper widget that a showcase or gallery defines locally. Treat it as
-a pattern to reproduce in the target app, not a type to import from a package.
-
-A two-dimensional comparison is a good use of Mix `GridBox`: declare the
-label column and specimen columns explicitly and allow implicit rows to size
-to their content. Use the `mix` skill for the exact `GridBox` API. A `Wrap`
-remains better for a simple one-dimensional set.
-
-Render the underlying `Fortal*` widget directly in coverage cells. Product
-wrappers belong in a separate section so they do not obscure the component's
-actual constructor, defaults, or public axes.
+`GalleryMatrix` is an app-owned helper, not a Remix API. Derive rows/columns
+from enum values; runtime-selected variants belong in matrices, named
+constructors in fixed product examples. Render underlying widgets directly so
+wrappers cannot hide defaults. Use `GridBox` for two-dimensional comparisons
+(see `mix`); a `Wrap` suits a single axis.
 
 ## Verification
 
@@ -113,6 +79,3 @@ actual constructor, defaults, or public axes.
   unrelated settings.
 - Confirm overlay and route content remains below the outer `FortalTheme` and
   has the required caller-owned `Overlay` or `Navigator`.
-
-The app is reference-quality when readers can distinguish library API,
-product-owned policy, and gallery infrastructure by looking at the code.

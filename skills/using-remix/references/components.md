@@ -22,10 +22,6 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 ## Actions
 
-[button.mdx](https://github.com/btwld/remix/blob/main/docs/components/button.mdx) ·
-[icon_button.mdx](https://github.com/btwld/remix/blob/main/docs/components/icon_button.mdx) ·
-[toggle.mdx](https://github.com/btwld/remix/blob/main/docs/components/toggle.mdx) ·
-[toggle_group.mdx](https://github.com/btwld/remix/blob/main/docs/components/toggle_group.mdx)
 
 - **Button** — effective enabled state is `enabled && !loading &&
   (onPressed != null || onLongPress != null)`. While `loading`, content stays
@@ -44,15 +40,6 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 ## Forms
 
-[checkbox.mdx](https://github.com/btwld/remix/blob/main/docs/components/checkbox.mdx) ·
-[checkbox_group.mdx](https://github.com/btwld/remix/blob/main/docs/components/checkbox_group.mdx) ·
-[radio.mdx](https://github.com/btwld/remix/blob/main/docs/components/radio.mdx) ·
-[switch.mdx](https://github.com/btwld/remix/blob/main/docs/components/switch.mdx) ·
-[slider.mdx](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx) ·
-[textfield.mdx](https://github.com/btwld/remix/blob/main/docs/components/textfield.mdx) ·
-[textarea.mdx](https://github.com/btwld/remix/blob/main/docs/components/textarea.mdx) ·
-[select.mdx](https://github.com/btwld/remix/blob/main/docs/components/select.mdx) ·
-[segmented_control.mdx](https://github.com/btwld/remix/blob/main/docs/components/segmented_control.mdx)
 
 - **Checkbox** — `checkedIcon` and `indeterminateIcon` are `IconData?`,
   default `null`. Leaving them unset does not mean "no icon": Remix falls
@@ -78,16 +65,6 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 ## Data display
 
-[avatar.mdx](https://github.com/btwld/remix/blob/main/docs/components/avatar.mdx) ·
-[badge.mdx](https://github.com/btwld/remix/blob/main/docs/components/badge.mdx) ·
-[card.mdx](https://github.com/btwld/remix/blob/main/docs/components/card.mdx) ·
-[callout.mdx](https://github.com/btwld/remix/blob/main/docs/components/callout.mdx) ·
-[data_list.mdx](https://github.com/btwld/remix/blob/main/docs/components/data_list.mdx) ·
-[data_table.mdx](https://github.com/btwld/remix/blob/main/docs/components/data_table.mdx) ·
-[progress.mdx](https://github.com/btwld/remix/blob/main/docs/components/progress.mdx) ·
-[spinner.mdx](https://github.com/btwld/remix/blob/main/docs/components/spinner.mdx) ·
-[skeleton.mdx](https://github.com/btwld/remix/blob/main/docs/components/skeleton.mdx) ·
-[divider.mdx](https://github.com/btwld/remix/blob/main/docs/components/divider.mdx)
 
 - **Avatar** — purely presentational; content precedence is `child` >
   `labelBuilder`/`label` > `iconBuilder`/`icon`.
@@ -102,8 +79,6 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 ## Layout and dashboard recipes
 
-[app_bar.mdx](https://github.com/btwld/remix/blob/main/docs/components/app_bar.mdx) ·
-[sidebar.mdx](https://github.com/btwld/remix/blob/main/docs/components/sidebar.mdx)
 
 Both presets also ship layout items beyond the core component set:
 
@@ -127,14 +102,6 @@ Both presets also ship layout items beyond the core component set:
 
 ## Agent surfaces
 
-[activity.mdx](https://github.com/btwld/remix/blob/main/docs/agent/activity.mdx) ·
-[answer.mdx](https://github.com/btwld/remix/blob/main/docs/agent/answer.mdx) ·
-[composer.mdx](https://github.com/btwld/remix/blob/main/docs/agent/composer.mdx) ·
-[execution.mdx](https://github.com/btwld/remix/blob/main/docs/agent/execution.mdx) ·
-[message.mdx](https://github.com/btwld/remix/blob/main/docs/agent/message.mdx) ·
-[permission.mdx](https://github.com/btwld/remix/blob/main/docs/agent/permission.mdx) ·
-[plan.mdx](https://github.com/btwld/remix/blob/main/docs/agent/plan.mdx) ·
-[transcript.mdx](https://github.com/btwld/remix/blob/main/docs/agent/transcript.mdx)
 
 For agent-run surfaces — `activity`, `answer`, `composer`, `execution`,
 `message`, `permission`, `plan`, `transcript` — install either preset's bare
@@ -146,17 +113,9 @@ Each agent item also declares its own `mix_annotations` dependency and
 
 ## Overlays
 
-[popover.mdx](https://github.com/btwld/remix/blob/main/docs/components/popover.mdx) ·
-[dialog.mdx](https://github.com/btwld/remix/blob/main/docs/components/dialog.mdx) ·
-[tooltip.mdx](https://github.com/btwld/remix/blob/main/docs/components/tooltip.mdx) ·
-[menu.mdx](https://github.com/btwld/remix/blob/main/docs/components/menu.mdx) ·
-[toast.mdx](https://github.com/btwld/remix/blob/main/docs/components/toast.mdx)
 
-Menu, select, popover, and tooltip content uses the nearest caller-provided
-`Overlay` and does not require a `Navigator`; wrap the subtree with
-`Overlay.wrap` when the host does not already expose one. Dialog helpers push
-routes and require a caller-provided `Navigator`; toasts require a
-`RemixToastScope` — see [host requirements](../SKILL.md#provide-only-the-host-capabilities-in-use).
+See [host requirements](../SKILL.md#provide-only-the-host-capabilities-in-use)
+for Overlay, Navigator and toast scope placement.
 
 - **showRemixDialog** — works even when the calling context has no
   `MixScope`; when one exists, it clones that scope's tokens and modifier
@@ -194,9 +153,6 @@ routes and require a caller-provided `Navigator`; toasts require a
 
 ## Navigation
 
-[tabs.mdx](https://github.com/btwld/remix/blob/main/docs/components/tabs.mdx) ·
-[accordion.mdx](https://github.com/btwld/remix/blob/main/docs/components/accordion.mdx) ·
-[disclosure.mdx](https://github.com/btwld/remix/blob/main/docs/components/disclosure.mdx)
 
 - **RemixTabs** — the behavioral root; no `style`/`styleSpec`. Takes
   `activationMode` (default automatic). There is no `FortalTabs` — compose
@@ -227,7 +183,6 @@ routes and require a caller-provided `Navigator`; toasts require a
 
 ## Typography
 
-[link.mdx](https://github.com/btwld/remix/blob/main/docs/components/link.mdx)
 
 `FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` exist only in
 the Fortal preset. `RemixLink` is base Remix — the Vanilla preset also ships
