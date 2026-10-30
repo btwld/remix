@@ -4,55 +4,24 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import 'computed.dart';
-import 'radix_colors.dart' as radix;
+import 'fortal_colors.dart' as colors;
+import 'palette.dart';
 import 'theme_scope.dart' show FortalTheme;
 import 'tokens.dart';
 
-/// Available accent colors matching Radix Themes names.
-enum FortalAccentColor {
-  gray,
-  mauve,
-  slate,
-  sage,
-  olive,
-  sand,
-  gold,
-  bronze,
-  brown,
-  yellow,
-  amber,
-  orange,
-  tomato,
-  red,
-  ruby,
-  crimson,
-  pink,
-  plum,
-  purple,
-  violet,
-  iris,
-  indigo,
-  blue,
-  cyan,
-  teal,
-  jade,
-  green,
-  grass,
-  lime,
-  mint,
-  sky,
-}
+/// Fortal palettes, named for the landscapes and coastal materials.
+enum FortalAccentColor { calcadao, mar, ceu, mangue, sol, duna, caju }
 
-/// Available neutral gray families matching Radix Themes names.
-enum FortalGrayColor { gray, mauve, slate, sage, olive, sand }
+/// The neutral palette. The enum leaves room for future neutral families.
+enum FortalGrayColor { calcadao }
 
-/// Theme-level radius multipliers matching the Radix Themes presets.
+/// Theme-level radius multipliers.
 enum FortalRadius { none, small, medium, large, full }
 
 /// Background treatment used by floating panels.
 enum FortalPanelBackground { solid, translucent }
 
-/// Discrete theme scaling values supported by Radix Themes.
+/// Discrete theme scaling values supported by Fortal.
 enum FortalScaling {
   percent90(0.9),
   percent95(0.95),
@@ -75,6 +44,7 @@ enum FortalThemeMode { system, light, dark }
 class FortalThemeConfig {
   const FortalThemeConfig({
     this.accent,
+    this.accentPalette,
     this.gray,
     this.brightness,
     this.panelBackground,
@@ -84,6 +54,9 @@ class FortalThemeConfig {
   });
 
   final FortalAccentColor? accent;
+
+  /// Optional seed-generated brand palette, overriding the named accent.
+  final FortalColorTheme? accentPalette;
   final FortalGrayColor? gray;
   final Brightness? brightness;
   final FortalPanelBackground? panelBackground;
@@ -95,6 +68,7 @@ class FortalThemeConfig {
 
   FortalThemeConfig copyWith({
     FortalAccentColor? accent,
+    FortalColorTheme? accentPalette,
     FortalGrayColor? gray,
     Brightness? brightness,
     FortalPanelBackground? panelBackground,
@@ -103,6 +77,8 @@ class FortalThemeConfig {
     bool? hasBackground,
   }) => FortalThemeConfig(
     accent: accent ?? this.accent,
+    accentPalette:
+        accentPalette ?? (accent == null ? this.accentPalette : null),
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
@@ -116,6 +92,7 @@ class FortalThemeConfig {
       identical(this, other) ||
       other is FortalThemeConfig &&
           accent == other.accent &&
+          accentPalette == other.accentPalette &&
           gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
@@ -126,6 +103,7 @@ class FortalThemeConfig {
   @override
   int get hashCode => Object.hash(
     accent,
+    accentPalette,
     gray,
     brightness,
     panelBackground,
@@ -140,6 +118,7 @@ class FortalThemeConfig {
 class FortalThemeData extends FortalThemeConfig {
   const FortalThemeData({
     required FortalAccentColor super.accent,
+    super.accentPalette,
     required FortalGrayColor super.gray,
     required Brightness super.brightness,
     required FortalPanelBackground super.panelBackground,
@@ -150,14 +129,16 @@ class FortalThemeData extends FortalThemeConfig {
 
   /// The preset's light appearance, with editable design options.
   const FortalThemeData.light({
-    FortalAccentColor accent = FortalAccentColor.indigo,
-    FortalGrayColor gray = FortalGrayColor.slate,
-    FortalPanelBackground panelBackground = FortalPanelBackground.translucent,
+    FortalAccentColor accent = FortalAccentColor.calcadao,
+    FortalColorTheme? accentPalette,
+    FortalGrayColor gray = FortalGrayColor.calcadao,
+    FortalPanelBackground panelBackground = FortalPanelBackground.solid,
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
     bool hasBackground = true,
   }) : this(
          accent: accent,
+         accentPalette: accentPalette,
          gray: gray,
          brightness: Brightness.light,
          panelBackground: panelBackground,
@@ -168,14 +149,16 @@ class FortalThemeData extends FortalThemeConfig {
 
   /// The preset's dark appearance, with editable design options.
   const FortalThemeData.dark({
-    FortalAccentColor accent = FortalAccentColor.indigo,
-    FortalGrayColor gray = FortalGrayColor.slate,
-    FortalPanelBackground panelBackground = FortalPanelBackground.translucent,
+    FortalAccentColor accent = FortalAccentColor.calcadao,
+    FortalColorTheme? accentPalette,
+    FortalGrayColor gray = FortalGrayColor.calcadao,
+    FortalPanelBackground panelBackground = FortalPanelBackground.solid,
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
     bool hasBackground = true,
   }) : this(
          accent: accent,
+         accentPalette: accentPalette,
          gray: gray,
          brightness: Brightness.dark,
          panelBackground: panelBackground,
@@ -205,6 +188,7 @@ class FortalThemeData extends FortalThemeConfig {
   @override
   FortalThemeData copyWith({
     FortalAccentColor? accent,
+    FortalColorTheme? accentPalette,
     FortalGrayColor? gray,
     Brightness? brightness,
     FortalPanelBackground? panelBackground,
@@ -213,6 +197,8 @@ class FortalThemeData extends FortalThemeConfig {
     bool? hasBackground,
   }) => FortalThemeData(
     accent: accent ?? this.accent,
+    accentPalette:
+        accentPalette ?? (accent == null ? this.accentPalette : null),
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
@@ -226,6 +212,7 @@ class FortalThemeData extends FortalThemeConfig {
       identical(this, other) ||
       other is FortalThemeData &&
           accent == other.accent &&
+          accentPalette == other.accentPalette &&
           gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
@@ -236,6 +223,7 @@ class FortalThemeData extends FortalThemeConfig {
   @override
   int get hashCode => Object.hash(
     accent,
+    accentPalette,
     gray,
     brightness,
     panelBackground,
@@ -267,21 +255,25 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
-    FortalTokens.error3: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    FortalTokens.error3: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .step(3),
-    FortalTokens.error7: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    FortalTokens.error7: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .step(7),
-    FortalTokens.error8: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    FortalTokens.error8: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .step(8),
-    FortalTokens.error9: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    FortalTokens.error9: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .step(9),
-    FortalTokens.error11: (theme.isDark ? radix.red.dark : radix.red.light)
+    FortalTokens.error11: (theme.isDark ? colors.caju.dark : colors.caju.light)
         .scale
         .step(11),
-    FortalTokens.error12: (theme.isDark ? radix.red.dark : radix.red.light)
+    FortalTokens.error12: (theme.isDark ? colors.caju.dark : colors.caju.light)
         .scale
         .step(12),
-    FortalTokens.errorA7: (theme.isDark ? radix.red.dark : radix.red.light)
+    FortalTokens.errorA7: (theme.isDark ? colors.caju.dark : colors.caju.light)
         .scale
         .alphaStep(7),
     ..._accentColorTokens(tokens),
@@ -377,6 +369,19 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     ...colorTokens,
     FortalTokens.panelBlur:
         theme.panelBackground == FortalPanelBackground.translucent ? 64.0 : 0.0,
+    FortalTokens.activityMaxHeight: 200.0 * scaling,
+    FortalTokens.dataTableSortIconSize1: 14.0 * scaling,
+    FortalTokens.dataTableSortIconSize3: 18.0 * scaling,
+    FortalTokens.planMaxHeight: 220.0 * scaling,
+    FortalTokens.messageAvatarSize: 28.0 * scaling,
+    FortalTokens.messageContentMaxWidth: 640.0 * scaling,
+    FortalTokens.messageCollapsedHeight: 72.0 * scaling,
+    FortalTokens.composerFieldMinHeight: 56.0 * scaling,
+    FortalTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
+    FortalTokens.sidebarDestinationMinHeight: 48.0 * math.max(1.0, scaling),
+    FortalTokens.popoverMaxWidth: 480.0 * scaling,
+    FortalTokens.dialogMaxWidth: 600.0 * scaling,
+    FortalTokens.toastMaxWidth: 360.0 * scaling,
     FortalTokens.space1: 4.0 * scaling,
     FortalTokens.space2: 8.0 * scaling,
     FortalTokens.space3: 12.0 * scaling,
@@ -387,37 +392,19 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.space8: 48.0 * scaling,
     FortalTokens.space9: 64.0 * scaling,
     FortalTokens.spinnerSize3: 20.0 * scaling,
-    FortalTokens.dataTableRowHeight1: 36.0 * scaling,
-    FortalTokens.dataTableRowHeight2: 44.0 * scaling,
-    FortalTokens.toggleGap1: 2.0 * scaling,
-    FortalTokens.toggleGap3: 6.0 * scaling,
     FortalTokens.avatarSize6: 80.0 * scaling,
     FortalTokens.avatarSize7: 96.0 * scaling,
     FortalTokens.avatarSize8: 128.0 * scaling,
     FortalTokens.avatarSize9: 160.0 * scaling,
-    FortalTokens.avatarIconSize1: 12.0 * scaling,
-    FortalTokens.avatarIconSize2: 16.0 * scaling,
     FortalTokens.avatarIconSize3: 20.0 * scaling,
-    FortalTokens.avatarIconSize4: 24.0 * scaling,
-    FortalTokens.avatarIconSize5: 32.0 * scaling,
-    FortalTokens.avatarIconSize6: 40.0 * scaling,
-    FortalTokens.avatarIconSize7: 48.0 * scaling,
-    FortalTokens.avatarIconSize8: 64.0 * scaling,
     FortalTokens.avatarIconSize9: 80.0 * scaling,
-    FortalTokens.badgePaddingX1: 6.0 * scaling,
     FortalTokens.badgePaddingY1: 2.0 * scaling,
-    FortalTokens.badgePaddingX3: 10.0 * scaling,
     FortalTokens.checkboxSize1: 14.0 * scaling,
     FortalTokens.checkboxSize3: 20.0 * scaling,
     FortalTokens.checkboxIndicatorSize1: 9.0 * scaling,
     FortalTokens.checkboxIndicatorSize2: 10.0 * scaling,
-    FortalTokens.checkboxIndicatorSize3: 12.0 * scaling,
-    FortalTokens.checkboxGroupItemGap1: 6.0 * scaling,
-    FortalTokens.checkboxGroupItemGap2: 7.0 * scaling,
-    FortalTokens.checkboxGroupItemGap3: 8.0 * scaling,
     FortalTokens.radioIndicatorSize1: 5.6 * scaling,
     FortalTokens.radioIndicatorSize2: 6.4 * scaling,
-    FortalTokens.radioIndicatorSize3: 8.0 * scaling,
     FortalTokens.checkboxRadius1: _scaledRadiusToken(
       theme.radius,
       scaling,
@@ -430,30 +417,23 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     ),
     FortalTokens.switchHeight2: 20.0 * scaling,
     FortalTokens.switchWidth1: 28.0 * scaling,
-    FortalTokens.switchWidth2: 35.0 * scaling,
-    FortalTokens.switchWidth3: 42.0 * scaling,
+    FortalTokens.switchWidth2: 36.0 * scaling,
+    FortalTokens.switchWidth3: 44.0 * scaling,
     FortalTokens.switchThumbSize1: 16.0 * scaling - 2.0,
     FortalTokens.switchThumbSize2: 20.0 * scaling - 2.0,
     FortalTokens.switchThumbSize3: 24.0 * scaling - 2.0,
     FortalTokens.progressHeight2: 6.0 * scaling,
     FortalTokens.sliderTrackSize1: 6.0 * scaling,
-    FortalTokens.sliderTrackSize2: 8.0 * scaling,
     FortalTokens.sliderTrackSize3: 10.0 * scaling,
     FortalTokens.sliderThumbSize1: 13.0 * scaling,
-    FortalTokens.sliderThumbSize2: 16.0 * scaling,
     FortalTokens.sliderThumbSize3: 19.0 * scaling,
-    FortalTokens.textFieldPadding1: 6.0 * scaling,
-    FortalTokens.textFieldPadding2: 8.0 * scaling,
-    FortalTokens.textFieldPadding3: 12.0 * scaling,
     FortalTokens.textAreaMinHeight3: 80.0,
     FortalTokens.dataListRowGap3: 20.0 * scaling,
     FortalTokens.dataListLabelMinWidth: 120.0,
     FortalTokens.tabInnerPaddingY1: 2.0 * scaling,
     FortalTokens.tabActiveLetterSpacing1: -0.12 * scaling,
     FortalTokens.tabActiveLetterSpacing2: -0.14 * scaling,
-    FortalTokens.selectSpace1Half: 6.0 * scaling,
     FortalTokens.selectIndicatorWidth1: 20.0 * scaling,
-    FortalTokens.selectIndicatorSize1: 8.0 * scaling,
     FortalTokens.selectIndicatorSize2: 10.0 * scaling,
     FortalTokens.selectGhostMarginX12: -8.0 * scaling,
     FortalTokens.selectGhostMarginY12: -4.0 * scaling,
@@ -461,84 +441,15 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.selectGhostMarginY3: -6.0 * scaling,
     ..._radiusTokensFor(theme.radius, scaling),
 
-    // Exact layered Radix shadow tokens, resolved for the active color scales.
     ...shadows,
-    FortalTokens.sliderClassicDisabledTrackShadows: _scaleShadowOpacity(
-      shadows[FortalTokens.shadow1Layers]! as List<RemixBoxShadow>,
-      0.5,
-    ),
-    FortalTokens.cardClassicOuterShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .outer,
-      state: .idle,
-    ),
-    FortalTokens.cardClassicInnerShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .inner,
-      state: .idle,
-    ),
-    FortalTokens.cardClassicHoverOuterShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .outer,
-      state: .hovered,
-    ),
-    FortalTokens.cardClassicHoverInnerShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .inner,
-      state: .hovered,
-    ),
-    FortalTokens.cardClassicActiveOuterShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .outer,
-      state: .active,
-    ),
-    FortalTokens.cardClassicActiveInnerShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .inner,
-      state: .active,
-    ),
-    FortalTokens.selectTriggerClassicShadows: _selectClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-    ),
-    FortalTokens.selectTriggerClassicHoverShadows: [
-      _insetShadow(tokens.gray.scale.alphaStep(3), spread: 1),
-      ..._selectClassicShadows(tokens, isDark: theme.isDark),
-    ],
-    FortalTokens.baseButtonClassicDisabledShadows:
-        _baseButtonClassicDisabledShadows(tokens, isDark: theme.isDark),
-    FortalTokens.baseButtonClassicShadows: _baseButtonClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      highContrast: false,
-    ),
-    FortalTokens.baseButtonClassicHighContrastShadows:
-        _baseButtonClassicShadows(
-          tokens,
-          isDark: theme.isDark,
-          highContrast: true,
-        ),
-    FortalTokens.baseButtonClassicActiveShadows:
-        _baseButtonClassicActiveShadows(tokens, highContrast: false),
-    FortalTokens.baseButtonClassicActiveHighContrastShadows:
-        _baseButtonClassicActiveShadows(tokens, highContrast: true),
-    FortalTokens.baseButtonClassicAfterInset: theme.isDark ? 1.0 : 2.0,
-    FortalTokens.baseButtonGhostPaddingY3: 6.0 * scaling,
     FortalTokens.baseButtonGhostMarginX12: -8.0 * scaling,
     FortalTokens.baseButtonGhostMarginY12: -4.0 * scaling,
     FortalTokens.baseButtonGhostMarginX3: -12.0 * scaling,
-    FortalTokens.baseButtonGhostMarginY3: -6.0 * scaling,
+    FortalTokens.baseButtonGhostMarginY3: -8.0 * scaling,
     FortalTokens.baseButtonGhostMarginX4: -16.0 * scaling,
     FortalTokens.baseButtonGhostMarginY4: -8.0 * scaling,
-    FortalTokens.iconButtonGhostPadding2: 6.0 * scaling,
     FortalTokens.iconButtonGhostMargin1: -4.0 * scaling,
-    FortalTokens.iconButtonGhostMargin2: -6.0 * scaling,
+    FortalTokens.iconButtonGhostMargin2: -8.0 * scaling,
     FortalTokens.iconButtonGhostMargin3: -8.0 * scaling,
     FortalTokens.iconButtonGhostMargin4: -12.0 * scaling,
     FortalTokens.cardGhostMargin1: -12.0 * scaling,
@@ -565,11 +476,6 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
       letterSpacing: 0.0,
       height: 24.0 / 16.0,
     ),
-    FortalTokens.accordionText2: TextStyle(
-      fontSize: 15.0 * scaling,
-      letterSpacing: 0.0,
-      height: 20.0 / 15.0,
-    ),
     FortalTokens.text4: TextStyle(
       fontSize: 18.0 * scaling,
       letterSpacing: -0.0025 * 18.0 * scaling,
@@ -591,9 +497,9 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
       height: 36.0 / 28.0,
     ),
     FortalTokens.text8: TextStyle(
-      fontSize: 35.0 * scaling,
-      letterSpacing: -0.01 * 35.0 * scaling,
-      height: 40.0 / 35.0,
+      fontSize: 36.0 * scaling,
+      letterSpacing: -0.01 * 36.0 * scaling,
+      height: 40.0 / 36.0,
     ),
     FortalTokens.text9: TextStyle(
       fontSize: 60.0 * scaling,
@@ -656,8 +562,8 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
       scaling: scaling,
     ),
     FortalTokens.avatarFallback8: _avatarFallbackText(
-      fontSize: 35,
-      letterSpacing: -0.01 * 35,
+      fontSize: 36,
+      letterSpacing: -0.01 * 36,
       scaling: scaling,
     ),
     FortalTokens.avatarFallback9: _avatarFallbackText(
@@ -669,8 +575,9 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     // Font weights (token values)
     FortalTokens.fontWeightLight: FontWeight.w300,
     FortalTokens.fontWeightRegular: FontWeight.w400,
+    FortalTokens.fontWeightSemibold: FontWeight.w600,
     FortalTokens.fontWeightMedium: FontWeight.w500,
-    // Match Radix Themes font weights (bold = 700)
+    // Match Fortal font weights (bold = 700)
     FortalTokens.fontWeightBold: FontWeight.w700,
 
     // Durations (token values)
@@ -691,303 +598,6 @@ TextStyle _avatarFallbackText({
   letterSpacing: letterSpacing * scaling,
   height: 1,
 );
-
-enum _CardShadowLayer { outer, inner }
-
-enum _CardShadowState { idle, hovered, active }
-
-List<RemixBoxShadow> _cardClassicShadows(
-  FortalThemeColors colors, {
-  required bool isDark,
-  required _CardShadowLayer layer,
-  required _CardShadowState state,
-}) {
-  final inner = layer == _CardShadowLayer.inner;
-  final shapeInset = inner ? 1.0 : 0.0;
-  final border = switch ((isDark, state)) {
-    (true, _) => mixOklabPremultiplied(
-      colors.gray.scale.alphaStep(6),
-      colors.gray.scale.step(6),
-      0.25,
-    ),
-    (false, _CardShadowState.hovered) => mixOklabPremultiplied(
-      colors.gray.scale.alphaStep(4),
-      colors.gray.scale.step(4),
-      0.25,
-    ),
-    (false, _) => mixOklabPremultiplied(
-      colors.gray.scale.alphaStep(3),
-      colors.gray.scale.step(3),
-      0.25,
-    ),
-  };
-
-  RemixBoxShadow shadow(
-    Color color, {
-    Offset offset = Offset.zero,
-    double blur = 0,
-    required double spread,
-  }) => RemixBoxShadow(
-    color: color,
-    offset: offset,
-    blurRadius: blur,
-    spreadRadius: spread,
-    shapeInset: shapeInset,
-  );
-
-  if (state == _CardShadowState.hovered) {
-    if (isDark) {
-      return [
-        shadow(border, spread: inner ? 1 : 0),
-        shadow(colors.gray.scale.alphaStep(4), blur: 1, spread: inner ? 1 : 0),
-        shadow(
-          colors.gray.scale.alphaStep(4),
-          blur: 1,
-          spread: inner ? -1 : -2,
-        ),
-        shadow(
-          colors.gray.scale.alphaStep(3),
-          blur: 3,
-          spread: inner ? -2 : -3,
-        ),
-        shadow(
-          colors.gray.scale.alphaStep(3),
-          blur: 12,
-          spread: inner ? -2 : -3,
-        ),
-        shadow(
-          colors.gray.scale.alphaStep(7),
-          blur: 16,
-          spread: inner ? -8 : -9,
-        ),
-      ];
-    }
-    return [
-      shadow(border, spread: inner ? 1 : 0),
-      shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 1),
-        blur: 1,
-        spread: inner ? 1 : 0,
-      ),
-      shadow(
-        colors.gray.scale.alphaStep(3),
-        offset: const Offset(0, 2),
-        blur: 1,
-        spread: inner ? -1 : -2,
-      ),
-      shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 2),
-        blur: 3,
-        spread: inner ? -2 : -3,
-      ),
-      shadow(
-        colors.gray.scale.alphaStep(3),
-        offset: const Offset(0, 3),
-        blur: 12,
-        spread: inner ? -4 : -5,
-      ),
-      shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 4),
-        blur: 16,
-        spread: inner ? -8 : -9,
-      ),
-    ];
-  }
-
-  final active = state == _CardShadowState.active;
-  final subtle = isDark ? colors.blackAlpha[3]! : colors.blackAlpha[1]!;
-  final middle = isDark
-      ? colors.blackAlpha[6]!
-      : colors.gray.scale.alphaStep(active ? 4 : 2);
-  final bottom = isDark ? colors.blackAlpha[5]! : colors.blackAlpha[1]!;
-  return [
-    shadow(border, spread: inner ? 1 : 0),
-    shadow(const Color(0x00000000), spread: inner ? 1 : 0),
-    shadow(subtle, spread: inner ? 0.5 : 0),
-    shadow(middle, offset: const Offset(0, 1), blur: 1, spread: inner ? 0 : -1),
-    shadow(
-      isDark ? colors.blackAlpha[6]! : colors.blackAlpha[1]!,
-      offset: const Offset(0, 2),
-      blur: 1,
-      spread: inner ? -1 : -2,
-    ),
-    shadow(bottom, offset: const Offset(0, 1), blur: 3, spread: inner ? 0 : -1),
-  ];
-}
-
-RemixBoxShadow _insetShadow(
-  Color color, {
-  Offset offset = Offset.zero,
-  double blur = 0,
-  double spread = 0,
-  double shapeInset = 0,
-}) => RemixBoxShadow(
-  kind: RemixBoxShadowKind.inset,
-  color: color,
-  offset: offset,
-  blurRadius: blur,
-  spreadRadius: spread,
-  shapeInset: shapeInset,
-);
-
-List<RemixBoxShadow> _selectClassicShadows(
-  FortalThemeColors colors, {
-  required bool isDark,
-}) {
-  if (isDark) {
-    return [
-      _insetShadow(colors.whiteAlpha[4]!, spread: 1),
-      _insetShadow(colors.whiteAlpha[4]!, offset: const Offset(0, 1), blur: 1),
-      _insetShadow(colors.blackAlpha[9]!, offset: const Offset(0, -1), blur: 1),
-    ];
-  }
-  return [
-    _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
-    _insetShadow(colors.whiteAlpha[11]!, offset: const Offset(0, 2), blur: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(4),
-      offset: const Offset(0, -2),
-      blur: 1,
-    ),
-  ];
-}
-
-List<RemixBoxShadow> _baseButtonClassicDisabledShadows(
-  FortalThemeColors colors, {
-  required bool isDark,
-}) {
-  if (isDark) {
-    return [
-      _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
-      _insetShadow(
-        colors.gray.scale.alphaStep(2),
-        offset: const Offset(0, 4),
-        blur: 2,
-        spread: -2,
-      ),
-      _insetShadow(
-        colors.gray.scale.alphaStep(5),
-        offset: const Offset(0, 1),
-        blur: 1,
-      ),
-      _insetShadow(colors.blackAlpha[3]!, offset: const Offset(0, -1), blur: 1),
-      _insetShadow(colors.gray.scale.alphaStep(2), spread: 1),
-    ];
-  }
-  return [
-    _insetShadow(colors.gray.scale.alphaStep(4), spread: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(3),
-      offset: const Offset(0, -2),
-      blur: 1,
-    ),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 4),
-      blur: 2,
-      spread: -2,
-    ),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 2),
-      blur: 1,
-      spread: -1,
-    ),
-  ];
-}
-
-List<RemixBoxShadow> _baseButtonClassicShadows(
-  FortalThemeColors colors, {
-  required bool isDark,
-  required bool highContrast,
-}) {
-  final accent = highContrast
-      ? colors.accent.scale.step(12)
-      : colors.accent.scale.step(9);
-  if (isDark) {
-    return [
-      _insetShadow(
-        colors.whiteAlpha[4]!,
-        offset: const Offset(0, 2),
-        blur: 3,
-        spread: -1,
-        shapeInset: 1,
-      ),
-      _insetShadow(colors.whiteAlpha[2]!, spread: 1),
-      _insetShadow(
-        colors.whiteAlpha[3]!,
-        offset: const Offset(0, 4),
-        blur: 2,
-        spread: -2,
-      ),
-      _insetShadow(colors.whiteAlpha[6]!, offset: const Offset(0, 1), blur: 1),
-      _insetShadow(colors.blackAlpha[6]!, offset: const Offset(0, -1), blur: 1),
-      _insetShadow(accent, spread: 1),
-    ];
-  }
-  return [
-    _insetShadow(
-      colors.whiteAlpha[4]!,
-      offset: const Offset(0, 2),
-      blur: 3,
-      spread: -1,
-      shapeInset: 2,
-    ),
-    _insetShadow(colors.gray.scale.alphaStep(4), spread: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(3),
-      offset: const Offset(0, -2),
-      blur: 1,
-    ),
-    _insetShadow(accent, spread: 1),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 4),
-      blur: 2,
-      spread: -2,
-    ),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 2),
-      blur: 1,
-      spread: -1,
-    ),
-  ];
-}
-
-List<RemixBoxShadow> _baseButtonClassicActiveShadows(
-  FortalThemeColors colors, {
-  required bool highContrast,
-}) {
-  final accent = highContrast
-      ? colors.accent.scale.step(12)
-      : colors.accent.scale.step(9);
-  return [
-    _insetShadow(
-      colors.gray.scale.alphaStep(4),
-      offset: const Offset(0, 4),
-      blur: 2,
-      spread: -2,
-    ),
-    _insetShadow(
-      colors.gray.scale.alphaStep(7),
-      offset: const Offset(0, 1),
-      blur: 1,
-    ),
-    _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
-    _insetShadow(accent, spread: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(3),
-      offset: const Offset(0, 3),
-      blur: 2,
-    ),
-    _insetShadow(colors.whiteAlpha[7]!, spread: 1),
-    _insetShadow(colors.whiteAlpha[5]!, offset: const Offset(0, -2), blur: 1),
-  ];
-}
 
 Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
   final factor = _radiusFactor(radius);
@@ -1041,21 +651,6 @@ Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
     FortalTokens.sliderTrackRadius3: progressRadius(10.0 * scaling),
   };
 }
-
-List<RemixBoxShadow> _scaleShadowOpacity(
-  List<RemixBoxShadow> shadows,
-  double factor,
-) => [
-  for (final shadow in shadows)
-    RemixBoxShadow(
-      kind: shadow.kind,
-      color: shadow.color.withValues(alpha: shadow.color.a * factor),
-      offset: shadow.offset,
-      blurRadius: shadow.blurRadius,
-      spreadRadius: shadow.spreadRadius,
-      shapeInset: shadow.shapeInset,
-    ),
-];
 
 double _radiusFactor(FortalRadius radius) => switch (radius) {
   .none => 0.0,

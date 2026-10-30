@@ -6,7 +6,7 @@ part of 'card.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed Card with the Radix size and variant contract.
+/// Flat panels. Elevation is reserved for floating layers, never cards.
 class FortalCard extends StatelessWidget {
   const FortalCard({
     super.key,
@@ -22,13 +22,6 @@ class FortalCard extends StatelessWidget {
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = FortalCardVariant.surface;
-
-  const FortalCard.classic({
-    super.key,
-    this.size = .size1,
-    this.style = const CardStyler.create(),
-    this.child,
-  }) : variant = FortalCardVariant.classic;
 
   const FortalCard.ghost({
     super.key,

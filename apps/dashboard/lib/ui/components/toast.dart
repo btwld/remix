@@ -11,7 +11,7 @@ part 'toast.g.dart';
 /// Ui toast size presets.
 enum UiToastSize { size1, size2, size3 }
 
-/// Ui toast surfaces, matching the Card surface and classic treatments.
+/// Ui toast surfaces, with quiet and elevated floating treatments.
 enum UiToastVariant { surface, classic }
 
 /// The color role of the leading icon.
@@ -23,8 +23,8 @@ enum UiToastIntent { accent, neutral, error }
 
 /// Ui-themed toast surface for [RemixToast] and [RemixToastScope].
 ///
-/// A Ui extension: Radix Themes has no toast, so the recipe reuses the
-/// Card panel and shadow tokens. The surface caps at 360 logical pixels and
+/// Toasts use the shared floating-layer elevation scale. The surface caps at
+/// 360 logical pixels and
 /// shrinks with the available width.
 ///
 /// ```dart
@@ -58,46 +58,21 @@ ToastStyler uiToastStyle({
           )
           .padding(.all(metrics.padding))
           .borderRadius(.all(metrics.radius))
-          .maxWidth(360)
+          .maxWidth(UiTokens.toastMaxWidth())
           .containerEffects(
             RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()),
           );
 
-  return (switch (variant) {
-    .surface =>
-      base
-          .containerEffects(RemixBoxEffectsMix.behindContent(_uiToastPanel()))
-          .containerEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadows: [
-                  RemixBoxShadowMix(
-                    color: UiTokens.grayStroke5(),
-                    spreadRadius: 1,
-                    shapeInset: 1,
-                  ),
-                ],
-              ),
-            ),
-          )
-          .decoration(
-            BoxDecorationMix.create(boxShadow: UiTokens.shadow4.mix()),
-          ),
-    .classic =>
-      base
-          .containerEffects(
-            RemixBoxEffectsMix.behindContent(
-              _uiToastPanel(shadowToken: UiTokens.cardClassicOuterShadows),
-            ),
-          )
-          .containerEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadowToken: UiTokens.cardClassicInnerShadows,
-              ),
-            ),
-          ),
-  }).merge(style);
+  return base
+      .color(UiTokens.colorPanel())
+      .border(.all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1())))
+      .decoration(
+        BoxDecorationMix.create(
+          boxShadow: (variant == .surface ? UiTokens.shadow3 : UiTokens.shadow4)
+              .mix(),
+        ),
+      )
+      .merge(style);
 }
 
 ({
@@ -136,14 +111,3 @@ Color _uiToastIntentColor(UiToastIntent intent) => switch (intent) {
   .neutral => UiTokens.gray11(),
   .error => UiTokens.error11(),
 };
-
-RemixBoxEffectLayerMix _uiToastPanel({RemixBoxShadowListToken? shadowToken}) =>
-    RemixBoxEffectLayerMix(
-      gradients: [
-        RemixLinearGradientMix(
-          colors: [UiTokens.colorPanel(), UiTokens.colorPanel()],
-        ),
-      ],
-      gradientInsets: const [1],
-      shadowToken: shadowToken,
-    );

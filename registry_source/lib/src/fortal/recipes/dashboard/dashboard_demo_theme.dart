@@ -7,8 +7,8 @@ import '../../theme/theme.dart';
 class FortalThemeSettings {
   const FortalThemeSettings({
     this.appearance = .system,
-    this.accentColor = .indigo,
-    this.grayColor = .slate,
+    this.accentColor = .calcadao,
+    this.grayColor = .calcadao,
     this.panelBackground = .solid,
     this.radius = .medium,
     this.scaling = .percent100,

@@ -6,7 +6,7 @@ part of 'avatar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed Avatar with the Radix size, variant, and override contract.
+/// Fortal-themed Avatar with Fortal sizes, variants, and overrides.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.

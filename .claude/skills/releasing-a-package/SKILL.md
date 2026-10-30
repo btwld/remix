@@ -45,14 +45,11 @@ Apply semantic versioning:
 - `packages/<pkg>/CHANGELOG.md` — a new top entry, matching the surrounding
   style (`## <version>` then `### Fixes` / `### Features` bullets)
 
-**`naked_ui` only — the Fortal parity pin:**
+**`naked_ui` only — the consumer floor:**
 
-- `registry_source/tool/fortal_parity/check.dart` —
-  `const _expectedNakedUiVersion`
-
-  Set this to the tested workspace member version. If raising Remix's consumer
-  floor, also update its `naked_ui` dependency, the root melos shared constraint,
-  and `_expectedNakedUiConstraint`, then bootstrap the workspace.
+If raising Remix's consumer floor, update its `naked_ui` dependency and the root
+melos shared constraint, then bootstrap the workspace. Fortal uses the workspace
+behavior tests and its own specification; there is no external parity pin.
 
 **`remix_cli` only:**
 
@@ -100,7 +97,7 @@ Individual checkers, when you want to isolate one:
 ```bash
 dart run tool/check_version_alignment.dart     # registry floor vs remix version
 dart run tool/check_ci_coverage.dart           # melos ci steps vs CI jobs
-cd registry_source && dart run tool/fortal_parity/check.dart   # must run from registry_source
+dart run melos run fortal:check                # owned specification and palette drift
 ```
 
 `ci:checks` is what the `Contract checks` CI job runs. Its steps are listed

@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'badge.g.dart';
 
-/// Radix Themes Badge size presets.
+/// {{typePrefix}} Badge size presets.
 enum {{typePrefix}}BadgeSize { size1, size2, size3 }
 
-/// Radix Themes Badge variants.
+/// {{typePrefix}} Badge variants.
 enum {{typePrefix}}BadgeVariant { solid, soft, surface, outline }
 
-/// {{typePrefix}}-themed Badge with the Radix size, variant, and override contract.
+/// {{typePrefix}}-themed Badge with {{typePrefix}} sizes, variants, and overrides.
 @MixWidget(target: RemixBadge.new)
 BadgeStyler {{valuePrefix}}BadgeStyle({
   {{typePrefix}}BadgeVariant variant = .soft,
@@ -36,7 +36,7 @@ BadgeStyler {{valuePrefix}}BadgeStyle({
       base
           .color({{typePrefix}}Tokens.accentA3())
           .labelColor(
-            // Step 11 is Radix low-contrast text, not WCAG AA 4.5:1 on
+            // Step 11 is {{typePrefix}} secondary text, not WCAG AA 4.5:1 on
             // accentA3 over colorPanelSolid. highContrast promotes accent12.
             highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
           ),
@@ -89,7 +89,7 @@ TextStyleToken _{{valuePrefix}}BadgeText({{typePrefix}}BadgeSize size) => switch
 EdgeInsetsGeometryMix _{{valuePrefix}}BadgePadding({{typePrefix}}BadgeSize size) =>
     switch (size) {
       .size1 => EdgeInsetsGeometryMix.symmetric(
-        horizontal: {{typePrefix}}Tokens.badgePaddingX1(),
+        horizontal: {{typePrefix}}Tokens.space2(),
         vertical: {{typePrefix}}Tokens.badgePaddingY1(),
       ),
       .size2 => EdgeInsetsGeometryMix.symmetric(
@@ -97,7 +97,7 @@ EdgeInsetsGeometryMix _{{valuePrefix}}BadgePadding({{typePrefix}}BadgeSize size)
         vertical: {{typePrefix}}Tokens.space1(),
       ),
       .size3 => EdgeInsetsGeometryMix.symmetric(
-        horizontal: {{typePrefix}}Tokens.badgePaddingX3(),
+        horizontal: {{typePrefix}}Tokens.space3(),
         vertical: {{typePrefix}}Tokens.space1(),
       ),
     };

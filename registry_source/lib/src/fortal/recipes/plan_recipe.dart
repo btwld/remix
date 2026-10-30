@@ -20,26 +20,40 @@ FortalAgentPlanRecipe fortalAgentPlanRecipe({
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
 }) => FortalAgentPlanRecipe(
   style: AgentPlanStyler(
-    viewport: BoxStyler().maxHeight(220),
+    viewport: BoxStyler().maxHeight(FortalTokens.planMaxHeight()),
     item: FlexBoxStyler()
-        .spacing(8)
+        .spacing(FortalTokens.space2())
         .crossAxisAlignment(.center)
-        .padding(.symmetric(vertical: 6)),
+        .padding(.vertical(FortalTokens.space2())),
     summaryTitle: TextStyler()
         .color(FortalTokens.gray12())
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
-    itemTitle: TextStyler().color(FortalTokens.gray12()).fontSize(14),
-    itemDetail: TextStyler().color(FortalTokens.gray11()).fontSize(12),
+        .style(FortalTokens.text2.mix())
+        .fontWeight(FortalTokens.fontWeightSemibold()),
+    itemTitle: TextStyler()
+        .color(FortalTokens.gray12())
+        .style(FortalTokens.text2.mix()),
+    itemDetail: TextStyler()
+        .color(FortalTokens.gray11())
+        .style(FortalTokens.text1.mix()),
     count: TextStyler()
         .color(FortalTokens.gray11())
-        .fontSize(12)
-        .wrap(.padding(.right(8))),
-    indicator: IconStyler().color(FortalTokens.gray12()).size(16),
-    pendingStatus: IconStyler().color(FortalTokens.gray9()).size(16),
-    activeStatus: IconStyler().color(FortalTokens.accent9()).size(16),
-    completedStatus: IconStyler().color(FortalTokens.accent9()).size(16),
-    cancelledStatus: IconStyler().color(FortalTokens.gray9()).size(16),
+        .style(FortalTokens.text1.mix())
+        .wrap(.padding(.right(FortalTokens.space2()))),
+    indicator: IconStyler()
+        .color(FortalTokens.gray12())
+        .size(FortalTokens.space4()),
+    pendingStatus: IconStyler()
+        .color(FortalTokens.gray9())
+        .size(FortalTokens.space4()),
+    activeStatus: IconStyler()
+        .color(FortalTokens.accent9())
+        .size(FortalTokens.space4()),
+    completedStatus: IconStyler()
+        .color(FortalTokens.accent9())
+        .size(FortalTokens.space4()),
+    cancelledStatus: IconStyler()
+        .color(FortalTokens.gray9())
+        .size(FortalTokens.space4()),
   ).merge(style),
   disclosureStyle: fortalDisclosureStyle(style: disclosureStyle),
 );

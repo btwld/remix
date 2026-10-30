@@ -34,7 +34,7 @@ AccordionStyler uiAccordionStyle({
 // cannot partially cover their antialiased edges.
 AccordionStyler _uiAccordionBaseStyler(UiAccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal))
+      .trigger(.direction(.horizontal).minHeight(UiTokens.touchTargetMin()))
       .leadingIcon(.color(UiTokens.gray11()))
       .title(.fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()))
       .trailingIcon(.color(UiTokens.gray11()))
@@ -52,12 +52,15 @@ AccordionStyler _uiAccordionBaseStyler(UiAccordionSize size) {
       .merge(_uiAccordionSizeStyler(size));
 }
 
-AccordionStyler _uiAccordionFocusStyler() {
-  return AccordionStyler().trigger(FlexBoxStyler().uiFocusRing());
+AccordionStyler _uiAccordionFocusStyler(UiAccordionSize size) {
+  return AccordionStyler().container(
+    BoxStyler().uiFocusRing(radius: _uiAccordionRadius(size)),
+  );
 }
 
 AccordionStyler _uiAccordionDisabledStyler() {
   return AccordionStyler()
+      .container(BoxStyler().wrap(uiFocusRingModifier(visible: false)))
       .trigger(.color(UiTokens.grayA3()))
       .leadingIcon(.color(UiTokens.gray8()))
       .title(.color(UiTokens.gray8()))
@@ -88,7 +91,7 @@ AccordionStyler _uiAccordionSurfaceStyler([UiAccordionSize size = .size2]) {
       )
       .onHovered(.trigger(.color(UiTokens.gray2())))
       .onPressed(.trigger(.color(UiTokens.gray3())))
-      .onFocusVisible(_uiAccordionFocusStyler())
+      .onFocusVisible(_uiAccordionFocusStyler(size))
       .onDisabled(_uiAccordionDisabledStyler());
 }
 
@@ -118,7 +121,7 @@ AccordionStyler _uiAccordionSoftStyler([UiAccordionSize size = .size2]) {
       )
       .onHovered(.trigger(.color(UiTokens.accent3())))
       .onPressed(.trigger(.color(UiTokens.accent4())))
-      .onFocusVisible(_uiAccordionFocusStyler())
+      .onFocusVisible(_uiAccordionFocusStyler(size))
       .onDisabled(_uiAccordionDisabledStyler());
 }
 
@@ -149,7 +152,7 @@ AccordionStyler _uiAccordionSizeStyler(UiAccordionSize size) {
     .size2 => AccordionStyler(
       trigger: FlexBoxStyler().padding(.all(UiTokens.space3())),
       leadingIcon: .size(UiTokens.spinnerSize3()),
-      title: .style(UiTokens.accordionText2.mix()),
+      title: .style(UiTokens.text2.mix()),
       trailingIcon: .size(UiTokens.spinnerSize3()),
       content: .padding(.all(UiTokens.space3())),
     ),

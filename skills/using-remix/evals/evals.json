@@ -113,13 +113,13 @@
     },
     {
       "id": 11,
-      "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use Radix-like colors or Fortal tokens. Style a primary button from scratch.",
+      "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use preset colors or Fortal tokens. Style a primary button from scratch.",
       "expected_output": "Chooses base Remix rather than initializing the Fortal preset, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalTheme or Fortal tokens.",
       "files": [],
       "expectations": [
         "Uses RemixButton with a custom ButtonStyler and interaction states.",
         "Imports remix without initializing the Fortal preset.",
-        "Does not add FortalTheme, Fortal tokens, or Radix-like defaults."
+        "Does not add FortalTheme, Fortal tokens, or preset defaults."
       ]
     },
     {
@@ -276,7 +276,7 @@
     {
       "id": 25,
       "prompt": "This project's remix.yaml has prefix: Ui and preset: fortal. Add a primary action button to a screen.",
-      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal and the prefix is Ui, the generated theme class is UiTheme and the button is UiButton (with Fortal's solid/soft/surface/outline/ghost/classic variants), not FortalTheme or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiTheme ancestor.",
+      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal and the prefix is Ui, the generated theme class is UiTheme and the button is UiButton (with Fortal's solid/soft/surface/outline/ghost variants), not FortalTheme or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiTheme ancestor.",
       "files": [],
       "expectations": [
         "Reads prefix and preset independently from remix.yaml rather than assuming Ui always means Vanilla.",

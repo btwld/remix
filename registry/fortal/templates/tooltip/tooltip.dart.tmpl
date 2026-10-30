@@ -20,5 +20,8 @@ TooltipStyler {{valuePrefix}}TooltipStyle({
       .padding(.horizontal({{typePrefix}}Tokens.space2()))
       .label(.color({{typePrefix}}Tokens.gray1()))
       .color({{typePrefix}}Tokens.gray12())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow3.mix()),
+      )
       .merge(style);
 }

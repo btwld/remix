@@ -15,10 +15,6 @@ const _segmentedControlActiveLetterSpacing3 = ContextToken<double>(
   _resolveSegmentedControlActiveLetterSpacing3,
 );
 
-/// Radix layers the track as `color-surface` under a `gray-a3`
-/// background-image. One BoxDecoration cannot stack two background fills, so
-/// the recipe pre-blends the pair; a foreground overlay would instead paint
-/// over the selected indicator fill, breaking the source z-order.
 Color _resolveSegmentedControlTrackBackground(BuildContext context) =>
     Color.alphaBlend(
       UiTokens.grayA3.resolve(context),
@@ -41,21 +37,16 @@ const _segmentedControlDisabledTrackBackground = ContextToken<Color>(
   _resolveSegmentedControlDisabledTrackBackground,
 );
 
-/// Radix Themes SegmentedControl size presets.
+/// Ui SegmentedControl size presets.
 enum UiSegmentedControlSize { size1, size2, size3 }
 
-/// Radix Themes SegmentedControl variants.
-enum UiSegmentedControlVariant { surface, classic }
+/// Ui SegmentedControl variants.
+enum UiSegmentedControlVariant { surface }
 
 /// Ui recipe for [RemixSegmentedControl].
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Control and item styles may override these defaults.
-///
-/// Paints the selected item in place. It does not reproduce Radix's sliding
-/// indicator, duplicate-label crossfade, inactive separators, or max-content
-/// overflow. Changing an item's label with the selection can therefore cause a
-/// small intrinsic-width shift.
 @MixWidget(target: RemixSegmentedControl.new)
 SegmentedControlStyler uiSegmentedControlStyle({
   UiSegmentedControlVariant variant = .surface,
@@ -70,7 +61,6 @@ SegmentedControlStyler uiSegmentedControlStyle({
       .minHeight(metrics.height)
       .borderRadius(.all(metrics.radius))
       .color(_segmentedControlTrackBackground())
-      .clipBehavior(.antiAlias)
       .item(item)
       .onDisabled(
         SegmentedControlStyler().color(
@@ -85,6 +75,7 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
   _UiSegmentedControlMetrics metrics,
 ) {
   final base = SegmentedControlItemStyler()
+      .wrap(uiTouchTarget())
       .minHeight(metrics.height)
       .padding(.horizontal(metrics.paddingX))
       .spacing(metrics.itemGap)
@@ -95,10 +86,6 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
             .fontWeight(UiTokens.fontWeightRegular())
             .letterSpacing(0)
             .wordSpacing(0)
-            // Radix keeps `min-width: max-content` on the track, so a label
-            // never wraps and the track overflows a narrow parent instead.
-            // The equal-segment layout shrinks to fit, so pin one line and
-            // ellipsize to preserve the same single-line behavior.
             .maxLines(1)
             .overflow(TextOverflow.ellipsis),
       )
@@ -111,6 +98,9 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
       );
   final selected = _uiSegmentedControlSelectedItem(variant, metrics);
   final disabled = SegmentedControlItemStyler()
+      .containerEffects(
+        RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+      )
       .label(TextStyler().color(UiTokens.grayA8()))
       .icon(IconStyler().color(UiTokens.grayA8()));
   final disabledSelected = disabled
@@ -133,7 +123,7 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
       .onFocusVisible(
         SegmentedControlItemStyler()
             .borderRadius(.all(metrics.radius))
-            .containerEffects(uiFocusOutline(UiTokens.focus8(), offset: -1)),
+            .containerEffects(uiFocusOutline()),
       )
       .onDisabled(disabled.onSelected(disabledSelected));
 }
@@ -151,9 +141,6 @@ SegmentedControlItemStyler _uiSegmentedControlSelectedItem(
           shapeInset: 1,
         ),
       ],
-    ),
-    .classic => RemixBoxEffectLayerMix(
-      shadowToken: UiTokens.segmentedControlClassicIndicatorShadows,
     ),
   };
 

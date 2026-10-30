@@ -318,8 +318,8 @@ void main() {
     theme.onChanged(
       theme.settings.copyWith(
         appearance: UiThemeMode.dark,
-        accentColor: .jade,
-        grayColor: .sage,
+        accentColor: .mar,
+        grayColor: .calcadao,
         panelBackground: .translucent,
         radius: .large,
         scaling: .percent110,
@@ -329,8 +329,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
     final scope = tester.widget<UiTheme>(find.byType(UiTheme));
     expect(scope.mode, UiThemeMode.dark);
-    expect(scope.accent, UiAccentColor.jade);
-    expect(scope.gray, UiGrayColor.sage);
+    expect(scope.accent, UiAccentColor.mar);
+    expect(scope.gray, UiGrayColor.calcadao);
     expect(scope.panelBackground, UiPanelBackground.translucent);
     expect(scope.radius, UiRadius.large);
     expect(scope.scaling, UiScaling.percent110);

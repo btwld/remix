@@ -193,7 +193,7 @@ final destructiveButton = baseButtonStyle
 
 ## Theming with Fortal
 
-Remix ships no theme of its own. If you want a polished, Radix Themes-inspired
+Remix ships no theme of its own. If you want a polished, Fortaleza-inspired
 starting point instead of authoring every style yourself, initialize the
 application-owned Fortal preset:
 

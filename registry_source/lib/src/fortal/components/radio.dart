@@ -20,9 +20,6 @@ enum FortalRadioSize {
 
 /// Fortal radio color variants.
 enum FortalRadioVariant {
-  /// Raised treatment with Radix's classic shadow and gradient layers.
-  classic,
-
   /// Surface treatment with neutral border.
   surface,
 
@@ -39,10 +36,16 @@ RadioStyler fortalRadioStyle({
   RadioStyler style = const RadioStyler.create(),
 }) {
   return (switch (variant) {
-    .classic => _fortalRadioClassicStyler(size, highContrast: highContrast),
-    .surface => _fortalRadioSurfaceStyler(size, highContrast: highContrast),
-    .soft => _fortalRadioSoftStyler(size, highContrast: highContrast),
-  }).merge(style);
+        .surface => _fortalRadioSurfaceStyler(size, highContrast: highContrast),
+        .soft => _fortalRadioSoftStyler(size, highContrast: highContrast),
+      })
+      .wrap(fortalTouchTarget())
+      .onDisabled(
+        RadioStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
 RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
@@ -60,93 +63,7 @@ RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
       behindContent: RemixBoxEffectLayerMix(),
       overContent: RemixBoxEffectLayerMix(),
     ),
-  ).onFocusVisible(
-    .containerEffects(
-      RemixBoxEffectsMix(
-        outline: BorderSideMix(
-          color: FortalTokens.focus8(),
-          width: 2,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        outlineOffset: 2,
-      ),
-    ),
-  );
-}
-
-RadioStyler _fortalRadioClassicStyler(
-  FortalRadioSize size, {
-  required bool highContrast,
-}) {
-  final selectedColor = highContrast
-      ? FortalTokens.accent12()
-      : FortalTokens.accentIndicator();
-  return _fortalRadioBaseStyler(size)
-      .color(FortalTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          RemixBoxEffectLayerMix(shadowToken: FortalTokens.shadow1Layers),
-        ),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.gray7()]),
-        ),
-      )
-      .indicatorColor(
-        highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
-      )
-      .onSelected(
-        .color(selectedColor)
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                RemixBoxEffectLayerMix(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [
-                        FortalTokens.whiteA3(),
-                        const Color(0x00000000),
-                        FortalTokens.blackA3(),
-                      ],
-                    ),
-                  ],
-                  shadows: [
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: FortalTokens.whiteA4(),
-                      offset: const Offset(0, 0.5),
-                      blurRadius: 0.5,
-                    ),
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: FortalTokens.blackA4(),
-                      offset: const Offset(0, -0.5),
-                      blurRadius: 0.5,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .indicatorColor(
-              highContrast
-                  ? FortalTokens.accent1()
-                  : FortalTokens.accentContrast(),
-            ),
-      )
-      .onDisabled(
-        .color(FortalTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                RemixBoxEffectLayerMix(shadowToken: FortalTokens.shadow1Layers),
-              ),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(FortalTokens.grayA8()),
-      );
+  ).onFocusVisible(.containerEffects(fortalFocusOutline()));
 }
 
 RadioStyler _fortalRadioSurfaceStyler(
@@ -251,6 +168,6 @@ RadioStyler _fortalRadioSoftStyler(
   ),
   .size3 => (
     size: FortalTokens.checkboxSize3(),
-    indicatorSize: FortalTokens.radioIndicatorSize3(),
+    indicatorSize: FortalTokens.space2(),
   ),
 };

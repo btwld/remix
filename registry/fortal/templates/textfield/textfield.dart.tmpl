@@ -25,9 +25,6 @@ enum {{typePrefix}}TextFieldSize {
 
 /// {{typePrefix}} text field color variants.
 enum {{typePrefix}}TextFieldVariant {
-  /// Raised treatment with Radix's level-one shadow.
-  classic,
-
   /// Surface treatment with neutral border and text colors.
   surface,
 
@@ -76,14 +73,9 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
     spacing: metrics.spacing,
     crossAxisAlignment: .center,
     text: metrics.text,
-    focusColor: switch (variant) {
-      .soft => {{typePrefix}}Tokens.accent8(),
-      .classic || .surface => {{typePrefix}}Tokens.focus8(),
-    },
   );
 
   final recipe = switch (variant) {
-    .classic => _{{valuePrefix}}ApplyClassicTextInput(base),
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
     .soft => _{{valuePrefix}}ApplySoftTextInput(
       base,
@@ -93,6 +85,14 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
 
   return recipe
       .variant(ContextVariant.widgetState(.error), _{{valuePrefix}}TextInputErrorStyle())
+      .onDisabled(
+        .containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      // The input container sits inside Remix's chrome gesture detector.
+      // An outer wrapper would reserve space without accepting its taps.
+      .container(BoxStyler().wrap({{valuePrefix}}TouchTarget()))
       .merge(style);
 }
 
@@ -101,7 +101,6 @@ TextFieldStyler _{{valuePrefix}}TextInputBaseStyle({
   required double spacing,
   required CrossAxisAlignment crossAxisAlignment,
   required TextStyleToken text,
-  required Color focusColor,
 }) =>
     TextFieldStyler(
           container: container,
@@ -122,51 +121,22 @@ TextFieldStyler _{{valuePrefix}}TextInputBaseStyle({
           ),
         )
         .wrap(.iconTheme(color: {{typePrefix}}Tokens.gray11(), size: 16.0))
-        // Radix keys text-input rings from :focus/:focus-within, so unlike
-        // control focus rings this intentionally follows raw focus.
-        .onFocused(
-          .containerEffects({{valuePrefix}}FocusOutline(focusColor, offset: -1)),
-        );
-
-TextFieldStyler _{{valuePrefix}}ApplyClassicTextInput(TextFieldStyler base) =>
-    _{{valuePrefix}}ApplyNeutralTextInput(base)
-        .color({{typePrefix}}Tokens.colorSurface())
-        .containerEffects(
-          RemixBoxEffectsMix.behindContent(
-            RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
-          ),
-        )
-        .onDisabled(
-          _{{valuePrefix}}NeutralTextInputDisabledStyle()
-              .color({{typePrefix}}Tokens.colorSurface())
-              .containerEffects(
-                RemixBoxEffectsMix.behindContent(
-                  RemixBoxEffectLayerMix(
-                    gradients: [
-                      RemixLinearGradientMix(
-                        colors: [{{typePrefix}}Tokens.grayA2(), {{typePrefix}}Tokens.grayA2()],
-                      ),
-                    ],
-                    shadowToken: {{typePrefix}}Tokens.shadow1Layers,
-                  ),
-                ),
-              ),
-        );
+        .onFocused(.containerEffects({{valuePrefix}}FocusOutline()));
 
 TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
     _{{valuePrefix}}ApplyNeutralTextInput(base)
-        .color({{typePrefix}}Tokens.colorSurface())
+        .color({{typePrefix}}Tokens.gray2())
         .containerEffects(
           RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
         )
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
+            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.gray7()]),
           ),
         )
         .onDisabled(
           _{{valuePrefix}}NeutralTextInputDisabledStyle()
-              .color({{typePrefix}}Tokens.colorSurface())
+              .color({{typePrefix}}Tokens.gray2())
               .containerEffects(
                 RemixBoxEffectsMix.behindContent(
                   RemixBoxEffectLayerMix(
@@ -235,15 +205,10 @@ TextFieldStyler _{{valuePrefix}}ApplyNeutralTextInput(TextFieldStyler base) =>
 
 // Keep the disabled-color branch on raw focus for the same :focus-within
 // contract as the enabled text input.
-TextFieldStyler _{{valuePrefix}}TextInputDisabledBaseStyle() =>
-    TextFieldStyler(
-      text: .color(
-        {{typePrefix}}Tokens.grayA11(),
-      ).selectionColor({{typePrefix}}Tokens.grayA5()),
-      cursorColor: {{typePrefix}}Tokens.grayA11(),
-    ).onFocused(
-      .containerEffects({{valuePrefix}}FocusOutline({{typePrefix}}Tokens.gray8(), offset: -1)),
-    );
+TextFieldStyler _{{valuePrefix}}TextInputDisabledBaseStyle() => TextFieldStyler(
+  text: .color({{typePrefix}}Tokens.grayA11()).selectionColor({{typePrefix}}Tokens.grayA5()),
+  cursorColor: {{typePrefix}}Tokens.grayA11(),
+).containerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
 
 TextFieldStyler _{{valuePrefix}}NeutralTextInputDisabledStyle() =>
     _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
@@ -269,12 +234,6 @@ TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
         ),
       ],
     ),
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.error8(),
-      width: 2,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: -1,
   ),
 );
 
@@ -289,43 +248,34 @@ _{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required boo
     switch (size) {
       .size1 => (
         height: {{typePrefix}}Tokens.space5(),
-        paddingX: bordered
-            ? {{typePrefix}}Tokens.textFieldPadding1()
-            : {{typePrefix}}Tokens.selectSpace1Half(),
+        paddingX: bordered ? {{typePrefix}}Tokens.space2() : {{typePrefix}}Tokens.space2(),
         spacing: {{typePrefix}}Tokens.space2(),
         radius: {{typePrefix}}Tokens.radius2OrFull(),
         text: {{typePrefix}}Tokens.text1,
       ),
       .size2 => (
         height: {{typePrefix}}Tokens.space6(),
-        paddingX: bordered
-            ? {{typePrefix}}Tokens.textFieldPadding2()
-            : {{typePrefix}}Tokens.space2(),
+        paddingX: bordered ? {{typePrefix}}Tokens.space2() : {{typePrefix}}Tokens.space2(),
         spacing: {{typePrefix}}Tokens.space2(),
         radius: {{typePrefix}}Tokens.radius2OrFull(),
         text: {{typePrefix}}Tokens.text2,
       ),
       .size3 => (
         height: {{typePrefix}}Tokens.space7(),
-        paddingX: bordered
-            ? {{typePrefix}}Tokens.textFieldPadding3()
-            : {{typePrefix}}Tokens.space3(),
+        paddingX: bordered ? {{typePrefix}}Tokens.space3() : {{typePrefix}}Tokens.space3(),
         spacing: {{typePrefix}}Tokens.space3(),
         radius: {{typePrefix}}Tokens.radius3OrFull(),
         text: {{typePrefix}}Tokens.text3,
       ),
     };
 
-/// Radix Themes TextArea size presets.
+/// {{typePrefix}} TextArea size presets.
 enum {{typePrefix}}TextAreaSize { size1, size2, size3 }
 
-/// Radix Themes TextArea variants.
-enum {{typePrefix}}TextAreaVariant { classic, surface, soft }
+/// {{typePrefix}} TextArea variants.
+enum {{typePrefix}}TextAreaVariant { surface, soft }
 
 /// {{typePrefix}} recipe for [RemixTextArea].
-///
-/// Scrolling follows the host platform; this recipe does not reproduce Radix's
-/// themed browser scrollbar or resize handle.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler {{valuePrefix}}TextAreaStyle({
   {{typePrefix}}TextAreaVariant variant = .surface,
@@ -344,14 +294,9 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
     spacing: metrics.spacing,
     crossAxisAlignment: .start,
     text: metrics.text,
-    focusColor: switch (variant) {
-      .soft => {{typePrefix}}Tokens.accent8(),
-      .classic || .surface => {{typePrefix}}Tokens.focus8(),
-    },
   );
 
   final recipe = switch (variant) {
-    .classic => _{{valuePrefix}}ApplyClassicTextInput(base),
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
     .soft => _{{valuePrefix}}ApplySoftTextInput(
       base,
@@ -361,6 +306,12 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
 
   return recipe
       .variant(ContextVariant.widgetState(.error), _{{valuePrefix}}TextInputErrorStyle())
+      .onDisabled(
+        .containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .container(BoxStyler().wrap({{valuePrefix}}TouchTarget()))
       .merge(style);
 }
 
@@ -375,7 +326,7 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
 _{{valuePrefix}}TextAreaMetrics({{typePrefix}}TextAreaSize size) => switch (size) {
   .size1 => (
     minHeight: {{typePrefix}}Tokens.space8(),
-    paddingX: {{typePrefix}}Tokens.selectSpace1Half(),
+    paddingX: {{typePrefix}}Tokens.space2(),
     paddingY: {{typePrefix}}Tokens.space1(),
     spacing: {{typePrefix}}Tokens.space2(),
     radius: {{typePrefix}}Tokens.radius2(),
@@ -384,7 +335,7 @@ _{{valuePrefix}}TextAreaMetrics({{typePrefix}}TextAreaSize size) => switch (size
   .size2 => (
     minHeight: {{typePrefix}}Tokens.space9(),
     paddingX: {{typePrefix}}Tokens.space2(),
-    paddingY: {{typePrefix}}Tokens.selectSpace1Half(),
+    paddingY: {{typePrefix}}Tokens.space2(),
     spacing: {{typePrefix}}Tokens.space2(),
     radius: {{typePrefix}}Tokens.radius2(),
     text: {{typePrefix}}Tokens.text2,

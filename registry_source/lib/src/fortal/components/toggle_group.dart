@@ -51,11 +51,12 @@ ToggleGroupStyler fortalToggleGroupStyle({
         ),
         color: FortalTokens.colorSurface(),
       ),
-      clipBehavior: .hardEdge,
       mainAxisSize: .min,
-      spacing: 0,
+      spacing: FortalTokens.space1(),
     ),
-    item: .alignment(.center)
+    item: ToggleGroupItemStyler()
+        .wrap(fortalTouchTarget())
+        .alignment(.center)
         .labelColor(FortalTokens.gray11())
         .iconColor(FortalTokens.gray11())
         .labelFontWeight(FortalTokens.fontWeightMedium())
@@ -63,6 +64,9 @@ ToggleGroupStyler fortalToggleGroupStyle({
         .onPressed(ToggleGroupItemStyler().color(FortalTokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
+              .container(
+                FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+              )
               .color(selectedColor)
               .labelColor(selectedForeground)
               .iconColor(selectedForeground)
@@ -72,6 +76,9 @@ ToggleGroupStyler fortalToggleGroupStyle({
         .onFocusVisible(ToggleGroupItemStyler().fortalFocusRing())
         .onDisabled(
           ToggleGroupItemStyler()
+              .container(
+                FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+              )
               .color(FortalTokens.grayA3())
               .labelColor(FortalTokens.gray8())
               .iconColor(FortalTokens.gray8()),
@@ -88,7 +95,7 @@ ToggleGroupStyler _fortalToggleGroupSizeStyler(FortalToggleGroupSize size) {
                 FlexBoxStyler()
                     .padding(.horizontal(FortalTokens.space2()))
                     .padding(.vertical(FortalTokens.space1()))
-                    .spacing(FortalTokens.toggleGap1()),
+                    .spacing(FortalTokens.space1()),
               )
               .label(.style(FortalTokens.text1.mix()))
               .icon(.size(FortalTokens.space3())),
@@ -112,7 +119,7 @@ ToggleGroupStyler _fortalToggleGroupSizeStyler(FortalToggleGroupSize size) {
                 FlexBoxStyler()
                     .padding(.horizontal(FortalTokens.space4()))
                     .padding(.vertical(FortalTokens.space2()))
-                    .spacing(FortalTokens.toggleGap3()),
+                    .spacing(FortalTokens.space2()),
               )
               .label(.style(FortalTokens.text3.mix()))
               .icon(.size(FortalTokens.spinnerSize3())),

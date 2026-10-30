@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'menu.g.dart';
 
-/// Radix Themes menu content sizes.
+/// Fortal menu content sizes.
 enum FortalMenuSize { size1, size2 }
 
-/// Radix Themes menu content variants.
+/// Fortal menu content variants.
 enum FortalMenuVariant { solid, soft }
 
-/// Fortal menu content with Radix-owned size, variant, and contrast behavior.
+/// Fortal menu content with Fortal-owned size, variant, and contrast behavior.
 @MixWidget(target: RemixMenu.new)
 MenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
@@ -22,14 +22,15 @@ MenuStyler fortalMenuStyle({
 }) {
   final metrics = _fortalMenuMetrics(size);
   final base = MenuStyler()
+      .containerEffects(
+        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
+      )
       .trigger(_fortalMenuTriggerStyler(metrics))
       .overlay(
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
-            // Radix pins menus to the solid panel with no backdrop blur,
-            // even when the theme panel background is translucent.
-            .color(FortalTokens.colorPanelSolid())
+            .color(FortalTokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
             )
@@ -59,10 +60,19 @@ MenuItemStyler fortalMenuItemStyle({
   highContrast: highContrast,
 );
 
-/// Radix has no menu-owned trigger; this mirrors the base Radix button
-/// content treatment (gap, text token, icon) without button chrome.
 MenuTriggerStyler _fortalMenuTriggerStyler(_FortalMenuMetrics metrics) =>
     MenuTriggerStyler()
+        .wrap(fortalTouchTarget())
+        .onFocusVisible(
+          MenuTriggerStyler().container(
+            FlexBoxStyler().wrap(fortalFocusRingModifier()),
+          ),
+        )
+        .onDisabled(
+          MenuTriggerStyler().container(
+            FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+          ),
+        )
         .spacing(metrics.triggerGap)
         .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
         .icon(.color(FortalTokens.gray12()).size(metrics.contentIconSize));
@@ -73,14 +83,13 @@ MenuItemStyler _fortalMenuItemStyler(
   required bool highContrast,
 }) {
   final base = MenuItemStyler()
+      .wrap(fortalTouchTarget())
       .direction(.horizontal)
       .spacing(FortalTokens.space2())
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.leadingInset))
       .borderRadius(.all(metrics.itemRadius))
       .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
-      // Radix pins only indicator/subtrigger icons (8/10px); content icons
-      // follow the repo-wide text-matched sizes used by tabs and toggles.
       .leadingIcon(.color(FortalTokens.gray12()).size(metrics.contentIconSize))
       .trailingIcon(
         .color(FortalTokens.grayA11()).size(metrics.contentIconSize),
@@ -91,18 +100,22 @@ MenuItemStyler _fortalMenuItemStyler(
     highContrast: highContrast,
   );
   final disabled = MenuItemStyler()
+      .container(FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)))
       .color(const Color(0x00000000))
       .label(.color(FortalTokens.grayA8()))
       .leadingIcon(.color(FortalTokens.grayA8()))
       .trailingIcon(.color(FortalTokens.grayA8()))
       .indicator(.color(FortalTokens.grayA8()));
 
-  // Naked's focused item is Radix's roving `data-highlighted` item, not a
-  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
+      .onFocusVisible(
+        MenuItemStyler().container(
+          FlexBoxStyler().fortalFocusRing(radius: metrics.itemRadius),
+        ),
+      )
       .onDisabled(disabled);
 }
 
@@ -150,8 +163,6 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
       .onFocused(highlighted)
       .onPressed(highlighted);
 
-  // The chevron keeps the exact Radix subtrigger icon size even though
-  // content trailing icons are text-matched.
   return MenuItemStyler()
       .trailingIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
       .onSelected(submenuOpen);
@@ -159,7 +170,7 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
 
 DividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
     DividerStyler()
-        .height(1)
+        .height(FortalTokens.borderWidth1())
         .margin(
           .left(
             metrics.leadingInset,
@@ -201,7 +212,7 @@ _FortalMenuMetrics _fortalMenuMetrics(FortalMenuSize size) => switch (size) {
     itemRadius: FortalTokens.radius1(),
     leadingInset: FortalTokens.space2(),
     trailingInset: FortalTokens.space2(),
-    indicatorSize: FortalTokens.selectIndicatorSize1(),
+    indicatorSize: FortalTokens.space2(),
     contentIconSize: FortalTokens.space3(),
     triggerGap: FortalTokens.space1(),
     text: FortalTokens.text1,

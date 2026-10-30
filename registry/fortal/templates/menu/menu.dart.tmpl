@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'menu.g.dart';
 
-/// Radix Themes menu content sizes.
+/// {{typePrefix}} menu content sizes.
 enum {{typePrefix}}MenuSize { size1, size2 }
 
-/// Radix Themes menu content variants.
+/// {{typePrefix}} menu content variants.
 enum {{typePrefix}}MenuVariant { solid, soft }
 
-/// {{typePrefix}} menu content with Radix-owned size, variant, and contrast behavior.
+/// {{typePrefix}} menu content with {{typePrefix}}-owned size, variant, and contrast behavior.
 @MixWidget(target: RemixMenu.new)
 MenuStyler {{valuePrefix}}MenuStyle({
   {{typePrefix}}MenuVariant variant = .solid,
@@ -22,14 +22,15 @@ MenuStyler {{valuePrefix}}MenuStyle({
 }) {
   final metrics = _{{valuePrefix}}MenuMetrics(size);
   final base = MenuStyler()
+      .containerEffects(
+        RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+      )
       .trigger(_{{valuePrefix}}MenuTriggerStyler(metrics))
       .overlay(
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
-            // Radix pins menus to the solid panel with no backdrop blur,
-            // even when the theme panel background is translucent.
-            .color({{typePrefix}}Tokens.colorPanelSolid())
+            .color({{typePrefix}}Tokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()),
             )
@@ -59,10 +60,19 @@ MenuItemStyler {{valuePrefix}}MenuItemStyle({
   highContrast: highContrast,
 );
 
-/// Radix has no menu-owned trigger; this mirrors the base Radix button
-/// content treatment (gap, text token, icon) without button chrome.
 MenuTriggerStyler _{{valuePrefix}}MenuTriggerStyler(_{{typePrefix}}MenuMetrics metrics) =>
     MenuTriggerStyler()
+        .wrap({{valuePrefix}}TouchTarget())
+        .onFocusVisible(
+          MenuTriggerStyler().container(
+            FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier()),
+          ),
+        )
+        .onDisabled(
+          MenuTriggerStyler().container(
+            FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
+          ),
+        )
         .spacing(metrics.triggerGap)
         .label(.style(metrics.text.mix()).color({{typePrefix}}Tokens.gray12()))
         .icon(.color({{typePrefix}}Tokens.gray12()).size(metrics.contentIconSize));
@@ -73,14 +83,13 @@ MenuItemStyler _{{valuePrefix}}MenuItemStyler(
   required bool highContrast,
 }) {
   final base = MenuItemStyler()
+      .wrap({{valuePrefix}}TouchTarget())
       .direction(.horizontal)
       .spacing({{typePrefix}}Tokens.space2())
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.leadingInset))
       .borderRadius(.all(metrics.itemRadius))
       .label(.style(metrics.text.mix()).color({{typePrefix}}Tokens.gray12()))
-      // Radix pins only indicator/subtrigger icons (8/10px); content icons
-      // follow the repo-wide text-matched sizes used by tabs and toggles.
       .leadingIcon(.color({{typePrefix}}Tokens.gray12()).size(metrics.contentIconSize))
       .trailingIcon(
         .color({{typePrefix}}Tokens.grayA11()).size(metrics.contentIconSize),
@@ -91,18 +100,22 @@ MenuItemStyler _{{valuePrefix}}MenuItemStyler(
     highContrast: highContrast,
   );
   final disabled = MenuItemStyler()
+      .container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)))
       .color(const Color(0x00000000))
       .label(.color({{typePrefix}}Tokens.grayA8()))
       .leadingIcon(.color({{typePrefix}}Tokens.grayA8()))
       .trailingIcon(.color({{typePrefix}}Tokens.grayA8()))
       .indicator(.color({{typePrefix}}Tokens.grayA8()));
 
-  // Naked's focused item is Radix's roving `data-highlighted` item, not a
-  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
+      .onFocusVisible(
+        MenuItemStyler().container(
+          FlexBoxStyler().{{valuePrefix}}FocusRing(radius: metrics.itemRadius),
+        ),
+      )
       .onDisabled(disabled);
 }
 
@@ -150,8 +163,6 @@ MenuItemStyler _{{valuePrefix}}MenuSubmenuItemStyler(
       .onFocused(highlighted)
       .onPressed(highlighted);
 
-  // The chevron keeps the exact Radix subtrigger icon size even though
-  // content trailing icons are text-matched.
   return MenuItemStyler()
       .trailingIcon(.color({{typePrefix}}Tokens.gray12()).size(metrics.indicatorSize))
       .onSelected(submenuOpen);
@@ -159,7 +170,7 @@ MenuItemStyler _{{valuePrefix}}MenuSubmenuItemStyler(
 
 DividerStyler _{{valuePrefix}}MenuDividerStyler(_{{typePrefix}}MenuMetrics metrics) =>
     DividerStyler()
-        .height(1)
+        .height({{typePrefix}}Tokens.borderWidth1())
         .margin(
           .left(
             metrics.leadingInset,
@@ -201,7 +212,7 @@ _{{typePrefix}}MenuMetrics _{{valuePrefix}}MenuMetrics({{typePrefix}}MenuSize si
     itemRadius: {{typePrefix}}Tokens.radius1(),
     leadingInset: {{typePrefix}}Tokens.space2(),
     trailingInset: {{typePrefix}}Tokens.space2(),
-    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize1(),
+    indicatorSize: {{typePrefix}}Tokens.space2(),
     contentIconSize: {{typePrefix}}Tokens.space3(),
     triggerGap: {{typePrefix}}Tokens.space1(),
     text: {{typePrefix}}Tokens.text1,

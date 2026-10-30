@@ -2,7 +2,7 @@ import 'package:remix/remix.dart';
 
 import 'theme_scope.dart' show FortalTheme;
 
-/// Design tokens for the Fortal UI system (powered by Radix Colors).
+/// Design tokens for the Fortal UI system (Fortal-owned palettes).
 ///
 /// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
 /// shadows (6-level), typography (9-size), and functional colors.
@@ -14,6 +14,34 @@ import 'theme_scope.dart' show FortalTheme;
 ///
 /// Must be used within [FortalTheme] to resolve actual values.
 class FortalTokens {
+  static const activityMaxHeight = DoubleToken('fortal.activity.max-height');
+  static const planMaxHeight = DoubleToken('fortal.plan.max-height');
+  static const messageAvatarSize = DoubleToken('fortal.message.avatar-size');
+  static const messageContentMaxWidth = DoubleToken(
+    'fortal.message.content-max-width',
+  );
+  static const messageCollapsedHeight = DoubleToken(
+    'fortal.message.collapsed-height',
+  );
+  static const composerFieldMinHeight = DoubleToken(
+    'fortal.composer-field-min-height',
+  );
+  static const touchTargetMin = DoubleToken('fortal.touch-target-min');
+  static const popoverMaxWidth = DoubleToken('fortal.popover-max-width');
+  static const dialogMaxWidth = DoubleToken('fortal.dialog-max-width');
+  static const toastMaxWidth = DoubleToken('fortal.toast-max-width');
+  static const sidebarDestinationMinHeight = DoubleToken(
+    'fortal.sidebar.destination-min-height',
+  );
+
+  /// Sort icons retain their optical sizes where the spacing scale has no step.
+  static const dataTableSortIconSize1 = DoubleToken(
+    'fortal.data-table.sort-icon-size.1',
+  );
+  static const dataTableSortIconSize3 = DoubleToken(
+    'fortal.data-table.sort-icon-size.3',
+  );
+
   /// Page background color selected for the active brightness.
   static const colorBackground = ColorToken('fortal.color.background');
 
@@ -203,7 +231,7 @@ class FortalTokens {
   static const blackA11 = ColorToken('fortal.black.a11');
   static const blackA12 = ColorToken('fortal.black.a12');
 
-  /// White alpha steps used by layered classic-control recipes.
+  /// White alpha steps for transparent decoration and overlays.
   static const whiteA1 = ColorToken('fortal.white.a1');
   static const whiteA2 = ColorToken('fortal.white.a2');
   static const whiteA3 = ColorToken('fortal.white.a3');
@@ -220,7 +248,6 @@ class FortalTokens {
   /// Mode-aware mixed shadow stroke.
   static const shadowStroke = ColorToken('fortal.shadow.stroke');
 
-  /// Premultiplied OKLab mixes used by Radix neutral one-pixel strokes.
   static const grayStroke3 = ColorToken('fortal.gray.stroke.3');
   static const grayStroke4 = ColorToken('fortal.gray.stroke.4');
   static const grayStroke5 = ColorToken('fortal.gray.stroke.5');
@@ -255,16 +282,7 @@ class FortalTokens {
   static const space9 = SpaceToken('fortal.space.9');
 
   /// Spinner size 3 - 20px at 100% scaling.
-  ///
-  /// Radix defines this as 1.25 times space 4, so it needs its own resolved
-  /// token rather than arithmetic on an unresolved token reference.
   static const spinnerSize3 = DoubleToken('fortal.spinner.size.3');
-
-  /// Compact gap shared by size-1 toggle extensions (2px at 100% scaling).
-  static const toggleGap1 = DoubleToken('fortal.toggle.gap.1');
-
-  /// Comfortable gap shared by size-3 toggle extensions (6px at 100%).
-  static const toggleGap3 = DoubleToken('fortal.toggle.gap.3');
 
   /// Avatar sizes expressed as scaled pixels rather than spacing steps.
   static const avatarSize6 = DoubleToken('fortal.avatar.size.6');
@@ -272,26 +290,12 @@ class FortalTokens {
   static const avatarSize8 = DoubleToken('fortal.avatar.size.8');
   static const avatarSize9 = DoubleToken('fortal.avatar.size.9');
 
-  /// Avatar icon sizes are half of each resolved avatar dimension.
-  ///
-  /// These values need dedicated tokens because arithmetic on an unresolved
-  /// token reference would destroy its identity before Mix can resolve it.
-  static const avatarIconSize1 = DoubleToken('fortal.avatar.icon-size.1');
-  static const avatarIconSize2 = DoubleToken('fortal.avatar.icon-size.2');
   static const avatarIconSize3 = DoubleToken('fortal.avatar.icon-size.3');
-  static const avatarIconSize4 = DoubleToken('fortal.avatar.icon-size.4');
-  static const avatarIconSize5 = DoubleToken('fortal.avatar.icon-size.5');
-  static const avatarIconSize6 = DoubleToken('fortal.avatar.icon-size.6');
-  static const avatarIconSize7 = DoubleToken('fortal.avatar.icon-size.7');
-  static const avatarIconSize8 = DoubleToken('fortal.avatar.icon-size.8');
   static const avatarIconSize9 = DoubleToken('fortal.avatar.icon-size.9');
 
-  /// Badge measurements that are fractional spacing expressions upstream.
-  static const badgePaddingX1 = DoubleToken('fortal.badge.padding-x.1');
   static const badgePaddingY1 = DoubleToken('fortal.badge.padding-y.1');
-  static const badgePaddingX3 = DoubleToken('fortal.badge.padding-x.3');
 
-  /// Checkbox dimensions expressed as scaled pixels by Radix Themes.
+  /// Checkbox dimensions expressed as scaled pixels by Fortal.
   static const checkboxSize1 = DoubleToken('fortal.checkbox.size.1');
   static const checkboxSize3 = DoubleToken('fortal.checkbox.size.3');
   static const checkboxIndicatorSize1 = DoubleToken(
@@ -300,22 +304,8 @@ class FortalTokens {
   static const checkboxIndicatorSize2 = DoubleToken(
     'fortal.checkbox.indicator-size.2',
   );
-  static const checkboxIndicatorSize3 = DoubleToken(
-    'fortal.checkbox.indicator-size.3',
-  );
 
-  /// Checkbox-group label gaps derived from Radix's size-linked `0.5em`.
-  static const checkboxGroupItemGap1 = DoubleToken(
-    'fortal.checkbox-group.item-gap.1',
-  );
-  static const checkboxGroupItemGap2 = DoubleToken(
-    'fortal.checkbox-group.item-gap.2',
-  );
-  static const checkboxGroupItemGap3 = DoubleToken(
-    'fortal.checkbox-group.item-gap.3',
-  );
-
-  /// Radio indicators are 40% of their control size in Radix Themes.
+  /// Radio indicators are 40% of their control size in Fortal.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
   /// token reference would destroy its identity before Mix can resolve it.
@@ -324,9 +314,6 @@ class FortalTokens {
   );
   static const radioIndicatorSize2 = DoubleToken(
     'fortal.radio.indicator-size.2',
-  );
-  static const radioIndicatorSize3 = DoubleToken(
-    'fortal.radio.indicator-size.3',
   );
 
   /// Checkbox radii derived from fractional radius-step expressions.
@@ -342,27 +329,18 @@ class FortalTokens {
   static const switchThumbSize2 = DoubleToken('fortal.switch.thumb-size.2');
   static const switchThumbSize3 = DoubleToken('fortal.switch.thumb-size.3');
 
-  /// Progress geometry derived from scaled fractional upstream expressions.
   static const progressHeight2 = DoubleToken('fortal.progress.height.2');
   static const progressRadius1 = RadiusToken('fortal.progress.radius.1');
   static const progressRadius2 = RadiusToken('fortal.progress.radius.2');
   static const progressRadius3 = RadiusToken('fortal.progress.radius.3');
 
-  /// Slider geometry expressed as scaled Radix component dimensions.
   static const sliderTrackSize1 = DoubleToken('fortal.slider.track-size.1');
-  static const sliderTrackSize2 = DoubleToken('fortal.slider.track-size.2');
   static const sliderTrackSize3 = DoubleToken('fortal.slider.track-size.3');
   static const sliderThumbSize1 = DoubleToken('fortal.slider.thumb-size.1');
-  static const sliderThumbSize2 = DoubleToken('fortal.slider.thumb-size.2');
   static const sliderThumbSize3 = DoubleToken('fortal.slider.thumb-size.3');
   static const sliderTrackRadius1 = RadiusToken('fortal.slider.track-radius.1');
   static const sliderTrackRadius2 = RadiusToken('fortal.slider.track-radius.2');
   static const sliderTrackRadius3 = RadiusToken('fortal.slider.track-radius.3');
-
-  /// TextField content insets after its fixed one-pixel border.
-  static const textFieldPadding1 = DoubleToken('fortal.text-field.padding.1');
-  static const textFieldPadding2 = DoubleToken('fortal.text-field.padding.2');
-  static const textFieldPadding3 = DoubleToken('fortal.text-field.padding.3');
 
   /// TextArea metrics that cannot be expressed by existing spacing tokens.
   static const textAreaMinHeight3 = DoubleToken(
@@ -419,32 +397,15 @@ class FortalTokens {
     'fortal.tabs.active-letter-spacing.2',
   );
 
-  /// Table size-1 minimum cell height (36px at 100% scaling).
-  ///
-  /// Radix writes `calc(36px * var(--scaling))` literally, so no existing
-  /// spacing step expresses it.
-  static const dataTableRowHeight1 = DoubleToken('fortal.data-table.height.1');
-
-  /// Table size-2 minimum cell height (44px at 100% scaling).
-  static const dataTableRowHeight2 = DoubleToken('fortal.data-table.height.2');
-
   /// Table surface border - `color-mix(in oklab, gray-a5, gray-6)`.
   ///
   /// The existing `grayStroke*` tokens blend an alpha step with the *same*
   /// numbered solid step at 25%; Table blends step 5 with step 6 at 50%.
   static const dataTableBorder = ColorToken('fortal.data-table.border');
 
-  /// Select's 1.5 × space-1 measurement (6px at 100% scaling).
-  static const selectSpace1Half = DoubleToken('fortal.select.space.1-half');
-
   /// Select size-1 indicator column width (20px at 100% scaling).
   static const selectIndicatorWidth1 = DoubleToken(
     'fortal.select.indicator-width.1',
-  );
-
-  /// Select size-1 check size (8px at 100% scaling).
-  static const selectIndicatorSize1 = DoubleToken(
-    'fortal.select.indicator-size.1',
   );
 
   /// Select size-2/3 check size (10px at 100% scaling).
@@ -521,26 +482,12 @@ class FortalTokens {
   static const shadow1 = BoxShadowToken('fortal.shadow.1');
 
   /// Exact layered shadow level 1, including inset layers.
-  ///
-  /// This additive token powers the preset's Radix-compatible rendering while
-  /// [shadow1] retains the original Remix public token type.
   static const shadow1Layers = RemixBoxShadowListToken(
     'fortal.shadow.1.layers',
   );
 
-  /// Half-opacity shadow-1 layers used by a disabled classic slider track.
-  static const sliderClassicDisabledTrackShadows = RemixBoxShadowListToken(
-    'fortal.slider.classic.disabled-track-shadows',
-  );
-
   /// Shadow level 2 - Low elevation.
   static const shadow2 = BoxShadowToken('fortal.shadow.2');
-
-  /// Shadow-2 painted on SegmentedControl's fixed one-pixel inset shape.
-  static const segmentedControlClassicIndicatorShadows =
-      RemixBoxShadowListToken(
-        'fortal.segmented-control.classic.indicator-shadows',
-      );
 
   /// Shadow level 3 - Medium elevation.
   static const shadow3 = BoxShadowToken('fortal.shadow.3');
@@ -554,61 +501,6 @@ class FortalTokens {
   /// Shadow level 6 - Maximum elevation.
   static const shadow6 = BoxShadowToken('fortal.shadow.6');
 
-  /// Card classic outer and inset-pseudo-element shadow lists.
-  static const cardClassicOuterShadows = RemixBoxShadowListToken(
-    'fortal.card.classic.outer-shadows',
-  );
-  static const cardClassicInnerShadows = RemixBoxShadowListToken(
-    'fortal.card.classic.inner-shadows',
-  );
-  static const cardClassicHoverOuterShadows = RemixBoxShadowListToken(
-    'fortal.card.classic.hover.outer-shadows',
-  );
-  static const cardClassicHoverInnerShadows = RemixBoxShadowListToken(
-    'fortal.card.classic.hover.inner-shadows',
-  );
-  static const cardClassicActiveOuterShadows = RemixBoxShadowListToken(
-    'fortal.card.classic.active.outer-shadows',
-  );
-  static const cardClassicActiveInnerShadows = RemixBoxShadowListToken(
-    'fortal.card.classic.active.inner-shadows',
-  );
-
-  /// Mode-aware inset layers for a classic Select trigger.
-  static const selectTriggerClassicShadows = RemixBoxShadowListToken(
-    'fortal.select.trigger.classic.shadows',
-  );
-
-  /// Mode-aware open/hover layers for a classic Select trigger.
-  static const selectTriggerClassicHoverShadows = RemixBoxShadowListToken(
-    'fortal.select.trigger.classic.hover-shadows',
-  );
-
-  /// Mode-aware disabled layers shared by classic button-shaped controls.
-  static const baseButtonClassicDisabledShadows = RemixBoxShadowListToken(
-    'fortal.base-button.classic.disabled.shadows',
-  );
-
-  /// Mode-aware classic Button/IconButton layers.
-  static const baseButtonClassicShadows = RemixBoxShadowListToken(
-    'fortal.base-button.classic.shadows',
-  );
-  static const baseButtonClassicHighContrastShadows = RemixBoxShadowListToken(
-    'fortal.base-button.classic.high-contrast.shadows',
-  );
-  static const baseButtonClassicActiveShadows = RemixBoxShadowListToken(
-    'fortal.base-button.classic.active.shadows',
-  );
-  static const baseButtonClassicActiveHighContrastShadows =
-      RemixBoxShadowListToken(
-        'fortal.base-button.classic.active.high-contrast.shadows',
-      );
-  static const baseButtonClassicAfterInset = DoubleToken(
-    'fortal.base-button.classic.after-inset',
-  );
-  static const baseButtonGhostPaddingY3 = DoubleToken(
-    'fortal.base-button.ghost.padding-y.3',
-  );
   static const baseButtonGhostMarginX12 = DoubleToken(
     'fortal.base-button.ghost.margin-x.1-2',
   );
@@ -626,9 +518,6 @@ class FortalTokens {
   );
   static const baseButtonGhostMarginY4 = DoubleToken(
     'fortal.base-button.ghost.margin-y.4',
-  );
-  static const iconButtonGhostPadding2 = DoubleToken(
-    'fortal.icon-button.ghost.padding.2',
   );
   static const iconButtonGhostMargin1 = DoubleToken(
     'fortal.icon-button.ghost.margin.1',
@@ -669,12 +558,6 @@ class FortalTokens {
   /// Text size 3 - 16px (Body text and primary content).
   static const text3 = TextStyleToken('fortal.text.3');
 
-  /// Accordion size-2 text (15px with a 20px line box at 100% scaling).
-  ///
-  /// Accordion is a Fortal extension, so this intermediate size is kept
-  /// separate from the upstream Radix typography scale.
-  static const accordionText2 = TextStyleToken('fortal.accordion.text.2');
-
   /// Text size 4 - 18px (Prominent body text).
   static const text4 = TextStyleToken('fortal.text.4');
 
@@ -687,7 +570,7 @@ class FortalTokens {
   /// Text size 7 - 28px (Large headings).
   static const text7 = TextStyleToken('fortal.text.7');
 
-  /// Text size 8 - 35px (Extra large headings).
+  /// Text size 8 - 36px (Extra large headings).
   static const text8 = TextStyleToken('fortal.text.8');
 
   /// Text size 9 - 60px (Display text).
@@ -704,6 +587,11 @@ class FortalTokens {
   /// Medium font weight (500).
   static const fontWeightMedium = FontWeightToken('fortal.font.weight.medium');
 
+  /// Semibold font weight (600).
+  static const fontWeightSemibold = FontWeightToken(
+    'fortal.font.weight.semibold',
+  );
+
   /// Bold font weight (700).
   static const fontWeightBold = FontWeightToken('fortal.font.weight.bold');
 
@@ -713,7 +601,6 @@ class FortalTokens {
   /// Slow animation duration (300ms).
   static const transitionSlow = DurationToken('fortal.transition.slow');
 
-  /// One leg of the Radix Skeleton pulse.
   static const skeletonPulseDuration = DurationToken(
     'fortal.skeleton.pulse-duration',
   );

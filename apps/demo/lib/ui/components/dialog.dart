@@ -8,7 +8,7 @@ import '../theme/theme.dart';
 
 part 'dialog.g.dart';
 
-/// Fortal dialog size presets matching Radix Themes 3.3.0.
+/// Fortal dialog size presets on the shared scale.
 enum FortalDialogSize { size1, size2, size3, size4 }
 
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
@@ -75,7 +75,7 @@ DialogStyler fortalDialogStyle({
             .spacing(FortalTokens.space3())
             .margin(.top(FortalTokens.space5())),
       )
-      .width(600)
+      .width(FortalTokens.dialogMaxWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())

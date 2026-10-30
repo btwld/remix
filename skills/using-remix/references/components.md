@@ -65,7 +65,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `.labelColor(...)`. The target is the control's own size unless
   `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
   48x48), so opt in with `Size.square(48)` for touch.
-- **CheckboxGroup** — keyboard model deliberately differs from Radix Themes:
+- **CheckboxGroup** — standard Flutter keyboard model:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
   checkbox groups. The group does not rove focus with arrow keys.
