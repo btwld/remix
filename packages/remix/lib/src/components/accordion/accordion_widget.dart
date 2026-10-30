@@ -269,8 +269,9 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     final leadingIcon = _config.leadingIcon;
     final title = _config.title;
 
-    return FlexBox(
+    return RemixFlexBoxAdapter(
       styleSpec: spec.trigger,
+      containerEffects: spec.triggerEffects,
       children: [
         if (leadingIcon != null)
           StyledIcon(icon: leadingIcon, styleSpec: spec.leadingIcon),
@@ -335,9 +336,14 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         onPressChange: _handlePressChange,
         semanticLabel: _config.semanticLabel ?? _config.title,
         child: _config.child,
-        builder:
-            _config.builder ??
-            (context, state) => _buildDefaultTrigger(spec, state),
+        builder: (context, state) => switch (_config.builder) {
+          final builder? => RemixBoxAdapter(
+            styleSpec: const StyleSpec(spec: BoxSpec()),
+            containerEffects: spec.triggerEffects,
+            child: builder(context, state),
+          ),
+          null => _buildDefaultTrigger(spec, state),
+        },
       ),
     );
   }

@@ -137,6 +137,43 @@ Widget buildStatusToggleGroup({
 ```
 </CodeGroup>
 
+## Focus rings
+
+`ToggleGroupItemStyler.containerEffects` paints an outline around the item
+without taking layout space, so focus does not resize the item or shift its
+neighbors. Put it in an `onFocusVisible` variant.
+
+A group usually clips its items to a rounded outline, and the clip also crops
+the ring of an end item when the ring is drawn outside the item. Draw the ring
+inside instead: give `outlineOffset` the negative of the ring width.
+
+<CodeGroup title="Inset focus ring" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final insetRing = RemixBoxEffectsMix(
+  outline: BorderSideMix(color: Colors.indigo, width: 2),
+  outlineOffset: -2,
+);
+
+final segmentedStyle = ToggleGroupStyler(
+  container: FlexBoxStyler()
+      .borderRadius(.circular(8))
+      .clipBehavior(.antiAlias),
+  item: ToggleGroupItemStyler()
+      .padding(.horizontal(12))
+      .padding(.vertical(8))
+      .onFocusVisible(ToggleGroupItemStyler().containerEffects(insetRing)),
+);
+```
+</CodeGroup>
+
+A group that does not clip can use a positive offset to draw the ring outside
+the item. Items paint in order, so a filled item after the focused one covers
+that side of an outside ring; in joined rows use the inset ring, or leave a gap
+of at least the ring's offset plus width.
+
 ## Constructor
 
 <CodeGroup title="RemixToggleGroup" defaultLanguage="dart">

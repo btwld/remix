@@ -15,6 +15,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
   Style<ButtonSpec>? get action;
   Style<IconButtonSpec>? get closeButton;
   RemixBoxEffectsSpec? get containerEffects;
+  RemixToastActionPlacement? get actionPlacement;
 
   @override
   Type get type => ToastSpec;
@@ -29,6 +30,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
     Style<ButtonSpec>? action,
     Style<IconButtonSpec>? closeButton,
     RemixBoxEffectsSpec? containerEffects,
+    RemixToastActionPlacement? actionPlacement,
   }) {
     return ToastSpec(
       container: container ?? this.container,
@@ -39,6 +41,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
       action: action ?? this.action,
       closeButton: closeButton ?? this.closeButton,
       containerEffects: containerEffects ?? this.containerEffects,
+      actionPlacement: actionPlacement ?? this.actionPlacement,
     );
   }
 
@@ -57,6 +60,11 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
         other?.containerEffects,
         t,
       ),
+      actionPlacement: MixOps.lerpSnap(
+        actionPlacement,
+        other?.actionPlacement,
+        t,
+      ),
     );
   }
 
@@ -70,6 +78,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
     action,
     closeButton,
     containerEffects,
+    actionPlacement,
   ];
 
   @override
@@ -119,7 +128,8 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('icon', icon))
       ..add(DiagnosticsProperty('action', action))
       ..add(DiagnosticsProperty('closeButton', closeButton))
-      ..add(DiagnosticsProperty('containerEffects', containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
+      ..add(DiagnosticsProperty('actionPlacement', actionPlacement));
   }
 }
 
@@ -143,6 +153,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
   final Prop<Style<ButtonSpec>>? $action;
   final Prop<Style<IconButtonSpec>>? $closeButton;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
+  final Prop<RemixToastActionPlacement>? $actionPlacement;
 
   const ToastStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -153,6 +164,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     Prop<Style<ButtonSpec>>? action,
     Prop<Style<IconButtonSpec>>? closeButton,
     Prop<RemixBoxEffectsSpec>? containerEffects,
+    Prop<RemixToastActionPlacement>? actionPlacement,
     super.variants,
     super.modifier,
     super.animation,
@@ -163,7 +175,8 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
        $icon = icon,
        $action = action,
        $closeButton = closeButton,
-       $containerEffects = containerEffects;
+       $containerEffects = containerEffects,
+       $actionPlacement = actionPlacement;
 
   ToastStyler({
     FlexBoxStyler? container,
@@ -174,6 +187,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     Style<ButtonSpec>? action,
     Style<IconButtonSpec>? closeButton,
     RemixBoxEffectsMix? containerEffects,
+    RemixToastActionPlacement? actionPlacement,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ToastSpec>>? variants,
@@ -186,6 +200,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
          action: Prop.maybe(action),
          closeButton: Prop.maybe(closeButton),
          containerEffects: Prop.maybeMix(containerEffects),
+         actionPlacement: Prop.maybe(actionPlacement),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -205,6 +220,8 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
       ToastStyler().closeButton(value);
   factory ToastStyler.containerEffects(RemixBoxEffectsMix value) =>
       ToastStyler().containerEffects(value);
+  factory ToastStyler.actionPlacement(RemixToastActionPlacement value) =>
+      ToastStyler().actionPlacement(value);
   factory ToastStyler.color(Color value) => ToastStyler().color(value);
   factory ToastStyler.gradient(GradientMix value) =>
       ToastStyler().gradient(value);
@@ -753,6 +770,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     'action',
     'closeButton',
     'containerEffects',
+    'actionPlacement',
     'animation',
     'modifier',
     'variants',
@@ -797,6 +815,11 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
   /// Sets the containerEffects.
   ToastStyler containerEffects(RemixBoxEffectsMix value) {
     return merge(ToastStyler(containerEffects: value));
+  }
+
+  /// Sets the actionPlacement.
+  ToastStyler actionPlacement(RemixToastActionPlacement value) {
+    return merge(ToastStyler(actionPlacement: value));
   }
 
   /// Sets the animation configuration.
@@ -860,6 +883,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         $containerEffects,
         other?.$containerEffects,
       ),
+      actionPlacement: MixOps.merge($actionPlacement, other?.$actionPlacement),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -878,6 +902,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
       action: MixOps.resolve(context, $action),
       closeButton: MixOps.resolve(context, $closeButton),
       containerEffects: MixOps.resolve(context, $containerEffects),
+      actionPlacement: MixOps.resolve(context, $actionPlacement),
     );
 
     return StyleSpec(
@@ -898,7 +923,8 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
       ..add(DiagnosticsProperty('icon', $icon))
       ..add(DiagnosticsProperty('action', $action))
       ..add(DiagnosticsProperty('closeButton', $closeButton))
-      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
+      ..add(DiagnosticsProperty('actionPlacement', $actionPlacement));
   }
 
   @override
@@ -911,6 +937,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     $action,
     $closeButton,
     $containerEffects,
+    $actionPlacement,
     $animation,
     $modifier,
     $variants,

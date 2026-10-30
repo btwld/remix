@@ -10,17 +10,23 @@ void main() {
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final thumb = Prop.maybeMix(BoxStyler());
+        final label = Prop.maybeMix(TextStyler());
+        final labelSpacing = Prop.maybe(12.0);
         final variants = <VariantStyle<SwitchSpec>>[];
 
         final style = SwitchStyler.create(
           container: container,
           thumb: thumb,
+          label: label,
+          labelSpacing: labelSpacing,
           variants: variants,
         );
 
         expect(style, isNotNull);
         expect(style.$container, equals(container));
         expect(style.$thumb, equals(thumb));
+        expect(style.$label, equals(label));
+        expect(style.$labelSpacing, equals(labelSpacing));
         expect(style.$variants, equals(variants));
       });
 
@@ -39,6 +45,44 @@ void main() {
     });
 
     group('Style Methods', () {
+      styleMethodTest(
+        'label',
+        initial: SwitchStyler(),
+        modify: (style) =>
+            style.label(TextStyler(style: TextStyleMix(color: Colors.red))),
+        expect: (style) {
+          expect(
+            style.$label,
+            equals(
+              Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.red))),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'labelColor',
+        initial: SwitchStyler(),
+        modify: (style) => style.labelColor(Colors.red),
+        expect: (style) {
+          expect(
+            style.$label,
+            equals(
+              Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.red))),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'labelSpacing',
+        initial: SwitchStyler(),
+        modify: (style) => style.labelSpacing(12),
+        expect: (style) {
+          expect(style.$labelSpacing, equals(Prop.value(12.0)));
+        },
+      );
+
       styleMethodTest(
         'thumbColor',
         initial: SwitchStyler(),
@@ -291,7 +335,9 @@ void main() {
           enableFeedback: false,
           focusNode: focusNode,
           autofocus: true,
+          label: 'Test Switch label',
           semanticLabel: 'Test Switch',
+          minimumTapTargetSize: const Size.square(48),
           mouseCursor: SystemMouseCursors.forbidden,
         );
 
@@ -301,7 +347,9 @@ void main() {
         expect(switchWidget.enableFeedback, equals(false));
         expect(switchWidget.focusNode, same(focusNode));
         expect(switchWidget.autofocus, equals(true));
+        expect(switchWidget.label, equals('Test Switch label'));
         expect(switchWidget.semanticLabel, equals('Test Switch'));
+        expect(switchWidget.minimumTapTargetSize, const Size.square(48));
         expect(switchWidget.mouseCursor, equals(SystemMouseCursors.forbidden));
         expect(switchWidget.style, same(style));
 
@@ -323,6 +371,8 @@ void main() {
         expect(switchWidget.selected, equals(false));
         expect(switchWidget.enabled, equals(true));
         expect(switchWidget.enableFeedback, equals(true));
+        expect(switchWidget.label, isNull);
+        expect(switchWidget.minimumTapTargetSize, Size.zero);
         expect(switchWidget.style, same(style));
       });
     });
@@ -346,9 +396,11 @@ void main() {
       test('props list contains all properties', () {
         final style = SwitchStyler();
 
-        expect(style.props, hasLength(7));
+        expect(style.props, hasLength(9));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$thumb));
+        expect(style.props, contains(style.$label));
+        expect(style.props, contains(style.$labelSpacing));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

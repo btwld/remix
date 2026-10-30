@@ -310,6 +310,7 @@ typedef _$SelectContentSpecMethods = _$SelectContentSpec; // ignore: unused_elem
 
 mixin _$SelectMenuItemSpec implements Spec<SelectMenuItemSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get text;
   StyleSpec<BoxSpec> get indicator;
   StyleSpec<IconSpec> get icon;
@@ -320,12 +321,14 @@ mixin _$SelectMenuItemSpec implements Spec<SelectMenuItemSpec>, Diagnosticable {
   @override
   SelectMenuItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? text,
     StyleSpec<BoxSpec>? indicator,
     StyleSpec<IconSpec>? icon,
   }) {
     return SelectMenuItemSpec(
       container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       text: text ?? this.text,
       indicator: indicator ?? this.indicator,
       icon: icon ?? this.icon,
@@ -336,6 +339,11 @@ mixin _$SelectMenuItemSpec implements Spec<SelectMenuItemSpec>, Diagnosticable {
   SelectMenuItemSpec lerp(SelectMenuItemSpec? other, double t) {
     return SelectMenuItemSpec(
       container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       text: text.lerp(other?.text, t),
       indicator: indicator.lerp(other?.indicator, t),
       icon: icon.lerp(other?.icon, t),
@@ -343,7 +351,13 @@ mixin _$SelectMenuItemSpec implements Spec<SelectMenuItemSpec>, Diagnosticable {
   }
 
   @override
-  List<Object?> get props => [container, text, indicator, icon];
+  List<Object?> get props => [
+    container,
+    containerEffects,
+    text,
+    indicator,
+    icon,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -386,6 +400,7 @@ mixin _$SelectMenuItemSpec implements Spec<SelectMenuItemSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('text', text))
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('icon', icon));
@@ -2506,12 +2521,14 @@ class SelectMenuItemStyler
         IconStyleMixin<SelectMenuItemStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const SelectMenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<BoxSpec>>? indicator,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -2519,12 +2536,14 @@ class SelectMenuItemStyler
     super.modifier,
     super.animation,
   }) : $container = container,
+       $containerEffects = containerEffects,
        $text = text,
        $indicator = indicator,
        $icon = icon;
 
   SelectMenuItemStyler({
     FlexBoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? text,
     BoxStyler? indicator,
     IconStyler? icon,
@@ -2533,6 +2552,7 @@ class SelectMenuItemStyler
     List<VariantStyle<SelectMenuItemSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          text: Prop.maybeMix(text),
          indicator: Prop.maybeMix(indicator),
          icon: Prop.maybeMix(icon),
@@ -2543,6 +2563,8 @@ class SelectMenuItemStyler
 
   factory SelectMenuItemStyler.container(FlexBoxStyler value) =>
       SelectMenuItemStyler().container(value);
+  factory SelectMenuItemStyler.containerEffects(RemixBoxEffectsMix value) =>
+      SelectMenuItemStyler().containerEffects(value);
   factory SelectMenuItemStyler.text(TextStyler value) =>
       SelectMenuItemStyler().text(value);
   factory SelectMenuItemStyler.indicator(BoxStyler value) =>
@@ -3112,6 +3134,7 @@ class SelectMenuItemStyler
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'containerEffects',
     'text',
     'indicator',
     'icon',
@@ -3123,6 +3146,11 @@ class SelectMenuItemStyler
   /// Sets the container.
   SelectMenuItemStyler container(FlexBoxStyler value) {
     return merge(SelectMenuItemStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  SelectMenuItemStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(SelectMenuItemStyler(containerEffects: value));
   }
 
   /// Sets the text.
@@ -3169,6 +3197,10 @@ class SelectMenuItemStyler
   SelectMenuItemStyler merge(SelectMenuItemStyler? other) {
     return SelectMenuItemStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       text: MixOps.merge($text, other?.$text),
       indicator: MixOps.merge($indicator, other?.$indicator),
       icon: MixOps.merge($icon, other?.$icon),
@@ -3183,6 +3215,7 @@ class SelectMenuItemStyler
   StyleSpec<SelectMenuItemSpec> resolve(BuildContext context) {
     final spec = SelectMenuItemSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       text: MixOps.resolve(context, $text),
       indicator: MixOps.resolve(context, $indicator),
       icon: MixOps.resolve(context, $icon),
@@ -3200,6 +3233,7 @@ class SelectMenuItemStyler
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('text', $text))
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('icon', $icon));
@@ -3208,6 +3242,7 @@ class SelectMenuItemStyler
   @override
   List<Object?> get props => [
     $container,
+    $containerEffects,
     $text,
     $indicator,
     $icon,

@@ -272,10 +272,13 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<SelectSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          builder: (context, spec) => _buildOverlayMenu(spec, style),
+        return RemixAnchorScope(
+          width: info.anchorRect.width,
+          child: RemixStyleSpecBuilder<SelectSpec>(
+            style: style,
+            styleSpec: widget.styleSpec,
+            builder: (context, spec) => _buildOverlayMenu(spec, style),
+          ),
         );
       },
       value: widget.selectedValue,
@@ -502,8 +505,10 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
           builder: (context, spec) => StyleSpecBuilder<SelectMenuItemSpec>(
             styleSpec: spec.item,
             builder: (context, item) => ExcludeSemantics(
-              child: RowBox(
+              child: RemixFlexBoxAdapter(
                 styleSpec: item.container,
+                direction: Axis.horizontal,
+                containerEffects: item.containerEffects,
                 children: [
                   Expanded(child: StyledText(data.label, styleSpec: item.text)),
                   if (state.isSelected)

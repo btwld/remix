@@ -472,8 +472,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   }
 
   Widget _buildDefaultTrigger(MenuTriggerSpec triggerSpec) {
-    return RowBox(
+    return RemixFlexBoxAdapter(
       styleSpec: triggerSpec.container,
+      direction: Axis.horizontal,
+      containerEffects: triggerSpec.containerEffects,
       children: [
         if (widget.trigger.icon != null)
           StyledIcon(icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
@@ -491,25 +493,28 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<MenuSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          builder: (context, spec) {
-            final inherited = Style.maybeOf<MenuSpec>(context);
-            final effectiveStyle = inherited is MenuStyler
-                ? inherited.merge(style)
-                : style;
-            return _RemixMenuItemsPanel<T>(
-              items: widget.items,
-              overlayStyleSpec: spec.overlay,
-              containerEffects: spec.containerEffects,
-              dividerStyleSpec: spec.divider,
-              hasRootSelectionCallback: widget.onSelected != null,
-              itemStyles: widget.styleSpec == null
-                  ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
-                  : _RemixMenuItemStyles.fromSpec(spec),
-            );
-          },
+        return RemixAnchorScope(
+          width: info.anchorRect.width,
+          child: RemixStyleSpecBuilder<MenuSpec>(
+            style: style,
+            styleSpec: widget.styleSpec,
+            builder: (context, spec) {
+              final inherited = Style.maybeOf<MenuSpec>(context);
+              final effectiveStyle = inherited is MenuStyler
+                  ? inherited.merge(style)
+                  : style;
+              return _RemixMenuItemsPanel<T>(
+                items: widget.items,
+                overlayStyleSpec: spec.overlay,
+                containerEffects: spec.containerEffects,
+                dividerStyleSpec: spec.divider,
+                hasRootSelectionCallback: widget.onSelected != null,
+                itemStyles: widget.styleSpec == null
+                    ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
+                    : _RemixMenuItemStyles.fromSpec(spec),
+              );
+            },
+          ),
         );
       },
       controller: _effectiveController,
@@ -916,8 +921,9 @@ class _RemixMenuItemContent extends StatelessWidget {
       );
     }
 
-    return FlexBox(
+    return RemixFlexBoxAdapter(
       styleSpec: spec.container,
+      containerEffects: spec.containerEffects,
       children: [
         if (reserveChoiceSlot)
           Visibility.maintain(

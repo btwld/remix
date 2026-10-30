@@ -45,29 +45,15 @@ class _RadioExampleState extends State<RadioExample> {
           spacing: 16,
           mainAxisSize: .min,
           children: [
-            Row(
-              spacing: 8,
-              mainAxisSize: .min,
-              children: [
-                RemixRadio<String>(
-                  semanticLabel: 'Option',
-                  value: 'option1',
-                  style: style,
-                ),
-                const Text('Option 1'),
-              ],
+            RemixRadio<String>(
+              label: 'Option 1',
+              value: 'option1',
+              style: style,
             ),
-            Row(
-              spacing: 8,
-              mainAxisSize: .min,
-              children: [
-                RemixRadio<String>(
-                  semanticLabel: 'Option',
-                  value: 'option2',
-                  style: style,
-                ),
-                const Text('Option 2'),
-              ],
+            RemixRadio<String>(
+              label: 'Option 2',
+              value: 'option2',
+              style: style,
             ),
           ],
         ),

@@ -356,6 +356,12 @@ Methods on `TabStyler` configure each interactive tab item.
 
 Configures the tab item flex box style.
 
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures an outline and paint layers drawn around the tab without taking
+layout space, such as a focus ring in `onFocusVisible`. A `builder` that
+returns a different widget replaces the styled container and its effects.
+
 #### `label(TextStyler value)`
 
 Configures the tab label style.

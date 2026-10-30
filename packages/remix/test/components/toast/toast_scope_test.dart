@@ -1,4 +1,5 @@
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -12,6 +13,21 @@ Widget _host(Widget child, {Color accent = const Color(0xFF3E63DD)}) {
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (context, _) => Overlay.wrap(child: child),
+    ),
+  );
+}
+
+/// A bare WidgetsApp host with a route, so Tab reaches a scope inside it.
+Widget _routeHost(Widget home) {
+  return MixScope.empty(
+    child: WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      home: home,
     ),
   );
 }
@@ -278,6 +294,110 @@ void main() {
       );
       expect(node.getSemanticsData().role, SemanticsRole.alert);
       semantics.dispose();
+    });
+  });
+
+  group('RemixToastScope focus while the layout flips', () {
+    final belowOnNarrow = ToastStyler().onBreakpoint(
+      const Breakpoint.maxWidth(768),
+      ToastStyler().actionPlacement(.below),
+    );
+
+    bool focusIsIn(Type type) {
+      final focused = FocusManager.instance.primaryFocus?.context;
+
+      return find
+          .descendant(
+            of: find.byType(type),
+            matching: find.byElementPredicate((e) => e == focused),
+          )
+          .evaluate()
+          .isNotEmpty;
+    }
+
+    bool actionBelowText(WidgetTester tester) =>
+        tester.getTopLeft(find.byType(RemixButton)).dy >=
+        tester.getBottomLeft(find.text('Stored on this device.')).dy;
+
+    /// Shows a toast with an action at [wide] and tabs [tabs] times into it.
+    Future<RemixToastHandle> showFocused(
+      WidgetTester tester, {
+      required ToastStyler style,
+      required double wide,
+      required int tabs,
+    }) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = Size(wide, 700);
+      addTearDown(tester.view.reset);
+      final controller = _controller();
+      await tester.pumpWidget(_routeHost(_scope(controller, style: style)));
+      final handle = controller.showToast(
+        RemixToastData(
+          title: 'Draft saved',
+          description: 'Stored on this device.',
+          action: RemixToastAction(label: 'Undo', onPressed: () {}),
+        ),
+      );
+      await tester.pumpAndSettle();
+      for (var i = 0; i < tabs; i++) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      }
+
+      return handle;
+    }
+
+    for (final (flip, style, narrow) in [
+      ('the narrow fallback', ToastStyler(), 300.0),
+      ('a placement variant', belowOnNarrow, 700.0),
+    ]) {
+      for (final (button, type, tabs) in [
+        ('action', RemixButton, 1),
+        ('close button', RemixIconButton, 2),
+      ]) {
+        testWidgets('keeps focus on the $button through $flip', (tester) async {
+          final handle = await showFocused(
+            tester,
+            style: style,
+            wide: 1024,
+            tabs: tabs,
+          );
+          final focused = FocusManager.instance.primaryFocus;
+          expect(focusIsIn(type), isTrue);
+          expect(actionBelowText(tester), isFalse);
+
+          tester.view.physicalSize = Size(narrow, 700);
+          await tester.pumpAndSettle();
+
+          expect(actionBelowText(tester), isTrue);
+          expect(FocusManager.instance.primaryFocus, same(focused));
+          expect(focusIsIn(type), isTrue);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(handle.isClosed, isTrue);
+          expect(await handle.closed, RemixToastDismissReason.close);
+        });
+      }
+    }
+
+    testWidgets('times out once focus leaves after the flip', (tester) async {
+      final handle = await showFocused(
+        tester,
+        style: ToastStyler(),
+        wide: 1024,
+        tabs: 1,
+      );
+      await tester.pump(const Duration(seconds: 5));
+      expect(handle.isClosed, isFalse, reason: 'focus pauses the countdown');
+
+      tester.view.physicalSize = const Size(300, 700);
+      await tester.pumpAndSettle();
+      FocusManager.instance.primaryFocus!.unfocus();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 5));
+
+      expect(handle.isClosed, isTrue);
+      expect(await handle.closed, RemixToastDismissReason.timeout);
     });
   });
 }

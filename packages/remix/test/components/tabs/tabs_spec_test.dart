@@ -465,8 +465,9 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = TabSpec();
 
-        expect(spec.props.length, equals(3));
+        expect(spec.props.length, equals(4));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
       });
