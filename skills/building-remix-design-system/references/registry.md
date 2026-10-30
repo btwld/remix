@@ -205,7 +205,8 @@ Item design rules:
 - **The theme is one shared item** that every component depends on, so any
   single `add` installs a working theme.
 - Group files by installable component. Compound items may declare multiple
-  adapters; list every generated part (the official chart item declares three).
+  adapters; list every generated part (the official chart item generates three
+  adapters in one `chart.g.dart` file).
 - **No two items may own the same target**, and no item may own `@ui/ui.dart`
   (the CLI assembles that barrel). A file two components need is a third
   item both depend on.
