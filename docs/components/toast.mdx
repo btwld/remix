@@ -95,6 +95,7 @@ class SaveButton extends StatelessWidget {
 - **Replacement.** Showing `RemixToastData` with the same non-null `id` as a visible or queued toast updates it in place and restarts its lifetime; the earlier handle closes with `replaced`.
 - **Placement.** Six `RemixToastPlacement` values. Start and end follow the text direction, and the newest toast sits nearest the edge. The stack clears the safe area and the keyboard.
 - **Theme.** Toasts render through one overlay portal, so they inherit the scope's `MixScope` tokens and update live when the theme changes.
+- **Reduced motion.** Toasts enter and leave at once while the user asks to reduce motion: `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion setting is on (iOS reports it separately). A toast reads the setting when it enters and again when it leaves.
 
 ## Accessibility
 

@@ -11,6 +11,38 @@ import 'utilities/state.dart';
 /// Formats one slider thumb's value for assistive technologies.
 typedef NakedSliderSemanticFormatterCallback = String Function(double value);
 
+/// Marks the rendered rail whose bounds map pointer positions to values.
+///
+/// Place one inside [NakedSlider.builder] when the painted rail is inset from
+/// the full hit target. Without a marker, input uses the slider's full bounds.
+/// This widget adds no padding, painting, or gesture handling.
+class NakedSliderTrack extends StatelessWidget {
+  /// Creates a geometry marker around the slider's rail.
+  const NakedSliderTrack({super.key, required this.child});
+
+  /// The rail, including its complete value span.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<_NakedSliderTrackScope>();
+    assert(scope != null, 'NakedSliderTrack must be inside NakedSlider');
+
+    return KeyedSubtree(key: scope!.trackKey, child: child);
+  }
+}
+
+class _NakedSliderTrackScope extends InheritedWidget {
+  const _NakedSliderTrackScope({required this.trackKey, required super.child});
+
+  final GlobalKey trackKey;
+
+  @override
+  bool updateShouldNotify(_NakedSliderTrackScope oldWidget) =>
+      trackKey != oldWidget.trackKey;
+}
+
 /// Immutable view passed to [NakedSlider.builder].
 class NakedSliderState extends NakedState {
   /// Creates an immutable snapshot of slider state.
@@ -248,6 +280,10 @@ class NakedSlider extends StatefulWidget {
   final ValueChanged<List<double>>? onChangeStart;
 
   /// Called with the last requested value list at the end of an interaction.
+  ///
+  /// The callback present at the start owns the complete pointer interaction.
+  /// Disabling or changing the thumb count or interaction configuration ends
+  /// that interaction with its previous value list, after the current frame.
   final ValueChanged<List<double>>? onChangeEnd;
 
   /// Called when pointer hover changes.
@@ -323,6 +359,10 @@ class _NakedSliderState extends State<NakedSlider>
   final Set<int> _focusedThumbIndices = <int>{};
   int _focusLossGeneration = 0;
   List<double>? _lastRequestedValues;
+  final _trackKey = GlobalKey();
+  List<double>? _pointerStartValues;
+  ValueChanged<List<double>>? _pointerEndCallback;
+  ValueChanged<bool>? _pointerDragCallback;
 
   bool get _isEnabled => widget.enabled && widget.onChanged != null;
 
@@ -354,14 +394,14 @@ class _NakedSliderState extends State<NakedSlider>
     });
   }
 
-  bool _focusConfigurationChanged(NakedSlider oldWidget) {
-    if (oldWidget.values.length != widget.values.length) return true;
-    final oldNodes = oldWidget.focusNodes;
-    final newNodes = widget.focusNodes;
-    if (identical(oldNodes, newNodes)) return false;
-    if (oldNodes == null || newNodes == null) return true;
-    for (var index = 0; index < newNodes.length; index++) {
-      if (!identical(oldNodes[index], newNodes[index])) return true;
+  bool _focusConfigurationChanged() {
+    // Compare with mounted nodes: callers may mutate the supplied lists before
+    // rebuilding, so oldWidget can already contain the new configuration.
+    if (_effectiveFocusNodes.length != widget.values.length) return true;
+    for (var index = 0; index < widget.values.length; index++) {
+      final node = _effectiveFocusNodes[index];
+      final oldExternal = _ownedFocusNodes.contains(node) ? null : node;
+      if (!identical(oldExternal, widget.focusNodes?[index])) return true;
     }
 
     return false;
@@ -369,17 +409,51 @@ class _NakedSliderState extends State<NakedSlider>
 
   void _replaceFocusNodes() {
     final oldOwned = _ownedFocusNodes;
+    final oldEffective = _effectiveFocusNodes;
     final transferIndex = _focusedThumbIndex;
-    _focusedThumbIndex = null;
+    final focusedNode = transferIndex == null
+        ? null
+        : oldEffective[transferIndex];
+    _ownedFocusNodes = <FocusNode>[];
+    _effectiveFocusNodes = List<FocusNode>.generate(widget.values.length, (
+      index,
+    ) {
+      final external = widget.focusNodes?[index];
+      if (external != null) return external;
+      final node =
+          index < oldEffective.length && oldOwned.contains(oldEffective[index])
+          ? oldEffective[index]
+          : FocusNode(debugLabel: 'NakedSlider thumb $index');
+      _ownedFocusNodes.add(node);
+
+      return node;
+    });
     _focusedThumbIndices.clear();
-    _createFocusNodes();
+    for (var index = 0; index < _effectiveFocusNodes.length; index++) {
+      if (_effectiveFocusNodes[index].hasFocus) _focusedThumbIndices.add(index);
+    }
+    _focusedThumbIndex = _focusedThumbIndices.firstOrNull;
+    final transferNode =
+        focusedNode != null &&
+            !_effectiveFocusNodes.contains(focusedNode) &&
+            oldEffective.length == widget.values.length &&
+            transferIndex != null
+        ? _effectiveFocusNodes[transferIndex]
+        : null;
+    final retiredNodes = oldOwned
+        .where((node) => !_ownedFocusNodes.contains(node))
+        .toList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      for (final node in oldOwned) {
+      for (final node in retiredNodes) {
         node.dispose();
       }
-      if (!mounted || transferIndex == null) return;
-      if (transferIndex < _effectiveFocusNodes.length && _isEnabled) {
-        _effectiveFocusNodes[transferIndex].requestFocus();
+      if (!mounted) return;
+      if (transferNode != null &&
+          _effectiveFocusNodes.contains(transferNode) &&
+          _isEnabled) {
+        transferNode.requestFocus();
+      } else if (_focusedThumbIndices.isEmpty && isFocused) {
+        updateFocusState(false, widget.onFocusChange);
       }
     });
   }
@@ -401,14 +475,25 @@ class _NakedSliderState extends State<NakedSlider>
       ),
       'values must be finite, ascending, in range, and honor minSpacing',
     );
-    if (_focusConfigurationChanged(oldWidget)) _replaceFocusNodes();
+    final focusChanged = _focusConfigurationChanged();
+    // Values have no stable identity across topology/configuration changes.
+    // End the old transaction before adopting the new controlled contract.
+    if (focusChanged ||
+        !_isEnabled ||
+        oldWidget.min != widget.min ||
+        oldWidget.max != widget.max ||
+        oldWidget.step != widget.step ||
+        oldWidget.minSpacing != widget.minSpacing ||
+        oldWidget.orientation != widget.orientation ||
+        oldWidget.inverted != widget.inverted) {
+      _finishPointerInteraction(deferCallbacks: true);
+    }
+    if (focusChanged) _replaceFocusNodes();
 
     _workingValues = List<double>.of(widget.values);
-    _lastRequestedValues = null;
     syncWidgetStates();
 
     if (!_isEnabled) {
-      if (_isDragging) _finishPointerInteraction();
       updateState(WidgetState.hovered, false);
       updateState(WidgetState.pressed, false);
     }
@@ -460,15 +545,19 @@ class _NakedSliderState extends State<NakedSlider>
     widget.onChanged?.call(_lastRequestedValues!);
   }
 
-  double _valueForPosition(Offset localPosition, Size size) {
+  double? _valueForPosition(Offset localPosition, RenderBox sliderBox) {
+    final trackBox = _trackKey.currentContext?.findRenderObject() as RenderBox?;
+    final box = trackBox != null && trackBox.hasSize ? trackBox : sliderBox;
+    final position = box.globalToLocal(sliderBox.localToGlobal(localPosition));
+    final size = box.size;
     final extent = widget.orientation == Axis.horizontal
         ? size.width
         : size.height;
-    if (extent <= 0) return widget.min;
+    if (extent <= 0) return null;
 
     var percentage = widget.orientation == Axis.horizontal
-        ? localPosition.dx / extent
-        : 1 - localPosition.dy / extent;
+        ? position.dx / extent
+        : 1 - position.dy / extent;
     if (widget.orientation == Axis.horizontal &&
         _textDirection == TextDirection.rtl) {
       percentage = 1 - percentage;
@@ -501,15 +590,25 @@ class _NakedSliderState extends State<NakedSlider>
     if (box == null || !box.hasSize) return;
 
     _workingValues = List<double>.of(widget.values);
-    final pointerValue = _valueForPosition(localPosition, box.size);
+    final pointerValue = _valueForPosition(localPosition, box);
+    if (pointerValue == null) return;
     final thumbIndex = _nearestThumbIndex(pointerValue);
     _isDragging = true;
     _activeThumbIndex = thumbIndex;
+    _lastRequestedValues = null;
+    _pointerStartValues = List<double>.unmodifiable(widget.values);
+    _pointerEndCallback = widget.onChangeEnd;
+    _pointerDragCallback = widget.onDragChange;
     updateState(WidgetState.pressed, true);
-    widget.onDragChange?.call(true);
-    widget.onChangeStart?.call(List<double>.unmodifiable(widget.values));
+    _pointerDragCallback?.call(true);
+    widget.onChangeStart?.call(_pointerStartValues!);
     _effectiveFocusNodes[thumbIndex].requestFocus();
-    _emitValues(_replaceThumb(_workingValues, thumbIndex, pointerValue));
+    // Controlled values need not lie on the step grid. Grabbing their exact
+    // painted center must not snap them before the pointer moves.
+    if ((pointerValue - _workingValues[thumbIndex]).abs() >
+        precisionErrorTolerance) {
+      _emitValues(_replaceThumb(_workingValues, thumbIndex, pointerValue));
+    }
   }
 
   void _updatePointerInteraction(Offset localPosition) {
@@ -517,27 +616,39 @@ class _NakedSliderState extends State<NakedSlider>
     if (!_isEnabled || !_isDragging || thumbIndex == null) return;
     final box = context.findRenderObject() as RenderBox?;
     if (box == null || !box.hasSize) return;
-    final value = _valueForPosition(localPosition, box.size);
+    final value = _valueForPosition(localPosition, box);
+    if (value == null) return;
     _emitValues(_replaceThumb(_workingValues, thumbIndex, value));
   }
 
-  void _finishPointerInteraction() {
+  void _finishPointerInteraction({bool deferCallbacks = false}) {
     if (!_isDragging) return;
-    final result =
-        _lastRequestedValues ?? List<double>.unmodifiable(widget.values);
+    final result = _lastRequestedValues ?? _pointerStartValues!;
+    final onDragChange = _pointerDragCallback;
+    final onChangeEnd = _pointerEndCallback;
     _isDragging = false;
     _activeThumbIndex = null;
+    _lastRequestedValues = null;
+    _pointerStartValues = null;
+    _pointerEndCallback = null;
+    _pointerDragCallback = null;
     updateState(WidgetState.pressed, false);
-    widget.onDragChange?.call(false);
-    widget.onChangeEnd?.call(result);
+    void notify() {
+      onDragChange?.call(false);
+      onChangeEnd?.call(result);
+    }
+
+    if (deferCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) notify();
+      });
+    } else {
+      notify();
+    }
   }
 
   void _handleHorizontalDragStart(DragStartDetails details) {
-    if (_isDragging) {
-      _updatePointerInteraction(details.localPosition);
-    } else {
-      _beginPointerInteraction(details.localPosition);
-    }
+    _updatePointerInteraction(details.localPosition);
   }
 
   void _handleHorizontalDragDown(DragDownDetails details) =>
@@ -550,11 +661,7 @@ class _NakedSliderState extends State<NakedSlider>
       _finishPointerInteraction();
 
   void _handleVerticalDragStart(DragStartDetails details) {
-    if (_isDragging) {
-      _updatePointerInteraction(details.localPosition);
-    } else {
-      _beginPointerInteraction(details.localPosition);
-    }
+    _updatePointerInteraction(details.localPosition);
   }
 
   void _handleVerticalDragDown(DragDownDetails details) =>
@@ -567,11 +674,12 @@ class _NakedSliderState extends State<NakedSlider>
       _finishPointerInteraction();
 
   void _handleTapUp(TapUpDetails details) {
-    _beginPointerInteraction(details.localPosition);
     _finishPointerInteraction();
   }
 
-  void _handleThumbFocusChange(int index, bool focused) {
+  void _handleThumbFocusChange(FocusNode node, bool focused) {
+    final index = _effectiveFocusNodes.indexOf(node);
+    if (index < 0) return;
     if (focused) {
       _focusLossGeneration++;
       _focusedThumbIndices.add(index);
@@ -672,6 +780,7 @@ class _NakedSliderState extends State<NakedSlider>
   }
 
   Widget _buildThumbSemantics(NakedSliderState state, int index) {
+    final focusNode = _effectiveFocusNodes[index];
     final value = widget.values[index];
     final increased = _constrainThumb(
       index,
@@ -689,14 +798,15 @@ class _NakedSliderState extends State<NakedSlider>
         : Alignment(0, visualPercentage * 2 - 1);
 
     return Align(
+      key: ObjectKey(focusNode),
       alignment: alignment,
       child: Focus(
-        focusNode: _effectiveFocusNodes[index],
+        focusNode: focusNode,
         autofocus: widget.autofocusThumbIndex == index,
         canRequestFocus: _isEnabled,
         skipTraversal: !_isEnabled,
         includeSemantics: false,
-        onFocusChange: (focused) => _handleThumbFocusChange(index, focused),
+        onFocusChange: (focused) => _handleThumbFocusChange(focusNode, focused),
         onKeyEvent: (_, event) => _handleThumbKey(index, event),
         child: Semantics(
           container: true,
@@ -805,16 +915,15 @@ class _NakedSliderState extends State<NakedSlider>
               fit: StackFit.passthrough,
               children: [
                 content,
-                if (!widget.excludeSemantics)
-                  Positioned.fill(
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: List<Widget>.generate(
-                        widget.values.length,
-                        (index) => _buildThumbSemantics(sliderState, index),
-                      ),
+                Positioned.fill(
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: List<Widget>.generate(
+                      widget.values.length,
+                      (index) => _buildThumbSemantics(sliderState, index),
                     ),
                   ),
+                ),
               ],
             ),
           );
@@ -822,6 +931,7 @@ class _NakedSliderState extends State<NakedSlider>
       ),
     );
 
+    result = _NakedSliderTrackScope(trackKey: _trackKey, child: result);
     if (widget.excludeSemantics) result = ExcludeSemantics(child: result);
 
     return MouseRegion(
