@@ -1,0 +1,384 @@
+{
+  "schema": 1,
+  "status": "reference design over Remix components (see docs/adr/heroui/0002)",
+  "product": "HeroUI React (web), not HeroUI Native or v2",
+  "retrieved": "2026-10-18",
+  "repository": "https://github.com/heroui-inc/heroui",
+  "tag": "v3.2.6",
+  "commit": "e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e",
+  "commitEvidence": "npm SLSA provenance resolvedDependencies for both published packages",
+  "packages": [
+    {
+      "name": "@heroui/react",
+      "version": "3.2.6",
+      "tarball": "https://registry.npmjs.org/@heroui/react/-/react-3.2.6.tgz",
+      "integrity": "sha512-KBhUUUdX4571SSjwpuBPEFZTYAw/tmGezTIsTnjIOlXDZkjWACfhFe6ibtReO+xTkUcfxCV1r3cF00/3OPlhhw==",
+      "integrityVerified": true,
+      "provenance": "https://registry.npmjs.org/-/npm/v1/attestations/@heroui%2freact@3.2.6",
+      "declaredLicense": "MIT",
+      "includedLicense": "Apache-2.0 text",
+      "inspectedFiles": [
+        {
+          "path": "package.json",
+          "sha256": "f6f47ada608330fd92158a258042c3ea3054a9644abac8f1e1254640694ba386"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "bd087c1ebd511adbab74705ec2b31d63d175e8d422f58c1af54754da02b1d329"
+        },
+        {
+          "path": "dist/components/index.d.ts",
+          "sha256": "632e8f0f9e88dc7ef25d4f4100b52e37970a16e863c3c9fb1dea9fcb2a57042a"
+        },
+        {
+          "path": "dist/components/button/button.js",
+          "sha256": "cc4bd13ecbffe47b3cd84c6438b643dc3470c2666e89fb76f63a3e2c66b03f27"
+        },
+        {
+          "path": "dist/components/button/button.d.ts",
+          "sha256": "beb41cf5d8a9691fbfd8255a05c7d981efc7e261dc010fd44ded03a87bc40d76"
+        },
+        {
+          "path": "dist/components/chip/chip.d.ts",
+          "sha256": "39a607fedc7d8cb2c07fe171aa5ca46099385c6c7abf417a621c7f2a74ed94b4"
+        },
+        {
+          "path": "dist/components/avatar/avatar.js",
+          "sha256": "b4e3f495a27f43712484fc694ba0582e6eb210369135f3dc419ebc157be9caf3"
+        },
+        {
+          "path": "dist/components/avatar-group/avatar-group.js",
+          "sha256": "107f59f9d66da88db747aa2e12b60f15b19074fc68810bb29cb5c4b944a118fa"
+        },
+        {
+          "path": "dist/components/badge/badge.js",
+          "sha256": "c200b2e1f686ebc4f94bde9b54cc8ddd1ba7593433698cab749a64d1a1311db3"
+        },
+        {
+          "path": "dist/components/button-group/button-group.js",
+          "sha256": "fbd3ba1d23b3dca8d75746476edf1225edb655b03474ab58791a8a4291a52216"
+        },
+        {
+          "path": "dist/components/close-button/close-button.js",
+          "sha256": "2d53aa21f2816f95169b6afed97ee8f1182f3f1ae0787c698b7afd8ebb71288f"
+        },
+        {
+          "path": "dist/components/kbd/kbd.js",
+          "sha256": "8c3d13b642061b38ad60b1d105f543100dfb4f2377a869fbf66ca92ff51f980c"
+        },
+        {
+          "path": "dist/components/link/link.js",
+          "sha256": "d56a621655608f1b1087a2f136257cfb2dfdd0ed81dedadbccfb3c57af340567"
+        },
+        {
+          "path": "dist/components/separator/separator.js",
+          "sha256": "14baba4fd591f18fe6a01977ad017b162bf3ae2d6a7ee66c65858fdecf846bd4"
+        },
+        {
+          "path": "dist/components/skeleton/skeleton.js",
+          "sha256": "059cab2a9565963bb95e58e4783ef2a8ec68c74a920bafe6f35951af074c2c12"
+        },
+        {
+          "path": "dist/components/spinner/spinner.js",
+          "sha256": "df4aef1909fcc823c3e234b12f4903c9045821379360ae027f5b80f58dbc3cf1"
+        },
+        {
+          "path": "dist/components/surface/surface.js",
+          "sha256": "e155404f4406df673991ae6d4de74a27172bcf19989737a3dbaf8369031a01dc"
+        },
+        {
+          "path": "dist/components/typography/typography.js",
+          "sha256": "77c01f662d670794f4738aa3a1f2ab21172f83eb523fe578f05f976aaa16a351"
+        },
+        {
+          "path": "dist/components/checkbox/checkbox.js",
+          "sha256": "b9d7b2d5ba98a9ba7a569ac341b5f9d5437a7e3a96aa112e37c959e440eed758"
+        },
+        {
+          "path": "dist/components/checkbox-group/checkbox-group.js",
+          "sha256": "cf9ab9d976de9a815aa805993a3bc9eb496eae77dca64de54feaf236ea170684"
+        },
+        {
+          "path": "dist/components/radio/radio.js",
+          "sha256": "401046807d5e4c640249bae5ce27e89c92c508c7bd4565b2ce6a26a90eb3efc6"
+        },
+        {
+          "path": "dist/components/radio-group/radio-group.js",
+          "sha256": "5e518e53b7c76cc2dc7247a0f64fc392e9868b3bb67c2a40d5d726c63338db9e"
+        },
+        {
+          "path": "dist/components/switch/switch.js",
+          "sha256": "1f2ed94bdd7f772eac49501c35976efb3a599619543011c3ea19a04f4e5f7d79"
+        },
+        {
+          "path": "dist/components/switch-group/switch-group.js",
+          "sha256": "8085faf77703b3addcb527c1eaf9fbe6a1e910f690565bd76793bb854cd81577"
+        },
+        {
+          "path": "dist/components/textarea/textarea.js",
+          "sha256": "da2c0e29cf6dddd4c5e161516f9bb9e685cae8c2496c82915bdaf3cb3fc1db3e"
+        },
+        {
+          "path": "dist/components/input-group/input-group.js",
+          "sha256": "906a068769e5224d099a01724be8fddc483ab8e0f26c124482c69d0cc75a9414"
+        },
+        {
+          "path": "dist/components/search-field/search-field.js",
+          "sha256": "9f42699affc2c3096ff93d84bab56c16805012a1694087acb22373513ec25087"
+        },
+        {
+          "path": "dist/components/toggle-button/toggle-button.js",
+          "sha256": "054cd7d74cde282b1532b7afafa81dc0cb168aabed4da25b4f7659c7673a8697"
+        },
+        {
+          "path": "dist/components/toggle-button/toggle-button.d.ts",
+          "sha256": "59892509e6770bd11a2a61238847b21b825acb1536133144476967e488ce9267"
+        },
+        {
+          "path": "dist/components/toggle-button-group/toggle-button-group.js",
+          "sha256": "504e9ca751c7b3a9b1fb8ec9280ba6900dbc5eacba4aecb4c8a41a7f60fe76b0"
+        },
+        {
+          "path": "dist/components/toggle-button-group/toggle-button-group.d.ts",
+          "sha256": "9de89b38460c3d70942367e570e01d971b130260ffd253579a06e9f6d14cfe3a"
+        },
+        {
+          "path": "dist/components/form/form.js",
+          "sha256": "961bdf4551640be29af2253dc6706e51dc7b02cfdf8524edb3331f678829bdf2"
+        },
+        {
+          "path": "dist/components/form/form.d.ts",
+          "sha256": "25544b0203449097d571b11a42711f6bdb871e7d50ad9e4b839393fe53f13f77"
+        },
+        {
+          "path": "dist/components/fieldset/fieldset.js",
+          "sha256": "483c4cc680fa0b8c44007888bfdda68d4aef33ba19b313f8eef7a72bdd94320b"
+        },
+        {
+          "path": "dist/components/fieldset/fieldset.d.ts",
+          "sha256": "f530dffcc00d6587140bc22c611288b7240233ff9e5806715486340b5dbc8e02"
+        },
+        {
+          "path": "dist/components/number-field/number-field.js",
+          "sha256": "63bba8fdc09edc3d009709f0b6ffdddc5d5b6e516667ba09ccc45d4c22772294"
+        },
+        {
+          "path": "dist/components/number-field/number-field.d.ts",
+          "sha256": "c0dc9c98518d5345875a7291cb7816785f86290d52e481568d3b95bd4597d74e"
+        },
+        {
+          "path": "dist/components/input-otp/input-otp.js",
+          "sha256": "3f8cfb36cd7f447751eb9f6f5b376fb7534719ec227d0515f4b478f85706dc84"
+        },
+        {
+          "path": "dist/components/input-otp/input-otp.d.ts",
+          "sha256": "b4cc1faa4a7e5bf2d6b4ac5954cff5a6018dcf1caa7e35ae36e9ccae35b8498f"
+        }
+      ]
+    },
+    {
+      "name": "@heroui/styles",
+      "version": "3.2.6",
+      "tarball": "https://registry.npmjs.org/@heroui/styles/-/styles-3.2.6.tgz",
+      "integrity": "sha512-feKZUphVe5+QCXnUe8kpqT5T+pPeMI3LaQcSztx08PGVTkhz0dU0C6crKvA1G4HHIPFXXon68VeL8lPjvGHsWg==",
+      "integrityVerified": true,
+      "provenance": "https://registry.npmjs.org/-/npm/v1/attestations/@heroui%2fstyles@3.2.6",
+      "declaredLicense": "MIT",
+      "includedLicense": "Apache-2.0 text",
+      "inspectedFiles": [
+        {
+          "path": "package.json",
+          "sha256": "9736b00140df636d947bcf7b0a1b522bacae60a72eff3260498316df947b3694"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "bd087c1ebd511adbab74705ec2b31d63d175e8d422f58c1af54754da02b1d329"
+        },
+        {
+          "path": "dist/index.css",
+          "sha256": "e4c14b76dc51883a587449f558c40fa4498076d32b62c070a7ed51ac36719931"
+        },
+        {
+          "path": "dist/themes/default/variables.css",
+          "sha256": "80efc8752b6e15c2acf285756bfeb26290749005335092fee643ed9ba9084f4c"
+        },
+        {
+          "path": "dist/themes/shared/theme.css",
+          "sha256": "70ea884b09e73a7bfa4f72eac91ad43b340c2c94fb06dcc889178472f0711f71"
+        },
+        {
+          "path": "dist/utilities/index.css",
+          "sha256": "d45e4105f361f68cb9689ffd2cb8849422c35095b8425b70e809f4c5c4ab4877"
+        },
+        {
+          "path": "dist/components/button.css",
+          "sha256": "a2bd37d460655889cbf6f492fb083e7e632201c7ab819c9b2533335a5ecc248c"
+        },
+        {
+          "path": "src/components/button/button.styles.ts",
+          "sha256": "2340b0b95db0688e13089295ce979eee8eec3a69ccf538da06cf0a7d9ac4b8e9"
+        },
+        {
+          "path": "src/components/chip/chip.styles.ts",
+          "sha256": "0ac376e5f7d640aba94556c884256586eb898ace78cdd4ec115ffd5c75ee00e1"
+        },
+        {
+          "path": "dist/components/avatar.css",
+          "sha256": "a80c6c91e757ceafb5bcdcbf9f4eb8ff0df4a66b2624eb4013ac1a831755a23d"
+        },
+        {
+          "path": "dist/components/avatar-group.css",
+          "sha256": "0b61587b363963389fca303d6fe2b73326bc31d72e189180096261363be6daf8"
+        },
+        {
+          "path": "dist/components/badge.css",
+          "sha256": "e8a2ef1ef462632ceadd3601bde1a08a2cf61f6959c545731f34c67cded19c48"
+        },
+        {
+          "path": "dist/components/button-group.css",
+          "sha256": "add45d9b24ca427e38457ccfec79c3a3975af06b7558891326c104e4dc3eb81b"
+        },
+        {
+          "path": "dist/components/close-button.css",
+          "sha256": "f185e385b0803022aae89b98ce5c76d847c2ba28ef947f32e2e67923f72628c2"
+        },
+        {
+          "path": "dist/components/kbd.css",
+          "sha256": "7ef4e891cb810ea994fe7b5245e9461feff68eb27c64bc3f7153c55b600d2bc6"
+        },
+        {
+          "path": "dist/components/link.css",
+          "sha256": "e8bdb6940ca488ab1dd5244973af70ab2fe6f01695167f5125220c0bbec5d500"
+        },
+        {
+          "path": "dist/components/separator.css",
+          "sha256": "f2a39ea05a8743887731d744dde706934148678451b2e1ff65ffe499d2dbc488"
+        },
+        {
+          "path": "dist/components/skeleton.css",
+          "sha256": "1c3d3d613311cb2d1d8734fd549d6b85870d644c6a201f66adb03da50d1523e5"
+        },
+        {
+          "path": "dist/components/spinner.css",
+          "sha256": "893520dac75245372a1568b1cea34c114c0a8dcf6d497b70e3fc515a7ea3e076"
+        },
+        {
+          "path": "dist/components/surface.css",
+          "sha256": "0086b20a95f6fea828c3136b27a258170819b43a4ff4f7e4bbd4ae8932e6cd01"
+        },
+        {
+          "path": "dist/components/typography.css",
+          "sha256": "ec7e29255d65b085d31e3cbc8f9c8680c4b4aa23401c297c966de45efaea25f6"
+        },
+        {
+          "path": "dist/components/checkbox.css",
+          "sha256": "a722645f0c67dda8d7655c56aeb7de0185a2b4ea3f460003db85ff1ddbcefc0d"
+        },
+        {
+          "path": "dist/components/checkbox-group.css",
+          "sha256": "06d8bca932e328ea714dfccc8a560a34456763f59778860beb4ad9e8e57e8a1f"
+        },
+        {
+          "path": "dist/components/radio.css",
+          "sha256": "51d8ae53e525703993034db6ad6bd469d7375a71011073ee6788724d41f8b1d1"
+        },
+        {
+          "path": "dist/components/radio-group.css",
+          "sha256": "9bac1d91b99a35b6e59a2cdf61dc9b569f827879276cd953e7b775f5a5f747fd"
+        },
+        {
+          "path": "dist/components/switch.css",
+          "sha256": "4cf9f49595b8ecdb59fc1ba49cf74a3178726019451cfffc5f7714c6ae9c529a"
+        },
+        {
+          "path": "dist/components/switch-group.css",
+          "sha256": "43caad536a59a92c7aa979df72d3b7f6a0d41e3a007721fa4a2192f29aa2ffd1"
+        },
+        {
+          "path": "dist/components/textarea.css",
+          "sha256": "cc0e2539cd48c79b3ecf3e1c0d197778d4aa327ac4e177005c0cb4cdb5e4cbe5"
+        },
+        {
+          "path": "dist/components/input-group.css",
+          "sha256": "bdab9b9b2e36b3e6e3375551e252209cdf561833618ebc6c663b0ecc98559f4c"
+        },
+        {
+          "path": "dist/components/search-field.css",
+          "sha256": "590ace429c53486261e27a81375e226aba20f04244d626d1a2db5d44767315a1"
+        },
+        {
+          "path": "dist/components/toggle-button.css",
+          "sha256": "c60c9658ffb6d87cb0038c70a919d84992ed7d0ae06f743dcf1138ea49693863"
+        },
+        {
+          "path": "src/components/toggle-button/toggle-button.styles.ts",
+          "sha256": "8ffafeb58719589a39819bd72243a7cc4e420014918e4cf65142e1084ab257cd"
+        },
+        {
+          "path": "dist/components/toggle-button-group.css",
+          "sha256": "51a05e880922196c7416d30a62b1e03af44520ae1c4481a6f3ffa813de7a9350"
+        },
+        {
+          "path": "src/components/toggle-button-group/toggle-button-group.styles.ts",
+          "sha256": "e28bc23d17f7a566a7e5ed96c04e917e6cccae188ff52de348a6111f4ebb5967"
+        },
+        {
+          "path": "dist/components/fieldset.css",
+          "sha256": "5fef1384e339ff0b5e04977ff79bcbf05bfe017f13457be33cde54affec6625c"
+        },
+        {
+          "path": "src/components/fieldset/fieldset.styles.ts",
+          "sha256": "4f8e5bfc7599438132edaf44c2768aed2fbf958d5cffdf0b9d791ce6bed09d2f"
+        },
+        {
+          "path": "dist/components/number-field.css",
+          "sha256": "9aa60a8356c519d4278518d6adbf03a54e4da146a69bd9ad680d4e9c01b111a8"
+        },
+        {
+          "path": "src/components/number-field/number-field.styles.ts",
+          "sha256": "7c9469a379aad3c2f563a18cb4a0e3d7579b733808a4c4f7060c786df27cf22d"
+        },
+        {
+          "path": "dist/components/input-otp.css",
+          "sha256": "32936ea9fda5e5fe212cf6dee8fa0f2ec0da6622d95e800b0d8055661c0b170c"
+        },
+        {
+          "path": "src/components/input-otp/input-otp.styles.ts",
+          "sha256": "24ac377763aa5efc36be453b38bfa23e7fe2d4503e861934e7920ac16fe9df7d"
+        }
+      ]
+    }
+  ],
+  "documentation": [
+    {
+      "path": "apps/docs/content/docs/en/react/components/(buttons)/button.mdx",
+      "url": "https://github.com/heroui-inc/heroui/blob/e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e/apps/docs/content/docs/en/react/components/(buttons)/button.mdx",
+      "sha256": "bd8364cb98527e5913f47f7c554a97a9470f36286cdba24a7a9bfecca25c4d1f"
+    },
+    {
+      "path": "apps/docs/content/docs/en/react/components/(typography)/typography.mdx",
+      "url": "https://github.com/heroui-inc/heroui/blob/e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e/apps/docs/content/docs/en/react/components/(typography)/typography.mdx",
+      "sha256": "9bba11ed56afe59b85bda30dcf7f31ddfb3cbe4ec3f51e1b279dd5de6cc79fdc"
+    },
+    {
+      "path": "apps/docs/content/docs/en/react/getting-started/(handbook)/theming.mdx",
+      "url": "https://github.com/heroui-inc/heroui/blob/e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e/apps/docs/content/docs/en/react/getting-started/(handbook)/theming.mdx",
+      "sha256": "a1f22bed85b0cfa0fe8713bfb60365a0cccbc0b42cbe274389e4723b3b79e7d7"
+    },
+    {
+      "path": "apps/docs/content/docs/en/react/getting-started/(handbook)/colors.mdx",
+      "url": "https://github.com/heroui-inc/heroui/blob/e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e/apps/docs/content/docs/en/react/getting-started/(handbook)/colors.mdx",
+      "sha256": "70a3b78448680217c3e4bd10e16c439db7e6c434bfe061cb97e41d830cf4a1d3"
+    },
+    {
+      "path": "apps/docs/content/docs/en/react/getting-started/(handbook)/animation.mdx",
+      "url": "https://github.com/heroui-inc/heroui/blob/e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e/apps/docs/content/docs/en/react/getting-started/(handbook)/animation.mdx",
+      "sha256": "9d1b1e1ba0e0b71532daef3d0e3f38c3818507ead5781b0080b2ebc49f98ba0c"
+    }
+  ],
+  "limitations": [
+    "Families mapped onto Remix are listed in families.json; families that need behavior Remix lacks are deferred.",
+    "source/ holds the compiled CSS, theme, and component sources for the mapped families only; files.json pins each by sha256.",
+    "Package metadata says MIT while the repository LICENSE is Apache-2.0; the Apache text is retained in LICENSE.upstream."
+  ]
+}

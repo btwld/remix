@@ -1,0 +1,31 @@
+/* Separator Component Styles */
+
+/* Base separator with default horizontal orientation */
+.separator {
+  @apply shrink-0 rounded-sm border-t-0 border-b-0 bg-separator;
+
+  /* Default size - horizontal orientation */
+  @apply h-px w-full;
+}
+
+/* Orientation variants */
+.separator--horizontal {
+  @apply h-px w-full;
+}
+
+.separator--vertical {
+  @apply h-auto min-h-2 w-px self-stretch;
+}
+
+/* Color variants */
+.separator--default {
+  @apply bg-separator;
+}
+
+.separator--secondary {
+  @apply bg-separator-secondary;
+}
+
+.separator--tertiary {
+  @apply bg-separator-tertiary;
+}

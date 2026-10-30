@@ -1,0 +1,26 @@
+component: Tooltip
+widget: HeroUiTooltip
+target: RemixTooltip
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/tooltip.css]
+anatomy: [trigger, surface]
+variants: []
+sizes: {supported: [], default: null}
+states: [hidden, shown]
+tokens:
+  - overlay and overlay shadow (surface), foreground (text)
+  - radius-xl (surface radius, capped at 32), text-xs
+measurements:
+  - {what: surface, value: "padding 8, text 12/16, 32 high around one line", cite: "tooltip-default-open-content, tooltip-default-open-text"}
+  - {what: max width, value: 320, cite: "tooltip-long-open-content (320 x 64 around 304 x 48 of text)"}
+  - {what: radius, value: "min(32, radius-xl) = 12", cite: tooltip-default-open-content}
+  - {what: fill and text, value: "overlay, foreground", cite: tooltip-default-open-content}
+  - {what: shadow, value: "overlay shadow (light layers)", cite: tooltip-default-open-content}
+approximations:
+  - The overlay shadow is applied as plain box shadows because TooltipStyler has no effects slot. Dark mode's overlay shadow is only a 1px white 30% inset hairline, which a box shadow cannot draw; dark tooltips carry the light layers (invisible on a dark surface) and lack that visible hairline.
+  - "The content sits 3px from the trigger (7px with showArrow, an arrow of 12 x 12) and the default placement is top (`tooltip-default-open-content`, `tooltip-arrow-open-arrow`); placement, offset and the arrow are Remix's."
+  - "`break-all` has no Flutter equivalent; long words wrap at the 320px limit as Flutter allows."
+  - Show and hide delays are Remix's; the CSS sets none.
+  - The 150ms enter and 100ms exit motion is not reproduced.

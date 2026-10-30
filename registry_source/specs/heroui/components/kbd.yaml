@@ -1,0 +1,23 @@
+component: Kbd
+widget: HeroUiKbd
+target: composition over Mix RowBox and StyledText
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/kbd.css]
+anatomy: [container, keys]
+variants: [default (defaultKbd), light]
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - default (fill; light is transparent)
+  - muted, radius-lg, text-sm
+measurements:
+  - {what: height, value: 24, cite: kbd-command}
+  - {what: padding, value: "8 each side", cite: kbd-command}
+  - {what: radius, value: 8, cite: kbd-command}
+  - {what: key gap, value: 2, cite: "kbd.css space-x-0.5"}
+  - {what: label, value: "14/20 medium muted, word spacing -4", cite: "kbd-command; kbd.css word-spacing -0.25rem"}
+approximations:
+  - Keys are plain strings (for example ⌘ and K); HeroUI's Kbd.Abbr key-name table and its title tooltips are React conveniences and are left to the app.
+  - HeroUI's default variant is defaultKbd.

@@ -4,10 +4,10 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the neutral `vanilla` preset or the Radix Themes-inspired `fortal`
-preset at initialization. Remix remains the behavior dependency; the
-application owns its tokens, theme values, component recipes, and generated
-adapters.
+Choose the neutral `vanilla` preset, the Radix Themes-inspired `fortal`
+preset, or the HeroUI-inspired `heroui` preset at initialization. Remix
+remains the behavior dependency; the application owns its tokens, theme values,
+component recipes, and generated adapters.
 
 The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
 component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
@@ -36,7 +36,14 @@ are rejected even with `--overwrite`. Existing installations without ownership
 records require verified, explicit `add theme button --adopt` migration; see
 [legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
-Both presets additionally distribute the unstyled Agent items:
+The `heroui` preset follows HeroUI's names, adding `alert`, `avatar_group`,
+`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
+`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`toggle_button`, and `toggle_button_group` to shared names such as `button` and
+`select`.
+
+The Vanilla and Fortal presets additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript`, with shared `models` and `support` dependencies. These are
 application-owned source, not a dependency on the private authoring source.
@@ -64,7 +71,7 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.13`, which `add` declares for you.
+Every preset requires Remix `^1.0.0-beta.13`, which `add` declares for you.
 
 Global activation is convenient for experiments. Registry content remains
 pinned per project in `remix.yaml`:
@@ -163,15 +170,15 @@ the child of `WidgetsApp.builder` with `AcmeTheme`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
 
-Both presets support `theme`, `darkTheme`, and `mode` on their generated scope.
+Every preset supports `theme`, `darkTheme`, and `mode` on its generated scope.
 The old scope `data` and `brightness` parameters and config `createScope`
 shortcut are removed. Update application-owned callers to this API.
 With no configuration, roots use the generated light/dark pair and follow the
 system. Nested scopes inherit the pair and active selection. A custom `theme`
 without `darkTheme` is used in both modes; supplying `darkTheme` alone keeps the
-base default. Both presets generate `AcmeThemeData.light()`, `.dark()`, and
-`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeTheme` for both presets,
-with your configured prefix.
+base default. Every preset generates `AcmeThemeData.light()`, `.dark()`, and
+`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeTheme` with your
+configured prefix.
 
 Place the scope in `WidgetsApp.builder` above the Navigator. The CLI installs
 theme files, not a complete app host or appearance picker. See the
@@ -265,7 +272,8 @@ use `--diff` and explicit `--overwrite` for template updates.
 
 ### Add the full dashboard demo
 
-Initialize either preset, then use the same item and public dashboard API:
+Initialize the Vanilla or Fortal preset (HeroUI ships no dashboard), then use
+the same item and public dashboard API:
 
 ```shell
 dart run remix_cli:remix init --prefix Ui --preset vanilla
@@ -291,7 +299,8 @@ Installed recipe source follows the normal update contract. Re-running `add
 dashboard_demo` preserves local edits. Inspect a newer template with `--diff`, and
 use `--overwrite` only when deliberately replacing the installed recipe.
 
-Contributors can reproduce the isolated consumer gates for either preset:
+Contributors can reproduce the isolated dashboard consumer gates for Vanilla
+and Fortal:
 
 ```shell
 dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep

@@ -1,0 +1,39 @@
+component: Checkbox
+widget: HeroUiCheckbox
+target: RemixCheckbox
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/checkbox.css, dist/components/label.css, dist/utilities/index.css]
+anatomy: [control, indicator, label]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, selected, indeterminate, invalid, focus-visible, disabled]
+tokens:
+  - field-background (primary rest), default (secondary rest), surface shadow (primary)
+  - accent, accent-hover (primary selected hover; indeterminate pressed), accent-foreground (mark)
+  - danger, danger-foreground (invalid), foreground (label), radius-md
+  - focus (ring), background (ring gap)
+measurements:
+  - {what: control, value: 16x16, cite: checkbox-primary-rest-control}
+  - {what: control radius, value: 6, cite: checkbox-primary-rest-control}
+  - {what: control fill, value: "field-background (primary), default (secondary)", cite: "checkbox-primary-rest-control, checkbox-secondary-rest-control"}
+  - {what: indeterminate fill, value: accent, cite: checkbox-primary-mixed-control}
+  - {what: indicator box, value: 12, cite: checkbox-primary-rest-indicator}
+  - {what: check mark svg, value: 10, cite: "checkbox.css checkbox-default-indicator--checkmark size-2.5"}
+  - {what: indeterminate line svg, value: 12, cite: "checkbox.css checkbox-default-indicator--indeterminate size-3"}
+  - {what: label, value: "14/20 medium", cite: checkbox-primary-rest-label}
+  - {what: control-label gap, value: 12, cite: checkbox-primary-rest-content}
+  - {what: invalid label, value: danger, cite: checkbox-primary-invalid-label}
+  - {what: invalid selected fill, value: "danger with a danger-foreground mark", cite: "checkbox-primary-invalid-selected-control, checkbox-primary-invalid-selected-indicator"}
+  - {what: invalid ring, value: "1px danger outline while unselected", cite: "checkbox.css status-invalid-field; utilities/index.css invalid-field-ring"}
+  - {what: disabled opacity, value: "0.5 field, 0.25 label", cite: "checkbox-primary-disabled, checkbox-primary-disabled-label"}
+  - {what: "focus ring, unselected", value: "2px background gap, then a 2px focus ring", cite: checkbox-primary-rest-focus-control}
+  - {what: "focus ring, selected", value: "the same ring", cite: checkbox-primary-selected-focus-control}
+  - {what: "focus ring, invalid and selected", value: "the same accent ring, not danger", cite: checkbox-primary-invalid-selected-focus-control}
+approximations:
+  - "The mark is Remix's check glyph, drawn in the svg's 10px box and centered in the 16px control; HeroUI's stroke check draws in over 150ms. The glyph is squarer than the upstream polyline (about 9.5 x 8.8 ink against 9.2 x 6.9) and its stroke is about 1.7px against 1.4px. The indeterminate dash matches (10 x 2 against 10.5 x 1.5)."
+  - The selected fill changes color over 200ms; upstream also scales it in from 70%.
+  - The row is at least 24px tall (HeroUI's touch-target size); upstream's 24px target is an overlay, so its row stays 20px.
+  - A description line is the app's composition; RemixCheckbox takes one label.
+  - "The `checkbox-*-selected-control` captures report the unselected field fill; the selected fill is checked against `checkbox-primary-mixed-control` and the theme's accent. The `*-selected-focus-control` captures report that fill too; only their ring is compared."

@@ -288,21 +288,23 @@ contract (`name`, `widgetParameters`, `factoryParameters`, generic targets).
 Install it with `npx skills add btwld/mix --skill mix`; without it, read
 `mix_widget_generator.dart` in the `mix_generator` package source.
 
-**Hand-written facade instead** only when the public widget needs structure
-the Remix widget cannot take, or a generated parameter would expose a
-Remix-only type the target system has no word for. A facade is a
-`StatelessWidget` in the target vocabulary that builds the recipe and passes
-it to the Remix widget's `style`.
+**Curate parameters with `widgetParameters`** before reaching for a
+hand-written facade. A facade over an existing Remix widget is the exception:
+record why in the worksheet, build the recipe inside it, and keep Remix's
+parameter names and shapes. Reference ports never adopt upstream prop shapes
+(`isSelected`/`defaultSelected`, compound children).
 
-**No Remix widget for the component.** In order of preference:
+**No Remix widget for the component.** Compose existing Remix widgets and Mix
+primitives (`Box`, `FlexBox`, `StyledText`, all re-exported by `remix`) in a
+stateless facade. If the family needs behavior that composition cannot
+supply, defer it. A third-party registry that must ship such a widget anyway
+can declare `naked_ui` on the item or author a `@MixableSpec(target: ...)`
+spec (the CLI then writes the consumer's `build.yaml`); record the choice in
+the ADR and README. First-party presets and reference ports never do this.
 
-1. Compose existing Remix widgets and Mix primitives (`Box`, `FlexBox`,
-   `StyledText`, all re-exported by `remix`) in a facade.
-2. Add behavior from Naked UI, declaring `naked_ui` on the item with the
-   constraint `remix` uses.
-3. Author a `@MixableSpec(target: ...)` spec. The CLI then writes the
-   consumer's `build.yaml` to enable that generator; record this in the ADR
-   and the README.
+For reference ports, map each upstream family to a Remix widget by role, not
+name: a label-like Chip fits `RemixBadge`, while an anchored notification
+Badge is a composition. See `references/reference-parity.md` §1–2.
 
 ## 3. Pitfalls
 
@@ -316,6 +318,9 @@ on it. With `target: RemixButton.new`, a recipe parameter with the same name
 and type as a target parameter becomes one widget field passed to both, so
 the recipe and `RemixButton` always agree. A different type for the same name
 fails generation.
+
+Map an upstream pending or busy state onto `loading`. Its focus and semantics
+are Remix's; do not rebuild the upstream contract in a facade.
 
 **Focus rings: outline effects, not borders.** `.onFocused(.border(...))`
 replaces the variant's border and shifts layout by the border width. Paint the
@@ -411,7 +416,6 @@ states: [rest, hover, pressed, focus-visible, disabled, loading]
 tokens: [interactive-primary, text-on-interactive, focus, radius]
 measurements:                     # non-token values, each with a source
   - {what: medium height, value: 36, cite: "button spec p.3"}
-behavior: <keyboard, focus, screen reader, RTL notes>
 approximations: <every deviation from the source>
 ```
 
@@ -427,6 +431,10 @@ In the authoring package, pumping a `WidgetsApp` whose `builder` installs
 - disabled and loading visuals match the worksheet;
 - `AcmeTheme.of` throws without a scope and `maybeOf` returns null;
 - the token test against `specs/tokens.yaml` (`references/tokens.md` §4).
+
+For reference ports, assert geometry against measured upstream values at each
+breakpoint the source defines, and review a side-by-side capture
+(`references/reference-parity.md` §3–4).
 
 A spinner animates forever, so `pumpAndSettle` never returns in loading tests;
 use `tester.pump(const Duration(milliseconds: 100))`. Assert token-derived

@@ -1,0 +1,25 @@
+component: Link
+widget: HeroUiLink
+target: RemixLink
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/link.css]
+anatomy: [container, label]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, focus-visible, disabled]
+tokens:
+  - link, muted (underline colours), focus (ring)
+  - radius-xl, disabled-opacity
+measurements:
+  - {what: label, value: "medium weight, size inherited", cite: "link: 16/24 in a 16/24 run"}
+  - {what: radius, value: 12, cite: link}
+  - {what: underline, value: "none at rest; on hover and press, 1.5px", cite: "link-hover, link-pressed (textDecorationLine underline); link.css decoration-[1.5px]"}
+  - {what: underline colour, value: "muted at 50% on hover, muted when pressed", cite: "link.css &:hover decoration-muted/50, &:active decoration-muted"}
+  - {what: disabled opacity, value: 0.5, cite: link-disabled}
+  - {what: label colour, value: "link token, unchanged on hover and press", cite: "link, link-hover, link-pressed (color), light and dark"}
+  - {what: focus ring, value: "box-shadow 0 0 0 2px background, then 0 0 0 4px focus", cite: "link-focus (light and dark)"}
+approximations:
+  - Flutter text has no underline offset, so link.css underline-offset-4 is not reproduced.
+  - The trailing link icon (link__icon) is left to the app, since RemixLink takes a child.

@@ -1,0 +1,106 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'button.dart';
+import 'close_button.dart';
+
+part 'toast.g.dart';
+
+/// HeroUI toast tones: the title and the leading icon take the status color.
+enum HeroUiToastVariant { defaultToast, accent, success, warning, danger }
+
+/// HeroUI recipe for [RemixToast] and, as its `style`, [RemixToastScope].
+///
+/// Stacking, timing, and dismissal stay with Remix. The action is HeroUI's
+/// default button, as in `Toast` (`toast-default-action`).
+@MixWidget(target: RemixToast.new)
+ToastStyler heroUiToastStyle({
+  HeroUiToastVariant variant = .defaultToast,
+  ToastStyler style = const ToastStyler.create(),
+}) {
+  final (title, icon) = switch (variant) {
+    .defaultToast => (
+      HeroUiTokens.overlayForeground,
+      HeroUiTokens.overlayForeground,
+    ),
+    .accent => (
+      HeroUiTokens.accentSoftForeground,
+      HeroUiTokens.overlayForeground,
+    ),
+    .success => (
+      HeroUiTokens.successSoftForeground,
+      HeroUiTokens.successSoftForeground,
+    ),
+    .warning => (
+      HeroUiTokens.warningSoftForeground,
+      HeroUiTokens.warningSoftForeground,
+    ),
+    .danger => (
+      HeroUiTokens.dangerSoftForeground,
+      HeroUiTokens.dangerSoftForeground,
+    ),
+  };
+
+  return ToastStyler()
+      .direction(.horizontal)
+      .crossAxisAlignment(.start)
+      .spacing(_gap)
+      .padding(.horizontal(_paddingX).vertical(_paddingY))
+      .color(HeroUiTokens.surface())
+      .borderRadius(.all(HeroUiTokens.radiusPanel()))
+      .containerEffects(heroUiSurfaceEffects(overlay: true))
+      // `.toast__indicator`: a `size-4` icon with `p-1` around it.
+      .icon(
+        IconStyler()
+            .size(_icon)
+            .color(icon())
+            .wrap(.padding(EdgeInsetsGeometryMix.all(_iconPadding))),
+      )
+      .title(
+        TextStyler(
+          style: HeroUiTokens.textSm.mix(),
+        ).fontWeight(.w500).color(title()),
+      )
+      .description(
+        TextStyler(
+          style: HeroUiTokens.textSm.mix(),
+        ).color(HeroUiTokens.muted()),
+      )
+      .action(heroUiButtonStyle())
+      .closeButton(_closeButton)
+      .merge(style);
+}
+
+/// `.toast__close-button` on top of the close button: `size-5` with a
+/// `size-3.5` icon and `bg-default` on hover; from `sm` up it gains the border
+/// and the overlay fill, and its icon is `size-3`.
+final _closeButton = heroUiCloseButtonStyle()
+    .size(_closeSize, _closeSize)
+    .icon(.size(_closeIcon))
+    .onHovered(IconButtonStyler().color(HeroUiTokens.defaultColor()))
+    .onBreakpoint(
+      const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+      IconButtonStyler()
+          .color(HeroUiTokens.overlay())
+          .border(.all(.color(HeroUiTokens.border()).width(_closeBorder)))
+          .icon(.size(_closeIconFromSm))
+          .onHovered(IconButtonStyler().color(HeroUiTokens.defaultColor())),
+    );
+
+/// `.toast` `px-4 py-3 gap-1.5`.
+const _paddingX = 16.0;
+const _paddingY = 12.0;
+const _gap = 6.0;
+
+/// `.toast__indicator` `size-4` with `p-1`, and `.toast__close-button`
+/// `size-5`.
+const _icon = 16.0;
+const _iconPadding = 4.0;
+const _closeSize = 20.0;
+
+/// `size-3.5`, `sm:size-3`, and `sm:border`.
+const _closeIcon = 14.0;
+const _closeIconFromSm = 12.0;
+const _closeBorder = 1.0;

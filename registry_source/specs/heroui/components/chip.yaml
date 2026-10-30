@@ -1,0 +1,26 @@
+component: Chip
+widget: HeroUiChip
+target: RemixBadge
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/chip.css]
+anatomy: [container, label]
+variants: [primary, secondary, soft, tertiary]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest]
+tokens:
+  - "colors (HeroUiColor, shared with badge, avatar, and progress): default (defaultColor), accent, success, warning, danger"
+  - "primary: accent/success/warning/danger with their -foreground; default stays on default"
+  - "secondary and tertiary: default (tertiary transparent) with the -soft-foreground (default-foreground for the default colour)"
+  - "soft: accent-soft/success-soft/warning-soft/danger-soft/default-soft with the -soft-foreground"
+  - radius-2xl, text-xs, text-sm
+measurements:
+  - {what: height, value: "sm 20, md 24, lg 28", cite: "chip-primary-accent-sm, -md, -lg"}
+  - {what: padding, value: "sm 4x0, md 8x2, lg 12x4, plus the label's 2px", cite: "chip-primary-accent-*; chip__label px-0.5 (sm width 47.98, md 55.98)"}
+  - {what: radius, value: 16, cite: chip-primary-accent-md}
+  - {what: label, value: "12/20 medium; lg 14/20", cite: "chip-primary-accent-md, -lg"}
+  - {what: fill and label colour, value: "per variant and colour, in light and dark", cite: "chip-<variant>-<color>-md backgroundColor and color (tertiary has no fill)"}
+approximations:
+  - HeroUI's Chip is a label-like badge, so it is RemixBadge. The label's px-0.5 is added to the container padding.
+  - Defaults are variant secondary, colour default, size md, the CSS base state.

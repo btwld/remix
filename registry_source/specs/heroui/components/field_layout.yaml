@@ -1,0 +1,26 @@
+component: Label, Description, FieldError
+widget: HeroUiFieldLayout, HeroUiControlRow
+target: composition (StyledText, FlexBox, Wrap)
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/label.css, dist/components/description.css, dist/components/field-error.css, dist/components/radio.css, dist/components/switch.css, dist/components/checkbox-group.css]
+anatomy: [group label, items, helper text, error text, control row label, control row description]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, invalid, disabled]
+tokens: [foreground (label), muted (description), danger (error and invalid label)]
+measurements:
+  - {what: label, value: "14/20 medium", cite: "label.css text-sm font-medium"}
+  - {what: description, value: "12/16 muted", cite: "description.css text-xs"}
+  - {what: error, value: "12/16 danger with a 4px inset", cite: "field-error.css text-xs px-1; search-primary-intrinsic-invalid-error"}
+  - {what: invalid group height, value: "the description stays and the error line adds 16: 204 becomes 220", cite: "radio-primary-vertical-rest, radio-primary-vertical-invalid"}
+  - {what: item spacing, value: 16, cite: "radio/checkbox mt-4; switch-group__items gap-4"}
+  - {what: label-description gap, value: 4, cite: ".radio gap-1; .switch gap-1"}
+  - {what: control-label gap, value: 12, cite: ".radio__content gap-3; .switch__content gap-3"}
+  - {what: disabled text, value: "dims twice (field and label)", cite: "utilities/index.css status-disabled; label.css disabled rule"}
+approximations:
+  - "The label, description, and error are the theme's text styles (`theme/field.dart`: `heroUiLabelText`, `heroUiDescriptionText`, `heroUiErrorText`), shared with the text field; this file only lays them out."
+  - "`errorText` shows after `helperText` while `invalid`, in `heroUiErrorText`. The description stays beside it. `.radio`, `.checkbox`, and `.switch` restyle their own FieldError as muted description text (`field-error.css`); the layout does not."
+  - The control row's label is plain text beside a bare RemixRadio or RemixSwitch; it is not a tap target.
+  - Remix text fields carry their own label, helper text, and error; this layout serves groups and control rows.

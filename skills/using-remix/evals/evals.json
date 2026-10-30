@@ -294,6 +294,18 @@
         "Runs add theme button --overwrite naming both items explicitly to adopt the change.",
         "Explains that --overwrite only rewrites items named on the command line, leaving other installed dependencies untouched."
       ]
+    },
+    {
+      "id": 27,
+      "prompt": "Our app has preset: heroui and prefix: Acme in remix.yaml. Add a fruit ComboBox, a submit button that shows HeroUI's pending state, and an email field that turns red when invalid.",
+      "expected_output": "Reads the HeroUI reference and uses Acme-prefixed names. Explains that ComboBox is not in the preset (it needs behavior Remix does not provide) and offers AcmeSelect or a composition instead of building a combobox. Maps pending to Remix loading on AcmeButton and invalid to error: true with the message in helperText on AcmeTextField, keeping validation in the app.",
+      "files": [],
+      "expectations": [
+        "Uses the configured Acme prefix, not HeroUi names.",
+        "States that ComboBox is not included and offers AcmeSelect or a composition.",
+        "Uses loading on AcmeButton for the pending state.",
+        "Uses error and helperText on AcmeTextField; validation stays in the app."
+      ]
     }
   ]
 }

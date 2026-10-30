@@ -1,0 +1,32 @@
+component: Switch
+widget: HeroUiSwitch
+target: RemixSwitch
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/switch.css, dist/components/label.css]
+anatomy: [track, thumb]
+variants: []
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest, hover, pressed, selected, invalid, focus-visible, disabled]
+tokens:
+  - default, accent (track); accent-hover (selected hover and press)
+  - white, accent-foreground (thumb); default-foreground (disabled thumb)
+  - surface shadow (unselected thumb), focus (ring), background (ring gap), radius-md, radius-lg, radius-xl
+measurements:
+  - {what: "track, thumb, and radius by size", value: "sm 32x16 r8 with 16.5x12 r6; md 40x20 r12 with 22x16 r8; lg 48x24 r12 with 27.5x20 r12", cite: "switch-sm-rest-control, switch-md-rest-control, switch-lg-rest-control, switch-sm-rest-thumb, switch-md-rest-thumb, switch-lg-rest-thumb"}
+  - {what: thumb inset, value: "2 from the track edge, on both sides once selected", cite: "switch.css switch__thumb ms-0.5; ms-[calc(100%-1.5rem)]"}
+  - {what: hover and pressed track, value: "default at 80%", cite: "switch-md-rest-hover, switch-md-rest-pressed"}
+  - {what: selected track, value: "accent; accent-hover while hovered or pressed", cite: "switch-md-selected-control, switch-md-selected-hover, switch-md-selected-pressed"}
+  - {what: selected thumb, value: "accent-foreground with its own three-layer shadow", cite: switch-md-selected-thumb}
+  - {what: invalid, value: "track and thumb unchanged; only the label turns danger (switch_group.yaml)", cite: "switch-md-invalid-control, switch-md-invalid-thumb, switch-md-invalid-label"}
+  - {what: disabled, value: "0.5; unselected thumb default-foreground at 20%, selected thumb 0.4", cite: "switch-md-disabled, switch-md-disabled-thumb, switch-md-disabled-selected-thumb"}
+  - {what: "focus ring, unselected", value: "2px background gap, then a 2px focus ring", cite: switch-md-rest-focus-control}
+  - {what: "focus ring, selected", value: "the same ring", cite: switch-md-selected-focus-control}
+approximations:
+  - The thumb slides by animating Remix's alignment, over the 300ms ease-out-fluid of its `margin`; the track fades over the same time, where upstream uses 250ms ease-smooth.
+  - The thumb has no pressed size change; upstream's rule is empty.
+  - Upstream clips the track (`overflow-hidden`); the thumb is padded inside it instead.
+  - There is no `Switch.Icon` slot in the thumb.
+  - Remix's switch is a bare control with a required `semanticLabel`; labels, descriptions, and the invalid label are `HeroUiSwitchGroup`. The switch has no invalid treatment of its own, as in switch.css.
+  - Remix declares its selected variant before the recipe's, so the hover and press fragments restate the selected track color.
