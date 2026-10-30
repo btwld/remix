@@ -269,7 +269,7 @@ void main() {
         tester,
       ) async {
         var values = <double>[20];
-        final events = <String>[];
+        final events = <(String, double)>[];
         await tester.pumpWidget(
           host(
             StatefulBuilder(
@@ -277,11 +277,11 @@ void main() {
                 values: values,
                 orientation: axis,
                 onChanged: (next) {
-                  events.add('change ${next.single}');
+                  events.add(('change', next.single));
                   if (accept) setState(() => values = next);
                 },
-                onChangeStart: (next) => events.add('start ${next.single}'),
-                onChangeEnd: (next) => events.add('end ${next.single}'),
+                onChangeStart: (next) => events.add(('start', next.single)),
+                onChangeEnd: (next) => events.add(('end', next.single)),
                 child: SizedBox(
                   width: axis == Axis.horizontal ? 200 : 48,
                   height: axis == Axis.horizontal ? 48 : 200,
@@ -297,7 +297,7 @@ void main() {
               : Offset(rect.center.dx, rect.bottom - 80),
         );
         await tester.pump();
-        expect(events, ['start 20.0', 'change 40.0', 'end 40.0']);
+        expect(events, [('start', 20.0), ('change', 40.0), ('end', 40.0)]);
       });
     }
   }
