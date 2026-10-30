@@ -1,3 +1,14 @@
+# Archived Fortal refresh brief
+
+Status: superseded as an implementation plan by
+[the accepted independent-design-system decision](../adr/fortal/0003-independent-design-system.md).
+The maintained values and acceptance rules are in [the Fortal specification](../../specs/fortal.md).
+
+The original brief below is preserved verbatim as design input. Its open
+questions and checkboxes describe the proposal on 2026-10-29, not current work.
+
+---
+
 Fortal Refresh Plan
 Oct 29, 2026 · @Leo Farias
 Recommendation
