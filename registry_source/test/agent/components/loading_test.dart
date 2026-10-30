@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/agent.dart';
+import 'package:remix/remix.dart';
 
 import '../helpers/pump.dart';
 
@@ -57,6 +58,56 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     expect(turns(tester), greaterThan(0));
   });
+
+  testWidgets(
+    'loading follows disableAnimations and ignores other MediaQuery',
+    (tester) async {
+      final media = ValueNotifier(const MediaQueryData());
+      addTearDown(media.dispose);
+      await tester.pumpWidget(
+        MixScope.empty(
+          child: ValueListenableBuilder(
+            valueListenable: media,
+            builder: (context, data, child) =>
+                MediaQuery(data: data, child: child!),
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: execution(AgentExecutionStatus.running),
+            ),
+          ),
+        ),
+      );
+      late final Element glyph;
+      tester.element(find.byType(RotationTransition)).visitAncestorElements((
+        ancestor,
+      ) {
+        glyph = ancestor;
+        return false;
+      });
+
+      var rebuilds = 0;
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (identical(element, glyph)) rebuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = null);
+
+      media.value = const MediaQueryData(
+        viewInsets: EdgeInsets.only(bottom: 300),
+      );
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(rebuilds, 0);
+      expect(turns(tester), greaterThan(0));
+
+      media.value = const MediaQueryData(
+        viewInsets: EdgeInsets.only(bottom: 300),
+        disableAnimations: true,
+      );
+      await tester.pump();
+      expect(rebuilds, 1);
+      expect(turns(tester), 0);
+      expect(tester.binding.transientCallbackCount, 0);
+    },
+  );
 
   testWidgets('loading pauses in a disabled ticker subtree', (tester) async {
     await pumpAgent(

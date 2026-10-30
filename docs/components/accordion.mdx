@@ -35,6 +35,7 @@ Widget-state variants (`onHovered`, `onPressed`, `onFocused`, `onFocusVisible`,
 `onDisabled`) describe interaction with the **trigger**, but may style any part
 of the item, including the container. The expanded content is not a separate
 hover or press target — moving the pointer into it clears the hovered state.
+Widgets you place in `child` do not inherit the trigger's widget states.
 
 <Warning>
   The top-level Box shorthand on `AccordionStyler` (`.color()`, `.padding()`,
@@ -204,6 +205,12 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
 <Info>
   See the [fortalAccordionStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/accordion.dart) for all available options.
 </Info>
+
+## Reduced motion
+
+When the user asks for reduced motion, panels expand and collapse without
+the transition. See [Reduced motion](/guides/styling-components#reduced-motion) for the
+signals Remix reads.
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">

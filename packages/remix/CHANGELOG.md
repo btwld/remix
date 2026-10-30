@@ -45,6 +45,12 @@
   widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
   existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
   `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
+- Add `RemixReducedMotionBuilder`. Its builder receives whether the user asked
+  for reduced motion and rebuilds when that changes. It combines
+  `MediaQuery.disableAnimations` with the platform's accessibility
+  `reduceMotion`, the only flag iOS Reduce Motion sets. A `MediaQuery`
+  override can force reduced motion on but cannot turn the platform's
+  `reduceMotion` off.
 
 ### Fixes
 
@@ -61,6 +67,28 @@
   `AlertDialog` content. It previously asserted "LayoutBuilder does not
   support returning intrinsic dimensions" in debug mode and collapsed in
   release mode.
+- Honor reduced motion in components that hard-code their own motion. The
+  select menu and accordion panel now open and close without a transition,
+  including one already under way. Skeleton and sidebar, which already
+  followed `MediaQuery.disableAnimations`, now follow iOS Reduce Motion too,
+  including a sidebar transition already under way. Essential spinner motion
+  stays unchanged. Style animations declared
+  with `.animate(...)` are driven by Mix and are not affected.
+- `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
+- `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
+  not on every `MediaQuery` change such as keyboard insets.
+- Data-table headers without `sortable`, including the selection header, no
+  longer read widget state from outside the table. A table inside a focused,
+  hovered, or pressed ancestor, such as a `Pressable`, no longer lights their
+  `onFocusVisible`, `onHovered`, or `onPressed` styles. Sortable headers still
+  resolve against their own state. Content of a non-sortable header's custom
+  `header` resolves widget-state variants against an empty state, so wrap a
+  widget in its own `Pressable` if it should react to its own hover or press.
+- Accordion and disclosure content no longer resolves widget-state variants
+  against the trigger, so widgets in the panel no longer change with the
+  trigger's state.
+- `RemixSidebar` header and footer content no longer resolves `onDisabled`
+  variants when the sidebar is disabled. The sidebar's own regions still do.
 
 ## 1.0.0-beta.13
 
