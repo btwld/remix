@@ -195,6 +195,13 @@ rerun preserves existing authored files. It can recreate a missing generated
 part, refresh the managed export block, and run the focused checks without
 resetting local work.
 
+Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
+reserves authored and generated targets across separate installs, so another
+registry cannot silently preserve or overwrite a different owner's recipe.
+Disjoint additive registries remain supported. Existing files from CLI beta.0
+or earlier need explicit provenance verification and `--adopt`; see the
+[migration instructions](REGISTRIES.md#existing-source-without-an-ownership-record).
+
 Use `--diff` to compare the requested item with the pinned template. This is
 read-only and requires Git:
 

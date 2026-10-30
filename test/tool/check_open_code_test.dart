@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:test/test.dart';
 
@@ -144,6 +146,303 @@ void main() {
       ]) {
         expect(checker.parseConsumerCheckOptions(arguments), isNull);
       }
+    });
+  });
+
+  test(
+    'ownership consumer check requires Vanilla checkout and the checkout CLI',
+    () {
+      expect(
+        checker.parseConsumerCheckOptions([
+          '--source',
+          'checkout',
+          '--item',
+          'ownership',
+        ])!.item,
+        'ownership',
+      );
+      for (final arguments in [
+        ['--item', 'ownership'],
+        ['--source', 'hosted', '--item', 'ownership'],
+        ['--source', 'checkout', '--preset', 'fortal', '--item', 'ownership'],
+        ['--source', 'checkout', '--hosted-cli', '--item', 'ownership'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(arguments), isNull);
+      }
+    },
+  );
+
+  group('worker count', () {
+    test('--jobs takes a positive integer once', () {
+      expect(checker.parseConsumerCheckOptions([])!.jobs, isNull);
+      expect(checker.parseConsumerCheckOptions(['--jobs', '3'])!.jobs, 3);
+
+      for (final arguments in [
+        ['--jobs'],
+        ['--jobs', '0'],
+        ['--jobs', '-2'],
+        ['--jobs', 'many'],
+        ['--jobs', '2', '--jobs', '3'],
+        ['--source', 'checkout', '--item', 'dashboard_demo', '--jobs', '2'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(arguments), isNull);
+      }
+    });
+
+    test('defaults to one worker per core, between two and four', () {
+      expect(checker.resolveJobs(processors: 1), 2);
+      expect(checker.resolveJobs(processors: 3), 3);
+      expect(checker.resolveJobs(processors: 64), 4);
+    });
+
+    test('the flag overrides the environment, which overrides the default', () {
+      expect(
+        checker.resolveJobs(requested: 8, fromEnvironment: '2', processors: 4),
+        8,
+      );
+      expect(checker.resolveJobs(fromEnvironment: '6', processors: 4), 6);
+    });
+
+    test('an environment value that is not a positive integer is rejected', () {
+      for (final value in ['0', '-1', 'four', '']) {
+        expect(
+          checker.resolveJobs(fromEnvironment: value, processors: 4),
+          isNull,
+          reason: 'REMIX_OPEN_CODE_JOBS="$value"',
+        );
+      }
+      expect(
+        checker.resolveJobs(requested: 2, fromEnvironment: 'x', processors: 4),
+        2,
+      );
+    });
+  });
+
+  test(
+    'production independent installs dispatch up to the requested jobs',
+    () async {
+      final app = Directory('${sandbox.path}/app')..createSync();
+      File('${app.path}/pubspec.yaml').writeAsStringSync('''
+name: dispatch_probe
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+''');
+      final probe = Directory('${sandbox.path}/probe')..createSync();
+      final release = File('${probe.path}/release');
+      final harness = File('${sandbox.path}/cli.dart')
+        ..writeAsStringSync(r'''
+import 'dart:io';
+
+Future<void> main(List<String> arguments) async {
+  if (arguments.first == 'init') {
+    final root = Platform.environment['REMIX_DISPATCH_PROBE']!;
+    final item = Directory.current.uri.pathSegments.where((s) => s.isNotEmpty).last;
+    File('$root/$item.started').writeAsStringSync('started');
+    while (!File('$root/release').existsSync()) {
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+  }
+  Directory('lib/ui').createSync(recursive: true);
+}
+''');
+      final result = checker.independentItemsProblemForTest(
+        app,
+        jobs: 2,
+        environment: {
+          'REMIX_REGISTRY_CONSUMER_CLI': harness.path,
+          'REMIX_DISPATCH_PROBE': probe.path,
+        },
+      );
+      int started() => probe
+          .listSync()
+          .whereType<File>()
+          .where((file) => file.path.endsWith('.started'))
+          .length;
+      var overlapping = 0;
+      try {
+        final deadline = Stopwatch()..start();
+        while (started() < 2 &&
+            deadline.elapsed < const Duration(seconds: 10)) {
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
+        overlapping = started();
+      } finally {
+        // Always release and await children, including when dispatch is serial.
+        release.writeAsStringSync('continue');
+      }
+      expect(await result, isNull);
+      expect(
+        overlapping,
+        2,
+        reason:
+            'the production checker must start two installs before either completes',
+      );
+      expect(
+        started(),
+        greaterThan(2),
+        reason: 'remaining items were dispatched',
+      );
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  group('runPooled', () {
+    late StringBuffer out;
+    late _Tasks tasks;
+
+    setUp(() {
+      out = StringBuffer();
+      tasks = _Tasks();
+    });
+
+    Future<String?> pool(int count, {required int limit}) => checker.runPooled(
+      List.generate(count, (index) => index),
+      limit: limit,
+      out: out,
+      work: tasks.run,
+    );
+
+    test(
+      'writes each log in input order whichever task finishes first',
+      () async {
+        final result = pool(3, limit: 3);
+        await _settle();
+
+        tasks.finish(2);
+        await _settle();
+        expect(out.toString(), isEmpty, reason: 'input 2 waits for 0 and 1');
+
+        tasks.finish(0);
+        await _settle();
+        expect(out.toString(), 'log 0;', reason: 'input 1 is still running');
+
+        tasks.finish(1);
+        expect(await result, isNull);
+        expect(out.toString(), 'log 0;log 1;log 2;');
+      },
+    );
+
+    test(
+      'keeps no more than the limit in flight and refills freed slots',
+      () async {
+        final result = pool(6, limit: 2);
+        await _settle();
+        expect(tasks.started, [0, 1]);
+
+        tasks.finish(1);
+        await _settle();
+        expect(tasks.started, [0, 1, 2]);
+
+        await tasks.finishAll();
+        expect(await result, isNull);
+        expect(tasks.started, [0, 1, 2, 3, 4, 5]);
+        expect(tasks.peak, 2);
+      },
+    );
+
+    test('a failure starts no more work but waits for running tasks', () async {
+      var settled = false;
+      final result = pool(5, limit: 2).whenComplete(() => settled = true);
+      await _settle();
+
+      tasks.finish(1, 'boom');
+      await _settle();
+      expect(tasks.started, [0, 1], reason: 'nothing starts after a failure');
+      expect(settled, isFalse, reason: 'input 0 is still running');
+
+      tasks.finish(0);
+      expect(await result, 'boom');
+      expect(
+        out.toString(),
+        'log 0;log 1;',
+        reason: 'the failing log is written after the log before it',
+      );
+    });
+
+    test(
+      'reports the earliest input to fail, not the first to finish',
+      () async {
+        final result = pool(2, limit: 2);
+        await _settle();
+
+        tasks.finish(1, 'second input');
+        tasks.finish(0, 'first input');
+
+        expect(await result, 'first input');
+      },
+    );
+
+    test(
+      'an exception stops new work and surfaces once running tasks settle',
+      () async {
+        final started = <int>[];
+        var settled = false;
+        final result = checker.runPooled<int, String>(
+          [0, 1, 2, 3],
+          limit: 2,
+          out: out,
+          work: (input, log) async {
+            started.add(input);
+            if (input != 0) return tasks.run(input, log);
+            await _settle();
+            throw StateError('broken');
+          },
+        );
+        final thrown = expectLater(result, throwsStateError);
+        unawaited(thrown.then((_) => settled = true));
+        await _settle();
+        expect(settled, isFalse, reason: 'input 1 is still running');
+
+        tasks.finish(1);
+        await thrown;
+        expect(started, [0, 1]);
+      },
+    );
+
+    test(
+      "an earlier input's failure outlasts a later input's exception",
+      () async {
+        final result = checker.runPooled<int, String>(
+          [0, 1],
+          limit: 2,
+          out: out,
+          work: (input, log) async {
+            if (input == 1) throw StateError('later input');
+            return tasks.run(input, log);
+          },
+        );
+        await _settle();
+
+        tasks.finish(0, 'first input');
+
+        expect(await result, 'first input');
+      },
+    );
+
+    test(
+      "an earlier input's exception outlasts a later input's failure",
+      () async {
+        final result = checker.runPooled<int, String>(
+          [0, 1],
+          limit: 2,
+          out: out,
+          work: (input, log) async {
+            if (input == 1) return 'later input';
+            await _settle();
+            await _settle();
+            throw StateError('first input');
+          },
+        );
+
+        await expectLater(result, throwsA(isA<StateError>()));
+      },
+    );
+
+    test('a limit below one is rejected instead of running nothing', () {
+      for (final limit in [0, -1]) {
+        expect(pool(3, limit: limit), throwsArgumentError);
+      }
+      expect(tasks.started, isEmpty);
     });
   });
 
@@ -479,5 +778,39 @@ void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);
     file.writeAsStringSync('library;\n');
+  }
+}
+
+Future<void> _settle() => Future<void>.delayed(Duration.zero);
+
+/// Tasks that run until the test finishes them, recording how many overlap.
+final class _Tasks {
+  final started = <int>[];
+  final _gates = <int, Completer<String?>>{};
+  var _running = 0;
+  var peak = 0;
+
+  Future<String?> run(int input, StringSink log) async {
+    started.add(input);
+    _running += 1;
+    peak = max(peak, _running);
+    log.write('log $input;');
+    try {
+      return await (_gates[input] = Completer<String?>()).future;
+    } finally {
+      _running -= 1;
+    }
+  }
+
+  void finish(int input, [String? failure]) => _gates[input]!.complete(failure);
+
+  /// Finishes every task not yet finished, including those started by it.
+  Future<void> finishAll() async {
+    for (var index = 0; ; index += 1) {
+      await _settle();
+      if (index >= started.length) return;
+      final gate = _gates[started[index]]!;
+      if (!gate.isCompleted) gate.complete();
+    }
   }
 }

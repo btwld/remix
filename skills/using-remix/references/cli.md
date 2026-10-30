@@ -26,7 +26,22 @@ moved — read the hunks, not the exit state. Rolling back is
 `remix.yaml` schema 3 is the only readable configuration; an older file fails
 to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
-`--ui-path`, then re-adopting installed source with `add <item> --diff`.
+`--ui-path`, then verifying the installed source's provenance before adoption.
+
+CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. The current
+CLI rejects unknown existing targets before mutation. After verifying their
+source, name every existing dependency explicitly when adopting:
+
+```bash
+dart run remix_cli:remix add theme button --adopt --diff
+dart run remix_cli:remix add theme button --adopt
+```
+
+Adoption preserves authored edits and records provenance in
+`remix.ownership.json`; commit it with configuration and source. Disjoint
+additions remain supported. A known different owner is rejected in every mode,
+even `--overwrite` and `--adopt`. An old CLI does not enforce these reservations;
+use the upgraded project-local CLI consistently.
 
 ## Install from another registry
 
@@ -40,7 +55,9 @@ dart run remix_cli:remix add @acme/button
 
 The registry must offer the project's preset, or `registry add` fails. Install
 a design-system registry's items instead of, not alongside, the official
-items that own the same files (`theme`, the components it replaces).
+items that own the same files (`theme`, the components it replaces). Overlaps
+are rejected across separate installs as well as within a single request.
+Additive registries with disjoint targets may compose with existing items.
 
 ## Choose an icon library
 

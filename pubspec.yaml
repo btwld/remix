@@ -284,6 +284,7 @@ melos:
     # The release check separately requires the published Remix version.
     ci:open-code:vanilla:
       steps:
+        - dart run tool/check_open_code.dart --source checkout --item ownership
         - dart test test/tool/check_open_code_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
