@@ -78,10 +78,10 @@ class RemixSlider extends StatelessWidget {
   /// Defaults to true.
   final bool enableFeedback;
 
-  /// Called when the user starts dragging the slider.
+  /// Called when the user starts a pointer interaction (tap or drag).
   final ValueChanged<double>? onChangeStart;
 
-  /// Called during drag with the new value.
+  /// Called during pointer, keyboard, or semantic input with the new value.
   ///
   /// When null, the slider is visually disabled and does not respond to
   /// interaction.
@@ -192,50 +192,52 @@ class RemixSlider extends StatelessWidget {
                     children: [
                       Padding(
                         padding: .symmetric(horizontal: horizontalPadding / 2),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: constraints.maxHeight,
-                          child: LayoutBuilder(
-                            builder: (context, trackConstraints) {
-                              final trackWidth = trackConstraints.maxWidth;
-                              return Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: spec.trackWidth,
-                                    child: RemixBoxAdapter(
-                                      styleSpec: _sliderRailStyle(
-                                        spec.track,
-                                        color: spec.trackColor,
-                                        thickness: spec.trackWidth,
+                        child: NakedSliderTrack(
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: constraints.maxHeight,
+                            child: LayoutBuilder(
+                              builder: (context, trackConstraints) {
+                                final trackWidth = trackConstraints.maxWidth;
+                                return Stack(
+                                  alignment: Alignment.centerLeft,
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: spec.trackWidth,
+                                      child: RemixBoxAdapter(
+                                        styleSpec: _sliderRailStyle(
+                                          spec.track,
+                                          color: spec.trackColor,
+                                          thickness: spec.trackWidth,
+                                        ),
+                                        containerEffects: spec.trackEffects,
                                       ),
-                                      containerEffects: spec.trackEffects,
                                     ),
-                                  ),
-                                  Positioned(
-                                    left: rangeStart * trackWidth,
-                                    width: rangeSpan * trackWidth,
-                                    top: 0,
-                                    bottom: 0,
-                                    child: Center(
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        height: spec.rangeWidth,
-                                        child: RemixBoxAdapter(
-                                          styleSpec: _sliderRailStyle(
-                                            spec.range,
-                                            color: spec.rangeColor,
-                                            thickness: spec.rangeWidth,
+                                    Positioned(
+                                      left: rangeStart * trackWidth,
+                                      width: rangeSpan * trackWidth,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: spec.rangeWidth,
+                                          child: RemixBoxAdapter(
+                                            styleSpec: _sliderRailStyle(
+                                              spec.range,
+                                              color: spec.rangeColor,
+                                              thickness: spec.rangeWidth,
+                                            ),
+                                            containerEffects: spec.rangeEffects,
                                           ),
-                                          containerEffects: spec.rangeEffects,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),

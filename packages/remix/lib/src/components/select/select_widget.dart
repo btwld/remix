@@ -287,6 +287,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       semanticLabel: widget.semanticLabel,
       semanticValue: selectedItem?.semanticLabel ?? selectedItem?.label,
       positioning: widget.positioning,
+      constrainToAvailableHeight: true,
       onOpen: () {
         animationController.forward();
         widget.onOpen?.call();
@@ -394,8 +395,10 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
               builder: (context, spec) => RemixBoxAdapter(
                 styleSpec: spec.container,
                 containerEffects: spec.containerEffects,
-                child: ColumnBox(
+                child: RemixFlexBoxAdapter(
                   styleSpec: widget.menuContainer,
+                  direction: Axis.vertical,
+                  scrollable: true,
                   children: widget.children,
                 ),
               ),

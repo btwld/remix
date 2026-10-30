@@ -1,3 +1,45 @@
+## Unreleased
+
+### Breaking changes
+
+- `RemixMenuTrigger.label` is now `String?`, because a control trigger has no
+  label. Code that reads `trigger.label` must handle null. The
+  `RemixMenuTrigger` and `RemixMenuTrigger.builder` constructors still require
+  a label.
+
+### Features
+
+- Add `RemixMenuTrigger.control`, so a real button such as a styled
+  `RemixButton` can be the menu trigger. Its builder receives a
+  `RemixMenuTriggerHandle` with `isOpen`, `controller`, `focusNode`, and
+  `toggle()`; pass `focusNode` and `toggle` to the button. The menu keeps the
+  overlay, Escape, outside taps, focus return, and expanded semantics, which
+  merge onto the button. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
+  do not apply to a control trigger, and a `semanticLabel` asserts.
+
+### Fixes
+
+- Map slider pointer input to its painted rail, including thumb and track
+  clearance, so grabbing a thumb does not change its value before movement.
+- `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
+  on the content or menu container, instead of overflowing. A short list still
+  shrinks to its options, and the container's padding and decoration stay in
+  place while the options scroll. The options column now sizes to its content
+  inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max` on
+  `menuContainer` no longer distribute free vertical space.
+- `RemixMenu` and its submenus scroll a list taller than their overlay or than
+  a `maxHeight` on the `overlay` style, instead of overflowing. A short menu
+  still shrinks to its items, and the panel's padding, decoration, and effects
+  stay in place while the items scroll. The items column now sizes to its
+  content inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max`
+  on `overlay` no longer distribute free vertical space.
+- `RemixSelect` and `RemixMenu` panels are laid out no taller than the space
+  above or below the trigger, after the positioning's `sideOffset` and
+  `collisionPadding`, instead of as tall as the whole overlay. A long list now
+  scrolls beside the trigger rather than sliding over it, and opens on the side
+  with more room. A panel that fits is unchanged, and so is a submenu, which
+  keeps the room the overlay has.
+
 ## 1.0.0-beta.13
 
 ### Breaking changes
