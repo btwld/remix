@@ -165,6 +165,10 @@ assuming Fortal's families — see [Vanilla](references/vanilla.md).
   resolve styling from active tokens instead of this fallback. A nested theme
   updates tokens for its subtree; when `brightness` or `gray` changes, it
   recolors `DefaultTextStyle` and `IconTheme` to the new `gray12`.
+- Every theme scope installs a complete token set instead of merging with the
+  scope above it. A `MixScope.inherit` token override, such as Fortal's
+  `focusRingWidth`, does not apply below a nested theme; place it inside the
+  nested scope.
 
 ## Customize installed source
 

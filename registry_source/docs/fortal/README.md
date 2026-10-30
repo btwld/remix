@@ -65,6 +65,11 @@ the new `gray12` color while preserving font metrics. Transparent, non-accent
 `FortalCode.ghost` is an exception and inherits surrounding text color unless
 restyled.
 
+Each scope installs a complete token set instead of merging with the scope above
+it, so a token override made with `MixScope.inherit`, such as a custom
+`focusRingWidth`, does not apply below a nested `FortalTheme`; place the
+override inside the nested scope.
+
 Use `WidgetsApp` as the application host. Put the scope in `builder` above the
 Navigator so routes, dialogs, and overlays inherit the same theme:
 

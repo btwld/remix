@@ -257,9 +257,11 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
         ),
       ],
     ),
+    // Merged after the `onFocused` ring, so it is also the ring while an
+    // errored field is focused and has to read the same width token.
     outline: BorderSideMix(
       color: UiTokens.error8(),
-      width: 2,
+      width: UiTokens.focusRingWidth(),
       strokeAlign: BorderSide.strokeAlignInside,
     ),
     outlineOffset: -1,

@@ -3,12 +3,17 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
-/// A CSS outline that does not affect layout.
+/// A token-width CSS outline that does not affect layout.
+///
+/// Outward rings at Radix's 2px gap pass [UiTokens.focusRingOffset]. Every
+/// other offset is a Radix literal and does not follow that token: the inset
+/// `-1` of fields, cards, selects and soft buttons, and the slider thumb's 3px
+/// halo.
 RemixBoxEffectsMix uiFocusOutline(Color color, {required double offset}) =>
     RemixBoxEffectsMix(
       outline: BorderSideMix(
         color: color,
-        width: 2,
+        width: UiTokens.focusRingWidth(),
         strokeAlign: BorderSide.strokeAlignInside,
       ),
       outlineOffset: offset,

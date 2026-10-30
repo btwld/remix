@@ -57,7 +57,15 @@ SelectTriggerStyler _uiSelectTriggerStyler(
       )
       .indicator(.color(UiTokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocusVisible(
-        .containerEffects(RemixBoxEffectsMix.overContent(_uiSelectFocusRing())),
+        .containerEffects(
+          // `outline: 2px solid focus-8; outline-offset: -1px`: the ring
+          // straddles the trigger edge. The soft trigger swaps the color for
+          // accent-8.
+          uiFocusOutline(switch (variant) {
+            .soft => UiTokens.accent8(),
+            .surface || .ghost => UiTokens.focus8(),
+          }, offset: -1),
+        ),
       )
       .merge(_uiSelectTriggerSizeStyler(variant, size));
 
@@ -118,19 +126,6 @@ SelectTriggerStyler _uiSelectTriggerSizeStyler(
         style.height(UiTokens.space7()).padding(.horizontal(UiTokens.space4())),
     },
   };
-}
-
-RemixBoxEffectLayerMix _uiSelectFocusRing() {
-  return RemixBoxEffectLayerMix(
-    shadows: [
-      RemixBoxShadowMix(color: UiTokens.focus8(), spreadRadius: 1),
-      RemixBoxShadowMix(
-        kind: RemixBoxShadowKind.inset,
-        color: UiTokens.focus8(),
-        spreadRadius: 1,
-      ),
-    ],
-  );
 }
 
 SelectTriggerStyler _uiSelectSurfaceTrigger(SelectTriggerStyler base) {
