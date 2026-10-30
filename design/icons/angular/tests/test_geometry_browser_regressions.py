@@ -1,4 +1,4 @@
-"""Geometry, evidence freshness, and real browser boundary regressions."""
+"""Geometry and browser-boundary regressions, including evidence freshness."""
 from __future__ import annotations
 import copy
 import os

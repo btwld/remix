@@ -4,6 +4,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw,ImageFont
 import cairosvg
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from tools.evidence import report_directory
 CAT=json.loads((ROOT/'catalog/icons.json').read_text())
 FONT='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 
@@ -28,7 +30,9 @@ def sheet(names,out,dark=False):
     im.save(out)
 
 if __name__=='__main__':
+    out=report_directory(ROOT)/'captures'
+    out.mkdir(exist_ok=True)
     nd=[i['id'] for i in CAT['icons'] if i['stage']=='pilot-addition']
-    for j in range(0,len(nd),8):sheet(nd[j:j+8],ROOT/f'review/new-icons-{j//8+1}.png')
-    for j in range(0,48,12):sheet([i['id'] for i in CAT['icons'][j:j+12]],ROOT/f'review/all-icons-{j//12+1}.png')
-    sheet(['sliders','gear','filter','info','help','warning','save','bookmark','edit'],ROOT/'review/dense-icons-dark.png',True)
+    for j in range(0,len(nd),8):sheet(nd[j:j+8],out/f'new-icons-{j//8+1}.png')
+    for j in range(0,48,12):sheet([i['id'] for i in CAT['icons'][j:j+12]],out/f'all-icons-{j//12+1}.png')
+    sheet(['sliders','gear','filter','info','help','warning','save','bookmark','edit'],out/'dense-icons-dark.png',True)

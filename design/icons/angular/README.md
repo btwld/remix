@@ -16,7 +16,7 @@ Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catal
 - A self-contained guide with all 48 icons, 96 labeled examples, six display sizes, four surfaces, SVG inspection, and native downloads.
 - An ES-module helper and 48 isolated per-icon imports. No React or Vue adapter is claimed.
 - Schema, SVG safety, geometry, critical-gap, raster, export, module, and rebuild checks.
-- Root GitHub Actions validation, contribution templates, and an explicit release gate.
+- Root GitHub Actions validation and an explicit release gate.
 
 ## What is not finished
 
@@ -30,9 +30,9 @@ contrast-color(); CI and the audit use the browser revisions pinned by Playwrigh
 1.64.1, including Chromium 156. Browser emulation does not certify physical
 Windows contrast themes, screen readers, or branded Safari.
 
-The retained `review/audit-patch/forced-light.png` shows the shared emulated
-forced-color palette: its light and dark captures were byte-identical, so it is
-not evidence of two distinct operating-system contrast themes.
+Forced-color captures use browser-emulated palettes; light and dark settings
+can produce identical captures and do not establish coverage of distinct
+operating-system contrast themes.
 
 ## Use the SVGs
 
@@ -127,8 +127,7 @@ packages/web/            ES-module API and isolated imports
 docs/catalog/            self-contained catalog and proof pages
 docs/                    design, accessibility, review, and release instructions
 tests/                   fixtures, geometry, runtime, pixel and browser checks
-review/                  screenshots and native-size evidence
-.github/                 reusable contribution template
+review/                  README preview; validation captures are external
 ../../../.github/workflows/vector-ui-icons.yml  maintained pack CI
 ```
 
