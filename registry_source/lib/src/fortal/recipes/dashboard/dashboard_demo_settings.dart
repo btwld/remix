@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -148,7 +149,7 @@ class _FortalDashboardSettingsPageState
                         context,
                         const RemixToastData(
                           title: 'Profile settings saved',
-                          icon: RemixIcons.checkCircled,
+                          icon: LucideIcons.circleCheck,
                         ),
                       ),
                       label: 'Save changes',
@@ -168,7 +169,7 @@ class _FortalDashboardSettingsPageState
                         'Tune every Fortal theme parameter in real time.',
                   ),
                   FortalCallout(
-                    icon: RemixIcons.magicWand,
+                    icon: LucideIcons.wandSparkles,
                     text: 'Changes apply live across the entire dashboard.',
                   ),
                   SingleChildScrollView(
@@ -258,7 +259,7 @@ class _FortalDashboardSettingsPageState
       context,
       const RemixToastData(
         title: 'Demo workspace was not deleted',
-        icon: RemixIcons.infoCircled,
+        icon: RemixIcons.info,
       ),
     );
   }

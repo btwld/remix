@@ -1828,9 +1828,14 @@ final class PresetBuilder {
     return template;
   }
 
-  /// Replaces the authoring icon library with registry placeholders. The
-  /// canonical names in icons.yaml are the default library's names, so the
-  /// same template renders for that library or any other the table maps.
+  /// Replaces the authoring icon libraries with registry placeholders.
+  ///
+  /// Source is authored against the default library, plus the fallback
+  /// library for each icon the default library does not draw. Every constant
+  /// becomes its canonical `{{icon:name}}`, and those libraries' imports
+  /// become one `{{icon:import}}`, so the same template renders for any
+  /// library the table maps. [_templateFor]'s round trip proves that the
+  /// default library renders back exactly these constants and imports.
   String _iconTemplate(String path, String source) {
     if (!iconPlaceholders) return source;
     final table = icons;
@@ -1840,40 +1845,67 @@ final class PresetBuilder {
       }
       return source;
     }
-    final authoring = table.library(defaultIconLibrary);
-    final importDirective = "import '${authoring.import}';";
-    var rewritten = source.replaceAllMapped(
-      RegExp('\\b${RegExp.escape(authoring.className)}\\.([A-Za-z0-9_]+)'),
-      (match) {
-        final name = match[1]!;
-        if (!table.icons.containsKey(name)) {
-          throw StateError('$path uses unmapped ${match[0]}.');
-        }
-        return iconToken(name);
+    final defaultLibrary = table.library(defaultIconLibrary);
+    final authoring = [
+      defaultIconLibrary,
+      ...{
+        for (final fallback in table.fallbacks.values)
+          if (fallback != defaultIconLibrary) fallback,
       },
-    );
-    if (rewritten.contains(authoring.className)) {
-      throw StateError(
-        '$path mentions bare ${authoring.className}; use a mapped glyph or '
-        'an alias.',
+    ];
+    var rewritten = source;
+    for (final name in authoring) {
+      final library = table.library(name);
+      rewritten = rewritten.replaceAllMapped(
+        RegExp('\\b${RegExp.escape(library.className)}\\.([A-Za-z0-9_]+)'),
+        (match) {
+          final canonical = table.canonicalFor(name, match[1]!);
+          if (canonical != null) return iconToken(canonical);
+          if (name == defaultIconLibrary) {
+            throw StateError('$path uses unmapped ${match[0]}.');
+          }
+          throw StateError(
+            '$path uses ${match[0]}, which icons.yaml does not name as the '
+            '$name fallback of an icon ${defaultLibrary.className} lacks. Use '
+            'the ${defaultLibrary.className} glyph, or add a fallback entry.',
+          );
+        },
       );
+      if (rewritten.contains(library.className)) {
+        throw StateError(
+          '$path mentions bare ${library.className}; use a mapped glyph or '
+          'an alias.',
+        );
+      }
     }
-    rewritten = rewritten.replaceFirst(importDirective, iconImportToken);
-    // The installer swaps the import token for the chosen library's import,
-    // so a file with icon constants must carry that token itself, and must
-    // not reach the package any other way (an alias or an export), which no
-    // library switch could rewrite.
-    final package = authoring.dependencies.keys.single;
-    if (rewritten.contains('package:$package/')) {
-      throw StateError(
-        '$path reaches $package other than by `$importDirective`; import it '
-        'exactly that way so the installer can swap the library.',
-      );
+    // The installer swaps the import token for the imports the chosen
+    // library needs, so a file with icon constants must carry that token
+    // itself, and must not reach an icon package any other way (an alias or
+    // an export), which no library switch could rewrite.
+    var tokenized = false;
+    for (final name in authoring) {
+      final directive = "import '${table.library(name).import}';";
+      if (!rewritten.contains(directive)) continue;
+      rewritten = tokenized
+          ? rewritten.replaceFirst('$directive\n', '')
+          : rewritten.replaceFirst(directive, iconImportToken);
+      tokenized = true;
+    }
+    for (final name in authoring) {
+      final library = table.library(name);
+      final package = library.dependencies.keys.single;
+      if (rewritten.contains('package:$package/')) {
+        throw StateError(
+          "$path reaches $package other than by `import '${library.import}';`; "
+          'import it exactly that way so the installer can swap the library.',
+        );
+      }
     }
     if (rewritten.contains('{{icon:') && !rewritten.contains(iconImportToken)) {
       throw StateError(
-        '$path uses ${authoring.className} without `$importDirective`; '
-        'import it in this file so the installer can swap the library.',
+        "$path uses ${defaultLibrary.className} without `import "
+        "'${defaultLibrary.import}';`; import it in this file so the "
+        'installer can swap the library.',
       );
     }
     return rewritten;

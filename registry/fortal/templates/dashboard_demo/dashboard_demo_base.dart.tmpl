@@ -16,19 +16,11 @@ enum {{typePrefix}}DashboardDemoSection {
 
 /// The navigation destinations in the dashboard demo.
 enum {{typePrefix}}DashboardDemoPage {
-  overview(
-    {{typePrefix}}DashboardDemoSection.workspace,
-    'Overview',
-    {{icon:dashboard}},
-  ),
+  overview({{typePrefix}}DashboardDemoSection.workspace, 'Overview', {{icon:dashboard}}),
   chat({{typePrefix}}DashboardDemoSection.workspace, 'Chat', {{icon:chatBubble}}),
   customers({{typePrefix}}DashboardDemoSection.data, 'Customers', {{icon:group}}),
   orders({{typePrefix}}DashboardDemoSection.data, 'Orders', {{icon:table}}),
-  settings(
-    {{typePrefix}}DashboardDemoSection.manage,
-    'Settings',
-    {{icon:mixerHorizontal}},
-  );
+  settings({{typePrefix}}DashboardDemoSection.manage, 'Settings', {{icon:mixerHorizontal}});
 
   const {{typePrefix}}DashboardDemoPage(this.section, this.label, this.icon);
 

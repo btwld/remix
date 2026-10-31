@@ -198,11 +198,15 @@ const _fortalPreset = _PresetContract(
 /// The hosted packages every preset's installed application declares. A preset
 /// that ships more, as Vanilla ships its fonts, extends this in its own
 /// [_PresetContract].
+///
+/// `registry/icons.yaml` renders the icons remix_ui_icons does not draw from
+/// Lucide, so the default `remix` icon library installs both packages.
 const _baseRuntimeDependencies = <String>[
   'remix',
   'mix_annotations',
   'mix_chart',
   'remix_ui_icons',
+  'lucide_flutter',
 ];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
 const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
@@ -214,10 +218,15 @@ const _baseImportPackages = <String>[
   'mix_annotations',
   'mix_chart',
   'remix_ui_icons',
+  'lucide_flutter',
 ];
 
-/// The package each `iconLibrary` in `registry/icons.yaml` installs.
-const _iconPackages = {'remix': 'remix_ui_icons', 'lucide': 'lucide_flutter'};
+/// The packages each `iconLibrary` in `registry/icons.yaml` installs: its own,
+/// and the fallback library's for the icons it does not draw.
+const _iconPackages = {
+  'remix': ['remix_ui_icons', 'lucide_flutter'],
+  'lucide': ['lucide_flutter'],
+};
 
 final class _PresetContract {
   const _PresetContract({
@@ -240,12 +249,15 @@ final class _PresetContract {
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
 
-  /// This contract with `remix_ui_icons` replaced by [iconLibrary]'s package.
+  /// This contract with the icon packages [iconLibrary] installs.
   _PresetContract withIconLibrary(String iconLibrary) {
     if (iconLibrary == 'remix') return this;
+    final icons = _iconPackages[iconLibrary]!;
+    final all = {for (final packages in _iconPackages.values) ...packages};
     List<String> swap(List<String> packages) => [
       for (final package in packages)
-        package == 'remix_ui_icons' ? _iconPackages[iconLibrary]! : package,
+        if (!all.contains(package)) package,
+      ...icons,
     ];
     return _PresetContract(
       name: name,
@@ -1063,8 +1075,11 @@ Future<_Failure?> _checkIndependentItems({
 }
 
 /// The checkout packages a preset's install resolves locally: Remix, its
-/// workspace primitive package `naked_ui`, and the fonts package when the
-/// preset's theme depends on it.
+/// workspace primitive package `naked_ui`, the fonts package when the
+/// preset's theme depends on it, and the icon package when the preset's
+/// icon library is Remix's own. The registry floors those two at the
+/// checkout's versions, which may not be published yet; the hosted release
+/// check requires them from pub.dev.
 Map<String, Directory> _checkoutPackages(
   Directory remixSource,
   _PresetContract preset,
@@ -1073,6 +1088,8 @@ Map<String, Directory> _checkoutPackages(
   'naked_ui': Directory('${remixSource.parent.path}/naked_ui'),
   if (preset.requiredRuntimeDependencies.contains('remix_ui_fonts'))
     'remix_ui_fonts': Directory('${remixSource.parent.path}/remix_ui_fonts'),
+  if (preset.requiredRuntimeDependencies.contains('remix_ui_icons'))
+    'remix_ui_icons': Directory('${remixSource.parent.path}/remix_ui_icons'),
 };
 
 void _writeCheckoutOverride(

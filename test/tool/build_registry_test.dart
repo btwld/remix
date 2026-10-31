@@ -327,6 +327,106 @@ const icon = glyphs.RemixIcons.bell;
     });
   });
 
+  group('schema 2 icon placeholders', () {
+    final icons = IconRegistry.parse('''
+schema: 2
+libraries:
+  remix: {dependency: {remix_ui_icons: ^1.0.0-beta.1}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
+icons:
+  magnifyingGlass: {remix: search, lucide: search}
+  checkCircled: {lucide: circleCheck, fallback: lucide}
+''');
+
+    PresetBuilder builderWithButton(String body) {
+      final builder = _fixtureBuilder(sandbox, icons: icons);
+      _write(builder.sourceRoot, 'components/button.dart', body);
+      return builder;
+    }
+
+    Matcher failsWith(String message) => throwsA(
+      isA<StateError>().having(
+        (error) => error.message,
+        'message',
+        allOf(contains('components/button.dart'), contains(message)),
+      ),
+    );
+
+    const footer = '''
+import '../theme/theme.dart';
+
+part 'button.g.dart';
+
+void fortalButtonStyle() {}
+''';
+
+    String button(String constants) =>
+        '''import 'package:lucide_flutter/lucide_flutter.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+$footer
+$constants''';
+
+    test('maps renamed and fallback constants to canonical tokens', () {
+      final output = builderWithButton(
+        button(
+          'const a = RemixIcons.search;\nconst b = LucideIcons.circleCheck;\n',
+        ),
+      ).derive();
+      final template = output.files.values.singleWhere(
+        (source) => source.contains('{{valuePrefix}}ButtonStyle'),
+      );
+      expect(template, contains('const a = {{icon:magnifyingGlass}};'));
+      expect(template, contains('const b = {{icon:checkCircled}};'));
+      expect('{{icon:import}}'.allMatches(template), hasLength(1));
+      expect(template, isNot(contains('lucide_flutter')));
+      expect(template, isNot(contains('remix_ui_icons')));
+    });
+
+    test('refuses a fallback constant for an icon remix draws', () {
+      expect(
+        builderWithButton(
+          button(
+            'const a = RemixIcons.search;\nconst b = LucideIcons.search;\n',
+          ),
+        ).derive,
+        failsWith('does not name as the lucide fallback'),
+      );
+    });
+
+    test('refuses a canonical name that is not the remix constant', () {
+      expect(
+        builderWithButton(
+          button(
+            'const a = RemixIcons.magnifyingGlass;\n'
+            'const b = LucideIcons.circleCheck;\n',
+          ),
+        ).derive,
+        failsWith('unmapped RemixIcons.magnifyingGlass'),
+      );
+    });
+
+    test('refuses an icon import that the constants do not use', () {
+      // The default library renders only Lucide's import for a file whose
+      // icons all fall back, so a leftover remix_ui_icons import cannot
+      // survive the round trip.
+      expect(
+        builderWithButton(
+          button('const b = LucideIcons.circleCheck;\n'),
+        ).derive,
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            contains('did not survive the template round trip'),
+          ),
+        ),
+      );
+    });
+  });
+
   test('refuses every package import outside the installed boundary', () {
     for (final package in ['registry_source', 'mix', 'naked_ui']) {
       final root = Directory(p.join(sandbox.path, package));
