@@ -13,7 +13,9 @@ The appearance names `outline` and `filled` are unchanged.
 
 Shared comparison surface: [`catalog/index.html`](catalog/index.html). It shows Outline, Rounded, and Mono together, including every Warning cell.
 
-This directory is the package. `package.json` is `"private": true`. The license is BSD 3-Clause, copyright Leo Farias. Do not publish it to npm or pub.dev. Do not fold these drawings into `packages/remix_ui_icons` or `registry/icons.yaml`; those are the Flutter icon track.
+This directory is the source pack. `package.json` is `"private": true`. The license is BSD 3-Clause, copyright Leo Farias. Do not publish it to npm or pub.dev.
+
+`packages/remix_ui_icons` compiles the generated SVG masters of all three families into its Flutter icon font, from `packages/remix_ui_icons/tool/icons/manifest.yaml`. Edit drawings here and regenerate that package; never edit its font or Dart constants by hand. A changed, added, or removed master changes the package's API and its codepoint lock, so it needs a package release.
 
 ## Warning
 

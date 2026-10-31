@@ -1,0 +1,1759 @@
+# Source of truth for remix_ui_icons. tool/icons/generate.py reads this file
+# and design/icons/{outline,rounded,mono}; every artifact under lib/, the
+# migration guide, and the CHANGELOG fragment are generated from it.
+#
+# Codepoints are not assigned here. They live in codepoints.lock.json, which
+# is append-only: a new glyph takes the next free codepoint, a removed glyph
+# is retired, and no codepoint is ever reassigned.
+schema: 1
+package: remix_ui_icons
+fontFamily: RemixIcons
+startCodepoint: "0xE200"
+source:
+  root: ../../../../design/icons
+  # The #336 revision the drawings were taken from.
+  revision: 5ebbbe577d5cb737ccd1150ef4ea56c0cdf91678
+reserved:
+  # remix_ui_icons 0.1.x shipped the Radix Icons 1.3.2 glyphs here. Never reuse.
+  - first: "0xE000"
+    last: "0xE13D"
+    reason: remix_ui_icons 0.1.x (Radix Icons 1.3.2)
+families:
+  outline:
+    class: OutlineIcons
+    label: Outline
+  rounded:
+    class: RoundedIcons
+    label: Rounded
+  mono:
+    class: MonoIcons
+    label: Mono
+# Every family draws each concept in two styles at three native masters.
+styles: [outline, filled]
+masters: [24, 16, 12]
+concepts:
+  home:
+    name: home
+    label: "Home"
+    families: [outline, rounded, mono]
+    tags: [dashboard, main]
+    rtl: false
+    since: 1.0.0-beta.1
+  menu:
+    name: menu
+    label: "Menu"
+    families: [outline]
+    tags: [hamburger, navigation]
+    rtl: false
+    since: 1.0.0-beta.1
+  more:
+    name: more
+    label: "More"
+    families: [outline]
+    tags: [overflow, ellipsis]
+    rtl: false
+    since: 1.0.0-beta.1
+  search:
+    name: search
+    label: "Search"
+    families: [outline, rounded, mono]
+    tags: [find, lookup]
+    rtl: false
+    since: 1.0.0-beta.1
+  grid:
+    name: grid
+    label: "Grid"
+    families: [outline]
+    tags: [apps, tiles]
+    rtl: false
+    since: 1.0.0-beta.1
+  arrow-left:
+    name: arrowLeft
+    label: "Arrow left"
+    families: [outline]
+    tags: [previous, back]
+    rtl: false
+    since: 1.0.0-beta.1
+  arrow-right:
+    name: arrowRight
+    label: "Arrow right"
+    families: [outline, rounded, mono]
+    tags: [next, forward]
+    rtl: false
+    since: 1.0.0-beta.1
+  arrow-up:
+    name: arrowUp
+    label: "Arrow up"
+    families: [outline]
+    tags: [up, move]
+    rtl: false
+    since: 1.0.0-beta.1
+  arrow-down:
+    name: arrowDown
+    label: "Arrow down"
+    families: [outline]
+    tags: [down, move]
+    rtl: false
+    since: 1.0.0-beta.1
+  arrow-up-right:
+    name: arrowUpRight
+    label: "Arrow up right"
+    families: [outline]
+    tags: [external, outbound]
+    rtl: false
+    since: 1.0.0-beta.1
+  chevron-left:
+    name: chevronLeft
+    label: "Chevron left"
+    families: [outline]
+    tags: [previous, back]
+    rtl: false
+    since: 1.0.0-beta.1
+  chevron-right:
+    name: chevronRight
+    label: "Chevron right"
+    families: [outline]
+    tags: [next, forward]
+    rtl: false
+    since: 1.0.0-beta.1
+  chevron-up:
+    name: chevronUp
+    label: "Chevron up"
+    families: [outline]
+    tags: [collapse, up]
+    rtl: false
+    since: 1.0.0-beta.1
+  chevron-down:
+    name: chevronDown
+    label: "Chevron down"
+    families: [outline]
+    tags: [expand, down]
+    rtl: false
+    since: 1.0.0-beta.1
+  plus:
+    name: plus
+    label: "Plus"
+    families: [outline, rounded, mono]
+    tags: [add, new, create]
+    rtl: false
+    since: 1.0.0-beta.1
+  minus:
+    name: minus
+    label: "Minus"
+    families: [outline]
+    tags: [subtract, decrease]
+    rtl: false
+    since: 1.0.0-beta.1
+  check:
+    name: check
+    label: "Check"
+    families: [outline]
+    tags: [done, complete, success]
+    rtl: false
+    since: 1.0.0-beta.1
+  close:
+    name: close
+    label: "Close"
+    families: [outline]
+    tags: [dismiss, cancel]
+    rtl: false
+    since: 1.0.0-beta.1
+  edit:
+    name: edit
+    label: "Edit"
+    families: [outline]
+    tags: [pencil, modify]
+    rtl: false
+    since: 1.0.0-beta.1
+  copy:
+    name: copy
+    label: "Copy"
+    families: [outline]
+    tags: [duplicate, clipboard]
+    rtl: false
+    since: 1.0.0-beta.1
+  trash:
+    name: trash
+    label: "Trash"
+    families: [outline]
+    tags: [delete, remove]
+    rtl: false
+    since: 1.0.0-beta.1
+  refresh:
+    name: refresh
+    label: "Refresh"
+    families: [outline]
+    tags: [reload, update]
+    rtl: false
+    since: 1.0.0-beta.1
+  filter:
+    name: filter
+    label: "Filter"
+    families: [outline]
+    tags: [funnel, results]
+    rtl: false
+    since: 1.0.0-beta.1
+  sliders:
+    name: sliders
+    label: "Sliders"
+    families: [outline, rounded, mono]
+    tags: [settings, adjust, controls]
+    rtl: false
+    since: 1.0.0-beta.1
+  upload:
+    name: upload
+    label: "Upload"
+    families: [outline]
+    tags: [import, send]
+    rtl: false
+    since: 1.0.0-beta.1
+  download:
+    name: download
+    label: "Download"
+    families: [outline]
+    tags: [export, receive]
+    rtl: false
+    since: 1.0.0-beta.1
+  save:
+    name: save
+    label: "Save"
+    families: [outline]
+    tags: [disk, commit]
+    rtl: false
+    since: 1.0.0-beta.1
+  file:
+    name: file
+    label: "File"
+    families: [outline, rounded, mono]
+    tags: [document, page]
+    rtl: false
+    since: 1.0.0-beta.1
+  folder:
+    name: folder
+    label: "Folder"
+    families: [outline]
+    tags: [directory, organize]
+    rtl: false
+    since: 1.0.0-beta.1
+  link:
+    name: link
+    label: "Link"
+    families: [outline, rounded, mono]
+    tags: [url, chain]
+    rtl: false
+    since: 1.0.0-beta.1
+  bookmark:
+    name: bookmark
+    label: "Bookmark"
+    families: [outline]
+    tags: [reading, later]
+    rtl: false
+    since: 1.0.0-beta.1
+  star:
+    name: star
+    label: "Star"
+    families: [outline, rounded, mono]
+    tags: [favorite, rating]
+    rtl: false
+    requiresLabel: [mono]
+    since: 1.0.0-beta.1
+  calendar:
+    name: calendar
+    label: "Calendar"
+    families: [outline, rounded, mono]
+    tags: [date, schedule]
+    rtl: false
+    since: 1.0.0-beta.1
+  user:
+    name: user
+    label: "User"
+    families: [outline, rounded, mono]
+    tags: [person, account]
+    rtl: false
+    since: 1.0.0-beta.1
+  chat:
+    name: chat
+    label: "Chat"
+    families: [outline]
+    tags: [message, conversation]
+    rtl: false
+    since: 1.0.0-beta.1
+  bell:
+    name: bell
+    label: "Bell"
+    families: [outline]
+    tags: [notification, alert]
+    rtl: false
+    since: 1.0.0-beta.1
+  warning:
+    name: warning
+    label: "Warning"
+    families: [outline, rounded, mono]
+    tags: [caution, attention]
+    rtl: false
+    requiresLabel: [outline, rounded, mono]
+    since: 1.0.0-beta.1
+  info:
+    name: info
+    label: "Info"
+    families: [outline]
+    tags: [information, about]
+    rtl: false
+    since: 1.0.0-beta.1
+  help:
+    name: help
+    label: "Help"
+    families: [outline]
+    tags: [question, support]
+    rtl: false
+    since: 1.0.0-beta.1
+  lock:
+    name: lock
+    label: "Lock"
+    families: [outline]
+    tags: [secure, private]
+    rtl: false
+    since: 1.0.0-beta.1
+  shield:
+    name: shield
+    label: "Shield"
+    families: [outline]
+    tags: [protection, policy]
+    rtl: false
+    since: 1.0.0-beta.1
+  gear:
+    name: gear
+    label: "Gear"
+    families: [outline]
+    tags: [settings, cog, preferences]
+    rtl: false
+    since: 1.0.0-beta.1
+  terminal:
+    name: terminal
+    label: "Terminal"
+    families: [outline]
+    tags: [console, command]
+    rtl: false
+    since: 1.0.0-beta.1
+  branch:
+    name: branch
+    label: "Branch"
+    families: [outline, rounded, mono]
+    tags: [workflow, fork]
+    rtl: false
+    since: 1.0.0-beta.1
+  chart:
+    name: chart
+    label: "Chart"
+    families: [outline]
+    tags: [analytics, metrics]
+    rtl: false
+    since: 1.0.0-beta.1
+  play:
+    name: play
+    label: "Play"
+    families: [outline]
+    tags: [run, start]
+    rtl: false
+    since: 1.0.0-beta.1
+  pause:
+    name: pause
+    label: "Pause"
+    families: [outline]
+    tags: [hold, wait]
+    rtl: false
+    since: 1.0.0-beta.1
+  focus:
+    name: focus
+    label: "Focus"
+    families: [outline]
+    tags: [target, region]
+    rtl: false
+    since: 1.0.0-beta.1
+# Every remix_ui_icons 0.1.x name. `exact` names stay on RemixIcons as
+# @Deprecated aliases until 2.0.0 (or remain canonical when the name is
+# unchanged); `partial` and `removed` names are gone in 1.0.0 and appear
+# only in the migration guide, with the closest Lucide icon.
+legacy:
+  accessibility:
+    codepoint: "0xE000"
+    status: removed
+    lucide: accessibility
+  activityLog:
+    codepoint: "0xE001"
+    status: removed
+    lucide: activity
+  alignBaseline:
+    codepoint: "0xE002"
+    status: removed
+    lucide: alignVerticalJustifyEnd
+  alignBottom:
+    codepoint: "0xE003"
+    status: removed
+    lucide: alignEndHorizontal
+  alignCenterHorizontally:
+    codepoint: "0xE004"
+    status: removed
+    lucide: alignCenter
+  alignCenterVertically:
+    codepoint: "0xE005"
+    status: removed
+    lucide: alignCenterVertical
+  alignLeft:
+    codepoint: "0xE006"
+    status: removed
+    lucide: alignLeft
+  alignRight:
+    codepoint: "0xE007"
+    status: removed
+    lucide: alignRight
+  alignTop:
+    codepoint: "0xE008"
+    status: removed
+    lucide: alignStartHorizontal
+  allSides:
+    codepoint: "0xE009"
+    status: removed
+    lucide: move
+  angle:
+    codepoint: "0xE00A"
+    status: removed
+    lucide: angle
+  archive:
+    codepoint: "0xE00B"
+    status: removed
+    lucide: archive
+  arrowBottomLeft:
+    codepoint: "0xE00C"
+    status: removed
+    lucide: arrowDownLeft
+  arrowBottomRight:
+    codepoint: "0xE00D"
+    status: removed
+    lucide: arrowDownRight
+  arrowDown:
+    codepoint: "0xE00E"
+    status: exact
+    target: arrowDown
+    lucide: arrowDown
+  arrowLeft:
+    codepoint: "0xE00F"
+    status: exact
+    target: arrowLeft
+    lucide: arrowLeft
+  arrowRight:
+    codepoint: "0xE010"
+    status: exact
+    target: arrowRight
+    lucide: arrowRight
+  arrowTopLeft:
+    codepoint: "0xE011"
+    status: removed
+    lucide: arrowUpLeft
+  arrowTopRight:
+    codepoint: "0xE012"
+    status: exact
+    target: arrowUpRight
+    lucide: arrowUpRight
+  arrowUp:
+    codepoint: "0xE013"
+    status: exact
+    target: arrowUp
+    lucide: arrowUp
+  aspectRatio:
+    codepoint: "0xE014"
+    status: removed
+    lucide: ratio
+  avatar:
+    codepoint: "0xE015"
+    status: partial
+    target: user
+    lucide: circleUser
+    note: "User metaphor only; avatar enclosure/face differs."
+  backpack:
+    codepoint: "0xE016"
+    status: removed
+    lucide: backpack
+  badge:
+    codepoint: "0xE017"
+    status: removed
+    lucide: badge
+  barChart:
+    codepoint: "0xE018"
+    status: exact
+    target: chart
+    lucide: chartColumn
+  bell:
+    codepoint: "0xE019"
+    status: exact
+    target: bell
+    lucide: bell
+  blendingMode:
+    codepoint: "0xE01A"
+    status: removed
+    lucide: blend
+  bookmarkFilled:
+    codepoint: "0xE01B"
+    status: exact
+    target: bookmarkFilled
+    lucide: bookmark
+  bookmark:
+    codepoint: "0xE01C"
+    status: exact
+    target: bookmark
+    lucide: bookmark
+  borderAll:
+    codepoint: "0xE01D"
+    status: removed
+    lucide: grid2x2
+  borderBottom:
+    codepoint: "0xE01E"
+    status: removed
+    lucide: panelBottom
+  borderDashed:
+    codepoint: "0xE01F"
+    status: removed
+    lucide: squareDashed
+  borderDotted:
+    codepoint: "0xE020"
+    status: removed
+    lucide: squareDashed
+  borderLeft:
+    codepoint: "0xE021"
+    status: removed
+    lucide: panelLeft
+  borderNone:
+    codepoint: "0xE022"
+    status: removed
+    lucide: squareDashed
+  borderRight:
+    codepoint: "0xE023"
+    status: removed
+    lucide: panelRight
+  borderSolid:
+    codepoint: "0xE024"
+    status: removed
+    lucide: square
+  borderSplit:
+    codepoint: "0xE025"
+    status: removed
+    lucide: grid2x2
+  borderStyle:
+    codepoint: "0xE026"
+    status: removed
+    lucide: squareDashed
+  borderTop:
+    codepoint: "0xE027"
+    status: removed
+    lucide: panelTop
+  borderWidth:
+    codepoint: "0xE028"
+    status: removed
+    lucide: lineSquiggle
+  boxModel:
+    codepoint: "0xE029"
+    status: removed
+    lucide: boxSelect
+  box:
+    codepoint: "0xE02A"
+    status: removed
+    lucide: box
+  button:
+    codepoint: "0xE02B"
+    status: removed
+    lucide: rectangleHorizontal
+  calendar:
+    codepoint: "0xE02C"
+    status: exact
+    target: calendar
+    lucide: calendar
+  camera:
+    codepoint: "0xE02D"
+    status: removed
+    lucide: camera
+  cardStackMinus:
+    codepoint: "0xE02E"
+    status: removed
+    lucide: layersMinus
+  cardStackPlus:
+    codepoint: "0xE02F"
+    status: removed
+    lucide: layersPlus
+  cardStack:
+    codepoint: "0xE030"
+    status: removed
+    lucide: layers
+  caretDown:
+    codepoint: "0xE031"
+    status: partial
+    target: chevronDown
+    lucide: chevronDown
+    note: "Chevron is open; caret is a filled triangle."
+  caretLeft:
+    codepoint: "0xE032"
+    status: partial
+    target: chevronLeft
+    lucide: chevronLeft
+    note: "Chevron is open; caret is a filled triangle."
+  caretRight:
+    codepoint: "0xE033"
+    status: partial
+    target: chevronRight
+    lucide: chevronRight
+    note: "Chevron is open; caret is a filled triangle."
+  caretSort:
+    codepoint: "0xE034"
+    status: removed
+    lucide: chevronsUpDown
+  caretUp:
+    codepoint: "0xE035"
+    status: partial
+    target: chevronUp
+    lucide: chevronUp
+    note: "Chevron is open; caret is a filled triangle."
+  chatBubble:
+    codepoint: "0xE036"
+    status: exact
+    target: chat
+    lucide: messageCircle
+  checkCircled:
+    codepoint: "0xE037"
+    status: removed
+    lucide: circleCheck
+  check:
+    codepoint: "0xE038"
+    status: exact
+    target: check
+    lucide: check
+  checkbox:
+    codepoint: "0xE039"
+    status: removed
+    lucide: squareCheck
+  chevronDown:
+    codepoint: "0xE03A"
+    status: exact
+    target: chevronDown
+    lucide: chevronDown
+  chevronLeft:
+    codepoint: "0xE03B"
+    status: exact
+    target: chevronLeft
+    lucide: chevronLeft
+  chevronRight:
+    codepoint: "0xE03C"
+    status: exact
+    target: chevronRight
+    lucide: chevronRight
+  chevronUp:
+    codepoint: "0xE03D"
+    status: exact
+    target: chevronUp
+    lucide: chevronUp
+  circleBackslash:
+    codepoint: "0xE03E"
+    status: removed
+    lucide: ban
+  circle:
+    codepoint: "0xE03F"
+    status: removed
+    lucide: circle
+  clipboardCopy:
+    codepoint: "0xE040"
+    status: partial
+    target: copy
+    lucide: clipboardCopy
+    note: "Copy action exists; clipboard outline is lost."
+  clipboard:
+    codepoint: "0xE041"
+    status: removed
+    lucide: clipboard
+  clock:
+    codepoint: "0xE042"
+    status: removed
+    lucide: clock
+  code:
+    codepoint: "0xE043"
+    status: partial
+    target: terminal
+    lucide: code
+    note: "Terminal window/prompt replaces code brackets; product decision required."
+  codesandboxLogo:
+    codepoint: "0xE044"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  colorWheel:
+    codepoint: "0xE045"
+    status: removed
+    lucide: palette
+  columnSpacing:
+    codepoint: "0xE046"
+    status: removed
+    lucide: betweenVerticalStart
+  columns:
+    codepoint: "0xE047"
+    status: removed
+    lucide: columns2
+  commit:
+    codepoint: "0xE048"
+    status: removed
+    lucide: gitCommitHorizontal
+  component1:
+    codepoint: "0xE049"
+    status: removed
+    lucide: component
+  component2:
+    codepoint: "0xE04A"
+    status: removed
+    lucide: component
+  componentBoolean:
+    codepoint: "0xE04B"
+    status: removed
+    lucide: toggleLeft
+  componentInstance:
+    codepoint: "0xE04C"
+    status: removed
+    lucide: diamond
+  componentNone:
+    codepoint: "0xE04D"
+    status: removed
+    lucide: circleOff
+  componentPlaceholder:
+    codepoint: "0xE04E"
+    status: removed
+    lucide: squareDashed
+  container:
+    codepoint: "0xE04F"
+    status: removed
+    lucide: container
+  cookie:
+    codepoint: "0xE050"
+    status: removed
+    lucide: cookie
+  copy:
+    codepoint: "0xE051"
+    status: exact
+    target: copy
+    lucide: copy
+  cornerBottomLeft:
+    codepoint: "0xE052"
+    status: removed
+    lucide: cornerDownLeft
+  cornerBottomRight:
+    codepoint: "0xE053"
+    status: removed
+    lucide: cornerDownRight
+  cornerTopLeft:
+    codepoint: "0xE054"
+    status: removed
+    lucide: cornerUpLeft
+  cornerTopRight:
+    codepoint: "0xE055"
+    status: removed
+    lucide: cornerUpRight
+  corners:
+    codepoint: "0xE056"
+    status: removed
+    lucide: scan
+  countdownTimer:
+    codepoint: "0xE057"
+    status: removed
+    lucide: timerReset
+  counterClockwiseClock:
+    codepoint: "0xE058"
+    status: removed
+    lucide: history
+  crop:
+    codepoint: "0xE059"
+    status: removed
+    lucide: crop
+  cross1:
+    codepoint: "0xE05A"
+    status: exact
+    target: close
+    lucide: x
+  cross2:
+    codepoint: "0xE05B"
+    status: exact
+    target: close
+    lucide: x
+  crossCircled:
+    codepoint: "0xE05C"
+    status: removed
+    lucide: circleX
+  crosshair1:
+    codepoint: "0xE05D"
+    status: partial
+    target: focus
+    lucide: crosshair
+    note: "Region brackets/center square replace crosshair."
+  crosshair2:
+    codepoint: "0xE05E"
+    status: partial
+    target: focus
+    lucide: crosshair
+    note: "Region brackets/center square replace crosshair."
+  crumpledPaper:
+    codepoint: "0xE05F"
+    status: removed
+    lucide: fileX
+  cube:
+    codepoint: "0xE060"
+    status: removed
+    lucide: box
+  cursorArrow:
+    codepoint: "0xE061"
+    status: removed
+    lucide: mousePointer2
+  cursorText:
+    codepoint: "0xE062"
+    status: removed
+    lucide: textCursor
+  dash:
+    codepoint: "0xE063"
+    status: partial
+    target: minus
+    lucide: minus
+    note: "Text dash versus decrease action."
+  dashboard:
+    codepoint: "0xE064"
+    status: partial
+    target: grid
+    lucide: layoutDashboard
+    note: "Grid is app/grid view, not dashboard panels; Home also changes metaphor."
+  desktop:
+    codepoint: "0xE065"
+    status: removed
+    lucide: monitor
+  dimensions:
+    codepoint: "0xE066"
+    status: removed
+    lucide: ruler
+  disc:
+    codepoint: "0xE067"
+    status: removed
+    lucide: disc
+  discordLogo:
+    codepoint: "0xE068"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  dividerHorizontal:
+    codepoint: "0xE069"
+    status: partial
+    target: minus
+    lucide: separatorHorizontal
+    note: "Minus is an action, not a layout divider."
+  dividerVertical:
+    codepoint: "0xE06A"
+    status: removed
+    lucide: separatorVertical
+  dotFilled:
+    codepoint: "0xE06B"
+    status: removed
+    lucide: dot
+  dot:
+    codepoint: "0xE06C"
+    status: removed
+    lucide: dot
+  dotsHorizontal:
+    codepoint: "0xE06D"
+    status: exact
+    target: more
+    lucide: ellipsis
+  dotsVertical:
+    codepoint: "0xE06E"
+    status: partial
+    target: more
+    lucide: ellipsisVertical
+    note: "New more is horizontal, not vertical."
+  doubleArrowDown:
+    codepoint: "0xE06F"
+    status: removed
+    lucide: chevronsDown
+  doubleArrowLeft:
+    codepoint: "0xE070"
+    status: removed
+    lucide: chevronsLeft
+  doubleArrowRight:
+    codepoint: "0xE071"
+    status: removed
+    lucide: chevronsRight
+  doubleArrowUp:
+    codepoint: "0xE072"
+    status: removed
+    lucide: chevronsUp
+  download:
+    codepoint: "0xE073"
+    status: exact
+    target: download
+    lucide: download
+  dragHandleDots1:
+    codepoint: "0xE074"
+    status: removed
+    lucide: gripVertical
+  dragHandleDots2:
+    codepoint: "0xE075"
+    status: removed
+    lucide: gripVertical
+  dragHandleHorizontal:
+    codepoint: "0xE076"
+    status: removed
+    lucide: gripHorizontal
+  dragHandleVertical:
+    codepoint: "0xE077"
+    status: removed
+    lucide: gripVertical
+  drawingPinFilled:
+    codepoint: "0xE078"
+    status: removed
+    lucide: pin
+  drawingPin:
+    codepoint: "0xE079"
+    status: removed
+    lucide: pin
+  dropdownMenu:
+    codepoint: "0xE07A"
+    status: removed
+    lucide: squareChevronDown
+  enterFullScreen:
+    codepoint: "0xE07B"
+    status: removed
+    lucide: maximize
+  enter:
+    codepoint: "0xE07C"
+    status: removed
+    lucide: logIn
+  envelopeClosed:
+    codepoint: "0xE07D"
+    status: removed
+    lucide: mail
+  envelopeOpen:
+    codepoint: "0xE07E"
+    status: removed
+    lucide: mailOpen
+  eraser:
+    codepoint: "0xE07F"
+    status: removed
+    lucide: eraser
+  exclamationTriangle:
+    codepoint: "0xE080"
+    status: exact
+    target: warning
+    lucide: triangleAlert
+  exitFullScreen:
+    codepoint: "0xE081"
+    status: removed
+    lucide: minimize
+  exit:
+    codepoint: "0xE082"
+    status: removed
+    lucide: logOut
+  externalLink:
+    codepoint: "0xE083"
+    status: partial
+    target: arrowUpRight
+    lucide: externalLink
+    note: "Diagonal arrow lacks enclosing external-link/window frame."
+  eyeClosed:
+    codepoint: "0xE084"
+    status: removed
+    lucide: eyeClosed
+  eyeNone:
+    codepoint: "0xE085"
+    status: removed
+    lucide: eyeOff
+  eyeOpen:
+    codepoint: "0xE086"
+    status: removed
+    lucide: eye
+  face:
+    codepoint: "0xE087"
+    status: removed
+    lucide: smile
+  figmaLogo:
+    codepoint: "0xE088"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  fileMinus:
+    codepoint: "0xE089"
+    status: removed
+    lucide: fileMinus
+  filePlus:
+    codepoint: "0xE08A"
+    status: removed
+    lucide: filePlus
+  fileText:
+    codepoint: "0xE08B"
+    status: partial
+    target: file
+    lucide: fileText
+    note: "Generic file loses text lines."
+  file:
+    codepoint: "0xE08C"
+    status: exact
+    target: file
+    lucide: file
+  fontBold:
+    codepoint: "0xE08D"
+    status: removed
+    lucide: bold
+  fontFamily:
+    codepoint: "0xE08E"
+    status: removed
+    lucide: type
+  fontItalic:
+    codepoint: "0xE08F"
+    status: removed
+    lucide: italic
+  fontRoman:
+    codepoint: "0xE090"
+    status: removed
+    lucide: type
+  fontSize:
+    codepoint: "0xE091"
+    status: removed
+    lucide: aLargeSmall
+  fontStyle:
+    codepoint: "0xE092"
+    status: removed
+    lucide: italic
+  frame:
+    codepoint: "0xE093"
+    status: removed
+    lucide: frame
+  framerLogo:
+    codepoint: "0xE094"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  gear:
+    codepoint: "0xE095"
+    status: exact
+    target: gear
+    lucide: settings
+  githubLogo:
+    codepoint: "0xE096"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  globe:
+    codepoint: "0xE097"
+    status: removed
+    lucide: globe
+  grid:
+    codepoint: "0xE098"
+    status: exact
+    target: grid
+    lucide: grid3x3
+  group:
+    codepoint: "0xE099"
+    status: removed
+    lucide: group
+  half1:
+    codepoint: "0xE09A"
+    status: removed
+    lucide: circleDashed
+  half2:
+    codepoint: "0xE09B"
+    status: removed
+    lucide: contrast
+  hamburgerMenu:
+    codepoint: "0xE09C"
+    status: exact
+    target: menu
+    lucide: menu
+  hand:
+    codepoint: "0xE09D"
+    status: removed
+    lucide: hand
+  heading:
+    codepoint: "0xE09E"
+    status: removed
+    lucide: heading
+  heartFilled:
+    codepoint: "0xE09F"
+    status: removed
+    lucide: heart
+  heart:
+    codepoint: "0xE0A0"
+    status: removed
+    lucide: heart
+  height:
+    codepoint: "0xE0A1"
+    status: removed
+    lucide: moveVertical
+  hobbyKnife:
+    codepoint: "0xE0A2"
+    status: removed
+    lucide: slice
+  home:
+    codepoint: "0xE0A3"
+    status: exact
+    target: home
+    lucide: house
+  iconjarLogo:
+    codepoint: "0xE0A4"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  idCard:
+    codepoint: "0xE0A5"
+    status: removed
+    lucide: idCard
+  image:
+    codepoint: "0xE0A6"
+    status: removed
+    lucide: image
+  infoCircled:
+    codepoint: "0xE0A7"
+    status: exact
+    target: info
+    lucide: info
+  input:
+    codepoint: "0xE0A8"
+    status: removed
+    lucide: formInput
+  instagramLogo:
+    codepoint: "0xE0A9"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  keyboard:
+    codepoint: "0xE0AA"
+    status: removed
+    lucide: keyboard
+  lapTimer:
+    codepoint: "0xE0AB"
+    status: removed
+    lucide: timer
+  laptop:
+    codepoint: "0xE0AC"
+    status: removed
+    lucide: laptop
+  layers:
+    codepoint: "0xE0AD"
+    status: removed
+    lucide: layers
+  layout:
+    codepoint: "0xE0AE"
+    status: removed
+    lucide: layout
+  letterCaseCapitalize:
+    codepoint: "0xE0AF"
+    status: removed
+    lucide: caseSensitive
+  letterCaseLowercase:
+    codepoint: "0xE0B0"
+    status: removed
+    lucide: caseLower
+  letterCaseToggle:
+    codepoint: "0xE0B1"
+    status: removed
+    lucide: caseSensitive
+  letterCaseUppercase:
+    codepoint: "0xE0B2"
+    status: removed
+    lucide: caseUpper
+  letterSpacing:
+    codepoint: "0xE0B3"
+    status: removed
+    lucide: moveHorizontal
+  lightningBolt:
+    codepoint: "0xE0B4"
+    status: removed
+    lucide: zap
+  lineHeight:
+    codepoint: "0xE0B5"
+    status: removed
+    lucide: listCollapse
+  link1:
+    codepoint: "0xE0B6"
+    status: exact
+    target: link
+    lucide: link
+  link2:
+    codepoint: "0xE0B7"
+    status: exact
+    target: link
+    lucide: link2
+  linkBreak1:
+    codepoint: "0xE0B8"
+    status: removed
+    lucide: unlink
+  linkBreak2:
+    codepoint: "0xE0B9"
+    status: removed
+    lucide: unlink2
+  linkNone1:
+    codepoint: "0xE0BA"
+    status: removed
+    lucide: link2Off
+  linkNone2:
+    codepoint: "0xE0BB"
+    status: removed
+    lucide: link2Off
+  linkedinLogo:
+    codepoint: "0xE0BC"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  listBullet:
+    codepoint: "0xE0BD"
+    status: removed
+    lucide: list
+  lockClosed:
+    codepoint: "0xE0BE"
+    status: exact
+    target: lock
+    lucide: lock
+  lockOpen1:
+    codepoint: "0xE0BF"
+    status: removed
+    lucide: lockOpen
+  lockOpen2:
+    codepoint: "0xE0C0"
+    status: removed
+    lucide: lockKeyholeOpen
+  loop:
+    codepoint: "0xE0C1"
+    status: removed
+    lucide: repeat
+  magicWand:
+    codepoint: "0xE0C2"
+    status: removed
+    lucide: wandSparkles
+  magnifyingGlass:
+    codepoint: "0xE0C3"
+    status: exact
+    target: search
+    lucide: search
+  margin:
+    codepoint: "0xE0C4"
+    status: removed
+    lucide: squareDashed
+  maskOff:
+    codepoint: "0xE0C5"
+    status: removed
+    lucide: squareDashed
+  maskOn:
+    codepoint: "0xE0C6"
+    status: removed
+    lucide: squareSquare
+  minusCircled:
+    codepoint: "0xE0C7"
+    status: removed
+    lucide: circleMinus
+  minus:
+    codepoint: "0xE0C8"
+    status: exact
+    target: minus
+    lucide: minus
+  mix:
+    codepoint: "0xE0C9"
+    status: removed
+    lucide: blend
+  mixerHorizontal:
+    codepoint: "0xE0CA"
+    status: exact
+    target: sliders
+    lucide: slidersHorizontal
+  mixerVertical:
+    codepoint: "0xE0CB"
+    status: partial
+    target: sliders
+    lucide: slidersVertical
+    note: "Only horizontal adjustment drawing."
+  mobile:
+    codepoint: "0xE0CC"
+    status: removed
+    lucide: smartphone
+  modulzLogo:
+    codepoint: "0xE0CD"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  moon:
+    codepoint: "0xE0CE"
+    status: removed
+    lucide: moon
+  move:
+    codepoint: "0xE0CF"
+    status: removed
+    lucide: move
+  notionLogo:
+    codepoint: "0xE0D0"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  opacity:
+    codepoint: "0xE0D1"
+    status: removed
+    lucide: droplet
+  openInNewWindow:
+    codepoint: "0xE0D2"
+    status: partial
+    target: arrowUpRight
+    lucide: squareArrowOutUpRight
+    note: "Diagonal arrow lacks window frame."
+  overline:
+    codepoint: "0xE0D3"
+    status: removed
+    lucide: baseline
+  padding:
+    codepoint: "0xE0D4"
+    status: removed
+    lucide: squareDashed
+  paperPlane:
+    codepoint: "0xE0D5"
+    status: removed
+    lucide: send
+  pause:
+    codepoint: "0xE0D6"
+    status: exact
+    target: pause
+    lucide: pause
+  pencil1:
+    codepoint: "0xE0D7"
+    status: exact
+    target: edit
+    lucide: pencil
+  pencil2:
+    codepoint: "0xE0D8"
+    status: exact
+    target: edit
+    lucide: pencilLine
+  person:
+    codepoint: "0xE0D9"
+    status: exact
+    target: user
+    lucide: user
+  pieChart:
+    codepoint: "0xE0DA"
+    status: removed
+    lucide: chartPie
+  pilcrow:
+    codepoint: "0xE0DB"
+    status: removed
+    lucide: pilcrow
+  pinBottom:
+    codepoint: "0xE0DC"
+    status: removed
+    lucide: pinOff
+  pinLeft:
+    codepoint: "0xE0DD"
+    status: removed
+    lucide: pin
+  pinRight:
+    codepoint: "0xE0DE"
+    status: removed
+    lucide: pin
+  pinTop:
+    codepoint: "0xE0DF"
+    status: removed
+    lucide: pin
+  play:
+    codepoint: "0xE0E0"
+    status: exact
+    target: play
+    lucide: play
+  plusCircled:
+    codepoint: "0xE0E1"
+    status: removed
+    lucide: circlePlus
+  plus:
+    codepoint: "0xE0E2"
+    status: exact
+    target: plus
+    lucide: plus
+  questionMarkCircled:
+    codepoint: "0xE0E3"
+    status: exact
+    target: help
+    lucide: circleQuestionMark
+  questionMark:
+    codepoint: "0xE0E4"
+    status: partial
+    target: help
+    lucide: circleQuestionMark
+    note: "Help adds an octagonal enclosure."
+  quote:
+    codepoint: "0xE0E5"
+    status: removed
+    lucide: quote
+  radiobutton:
+    codepoint: "0xE0E6"
+    status: removed
+    lucide: circleDot
+  reader:
+    codepoint: "0xE0E7"
+    status: removed
+    lucide: bookOpen
+  reload:
+    codepoint: "0xE0E8"
+    status: exact
+    target: refresh
+    lucide: rotateCcw
+  reset:
+    codepoint: "0xE0E9"
+    status: removed
+    lucide: rotateCcw
+  resume:
+    codepoint: "0xE0EA"
+    status: partial
+    target: play
+    lucide: circlePlay
+    note: "Play loses distinct resume marker."
+  rocket:
+    codepoint: "0xE0EB"
+    status: removed
+    lucide: rocket
+  rotateCounterClockwise:
+    codepoint: "0xE0EC"
+    status: removed
+    lucide: rotateCcw
+  rowSpacing:
+    codepoint: "0xE0ED"
+    status: removed
+    lucide: betweenHorizontalStart
+  rows:
+    codepoint: "0xE0EE"
+    status: removed
+    lucide: rows2
+  rulerHorizontal:
+    codepoint: "0xE0EF"
+    status: removed
+    lucide: ruler
+  rulerSquare:
+    codepoint: "0xE0F0"
+    status: removed
+    lucide: squareDashed
+  scissors:
+    codepoint: "0xE0F1"
+    status: removed
+    lucide: scissors
+  section:
+    codepoint: "0xE0F2"
+    status: removed
+    lucide: section
+  sewingPinFilled:
+    codepoint: "0xE0F3"
+    status: removed
+    lucide: mapPin
+  sewingPin:
+    codepoint: "0xE0F4"
+    status: removed
+    lucide: mapPin
+  shadowInner:
+    codepoint: "0xE0F5"
+    status: removed
+    lucide: squareSquare
+  shadowNone:
+    codepoint: "0xE0F6"
+    status: removed
+    lucide: square
+  shadowOuter:
+    codepoint: "0xE0F7"
+    status: removed
+    lucide: copy
+  shadow:
+    codepoint: "0xE0F8"
+    status: removed
+    lucide: copy
+  share1:
+    codepoint: "0xE0F9"
+    status: removed
+    lucide: share
+  share2:
+    codepoint: "0xE0FA"
+    status: removed
+    lucide: share2
+  shuffle:
+    codepoint: "0xE0FB"
+    status: removed
+    lucide: shuffle
+  size:
+    codepoint: "0xE0FC"
+    status: removed
+    lucide: scaling
+  sketchLogo:
+    codepoint: "0xE0FD"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  slash:
+    codepoint: "0xE0FE"
+    status: removed
+    lucide: slash
+  slider:
+    codepoint: "0xE0FF"
+    status: removed
+    lucide: slidersHorizontal
+  spaceBetweenHorizontally:
+    codepoint: "0xE100"
+    status: removed
+    lucide: alignHorizontalSpaceBetween
+  spaceBetweenVertically:
+    codepoint: "0xE101"
+    status: removed
+    lucide: alignVerticalSpaceBetween
+  spaceEvenlyHorizontally:
+    codepoint: "0xE102"
+    status: removed
+    lucide: alignHorizontalSpaceAround
+  spaceEvenlyVertically:
+    codepoint: "0xE103"
+    status: removed
+    lucide: alignVerticalSpaceAround
+  speakerLoud:
+    codepoint: "0xE104"
+    status: removed
+    lucide: volume2
+  speakerModerate:
+    codepoint: "0xE105"
+    status: removed
+    lucide: volume1
+  speakerOff:
+    codepoint: "0xE106"
+    status: removed
+    lucide: volumeX
+  speakerQuiet:
+    codepoint: "0xE107"
+    status: removed
+    lucide: volume
+  square:
+    codepoint: "0xE108"
+    status: removed
+    lucide: square
+  stack:
+    codepoint: "0xE109"
+    status: removed
+    lucide: layers
+  starFilled:
+    codepoint: "0xE10A"
+    status: exact
+    target: starFilled
+    lucide: star
+  star:
+    codepoint: "0xE10B"
+    status: exact
+    target: star
+    lucide: star
+  stitchesLogo:
+    codepoint: "0xE10C"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  stop:
+    codepoint: "0xE10D"
+    status: removed
+    lucide: octagon
+  stopwatch:
+    codepoint: "0xE10E"
+    status: removed
+    lucide: timer
+  stretchHorizontally:
+    codepoint: "0xE10F"
+    status: removed
+    lucide: stretchHorizontal
+  stretchVertically:
+    codepoint: "0xE110"
+    status: removed
+    lucide: stretchVertical
+  strikethrough:
+    codepoint: "0xE111"
+    status: removed
+    lucide: strikethrough
+  sun:
+    codepoint: "0xE112"
+    status: removed
+    lucide: sun
+  switchIcon:
+    codepoint: "0xE113"
+    status: removed
+    lucide: toggleRight
+  symbol:
+    codepoint: "0xE114"
+    status: removed
+    lucide: shapes
+  table:
+    codepoint: "0xE115"
+    status: removed
+    lucide: table
+  target:
+    codepoint: "0xE116"
+    status: partial
+    target: focus
+    lucide: target
+    note: "Focus brackets differ from bullseye."
+  textAlignBottom:
+    codepoint: "0xE117"
+    status: removed
+    lucide: alignVerticalJustifyEnd
+  textAlignCenter:
+    codepoint: "0xE118"
+    status: removed
+    lucide: textAlignCenter
+  textAlignJustify:
+    codepoint: "0xE119"
+    status: removed
+    lucide: textAlignJustify
+  textAlignLeft:
+    codepoint: "0xE11A"
+    status: removed
+    lucide: textAlignStart
+  textAlignMiddle:
+    codepoint: "0xE11B"
+    status: removed
+    lucide: alignVerticalJustifyCenter
+  textAlignRight:
+    codepoint: "0xE11C"
+    status: removed
+    lucide: textAlignEnd
+  textAlignTop:
+    codepoint: "0xE11D"
+    status: removed
+    lucide: alignVerticalJustifyStart
+  textNone:
+    codepoint: "0xE11E"
+    status: removed
+    lucide: removeFormatting
+  text:
+    codepoint: "0xE11F"
+    status: removed
+    lucide: text
+  thickArrowDown:
+    codepoint: "0xE120"
+    status: partial
+    target: arrowDown
+    lucide: arrowBigDown
+    note: "Filled weight may approximate; not old thick-arrow shape."
+  thickArrowLeft:
+    codepoint: "0xE121"
+    status: partial
+    target: arrowLeft
+    lucide: arrowBigLeft
+    note: "Filled weight may approximate; not old thick-arrow shape."
+  thickArrowRight:
+    codepoint: "0xE122"
+    status: partial
+    target: arrowRight
+    lucide: arrowBigRight
+    note: "Filled weight may approximate; not old thick-arrow shape."
+  thickArrowUp:
+    codepoint: "0xE123"
+    status: partial
+    target: arrowUp
+    lucide: arrowBigUp
+    note: "Filled weight may approximate; not old thick-arrow shape."
+  timer:
+    codepoint: "0xE124"
+    status: removed
+    lucide: timer
+  tokens:
+    codepoint: "0xE125"
+    status: removed
+    lucide: coins
+  trackNext:
+    codepoint: "0xE126"
+    status: removed
+    lucide: skipForward
+  trackPrevious:
+    codepoint: "0xE127"
+    status: removed
+    lucide: skipBack
+  transform:
+    codepoint: "0xE128"
+    status: removed
+    lucide: scaling
+  transparencyGrid:
+    codepoint: "0xE129"
+    status: removed
+    lucide: grid2x2
+  trash:
+    codepoint: "0xE12A"
+    status: exact
+    target: trash
+    lucide: trash
+  triangleDown:
+    codepoint: "0xE12B"
+    status: removed
+    lucide: triangle
+  triangleLeft:
+    codepoint: "0xE12C"
+    status: removed
+    lucide: triangle
+  triangleRight:
+    codepoint: "0xE12D"
+    status: removed
+    lucide: triangleRight
+  triangleUp:
+    codepoint: "0xE12E"
+    status: removed
+    lucide: triangle
+  twitterLogo:
+    codepoint: "0xE12F"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  underline:
+    codepoint: "0xE130"
+    status: removed
+    lucide: underline
+  update:
+    codepoint: "0xE131"
+    status: removed
+    lucide: loaderCircle
+  upload:
+    codepoint: "0xE132"
+    status: exact
+    target: upload
+    lucide: upload
+  valueNone:
+    codepoint: "0xE133"
+    status: removed
+    lucide: circleOff
+  value:
+    codepoint: "0xE134"
+    status: removed
+    lucide: circle
+  vercelLogo:
+    codepoint: "0xE135"
+    status: removed
+    lucide: null
+    note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
+  video:
+    codepoint: "0xE136"
+    status: removed
+    lucide: video
+  viewGrid:
+    codepoint: "0xE137"
+    status: partial
+    target: grid
+    lucide: layoutGrid
+    note: "Grid exists; layout/structure differs."
+  viewHorizontal:
+    codepoint: "0xE138"
+    status: removed
+    lucide: columns2
+  viewNone:
+    codepoint: "0xE139"
+    status: removed
+    lucide: squareDashed
+  viewVertical:
+    codepoint: "0xE13A"
+    status: removed
+    lucide: rows2
+  width:
+    codepoint: "0xE13B"
+    status: removed
+    lucide: moveHorizontal
+  zoomIn:
+    codepoint: "0xE13C"
+    status: removed
+    lucide: zoomIn
+  zoomOut:
+    codepoint: "0xE13D"
+    status: removed
+    lucide: zoomOut

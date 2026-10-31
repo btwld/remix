@@ -413,7 +413,7 @@ body:has(#surface:checked) {{
 {_outline_only(root, shared_labels)}
 </main>
 <footer>
-<p>BSD 3-Clause. Copyright 2026, Leo Farias. <code>package.json</code> is <code>private</code>. This pack is not published to npm or pub.dev, and it is not <code>remix_ui_icons</code>.</p>
+<p>BSD 3-Clause. Copyright 2026, Leo Farias. <code>package.json</code> is <code>private</code>. This source pack is not published to npm or pub.dev; <code>remix_ui_icons</code> compiles its masters into a Flutter icon font.</p>
 <p>Family catalogs remain build products: <a href="../outline/docs/catalog/index.html">Outline</a>, <a href="../rounded/docs/catalog/index.html">Rounded</a>, <a href="../mono/proof/index.html">Mono proof</a>.</p>
 </footer>
 </body>
