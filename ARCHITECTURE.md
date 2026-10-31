@@ -63,7 +63,7 @@ checkout consumer success cannot establish hosted minimum-version support.
 
 ## Fortal owns its visual contract (Fortal ADR-0003)
 
-2026-10-29 · Accepted; supersedes Radix Themes visual parity · [Specification](registry_source/specs/fortal.md) · [Archived brief](registry_source/docs/fortal/refresh-brief.md)
+2026-10-29 · Accepted; supersedes Radix Themes visual parity · [Specification](registry_source/specs/fortal.md) · [Design provenance](registry_source/docs/fortal/refresh-brief.md)
 
 Use seven owned, deterministic seed-generated palettes and Fortal's own visual
 specification, retaining twelve-step roles and Remix/Naked UI behavior, because

@@ -8,9 +8,9 @@ size-linked recipes over Remix; no behavioral component is reimplemented.
 
 ## Sources and decisions
 
-The [Fortal Refresh brief](../docs/fortal/refresh-brief.md) (Leo Farias,
-2026-10-29) supplies the names, seeds,
-role model, contrast targets, and component decisions below. Leo's 2026-10-31
+The [design provenance](../docs/fortal/refresh-brief.md) records Leo Farias's
+2026-10-29 brief, which established the palette names, role model, contrast
+targets, and component direction. Leo's 2026-10-31
 palette review replaced Mangue with Serra, set the Céu and Caju seeds, moved
 errors to a dedicated red, and bounded dark solid lightness. OKLab conversion
 uses Björn Ottosson's published equations; contrast uses WCAG 2 relative

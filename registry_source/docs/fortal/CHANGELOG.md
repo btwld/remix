@@ -10,6 +10,18 @@
   stays apart from Caju. The dashboard recipe's negative statuses, deltas, and
   destructive actions use it via `FortalAccentScope.error`; positive statuses
   use Serra, and every status keeps its text label.
+- **Breaking:** the public dashboard recipe fields `FortalAccentScope.accent`
+  and `FortalStatusBadge.accent` change from `FortalAccentColor` to
+  `FortalAccentColor?` (installed as `<prefix>AccentScope.accent` and
+  `<prefix>StatusBadge.accent`). A null value represents the dedicated error
+  palette: `FortalAccentScope.error` sets it, as do refunded and suspended
+  badges. Consumers reading either field must accept the nullable type and
+  handle null explicitly. When forwarding an accent to another scope, use
+  `FortalAccentScope.error(child: child)` for null and
+  `FortalAccentScope(accent: accent, child: child)` for a promoted non-null
+  value. Use `accentPalette: fortalError` when forwarding null to `FortalTheme`;
+  passing only `accent: null` inherits the parent accent instead. Installed
+  source uses the corresponding prefixed types and `<prefix>Error` palette.
 - **Breaking:** the exported `FortalThemeColors` constructor (installed as
   `<prefix>ThemeColors`) requires two new arguments, `controlBorder` and
   `accentThumbRing`. Code that constructs it directly must supply both, or
