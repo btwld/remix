@@ -80,6 +80,13 @@ files and includes already-installed adapters in generation.
 
 ## Source ownership
 
+Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
+reserves authored and generated targets across separate installs, so another
+registry cannot silently preserve or overwrite a different owner's recipe.
+Disjoint additive registries remain supported. Existing files from CLI beta.0
+or earlier need explicit provenance verification and `--adopt`; see the
+[migration instructions](REGISTRIES.md#existing-source-without-an-ownership-record).
+
 Updating a pin and adopting source are separate operations:
 
 ```shell
