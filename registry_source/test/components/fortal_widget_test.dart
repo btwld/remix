@@ -348,6 +348,35 @@ void main() {
       expect(find.byType(RemixRadio<String>), findsOneWidget);
     });
 
+    testWidgets('FortalRadio and FortalSwitch forward their visible label', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixRadioGroup<String>(
+          groupValue: 'option',
+          child: FortalRadio<String>(value: 'option', label: 'Option'),
+        ),
+      );
+
+      expect(find.text('Option'), findsOneWidget);
+      expect(
+        tester
+            .widget<RemixRadio<String>>(find.byType(RemixRadio<String>))
+            .label,
+        'Option',
+      );
+
+      await tester.pumpRemixApp(
+        const FortalSwitch(label: 'Notifications', selected: true),
+      );
+
+      expect(find.text('Notifications'), findsOneWidget);
+      expect(
+        tester.widget<RemixSwitch>(find.byType(RemixSwitch)).label,
+        'Notifications',
+      );
+    });
+
     testWidgets('renders FortalSlider', (tester) async {
       await tester.pumpRemixApp(const FortalSlider(value: 0.5));
 

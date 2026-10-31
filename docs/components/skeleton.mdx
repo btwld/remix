@@ -274,10 +274,11 @@ return unchanged. No loading or progress role is fabricated.
 
 ### Reduced motion
 
-The pulse honours the platform animation preference through
-`MediaQuery.disableAnimationsOf`. When animations are disabled the placeholder
-paints its base frame and schedules no further frames, and it resumes pulsing if
-the preference changes back while it is mounted.
+The pulse honours the user's reduced-motion preference, read from
+`MediaQuery.disableAnimations` and the platform's `reduceMotion` (see
+[Reduced motion](/guides/styling-components#reduced-motion)). When motion is
+reduced the placeholder paints its base frame and schedules no further frames,
+and it resumes pulsing if the preference changes back while it is mounted.
 
 ### Text direction
 
@@ -292,8 +293,11 @@ RTL. Directionality comes from whatever the child itself needs.
   minimum height and leaves width to its constraints.
 - Fortal pulses gray alpha 3–4 with a 1000 ms leg and honors
   `MediaQuery.disableAnimationsOf`.
-- A raw Remix style interpolates `color` and `pulseColor`. For opaque
-  decorations that mask the fill, it fades the whole container instead.
+- A raw Remix style interpolates `color` and `pulseColor` when there is an
+  unmasked fill. With no `color`, or when a gradient, image, or
+  `foregroundDecoration` masks the fill, it fades the whole container between
+  full and half opacity instead. This composes with any opacity the caller
+  already applied and leaves the decoration intact.
 - Loading content is excluded from focus, semantics, and ticking. There is
   no shimmer gradient or fabricated progress semantics.
 

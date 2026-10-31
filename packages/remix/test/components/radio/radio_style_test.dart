@@ -17,17 +17,23 @@ void main() {
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final indicator = Prop.maybeMix(BoxStyler());
+        final label = Prop.maybeMix(TextStyler());
+        final labelSpacing = Prop.maybe(12.0);
         final variants = <VariantStyle<RadioSpec>>[];
 
         final style = RadioStyler.create(
           container: container,
           indicator: indicator,
+          label: label,
+          labelSpacing: labelSpacing,
           variants: variants,
         );
 
         expect(style, isNotNull);
         expect(style.$container, equals(container));
         expect(style.$indicator, equals(indicator));
+        expect(style.$label, equals(label));
+        expect(style.$labelSpacing, equals(labelSpacing));
         expect(style.$variants, equals(variants));
       });
 
@@ -62,6 +68,44 @@ void main() {
               ),
             ),
           );
+        },
+      );
+
+      styleMethodTest(
+        'label',
+        initial: RadioStyler(),
+        modify: (style) =>
+            style.label(TextStyler(style: TextStyleMix(color: Colors.red))),
+        expect: (style) {
+          expect(
+            style.$label,
+            equals(
+              Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.red))),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'labelColor',
+        initial: RadioStyler(),
+        modify: (style) => style.labelColor(Colors.red),
+        expect: (style) {
+          expect(
+            style.$label,
+            equals(
+              Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.red))),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'labelSpacing',
+        initial: RadioStyler(),
+        modify: (style) => style.labelSpacing(12),
+        expect: (style) {
+          expect(style.$labelSpacing, equals(Prop.value(12.0)));
         },
       );
 
@@ -247,6 +291,8 @@ void main() {
 
         expect(radio, isA<RemixRadio<String>>());
         expect(radio.value, equals('option1'));
+        expect(radio.label, isNull);
+        expect(radio.minimumTapTargetSize, Size.zero);
         expect(radio.enabled, isTrue);
         expect(radio.autofocus, isFalse);
         expect(radio.toggleable, isFalse);
@@ -258,7 +304,9 @@ void main() {
 
         final radio = style.call<int>(
           value: 42,
+          label: 'Forty-two',
           semanticLabel: 'Option',
+          minimumTapTargetSize: const Size.square(48),
           enabled: false,
           autofocus: true,
           toggleable: true,
@@ -268,6 +316,9 @@ void main() {
 
         expect(radio, isA<RemixRadio<int>>());
         expect(radio.value, equals(42));
+        expect(radio.label, 'Forty-two');
+        expect(radio.semanticLabel, 'Option');
+        expect(radio.minimumTapTargetSize, const Size.square(48));
         expect(radio.enabled, isFalse);
         expect(radio.autofocus, isTrue);
         expect(radio.toggleable, isTrue);

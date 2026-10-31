@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+// `RemixFlexBoxAdapter` is `@internal` to `remix`, but this sibling package's
+// tests need it to read the container spec Remix resolved for a Fortal recipe.
+// Suppressed per-use below, so a future accidental internal-member use still
+// gets flagged.
+import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:registry_source/fortal.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -22,8 +27,7 @@ void main() {
                 ),
               );
               await tester.pumpAndSettle();
-              final row = tester.widget<RowBox>(find.byType(RowBox));
-              final box = row.styleSpec!.spec.box!.spec;
+              final box = _toggleRow(tester).styleSpec.spec.box!.spec;
               final padding = switch (size) {
                 FortalToggleSize.size1 => const EdgeInsets.symmetric(
                   horizontal: 8,
@@ -39,7 +43,7 @@ void main() {
                 ),
               };
               expect(box.padding!.resolve(TextDirection.ltr), padding);
-              final context = tester.element(find.byType(RowBox));
+              final context = tester.element(_toggleRowFinder);
               Color color(ColorToken token) => MixScope.tokenOf(token, context);
               final decoration = box.decoration! as BoxDecoration;
               expect(
@@ -93,7 +97,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
-      expect(tester.getSize(find.byType(RowBox)).width, lessThanOrEqualTo(200));
+      expect(tester.getSize(_toggleRowFinder).width, lessThanOrEqualTo(200));
       expect(
         tester.getSemantics(find.byType(RemixToggle)).label,
         'Workspace Write',
@@ -109,7 +113,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final rowSize = tester.getSize(find.byType(RowBox));
+      final rowSize = tester.getSize(_toggleRowFinder);
       final labelSize = tester.getSize(find.text('Bold'));
       expect(rowSize.width, closeTo(labelSize.width + 24, 0.01));
       expect(rowSize.height, closeTo(labelSize.height + 16, 0.01));
@@ -127,7 +131,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        iconOnlySizes.add(tester.getSize(find.byType(RowBox)));
+        iconOnlySizes.add(tester.getSize(_toggleRowFinder));
       }
 
       expect(iconOnlySizes[1], iconOnlySizes[0]);
@@ -230,3 +234,10 @@ Color? _outlineBorderColor(WidgetTester tester) {
   if (decoration is! BoxDecoration || decoration.border is! Border) return null;
   return (decoration.border! as Border).top.color;
 }
+
+// ignore: invalid_use_of_internal_member
+final _toggleRowFinder = find.byType(RemixFlexBoxAdapter);
+
+// ignore: invalid_use_of_internal_member
+RemixFlexBoxAdapter _toggleRow(WidgetTester tester) =>
+    tester.widget(_toggleRowFinder);

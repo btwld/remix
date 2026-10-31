@@ -8,6 +8,7 @@ part of 'menu.dart';
 
 mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
@@ -17,11 +18,13 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
   @override
   MenuTriggerSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
     return MenuTriggerSpec(
       container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -31,13 +34,18 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
   MenuTriggerSpec lerp(MenuTriggerSpec? other, double t) {
     return MenuTriggerSpec(
       container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [container, containerEffects, label, icon];
 
   @override
   bool operator ==(Object other) {
@@ -80,6 +88,7 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
@@ -214,6 +223,7 @@ typedef _$MenuSpecMethods = _$MenuSpec; // ignore: unused_element
 
 mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<IconSpec> get trailingIcon;
@@ -225,6 +235,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   @override
   MenuItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
@@ -232,6 +243,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   }) {
     return MenuItemSpec(
       container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       label: label ?? this.label,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       trailingIcon: trailingIcon ?? this.trailingIcon,
@@ -243,6 +255,11 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   MenuItemSpec lerp(MenuItemSpec? other, double t) {
     return MenuItemSpec(
       container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       label: label.lerp(other?.label, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
@@ -253,6 +270,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   @override
   List<Object?> get props => [
     container,
+    containerEffects,
     label,
     leadingIcon,
     trailingIcon,
@@ -300,6 +318,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
@@ -323,22 +342,26 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
         IconStyleMixin<MenuTriggerStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const MenuTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
+       $containerEffects = containerEffects,
        $label = label,
        $icon = icon;
 
   MenuTriggerStyler({
     FlexBoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
@@ -346,6 +369,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     List<VariantStyle<MenuTriggerSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          variants: variants,
@@ -355,6 +379,8 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
 
   factory MenuTriggerStyler.container(FlexBoxStyler value) =>
       MenuTriggerStyler().container(value);
+  factory MenuTriggerStyler.containerEffects(RemixBoxEffectsMix value) =>
+      MenuTriggerStyler().containerEffects(value);
   factory MenuTriggerStyler.label(TextStyler value) =>
       MenuTriggerStyler().label(value);
   factory MenuTriggerStyler.icon(IconStyler value) =>
@@ -916,6 +942,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'containerEffects',
     'label',
     'icon',
     'animation',
@@ -926,6 +953,11 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   /// Sets the container.
   MenuTriggerStyler container(FlexBoxStyler value) {
     return merge(MenuTriggerStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  MenuTriggerStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(MenuTriggerStyler(containerEffects: value));
   }
 
   /// Sets the label.
@@ -968,6 +1000,10 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   MenuTriggerStyler merge(MenuTriggerStyler? other) {
     return MenuTriggerStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -981,6 +1017,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   StyleSpec<MenuTriggerSpec> resolve(BuildContext context) {
     final spec = MenuTriggerSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
     );
@@ -997,6 +1034,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('icon', $icon));
   }
@@ -1004,6 +1042,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   @override
   List<Object?> get props => [
     $container,
+    $containerEffects,
     $label,
     $icon,
     $animation,
@@ -1281,6 +1320,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     with RemixBoxStylerMixin<MenuItemStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
@@ -1288,6 +1328,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
 
   const MenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<IconSpec>>? trailingIcon,
@@ -1296,6 +1337,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     super.modifier,
     super.animation,
   }) : $container = container,
+       $containerEffects = containerEffects,
        $label = label,
        $leadingIcon = leadingIcon,
        $trailingIcon = trailingIcon,
@@ -1303,6 +1345,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
 
   MenuItemStyler({
     FlexBoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? label,
     IconStyler? leadingIcon,
     IconStyler? trailingIcon,
@@ -1312,6 +1355,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     List<VariantStyle<MenuItemSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          label: Prop.maybeMix(label),
          leadingIcon: Prop.maybeMix(leadingIcon),
          trailingIcon: Prop.maybeMix(trailingIcon),
@@ -1323,6 +1367,8 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
 
   factory MenuItemStyler.container(FlexBoxStyler value) =>
       MenuItemStyler().container(value);
+  factory MenuItemStyler.containerEffects(RemixBoxEffectsMix value) =>
+      MenuItemStyler().containerEffects(value);
   factory MenuItemStyler.label(TextStyler value) =>
       MenuItemStyler().label(value);
   factory MenuItemStyler.leadingIcon(IconStyler value) =>
@@ -1883,6 +1929,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'containerEffects',
     'label',
     'leadingIcon',
     'trailingIcon',
@@ -1895,6 +1942,11 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   /// Sets the container.
   MenuItemStyler container(FlexBoxStyler value) {
     return merge(MenuItemStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  MenuItemStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(MenuItemStyler(containerEffects: value));
   }
 
   /// Sets the label.
@@ -1945,6 +1997,10 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   MenuItemStyler merge(MenuItemStyler? other) {
     return MenuItemStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       label: MixOps.merge($label, other?.$label),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
@@ -1960,6 +2016,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   StyleSpec<MenuItemSpec> resolve(BuildContext context) {
     final spec = MenuItemSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       label: MixOps.resolve(context, $label),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
@@ -1978,6 +2035,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
@@ -1987,6 +2045,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   @override
   List<Object?> get props => [
     $container,
+    $containerEffects,
     $label,
     $leadingIcon,
     $trailingIcon,

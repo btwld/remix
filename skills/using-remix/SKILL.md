@@ -17,110 +17,54 @@ description: >-
 
 # Using Remix
 
-Build accessible Flutter interfaces with Remix behavior plus a hand-written
-style, the neutral Vanilla starter preset, or Fortal's Fortaleza-inspired
-preset. To build a reusable design system for other applications and
-publish it as a Remix registry, use `building-remix-design-system`;
-restyling this application's own installed source stays here.
-
-## Glossary
-
-| Term | Meaning |
-| --- | --- |
-| preset | Vanilla or Fortal — the installed starter theme and recipes `remix_cli` copies into the app |
-| prefix | The app-chosen name (`Ui`, `Fortal`, `Acme`, ...) substituted into every generated type; recorded in `remix.yaml` |
-| recipe function | `<prefix>ButtonStyle(...)` — returns the component's `*Styler`, the source of truth for one component's look |
-| generated widget | `<Prefix>Button` — the `@MixWidget` adapter that calls the recipe function and wraps a `Remix*` widget |
-| `<item>_recipe` | A registry item bundling an unstyled agent surface (`activity`, `composer`, ...) with its preset-specific styler |
+Inspect `pubspec.yaml`, `remix.yaml` and installed source first. Use this skill
+for app UI and restyling owned source; use `building-remix-design-system` for a
+reusable registry, and the `mix` skill for general styling syntax.
 
 ## Choose base Remix, Vanilla, or Fortal
 
-Inspect `pubspec.yaml` and `remix.yaml` before assuming how a project is set
-up; `remix.yaml`'s `preset` field records the choice already made. A project
-has exactly one preset and prefix: `init` refuses a different one while
-`remix.yaml` exists, and both presets install into the same `theme/` and
-`components/` files. In a Vanilla project, restyle Vanilla recipes (even per
-screen, with a nested themed scope) rather than adding Fortal.
-
-| Need | Source and API |
+| Need | Start with |
 | --- | --- |
-| No generated source or codegen wanted | base `remix`; hand-write `Remix*` widgets and `*Styler`s |
-| A neutral, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>Theme`/`<Prefix>Tokens` |
-| Ready-made Fortaleza-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Theme` plus prefixed `<Prefix>*` widgets |
-| Own brand in one app, want editable tokens and recipes | Vanilla, then customize — see [Customize installed source](#customize-installed-source) |
+| Hand-written widgets, no source generation | `remix`; `Remix*` widgets and `*Styler`s |
+| Neutral editable recipes | Vanilla (CLI default), then customize |
+| Fortal's visual language | Fortal preset |
 
-Both presets install editable application source, not a package dependency:
-`remix_cli` copies analyzer-checked Dart from a pinned GitHub registry into
-`lib/ui` (or `--ui-path`). Component recipes, enum variants, and tokens are
-yours to edit; nothing here is vendor-fixed.
+A project has one preset and prefix, recorded in `remix.yaml`. Both presets
+write the same theme/component paths; do not mix them. A prefix is independent
+of the preset: `UiButton` can be Fortal. Read the installed enums instead of
+assuming one preset's variants or sizes carry over.
 
 ## Set up dependencies and imports
 
-Base Remix, no preset:
-
-```bash
-flutter pub add remix
-```
-
-<!-- dart-excerpt: imports only -->
-
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-```
-
-With a preset, initialize the registry and add the items the app uses:
+For base widgets: `flutter pub add remix`, then import
+`package:remix/remix.dart` and widgets-layer Flutter. For editable source:
 
 ```bash
 flutter pub add dev:remix_cli
-dart run remix_cli:remix init                  # preset defaults to vanilla, prefix to Ui
+dart run remix_cli:remix init                  # vanilla, prefix Ui
 dart run remix_cli:remix add button textfield
 ```
 
-```bash
-dart run remix_cli:remix init --prefix Fortal --preset fortal   # Fortal preset
-```
+Choose Fortal at initialization with `init --prefix Fortal --preset fortal`.
+`init` pins `registry-stable` to a full GitHub SHA in schema-3 `remix.yaml`.
+`add` installs each item's dependency closure, including its theme.
+[CLI](references/cli.md) owns pin updates and old-schema recovery.
 
-<!-- dart-excerpt: imports only -->
+Import the owned `ui/ui.dart` barrel from `lib/main.dart`; nested files need
+`package:<app>/ui/ui.dart` or the corresponding relative path. Substitute the
+configured `--ui-path`. Also import `package:remix/remix.dart` for base widgets,
+stylers or data classes that the owned barrel does not export.
 
-```dart
-import 'package:flutter/widgets.dart';
-import 'ui/ui.dart';
-```
-
-`init` resolves the `registry-stable` branch of `btwld/remix` and pins
-its full commit SHA into `remix.yaml` (schema 3); see [CLI](references/cli.md)
-to move that pin later. `add` also pulls each
-item's own `registryDependencies` (its `theme` item, etc.), so a fresh
-project does not need a separate `add theme`. Import
-`package:remix/remix.dart` too when the file also uses base `Remix*`
-widgets, `*Styler` types, or Remix data classes the owned barrel does not
-re-export.
-
-`import 'ui/ui.dart'` is a relative import: it only resolves as written from
-a file at the `lib/` root, such as `lib/main.dart`. A file nested deeper
-needs `package:<app>/ui/ui.dart` (or the equivalent relative path) instead,
-substituting the configured `--ui-path` if it is not `lib/ui`.
-
-| Preset | Theme class | Theme values and mode | Generated widget | Recipe function | Tokens |
-| --- | --- | --- | --- | --- | --- |
-| Vanilla | `<Prefix>Theme` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
-| Fortal | `<Prefix>Theme` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
-
-The prefix is independent of the preset; read both from `remix.yaml` and
-substitute. Examples in this skill use `Ui` for Vanilla and `Fortal` for
-Fortal.
+Recipes are `<prefix>ButtonStyle(...)` functions returning a `*Styler`;
+`@MixWidget` generates `<Prefix>Button` adapters. Agent `<item>_recipe` items
+instead bundle parent and child stylers for an installed domain surface.
 
 ## Place the theme scope
 
-Both presets' generated theme takes `theme`, `darkTheme`, `mode`, and
-`child`; Fortal's also takes `accent`, `gray`, `panelBackground`, `radius`,
-`scaling`, `hasBackground`, `orderOfModifiers`. Do not pass `data`,
-`brightness`, `lightTheme`, or `createScope` — the constructors don't accept
-them.
-
-Install the theme in `WidgetsApp.builder`, above the Navigator, so pushed
-routes, dialogs, and overlays inherit it:
+Install `<Prefix>Theme` in the host's builder, above its Navigator, so routes
+and overlays inherit it. Both presets take `theme`, `darkTheme`, `mode`,
+`child`; they do not take `data`, `brightness`, `lightTheme` or `createScope`.
+For Fortal config options, see [Fortal](references/fortal.md#scope-and-theme-config).
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -142,67 +86,38 @@ Widget app(Widget home) => WidgetsApp(
 );
 ```
 
-For the Vanilla preset the builder is
-`(context, child) => UiTheme(child: child!)`, with the same optional
-`theme`/`darkTheme`/`mode` (`UiThemeData`, `UiThemeMode`). Vanilla widgets
-take their Remix widget's parameters (`UiButton.primary(label: ...,
-onPressed: ...)`); their variants and sizes are the enums in the installed
-recipe, for example `UiButtonVariant` and `UiButtonSize` in
-`lib/ui/components/button.dart`. Read the installed file rather than
-assuming Fortal's families — see [Vanilla](references/vanilla.md).
+For Vanilla use `UiTheme(child: child!)` in the same position, with optional
+`UiThemeData` and `UiThemeMode`.
 
-- A root with neither `theme` nor `darkTheme` supplies the preset's light/dark
-  defaults and follows the system.
-- Supplying only `theme` uses that value in both modes; supplying only
-  `darkTheme` keeps the inherited or default light theme.
-- A nested scope with no `mode` inherits the parent's configured pair and
-  active selection; an explicit nested `mode` selects from that inherited
-  pair.
-- The app owns mode preference and persistence. `mode: .system` reacts to
-  platform brightness changes; no brightness observer is needed.
-- The outermost `FortalTheme` sets fallback `DefaultTextStyle` and `IconTheme`
-  styles using `gray12` and `text3` (16px, regular weight). Fortal components
-  resolve styling from active tokens instead of this fallback. A nested theme
-  updates tokens for its subtree; when `brightness` or `gray` changes, it
-  recolors `DefaultTextStyle` and `IconTheme` to the new `gray12`.
+- Without a supplied pair, the root uses preset light/dark defaults and system mode.
+- Only `theme` supplies both slots; only `darkTheme` retains the inherited or
+  default light slot.
+- An empty nested scope inherits the pair and selection. An explicit nested
+  `mode` selects from that pair.
+- The app owns preference/persistence. `.system` follows platform brightness;
+  no brightness observer is needed.
+- Fortal's root installs fallback text/icon styling (`gray12`, `text3`). A
+  nested brightness/gray change recolors that fallback; components use tokens.
 
 ## Customize installed source
 
-Installed source has three levels of override, in order of scope:
+Use a named preset constructor for a fixed variant, and `variant:` for runtime
+selection. Prefer `style:` on a generated widget when that preset is the
+baseline; call its styler function on `Remix*` when composition differs. Build
+stylers from scratch for a different visual language.
 
-- **One instance** — pass `style:` to the generated widget; it merges last.
-  State fragments merge by state, so an override that must beat the recipe's
-  hover or pressed fill has to declare that state's fragment too
-  (`.onHovered(...)`, `.onPressed(...)`) — a bare `.color(...)` only replaces
-  the idle one.
-- **A subtree** — retheme with `copyWith` or a preset config:
+Override one instance with `style:` (merged last), a subtree with a nested theme,
+or the whole app by editing owned recipes/theme. State fragments merge by state:
+a hover/pressed override must supply that state's fragment; an idle fill cannot
+replace it. See [Styling](references/styling.md) for canonical spellings and tokens,
+and [Vanilla](references/vanilla.md)/[Fortal](references/fortal.md) for theme rules.
 
-  ```dart
-  import 'package:flutter/widgets.dart';
-  import 'ui/ui.dart';
-
-  Widget rethemed(Widget child) => UiTheme(
-    theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)),
-    child: child,
-  );
-  ```
-
-  ```dart
-  import 'package:flutter/widgets.dart';
-  import 'ui/ui.dart';
-
-  Widget rethemed(Widget child) => FortalTheme(accent: .caju, child: child);
-  ```
-
-- **App-wide** — edit `lib/ui/components/<item>.dart` or `lib/ui/theme/*`
-  directly; it is application source, not a package. After changing a
-  recipe's parameters, enums, or `@MixWidget` annotation, run
-  `dart run build_runner build` to regenerate its `.g.dart`.
+After changing recipe parameters, enums or annotations, run
+`dart run build_runner build` and review the generated `.g.dart` diff.
 
 ## Provide only the host capabilities in use
 
-Remix composes inside the caller's host; do not invent an app, scaffold, or
-overlay-host wrapper.
+Compose inside the existing host; the app owns routing and overlays.
 
 | UI | Caller must provide |
 | --- | --- |
@@ -211,7 +126,10 @@ overlay-host wrapper.
 | Menu, select, popover, tooltip | An `Overlay`; use `Overlay.wrap` when no navigator is needed |
 | Text field / text area once focused | An `Overlay` for selection handles; a routed `WidgetsApp` provides one, a builder-only host needs `Overlay.wrap` |
 | `showRemixDialog`/`showRemixAlertDialog` | A caller-owned `Navigator` |
-| `showRemixToast`/`RemixToast` | One `RemixToastScope` above the app's `Navigator`, inside the same builder, below the theme scope |
+| `showRemixToast`/`RemixToast` | One `RemixToastScope` above the app's `Navigator`, inside the same builder, below the theme scope and an `Overlay.wrap` |
+
+The toast scope requires an `Overlay` ancestor. The Navigator's own Overlay
+is below the scope, so wrap it explicitly in the host's builder:
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -225,73 +143,14 @@ Widget builder(BuildContext context, Widget? child) => FortalTheme(
 );
 ```
 
-Feature code then calls
-`showRemixToast(context, RemixToastData(title: 'Draft saved'))` from an event
-callback; a per-toast `style:` merges over the scope's.
-
-## Choose a styling path
-
-1. Prefer a preset's named constructor for standard UI, e.g.
-   `FortalButton.soft(...)` or `UiButton.primary(...)`, when the variant is
-   fixed.
-2. Use the unnamed preset constructor with `variant:` only when the variant
-   is selected at runtime.
-3. Prefer `style:` on the generated widget (`FortalButton(style: ...)`,
-   `UiButton(style: ...)`) to override the preset's recipe when the preset is
-   the baseline. Use a preset's styler function (`fortalButtonStyle(...)`,
-   `uiButtonStyle(...)`) directly on a `Remix*` widget only when the
-   composition itself differs from the generated widget.
-4. Build a `*Styler` from scratch when the design should not use either
-   preset.
-
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-
-final submitStyle = ButtonStyler()
-    .color(const Color(0xFF3E63DD))
-    .padding(.horizontal(16))
-    .padding(.vertical(10))
-    .borderRadius(.circular(6))
-    .labelColor(const Color(0xFFFFFFFF))
-    .onHovered(ButtonStyler().color(const Color(0xFF3358D4)));
-
-Widget submitButton(VoidCallback submit) =>
-    RemixButton(label: 'Submit', style: submitStyle, onPressed: submit);
-```
-
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-import 'ui/ui.dart';
-
-Widget saveButton(VoidCallback save) => RemixButton(
-  label: 'Save',
-  onPressed: save,
-  style: fortalButtonStyle(variant: .solid)
-      .padding(.horizontal(32))
-      .borderRadius(.circular(8)),
-);
-```
-
-Do not infer that every component shares the same variants or sizes: the
-installed recipe's enum in `lib/ui/components/<name>.dart` is authoritative,
-since that source is owned and may be edited.
-[The Fortal catalog](https://github.com/btwld/remix/blob/main/docs/fortal/catalog.mdx)
-describes the unedited upstream family.
-
 ## Preserve behavioral roots
 
-- `RemixTabs` is the behavioral root; style it with `FortalTabBar`,
-  `FortalTab`, and `FortalTabView` — there is no `FortalTabs`.
-- Keep `RemixRadioGroup`, `RemixCheckboxGroup`, and `RemixAccordionGroup` as
-  roots around their preset-styled children.
-- `RemixAccordionGroup.controller` is required; see
-  [Components](references/components.md#navigation) for Menu and Tabs.
+Keep `RemixTabs`, `RemixRadioGroup`, `RemixCheckboxGroup` and
+`RemixAccordionGroup` around styled children. There is no `FortalTabs`.
+`RemixAccordionGroup.controller` is required; Menu and Tabs have different
+controller rules. See [Components](references/components.md#navigation).
 
 ## Route to references
-
-Read only the references needed for the task:
 
 | Task | Reference |
 | --- | --- |
@@ -305,17 +164,7 @@ Read only the references needed for the task:
 
 ## Verify the result
 
-- Keep imports aligned with the selected source layer and configured prefix.
-- Confirm preset content and route/overlay builders sit below the theme
-  scope, and a `RemixToastScope` sits below it too when toasts are used.
-- Confirm overlays and dialogs have the required caller-owned host
-  capability.
-- After editing a recipe's parameters, enums, or `@MixWidget` annotation, run
-  `dart run build_runner build` and confirm the regenerated `.g.dart` looks
-  right.
-- For showcases, verify product examples follow the
-  [product-example rules](references/reference-showcases.md#product-examples)
-  and coverage galleries follow the
-  [coverage-gallery rules](references/reference-showcases.md#coverage-galleries)
-  instead of forcing one policy onto both.
-- Run the project's formatter, analyzer, and relevant Flutter tests.
+Check imports/prefix, theme placement over routes/overlays, required host
+capabilities, and regenerated adapters. Run the project's formatter, analyzer
+and relevant Flutter tests. For showcases, verify the distinct product and
+coverage contracts in [Reference showcases](references/reference-showcases.md).

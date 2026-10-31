@@ -20,7 +20,9 @@ class PlaygroundSwitch extends StatelessWidget {
     super.key,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -34,7 +36,11 @@ class PlaygroundSwitch extends StatelessWidget {
 
   final bool selected;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final ValueChanged<bool>? onChanged;
 
@@ -56,7 +62,9 @@ class PlaygroundSwitch extends StatelessWidget {
       key: this.key,
       style: playgroundSwitchStyle(style: this.style),
       selected: this.selected,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       onChanged: this.onChanged,
       enabled: this.enabled,
       enableFeedback: this.enableFeedback,

@@ -8,6 +8,7 @@ part of 'toggle.dart';
 
 mixin _$ToggleSpec implements Spec<ToggleSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
@@ -17,11 +18,13 @@ mixin _$ToggleSpec implements Spec<ToggleSpec>, Diagnosticable {
   @override
   ToggleSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
     return ToggleSpec(
       container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -31,13 +34,18 @@ mixin _$ToggleSpec implements Spec<ToggleSpec>, Diagnosticable {
   ToggleSpec lerp(ToggleSpec? other, double t) {
     return ToggleSpec(
       container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [container, containerEffects, label, icon];
 
   @override
   bool operator ==(Object other) {
@@ -80,6 +88,7 @@ mixin _$ToggleSpec implements Spec<ToggleSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
@@ -101,22 +110,26 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
         IconStyleMixin<ToggleStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const ToggleStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
+       $containerEffects = containerEffects,
        $label = label,
        $icon = icon;
 
   ToggleStyler({
     FlexBoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
@@ -124,6 +137,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     List<VariantStyle<ToggleSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          variants: variants,
@@ -133,6 +147,8 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
 
   factory ToggleStyler.container(FlexBoxStyler value) =>
       ToggleStyler().container(value);
+  factory ToggleStyler.containerEffects(RemixBoxEffectsMix value) =>
+      ToggleStyler().containerEffects(value);
   factory ToggleStyler.label(TextStyler value) => ToggleStyler().label(value);
   factory ToggleStyler.icon(IconStyler value) => ToggleStyler().icon(value);
   factory ToggleStyler.color(Color value) => ToggleStyler().color(value);
@@ -683,6 +699,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'containerEffects',
     'label',
     'icon',
     'animation',
@@ -693,6 +710,11 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
   /// Sets the container.
   ToggleStyler container(FlexBoxStyler value) {
     return merge(ToggleStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  ToggleStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(ToggleStyler(containerEffects: value));
   }
 
   /// Sets the label.
@@ -766,6 +788,10 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
   ToggleStyler merge(ToggleStyler? other) {
     return ToggleStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -779,6 +805,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
   StyleSpec<ToggleSpec> resolve(BuildContext context) {
     final spec = ToggleSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
     );
@@ -795,6 +822,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('icon', $icon));
   }
@@ -802,6 +830,7 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
   @override
   List<Object?> get props => [
     $container,
+    $containerEffects,
     $label,
     $icon,
     $animation,

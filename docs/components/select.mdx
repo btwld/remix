@@ -142,6 +142,73 @@ void main() {
   SelectStyler().content(SelectContentStyler().maxHeight(320));
 }
 ```
+## Match the trigger width
+
+A select menu is as wide as its widest option. `remixAnchorWidth` is the width
+of the trigger that opened the menu, so a width on the menu can follow it, like
+CSS `min-width: var(--trigger-width)`:
+
+<CodeGroup title="Menu at least as wide as the trigger" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TriggerWidthSelectExample extends StatefulWidget {
+  const TriggerWidthSelectExample({super.key});
+
+  @override
+  State<TriggerWidthSelectExample> createState() =>
+      _TriggerWidthSelectExampleState();
+}
+
+class _TriggerWidthSelectExampleState extends State<TriggerWidthSelectExample> {
+  String? _selectedValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 280,
+      child: RemixSelect<String>(
+        trigger: const RemixSelectTrigger(placeholder: 'Pick a fruit'),
+        items: const [
+          RemixSelectItem(value: 'apple', label: 'Apple'),
+          RemixSelectItem(value: 'fig', label: 'Fig'),
+        ],
+        selectedValue: _selectedValue,
+        positioning: const OverlayPositionConfig(
+          side: .bottom,
+          alignment: .start,
+        ),
+        style: SelectStyler().content(
+          SelectContentStyler().minWidth(remixAnchorWidth()),
+        ),
+        onChanged: (value) => setState(() => _selectedValue = value),
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+- Pass it to `minWidth` for a menu at least as wide as the trigger, `width` for
+  exactly as wide, or `maxWidth` for no wider. The menu follows the trigger if
+  it resizes while open.
+- It is opt-in. Without it the menu keeps the width its styles give it.
+- The token resolves where the style is built. `RemixSelect` and `RemixMenu`
+  build their menu styles inside the overlay, so use it in the select `content`
+  and `menuContainer` styles or the menu `overlay` style. A style resolved
+  outside the overlay, such as the trigger's or a `RemixPopover`'s, reads `0`.
+- Merging a `minWidth` into `content` replaces a minimum a preset set there.
+  To keep it, apply the token as a box modifier:
+  `SelectContentStyler().wrap(.box(BoxStyler().minWidth(remixAnchorWidth())))`
+  makes the menu the larger of the preset's minimum and the trigger width. Do
+  not put the token on `menuContainer`: that box sits inside the padding and
+  border of `content`, so the menu ends up that much wider than the trigger.
+- On a single box, a `minWidth` larger than its `maxWidth` is invalid in Flutter
+  and throws in debug. With the token that only happens once the trigger is
+  wider than the maximum, so keep a ceiling on a different box than the token.
+- A menu wider than its trigger is centered below it by default. Use
+  `alignment: .start`, as above, to align the edges.
 
 ## Fortal widgets
 
@@ -204,6 +271,12 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
   `FortalSelect` applies matching trigger, menu container, and default item styles. Set `RemixSelectItem.style` only for a row-level override.
   See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/select.dart) for all available options.
 </Info>
+
+## Reduced motion
+
+When the user asks for reduced motion, the menu opens and closes without its
+fade and scale. See [Reduced motion](/guides/styling-components#reduced-motion) for the
+signals Remix reads.
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
@@ -301,6 +374,12 @@ Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 
 ### Select Style Methods
+
+#### `content(SelectContentStyler value)`
+
+Configures the box around the menu: its fill, border, padding, and
+constraints. Its `width`, `minWidth`, and `maxWidth` accept
+`remixAnchorWidth()` to follow the trigger width.
 
 #### `menuContainer(FlexBoxStyler value)`
 
@@ -508,6 +587,13 @@ Sets single icon shadow
 #### `container(FlexBoxStyler value)`
 
 Configures the menu item container style.
+
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures an outline and paint layers drawn around the item row without
+taking layout space, such as a focus ring in `onFocusVisible`. When the popup
+content clips (`clipBehavior` on its container), an outside ring is cropped at
+the popup edge; use a negative `outlineOffset` to draw it inside the row.
 
 #### `text(TextStyler value)`
 

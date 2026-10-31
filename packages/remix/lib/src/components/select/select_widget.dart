@@ -152,7 +152,7 @@ class RemixSelect<T> extends StatefulWidget {
 }
 
 class _RemixSelectState<T> extends State<RemixSelect<T>>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController animationController;
 
   @override
@@ -163,6 +163,27 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       reverseDuration: const Duration(milliseconds: 150),
       vsync: this,
     );
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _settleWhenReduced();
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() => _settleWhenReduced();
+
+  void _settleWhenReduced() {
+    if (!remixReducedMotionOf(context) || !animationController.isAnimating) {
+      return;
+    }
+    final closing = animationController.status == AnimationStatus.reverse;
+    // Complete the exit future before setting the endpoint. A canceled ticker
+    // would strand the close callback that unmounts the overlay.
+    animationController.stop(canceled: false);
+    animationController.value = closing ? 0 : 1;
   }
 
   SelectStyler _buildStyle() {
@@ -259,6 +280,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     animationController.dispose();
     super.dispose();
   }
@@ -272,10 +294,13 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<SelectSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          builder: (context, spec) => _buildOverlayMenu(spec, style),
+        return RemixAnchorScope(
+          width: info.anchorRect.width,
+          child: RemixStyleSpecBuilder<SelectSpec>(
+            style: style,
+            styleSpec: widget.styleSpec,
+            builder: (context, spec) => _buildOverlayMenu(spec, style),
+          ),
         );
       },
       value: widget.selectedValue,
@@ -289,12 +314,16 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       positioning: widget.positioning,
       constrainToAvailableHeight: true,
       onOpen: () {
-        animationController.forward();
+        if (remixReducedMotionOf(context)) {
+          animationController.value = 1;
+        } else {
+          animationController.forward();
+        }
         widget.onOpen?.call();
       },
       onCloseRequested: (hide) {
         // Naked owns open state. Play the reverse visual, then complete close.
-        if (animationController.value == 0) {
+        if (animationController.value == 0 || remixReducedMotionOf(context)) {
           hide();
           return;
         }
@@ -505,8 +534,10 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
           builder: (context, spec) => StyleSpecBuilder<SelectMenuItemSpec>(
             styleSpec: spec.item,
             builder: (context, item) => ExcludeSemantics(
-              child: RowBox(
+              child: RemixFlexBoxAdapter(
                 styleSpec: item.container,
+                direction: Axis.horizontal,
+                containerEffects: item.containerEffects,
                 children: [
                   Expanded(child: StyledText(data.label, styleSpec: item.text)),
                   if (state.isSelected)

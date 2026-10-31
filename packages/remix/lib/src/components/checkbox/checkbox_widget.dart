@@ -170,36 +170,12 @@ class RemixCheckbox extends StatelessWidget {
               child: indicator,
             );
 
-            final visibleLabel = label;
-            final content = visibleLabel == null
-                ? Align(widthFactor: 1, heightFactor: 1, child: checkbox)
-                : LayoutBuilder(
-                    builder: (context, constraints) {
-                      final labelWidget = ExcludeSemantics(
-                        child: StyledText(visibleLabel, styleSpec: spec.label),
-                      );
-
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          checkbox,
-                          SizedBox(width: spec.labelSpacing),
-                          if (constraints.hasBoundedWidth)
-                            Flexible(child: labelWidget)
-                          else
-                            labelWidget,
-                        ],
-                      );
-                    },
-                  );
-
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: minimumTapTargetSize.width,
-                minHeight: minimumTapTargetSize.height,
-              ),
-              child: content,
+            return RemixLabeledControl(
+              control: checkbox,
+              label: label,
+              labelSpec: spec.label,
+              labelSpacing: spec.labelSpacing,
+              minimumTapTargetSize: minimumTapTargetSize,
             );
           },
         );

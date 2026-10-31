@@ -62,7 +62,12 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
   Widget build(BuildContext context, SkeletonSpec spec) {
     final child = this.child;
     if (child == null && !loading) return const SizedBox.shrink();
-    if (child == null) return _SkeletonPulse(spec: spec);
+
+    Widget pulse() => RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) =>
+          _SkeletonPulse(spec: spec, reduceMotion: reduceMotion),
+    );
+    if (child == null) return pulse();
 
     return ExcludeSemantics(
       // The single semantics control for both states. It sits outside the
@@ -97,7 +102,7 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
               ),
             ),
           ),
-          if (loading) Positioned.fill(child: _SkeletonPulse(spec: spec)),
+          if (loading) Positioned.fill(child: pulse()),
         ],
       ),
     );
@@ -108,9 +113,10 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
 ///
 /// Mounted only while loading, and only ever as a sibling of the child.
 class _SkeletonPulse extends StatefulWidget {
-  const _SkeletonPulse({required this.spec});
+  const _SkeletonPulse({required this.spec, required this.reduceMotion});
 
   final SkeletonSpec spec;
+  final bool reduceMotion;
 
   @override
   State<_SkeletonPulse> createState() => _SkeletonPulseState();
@@ -123,23 +129,18 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
   @override
   void initState() {
     super.initState();
-    // Unlike Spinner the controller does not start here: reduced motion is a
-    // dependency, so didChangeDependencies owns every start and stop.
     _controller = AnimationController(
       duration: _resolveLeg(widget.spec.duration),
       vsync: this,
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     _syncMotion();
   }
 
   @override
   void didUpdateWidget(covariant _SkeletonPulse oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.reduceMotion != widget.reduceMotion) _syncMotion();
+
     final leg = _resolveLeg(widget.spec.duration);
     if (_controller.duration == leg) return;
 
@@ -156,7 +157,7 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
   }
 
   void _syncMotion() {
-    if (MediaQuery.disableAnimationsOf(context)) {
+    if (widget.reduceMotion) {
       _controller.stop();
       // Deterministic base frame, so a static placeholder always paints the
       // container exactly as styled.
