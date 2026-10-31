@@ -279,21 +279,27 @@ Both the default accent and the sole gray family are **Calçadão**: basalt and
 limestone neutrals. The page uses neutral step 1 and solid panels use step 2
 in both modes. Choose a named accent with `FortalTheme(accent: .mar, child: child)`.
 
-| Palette | Enum | Seed | Solid foreground |
-| --- | --- | --- | --- |
-| Calçadão | `calcadao` | `#13181D` | Limestone / basalt by mode |
-| Mar | `mar` | `#036F6B` | White or basalt, contrast-fitted |
-| Céu | `ceu` | `#006EBE` | White or basalt, contrast-fitted |
-| Mangue | `mangue` | `#1D7D3E` | White or basalt, contrast-fitted |
-| Sol | `sol` | `#FFCF50` | Basalt |
-| Duna | `duna` | `#E5C79A` | Basalt |
-| Caju | `caju` | `#CB4333` | White or basalt, contrast-fitted |
+| Palette | Enum | Seed | Character | Solid foreground |
+| --- | --- | --- | --- | --- |
+| Calçadão | `calcadao` | `#13181D` | Basalt and limestone neutral | Limestone / basalt by mode |
+| Mar | `mar` | `#036F6B` | Signature sea green | White / deep teal by mode |
+| Céu | `ceu` | `#1A95D8` | Sky blue | Deep navy |
+| Serra | `serra` | `#6F7845` | Earthy olive | White / dark olive by mode |
+| Sol | `sol` | `#FFCF50` | Sunny yellow | Warm brown |
+| Duna | `duna` | `#E5C79A` | Warm sand | Warm brown |
+| Caju | `caju` | `#E76A32` | Cashew-fruit orange-red | Deep brown |
 
 Seeds identify each palette; the generator fits final colors to sRGB and the
 contrast contract. Background, border, and text steps share OKLCH lightness
-stops; seed-led solid steps 9–10 preserve each palette's identity. Transparent
-steps are solved against the neutral page. Their appearance on a different
-background follows ordinary alpha compositing.
+stops; seed-led solid steps 9–10 preserve each palette's identity. In dark
+mode the solid follows the seed's lightness within a 0.70–0.84 range, so dark
+seeds are lifted and Sol and Duna stay sunny and sandy. Labels, thumbs and
+marks on solid fills use one foreground role: white where the fill needs it,
+otherwise a deep tone of the palette's own hue (the lightest that keeps 4.6:1
+on fill and hover), so colored controls avoid harsh near-black text. High
+contrast variants keep their deliberate step-1 knockout. Transparent steps are
+solved against the neutral page. Their appearance on a different background
+follows ordinary alpha compositing.
 
 | Steps | Job |
 | --- | --- |
@@ -304,7 +310,12 @@ background follows ordinary alpha compositing.
 | 11–12 | Secondary and primary text |
 
 The `contrast`, `surface`, `indicator`, and `track` roles remain available.
-Error tokens always use Caju, independently of the selected accent.
+Error tokens always use a dedicated red, `fortalError` (`#C92E3B`; installed as
+`<prefix>Error` in `fortal_colors.dart`), independently of the selected accent or
+a custom palette. It is not a selectable accent, so a
+Caju accent stays orange while errors stay red. To give destructive content the
+error red, scope it with `FortalTheme(accentPalette: fortalError, child: child)`
+and keep a text label or icon, because color alone must not carry meaning.
 
 ## Contrast and geometry
 

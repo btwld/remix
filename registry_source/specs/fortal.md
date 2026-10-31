@@ -10,7 +10,9 @@ size-linked recipes over Remix; no behavioral component is reimplemented.
 
 The [Fortal Refresh brief](../docs/fortal/refresh-brief.md) (Leo Farias,
 2026-10-29) supplies the names, seeds,
-role model, contrast targets, and component decisions below. OKLab conversion
+role model, contrast targets, and component decisions below. Leo's 2026-10-31
+palette review replaced Mangue with Serra, set the Céu and Caju seeds, moved
+errors to a dedicated red, and bounded dark solid lightness. OKLab conversion
 uses Björn Ottosson's published equations; contrast uses WCAG 2 relative
 luminance. All palette data is generated here, with no external color dataset.
 The [independence ADR](../docs/adr/fortal/0003-independent-design-system.md)
@@ -23,16 +25,22 @@ unchanged; Anton, cobogó patterns, and full Fortaleza branding are out of scope
 | --- | --- | --- |
 | Calçadão / `calcadao` | `#13181D` | Neutral accent and the sole gray; inverse limestone in dark mode |
 | Mar / `mar` | `#036F6B` | Signature sea green |
-| Céu / `ceu` | `#006EBE` | Sky blue |
-| Mangue / `mangue` | `#1D7D3E` | Mangrove green |
-| Sol / `sol` | `#FFCF50` | Yellow and highlights |
+| Céu / `ceu` | `#1A95D8` | Sky blue, with deep navy labels |
+| Serra / `serra` | `#6F7845` | Earthy olive of the hills inland |
+| Sol / `sol` | `#FFCF50` | Sunny yellow and highlights |
 | Duna / `duna` | `#E5C79A` | Warm sand |
-| Caju / `caju` | `#CB4333` | Red and errors |
+| Caju / `caju` | `#E76A32` | Cashew-fruit orange-red, with deep brown labels |
+
+Error roles use a dedicated red, `fortalError` (seed `#C92E3B`, installed as
+`<prefix>Error`). It is generated with the accents but is not a selectable
+accent, so an orange Caju accent and a red error never share a palette.
 
 Both theme defaults are Calçadão. The page is gray step 1 in both modes; solid
 panels and surface fields are gray step 2. Panel background defaults to `solid`
-with zero blur; `translucent` remains opt-in. Error roles always resolve to Caju,
-independently of the current accent or a custom brand palette.
+with zero blur; `translucent` remains opt-in. Error roles always resolve to the
+dedicated error red, independently of the current accent or a custom brand
+palette. Status examples keep a text label or icon: color reinforces meaning
+but never carries it alone.
 
 | Steps | Role |
 | --- | --- |
@@ -52,9 +60,33 @@ The generator (`tool/fortal_palettes/`) gamut-maps OKLCH by reducing chroma.
 Background, border, and text roles share lightness stops across palettes.
 The solid/hover pair deliberately follows the seed instead: forcing Sol and
 basalt to identical lightness would lose their identities. Light seeds are
-retained when accessible; dark fills are lifted, with inverse limestone for
-the neutral accent. The generator fits the pair together to one white or basalt
-foreground, with a 4.6:1 generation margin above the 4.5:1 requirement.
+retained when accessible. In dark mode the solid takes the seed's OKLCH
+lightness clamped to 0.70–0.84: darker seeds are lifted to stay visible, while
+light seeds keep their character (Sol is gold `#F3C442`, not mustard; Duna
+keeps its sand seed). The neutral accent uses inverse limestone. The error
+red's dark solid is curated at 0.64 so it reads as red, not coral, beside
+Caju's orange. The generator fits the pair together to white or to a dark
+reference (basalt), with a 4.6:1 generation margin above the 4.5:1 requirement.
+
+### On-solid ink
+
+`contrast` is the one foreground role for solid fills: button and badge
+labels, solid avatar text, selected surface switch thumbs, checkbox marks,
+radio dots and solid menu/select highlights. Where white serves the fitted
+fill, it stays white. Otherwise the ink is a deep tone of the palette's own
+hue rather than generic basalt: the lightest tone up to OKLCH lightness 0.30
+that keeps 4.6:1 on both step 9 and step 10. Its chroma is 0.6× the seed's,
+at most 0.09, gamut-mapped by chroma reduction; yellow and sand hues rotate up
+to 18° toward orange so they read warm brown rather than olive. Lightness
+descends in 0.002 steps, and basalt is the fallback if no family tone passes.
+Fills are fitted first and never move for the ink, so hover cannot collapse.
+The neutral Calçadão keeps white on basalt and basalt on limestone; gray and
+near-white custom seeds get a deep neutral. Where a fill leaves little headroom
+(light Céu and Caju), the ink stays near basalt's lightness but keeps its hue.
+
+High-contrast variants are a deliberate knockout: their fill is step 12 and
+their foreground is step 1 (or neutral gray 1 for buttons), so in dark mode
+they remain near-black on a pale tint, at 7:1 or more by construction.
 
 ### Contrast requirements (both appearances)
 
@@ -73,7 +105,10 @@ clears an inherited custom palette. See the palette tool README for the command.
 Solid fills preserve a light seed when its label meets the contrast contract.
 They do not guarantee 3:1 against the page: for example, `#F4F4F0` remains
 `#F4F4F0` in light mode, about 1.05:1 against the neutral page, while its
-basalt label exceeds 16:1. This also preserves the intended Sol and Duna fills.
+deep neutral ink (`#2E2E2C`) reaches 12.3:1. This also preserves the intended
+Sol and Duna fills. In dark mode such seeds take the 0.84 lightness cap, so
+their dark solid is a light tone (`#CDCCB2`) with that ink rather than the
+seed itself.
 Use `highContrast: true` on controls that expose it when a stronger active
 fill is needed, or choose an outline/surface treatment with an explicit
 step-8 border. Focus remains step 8; label and focus guarantees apply in both
@@ -131,9 +166,15 @@ Caller style overrides are always merged last.
   source enums, defaults, public constructors, recipe inventory, and tests.
 - `tool/fortal_palettes/generate.dart --check` rejects palette drift.
 - `test/fortal/palette_contrast_test.dart` checks all four targets, alpha soft
-  labels, compositing, and non-curated/extreme brand seeds.
+  labels, and compositing for every accent and the error red, plus
+  non-curated/extreme brand seeds, the dark-solid policy, the on-solid ink
+  policy, distinct hovers, and Fortal's own comparative separation between
+  accents and the error red. `test/fortal/fortal_on_solid_ink_test.dart`
+  resolves solid button labels, switch thumbs, checkbox marks and radio dots
+  to that ink for every palette in both modes.
 - `test/fortal/spec_conformance_test.dart` checks theme defaults, token values,
-  Caju errors, flat surfaces, filled fields, and scaling.
+  error roles independent of accents and custom palettes, flat surfaces, filled
+  fields, and scaling.
 - Focus, control matrices, keyboard/semantics and theme-scope tests retain
   Remix/Naked UI behavior coverage. Fortal-owned goldens cover both modes.
 - `tool/generate_fortal_catalog.dart --check`, `docs:check`, registry derivation,

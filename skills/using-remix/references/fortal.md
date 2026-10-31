@@ -104,7 +104,9 @@ the rules that are not obvious from a token's name:
 - `colorPanel` follows `panelBackground`: it resolves to `colorPanelSolid`
   when `panelBackground == .solid`, otherwise to `colorPanelTranslucent`.
 - `colorBackground` and `colorPanelSolid` use Calçadão `gray1`/`gray2` in
-  both modes. Error tokens use Caju regardless of the active accent.
+  both modes. Error tokens use the dedicated error red (`<prefix>Error` in
+  `ui/theme/fortal_colors.dart`) regardless of the active accent or a custom
+  palette; it is not a selectable accent, and Caju is an orange-red accent.
 - Component sizing frequently reuses space tokens rather than fixed
   literals and does not always step evenly — e.g. `FortalProgress` heights
   are `space1`/`progressHeight2`/`space2` (4/6/8px) × the theme's `scaling`,
@@ -118,7 +120,9 @@ call-form mechanics (`.mix()`, `.resolve(context)`).
 
 ## Palettes and review
 
-The accents are `calcadao`, `mar`, `ceu`, `mangue`, `sol`, `duna`, and `caju`.
+The accents are `calcadao`, `mar`, `ceu`, `serra`, `sol`, `duna`, and `caju`.
+For destructive or negative content, scope the error palette with
+`accentPalette:` instead of choosing Caju, and keep a text label or icon.
 Both the accent and sole gray default to `calcadao`. All colors come from
 Fortal's own seed-based generator, not an external dataset.
 

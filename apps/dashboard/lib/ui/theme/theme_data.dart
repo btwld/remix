@@ -9,8 +9,9 @@ import 'palette.dart';
 import 'theme_scope.dart' show UiTheme;
 import 'tokens.dart';
 
-/// Ui palettes, named for the landscapes and coastal materials.
-enum UiAccentColor { calcadao, mar, ceu, mangue, sol, duna, caju }
+/// Ui palettes, named for the landscapes and coastal materials. Error
+/// roles use a dedicated red palette that is not a selectable accent.
+enum UiAccentColor { calcadao, mar, ceu, serra, sol, duna, caju }
 
 /// The neutral palette. The enum leaves room for future neutral families.
 enum UiGrayColor { calcadao }
@@ -238,6 +239,10 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
   final tokens = resolveUiTokens(theme);
   final scaling = theme.scaling.factor;
   final shadows = buildUiShadows(isDark: theme.isDark, colors: tokens);
+  // Error roles never follow the accent or a custom palette.
+  final error = theme.isDark
+      ? colors.uiError.dark.scale
+      : colors.uiError.light.scale;
 
   final colorTokens = {
     // Role and functional tokens
@@ -255,23 +260,13 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
-    UiTokens.error3: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
-        .step(3),
-    UiTokens.error7: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
-        .step(7),
-    UiTokens.error8: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
-        .step(8),
-    UiTokens.error9: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
-        .step(9),
-    UiTokens.error11: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(11),
-    UiTokens.error12: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(12),
-    UiTokens.errorA7: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .alphaStep(7),
+    UiTokens.error3: error.step(3),
+    UiTokens.error7: error.step(7),
+    UiTokens.error8: error.step(8),
+    UiTokens.error9: error.step(9),
+    UiTokens.error11: error.step(11),
+    UiTokens.error12: error.step(12),
+    UiTokens.errorA7: error.alphaStep(7),
     ..._accentColorTokens(tokens),
     // Gray steps
     UiTokens.gray1: tokens.gray.scale.step(1),

@@ -641,13 +641,13 @@ void main() {
     );
     await tester.pump();
 
-    final mangue = find.byKey(const ValueKey('accent-mangue'));
-    await tester.ensureVisible(mangue);
-    await tester.tap(mangue);
+    final serra = find.byKey(const ValueKey('accent-serra'));
+    await tester.ensureVisible(serra);
+    await tester.tap(serra);
     await tester.pump();
 
     final shell = tester.element(find.byType(UiDashboardDemo));
-    expect(UiTheme.of(shell).accent, UiAccentColor.mangue);
+    expect(UiTheme.of(shell).accent, UiAccentColor.serra);
   });
 
   testWidgets('theme swatch centers its selected checkmark', (tester) async {

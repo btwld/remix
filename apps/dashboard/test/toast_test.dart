@@ -30,7 +30,7 @@ void main() {
       find.byType(UiDashboardThemeScope),
     );
     themeScope.onChanged(
-      themeScope.settings.copyWith(accentColor: UiAccentColor.mangue),
+      themeScope.settings.copyWith(accentColor: UiAccentColor.serra),
     );
     await tester.pump();
 

@@ -144,7 +144,9 @@ state, context and animation syntax.
 A destructive action needs the accent itself to change, not just the idle
 fill: overriding `.color()`/`.onHovered()` alone misses the Fortal recipe's
 own `.onPressed` fill, so the button flashes the theme accent on press. Scope
-the accent instead of hard-coding palette values:
+Fortal's dedicated error red instead of hard-coding palette values. It is a
+palette, not a selectable accent; Caju is an orange-red accent, not the error
+color. Keep the text label, since color alone must not carry meaning:
 
 ```dart
 // Fortal
@@ -152,7 +154,7 @@ import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
 Widget deleteButton(VoidCallback delete) => FortalTheme(
-  accent: .caju,
+  accentPalette: fortalError,
   child: FortalButton.solid(label: 'Delete', onPressed: delete),
 );
 ```

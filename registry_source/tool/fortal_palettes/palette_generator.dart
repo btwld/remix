@@ -10,16 +10,45 @@ import 'dart:math' as math;
 const basalt = 0xff13181d;
 const limestone = 0xfffaf9f6;
 
-/// Original design seeds from the Fortal refresh brief, 2026-10-29.
+/// Selectable accent seeds. Calçadão, Mar, Sol and Duna keep the refresh brief
+/// (2026-10-29) values; the 2026-10-31 palette review set Céu, Serra and Caju.
 const fortalSeeds = <String, int>{
   'calcadao': basalt,
   'mar': 0xff036f6b,
-  'ceu': 0xff006ebe,
-  'mangue': 0xff1d7d3e,
+  'ceu': 0xff1a95d8,
+  'serra': 0xff6f7845,
   'sol': 0xffffcf50,
   'duna': 0xffe5c79a,
-  'caju': 0xffcb4333,
+  'caju': 0xffe76a32,
 };
+
+/// Dedicated error red. It is generated with the accents but is not one of
+/// them: error roles read it regardless of the accent or a custom palette.
+const fortalErrorSeed = 0xffc92e3b;
+
+/// Curated dark solid lightness for [fortalErrorSeed]. A deeper red reads as
+/// red rather than coral and stays apart from Caju's orange dark solid.
+const fortalErrorDarkSolidLightness = .64;
+
+/// Dark solid lightness bounds. Darker seeds are lifted to stay visible on the
+/// dark page; lighter seeds keep their identity up to the cap.
+const darkSolidLightnessRange = (min: .70, max: .84);
+
+/// Deep on-solid ink. Where white does not serve a solid fill, its label,
+/// thumb and marks use a deep tone of the palette's own hue instead of
+/// generic basalt: the lightest such tone up to [maxLightness] that keeps the
+/// 4.6:1 generation margin on both the fill and its hover. Fills are fitted
+/// first and never move for the ink, so the hover step cannot collapse.
+/// Chroma is [chromaScale] × the seed's, at most [maxChroma], gamut-mapped by
+/// chroma reduction. Yellow and sand hues rotate up to [warmHueShift] degrees
+/// toward orange so their deep tone reads warm brown rather than olive.
+/// Basalt remains the fallback and the neutral palette's dark ink.
+const onSolidInk = (
+  maxLightness: .30,
+  chromaScale: .6,
+  maxChroma: .09,
+  warmHueShift: 18.0,
+);
 
 typedef Oklch = ({double l, double c, double h});
 
@@ -44,23 +73,60 @@ class GeneratedPalette {
 /// Preserves seed-led light fills when their label passes contrast.
 /// Fill-to-page contrast is not guaranteed; use high-contrast recipes or an
 /// explicit step-8 border when very light seeds need a visible boundary.
-GeneratedPalette generatePalette(int seed, {bool neutral = false}) =>
-    GeneratedPalette(
-      _generateMode(seed, dark: false, neutral: neutral),
-      _generateMode(seed, dark: true, neutral: neutral),
-    );
+///
+/// The dark solid follows the seed's OKLCH lightness within
+/// [darkSolidLightnessRange]. [darkSolidLightness] replaces that policy for a
+/// curated semantic palette.
+GeneratedPalette generatePalette(
+  int seed, {
+  bool neutral = false,
+  double? darkSolidLightness,
+}) => GeneratedPalette(
+  _generateMode(seed, dark: false, neutral: neutral),
+  _generateMode(
+    seed,
+    dark: true,
+    neutral: neutral,
+    darkSolidLightness: darkSolidLightness,
+  ),
+);
+
+/// Generates [fortalErrorSeed] with its curated dark solid.
+GeneratedPalette generateErrorPalette() => generatePalette(
+  fortalErrorSeed,
+  darkSolidLightness: fortalErrorDarkSolidLightness,
+);
 
 GeneratedMode _generateMode(
   int seed, {
   required bool dark,
   required bool neutral,
+  double? darkSolidLightness,
 }) {
   final brand = toOklch(seed);
+  final darkSolid =
+      darkSolidLightness ??
+      brand.l
+          .clamp(darkSolidLightnessRange.min, darkSolidLightnessRange.max)
+          .toDouble();
   // Common lightness by role, except the seed-led solid/hover pair. Keeping
   // Sol yellow and Calçadão basalt is intentional: equal solid lightness would
   // turn both into midtones. Text/border contrast is checked after quantizing.
   final lightness = dark
-      ? <double>[.19, .225, .27, .305, .34, .39, .46, .64, .70, .74, .84, .97]
+      ? <double>[
+          .19,
+          .225,
+          .27,
+          .305,
+          .34,
+          .39,
+          .46,
+          .64,
+          darkSolid,
+          .74,
+          .84,
+          .97,
+        ]
       : <double>[
           .985,
           .97,
@@ -132,8 +198,32 @@ GeneratedMode _generateMode(
     List.unmodifiable([
       for (final color in solid) transparentOver(color, page),
     ]),
-    onSolid,
+    onSolid == white || neutral
+        ? onSolid
+        : deepInk(seed, fill: solid[8], hover: solid[9]),
   );
+}
+
+/// The [onSolidInk] for a palette whose fitted fill and hover take a dark
+/// label. Deterministic: lightness descends in 0.002 steps from the cap to
+/// basalt's lightness; basalt is returned if no family tone qualifies.
+int deepInk(int seed, {required int fill, required int hover}) {
+  final brand = toOklch(seed);
+  final hue = brand.h * 180 / math.pi % 360;
+  // Full rotation at yellow (85°), tapering to none at 55° and 115°.
+  final warmth = (1 - ((hue - 85).abs() / 30)).clamp(0, 1);
+  final inkHue = (hue - onSolidInk.warmHueShift * warmth) * math.pi / 180;
+  final chroma = math.min(
+    brand.c * onSolidInk.chromaScale,
+    onSolidInk.maxChroma,
+  );
+  final floor = toOklch(basalt).l;
+  for (var step = 0; ; step++) {
+    final l = onSolidInk.maxLightness - step * .002;
+    if (l < floor) return basalt;
+    final ink = fromOklch((l: l, c: chroma, h: inkHue));
+    if (_ratio(ink, fill) >= 4.6 && _ratio(ink, hover) >= 4.6) return ink;
+  }
 }
 
 /// Minimal-alpha sRGB source that reconstructs [solid] over [background].

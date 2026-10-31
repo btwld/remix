@@ -1,8 +1,12 @@
 # Fortal palettes
 
 These tools contain no external palette data or package dependencies. The
-seed inventory comes from the Fortal Refresh brief (2026-10-29); conversion
-uses OKLab and WCAG 2 luminance. See [the specification](../../specs/fortal.md) for the role contract.
+seed inventory comes from the Fortal Refresh brief (2026-10-29), as revised by
+the 2026-10-31 palette review; conversion uses OKLab and WCAG 2 luminance.
+See [the specification](../../specs/fortal.md) for the role contract.
+
+The built-in run writes the seven accents, the dedicated error red
+(`fortalError`, not a selectable accent), and the neutral alpha swatches.
 
 From the repository root, with the pinned SDK:
 
@@ -26,12 +30,20 @@ in the app and pass `accentPalette: brand` to its prefixed theme widget. The
 palette owns both modes; all named accents remain available in nested scopes.
 The generated identifiers start with the requested lower-camel name, not the
 consumer's prefix, so a palette can be renamed independently of UI classes.
+A custom name may not reuse a built-in identifier (`calcadao`, `serra`,
+`<prefix>Error`, `blackAlpha` and the rest), and a custom palette is never
+generated as the neutral because of its name.
 
 Generation reduces chroma to fit sRGB, uses common lightness stops for
 background/border/text roles, and preserves accessible seed-led solid fills.
-Dark fills are lifted for visibility. A single white/basalt foreground passes
-both solid and hover. Every alpha step is solved against the neutral page.
-All steps are rounded to 8-bit sRGB before contrast is checked in tests.
+Dark solids take the seed's OKLCH lightness clamped to 0.70–0.84: dark seeds
+are lifted for visibility and light seeds keep their character. The solid and
+hover are fitted to white or a dark reference; a dark side then takes the
+palette's deep on-solid ink (its own hue, lightness up to 0.30, 4.6:1 on both
+fill and hover; warm brown for yellows; a deep neutral for gray seeds). See the
+specification's on-solid ink policy. Every alpha step is solved against the
+neutral page. All steps are rounded to 8-bit sRGB before
+contrast is checked in tests.
 
 ## Very light custom accents
 

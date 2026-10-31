@@ -37,7 +37,7 @@ List<Color> resolveFortalChartPalette(
   final step = highContrast ? 12 : 9;
   final candidates = <Color>[
     colors.accent.scale.step(step),
-    for (final family in [calcadao, mar, ceu, mangue, sol, duna, caju])
+    for (final family in [calcadao, mar, ceu, serra, sol, duna, caju])
       (theme.isDark ? family.dark : family.light).scale.step(step),
   ];
 

@@ -243,7 +243,7 @@ const Map<String, UiColorTheme> _accentThemesByName = {
   'calcadao': calcadao,
   'mar': mar,
   'ceu': ceu,
-  'mangue': mangue,
+  'serra': serra,
   'sol': sol,
   'duna': duna,
   'caju': caju,

@@ -7,6 +7,12 @@ The maintained values and acceptance rules are in [the Fortal specification](../
 The original brief below is preserved verbatim as design input. Its open
 questions and checkboxes describe the proposal on 2026-10-29, not current work.
 
+Palette provenance, 2026-10-31: Leo's palette review replaced Mangue with
+Serra, an earthy olive (`#6F7845`); moved Céu to sky blue (`#1A95D8`) and Caju
+to a cashew-fruit orange-red (`#E76A32`); and moved error roles from Caju to a
+dedicated red (`#C92E3B`) that is not a selectable accent. Mangue, the Céu and
+Caju seeds, and "errors read caju" below are historical.
+
 ---
 
 Fortal Refresh Plan

@@ -1,28 +1,31 @@
 {
   "date": "2026-10-31",
   "base_commit": "2556203413520874c4e6d7682e8e1737f4b9f360",
-  "method": "Actual Flutter widget-test renderer on Ubuntu 24.04 x64, compact neutral/Mar selection from shared palette-state panel; not a browser screenshot",
+  "method": "Actual Flutter widget-test renderer on Ubuntu 24.04 x64; neutral/Mar catalog uses the shared palette-state panel. Not a browser screenshot.",
   "flutter": "3.44.0",
   "dart": "3.12.0",
-  "command": "cd /work/candidate/apps/demo && flutter test --no-pub test/polish_board_golden_test.dart --update-goldens --name 'all palettes:|public catalog:|Inputs:' --reporter expanded",
+  "command": "cd apps/demo && flutter test --no-pub test/polish_board_golden_test.dart --update-goldens --name 'all palettes:|semantics:|public catalog:' --reporter expanded",
   "fonts": "Geist for FortalReview/Roboto, Geist Mono for Menlo, Material Icons; loaded by the test",
   "dimensions": [
     1600,
     848
   ],
-  "sha256": "0508e240c71ee989a4044778cf43dc7bc9821e004aedac31c9ec7f4cc2be5c7c",
-  "bytes": 123363,
+  "sha256": "2edfa67ba482670be44266b4aacd95ed60344d1fce2271f3600bb3b789a320e5",
+  "bytes": 123313,
   "golden": "docs/assets/fortal-catalog.png (checked by public catalog test)",
   "source_sha256": {
-    "apps/demo/test/polish_board_golden_test.dart": "1c0f25c6c8043a7bc113d6b5da031afbf4f1a927795cbcf036067755bf9fe5ef",
     "apps/demo/lib/polish_board.dart": "da253b6eb7b05f133d123970d085e574f31144ab48c5be69631ec16c91abe315",
     "apps/demo/lib/ui/components/switch.dart": "fec03df78cf4e2abc81f5e2f017b58f5b785dbfb1973580067c1bde30e02c77d",
     "apps/demo/lib/ui/components/textfield.dart": "7a92295c124039cc7a7bc9b5144e6847db3c19a2ab4ddfab3fe6e337f7e86688",
+    "apps/demo/lib/ui/theme/fortal_colors.dart": "e2949359769cf925600360f53cc8c12ca62fbdc7dffa163445dc45b44f1bf3ec",
+    "apps/demo/test/polish_board_golden_test.dart": "0bf582efe902f706e1aa3837b9f1e01b7a81108bb1ef5e59e2bf79c0fdb6b2b3",
     "registry_source/lib/src/fortal/components/switch.dart": "fec03df78cf4e2abc81f5e2f017b58f5b785dbfb1973580067c1bde30e02c77d",
     "registry_source/lib/src/fortal/components/textfield.dart": "7a92295c124039cc7a7bc9b5144e6847db3c19a2ab4ddfab3fe6e337f7e86688",
-    "registry_source/lib/src/fortal/theme/fortal_colors.dart": "e4b9e8a1313f69b61102bdbb477756912c526496e20b29e6047199baea0a3435"
+    "registry_source/lib/src/fortal/theme/fortal_colors.dart": "e2949359769cf925600360f53cc8c12ca62fbdc7dffa163445dc45b44f1bf3ec",
+    "registry_source/tool/fortal_palettes/generate.dart": "775e8dd412741fd742219ffc9dd0a14e9a7eeb401fc271f2ee7d04674468e941",
+    "registry_source/tool/fortal_palettes/palette_generator.dart": "f2cb0ccc26fcb600178c258619c6247c846ea37b9b5481173d59f12abf2d2da7"
   },
-  "review": "Coordinator and executor viewed all three actual Linux outputs: neutral/Mar overview, seven-accent light/dark state matrix, and Inputs sizes/variants. Selected switch thumbs, enabled hint/icon content, focus rings and disabled roles present; no visible clipping or render exceptions.",
+  "review": "Canonical palette, semantic and neutral/Mar captures inspected: family-hued solid labels, switch thumbs and selection marks, error crimson, focus and disabled states. Color ramps remain unchanged by the foreground refinement; no visible clipping or render exceptions.",
   "font_sha256": {
     "packages/remix_ui_fonts/lib/fonts/geist/Geist-Regular.ttf": "5c8968eafb98a4c4f47033daf29e38e284a6f2a82eb017d171ab040fe7c4b615",
     "packages/remix_ui_fonts/lib/fonts/geist/Geist-Medium.ttf": "0090e004725f6f64b841715b4167920580f883fcf9b67fc6d744089103fec101",
@@ -31,7 +34,7 @@
     "packages/remix_ui_fonts/lib/fonts/geist/GeistMono-Regular.ttf": "42d8ad2e610238e64e8abfcde3037c63f7850a73928742b7ab7229d897bcb155",
     "packages/remix_ui_fonts/lib/fonts/geist/GeistMono-Medium.ttf": "90b15711dc3779b2e64e8aff5228154dd019a90bce4947549c4a8a8a43f2ac25"
   },
-  "full_palette_golden_sha256": "3d834e7740953b991be13a081e67d5e068ffd5e1ea38997ff36b29fd4dd6de83",
+  "full_palette_golden_sha256": "d6afbeb3a71c0a915db6be00118a3ee24fc672ff8aeb6804ec956b9939ad9d3f",
   "capture_host": {
     "os": "Ubuntu",
     "version": "24.04.5 LTS",
@@ -51,25 +54,25 @@
     "invocation": "Direct /opt/flutter/bin/flutter from container PATH; fvm was not used inside the container"
   },
   "affected_renders": {
-    "apps/demo/test/goldens/fortal_inputs.png": {
-      "sha256": "4af1419bbe9a300ced243cde0866bd615e3f0b924985a9ec884973a4953bb9d3",
-      "bytes": 254309,
-      "dimensions": [
-        1600,
-        2032
-      ]
-    },
     "apps/demo/test/goldens/fortal_palettes_states.png": {
-      "sha256": "3d834e7740953b991be13a081e67d5e068ffd5e1ea38997ff36b29fd4dd6de83",
-      "bytes": 646638,
+      "sha256": "d6afbeb3a71c0a915db6be00118a3ee24fc672ff8aeb6804ec956b9939ad9d3f",
+      "bytes": 645699,
       "dimensions": [
         1600,
         4704
       ]
     },
+    "apps/demo/test/goldens/fortal_semantics.png": {
+      "sha256": "23df9a49eb8a19b9a5b67f720d4b9ed49b940472cde17b3431ad36d27055ef54",
+      "bytes": 59559,
+      "dimensions": [
+        1600,
+        312
+      ]
+    },
     "docs/assets/fortal-catalog.png": {
-      "sha256": "0508e240c71ee989a4044778cf43dc7bc9821e004aedac31c9ec7f4cc2be5c7c",
-      "bytes": 123363,
+      "sha256": "2edfa67ba482670be44266b4aacd95ed60344d1fce2271f3600bb3b789a320e5",
+      "bytes": 123313,
       "dimensions": [
         1600,
         848
@@ -77,35 +80,34 @@
     }
   },
   "validation": {
-    "baseline": {
-      "command": "cd /work/base/apps/demo && flutter test --no-pub --concurrency=2 --reporter expanded",
-      "exit_code": 0,
-      "passed": 73,
-      "skipped": 0
-    },
-    "before_update": {
-      "command": "cd /work/candidate/apps/demo && flutter test --no-pub test/polish_board_golden_test.dart --name 'all palettes:|public catalog:|Inputs:' --reporter expanded",
-      "exit_code": 1,
-      "golden_mismatches": 3,
-      "reason": "Mac-generated masters differ from Linux rasterization"
-    },
     "render": {
+      "command": "cd apps/demo && flutter test --no-pub test/polish_board_golden_test.dart --update-goldens --name 'all palettes:|semantics:|public catalog:' --reporter expanded",
       "exit_code": 0,
       "passed": 3
     },
     "candidate": {
-      "command": "cd /work/candidate/apps/demo && flutter test --no-pub --concurrency=2 --reporter expanded",
+      "command": "cd apps/demo && flutter test --no-pub --concurrency=2 --reporter expanded",
       "exit_code": 0,
-      "passed": 74,
+      "passed": 75,
       "skipped": 0
     },
-    "six_other_masters": "Unchanged from base; verified SHA-256",
-    "private_evidence": "retained by the maintainer; not published",
+    "unchanged_masters_sha256": {
+      "apps/demo/test/goldens/fortal_typography.png": "8d973be604ae3e2701a79b7bbcc71e11d277c79550b68b8d8d73ec8853be209e",
+      "apps/demo/test/goldens/fortal_inputs.png": "4af1419bbe9a300ced243cde0866bd615e3f0b924985a9ec884973a4953bb9d3",
+      "apps/demo/test/goldens/fortal_layers.png": "870a66ae72cebddabb43e9eedbb5e17bd03386b7963055d9583c01983e4b8da7",
+      "apps/demo/test/goldens/fortal_feedback.png": "0e4ea2ad033650c87aaced2a361068ad825733da9718edad4b3bfbbdb629461e",
+      "apps/demo/test/goldens/fortal_containers.png": "d4de2e709057d409dab6400b8426eefe6cf34669b78f0c4514b2f4a8828a7a9a",
+      "apps/demo/test/goldens/fortal_layout.png": "77cd2b658fe69c09d45c9e54963b027f09139008b8af7dc369ba2b5249b96c95",
+      "apps/demo/test/goldens/fortal_actions.png": "b4e6b3a56a3b803035e6a2f010114169bc168466cdefe2ca3f4063f31a683d28"
+    },
     "log_sha256": {
-      "baseline-demo.log": "43466cc9e9d312581d6ea598b885db36286ffb99016e5821173a5f5c72560003",
-      "candidate-before-demo.log": "0e12d792a06904df704b7916882aeed23f73c1624799e2458f6943fbcf70f5e9",
-      "candidate-render.log": "80cd96dce17744d719b8267b4ab320aefc32a10d18590f9a5596f8a38ee9b2dd",
-      "candidate-final-demo.log": "b45da3c5c2e7a7144bbb6e696850d29b73df0fd418c4f5ab65b04fdad1482993"
-    }
-  }
+      "render.log": "87268d61e78a0d000099b5f558fdf322bfd2183e030d0c5367e4d6374d7c92fb",
+      "demo-tests.log": "4165a9e07d4345252ac35646ee50d95d12b02fa81c7f5b8979021c9ade940f54"
+    },
+    "private_evidence": "Complete source snapshot and logs retained by the maintainer; no private paths published."
+  },
+  "source_parent_commit": "7fc1f39b33def2c184cdfd6b231978a224269eac",
+  "source_state": "Working-tree capture before publication; source hashes identify the exact rendering inputs.",
+  "supersedes_capture_sha256": "0508e240c71ee989a4044778cf43dc7bc9821e004aedac31c9ec7f4cc2be5c7c",
+  "source_snapshot_manifest_sha256": "5fab72f492509121de9a129a574782bb8d01603b8b4bc5473424130c1d782c1b"
 }

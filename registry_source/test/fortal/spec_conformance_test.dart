@@ -39,12 +39,19 @@ void main() {
     final brightness = dark ? Brightness.dark : Brightness.light;
     test('${brightness.name}: page, panel, error and typography roles', () {
       final neutral = dark ? calcadao.dark : calcadao.light;
-      final errors = dark ? caju.dark : caju.light;
-      for (final accent in FortalAccentColor.values) {
+      final errors = dark ? fortalError.dark : fortalError.light;
+      // Error roles ignore every named accent and a custom brand palette.
+      for (final theme in [
+        for (final accent in FortalAccentColor.values)
+          FortalThemeData.light(accent: accent),
+        const FortalThemeData.light(accentPalette: caju),
+        const FortalThemeData.light(accentPalette: fortalError),
+      ]) {
+        final label = theme.accentPalette == null
+            ? theme.accent.name
+            : 'custom palette';
         final tokens = buildFortalScopeTokens(
-          FortalThemeData.light(
-            accent: accent,
-          ).copyWith(brightness: brightness),
+          theme.copyWith(brightness: brightness),
         );
         expect(tokens[FortalTokens.colorBackground], neutral.scale.step(1));
         expect(tokens[FortalTokens.colorPanelSolid], neutral.scale.step(2));
@@ -60,7 +67,7 @@ void main() {
           expect(
             tokens[token],
             errors.scale.step(step),
-            reason: '${accent.name} error$step',
+            reason: '$label error$step',
           );
         }
         expect(tokens[FortalTokens.errorA7], errors.scale.alphaStep(7));

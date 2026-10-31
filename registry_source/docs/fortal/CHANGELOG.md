@@ -1,5 +1,27 @@
 ## Unreleased
 
+- **Breaking:** replace Mangue with Serra, a new earthy olive (`#6F7845`).
+  `FortalAccentColor.mangue` and the `mangue` palette constant are removed
+  without an alias; use `.serra` and `serra`.
+- **Breaking:** error roles (`error3`–`error12`, `errorA7`) read a dedicated red,
+  `fortalError` (`#C92E3B`, installed as `<prefix>Error`), instead of Caju. It is
+  not a selectable accent. Destructive content that used `accent: .caju` for red
+  should use `accentPalette: fortalError`. Its dark solid is a deeper red so it
+  stays apart from Caju. The dashboard recipe's negative statuses, deltas, and
+  destructive actions use it via `FortalAccentScope.error`; positive statuses
+  use Serra, and every status keeps its text label.
+- Caju becomes a cashew-fruit orange-red (`#E76A32`) and Céu a sky blue
+  (`#1A95D8`).
+- Solid foregrounds (`contrast`) use a deep tone of each palette instead of
+  basalt where white does not serve the fill: deep teal, navy, dark olive, warm
+  brown and deep crimson, fitted to 4.6:1 on both fill and hover with fills
+  unchanged. Calçadão and high-contrast knockouts are unchanged; custom
+  palettes regenerate with their own deep ink.
+- Dark solids take the seed's lightness within 0.70–0.84: Sol is gold
+  (`#F3C442`, formerly mustard `#C49800`) and Duna keeps its sand seed. Custom
+  palettes with seeds lighter than L 0.70 regenerate with lighter dark solids.
+- The palette tool rejects custom names that reuse built-in identifiers and no
+  longer infers the neutral palette from a custom name.
 - Correct selected switch thumbs to semantic accent content roles in both modes:
   surface uses contrast/step 1, soft uses step 11/12. Idle thumb overrides remain
   supported; use `style.onSelected(...)` or `style.onDisabled(...)` to override
@@ -12,7 +34,7 @@
   custom-palette treatment without changing the palette algorithm.
 
 - Refresh Fortal as an independent, Fortaleza-inspired design system: seven
-  generated OKLCH palettes, neutral Calçadão defaults, Caju errors, and tested
+  generated OKLCH palettes, neutral Calçadão defaults, a dedicated error red, and tested
   contrast in both modes. Apps can generate a custom palette from one seed.
 - Remove the twelve classic control/card/inline variants, default panels to
   solid, flatten cards and controls, fill surface fields, share a token-based

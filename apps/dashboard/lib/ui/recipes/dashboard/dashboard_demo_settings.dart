@@ -176,8 +176,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                 ],
               ),
             ),
-            UiAccentScope(
-              accent: .caju,
+            UiAccentScope.error(
               child: UiDisclosure.soft(
                 key: const ValueKey('settings-danger-zone'),
                 size: .size3,
@@ -240,8 +239,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
             onPressed: () => Navigator.of(context).pop(false),
             label: 'Cancel',
           ),
-          UiAccentScope(
-            accent: .caju,
+          UiAccentScope.error(
             child: UiButton(
               onPressed: () => Navigator.of(context).pop(true),
               label: 'Delete',

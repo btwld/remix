@@ -1,7 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../tool/fortal_palettes/generate.dart' as cli;
 import '../../tool/fortal_palettes/palette_generator.dart' as generator;
 import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';
@@ -10,14 +13,32 @@ const palettes = <String, FortalColorTheme>{
   'calcadao': calcadao,
   'mar': mar,
   'ceu': ceu,
-  'mangue': mangue,
+  'serra': serra,
   'sol': sol,
   'duna': duna,
   'caju': caju,
 };
 
+/// Every shipped scale: the selectable accents plus the dedicated error red.
+const shipped = <String, FortalColorTheme>{
+  ...palettes,
+  'fortalError': fortalError,
+};
+
+/// OKLab distance, used for Fortal's own comparative separation checks.
+double oklabDistance(Color first, Color second) {
+  final a = generator.toOklch(first.toARGB32());
+  final b = generator.toOklch(second.toARGB32());
+  final da = a.c * math.cos(a.h) - b.c * math.cos(b.h);
+  final db = a.c * math.sin(a.h) - b.c * math.sin(b.h);
+  return math.sqrt(math.pow(a.l - b.l, 2) + da * da + db * db);
+}
+
+double hueDegrees(Color color) =>
+    generator.toOklch(color.toARGB32()).h * 180 / math.pi % 360;
+
 void main() {
-  for (final entry in palettes.entries) {
+  for (final entry in shipped.entries) {
     for (final dark in [false, true]) {
       final name = '${entry.key}/${dark ? 'dark' : 'light'}';
       final color = dark ? entry.value.dark : entry.value.light;
@@ -237,6 +258,234 @@ void main() {
       }
     },
   );
+
+  test('on-solid inks are deep tones of their own family', () {
+    // Calçadão stays the neutral reference: white on basalt, basalt on
+    // limestone.
+    expect(calcadao.light.contrast, const Color(0xffffffff));
+    expect(calcadao.dark.contrast, const Color(generator.basalt));
+    // White remains where the fill needs it.
+    const whiteSide = {'mar/light', 'serra/light', 'fortalError/light'};
+    final basaltL = generator.toOklch(generator.basalt).l;
+    for (final entry in shipped.entries) {
+      if (entry.key == 'calcadao') continue;
+      for (final dark in [false, true]) {
+        final name = '${entry.key}/${dark ? 'dark' : 'light'}';
+        final mode = dark ? entry.value.dark : entry.value.light;
+        final ink = mode.contrast;
+        if (whiteSide.contains(name)) {
+          expect(ink, const Color(0xffffffff), reason: name);
+          continue;
+        }
+        final tone = generator.toOklch(ink.toARGB32());
+        final seed = generator.toOklch(
+          generator.fortalSeeds[entry.key] ?? generator.fortalErrorSeed,
+        );
+        // Neither generic basalt nor a light midtone.
+        expect(
+          oklabDistance(ink, const Color(generator.basalt)),
+          greaterThan(.03),
+          reason: '$name is basalt',
+        );
+        expect(
+          tone.l,
+          inInclusiveRange(
+            basaltL - .005,
+            generator.onSolidInk.maxLightness + .005,
+          ),
+          reason: name,
+        );
+        expect(tone.c, greaterThan(.03), reason: '$name chroma');
+        // The family hue, warmed by at most the documented rotation.
+        final hueShift =
+            (hueDegrees(
+                      Color(
+                        generator.fortalSeeds[entry.key] ??
+                            generator.fortalErrorSeed,
+                      ),
+                    ) -
+                    hueDegrees(ink) +
+                    540) %
+                360 -
+            180;
+        expect(
+          hueShift,
+          inInclusiveRange(-4, generator.onSolidInk.warmHueShift + 4),
+          reason: '$name hue',
+        );
+        expect(seed.c, greaterThan(tone.c), reason: '$name stays deep');
+        // The 4.6:1 generation margin holds on the fill and on its hover.
+        for (final step in [9, 10]) {
+          expect(
+            contrastRatio(ink, mode.scale.step(step)),
+            greaterThanOrEqualTo(4.6),
+            reason: '$name step $step',
+          );
+        }
+      }
+    }
+    // Sol and Duna read warm brown, not olive.
+    for (final theme in [sol, duna]) {
+      for (final mode in [theme.light, theme.dark]) {
+        expect(hueDegrees(mode.contrast), inInclusiveRange(55, 72));
+      }
+    }
+  });
+
+  test('custom and extreme seeds follow the same ink policy', () {
+    for (final seed in [
+      0xff000000,
+      0xffffffff,
+      0xfff4f4f0,
+      0xff777777,
+      0xffff0000,
+      0xff00ff00,
+      0xff0000ff,
+      0xff8038cc,
+      0xff00ffff,
+    ]) {
+      final palette = generator.generatePalette(seed);
+      final achromatic = generator.toOklch(seed).c < .02;
+      for (final mode in [palette.light, palette.dark]) {
+        final reason = '#${seed.toRadixString(16)}';
+        if (mode.contrast == 0xffffffff) continue;
+        final tone = generator.toOklch(mode.contrast);
+        expect(
+          tone.l,
+          lessThanOrEqualTo(generator.onSolidInk.maxLightness + .005),
+          reason: reason,
+        );
+        for (final step in [9, 10]) {
+          expect(
+            contrastRatio(Color(mode.contrast), Color(mode.solid[step - 1])),
+            greaterThanOrEqualTo(4.6),
+            reason: '$reason step $step',
+          );
+        }
+        // Gray and near-white seeds get a deep neutral, not an invented hue.
+        if (achromatic) expect(tone.c, lessThan(.02), reason: reason);
+      }
+    }
+    // The neutral generator keeps basalt on limestone.
+    final neutral = generator.generatePalette(generator.basalt, neutral: true);
+    expect(neutral.dark.contrast, generator.basalt);
+    expect(neutral.light.contrast, 0xffffffff);
+  });
+
+  test('every shipped solid keeps a visibly distinct hover', () {
+    // Contrast fitting once collapsed hover onto the solid (OKLab 0.0003).
+    // Calçadão's dark limestone-to-white hover (0.018) is the stable minimum;
+    // palettes changed in the 2026-10-31 review keep a full hover step.
+    const reviewed = {'ceu', 'serra', 'sol', 'duna', 'caju', 'fortalError'};
+    for (final entry in shipped.entries) {
+      for (final dark in [false, true]) {
+        final scale = (dark ? entry.value.dark : entry.value.light).scale;
+        expect(
+          oklabDistance(scale.step(9), scale.step(10)),
+          greaterThanOrEqualTo(reviewed.contains(entry.key) ? .025 : .015),
+          reason: '${entry.key}/${dark ? 'dark' : 'light'}',
+        );
+      }
+    }
+  });
+
+  test('dark solids follow seed lightness within the dark range', () {
+    final range = generator.darkSolidLightnessRange;
+    for (final seed in [
+      0xff000000,
+      0xff036f6b,
+      0xffe76a32,
+      0xffe5c79a,
+      0xffffcf50,
+      0xfff4f4f0,
+      0xffffffff,
+    ]) {
+      final expected = generator
+          .toOklch(seed)
+          .l
+          .clamp(range.min, range.max)
+          .toDouble();
+      final actual = generator
+          .toOklch(generator.generatePalette(seed).dark.solid[8])
+          .l;
+      // Contrast fitting may nudge lightness; stay within one fitting band.
+      expect(
+        actual,
+        closeTo(expected, .02),
+        reason: '#${seed.toRadixString(16)}',
+      );
+    }
+    // Sol keeps a sunny gold instead of the former L .70 mustard (#C49800).
+    expect(sol.dark.scale.step(9), const Color(0xfff3c442));
+    expect(sol.dark.scale.step(10), const Color(0xffffcf51));
+    // Duna keeps its sand seed in dark mode.
+    expect(
+      oklabDistance(duna.dark.scale.step(9), const Color(0xffe5c79a)),
+      lessThan(.01),
+    );
+  });
+
+  test('named accents and the error red stay mutually distinct', () {
+    // Fortal's own comparative floor for chart series and status badges, not
+    // an external standard. The former Serra/Duna dark pair measured 0.047.
+    final names = shipped.keys.toList();
+    for (final dark in [false, true]) {
+      for (var i = 0; i < names.length; i++) {
+        for (var j = i + 1; j < names.length; j++) {
+          Color fill(String name) =>
+              (dark ? shipped[name]!.dark : shipped[name]!.light).scale.step(9);
+          expect(
+            oklabDistance(fill(names[i]), fill(names[j])),
+            greaterThanOrEqualTo(.08),
+            reason: '${names[i]}/${names[j]} ${dark ? 'dark' : 'light'}',
+          );
+        }
+      }
+    }
+  });
+
+  test('the dedicated error palette stays red and apart from Caju', () {
+    for (final dark in [false, true]) {
+      final error = dark ? fortalError.dark : fortalError.light;
+      for (final step in [3, 7, 8, 9, 11]) {
+        final hue = hueDegrees(error.scale.step(step));
+        expect(hue, inInclusiveRange(10, 32), reason: 'error$step hue');
+      }
+      final orange = dark ? caju.dark : caju.light;
+      expect(hueDegrees(orange.scale.step(9)), greaterThan(38));
+      expect(
+        oklabDistance(error.scale.step(9), orange.scale.step(9)),
+        greaterThanOrEqualTo(.08),
+      );
+    }
+    // Light errors keep white labels; the dark solid is curated deeper.
+    expect(fortalError.light.contrast, const Color(0xffffffff));
+    expect(
+      generator.toOklch(fortalError.dark.scale.step(9).toARGB32()).l,
+      closeTo(generator.fortalErrorDarkSolidLightness, .02),
+    );
+  });
+
+  test('custom generation never borrows built-in identities by name', () {
+    final reserved = cli.reservedPaletteNames('Acme');
+    expect(reserved, containsAll(['calcadao', 'serra', 'caju', 'acmeError']));
+    expect(reserved, isNot(contains('mangue')));
+    final custom = cli.renderPalettes({
+      'calcadao': generator.basalt,
+    }, paletteImport: 'palette.dart');
+    final builtIn = cli.renderPalettes(
+      {'calcadao': generator.basalt},
+      paletteImport: 'palette.dart',
+      builtIns: true,
+    );
+    // Only the shipped file renders Calçadão as the neutral (limestone dark
+    // solid) and appends the error palette and alpha swatches.
+    expect(custom, isNot(contains('0xfffaf9f6')));
+    expect(custom, isNot(contains('fortalError')));
+    expect(custom, isNot(contains('blackAlpha')));
+    expect(builtIn, contains('0xfffaf9f6'));
+    expect(builtIn, contains('const fortalError'));
+  });
 
   test('out-of-range steps fail in release builds as well as debug', () {
     expect(() => calcadao.light.scale.step(0), throwsRangeError);
