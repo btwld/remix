@@ -95,8 +95,8 @@
     "apps/demo/lib/ui/theme/palette.dart": "f51643bf8587cd07fabcb5b8ab2de731a7073821c8029a45f981caf76157dc19",
     "apps/demo/lib/ui/theme/surface_frame.dart": "ed343cf97da28ab4b7d1a5b3d5564ced5002f999cb899d91d05e5ae484f4b245",
     "apps/demo/lib/ui/theme/theme.dart": "a4be3b4e055d9197ad759247dfc06a2c5f516673f663e9edc33dbe3dc57bbd6b",
-    "apps/demo/lib/ui/theme/theme_data.dart": "ef5a11d3caed14630cdbc631c26d10568f418be03a8f1216b659ac05cb8e569f",
-    "apps/demo/lib/ui/theme/theme_scope.dart": "7cc660a130e5096328485e29ae9909564479b55fd0d818afdf7ff442d86e374e",
+    "apps/demo/lib/ui/theme/theme_data.dart": "aa82314f8ca886020ffcad525308d1bb3835e59a9327b3ca4239992175b0dd31",
+    "apps/demo/lib/ui/theme/theme_scope.dart": "17352e923d4cb51d5e1d93d19329c174b80da2ab5a5473508ff40dbc299228f4",
     "apps/demo/lib/ui/theme/tokens.dart": "0483f53789ee16713ffaa408d9ed0875b4facf78a14108685cd0b26bbf19affa",
     "apps/demo/lib/ui/ui.dart": "e265f7bd1d6f70edd108454ad330b4dc309808897c62c655e4c04bbd94c4a15c",
     "apps/demo/test/polish_board_golden_test.dart": "0bf582efe902f706e1aa3837b9f1e01b7a81108bb1ef5e59e2bf79c0fdb6b2b3",
@@ -185,7 +185,7 @@
     "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_settings.dart": "857899f074820929b1a0f9cbf0c3e01cde2f9640cad639a7f8584eac00410580",
     "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_text.dart": "183b76ee2c80385ad4f93d3b6d90d207cb79df9f95e246d9bcfebe9aa5a95f78",
     "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_theme.dart": "e2512d9c5b795f42a0a9ebcb68fba450fc72dd9892aabcce410543fbc780642b",
-    "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_theme_panel.dart": "535b6fc79d45bb0cf7436f20a10ef0ce9003d88a8308e1a3b74f4148a0f53670",
+    "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_theme_panel.dart": "45f1c0e37883f71fd33db21ae1f2e63114d3ce70d5faef9203aed44d3768c1ce",
     "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_typography.dart": "48616a60329361f6a332c283c796344d4cfabcdd4e1b1d46b6270296f23ed2a7",
     "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_ui.dart": "4389cbfd6ef5c8645a27eb56af46a895baa24b0fc7ac5a7015f53c70e994b403",
     "registry_source/lib/src/fortal/recipes/dashboard/dashboard_demo_widgets.dart": "98db853f65c9e24dbaa37d9c430b111aa1c799f50369ecedacf99df229c30db8",
@@ -202,8 +202,8 @@
     "registry_source/lib/src/fortal/theme/palette.dart": "f51643bf8587cd07fabcb5b8ab2de731a7073821c8029a45f981caf76157dc19",
     "registry_source/lib/src/fortal/theme/surface_frame.dart": "ed343cf97da28ab4b7d1a5b3d5564ced5002f999cb899d91d05e5ae484f4b245",
     "registry_source/lib/src/fortal/theme/theme.dart": "a4be3b4e055d9197ad759247dfc06a2c5f516673f663e9edc33dbe3dc57bbd6b",
-    "registry_source/lib/src/fortal/theme/theme_data.dart": "ef5a11d3caed14630cdbc631c26d10568f418be03a8f1216b659ac05cb8e569f",
-    "registry_source/lib/src/fortal/theme/theme_scope.dart": "7cc660a130e5096328485e29ae9909564479b55fd0d818afdf7ff442d86e374e",
+    "registry_source/lib/src/fortal/theme/theme_data.dart": "aa82314f8ca886020ffcad525308d1bb3835e59a9327b3ca4239992175b0dd31",
+    "registry_source/lib/src/fortal/theme/theme_scope.dart": "17352e923d4cb51d5e1d93d19329c174b80da2ab5a5473508ff40dbc299228f4",
     "registry_source/lib/src/fortal/theme/tokens.dart": "0483f53789ee16713ffaa408d9ed0875b4facf78a14108685cd0b26bbf19affa",
     "registry_source/tool/fortal_palettes/generate.dart": "4c02e9a5b43476676659856df6694ee3f1e9bb26ac700ea21551b39e0b477515",
     "registry_source/tool/fortal_palettes/palette_generator.dart": "429d8785c0a6aa58736245fc8d8d497a4a040b72601f47a3398ed8dfa495e0b4"
@@ -317,16 +317,34 @@
       "apps/demo/test/goldens/fortal_layers.png": "870a66ae72cebddabb43e9eedbb5e17bd03386b7963055d9583c01983e4b8da7"
     },
     "log_sha256": {
-      "contrast-tests.log": "476dfe25be64b9c228071989d8d3c38549b4cc5b592dbc46ab6c1c90ecd8ebb4",
-      "render.log": "8a0199d0b8f4c75ce2ca9eac1bfec4773910d0e98f7141485a7b330de99ff141",
-      "demo-tests.log": "e72063fa6743e7333810967826ca9e07fd7d97286ea90a6ac10780773b805325",
+      "contrast-tests.log": "2df67169bd34aae44f92f364322423bfb0923eeeb585f343b5e595994e6ecdb2",
+      "render.log": "759fa981da0236b4055e3179bbc8dcebee216d83c585c65d7610ed141a5f72bb",
+      "demo-tests.log": "3b00a1f57c4c219f754f7d621cf77e6aec21d6be624d266c93ded050c04d288e",
       "environment.txt": "f9387fbaa7c1511ca76fc5fdf706a34b439042afdee690a2df86e9d7c3efeef3"
     },
     "private_evidence": "Complete capture input snapshot and logs retained by the maintainer; no private paths published."
   },
-  "source_parent_commit": "62688365c7be210acce025e7dc5aa3be6bc29b45",
-  "source_state": "Working-tree capture before publication. Listed rendering-source and font bytes match the actual capture input snapshot. The snapshot contains the previous masters; regenerated outputs and this receipt were installed after capture.",
+  "source_parent_commit": "6d962dc1e86c9d7448b17e491849e511d8635a9f",
+  "source_state": "Capture from the merged working-tree source before the merge commit. All ten canonical images reproduced byte-for-byte. The snapshot contains those image masters and the preceding receipt; this provenance refresh was installed after capture.",
   "supersedes_capture_sha256": "078b32636b6d0ac5043d751a963b6c823c97bf39d5de5ad0a82fcd852713373d",
-  "source_snapshot_manifest_sha256": "a3f83fa8ad7b4b2132b750f158566854968f294c2ad84cf48746d48b5a3503cc",
-  "captured_at_utc": "2026-10-31T23:33:06.173833+00:00"
+  "source_snapshot_manifest_sha256": "e88dbb31924e66070a13e0a1162c98b78699b2c4c2f85e554eaa3b39174cf042",
+  "captured_at_utc": "2026-10-31T23:47:29.303576+00:00",
+  "source_merge_parent_commit": "0587b537169f4c03047734e739bdef7f23a6e4cf",
+  "integration_refresh": {
+    "previous_receipt_sha256": "e0522538aef29ee540c8592ccc520565f5791e4b889d4f323e553527badb3a04",
+    "reason": "Revalidate rendering after integrating theme equality, scope and palette-picker focus fixes.",
+    "reproduced_output_sha256": {
+      "apps/demo/test/goldens/fortal_inputs.png": "ef9858749119332f10a53f7c9e91e9b91d968868bf78a0c11b6b19d205fd5112",
+      "apps/demo/test/goldens/fortal_layout.png": "f210a31287a8e5e940e4a37135341f1c6992cbb9981d3f3d53bb4a0b2573f8bb",
+      "apps/demo/test/goldens/fortal_palettes_states.png": "bb95fc7637e08e8f092a124e10ccd9923a836fc362566c9b453697f4f2c807bd",
+      "apps/demo/test/goldens/fortal_containers.png": "d4de2e709057d409dab6400b8426eefe6cf34669b78f0c4514b2f4a8828a7a9a",
+      "apps/demo/test/goldens/fortal_feedback.png": "431c69c6b0669d886f8a7ceaa8c466ca5644948749f01f9a3077b4197539eb68",
+      "apps/demo/test/goldens/fortal_typography.png": "8161fde9620bdc5bec91b170be5058dcc50c2e73f04f560a47eb8605a612b355",
+      "apps/demo/test/goldens/fortal_semantics.png": "1fe4074e5f8bfdc2cb4d19cca834e2ad5bac74404938161a5ecdae98ecbd40d7",
+      "apps/demo/test/goldens/fortal_actions.png": "b4e6b3a56a3b803035e6a2f010114169bc168466cdefe2ca3f4063f31a683d28",
+      "apps/demo/test/goldens/fortal_layers.png": "870a66ae72cebddabb43e9eedbb5e17bd03386b7963055d9583c01983e4b8da7",
+      "docs/assets/fortal-catalog.png": "8e8a0fd8c11f7a6096bbced109fdf4441388eb7e1c699e3608eb8c7bf1e85d53"
+    },
+    "unchanged_output_count": 10
+  }
 }

@@ -300,4 +300,62 @@ void main() {
     expect(rendered().color, foreground);
     expect(rendered().fontSize, 16);
   });
+
+  testWidgets(
+    'the scope rebuilds for brightness, not other MediaQuery fields',
+    (tester) async {
+      var scopeBuilds = 0;
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (element.widget is FortalTheme) scopeBuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = null);
+      const scope = FortalTheme(child: SizedBox());
+      Widget host(MediaQueryData data) => MediaQuery(
+        data: data,
+        child: const Directionality(textDirection: .ltr, child: scope),
+      );
+
+      await tester.pumpWidget(host(const MediaQueryData()));
+      scopeBuilds = 0;
+      await tester.pumpWidget(
+        host(const MediaQueryData(viewInsets: EdgeInsets.only(bottom: 300))),
+      );
+      expect(scopeBuilds, 0, reason: 'keyboard insets');
+
+      await tester.pumpWidget(
+        host(const MediaQueryData(platformBrightness: .dark)),
+      );
+      expect(scopeBuilds, 1, reason: 'system mode follows brightness');
+    },
+  );
+
+  testWidgets('a scope above any MediaQuery supplies one from the view', (
+    tester,
+  ) async {
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+    late Brightness brightness;
+    MediaQueryData? media;
+    await tester.pumpWidget(
+      RawView(
+        view: tester.view,
+        child: Directionality(
+          textDirection: .ltr,
+          child: FortalTheme(
+            child: Builder(
+              builder: (context) {
+                brightness = FortalTheme.of(context).brightness;
+                media = MediaQuery.maybeOf(context);
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      ),
+      wrapWithView: false,
+    );
+
+    expect(media, isNotNull);
+    expect(brightness, Brightness.dark);
+  });
 }
