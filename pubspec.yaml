@@ -221,7 +221,8 @@ melos:
       description: Verify every Dart source matches the formatter
 
     # `ci` runs the scripts below in sequence. CI runs those scripts as
-    # parallel jobs. The `icons` and `cli-windows` jobs are CI-only.
+    # parallel jobs. The `icons`, `icons-tree-shake`, and `cli-windows` jobs are
+    # CI-only; `melos run icons:check` runs the icon checks that need no Flutter.
     #
     # tool/check_ci_coverage.dart fails when a `ci` step and the workflow's
     # `melos run` list drift, and runs inside `ci:checks`.

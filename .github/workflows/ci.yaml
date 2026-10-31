@@ -102,19 +102,67 @@ jobs:
         working-directory: packages/remix_cli
         run: dart test test/installer_sdk_test.dart
 
+  # The icon font and its Dart API are generated from tool/icons/manifest.yaml
+  # and the Vector UI masters in design/icons. The job keeps the id `icons`,
+  # and so the check name it has always reported.
   icons:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Flutter renders every glyph in the last step.
+      - uses: ./.github/actions/setup-workspace
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
         with:
           version: "0.11.24"
           python-version: "3.13"
           enable-cache: true
-          cache-dependency-glob: packages/remix_ui_icons/tool/radix_icons/uv.lock
-      - name: Verify generated Remix icons
-        run: uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json --check
-      - name: Test Remix icon index generator
-        run: uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python -m unittest discover -s packages/remix_ui_icons/tool/radix_icons -p 'test_*.py'
-      - name: Verify icon integrity contract
-        run: uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/verify.py
+          cache-dependency-glob: packages/remix_ui_icons/tool/icons/uv.lock
+      - name: Test the icon generator
+        run: uv run --frozen --project packages/remix_ui_icons/tool/icons python -m unittest discover -s packages/remix_ui_icons/tool/icons -p 'test_*.py'
+      - name: Regenerate the icon artifacts and fail on drift
+        run: |
+          uv run --frozen --project packages/remix_ui_icons/tool/icons python packages/remix_ui_icons/tool/icons/generate.py
+          git diff --exit-code -- packages/remix_ui_icons
+      # The lock is append-only, which a single checkout cannot show: compare
+      # it with the lock this change starts from.
+      - name: Fetch the codepoint lock this change starts from
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.base_ref || github.event.before }}
+        run: |
+          lock=packages/remix_ui_icons/tool/icons/codepoints.lock.json
+          if git fetch --depth=1 origin "$BASE" && git show "FETCH_HEAD:$lock" > "$RUNNER_TEMP/base-lock.json"; then
+            echo "REMIX_ICONS_BASE_LOCK=$RUNNER_TEMP/base-lock.json" >> "$GITHUB_ENV"
+          else
+            echo "$BASE has no codepoint lock yet; checking this one alone."
+          fi
+      - name: Verify the lock, generated Dart, glyph rasters, API, and Flutter rendering
+        run: |
+          args=(--flutter flutter)
+          if [ -n "${REMIX_ICONS_BASE_LOCK:-}" ]; then args+=(--base-lock "$REMIX_ICONS_BASE_LOCK"); fi
+          uv run --frozen --project packages/remix_ui_icons/tool/icons python packages/remix_ui_icons/tool/icons/check.py "${args[@]}"
+
+  # A release build must keep only the glyphs an app refers to, on the oldest
+  # Flutter the package supports and on current stable. The tree shaker
+  # changes between releases (ConstFinder today, record_use on master).
+  icons-tree-shake:
+    name: Icon tree shaking (Flutter ${{ matrix.flutter }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        flutter: ['3.41.0', stable]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.flutter != 'stable' && matrix.flutter || '' }}
+          channel: stable
+          cache: true
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        with:
+          version: "0.11.24"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: packages/remix_ui_icons/tool/icons/uv.lock
+      - name: Build a release web app and inspect the shipped font
+        run: uv run --frozen --project packages/remix_ui_icons/tool/icons python packages/remix_ui_icons/tool/icons/tree_shake.py --flutter flutter
