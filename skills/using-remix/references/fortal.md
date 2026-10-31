@@ -15,26 +15,15 @@ Sections: [Presets and recipes](#presets-and-recipes) ·
 
 ## Presets and recipes
 
-Each component ships a `fortal<Name>Style(...)` function that returns the
-component's `*Styler`, plus a `Fortal<Name>` generated widget that applies
-it:
+Each recipe is `fortal<Name>Style(...)` returning a `*Styler`, with a generated
+`Fortal<Name>` adapter. Prefer named constructors for fixed variants:
 
 ```dart
 import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
-// Generated widget — Remix widget params + fixed variant/size
-Widget generated(VoidCallback save) =>
+Widget saveButton(VoidCallback save) =>
     FortalButton.soft(label: 'Save', onPressed: save, size: .size3);
-
-// Styler function — returns a ButtonStyler to extend
-Widget styled(VoidCallback save) => RemixButton(
-  label: 'Save',
-  onPressed: save,
-  style: fortalButtonStyle(variant: .soft, size: .size3)
-      .onHovered(ButtonStyler().scale(1.02)),
-);
 ```
 
 Fortal preset styles resolve `FortalTokens`, so a `FortalTheme` ancestor is
@@ -92,15 +81,8 @@ and `child` — see [theme selection](../SKILL.md#place-the-theme-scope) for
 the shared `theme`/`darkTheme`/`mode` rules. `FortalThemeConfig` is the
 immutable config object form (`FortalThemeData extends FortalThemeConfig`):
 
-```dart
-import 'package:flutter/widgets.dart';
-import 'ui/ui.dart';
-
-const brand = FortalThemeConfig(accent: .mar, gray: .calcadao);
-
-Widget branded(FortalThemeMode mode, Widget child) =>
-    FortalTheme(theme: brand, darkTheme: brand, mode: mode, child: child);
-```
+Use one `const FortalThemeConfig(accent: .mar, gray: .calcadao)` in both
+`theme` and `darkTheme` when the config should follow either brightness.
 
 Leave `brightness` unset on `brand` itself: the scope fills it per slot,
 light for `theme` and dark for `darkTheme`, so the same config object works

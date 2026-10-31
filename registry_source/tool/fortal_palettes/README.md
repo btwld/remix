@@ -2,7 +2,7 @@
 
 These tools contain no external palette data or package dependencies. The
 seed inventory comes from the Fortal Refresh brief (2026-10-29); conversion
-uses OKLab and WCAG 2 luminance. See `specs/fortal.md` for the role contract.
+uses OKLab and WCAG 2 luminance. See [the specification](../../specs/fortal.md) for the role contract.
 
 From the repository root, with the pinned SDK:
 
@@ -19,7 +19,8 @@ fvm dart run registry_source/tool/fortal_palettes/generate.dart \
 ```
 
 The output imports the sibling `palette.dart` installed with `@remix/theme`.
-Match `--type-prefix` to the app prefix in `remix.yaml` (default `Fortal`).
+Match `--type-prefix` to the app prefix in `remix.yaml`. The generator defaults
+to `Fortal`; the CLI project prefix defaults to `Ui`.
 Use `--palette-import` to choose a different Dart import. Import that output
 in the app and pass `accentPalette: brand` to its prefixed theme widget. The
 palette owns both modes; all named accents remain available in nested scopes.
