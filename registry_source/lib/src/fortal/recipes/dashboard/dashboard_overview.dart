@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -258,10 +259,10 @@ class _FortalActivityIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
-      .customer => (RemixIcons.person, FortalAccentColor.ceu),
-      .order => (RemixIcons.box, FortalAccentColor.ceu),
-      .payment => (RemixIcons.checkCircled, FortalAccentColor.mangue),
-      .alert => (RemixIcons.exclamationTriangle, FortalAccentColor.sol),
+      .customer => (RemixIcons.user, FortalAccentColor.ceu),
+      .order => (LucideIcons.box, FortalAccentColor.ceu),
+      .payment => (LucideIcons.circleCheck, FortalAccentColor.mangue),
+      .alert => (RemixIcons.warning, FortalAccentColor.sol),
     };
 
     return FortalAccentScope(
@@ -287,7 +288,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .size1,
             label: 'View all',
-            trailingIcon: RemixIcons.doubleArrowRight,
+            trailingIcon: LucideIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],

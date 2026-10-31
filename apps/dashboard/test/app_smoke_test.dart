@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -45,7 +46,10 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: brand, matching: find.byIcon(RemixIcons.magicWand)),
+      find.descendant(
+        of: brand,
+        matching: find.byIcon(LucideIcons.wandSparkles),
+      ),
       findsNothing,
     );
   });

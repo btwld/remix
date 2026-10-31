@@ -100,7 +100,7 @@ void main() {
                     RemixSidebarDestination(
                       value: 'overview',
                       label: 'Overview',
-                      icon: RemixIcons.dashboard,
+                      icon: RemixIcons.grid,
                     ),
                   ],
                 ),

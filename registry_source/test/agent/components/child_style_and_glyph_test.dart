@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/agent.dart';
 
@@ -64,7 +65,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: answer, matching: _findIcon(RemixIcons.reload)),
+      find.descendant(of: answer, matching: _findIcon(RemixIcons.refresh)),
       findsOneWidget,
     );
   });
@@ -87,11 +88,11 @@ void main() {
 
     final execution = find.byType(AgentExecution);
     for (final icon in [
-      RemixIcons.code,
-      RemixIcons.checkCircled,
+      RemixIcons.terminal,
+      LucideIcons.circleCheck,
       RemixIcons.chevronUp,
       RemixIcons.copy,
-      RemixIcons.reload,
+      RemixIcons.refresh,
     ]) {
       expect(
         find.descendant(of: execution, matching: _findIcon(icon)),

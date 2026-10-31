@@ -14,6 +14,8 @@ void main() {
   setUp(() => root = createFlutterPackage());
   tearDown(() => root.deleteSync(recursive: true));
 
+  _remixIconsTest();
+
   test(
     'installing icons with lucide uses Lucide and not remix_ui_icons',
     () async {
@@ -59,38 +61,81 @@ void main() {
   );
 }
 
-RecordingProcessRunner _choiceRunner(Directory root) =>
-    RecordingProcessRunner((invocation) async {
-      if (invocation.executable == 'flutter' &&
-          invocation.arguments.join(' ') == '--version --machine') {
-        return ProcessOutput(
-          exitCode: 0,
-          stdout: fakeFlutterMachineJson(root),
-          stderr: '',
-        );
-      }
-      final command = invocation.arguments.join(' ');
-      if (command.startsWith('pub add') || command.startsWith('pub remove')) {
-        return successProcessOutput;
-      }
-      if (command == 'pub get') {
-        writeRequiredLock(root, remixUiIcons: '0.1.0');
-        final lock = File(p.join(root.path, 'pubspec.lock'));
-        lock.writeAsStringSync(
-          lock.readAsStringSync().replaceFirst(
-            'packages:\n',
-            'packages:\n'
-                '  lucide_flutter:\n'
-                '    version: "1.47.0"\n',
-          ),
-        );
-        return successProcessOutput;
-      }
-      if (command.startsWith('format ') || command.startsWith('analyze ')) {
-        return successProcessOutput;
-      }
-      if (command.startsWith('run build_runner build')) {
-        return successProcessOutput;
-      }
-      throw StateError('Unexpected process: ${invocation.executable} $command');
-    });
+void _remixIconsTest() => test(
+  'installing icons with remix falls back to Lucide for missing glyphs',
+  () async {
+    final root = createFlutterPackage();
+    addTearDown(() => root.deleteSync(recursive: true));
+    await Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      processRunner: _choiceRunner(root),
+      sources: const FixtureOfficialResolver(),
+    ).initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
+    );
+    final runner = _choiceRunner(root, remixUiIcons: true);
+    await Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      processRunner: runner,
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['icons'], mode: AddMode.write));
+
+    final icons = File(
+      p.join(root.path, 'lib', 'ui', 'icons.dart'),
+    ).readAsStringSync();
+    // Remix draws search under its 1.0 name, and has no double arrow.
+    expect(icons, contains('RemixIcons.search'));
+    expect(icons, contains('RemixIcons.close'));
+    expect(icons, contains('LucideIcons.chevronsLeft'));
+    expect(icons, isNot(contains('RemixIcons.magnifyingGlass')));
+    expect(
+      icons,
+      contains("import 'package:lucide_flutter/lucide_flutter.dart';"),
+    );
+    expect(
+      icons,
+      contains("import 'package:remix_ui_icons/remix_ui_icons.dart';"),
+    );
+    final added = runner.calls
+        .map((call) => call.arguments.join(' '))
+        .where((command) => command.startsWith('pub add'))
+        .join('\n');
+    expect(added, contains('remix_ui_icons@^1.0.0-beta.1'));
+    expect(added, contains('lucide_flutter@^1.47.0'));
+  },
+);
+
+RecordingProcessRunner _choiceRunner(
+  Directory root, {
+  bool remixUiIcons = false,
+}) => RecordingProcessRunner((invocation) async {
+  if (invocation.executable == 'flutter' &&
+      invocation.arguments.join(' ') == '--version --machine') {
+    return ProcessOutput(
+      exitCode: 0,
+      stdout: fakeFlutterMachineJson(root),
+      stderr: '',
+    );
+  }
+  final command = invocation.arguments.join(' ');
+  if (command.startsWith('pub add') || command.startsWith('pub remove')) {
+    return successProcessOutput;
+  }
+  if (command == 'pub get') {
+    writeRequiredLock(
+      root,
+      remixUiIcons: remixUiIcons ? '1.0.0-beta.1' : null,
+      lucideFlutter: '1.47.0',
+    );
+    return successProcessOutput;
+  }
+  if (command.startsWith('format ') || command.startsWith('analyze ')) {
+    return successProcessOutput;
+  }
+  if (command.startsWith('run build_runner build')) {
+    return successProcessOutput;
+  }
+  throw StateError('Unexpected process: ${invocation.executable} $command');
+});

@@ -110,7 +110,8 @@ Agent installs also enable the scoped spec-styler builder in consumer
 `add chart` installs three adapters backed by `mix_chart`. Import that package
 directly for data models, supply finite chart dimensions and keep existing
 themes' `chart1`–`chart5` tokens current. The owned barrel does not re-export
-`mix_chart`. `add icons` installs an editable alias set backed by `remix_ui_icons`.
+`mix_chart`. `add icons` installs an editable alias set backed by `remix_ui_icons`,
+with `lucide_flutter` for the icons Remix does not draw.
 
 ## Material boundary
 

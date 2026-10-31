@@ -21,12 +21,12 @@ const _sections = <RemixSidebarSection<String>>[
       RemixSidebarDestination(
         value: 'overview',
         label: 'Overview',
-        icon: RemixIcons.dashboard,
+        icon: RemixIcons.grid,
       ),
       RemixSidebarDestination(
         value: 'reports',
         label: 'Reports',
-        icon: RemixIcons.fileText,
+        icon: RemixIcons.file,
       ),
     ],
   ),

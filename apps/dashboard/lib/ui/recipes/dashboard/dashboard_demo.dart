@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -86,7 +87,7 @@ class UiDashboardSidebarAccount extends StatelessWidget {
             ),
           ),
           StyledIcon(
-            icon: RemixIcons.dotsHorizontal,
+            icon: RemixIcons.more,
             style: IconStyler().size(18).color(UiTokens.gray11()),
           ),
         ],
@@ -102,7 +103,7 @@ class UiDashboardSidebarAccount extends StatelessWidget {
           title: value == 'signout'
               ? 'Signed out of demo'
               : '${capitalize(value)} opened',
-          icon: RemixIcons.checkCircled,
+          icon: LucideIcons.circleCheck,
         ),
       ),
     ),
@@ -146,7 +147,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                 theme.settings.copyWith(appearance: isDark ? .light : .dark),
               );
             },
-            icon: isDark ? RemixIcons.sun : RemixIcons.moon,
+            icon: isDark ? LucideIcons.sun : LucideIcons.moon,
           ),
         ),
         if (!compact)
@@ -189,7 +190,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                               context,
                               const RemixToastData(
                                 title: 'All notifications marked read',
-                                icon: RemixIcons.checkCircled,
+                                icon: LucideIcons.circleCheck,
                               ),
                             );
                           },
@@ -284,7 +285,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
             semanticLabel: 'Theme settings',
             style: _toolbarButtonStyle,
             onPressed: _toggleTheme,
-            icon: RemixIcons.mixerHorizontal,
+            icon: RemixIcons.sliders,
           ),
         ),
         if (!compact)
@@ -312,7 +313,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                 title: value == 'signout'
                     ? 'Signed out of demo'
                     : 'Opened $value',
-                icon: RemixIcons.checkCircled,
+                icon: LucideIcons.circleCheck,
               ),
             ),
           ),

@@ -83,8 +83,9 @@ melos:
         yaml: ^3.1.3
         naked_ui: ^1.2.3
         remix: ^1.0.0-beta.13
-        remix_ui_icons: ^0.1.0
+        remix_ui_icons: ^1.0.0-beta.1
         remix_ui_fonts: ^0.1.0
+        lucide_flutter: ^1.47.0
         widgetbook: ^3.25.0
         widgetbook_annotation: ^3.11.0
       dev_dependencies:
@@ -92,7 +93,7 @@ melos:
         build_runner: ^2.10.1
         meta: ^1.18.0
         mix_generator: ^2.2.0-beta.3
-        remix_cli: ^1.0.0-beta.0
+        remix_cli: ^1.0.0-beta.1
         test: ^1.31.0
 
   scripts:
@@ -195,17 +196,14 @@ melos:
       description: Fail on numeric literals off Vanilla's spacing and type scale
 
     icons:generate:
-      steps:
-        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json
-        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/generate_icons_index.py
-      description: Regenerate the locked RemixIcons font, Dart provider, and opt-in index
+      run: uv run --frozen --project packages/remix_ui_icons/tool/icons python packages/remix_ui_icons/tool/icons/generate.py
+      description: Regenerate the RemixIcons font, Dart API, and migration guide from the Vector UI masters
 
     icons:check:
       steps:
-        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json --check
-        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python -m unittest discover -s packages/remix_ui_icons/tool/radix_icons -p 'test_*.py'
-        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/verify.py
-      description: Verify the pinned Radix snapshot, generated icon artifacts, and opt-in index
+        - uv run --frozen --project packages/remix_ui_icons/tool/icons python -m unittest discover -s packages/remix_ui_icons/tool/icons -p 'test_*.py'
+        - uv run --frozen --project packages/remix_ui_icons/tool/icons python packages/remix_ui_icons/tool/icons/check.py
+      description: Verify the icon manifest, codepoint lock, generated artifacts, glyph rasters, and API gate
 
     constraints:check:
       run: dart run tool/check_dependency_constraints.dart
@@ -223,7 +221,8 @@ melos:
       description: Verify every Dart source matches the formatter
 
     # `ci` runs the scripts below in sequence. CI runs those scripts as
-    # parallel jobs. The `icons` and `cli-windows` jobs are CI-only.
+    # parallel jobs. The `icons`, `icons-tree-shake`, and `cli-windows` jobs are
+    # CI-only; `melos run icons:check` runs the icon checks that need no Flutter.
     #
     # tool/check_ci_coverage.dart fails when a `ci` step and the workflow's
     # `melos run` list drift, and runs inside `ci:checks`.

@@ -1,0 +1,21 @@
+{
+  "generator": "glyphpact",
+  "generatorVersion": "1.1.0",
+  "status": "success",
+  "quality": "lossless",
+  "policy": {
+    "lossy": "error",
+    "unrepresentable": "error"
+  },
+  "glyphCount": 432,
+  "losslessGlyphCount": 432,
+  "approximatedGlyphCount": 0,
+  "skippedIconCount": 0,
+  "issueCount": 0,
+  "retiredCodepointCount": 0,
+  "font": {
+    "file": "fonts/RemixIcons.otf",
+    "sha256": "c8e945b9ae0f6f47c46de24e4c3b14440887cbee8a64161bd7569dd2e046d117",
+    "bytes": 65284
+  }
+}

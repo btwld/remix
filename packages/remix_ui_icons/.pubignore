@@ -2,9 +2,6 @@ pubspec_overrides.yaml
 .vscode/*
 .cursor/*
 test/*
-reference/*
+# The generator, its lock, and its evidence stay in the repository; consumers
+# need only lib/. The SVG masters live outside this package, in design/icons.
 tool/*
-lib/src/generated/.glyphpact.json
-lib/src/generated/ATTRIBUTION.md
-lib/src/generated/iconfont.lock.json
-lib/src/generated/iconfont.report.json

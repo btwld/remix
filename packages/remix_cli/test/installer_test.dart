@@ -65,8 +65,8 @@ void main() {
   test(
     'Agent install configures generation and repairs a missing config',
     () async {
-      writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
-      writeRequiredLock(root, remixUiIcons: '0.1.0');
+      writeRequiredPubspec(root, remixUiIcons: '^1.0.0-beta.1');
+      writeRequiredLock(root, remixUiIcons: '1.0.0-beta.1');
       final runner = happyRunner(root, writeLockOnPubGet: false);
       final installer = Installer(
         projectRoot: root,
@@ -134,8 +134,8 @@ void main() {
     test(
       'Agent install preserves named default $target in every mode',
       () async {
-        writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
-        writeRequiredLock(root, remixUiIcons: '0.1.0');
+        writeRequiredPubspec(root, remixUiIcons: '^1.0.0-beta.1');
+        writeRequiredLock(root, remixUiIcons: '1.0.0-beta.1');
         final config = File(p.join(root.path, 'build.yaml'));
         config.writeAsStringSync('targets: {$target: {sources: []}}');
         final output = <String>[];
@@ -620,8 +620,8 @@ packages:
         main.path: main.readAsBytesSync(),
         routes.path: routes.readAsBytesSync(),
       };
-      writeRequiredPubspec(caseRoot, remixUiIcons: '^0.1.0');
-      writeRequiredLock(caseRoot, remixUiIcons: '0.1.0');
+      writeRequiredPubspec(caseRoot, remixUiIcons: '^1.0.0-beta.1');
+      writeRequiredLock(caseRoot, remixUiIcons: '1.0.0-beta.1');
 
       final installer = Installer(
         projectRoot: caseRoot,
@@ -716,12 +716,12 @@ packages:
         writeRequiredPubspec(
           caseRoot,
           mixChart: registryMixChartConstraint,
-          remixUiIcons: '^0.1.0',
+          remixUiIcons: '^1.0.0-beta.1',
         );
         writeRequiredLock(
           caseRoot,
           mixChart: '$registryMixChartFloor',
-          remixUiIcons: '0.1.0',
+          remixUiIcons: '1.0.0-beta.1',
         );
 
         final installer = Installer(
@@ -989,7 +989,7 @@ packages:
           ),
         );
         final remixUiIcons = await _itemUsesRemixIcons(catalog, item)
-            ? '0.1.0'
+            ? '1.0.0-beta.1'
             : null;
         final mixChart =
             catalog
@@ -1655,8 +1655,8 @@ dev_dependencies:
     test('resolves, formats, and generates once for the whole batch', () async {
       // This is the reason the batch exists: the expensive tail runs per
       // invocation, so four items in one call must not pay it four times.
-      writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
-      writeRequiredLock(root, remixUiIcons: '0.1.0');
+      writeRequiredPubspec(root, remixUiIcons: '^1.0.0-beta.1');
+      writeRequiredLock(root, remixUiIcons: '1.0.0-beta.1');
       final runner = happyRunner(root, writeLockOnPubGet: false);
 
       await Installer(

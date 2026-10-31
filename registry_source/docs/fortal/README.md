@@ -132,18 +132,20 @@ preset:
 dart run remix_cli:remix add icons
 ```
 
-That item adds `remix_ui_icons` and creates a small `FortalIcons` alias set you
-can edit as the application's vocabulary evolves:
+That item adds `remix_ui_icons` and `lucide_flutter`, and creates a small
+`FortalIcons` alias set you can edit as the application's vocabulary evolves.
+The double arrows come from Lucide, because Remix does not draw them:
 
 ```dart
 const Icon(FortalIcons.check)
 ```
 
 Import `package:remix_ui_icons/remix_ui_icons.dart` and use `RemixIcons`
-directly for the complete 318-glyph Radix Icons 1.3.2 catalog. There is
-deliberately no runtime name-to-icon map on `RemixIcons` itself because dynamic
-lookup would keep the full catalog reachable. Fortal controls otherwise use
-Remix's inline Radix-shaped vector defaults.
+directly for the rest of the Vector UI pack: the Outline family in outline and
+filled styles at native 24, 16, and 12 px masters, with `RoundedIcons` and
+`MonoIcons` beside it. There is deliberately no runtime name-to-icon map on
+`RemixIcons` itself because dynamic lookup would keep the full font reachable.
+Fortal controls otherwise use Remix's inline Radix-shaped vector defaults.
 
 Catalogs, galleries, and drift tests that must enumerate every glyph can import
 the opt-in index. An application that never imports it keeps full font
@@ -152,12 +154,8 @@ subsetting:
 ```dart
 import 'package:remix_ui_icons/icons_index.dart';
 
-final icon = remixIconsByName['check'];
+final search = remixIconEntries.firstWhere((entry) => entry.name == 'search');
 ```
-
-The `shadow`, `shadowInner`, `shadowNone`, `shadowOuter`, and
-`transparencyGrid` glyphs approximate Radix's partial opacity as opaque
-coverage; the other 313 glyphs are lossless conversions.
 
 ## Soft variants and contrast
 

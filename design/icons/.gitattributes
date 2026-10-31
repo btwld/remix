@@ -1,0 +1,19 @@
+# Rebuilt from the maintained family constructors and catalog sources.
+catalog/index.html linguist-generated=true
+
+outline/generated/** linguist-generated=true
+outline/generated-sha256.json linguist-generated=true
+outline/docs/catalog/** linguist-generated=true
+outline/docs/usage-restrictions.md linguist-generated=true
+outline/packages/web/data.mjs linguist-generated=true
+outline/packages/web/usage-data.mjs linguist-generated=true
+outline/packages/web/icons/** linguist-generated=true
+outline/tests/fixtures/native-pixels/** linguist-generated=true
+
+rounded/generated/** linguist-generated=true
+rounded/docs/catalog/** linguist-generated=true
+rounded/catalog/exceptions.json linguist-generated=true
+
+mono/generated/** linguist-generated=true
+mono/proof/** linguist-generated=true
+mono/catalog/*.json linguist-generated=true

@@ -74,13 +74,18 @@ void writeRequiredPubspec(
   String mixAnnotations = '^2.2.0-beta.1',
   String? mixChart,
   String? remixUiIcons,
+  String? lucideFlutter,
   String? remixUiFonts = '^0.1.0',
   String buildRunner = '^2.10.1',
   String mixGenerator = '^2.2.0-beta.3',
 }) {
+  // The official registry renders the icons remix_ui_icons does not draw from
+  // Lucide, so a project on Remix icons declares lucide_flutter too.
+  final lucide = lucideFlutter ?? (remixUiIcons == null ? null : '^1.47.0');
   final remixUiIconsDependency = remixUiIcons == null
       ? ''
       : '  remix_ui_icons: $remixUiIcons\n';
+  final lucideDependency = lucide == null ? '' : '  lucide_flutter: $lucide\n';
   final remixUiFontsDependency = remixUiFonts == null
       ? ''
       : '  remix_ui_fonts: $remixUiFonts\n';
@@ -93,7 +98,7 @@ dependencies:
     sdk: flutter
   remix: ${remix ?? registryRemixConstraint}
   mix_annotations: $mixAnnotations
-$mixChartDependency$remixUiIconsDependency${remixUiFontsDependency}dev_dependencies:
+$mixChartDependency$remixUiIconsDependency$lucideDependency${remixUiFontsDependency}dev_dependencies:
   build_runner: $buildRunner
   mix_generator: $mixGenerator
 ''');
@@ -105,13 +110,17 @@ void writeRequiredLock(
   String mixAnnotations = '2.2.0-beta.1',
   String? mixChart,
   String? remixUiIcons,
+  String? lucideFlutter,
   String? remixUiFonts = '0.1.0',
   String buildRunner = '2.10.1',
   String mixGenerator = '2.2.0-beta.3',
 }) {
-  final remixUiIconsPackage = remixUiIcons == null
-      ? ''
-      : '  remix_ui_icons:\n    version: "$remixUiIcons"\n';
+  final lucide = lucideFlutter ?? (remixUiIcons == null ? null : '1.47.0');
+  final remixUiIconsPackage =
+      (remixUiIcons == null
+          ? ''
+          : '  remix_ui_icons:\n    version: "$remixUiIcons"\n') +
+      (lucide == null ? '' : '  lucide_flutter:\n    version: "$lucide"\n');
   // The Vanilla theme sets its type in Geist, so a Vanilla install locks it.
   final remixUiFontsPackage = remixUiFonts == null
       ? ''

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -74,7 +75,7 @@ class _PlaygroundDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: PlaygroundTextField(
                 key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
+                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
@@ -103,7 +104,7 @@ class _PlaygroundDashboardCustomersPageState
                       context,
                       RemixToastData(
                         title: '${_selectedIds.length} customers archived',
-                        icon: RemixIcons.checkCircled,
+                        icon: LucideIcons.circleCheck,
                         action: const RemixToastAction(
                           label: 'Undo',
                           onPressed: _noop,
@@ -379,7 +380,7 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
 Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
   trigger: RemixMenuTrigger.builder(
     label: 'Actions for $value',
-    icon: RemixIcons.dotsHorizontal,
+    icon: RemixIcons.more,
     builder: (_, _, _) => Semantics(
       label: 'Actions for $value',
       button: true,
@@ -389,7 +390,7 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
             .alignment(.center)
             .borderRadius(.all(PlaygroundTokens.radiusSm())),
         child: StyledIcon(
-          icon: RemixIcons.dotsHorizontal,
+          icon: RemixIcons.more,
           style: IconStyler()
               .size(PlaygroundTokens.icon)
               .color(PlaygroundTokens.mutedForeground()),
@@ -483,7 +484,7 @@ class _Empty extends StatelessWidget {
               .borderRadius(.all(PlaygroundTokens.radiusMd()))
               .color(PlaygroundTokens.secondary()),
           child: StyledIcon(
-            icon: RemixIcons.magnifyingGlass,
+            icon: RemixIcons.search,
             style: IconStyler()
                 .size(PlaygroundTokens.s5)
                 .color(PlaygroundTokens.secondaryForeground()),

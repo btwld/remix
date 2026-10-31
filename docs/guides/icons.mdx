@@ -1,0 +1,131 @@
+---
+title: Icons
+description: Use the Vector UI icon font from remix_ui_icons — families, styles, optical masters, labels, and migrating from 0.1.x
+---
+
+`remix_ui_icons` is Remix's icon package: the Vector UI pack compiled into
+one icon font, with a `const IconData` for every glyph. Remix widgets take
+`IconData`, so any constant works anywhere a widget asks for an icon, and a
+release build keeps only the glyphs your app refers to.
+
+```bash
+flutter pub add remix_ui_icons:^1.0.0-beta.1
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+const search = Icon(RemixIcons.search);
+const close = Icon(RemixIcons.close, size: 16);
+```
+
+## Families
+
+| Family | Class | Concepts | Glyphs |
+| --- | --- | ---: | ---: |
+| Outline | `OutlineIcons` | 48 | 288 |
+| Rounded | `RoundedIcons` | 12 | 72 |
+| Mono | `MonoIcons` | 12 | 72 |
+
+`RemixIcons` is the default and is the Outline family under the same names.
+Rounded (circles, stadiums, round joins) and Mono (chamfered plates,
+square-cut bars) are drawn from their own primitives rather than filtered from
+Outline, and cover 12 of its concepts.
+
+## Styles and masters
+
+Every concept has an outline and a filled style, each drawn natively at 24,
+16, and 12 px. The bare name is the outline style at the 24 px master;
+suffixes pick the rest:
+
+| Constant | Style | Master |
+| --- | --- | --- |
+| `search` | outline | 24 px |
+| `searchFilled` | filled | 24 px |
+| `search16` | outline | 16 px |
+| `searchFilled16` | filled | 16 px |
+| `search12` | outline | 12 px |
+| `searchFilled12` | filled | 12 px |
+
+Use the master closest to the rendered size: up to 12 px use the 12 px master,
+up to 16 px the 16 px master, and the 24 px master above that. Sizes below
+12 px are not reviewed.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+const toolbar = Icon(OutlineIcons.sliders16, size: 16);
+const badge = Icon(MonoIcons.starFilled12, size: 12);
+```
+
+When the size is only known at runtime, import the opt-in `sized.dart`. Each
+set refers to all three of its masters, so it keeps three glyphs in a release
+build:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix_ui_icons/sized.dart';
+
+Widget searchIcon(double size) =>
+    Icon(OutlineIconSets.search.at(size), size: size);
+```
+
+## Labels and direction
+
+Some glyphs are recognized reliably only with a visible text label. The rules
+come from the Vector UI design contract and depend on the family and master:
+
+| Glyphs | Visible text label |
+| --- | --- |
+| Warning, every family and style | Required at every size. A tooltip or semantic label is not a substitute. |
+| Mono Star | Required at every size: the CAD-regular star reads as Favorite only with its label. |
+| Rounded Branch | Required at every size. |
+| Outline Help, Branch, Focus | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
+| Rounded Link; Mono Link and Branch | Required at 12 px. |
+| Mono Search | Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder. |
+| Outline Arrow up-right | Keep a visible action label: it opens another destination. |
+
+Each constant's documentation states its rule, and the index below reports it
+as `requiresLabel` and `usage`.
+
+No glyph mirrors in right-to-left layouts. When direction carries meaning,
+choose the left or right glyph yourself.
+
+## Catalogs
+
+`package:remix_ui_icons/icons_index.dart` lists every glyph with its family,
+style, master, tags, whether it needs a label, and the contract's usage notes.
+It refers to every glyph, so importing it keeps the whole font: use it in
+galleries and tests, not in application code.
+
+```dart
+import 'package:remix_ui_icons/icons_index.dart';
+
+final labelled = remixIconEntries.where((entry) => entry.requiresLabel);
+```
+
+## Icons in registry presets
+
+The Vanilla and Fortal presets use 50 icons. Remix draws 23 of them and the
+rest render from [Lucide](https://pub.dev/packages/lucide_flutter), so
+installing a preset item that uses icons adds `lucide_flutter` beside
+`remix_ui_icons`. Set `iconLibrary: lucide` in `remix.yaml` to render every
+preset icon from Lucide instead; see [Open Code](/open-code).
+
+## Migrating from 0.1.x
+
+0.1.x shipped the 318 Radix Icons 1.3.2 glyphs. 1.0 replaces every one of
+them, and moves every codepoint, so it is a new major version:
+
+| 0.1.x names | Count | In 1.0 |
+| --- | ---: | --- |
+| Unchanged, such as `check` and `chevronDown` | 27 | Same name, new drawing |
+| Renamed, such as `magnifyingGlass` | 19 | Deprecated alias of the new name until 2.0.0 |
+| Partial matches, such as `avatar` | 25 | Removed; a Remix concept covers part of the meaning |
+| No match, such as `accessibility` | 247 | Removed; use the suggested Lucide icon |
+
+The package's
+[MIGRATION.md](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)
+lists every 0.1.x name with its replacement or closest Lucide icon.

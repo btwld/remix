@@ -24,7 +24,9 @@ registries:
 
 The optional `iconLibrary` is resolved when templates are installed.
 Registries publish `icons.yaml` beside their preset catalogs; the CLI must
-ship support for that table before a registry begins using its placeholders.
+ship support for that table, and for its schema, before a registry begins
+using them. Schema 2 (`remix_cli` 1.0.0-beta.1) lets an icon name a `fallback`
+library for the libraries that do not draw it.
 
 `ref` records the requested branch, tag, or SHA. `revision` is the immutable
 commit used for every index, catalog, and template read. Commit `remix.yaml`;
@@ -121,7 +123,9 @@ and filters extend only for missing paths. Explicit exclusions, disabled
 builders and competing target ownership fail preflight. Both `$default` and
 package-named default targets are supported; diff/dry-run show proposed changes.
 
-Optional chart/icon items declare their hosted dependencies. Vanilla's theme
+Optional chart/icon items declare their hosted dependencies; icon items also
+add `lucide_flutter` under the default `remix` library, for the icons
+`registry/icons.yaml` falls back to Lucide for. Vanilla's theme
 also declares `remix_ui_fonts` for Geist/Geist Mono; Fortal pins no font family.
 Grouped `dashboard_shell` and `dashboard_demo` items leave the app entry point,
 theme scope, routes, authentication and persistence with the host.

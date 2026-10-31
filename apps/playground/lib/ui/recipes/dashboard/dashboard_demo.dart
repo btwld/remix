@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -177,7 +178,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
   List<Widget> _chromeActions() => [
     PlaygroundIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
+      icon: _isDark ? LucideIcons.sun : LucideIcons.moon,
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
@@ -384,7 +385,7 @@ class _PlaygroundAccount extends StatelessWidget {
   Widget build(BuildContext context) => PlaygroundMenu<String>(
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
-      icon: RemixIcons.person,
+      icon: RemixIcons.user,
       builder: (context, _, _) => Box(
         style: BoxStyler()
             .padding(
@@ -425,7 +426,7 @@ class _PlaygroundAccount extends StatelessWidget {
               ),
             ),
             StyledIcon(
-              icon: RemixIcons.dotsHorizontal,
+              icon: RemixIcons.more,
               style: IconStyler()
                   .size(PlaygroundTokens.icon)
                   .color(PlaygroundTokens.mutedForeground()),

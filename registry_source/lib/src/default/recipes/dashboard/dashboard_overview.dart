@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -345,10 +346,10 @@ Widget _activityCard(RegistryDashboardSampleData data) => VanillaCard(
 );
 
 IconData _activityIcon(RegistryDashboardActivityKind kind) => switch (kind) {
-  .customer => RemixIcons.person,
-  .order => RemixIcons.box,
-  .payment => RemixIcons.checkCircled,
-  .alert => RemixIcons.exclamationTriangle,
+  .customer => RemixIcons.user,
+  .order => LucideIcons.box,
+  .payment => LucideIcons.circleCheck,
+  .alert => RemixIcons.warning,
 };
 
 Widget _ordersCard(
@@ -368,7 +369,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
-            trailingIcon: RemixIcons.doubleArrowRight,
+            trailingIcon: LucideIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],

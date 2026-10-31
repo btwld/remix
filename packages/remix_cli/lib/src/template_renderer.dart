@@ -16,6 +16,26 @@ final _anyToken = RegExp(r'\{\{[^\n{}]*\}\}');
 final class TemplateRenderer {
   const TemplateRenderer();
 
+  /// The icon libraries [source]'s icons render from for [iconLibrary]:
+  /// [iconLibrary] itself, plus the fallback of any icon it does not map.
+  ///
+  /// A template that imports icons but names none still imports
+  /// [iconLibrary].
+  Set<String> iconLibraries(
+    String source, {
+    required IconRegistry icons,
+    String iconLibrary = defaultIconLibrary,
+  }) {
+    final used = <String>{
+      for (final match in _iconPattern.allMatches(source))
+        if (match[0] != iconImportToken)
+          icons.resolve(match[1]!, iconLibrary).library,
+    };
+    return used.isEmpty && source.contains(iconImportToken)
+        ? {iconLibrary}
+        : used;
+  }
+
   String render(
     String source, {
     required String typePrefix,
@@ -33,10 +53,21 @@ final class TemplateRenderer {
           'Template uses icons but registry has no icons.yaml.',
         );
       }
-      final library = icons.library(iconLibrary);
+      // One import per library a constant renders from: the chosen library,
+      // and the fallback library of any icon it does not have.
+      final imports = [
+        for (final name in iconLibraries(
+          rendered,
+          icons: icons,
+          iconLibrary: iconLibrary,
+        ))
+          "import '${icons.library(name).import}';",
+      ]..sort();
       rendered = rendered.replaceAllMapped(_iconPattern, (match) {
-        if (match[0] == iconImportToken) return "import '${library.import}';";
-        return '${library.className}.${icons.constant(match[1]!, iconLibrary)}';
+        if (match[0] == iconImportToken) return imports.join('\n');
+        final resolved = icons.resolve(match[1]!, iconLibrary);
+        return '${icons.library(resolved.library).className}.'
+            '${resolved.constant}';
       });
     }
     final unresolved = _anyToken.firstMatch(rendered);

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -74,7 +75,7 @@ class _VanillaDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: VanillaTextField(
                 key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
+                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
@@ -103,7 +104,7 @@ class _VanillaDashboardCustomersPageState
                       context,
                       RemixToastData(
                         title: '${_selectedIds.length} customers archived',
-                        icon: RemixIcons.checkCircled,
+                        icon: LucideIcons.circleCheck,
                         action: const RemixToastAction(
                           label: 'Undo',
                           onPressed: _noop,
@@ -376,7 +377,7 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
 Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
   trigger: RemixMenuTrigger.builder(
     label: 'Actions for $value',
-    icon: RemixIcons.dotsHorizontal,
+    icon: RemixIcons.more,
     builder: (_, _, _) => Semantics(
       label: 'Actions for $value',
       button: true,
@@ -386,7 +387,7 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
             .alignment(.center)
             .borderRadius(.all(VanillaTokens.radiusSm())),
         child: StyledIcon(
-          icon: RemixIcons.dotsHorizontal,
+          icon: RemixIcons.more,
           style: IconStyler()
               .size(VanillaTokens.icon)
               .color(VanillaTokens.mutedForeground()),
@@ -480,7 +481,7 @@ class _Empty extends StatelessWidget {
               .borderRadius(.all(VanillaTokens.radiusMd()))
               .color(VanillaTokens.secondary()),
           child: StyledIcon(
-            icon: RemixIcons.magnifyingGlass,
+            icon: RemixIcons.search,
             style: IconStyler()
                 .size(VanillaTokens.s5)
                 .color(VanillaTokens.secondaryForeground()),

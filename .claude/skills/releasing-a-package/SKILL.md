@@ -55,11 +55,26 @@ behavior tests and its own specification; there is no external parity pin.
   version leaves the old caret range (any minor bump while the package is
   0.x). `tool/check_version_alignment.dart` fails until the floor matches.
 
-**`remix_ui_icons` only — the icon table:**
+**`remix_ui_icons` only — the icon table and the generated API:**
 
 - `registry/icons.yaml` — the `remix` library's `remix_ui_icons` dependency
   must floor at the new version. `tool/check_version_alignment.dart` fails
-  until it does.
+  until it does. When the new version leaves the old caret range, also move
+  the melos shared constraint and every workspace pubspec that declares it.
+- The package is generated. Change `tool/icons/manifest.yaml` or the
+  `design/icons` masters, run `dart run melos run icons:generate`, and fill in
+  the CHANGELOG entry around its generated block. The `since:` of a new
+  concept is the new version.
+- Choose the bump from `tool/icons/README.md`: a new icon, family, master, or
+  redraw is minor; a removal is major; a codepoint never changes.
+  `tool/icons/check.py` fails a removal from `released_api.txt` that is not a
+  major version.
+- After the release is published, replace `tool/icons/released_api.txt` with
+  `tool/icons/public_api.txt` and set its `version:` line, so the next
+  release is compared with it.
+- The registry needs the CLI that reads its `icons.yaml` schema; publish
+  `remix_cli` first when the schema changes, then `remix_ui_icons`, and only
+  then let **Promote registry** run.
 
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
