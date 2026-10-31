@@ -52,8 +52,9 @@ Family READMEs describe their maintained construction and usage contracts. Use t
 Design sign-off and recognition testing remain open. Mono usage limits stay in force until real evidence supports changing them. The Angular release gate stays closed while the pack is private. The undrawn fillet proposal previously called Rounded needs a product naming decision.
 
 Existing web API pack/package identifiers, sprite symbol IDs, pilot version tags,
-and immutable fixture keys retain their historical spellings pending compatibility
-decisions. The family catalogs also retain the unavailable legacy roadmap keys
+immutable fixture keys, and captions in the committed raster proofs retain their
+historical spellings pending compatibility decisions. The family catalogs also
+retain the unavailable legacy roadmap keys
 (`rounded`, plus Mono’s `soft`); resolving those keys together with the old fillet
 proposal requires a product decision. The Angular release gate keeps its name
 and remains closed. License and copyright text is unchanged.

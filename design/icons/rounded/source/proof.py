@@ -35,7 +35,8 @@ def sheet(out: Path, dark: bool = False) -> None:
     d = ImageDraw.Draw(im)
     font = ImageFont.truetype(FONT, 20)
     small = ImageFont.truetype(FONT, 13)
-    d.text((24, 18), 'ROUNDED / NATIVE OPTICAL DRAWINGS', font=font, fill=ink)
+    # Historical raster captions are held to preserve the reviewed PNG bytes.
+    d.text((24, 18), 'SOFT / NATIVE OPTICAL DRAWINGS', font=font, fill=ink)
     for col, n in enumerate([12, 16, 24]):
         d.text((250 + col * 320, 54), f'{n} px / outline + filled / 4× + native', font=small, fill=ink)
     for row, name in enumerate(names):
@@ -65,8 +66,8 @@ def compare_sheet(out: Path, master: int = 24) -> None:
     d = ImageDraw.Draw(im)
     font = ImageFont.truetype(FONT, 18)
     small = ImageFont.truetype(FONT, 12)
-    d.text((24, 18), f'OUTLINE {master} vs ROUNDED {master}  (Outline is read-only)', font=font, fill=INK)
-    for i, cap in enumerate(['Outline outline', 'Rounded outline', 'Outline filled', 'Rounded filled']):
+    d.text((24, 18), f'ANGULAR {master} vs SOFT {master}  (Angular is read-only)', font=font, fill=INK)
+    for i, cap in enumerate(['Angular outline', 'Soft outline', 'Angular filled', 'Soft filled']):
         d.text((260 + i * 200, 48), cap, font=small, fill=INK)
     for row, name in enumerate(names):
         y = 72 + row * row_h
