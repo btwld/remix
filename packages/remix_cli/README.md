@@ -30,6 +30,11 @@ or an application entry point.
 The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. Registry content is published independently on GitHub and pinned in `remix.yaml`.
 Registry updates change pins only; installed source remains application-owned.
+Commit `remix.ownership.json` with the configuration and installed source.
+Target ownership is checked across separate installs; overlapping registries
+are rejected even with `--overwrite`. Existing installations without ownership
+records require verified, explicit `add theme button --adopt` migration; see
+[legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
 Both presets additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,

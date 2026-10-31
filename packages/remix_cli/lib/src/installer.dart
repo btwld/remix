@@ -10,6 +10,7 @@ import 'builder_config.dart';
 import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
+import 'ownership.dart';
 import 'registry.dart';
 import 'icon_registry.dart';
 import 'registry_graph.dart';
@@ -213,6 +214,9 @@ final class Installer {
       states: plan.states,
     );
 
+    if (plan.ownership.changed) {
+      _writeOut('$ownershipFileName: record registry target ownership.');
+    }
     if (plan.builderConfiguration != null) {
       _writeOut(
         'build.yaml: enable spec-styler generation for installed source.',
@@ -278,6 +282,17 @@ final class Installer {
       );
     }
     final items = graph.items;
+    if (options.adopt && options.mode == AddMode.overwrite) {
+      throw const FormatException(
+        '--adopt and --overwrite cannot be combined.',
+      );
+    }
+    final ownership = OwnershipPlan.resolve(
+      config,
+      items,
+      requestedNames: graph.requestedNames,
+      adopt: options.adopt,
+    );
     // Requested names are qualified for a pinned project, so they compare
     // against the qualified names `items` carries. The graph does the
     // qualifying, because it is the only thing that knows each item's owner.
@@ -410,6 +425,7 @@ final class Installer {
     return _InstallPlan(
       root: root,
       config: config,
+      ownership: ownership,
       items: items,
       requestedNames: requestedNames,
       rendered: rendered,
@@ -510,6 +526,15 @@ final class Installer {
         );
       }
 
+      // Reserve before the first source write, so partial writes, formatter,
+      // generator, or analyzer failures cannot leave unowned installed files.
+      if (plan.ownership.changed) {
+        _fileWriter.write(
+          _projectFile(root, ownershipFileName),
+          plan.ownership.after,
+        );
+        completed.add('registry ownership');
+      }
       final pathsToWrite = <String>[];
       for (final item in items) {
         final state = states[item.name]!;
@@ -1219,6 +1244,7 @@ final class _InstallPlan {
   const _InstallPlan({
     required this.root,
     required this.config,
+    required this.ownership,
     required this.items,
     required this.requestedNames,
     required this.rendered,
@@ -1239,6 +1265,7 @@ final class _InstallPlan {
 
   final Directory root;
   final ProjectConfig config;
+  final OwnershipPlan ownership;
 
   /// Every requested item and its dependencies, dependencies first.
   final List<RegistryItem> items;

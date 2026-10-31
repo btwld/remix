@@ -1,3 +1,11 @@
+## Unreleased
+
+- Reserve authored and generated target ownership across installs, rejecting
+  conflicting registries before dependency or source mutation in every mode.
+- Preserve same-owner edits and disjoint registry additions. Add explicit
+  `--adopt` migration for verified legacy source without ownership metadata;
+  commit `remix.ownership.json` alongside configuration and source.
+
 ## 1.0.0-beta.0
 
 First 1.0 pre-release. Stable `0.1.0` stays published; this beta is opt-in,

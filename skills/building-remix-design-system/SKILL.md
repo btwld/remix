@@ -69,15 +69,15 @@ them at publish time. Four names are easy to confuse:
   `remix init`, and every registry it registers must offer that preset. A
   third-party registry cannot introduce a new preset such as `acme`.
   `vanilla` is the default preset. Do not also map `fortal`: a Fortal project
-  already owns `@ui/theme/*`, so your theme item would be skipped as installed
-  and your recipes would then fail against Fortal's tokens. Your namespace,
-  not the preset, identifies your system. Recommend a namespace and a prefix in your README (for example
+  already owns `@ui/theme/*`, so an overlapping theme is rejected before
+  installation. Your namespace, not the preset, identifies your system. Recommend a namespace and a prefix in your README (for example
   `@acme` and `--prefix Acme`).
 - **Make the registry self-contained.** Ship your own `theme` item and depend
   on no `@remix/*` items. Official and third-party items render the same
   prefixed names (`<Prefix>Tokens`, `<Prefix>Button`) into the same targets,
-  and the CLI treats an existing file as installed without checking which
-  registry wrote it. Tell consumers to install only `@acme/*` items.
+  and the CLI rejects overlapping owners across installations. Legacy source
+  without recorded ownership requires explicit, verified `--adopt` migration.
+  Tell consumers to install only `@acme/*` items.
 - **Public github.com only.** There is no private, enterprise, HTTP, or local
   registry, so every test of catalog changes goes through a pushed branch.
 - **Templates are Dart with placeholders**: `{{typePrefix}}` (the

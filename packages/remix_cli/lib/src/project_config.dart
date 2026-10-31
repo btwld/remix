@@ -65,7 +65,8 @@ final class ProjectConfig {
         'remix_cli supports schema $supportedProjectSchema. A project written '
         'by an earlier prerelease names no registry to read from: delete '
         'remix.yaml and run remix init to pin one. Installed source is yours '
-        'and is left alone; review it afterwards with add --diff.',
+        'and is left alone; verify its provenance, then review with '
+        'add <items> --adopt --diff before adoption.',
       );
     }
     requireYamlKeys(

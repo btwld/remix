@@ -33,7 +33,11 @@ final class InitOptions {
 enum AddMode { write, dryRun, diff, overwrite }
 
 final class AddOptions {
-  const AddOptions({required this.items, required this.mode});
+  const AddOptions({
+    required this.items,
+    required this.mode,
+    this.adopt = false,
+  });
 
   /// The explicitly requested registry items, in invocation order.
   ///
@@ -42,6 +46,9 @@ final class AddOptions {
   /// never to what was pulled in behind it.
   final List<String> items;
   final AddMode mode;
+
+  /// Explicitly attest ownership of existing files for the named items.
+  final bool adopt;
 }
 
 enum RegistryAction { add, update }
@@ -190,7 +197,12 @@ final class _AddCommand extends Command<int> {
     argParser
       ..addFlag('dry-run', negatable: false)
       ..addFlag('diff', negatable: false)
-      ..addFlag('overwrite', negatable: false);
+      ..addFlag('overwrite', negatable: false)
+      ..addFlag(
+        'adopt',
+        negatable: false,
+        help: 'Record verified legacy ownership without replacing source.',
+      );
   }
 
   final AddHandler? _handler;
@@ -225,6 +237,9 @@ final class _AddCommand extends Command<int> {
       );
     }
 
+    if (argResults!.flag('adopt') && argResults!.flag('overwrite')) {
+      usageException('--adopt and --overwrite cannot be combined.');
+    }
     final handler = _handler;
     if (handler == null) {
       throw StateError('The add command is not available.');
@@ -233,6 +248,7 @@ final class _AddCommand extends Command<int> {
       AddOptions(
         items: List.unmodifiable(positional),
         mode: modes.isEmpty ? AddMode.write : modes.single,
+        adopt: argResults!.flag('adopt'),
       ),
     );
     return successExitCode;
