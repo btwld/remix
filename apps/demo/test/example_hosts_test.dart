@@ -26,9 +26,9 @@ import '../../../packages/remix/example/api/textfield.0.dart'
 import '../../../packages/remix/example/api/spinner.0.dart' as spinner_example;
 import '../../../packages/remix/example/api/select.0.dart' as select_example;
 import '../../../packages/remix/example/api/tabs.0.dart' as tabs_example;
-import '../../../registry_source/example/misc/radix_button_example.dart'
+import '../../../registry_source/example/misc/fortal_button_example.dart'
     as basic;
-import '../../../registry_source/example/misc/radix_button_comprehensive.dart'
+import '../../../registry_source/example/misc/fortal_button_comprehensive.dart'
     as comprehensive;
 
 void main() {

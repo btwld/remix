@@ -26,8 +26,10 @@ final class _RemixDisclosureTrigger extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Box(
-      styleSpec: _RemixDisclosureStyleScope.of(context).trigger,
+    final spec = _RemixDisclosureStyleScope.of(context);
+    return RemixBoxAdapter(
+      styleSpec: spec.trigger,
+      containerEffects: spec.triggerEffects,
       child: child,
     );
   }
@@ -42,7 +44,9 @@ final class _RemixDisclosureContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Box(
       styleSpec: _RemixDisclosureStyleScope.of(context).content,
-      child: child,
+      // The panel is mounted inside the trigger's state scope, which belongs
+      // to the trigger alone.
+      child: WidgetStateProvider(states: const {}, child: child),
     );
   }
 }

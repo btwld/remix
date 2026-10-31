@@ -20,5 +20,6 @@ TooltipStyler uiTooltipStyle({
       .padding(.horizontal(UiTokens.space2()))
       .label(.color(UiTokens.gray1()))
       .color(UiTokens.gray12())
+      .decoration(BoxDecorationMix.create(boxShadow: UiTokens.shadow3.mix()))
       .merge(style);
 }

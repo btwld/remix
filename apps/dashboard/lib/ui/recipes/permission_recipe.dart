@@ -38,27 +38,35 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => UiAgentPermissionRecipe(
   style: UiPermissionStyler(
-    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
-    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
-    title: TextStyler().color(UiTokens.gray12()).fontWeight(FontWeight.w600),
+    header: FlexBoxStyler()
+        .spacing(UiTokens.space2())
+        .crossAxisAlignment(.center),
+    actions: FlexBoxStyler()
+        .spacing(UiTokens.space2())
+        .padding(.top(UiTokens.space2())),
+    title: TextStyler()
+        .color(UiTokens.gray12())
+        .fontWeight(UiTokens.fontWeightSemibold()),
     tool: TextStyler()
         .color(UiTokens.gray11())
-        .fontSize(12)
-        .wrap(.padding(.top(2))),
+        .style(UiTokens.text1.mix())
+        .wrap(.padding(.top(UiTokens.space1()))),
     description: TextStyler()
         .color(UiTokens.gray11())
-        .wrap(.padding(.symmetric(vertical: 6))),
-    status: TextStyler().color(UiTokens.gray11()).fontSize(12),
-    detailsLabel: TextStyler().color(UiTokens.gray12()).fontSize(13),
-    toolIcon: IconStyler().color(UiTokens.gray12()).size(16),
-    statusIcon: IconStyler().color(UiTokens.accent9()).size(12),
-    indicator: IconStyler().color(UiTokens.gray12()).size(16),
+        .wrap(.padding(.vertical(UiTokens.space2()))),
+    status: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
+    detailsLabel: TextStyler()
+        .color(UiTokens.gray12())
+        .style(UiTokens.text2.mix()),
+    toolIcon: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
+    statusIcon: IconStyler().color(UiTokens.accent9()).size(UiTokens.space3()),
+    indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
   detailsStyle: uiDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(4)))
+        .container(BoxStyler().margin(.top(UiTokens.space1())))
         .merge(detailsStyle),
   ),
   parametersStyle: uiDataListStyle(style: parametersStyle),

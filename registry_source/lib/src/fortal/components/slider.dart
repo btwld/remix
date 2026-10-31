@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'slider.g.dart';
 
-/// Radix Themes slider sizes.
+/// Fortal slider sizes.
 enum FortalSliderSize { size1, size2, size3 }
 
-/// Radix Themes slider variants.
-enum FortalSliderVariant { classic, surface, soft }
+/// Fortal slider variants.
+enum FortalSliderVariant { surface, soft }
 
-/// Fortal slider with Radix-owned size, variant, and component overrides.
+/// Fortal slider with Fortal-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
 SliderStyler fortalSliderStyle({
   FortalSliderVariant variant = .surface,
@@ -30,24 +30,9 @@ SliderStyler fortalSliderStyle({
         .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
       .thickness(metrics.trackSize)
-      .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(
-            shadows: [
-              RemixBoxShadowMix(color: FortalTokens.accent3(), spreadRadius: 3),
-              RemixBoxShadowMix(color: FortalTokens.focus8(), spreadRadius: 5),
-            ],
-          ),
-        ),
-      );
+      .thumbFocusEffects(fortalFocusOutline());
 
   final styled = switch (variant) {
-    .classic => _fortalSliderClassic(
-      base,
-      trackRadius: radius,
-      thumbRadius: thumbRadius,
-      highContrast: highContrast,
-    ),
     .surface => _fortalSliderSurface(
       base,
       trackRadius: radius,
@@ -76,6 +61,7 @@ SliderStyler fortalSliderStyle({
         ),
         SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
       )
+      .wrap(fortalTouchTarget())
       .merge(style);
 }
 
@@ -104,71 +90,9 @@ SliderStyler _fortalSliderSurface(
     )
     .thumb(
       BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: FortalTokens.blackA4(), spreadRadius: 1),
-        ]),
-      ),
-    );
-
-SliderStyler _fortalSliderClassic(
-  SliderStyler base, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-  required bool highContrast,
-}) => base
-    .track(.color(FortalTokens.grayA3()))
-    .range(.color(FortalTokens.accentTrack()))
-    .thumbColor(const Color(0xFFFFFFFF))
-    .trackEffects(
-      RemixBoxEffectsMix.overContent(
-        RemixBoxEffectLayerMix(shadowToken: FortalTokens.shadow1Layers),
-      ),
-    )
-    .rangeEffects(
-      RemixBoxEffectsMix.behindContent(
-        RemixBoxEffectLayerMix(
-          gradients: _fortalSliderHighContrastGradients(highContrast),
-          shadows: highContrast
-              ? [
-                  _fortalSliderInset(FortalTokens.grayA3()),
-                  _fortalSliderInset(FortalTokens.blackA2()),
-                  _fortalSliderInset(
-                    FortalTokens.blackA2(),
-                    offset: const Offset(0, 1.5),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                  ),
-                ]
-              : [
-                  _fortalSliderInset(FortalTokens.grayA3()),
-                  _fortalSliderInset(FortalTokens.accentA4()),
-                  _fortalSliderInset(FortalTokens.blackA1()),
-                  _fortalSliderInset(
-                    FortalTokens.blackA2(),
-                    offset: const Offset(0, 1.5),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                  ),
-                ],
+        .border(
+          .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
         ),
-      ),
-    )
-    .thumb(
-      BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: FortalTokens.blackA3(), spreadRadius: 1),
-          BoxShadowMix(
-            color: FortalTokens.blackA1(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadowMix(
-            color: FortalTokens.blackA1(),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-            spreadRadius: -1,
-          ),
-        ]),
       ),
     );
 
@@ -206,22 +130,9 @@ SliderStyler _fortalSliderSoft(
     )
     .thumb(
       BoxStyler().decoration(
-        .boxShadow([
-          BoxShadowMix(color: FortalTokens.blackA3(), spreadRadius: 1),
-          BoxShadowMix(color: FortalTokens.grayA2(), spreadRadius: 1),
-          BoxShadowMix(color: FortalTokens.accentA2(), spreadRadius: 1),
-          BoxShadowMix(
-            color: FortalTokens.grayA4(),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-          ),
-          BoxShadowMix(
-            color: FortalTokens.grayA3(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-            spreadRadius: -0.5,
-          ),
-        ]),
+        .border(
+          .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
+        ),
       ),
     );
 
@@ -237,16 +148,6 @@ SliderStyler _fortalSliderDisabled(
           .trackEffects(
             RemixBoxEffectsMix.behindContent(
               fortalInsetSurface(strokes: [FortalTokens.grayA4()]),
-            ),
-          ),
-    .classic =>
-      SliderStyler()
-          .track(.color(FortalTokens.grayA3()))
-          .trackEffects(
-            RemixBoxEffectsMix.overContent(
-              RemixBoxEffectLayerMix(
-                shadowToken: FortalTokens.sliderClassicDisabledTrackShadows,
-              ),
             ),
           ),
     .soft =>
@@ -273,37 +174,18 @@ SliderStyler _fortalSliderDisabled(
       )
       .thumb(
         BoxStyler().decoration(
-          .boxShadow([
-            BoxShadowMix(
-              color: switch (variant) {
-                .soft => FortalTokens.gray5(),
-                .classic || .surface => FortalTokens.gray6(),
-              },
-              spreadRadius: 1,
+          .border(
+            .all(
+              .color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()),
             ),
-          ]),
+          ),
         ),
       )
       .thumbFocusEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
-        ),
+        RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
       )
       .blendMode(BlendMode.multiply);
 }
-
-RemixBoxShadowMix _fortalSliderInset(
-  Color color, {
-  Offset offset = Offset.zero,
-  double blurRadius = 0,
-  double spreadRadius = 1,
-}) => RemixBoxShadowMix(
-  kind: RemixBoxShadowKind.inset,
-  color: color,
-  offset: offset,
-  blurRadius: blurRadius,
-  spreadRadius: spreadRadius,
-);
 
 List<RemixLinearGradientMix> _fortalSliderHighContrastGradients(
   bool highContrast,
@@ -338,8 +220,8 @@ _FortalSliderMetrics _fortalSliderMetrics(FortalSliderSize size) =>
         trackRadius: FortalTokens.sliderTrackRadius1(),
       ),
       .size2 => _FortalSliderMetrics(
-        trackSize: FortalTokens.sliderTrackSize2(),
-        thumbSize: FortalTokens.sliderThumbSize2(),
+        trackSize: FortalTokens.space2(),
+        thumbSize: FortalTokens.space4(),
         trackRadius: FortalTokens.sliderTrackRadius2(),
       ),
       .size3 => _FortalSliderMetrics(

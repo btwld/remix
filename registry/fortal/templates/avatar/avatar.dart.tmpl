@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'avatar.g.dart';
 
-/// Radix Themes Avatar size presets.
+/// {{typePrefix}} Avatar size presets.
 enum {{typePrefix}}AvatarSize {
   size1,
   size2,
@@ -19,10 +19,10 @@ enum {{typePrefix}}AvatarSize {
   size9,
 }
 
-/// Radix Themes Avatar variants.
+/// {{typePrefix}} Avatar variants.
 enum {{typePrefix}}AvatarVariant { soft, solid }
 
-/// {{typePrefix}}-themed Avatar with the Radix size, variant, and override contract.
+/// {{typePrefix}}-themed Avatar with {{typePrefix}} sizes, variants, and overrides.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -88,14 +88,14 @@ double _{{valuePrefix}}AvatarDimension({{typePrefix}}AvatarSize size) => switch 
 };
 
 double _{{valuePrefix}}AvatarIconSize({{typePrefix}}AvatarSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.avatarIconSize1(),
-  .size2 => {{typePrefix}}Tokens.avatarIconSize2(),
+  .size1 => {{typePrefix}}Tokens.space3(),
+  .size2 => {{typePrefix}}Tokens.space4(),
   .size3 => {{typePrefix}}Tokens.avatarIconSize3(),
-  .size4 => {{typePrefix}}Tokens.avatarIconSize4(),
-  .size5 => {{typePrefix}}Tokens.avatarIconSize5(),
-  .size6 => {{typePrefix}}Tokens.avatarIconSize6(),
-  .size7 => {{typePrefix}}Tokens.avatarIconSize7(),
-  .size8 => {{typePrefix}}Tokens.avatarIconSize8(),
+  .size4 => {{typePrefix}}Tokens.space5(),
+  .size5 => {{typePrefix}}Tokens.space6(),
+  .size6 => {{typePrefix}}Tokens.space7(),
+  .size7 => {{typePrefix}}Tokens.space8(),
+  .size8 => {{typePrefix}}Tokens.space9(),
   .size9 => {{typePrefix}}Tokens.avatarIconSize9(),
 };
 

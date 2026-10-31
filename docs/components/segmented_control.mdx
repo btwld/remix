@@ -14,8 +14,8 @@ The value type must be non-nullable (`T extends Object`). `null` is reserved for
 null, and `onChanged` only emits non-null item values.
 
 <Info>
-  `FortalSegmentedControl<T>` supplies the pinned Radix Themes 3.3 track,
-  sizes, surface/classic variants, typography, selected layers, focus outline,
+  `FortalSegmentedControl<T>` supplies the owned track,
+  sizes, surface variant, typography, selected fill, shared focus ring,
   and disabled precedence. A raw `RemixSegmentedControl` remains intentionally
   unstyled.
 </Info>
@@ -32,7 +32,7 @@ FortalSegmentedControl<String> reportingPeriod({
   required String value,
   required ValueChanged<String> onChanged,
 }) {
-  return FortalSegmentedControl<String>.classic(
+  return FortalSegmentedControl<String>.surface(
     semanticLabel: 'Reporting period',
     size: FortalSegmentedControlSize.size2,
     items: const [
@@ -187,7 +187,7 @@ Widget layoutSelector({
 
 Set `orientation: Axis.vertical` to equalize item heights and use Up/Down arrow
 navigation. Orientation and per-item disabled state are intentional Flutter
-extensions to the Radix model.
+part of the Fortal composition model.
 
 ## Keyboard behavior
 
@@ -230,18 +230,9 @@ Both stylers start empty. Nothing supplies a track background, segment padding,
 selected surface, or focus ring unless you do, so treat `style` as required
 rather than optional.
 
-## Fortal parity boundaries
+## Fortal presentation
 
-Fortal matches the settled track, item metrics, inactive/active typography,
-selected inset fill, surface ring or five-layer classic shadow, focus outline,
-and disabled state. Three Radix presentation details remain explicit v1
-approximations:
-
-- The selected surface switches directly on the selected item instead of
-  sliding one shared indicator over 100 ms.
-- One label changes typography in place instead of crossfading duplicate
-  inactive and active labels.
-- Inactive-item separator pseudo-elements are omitted.
-
-These differences do not change selection, focus, keyboard, semantics, item
-geometry, or the resolved selected and disabled layers.
+Fortal owns the settled track, item metrics, typography, selected inset fill,
+crisp frame, shared outside focus ring, and disabled state. Selected surfaces
+switch in place; labels change typography without duplicate-label crossfades.
+Selection, keyboard traversal, and semantics remain owned by Remix/Naked UI.

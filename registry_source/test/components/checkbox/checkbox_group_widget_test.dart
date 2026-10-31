@@ -113,13 +113,13 @@ void main() {
             fontSize: 12,
             lineHeight: 16 / 12,
             letterSpacing: 0.0025 * 12,
-            gap: 6,
+            gap: 4,
           ),
           FortalCheckboxSize.size2: (
             fontSize: 14,
             lineHeight: 20 / 14,
             letterSpacing: 0,
-            gap: 7,
+            gap: 8,
           ),
           FortalCheckboxSize.size3: (
             fontSize: 16,

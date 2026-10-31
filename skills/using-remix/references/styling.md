@@ -121,21 +121,25 @@ differs:
 | `items:` (Menu/Select) | `entries:` |
 | `ButtonStyler` | the deprecated `RemixButtonStyler` alias |
 
+## Reduced motion
+
+The select menu, accordion panel, skeleton, and sidebar skip their
+motion when `MediaQuery.disableAnimations` or the platform's `reduceMotion` is
+set; iOS Reduce Motion sets only the latter. Essential `RemixSpinner` motion
+intentionally continues. Dialogs, tooltips, disclosure, and
+toast get their motion from Naked UI and follow the signals the installed
+Naked UI release reads.
+`RemixReducedMotionBuilder(builder: (context, reduceMotion) => ...)` exposes the
+same preference and rebuilds when either signal changes. A `MediaQuery`
+override can force it on but cannot turn the platform's `reduceMotion` off.
+Style `.animate(...)` is driven by Mix, which never reads the preference: choose
+the animation yourself while `reduceMotion` is true, and expect the change to
+take effect once the style stops moving.
+
 ## Reusable and dynamic app styles
 
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-import 'ui/ui.dart';
-
-class AppStyles {
-  static ButtonStyler get primaryButton => fortalButtonStyle(variant: .solid)
-      .animate(AnimationConfig.spring(200.ms));
-}
-
-Widget saveButton(VoidCallback save) =>
-    RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton);
-```
+Keep shared recipe extensions in app-owned styles; use the `mix` skill for
+state, context and animation syntax.
 
 A destructive action needs the accent itself to change, not just the idle
 fill: overriding `.color()`/`.onHovered()` alone misses the Fortal recipe's
@@ -148,7 +152,7 @@ import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
 Widget deleteButton(VoidCallback delete) => FortalTheme(
-  accent: .red,
+  accent: .caju,
   child: FortalButton.solid(label: 'Delete', onPressed: delete),
 );
 ```

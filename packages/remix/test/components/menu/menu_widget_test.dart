@@ -6,6 +6,8 @@ import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixBoxAdapter, RemixFlexBoxAdapter;
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -74,7 +76,7 @@ void main() {
 
         expect(openStates, isNotEmpty);
         expect(openStates.first, isFalse);
-        expect(receivedChild, isA<RowBox>());
+        expect(receivedChild, isA<RemixFlexBoxAdapter>());
         expect(find.text('Options'), findsOneWidget);
         expect(find.byIcon(Icons.more_vert), findsOneWidget);
 
@@ -647,13 +649,16 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
-      final trigger = tester.widget<RowBox>(
+      final trigger = tester.widget<RemixFlexBoxAdapter>(
         find
-            .ancestor(of: find.text('Options'), matching: find.byType(RowBox))
+            .ancestor(
+              of: find.text('Options'),
+              matching: find.byType(RemixFlexBoxAdapter),
+            )
             .first,
       );
       expect(
-        trigger.styleSpec!.spec.box!.spec.padding,
+        trigger.styleSpec.spec.box!.spec.padding,
         const EdgeInsets.all(20),
       );
     });
@@ -676,12 +681,15 @@ void main() {
       expect(find.byType(RemixMenu<String>), findsOneWidget);
       await tester.tap(find.text('Options'));
       await tester.pumpAndSettle();
-      final item = tester.widget<FlexBox>(
+      final item = tester.widget<RemixFlexBoxAdapter>(
         find
-            .ancestor(of: find.text('Copy'), matching: find.byType(FlexBox))
+            .ancestor(
+              of: find.text('Copy'),
+              matching: find.byType(RemixFlexBoxAdapter),
+            )
             .first,
       );
-      expect(item.styleSpec!.spec.box!.spec.padding, const EdgeInsets.all(12));
+      expect(item.styleSpec.spec.box!.spec.padding, const EdgeInsets.all(12));
     });
 
     testWidgets('applies menu-level default item style', (tester) async {
@@ -1061,6 +1069,181 @@ void main() {
       final item = tester.getRect(find.text('Copy'));
       expect(item.top, greaterThanOrEqualTo(trigger.bottom));
       expect(item.left, closeTo(trigger.left, 0.01));
+    });
+  });
+
+  group('RemixMenu anchor width', () {
+    Widget menu({
+      required double triggerWidth,
+      MenuStyler? style,
+      List<RemixMenuItemData<String>>? items,
+    }) {
+      return SizedBox(
+        width: triggerWidth,
+        child: RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items:
+              items ?? const [RemixMenuItem<String>(value: 'a', label: 'Copy')],
+          style: style ?? MenuStyler(),
+        ),
+      );
+    }
+
+    Future<void> open(WidgetTester tester) async {
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+    }
+
+    Rect triggerRect(WidgetTester tester) =>
+        tester.getRect(find.byType(RemixMenu<String>));
+
+    Rect panelRect(WidgetTester tester, String label) => tester.getRect(
+      find
+          .ancestor(
+            of: find.text(label),
+            matching: find.byType(RemixBoxAdapter),
+          )
+          .first,
+    );
+
+    final minWidthOverlay = MenuStyler().overlay(
+      FlexBoxStyler().minWidth(remixAnchorWidth()),
+    );
+
+    testWidgets('minWidth grows the panel to the trigger width', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        menu(triggerWidth: 240, style: minWidthOverlay),
+      );
+      await open(tester);
+
+      expect(triggerRect(tester).width, 240);
+      expect(panelRect(tester, 'Copy').width, 240);
+    });
+
+    testWidgets('width and maxWidth resolve to the trigger width', (
+      tester,
+    ) async {
+      const label =
+          'A very long menu item label that is wider than any trigger';
+      const items = [RemixMenuItem<String>(value: 'a', label: label)];
+
+      await tester.pumpRemixApp(
+        menu(
+          triggerWidth: 240,
+          items: items,
+          style: MenuStyler().overlay(
+            FlexBoxStyler().width(remixAnchorWidth()),
+          ),
+        ),
+      );
+      await open(tester);
+      expect(panelRect(tester, label).width, 240);
+
+      await tester.pumpRemixApp(
+        menu(
+          triggerWidth: 240,
+          items: items,
+          style: MenuStyler().overlay(
+            FlexBoxStyler().maxWidth(remixAnchorWidth()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(panelRect(tester, label).width, 240);
+    });
+
+    testWidgets('leaves the panel content-sized when the token is unused', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(menu(triggerWidth: 240));
+      await open(tester);
+
+      expect(panelRect(tester, 'Copy').width, lessThan(240));
+    });
+
+    testWidgets('follows a trigger resize while open', (tester) async {
+      await tester.pumpRemixApp(
+        menu(triggerWidth: 240, style: minWidthOverlay),
+      );
+      await open(tester);
+      expect(panelRect(tester, 'Copy').width, 240);
+
+      await tester.pumpRemixApp(
+        menu(triggerWidth: 320, style: minWidthOverlay),
+      );
+      await tester.pumpAndSettle();
+
+      expect(triggerRect(tester).width, 320);
+      expect(panelRect(tester, 'Copy').width, 320);
+    });
+
+    for (final direction in TextDirection.values) {
+      testWidgets('aligns a wider panel to the start edge in $direction', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          menu(
+            triggerWidth: 120,
+            style: minWidthOverlay,
+            items: const [
+              RemixMenuItem<String>(
+                value: 'a',
+                label: 'Wider than the trigger',
+              ),
+            ],
+          ),
+          textDirection: direction,
+        );
+        await open(tester);
+
+        final trigger = triggerRect(tester);
+        final panel = panelRect(tester, 'Wider than the trigger');
+        expect(panel.width, greaterThan(trigger.width));
+        switch (direction) {
+          case TextDirection.ltr:
+            expect(panel.left, closeTo(trigger.left, 0.01));
+          case TextDirection.rtl:
+            expect(panel.right, closeTo(trigger.right, 0.01));
+        }
+        expect(panel.top, greaterThanOrEqualTo(trigger.bottom));
+      });
+    }
+
+    testWidgets('submenus reuse the width resolved for the root panel', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1200, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final menuController = MenuController();
+      final submenuController = MenuController();
+
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 240,
+          child: RemixMenu<String>(
+            controller: menuController,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            style: minWidthOverlay,
+            items: [
+              RemixMenuSubmenu<String>(
+                controller: submenuController,
+                label: 'More',
+                items: const [
+                  RemixMenuItem(value: 'archive', label: 'Archive'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      menuController.open();
+      await tester.pumpAndSettle();
+      submenuController.open();
+      await tester.pumpAndSettle();
+
+      expect(panelRect(tester, 'Archive').width, 240);
     });
   });
 
@@ -2064,7 +2247,10 @@ void main() {
       await tester.pump();
 
       Finder rowFor(String label) => find
-          .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+          .ancestor(
+            of: find.text(label),
+            matching: find.byType(RemixFlexBoxAdapter),
+          )
           .first;
       final first = tester.getRect(rowFor('First radio'));
       final second = tester.getRect(rowFor('Second radio'));
@@ -2124,15 +2310,15 @@ void main() {
         await tester.tap(find.text('Options'));
         await tester.pump();
 
-        final beforeRow = find
-            .ancestor(of: find.text('Before'), matching: find.byType(FlexBox))
+        Finder rowFor(String label) => find
+            .ancestor(
+              of: find.text(label),
+              matching: find.byType(RemixFlexBoxAdapter),
+            )
             .first;
-        final radioRow = find
-            .ancestor(of: find.text('Radio'), matching: find.byType(FlexBox))
-            .first;
-        final afterRow = find
-            .ancestor(of: find.text('After'), matching: find.byType(FlexBox))
-            .first;
+        final beforeRow = rowFor('Before');
+        final radioRow = rowFor('Radio');
+        final afterRow = rowFor('After');
         expect(
           tester.getSize(beforeRow).height,
           tester.getSize(radioRow).height,
@@ -2206,16 +2392,17 @@ void main() {
       await tester.tap(find.text('More'));
       await tester.pump();
 
-      final rootRow = tester.widget<FlexBox>(
-        find
-            .ancestor(of: find.text('More'), matching: find.byType(FlexBox))
-            .first,
-      );
-      final nestedRow = tester.widget<FlexBox>(
-        find
-            .ancestor(of: find.text('Nested'), matching: find.byType(FlexBox))
-            .first,
-      );
+      RemixFlexBoxAdapter rowFor(String label) =>
+          tester.widget<RemixFlexBoxAdapter>(
+            find
+                .ancestor(
+                  of: find.text(label),
+                  matching: find.byType(RemixFlexBoxAdapter),
+                )
+                .first,
+          );
+      final rootRow = rowFor('More');
+      final nestedRow = rowFor('Nested');
       expect(rootRow.children.first, isA<Visibility>());
       expect(nestedRow.children.first, isA<Expanded>());
     });
@@ -2253,9 +2440,12 @@ void main() {
       await tester.pump();
 
       Finder slotFor(String label) {
-        final row = tester.widget<FlexBox>(
+        final row = tester.widget<RemixFlexBoxAdapter>(
           find
-              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .ancestor(
+                of: find.text(label),
+                matching: find.byType(RemixFlexBoxAdapter),
+              )
               .first,
         );
         return find.byWidget(row.children.first);
@@ -2303,9 +2493,12 @@ void main() {
           ('Unchecked', false),
         ]) {
           final row = find
-              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .ancestor(
+                of: find.text(label),
+                matching: find.byType(RemixFlexBoxAdapter),
+              )
               .first;
-          final slot = tester.widget<FlexBox>(row).children.first;
+          final slot = tester.widget<RemixFlexBoxAdapter>(row).children.first;
 
           expect(
             slot,

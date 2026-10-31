@@ -343,9 +343,6 @@ final _toolbarButtonStyle = uiIconButtonStyle(variant: .ghost)
 
 /// Full Ui dashboard demo.
 ///
-/// This is the open-code Ui product dashboard starter: it includes the
-/// Overview, Chat, Customers, Orders, and Settings destinations, live Radix
-/// theme customization, interactive Agent chat, and revenue/activity charts.
 class UiDashboardDemo extends StatefulWidget {
   const UiDashboardDemo({
     super.key,

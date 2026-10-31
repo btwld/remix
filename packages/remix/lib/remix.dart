@@ -1,6 +1,6 @@
 /// Remix design system widgets and styles.
 ///
-/// Remix ships no theme. For a ready-made Radix Themes-inspired starting point,
+/// Remix ships no theme. For a ready-made Fortaleza-inspired starting point,
 /// initialize the application-owned `fortal` preset with `remix_cli`.
 library remix;
 
@@ -73,7 +73,9 @@ export 'src/rendering/remix_box_effects.dart'
         RemixBoxEffectsSpec,
         RemixBoxEffectsMix;
 
+export 'src/utilities/remix_anchor.dart' show remixAnchorWidth;
 export 'src/utilities/remix_placement.dart' show RemixPlacement;
+export 'src/utilities/remix_reduced_motion.dart' show RemixReducedMotionBuilder;
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'

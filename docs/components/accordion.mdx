@@ -22,7 +22,9 @@ An accordion item is one panel with two parts inside it:
   `containerEffects` for layered fills, strokes, and backdrop blur painted with
   it.
 - **`trigger`** — the always-visible header row (leading icon, title, trailing
-  icon). It owns only its own internal layout, such as padding and spacing.
+  icon). It owns only its own internal layout, such as padding and spacing. Use
+  `triggerEffects` for an outline, such as a focus ring, drawn around the
+  header alone.
 - **`content`** — the expanded body. It owns its own padding and any interior
   divider, drawn as a foreground border so it does not inset the body by a pixel.
 
@@ -33,6 +35,7 @@ Widget-state variants (`onHovered`, `onPressed`, `onFocused`, `onFocusVisible`,
 `onDisabled`) describe interaction with the **trigger**, but may style any part
 of the item, including the container. The expanded content is not a separate
 hover or press target — moving the pointer into it clears the hovered state.
+Widgets you place in `child` do not inherit the trigger's widget states.
 
 <Warning>
   The top-level Box shorthand on `AccordionStyler` (`.color()`, `.padding()`,
@@ -203,6 +206,12 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
   See the [fortalAccordionStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/accordion.dart) for all available options.
 </Info>
 
+## Reduced motion
+
+When the user asks for reduced motion, panels expand and collapse without
+the transition. See [Reduced motion](/guides/styling-components#reduced-motion) for the
+signals Remix reads.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
@@ -338,6 +347,17 @@ Configures layered fills, strokes, and backdrop blur painted with `container`.
 #### `trigger(FlexBoxStyler value)`
 
 Configures the trigger row style.
+
+#### `triggerEffects(RemixBoxEffectsMix value)`
+
+Configures an outline and paint layers drawn around the trigger row only,
+without taking layout space. Use it in `onFocusVisible` for a focus ring that
+does not wrap the revealed content, unlike `containerEffects`. When the
+`container` clips, an outside ring is cropped at the panel edge; use a negative
+`outlineOffset` to draw it inside the trigger. A custom `builder` replaces the
+default trigger row, but its widget is still wrapped in `triggerEffects`, so the
+ring shows around a custom trigger. The `trigger` box (padding, decoration) does
+not apply to it.
 
 #### `leadingIcon(IconStyler value)`
 

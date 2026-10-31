@@ -11,26 +11,8 @@ part of 'radio.dart';
 ///   onChanged: (value) => setState(() => selectedValue = value),
 ///   child: Column(
 ///     children: [
-///       Row(
-///         children: [
-///           RemixRadio<String>(
-///             value: 'option1',
-///             semanticLabel: 'Option 1',
-///           ),
-///           const SizedBox(width: 8),
-///           const Text('Option 1'),
-///         ],
-///       ),
-///       Row(
-///         children: [
-///           RemixRadio<String>(
-///             value: 'option2',
-///             semanticLabel: 'Option 2',
-///           ),
-///           const SizedBox(width: 8),
-///           const Text('Option 2'),
-///         ],
-///       ),
+///       RemixRadio<String>(value: 'option1', label: 'Option 1'),
+///       RemixRadio<String>(value: 'option2', label: 'Option 2'),
 ///     ],
 ///   ),
 /// )
@@ -40,7 +22,9 @@ class RemixRadio<T> extends StatelessWidget {
   const RemixRadio({
     super.key,
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -49,9 +33,14 @@ class RemixRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
     this.style = const RadioStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : assert(label != '', 'RemixRadio.label must not be empty.'),
+       assert(
          semanticLabel != '',
          'RemixRadio.semanticLabel must be a nonblank accessible name.',
+       ),
+       assert(
+         label != null || semanticLabel != null,
+         'RemixRadio requires a label or a semanticLabel.',
        );
 
   final RadioStyler style;
@@ -78,11 +67,25 @@ class RemixRadio<T> extends StatelessWidget {
   /// The mouse cursor to use when hovering over the radio button.
   final MouseCursor? mouseCursor;
 
+  /// Optional visible label included in the radio's interaction target.
+  ///
+  /// The label is also used as the accessible name unless [semanticLabel]
+  /// overrides it.
+  final String? label;
+
   /// Accessible name for this radio.
   ///
-  /// Required and must be nonblank. A bare radio must not be unnamed;
-  /// do not rely on adjacent [Text] as the accessible composition.
-  final String semanticLabel;
+  /// Defaults to [label]. At least one of the two is required and neither may
+  /// be blank. A bare radio must not be unnamed; do not rely on adjacent
+  /// [Text] as the accessible composition.
+  final String? semanticLabel;
+
+  /// Minimum pointer, focus, and semantics target size.
+  ///
+  /// Defaults to [Size.zero], which keeps the radio's own geometry, unlike
+  /// `RemixCheckbox`, which defaults to `Size.square(48)`. Pass
+  /// `Size.square(48)` to meet platform tap target guidelines.
+  final Size minimumTapTargetSize;
 
   /// Whether to hide the radio button and its visual subtree from semantics.
   final bool excludeSemantics;
@@ -90,8 +93,18 @@ class RemixRadio<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(
-      semanticLabel.trim().isNotEmpty,
+      label == null || label!.trim().isNotEmpty,
+      'RemixRadio.label must not be blank.',
+    );
+    assert(
+      semanticLabel == null || semanticLabel!.trim().isNotEmpty,
       'RemixRadio.semanticLabel must be a nonblank accessible name.',
+    );
+    assert(
+      minimumTapTargetSize.isFinite &&
+          minimumTapTargetSize.width >= 0 &&
+          minimumTapTargetSize.height >= 0,
+      'RemixRadio.minimumTapTargetSize must be finite and non-negative.',
     );
     // NakedRadio owns missing-group validation and group participation.
     return NakedRadio<T>(
@@ -101,7 +114,7 @@ class RemixRadio<T> extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       toggleable: toggleable,
-      semanticLabel: semanticLabel,
+      semanticLabel: semanticLabel ?? label,
       excludeSemantics: excludeSemantics,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<RadioSpec>(
@@ -109,10 +122,22 @@ class RemixRadio<T> extends StatelessWidget {
           styleSpec: styleSpec,
           controller: NakedRadioState.controllerOf<T>(context),
           builder: (context, spec) {
-            return RemixBoxAdapter(
+            final radio = RemixBoxAdapter(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
               child: state.isSelected ? Box(styleSpec: spec.indicator) : null,
+            );
+
+            if (label == null && minimumTapTargetSize == Size.zero) {
+              return radio;
+            }
+
+            return RemixLabeledControl(
+              control: radio,
+              label: label,
+              labelSpec: spec.label,
+              labelSpacing: spec.labelSpacing,
+              minimumTapTargetSize: minimumTapTargetSize,
             );
           },
         );

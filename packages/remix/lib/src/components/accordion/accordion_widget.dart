@@ -215,6 +215,8 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
   // trigger's interaction states here is what lets one resolved spec drive
   // the container, the trigger, and the content alike.
   late final WidgetStatesController _statesController;
+  GlobalKey? _panelKey;
+  bool _wasExpanded = false;
 
   RemixAccordion<T> get _config => widget.config;
 
@@ -269,8 +271,9 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     final leadingIcon = _config.leadingIcon;
     final title = _config.title;
 
-    return FlexBox(
+    return RemixFlexBoxAdapter(
       styleSpec: spec.trigger,
+      containerEffects: spec.triggerEffects,
       children: [
         if (leadingIcon != null)
           StyledIcon(icon: leadingIcon, styleSpec: spec.leadingIcon),
@@ -299,12 +302,24 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     bool isExpanded,
     Widget panel,
   ) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
-      transitionBuilder: _config.transitionBuilder,
-      child: isExpanded
-          ? Box(styleSpec: spec.content, child: panel)
-          : const SizedBox.shrink(),
+    return RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) {
+        final content = isExpanded
+            ? Box(
+                styleSpec: spec.content,
+                // Preserve the logical content when the preference moves it
+                // into or out of the switcher, not the transition itself.
+                child: KeyedSubtree(key: _panelKey, child: panel),
+              )
+            : const SizedBox.shrink();
+        if (reduceMotion) return content;
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: _config.transitionBuilder,
+          child: content,
+        );
+      },
     );
   }
 
@@ -334,10 +349,17 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         // whether or not the caller asked to observe presses.
         onPressChange: _handlePressChange,
         semanticLabel: _config.semanticLabel ?? _config.title,
-        child: _config.child,
-        builder:
-            _config.builder ??
-            (context, state) => _buildDefaultTrigger(spec, state),
+        // The panel is mounted inside the trigger's state scope, which belongs
+        // to the trigger alone.
+        child: WidgetStateProvider(states: const {}, child: _config.child),
+        builder: (context, state) => switch (_config.builder) {
+          final builder? => RemixBoxAdapter(
+            styleSpec: const StyleSpec(spec: BoxSpec()),
+            containerEffects: spec.triggerEffects,
+            child: builder(context, state),
+          ),
+          null => _buildDefaultTrigger(spec, state),
+        },
       ),
     );
   }
@@ -346,6 +368,12 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
   Widget build(BuildContext context) {
     final controller = NakedAccordionScope.of<T>(context).controller;
     final isExpanded = controller.contains(_config.value);
+    if (isExpanded && !_wasExpanded) {
+      // A new expansion must not share its identity with a panel still fading
+      // out after a rapid close and reopen.
+      _panelKey = GlobalKey(debugLabel: 'RemixAccordion panel');
+    }
+    _wasExpanded = isExpanded;
     final canCollapse = isExpanded && controller.values.length > controller.min;
     final canExpand =
         !isExpanded &&

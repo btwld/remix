@@ -38,29 +38,43 @@ final class {{typePrefix}}AgentPermissionRecipe {
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => {{typePrefix}}AgentPermissionRecipe(
   style: {{typePrefix}}PermissionStyler(
-    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
-    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
+    header: FlexBoxStyler()
+        .spacing({{typePrefix}}Tokens.space2())
+        .crossAxisAlignment(.center),
+    actions: FlexBoxStyler()
+        .spacing({{typePrefix}}Tokens.space2())
+        .padding(.top({{typePrefix}}Tokens.space2())),
     title: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
-        .fontWeight(FontWeight.w600),
+        .fontWeight({{typePrefix}}Tokens.fontWeightSemibold()),
     tool: TextStyler()
         .color({{typePrefix}}Tokens.gray11())
-        .fontSize(12)
-        .wrap(.padding(.top(2))),
+        .style({{typePrefix}}Tokens.text1.mix())
+        .wrap(.padding(.top({{typePrefix}}Tokens.space1()))),
     description: TextStyler()
         .color({{typePrefix}}Tokens.gray11())
-        .wrap(.padding(.symmetric(vertical: 6))),
-    status: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
-    detailsLabel: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(13),
-    toolIcon: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
-    statusIcon: IconStyler().color({{typePrefix}}Tokens.accent9()).size(12),
-    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+        .wrap(.padding(.vertical({{typePrefix}}Tokens.space2()))),
+    status: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .style({{typePrefix}}Tokens.text1.mix()),
+    detailsLabel: TextStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .style({{typePrefix}}Tokens.text2.mix()),
+    toolIcon: IconStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .size({{typePrefix}}Tokens.space4()),
+    statusIcon: IconStyler()
+        .color({{typePrefix}}Tokens.accent9())
+        .size({{typePrefix}}Tokens.space3()),
+    indicator: IconStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .size({{typePrefix}}Tokens.space4()),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
   detailsStyle: {{valuePrefix}}DisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(4)))
+        .container(BoxStyler().margin(.top({{typePrefix}}Tokens.space1())))
         .merge(detailsStyle),
   ),
   parametersStyle: {{valuePrefix}}DataListStyle(style: parametersStyle),

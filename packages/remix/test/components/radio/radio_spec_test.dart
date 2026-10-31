@@ -10,16 +10,26 @@ void main() {
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.indicator, isA<StyleSpec<BoxSpec>>());
+        expect(spec.label, isA<StyleSpec<TextSpec>>());
+        expect(spec.labelSpacing, 8);
       });
 
       test('creates spec with provided parameters', () {
         final container = StyleSpec(spec: BoxSpec());
         final indicator = StyleSpec(spec: BoxSpec());
+        final label = StyleSpec(spec: TextSpec(maxLines: 2));
 
-        final spec = RadioSpec(container: container, indicator: indicator);
+        final spec = RadioSpec(
+          container: container,
+          indicator: indicator,
+          label: label,
+          labelSpacing: 12,
+        );
 
         expect(spec.container, equals(container));
         expect(spec.indicator, equals(indicator));
+        expect(spec.label, equals(label));
+        expect(spec.labelSpacing, 12);
       });
     });
 
@@ -90,6 +100,13 @@ void main() {
         expect(result, isNot(same(spec2)));
         expect(result.container, equals(spec2.container));
       });
+
+      test('interpolates label spacing', () {
+        const start = RadioSpec(labelSpacing: 8);
+        const end = RadioSpec(labelSpacing: 16);
+
+        expect(start.lerp(end, 0.5).labelSpacing, 12);
+      });
     });
 
     group('Equality and Props', () {
@@ -118,9 +135,11 @@ void main() {
       test('props list contains all properties', () {
         const spec = RadioSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
+        expect(spec.props, contains(spec.label));
+        expect(spec.props, contains(spec.labelSpacing));
       });
     });
 
@@ -131,7 +150,13 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['container', 'indicator', 'containerEffects']),
+          unorderedEquals([
+            'container',
+            'indicator',
+            'label',
+            'labelSpacing',
+            'containerEffects',
+          ]),
         );
       });
     });

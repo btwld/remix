@@ -18,6 +18,12 @@ class DisclosureSpec with _$DisclosureSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> trigger;
 
+  /// Outline and paint layers drawn around [trigger] only, so a focus ring
+  /// does not wrap the revealed content.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? triggerEffects;
+
   @override
   final StyleSpec<BoxSpec> content;
 
@@ -25,6 +31,7 @@ class DisclosureSpec with _$DisclosureSpec {
     StyleSpec<BoxSpec>? container,
     this.containerEffects,
     StyleSpec<BoxSpec>? trigger,
+    this.triggerEffects,
     StyleSpec<BoxSpec>? content,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        trigger = trigger ?? const StyleSpec(spec: BoxSpec()),
@@ -41,6 +48,11 @@ class DisclosureSpec with _$DisclosureSpec {
       containerEffects: RemixBoxEffectsSpec.lerpNullable(
         containerEffects,
         other.containerEffects,
+        t,
+      ),
+      triggerEffects: RemixBoxEffectsSpec.lerpNullable(
+        triggerEffects,
+        other.triggerEffects,
         t,
       ),
     );

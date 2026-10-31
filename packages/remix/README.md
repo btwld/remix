@@ -1,272 +1,52 @@
+# Remix
 
-<p align="center">
-  <img alt="Remix banner" src="https://jtmo7uveygl6pnag.public.blob.vercel-storage.com/remix_banner.png" width="100%" />
-</p>
-
-A Flutter component library combining Naked UI interaction and accessibility
-with Mix styling.
-
-## Styling a button
-
-```dart
-final style = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(const Color(0xFF2196F3))
-  .borderRadius(.circular(8))
-  .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(const Color(0xFF1976D2)));
-
-RemixButton(
-  onPressed: () {},
-  label: 'Click me',
-  style: style,
-);
-```
-
-Or using callable styles:
-```dart
-final button = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(const Color(0xFF2196F3))
-  .borderRadius(.circular(8))
-  .onHovered(.color(const Color(0xFF1976D2)))
-  .animate(AnimationConfig.spring(300.ms));
-
-button(
-  label: 'Click me',
-  onPressed: () {},
-); // return RemixButton Widget.
-```
-
-## Quick Start
-
-### Installation
-
-Add Remix to your project:
+Flutter components combining Naked UI interaction and accessibility with Mix
+styling. Remix supplies component anatomy and behavior; your app supplies its
+visual language, state and navigation.
 
 ```bash
 flutter pub add remix:^1.0.0-beta.13
 ```
 
-Or add it to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  remix: ^1.0.0-beta.13
-```
-
-### Your First Component
-
-A button with hover styling and animation:
-
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-class MyApp extends StatelessWidget {
-
-  final button = ButtonStyler()
-    .padding(.horizontal(16))
-    .padding(.vertical(10))
-    .color(const Color(0xFF2196F3))
-    .borderRadius(.circular(8))
-    .label(TextStyler().color(const Color(0xFFFFFFFF)));
-
-  @override
-  Widget build(BuildContext context) {
-    return WidgetsApp(
-      color: const Color(0xFF2196F3),
-      builder: (_, _) => Center(
-        child: button(
-          label: 'Click Me',
-          onPressed: () => debugPrint('Button pressed!'),
-        ),
-      ),
-    );
-  }
-}
+Widget saveButton(VoidCallback save) => RemixButton(
+  label: 'Save',
+  onPressed: save,
+  style: ButtonStyler()
+      .color(const Color(0xFF2196F3))
+      .padding(.horizontal(16))
+      .borderRadius(.circular(8))
+      .labelColor(const Color(0xFFFFFFFF)),
+);
 ```
 
-### Adding Interaction States
-
-Easily define how components should look in different interaction states.
-
-```dart
-final button = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(const Color(0xFF2196F3))
-  .borderRadius(.circular(8))
-  .label(TextStyler().color(const Color(0xFFFFFFFF)))
-  .onHovered(.color(const Color(0xFF1976D2)))
-  .onPressed(.scale(0.95));
-```
-
-### Adding Animation
-
-Make your button style smoothly animate when its state changes by chaining `.animate()` with your state-specific styles. You can use `AnimationConfig.spring` to get natural, spring-based motion.
-
-```dart
-final style = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(const Color(0xFF2196F3))
-  .borderRadius(.circular(8))
-  .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(const Color(0xFF1976D2)))
-  .onPressed(.scale(0.95));
-```
-
-This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
-
-See the [Mix repository](https://github.com/btwld/mix) for keyframe and phase animation APIs.
-
-### Style Composition and Reuse
-
-Create base styles and extend them to build variants:
-
-```dart
-final baseButtonStyle = ButtonStyler()
-    .padding(.horizontal(16))
-    .padding(.vertical(10))
-    .borderRadius(.circular(8));
-
-final primaryButton = baseButtonStyle
-    .color(const Color(0xFF2196F3))
-    .label(TextStyler().color(const Color(0xFFFFFFFF)));
-
-final destructiveButton = baseButtonStyle
-    .color(const Color(0xFFF44336))
-    .label(TextStyler().color(const Color(0xFFFFFFFF)));
-```
-
-## Theming with Fortal
-
-Remix ships no theme of its own. If you want a polished, Radix Themes-inspired
-starting point instead of authoring every style yourself, initialize the
-application-owned Fortal preset:
+Use `Remix*` widgets with your own stylers, or install a neutral Vanilla or
+Fortal preset as editable application source:
 
 ```bash
 flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Fortal --preset fortal
+dart run remix_cli:remix init --preset vanilla
 dart run remix_cli:remix add button
 ```
 
-It copies `FortalTheme`, the token system, `fortal*Style()` recipes, and the
-components you add into your application.
+The CLI installs a theme and recipes, then generates adapters against your
+resolved dependencies. It pins registry content separately from the package
+version. Place the installed theme above the Navigator in your host's builder.
 
-See the [Fortal documentation](../../docs/fortal/catalog.mdx) to get
-started.
+Remix works inside Material, Cupertino, Widgets and router-based hosts.
+Menus, select, popovers, tooltips and focused text fields need an Overlay;
+dialog helpers need a Navigator; toasts need a `RemixToastScope` and overlay.
+See [host setup](https://github.com/btwld/remix/blob/main/skills/using-remix/SKILL.md#provide-only-the-host-capabilities-in-use).
 
-## Host Capabilities
+- [Getting started](https://github.com/btwld/remix/blob/main/docs/getting-started.mdx)
+- [Styling and states](https://github.com/btwld/remix/blob/main/docs/guides/styling-components.mdx)
+- [Editable-source walkthrough](https://github.com/btwld/remix/blob/main/open_code/README.md)
+- [Component docs](https://github.com/btwld/remix/tree/main/docs/components)
+- [Fortal catalog](https://github.com/btwld/remix/blob/main/docs/fortal/catalog.mdx)
+- [Examples and core concepts](https://github.com/btwld/remix#remix)
+- [Material dependency boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
 
-Remix composes inside your existing Flutter host. It does not require a
-`MaterialApp`, `Scaffold`, or Remix-owned application wrapper.
-
-| UI | Caller provides | Compatible hosts |
-|----|-----------------|------------------|
-| Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree | Material, Cupertino, Widgets, and router-based hosts |
-| Widgets styled by the Fortal preset | The preset's token scope, in addition to the widget's normal Flutter services | Any Flutter host |
-| Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
-| `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
-| Toast (`showRemixToast`) | A `RemixToastScope` above the invoking context | Any host exposing an overlay |
-
-For a portal-based interface without routing, provide only an overlay:
-
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-
-Widget buildPortalHost() {
-  return WidgetsApp(
-    color: const Color(0xFFFFFFFF),
-    builder: (_, _) => Overlay.wrap(
-      child: Center(
-        child: RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Actions'),
-          items: const [
-            RemixMenuItem(value: 'share', label: 'Share'),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-```
-
-A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
-commonly provides a `Navigator` and its overlay already. Dialog helpers push
-routes, so their calling context must be below that caller-owned `Navigator`.
-
-See the [Material dependency boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
-for the scope of the source check and remaining upstream dependencies.
-
-## Components
-
-Available components:
-
-### Interactive Elements
-- **Button** - Clickable actions with full styling control
-- **IconButton** - Icon-based actions
-- **Switch** - Toggle controls
-- **Toggle** - Two-state on/off buttons
-- **ToggleGroup** - Coordinated single-selection toggle buttons (`RemixToggleGroup`)
-- **Checkbox** - Multiple selection
-- **CheckboxGroup** - Coordinated multiple selection with composable checkbox visuals
-- **Radio** - Single selection from a group
-- **Slider** - Continuous value selection
-
-### Input Components
-- **TextField** - Text input with validation support
-- **TextArea** - Multiline text input with safe auto-growing defaults
-- **Select** - Dropdown selection with keyboard navigation
-
-### Display Components
-- **Avatar** - User avatars and images
-- **Badge** - Status indicators and labels
-- **Card** - Content containers
-- **DataList** - Label/value metadata lists with a shared label column
-- **DataTable** - Controlled tables with shared column headers, sorting, selection, and pagination
-- **Divider** - Visual separators
-- **Progress** - Progress indicators
-- **Skeleton** - Loading placeholders that mirror their content
-- **Spinner** - Loading states
-
-### Layout & Navigation
-- **AppBar** - Page headers and top toolbars (`RemixAppBar`)
-- **Sidebar** - Collapsible navigation panels (`RemixSidebar`)
-- **Tabs** - Tabbed navigation
-- **Accordion** - Collapsible content sections
-- **Disclosure** - A standalone trigger and inline expandable panel
-- **Link** - Styled text that navigates, with the Link role and Enter activation
-- **Menu** - Context menus and dropdowns
-- **SegmentedControl** - Equal-segment controlled single selection
-
-### Overlays
-- **Dialog** - Modal dialogs
-- **Popover** - Anchored non-modal overlays (`RemixPopover`)
-- **Tooltip** - Contextual help
-- **Toast** - Queued non-modal notifications (`RemixToast` / `RemixToastScope`)
-- **Callout** - Highlighted information blocks
-
-## Who is Remix for?
-
-Remix is ideal for:
-- **Teams building custom design systems** who need full control over component appearance
-- **Developers requiring complex state management** with multiple variants and interaction states
-- **Applications needing consistent styling** across dozens of components
-
-## Examples
-
-Check out `apps/dashboard`, `apps/demo`, and the per-package examples in
-`packages/remix/example` and `registry_source/example` for complete working examples demonstrating:
-- Component usage patterns
-- Style composition techniques
-- Design system implementation
-- Advanced customization
-
----
-
-Built with ❤️ using [Mix](https://github.com/btwld/mix) and [Naked UI](https://github.com/btwld/remix/tree/main/packages/naked_ui)
+Agent skills: `npx skills add btwld/remix`.

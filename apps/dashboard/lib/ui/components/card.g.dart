@@ -6,7 +6,7 @@ part of 'card.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Card with the Radix size and variant contract.
+/// Flat panels. Elevation is reserved for floating layers, never cards.
 class UiCard extends StatelessWidget {
   const UiCard({
     super.key,
@@ -22,13 +22,6 @@ class UiCard extends StatelessWidget {
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = UiCardVariant.surface;
-
-  const UiCard.classic({
-    super.key,
-    this.size = .size1,
-    this.style = const CardStyler.create(),
-    this.child,
-  }) : variant = UiCardVariant.classic;
 
   const UiCard.ghost({
     super.key,

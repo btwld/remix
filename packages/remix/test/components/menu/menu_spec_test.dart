@@ -136,8 +136,9 @@ void main() {
       test('props list contains all properties', () {
         const spec = MenuTriggerSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
       });
@@ -150,7 +151,7 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['container', 'label', 'icon']),
+          unorderedEquals(['container', 'containerEffects', 'label', 'icon']),
         );
       });
     });
@@ -609,8 +610,9 @@ void main() {
       test('props list contains all properties', () {
         const spec = MenuItemSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.leadingIcon));
         expect(spec.props, contains(spec.trailingIcon));
@@ -627,6 +629,7 @@ void main() {
           builder.properties.map((property) => property.name),
           unorderedEquals([
             'container',
+            'containerEffects',
             'label',
             'leadingIcon',
             'trailingIcon',

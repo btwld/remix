@@ -7,7 +7,7 @@ import 'package:registry_source/fortal.dart';
 void main() {
   for (final (size, height, paddingX, softPaddingX, spacing, fontSize, radius)
       in const [
-        (FortalTextFieldSize.size1, 24.0, 6.0, 6.0, 8.0, 12.0, 4.0),
+        (FortalTextFieldSize.size1, 24.0, 8.0, 8.0, 8.0, 12.0, 4.0),
         (FortalTextFieldSize.size2, 32.0, 8.0, 8.0, 8.0, 14.0, 4.0),
         (FortalTextFieldSize.size3, 40.0, 12.0, 12.0, 12.0, 16.0, 6.0),
       ]) {
@@ -38,13 +38,8 @@ void main() {
     });
   }
 
-  testWidgets('classic and surface resolve neutral text and effect layers', (
-    tester,
-  ) async {
-    for (final variant in [
-      FortalTextFieldVariant.classic,
-      FortalTextFieldVariant.surface,
-    ]) {
+  testWidgets('surface resolve neutral text and effect layers', (tester) async {
+    for (final variant in [FortalTextFieldVariant.surface]) {
       final result = await _resolve(tester, variant: variant);
       final spec = result.spec;
 
@@ -60,17 +55,12 @@ void main() {
       expect(spec.label.spec.style?.fontWeight, FontWeight.w500);
       expect(_color(spec.container.spec), result.colorSurface);
 
-      if (variant == .classic) {
-        expect(spec.containerEffects?.behindContent?.shadows, hasLength(3));
-        expect(spec.containerEffects?.overContent?.shadows, isEmpty);
-      } else {
-        expect(spec.containerEffects?.behindContent?.shadows, isEmpty);
-        expect(spec.containerEffects?.overContent?.shadows, hasLength(1));
-        expect(
-          spec.containerEffects?.overContent?.shadows.single.color,
-          result.grayA7,
-        );
-      }
+      expect(spec.containerEffects?.behindContent?.shadows, isEmpty);
+      expect(spec.containerEffects?.overContent?.shadows, hasLength(1));
+      expect(
+        spec.containerEffects?.overContent?.shadows.single.color,
+        result.gray7,
+      );
     }
   });
 
@@ -116,20 +106,13 @@ void main() {
           _color(spec.container.spec),
           variant == .soft ? result.grayA3 : result.colorSurface,
         );
-        expect(spec.containerEffects?.outline.color, result.gray8);
-        expect(spec.containerEffects?.outline.width, 2);
-        expect(spec.containerEffects?.outlineOffset, -1);
+        expect(spec.containerEffects?.outline.style, BorderStyle.none);
       }
     }
   });
 
-  testWidgets('classic and surface keep their existing focus outline', (
-    tester,
-  ) async {
-    for (final variant in [
-      FortalTextFieldVariant.classic,
-      FortalTextFieldVariant.surface,
-    ]) {
+  testWidgets('surface keep their existing focus outline', (tester) async {
+    for (final variant in [FortalTextFieldVariant.surface]) {
       final result = await _resolve(
         tester,
         variant: variant,
@@ -137,7 +120,7 @@ void main() {
       );
       expect(result.spec.containerEffects?.outline.color, result.focus8);
       expect(result.spec.containerEffects?.outline.width, 2);
-      expect(result.spec.containerEffects?.outlineOffset, -1);
+      expect(result.spec.containerEffects?.outlineOffset, 2);
     }
   });
 
@@ -155,7 +138,7 @@ void main() {
         expect(spec.helperText.spec.style?.color, result.error11);
         expect(spec.label.spec.style?.color, result.error11);
         expect(spec.cursorColor, result.error9);
-        expect(spec.containerEffects?.outline.color, result.error8);
+        expect(spec.containerEffects?.outline.style, BorderStyle.none);
         expect(
           spec.containerEffects?.overContent?.shadows.single.color,
           result.errorA7,
@@ -184,7 +167,7 @@ void main() {
         expect(spec.helperText.spec.style?.color, result.error11);
         expect(spec.label.spec.style?.color, result.error11);
         expect(spec.cursorColor, result.error9);
-        expect(spec.containerEffects?.outline.color, result.error8);
+        expect(spec.containerEffects?.outline.style, BorderStyle.none);
         expect(spec.text.spec.style?.color, result.grayA11);
         expect(spec.text.spec.selectionColor, result.grayA5);
       }
@@ -194,12 +177,9 @@ void main() {
   testWidgets('bordered insets use full scaled values at 110 percent', (
     tester,
   ) async {
-    for (final variant in [
-      FortalTextFieldVariant.classic,
-      FortalTextFieldVariant.surface,
-    ]) {
+    for (final variant in [FortalTextFieldVariant.surface]) {
       for (final (size, expected) in const [
-        (FortalTextFieldSize.size1, 6.6),
+        (FortalTextFieldSize.size1, 8.8),
         (FortalTextFieldSize.size2, 8.8),
         (FortalTextFieldSize.size3, 13.2),
       ]) {
@@ -250,6 +230,7 @@ Future<
     Color gray12,
     Color grayA3,
     Color grayA7,
+    Color gray7,
     Color grayA10,
     Color accentA3,
     Color accentA5,
@@ -280,6 +261,7 @@ _resolve(
     Color gray12,
     Color grayA3,
     Color grayA7,
+    Color gray7,
     Color grayA10,
     Color accentA3,
     Color accentA5,
@@ -315,6 +297,7 @@ _resolve(
               grayA11: MixScope.tokenOf(FortalTokens.grayA11, context),
               gray12: MixScope.tokenOf(FortalTokens.gray12, context),
               grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
+              gray7: MixScope.tokenOf(FortalTokens.gray7, context),
               grayA7: MixScope.tokenOf(FortalTokens.grayA7, context),
               grayA10: MixScope.tokenOf(FortalTokens.grayA10, context),
               accentA3: MixScope.tokenOf(FortalTokens.accentA3, context),

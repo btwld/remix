@@ -37,6 +37,7 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
       .trigger(
         BoxStyler()
             .width(.infinity)
+            .minHeight(FortalTokens.touchTargetMin())
             .alignment(.centerLeft)
             .padding(.all(metrics.padding))
             .wrap(
@@ -86,7 +87,11 @@ DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
       )
       .onHovered(.trigger(.color(FortalTokens.gray2())))
       .onPressed(.trigger(.color(FortalTokens.gray3())))
-      .onFocusVisible(DisclosureStyler().fortalFocusRing())
+      .onFocusVisible(
+        DisclosureStyler().container(
+          BoxStyler().fortalFocusRing(radius: metrics.radius),
+        ),
+      )
       .onDisabled(_fortalDisclosureDisabledStyler());
 }
 
@@ -129,21 +134,27 @@ DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
       )
       .onHovered(.trigger(.color(FortalTokens.accent3())))
       .onPressed(.trigger(.color(FortalTokens.accent4())))
-      .onFocusVisible(DisclosureStyler().fortalFocusRing())
+      .onFocusVisible(
+        DisclosureStyler().container(
+          BoxStyler().fortalFocusRing(radius: metrics.radius),
+        ),
+      )
       .onDisabled(_fortalDisclosureDisabledStyler());
 }
 
 DisclosureStyler _fortalDisclosureDisabledStyler() {
-  return DisclosureStyler().trigger(
-    BoxStyler()
-        .color(FortalTokens.grayA3())
-        .wrap(
-          _fortalDisclosureForeground(
-            color: FortalTokens.gray8(),
-            iconColor: FortalTokens.gray8(),
-          ),
-        ),
-  );
+  return DisclosureStyler()
+      .container(BoxStyler().wrap(fortalFocusRingModifier(visible: false)))
+      .trigger(
+        BoxStyler()
+            .color(FortalTokens.grayA3())
+            .wrap(
+              _fortalDisclosureForeground(
+                color: FortalTokens.gray8(),
+                iconColor: FortalTokens.gray8(),
+              ),
+            ),
+      );
 }
 
 BorderSideMix _fortalDisclosureBorderSide(Color color) =>
@@ -181,7 +192,7 @@ _fortalDisclosureMetrics(FortalDisclosureSize size) {
     .size2 => (
       padding: FortalTokens.space3(),
       radius: FortalTokens.radius4(),
-      triggerText: FortalTokens.accordionText2,
+      triggerText: FortalTokens.text2,
       iconSize: FortalTokens.spinnerSize3(),
     ),
     .size3 => (

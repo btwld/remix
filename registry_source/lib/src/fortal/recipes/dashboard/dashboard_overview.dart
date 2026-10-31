@@ -20,7 +20,6 @@ import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_widgets.dart';
 
-/// The Fortal dashboard overview with Radix-native surfaces and type.
 class FortalDashboardOverview extends StatelessWidget {
   const FortalDashboardOverview({
     super.key,
@@ -260,10 +259,10 @@ class _FortalActivityIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
-      .customer => (RemixIcons.user, FortalAccentColor.blue),
-      .order => (LucideIcons.box, FortalAccentColor.indigo),
-      .payment => (LucideIcons.circleCheck, FortalAccentColor.green),
-      .alert => (RemixIcons.warning, FortalAccentColor.amber),
+      .customer => (RemixIcons.user, FortalAccentColor.ceu),
+      .order => (LucideIcons.box, FortalAccentColor.ceu),
+      .payment => (LucideIcons.circleCheck, FortalAccentColor.mangue),
+      .alert => (RemixIcons.warning, FortalAccentColor.sol),
     };
 
     return FortalAccentScope(

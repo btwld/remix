@@ -27,7 +27,7 @@ class AcmeApp extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 AcmeHeading('Fortal, now yours'),
-                AcmeText('Radix Themes 3.3.0 expressed as local Dart.'),
+                AcmeText('Fortal specification expressed as local Dart.'),
                 AcmeButton(label: 'Continue'),
               ],
             ),

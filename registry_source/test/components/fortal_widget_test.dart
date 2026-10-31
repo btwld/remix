@@ -31,7 +31,7 @@ void main() {
         trigger: RemixSelectTrigger(placeholder: 'Pick'),
         items: [RemixSelectItem(value: 'a', label: 'A')],
       );
-      const segmented = FortalSegmentedControl.classic(
+      const segmented = FortalSegmentedControl.surface(
         items: [RemixSegmentedControlItem(value: 'a', label: 'A')],
         selectedValue: 'a',
       );
@@ -48,7 +48,7 @@ void main() {
       expect(select, isA<FortalSelect<String>>());
       expect(select.variant, FortalSelectVariant.ghost);
       expect(segmented, isA<FortalSegmentedControl<String>>());
-      expect(segmented.variant, FortalSegmentedControlVariant.classic);
+      expect(segmented.variant, FortalSegmentedControlVariant.surface);
       expect(textArea.variant, FortalTextAreaVariant.soft);
     });
 
@@ -146,8 +146,7 @@ void main() {
           expect(
             label.style?.color,
             colors.accent.scale.alphaStep(11),
-            reason:
-                '${variant.name} badges use the Radix low-contrast text step',
+            reason: '${variant.name} badges use the Fortal secondary text step',
           );
         }
       },
@@ -258,32 +257,31 @@ void main() {
       },
     );
 
-    test('default soft labels miss WCAG AA for some light accents only', () {
-      final failures = <Brightness, List<FortalAccentColor>>{};
+    test(
+      'default soft labels meet WCAG AA for every palette in both modes',
+      () {
+        final failures = <Brightness, List<FortalAccentColor>>{};
 
-      for (final brightness in Brightness.values) {
-        final failedAccents = <FortalAccentColor>[];
-        for (final accent in FortalAccentColor.values) {
-          final colors = resolveFortalTokens(
-            FortalThemeConfig(accent: accent, brightness: brightness),
-          );
-          final ratio = compositedContrast(
-            foreground: colors.accent.scale.alphaStep(11),
-            fill: colors.accent.scale.alphaStep(3),
-            panel: colors.colorPanelSolid,
-          );
-          if (ratio < 4.5) failedAccents.add(accent);
+        for (final brightness in Brightness.values) {
+          final failedAccents = <FortalAccentColor>[];
+          for (final accent in FortalAccentColor.values) {
+            final colors = resolveFortalTokens(
+              FortalThemeConfig(accent: accent, brightness: brightness),
+            );
+            final ratio = compositedContrast(
+              foreground: colors.accent.scale.alphaStep(11),
+              fill: colors.accent.scale.alphaStep(3),
+              panel: colors.colorPanelSolid,
+            );
+            if (ratio < 4.5) failedAccents.add(accent);
+          }
+          failures[brightness] = failedAccents;
         }
-        failures[brightness] = failedAccents;
-      }
 
-      expect(failures[Brightness.light], isNotEmpty);
-      expect(
-        failures[Brightness.light],
-        isNot(hasLength(FortalAccentColor.values.length)),
-      );
-      expect(failures[Brightness.dark], isEmpty);
-    });
+        expect(failures[Brightness.light], isEmpty);
+        expect(failures[Brightness.dark], isEmpty);
+      },
+    );
 
     testWidgets('renders FortalButton', (tester) async {
       await tester.pumpRemixApp(const FortalButton(label: 'Save'));
@@ -348,6 +346,35 @@ void main() {
 
       expect(find.byType(FortalRadio<String>), findsOneWidget);
       expect(find.byType(RemixRadio<String>), findsOneWidget);
+    });
+
+    testWidgets('FortalRadio and FortalSwitch forward their visible label', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixRadioGroup<String>(
+          groupValue: 'option',
+          child: FortalRadio<String>(value: 'option', label: 'Option'),
+        ),
+      );
+
+      expect(find.text('Option'), findsOneWidget);
+      expect(
+        tester
+            .widget<RemixRadio<String>>(find.byType(RemixRadio<String>))
+            .label,
+        'Option',
+      );
+
+      await tester.pumpRemixApp(
+        const FortalSwitch(label: 'Notifications', selected: true),
+      );
+
+      expect(find.text('Notifications'), findsOneWidget);
+      expect(
+        tester.widget<RemixSwitch>(find.byType(RemixSwitch)).label,
+        'Notifications',
+      );
     });
 
     testWidgets('renders FortalSlider', (tester) async {

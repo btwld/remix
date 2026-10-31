@@ -75,7 +75,20 @@ void main() {
       'select',
       'data_table',
     ]);
-    expect(catalog.items['theme']!.files, hasLength(8));
+    expect(
+      catalog.items['theme']!.files.map((file) => file.target),
+      unorderedEquals([
+        '@ui/theme/computed.dart',
+        '@ui/theme/control_styles.dart',
+        '@ui/theme/fortal_colors.dart',
+        '@ui/theme/palette.dart',
+        '@ui/theme/surface_frame.dart',
+        '@ui/theme/theme.dart',
+        '@ui/theme/theme_data.dart',
+        '@ui/theme/theme_scope.dart',
+        '@ui/theme/tokens.dart',
+      ]),
+    );
     expect(catalog.items['theme']!.exports, ['theme/theme.dart']);
 
     // sidebar_layout composes an already-installed sidebar into its row and

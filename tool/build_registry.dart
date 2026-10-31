@@ -159,6 +159,7 @@ final class PresetSpec {
     this.groupedRecipeItems = const [],
     this.behavior,
     this.extensionDirectory,
+    this.fixedFileNames = const {},
   });
 
   /// Preset name, and the directory it occupies under the remote registry.
@@ -185,6 +186,9 @@ final class PresetSpec {
 
   /// Lowercase casing replaced by `{{valuePrefix}}`, e.g. `fortal`.
   final String valueWord;
+
+  /// Stable data filenames are not identifiers and never take a UI prefix.
+  final Set<String> fixedFileNames;
 
   /// Source directory holding one file per component item.
   final String componentDirectory;
@@ -577,6 +581,7 @@ const defaultPreset = PresetSpec(
 /// The Fortal design system as application-owned registry source.
 const fortalPreset = PresetSpec(
   name: 'fortal',
+  fixedFileNames: {'fortal_colors.dart'},
   sourceRoot: 'registry_source/lib/src/fortal',
   sourcePackage: 'registry_source',
   typeWord: 'Fortal',
@@ -1589,7 +1594,11 @@ final class PresetBuilder {
       final content = entry.value;
       if (p.posix
           .split(path)
-          .any((segment) => segment.toLowerCase().contains(spec.valueWord))) {
+          .any(
+            (segment) =>
+                !spec.fixedFileNames.contains(segment) &&
+                segment.toLowerCase().contains(spec.valueWord),
+          )) {
         failures.add('$path: a path segment contains "${spec.valueWord}"');
       }
       if (content.contains('{{')) {
@@ -1605,7 +1614,12 @@ final class PresetBuilder {
       );
       for (final match in _directivePattern.allMatches(content)) {
         final uri = match.group(2)!;
-        if (uri.contains(spec.typeWord) || uri.contains(spec.valueWord)) {
+        final variableUri = uri
+            .split('/')
+            .where((segment) => !spec.fixedFileNames.contains(segment))
+            .join('/');
+        if (variableUri.contains(spec.typeWord) ||
+            variableUri.contains(spec.valueWord)) {
           failures.add('$path: directive URI would be rewritten: $uri');
         }
         if (!uri.startsWith('package:') && !uri.startsWith('dart:')) {
@@ -1812,9 +1826,18 @@ final class PresetBuilder {
   /// not reverse exactly means the source says the preset's name somewhere the
   /// consumer's prefix does not belong.
   String _templateFor(String path, String source) {
-    var template = source
-        .replaceAll(spec.typeWord, '{{typePrefix}}')
-        .replaceAll(spec.valueWord, '{{valuePrefix}}');
+    final substitutions = RegExp(
+      [
+        ...spec.fixedFileNames.map(RegExp.escape),
+        RegExp.escape(spec.typeWord),
+        RegExp.escape(spec.valueWord),
+      ].join('|'),
+    );
+    var template = source.replaceAllMapped(substitutions, (match) {
+      final word = match[0]!;
+      if (spec.fixedFileNames.contains(word)) return word;
+      return word == spec.typeWord ? '{{typePrefix}}' : '{{valuePrefix}}';
+    });
     template = _iconTemplate(path, template);
     final roundTrip = const TemplateRenderer().render(
       template,

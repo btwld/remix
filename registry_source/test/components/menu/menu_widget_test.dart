@@ -2,6 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+// `RemixFlexBoxAdapter` is `@internal` to `remix`, but this sibling package's
+// tests need it to read the container spec Remix resolved for a Fortal recipe.
+// Suppressed per-use below, so a future accidental internal-member use still
+// gets flagged.
+import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
@@ -112,7 +117,7 @@ void main() {
     for (final size in FortalMenuSize.values) {
       for (final highContrast in [false, true]) {
         testWidgets(
-          '${variant.name} ${size.name} indicators follow Radix foreground states'
+          '${variant.name} ${size.name} indicators follow Fortal foreground states'
           '${highContrast ? ' at high contrast' : ''}',
           (tester) async {
             final controller = MenuController();
@@ -172,7 +177,7 @@ void main() {
               .soft => idleColor,
             };
             final expectedSize = switch (size) {
-              .size1 => FortalTokens.selectIndicatorSize1.resolve(context),
+              .size1 => FortalTokens.space2.resolve(context),
               .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
             };
 
@@ -200,7 +205,7 @@ void main() {
   }
 
   for (final size in FortalMenuSize.values) {
-    testWidgets('${size.name} pins the solid panel and Radix icon metrics', (
+    testWidgets('${size.name} pins the solid panel and icon metrics', (
       tester,
     ) async {
       final controller = MenuController();
@@ -233,7 +238,7 @@ void main() {
         .size2 => FortalTokens.space4.resolve(context),
       };
       final subtriggerIconSize = switch (size) {
-        .size1 => FortalTokens.selectIndicatorSize1.resolve(context),
+        .size1 => FortalTokens.space2.resolve(context),
         .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
       };
       final triggerGap = switch (size) {
@@ -241,16 +246,13 @@ void main() {
         .size2 => FortalTokens.space2.resolve(context),
       };
 
-      // Radix pins menus to the solid panel with no backdrop blur.
       final resolved = fortalMenuStyle(size: size).resolve(context).spec;
       expect(
         (resolved.overlay.spec.box?.spec.decoration as BoxDecoration?)?.color,
         FortalTokens.colorPanelSolid.resolve(context),
       );
-      expect(resolved.containerEffects, isNull);
+      expect(resolved.containerEffects?.backdropBlur, 0);
 
-      // Content icons are text-matched; the subtrigger chevron keeps the
-      // exact Radix icon size.
       expect(
         tester.getSize(find.byIcon(Icons.edit_outlined)),
         Size.square(contentIconSize),
@@ -266,17 +268,14 @@ void main() {
         subtriggerIconSize,
       );
 
-      // The trigger content mirrors the base Radix button gap and icon.
       expect(
         tester.getSize(find.byIcon(Icons.tune)),
         Size.square(contentIconSize),
       );
-      final triggerRow = tester.widget<RowBox>(
-        find
-            .ancestor(of: find.text('Options'), matching: find.byType(RowBox))
-            .first,
+      expect(
+        _rowAround(tester, 'Options').styleSpec.spec.flex?.spec.spacing,
+        triggerGap,
       );
-      expect(triggerRow.styleSpec?.spec.flex?.spec.spacing, triggerGap);
     });
   }
 
@@ -366,8 +365,20 @@ void main() {
 }
 
 Color? _menuRowColor(WidgetTester tester, String label) {
-  final row = tester.widget<FlexBox>(
-    find.ancestor(of: find.text(label), matching: find.byType(FlexBox)).first,
-  );
-  return (row.styleSpec?.spec.box?.spec.decoration as BoxDecoration?)?.color;
+  final box = _rowAround(tester, label).styleSpec.spec.box;
+  return (box?.spec.decoration as BoxDecoration?)?.color;
 }
+
+/// The Remix row that owns the container spec of the trigger or item labelled
+/// [label].
+// ignore: invalid_use_of_internal_member
+RemixFlexBoxAdapter _rowAround(WidgetTester tester, String label) =>
+    tester.widget(
+      find
+          .ancestor(
+            of: find.text(label),
+            // ignore: invalid_use_of_internal_member
+            matching: find.byType(RemixFlexBoxAdapter),
+          )
+          .first,
+    );

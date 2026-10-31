@@ -18,13 +18,12 @@ repository does not commit installed skills; the index points at the sources.
 |mix:{SKILL.md,references/{animations.md,architecture.md,code-generation.md,design-tokens.md,development-workflow.md,examples.md,fluent-api.md,layout.md,styler-api-policy.md,testing.md,variants.md,widget-modifiers-directives.md}}
 [Maintainer workflows]|root: .
 |releasing-a-package:.claude/skills/releasing-a-package/SKILL.md
-|open_code:{README.md,REGISTRIES.md,PRESETS.md,RELEASING.md}
+|open_code:{README.md,REGISTRIES.md,RELEASING.md}
 ```
 
-- `using-remix`: app UI with `Remix*` widgets or an installed Vanilla/Fortal preset.
-- `building-remix-design-system`: authoring a design system and publishing it as a registry.
-- `mix`: stylers, specs, tokens, variants, animations, and modifiers.
-- `releasing-a-package`: version bumps, contract checkers, release PRs, and tags.
+Use `using-remix` for app UI, `building-remix-design-system` for registry
+authoring, `mix` for styling APIs, and `releasing-a-package` for release work.
+Architecture rationale lives in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 Where the Mix skill and Remix differ, [canonical spellings](skills/using-remix/references/styling.md#canonical-spellings)
 win: write `padding(.all(v))` and `borderRadius(.circular(x))`, not `paddingAll`
@@ -59,7 +58,7 @@ system SDK is older.
 - `dart run melos bootstrap`
 - `dart run melos run generate`: rerun `build_runner` in `remix` and
   `registry_source` after changing annotated sources.
-- `dart run melos run ci:checks`: every contract checker, in seconds.
+- `dart run melos run ci:checks`: contract checkers and analysis.
 - `dart run melos run docs:check`: after editing `docs/` or `skills/`; rejects
   retired APIs and compiles published Dart examples.
 - `dart run melos run ci`: the local scripts, in sequence. The `icons`, `icons-tree-shake`, and `cli-windows` jobs are CI-only.

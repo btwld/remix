@@ -74,7 +74,7 @@ class FortalStatCard extends StatelessWidget {
           children: [
             if (delta case final delta?)
               FortalAccentScope(
-                accent: positive ? .green : .red,
+                accent: positive ? .mangue : .caju,
                 child: FortalBadge(highContrast: true, label: delta),
               ),
             StyledText(caption, style: dashboardText(.size1, tone: .muted)),
@@ -108,10 +108,10 @@ class FortalStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .paid => .green,
-      .pending => .amber,
-      .refunded => .red,
-      .cancelled => .gray,
+      .paid => .mangue,
+      .pending => .sol,
+      .refunded => .caju,
+      .cancelled => .calcadao,
     },
   );
 
@@ -122,9 +122,9 @@ class FortalStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .active => .green,
-      .invited => .blue,
-      .suspended => .red,
+      .active => .mangue,
+      .invited => .ceu,
+      .suspended => .caju,
     },
   );
 
@@ -134,12 +134,12 @@ class FortalStatusBadge extends StatelessWidget {
       key: key,
       label: capitalize(normalized),
       accent: switch (normalized) {
-        'paid' || 'active' || 'fulfilled' || 'ready' => .green,
-        'pending' || 'processing' || 'review' => .amber,
-        'refunded' || 'suspended' => .red,
-        'cancelled' => .gray,
-        'invited' => .blue,
-        _ => .indigo,
+        'paid' || 'active' || 'fulfilled' || 'ready' => .mangue,
+        'pending' || 'processing' || 'review' => .sol,
+        'refunded' || 'suspended' => .caju,
+        'cancelled' => .calcadao,
+        'invited' => .ceu,
+        _ => .mar,
       },
     );
   }

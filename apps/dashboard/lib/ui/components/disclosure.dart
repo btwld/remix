@@ -37,6 +37,7 @@ DisclosureStyler _uiDisclosureBaseStyler(UiDisclosureSize size) {
       .trigger(
         BoxStyler()
             .width(.infinity)
+            .minHeight(UiTokens.touchTargetMin())
             .alignment(.centerLeft)
             .padding(.all(metrics.padding))
             .wrap(
@@ -84,7 +85,11 @@ DisclosureStyler _uiDisclosureSurfaceStyler(UiDisclosureSize size) {
       )
       .onHovered(.trigger(.color(UiTokens.gray2())))
       .onPressed(.trigger(.color(UiTokens.gray3())))
-      .onFocusVisible(DisclosureStyler().uiFocusRing())
+      .onFocusVisible(
+        DisclosureStyler().container(
+          BoxStyler().uiFocusRing(radius: metrics.radius),
+        ),
+      )
       .onDisabled(_uiDisclosureDisabledStyler());
 }
 
@@ -127,21 +132,27 @@ DisclosureStyler _uiDisclosureSoftStyler(UiDisclosureSize size) {
       )
       .onHovered(.trigger(.color(UiTokens.accent3())))
       .onPressed(.trigger(.color(UiTokens.accent4())))
-      .onFocusVisible(DisclosureStyler().uiFocusRing())
+      .onFocusVisible(
+        DisclosureStyler().container(
+          BoxStyler().uiFocusRing(radius: metrics.radius),
+        ),
+      )
       .onDisabled(_uiDisclosureDisabledStyler());
 }
 
 DisclosureStyler _uiDisclosureDisabledStyler() {
-  return DisclosureStyler().trigger(
-    BoxStyler()
-        .color(UiTokens.grayA3())
-        .wrap(
-          _uiDisclosureForeground(
-            color: UiTokens.gray8(),
-            iconColor: UiTokens.gray8(),
-          ),
-        ),
-  );
+  return DisclosureStyler()
+      .container(BoxStyler().wrap(uiFocusRingModifier(visible: false)))
+      .trigger(
+        BoxStyler()
+            .color(UiTokens.grayA3())
+            .wrap(
+              _uiDisclosureForeground(
+                color: UiTokens.gray8(),
+                iconColor: UiTokens.gray8(),
+              ),
+            ),
+      );
 }
 
 BorderSideMix _uiDisclosureBorderSide(Color color) =>
@@ -179,7 +190,7 @@ _uiDisclosureMetrics(UiDisclosureSize size) {
     .size2 => (
       padding: UiTokens.space3(),
       radius: UiTokens.radius4(),
-      triggerText: UiTokens.accordionText2,
+      triggerText: UiTokens.text2,
       iconSize: UiTokens.spinnerSize3(),
     ),
     .size3 => (

@@ -1,12 +1,21 @@
 ## Unreleased
 
+- Refresh Fortal as an independent, Fortaleza-inspired design system: seven
+  generated OKLCH palettes, neutral Calçadão defaults, Caju errors, and tested
+  contrast in both modes. Apps can generate a custom palette from one seed.
+- Remove the twelve classic control/card/inline variants, default panels to
+  solid, flatten cards and controls, fill surface fields, share a token-based
+  focus ring, and align spacing, touch targets, and the 36px type step.
+- Replace the external parity contract and color fixtures with Fortal's own
+  specification, API catalog, contrast tests, and light/dark polish-board goldens.
+
 - Add `fortalAppBarStyle` and generated `FortalAppBar` with a solid panel surface, 64px (`space9`) toolbar height, bottom border, `space4` insets, and bold `size4` title. Update `FortalDashboardShell` to use `FortalAppBar` and align its sidebar header height to `space9`.
 
 - Add `FortalTheme.theme`, `darkTheme`, and `mode`, with light/dark data constructors, live system appearance, and nested theme-pair inheritance. The outermost `FortalTheme` sets `DefaultTextStyle` and `IconTheme(color: gray12)`, and a nested `FortalTheme` whose `brightness` or `gray` differs from its parent recolors both `DefaultTextStyle` and `IconTheme` to the new `gray12`. **Breaking:** rename `FortalScope` to `FortalTheme` and remove scope `brightness` and config `createScope`; use `mode` and `theme`. Direct design options such as `accent` remain supported.
 
 - **Breaking:** align icon button icon sizes to 12/16/20 pixels.
 
-- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent. Toast is a Fortal extension and is not tracked in the Radix Themes parity ledger.
+- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent.
 
 ## 1.0.0-beta.9
 

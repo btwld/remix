@@ -15,7 +15,9 @@ class UiSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -25,23 +27,6 @@ class UiSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// Raised treatment with Radix's classic shadows.
-  const UiSwitch.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const SwitchStyler.create(),
-    required this.selected,
-    required this.semanticLabel,
-    this.onChanged,
-    this.enabled = true,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = UiSwitchVariant.classic;
-
   /// Surface treatment with a visible border.
   const UiSwitch.surface({
     super.key,
@@ -49,7 +34,9 @@ class UiSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -66,7 +53,9 @@ class UiSwitch extends StatelessWidget {
     this.highContrast = false,
     this.style = const SwitchStyler.create(),
     required this.selected,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
@@ -86,7 +75,11 @@ class UiSwitch extends StatelessWidget {
 
   final bool selected;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final ValueChanged<bool>? onChanged;
 
@@ -113,7 +106,9 @@ class UiSwitch extends StatelessWidget {
         style: this.style,
       ),
       selected: this.selected,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       onChanged: this.onChanged,
       enabled: this.enabled,
       enableFeedback: this.enableFeedback,

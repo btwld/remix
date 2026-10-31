@@ -180,7 +180,7 @@ class _FortalDashboardSettingsPageState
               ),
             ),
             FortalAccentScope(
-              accent: .red,
+              accent: .caju,
               child: FortalDisclosure.soft(
                 key: const ValueKey('settings-danger-zone'),
                 size: .size3,
@@ -245,7 +245,7 @@ class _FortalDashboardSettingsPageState
             label: 'Cancel',
           ),
           FortalAccentScope(
-            accent: .red,
+            accent: .caju,
             child: FortalButton(
               onPressed: () => Navigator.of(context).pop(true),
               label: 'Delete',

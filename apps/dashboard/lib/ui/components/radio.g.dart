@@ -15,7 +15,9 @@ class UiRadio<T> extends StatelessWidget {
     this.highContrast = false,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -24,22 +26,6 @@ class UiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Raised treatment with Radix's classic shadow and gradient layers.
-  const UiRadio.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const RadioStyler.create(),
-    required this.value,
-    required this.semanticLabel,
-    this.enabled = true,
-    this.toggleable = false,
-    this.mouseCursor,
-    this.focusNode,
-    this.autofocus = false,
-    this.excludeSemantics = false,
-  }) : variant = UiRadioVariant.classic;
-
   /// Surface treatment with neutral border.
   const UiRadio.surface({
     super.key,
@@ -47,7 +33,9 @@ class UiRadio<T> extends StatelessWidget {
     this.highContrast = false,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -63,7 +51,9 @@ class UiRadio<T> extends StatelessWidget {
     this.highContrast = false,
     this.style = const RadioStyler.create(),
     required this.value,
-    required this.semanticLabel,
+    this.label,
+    this.semanticLabel,
+    this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
@@ -82,7 +72,11 @@ class UiRadio<T> extends StatelessWidget {
 
   final T value;
 
-  final String semanticLabel;
+  final String? label;
+
+  final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final bool enabled;
 
@@ -107,7 +101,9 @@ class UiRadio<T> extends StatelessWidget {
         style: this.style,
       ),
       value: this.value,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       enabled: this.enabled,
       toggleable: this.toggleable,
       mouseCursor: this.mouseCursor,

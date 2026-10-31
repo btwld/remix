@@ -74,7 +74,7 @@ class UiStatCard extends StatelessWidget {
           children: [
             if (delta case final delta?)
               UiAccentScope(
-                accent: positive ? .green : .red,
+                accent: positive ? .mangue : .caju,
                 child: UiBadge(highContrast: true, label: delta),
               ),
             StyledText(caption, style: dashboardText(.size1, tone: .muted)),
@@ -102,10 +102,10 @@ class UiStatusBadge extends StatelessWidget {
         key: key,
         label: capitalize(status.name),
         accent: switch (status) {
-          .paid => .green,
-          .pending => .amber,
-          .refunded => .red,
-          .cancelled => .gray,
+          .paid => .mangue,
+          .pending => .sol,
+          .refunded => .caju,
+          .cancelled => .calcadao,
         },
       );
 
@@ -116,9 +116,9 @@ class UiStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .active => .green,
-      .invited => .blue,
-      .suspended => .red,
+      .active => .mangue,
+      .invited => .ceu,
+      .suspended => .caju,
     },
   );
 
@@ -128,12 +128,12 @@ class UiStatusBadge extends StatelessWidget {
       key: key,
       label: capitalize(normalized),
       accent: switch (normalized) {
-        'paid' || 'active' || 'fulfilled' || 'ready' => .green,
-        'pending' || 'processing' || 'review' => .amber,
-        'refunded' || 'suspended' => .red,
-        'cancelled' => .gray,
-        'invited' => .blue,
-        _ => .indigo,
+        'paid' || 'active' || 'fulfilled' || 'ready' => .mangue,
+        'pending' || 'processing' || 'review' => .sol,
+        'refunded' || 'suspended' => .caju,
+        'cancelled' => .calcadao,
+        'invited' => .ceu,
+        _ => .mar,
       },
     );
   }

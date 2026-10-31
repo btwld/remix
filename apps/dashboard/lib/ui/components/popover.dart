@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'popover.g.dart';
 
-/// Ui popover size presets matching Radix Themes 3.3.0.
+/// Ui popover size presets on the shared scale.
 enum UiPopoverSize { size1, size2, size3, size4 }
 
 /// Ui-themed preset for [RemixPopover].
@@ -30,7 +30,7 @@ PopoverStyler uiPopoverStyle({
   };
 
   return PopoverStyler()
-      .maxWidth(480)
+      .maxWidth(UiTokens.popoverMaxWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(UiTokens.colorPanel())

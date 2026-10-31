@@ -777,6 +777,291 @@ void main() {
       expect(proposedValues, isEmpty);
     });
 
+    group('in a horizontally scrolling list', () {
+      const optionCount = 20;
+      const optionWidth = 100.0;
+      const viewportKey = Key('options viewport');
+      late ScrollController scrollController;
+      late List<FocusNode> focusNodes;
+
+      setUp(() {
+        scrollController = ScrollController();
+        focusNodes = List.generate(
+          optionCount,
+          (index) => FocusNode(debugLabel: 'option $index'),
+        );
+      });
+
+      tearDown(() {
+        scrollController.dispose();
+        for (final node in focusNodes) {
+          node.dispose();
+        }
+      });
+
+      Future<void> pumpScrollingGroup(
+        WidgetTester tester, {
+        TextDirection textDirection = TextDirection.ltr,
+      }) async {
+        await tester.pumpMaterialWidget(
+          Directionality(
+            textDirection: textDirection,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                key: viewportKey,
+                width: 3 * optionWidth,
+                height: 40,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: scrollController,
+                  child: NakedToggleGroup<String>(
+                    selectedValue: 'option0',
+                    onChanged: (_) {},
+                    child: Row(
+                      children: [
+                        for (var index = 0; index < optionCount; index++)
+                          NakedToggleOption<String>(
+                            value: 'option$index',
+                            focusNode: focusNodes[index],
+                            child: SizedBox(
+                              key: Key('option$index'),
+                              width: optionWidth,
+                              height: 40,
+                              child: Center(child: Text('Option $index')),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      bool isInViewport(WidgetTester tester, int index) {
+        final viewport = tester.getRect(find.byKey(viewportKey));
+        final option = tester.getRect(find.byKey(Key('option$index')));
+        return option.left >= viewport.left && option.right <= viewport.right;
+      }
+
+      testWidgets('End focuses the last option and scrolls it into view', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes.first.requestFocus();
+        await tester.pump();
+        expect(isInViewport(tester, optionCount - 1), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes.last.hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, optionCount - 1), isTrue);
+      });
+
+      testWidgets('Home focuses the first option and scrolls it into view', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes.last.requestFocus();
+        await tester.pump();
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+        expect(isInViewport(tester, 0), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.home);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes.first.hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, 0), isTrue);
+      });
+
+      testWidgets('arrow keys scroll the next option into view', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes[2].requestFocus();
+        await tester.pump();
+        expect(isInViewport(tester, 3), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes[3].hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, 3), isTrue);
+      });
+
+      testWidgets('arrow keys leave a fully visible option where it is', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        scrollController.jumpTo(5 * optionWidth);
+        await tester.pumpAndSettle();
+        focusNodes[7].requestFocus();
+        await tester.pump();
+        final before = tester.getRect(find.byKey(const Key('option6')));
+        expect(isInViewport(tester, 6), isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes[6].hasPrimaryFocus, isTrue);
+        expect(tester.getRect(find.byKey(const Key('option6'))), before);
+      });
+
+      testWidgets('wrapping from the last option to the first scrolls back', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester);
+        focusNodes.last.requestFocus();
+        await tester.pump();
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+        expect(isInViewport(tester, 0), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes.first.hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, 0), isTrue);
+      });
+
+      testWidgets('End scrolls the last option into view in right-to-left', (
+        tester,
+      ) async {
+        await pumpScrollingGroup(tester, textDirection: TextDirection.rtl);
+        focusNodes.first.requestFocus();
+        await tester.pump();
+        expect(isInViewport(tester, optionCount - 1), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pumpAndSettle();
+
+        expect(focusNodes.last.hasPrimaryFocus, isTrue);
+        expect(isInViewport(tester, optionCount - 1), isTrue);
+      });
+    });
+
+    testWidgets('arrow keys keep a scrolled page where it is', (tester) async {
+      final pageController = ScrollController();
+      final focusNodes = List.generate(3, (_) => FocusNode());
+      addTearDown(pageController.dispose);
+      for (final node in focusNodes) {
+        addTearDown(node.dispose);
+      }
+
+      await tester.pumpMaterialWidget(
+        SingleChildScrollView(
+          controller: pageController,
+          child: Column(
+            children: [
+              const SizedBox(height: 1000),
+              NakedToggleGroup<String>(
+                selectedValue: 'option0',
+                onChanged: (_) {},
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var index = 0; index < focusNodes.length; index++)
+                      NakedToggleOption<String>(
+                        value: 'option$index',
+                        focusNode: focusNodes[index],
+                        child: SizedBox(
+                          key: Key('option$index'),
+                          width: 100,
+                          height: 40,
+                          child: Text('Option $index'),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 1000),
+            ],
+          ),
+        ),
+      );
+      pageController.jumpTo(800);
+      await tester.pump();
+      focusNodes.first.requestFocus();
+      await tester.pump();
+      final before = tester.getTopLeft(find.byKey(const Key('option1')));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+
+      expect(focusNodes[1].hasPrimaryFocus, isTrue);
+      expect(tester.getTopLeft(find.byKey(const Key('option1'))), before);
+    });
+
+    testWidgets('arrow keys scroll a strip and the page below the fold', (
+      tester,
+    ) async {
+      final pageController = ScrollController();
+      final stripController = ScrollController();
+      final focusNodes = List.generate(10, (_) => FocusNode());
+      addTearDown(pageController.dispose);
+      addTearDown(stripController.dispose);
+      for (final node in focusNodes) {
+        addTearDown(node.dispose);
+      }
+
+      await tester.pumpMaterialWidget(
+        SingleChildScrollView(
+          controller: pageController,
+          child: Column(
+            children: [
+              const SizedBox(height: 1000),
+              SizedBox(
+                key: const Key('strip'),
+                width: 300,
+                height: 40,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: stripController,
+                  child: NakedToggleGroup<String>(
+                    selectedValue: 'option0',
+                    onChanged: (_) {},
+                    child: Row(
+                      children: [
+                        for (var index = 0; index < focusNodes.length; index++)
+                          NakedToggleOption<String>(
+                            value: 'option$index',
+                            focusNode: focusNodes[index],
+                            child: SizedBox(
+                              key: Key('option$index'),
+                              width: 100,
+                              height: 40,
+                              child: Text('Option $index'),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 1000),
+            ],
+          ),
+        ),
+      );
+      focusNodes[2].requestFocus();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+
+      final page = tester.getRect(find.byType(SingleChildScrollView).first);
+      final strip = tester.getRect(find.byKey(const Key('strip')));
+      final option = tester.getRect(find.byKey(const Key('option3')));
+      expect(focusNodes[3].hasPrimaryFocus, isTrue);
+      expect(option.left >= strip.left && option.right <= strip.right, isTrue);
+      expect(strip.top >= page.top && strip.bottom <= page.bottom, isTrue);
+    });
+
     testWidgets('vertical groups claim only Up and Down', (tester) async {
       final optionA = FocusNode(debugLabel: 'option A');
       final optionB = FocusNode(debugLabel: 'option B');

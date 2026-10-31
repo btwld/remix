@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The nine-step Radix Themes text scale supplied by [{{typePrefix}}Tokens].
+/// The nine-step {{typePrefix}} text scale supplied by [{{typePrefix}}Tokens].
 enum {{typePrefix}}TextSize {
   size1,
   size2,
@@ -18,8 +18,6 @@ enum {{typePrefix}}TextSize {
 
 /// Font weights supported by the {{typePrefix}} typography scale.
 ///
-/// Closed rather than Flutter's [FontWeight], which is an open class accepting
-/// any value from 1 to 1000; Radix ships exactly these four.
 enum {{typePrefix}}TextWeight { light, regular, medium, bold }
 
 TextStyleToken {{valuePrefix}}TextSizeToken({{typePrefix}}TextSize size) => switch (size) {
