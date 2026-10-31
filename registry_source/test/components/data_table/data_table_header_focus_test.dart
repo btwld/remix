@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,8 +8,8 @@ import 'package:remix/remix.dart';
 import '../../helpers/pixels.dart';
 import '../../helpers/test_helpers.dart';
 
-/// Radix's Table has no sortable header, so a focusable header takes Fortal's
-/// own `focus-8` ring inside the cell, the way a tab does.
+/// Sortable headers use the shared token outline, measured from the cell's
+/// padding so every edge remains visible inside a clipped table.
 void main() {
   late FocusHighlightStrategy previousStrategy;
 
@@ -67,10 +68,14 @@ void main() {
 
           await focusWithKeyboard(tester);
           final focused = await capturePixels(tester, boundary);
-          final focus8 = MixScope.tokenOf(
-            FortalTokens.focus8,
-            tester.element(headers.first),
-          );
+          final context = tester.element(headers.first);
+          final focus8 = FortalTokens.focus8.resolve(context);
+          final width = FortalTokens.focusRingWidth.resolve(context);
+          final offset = FortalTokens.focusRingOffset.resolve(context);
+          final inset = FortalTokens.space2.resolve(context);
+          final outerInset = inset - offset - width;
+          final paint = _headerRings(tester).single;
+          final ringBounds = paint.localToGlobal(Offset.zero) & paint.size;
 
           final origin = tester.getTopLeft(find.byKey(boundary));
           Color pixel(Pixels pixels, Offset logical) {
@@ -78,8 +83,7 @@ void main() {
             return pixels.at(device.dx.round(), device.dy.round());
           }
 
-          // Each probe is the middle of an edge, `inside` logical pixels in
-          // from it. The 2px ring covers 1; the cell past the ring starts at 3.
+          // Probe the outline, its gap and the cell beyond its outer edge.
           List<Offset Function(double inside)> edges(Rect cell) => [
             (inside) => Offset(cell.center.dx, cell.top + inside),
             (inside) => Offset(cell.center.dx, cell.bottom - inside),
@@ -87,13 +91,22 @@ void main() {
             (inside) => Offset(cell.right - inside, cell.center.dy),
           ];
 
-          for (final at in edges(focusedCell)) {
-            expectNearColor(pixel(focused, at(1)), focus8);
-            expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
+          for (final at in edges(ringBounds)) {
+            expectNearColor(pixel(focused, at(outerInset + width / 2)), focus8);
+            for (final distance in [outerInset - 0.5, inset - offset / 2]) {
+              expectNearColor(
+                pixel(focused, at(distance)),
+                pixel(idle, at(distance)),
+              );
+            }
           }
           // The neighbouring sortable header is not the focused one.
           for (final at in edges(otherCell)) {
-            expectNearColor(pixel(focused, at(1)), pixel(idle, at(1)));
+            final distance = outerInset + width / 2;
+            expectNearColor(
+              pixel(focused, at(distance)),
+              pixel(idle, at(distance)),
+            );
           }
           expect(tester.getRect(headers.first), focusedCell);
         },
@@ -101,12 +114,18 @@ void main() {
     }
   }
 
-  testWidgets('the ring follows the focus ring width token', (tester) async {
-    for (final width in [2.0, 3.5]) {
+  testWidgets('the ring follows the shared width and offset tokens', (
+    tester,
+  ) async {
+    for (final (width, offset) in [(2.0, 2.0), (3.5, 1.0)]) {
       await tester.pumpRemixApp(
         MixScope.inherit(
-          spaces: {FortalTokens.focusRingWidth: width},
+          spaces: {
+            FortalTokens.focusRingWidth: width,
+            FortalTokens.focusRingOffset: offset,
+          },
           child: SizedBox(
+            key: ValueKey((width, offset)),
             width: 400,
             child: FortalDataTable<String>(
               rows: const ['one'],
@@ -119,7 +138,22 @@ void main() {
 
       await focusWithKeyboard(tester);
 
-      expect(_headerRings(tester).map((side) => side.width), [width]);
+      final paint = _headerRings(tester).single;
+      final context = tester.element(find.byType(Pressable).first);
+      final content = RRect.fromRectAndRadius(
+        (Offset.zero & paint.size).deflate(
+          FortalTokens.space2.resolve(context),
+        ),
+        FortalTokens.radius2.resolve(context),
+      );
+      expect(
+        paint,
+        paints..drrect(
+          outer: content.inflate(offset + width),
+          inner: content.inflate(offset),
+          color: FortalTokens.focus8.resolve(context),
+        ),
+      );
     }
   });
 
@@ -270,19 +304,29 @@ RemixDataTableColumn<String> _column({
   cellBuilder: (context, row) => Text(row),
 );
 
-/// The ring of every header cell. Only a ring has a solid top side; the row
-/// divider draws just its bottom edge.
-List<BorderSide> _headerRings(WidgetTester tester) => [
-  for (final box in tester.widgetList<Box>(
-    find.descendant(
-      of: find.byType(RemixDataTable<String>),
-      matching: find.byType(Box),
-    ),
-  ))
-    if ((box.styleSpec?.spec.foregroundDecoration as BoxDecoration?)
-        case BoxDecoration(border: final Border border))
-      if (border.top.style == BorderStyle.solid) border.top,
-];
+/// Header outlines paint separately from the cell decoration and row divider.
+List<RenderCustomPaint> _headerRings(WidgetTester tester) {
+  final result = <RenderCustomPaint>[];
+  for (final element
+      in find
+          .descendant(
+            of: find.byWidgetPredicate((widget) => widget is Table),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is CustomPaint && widget.foregroundPainter != null,
+            ),
+          )
+          .evaluate()) {
+    final paint = element.renderObject! as RenderCustomPaint;
+    final state = <dynamic, dynamic>{};
+    final matched = ((paints..drrect()) as Matcher).matches(
+      (Canvas canvas) => paint.foregroundPainter!.paint(canvas, paint.size),
+      state,
+    );
+    if (matched) result.add(paint);
+  }
+  return result;
+}
 
 class _InitCounter extends StatefulWidget {
   const _InitCounter(this.onInit);

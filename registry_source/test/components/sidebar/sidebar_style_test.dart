@@ -184,47 +184,58 @@ void main() {
     ];
     const target = 'Billing';
 
-    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+    for (final (mode, ringWidth, ringOffset) in [
+      (FortalThemeMode.light, 2.0, 2.0),
+      (FortalThemeMode.dark, 2.0, 2.0),
+      (FortalThemeMode.light, 3.0, 5.0),
+      (FortalThemeMode.dark, 3.0, 5.0),
+    ]) {
       for (final collapsed in [false, true]) {
         testWidgets(
           'rings the destination without moving its content in ${mode.name}, '
-          '${collapsed ? 'collapsed' : 'expanded'}',
+          '${collapsed ? 'collapsed' : 'expanded'}, width $ringWidth / gap $ringOffset',
           (tester) async {
             final semantics = tester.ensureSemantics();
             final boundary = GlobalKey();
             await tester.pumpRemixApp(
               FortalTheme(
                 mode: mode,
-                child: RepaintBoundary(
-                  key: boundary,
-                  child: ColoredBox(
-                    color: mode == .dark
-                        ? const Color(0xFF000000)
-                        : const Color(0xFFFFFFFF),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SizedBox(
-                        width: collapsed ? 72 : 256,
-                        height: 220,
-                        child: FortalSidebar<String>(
-                          collapsed: collapsed,
-                          animationStyle: AnimationStyle.noAnimation,
-                          selectedValue: 'Home',
-                          onSelected: (_) {},
-                          sections: [
-                            RemixSidebarSection(
-                              destinations: [
-                                for (final label in labels)
-                                  RemixSidebarDestination(
-                                    value: label,
-                                    label: label,
-                                    icon: label == target
-                                        ? Icons.star_outline
-                                        : Icons.circle_outlined,
-                                  ),
-                              ],
-                            ),
-                          ],
+                child: MixScope.inherit(
+                  spaces: {
+                    FortalTokens.focusRingWidth: ringWidth,
+                    FortalTokens.focusRingOffset: ringOffset,
+                  },
+                  child: RepaintBoundary(
+                    key: boundary,
+                    child: ColoredBox(
+                      color: mode == .dark
+                          ? const Color(0xFF000000)
+                          : const Color(0xFFFFFFFF),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: SizedBox(
+                          width: collapsed ? 72 : 256,
+                          height: 220,
+                          child: FortalSidebar<String>(
+                            collapsed: collapsed,
+                            animationStyle: AnimationStyle.noAnimation,
+                            selectedValue: 'Home',
+                            onSelected: (_) {},
+                            sections: [
+                              RemixSidebarSection(
+                                destinations: [
+                                  for (final label in labels)
+                                    RemixSidebarDestination(
+                                      value: label,
+                                      label: label,
+                                      icon: label == target
+                                          ? Icons.star_outline
+                                          : Icons.circle_outlined,
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -250,10 +261,20 @@ void main() {
                 tester.getTopLeft(find.byIcon(Icons.star_outline)) -
                 destination.topLeft;
             final focused = await capturePixels(tester, boundary);
-            final ring = MixScope.tokenOf(
-              FortalTokens.focus8,
-              tester.element(find.bySemanticsLabel(target)),
-            );
+            final context = tester.element(find.bySemanticsLabel(target));
+            final ring = FortalTokens.focus8.resolve(context);
+            final width = FortalTokens.focusRingWidth.resolve(context);
+            final offset = FortalTokens.focusRingOffset.resolve(context);
+            final margin = tester
+                .resolvedSpecOf<ToggleSpec>(find.byIcon(Icons.star_outline))
+                .container
+                .spec
+                .box!
+                .spec
+                .margin!
+                .resolve(TextDirection.ltr);
+            expect(margin, EdgeInsets.symmetric(vertical: width + offset));
+            final surface = margin.deflateRect(destination);
 
             FocusManager.instance.primaryFocus!.unfocus();
             await tester.pumpAndSettle();
@@ -267,9 +288,8 @@ void main() {
               focusedIcon,
             );
 
-            // Each probe is the middle of an edge, `inside` logical pixels in
-            // from it: the 2px ring covers 1, the destination past it starts at
-            // 3, and -1 is outside the destination.
+            // The common outline is outside the destination, separated by the
+            // token gap. Its paint must remain visible after keyboard scrolling.
             final origin = tester.getTopLeft(find.byKey(boundary));
             Color pixel(Pixels pixels, Offset logical) {
               final device = (logical - origin) * pixelScale.toDouble();
@@ -277,18 +297,18 @@ void main() {
             }
 
             for (final at in <Offset Function(double inside)>[
-              (inside) =>
-                  Offset(destination.center.dx, destination.top + inside),
-              (inside) =>
-                  Offset(destination.center.dx, destination.bottom - inside),
-              (inside) =>
-                  Offset(destination.left + inside, destination.center.dy),
-              (inside) =>
-                  Offset(destination.right - inside, destination.center.dy),
+              (inside) => Offset(surface.center.dx, surface.top + inside),
+              (inside) => Offset(surface.center.dx, surface.bottom - inside),
+              (inside) => Offset(surface.left + inside, surface.center.dy),
+              (inside) => Offset(surface.right - inside, surface.center.dy),
             ]) {
-              expectNearColor(pixel(focused, at(1)), ring);
-              expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
-              expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
+              expectNearColor(pixel(focused, at(-offset - width / 2)), ring);
+              for (final distance in [1.0, -offset / 2, -offset - width - 1]) {
+                expectNearColor(
+                  pixel(focused, at(distance)),
+                  pixel(idle, at(distance)),
+                );
+              }
             }
             semantics.dispose();
           },

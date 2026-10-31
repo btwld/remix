@@ -93,9 +93,25 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
                 right: destinationRightPadding,
               ),
             )
-            .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
+            .container(
+              FlexBoxStyler()
+                  .mainAxisSize(.max)
+                  .mainAxisAlignment(.start)
+                  // Include the outward ring in the destination's scroll
+                  // target even when traversal reveals it at a viewport edge.
+                  .margin(.vertical(_destinationFocusRoom())),
+            ),
   ).merge(style);
 }
+
+double _resolveDestinationFocusRoom(BuildContext context) {
+  final outline = {{valuePrefix}}FocusOutline().resolve(context);
+  return outline.outline.width + outline.outlineOffset;
+}
+
+const _destinationFocusRoom = ContextToken<double>(
+  _resolveDestinationFocusRoom,
+);
 
 /// Resolve both endpoints before interpolation so theme scaling stays live.
 double _resolveSidebarHorizontalPadding(BuildContext context, bool collapsed) {
