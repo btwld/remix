@@ -61,6 +61,7 @@ void main() {
     expect(board, families);
   });
 
+  // Skia text rasterization is host-specific; canonical masters are Ubuntu 24.04 x64.
   for (final group in polishGroups) {
     testWidgets('$group: every size and variant in light and dark', (
       tester,
@@ -75,36 +76,41 @@ void main() {
         find.byKey(key),
         matchesGoldenFile('goldens/fortal_${group.toLowerCase()}.png'),
       );
-    });
+    }, skip: !Platform.isLinux);
   }
 
-  testWidgets('all palettes: soft, solid, surface, focus and disabled states', (
+  testWidgets(
+    'all palettes: soft, solid, surface, focus and disabled states',
+    (tester) async {
+      final key = await _pumpBoard(
+        tester,
+        _paletteBoard(FortalAccentColor.values),
+      );
+      expect(tester.takeException(), isNull);
+      await expectLater(
+        find.byKey(key),
+        matchesGoldenFile('goldens/fortal_palettes_states.png'),
+      );
+    },
+    skip: !Platform.isLinux,
+  );
+
+  testWidgets('public catalog: neutral and Mar light/dark states', (
     tester,
   ) async {
     final key = await _pumpBoard(
       tester,
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final accent in FortalAccentColor.values)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final dark in [false, true])
-                  Expanded(
-                    child: _PaletteStatePanel(accent: accent, dark: dark),
-                  ),
-              ],
-            ),
-        ],
-      ),
+      _paletteBoard([
+        FortalAccentColor.calcadao,
+        FortalAccentColor.mar,
+      ], overview: true),
     );
     expect(tester.takeException(), isNull);
     await expectLater(
       find.byKey(key),
-      matchesGoldenFile('goldens/fortal_palettes_states.png'),
+      matchesGoldenFile('../../../docs/assets/fortal-catalog.png'),
     );
-  });
+  }, skip: !Platform.isLinux);
 
   if (const bool.fromEnvironment('FORTAL_REVIEW')) {
     for (final accent in FortalAccentColor.values) {
@@ -192,10 +198,38 @@ Future<void> _export(WidgetTester tester, GlobalKey key, String name) async {
   });
 }
 
+Widget _paletteBoard(
+  Iterable<FortalAccentColor> accents, {
+  bool overview = false,
+}) => Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    for (final accent in accents)
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final dark in [false, true])
+            Expanded(
+              child: _PaletteStatePanel(
+                accent: accent,
+                dark: dark,
+                overview: overview,
+              ),
+            ),
+        ],
+      ),
+  ],
+);
+
 class _PaletteStatePanel extends StatelessWidget {
-  const _PaletteStatePanel({required this.accent, required this.dark});
+  const _PaletteStatePanel({
+    required this.accent,
+    required this.dark,
+    this.overview = false,
+  });
   final FortalAccentColor accent;
   final bool dark;
+  final bool overview;
 
   @override
   Widget build(BuildContext context) => FortalTheme(
@@ -242,6 +276,50 @@ class _PaletteStatePanel extends StatelessWidget {
                       const FortalAvatar(label: 'Ada'),
                     ],
                   ),
+                  if (!overview) ...[
+                    for (final variant in FortalSwitchVariant.values)
+                      Row(
+                        spacing: 16,
+                        children: [
+                          SizedBox(width: 72, child: FortalText(variant.name)),
+                          for (final highContrast in [false, true])
+                            for (final enabled in [true, false])
+                              FortalSwitch(
+                                variant: variant,
+                                highContrast: highContrast,
+                                selected: true,
+                                enabled: enabled,
+                                onChanged: (_) {},
+                                semanticLabel:
+                                    '${variant.name} '
+                                    '${highContrast ? 'high contrast' : 'normal'} '
+                                    '${enabled ? 'enabled' : 'disabled'}',
+                              ),
+                        ],
+                      ),
+                    const Row(
+                      spacing: 16,
+                      children: [
+                        Expanded(
+                          child: FortalTextField.soft(
+                            hintText: 'Search workspace',
+                            leading: Icon(Icons.search),
+                          ),
+                        ),
+                        Expanded(
+                          child: FortalTextField.soft(
+                            enabled: false,
+                            hintText: 'Disabled search',
+                            leading: Icon(Icons.search),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const FortalTextArea.soft(
+                      hintText: 'Notes',
+                      leading: Icon(Icons.edit),
+                    ),
+                  ],
                   for (final state in [
                     WidgetState.hovered,
                     WidgetState.pressed,

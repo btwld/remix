@@ -102,14 +102,21 @@ SwitchStyler _uiSwitchSoftStyler(
   return _uiSwitchBaseStyler(size)
       .trackColor(UiTokens.grayA3())
       .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
-      .thumb(_uiSwitchSoftThumbStyler(false))
+      .thumb(
+        _uiSwitchSoftThumbStyler(selected: false, highContrast: highContrast),
+      )
       .onSelected(
         SwitchStyler()
             .trackColor(
               highContrast ? UiTokens.accentA6() : UiTokens.accentA4(),
             )
             .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
-            .thumb(_uiSwitchSoftThumbStyler(true)),
+            .thumb(
+              _uiSwitchSoftThumbStyler(
+                selected: true,
+                highContrast: highContrast,
+              ),
+            ),
       )
       .onPressed(
         SwitchStyler()
@@ -159,13 +166,24 @@ SwitchStyler _uiSwitchDisabledStyler({bool soft = false}) => SwitchStyler()
 BoxStyler _uiSwitchThumbStyler({
   required bool selected,
   required bool highContrast,
-}) => BoxStyler().border(
-  .all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())),
-);
+}) => BoxStyler()
+    .color(
+      selected
+          ? (highContrast ? UiTokens.accent1() : UiTokens.accentContrast())
+          : const Color(0xFFFFFFFF),
+    )
+    .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())));
 
-BoxStyler _uiSwitchSoftThumbStyler(bool selected) => BoxStyler().border(
-  .all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())),
-);
+BoxStyler _uiSwitchSoftThumbStyler({
+  required bool selected,
+  required bool highContrast,
+}) => BoxStyler()
+    .color(
+      selected
+          ? (highContrast ? UiTokens.accent12() : UiTokens.accent11())
+          : const Color(0xFFFFFFFF),
+    )
+    .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())));
 
 RemixBoxEffectLayerMix _uiSwitchInsetRing(Color color) => _uiSwitchLayer(
   shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],

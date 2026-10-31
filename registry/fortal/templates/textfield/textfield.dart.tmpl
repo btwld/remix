@@ -32,25 +32,17 @@ enum {{typePrefix}}TextFieldVariant {
   soft,
 }
 
-Color _resolveNeutralTextInputPlaceholder(BuildContext context) {
+Color _resolveDisabledNeutralTextInputPlaceholder(BuildContext context) {
   final color = {{typePrefix}}Tokens.grayA10.resolve(context);
   return color.withValues(alpha: color.a * 0.5);
 }
 
-const _neutralTextInputPlaceholder = ContextToken<Color>(
-  _resolveNeutralTextInputPlaceholder,
+const _disabledNeutralTextInputPlaceholder = ContextToken<Color>(
+  _resolveDisabledNeutralTextInputPlaceholder,
 );
 
 Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
     {{typePrefix}}Tokens.accent12.resolve(context).withValues(alpha: alpha);
-
-final _softTextFieldPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.60),
-);
-
-final _softTextAreaPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.65),
-);
 
 final _softTextInputDisabledPlaceholder = ContextToken<Color>(
   (context) => _resolveAccent12Alpha(context, 0.5),
@@ -77,10 +69,7 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
 
   final recipe = switch (variant) {
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
-    .soft => _{{valuePrefix}}ApplySoftTextInput(
-      base,
-      placeholder: _softTextFieldPlaceholder,
-    ),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(base),
   };
 
   return recipe
@@ -155,10 +144,7 @@ TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
               ),
         );
 
-TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
-  TextFieldStyler base, {
-  required ContextToken<Color> placeholder,
-}) => base
+TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(TextFieldStyler base) => base
     .merge(
       TextFieldStyler(
         text: .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
@@ -174,8 +160,9 @@ TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
     )
     .textColor({{typePrefix}}Tokens.accent12())
     .text(.selectionColor({{typePrefix}}Tokens.accentA5()))
-    .onEnabled(.hintText(.color(placeholder())))
-    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()))
+    .onEnabled(.hintText(.color({{typePrefix}}Tokens.accentA11())))
+    // Base-level icon overrides remain available while enabled.
+    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent11()))
     .color({{typePrefix}}Tokens.accentA3())
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -194,7 +181,7 @@ TextFieldStyler _{{valuePrefix}}ApplyNeutralTextInput(TextFieldStyler base) =>
         text: .color(
           {{typePrefix}}Tokens.gray12(),
         ).selectionColor({{typePrefix}}Tokens.focusA5()),
-        hintText: .color(_neutralTextInputPlaceholder()),
+        hintText: .color({{typePrefix}}Tokens.grayA11()),
         cursorColor: {{typePrefix}}Tokens.gray12(),
         helperText: .color({{typePrefix}}Tokens.gray11()),
         label: .color(
@@ -212,13 +199,13 @@ TextFieldStyler _{{valuePrefix}}TextInputDisabledBaseStyle() => TextFieldStyler(
 
 TextFieldStyler _{{valuePrefix}}NeutralTextInputDisabledStyle() =>
     _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
-      .color(_neutralTextInputPlaceholder()),
+      .color(_disabledNeutralTextInputPlaceholder()),
     );
 
 TextFieldStyler _{{valuePrefix}}SoftTextInputDisabledStyle() =>
-    _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
-      .color(_softTextInputDisabledPlaceholder()),
-    );
+    _{{valuePrefix}}TextInputDisabledBaseStyle()
+        .hintText(.color(_softTextInputDisabledPlaceholder()))
+        .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()));
 
 TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
   helperText: .color({{typePrefix}}Tokens.error11()),
@@ -298,10 +285,7 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
 
   final recipe = switch (variant) {
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
-    .soft => _{{valuePrefix}}ApplySoftTextInput(
-      base,
-      placeholder: _softTextAreaPlaceholder,
-    ),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(base),
   };
 
   return recipe

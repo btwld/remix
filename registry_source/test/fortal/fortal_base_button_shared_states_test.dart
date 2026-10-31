@@ -17,73 +17,87 @@ void main() {
       FocusManager.instance.highlightStrategy = previousHighlightStrategy;
     });
 
-    for (final variants in _variantPairs) {
-      for (final highContrast in [false, true]) {
-        testWidgets('${variants.button.name} shared states match'
-            '${highContrast ? ' at high contrast' : ''}', (tester) async {
-          for (final stateCase in _stateCases) {
-            final resolved = await _resolveBaseButtons(
-              tester,
-              buttonVariant: variants.button,
-              iconButtonVariant: variants.iconButton,
-              highContrast: highContrast,
-              states: stateCase.states,
-            );
-            final reason =
-                '${variants.button.name}/${stateCase.name}'
-                '${highContrast ? '/highContrast' : ''}';
+    for (final dark in [false, true]) {
+      for (final variants in _variantPairs) {
+        for (final highContrast in [false, true]) {
+          testWidgets(
+            '${dark ? 'dark' : 'light'}/${variants.button.name} shared states match'
+            '${highContrast ? ' at high contrast' : ''}',
+            (tester) async {
+              for (final stateCase in _stateCases) {
+                final resolved = await _resolveBaseButtons(
+                  tester,
+                  dark: dark,
+                  buttonVariant: variants.button,
+                  iconButtonVariant: variants.iconButton,
+                  highContrast: highContrast,
+                  states: stateCase.states,
+                );
+                final reason =
+                    '${variants.button.name}/${stateCase.name}'
+                    '${highContrast ? '/highContrast' : ''}';
 
-            expect(
-              _buttonBackground(resolved.button),
-              _iconButtonBackground(resolved.iconButton),
-              reason: '$reason background',
-            );
-            expect(
-              resolved.button.spec.containerEffects,
-              resolved.iconButton.spec.containerEffects,
-              reason: '$reason effects',
-            );
-            expect(
-              resolved.button.widgetModifiers,
-              resolved.iconButton.widgetModifiers,
-              reason: '$reason filters',
-            );
+                expect(
+                  _buttonBackground(resolved.button),
+                  _iconButtonBackground(resolved.iconButton),
+                  reason: '$reason background',
+                );
+                expect(
+                  resolved.button.spec.containerEffects,
+                  resolved.iconButton.spec.containerEffects,
+                  reason: '$reason effects',
+                );
+                expect(
+                  resolved.button.widgetModifiers,
+                  resolved.iconButton.widgetModifiers,
+                  reason: '$reason filters',
+                );
 
-            final iconForeground = resolved.iconButton.spec.icon.spec.color;
-            expect(
-              resolved.button.spec.label.spec.style?.color,
-              iconForeground,
-              reason: '$reason label foreground',
-            );
-            expect(
-              resolved.button.spec.icon.spec.color,
-              iconForeground,
-              reason: '$reason icon foreground',
-            );
-            expect(
-              resolved.button.spec.spinner.spec.color,
-              resolved.iconButton.spec.spinner.spec.color,
-              reason: '$reason spinner foreground',
-            );
-            expect(
-              resolved.button.spec.spinner.spec.opacity,
-              resolved.iconButton.spec.spinner.spec.opacity,
-              reason: '$reason spinner opacity',
-            );
+                final iconForeground = resolved.iconButton.spec.icon.spec.color;
+                expect(
+                  resolved.button.spec.label.spec.style?.color,
+                  iconForeground,
+                  reason: '$reason label foreground',
+                );
+                expect(
+                  resolved.button.spec.icon.spec.color,
+                  iconForeground,
+                  reason: '$reason icon foreground',
+                );
+                expect(
+                  resolved.button.spec.spinner.spec.color,
+                  resolved.iconButton.spec.spinner.spec.color,
+                  reason: '$reason spinner foreground',
+                );
+                expect(
+                  resolved.button.spec.spinner.spec.opacity,
+                  resolved.iconButton.spec.spinner.spec.opacity,
+                  reason: '$reason spinner opacity',
+                );
 
-            if (stateCase.name == 'focused') {
-              final effects = resolved.button.spec.containerEffects!;
-              expect(effects.outline.width, 2, reason: '$reason focus width');
-              expect(effects.outlineOffset, 2, reason: '$reason focus offset');
-            } else if (stateCase.name == 'focused+disabled') {
-              expect(
-                resolved.button.spec.containerEffects?.outline.style,
-                BorderStyle.none,
-                reason: '$reason disabled focus precedence',
-              );
-            }
-          }
-        });
+                if (stateCase.name == 'focused') {
+                  final effects = resolved.button.spec.containerEffects!;
+                  expect(
+                    effects.outline.width,
+                    2,
+                    reason: '$reason focus width',
+                  );
+                  expect(
+                    effects.outlineOffset,
+                    2,
+                    reason: '$reason focus offset',
+                  );
+                } else if (stateCase.name == 'focused+disabled') {
+                  expect(
+                    resolved.button.spec.containerEffects?.outline.style,
+                    BorderStyle.none,
+                    reason: '$reason disabled focus precedence',
+                  );
+                }
+              }
+            },
+          );
+        }
       }
     }
   });
@@ -118,6 +132,7 @@ _resolveBaseButtons(
   FortalButtonSize buttonSize = .size2,
   FortalIconButtonSize iconButtonSize = .size2,
   bool highContrast = false,
+  bool dark = false,
   Set<WidgetState> states = const {},
 }) async {
   late ({StyleSpec<ButtonSpec> button, StyleSpec<IconButtonSpec> iconButton})
@@ -125,12 +140,18 @@ _resolveBaseButtons(
 
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
+      mode: dark ? .dark : .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) => WidgetStateProvider(
           states: states,
           child: Builder(
             builder: (context) {
+              expect(
+                FortalTheme.of(context).brightness,
+                dark ? Brightness.dark : Brightness.light,
+              );
               resolved = (
                 button: fortalButtonStyle(
                   variant: buttonVariant,

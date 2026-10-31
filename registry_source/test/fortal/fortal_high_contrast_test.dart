@@ -353,7 +353,9 @@ void main() {
       }
     });
 
-    testWidgets('selected switches retain a white thumb', (tester) async {
+    testWidgets('selected switches use appearance-aware high contrast thumbs', (
+      tester,
+    ) async {
       for (final variant in FortalSwitchVariant.values) {
         final highContrast = await _resolveFortalStyle(
           tester,
@@ -367,8 +369,10 @@ void main() {
 
         expect(
           _boxColor(highContrast.spec.thumb),
-          Colors.white,
-          reason: '$variant must contrast with its accent12 track.',
+          variant == .surface
+              ? ceu.dark.scale.step(1)
+              : ceu.dark.scale.step(12),
+          reason: '$variant must use its high-contrast content role.',
         );
       }
     });

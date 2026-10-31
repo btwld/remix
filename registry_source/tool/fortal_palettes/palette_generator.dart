@@ -41,6 +41,9 @@ class GeneratedPalette {
   final GeneratedMode dark;
 }
 
+/// Preserves seed-led light fills when their label passes contrast.
+/// Fill-to-page contrast is not guaranteed; use high-contrast recipes or an
+/// explicit step-8 border when very light seeds need a visible boundary.
 GeneratedPalette generatePalette(int seed, {bool neutral = false}) =>
     GeneratedPalette(
       _generateMode(seed, dark: false, neutral: neutral),
