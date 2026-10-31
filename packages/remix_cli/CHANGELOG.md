@@ -1,3 +1,20 @@
+## 1.0.0-beta.1
+
+### Features
+
+- Read `icons.yaml` schema 2. An icon may leave out a library it is not drawn
+  in by naming a `fallback` library that maps it; installing on the missing
+  library renders the fallback's constant and adds the fallback's package.
+  The default library's constant may differ from the canonical name. Schema 1
+  tables still parse with their old rules, so this release reads the current
+  `registry-stable`.
+
+### Fixes
+
+- An existing dependency constraint that excludes the registry's now names
+  the constraint to declare, and warns that a new major version can change
+  APIs, instead of only reporting the conflict.
+
 ## 1.0.0-beta.0
 
 First 1.0 pre-release. Stable `0.1.0` stays published; this beta is opt-in,

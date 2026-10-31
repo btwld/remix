@@ -143,6 +143,13 @@ Remix icons. It applies when items are installed; after changing it, reinstall
 every installed item that uses icons (`icons`, `dashboard_shell`,
 `dashboard_demo`, `support`) in one `add --diff`, then `add --overwrite`.
 
+A registry's `icons.yaml` maps each icon to a constant in every library. From
+schema 2, an icon a library does not draw names a `fallback` library instead:
+installing it on that library renders the fallback's constant and adds the
+fallback's package too. The official registry renders the icons Remix does
+not draw from Lucide, so a `remix` project installs `lucide_flutter`
+alongside `remix_ui_icons`.
+
 ### Fortal as owned source
 
 With `preset: fortal`, `add button` installs the full local theme layer,
@@ -296,8 +303,8 @@ dart run tool/check_open_code.dart --preset fortal --source checkout --item dash
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
 application-owned `UiIcons` alias set with no generated adapter. Add or rename
-aliases there as your interface evolves. The complete 318-icon catalog remains
-one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
+aliases there as your interface evolves. Every Remix icon remains one direct
+`package:remix_ui_icons/remix_ui_icons.dart` import away.
 
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
@@ -391,7 +398,8 @@ writes.
 
 Section placement is checked but never rewritten. Packages the installed source
 imports at runtime (`remix`, `mix_annotations`, `mix_chart` for `chart`,
-`remix_ui_icons` for `icons`, and `remix_ui_fonts` for the Vanilla `theme`)
+`remix_ui_icons` and its `lucide_flutter` fallback for `icons`, and
+`remix_ui_fonts` for the Vanilla `theme`)
 must be declared under
 `dependencies`; build-only packages (`build_runner`, `mix_generator`) may sit in
 either section. Declaring the same package in both sections is rejected. A
