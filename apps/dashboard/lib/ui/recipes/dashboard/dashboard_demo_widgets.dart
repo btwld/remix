@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -44,11 +45,11 @@ class UiStatCard extends StatelessWidget {
     final resolvedIcon =
         icon ??
         switch (label) {
-          'Revenue' => RemixIcons.barChart,
-          'Active customers' => RemixIcons.person,
-          'Open orders' => RemixIcons.box,
-          'Fulfillment' => RemixIcons.activityLog,
-          _ => RemixIcons.activityLog,
+          'Revenue' => RemixIcons.chart,
+          'Active customers' => RemixIcons.user,
+          'Open orders' => LucideIcons.box,
+          'Fulfillment' => LucideIcons.activity,
+          _ => LucideIcons.activity,
         };
     final column = ColumnBox(
       style: FlexBoxStyler()
@@ -285,10 +286,7 @@ const uiDataTableActionsPositioning = OverlayPositionConfig(
 /// Compact kebab trigger shared by data-table actions columns.
 final uiDataTableActionsTrigger = Box(
   style: BoxStyler().padding(.all(6)),
-  child: StyledIcon(
-    icon: RemixIcons.dotsHorizontal,
-    style: IconStyler().size(18),
-  ),
+  child: StyledIcon(icon: RemixIcons.more, style: IconStyler().size(18)),
 );
 
 /// Empty state card used when search or filter queries match no rows.

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -147,7 +148,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                         context,
                         const RemixToastData(
                           title: 'Profile settings saved',
-                          icon: RemixIcons.checkCircled,
+                          icon: LucideIcons.circleCheck,
                         ),
                       ),
                       label: 'Save changes',
@@ -166,7 +167,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                     description: 'Tune every Ui theme parameter in real time.',
                   ),
                   UiCallout(
-                    icon: RemixIcons.magicWand,
+                    icon: LucideIcons.wandSparkles,
                     text: 'Changes apply live across the entire dashboard.',
                   ),
                   SingleChildScrollView(
@@ -255,7 +256,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
       context,
       const RemixToastData(
         title: 'Demo workspace was not deleted',
-        icon: RemixIcons.infoCircled,
+        icon: RemixIcons.info,
       ),
     );
   }

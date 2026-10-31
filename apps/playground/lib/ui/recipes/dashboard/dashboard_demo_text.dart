@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../theme/tokens.dart';
 
@@ -35,5 +35,5 @@ class PlaygroundDashboardText extends StatelessWidget {
 void playgroundDashboardToast(BuildContext context, String title) =>
     showRemixToast(
       context,
-      RemixToastData(title: title, icon: RemixIcons.checkCircled),
+      RemixToastData(title: title, icon: LucideIcons.circleCheck),
     );

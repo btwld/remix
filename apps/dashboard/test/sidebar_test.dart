@@ -6,6 +6,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -16,7 +17,7 @@ const _sections = <RemixSidebarSection<UiDashboardDemoPage>>[
       RemixSidebarDestination(
         value: UiDashboardDemoPage.overview,
         label: 'Overview',
-        icon: RemixIcons.dashboard,
+        icon: RemixIcons.grid,
       ),
     ],
   ),
@@ -26,12 +27,12 @@ const _sections = <RemixSidebarSection<UiDashboardDemoPage>>[
       RemixSidebarDestination(
         value: UiDashboardDemoPage.customers,
         label: 'Customers',
-        icon: RemixIcons.group,
+        icon: LucideIcons.group,
       ),
       RemixSidebarDestination(
         value: UiDashboardDemoPage.orders,
         label: 'Orders',
-        icon: RemixIcons.table,
+        icon: LucideIcons.table,
       ),
     ],
   ),
@@ -259,7 +260,7 @@ void main() {
                       value: UiDashboardDemoPage.overview,
                       label:
                           'Overview of every active workspace and its status',
-                      icon: RemixIcons.dashboard,
+                      icon: RemixIcons.grid,
                     ),
                   ],
                 ),
