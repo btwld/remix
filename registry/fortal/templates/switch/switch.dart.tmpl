@@ -117,7 +117,12 @@ SwitchStyler _{{valuePrefix}}SwitchSoftStyler(
   return _{{valuePrefix}}SwitchBaseStyler(size)
       .trackColor({{typePrefix}}Tokens.grayA3())
       .trackEffects(RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()))
-      .thumb(_{{valuePrefix}}SwitchSoftThumbStyler(false))
+      .thumb(
+        _{{valuePrefix}}SwitchSoftThumbStyler(
+          selected: false,
+          highContrast: highContrast,
+        ),
+      )
       .onSelected(
         SwitchStyler()
             .trackColor(
@@ -126,7 +131,12 @@ SwitchStyler _{{valuePrefix}}SwitchSoftStyler(
             .trackEffects(
               RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()),
             )
-            .thumb(_{{valuePrefix}}SwitchSoftThumbStyler(true)),
+            .thumb(
+              _{{valuePrefix}}SwitchSoftThumbStyler(
+                selected: true,
+                highContrast: highContrast,
+              ),
+            ),
       )
       .onPressed(
         SwitchStyler()
@@ -182,13 +192,30 @@ SwitchStyler _{{valuePrefix}}SwitchDisabledStyler({bool soft = false}) => Switch
 BoxStyler _{{valuePrefix}}SwitchThumbStyler({
   required bool selected,
   required bool highContrast,
-}) => BoxStyler().border(
-  .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
-);
+}) => BoxStyler()
+    .color(
+      selected
+          ? (highContrast
+                ? {{typePrefix}}Tokens.accent1()
+                : {{typePrefix}}Tokens.accentContrast())
+          : const Color(0xFFFFFFFF),
+    )
+    .border(
+      .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
+    );
 
-BoxStyler _{{valuePrefix}}SwitchSoftThumbStyler(bool selected) => BoxStyler().border(
-  .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
-);
+BoxStyler _{{valuePrefix}}SwitchSoftThumbStyler({
+  required bool selected,
+  required bool highContrast,
+}) => BoxStyler()
+    .color(
+      selected
+          ? (highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent11())
+          : const Color(0xFFFFFFFF),
+    )
+    .border(
+      .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
+    );
 
 RemixBoxEffectLayerMix _{{valuePrefix}}SwitchInsetRing(Color color) =>
     _{{valuePrefix}}SwitchLayer(

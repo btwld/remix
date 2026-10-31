@@ -1,5 +1,16 @@
 ## Unreleased
 
+- Correct selected switch thumbs to semantic accent content roles in both modes:
+  surface uses contrast/step 1, soft uses step 11/12. Idle thumb overrides remain
+  supported; use `style.onSelected(...)` or `style.onDisabled(...)` to override
+  those states, just as state-specific track colors require state overrides.
+- Improve enabled surface input hints with secondary gray text and enabled soft
+  input hints/icons with secondary accent content. Enabled base-level icon
+  overrides remain supported; use explicit disabled-state overrides for that state.
+  Disabled, focus, and error roles retain their existing precedence.
+- Document seed-led near-white fill visibility limits and test a high-contrast
+  custom-palette treatment without changing the palette algorithm.
+
 - Refresh Fortal as an independent, Fortaleza-inspired design system: seven
   generated OKLCH palettes, neutral Calçadão defaults, Caju errors, and tested
   contrast in both modes. Apps can generate a custom palette from one seed.

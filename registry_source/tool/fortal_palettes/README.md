@@ -32,3 +32,10 @@ background/border/text roles, and preserves accessible seed-led solid fills.
 Dark fills are lifted for visibility. A single white/basalt foreground passes
 both solid and hover. Every alpha step is solved against the neutral page.
 All steps are rounded to 8-bit sRGB before contrast is checked in tests.
+
+## Very light custom accents
+
+Near-white solids can blend with the page despite readable labels. Use an
+available high-contrast control treatment or an explicit step-8 border when a
+visible boundary matters. The [owned policy](../../specs/fortal.md#very-light-custom-accents)
+defines the guarantees and measurements; generation preserves seed identity.

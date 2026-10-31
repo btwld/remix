@@ -7,7 +7,7 @@ Build **Launchpad**, a desktop-browser settings screen with a form, save state,
 dialog, and sidebar. You write the application; the CLI installs editable
 component recipes and their theme.
 
-![Launchpad with the Vanilla preset and a cyan preview button](/assets/remix-cli-tutorial/default-finished.jpg)
+![Launchpad with Vanilla, October 31 Flutter test-renderer capture](/assets/remix-cli-tutorial/current-default.png)
 
 The finished screenshot includes the medium Button height edit below. It is
 an application example, not a screen the CLI generates for you.
@@ -20,14 +20,18 @@ both projects, generated adapters, and four behavior tests per preset.
 
 Use Flutter **3.44.0**, its bundled Dart **3.12.0**, Git, and a desktop browser.
 The samples use local state, with no backend or responsive mobile layout.
+Both hosts explicitly use Geist from `remix_ui_fonts`, so app text and owned
+recipes share a reproducible font.
 
-The September 7, 2026 captures used checkout
-`bfae6507676fadea7632e2f7f66924935c04ca2a`, with Remix `1.0.0-beta.9` and
-CLI `0.1.0`. These are recorded checkout versions, not a claim that those
-packages are published. Keep the pin when reproducing the screenshots.
-That pinned CLI calls the compact preset `default`; current releases call the
-same preset `vanilla`. The commands below retain `default` so the recorded
-walkthrough remains reproducible.
+This replay pins both the CLI checkout and the remote registry to
+`2556203413520874c4e6d7682e8e1737f4b9f360` (Remix `1.0.0-beta.13`, CLI
+`1.0.0-beta.0`). The compact preset is named `vanilla`; the sample directory
+keeps the original `default_demo` name.
+
+The September 7 browser/editor images remain labeled historical. The October
+31 overview captures use the real Flutter test renderer with the pinned SDK;
+they are not browser screenshots. Browser automation was unavailable during
+this replay. Both applications also pass release web builds.
 
 ## Prepare the project and CLI
 
@@ -46,7 +50,7 @@ In a second terminal, get the reviewed Remix checkout:
 
 ```bash
 git clone https://github.com/btwld/remix.git remix-review
-git -C remix-review checkout bfae6507676fadea7632e2f7f66924935c04ca2a
+git -C remix-review checkout 2556203413520874c4e6d7682e8e1737f4b9f360
 git -C remix-review rev-parse --show-toplevel
 ```
 
@@ -59,6 +63,8 @@ Use the printed absolute path in place of `/path/to/remix` below. Back in
 dependency_overrides:
   remix:
     path: /path/to/remix/packages/remix
+  remix_ui_fonts:
+    path: /path/to/remix/packages/remix_ui_fonts
 ```
 
 Then install the checkout CLI as a project-local development dependency:
@@ -70,7 +76,7 @@ dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 dart run remix_cli:remix --version
 ```
 
-The version should be `0.1.0`. Keep running CLI commands from the sample's
+The version should be `1.0.0-beta.0`. Keep running CLI commands from the sample's
 package root, beside `pubspec.yaml`.
 
 ## Initialize and install Button
@@ -78,11 +84,13 @@ package root, beside `pubspec.yaml`.
 {/* tutorial-source: init-default */}
 
 ```bash
-dart run remix_cli:remix init --prefix Acme --preset default
+dart run remix_cli:remix init --prefix Acme --preset vanilla
+dart run remix_cli:remix registry update @remix --ref 2556203413520874c4e6d7682e8e1737f4b9f360
 ```
 
 `Acme` controls local names such as `AcmeButton` and `acmeButtonStyle`.
-Initialization writes `remix.yaml` and a managed barrel at `lib/ui/ui.dart`.
+Initialization resolves the stable registry; the next command pins the replay
+revision explicitly. It writes `remix.yaml` and a managed barrel at `lib/ui/ui.dart`.
 It does not install a component yet.
 
 Preview the first install:
@@ -167,7 +175,7 @@ class HomePage extends StatelessWidget {
 flutter run -d chrome
 ```
 
-![The default Continue button on a white surface](/assets/remix-cli-tutorial/first-render.jpg)
+![Historical September 7 capture: the default Continue button on a white surface](/assets/remix-cli-tutorial/first-render.jpg)
 
 You should see **Continue** centered in the app. Its callback is deliberately
 empty at this stage. Keep this terminal open; use another terminal in the same
@@ -186,6 +194,7 @@ dart run remix_cli:remix add dialog
 dart run remix_cli:remix add card
 dart run remix_cli:remix add sidebar
 dart run remix_cli:remix add sidebar_layout
+flutter pub add "remix_ui_fonts:^0.1.0"
 ```
 
 The existing theme is preserved. Sidebar also installs its `toggle` and
@@ -215,11 +224,11 @@ overlay, and the dialog needs the invoking context's navigator and text defaults
 ## Customize your recipe
 
 Open `lib/ui/components/button.dart`. In `_metricsFor`, change the medium
-`minHeight` from `36.0` to `44.0`. Reload the app. All medium default buttons
+`minHeight` from `AcmeTokens.controlMd` (36 pixels) to `44.0`. Reload the app. All medium default buttons
 should use the taller recipe, while the cyan preview button keeps its
 instance-specific colors and rounded shape.
 
-![The application-owned recipe with minHeight set to 44.0](/assets/remix-cli-tutorial/recipe-edit.jpg)
+![Historical September 7 editor capture: literal 36.0 changed to 44.0; current recipes use AcmeTokens.controlMd](/assets/remix-cli-tutorial/recipe-edit.jpg)
 
 This changes a recipe value, not the generated widget signature. If you change
 recipe parameters, enums, or annotations, regenerate the adapter as described
@@ -233,9 +242,9 @@ in the [customization reference](/open-code#the-three-levels-of-customization).
 4. Open and confirm the invitation dialog. Check that its result reaches the screen.
 5. Change the sidebar selection and test the preview button's callback.
 
-![Saved form values with one completed save and summary off](/assets/remix-cli-tutorial/saved.jpg)
+![Historical September 7 capture: saved form values with one completed save and summary off](/assets/remix-cli-tutorial/saved.jpg)
 
-Now compare your edited Button with its bundled recipe:
+Now compare your edited Button with its pinned registry recipe:
 
 {/* tutorial-source: diff-button */}
 
@@ -244,7 +253,7 @@ dart run remix_cli:remix add button --diff
 ```
 
 The diff's `current` side contains your `44.0` edit; `proposed` contains the
-bundled `36.0`. The command does not replace your source. Repeat ordinary add:
+registry token `AcmeTokens.controlMd`. The command does not replace your source. Repeat ordinary add:
 
 {/* tutorial-source: preserve-button */}
 
@@ -276,6 +285,7 @@ new project. Then initialize Fortal and install its recipes:
 
 ```bash
 dart run remix_cli:remix init --prefix Acme --preset fortal
+dart run remix_cli:remix registry update @remix --ref 2556203413520874c4e6d7682e8e1737f4b9f360
 dart run remix_cli:remix add button
 dart run remix_cli:remix add checkbox
 dart run remix_cli:remix add textfield
@@ -283,6 +293,7 @@ dart run remix_cli:remix add dialog
 dart run remix_cli:remix add card
 dart run remix_cli:remix add sidebar
 dart run remix_cli:remix add sidebar_layout
+flutter pub add "remix_ui_fonts:^0.1.0"
 ```
 
 Replace this app's `lib/main.dart` with the complete Fortal source below, also
@@ -296,11 +307,11 @@ available as `fortal_demo/lib/main.dart` in the download.
 </Accordion>
 </Accordions>
 
-The Fortal example uses `AcmeTheme` with a violet accent and `AcmeButton.solid`,
+The Fortal example uses `AcmeTheme` with the Mar accent and `AcmeButton.solid`,
 rather than `AcmeButton.primary`. Keep its complete host configuration.
 Do not apply the Vanilla preset's Button metrics edit to Fortal.
 
-![The Fortal settings screen in dark mode](/assets/remix-cli-tutorial/fortal-dark.jpg)
+![Launchpad with Fortal Mar in dark mode, October 31 Flutter test-renderer capture](/assets/remix-cli-tutorial/current-fortal-dark.png)
 
 Fortal supplies a different theme and recipe vocabulary, not a second runtime
 for your form. Repeat the same behavior checks. Neither preset adds a
@@ -353,16 +364,18 @@ failures before treating a screenshot as evidence that the sample works.
 
 ## Troubleshooting and evidence
 
-- **Pub cannot resolve `remix`:** the samples depend on `^1.0.0-beta.9` and resolve it through the absolute checkout path in `pubspec_overrides.yaml`; check that path.
+- **Pub cannot resolve `remix`:** the samples depend on `^1.0.0-beta.13` and resolve it through the absolute checkout path in `pubspec_overrides.yaml`; check that path.
 - **Missing generated class:** inspect the add command's generation error and the recipe's `part` declaration.
 - **Missing overlay or incorrect dialog text:** restore the complete sample's application host and scope placement.
-- **No `primary` constructor:** use the Vanilla sample, which this pinned walkthrough selects as `default`, or the `solid` constructor with `fortal`.
+- **No `primary` constructor:** use the Vanilla sample, selected with `--preset vanilla`, or the `solid` constructor with `fortal`.
 
 See the [Open Code reference](/open-code) for configuration and command details.
 
-Screenshots were captured from Flutter release web builds and an editor during
-the September 7 review. They show desktop states, not certification of all
+Historical JPGs were captured from Flutter release web builds and an editor
+during the September 7 review, at checkout
+`bfae6507676fadea7632e2f7f66924935c04ca2a`. Current PNG overviews were rendered
+on October 31 from the downloaded source with Flutter 3.44.0 widget tests. They show desktop states, not certification of all
 components or platforms. [Recorded evidence](/assets/remix-cli-tutorial/evidence.json)
-tracks their hashes and source checkout. [Assets and evidence](/assets/remix-cli-tutorial/README.md)
+tracks each capture method, hashes, and source checkout. [Assets and evidence](/assets/remix-cli-tutorial/README.md)
 remain alongside this documentation. Source panels above are expanded from the
 same archive during the documentation build, not maintained as separate copies.

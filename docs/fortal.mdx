@@ -7,7 +7,9 @@ description: An independent, Fortaleza-inspired design system for Remix
 Seven city-inspired palettes, neutral defaults, flat controls, and shared token
 scales give apps a complete starting point without locking away the source.
 
-![A selection of Fortal components and variants](/assets/fortal-catalog.png)
+![Fortal palettes, switch states, and input content in light and dark](/assets/fortal-catalog.png)
+
+[Capture provenance](/assets/fortal-catalog-evidence.json).
 
 This overview covers installation and theming. Use the [Catalog](/fortal/catalog)
 for widget sizes, variants, and defaults, or [Typography](/fortal/typography)
@@ -344,6 +346,14 @@ when the file lives elsewhere. Import the generated file in the app and pass
 `accentPalette: brand` to its theme. A custom palette supplies both modes and
 inherits through nested scopes; an explicit named `accent` in a nested scope
 selects that built-in palette again.
+
+### Very light custom accents
+
+A near-white seed can blend with the page while retaining readable labels.
+Use a control's `highContrast: true` treatment or an explicit step-8 border
+when a visible boundary matters. See the
+[owned custom-palette policy](https://github.com/btwld/remix/blob/main/registry_source/specs/fortal.md#very-light-custom-accents)
+for the guarantees, limits, and near-white measurements.
 
 ## Owned specification and review
 

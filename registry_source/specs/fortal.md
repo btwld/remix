@@ -68,6 +68,17 @@ Custom palettes generated from one `#RRGGBB` seed use the same model and can
 be supplied as `FortalTheme(accentPalette: brand)`. An explicit named accent
 clears an inherited custom palette. See the palette tool README for the command.
 
+### Very light custom accents
+
+Solid fills preserve a light seed when its label meets the contrast contract.
+They do not guarantee 3:1 against the page: for example, `#F4F4F0` remains
+`#F4F4F0` in light mode, about 1.05:1 against the neutral page, while its
+basalt label exceeds 16:1. This also preserves the intended Sol and Duna fills.
+Use `highContrast: true` on controls that expose it when a stronger active
+fill is needed, or choose an outline/surface treatment with an explicit
+step-8 border. Focus remains step 8; label and focus guarantees apply in both
+modes. Check the actual component and background when using a custom palette.
+
 ## Fixed scales and geometry
 
 - Spacing: **4, 8, 12, 16, 24, 32, 40, 48, 64px**, multiplied by scaling.
@@ -101,6 +112,13 @@ Cards and controls have no blurred/offset shadows or gradients. Crisp inset
 frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
 toasts retain outer elevation; a shadow means the surface floats. Surface text
 fields, text areas, and select triggers use opaque gray-2 fill and gray-7 border.
+Enabled surface input hints use secondary gray content; enabled soft input
+hints and icons use secondary accent content. Disabled input treatments stay separate.
+
+Selected surface switch thumbs use `accentContrast`, or `accent1` against the
+high-contrast `accent12` track. Selected soft thumbs use `accent11`, promoted
+to `accent12` at high contrast. Off thumbs stay white; disabled thumbs keep
+neutral gray-2 fill and a gray-6 border. Geometry and state precedence are shared.
 
 The polish board presents all families and sizes in light/dark pairs on a 4px
 grid. Check padding against height, text centering, matched icon size/gap,

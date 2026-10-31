@@ -44,10 +44,7 @@ void main() {
       final spec = result.spec;
 
       expect(spec.text.spec.style?.color, result.gray12);
-      expect(
-        spec.hintText.spec.style?.color,
-        result.grayA10.withValues(alpha: result.grayA10.a * 0.5),
-      );
+      expect(spec.hintText.spec.style?.color, result.grayA11);
       expect(spec.text.spec.selectionColor, result.focusA5);
       expect(spec.cursorColor, result.gray12);
       expect(spec.helperText.spec.style?.color, result.gray11);

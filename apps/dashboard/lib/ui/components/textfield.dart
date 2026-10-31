@@ -32,25 +32,17 @@ enum UiTextFieldVariant {
   soft,
 }
 
-Color _resolveNeutralTextInputPlaceholder(BuildContext context) {
+Color _resolveDisabledNeutralTextInputPlaceholder(BuildContext context) {
   final color = UiTokens.grayA10.resolve(context);
   return color.withValues(alpha: color.a * 0.5);
 }
 
-const _neutralTextInputPlaceholder = ContextToken<Color>(
-  _resolveNeutralTextInputPlaceholder,
+const _disabledNeutralTextInputPlaceholder = ContextToken<Color>(
+  _resolveDisabledNeutralTextInputPlaceholder,
 );
 
 Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
     UiTokens.accent12.resolve(context).withValues(alpha: alpha);
-
-final _softTextFieldPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.60),
-);
-
-final _softTextAreaPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.65),
-);
 
 final _softTextInputDisabledPlaceholder = ContextToken<Color>(
   (context) => _resolveAccent12Alpha(context, 0.5),
@@ -77,10 +69,7 @@ TextFieldStyler uiTextFieldStyle({
 
   final recipe = switch (variant) {
     .surface => _uiApplySurfaceTextInput(base),
-    .soft => _uiApplySoftTextInput(
-      base,
-      placeholder: _softTextFieldPlaceholder,
-    ),
+    .soft => _uiApplySoftTextInput(base),
   };
 
   return recipe
@@ -155,10 +144,7 @@ TextFieldStyler _uiApplySurfaceTextInput(TextFieldStyler base) =>
               ),
         );
 
-TextFieldStyler _uiApplySoftTextInput(
-  TextFieldStyler base, {
-  required ContextToken<Color> placeholder,
-}) => base
+TextFieldStyler _uiApplySoftTextInput(TextFieldStyler base) => base
     .merge(
       TextFieldStyler(
         text: .fontWeight(UiTokens.fontWeightRegular()),
@@ -174,8 +160,9 @@ TextFieldStyler _uiApplySoftTextInput(
     )
     .textColor(UiTokens.accent12())
     .text(.selectionColor(UiTokens.accentA5()))
-    .onEnabled(.hintText(.color(placeholder())))
-    .wrap(.iconTheme(color: UiTokens.accent10()))
+    .onEnabled(.hintText(.color(UiTokens.accentA11())))
+    // Base-level icon overrides remain available while enabled.
+    .wrap(.iconTheme(color: UiTokens.accent11()))
     .color(UiTokens.accentA3())
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -191,7 +178,7 @@ TextFieldStyler _uiApplySoftTextInput(
 TextFieldStyler _uiApplyNeutralTextInput(TextFieldStyler base) => base.merge(
   TextFieldStyler(
     text: .color(UiTokens.gray12()).selectionColor(UiTokens.focusA5()),
-    hintText: .color(_neutralTextInputPlaceholder()),
+    hintText: .color(UiTokens.grayA11()),
     cursorColor: UiTokens.gray12(),
     helperText: .color(UiTokens.gray11()),
     label: .color(UiTokens.gray12()).fontWeight(UiTokens.fontWeightMedium()),
@@ -207,13 +194,13 @@ TextFieldStyler _uiTextInputDisabledBaseStyle() => TextFieldStyler(
 
 TextFieldStyler _uiNeutralTextInputDisabledStyle() =>
     _uiTextInputDisabledBaseStyle().hintText(
-      .color(_neutralTextInputPlaceholder()),
+      .color(_disabledNeutralTextInputPlaceholder()),
     );
 
 TextFieldStyler _uiSoftTextInputDisabledStyle() =>
-    _uiTextInputDisabledBaseStyle().hintText(
-      .color(_softTextInputDisabledPlaceholder()),
-    );
+    _uiTextInputDisabledBaseStyle()
+        .hintText(.color(_softTextInputDisabledPlaceholder()))
+        .wrap(.iconTheme(color: UiTokens.accent10()));
 
 TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
   helperText: .color(UiTokens.error11()),
@@ -293,7 +280,7 @@ TextFieldStyler uiTextAreaStyle({
 
   final recipe = switch (variant) {
     .surface => _uiApplySurfaceTextInput(base),
-    .soft => _uiApplySoftTextInput(base, placeholder: _softTextAreaPlaceholder),
+    .soft => _uiApplySoftTextInput(base),
   };
 
   return recipe
