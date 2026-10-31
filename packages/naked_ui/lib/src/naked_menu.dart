@@ -432,6 +432,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 
   void _handleTriggerEnter() {
     _isTriggerHovered = true;
+    _cancelHoverTimer();
     _cancelAncestorHoverTimers();
   }
 
@@ -440,7 +441,9 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   void _handleTriggerHover(PointerHoverEvent event) {
     if (!widget.enabled || event.delta == Offset.zero) return;
     AnchoredOverlay.clearItemFocus(context);
-    _scheduleHoverOpen();
+    if (!_controller.isOpen && _hoverTimer == null) {
+      _scheduleHoverOpen();
+    }
   }
 
   void _handleTriggerExit() {

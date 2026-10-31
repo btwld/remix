@@ -1,16 +1,18 @@
 ## Unreleased
 
-- **Breaking:** Fortal focus rings on toggles, toggle-group items, tabs, accordion and disclosure triggers, and sidebar destinations are outlines painted through `containerEffects` (`triggerEffects` on accordion and disclosure), so focusing no longer resizes or moves the part. Toggles, toggle groups, accordion, disclosure, and sidebar destinations ring in `focus-8`, where they rang in `focus-a8`. `fortalFocusRing`, `FortalFocusRing`, and `FortalFocusRingFlexBox` are removed: put `fortalTabFocusOutline()` (or `fortalFocusOutline(color, offset:)`) in `containerEffects` or `triggerEffects`. `FortalFocusRingFlexBox` rang a plain `FlexBoxStyler`, which has no effects slot, so it has no helper: wrap the content in a `RemixCard` and put `fortalFocusOutline(...)` in `CardStyler().containerEffects(...)` under `onFocusVisible`, as the dashboard account row does, or draw a foreground border.
+- Move tab, toggle, toggle-group, accordion and disclosure focus rings to
+  `containerEffects`/`triggerEffects`, retaining the shared `focus8`,
+  `focusRingWidth`, and `focusRingOffset` tokens. Adopt caller-owned menu
+  controls, anchor-width select sizing, and styled radio/switch labels.
 
-- **Breaking:** `FortalActionMenu` takes a `RemixMenuTrigger` instead of `semanticLabel` and a `trigger` widget, and `fortalDataTableActionsTrigger` is a function of the accessible label that returns a `RemixMenuTrigger`. The data-table kebab and the top-bar account menu are real buttons through `RemixMenuTrigger.control`; the sidebar account row stays a visual trigger and now rings on keyboard focus.
-
-- **Breaking:** The Fortal select panel is at least as wide as its trigger (`minWidth(remixAnchorWidth())`, Radix `select.css:45`). A `maxWidth` below the trigger width must also set `minWidth`.
-
-- Add a `focus-8` ring to a focused sortable data-table header. Radix draws none; a focusable header needs a visible focus indicator.
-
-- These changes need remix 1.0.0-beta.14 and naked_ui 1.3.0. Overwrite these installed items together: `theme`, `toggle`, `toggle_group`, `tabs`, `accordion`, `disclosure`, `data_table`, `select`, and `dashboard_demo`. `sidebar` needs no overwrite: its destinations take the new ring from `toggle`.
-- Keep the dashboard theme panel's edge padding nonnegative when a custom focus
-  ring offset draws the ring inside its swatch.
+- Refresh Fortal as an independent, Fortaleza-inspired design system: seven
+  generated OKLCH palettes, neutral Calçadão defaults, Caju errors, and tested
+  contrast in both modes. Apps can generate a custom palette from one seed.
+- Remove the twelve classic control/card/inline variants, default panels to
+  solid, flatten cards and controls, fill surface fields, share a token-based
+  focus ring, and align spacing, touch targets, and the 36px type step.
+- Replace the external parity contract and color fixtures with Fortal's own
+  specification, API catalog, contrast tests, and light/dark polish-board goldens.
 
 - Add `fortalAppBarStyle` and generated `FortalAppBar` with a solid panel surface, 64px (`space9`) toolbar height, bottom border, `space4` insets, and bold `size4` title. Update `FortalDashboardShell` to use `FortalAppBar` and align its sidebar header height to `space9`.
 
@@ -18,7 +20,7 @@
 
 - **Breaking:** align icon button icon sizes to 12/16/20 pixels.
 
-- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent. Toast is a Fortal extension and is not tracked in the Radix Themes parity ledger.
+- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent.
 
 ## 1.0.0-beta.9
 

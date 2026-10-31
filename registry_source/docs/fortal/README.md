@@ -1,19 +1,12 @@
 # Fortal authoring package
 
-A Radix Themes-inspired preset theme and widget catalog for
-[Remix](https://pub.dev/packages/remix).
+An independent, city-inspired design system for [Remix](https://pub.dev/packages/remix).
 
-Remix gives you complete freedom to build any design system, which also means it
-ships no theme of its own. Fortal is the ready-made alternative: a comprehensive
-set of prebuilt styles based on
-[Radix Themes 3.3.0](https://www.radix-ui.com/themes), providing a polished,
-modern UI out of the box while remaining fully customizable.
-
-This workspace package is no longer released for consumers. It is the
-analyzer-checked source of truth for the application-owned `fortal` preset
-bundled with `remix_cli`, plus the target of Fortal's tests and Radix parity
-checks. Consumer applications copy the source into their own project instead
-of depending on `remix_fortal`.
+This private workspace package is the analyzed authoring source for the
+application-owned `fortal` preset, not a published consumer package. It owns
+seven seed-generated OKLCH palettes, neutral Calçadão defaults, flat controls,
+solid panels, a shared focus ring, and contrast-tested soft labels.
+Consumers install editable source with the CLI.
 
 ## Installation
 
@@ -92,8 +85,7 @@ This is a fallback, not a forced global style. A nearer `DefaultTextStyle`,
 including one installed by `Material` or `Scaffold`, still wins for bare
 Flutter `Text`. Fortal typography ignores that ambient run for token metrics
 and default roles: an omitted size uses `text3`, while an explicit `size:`
-selects another token size. This is a deliberate deviation from Radix's
-ambient CSS `1em` behavior. The sole ambient field retained by Fortal
+selects another token size. The sole ambient field retained by Fortal
 typography is the foreground of transparent, non-accent `FortalCode.ghost`.
 
 ## Light, dark, and system appearance
@@ -105,8 +97,8 @@ Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
 
 ```dart
 FortalTheme(
-  theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
-  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
+  theme: const FortalThemeData.light(accent: FortalAccentColor.calcadao),
+  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.calcadao),
   mode: FortalThemeMode.system,
   child: child,
 )
@@ -175,12 +167,10 @@ coverage; the other 313 glyphs are lossless conversions.
 ## Soft variants and contrast
 
 Default `fortalBadgeStyle(variant: .soft)` pairs fill `accentA3` with label
-`accentA11`. That is the Radix step-11 **low-contrast text** role, not a WCAG
-AA 4.5:1 guarantee. In light mode, compositing that label over the fill over
-`colorPanelSolid` (a badge inside a card) misses 4.5:1 for some of the 31
-accents. Dark-mode default and `highContrast: true` — which promotes the label
-to `accent12` -- pass AA on that composite. Use `highContrast: true` when
-light-mode soft labels must meet WCAG AA.
+`accentA11`. All seven palettes meet WCAG AA 4.5:1 on soft fills in light and
+dark mode, including compositing on the page and solid panels. The optional
+`highContrast: true` promotes the label to `accent12` for stronger emphasis;
+it is not required to make default soft labels readable.
 
 ## Charts
 
@@ -233,7 +223,7 @@ final donut = PieChart(
 
 Fortal styles are built on a token system that includes:
 
-- **Colors**: 12-step accent and gray scales (powered by Radix Colors)
+- **Colors**: seven generated 12-step OKLCH palettes, with Calçadão as accent and sole gray by default
 - **Spacing**: 9-step spacing scale
 - **Border Radius**: 6-step radius scale
 - **Shadows**: 6-level shadow system
@@ -263,7 +253,7 @@ Every Remix component has a matching Fortal recipe and preset widget:
 These five families exist only in Fortal — base Remix ships no `RemixText` — and
 they share one nine-step `FortalTextSize` scale plus one `FortalTextWeight`
 enum. See the [Typography guide](https://docs.page/btwld/remix/fortal/typography)
-for controls, semantics, and parity boundaries.
+for controls, semantics, and composition guidance.
 
 ### Interactive Elements
 - **FortalButton**, **FortalIconButton**, **FortalSwitch**, **FortalToggle**
@@ -287,8 +277,7 @@ There is no `FortalTabs`: the behavioral root stays `RemixTabs`, which takes no
 style. The same applies to the other behavioral roots (`RemixRadioGroup`,
 `RemixCheckboxGroup`, `RemixAccordionGroup`).
 
-`FortalSidebar` is a Fortal extension rather than a Radix Themes parity
-family. It applies the solid panel surface, the scrolling-region padding, the
+`FortalSidebar` is part of the owned Fortal catalog. It applies the solid panel surface, the scrolling-region padding, the
 footer divider, compact uppercase section headings, and the ghost `size2`
 toggle treatment to the public `RemixSidebar` behavior. It sets no panel width
 and no header padding, because the host owns placement and usually has to match
@@ -304,12 +293,19 @@ ensuring horizontal alignment across scaling settings.
 ### Overlays
 - **FortalDialog**, **FortalTooltip**, **FortalPopover**, **FortalToast**, **FortalCallout**
 
-## Radix parity
+## Owned contract and review
 
-Fortal's mapping to Radix Themes 3.3.0 is enforced by a checked-in parity
-contract (`reference/radix_themes_3_3_0/`) verified in CI. Every mapped family
-documents its upstream selectors, supported style props, and the tests that cover
-them.
+`specs/fortal.md` defines tokens, defaults, variants, geometry, and contrast;
+`specs/fortal_catalog.json` owns the machine-readable API/test inventory.
+`dart run tool/check_fortal.dart` from the repository root checks that inventory.
+Palette/geometry/focus tests and the demo polish-board goldens protect the
+visual contract without an external fixture.
+
+Run `fvm flutter run -d chrome -t lib/polish_main.dart` in `apps/demo` for the
+39-family board: every size and variant, seven accents, both modes, a 4px
+grid, and hover/pressed/focused/disabled review states. See the
+[Fortal guide](https://docs.page/btwld/remix/fortal) for palettes, contrast,
+and custom seed generation.
 
 ## Built on Remix
 

@@ -7,16 +7,7 @@ import 'typography.dart';
 
 part 'text.g.dart';
 
-/// Ui-themed body text on the Radix nine-step scale.
-///
-/// Omitted [size] and [weight] resolve to the Radix root run (`text3`,
-/// regular) from the active [UiTheme]'s tokens rather than the ambient
-/// `DefaultTextStyle`. This deliberately deviates from Radix's CSS `1em`
-/// inheritance: a token default cannot be silently replaced by a host-installed
-/// text run (a `Material` surface, or a host with no run at all), which keeps
-/// Ui text a function of the theme alone. Set [accent] to take the
-/// surrounding [UiTheme]'s accent colour; leaving it false uses the
-/// neutral `gray12` foreground.
+/// Ui-themed body text on the Ui nine-step scale.
 @MixWidget()
 TextStyler uiTextStyle({
   UiTextSize? size,

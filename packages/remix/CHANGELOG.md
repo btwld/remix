@@ -8,10 +8,6 @@
   non-null `String` needs a null check. A radio or switch must still have a
   `label` or a `semanticLabel`; that rule is now a debug-mode assert instead
   of a required parameter.
-- `RemixMenuTrigger.label` is now `String?`, because a control trigger has no
-  label. Code that reads `trigger.label` must handle null. The
-  `RemixMenuTrigger` and `RemixMenuTrigger.builder` constructors still require
-  a label.
 
 ### Features
 
@@ -22,12 +18,6 @@
   their start, with the close button on the first line after the message. It
   is a spec field, so a style can switch it with a variant such as
   `onBreakpoint`.
-- Add `RemixReducedMotionBuilder`. Its builder receives whether the user asked
-  for reduced motion and rebuilds when that changes. It combines
-  `MediaQuery.disableAnimations` with the platform's accessibility
-  `reduceMotion`, the only flag iOS Reduce Motion sets. A `MediaQuery`
-  override can force reduced motion on but cannot turn the platform's
-  `reduceMotion` off.
 - Add `remixAnchorWidth`, a token that resolves to the width of the trigger of
   the surrounding `RemixSelect` or `RemixMenu`, and to 0 elsewhere. Pass it to
   `minWidth`, `width`, or `maxWidth` to size the panel from its trigger, for
@@ -55,26 +45,28 @@
   widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
   existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
   `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
-- Add `RemixMenuTrigger.control`, so a real button such as a styled
-  `RemixButton` can be the menu trigger. Its builder receives a
-  `RemixMenuTriggerHandle` with `isOpen`, `controller`, `focusNode`, and
-  `toggle()`; pass `focusNode` and `toggle` to the button. The menu keeps the
-  overlay, Escape, outside taps, focus return, and expanded semantics, which
-  merge onto the button. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
-  do not apply to a control trigger, and a `semanticLabel` asserts.
+- Add `RemixReducedMotionBuilder`. Its builder receives whether the user asked
+  for reduced motion and rebuilds when that changes. It combines
+  `MediaQuery.disableAnimations` with the platform's accessibility
+  `reduceMotion`, the only flag iOS Reduce Motion sets. A `MediaQuery`
+  override can force reduced motion on but cannot turn the platform's
+  `reduceMotion` off.
 
 ### Fixes
 
-- Map slider pointer input to its painted rail, including thumb and track
-  clearance, so grabbing a thumb does not change its value before movement.
 - `RemixToast` stacks an inline action below the message when the toast is
   too narrow to share a row, so the message is no longer squeezed beside it.
   The cutoff follows the width the toast gets, including its margin and style
   max width, and grows with the text scale. Wider toasts keep the single row.
-  A toast with an inline action measures its width, so it does not support
-  intrinsic sizing (`IntrinsicWidth`, `IntrinsicHeight`); set
-  `actionPlacement` to `below` where that is needed.
-
+- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
+  accordion trigger, and disclosure trigger content keeps its state when a
+  style adds or removes a decoration such as a focus ring. Previously such a
+  change rebuilt the part's content from scratch.
+- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
+  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
+  `AlertDialog` content. It previously asserted "LayoutBuilder does not
+  support returning intrinsic dimensions" in debug mode and collapsed in
+  release mode.
 - Honor reduced motion in components that hard-code their own motion. The
   select menu and accordion panel now open and close without a transition,
   including one already under way. Skeleton and sidebar, which already
@@ -85,15 +77,6 @@
 - `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
 - `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
   not on every `MediaQuery` change such as keyboard insets.
-- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
-  accordion trigger, and disclosure trigger content keeps its state when a
-  style adds or removes a decoration such as a focus ring. Previously such a
-  change rebuilt the part's content from scratch.
-- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
-  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
-  `AlertDialog` content. It previously asserted "LayoutBuilder does not
-  support returning intrinsic dimensions" in debug mode and collapsed in
-  release mode.
 - Data-table headers without `sortable`, including the selection header, no
   longer read widget state from outside the table. A table inside a focused,
   hovered, or pressed ancestor, such as a `Pressable`, no longer lights their
@@ -106,24 +89,6 @@
   trigger's state.
 - `RemixSidebar` header and footer content no longer resolves `onDisabled`
   variants when the sidebar is disabled. The sidebar's own regions still do.
-- `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
-  on the content or menu container, instead of overflowing. A short list still
-  shrinks to its options, and the container's padding and decoration stay in
-  place while the options scroll. The options column now sizes to its content
-  inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max` on
-  `menuContainer` no longer distribute free vertical space.
-- `RemixMenu` and its submenus scroll a list taller than their overlay or than
-  a `maxHeight` on the `overlay` style, instead of overflowing. A short menu
-  still shrinks to its items, and the panel's padding, decoration, and effects
-  stay in place while the items scroll. The items column now sizes to its
-  content inside the scroll view, so `mainAxisAlignment` and `mainAxisSize.max`
-  on `overlay` no longer distribute free vertical space.
-- `RemixSelect` and `RemixMenu` panels are laid out no taller than the space
-  above or below the trigger, after the positioning's `sideOffset` and
-  `collisionPadding`, instead of as tall as the whole overlay. A long list now
-  scrolls beside the trigger rather than sliding over it, and opens on the side
-  with more room. A panel that fits is unchanged, and so is a submenu, which
-  keeps the room the overlay has.
 
 ## 1.0.0-beta.13
 

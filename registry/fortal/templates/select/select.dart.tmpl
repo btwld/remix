@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'select.g.dart';
 
-/// Radix Themes Select root size presets.
+/// {{typePrefix}} Select root size presets.
 enum {{typePrefix}}SelectSize { size1, size2, size3 }
 
-/// Radix Themes Select variants.
+/// {{typePrefix}} Select variants.
 enum {{typePrefix}}SelectVariant { surface, soft, ghost }
 
-/// {{typePrefix}}-themed Select with Radix-owned trigger and content configuration.
+/// {{typePrefix}}-themed Select with {{typePrefix}}-owned trigger and content configuration.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -62,24 +62,19 @@ SelectTriggerStyler _{{valuePrefix}}SelectTriggerStyler(
         }),
       )
       .indicator(.color({{typePrefix}}Tokens.gray12()).size(size == .size3 ? 11 : 9))
-      .onFocusVisible(
-        .containerEffects(
-          // `outline: 2px solid focus-8; outline-offset: -1px`: the ring
-          // straddles the trigger edge. The soft trigger swaps the color for
-          // accent-8.
-          {{valuePrefix}}FocusOutline(switch (variant) {
-            .soft => {{typePrefix}}Tokens.accent8(),
-            .surface || .ghost => {{typePrefix}}Tokens.focus8(),
-          }, offset: -1),
-        ),
-      )
-      .merge(_{{valuePrefix}}SelectTriggerSizeStyler(variant, size));
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
+      .merge(_{{valuePrefix}}SelectTriggerSizeStyler(variant, size))
+      .wrap({{valuePrefix}}TouchTarget());
 
-  return switch (variant) {
+  return (switch (variant) {
     .surface => _{{valuePrefix}}SelectSurfaceTrigger(base),
     .soft => _{{valuePrefix}}SelectSoftTrigger(base),
     .ghost => _{{valuePrefix}}SelectGhostTrigger(base),
-  };
+  }).onDisabled(
+    SelectTriggerStyler().containerEffects(
+      RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+    ),
+  );
 }
 
 TextStyler _{{valuePrefix}}SelectTriggerText({{typePrefix}}SelectSize size, {Color? color}) {
@@ -105,7 +100,7 @@ SelectTriggerStyler _{{valuePrefix}}SelectTriggerSizeStyler(
 ) {
   final style = SelectTriggerStyler().spacing(switch (size) {
     .size1 => {{typePrefix}}Tokens.space1(),
-    .size2 => {{typePrefix}}Tokens.selectSpace1Half(),
+    .size2 => {{typePrefix}}Tokens.space2(),
     .size3 => {{typePrefix}}Tokens.space2(),
   });
   return switch (variant) {
@@ -119,7 +114,7 @@ SelectTriggerStyler _{{valuePrefix}}SelectTriggerSizeStyler(
       .size3 =>
         style
             .padding(.horizontal({{typePrefix}}Tokens.space3()))
-            .padding(.vertical({{typePrefix}}Tokens.selectSpace1Half()))
+            .padding(.vertical({{typePrefix}}Tokens.space2()))
             .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX3()))
             .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY3())),
     },
@@ -143,10 +138,10 @@ SelectTriggerStyler _{{valuePrefix}}SelectTriggerSizeStyler(
 SelectTriggerStyler _{{valuePrefix}}SelectSurfaceTrigger(SelectTriggerStyler base) {
   return base
       .indicatorOpacity(0.9)
-      .color({{typePrefix}}Tokens.colorSurface())
+      .color({{typePrefix}}Tokens.gray2())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.gray7()]),
         ),
       )
       .onHovered(
@@ -244,6 +239,7 @@ SelectMenuItemStyler _{{valuePrefix}}SelectItemStyler(
 }) {
   final metrics = _{{valuePrefix}}SelectContentMetrics(size);
   final base = SelectMenuItemStyler()
+      .wrap({{valuePrefix}}TouchTarget())
       .direction(.horizontal)
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.indicatorWidth))
@@ -282,16 +278,23 @@ SelectMenuItemStyler _{{valuePrefix}}SelectItemStyler(
     .soft => SelectMenuItemStyler().color({{typePrefix}}Tokens.accentA4()),
   };
 
-  // Naked's focused option is Radix's roving `data-highlighted` item, not a
-  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
+      .onFocusVisible(
+        SelectMenuItemStyler().container(
+          FlexBoxStyler().{{valuePrefix}}FocusRing(radius: metrics.itemRadius),
+        ),
+      )
       .onDisabled(
-        .color(
-          const Color(0x00000000),
-        ).text(.color({{typePrefix}}Tokens.grayA8())).iconColor({{typePrefix}}Tokens.grayA8()),
+        SelectMenuItemStyler()
+            .container(
+              FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
+            )
+            .color(const Color(0x00000000))
+            .text(.color({{typePrefix}}Tokens.grayA8()))
+            .iconColor({{typePrefix}}Tokens.grayA8()),
       );
 }
 
@@ -306,7 +309,7 @@ _{{valuePrefix}}SelectContentMetrics({{typePrefix}}SelectSize size) => switch (s
   .size1 => (
     itemHeight: {{typePrefix}}Tokens.space5(),
     indicatorWidth: {{typePrefix}}Tokens.selectIndicatorWidth1(),
-    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize1(),
+    indicatorSize: {{typePrefix}}Tokens.space2(),
     itemRadius: {{typePrefix}}Tokens.radius1(),
     itemText: {{typePrefix}}Tokens.text1,
   ),

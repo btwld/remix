@@ -22,19 +22,25 @@ AccordionStyler fortalAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) {
   return (switch (variant) {
-    .surface => _fortalAccordionSurfaceStyler(size),
-    .soft => _fortalAccordionSoftStyler(size),
-  }).merge(style);
+        .surface => _fortalAccordionSurfaceStyler(size),
+        .soft => _fortalAccordionSoftStyler(size),
+      })
+      // Clip each painted part so its effects can extend beyond the panel.
+      .container(BoxStyler().clipBehavior(.none))
+      .merge(style);
 }
 
-// Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, frame, fill, and clipping, while trigger and
-// content stay flat rectangles that simply get cropped to its rounded shape.
-// The frame and divider are foreground borders so edge-to-edge child fills
-// cannot partially cover their antialiased edges.
+// The container owns the fill and foreground frame. Each part clips its own
+// content, leaving trigger effects free to paint outside the panel's edges.
 AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal))
+      .trigger(
+        FlexBoxStyler()
+            .direction(.horizontal)
+            .minHeight(FortalTokens.touchTargetMin())
+            .borderRadius(.all(_fortalAccordionRadius(size)))
+            .clipBehavior(.antiAlias),
+      )
       .leadingIcon(.color(FortalTokens.gray11()))
       .title(
         .fontWeight(
@@ -42,26 +48,48 @@ AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
         ).color(FortalTokens.gray12()),
       )
       .trailingIcon(.color(FortalTokens.gray11()))
-      .content(.width(.infinity))
-      .onExpanded(
-        AccordionStyler().trailingIcon(
-          IconStyler().wrap(
-            WidgetModifierConfig.transform(
-              transform: Matrix4.rotationZ(math.pi),
-              alignment: .center,
+      .content(
+        BoxStyler()
+            .width(.infinity)
+            .clipBehavior(.antiAlias)
+            .borderRadius(
+              BorderRadiusMix(
+                bottomLeft: _fortalAccordionRadius(size),
+                bottomRight: _fortalAccordionRadius(size),
+              ),
             ),
-          ),
-        ),
+      )
+      .onExpanded(
+        AccordionStyler()
+            .trigger(
+              FlexBoxStyler().borderRadius(
+                BorderRadiusMix(
+                  topLeft: _fortalAccordionRadius(size),
+                  topRight: _fortalAccordionRadius(size),
+                  bottomLeft: Radius.zero,
+                  bottomRight: Radius.zero,
+                ),
+              ),
+            )
+            .trailingIcon(
+              IconStyler().wrap(
+                WidgetModifierConfig.transform(
+                  transform: Matrix4.rotationZ(math.pi),
+                  alignment: .center,
+                ),
+              ),
+            ),
       )
       .merge(_fortalAccordionSizeStyler(size));
 }
 
 AccordionStyler _fortalAccordionFocusStyler() {
-  return AccordionStyler().triggerEffects(fortalTabFocusOutline());
+  return AccordionStyler().triggerEffects(fortalFocusOutline());
 }
 
 AccordionStyler _fortalAccordionDisabledStyler() {
   return AccordionStyler()
+      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .trigger(.color(FortalTokens.grayA3()))
       .leadingIcon(.color(FortalTokens.gray8()))
       .title(.color(FortalTokens.gray8()))
@@ -157,7 +185,7 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     .size2 => AccordionStyler(
       trigger: FlexBoxStyler().padding(.all(FortalTokens.space3())),
       leadingIcon: .size(FortalTokens.spinnerSize3()),
-      title: .style(FortalTokens.accordionText2.mix()),
+      title: .style(FortalTokens.text2.mix()),
       trailingIcon: .size(FortalTokens.spinnerSize3()),
       content: .padding(.all(FortalTokens.space3())),
     ),

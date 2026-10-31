@@ -4,10 +4,10 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the neutral `vanilla` preset, the Radix Themes-inspired `fortal`
-preset, or the HeroUI-inspired `heroui` preset at initialization. Remix
-remains the behavior dependency; the application owns its tokens, theme values,
-component recipes, and generated adapters.
+Choose the neutral `vanilla` preset or the Fortaleza-inspired `fortal`
+preset at initialization. Remix remains the behavior dependency; the
+application owns its tokens, theme values, component recipes, and generated
+adapters.
 
 The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
 component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
@@ -162,7 +162,7 @@ With `preset: fortal`, `add button` installs the full local theme layer,
 prefix replaces Fortal throughout: `--prefix Acme` creates `AcmeTheme`,
 `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. The installed application
 does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
-the Radix color data, tokens, recipes, and instance overrides as ordinary app
+the generated palette data, tokens, recipes, and instance overrides as ordinary app
 source.
 
 Place `AcmeTheme` below the application host. For a routed `WidgetsApp`, wrap

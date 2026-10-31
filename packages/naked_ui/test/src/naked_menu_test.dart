@@ -533,6 +533,46 @@ void main() {
         expect(find.text('Child item'), findsOneWidget);
       });
 
+      testWidgets(
+        'moving within a submenu trigger does not restart its delay',
+        (tester) async {
+          final controller = MenuController();
+          await tester.pumpMaterialWidget(
+            NakedMenu<String>(
+              controller: controller,
+              builder: (context, state, child) => const Text('Open'),
+              overlayBuilder: (context, info) => const NakedMenuSubmenu<String>(
+                hoverDelay: Duration(milliseconds: 100),
+                child: SizedBox(width: 120, height: 40, child: Text('More')),
+                overlayBuilder: _submenuContent,
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: Offset.zero);
+          addTearDown(mouse.removePointer);
+          final triggerCenter = tester.getCenter(find.text('More'));
+          await mouse.moveTo(triggerCenter);
+
+          for (var move = 1; move <= 4; move++) {
+            await tester.pump(const Duration(milliseconds: 20));
+            await mouse.moveTo(triggerCenter + Offset(move.toDouble(), 0));
+            expect(find.text('Child item'), findsNothing);
+          }
+          await tester.pump(const Duration(milliseconds: 19));
+          expect(find.text('Child item'), findsNothing);
+
+          await tester.pump(const Duration(milliseconds: 1));
+          await tester.pump();
+          expect(find.text('Child item'), findsOneWidget);
+        },
+      );
+
       testWidgets('keyboard opens, closes, and restores submenu focus', (
         tester,
       ) async {
@@ -1093,7 +1133,6 @@ void main() {
         );
       });
     });
-
     group('Panel height', () {
       const triggerKey = Key('trigger');
       const panelKey = Key('panel');

@@ -3,44 +3,218 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
-/// A token-width CSS outline that does not affect layout.
-///
-/// Every ring is [{{typePrefix}}Tokens.focusRingWidth] wide. The classic and solid
-/// buttons and icon buttons, checkboxes, radios, switches, and links draw it
-/// outside at Radix's 2px gap and pass [{{typePrefix}}Tokens.focusRingOffset]. The
-/// other offsets are literals that do not follow that token: `-1` for fields,
-/// cards, selects, segmented control items, and the soft, surface, outline, and
-/// ghost buttons and icon buttons, `-2` for [{{valuePrefix}}TabFocusOutline], and the
-/// slider thumb's 3px halo.
-RemixBoxEffectsMix {{valuePrefix}}FocusOutline(Color color, {required double offset}) =>
-    RemixBoxEffectsMix(
-      outline: BorderSideMix(
-        color: color,
-        width: {{typePrefix}}Tokens.focusRingWidth(),
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
-      outlineOffset: offset,
+/// {{typePrefix}}'s focus ring: solid step 8, 2px wide, with a 2px gap.
+/// Tokens resolve at the control, so nested themes and overrides work.
+/// The outline takes no layout space and never replaces the control's border.
+RemixBoxEffectsMix {{valuePrefix}}FocusOutline() => RemixBoxEffectsMix(
+  outline: BorderSideMix(
+    color: {{typePrefix}}Tokens.focus8(),
+    width: {{typePrefix}}Tokens.focusRingWidth(),
+  ),
+  outlineOffset: {{typePrefix}}Tokens.focusRingOffset(),
+);
+
+/// Keeps compact visual sizes while giving controls a 40px interaction area.
+/// This wraps the painted child inside Naked UI's existing gesture target.
+WidgetModifierConfig {{valuePrefix}}TouchTarget() =>
+    WidgetModifierConfig.modifier(const _{{typePrefix}}TouchTargetMix());
+
+final class _{{typePrefix}}TouchTargetMix extends ModifierMix<_{{typePrefix}}TouchTarget> {
+  const _{{typePrefix}}TouchTargetMix();
+
+  @override
+  _{{typePrefix}}TouchTarget resolve(BuildContext context) =>
+      _{{typePrefix}}TouchTarget({{typePrefix}}Tokens.touchTargetMin.resolve(context));
+
+  @override
+  _{{typePrefix}}TouchTargetMix merge(_{{typePrefix}}TouchTargetMix? other) => other ?? this;
+
+  @override
+  List<Object?> get props => const [];
+}
+
+final class _{{typePrefix}}TouchTarget extends WidgetModifier<_{{typePrefix}}TouchTarget> {
+  const _{{typePrefix}}TouchTarget(this.minimum);
+  final double minimum;
+
+  @override
+  Widget build(Widget child) => ConstrainedBox(
+    constraints: BoxConstraints(minWidth: minimum, minHeight: minimum),
+    child: Center(widthFactor: 1, heightFactor: 1, child: child),
+  );
+
+  @override
+  _{{typePrefix}}TouchTarget copyWith({double? minimum}) =>
+      _{{typePrefix}}TouchTarget(minimum ?? this.minimum);
+
+  @override
+  _{{typePrefix}}TouchTarget lerp(_{{typePrefix}}TouchTarget? other, double t) =>
+      _{{typePrefix}}TouchTarget(minimum + ((other?.minimum ?? minimum) - minimum) * t);
+
+  @override
+  List<Object?> get props => [minimum];
+}
+
+/// The same outline for surfaces without a Remix effects slot.
+/// [inset] measures from content inside an edge-to-edge clipped surface.
+WidgetModifierConfig {{valuePrefix}}FocusRingModifier({
+  Radius? radius,
+  bool visible = true,
+  double inset = 0,
+}) =>
+    WidgetModifierConfig.modifier(_{{typePrefix}}FocusRingMix(radius, visible, inset));
+
+extension {{typePrefix}}FocusRingToggle on ToggleStyler {
+  ToggleStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
+      container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
+}
+
+extension {{typePrefix}}FocusRingToggleGroup on ToggleGroupItemStyler {
+  ToggleGroupItemStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
+      container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
+}
+
+extension {{typePrefix}}FocusRingTab on TabStyler {
+  TabStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
+      container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
+}
+
+extension {{typePrefix}}FocusRingDisclosure on DisclosureStyler {
+  DisclosureStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
+      trigger(BoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
+}
+
+extension {{typePrefix}}FocusRingFlexBox on FlexBoxStyler {
+  FlexBoxStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
+      wrap({{valuePrefix}}FocusRingModifier(radius: radius));
+}
+
+extension {{typePrefix}}FocusRingBox on BoxStyler {
+  BoxStyler {{valuePrefix}}FocusRing({Radius? radius, double inset = 0}) =>
+      wrap({{valuePrefix}}FocusRingModifier(radius: radius, inset: inset));
+}
+
+final class _{{typePrefix}}FocusRingMix extends ModifierMix<_{{typePrefix}}FocusRingModifier> {
+  const _{{typePrefix}}FocusRingMix(this.radius, this.visible, this.inset);
+  final Radius? radius;
+  final bool visible;
+  final double inset;
+
+  @override
+  _{{typePrefix}}FocusRingModifier resolve(BuildContext context) {
+    final outline = {{valuePrefix}}FocusOutline().resolve(context);
+    return _{{typePrefix}}FocusRingModifier(
+      color: visible ? outline.outline.color : const Color(0x00000000),
+      width: outline.outline.width,
+      offset: outline.outlineOffset,
+      inset: MixOps.resolve(context, Prop.value(inset)) ?? 0,
+      radius:
+          MixOps.resolve(context, Prop.maybe(radius)) ??
+          {{typePrefix}}Tokens.radius2.resolve(context),
     );
+  }
 
-/// The ring of a Radix tab: `outline: 2px solid var(--focus-8)` at
-/// `outline-offset: -2px` (`base-tab-list.css:126-129`).
-///
-/// Toggles, toggle-group items, accordion and disclosure triggers, and sidebar
-/// destinations have no Radix counterpart and share it. At the default width it
-/// lies inside the box, so the clip of a toggle group or an accordion or
-/// disclosure panel does not crop it.
-RemixBoxEffectsMix {{valuePrefix}}TabFocusOutline() =>
-    {{valuePrefix}}FocusOutline({{typePrefix}}Tokens.focus8(), offset: -2);
+  @override
+  _{{typePrefix}}FocusRingMix merge(_{{typePrefix}}FocusRingMix? other) => other ?? this;
+  @override
+  List<Object?> get props => [radius, visible, inset];
+}
 
-/// A one-pixel inset stroke, optionally layered over a fill.
+final class _{{typePrefix}}FocusRingModifier
+    extends WidgetModifier<_{{typePrefix}}FocusRingModifier> {
+  const _{{typePrefix}}FocusRingModifier({
+    required this.color,
+    required this.width,
+    required this.offset,
+    required this.radius,
+    required this.inset,
+  });
+  final Color color;
+  final double width;
+  final double offset;
+  final Radius radius;
+  final double inset;
+
+  @override
+  _{{typePrefix}}FocusRingModifier copyWith({
+    Color? color,
+    double? width,
+    double? offset,
+    Radius? radius,
+    double? inset,
+  }) => _{{typePrefix}}FocusRingModifier(
+    color: color ?? this.color,
+    width: width ?? this.width,
+    offset: offset ?? this.offset,
+    radius: radius ?? this.radius,
+    inset: inset ?? this.inset,
+  );
+  @override
+  _{{typePrefix}}FocusRingModifier lerp(_{{typePrefix}}FocusRingModifier? other, double t) =>
+      other == null
+      ? this
+      : _{{typePrefix}}FocusRingModifier(
+          color: Color.lerp(color, other.color, t)!,
+          width: width + (other.width - width) * t,
+          offset: offset + (other.offset - offset) * t,
+          radius: Radius.lerp(radius, other.radius, t)!,
+          inset: inset + (other.inset - inset) * t,
+        );
+  @override
+  Widget build(Widget child) => CustomPaint(
+    foregroundPainter: _{{typePrefix}}FocusPainter(color, width, offset, radius, inset),
+    child: child,
+  );
+  @override
+  List<Object?> get props => [color, width, offset, radius, inset];
+}
+
+class _{{typePrefix}}FocusPainter extends CustomPainter {
+  const _{{typePrefix}}FocusPainter(
+    this.color,
+    this.width,
+    this.offset,
+    this.radius,
+    this.inset,
+  );
+  final Color color;
+  final double width;
+  final double offset;
+  final Radius radius;
+  final double inset;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (color.a == 0 || width == 0) return;
+    final box = RRect.fromRectAndRadius(
+      (Offset.zero & size).deflate(inset),
+      radius,
+    );
+    canvas.drawDRRect(
+      box.inflate(offset + width),
+      box.inflate(offset),
+      Paint()..color = color,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_{{typePrefix}}FocusPainter old) =>
+      color != old.color ||
+      width != old.width ||
+      offset != old.offset ||
+      radius != old.radius ||
+      inset != old.inset;
+}
+
+/// A crisp inset frame, not an elevation shadow. No blur or offset is used.
 RemixBoxEffectLayerMix {{valuePrefix}}InsetSurface({required List<Color> strokes}) =>
     RemixBoxEffectLayerMix(
       shadows: [
         for (final stroke in strokes)
           RemixBoxShadowMix(
-            kind: RemixBoxShadowKind.inset,
+            kind: .inset,
             color: stroke,
-            spreadRadius: 1,
+            spreadRadius: {{typePrefix}}Tokens.borderWidth1(),
           ),
       ],
     );

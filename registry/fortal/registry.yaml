@@ -9,8 +9,10 @@ items:
         target: "@ui/theme/computed.dart"
       - source: templates/theme/control_styles.dart.tmpl
         target: "@ui/theme/control_styles.dart"
-      - source: templates/theme/radix_colors.dart.tmpl
-        target: "@ui/theme/radix_colors.dart"
+      - source: templates/theme/fortal_colors.dart.tmpl
+        target: "@ui/theme/fortal_colors.dart"
+      - source: templates/theme/palette.dart.tmpl
+        target: "@ui/theme/palette.dart"
       - source: templates/theme/surface_frame.dart.tmpl
         target: "@ui/theme/surface_frame.dart"
       - source: templates/theme/theme.dart.tmpl
@@ -498,6 +500,7 @@ items:
 
   message_recipe:
     registryDependencies:
+      - theme
       - button
       - card
       - message
@@ -822,6 +825,7 @@ items:
 
   transcript_recipe:
     registryDependencies:
+      - theme
       - transcript
     files:
       - source: templates/recipes/transcript_recipe.dart.tmpl

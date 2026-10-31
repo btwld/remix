@@ -63,12 +63,7 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
           style: CardStyler()
               .borderRadius(.all(FortalTokens.radius2()))
               .onFocusVisible(
-                CardStyler().containerEffects(
-                  fortalFocusOutline(
-                    FortalTokens.focus8(),
-                    offset: FortalTokens.focusRingOffset(),
-                  ),
-                ),
+                CardStyler().containerEffects(fortalFocusOutline()),
               ),
           child: RowBox(
             style: FlexBoxStyler()
@@ -368,9 +363,6 @@ final _toolbarButtonStyle = fortalIconButtonStyle(variant: .ghost)
 
 /// Full Fortal dashboard demo.
 ///
-/// This is the open-code Fortal product dashboard starter: it includes the
-/// Overview, Chat, Customers, Orders, and Settings destinations, live Radix
-/// theme customization, interactive Agent chat, and revenue/activity charts.
 class FortalDashboardDemo extends StatefulWidget {
   const FortalDashboardDemo({
     super.key,

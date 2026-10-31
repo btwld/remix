@@ -6,7 +6,7 @@ part of 'select.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Select with Radix-owned trigger and content configuration.
+/// Ui-themed Select with Ui-owned trigger and content configuration.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.

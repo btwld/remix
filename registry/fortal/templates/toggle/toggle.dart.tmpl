@@ -21,9 +21,19 @@ ToggleStyler {{valuePrefix}}ToggleStyle({
   ToggleStyler style = const ToggleStyler.create(),
 }) {
   return (switch (variant) {
-    .ghost => _{{valuePrefix}}ToggleGhostStyler(size, highContrast: highContrast),
-    .outline => _{{valuePrefix}}ToggleOutlineStyler(size, highContrast: highContrast),
-  }).merge(style);
+        .ghost => _{{valuePrefix}}ToggleGhostStyler(size, highContrast: highContrast),
+        .outline => _{{valuePrefix}}ToggleOutlineStyler(
+          size,
+          highContrast: highContrast,
+        ),
+      })
+      .wrap({{valuePrefix}}TouchTarget())
+      .onDisabled(
+        ToggleStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
 ToggleStyler _{{valuePrefix}}ToggleBaseStyler({{typePrefix}}ToggleSize size) {
@@ -36,7 +46,7 @@ ToggleStyler _{{valuePrefix}}ToggleBaseStyler({{typePrefix}}ToggleSize size) {
 }
 
 ToggleStyler _{{valuePrefix}}ToggleFocusStyler() =>
-    ToggleStyler().containerEffects({{valuePrefix}}TabFocusOutline());
+    ToggleStyler().containerEffects({{valuePrefix}}FocusOutline());
 
 ToggleStyler _{{valuePrefix}}ToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()
@@ -111,7 +121,7 @@ ToggleStyler _{{valuePrefix}}ToggleSizeStyler({{typePrefix}}ToggleSize size) {
           .padding(.horizontal({{typePrefix}}Tokens.space2()))
           .padding(.vertical({{typePrefix}}Tokens.space1()))
           .borderRadius(.all({{typePrefix}}Tokens.radius2()))
-          .spacing({{typePrefix}}Tokens.toggleGap1()),
+          .spacing({{typePrefix}}Tokens.space1()),
       label: .style({{typePrefix}}Tokens.text1.mix()),
       icon: .size({{typePrefix}}Tokens.space3()),
     ),
@@ -129,7 +139,7 @@ ToggleStyler _{{valuePrefix}}ToggleSizeStyler({{typePrefix}}ToggleSize size) {
           .padding(.horizontal({{typePrefix}}Tokens.space4()))
           .padding(.vertical({{typePrefix}}Tokens.space2()))
           .borderRadius(.all({{typePrefix}}Tokens.radius3()))
-          .spacing({{typePrefix}}Tokens.toggleGap3()),
+          .spacing({{typePrefix}}Tokens.space2()),
       label: .style({{typePrefix}}Tokens.text3.mix()),
       icon: .size({{typePrefix}}Tokens.spinnerSize3()),
     ),

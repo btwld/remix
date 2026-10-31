@@ -6,13 +6,10 @@ import '../theme/theme.dart';
 
 part 'tabs.g.dart';
 
-/// Ui tab-list size presets matching Radix Themes 3.3.0.
+/// Ui tab-list size presets on the shared scale.
 enum UiTabsSize { size1, size2 }
 
 /// Ui-themed preset for [RemixTabBar].
-///
-/// The tab-list bottom border is a single hairline at every Radix size, so this
-/// preset takes no `size` — unlike [uiTabStyle], whose per-tab metrics vary.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler uiTabBarStyle({TabBarStyler style = const TabBarStyler.create()}) {
   return TabBarStyler()
@@ -86,7 +83,7 @@ TabStyler uiTabStyle({
             .color(UiTokens.grayA3())
             .onFocusVisible(.color(UiTokens.accentA3())),
       )
-      .onFocusVisible(TabStyler().containerEffects(uiTabFocusOutline()))
+      .onFocusVisible(TabStyler().containerEffects(uiFocusOutline()))
       .onSelected(
         .label(
               .color(UiTokens.gray12())
@@ -107,6 +104,12 @@ TabStyler uiTabStyle({
                 ),
               ),
             ),
+      )
+      .wrap(uiTouchTarget())
+      .onDisabled(
+        TabStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
       )
       .merge(style);
 }

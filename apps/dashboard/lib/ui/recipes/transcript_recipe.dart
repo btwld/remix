@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../components/transcript.dart';
+import '../theme/theme.dart';
 
 @immutable
 final class UiAgentTranscriptRecipe {
@@ -15,6 +16,6 @@ UiAgentTranscriptRecipe uiAgentTranscriptRecipe({
   style: UiTranscriptStyler(
     viewport: BoxStyler(),
     item: BoxStyler(),
-    spacing: 12,
+    spacing: UiTokens.space3(),
   ).merge(style),
 );

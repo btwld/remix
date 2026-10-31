@@ -113,6 +113,7 @@ final List<_Part> _parts = [
   ),
   (
     name: 'SelectMenuItem',
+    // Opening focuses the first option; the second stays idle until Arrow Down.
     label: 'Beta',
     adapter: RemixFlexBoxAdapter,
     build: (ring, node) => RemixSelect<String>(

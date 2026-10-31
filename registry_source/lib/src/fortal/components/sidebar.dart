@@ -9,11 +9,7 @@ import 'tooltip.dart';
 
 part 'sidebar.g.dart';
 
-const _sectionLabelHorizontalPadding = 14.0;
-const _sectionLabelVerticalPadding = 6.0;
 const _sectionLabelLetterSpacing = 0.7;
-const _destinationSpacing = 2.0;
-const _minimumDestinationTargetHeight = 48.0;
 
 /// Fortal-themed preset for [RemixSidebar].
 ///
@@ -77,20 +73,20 @@ SidebarStyler fortalSidebarStyle({
         .wrap(
           .padding(
             .symmetric(
-              horizontal: _sectionLabelHorizontalPadding,
-              vertical: _sectionLabelVerticalPadding,
+              horizontal: FortalTokens.space4(),
+              vertical: FortalTokens.space2(),
             ),
           ),
         ),
     tooltip: fortalTooltipStyle(),
-    destinations: FlexBoxStyler().spacing(_destinationSpacing),
+    destinations: FlexBoxStyler().spacing(FortalTokens.space1()),
     destination:
         fortalToggleStyle(
               variant: .ghost,
               size: .size2,
               highContrast: highContrast,
             )
-            .minHeight(_minimumDestinationTargetHeight)
+            .minHeight(FortalTokens.sidebarDestinationMinHeight())
             .padding(
               .only(
                 left: destinationLeftPadding,

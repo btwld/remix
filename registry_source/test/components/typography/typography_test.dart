@@ -49,7 +49,7 @@ void main() {
     testWidgets('all nine sizes resolve the pinned scale across scaling', (
       tester,
     ) async {
-      const fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 35, 60];
+      const fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 36, 60];
       for (final (scaling, factor) in const [
         (FortalScaling.percent90, 0.9),
         (FortalScaling.percent100, 1.0),
@@ -73,7 +73,7 @@ void main() {
     testWidgets('heading keeps the pinned line boxes and bold size6 default', (
       tester,
     ) async {
-      const fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 35, 60];
+      const fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 36, 60];
       const lineHeights = [16.0, 18, 22, 24, 26, 30, 36, 40, 60];
       for (var i = 0; i < FortalTextSize.values.length; i++) {
         final label = 'h$i';
@@ -683,15 +683,8 @@ void main() {
   });
 
   group('kbd variants', () {
-    testWidgets('classic and soft resolve their pinned fills in both modes', (
-      tester,
-    ) async {
+    testWidgets('soft resolves its fills in both modes', (tester) async {
       for (final brightness in Brightness.values) {
-        final gray1 = await _resolveToken(
-          tester,
-          FortalTokens.gray1,
-          brightness: brightness,
-        );
         final grayA3 = await _resolveToken(
           tester,
           FortalTokens.grayA3,
@@ -703,10 +696,7 @@ void main() {
           brightness: brightness,
         );
 
-        for (final (variant, fill) in [
-          (FortalKbdVariant.classic, gray1),
-          (FortalKbdVariant.soft, grayA3),
-        ]) {
+        for (final (variant, fill) in [(FortalKbdVariant.soft, grayA3)]) {
           final label = '${variant.name}-${brightness.name}';
           await _pump(
             tester,
@@ -726,12 +716,12 @@ void main() {
   });
 
   group('link', () {
-    testWidgets('underline thickness follows the pinned min/max ramp', (
+    testWidgets('underline thickness follows the Fortal min/max ramp', (
       tester,
     ) async {
-      // Upstream is `min(2px, max(1px, 0.05em))`, so the ramp is flat at 1
+      // The ramp is `min(2px, max(1px, 0.05em))`, so it is flat at 1
       // through size5, rises through size8, and clamps at 2 for size9.
-      const expected = [1.0, 1, 1, 1, 1, 1.2, 1.4, 1.75, 2];
+      const expected = [1.0, 1, 1, 1, 1, 1.2, 1.4, 1.8, 2];
       for (var i = 0; i < FortalTextSize.values.length; i++) {
         final size = FortalTextSize.values[i];
         final label = 'link$i';
@@ -834,7 +824,6 @@ void main() {
         ),
       );
 
-      // Color.lerp is the recorded sRGB approximation of Radix's OKLab mix.
       expect(
         _text(tester, 'always').style?.decorationColor,
         Color.lerp(accentA5, grayA6, 0.5),
@@ -1003,31 +992,6 @@ void main() {
   });
 
   group('theme', () {
-    for (final brightness in Brightness.values) {
-      testWidgets('kbd classic keeps all six ${brightness.name} layers', (
-        tester,
-      ) async {
-        await _pump(
-          tester,
-          const FortalKbd.classic('classic'),
-          brightness: brightness,
-        );
-
-        final shadows = _surface(
-          tester,
-        ).containerEffects!.behindContent!.shadows;
-        expect(shadows, hasLength(6));
-        expect(shadows.map((s) => s.kind), const [
-          RemixBoxShadowKind.inset,
-          RemixBoxShadowKind.inset,
-          RemixBoxShadowKind.inset,
-          RemixBoxShadowKind.inset,
-          RemixBoxShadowKind.outer,
-          RemixBoxShadowKind.outer,
-        ]);
-      });
-    }
-
     testWidgets('neutral and accent colours differ between light and dark', (
       tester,
     ) async {
@@ -1222,7 +1186,6 @@ void main() {
         ),
       );
 
-      // highContrast alone is inert: upstream gates the colour on the accent.
       expect(_text(tester, 'neutral text').style?.color, gray12);
       expect(_text(tester, 'neutral hc text').style?.color, gray12);
       expect(_text(tester, 'accent text').style?.color, accentA11);
@@ -1282,7 +1245,7 @@ void main() {
       expect(code.weight, isNull);
 
       expect(kbd.size, isNull);
-      expect(kbd.variant, FortalKbdVariant.classic);
+      expect(kbd.variant, FortalKbdVariant.soft);
       expect(kbd.excludeSemantics, isFalse);
 
       expect(link.size, isNull);
@@ -1301,7 +1264,6 @@ void main() {
       expect(const FortalCode.soft('c').variant, FortalCodeVariant.soft);
       expect(const FortalCode.outline('c').variant, FortalCodeVariant.outline);
       expect(const FortalCode.ghost('c').variant, FortalCodeVariant.ghost);
-      expect(const FortalKbd.classic('k').variant, FortalKbdVariant.classic);
       expect(const FortalKbd.soft('k').variant, FortalKbdVariant.soft);
     });
 
@@ -1326,7 +1288,7 @@ void main() {
   });
 }
 
-const _fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 35, 60];
+const _fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 36, 60];
 const _letterSpacings = [
   0.0025 * 12,
   0.0,
@@ -1335,7 +1297,7 @@ const _letterSpacings = [
   -0.005 * 20,
   -0.00625 * 24,
   -0.0075 * 28,
-  -0.01 * 35,
+  -0.01 * 36,
   -0.025 * 60,
 ];
 

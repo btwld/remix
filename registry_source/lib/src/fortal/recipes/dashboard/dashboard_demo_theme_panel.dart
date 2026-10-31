@@ -202,7 +202,8 @@ class _AccentSwatch extends StatelessWidget {
           .color(FortalTokens.accent9())
           .iconColor(const Color(0x00000000))
           .onHovered(ToggleStyler().color(FortalTokens.accent10()))
-          .onPressed(ToggleStyler().color(FortalTokens.accent10()));
+          .onPressed(ToggleStyler().color(FortalTokens.accent10()))
+          .onSelected(ToggleStyler().iconColor(FortalTokens.accentContrast()));
 
   final FortalAccentColor accent;
   final bool selected;
@@ -210,21 +211,15 @@ class _AccentSwatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The ring belongs to the panel's theme: gray-12 once checked, accent-9
-    // while focused, the later rule winning as in theme-panel.css:36-47. Read
-    // inside the accent scope below, accent-9 would be the swatch's own color.
-    final width = MixScope.tokenOf(FortalTokens.focusRingWidth, context);
-    final offset = MixScope.tokenOf(FortalTokens.focusRingOffset, context);
-    ToggleStyler ring(ColorToken color) => ToggleStyler().containerEffects(
-      // Resolve every override before entering the swatch's own accent scope.
-      // The control's circular radius also shapes the outline; zero width
-      // paints nothing without a foreground-decoration workaround.
-      fortalFocusOutline(
-        MixScope.tokenOf(color, context),
-        offset: offset,
-      ).outline(BorderSideMix(width: width)),
+    // The swatch changes its fill palette, while its ring belongs to the
+    // surrounding panel and must retain that scope's token overrides.
+    final outline = fortalFocusOutline().resolve(context);
+    final ring = ToggleStyler().containerEffects(
+      RemixBoxEffectsMix.create(
+        outline: Prop.value(outline.outline),
+        outlineOffset: Prop.value(outline.outlineOffset),
+      ),
     );
-
     return FortalAccentScope(
       accent: accent,
       child: RemixToggle(
@@ -232,13 +227,7 @@ class _AccentSwatch extends StatelessWidget {
         onChanged: (_) => onPressed(),
         icon: RemixIcons.check,
         semanticLabel: '${enumLabel(accent)} accent',
-        style: _style
-            .onSelected(
-              ToggleStyler()
-                  .iconColor(FortalTokens.accentContrast())
-                  .merge(ring(FortalTokens.gray12)),
-            )
-            .onFocusVisible(ring(FortalTokens.accent9)),
+        style: _style.onSelected(ring).onFocusVisible(ring),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import '../components/button.dart';
 import '../components/card.dart';
 import '../components/message.dart';
+import '../theme/theme.dart';
 
 @immutable
 final class UiAgentMessageRecipe {
@@ -27,16 +28,19 @@ UiAgentMessageRecipe uiAgentMessageRecipe({
   ButtonStyler toggleStyle = const ButtonStyler.create(),
 }) => UiAgentMessageRecipe(
   style: UiMessageStyler(
-    row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
-    avatar: BoxStyler().size(28, 28),
-    header: BoxStyler().padding(.bottom(6)),
+    row: FlexBoxStyler().mainAxisSize(.max).spacing(UiTokens.space2()),
+    avatar: BoxStyler().size(
+      UiTokens.messageAvatarSize(),
+      UiTokens.messageAvatarSize(),
+    ),
+    header: BoxStyler().padding(.bottom(UiTokens.space2())),
     body: BoxStyler(),
-    footer: BoxStyler().padding(.top(4)),
-    maxWidth: 640,
+    footer: BoxStyler().padding(.top(UiTokens.space1())),
+    maxWidth: UiTokens.messageContentMaxWidth(),
   ).merge(style),
   surfaceStyle: uiCardStyle(style: surfaceStyle),
   collapsibleStyle: UiMessageCollapsibleStyler(
-    collapsedHeight: 72,
+    collapsedHeight: UiTokens.messageCollapsedHeight(),
     container: BoxStyler(),
     clipped: BoxStyler(),
   ).merge(collapsibleStyle),

@@ -6,7 +6,7 @@ part of 'slider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal slider with Radix-owned size, variant, and component overrides.
+/// Fortal slider with Fortal-owned size, variant, and component overrides.
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,
@@ -29,27 +29,6 @@ class FortalSlider extends StatelessWidget {
     this.semanticFormatterCallback,
     this.excludeSemantics = false,
   });
-
-  const FortalSlider.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const SliderStyler.create(),
-    required this.value,
-    this.onChanged,
-    this.onChangeStart,
-    this.onChangeEnd,
-    this.min = 0.0,
-    this.max = 1.0,
-    this.enabled = true,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.snapDivisions,
-    this.semanticLabel,
-    this.semanticFormatterCallback,
-    this.excludeSemantics = false,
-  }) : variant = FortalSliderVariant.classic;
 
   const FortalSlider.surface({
     super.key,

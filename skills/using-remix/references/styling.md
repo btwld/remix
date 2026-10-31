@@ -138,19 +138,8 @@ take effect once the style stops moving.
 
 ## Reusable and dynamic app styles
 
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-import 'ui/ui.dart';
-
-class AppStyles {
-  static ButtonStyler get primaryButton => fortalButtonStyle(variant: .solid)
-      .animate(AnimationConfig.spring(200.ms));
-}
-
-Widget saveButton(VoidCallback save) =>
-    RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton);
-```
+Keep shared recipe extensions in app-owned styles; use the `mix` skill for
+state, context and animation syntax.
 
 A destructive action needs the accent itself to change, not just the idle
 fill: overriding `.color()`/`.onHovered()` alone misses the Fortal recipe's
@@ -163,7 +152,7 @@ import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
 Widget deleteButton(VoidCallback delete) => FortalTheme(
-  accent: .red,
+  accent: .caju,
   child: FortalButton.solid(label: 'Delete', onPressed: delete),
 );
 ```

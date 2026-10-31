@@ -6,16 +6,6 @@ use a third-party system named "Acme" registered as `@acme`. For a first-party
 preset in `btwld/remix`, follow `open_code/ADDING_PRESETS.md` in that checkout:
 reuse its authoring package, builder, and checkout consumer harness.
 
-## Table of Contents
-
-- [Repository layout](#1-repository-layout)
-- [Authoring package](#2-authoring-package)
-- [Authoring rules](#3-authoring-rules)
-- [Derivation](#4-derivation)
-- [Catalog](#5-catalog)
-- [Publish and test](#6-publish-and-test)
-- [Limits](#7-limits)
-
 ## 1. Repository layout
 
 ```text
@@ -28,7 +18,7 @@ acme-design-system/            public github.com repository
   specs/
     tokens.yaml                token inventory, values, citations (references/tokens.md)
     components/<name>.yaml     one worksheet per component
-  docs/adr/                    scope, sources, theme model decisions
+  ARCHITECTURE.md               significant decisions, if needed; reuse an existing log
   tool/
     derive_templates.dart      source/lib → registry/vanilla/templates
     extract/                   tier 1–2 token extraction, if any (references/tokens.md)
@@ -119,7 +109,7 @@ and adds package dependencies; it cannot add `fonts:` or `assets:` to a
 consumer's pubspec. Ship icons and fonts as a pub package an item declares
 (Vanilla's `theme` item declares `remix_ui_fonts`; icon packages come from
 `icons.yaml`, below), or document the
-consumer's pubspec step in the README. Record the choice in the ADR.
+consumer's pubspec step in the README; preserve any significant tradeoff in the decision log.
 
 **No literal `{{`** anywhere in source; the CLI rejects any placeholder other
 than the ones it renders: `{{typePrefix}}`, `{{valuePrefix}}`,
@@ -148,77 +138,19 @@ A short script owned by the repository. Its contract:
 - `--check` compares instead of writing and fails on any missing, changed, or
   stale template. Run it in CI.
 
-```dart
-// tool/derive_templates.dart: run from the repository root.
-// `dart run tool/derive_templates.dart` writes; `--check` only compares.
-import 'dart:io';
+Use the maintained [official builder](https://github.com/btwld/remix/blob/main/tool/build_registry.dart)
+and its [tests](https://github.com/btwld/remix/blob/main/test/tool/build_registry_test.dart)
+as the implementation reference. Keep the derivation script local and small;
+assert rendering with a different consumer prefix and deriving it back yields
+byte-identical source. Compare the entire output tree, including catalog
+structure, so orphaned files cannot escape drift checks.
 
-const typeWord = 'Acme';
-const valueWord = 'acme';
-const sourceRoot = 'source/lib';
-const templateRoot = 'registry/vanilla/templates';
-
-// A leak is the word standing on its own instead of inside an identifier
-// (AcmeButton, resolveAcmePalette, acmeButtonStyle) or opening a quoted id
-// ('acme.color.primary', 'acme-row').
-final leak = RegExp(
-  '(?<![A-Za-z0-9_])$typeWord(?![A-Z0-9_])'
-  "|(?<![A-Za-z0-9_'\"])$valueWord(?![A-Z0-9_])"
-  "|(?<=['\"])$valueWord(?![A-Z0-9_.-])",
-);
-final anySpelling = RegExp(typeWord, caseSensitive: false);
-
-void main(List<String> args) {
-  final expected = <String, String>{};
-  final sources = Directory(sourceRoot)
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'));
-  for (final file in sources) {
-    final relative = file.path.substring(sourceRoot.length + 1);
-    final source = file.readAsStringSync();
-    final template = source
-        .replaceAll(typeWord, '{{typePrefix}}')
-        .replaceAll(valueWord, '{{valuePrefix}}');
-    final problem = anySpelling.hasMatch(relative)
-        ? 'authoring word in the file path'
-        : source.contains('{{')
-        ? 'literal "{{"'
-        : leak.hasMatch(source)
-        ? 'authoring word at offset ${leak.firstMatch(source)!.start}'
-        : anySpelling.hasMatch(template)
-        ? 'another spelling of the authoring word'
-        : null;
-    if (problem != null) throw StateError('$relative: $problem');
-    expected['$templateRoot/$relative.tmpl'] = template;
-  }
-
-  final root = Directory(templateRoot);
-  final existing = root.existsSync()
-      ? root.listSync(recursive: true).whereType<File>().map((f) => f.path)
-      : const Iterable<String>.empty();
-  final stale = existing.where((path) => !expected.containsKey(path)).toList();
-  final changed = [
-    for (final MapEntry(:key, :value) in expected.entries)
-      if (!File(key).existsSync() || File(key).readAsStringSync() != value) key,
-  ];
-
-  if (args.contains('--check')) {
-    if (stale.isEmpty && changed.isEmpty) return;
-    stderr.writeln('Template drift:\n${[...stale, ...changed].join('\n')}');
-    exitCode = 1;
-    return;
-  }
-  for (final path in stale) {
-    File(path).deleteSync();
-  }
-  for (final path in changed) {
-    File(path)
-      ..createSync(recursive: true)
-      ..writeAsStringSync(expected[path]!);
-  }
-}
-```
+The official registry has explicit stable data filename exceptions such as
+`theme/fortal_colors.dart`. These preserve literal imports, while Dart types
+still render with the consumer prefix; a filename exception is not permission
+for arbitrary prefix leakage. Catalog dependency floors and icon mappings are
+maintained inputs, as [the official contract](https://github.com/btwld/remix/blob/main/open_code/REGISTRIES.md#authoring-and-derivation)
+explains.
 
 ## 5. Catalog
 
@@ -282,7 +214,9 @@ Item design rules:
 
 - **The theme is one shared item** that every component depends on, so any
   single `add` installs a working theme.
-- **One item per component**, one generated part per item.
+- Group files by installable component. Compound items may declare multiple
+  adapters; list every generated part (the official chart item generates three
+  adapters in one `chart.g.dart` file).
 - **No two items may own the same target**, and no item may own `@ui/ui.dart`
   (the CLI assembles that barrel). A file two components need is a third
   item both depend on.

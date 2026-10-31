@@ -5,12 +5,10 @@ import 'package:registry_source/fortal.dart';
 
 import '../../helpers/test_helpers.dart';
 
-// Panel anatomy derives from the mapped Table family (see
-// registry_source/fortal/lib/src/components/data_table.dart): the container owns
-// radius, foreground frame, fill, and clipping so the trigger and content crop into
-// one rounded shape instead of each rounding their own corners. These tests
-// pin that contract directly, plus the content font size that keeps a
-// passage from ever reading larger than its own title.
+// The container owns the rounded foreground frame and fill. Trigger and content
+// clip their own painted children so the shared focus outline can extend beyond
+// the panel. Expanded parts join without rounding their shared edge. These tests
+// also pin the content font size so a passage never exceeds its title.
 void main() {
   group('panel anatomy', () {
     for (final (size, radius) in const [
@@ -25,7 +23,8 @@ void main() {
         final box = spec.container.spec;
 
         expect(_radius(box), radius);
-        expect(box.clipBehavior, Clip.antiAlias);
+        expect(box.clipBehavior, Clip.none);
+        expect(spec.trigger.spec.box?.spec.clipBehavior, Clip.antiAlias);
       });
     }
 
@@ -57,29 +56,37 @@ void main() {
       expect(border?.top.color, tokens.accent6);
     });
 
-    testWidgets(
-      'expanded trigger has no corner radius of its own, so it can join '
-      'content with no notch',
-      (tester) async {
-        final spec = await _resolve(
-          tester,
-          fortalAccordionStyle(),
-          states: {WidgetState.selected},
-        );
-        final triggerBox =
-            spec.trigger.spec.box?.spec.decoration as BoxDecoration?;
+    testWidgets('expanded trigger rounds only the top corners to join '
+        'content with no notch', (tester) async {
+      await tester.pumpRemixApp(
+        RemixAccordionGroup<String>(
+          controller: RemixAccordionController<String>(),
+          initialExpandedValues: const ['item'],
+          child: const FortalAccordion<String>(
+            value: 'item',
+            title: 'Panel title',
+            child: Text('Panel body'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final spec = tester.resolvedSpecOf<AccordionSpec>(
+        find.text('Panel title'),
+      );
+      final triggerBox =
+          spec.trigger.spec.box?.spec.decoration as BoxDecoration?;
 
-        expect(triggerBox?.borderRadius, isNull);
-      },
-    );
+      final radii = triggerBox!.borderRadius!.resolve(TextDirection.ltr);
+      expect(radii.topLeft.x, 8);
+      expect(radii.bottomLeft.x, 0);
+    });
 
-    testWidgets('collapsed trigger also has no corner radius of its own: the '
-        'container supplies rounding either way', (tester) async {
+    testWidgets('collapsed trigger rounds every corner', (tester) async {
       final spec = await _resolve(tester, fortalAccordionStyle());
       final triggerBox =
           spec.trigger.spec.box?.spec.decoration as BoxDecoration?;
 
-      expect(triggerBox?.borderRadius, isNull);
+      expect(triggerBox?.borderRadius, BorderRadius.circular(8));
     });
 
     testWidgets('an expanded item renders one continuous panel: the container '

@@ -6,13 +6,10 @@ import '../theme/theme.dart';
 
 part 'tabs.g.dart';
 
-/// Fortal tab-list size presets matching Radix Themes 3.3.0.
+/// Fortal tab-list size presets on the shared scale.
 enum FortalTabsSize { size1, size2 }
 
 /// Fortal-themed preset for [RemixTabBar].
-///
-/// The tab-list bottom border is a single hairline at every Radix size, so this
-/// preset takes no `size` — unlike [fortalTabStyle], whose per-tab metrics vary.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler fortalTabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
@@ -94,7 +91,7 @@ TabStyler fortalTabStyle({
             .color(FortalTokens.grayA3())
             .onFocusVisible(.color(FortalTokens.accentA3())),
       )
-      .onFocusVisible(TabStyler().containerEffects(fortalTabFocusOutline()))
+      .onFocusVisible(TabStyler().containerEffects(fortalFocusOutline()))
       .onSelected(
         .label(
               .color(FortalTokens.gray12())
@@ -115,6 +112,12 @@ TabStyler fortalTabStyle({
                 ),
               ),
             ),
+      )
+      .wrap(fortalTouchTarget())
+      .onDisabled(
+        TabStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
       )
       .merge(style);
 }

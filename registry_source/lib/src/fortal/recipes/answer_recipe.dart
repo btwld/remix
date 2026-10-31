@@ -32,16 +32,22 @@ FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
 }) => FortalAgentAnswerRecipe(
   style: AgentAnswerStyler(
     body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
-    feedback: BoxStyler().padding(.top(6)),
-    sourcesLabel: TextStyler().color(FortalTokens.gray12()).fontSize(13),
-    indicator: IconStyler().color(FortalTokens.gray12()).size(16),
+    actions: FlexBoxStyler()
+        .spacing(FortalTokens.space2())
+        .padding(.top(FortalTokens.space3())),
+    feedback: BoxStyler().padding(.top(FortalTokens.space2())),
+    sourcesLabel: TextStyler()
+        .color(FortalTokens.gray12())
+        .style(FortalTokens.text2.mix()),
+    indicator: IconStyler()
+        .color(FortalTokens.gray12())
+        .size(FortalTokens.space4()),
   ).merge(style),
   surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
   sourcesStyle: fortalDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(12)))
+        .container(BoxStyler().margin(.top(FortalTokens.space3())))
         .merge(sourcesStyle),
   ),
   copyStyle: fortalIconButtonStyle(

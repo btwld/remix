@@ -9,13 +9,12 @@ import 'select.dart';
 
 part 'data_table.g.dart';
 
-/// Radix Themes Table size presets.
+/// Fortal Table size presets.
 enum FortalDataTableSize { size1, size2, size3 }
 
-/// Radix Themes Table variants.
+/// Fortal Table variants.
 enum FortalDataTableVariant { surface, ghost }
 
-/// Resolved Radix `table.css` metrics for one size step.
 typedef _FortalDataTableMetrics = ({
   double paddingX,
   double paddingY,
@@ -26,17 +25,6 @@ typedef _FortalDataTableMetrics = ({
 });
 
 /// Fortal recipe for [RemixDataTable].
-///
-/// Sizes and variants map `@radix-ui/themes@3.3.0` `table.css` exactly: cell
-/// padding, minimum cell height, typography, radius, the `gray-a5` row
-/// divider, bold column headers, the surface panel/border, the `gray-a2`
-/// header background, and the suppressed divider under a surface table's last
-/// row.
-///
-/// Sorting, selection, pagination, and row hover have no Radix counterpart —
-/// Radix's Table is a passive layout. They are Fortal extensions built from
-/// existing accent/gray control tokens and are recorded as extensions in the
-/// parity manifest.
 @MixWidget(target: RemixDataTable.new)
 DataTableStyler fortalDataTableStyle({
   FortalDataTableSize size = .size2,
@@ -58,12 +46,13 @@ DataTableStyler fortalDataTableStyle({
             .fontWeight(FortalTokens.fontWeightRegular())
             .color(FortalTokens.gray11()),
       )
-      .headerCell(_fortalDataTableCell(metrics))
+      .headerCell(
+        _fortalDataTableCell(metrics).onFocusVisible(
+          // Keep the common outline inside the padding of clipped tables.
+          BoxStyler().fortalFocusRing(inset: FortalTokens.space2()),
+        ),
+      )
       .bodyCell(_fortalDataTableCell(metrics))
-      // The selection column is a Fortal extension with no Radix counterpart.
-      // It carries no padding of its own, so the composed checkbox's
-      // interaction target — sized to this cell — spans the whole column and
-      // the full row height instead of being inset from both.
       .selectionCell(BoxStyler().alignment(Alignment.center))
       .headerMinHeight(metrics.minHeight)
       .rowMinHeight(metrics.minHeight)
@@ -72,7 +61,7 @@ DataTableStyler fortalDataTableStyle({
       .sortIcon(
         IconStyler(color: FortalTokens.gray11(), size: metrics.sortIconSize),
       )
-      .headerRow(_fortalDataTableHeaderRow())
+      .headerRow(_fortalDataTableRowDivider())
       .bodyRow(
         _fortalDataTableRowDivider()
             .color(const Color(0x00000000))
@@ -101,16 +90,16 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
       .size1 => (
         paddingX: FortalTokens.space2(),
         paddingY: FortalTokens.space2(),
-        minHeight: FortalTokens.dataTableRowHeight1(),
-        sortIconSize: 14.0,
+        minHeight: FortalTokens.touchTargetMin(),
+        sortIconSize: FortalTokens.dataTableSortIconSize1(),
         radius: FortalTokens.radius3(),
         text: FortalTokens.text2,
       ),
       .size2 => (
         paddingX: FortalTokens.space3(),
         paddingY: FortalTokens.space3(),
-        minHeight: FortalTokens.dataTableRowHeight2(),
-        sortIconSize: 16.0,
+        minHeight: FortalTokens.space8(),
+        sortIconSize: FortalTokens.space4(),
         radius: FortalTokens.radius4(),
         text: FortalTokens.text2,
       ),
@@ -118,7 +107,7 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
         paddingX: FortalTokens.space4(),
         paddingY: FortalTokens.space3(),
         minHeight: FortalTokens.space8(),
-        sortIconSize: 18.0,
+        sortIconSize: FortalTokens.dataTableSortIconSize3(),
         radius: FortalTokens.radius4(),
         text: FortalTokens.text3,
       ),
@@ -128,38 +117,6 @@ BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
 
-/// Radix's Table has no sortable header, so a focusable one takes Fortal's own
-/// ring: `focus-8` at the focus ring width, drawn inside the cell. Each header
-/// cell resolves its own row region under its own widget-state scope, so only
-/// the focused cell rings.
-///
-/// The row region already paints the divider as a foreground border, so focus
-/// only changes that decoration. A decoration that appeared on focus would swap
-/// the cell's root widget and rebuild a stateful custom header from scratch.
-BoxStyler _fortalDataTableHeaderRow() => _fortalDataTableRowDivider()
-    .onFocusVisible(BoxStyler().onBuilder(_fortalDataTableHeaderRing));
-
-/// A zero-width [BorderSide] is a hairline, so a ring of width zero draws
-/// nothing and leaves the divider alone.
-BoxStyler _fortalDataTableHeaderRing(BuildContext context) {
-  final width = FortalTokens.focusRingWidth.resolve(context);
-  if (width <= 0) return BoxStyler();
-  return BoxStyler().foregroundDecoration(
-    BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(
-          color: FortalTokens.focus8(),
-          width: width,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-      ),
-    ),
-  );
-}
-
-/// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
-/// over the cell without reserving layout space. A foreground border is the
-/// Flutter equivalent; a regular border would inset the cell content by 1px.
 BoxStyler _fortalDataTableRowDivider() => BoxStyler().foregroundDecoration(
   BoxDecorationMix(border: BoxBorderMix.bottom(_fortalDataTableDividerSide())),
 );
@@ -171,7 +128,8 @@ BorderSideMix _fortalDataTableDividerSide() =>
 
 FlexBoxStyler _fortalDataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)
-    .spacing(FortalTokens.space2())
+    // The compact pager keeps full touch targets without crowding its labels.
+    .spacing(FortalTokens.space1())
     .padding(.horizontal(FortalTokens.space4()))
     .padding(.vertical(FortalTokens.space2()))
     .foregroundDecoration(
@@ -192,8 +150,6 @@ DataTableStyler _fortalDataTableSurface(DataTableStyler base, Radius radius) {
         RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       )
       .headerRow(.color(FortalTokens.grayA2()))
-      // Radix clears `--table-row-box-shadow` on the surface variant's last
-      // row so its divider never doubles up with the panel border.
       .lastBodyRow(
         BoxStyler().foregroundDecoration(
           BoxDecorationMix(border: BoxBorderMix.bottom(BorderSideMix.none)),

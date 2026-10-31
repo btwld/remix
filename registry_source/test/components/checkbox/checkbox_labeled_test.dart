@@ -5,8 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 // Suppressed per-use below, so a future accidental internal-member use still
 // gets flagged.
 import 'package:remix/src/rendering/remix_box_effects.dart';
-// Deliberate: RemixPathIcon/RemixPathGlyph stay unexported, but this sibling
-// package verifies Fortal's pinned Radix checkbox defaults at the widget edge.
 import 'package:remix/src/utilities/remix_path_icon.dart';
 import 'package:registry_source/fortal.dart';
 
@@ -47,7 +45,7 @@ void main() {
       }
     });
 
-    testWidgets('uses thick Radix indicators at every checkbox size', (
+    testWidgets('uses thick vector indicators at every checkbox size', (
       tester,
     ) async {
       const expectedIndicatorSizes = <FortalCheckboxSize, double>{

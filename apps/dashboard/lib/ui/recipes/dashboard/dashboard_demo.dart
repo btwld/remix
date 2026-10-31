@@ -59,14 +59,7 @@ class UiDashboardSidebarAccount extends StatelessWidget {
         builder: (_, _, _) => RemixCard(
           style: CardStyler()
               .borderRadius(.all(UiTokens.radius2()))
-              .onFocusVisible(
-                CardStyler().containerEffects(
-                  uiFocusOutline(
-                    UiTokens.focus8(),
-                    offset: UiTokens.focusRingOffset(),
-                  ),
-                ),
-              ),
+              .onFocusVisible(CardStyler().containerEffects(uiFocusOutline())),
           child: RowBox(
             style: FlexBoxStyler()
                 .minHeight(48)
@@ -365,9 +358,6 @@ final _toolbarButtonStyle = uiIconButtonStyle(variant: .ghost)
 
 /// Full Ui dashboard demo.
 ///
-/// This is the open-code Ui product dashboard starter: it includes the
-/// Overview, Chat, Customers, Orders, and Settings destinations, live Radix
-/// theme customization, interactive Agent chat, and revenue/activity charts.
 class UiDashboardDemo extends StatefulWidget {
   const UiDashboardDemo({
     super.key,

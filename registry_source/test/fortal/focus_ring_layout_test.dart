@@ -165,42 +165,41 @@ void main() {
     }
 
     for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
-      testWidgets('${part.name} paints its ring over its box in ${mode.name}', (
-        tester,
-      ) async {
-        final boundary = GlobalKey();
-        await pumpPart(tester, part, boundary: boundary, mode: mode);
-        final idle = await capturePixels(tester, boundary);
-        final box = tester.getRect(part.box);
+      testWidgets(
+        '${part.name} paints its ring outside its box in ${mode.name}',
+        (tester) async {
+          final boundary = GlobalKey();
+          await pumpPart(tester, part, boundary: boundary, mode: mode);
+          final idle = await capturePixels(tester, boundary);
+          final box = tester.getRect(part.box);
 
-        await focusWithKeyboard(tester);
-        final focused = await capturePixels(tester, boundary);
-        final ring = MixScope.tokenOf(
-          FortalTokens.focus8,
-          tester.element(part.box),
-        );
+          await focusWithKeyboard(tester);
+          final focused = await capturePixels(tester, boundary);
+          final ring = MixScope.tokenOf(
+            FortalTokens.focus8,
+            tester.element(part.box),
+          );
 
-        // Each probe is the middle of an edge, `inside` logical pixels in from
-        // it. The 2px ring covers 1, the box past the ring starts at 3, and -1
-        // is outside the box.
-        final origin = tester.getTopLeft(find.byKey(boundary));
-        final edges = <Offset Function(double inside)>[
-          (inside) => Offset(box.center.dx, box.top + inside),
-          (inside) => Offset(box.center.dx, box.bottom - inside),
-          (inside) => Offset(box.left + inside, box.center.dy),
-          (inside) => Offset(box.right - inside, box.center.dy),
-        ];
-        Color pixel(Pixels pixels, Offset logical) {
-          final device = (logical - origin) * pixelScale.toDouble();
-          return pixels.at(device.dx.round(), device.dy.round());
-        }
+          // The common token ring sits 2px outside the box and is 2px wide.
+          final origin = tester.getTopLeft(find.byKey(boundary));
+          final edges = <Offset Function(double inside)>[
+            (inside) => Offset(box.center.dx, box.top + inside),
+            (inside) => Offset(box.center.dx, box.bottom - inside),
+            (inside) => Offset(box.left + inside, box.center.dy),
+            (inside) => Offset(box.right - inside, box.center.dy),
+          ];
+          Color pixel(Pixels pixels, Offset logical) {
+            final device = (logical - origin) * pixelScale.toDouble();
+            return pixels.at(device.dx.round(), device.dy.round());
+          }
 
-        for (final at in edges) {
-          expectNearColor(pixel(focused, at(1)), ring);
-          expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
-          expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
-        }
-      });
+          for (final at in edges) {
+            expectNearColor(pixel(focused, at(-3)), ring);
+            expectNearColor(pixel(focused, at(1)), pixel(idle, at(1)));
+            expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
+          }
+        },
+      );
     }
   }
 }

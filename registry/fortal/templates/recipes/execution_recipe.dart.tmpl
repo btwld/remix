@@ -31,21 +31,37 @@ final class {{typePrefix}}AgentExecutionRecipe {
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentExecutionRecipe(
   style: {{typePrefix}}ExecutionStyler(
-    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+    header: FlexBoxStyler()
+        .spacing({{typePrefix}}Tokens.space2())
+        .crossAxisAlignment(.center),
     output: BoxStyler()
         .color({{typePrefix}}Tokens.gray3())
-        .borderRadius(.circular(6))
-        .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
-    tool: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+        .borderRadius(.all({{typePrefix}}Tokens.radius3()))
+        .padding(.all({{typePrefix}}Tokens.space3())),
+    actions: FlexBoxStyler()
+        .spacing({{typePrefix}}Tokens.space2())
+        .padding(.top({{typePrefix}}Tokens.space3())),
+    tool: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .style({{typePrefix}}Tokens.text1.mix()),
     title: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
-        .fontWeight(FontWeight.w600),
-    meta: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
-    status: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
-    toolIcon: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
-    statusIcon: IconStyler().color({{typePrefix}}Tokens.accent9()).size(12),
-    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+        .fontWeight({{typePrefix}}Tokens.fontWeightSemibold()),
+    meta: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .style({{typePrefix}}Tokens.text1.mix()),
+    status: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .style({{typePrefix}}Tokens.text1.mix()),
+    toolIcon: IconStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .size({{typePrefix}}Tokens.space4()),
+    statusIcon: IconStyler()
+        .color({{typePrefix}}Tokens.accent9())
+        .size({{typePrefix}}Tokens.space3()),
+    indicator: IconStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .size({{typePrefix}}Tokens.space4()),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
   disclosureStyle: {{valuePrefix}}DisclosureStyle(
@@ -58,7 +74,9 @@ final class {{typePrefix}}AgentExecutionRecipe {
         .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
         .content(
           BoxStyler()
-              .padding(.fromLTRB(0, 12, 0, 4))
+              .padding(
+                .fromLTRB(0, {{typePrefix}}Tokens.space3(), 0, {{typePrefix}}Tokens.space1()),
+              )
               .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
         )
         .onHovered(.trigger(.color(const Color(0x00000000))))

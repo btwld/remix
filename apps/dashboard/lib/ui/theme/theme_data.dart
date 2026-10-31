@@ -6,55 +6,24 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import 'computed.dart';
-import 'radix_colors.dart' as radix;
+import 'fortal_colors.dart' as colors;
+import 'palette.dart';
 import 'theme_scope.dart' show UiTheme;
 import 'tokens.dart';
 
-/// Available accent colors matching Radix Themes names.
-enum UiAccentColor {
-  gray,
-  mauve,
-  slate,
-  sage,
-  olive,
-  sand,
-  gold,
-  bronze,
-  brown,
-  yellow,
-  amber,
-  orange,
-  tomato,
-  red,
-  ruby,
-  crimson,
-  pink,
-  plum,
-  purple,
-  violet,
-  iris,
-  indigo,
-  blue,
-  cyan,
-  teal,
-  jade,
-  green,
-  grass,
-  lime,
-  mint,
-  sky,
-}
+/// Ui palettes, named for the landscapes and coastal materials.
+enum UiAccentColor { calcadao, mar, ceu, mangue, sol, duna, caju }
 
-/// Available neutral gray families matching Radix Themes names.
-enum UiGrayColor { gray, mauve, slate, sage, olive, sand }
+/// The neutral palette. The enum leaves room for future neutral families.
+enum UiGrayColor { calcadao }
 
-/// Theme-level radius multipliers matching the Radix Themes presets.
+/// Theme-level radius multipliers.
 enum UiRadius { none, small, medium, large, full }
 
 /// Background treatment used by floating panels.
 enum UiPanelBackground { solid, translucent }
 
-/// Discrete theme scaling values supported by Radix Themes.
+/// Discrete theme scaling values supported by Ui.
 enum UiScaling {
   percent90(0.9),
   percent95(0.95),
@@ -77,6 +46,7 @@ enum UiThemeMode { system, light, dark }
 class UiThemeConfig {
   const UiThemeConfig({
     this.accent,
+    this.accentPalette,
     this.gray,
     this.brightness,
     this.panelBackground,
@@ -86,6 +56,9 @@ class UiThemeConfig {
   });
 
   final UiAccentColor? accent;
+
+  /// Optional seed-generated brand palette, overriding the named accent.
+  final UiColorTheme? accentPalette;
   final UiGrayColor? gray;
   final Brightness? brightness;
   final UiPanelBackground? panelBackground;
@@ -97,6 +70,7 @@ class UiThemeConfig {
 
   UiThemeConfig copyWith({
     UiAccentColor? accent,
+    UiColorTheme? accentPalette,
     UiGrayColor? gray,
     Brightness? brightness,
     UiPanelBackground? panelBackground,
@@ -105,6 +79,8 @@ class UiThemeConfig {
     bool? hasBackground,
   }) => UiThemeConfig(
     accent: accent ?? this.accent,
+    accentPalette:
+        accentPalette ?? (accent == null ? this.accentPalette : null),
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
@@ -118,6 +94,7 @@ class UiThemeConfig {
       identical(this, other) ||
       other is UiThemeConfig &&
           accent == other.accent &&
+          accentPalette == other.accentPalette &&
           gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
@@ -128,6 +105,7 @@ class UiThemeConfig {
   @override
   int get hashCode => Object.hash(
     accent,
+    accentPalette,
     gray,
     brightness,
     panelBackground,
@@ -142,6 +120,7 @@ class UiThemeConfig {
 class UiThemeData extends UiThemeConfig {
   const UiThemeData({
     required UiAccentColor super.accent,
+    super.accentPalette,
     required UiGrayColor super.gray,
     required Brightness super.brightness,
     required UiPanelBackground super.panelBackground,
@@ -152,14 +131,16 @@ class UiThemeData extends UiThemeConfig {
 
   /// The preset's light appearance, with editable design options.
   const UiThemeData.light({
-    UiAccentColor accent = UiAccentColor.indigo,
-    UiGrayColor gray = UiGrayColor.slate,
-    UiPanelBackground panelBackground = UiPanelBackground.translucent,
+    UiAccentColor accent = UiAccentColor.calcadao,
+    UiColorTheme? accentPalette,
+    UiGrayColor gray = UiGrayColor.calcadao,
+    UiPanelBackground panelBackground = UiPanelBackground.solid,
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
     bool hasBackground = true,
   }) : this(
          accent: accent,
+         accentPalette: accentPalette,
          gray: gray,
          brightness: Brightness.light,
          panelBackground: panelBackground,
@@ -170,14 +151,16 @@ class UiThemeData extends UiThemeConfig {
 
   /// The preset's dark appearance, with editable design options.
   const UiThemeData.dark({
-    UiAccentColor accent = UiAccentColor.indigo,
-    UiGrayColor gray = UiGrayColor.slate,
-    UiPanelBackground panelBackground = UiPanelBackground.translucent,
+    UiAccentColor accent = UiAccentColor.calcadao,
+    UiColorTheme? accentPalette,
+    UiGrayColor gray = UiGrayColor.calcadao,
+    UiPanelBackground panelBackground = UiPanelBackground.solid,
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
     bool hasBackground = true,
   }) : this(
          accent: accent,
+         accentPalette: accentPalette,
          gray: gray,
          brightness: Brightness.dark,
          panelBackground: panelBackground,
@@ -207,6 +190,7 @@ class UiThemeData extends UiThemeConfig {
   @override
   UiThemeData copyWith({
     UiAccentColor? accent,
+    UiColorTheme? accentPalette,
     UiGrayColor? gray,
     Brightness? brightness,
     UiPanelBackground? panelBackground,
@@ -215,6 +199,8 @@ class UiThemeData extends UiThemeConfig {
     bool? hasBackground,
   }) => UiThemeData(
     accent: accent ?? this.accent,
+    accentPalette:
+        accentPalette ?? (accent == null ? this.accentPalette : null),
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
@@ -228,6 +214,7 @@ class UiThemeData extends UiThemeConfig {
       identical(this, other) ||
       other is UiThemeData &&
           accent == other.accent &&
+          accentPalette == other.accentPalette &&
           gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
@@ -238,6 +225,7 @@ class UiThemeData extends UiThemeConfig {
   @override
   int get hashCode => Object.hash(
     accent,
+    accentPalette,
     gray,
     brightness,
     panelBackground,
@@ -269,19 +257,22 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
-    UiTokens.error3: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.error3: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
         .step(3),
-    UiTokens.error7: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.error7: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
         .step(7),
-    UiTokens.error8: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.error8: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
         .step(8),
-    UiTokens.error9: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.error9: (theme.isDark ? colors.caju.dark : colors.caju.light).scale
         .step(9),
-    UiTokens.error11: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.error11: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .step(11),
-    UiTokens.error12: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.error12: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .step(12),
-    UiTokens.errorA7: (theme.isDark ? radix.red.dark : radix.red.light).scale
+    UiTokens.errorA7: (theme.isDark ? colors.caju.dark : colors.caju.light)
+        .scale
         .alphaStep(7),
     ..._accentColorTokens(tokens),
     // Gray steps
@@ -377,6 +368,19 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.panelBlur: theme.panelBackground == UiPanelBackground.translucent
         ? 64.0
         : 0.0,
+    UiTokens.activityMaxHeight: 200.0 * scaling,
+    UiTokens.dataTableSortIconSize1: 14.0 * scaling,
+    UiTokens.dataTableSortIconSize3: 18.0 * scaling,
+    UiTokens.planMaxHeight: 220.0 * scaling,
+    UiTokens.messageAvatarSize: 28.0 * scaling,
+    UiTokens.messageContentMaxWidth: 640.0 * scaling,
+    UiTokens.messageCollapsedHeight: 72.0 * scaling,
+    UiTokens.composerFieldMinHeight: 56.0 * scaling,
+    UiTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
+    UiTokens.sidebarDestinationMinHeight: 48.0 * math.max(1.0, scaling),
+    UiTokens.popoverMaxWidth: 480.0 * scaling,
+    UiTokens.dialogMaxWidth: 600.0 * scaling,
+    UiTokens.toastMaxWidth: 360.0 * scaling,
     UiTokens.space1: 4.0 * scaling,
     UiTokens.space2: 8.0 * scaling,
     UiTokens.space3: 12.0 * scaling,
@@ -387,37 +391,19 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.space8: 48.0 * scaling,
     UiTokens.space9: 64.0 * scaling,
     UiTokens.spinnerSize3: 20.0 * scaling,
-    UiTokens.dataTableRowHeight1: 36.0 * scaling,
-    UiTokens.dataTableRowHeight2: 44.0 * scaling,
-    UiTokens.toggleGap1: 2.0 * scaling,
-    UiTokens.toggleGap3: 6.0 * scaling,
     UiTokens.avatarSize6: 80.0 * scaling,
     UiTokens.avatarSize7: 96.0 * scaling,
     UiTokens.avatarSize8: 128.0 * scaling,
     UiTokens.avatarSize9: 160.0 * scaling,
-    UiTokens.avatarIconSize1: 12.0 * scaling,
-    UiTokens.avatarIconSize2: 16.0 * scaling,
     UiTokens.avatarIconSize3: 20.0 * scaling,
-    UiTokens.avatarIconSize4: 24.0 * scaling,
-    UiTokens.avatarIconSize5: 32.0 * scaling,
-    UiTokens.avatarIconSize6: 40.0 * scaling,
-    UiTokens.avatarIconSize7: 48.0 * scaling,
-    UiTokens.avatarIconSize8: 64.0 * scaling,
     UiTokens.avatarIconSize9: 80.0 * scaling,
-    UiTokens.badgePaddingX1: 6.0 * scaling,
     UiTokens.badgePaddingY1: 2.0 * scaling,
-    UiTokens.badgePaddingX3: 10.0 * scaling,
     UiTokens.checkboxSize1: 14.0 * scaling,
     UiTokens.checkboxSize3: 20.0 * scaling,
     UiTokens.checkboxIndicatorSize1: 9.0 * scaling,
     UiTokens.checkboxIndicatorSize2: 10.0 * scaling,
-    UiTokens.checkboxIndicatorSize3: 12.0 * scaling,
-    UiTokens.checkboxGroupItemGap1: 6.0 * scaling,
-    UiTokens.checkboxGroupItemGap2: 7.0 * scaling,
-    UiTokens.checkboxGroupItemGap3: 8.0 * scaling,
     UiTokens.radioIndicatorSize1: 5.6 * scaling,
     UiTokens.radioIndicatorSize2: 6.4 * scaling,
-    UiTokens.radioIndicatorSize3: 8.0 * scaling,
     UiTokens.checkboxRadius1: _scaledRadiusToken(
       theme.radius,
       scaling,
@@ -430,30 +416,23 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     ),
     UiTokens.switchHeight2: 20.0 * scaling,
     UiTokens.switchWidth1: 28.0 * scaling,
-    UiTokens.switchWidth2: 35.0 * scaling,
-    UiTokens.switchWidth3: 42.0 * scaling,
+    UiTokens.switchWidth2: 36.0 * scaling,
+    UiTokens.switchWidth3: 44.0 * scaling,
     UiTokens.switchThumbSize1: 16.0 * scaling - 2.0,
     UiTokens.switchThumbSize2: 20.0 * scaling - 2.0,
     UiTokens.switchThumbSize3: 24.0 * scaling - 2.0,
     UiTokens.progressHeight2: 6.0 * scaling,
     UiTokens.sliderTrackSize1: 6.0 * scaling,
-    UiTokens.sliderTrackSize2: 8.0 * scaling,
     UiTokens.sliderTrackSize3: 10.0 * scaling,
     UiTokens.sliderThumbSize1: 13.0 * scaling,
-    UiTokens.sliderThumbSize2: 16.0 * scaling,
     UiTokens.sliderThumbSize3: 19.0 * scaling,
-    UiTokens.textFieldPadding1: 6.0 * scaling,
-    UiTokens.textFieldPadding2: 8.0 * scaling,
-    UiTokens.textFieldPadding3: 12.0 * scaling,
     UiTokens.textAreaMinHeight3: 80.0,
     UiTokens.dataListRowGap3: 20.0 * scaling,
     UiTokens.dataListLabelMinWidth: 120.0,
     UiTokens.tabInnerPaddingY1: 2.0 * scaling,
     UiTokens.tabActiveLetterSpacing1: -0.12 * scaling,
     UiTokens.tabActiveLetterSpacing2: -0.14 * scaling,
-    UiTokens.selectSpace1Half: 6.0 * scaling,
     UiTokens.selectIndicatorWidth1: 20.0 * scaling,
-    UiTokens.selectIndicatorSize1: 8.0 * scaling,
     UiTokens.selectIndicatorSize2: 10.0 * scaling,
     UiTokens.selectGhostMarginX12: -8.0 * scaling,
     UiTokens.selectGhostMarginY12: -4.0 * scaling,
@@ -461,85 +440,15 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.selectGhostMarginY3: -6.0 * scaling,
     ..._radiusTokensFor(theme.radius, scaling),
 
-    // Exact layered Radix shadow tokens, resolved for the active color scales.
     ...shadows,
-    UiTokens.sliderClassicDisabledTrackShadows: _scaleShadowOpacity(
-      shadows[UiTokens.shadow1Layers]! as List<RemixBoxShadow>,
-      0.5,
-    ),
-    UiTokens.cardClassicOuterShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .outer,
-      state: .idle,
-    ),
-    UiTokens.cardClassicInnerShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .inner,
-      state: .idle,
-    ),
-    UiTokens.cardClassicHoverOuterShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .outer,
-      state: .hovered,
-    ),
-    UiTokens.cardClassicHoverInnerShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .inner,
-      state: .hovered,
-    ),
-    UiTokens.cardClassicActiveOuterShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .outer,
-      state: .active,
-    ),
-    UiTokens.cardClassicActiveInnerShadows: _cardClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      layer: .inner,
-      state: .active,
-    ),
-    UiTokens.selectTriggerClassicShadows: _selectClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-    ),
-    UiTokens.selectTriggerClassicHoverShadows: [
-      _insetShadow(tokens.gray.scale.alphaStep(3), spread: 1),
-      ..._selectClassicShadows(tokens, isDark: theme.isDark),
-    ],
-    UiTokens.baseButtonClassicDisabledShadows:
-        _baseButtonClassicDisabledShadows(tokens, isDark: theme.isDark),
-    UiTokens.baseButtonClassicShadows: _baseButtonClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      highContrast: false,
-    ),
-    UiTokens.baseButtonClassicHighContrastShadows: _baseButtonClassicShadows(
-      tokens,
-      isDark: theme.isDark,
-      highContrast: true,
-    ),
-    UiTokens.baseButtonClassicActiveShadows: _baseButtonClassicActiveShadows(
-      tokens,
-      highContrast: false,
-    ),
-    UiTokens.baseButtonClassicActiveHighContrastShadows:
-        _baseButtonClassicActiveShadows(tokens, highContrast: true),
-    UiTokens.baseButtonClassicAfterInset: theme.isDark ? 1.0 : 2.0,
-    UiTokens.baseButtonGhostPaddingY3: 6.0 * scaling,
     UiTokens.baseButtonGhostMarginX12: -8.0 * scaling,
     UiTokens.baseButtonGhostMarginY12: -4.0 * scaling,
     UiTokens.baseButtonGhostMarginX3: -12.0 * scaling,
-    UiTokens.baseButtonGhostMarginY3: -6.0 * scaling,
+    UiTokens.baseButtonGhostMarginY3: -8.0 * scaling,
     UiTokens.baseButtonGhostMarginX4: -16.0 * scaling,
     UiTokens.baseButtonGhostMarginY4: -8.0 * scaling,
-    UiTokens.iconButtonGhostPadding2: 6.0 * scaling,
     UiTokens.iconButtonGhostMargin1: -4.0 * scaling,
-    UiTokens.iconButtonGhostMargin2: -6.0 * scaling,
+    UiTokens.iconButtonGhostMargin2: -8.0 * scaling,
     UiTokens.iconButtonGhostMargin3: -8.0 * scaling,
     UiTokens.iconButtonGhostMargin4: -12.0 * scaling,
     UiTokens.cardGhostMargin1: -12.0 * scaling,
@@ -566,11 +475,6 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
       letterSpacing: 0.0,
       height: 24.0 / 16.0,
     ),
-    UiTokens.accordionText2: TextStyle(
-      fontSize: 15.0 * scaling,
-      letterSpacing: 0.0,
-      height: 20.0 / 15.0,
-    ),
     UiTokens.text4: TextStyle(
       fontSize: 18.0 * scaling,
       letterSpacing: -0.0025 * 18.0 * scaling,
@@ -592,9 +496,9 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
       height: 36.0 / 28.0,
     ),
     UiTokens.text8: TextStyle(
-      fontSize: 35.0 * scaling,
-      letterSpacing: -0.01 * 35.0 * scaling,
-      height: 40.0 / 35.0,
+      fontSize: 36.0 * scaling,
+      letterSpacing: -0.01 * 36.0 * scaling,
+      height: 40.0 / 36.0,
     ),
     UiTokens.text9: TextStyle(
       fontSize: 60.0 * scaling,
@@ -657,8 +561,8 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
       scaling: scaling,
     ),
     UiTokens.avatarFallback8: _avatarFallbackText(
-      fontSize: 35,
-      letterSpacing: -0.01 * 35,
+      fontSize: 36,
+      letterSpacing: -0.01 * 36,
       scaling: scaling,
     ),
     UiTokens.avatarFallback9: _avatarFallbackText(
@@ -670,8 +574,9 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     // Font weights (token values)
     UiTokens.fontWeightLight: FontWeight.w300,
     UiTokens.fontWeightRegular: FontWeight.w400,
+    UiTokens.fontWeightSemibold: FontWeight.w600,
     UiTokens.fontWeightMedium: FontWeight.w500,
-    // Match Radix Themes font weights (bold = 700)
+    // Match Ui font weights (bold = 700)
     UiTokens.fontWeightBold: FontWeight.w700,
 
     // Durations (token values)
@@ -716,303 +621,6 @@ TextStyle _avatarFallbackText({
   letterSpacing: letterSpacing * scaling,
   height: 1,
 );
-
-enum _CardShadowLayer { outer, inner }
-
-enum _CardShadowState { idle, hovered, active }
-
-List<RemixBoxShadow> _cardClassicShadows(
-  UiThemeColors colors, {
-  required bool isDark,
-  required _CardShadowLayer layer,
-  required _CardShadowState state,
-}) {
-  final inner = layer == _CardShadowLayer.inner;
-  final shapeInset = inner ? 1.0 : 0.0;
-  final border = switch ((isDark, state)) {
-    (true, _) => mixOklabPremultiplied(
-      colors.gray.scale.alphaStep(6),
-      colors.gray.scale.step(6),
-      0.25,
-    ),
-    (false, _CardShadowState.hovered) => mixOklabPremultiplied(
-      colors.gray.scale.alphaStep(4),
-      colors.gray.scale.step(4),
-      0.25,
-    ),
-    (false, _) => mixOklabPremultiplied(
-      colors.gray.scale.alphaStep(3),
-      colors.gray.scale.step(3),
-      0.25,
-    ),
-  };
-
-  RemixBoxShadow shadow(
-    Color color, {
-    Offset offset = Offset.zero,
-    double blur = 0,
-    required double spread,
-  }) => RemixBoxShadow(
-    color: color,
-    offset: offset,
-    blurRadius: blur,
-    spreadRadius: spread,
-    shapeInset: shapeInset,
-  );
-
-  if (state == _CardShadowState.hovered) {
-    if (isDark) {
-      return [
-        shadow(border, spread: inner ? 1 : 0),
-        shadow(colors.gray.scale.alphaStep(4), blur: 1, spread: inner ? 1 : 0),
-        shadow(
-          colors.gray.scale.alphaStep(4),
-          blur: 1,
-          spread: inner ? -1 : -2,
-        ),
-        shadow(
-          colors.gray.scale.alphaStep(3),
-          blur: 3,
-          spread: inner ? -2 : -3,
-        ),
-        shadow(
-          colors.gray.scale.alphaStep(3),
-          blur: 12,
-          spread: inner ? -2 : -3,
-        ),
-        shadow(
-          colors.gray.scale.alphaStep(7),
-          blur: 16,
-          spread: inner ? -8 : -9,
-        ),
-      ];
-    }
-    return [
-      shadow(border, spread: inner ? 1 : 0),
-      shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 1),
-        blur: 1,
-        spread: inner ? 1 : 0,
-      ),
-      shadow(
-        colors.gray.scale.alphaStep(3),
-        offset: const Offset(0, 2),
-        blur: 1,
-        spread: inner ? -1 : -2,
-      ),
-      shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 2),
-        blur: 3,
-        spread: inner ? -2 : -3,
-      ),
-      shadow(
-        colors.gray.scale.alphaStep(3),
-        offset: const Offset(0, 3),
-        blur: 12,
-        spread: inner ? -4 : -5,
-      ),
-      shadow(
-        colors.blackAlpha[1]!,
-        offset: const Offset(0, 4),
-        blur: 16,
-        spread: inner ? -8 : -9,
-      ),
-    ];
-  }
-
-  final active = state == _CardShadowState.active;
-  final subtle = isDark ? colors.blackAlpha[3]! : colors.blackAlpha[1]!;
-  final middle = isDark
-      ? colors.blackAlpha[6]!
-      : colors.gray.scale.alphaStep(active ? 4 : 2);
-  final bottom = isDark ? colors.blackAlpha[5]! : colors.blackAlpha[1]!;
-  return [
-    shadow(border, spread: inner ? 1 : 0),
-    shadow(const Color(0x00000000), spread: inner ? 1 : 0),
-    shadow(subtle, spread: inner ? 0.5 : 0),
-    shadow(middle, offset: const Offset(0, 1), blur: 1, spread: inner ? 0 : -1),
-    shadow(
-      isDark ? colors.blackAlpha[6]! : colors.blackAlpha[1]!,
-      offset: const Offset(0, 2),
-      blur: 1,
-      spread: inner ? -1 : -2,
-    ),
-    shadow(bottom, offset: const Offset(0, 1), blur: 3, spread: inner ? 0 : -1),
-  ];
-}
-
-RemixBoxShadow _insetShadow(
-  Color color, {
-  Offset offset = Offset.zero,
-  double blur = 0,
-  double spread = 0,
-  double shapeInset = 0,
-}) => RemixBoxShadow(
-  kind: RemixBoxShadowKind.inset,
-  color: color,
-  offset: offset,
-  blurRadius: blur,
-  spreadRadius: spread,
-  shapeInset: shapeInset,
-);
-
-List<RemixBoxShadow> _selectClassicShadows(
-  UiThemeColors colors, {
-  required bool isDark,
-}) {
-  if (isDark) {
-    return [
-      _insetShadow(colors.whiteAlpha[4]!, spread: 1),
-      _insetShadow(colors.whiteAlpha[4]!, offset: const Offset(0, 1), blur: 1),
-      _insetShadow(colors.blackAlpha[9]!, offset: const Offset(0, -1), blur: 1),
-    ];
-  }
-  return [
-    _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
-    _insetShadow(colors.whiteAlpha[11]!, offset: const Offset(0, 2), blur: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(4),
-      offset: const Offset(0, -2),
-      blur: 1,
-    ),
-  ];
-}
-
-List<RemixBoxShadow> _baseButtonClassicDisabledShadows(
-  UiThemeColors colors, {
-  required bool isDark,
-}) {
-  if (isDark) {
-    return [
-      _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
-      _insetShadow(
-        colors.gray.scale.alphaStep(2),
-        offset: const Offset(0, 4),
-        blur: 2,
-        spread: -2,
-      ),
-      _insetShadow(
-        colors.gray.scale.alphaStep(5),
-        offset: const Offset(0, 1),
-        blur: 1,
-      ),
-      _insetShadow(colors.blackAlpha[3]!, offset: const Offset(0, -1), blur: 1),
-      _insetShadow(colors.gray.scale.alphaStep(2), spread: 1),
-    ];
-  }
-  return [
-    _insetShadow(colors.gray.scale.alphaStep(4), spread: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(3),
-      offset: const Offset(0, -2),
-      blur: 1,
-    ),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 4),
-      blur: 2,
-      spread: -2,
-    ),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 2),
-      blur: 1,
-      spread: -1,
-    ),
-  ];
-}
-
-List<RemixBoxShadow> _baseButtonClassicShadows(
-  UiThemeColors colors, {
-  required bool isDark,
-  required bool highContrast,
-}) {
-  final accent = highContrast
-      ? colors.accent.scale.step(12)
-      : colors.accent.scale.step(9);
-  if (isDark) {
-    return [
-      _insetShadow(
-        colors.whiteAlpha[4]!,
-        offset: const Offset(0, 2),
-        blur: 3,
-        spread: -1,
-        shapeInset: 1,
-      ),
-      _insetShadow(colors.whiteAlpha[2]!, spread: 1),
-      _insetShadow(
-        colors.whiteAlpha[3]!,
-        offset: const Offset(0, 4),
-        blur: 2,
-        spread: -2,
-      ),
-      _insetShadow(colors.whiteAlpha[6]!, offset: const Offset(0, 1), blur: 1),
-      _insetShadow(colors.blackAlpha[6]!, offset: const Offset(0, -1), blur: 1),
-      _insetShadow(accent, spread: 1),
-    ];
-  }
-  return [
-    _insetShadow(
-      colors.whiteAlpha[4]!,
-      offset: const Offset(0, 2),
-      blur: 3,
-      spread: -1,
-      shapeInset: 2,
-    ),
-    _insetShadow(colors.gray.scale.alphaStep(4), spread: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(3),
-      offset: const Offset(0, -2),
-      blur: 1,
-    ),
-    _insetShadow(accent, spread: 1),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 4),
-      blur: 2,
-      spread: -2,
-    ),
-    _insetShadow(
-      colors.whiteAlpha[9]!,
-      offset: const Offset(0, 2),
-      blur: 1,
-      spread: -1,
-    ),
-  ];
-}
-
-List<RemixBoxShadow> _baseButtonClassicActiveShadows(
-  UiThemeColors colors, {
-  required bool highContrast,
-}) {
-  final accent = highContrast
-      ? colors.accent.scale.step(12)
-      : colors.accent.scale.step(9);
-  return [
-    _insetShadow(
-      colors.gray.scale.alphaStep(4),
-      offset: const Offset(0, 4),
-      blur: 2,
-      spread: -2,
-    ),
-    _insetShadow(
-      colors.gray.scale.alphaStep(7),
-      offset: const Offset(0, 1),
-      blur: 1,
-    ),
-    _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
-    _insetShadow(accent, spread: 1),
-    _insetShadow(
-      colors.gray.scale.alphaStep(3),
-      offset: const Offset(0, 3),
-      blur: 2,
-    ),
-    _insetShadow(colors.whiteAlpha[7]!, spread: 1),
-    _insetShadow(colors.whiteAlpha[5]!, offset: const Offset(0, -2), blur: 1),
-  ];
-}
 
 Map<RadiusToken, Radius> _radiusTokensFor(UiRadius radius, double scaling) {
   final factor = _radiusFactor(radius);
@@ -1066,21 +674,6 @@ Map<RadiusToken, Radius> _radiusTokensFor(UiRadius radius, double scaling) {
     UiTokens.sliderTrackRadius3: progressRadius(10.0 * scaling),
   };
 }
-
-List<RemixBoxShadow> _scaleShadowOpacity(
-  List<RemixBoxShadow> shadows,
-  double factor,
-) => [
-  for (final shadow in shadows)
-    RemixBoxShadow(
-      kind: shadow.kind,
-      color: shadow.color.withValues(alpha: shadow.color.a * factor),
-      offset: shadow.offset,
-      blurRadius: shadow.blurRadius,
-      spreadRadius: shadow.spreadRadius,
-      shapeInset: shadow.shapeInset,
-    ),
-];
 
 double _radiusFactor(UiRadius radius) => switch (radius) {
   .none => 0.0,

@@ -6,16 +6,6 @@ traceable. This is a strategy, not a toolchain: a missing tool changes how a
 value is read and how much confidence it carries, never what must be
 extracted.
 
-## Table of Contents
-
-- [The critical set](#1-the-critical-set)
-- [Invariants](#2-invariants)
-- [Classify sources](#3-classify-sources-per-domain)
-- [Where values land](#4-where-values-land)
-- [Extraction modes](#5-extraction-modes)
-- [Conflicts and upgrades](#6-conflicts-and-upgrades)
-- [What not to build](#7-what-not-to-build)
-
 ## 1. The critical set
 
 Extraction is done when this is filled, or a gap is explicitly marked.
@@ -35,17 +25,18 @@ and non-token measurements with their source.
 
 ## 2. Invariants
 
-1. **One meeting point.** Every source converges on `specs/tokens.yaml`. The
-   Dart theme is checked against it, never against the original source.
-2. **Inventory before values.** List every token name and every in-scope
-   component's variants, sizes, and states first; then fill values. Gaps become explicit
+1. **One meeting point.** Every source converges on one cited specification
+   (`specs/tokens.yaml` for a new registry, or its existing owning spec). The
+   Dart theme is checked against that contract.
+2. **Inventory before values.** List every token name and every component's
+   variants, sizes, and states first; then fill values. Gaps become explicit
    (`status: missing-in-source`), never silent absences.
 3. **Every value is traceable**: a citation (page, node link, URL and date,
    image and coordinates, brief section) and a confidence —
    `specified` (stated by the source), `derived` (computed by a documented
    rule), `measured` (sampled from a rendering), `assumed` (a judgment call,
    also listed in a worksheet's approximations), or `designed` (chosen from a
-   brief, rationale in the ADR).
+   brief, rationale in the brief/spec or decision log according to significance).
 4. **Pin what can be pinned; hash and date the rest**: exact versions and
    commits for code; file versions, sha256, and retrieval dates for documents
    and images; URL, date, and viewport for anything rendered.
@@ -72,6 +63,35 @@ record that, so a later pass can upgrade it.
 **Upgrade opportunistically.** Before manual work, look for a hidden higher
 tier: sites often ship tokens as CSS custom properties, design files usually
 have an export or API, vendors often publish a tokens package.
+
+### Reading each source tier
+
+**Tier 1.** Import the official package as executable code rather than
+regex-parsing Sass or TypeScript; resolved exports are the only faithful
+values. Record the package lock's integrity hashes with the version.
+
+**Tier 2.** Pin the file version or API revision. Prefer declared values
+(variables, styles) over computed ones; when reading computed values, record
+the viewport and capture each state. For fluid systems, harvest at several
+widths. In design files, variables usually map to color and type; spacing
+usually lives in frame layout values. Cite node links.
+
+**Tier 3.** Read end to end for the inventory pass, then transcribe with page
+citations. Print-only values (CMYK, Pantone) need an official digital mapping;
+otherwise they are `assumed`.
+
+**Tier 4.** Lossless images only. Calibrate scale against an element of known
+size and record it. Sample flat regions away from edges and take the dominant
+value of a patch. Snap spacing to a grid only when independent measurements
+agree, and keep both raw and snapped values. Every state needs its own
+capture.
+
+**Brief.** Commit the brief verbatim (`docs/brief.md`) so every `designed`
+value can cite it. Ask first when the user is available: brand colors, modes,
+density, typefaces, existing assets (a logo alone pins brand hues). Decide the
+full inventory before values. Prefer documented rules — a perceptually even
+ramp from the brand color, a modular type scale, a 4px spacing base — so
+values are `derived`; reserve `designed` for genuine taste calls.
 
 ## 4. Where values land
 
@@ -134,84 +154,19 @@ tokens:
 A test in the authoring package keeps the two in step. It fails when a theme
 token has no entry or a value differs; add encoders as token types grow.
 
-<!-- dart-excerpt: test in the authoring package, imports design_source -->
-
-```dart
-// source/test/tokens_test.dart (dev dependency: yaml)
-import 'dart:io';
-
-import 'package:design_source/theme/theme_data.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:yaml/yaml.dart';
-
-final spec =
-    (loadYaml(File('../specs/tokens.yaml').readAsStringSync()) as YamlMap)['tokens']
-        as YamlMap;
-
-/// A theme value in the notation specs/tokens.yaml uses.
-Object encode(Object value) => switch (value) {
-  Color c when c.a == 1.0 =>
-    '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}',
-  Color c => '#${c.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}',
-  Radius r => r.x,
-  _ => value,
-};
-
-void main() {
-  const modes = {'light': AcmeThemeData.light(), 'dark': AcmeThemeData.dark()};
-  for (final MapEntry(key: mode, value: theme) in modes.entries) {
-    test('$mode theme matches specs/tokens.yaml', () {
-      for (final MapEntry(key: token, value: value) in theme.tokens.entries) {
-        final id = token.name.substring('acme.'.length);
-        final entry = spec[id] as YamlMap?;
-        expect(entry, isNotNull, reason: '$id has no entry');
-        final expected = (entry![mode] as YamlMap? ?? entry)['value'];
-        expect(encode(value), expected, reason: '$mode $id');
-      }
-    });
-  }
-}
-```
-
-## 5. Extraction modes
-
-**Tier 1.** Import an official package as executable code rather than
-regex-parsing Sass or TypeScript; read structured exports. CSS-first
-packages also need their real stylesheet pipeline: compile the pinned CSS
-with its locked dependencies, then resolve custom properties, cascade layers,
-`calc`, color functions, and media queries in a browser. Unexpanded Tailwind
-`@apply` is not a computed measurement. Keep declared expressions as evidence
-as well as their resolved values. Record package integrity hashes and the
-dependency lockfile.
-
-**Tier 2.** Pin the file version or API revision. Prefer declared values
-(variables, styles) over computed ones; when reading computed values, record
-the viewport and capture each state. For fluid systems, harvest at several
-widths. In design files, variables usually map to color and type; spacing
-usually lives in frame layout values. Cite node links.
-
-**Tier 3.** Read end to end for the inventory pass, then transcribe with page
-citations. Print-only values (CMYK, Pantone) need an official digital mapping;
-otherwise they are `assumed`.
-
-**Tier 4.** Lossless images only. Calibrate scale against an element of known
-size and record it. Sample flat regions away from edges and take the dominant
-value of a patch. Snap spacing to a grid only when independent measurements
-agree, and keep both raw and snapped values. Every state needs its own
-capture.
-
-**Brief.** Commit the brief verbatim (`docs/brief.md`) so every `designed`
-value can cite it. Ask first when the user is available: brand colors, modes,
-density, typefaces, existing assets (a logo alone pins brand hues). Decide the
-full inventory before values. Prefer documented rules — a perceptually even
-ramp from the brand color, a modular type scale, a 4px spacing base — so
-values are `derived`; reserve `designed` for genuine taste calls.
+For every supported mode, compare each theme token to its specification entry:
+strip the authoring prefix, require an entry, normalize its value and assert
+equality with a token/mode-specific failure message. Check coverage both ways
+so removed Dart tokens cannot leave unreviewed stale spec entries. Encode colors
+as `#RRGGBB` or `#AARRGGBB`, radii numerically, and extend encoders as types grow.
+See the maintained [Vanilla scale checks](https://github.com/btwld/remix/blob/main/tool/check_vanilla_scale.dart)
+for the native preset's existing-spec approach.
 
 ## 6. Conflicts and upgrades
 
 - **Precedence** when sources disagree: shipped code → design-tool source →
-  docs prose → PDF → screenshots. Record any deliberate deviation in the ADR
+  docs prose → PDF → screenshots. Record deliberate deviations in the owning spec
+  or, for a lasting tradeoff, the decision log
   and keep the losing citation visible.
 - **Upgrading a source** is its own change: bump the pin, re-run extraction,
   review the `specs/tokens.yaml` diff, update the Dart values and inventory

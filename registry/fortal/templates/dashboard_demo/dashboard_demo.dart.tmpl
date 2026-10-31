@@ -63,12 +63,7 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
           style: CardStyler()
               .borderRadius(.all({{typePrefix}}Tokens.radius2()))
               .onFocusVisible(
-                CardStyler().containerEffects(
-                  {{valuePrefix}}FocusOutline(
-                    {{typePrefix}}Tokens.focus8(),
-                    offset: {{typePrefix}}Tokens.focusRingOffset(),
-                  ),
-                ),
+                CardStyler().containerEffects({{valuePrefix}}FocusOutline()),
               ),
           child: RowBox(
             style: FlexBoxStyler()
@@ -368,9 +363,6 @@ final _toolbarButtonStyle = {{valuePrefix}}IconButtonStyle(variant: .ghost)
 
 /// Full {{typePrefix}} dashboard demo.
 ///
-/// This is the open-code {{typePrefix}} product dashboard starter: it includes the
-/// Overview, Chat, Customers, Orders, and Settings destinations, live Radix
-/// theme customization, interactive Agent chat, and revenue/activity charts.
 class {{typePrefix}}DashboardDemo extends StatefulWidget {
   const {{typePrefix}}DashboardDemo({
     super.key,

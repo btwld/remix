@@ -31,20 +31,18 @@ void main() {
       ),
     );
 
-    expect(data.accent, FortalAccentColor.indigo);
-    expect(data.gray, FortalGrayColor.slate);
+    expect(data.accent, FortalAccentColor.calcadao);
+    expect(data.gray, FortalGrayColor.calcadao);
     expect(data.brightness, Brightness.light);
-    expect(data.panelBackground, FortalPanelBackground.translucent);
+    expect(data.panelBackground, FortalPanelBackground.solid);
     expect(data.radius, FortalRadius.medium);
     expect(data.scaling, FortalScaling.percent100);
     expect(data.hasBackground, isTrue);
   });
 
-  testWidgets('root scope establishes the Radix root text run', (tester) async {
-    // Upstream `.radix-themes` sets the page's default text run, not just its
-    // tokens: `--default-font-size` is `--font-size-3`, `--default-line-height`
-    // is 1.5, `--default-letter-spacing` is 0, `--default-font-weight` is
-    // regular, and `color.css` adds `color: var(--gray-12)`.
+  testWidgets('root scope establishes the Fortal root text run', (
+    tester,
+  ) async {
     for (final (scaling, factor) in const [
       (FortalScaling.percent90, 0.9),
       (FortalScaling.percent100, 1.0),
@@ -77,8 +75,6 @@ void main() {
         expect(root.fontWeight, FontWeight.w400, reason: reason);
         expect(root.color, gray12, reason: reason);
         expect(iconColor, gray12, reason: reason);
-        // Radix's `--default-font-family` is the platform system stack, so the
-        // root deliberately pins no family.
         expect(root.fontFamily, isNull, reason: reason);
       }
     }
@@ -164,7 +160,7 @@ void main() {
               color: Color(0xFF00FF00),
             ),
             child: FortalTheme(
-              accent: .red,
+              accent: .caju,
               scaling: .percent110,
               child: Column(
                 children: [FortalText('body'), FortalCode.soft('code')],
@@ -201,8 +197,8 @@ void main() {
 
     await tester.pumpWidget(
       FortalTheme(
-        accent: .red,
-        gray: .mauve,
+        accent: .caju,
+        gray: .calcadao,
         mode: .dark,
         radius: .large,
         child: Builder(
@@ -265,14 +261,6 @@ void main() {
     expect(light.pulseDuration, const Duration(milliseconds: 1000));
     expect(light.indicatorBackground, light.colorBackground);
     expect(dark.indicatorBackground, dark.grayA3);
-    expect(light.classicIndicatorShadows, hasLength(5));
-    expect(dark.classicIndicatorShadows, hasLength(5));
-    for (final shadows in [
-      light.classicIndicatorShadows,
-      dark.classicIndicatorShadows,
-    ]) {
-      expect(shadows.map((shadow) => shadow.shapeInset), everyElement(1));
-    }
     expect(light.textAreaMinHeight3, 80);
     expect(light.dataListRowGap3, 20);
     expect(light.dataListLabelMinWidth, 120);
@@ -312,7 +300,7 @@ Future<({Color accent, Color gray12, TextStyle text})> _captureThemes(
 
   await tester.pumpWidget(
     FortalTheme(
-      accent: .red,
+      accent: .caju,
       child: ambient == null
           ? probe
           : DefaultTextStyle(
@@ -352,7 +340,6 @@ Future<
     Color indicatorBackground,
     Color colorBackground,
     Color grayA3,
-    List<RemixBoxShadow> classicIndicatorShadows,
     double textAreaMinHeight3,
     double dataListRowGap3,
     double dataListLabelMinWidth,
@@ -368,7 +355,6 @@ _captureRecipeTokens(
     Color indicatorBackground,
     Color colorBackground,
     Color grayA3,
-    List<RemixBoxShadow> classicIndicatorShadows,
     double textAreaMinHeight3,
     double dataListRowGap3,
     double dataListLabelMinWidth,
@@ -395,10 +381,6 @@ _captureRecipeTokens(
               context,
             ),
             grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
-            classicIndicatorShadows: MixScope.tokenOf(
-              FortalTokens.segmentedControlClassicIndicatorShadows,
-              context,
-            ),
             textAreaMinHeight3: MixScope.tokenOf(
               FortalTokens.textAreaMinHeight3,
               context,

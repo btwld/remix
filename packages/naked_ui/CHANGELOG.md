@@ -1,4 +1,4 @@
-## Unreleased
+## 1.3.0
 
 ### Features
 
@@ -23,13 +23,6 @@
 
 ### Fixes
 
-- End slider interactions safely when thumbs or interaction configuration
-  change or the slider is disabled. Preserve one start/end sequence and the
-  last requested values across controlled rebuilds.
-- Retain slider keyboard focus when semantics are excluded, and preserve
-  surviving external focus nodes when thumbs change.
-- Add `NakedSliderTrack` to map input to an inset painted rail while retaining
-  the full slider hit target.
 - Keep the focus action and focused state on a `NakedDisclosure` trigger that
   sets `semanticLabel`. The label still replaces the trigger's visual content
   for assistive technology, but no longer drops focus semantics.
@@ -48,6 +41,42 @@
   `transitionDuration` or under reduced motion, no longer hides the dismissible
   barrier's "Dismiss" node from screen readers. `showNakedDialog` now wraps the
   dialog page in a semantics container.
+- Keep a menu nested in a menubar panel out of the bar's trigger traversal and
+  focus/hover activation. A nested caller-owned control still opens its menu
+  only through its own activation.
+- Home and End now scroll the newly focused item just far enough into view in
+  `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
+  content, in `NakedTabBar`, and in `NakedMenubar`.
+- The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
+  from an open `NakedMenubar` menu, scroll the newly focused item into view the
+  same way. A target that is already visible stays where it is.
+- `NakedSelect` now opens with focus on the selected option, scrolled into
+  view, so Arrow Up and Arrow Down continue from it instead of from the ends of
+  the list. A select without a selected option, or whose selected option is
+  disabled or not built yet in a lazy list, opens on the first item that can
+  take focus, normally its first enabled option: the first Arrow Down reaches
+  the second option and Enter selects the first, where focus used to start on
+  the overlay container. A field in the panel that requests focus while the
+  panel builds keeps it.
+- Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
+  hovering a submenu row also opens it after its delay, only when the pointer
+  moves over it, no longer when a list scrolls under a resting pointer. Moving
+  within the submenu trigger does not restart the delay.
+- `NakedCombobox` now scrolls the highlighted option just far enough into view
+  when the arrow keys highlight it and when the options view opens, instead of
+  leaving it outside a scrolling options list. Focus stays on the field, an
+  option that is already visible does not scroll the list or the page, and
+  scrolling by hand is not undone. Opening replaces a scroll offset you gave
+  the list when the highlighted option is outside it, and in a lazily built
+  list such as `ListView.builder` a highlighted option that is not built, such
+  as the last option after Ctrl or Cmd with ArrowDown, is not revealed.
+- End slider interactions safely when thumbs or interaction configuration
+  change or the slider is disabled. Preserve one start/end sequence and the
+  last requested values across controlled rebuilds.
+- Retain slider keyboard focus when semantics are excluded, and preserve
+  surviving external focus nodes when thumbs change.
+- Add `NakedSliderTrack` to map input to an inset painted rail while retaining
+  the full slider hit target.
 - `NakedPopover` with `openOnTap: false` no longer wraps its child in a focus
   stop of its own. A button or other control passed as the child is now the only
   tab stop, and closing the popover returns focus to it instead of to the
@@ -63,35 +92,6 @@
   tab stop, a node that is not attached to the control receives no focus, and
   with a `Focus` child and a different `triggerFocusNode` the child's own node
   is the tab stop.
-- Home and End now scroll the newly focused item just far enough into view in
-  `NakedSelect`, `NakedMenu`, and other anchored overlays with scrolling
-  content, in `NakedTabBar`, and in `NakedMenubar`.
-- The arrow keys and Home and End in `NakedToggleGroup`, and the arrow keys
-  from an open `NakedMenubar` menu, scroll the newly focused item into view the
-  same way. A target that is already visible stays where it is.
-- `NakedCombobox` now scrolls the highlighted option just far enough into view
-  when the arrow keys highlight it and when the options view opens, instead of
-  leaving it outside a scrolling options list. Focus stays on the field, an
-  option that is already visible does not scroll the list or the page, and
-  scrolling by hand is not undone. Opening replaces a scroll offset you gave
-  the list when the highlighted option is outside it, and in a lazily built
-  list such as `ListView.builder` a highlighted option that is not built, such
-  as the last option after Ctrl or Cmd with ArrowDown, is not revealed.
-- `NakedSelect` now opens with focus on the selected option, scrolled into
-  view, so Arrow Up and Arrow Down continue from it instead of from the ends of
-  the list. A select without a selected option, or whose selected option is
-  disabled or not built yet in a lazy list, opens on the first item that can
-  take focus, normally its first enabled option: the first Arrow Down reaches
-  the second option and Enter selects the first, where focus used to start on
-  the overlay container. A field in the panel that requests focus while the
-  panel builds keeps it.
-- Hovering an item in `NakedSelect` or `NakedMenu` clears keyboard focus, and
-  hovering a submenu row also opens it after its delay, only when the pointer
-  moves over it, no longer when a list scrolls under a resting pointer.
-
-- Keep a menu nested in a menubar panel out of the bar's trigger traversal and
-  focus/hover activation. A nested caller-owned control still opens its menu
-  only through its own activation.
 
 ## 1.2.3
 

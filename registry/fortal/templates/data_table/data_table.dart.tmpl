@@ -9,13 +9,12 @@ import 'select.dart';
 
 part 'data_table.g.dart';
 
-/// Radix Themes Table size presets.
+/// {{typePrefix}} Table size presets.
 enum {{typePrefix}}DataTableSize { size1, size2, size3 }
 
-/// Radix Themes Table variants.
+/// {{typePrefix}} Table variants.
 enum {{typePrefix}}DataTableVariant { surface, ghost }
 
-/// Resolved Radix `table.css` metrics for one size step.
 typedef _{{typePrefix}}DataTableMetrics = ({
   double paddingX,
   double paddingY,
@@ -26,17 +25,6 @@ typedef _{{typePrefix}}DataTableMetrics = ({
 });
 
 /// {{typePrefix}} recipe for [RemixDataTable].
-///
-/// Sizes and variants map `@radix-ui/themes@3.3.0` `table.css` exactly: cell
-/// padding, minimum cell height, typography, radius, the `gray-a5` row
-/// divider, bold column headers, the surface panel/border, the `gray-a2`
-/// header background, and the suppressed divider under a surface table's last
-/// row.
-///
-/// Sorting, selection, pagination, and row hover have no Radix counterpart —
-/// Radix's Table is a passive layout. They are {{typePrefix}} extensions built from
-/// existing accent/gray control tokens and are recorded as extensions in the
-/// parity manifest.
 @MixWidget(target: RemixDataTable.new)
 DataTableStyler {{valuePrefix}}DataTableStyle({
   {{typePrefix}}DataTableSize size = .size2,
@@ -58,12 +46,13 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
             .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
             .color({{typePrefix}}Tokens.gray11()),
       )
-      .headerCell(_{{valuePrefix}}DataTableCell(metrics))
+      .headerCell(
+        _{{valuePrefix}}DataTableCell(metrics).onFocusVisible(
+          // Keep the common outline inside the padding of clipped tables.
+          BoxStyler().{{valuePrefix}}FocusRing(inset: {{typePrefix}}Tokens.space2()),
+        ),
+      )
       .bodyCell(_{{valuePrefix}}DataTableCell(metrics))
-      // The selection column is a {{typePrefix}} extension with no Radix counterpart.
-      // It carries no padding of its own, so the composed checkbox's
-      // interaction target — sized to this cell — spans the whole column and
-      // the full row height instead of being inset from both.
       .selectionCell(BoxStyler().alignment(Alignment.center))
       .headerMinHeight(metrics.minHeight)
       .rowMinHeight(metrics.minHeight)
@@ -72,7 +61,7 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
       .sortIcon(
         IconStyler(color: {{typePrefix}}Tokens.gray11(), size: metrics.sortIconSize),
       )
-      .headerRow(_{{valuePrefix}}DataTableHeaderRow())
+      .headerRow(_{{valuePrefix}}DataTableRowDivider())
       .bodyRow(
         _{{valuePrefix}}DataTableRowDivider()
             .color(const Color(0x00000000))
@@ -101,16 +90,16 @@ _{{typePrefix}}DataTableMetrics _{{valuePrefix}}DataTableMetrics({{typePrefix}}D
       .size1 => (
         paddingX: {{typePrefix}}Tokens.space2(),
         paddingY: {{typePrefix}}Tokens.space2(),
-        minHeight: {{typePrefix}}Tokens.dataTableRowHeight1(),
-        sortIconSize: 14.0,
+        minHeight: {{typePrefix}}Tokens.touchTargetMin(),
+        sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize1(),
         radius: {{typePrefix}}Tokens.radius3(),
         text: {{typePrefix}}Tokens.text2,
       ),
       .size2 => (
         paddingX: {{typePrefix}}Tokens.space3(),
         paddingY: {{typePrefix}}Tokens.space3(),
-        minHeight: {{typePrefix}}Tokens.dataTableRowHeight2(),
-        sortIconSize: 16.0,
+        minHeight: {{typePrefix}}Tokens.space8(),
+        sortIconSize: {{typePrefix}}Tokens.space4(),
         radius: {{typePrefix}}Tokens.radius4(),
         text: {{typePrefix}}Tokens.text2,
       ),
@@ -118,7 +107,7 @@ _{{typePrefix}}DataTableMetrics _{{valuePrefix}}DataTableMetrics({{typePrefix}}D
         paddingX: {{typePrefix}}Tokens.space4(),
         paddingY: {{typePrefix}}Tokens.space3(),
         minHeight: {{typePrefix}}Tokens.space8(),
-        sortIconSize: 18.0,
+        sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize3(),
         radius: {{typePrefix}}Tokens.radius4(),
         text: {{typePrefix}}Tokens.text3,
       ),
@@ -128,38 +117,6 @@ BoxStyler _{{valuePrefix}}DataTableCell(_{{typePrefix}}DataTableMetrics metrics)
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
 
-/// Radix's Table has no sortable header, so a focusable one takes {{typePrefix}}'s own
-/// ring: `focus-8` at the focus ring width, drawn inside the cell. Each header
-/// cell resolves its own row region under its own widget-state scope, so only
-/// the focused cell rings.
-///
-/// The row region already paints the divider as a foreground border, so focus
-/// only changes that decoration. A decoration that appeared on focus would swap
-/// the cell's root widget and rebuild a stateful custom header from scratch.
-BoxStyler _{{valuePrefix}}DataTableHeaderRow() => _{{valuePrefix}}DataTableRowDivider()
-    .onFocusVisible(BoxStyler().onBuilder(_{{valuePrefix}}DataTableHeaderRing));
-
-/// A zero-width [BorderSide] is a hairline, so a ring of width zero draws
-/// nothing and leaves the divider alone.
-BoxStyler _{{valuePrefix}}DataTableHeaderRing(BuildContext context) {
-  final width = {{typePrefix}}Tokens.focusRingWidth.resolve(context);
-  if (width <= 0) return BoxStyler();
-  return BoxStyler().foregroundDecoration(
-    BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(
-          color: {{typePrefix}}Tokens.focus8(),
-          width: width,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-      ),
-    ),
-  );
-}
-
-/// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
-/// over the cell without reserving layout space. A foreground border is the
-/// Flutter equivalent; a regular border would inset the cell content by 1px.
 BoxStyler _{{valuePrefix}}DataTableRowDivider() => BoxStyler().foregroundDecoration(
   BoxDecorationMix(border: BoxBorderMix.bottom(_{{valuePrefix}}DataTableDividerSide())),
 );
@@ -171,7 +128,8 @@ BorderSideMix _{{valuePrefix}}DataTableDividerSide() =>
 
 FlexBoxStyler _{{valuePrefix}}DataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)
-    .spacing({{typePrefix}}Tokens.space2())
+    // The compact pager keeps full touch targets without crowding its labels.
+    .spacing({{typePrefix}}Tokens.space1())
     .padding(.horizontal({{typePrefix}}Tokens.space4()))
     .padding(.vertical({{typePrefix}}Tokens.space2()))
     .foregroundDecoration(
@@ -192,8 +150,6 @@ DataTableStyler _{{valuePrefix}}DataTableSurface(DataTableStyler base, Radius ra
         RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
       )
       .headerRow(.color({{typePrefix}}Tokens.grayA2()))
-      // Radix clears `--table-row-box-shadow` on the surface variant's last
-      // row so its divider never doubles up with the panel border.
       .lastBodyRow(
         BoxStyler().foregroundDecoration(
           BoxDecorationMix(border: BoxBorderMix.bottom(BorderSideMix.none)),

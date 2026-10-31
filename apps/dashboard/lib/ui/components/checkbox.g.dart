@@ -30,27 +30,6 @@ class UiCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  const UiCheckbox.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const CheckboxStyler.create(),
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.tristate = false,
-    this.checkedIcon,
-    this.uncheckedIcon,
-    this.indeterminateIcon,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.label,
-    this.semanticLabel,
-    this.minimumTapTargetSize = const Size.square(48),
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = UiCheckboxVariant.classic;
-
   const UiCheckbox.surface({
     super.key,
     this.size = .size2,
@@ -159,9 +138,6 @@ class UiCheckbox extends StatelessWidget {
 
 /// Ui recipe for [RemixCheckboxGroupItem].
 ///
-/// Combines the mapped checkbox recipe with Radix's size-linked item label
-/// typography and `0.5em` label gap. The behavioral group remains layout
-/// transparent, so callers continue to own root direction and spacing.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle
@@ -187,24 +163,6 @@ class UiCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  const UiCheckboxGroupItem.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const CheckboxStyler.create(),
-    required this.value,
-    required this.label,
-    this.semanticLabel,
-    this.enabled = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.checkedIcon,
-    this.uncheckedIcon,
-    this.enableFeedback = true,
-    this.minimumTapTargetSize = const Size.square(48),
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = UiCheckboxVariant.classic;
 
   const UiCheckboxGroupItem.surface({
     super.key,

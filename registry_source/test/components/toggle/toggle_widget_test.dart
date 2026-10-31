@@ -237,7 +237,6 @@ void main() {
 
 BorderSide? _focusRing(WidgetTester tester) =>
     tester.resolvedSpecOf<ToggleSpec>(find.text('T')).containerEffects?.outline;
-
 // ignore: invalid_use_of_internal_member
 final _toggleRowFinder = find.byType(RemixFlexBoxAdapter);
 

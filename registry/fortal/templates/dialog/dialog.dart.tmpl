@@ -8,7 +8,7 @@ import '../theme/theme.dart';
 
 part 'dialog.g.dart';
 
-/// {{typePrefix}} dialog size presets matching Radix Themes 3.3.0.
+/// {{typePrefix}} dialog size presets on the shared scale.
 enum {{typePrefix}}DialogSize { size1, size2, size3, size4 }
 
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
@@ -75,7 +75,7 @@ DialogStyler {{valuePrefix}}DialogStyle({
             .spacing({{typePrefix}}Tokens.space3())
             .margin(.top({{typePrefix}}Tokens.space5())),
       )
-      .width(600)
+      .width({{typePrefix}}Tokens.dialogMaxWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))
       .color({{typePrefix}}Tokens.colorPanel())

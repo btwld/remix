@@ -10,7 +10,7 @@ command and configuration reference.
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
-small `vanilla` preset, the full Radix Themes-inspired `fortal` preset, or the
+small `vanilla` preset, the Fortaleza-inspired `fortal` preset, or the
 HeroUI-inspired `heroui` preset when you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
@@ -26,10 +26,10 @@ The Fortal preset does not add a `remix_fortal` dependency.
 
 | | `vanilla` | `fortal` | `heroui` |
 |---|---|---|---|
-| Design language | Neutral and minimal, inspired by shadcn/ui | Radix Themes 3.3.0 parity surface | HeroUI web 3.2.6 |
-| Theme | 32 color tokens, a radius scale, and a type scale | 277 tokens, Radix color scales, scaling, radius, and panel modes | HeroUI's 68 color roles, derived like its CSS variables, and a radius scale |
-| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | HeroUI's `primary`, `secondary`, `tertiary`, `soft`, and `ghost` vocabulary where applicable |
-| Best for | A house system you intend to shape | Starting from a complete Radix-like system | Starting from a HeroUI-like system |
+| Design language | Neutral and minimal, inspired by shadcn/ui | Independent, Fortaleza-inspired, with flat controls and solid panels | HeroUI web 3.2.6 |
+| Theme | 32 color tokens, a radius scale, and a type scale | Seven generated palettes, neutral Calçadão defaults, scaling, radius, and panel modes | HeroUI's 68 color roles, derived like its CSS variables, and a radius scale |
+| Component axes | Small default vocabulary | `solid`, `soft`, `surface`, `outline`, and `ghost` where applicable; floating toast also has `classic` | HeroUI's `primary`, `secondary`, `tertiary`, `soft`, and `ghost` vocabulary where applicable |
+| Best for | A house system you intend to shape | A complete system with contrast-tested colors and consistent focus rings | Starting from a HeroUI-like system |
 
 Every choice installs local Dart under `lib/`, uses Remix for behavior, and uses
 the same `add --diff` / `add --overwrite` review workflow. They cannot be mixed
@@ -358,7 +358,8 @@ lib/ui/
 ├── ui.dart
 ├── theme/
 │   ├── theme.dart
-│   ├── radix_colors.dart
+│   ├── fortal_colors.dart
+│   ├── palette.dart
 │   ├── computed.dart
 │   ├── control_styles.dart
 │   ├── tokens.dart
@@ -377,9 +378,9 @@ inherit its tokens and text defaults. The theme example lives in
 `lib/ui/theme/theme_scope.dart`.
 
 These are application files, not forwarding wrappers around a package. The
-authored recipes and pinned Radix Themes 3.3.0
-color data are copied from the same source used by the repository's parity
-suite. `remix` remains the behavior and styling-engine boundary;
+authored recipes and generated OKLCH palettes are copied from the same source
+checked by Fortal's specification, contrast tests, and owned goldens.
+`remix` remains the behavior and styling-engine boundary;
 `mix_annotations`, `build_runner`, and `mix_generator` support adapter
 generation. `icons` additionally installs `remix_ui_icons`, and `chart`
 installs `mix_chart`. The preset adds no direct `mix`, `naked_ui`, or

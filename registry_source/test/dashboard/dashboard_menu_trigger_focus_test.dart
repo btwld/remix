@@ -41,7 +41,12 @@ void main() {
         ),
       ),
     );
-    final rect = tester.getRect(trigger);
+    final surface = find.descendant(
+      of: trigger,
+      matching: find.byKey(const ValueKey('remix-icon-button-surface')),
+    );
+    final painted = surface.evaluate().isEmpty ? trigger : surface;
+    final rect = tester.getRect(painted);
     final idle = await capturePixels(tester, boundary);
 
     await focus();
@@ -64,10 +69,10 @@ void main() {
       (inside) => Offset(rect.left + inside, rect.center.dy),
       (inside) => Offset(rect.right - inside, rect.center.dy),
     ]) {
-      expectNearColor(pixel(focused, at(0.5)), focus8);
+      expectNearColor(pixel(focused, at(-3)), focus8);
       expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
     }
-    expect(tester.getRect(trigger), rect);
+    expect(tester.getRect(painted), rect);
   }
 
   Future<void> tab(WidgetTester tester) =>

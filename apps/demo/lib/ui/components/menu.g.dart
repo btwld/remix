@@ -6,7 +6,7 @@ part of 'menu.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal menu content with Radix-owned size, variant, and contrast behavior.
+/// Fortal menu content with Fortal-owned size, variant, and contrast behavior.
 class FortalMenu<T> extends StatelessWidget {
   const FortalMenu({
     super.key,

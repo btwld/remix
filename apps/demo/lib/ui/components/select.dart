@@ -6,13 +6,13 @@ import '../theme/theme.dart';
 
 part 'select.g.dart';
 
-/// Radix Themes Select root size presets.
+/// Fortal Select root size presets.
 enum FortalSelectSize { size1, size2, size3 }
 
-/// Radix Themes Select variants.
+/// Fortal Select variants.
 enum FortalSelectVariant { surface, soft, ghost }
 
-/// Fortal-themed Select with Radix-owned trigger and content configuration.
+/// Fortal-themed Select with Fortal-owned trigger and content configuration.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -62,24 +62,19 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
         }),
       )
       .indicator(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
-      .onFocusVisible(
-        .containerEffects(
-          // `outline: 2px solid focus-8; outline-offset: -1px`: the ring
-          // straddles the trigger edge. The soft trigger swaps the color for
-          // accent-8.
-          fortalFocusOutline(switch (variant) {
-            .soft => FortalTokens.accent8(),
-            .surface || .ghost => FortalTokens.focus8(),
-          }, offset: -1),
-        ),
-      )
-      .merge(_fortalSelectTriggerSizeStyler(variant, size));
+      .onFocusVisible(.containerEffects(fortalFocusOutline()))
+      .merge(_fortalSelectTriggerSizeStyler(variant, size))
+      .wrap(fortalTouchTarget());
 
-  return switch (variant) {
+  return (switch (variant) {
     .surface => _fortalSelectSurfaceTrigger(base),
     .soft => _fortalSelectSoftTrigger(base),
     .ghost => _fortalSelectGhostTrigger(base),
-  };
+  }).onDisabled(
+    SelectTriggerStyler().containerEffects(
+      RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+    ),
+  );
 }
 
 TextStyler _fortalSelectTriggerText(FortalSelectSize size, {Color? color}) {
@@ -105,7 +100,7 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
 ) {
   final style = SelectTriggerStyler().spacing(switch (size) {
     .size1 => FortalTokens.space1(),
-    .size2 => FortalTokens.selectSpace1Half(),
+    .size2 => FortalTokens.space2(),
     .size3 => FortalTokens.space2(),
   });
   return switch (variant) {
@@ -119,7 +114,7 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
       .size3 =>
         style
             .padding(.horizontal(FortalTokens.space3()))
-            .padding(.vertical(FortalTokens.selectSpace1Half()))
+            .padding(.vertical(FortalTokens.space2()))
             .margin(.horizontal(FortalTokens.selectGhostMarginX3()))
             .margin(.vertical(FortalTokens.selectGhostMarginY3())),
     },
@@ -143,10 +138,10 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
 SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
   return base
       .indicatorOpacity(0.9)
-      .color(FortalTokens.colorSurface())
+      .color(FortalTokens.gray2())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
-          fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
+          fortalInsetSurface(strokes: [FortalTokens.gray7()]),
         ),
       )
       .onHovered(
@@ -244,6 +239,7 @@ SelectMenuItemStyler _fortalSelectItemStyler(
 }) {
   final metrics = _fortalSelectContentMetrics(size);
   final base = SelectMenuItemStyler()
+      .wrap(fortalTouchTarget())
       .direction(.horizontal)
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.indicatorWidth))
@@ -282,16 +278,23 @@ SelectMenuItemStyler _fortalSelectItemStyler(
     .soft => SelectMenuItemStyler().color(FortalTokens.accentA4()),
   };
 
-  // Naked's focused option is Radix's roving `data-highlighted` item, not a
-  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
+      .onFocusVisible(
+        SelectMenuItemStyler().container(
+          FlexBoxStyler().fortalFocusRing(radius: metrics.itemRadius),
+        ),
+      )
       .onDisabled(
-        .color(
-          const Color(0x00000000),
-        ).text(.color(FortalTokens.grayA8())).iconColor(FortalTokens.grayA8()),
+        SelectMenuItemStyler()
+            .container(
+              FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+            )
+            .color(const Color(0x00000000))
+            .text(.color(FortalTokens.grayA8()))
+            .iconColor(FortalTokens.grayA8()),
       );
 }
 
@@ -306,7 +309,7 @@ _fortalSelectContentMetrics(FortalSelectSize size) => switch (size) {
   .size1 => (
     itemHeight: FortalTokens.space5(),
     indicatorWidth: FortalTokens.selectIndicatorWidth1(),
-    indicatorSize: FortalTokens.selectIndicatorSize1(),
+    indicatorSize: FortalTokens.space2(),
     itemRadius: FortalTokens.radius1(),
     itemText: FortalTokens.text1,
   ),

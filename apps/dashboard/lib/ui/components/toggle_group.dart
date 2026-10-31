@@ -47,11 +47,12 @@ ToggleGroupStyler uiToggleGroupStyle({
         ),
         color: UiTokens.colorSurface(),
       ),
-      clipBehavior: .hardEdge,
       mainAxisSize: .min,
-      spacing: 0,
+      spacing: UiTokens.space1(),
     ),
-    item: .alignment(.center)
+    item: ToggleGroupItemStyler()
+        .wrap(uiTouchTarget())
+        .alignment(.center)
         .labelColor(UiTokens.gray11())
         .iconColor(UiTokens.gray11())
         .labelFontWeight(UiTokens.fontWeightMedium())
@@ -66,10 +67,13 @@ ToggleGroupStyler uiToggleGroupStyle({
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
         .onFocusVisible(
-          ToggleGroupItemStyler().containerEffects(uiTabFocusOutline()),
+          ToggleGroupItemStyler().containerEffects(uiFocusOutline()),
         )
         .onDisabled(
           ToggleGroupItemStyler()
+              .containerEffects(
+                RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+              )
               .color(UiTokens.grayA3())
               .labelColor(UiTokens.gray8())
               .iconColor(UiTokens.gray8()),
@@ -85,7 +89,7 @@ ToggleGroupStyler _uiToggleGroupSizeStyler(UiToggleGroupSize size) {
         FlexBoxStyler()
             .padding(.horizontal(UiTokens.space2()))
             .padding(.vertical(UiTokens.space1()))
-            .spacing(UiTokens.toggleGap1()),
+            .spacing(UiTokens.space1()),
       ).label(.style(UiTokens.text1.mix())).icon(.size(UiTokens.space3())),
     ),
     .size2 => ToggleGroupStyler(
@@ -104,7 +108,7 @@ ToggleGroupStyler _uiToggleGroupSizeStyler(UiToggleGroupSize size) {
                 FlexBoxStyler()
                     .padding(.horizontal(UiTokens.space4()))
                     .padding(.vertical(UiTokens.space2()))
-                    .spacing(UiTokens.toggleGap3()),
+                    .spacing(UiTokens.space2()),
               )
               .label(.style(UiTokens.text3.mix()))
               .icon(.size(UiTokens.spinnerSize3())),

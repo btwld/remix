@@ -22,14 +22,11 @@ DisclosureStyler uiDisclosureStyle({
   return (switch (variant) {
     .surface => _uiDisclosureSurfaceStyler(size),
     .soft => _uiDisclosureSoftStyler(size),
-  }).merge(style);
+  }).container(BoxStyler().clipBehavior(.none)).merge(style);
 }
 
-// Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, frame, fill, and clipping, while trigger and
-// content stay flat rectangles that simply get cropped to its rounded shape.
-// The frame and divider are foreground borders so edge-to-edge child fills
-// cannot partially cover their antialiased edges.
+// The frame paints above the parts, whose own clips leave focus outlines free
+// to extend outside the container without changing layout.
 DisclosureStyler _uiDisclosureBaseStyler(UiDisclosureSize size) {
   final metrics = _uiDisclosureMetrics(size);
 
@@ -37,6 +34,9 @@ DisclosureStyler _uiDisclosureBaseStyler(UiDisclosureSize size) {
       .trigger(
         BoxStyler()
             .width(.infinity)
+            .borderRadius(.all(metrics.radius))
+            .clipBehavior(.antiAlias)
+            .minHeight(UiTokens.touchTargetMin())
             .alignment(.centerLeft)
             .padding(.all(metrics.padding))
             .wrap(
@@ -48,9 +48,28 @@ DisclosureStyler _uiDisclosureBaseStyler(UiDisclosureSize size) {
               ),
             ),
       )
+      .onExpanded(
+        DisclosureStyler().trigger(
+          BoxStyler().borderRadius(
+            BorderRadiusMix(
+              topLeft: metrics.radius,
+              topRight: metrics.radius,
+              bottomLeft: Radius.zero,
+              bottomRight: Radius.zero,
+            ),
+          ),
+        ),
+      )
       .content(
         BoxStyler()
             .width(.infinity)
+            .borderRadius(
+              BorderRadiusMix(
+                bottomLeft: metrics.radius,
+                bottomRight: metrics.radius,
+              ),
+            )
+            .clipBehavior(.antiAlias)
             .padding(.all(metrics.padding))
             .wrap(
               _uiDisclosureTypography(
@@ -84,7 +103,7 @@ DisclosureStyler _uiDisclosureSurfaceStyler(UiDisclosureSize size) {
       )
       .onHovered(.trigger(.color(UiTokens.gray2())))
       .onPressed(.trigger(.color(UiTokens.gray3())))
-      .onFocusVisible(DisclosureStyler().triggerEffects(uiTabFocusOutline()))
+      .onFocusVisible(DisclosureStyler().triggerEffects(uiFocusOutline()))
       .onDisabled(_uiDisclosureDisabledStyler());
 }
 
@@ -127,21 +146,23 @@ DisclosureStyler _uiDisclosureSoftStyler(UiDisclosureSize size) {
       )
       .onHovered(.trigger(.color(UiTokens.accent3())))
       .onPressed(.trigger(.color(UiTokens.accent4())))
-      .onFocusVisible(DisclosureStyler().triggerEffects(uiTabFocusOutline()))
+      .onFocusVisible(DisclosureStyler().triggerEffects(uiFocusOutline()))
       .onDisabled(_uiDisclosureDisabledStyler());
 }
 
 DisclosureStyler _uiDisclosureDisabledStyler() {
-  return DisclosureStyler().trigger(
-    BoxStyler()
-        .color(UiTokens.grayA3())
-        .wrap(
-          _uiDisclosureForeground(
-            color: UiTokens.gray8(),
-            iconColor: UiTokens.gray8(),
-          ),
-        ),
-  );
+  return DisclosureStyler()
+      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
+      .trigger(
+        BoxStyler()
+            .color(UiTokens.grayA3())
+            .wrap(
+              _uiDisclosureForeground(
+                color: UiTokens.gray8(),
+                iconColor: UiTokens.gray8(),
+              ),
+            ),
+      );
 }
 
 BorderSideMix _uiDisclosureBorderSide(Color color) =>
@@ -179,7 +200,7 @@ _uiDisclosureMetrics(UiDisclosureSize size) {
     .size2 => (
       padding: UiTokens.space3(),
       radius: UiTokens.radius4(),
-      triggerText: UiTokens.accordionText2,
+      triggerText: UiTokens.text2,
       iconSize: UiTokens.spinnerSize3(),
     ),
     .size3 => (

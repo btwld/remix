@@ -11,21 +11,9 @@ install commands, scope placement, and the preset chooser, see the
 `<Prefix>Tokens` follows shadcn/ui's theme variable names (`card-foreground`
 is `cardForeground`), so values from those themes carry over:
 
-- `background`, `foreground`, `card`, `cardForeground`, `popover`,
-  `popoverForeground`
-- `primary`, `primaryForeground`, `secondary`, `secondaryForeground`
-- `muted`, `mutedForeground`, `accent`, `accentForeground`
-- `destructive`, `destructiveForeground`
-- `border`, `input`, `ring`
-- `chart1`–`chart5`
-- `sidebar`, `sidebarForeground`, `sidebarPrimary`,
-  `sidebarPrimaryForeground`, `sidebarAccent`, `sidebarAccentForeground`,
-  `sidebarBorder`, `sidebarRing`
-- radius steps: `radiusSm`, `radiusMd`, `radiusLg`, `radiusXl`
-- text steps: `textXs`, `textSm`, `textBase`, `textLg`, `textXl`, `text2xl`,
-  `text3xl`, and `textMono`
-
-The lists `colors`, `radii`, `textStyles`, and `chart` enumerate them.
+The installed `theme/tokens.dart` owns the full catalog: semantic colors,
+radius/text steps, sidebar roles and chart colors. `colors`, `radii`,
+`textStyles` and `chart` enumerate token groups.
 
 `<Prefix>ThemeData` stores one `radius` (10); the four radius steps derive
 from it (6, 8, 10, 14), so `copyWith(radius: ...)` rounds everything. Controls
@@ -147,26 +135,8 @@ families carry over.
 
 ## Styling with tokens
 
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-import 'ui/ui.dart';
-
-final primaryButton = ButtonStyler()
-    .color(UiTokens.primary())
-    .label(
-      TextStyler()
-          .style(UiTokens.textSm.mix())
-          .color(UiTokens.primaryForeground()),
-    );
-
-Widget background(BuildContext context) =>
-    Container(color: UiTokens.background.resolve(context));
-```
-
-Call a color or radius token inside a styler chain, `.mix()` on a text token
-for `TextStyler.style`, and `.resolve(context)` for a direct value in widget
-code. See [Styling](styling.md) for general token and `Prop` mechanics.
+Use [Styling](styling.md#styling-with-installed-tokens) for token call forms,
+`.mix()` and `.resolve(context)`; the same mechanics apply to both presets.
 
 ## Updating an older install
 

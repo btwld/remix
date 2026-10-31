@@ -111,7 +111,7 @@ void main() {
     }
 
     expect(paddings, hasLength(FortalToggleGroupSize.values.length));
-    expect(spacings, hasLength(FortalToggleGroupSize.values.length));
+    expect(spacings, {4.0, 8.0});
     expect(fontSizes, hasLength(FortalToggleGroupSize.values.length));
     expect(iconSizes, hasLength(FortalToggleGroupSize.values.length));
     expect(radii, hasLength(2));

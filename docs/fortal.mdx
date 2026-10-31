@@ -1,13 +1,11 @@
 ---
 title: Fortal
-description: A Radix Themes-inspired preset theme and widget catalog for Remix
+description: An independent, Fortaleza-inspired design system for Remix
 ---
 
-Remix gives you complete freedom to build any design system, which also means it
-ships no theme of its own. **Fortal** is the ready-made alternative: a
-comprehensive set of prebuilt styles based on
-[Radix Themes 3.3.0](https://www.radix-ui.com/themes), providing a polished,
-modern UI out of the box while remaining fully customizable.
+**Fortal** is an application-owned design system built on Remix and Naked UI.
+Seven city-inspired palettes, neutral defaults, flat controls, and shared token
+scales give apps a complete starting point without locking away the source.
 
 ![A selection of Fortal components and variants](/assets/fortal-catalog.png)
 
@@ -21,11 +19,11 @@ for text styles. Live examples and their source live on the individual
 Fortal lives in its own application-owned preset so that `remix` stays a
 genuinely theme-free component library. If you are building your own design
 system on Remix, you pay nothing for a theme you never use. If you choose
-Fortal, the CLI copies its token tables, Radix color data, and recipes into your
+Fortal, the CLI copies its token tables, owned color palettes, and recipes into your
 application, where they become your source.
 
 The repository keeps `registry_source` (`lib/src/fortal`) as the analyzed authoring and
-Radix parity surface. Consumer applications do not depend on that package.
+Fortal specification and test surface. Consumer applications do not depend on that package.
 
 ## Installation
 
@@ -150,11 +148,11 @@ import 'ui/ui.dart';
 
 Widget withAppearance(Widget child) => FortalTheme(
   theme: const FortalThemeConfig(
-    accent: FortalAccentColor.indigo,
+    accent: FortalAccentColor.calcadao,
     brightness: Brightness.light,
   ),
   darkTheme: const FortalThemeConfig(
-    accent: FortalAccentColor.indigo,
+    accent: FortalAccentColor.calcadao,
     brightness: Brightness.dark,
   ),
   mode: FortalThemeMode.system,
@@ -194,7 +192,7 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
 
 Fortal styles are built on a robust token system that includes:
 
-- **Colors**: 12-step accent and gray scales (powered by Radix Colors)
+- **Colors**: 12-step accent and gray scales (generated in OKLCH from owned seeds)
 - **Spacing**: 9-step spacing scale
 - **Border Radius**: 6-step radius scale
 - **Shadows**: 6-level shadow system
@@ -220,7 +218,7 @@ Fortal adds five typography families that base Remix has no counterpart for:
 `FortalText`, `FortalHeading`, `FortalCode`, `FortalKbd`, and `FortalLink`. They
 share one nine-step `FortalTextSize` scale and one `FortalTextWeight` enum. See
 [Typography](/fortal/typography) for widget selection, controls, semantics,
-recipe customization, and the documented parity boundaries.
+recipe customization, and composition guidance.
 
 ## Charts
 
@@ -279,20 +277,96 @@ import 'package:remix_ui_icons/icons_index.dart';
 final icon = remixIconsByName['check'];
 ```
 
-## Soft variants and contrast
+## Seven palettes
 
-Default `fortalBadgeStyle(variant: .soft)` pairs fill `accentA3` with label
-`accentA11`. Step 11 is Radix **low-contrast text**, not a WCAG AA 4.5:1
-guarantee against that fill composited over `colorPanelSolid`. In light mode
-some of the 31 accents miss 4.5:1 on that composite. Dark-mode default and
-`highContrast: true` (label `accent12`) pass AA. Use `highContrast: true` when
-light-mode soft labels must meet WCAG AA.
+Both the default accent and the sole gray family are **Calçadão**: basalt and
+limestone neutrals. The page uses neutral step 1 and solid panels use step 2
+in both modes. Choose a named accent with `FortalTheme(accent: .mar, child: child)`.
 
-## Covered components
+| Palette | Enum | Seed | Solid foreground |
+| --- | --- | --- | --- |
+| Calçadão | `calcadao` | `#13181D` | Limestone / basalt by mode |
+| Mar | `mar` | `#036F6B` | White or basalt, contrast-fitted |
+| Céu | `ceu` | `#006EBE` | White or basalt, contrast-fitted |
+| Mangue | `mangue` | `#1D7D3E` | White or basalt, contrast-fitted |
+| Sol | `sol` | `#FFCF50` | Basalt |
+| Duna | `duna` | `#E5C79A` | Basalt |
+| Caju | `caju` | `#CB4333` | White or basalt, contrast-fitted |
 
-Every Remix component has a matching Fortal recipe and preset widget. The
-[Catalog](/fortal/catalog) lists every widget with its sizes, variants,
-defaults, named constructors, and documented parity boundaries in one place; it
-is generated from the same pinned Radix contract that CI holds against the
-recipes, so it cannot drift from the code. For usage examples, see the
-`## Fortal widgets` section on each [component page](/components/button).
+Seeds identify each palette; the generator fits final colors to sRGB and the
+contrast contract. Background, border, and text steps share OKLCH lightness
+stops; seed-led solid steps 9–10 preserve each palette's identity. Transparent
+steps are solved against the neutral page. Their appearance on a different
+background follows ordinary alpha compositing.
+
+| Steps | Job |
+| --- | --- |
+| 1–2 | Page and subtle backgrounds |
+| 3–5 | Component fills: rest, hover, pressed |
+| 6–8 | Borders: subtle, normal, strong; step 8 also supplies focus |
+| 9–10 | Solid fill and hover |
+| 11–12 | Secondary and primary text |
+
+The `contrast`, `surface`, `indicator`, and `track` roles remain available.
+Error tokens always use Caju, independently of the selected accent.
+
+## Contrast and geometry
+
+Every built-in palette is tested in both modes:
+
+- Contrast text on steps 9 and 10: **at least 4.5:1**.
+- Step 11 on steps 1–3: **at least 4.5:1**.
+- Step 12 on steps 1–5: **at least 7:1**.
+- Step 8 on steps 1 and 2: **at least 3:1**.
+- Actual soft alpha labels on fills 3–5 over the page and solid panel: **at least 4.5:1**.
+
+Soft badges, callouts, code, avatars, and buttons are readable by default.
+`highContrast` remains available to strengthen their foreground treatment.
+Interactive controls share a token-driven 2px step-8 focus ring with a 2px
+outside gap. Compact controls keep their painted sizes within interaction
+areas of at least 40 logical pixels.
+
+Panels default to `solid`, with zero blur. Opt into `panelBackground:
+.translucent` for translucent panels. Only floating menu, popover, dialog,
+select-popup, tooltip, and toast layers carry elevation; cards and controls
+are flat. Surface fields and select triggers use opaque gray step 2 with a
+step-7 border. Radius, scaling, high contrast, font selection, and icons remain
+independent options.
+
+## Your own brand seed
+
+The palette tool has no external color-data dependency. From a Remix checkout,
+generate a palette next to the installed `palette.dart`:
+
+```bash
+fvm dart run registry_source/tool/fortal_palettes/generate.dart \
+  --name brand --seed '#8038CC' --type-prefix Fortal \
+  --output /path/to/app/lib/ui/theme/brand_colors.dart
+```
+
+Set `--type-prefix` to the prefix in the app's `remix.yaml` (for example,
+`Acme`). The default is `Fortal`. `--palette-import` changes the sibling import
+when the file lives elsewhere. Import the generated file in the app and pass
+`accentPalette: brand` to its theme. A custom palette supplies both modes and
+inherits through nested scopes; an explicit named `accent` in a nested scope
+selects that built-in palette again.
+
+## Owned specification and review
+
+The [catalog](/fortal/catalog) is generated from Fortal's own machine-readable
+specification, checked against its source APIs and test inventory in CI. The
+[prose specification](https://github.com/btwld/remix/blob/main/registry_source/specs/fortal.md)
+owns tokens, defaults, geometry, variants, and contrast targets.
+
+The Fortal playground in `apps/demo` includes a polish board with every family,
+every size and variant, side-by-side light/dark panels, palette selection,
+a 4px grid, and hover/pressed/focus/disabled review states:
+
+```bash
+cd apps/demo
+fvm flutter run -d chrome -t lib/polish_main.dart
+```
+
+Owned golden tests capture the board and all seven palette/state combinations.
+For usage examples, see the `Fortal widgets` section on each
+[component page](/components/button).
