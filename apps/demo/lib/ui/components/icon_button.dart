@@ -7,13 +7,13 @@ import '../theme/theme.dart';
 
 part 'icon_button.g.dart';
 
-/// Radix Themes IconButton size presets.
+/// Fortal IconButton size presets.
 enum FortalIconButtonSize { size1, size2, size3, size4 }
 
-/// Radix Themes IconButton variants.
-enum FortalIconButtonVariant { classic, solid, soft, surface, outline, ghost }
+/// Fortal IconButton variants.
+enum FortalIconButtonVariant { solid, soft, surface, outline, ghost }
 
-/// Fortal-themed IconButton with the Radix size, variant, and override contract.
+/// Fortal-themed IconButton with Fortal sizes, variants, and overrides.
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler fortalIconButtonStyle({
   FortalIconButtonVariant variant = .solid,
@@ -30,11 +30,14 @@ IconButtonStyler fortalIconButtonStyle({
     highContrast: highContrast,
   );
 
-  return _applyFortalIconButtonStateStyles(
-    base,
-    stateStyles,
-    pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
-  ).merge(style);
+  return _applyFortalIconButtonStateStyles(base, stateStyles)
+      .wrap(fortalTouchTarget())
+      .onDisabled(
+        IconButtonStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
 IconButtonStyler _fortalIconButtonBaseStyler(
@@ -65,7 +68,6 @@ IconButtonStyler _fortalIconButtonBaseStyler(
 FortalBaseButtonVariant _fortalBaseButtonVariant(
   FortalIconButtonVariant variant,
 ) => switch (variant) {
-  .classic => .classic,
   .solid => .solid,
   .soft => .soft,
   .surface => .surface,
@@ -83,16 +85,12 @@ FortalBaseButtonSize _fortalBaseButtonSize(FortalIconButtonSize size) =>
 
 IconButtonStyler _applyFortalIconButtonStateStyles(
   IconButtonStyler base,
-  FortalBaseButtonStateStyles stateStyles, {
-  required double? pressedPaddingTop,
-}) {
-  var pressed = _applyFortalIconButtonState(
+  FortalBaseButtonStateStyles stateStyles,
+) {
+  final pressed = _applyFortalIconButtonState(
     IconButtonStyler().animate(fortalBaseButtonActiveMotion),
     stateStyles.pressed,
   );
-  if (pressedPaddingTop != null) {
-    pressed = pressed.padding(.top(pressedPaddingTop));
-  }
 
   return _applyFortalIconButtonState(
         base.animate(fortalBaseButtonRestMotion),

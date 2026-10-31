@@ -37,6 +37,7 @@ DisclosureStyler _{{valuePrefix}}DisclosureBaseStyler({{typePrefix}}DisclosureSi
       .trigger(
         BoxStyler()
             .width(.infinity)
+            .minHeight({{typePrefix}}Tokens.touchTargetMin())
             .alignment(.centerLeft)
             .padding(.all(metrics.padding))
             .wrap(
@@ -86,7 +87,11 @@ DisclosureStyler _{{valuePrefix}}DisclosureSurfaceStyler({{typePrefix}}Disclosur
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
-      .onFocusVisible(DisclosureStyler().{{valuePrefix}}FocusRing())
+      .onFocusVisible(
+        DisclosureStyler().container(
+          BoxStyler().{{valuePrefix}}FocusRing(radius: metrics.radius),
+        ),
+      )
       .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
 }
 
@@ -129,21 +134,27 @@ DisclosureStyler _{{valuePrefix}}DisclosureSoftStyler({{typePrefix}}DisclosureSi
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
-      .onFocusVisible(DisclosureStyler().{{valuePrefix}}FocusRing())
+      .onFocusVisible(
+        DisclosureStyler().container(
+          BoxStyler().{{valuePrefix}}FocusRing(radius: metrics.radius),
+        ),
+      )
       .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
 }
 
 DisclosureStyler _{{valuePrefix}}DisclosureDisabledStyler() {
-  return DisclosureStyler().trigger(
-    BoxStyler()
-        .color({{typePrefix}}Tokens.grayA3())
-        .wrap(
-          _{{valuePrefix}}DisclosureForeground(
-            color: {{typePrefix}}Tokens.gray8(),
-            iconColor: {{typePrefix}}Tokens.gray8(),
-          ),
-        ),
-  );
+  return DisclosureStyler()
+      .container(BoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)))
+      .trigger(
+        BoxStyler()
+            .color({{typePrefix}}Tokens.grayA3())
+            .wrap(
+              _{{valuePrefix}}DisclosureForeground(
+                color: {{typePrefix}}Tokens.gray8(),
+                iconColor: {{typePrefix}}Tokens.gray8(),
+              ),
+            ),
+      );
 }
 
 BorderSideMix _{{valuePrefix}}DisclosureBorderSide(Color color) =>
@@ -181,7 +192,7 @@ _{{valuePrefix}}DisclosureMetrics({{typePrefix}}DisclosureSize size) {
     .size2 => (
       padding: {{typePrefix}}Tokens.space3(),
       radius: {{typePrefix}}Tokens.radius4(),
-      triggerText: {{typePrefix}}Tokens.accordionText2,
+      triggerText: {{typePrefix}}Tokens.text2,
       iconSize: {{typePrefix}}Tokens.spinnerSize3(),
     ),
     .size3 => (

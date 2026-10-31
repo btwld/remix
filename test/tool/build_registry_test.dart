@@ -9,6 +9,27 @@ import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
 void main() {
+  test('owned palette data filename stays stable under a consumer prefix', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current.absolute,
+    ).derive();
+    final data = output.files['templates/theme/fortal_colors.dart.tmpl']!;
+    final theme = output.files['templates/theme/theme_data.dart.tmpl']!;
+    final renderedData = const TemplateRenderer().render(
+      data,
+      typePrefix: 'Acme',
+      valuePrefix: 'acme',
+    );
+    final renderedTheme = const TemplateRenderer().render(
+      theme,
+      typePrefix: 'Acme',
+      valuePrefix: 'acme',
+    );
+    expect(renderedData, contains('AcmeColorTheme'));
+    expect(renderedTheme, contains("import 'fortal_colors.dart'"));
+    expect(renderedTheme, isNot(contains('acme_colors.dart')));
+  });
+
   test(
     'HeroUI derives every component as a generated recipe and keeps notices',
     () {
@@ -196,7 +217,11 @@ void main() {
 
       expect(rendered, entry.value, reason: entry.key);
       expect(template, isNot(contains('Fortal')), reason: entry.key);
-      expect(template, isNot(contains('fortal')), reason: entry.key);
+      expect(
+        template.replaceAll('fortal_colors.dart', ''),
+        isNot(contains('fortal')),
+        reason: entry.key,
+      );
     }
   });
 

@@ -31,21 +31,37 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
   IconButtonStyler retryStyle = const IconButtonStyler.create(),
 }) => FortalAgentExecutionRecipe(
   style: AgentExecutionStyler(
-    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+    header: FlexBoxStyler()
+        .spacing(FortalTokens.space2())
+        .crossAxisAlignment(.center),
     output: BoxStyler()
         .color(FortalTokens.gray3())
-        .borderRadius(.circular(6))
-        .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.top(10)),
-    tool: TextStyler().color(FortalTokens.gray11()).fontSize(12),
+        .borderRadius(.all(FortalTokens.radius3()))
+        .padding(.all(FortalTokens.space3())),
+    actions: FlexBoxStyler()
+        .spacing(FortalTokens.space2())
+        .padding(.top(FortalTokens.space3())),
+    tool: TextStyler()
+        .color(FortalTokens.gray11())
+        .style(FortalTokens.text1.mix()),
     title: TextStyler()
         .color(FortalTokens.gray12())
-        .fontWeight(FontWeight.w600),
-    meta: TextStyler().color(FortalTokens.gray11()).fontSize(12),
-    status: TextStyler().color(FortalTokens.gray11()).fontSize(12),
-    toolIcon: IconStyler().color(FortalTokens.gray12()).size(16),
-    statusIcon: IconStyler().color(FortalTokens.accent9()).size(12),
-    indicator: IconStyler().color(FortalTokens.gray12()).size(16),
+        .fontWeight(FortalTokens.fontWeightSemibold()),
+    meta: TextStyler()
+        .color(FortalTokens.gray11())
+        .style(FortalTokens.text1.mix()),
+    status: TextStyler()
+        .color(FortalTokens.gray11())
+        .style(FortalTokens.text1.mix()),
+    toolIcon: IconStyler()
+        .color(FortalTokens.gray12())
+        .size(FortalTokens.space4()),
+    statusIcon: IconStyler()
+        .color(FortalTokens.accent9())
+        .size(FortalTokens.space3()),
+    indicator: IconStyler()
+        .color(FortalTokens.gray12())
+        .size(FortalTokens.space4()),
   ).merge(style),
   surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
   disclosureStyle: fortalDisclosureStyle(
@@ -58,7 +74,9 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
         .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
         .content(
           BoxStyler()
-              .padding(.fromLTRB(0, 12, 0, 4))
+              .padding(
+                .fromLTRB(0, FortalTokens.space3(), 0, FortalTokens.space1()),
+              )
               .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
         )
         .onHovered(.trigger(.color(const Color(0x00000000))))

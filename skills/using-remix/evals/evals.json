@@ -113,13 +113,13 @@
     },
     {
       "id": 11,
-      "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use Radix-like colors or Fortal tokens. Style a primary button from scratch.",
+      "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use preset colors or Fortal tokens. Style a primary button from scratch.",
       "expected_output": "Chooses base Remix rather than initializing the Fortal preset, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalTheme or Fortal tokens.",
       "files": [],
       "expectations": [
         "Uses RemixButton with a custom ButtonStyler and interaction states.",
         "Imports remix without initializing the Fortal preset.",
-        "Does not add FortalTheme, Fortal tokens, or Radix-like defaults."
+        "Does not add FortalTheme, Fortal tokens, or preset defaults."
       ]
     },
     {
@@ -232,12 +232,12 @@
     {
       "id": 21,
       "prompt": "This project's remix.yaml still has schema: 1 and was originally initialized with --prefix Acme --preset fortal. remix add button now fails, saying the schema is unsupported. Fix it.",
-      "expected_output": "Explains that remix.yaml schema 3 is the only readable configuration, so a schema 1 file fails outright rather than being migrated automatically. Deletes remix.yaml, reruns remix init --prefix Acme --preset fortal to match the project's original configuration, then re-adopts each previously installed item's source with remix add <item> --diff, using --overwrite only for items where the new file should replace the old one. Notes that already-installed application source is left untouched by re-initialization itself.",
+      "expected_output": "Explains that remix.yaml schema 3 is the only readable configuration, so a schema 1 file fails outright rather than being migrated automatically. Deletes remix.yaml, reruns remix init --prefix Acme --preset fortal to match the project's original configuration, then verifies the registry provenance of the existing source before reviewing with remix add theme base_button button --adopt --diff and adopting with remix add theme base_button button --adopt, explicitly naming every other existing item and dependency too. Notes that re-initialization and adoption preserve authored edits, and commits remix.ownership.json with remix.yaml and installed source. Uses --overwrite only after adoption for items whose source should be replaced.",
       "files": [],
       "expectations": [
         "Deletes the schema-1 remix.yaml and reruns remix init with the project's original prefix and preset.",
-        "Reviews previously installed items with add <item> --diff rather than assuming an automatic migration.",
-        "Explains that re-initialization leaves installed source untouched and adoption happens item by item."
+        "Verifies provenance, previews with --adopt --diff, then adopts with --adopt, explicitly naming existing dependencies including Fortal base_button.",
+        "Explains that re-initialization and adoption preserve authored edits, and commits remix.ownership.json with configuration and installed source."
       ]
     },
     {
@@ -276,7 +276,7 @@
     {
       "id": 25,
       "prompt": "This project's remix.yaml has prefix: Ui and preset: fortal. Add a primary action button to a screen.",
-      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal and the prefix is Ui, the generated theme class is UiTheme and the button is UiButton (with Fortal's solid/soft/surface/outline/ghost/classic variants), not FortalTheme or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiTheme ancestor.",
+      "expected_output": "Reads prefix and preset independently from remix.yaml: since the preset is fortal and the prefix is Ui, the generated theme class is UiTheme and the button is UiButton (with Fortal's solid/soft/surface/outline/ghost variants), not FortalTheme or FortalButton. Uses a named UiButton constructor such as UiButton.solid(...) under a UiTheme ancestor.",
       "files": [],
       "expectations": [
         "Reads prefix and preset independently from remix.yaml rather than assuming Ui always means Vanilla.",

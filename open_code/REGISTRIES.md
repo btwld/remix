@@ -129,6 +129,13 @@ If provenance is uncertain or systems were previously mixed, restore a known
 configuration/source pair from version control or start a clean installation
 and reapply local edits. Do not use adoption to relabel another system's files.
 
+Commit `remix.ownership.json` with `remix.yaml` and the installed source after
+adoption. Its prefix, preset, and UI path must continue to match the project
+configuration. Renaming identifiers or deleting source does not release its
+reservations. Restore matching configuration, ownership, and source after an
+accidental context change; for an intentional change, initialize a clean
+installation in a separate app and reapply your edits.
+
 Upgrade the project-local CLI before migrating. Older CLIs ignore this record
 and do not enforce the boundary; do not downgrade installer commands afterward.
 This installer behavior requires a new CLI release; updating a registry pin
@@ -154,6 +161,32 @@ configuration only: installed files and generated adapters are preserved, and
 nothing claims they still match the newly pinned source. That is what the
 `--adopt --diff` is for. Verify provenance before adoption as described above.
 
+## Preset and generation contract
+
+Choose one preset and prefix at initialization; the official presets own the
+same installed paths, so their source trees cannot be mixed. `Fortal` is an
+authoring word, not a required installed prefix. A recipe installs only its
+item dependency closure. Agent surfaces may install bare or through their
+`*_recipe` bundles; shared models/support install transitively.
+
+Applications own theme/recipes and Agent domain source, never depend on
+`registry_source`, and generate adapters against their resolved dependencies.
+`style` comes from the recipe with the caller override merged last;
+`styleSpec` is not a generated visual override because it bypasses resolution.
+Existing authored files are preserved, and `--diff` is read-only.
+
+Recipe-only installs need no build configuration. For `@MixableSpec`, the CLI
+enables the supported spec-styler builder in consumer `build.yaml`. New settings
+are scoped to literal installed paths; existing all-source settings stay so,
+and filters extend only for missing paths. Explicit exclusions, disabled
+builders and competing target ownership fail preflight. Both `$default` and
+package-named default targets are supported; diff/dry-run show proposed changes.
+
+Optional chart/icon items declare their hosted dependencies. Vanilla's theme
+also declares `remix_ui_fonts` for Geist/Geist Mono; Fortal pins no font family.
+Grouped `dashboard_shell` and `dashboard_demo` items leave the app entry point,
+theme scope, routes, authentication and persistence with the host.
+
 ## Author and publish
 
 Edit analyzer-checked Dart under `registry_source/`, then run:
@@ -174,6 +207,7 @@ schema: 1
 presets:
   vanilla: vanilla/registry.yaml
   fortal: fortal/registry.yaml
+  heroui: heroui/registry.yaml
 ```
 
 Within a schema-2 catalog, `registryDependencies: [theme, "@company/icons"]`
@@ -189,7 +223,40 @@ require promoting `registry-stable`, not a new CLI release.
 
 ## Vanilla preset naming
 
-New projects select `vanilla` when `--preset` is omitted. The official remote
-index exposes only `vanilla` and `fortal`; `default` is not a remote alias.
+New projects select `vanilla` when `--preset` is omitted. The checkout index
+exposes `vanilla`, `fortal`, and `heroui`; the served stable index gains a new
+preset only after registry promotion. `default` is not a remote alias.
 A project reinitialized from schema 1 or 2 records `vanilla` in its place. The
 internal authoring directory remains `registry_source/lib/src/default/`.
+
+## Authoring and derivation
+
+`registry_source/lib/src/default`, `fortal`, `heroui`, `agent` and `dashboard` own the
+analyzed Dart. Edit it, never `.tmpl` output. The builder asserts prefix round
+trips and rewrites shared Agent imports to installed relative paths. Imports
+determine item dependencies; parts determine adapter targets. Whole-tree checks
+reject missing, unexpected or changed files.
+
+Explicit fixed data filenames are exceptions to prefix substitution:
+`theme/fortal_colors.dart` stays stable while its Dart types take the consumer
+prefix; the theme barrel excludes unprefixed palette globals. Palettes are
+generated from owned seeds; [Fortal's specification](../registry_source/specs/fortal.md)
+owns the visual contract.
+
+Catalog structure and templates are derived. Maintained inputs are
+`registry/icons.yaml` (mapping/library floors) and Vanilla's dependency and
+dev-dependency floors, read back by the builder and shared with Fortal and HeroUI. Change
+floors through the [package release workflow](../.claude/skills/releasing-a-package/SKILL.md).
+
+## Repository consumers
+
+| App | Preset / prefix | Role |
+| --- | --- | --- |
+| `apps/playground` | Vanilla / Playground | Full catalog, Agent recipes and installed dashboard demo |
+| `apps/demo` | Fortal / Fortal | Non-Agent review catalog |
+| `apps/dashboard` | Fortal / Ui | Full catalog; Chat combines Agent surfaces |
+| `apps/widgetbook_vanilla` | Vanilla / Vanilla | Non-Agent review catalog |
+
+`tool/check_consumer_apps.dart` checks these installed trees. Fresh checkout
+consumers test installation and generation; hosted checks separately establish
+published-floor compatibility. See [release ordering](RELEASING.md).

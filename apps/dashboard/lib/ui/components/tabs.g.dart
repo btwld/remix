@@ -7,9 +7,6 @@ part of 'tabs.dart';
 // **************************************************************************
 
 /// Ui-themed preset for [RemixTabBar].
-///
-/// The tab-list bottom border is a single hairline at every Radix size, so this
-/// preset takes no `size` — unlike [uiTabStyle], whose per-tab metrics vary.
 class UiTabBar extends StatelessWidget {
   const UiTabBar({
     super.key,

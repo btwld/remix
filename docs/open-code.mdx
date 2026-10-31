@@ -10,7 +10,7 @@ command and configuration reference.
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
-small `vanilla` preset, the full Radix Themes-inspired `fortal` preset, or the
+small `vanilla` preset, the full Fortaleza-inspired `fortal` preset, or the
 HeroUI-inspired `heroui` preset when you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
@@ -26,10 +26,10 @@ The Fortal preset does not add a `remix_fortal` dependency.
 
 | | `vanilla` | `fortal` | `heroui` |
 |---|---|---|---|
-| Design language | Neutral and minimal, inspired by shadcn/ui | Radix Themes 3.3.0 parity surface | HeroUI web 3.2.6 |
-| Theme | 32 color tokens, a radius scale, and a type scale | 277 tokens, Radix color scales, scaling, radius, and panel modes | HeroUI's 68 color roles, derived like its CSS variables, and a radius scale |
-| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | HeroUI's `primary`, `secondary`, `tertiary`, `soft`, and `ghost` vocabulary where applicable |
-| Best for | A house system you intend to shape | Starting from a complete Radix-like system | Starting from a HeroUI-like system |
+| Design language | Neutral and minimal, inspired by shadcn/ui | Independent, Fortaleza-inspired, with flat controls and solid panels | HeroUI web 3.2.6 |
+| Theme | 32 color tokens, a radius scale, and a type scale | Seven generated palettes, neutral Calçadão defaults, scaling, radius, and panel modes | HeroUI's 68 color roles, derived like its CSS variables, and a radius scale |
+| Component axes | Small default vocabulary | `solid`, `soft`, `surface`, `outline`, and `ghost` where applicable; floating toast also has `classic` | HeroUI's `primary`, `secondary`, `tertiary`, `soft`, and `ghost` vocabulary where applicable |
+| Best for | A house system you intend to shape | A complete system with contrast-tested colors and consistent focus rings | Starting from a HeroUI-like system |
 
 Every choice installs local Dart under `lib/`, uses Remix for behavior, and uses
 the same `add --diff` / `add --overwrite` review workflow. They cannot be mixed
@@ -199,6 +199,12 @@ Added button.
 Generated lib/ui/components/button.g.dart.
 ```
 
+Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
+records the registry owner of authored and generated targets, including missing
+files; it does not lock their content or hash local edits. All install modes,
+including previews, enforce these reservations. Older installations need
+[explicit adoption](#legacy-source-adoption) before previewing existing items.
+
 Then use it like any widget:
 
 ```dart
@@ -264,11 +270,17 @@ not rename, restyle, or move source it has already installed.
 Running `init` with different values against an existing `remix.yaml` is a hard
 error, not a migration.
 
-Editing `remix.yaml` by hand afterwards is worse, because installed state is
-tracked by *file path*, not by content. `remix add button` would still see
-`lib/ui/components/button.dart` on disk, report `Preserved button.`, and leave
-the old prefix in place. To actually change a prefix you must rename the
-identifiers yourself, or delete the installed files and reinstall.
+Editing `remix.yaml` by hand afterwards conflicts with the prefix, preset, and
+UI path saved in `remix.ownership.json`. Every `add` mode, including `--diff`,
+`--dry-run`, `--overwrite`, and `--adopt`, rejects that mismatch. Renaming
+identifiers or deleting installed files does not update the recorded context
+or release target reservations.
+
+To recover an accidental change, restore the matching configuration, ownership
+record, and source from version control. To intentionally choose another
+prefix, preset, or UI path, initialize a clean installation in a separate app
+with those settings, install the required items, then reapply your application
+edits. Do not delete or edit the ownership record to relabel existing source.
 </Warning>
 
 For example, an `init` that conflicts with the existing configuration reports:
@@ -358,7 +370,8 @@ lib/ui/
 ├── ui.dart
 ├── theme/
 │   ├── theme.dart
-│   ├── radix_colors.dart
+│   ├── fortal_colors.dart
+│   ├── palette.dart
 │   ├── computed.dart
 │   ├── control_styles.dart
 │   ├── tokens.dart
@@ -377,9 +390,9 @@ inherit its tokens and text defaults. The theme example lives in
 `lib/ui/theme/theme_scope.dart`.
 
 These are application files, not forwarding wrappers around a package. The
-authored recipes and pinned Radix Themes 3.3.0
-color data are copied from the same source used by the repository's parity
-suite. `remix` remains the behavior and styling-engine boundary;
+authored recipes and generated OKLCH palettes are copied from the same source
+checked by Fortal's specification, contrast tests, and owned goldens.
+`remix` remains the behavior and styling-engine boundary;
 `mix_annotations`, `build_runner`, and `mix_generator` support adapter
 generation. `icons` additionally installs `remix_ui_icons`, and `chart`
 installs `mix_chart`. The preset adds no direct `mix`, `naked_ui`, or
@@ -530,12 +543,10 @@ Bare dependencies resolve within their owning registry. Qualified dependencies
 require explicit registration; they cannot add or redirect sources. Cross-registry
 cycles, conflicting targets and incompatible package requirements fail before writes.
 
-A project on schema 1 or 2 named no registry at all, so there is no pin to
-migrate. Delete `remix.yaml`, rerun `remix init` with the prefix, preset and UI
-path it recorded, then review with `remix add button --diff`; authored files and
-generated adapters are untouched either way. Restore a previously committed
-`remix.yaml` pin to roll back the source selection; installed files are not
-reverted.
+For projects from earlier prereleases, complete
+[legacy source adoption](#legacy-source-adoption) before using these preview
+and overwrite commands. Restore a previously committed `remix.yaml` pin to
+roll back the source selection; installed files are not reverted.
 
 `--diff` renders the new template, formats it, and runs a real `git diff`
 against what is on disk. If the output is empty you are current:
@@ -572,7 +583,43 @@ Updated button.
 If you only want part of the upstream change, copy it out of the diff by hand.
 That is the intended workflow. The file is yours.
 
+### Legacy source adoption
+
+CLI 0.1.0 and 1.0.0-beta.0 did not record target ownership, even for schema-3
+projects. Upgrade the project-local CLI before recovery. Keep an existing
+schema-3 configuration; for schemas 1 or 2, remove `remix.yaml` and rerun
+`remix init` with the original prefix, preset, and UI path (schema 1's `default`
+preset corresponds to `vanilla`). Reinitialization preserves installed source
+and generated adapters.
+
+Every `add` mode rejects existing targets with unknown ownership. After
+verifying that each item came from the configured registry and preset, preview
+and adopt it explicitly. For Vanilla Button with an existing Theme:
+
+```bash
+remix add theme button --adopt --diff
+remix add theme button --adopt
+```
+
+Name every existing unknown dependency as well as the item itself; for an
+existing Fortal Button installation, also name `base_button`.
+The preview writes nothing. Adoption records your verified provenance in
+`remix.ownership.json` and preserves authored edits, while otherwise running
+normal installation, dependency resolution, missing adapter generation, and
+analysis. Commit that record with `remix.yaml` and the installed source.
+
+`--adopt` cannot be combined with `--overwrite`, cannot replace a known
+different owner, and does not verify provenance for you. If provenance is
+uncertain or source from different systems was mixed, restore a known matching
+configuration, ownership record (if one existed), and source, or start a clean
+installation and reapply your edits. Once adopted, use ordinary `--diff` and
+explicit `--overwrite` for updates. Do not downgrade to a CLI that ignores the
+ownership record.
+
 ### Moving an older Vanilla install onto the current theme
+
+Complete [legacy source adoption](#legacy-source-adoption) first if your
+installation has unknown target ownership.
 
 The Vanilla theme was rebuilt on a new token set. Every recipe reads the new
 tokens, and `--overwrite` replaces only the items you name, so update the theme
@@ -930,7 +977,7 @@ opt-in spec-styler builder for their installed source paths in `build.yaml`,
 preserving other builder settings and comments. Explicit exclusions or disabled
 generation are reported before writes. `--dry-run` and `--diff` remain read-only.
 Agent recipes extend the Vanilla and Fortal presets; they do not constitute
-another preset or claim Radix component parity.
+another preset.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

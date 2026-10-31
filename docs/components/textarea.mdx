@@ -139,8 +139,7 @@ not accept input or expose an editing action.
 
 ## Fortal recipe
 
-Use `FortalTextArea`, `.classic`, `.surface`, or `.soft` for the pinned Radix
-Themes 3.3 sizes and variants. The wrapper forwards the full multiline editor
+Use `FortalTextArea`, `.surface`, or `.soft` for the Fortal recipes. Surface fields use gray step 2 and a crisp step-7 border. The wrapper forwards the full multiline editor
 API. Its 48/64/80 logical-pixel minimum heights do not force a fixed height, so
 content can still grow within parent constraints.
 
@@ -157,7 +156,6 @@ class FortalTextAreaExample extends StatelessWidget {
     return const Column(
       spacing: 16,
       children: [
-        FortalTextArea.classic(label: 'Classic', hintText: 'Add notes'),
         FortalTextArea.surface(label: 'Surface', hintText: 'Add notes'),
         FortalTextArea.soft(label: 'Soft', hintText: 'Add notes'),
       ],

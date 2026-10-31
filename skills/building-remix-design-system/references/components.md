@@ -7,14 +7,6 @@ reference
 ([theme](https://github.com/btwld/remix/tree/registry-stable/registry/vanilla/templates/theme),
 [button](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/templates/button/button.dart.tmpl)).
 
-## Table of Contents
-
-- [Theme item](#1-theme-item)
-- [Recipes](#2-recipes)
-- [Pitfalls](#3-pitfalls)
-- [Worksheet](#4-worksheet)
-- [Tests](#5-tests)
-
 ## 1. Theme item
 
 Three files at the least, installed together as the `theme` item. Vanilla
@@ -67,55 +59,9 @@ resolves a token missing from the active scope throws at runtime. Mix tokens
 override `==`, so a `const` map keyed by them does not compile; build it at
 runtime.
 
-<!-- dart-excerpt: theme/theme_data.dart in the multi-file layout -->
-
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-
-import 'tokens.dart';
-
-enum AcmeThemeMode { system, light, dark }
-
-@immutable
-class AcmeThemeData {
-  const AcmeThemeData.light()
-    : brightness = Brightness.light,
-      background = const Color(0xFFFFFFFF),
-      text = const Color(0xFF1C1C1E),
-      interactivePrimary = const Color(0xFF0B5FFF),
-      onInteractive = const Color(0xFFFFFFFF),
-      hoverSurface = const Color(0xFFF2F2F7),
-      pressedSurface = const Color(0xFFE5E5EA),
-      focus = const Color(0xFF0B5FFF),
-      radius = const Radius.circular(4);
-
-  final Brightness brightness;
-  final Color background;
-  final Color text;
-  final Color interactivePrimary;
-  final Color onInteractive;
-  final Color hoverSurface;
-  final Color pressedSurface;
-  final Color focus;
-  final Radius radius;
-
-  Map<MixToken<Object?>, Object> get tokens =>
-      Map<MixToken<Object?>, Object>.unmodifiable(<MixToken<Object?>, Object>{
-        AcmeTokens.background: background,
-        AcmeTokens.text: text,
-        AcmeTokens.interactivePrimary: interactivePrimary,
-        AcmeTokens.onInteractive: onInteractive,
-        AcmeTokens.hoverSurface: hoverSurface,
-        AcmeTokens.pressedSurface: pressedSurface,
-        AcmeTokens.focus: focus,
-        AcmeTokens.radius: radius,
-      });
-
-  // A .dark() constructor, a default constructor, copyWith, and == and
-  // hashCode over every field, as in Vanilla's theme_data.dart.
-}
-```
+Use the analyzed [Vanilla theme data](https://github.com/btwld/remix/blob/main/registry_source/lib/src/default/theme/theme_data.dart)
+for the complete constructor/copy/equality pattern. Map every token to a value;
+keep fixed scales as constants rather than scope lookups.
 
 **`theme_scope.dart` — installation.** Match Vanilla's contract so consumers
 set up every Remix design system the same way:
@@ -157,109 +103,27 @@ A component is a top-level recipe function annotated with
 constructor is the recipe's parameters plus the Remix widget's parameters,
 and whose `build` calls the Remix widget with the resolved style.
 
-<!-- dart-excerpt: components/button.dart in the multi-file layout -->
+Recipe outline (the analyzed [Vanilla button](https://github.com/btwld/remix/blob/main/registry_source/lib/src/default/components/button.dart)
+owns the complete implementation):
+
+<!-- dart-excerpt: recipe shape; helpers and theme imports are in the linked source -->
 
 ```dart
-import 'package:flutter/widgets.dart';
-import 'package:mix_annotations/mix_annotations.dart';
-import 'package:remix/remix.dart';
-
-import '../theme/tokens.dart';
-
-part 'button.g.dart';
-
-enum AcmeButtonVariant { primary, plain }
-
-enum AcmeButtonSize { small, medium, large }
-
 @MixWidget(target: RemixButton.new)
 ButtonStyler acmeButtonStyle({
   AcmeButtonVariant variant = .primary,
   AcmeButtonSize size = .medium,
   bool loading = false,
   ButtonStyler style = const ButtonStyler.create(),
-}) {
-  return _base(_metricsFor(size))
-      .merge(_variantStyle(variant))
-      .onFocusVisible(_focusRing())
-      .onDisabled(loading ? _loading() : _disabled())
-      .merge(style);
-}
-
-typedef _Metrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
-
-_Metrics _metricsFor(AcmeButtonSize size) => switch (size) {
-  .small => (
-    minHeight: 28.0,
-    paddingX: 12.0,
-    gap: 6.0,
-    labelSize: 13.0,
-    iconSize: 14.0,
-  ),
-  .medium => (
-    minHeight: 36.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .large => (
-    minHeight: 44.0,
-    paddingX: 20.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
-  ),
-};
-
-ButtonStyler _base(_Metrics metrics) => ButtonStyler()
-    .minHeight(metrics.minHeight)
-    .padding(.horizontal(metrics.paddingX))
-    .spacing(metrics.gap)
-    .borderRadius(.all(AcmeTokens.radius()))
-    .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-    .icon(.size(metrics.iconSize))
-    .spinner(.size(metrics.iconSize));
-
-ButtonStyler _variantStyle(AcmeButtonVariant variant) => switch (variant) {
-  .primary => _content(
-    .color(AcmeTokens.interactivePrimary()),
-    AcmeTokens.onInteractive(),
-  ).onHovered(.color(_primaryHoverFill())).onPressed(
-    .color(_primaryPressedFill()),
-  ),
-  .plain => _content(.color(_noFill), AcmeTokens.text())
-      .onHovered(_content(.color(AcmeTokens.hoverSurface()), AcmeTokens.text()))
-      .onPressed(
-        _content(.color(AcmeTokens.pressedSurface()), AcmeTokens.text()),
-      ),
-};
-
-/// One foreground for the label, the icons, and the spinner.
-ButtonStyler _content(ButtonStyler style, Color foreground) => style
-    .label(.color(foreground))
-    .icon(.color(foreground))
-    .spinner(.color(foreground));
-
-/// Loading keeps the variant's visuals; only the focus ring is cleared.
-ButtonStyler _loading() =>
-    ButtonStyler().containerEffects(.outline(.style(.none)));
-
-/// Declared last, so it wins over every other state fragment.
-ButtonStyler _disabled() => ButtonStyler()
-    .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(0.5));
-
-const _noFill = Color(0x00000000);
+}) => _base(size)
+    .merge(_variantStyle(variant))
+    .onFocusVisible(_focusRing())
+    .onDisabled(loading ? _loading() : _disabled())
+    .merge(style);
 ```
 
-`_focusRing` and the `_primary*Fill` context tokens are in §3.
+Keep `part 'button.g.dart'`, enum definitions and helpers in the authored file.
+`_focusRing` and the derived-fill pattern are illustrated in §3.
 
 - **Return the target's own styler type**: `RemixButton` takes a
   `ButtonStyler`, `RemixBadge` a `BadgeStyler`. A styler's methods are in the
@@ -272,7 +136,7 @@ const _noFill = Color(0x00000000);
 - **Variants**: keep the parameter named `variant` so the generator emits
   named constructors, and put the system's vocabulary in the enum:
   `AcmeBadgeTone { neutral, info }` gives `AcmeBadge.info(...)`. Size names
-  come from the source; if it has none, record the chosen names in the ADR.
+  come from the source; if it has none, record the chosen names in the visual spec.
 - Merge the caller's `style` **last** so one call site can override anything
   without forking the recipe.
 - Style only through tokens: `AcmeTokens.x()` inside styler chains,
@@ -290,21 +154,21 @@ Install it with `npx skills add btwld/mix --skill mix`; without it, read
 
 **Curate parameters with `widgetParameters`** before reaching for a
 hand-written facade. A facade over an existing Remix widget is the exception:
-record why in the worksheet, build the recipe inside it, and keep Remix's
-parameter names and shapes. Reference ports never adopt upstream prop shapes
-(`isSelected`/`defaultSelected`, compound children).
+record why in the owning visual contract, build the recipe inside it, and keep
+Remix's parameter names and shapes. Reference ports never adopt upstream prop
+shapes (`isSelected`/`defaultSelected`, compound children).
 
 **No Remix widget for the component.** Compose existing Remix widgets and Mix
 primitives (`Box`, `FlexBox`, `StyledText`, all re-exported by `remix`) in a
-stateless facade. If the family needs behavior that composition cannot
-supply, defer it. A third-party registry that must ship such a widget anyway
-can declare `naked_ui` on the item or author a `@MixableSpec(target: ...)`
-spec (the CLI then writes the consumer's `build.yaml`); record the choice in
-the ADR and README. First-party presets and reference ports never do this.
+stateless facade. If the family needs behavior composition cannot supply,
+defer it. A third-party registry that must ship such a widget can declare
+`naked_ui` or author a `@MixableSpec(target: ...)` spec; document the consumer
+build configuration and any significant boundary decision in the existing log.
+First-party presets and reference ports compose or defer.
 
-For reference ports, map each upstream family to a Remix widget by role, not
-name: a label-like Chip fits `RemixBadge`, while an anchored notification
-Badge is a composition. See `references/reference-parity.md` §1–2.
+Map upstream families to Remix widgets by role, not name: a label-like Chip
+fits `RemixBadge`, while an anchored notification Badge is a composition.
+See [Reference ports](reference-parity.md) §1–2.
 
 ## 3. Pitfalls
 
@@ -396,11 +260,11 @@ consumers may not have a Material ancestor.
 
 ## 4. Worksheet
 
-Write `specs/components/<component>.yaml` before code. It is the review
-artifact: the code is checked against it, and it is checked against the
-source. When reviewing a component that has no worksheet, report that as a
-finding. Values that came only from a user's request cite the committed brief
-(`docs/brief.md`), like any other designed value.
+For a new measurable visual contract, write its anatomy, measurements and
+source before implementation. Use `specs/components/<component>.yaml` or extend
+the existing owning specification; do not create a worksheet for an ordinary
+fix. During review, flag missing contract evidence rather than a missing filename.
+Designed values cite the committed brief (`docs/brief.md`).
 
 ```yaml
 component: Button                 # source system's name

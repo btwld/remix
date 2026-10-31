@@ -66,7 +66,9 @@ branch back by hand takes a force push, which that protection rejects, and
 the next push to `main` would advance the branch over the reset. Projects
 that already pinned a revision stay on it either way.
 
-To repeat the promoted-branch check locally:
+The [package release skill](../.claude/skills/releasing-a-package/SKILL.md)
+owns package-specific bump files and tag patterns. Smoke-test the promoted branch
+with hosted dependencies for both presets:
 
 ```shell
 REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted

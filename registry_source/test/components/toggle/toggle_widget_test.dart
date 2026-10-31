@@ -165,47 +165,38 @@ void main() {
         FocusManager.instance.highlightStrategy = previousStrategy;
       });
 
-      testWidgets('outline toggle keeps focus ring when selected', (
-        tester,
-      ) async {
-        FocusManager.instance.highlightStrategy =
-            FocusHighlightStrategy.alwaysTraditional;
-        final focusRingColor = await resolveInFortalTheme(
-          tester,
-          (context) => MixScope.tokenOf(FortalTokens.focusA8, context),
-        );
-
-        Future<Color?> borderColorFor({required bool selected}) async {
-          final focusNode = FocusNode();
-          addTearDown(focusNode.dispose);
-          await tester.pumpRemixApp(
-            RemixToggle(
-              selected: selected,
-              onChanged: (_) {},
-              label: 'T',
-              focusNode: focusNode,
-              style: fortalToggleStyle(variant: .outline),
-            ),
-          );
-          await tester.pumpAndSettle();
-
-          focusNode.requestFocus();
-          await tester.pumpAndSettle();
-
-          expect(focusNode.hasFocus, isTrue);
-          return _outlineBorderColor(tester);
-        }
-
-        final unselected = await borderColorFor(selected: false);
-        final selected = await borderColorFor(selected: true);
-
-        expect(unselected, focusRingColor);
-        expect(
-          selected,
-          unselected,
-          reason: 'focus ring must survive selection',
-        );
-      });
+      testWidgets(
+        'outline toggle keeps a separate outside focus ring when selected',
+        (tester) async {
+          FocusManager.instance.highlightStrategy =
+              FocusHighlightStrategy.alwaysTraditional;
+          for (final selected in [false, true]) {
+            final focusNode = FocusNode();
+            addTearDown(focusNode.dispose);
+            await tester.pumpRemixApp(
+              RemixToggle(
+                selected: selected,
+                onChanged: (_) {},
+                label: 'T',
+                focusNode: focusNode,
+                style: fortalToggleStyle(variant: .outline),
+              ),
+            );
+            final bounds = tester.getRect(find.byType(RemixToggle));
+            focusNode.requestFocus();
+            await tester.pumpAndSettle();
+            expect(focusNode.hasFocus, isTrue);
+            expect(tester.getRect(find.byType(RemixToggle)), bounds);
+            expect(
+              find.descendant(
+                of: find.byType(RemixToggle),
+                matching: find.byType(CustomPaint),
+              ),
+              findsWidgets,
+            );
+          }
+        },
+      );
 
       testWidgets('outline toggle hides focus ring in touch mode', (
         tester,

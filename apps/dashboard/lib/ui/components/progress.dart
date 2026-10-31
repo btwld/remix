@@ -10,7 +10,7 @@ part 'progress.g.dart';
 enum UiProgressSize { size1, size2, size3 }
 
 /// Ui progress color variants.
-enum UiProgressVariant { classic, surface, soft }
+enum UiProgressVariant { surface, soft }
 
 /// Ui-themed preset for [RemixProgress].
 @MixWidget(target: RemixProgress.new)
@@ -21,7 +21,6 @@ ProgressStyler uiProgressStyle({
   ProgressStyler style = const ProgressStyler.create(),
 }) {
   return (switch (variant) {
-    .classic => _uiProgressClassicStyler(size, highContrast: highContrast),
     .surface => _uiProgressSurfaceStyler(size, highContrast: highContrast),
     .soft => _uiProgressSoftStyler(size, highContrast: highContrast),
   }).merge(style);
@@ -45,22 +44,6 @@ ProgressStyler _uiProgressBaseStyler(UiProgressSize size) {
       overContent: _uiProgressLayer(),
     ),
   );
-}
-
-ProgressStyler _uiProgressClassicStyler(
-  UiProgressSize size, {
-  required bool highContrast,
-}) {
-  return _uiProgressBaseStyler(size)
-      .trackColor(UiTokens.grayA3())
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          _uiProgressLayer(shadowToken: UiTokens.shadow1Layers),
-        ),
-      )
-      .indicatorColor(
-        highContrast ? UiTokens.accent12() : UiTokens.accentTrack(),
-      );
 }
 
 ProgressStyler _uiProgressSurfaceStyler(

@@ -30,7 +30,7 @@ void main() {
       find.byType(UiDashboardThemeScope),
     );
     themeScope.onChanged(
-      themeScope.settings.copyWith(accentColor: UiAccentColor.green),
+      themeScope.settings.copyWith(accentColor: UiAccentColor.mangue),
     );
     await tester.pump();
 
@@ -188,7 +188,7 @@ Future<BuildContext> _pumpDashboard(WidgetTester tester) async {
     const DashboardApp(
       initialSettings: UiThemeSettings(
         appearance: UiThemeMode.light,
-        accentColor: UiAccentColor.blue,
+        accentColor: UiAccentColor.ceu,
       ),
     ),
   );

@@ -22,20 +22,9 @@ own — merging the release PR and then pushing the tag does.
 
 ## 1. Decide the version
 
-Read the actual changes, not the commit subjects.
-
-```bash
-git log <last-release-commit>..HEAD --format='%h %ad %s' --date=short -- packages/<pkg>
-git show <sha> -- packages/<pkg>          # read every diff
-```
-
-Apply semantic versioning:
-
-| Change | Bump |
-| --- | --- |
-| Public API added | minor |
-| Public API or required consumer configuration changed incompatibly | major |
-| Fix, internal change, message/doc-only change | patch |
+Read package diffs since the last release, not just commit subjects. Apply
+semantic versioning: incompatible public API/config changes are major, added
+API minor, fixes/internal/docs changes patch. Packages are independent.
 
 ## 2. Change every file the version lives in
 
@@ -45,14 +34,11 @@ Apply semantic versioning:
 - `packages/<pkg>/CHANGELOG.md` — a new top entry, matching the surrounding
   style (`## <version>` then `### Fixes` / `### Features` bullets)
 
-**`naked_ui` only — the Fortal parity pin:**
+**`naked_ui` only — the consumer floor:**
 
-- `registry_source/tool/fortal_parity/check.dart` —
-  `const _expectedNakedUiVersion`
-
-  Set this to the tested workspace member version. If raising Remix's consumer
-  floor, also update its `naked_ui` dependency, the root melos shared constraint,
-  and `_expectedNakedUiConstraint`, then bootstrap the workspace.
+If raising Remix's consumer floor, update its `naked_ui` dependency and the root
+melos shared constraint, then bootstrap the workspace. Fortal uses the workspace
+behavior tests and its own specification; there is no external parity pin.
 
 **`remix_cli` only:**
 
@@ -95,32 +81,14 @@ Run the contract checks:
 dart run melos run ci:checks
 ```
 
-Individual checkers, when you want to isolate one:
-
-```bash
-dart run tool/check_version_alignment.dart     # registry floor vs remix version
-dart run tool/check_ci_coverage.dart           # melos ci steps vs CI jobs
-cd registry_source && dart run tool/fortal_parity/check.dart   # must run from registry_source
-```
-
-`ci:checks` is what the `Contract checks` CI job runs. Its steps are listed
-under `ci:checks:` in the root `pubspec.yaml`. Note `dart analyze` exits 0 on
-info-level issues, so pre-existing infos in the output are not the failure.
+`ci:checks` includes version/floor alignment, CI coverage and the owned Fortal
+specification. `dart analyze` exits 0 on infos; existing infos are not failures.
 
 ## 4. Release pull request
 
-Branch, commit, push, open the PR:
-
-```bash
-git checkout -b chore/release-<pkg>-<version-dashed>
-# edits from step 2
-git commit -m "chore(release): <pkg> <version>"
-gh pr create --base main --title "chore(release): <pkg> <version>" --body ...
-```
-
-The PR title is linted by the `Validate PR title` job — use the conventional
-`chore(release): ` prefix. In the body, state the changes being released and
-why the bump level is right.
+Use a focused release branch and Conventional Commit title
+`chore(release): <pkg> <version>`. State the released behavior and why the bump
+level is appropriate. Merge the reviewed PR before tagging its release commit.
 
 ## 5. Tag after merge
 
@@ -136,11 +104,6 @@ publishing" configuration. A mismatched tag fails OIDC auth.
 | `remix_ui_icons` | `remix_ui_icons-v<version>` |
 | `remix_ui_fonts` | `remix_ui_fonts-v<version>` |
 
-```bash
-git checkout main && git pull
-git tag naked_ui-v1.0.1 && git push origin naked_ui-v1.0.1
-```
-
 Rules that have already cost a release here:
 
 - **Never `git push --tags`.** Stale `v*` tags in this repo would start
@@ -152,12 +115,12 @@ Rules that have already cost a release here:
   for its merge fails until pub.dev serves that version. Once it does, re-run
   **Promote registry** on `main` (Actions → Promote registry → Run workflow)
   or `registry-stable` stays on the previous floor.
-- `naked_ui` published from its own repo on the bare `v<version>` pattern. Its
-  pub.dev tag pattern must be `naked_ui-v{{version}}` before the first release
+- On the first monorepo release, check that `naked_ui` moved from its former
+  repo/bare `v<version>` pattern. Its pub.dev tag pattern must be `naked_ui-v{{version}}` before the first release
   from this monorepo, or the job authenticates against the old pattern and
   fails.
-- `remix_ui_fonts` 0.1.0 is published by hand first, from a clean checkout of
-  the release commit (`dart pub publish` in `packages/remix_ui_fonts`); pub.dev
+- If bootstrapping `remix_ui_fonts`, 0.1.0 is published by hand first from a
+  clean checkout of the release commit (`dart pub publish` in `packages/remix_ui_fonts`); pub.dev
   offers automated publishing only for an existing package. After that,
   enable automated publishing for it with the tag pattern
   `remix_ui_fonts-v{{version}}`; every later release follows the tag flow

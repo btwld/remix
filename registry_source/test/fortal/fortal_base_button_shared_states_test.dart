@@ -74,13 +74,7 @@ void main() {
             if (stateCase.name == 'focused') {
               final effects = resolved.button.spec.containerEffects!;
               expect(effects.outline.width, 2, reason: '$reason focus width');
-              expect(
-                effects.outlineOffset,
-                variants.button == .classic || variants.button == .solid
-                    ? 2
-                    : -1,
-                reason: '$reason focus offset',
-              );
+              expect(effects.outlineOffset, 2, reason: '$reason focus offset');
             } else if (stateCase.name == 'focused+disabled') {
               expect(
                 resolved.button.spec.containerEffects?.outline.style,
@@ -92,61 +86,16 @@ void main() {
         });
       }
     }
-
-    testWidgets('classic pressed content offset matches at every size', (
-      tester,
-    ) async {
-      for (final sizes in _sizePairs) {
-        final resolved = await _resolveBaseButtons(
-          tester,
-          buttonVariant: .classic,
-          iconButtonVariant: .classic,
-          buttonSize: sizes.button,
-          iconButtonSize: sizes.iconButton,
-          states: const {WidgetState.pressed},
-        );
-        final buttonPadding =
-            resolved.button.spec.container.spec.box?.spec.padding as EdgeInsets;
-        final iconButtonPadding =
-            resolved.iconButton.spec.container.spec.padding as EdgeInsets;
-
-        expect(
-          buttonPadding.top,
-          sizes.pressedOffset,
-          reason: sizes.button.name,
-        );
-        expect(
-          iconButtonPadding.top,
-          sizes.pressedOffset,
-          reason: sizes.iconButton.name,
-        );
-      }
-    });
   });
 }
 
 const _variantPairs =
     <({FortalButtonVariant button, FortalIconButtonVariant iconButton})>[
-      (button: .classic, iconButton: .classic),
       (button: .solid, iconButton: .solid),
       (button: .soft, iconButton: .soft),
       (button: .surface, iconButton: .surface),
       (button: .outline, iconButton: .outline),
       (button: .ghost, iconButton: .ghost),
-    ];
-
-const _sizePairs =
-    <
-      ({
-        FortalButtonSize button,
-        FortalIconButtonSize iconButton,
-        double pressedOffset,
-      })
-    >[
-      (button: .size1, iconButton: .size1, pressedOffset: 1),
-      (button: .size2, iconButton: .size2, pressedOffset: 2),
-      (button: .size3, iconButton: .size3, pressedOffset: 2),
-      (button: .size4, iconButton: .size4, pressedOffset: 2),
     ];
 
 const _stateCases = <({String name, Set<WidgetState> states})>[

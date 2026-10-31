@@ -57,8 +57,9 @@ existing `specs/components/` worksheets describe shared Agent surfaces.
 ## Gate 2 — Appearance evidence and theme
 
 Create a small pinned fixture under `registry_source/tool/<preset>_parity/`,
-following Fortal's separation of reference artifacts, checker, and Flutter
-tests. For a CSS-first system, compile the upstream CSS, render the upstream
+following HeroUI's separation of reference artifacts, checker, and Flutter
+tests. Fortal owns an independent specification checked by `fortal:check`.
+For a CSS-first system, compile the upstream CSS, render the upstream
 components, and record tokens and measurements for both modes, each variant and
 size, the visual states, and both sides of each breakpoint. Keep the committed
 evidence small.

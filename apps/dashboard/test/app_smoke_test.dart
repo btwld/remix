@@ -641,13 +641,13 @@ void main() {
     );
     await tester.pump();
 
-    final grass = find.byKey(const ValueKey('accent-grass'));
-    await tester.ensureVisible(grass);
-    await tester.tap(grass);
+    final mangue = find.byKey(const ValueKey('accent-mangue'));
+    await tester.ensureVisible(mangue);
+    await tester.tap(mangue);
     await tester.pump();
 
     final shell = tester.element(find.byType(UiDashboardDemo));
-    expect(UiTheme.of(shell).accent, UiAccentColor.grass);
+    expect(UiTheme.of(shell).accent, UiAccentColor.mangue);
   });
 
   testWidgets('theme swatch centers its selected checkmark', (tester) async {
@@ -657,7 +657,7 @@ void main() {
     );
     await tester.pump();
 
-    final swatch = find.byKey(const ValueKey('accent-indigo'));
+    final swatch = find.byKey(const ValueKey('accent-calcadao'));
     final toggle = find.descendant(
       of: swatch,
       matching: find.byType(RemixToggle),
@@ -758,11 +758,10 @@ void main() {
     // The header checkbox comes first, so the next one belongs to row one.
     final rowCheckbox = find.byType(RemixCheckbox).at(1);
 
-    // The interaction target is the selection cell: the 48px column by the
-    // Radix size-2 row height, rather than a fixed square that would inflate
-    // the row.
-    expect(tester.getSize(selectAll), const Size(48, 44));
-    expect(tester.getSize(rowCheckbox), const Size(48, 44));
+    // The interaction target fills the scale-aligned 48px selection cell;
+    // the compact painted checkbox stays 14px square.
+    expect(tester.getSize(selectAll), const Size(48, 48));
+    expect(tester.getSize(rowCheckbox), const Size(48, 48));
     expect(
       tester.getSize(
         find
@@ -810,44 +809,45 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('dashboard-owned strong text follows the live gray theme', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
+  testWidgets(
+    'dashboard-owned strong text follows light and dark neutral roles',
+    (tester) async {
+      await tester.pumpWidget(const DashboardApp());
 
-    // Both titles are Fortal typography, which resolves `gray12` from the
-    // active scope's tokens rather than from any inherited `DefaultTextStyle`.
-    // That is what makes them repaint when the gray family changes, and it is
-    // why the assertion reads the painted colour rather than the widget's.
-    final pageTitle = find.descendant(
-      of: find.byType(UiPageHeader),
-      matching: find.text('Overview'),
-    );
-    final activityTitle = find.text('Payment received');
-    Color painted(Finder finder) =>
-        tester.renderObject<RenderParagraph>(finder).text.style!.color!;
-    Color gray12() => MixScope.tokenOf(
-      UiTokens.gray12,
-      tester.element(find.byType(UiDashboardDemo)),
-    );
+      // Both titles are Fortal typography, which resolves `gray12` from the
+      // active scope's tokens rather than from any inherited `DefaultTextStyle`.
+      // That is what makes them repaint when the appearance changes, and it is
+      // why the assertion reads the painted colour rather than the widget's.
+      final pageTitle = find.descendant(
+        of: find.byType(UiPageHeader),
+        matching: find.text('Overview'),
+      );
+      final activityTitle = find.text('Payment received');
+      Color painted(Finder finder) =>
+          tester.renderObject<RenderParagraph>(finder).text.style!.color!;
+      Color gray12() => MixScope.tokenOf(
+        UiTokens.gray12,
+        tester.element(find.byType(UiDashboardDemo)),
+      );
 
-    final slate = gray12();
-    expect(painted(pageTitle), slate);
-    expect(painted(activityTitle), slate);
+      final light = gray12();
+      expect(painted(pageTitle), light);
+      expect(painted(activityTitle), light);
 
-    final themeScope = tester.widget<UiDashboardThemeScope>(
-      find.byType(UiDashboardThemeScope),
-    );
-    themeScope.onChanged(
-      themeScope.settings.copyWith(grayColor: UiGrayColor.mauve),
-    );
-    await tester.pump();
+      final themeScope = tester.widget<UiDashboardThemeScope>(
+        find.byType(UiDashboardThemeScope),
+      );
+      themeScope.onChanged(
+        themeScope.settings.copyWith(appearance: UiThemeMode.dark),
+      );
+      await tester.pump();
 
-    final mauve = gray12();
-    expect(mauve, isNot(slate));
-    expect(painted(pageTitle), mauve);
-    expect(painted(activityTitle), mauve);
-  });
+      final dark = gray12();
+      expect(dark, isNot(light));
+      expect(painted(pageTitle), dark);
+      expect(painted(activityTitle), dark);
+    },
+  );
 
   testWidgets('compact sheet sidebar text follows the gray theme too', (
     tester,

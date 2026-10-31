@@ -9,11 +9,7 @@ import 'tooltip.dart';
 
 part 'sidebar.g.dart';
 
-const _sectionLabelHorizontalPadding = 14.0;
-const _sectionLabelVerticalPadding = 6.0;
 const _sectionLabelLetterSpacing = 0.7;
-const _destinationSpacing = 2.0;
-const _minimumDestinationTargetHeight = 48.0;
 
 /// Ui-themed preset for [RemixSidebar].
 ///
@@ -73,16 +69,16 @@ SidebarStyler uiSidebarStyle({
         .wrap(
           .padding(
             .symmetric(
-              horizontal: _sectionLabelHorizontalPadding,
-              vertical: _sectionLabelVerticalPadding,
+              horizontal: UiTokens.space4(),
+              vertical: UiTokens.space2(),
             ),
           ),
         ),
     tooltip: uiTooltipStyle(),
-    destinations: FlexBoxStyler().spacing(_destinationSpacing),
+    destinations: FlexBoxStyler().spacing(UiTokens.space1()),
     destination:
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
-            .minHeight(_minimumDestinationTargetHeight)
+            .minHeight(UiTokens.sidebarDestinationMinHeight())
             .padding(
               .only(
                 left: destinationLeftPadding,

@@ -253,11 +253,9 @@ There is no Fortal checkbox-group widget, because the group root has no
 visuals of its own. Render each option as `FortalCheckboxGroupItem`, which
 applies `fortalCheckboxGroupItemStyle` for you; the group stays unstyled.
 Fortal keeps its 14/16/20 indicator geometry inside the item's default
-48-pixel interaction target. The Radix CheckboxGroup family is audited
-separately as intentionally unmapped at the root: caller-owned
-`Column`/`Row` spacing replaces its root layout, while each
-`FortalCheckboxGroupItem` receives the mapped checkbox visuals, size-linked
-`text1`/`text2`/`text3` label typography, and scaled 6/7/8 label gap.
+48-pixel interaction target. Caller-owned `Column`/`Row` spacing controls
+the group layout. Each `FortalCheckboxGroupItem` receives Fortal checkbox
+visuals, size-linked `text1`/`text2`/`text3` labels, and scaled 4/8/8 label gaps.
 
 <CodeGroup title="Fortal-styled items" defaultLanguage="dart">
 ```dart
@@ -334,15 +332,9 @@ users can discover them — activation stays suppressed. Caller-owned
 disposed by the group.
 
 <Info>
-  **Known difference from Radix Themes.** Radix's `CheckboxGroup` roves focus:
-  the group is a single Tab stop, and Arrow/Home/End move between options, with
-  `orientation`, `loop`, and RTL awareness. Remix v1 deliberately uses standard
-  Flutter traversal instead — the private registration, focus-order refresh, and
-  node-restoration layer roving requires is the group's largest source of code
-  and risk, and it only changes how keyboard users move *between* options, which
-  Tab already reaches. `orientation` and `loop` are omitted for the same reason:
-  they only have meaning alongside roving focus, and they will land with it.
-  This will be reopened on real user or parity demand.
+  Every enabled item is a standard Flutter Tab stop. Space and Enter toggle
+  the focused option. The group does not implement arrow-key roving focus,
+  so it exposes no `orientation` or `loop` option.
 </Info>
 
 ## Accessibility

@@ -19,16 +19,6 @@ class FortalProgress extends StatelessWidget {
     this.semanticsValue,
   });
 
-  const FortalProgress.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const ProgressStyler.create(),
-    required this.value,
-    this.semanticsLabel,
-    this.semanticsValue,
-  }) : variant = FortalProgressVariant.classic;
-
   const FortalProgress.surface({
     super.key,
     this.size = .size2,

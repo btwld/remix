@@ -6,7 +6,7 @@ part of 'callout.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed Callout with the Radix size, variant, and override contract.
+/// Fortal-themed Callout with Fortal sizes, variants, and overrides.
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,

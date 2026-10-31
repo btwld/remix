@@ -12,8 +12,8 @@ class FortalExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FortalTheme(
-      accent: .blue,
-      gray: .slate,
+      accent: .ceu,
+      gray: .calcadao,
       mode: .light,
       child: WidgetsApp(
         color: const Color(0xFFF8FAFC),
@@ -44,7 +44,7 @@ class _FortalExampleScreenState extends State<FortalExampleScreen> {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: FortalCard.classic(
+              child: FortalCard.surface(
                 size: .size3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -75,7 +75,7 @@ class _FortalExampleScreenState extends State<FortalExampleScreen> {
                           'FortalTheme',
                           size: FortalTextSize.size2,
                         ),
-                        const FortalKbd.classic(
+                        const FortalKbd.soft(
                           '⌘K',
                           size: FortalTextSize.size2,
                           semanticLabel: 'Command K',

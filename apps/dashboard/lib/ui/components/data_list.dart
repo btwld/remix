@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'data_list.g.dart';
 
-/// Radix Themes DataList size presets.
+/// Ui DataList size presets.
 enum UiDataListSize { size1, size2, size3 }
 
 /// Ui recipe for [RemixDataList].

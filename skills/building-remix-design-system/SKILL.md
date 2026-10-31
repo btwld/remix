@@ -118,148 +118,49 @@ route. Four names are easy to confuse:
 
 ## Workflow
 
-Work through the phases in order; each ends with a check.
+1. **Sources and scope.** Inventory token domains and classify/pin their sources
+   with [tokens](references/tokens.md). Preserve the target's theme model and
+   vocabulary; decide modes, fonts/icons and scope explicitly. Keep evidence
+   in the brief/spec. Record a short decision only for a costly boundary,
+   rejected direction or lasting tradeoff; prefer an existing architecture log
+   over creating a numbered ADR. Routine reversible choices need no new record.
+   For reference ports, map each upstream family to a Remix recipe, composition,
+   or deferred family and plan appearance evidence with the porting reference.
+2. **Authoring and derivation.** Use the [registry layout](references/registry.md):
+   a private analyzed Dart package mirroring installed paths, generated
+   templates, catalogs, prefix round trips and whole-tree `--check` coverage.
+3. **Theme.** Build token identities/scales, mode values with equality, and a
+   scope taking `theme`, `darkTheme`, `mode`, `child`. Cover every token in every
+   supported mode; check values against one cited specification.
+4. **Components.** Use the target system's vocabulary and `@MixWidget` recipes.
+   For a new measurable visual contract, record anatomy, variants, states,
+   measurements and deviations before implementing; extend an existing spec
+   when it already owns that contract. An ordinary fix needs no new worksheet.
+   See [components](references/components.md) for loading/focus, unresolved child
+   styles, merge order and overlay scope hazards.
+5. **Publish and verify.** Analyze/test authored code, derive and check for
+   drift. First-party presets use the checkout consumer harness and their
+   parity gates; verify hosted publication separately per `open_code/RELEASING.md`.
+   Third-party registries use a pushed branch in a fresh `vanilla` scratch app
+   with a different prefix when publication is authorized. Install every item,
+   generate, analyze, build and render each component/mode. Advance the consumer
+   ref only after those checks. Reference ports also need measured geometry,
+   a reviewed side-by-side capture, and stated approximations.
 
-Paths below use the third-party layout. For a first-party preset, use the
-checklist's paths instead: ADRs in `registry_source/docs/adr/<preset>/`, tokens
-in `registry_source/specs/<preset>/tokens.json`, worksheets in that preset's
-`components/` spec directory, and source in `registry_source/lib/src/<preset>/`.
-Keep shared Agent worksheets separate from the new preset's parity contract.
-
-### Phase 0 — Sources and decisions
-
-1. Inventory every design source and classify each token domain by tier
-   (machine-readable, queryable, document, images, or a brief). Pin what can be
-   pinned: exact package versions and commits, file versions, retrieval dates,
-   sha256 hashes. Read `references/tokens.md`.
-2. Record an ADR (`docs/adr/0001-scope-and-sources.md`): source tiers and
-   conflict precedence, the theme model, which components the first release
-   covers, what is out of scope, font and icon strategy, naming and trademark
-   constraints, and the namespace consumers should use.
-3. Decide the theme model: which modes (light/dark, high contrast), role-based
-   names (`interactivePrimary`) or numbered scales (`accent1–12`). **Preserve
-   the target system's model**; never translate it into Vanilla's or Radix's
-   vocabulary. When designing from a brief, pick one deliberately and record
-   why.
-4. For a reference port, map each upstream family to a Remix recipe, a
-   composition, or deferred, and plan the appearance evidence in
-   `references/reference-parity.md`; copying Vanilla or Fortal values is not a port.
-
-Done when the ADR exists and every token domain has a tier and a pinned
-source.
-
-### Phase 1 — Registry repository
-
-For a first-party preset, follow `open_code/ADDING_PRESETS.md` instead of
-creating another package or derivation script. For a third-party registry,
-scaffold the repository described in `references/registry.md`: an
-analyzer-checked authoring package that mirrors the installed layout, a
-derivation script that turns it into `registry/vanilla/templates/`, and the
-`index.yaml` and `registry.yaml` catalog. Choose the authoring word (for
-example `Acme`) now; it may appear only inside identifiers and at the start of
-token ids (`references/registry.md` §3).
-
-Done when the empty theme item derives, `--check` passes, and the catalog
-validates in a scratch application.
-
-### Phase 2 — Theme item
-
-Build `tokens.dart`, `theme_data.dart`, and `theme_scope.dart` in Vanilla's
-shape (`references/components.md` §1): token identities and fixed scales, concrete values per
-mode with value equality, and a theme widget taking `theme`, `darkTheme`, and `mode`.
-Put shared recipe helpers beside them, as Vanilla's
-`effects.dart` does.
-Record every value's source in `specs/tokens.yaml` and test the Dart values
-against it (`references/tokens.md` §4).
-
-Done when the theme renders in every mode and the token test passes.
-
-### Phase 3 — Components
-
-Per component — display components first, then buttons and inputs, overlays
-last (they depend on `wrap` carrying the scope):
-
-1. Write the worksheet `specs/components/<component>.yaml` first: anatomy,
-   variants, sizes, states, consumed tokens, sourced measurements, and
-   approximations.
-2. Write the recipe as a top-level `@MixWidget(target: Remix<Component>.new)`
-   function in the target system's vocabulary, styled only through tokens.
-   Curate exposed parameters with `widgetParameters`; a hand-written facade
-   over a Remix widget is a recorded exception that keeps Remix's API.
-3. Add widget tests in the authoring package, derive, and add the catalog
-   item with its `generated` part and package constraints.
-
-Done when the component's tests pass and `--check` is clean.
-
-### Phase 4 — Publish and verify
-
-For a first-party preset, run the checkout consumer and parity gates first;
-verify the hosted/published boundary separately per `open_code/RELEASING.md`.
-Do not treat this workflow as authorization to push or publish.
-
-For a third-party registry, when publication is authorized, push a working
-branch, register it from a scratch application initialized
-with the `vanilla` preset, and install every item (`references/registry.md`
-§6). Advance the branch consumers follow only after that application builds,
-analyzes clean, and renders every component.
-
-## Definition of done (per release)
-
-- The authoring package analyzes clean and its tests pass: every variant and
-  size in every theme mode, measured default geometry, focus, disabled, and
-  loading visuals.
-- `specs/tokens.yaml` covers the whole inventory; the token test passes; no
-  value lacks a citation or a recorded design rationale.
-- Derivation `--check` passes: committed templates match the authored source
-  byte for byte.
-- A fresh application using the intended preset installs every item,
-  generates its parts, analyzes clean, and runs. First-party work passes the
-  checkout harness; published releases also pass the remote/hosted check.
-- Reference ports have upstream measurements for the claimed modes, sizes,
-  breakpoints, and visual states, a reviewed side-by-side capture, and stated
-  approximations.
-- Worksheets exist for every shipped component; approximations are stated.
-- Consumer setup matches the authoring route. A published first-party preset
-  uses `init --preset <preset>` and the official `@remix` namespace once the
-  served index includes it. A third-party README names the repository, path,
-  ref, and namespace to register, and tells consumers to install only that
-  registry's items.
-
-## Pitfall index
-
-Each is explained where it applies.
-
-1. The authoring word standing on its own in prose, provenance, or a file
-   name — it becomes the consumer's prefix (`references/registry.md` §3).
-2. Importing `package:mix` or Material in a template — reach Mix through
-   `package:remix/remix.dart` and use only widgets-layer Flutter
-   (`references/registry.md` §3).
-3. Re-testing with `add <item> --overwrite` after a theme change — installed
-   dependencies are not refreshed (`references/registry.md` §6).
-4. A token without a value in the active theme — recipes throw when they
-   resolve it (`references/components.md` §1).
-5. Loading is Remix's disabled state; a recipe `bool loading` shared with the
-   target keeps both in step (`references/components.md` §3).
-6. Enum values or widget names borrowed from Vanilla or Fortal instead of the
-   target system's vocabulary (`references/components.md` §2).
-7. Focus rings drawn with a border shift layout (`references/components.md` §3).
-8. `token().withValues(...)` accumulates through merges; use a `ContextToken`
-   (`references/components.md` §3).
-9. `InheritedTheme.wrap` must rebuild the `MixScope`, or overlays lose tokens
-   (`references/components.md` §1).
-10. Invented values for tokens the source does not define
-    (`references/tokens.md` §2).
-11. Porting upstream behavior or prop shapes (interaction policies,
-    controlled/uncontrolled pairs, form engines) instead of styling Remix
-    (`references/reference-parity.md` §1–2).
+The third-party consumer README must state namespace, repository/path/ref,
+required preset, exclusive `@<namespace>/*` use and host/theme setup. First-party
+setup uses `init --preset <preset>` once the served index includes it.
+Refresh every changed item,
+including theme dependencies, during iteration; `--overwrite` only replaces
+named items. [Registry](references/registry.md#6-publish-and-test) owns that loop.
 
 ## References
 
-- **`references/registry.md`** — repository layout, authoring rules,
-  derivation, catalog format, the publish-and-test loop, CLI limits.
-- **`references/tokens.md`** — getting tokens out of any source, traceability,
-  and when an extraction script earns its place.
-- **`references/components.md`** — theme item shape, recipe shape, Remix and
-  Mix pitfalls, worksheet template, tests.
-- **`references/reference-parity.md`** — porting a web design system: mapping
-  families onto Remix, the extension order, appearance evidence, acceptance.
+- [Registry](references/registry.md): layout, prefix leakage, derivation, catalogs,
+  public-GitHub limits, target ownership and scratch installs.
+- [Tokens](references/tokens.md): inventory, provenance, source tiers, conflicts
+  and deliberate upgrades.
+- [Components](references/components.md): scope/recipe shapes, concrete runtime
+  pitfalls, contract worksheets and tests.
+- [Reference ports](references/reference-parity.md): family mapping, extension
+  order, appearance evidence and acceptance for a web design system.
