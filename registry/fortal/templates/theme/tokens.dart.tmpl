@@ -87,6 +87,14 @@ class {{typePrefix}}Tokens {
   /// High contrast foreground for solid accent backgrounds.
   static const accentContrast = ColorToken('{{valuePrefix}}.accent.contrast');
 
+  /// Outline of a white switch or slider thumb: the on-solid ink where that
+  /// ink is darker than the solid fill, otherwise [controlBorder].
+  static const accentThumbRing = ColorToken('{{valuePrefix}}.accent.thumb-ring');
+
+  /// Neutral boundary of active empty controls (unchecked checkbox and radio,
+  /// off switch, surface text input), at least 3:1 against page and panel.
+  static const controlBorder = ColorToken('{{valuePrefix}}.control.border');
+
   /// Solid focus ring color (accent step 8).
   static const focus8 = ColorToken('{{valuePrefix}}.focus.8');
 

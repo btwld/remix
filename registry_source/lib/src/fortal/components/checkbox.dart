@@ -134,7 +134,7 @@ CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
+          fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
         ),
       )
       .onSelected(selected)
@@ -163,12 +163,24 @@ CheckboxStyler _fortalCheckboxSoft(CheckboxStyler base, bool highContrast) {
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
+      // The tint alone is too faint to show an empty control; the accent-8
+      // ring keeps a 3:1 boundary in every enabled state.
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+        ),
+      )
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         .color(FortalTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
             )
             .indicatorColor(FortalTokens.grayA8()),
       );

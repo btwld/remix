@@ -10,22 +10,53 @@
   stays apart from Caju. The dashboard recipe's negative statuses, deltas, and
   destructive actions use it via `FortalAccentScope.error`; positive statuses
   use Serra, and every status keeps its text label.
+- **Breaking:** the exported `FortalThemeColors` constructor (installed as
+  `<prefix>ThemeColors`) requires two new arguments, `controlBorder` and
+  `accentThumbRing`. Code that constructs it directly must supply both, or
+  obtain the colors from `resolveFortalTokens(config)` (`resolve<prefix>Tokens`).
+  Configuring and injecting themes through `FortalTheme` is unchanged. Refresh the complete `theme` item together with
+  the updated `base_button`, `checkbox`, `radio`, `slider`, `switch` and
+  `textfield` recipes, which read the new tokens.
 - Caju becomes a cashew-fruit orange-red (`#E76A32`) and Céu a sky blue
   (`#1A95D8`).
-- Solid foregrounds (`contrast`) use a deep tone of each palette instead of
-  basalt where white does not serve the fill: deep teal, navy, dark olive, warm
-  brown and deep crimson, fitted to 4.6:1 on both fill and hover with fills
-  unchanged. Calçadão and high-contrast knockouts are unchanged; custom
-  palettes regenerate with their own deep ink.
+- Solid foregrounds (`contrast`) use a tone of each palette instead of basalt
+  where white does not serve the fill: the lightest tone that keeps 4.6:1 on
+  both fill and hover (lightness up to 0.70, chroma up to the seed's), with
+  fills unchanged. Sol and Duna read amber/warm brown (`#764B00`, `#694624`,
+  `#704D2B`) instead of near-black; teal, navy, olive, brown and crimson inks
+  on mid-tone fills stay deep. Calçadão and high-contrast knockouts are
+  unchanged; custom palettes regenerate with their own ink.
+- Normal selected surface-switch thumbs and enabled slider thumbs are light
+  surfaces instead of ink discs: white with a 2px `accentThumbRing` outline
+  (the ink where it is darker than the fill, otherwise `controlBorder`). Off
+  switch thumbs stay white with a neutral ring. Selected soft thumbs keep
+  step 11/12, explicit high-contrast surface thumbs keep step 1, and disabled
+  thumbs keep gray 2 with a gray-6 border.
+- Add `controlBorder`, a neutral boundary at 3:1 or more against the page,
+  panels and off track, for unchecked checkbox/radio outlines (formerly gray
+  alpha 7, about 2.1:1), the off switch track and thumb, and surface text
+  field/area borders (formerly gray 7). Error fields frame with error step 8
+  (formerly error alpha 7). Soft empty checkboxes and radios, and soft text
+  fields and text areas (whose tint alone is about 1.2:1 when blank), gain an
+  `accentA8` ring. Disabled controls keep their quieter strokes; disabled
+  switches no longer show the active track edge. Select triggers are
+  unchanged.
+- Solid button press keeps its label readable: the pressed fill now moves away
+  from the label (lighter under a deep ink) instead of always darkening in
+  light mode, which put light Céu and Caju labels near 4.2:1. Solid and
+  high-contrast hover/press recolor the fill instead of filtering the whole
+  button, so the focus ring keeps its 3:1 contrast while a key or pointer is
+  held, and caller label colours are no longer filtered.
 - Dark solids take the seed's lightness within 0.70–0.84: Sol is gold
   (`#F3C442`, formerly mustard `#C49800`) and Duna keeps its sand seed. Custom
   palettes with seeds lighter than L 0.70 regenerate with lighter dark solids.
 - The palette tool rejects custom names that reuse built-in identifiers and no
   longer infers the neutral palette from a custom name.
-- Correct selected switch thumbs to semantic accent content roles in both modes:
-  surface uses contrast/step 1, soft uses step 11/12. Idle thumb overrides remain
-  supported; use `style.onSelected(...)` or `style.onDisabled(...)` to override
-  those states, just as state-specific track colors require state overrides.
+- Correct selected switch thumbs in both modes: normal surface thumbs are white
+  with an `accentThumbRing`, explicit high-contrast surface thumbs use step 1,
+  and soft thumbs use step 11/12. Idle thumb overrides remain supported; use
+  `style.onSelected(...)` or `style.onDisabled(...)` to override those states,
+  just as state-specific track colors require state overrides.
 - Improve enabled surface input hints with secondary gray text and enabled soft
   input hints/icons with secondary accent content. Enabled base-level icon
   overrides remain supported; use explicit disabled-state overrides for that state.

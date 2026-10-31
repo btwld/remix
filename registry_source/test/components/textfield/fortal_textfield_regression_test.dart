@@ -56,7 +56,7 @@ void main() {
       expect(spec.containerEffects?.overContent?.shadows, hasLength(1));
       expect(
         spec.containerEffects?.overContent?.shadows.single.color,
-        result.gray7,
+        result.controlBorder,
       );
     }
   });
@@ -75,6 +75,84 @@ void main() {
     expect(spec.helperText.spec.style?.color, result.gray11);
     expect(spec.label.spec.style?.color, result.gray12);
     expect(spec.label.spec.style?.fontWeight, FontWeight.w500);
+  });
+
+  testWidgets('soft inputs keep an accent-8 frame that disabled clears', (
+    tester,
+  ) async {
+    for (final brightness in [Brightness.light, Brightness.dark]) {
+      for (final states in <Set<WidgetState>>[
+        {},
+        {WidgetState.focused},
+        {WidgetState.hovered},
+        {WidgetState.error},
+        {WidgetState.disabled},
+        {WidgetState.disabled, WidgetState.focused},
+        {WidgetState.disabled, WidgetState.error},
+        {WidgetState.disabled, WidgetState.focused, WidgetState.error},
+      ]) {
+        final result = await _resolve(
+          tester,
+          variant: .soft,
+          brightness: brightness,
+          states: states,
+        );
+        // Error keeps its precedence; otherwise disabled stays muted.
+        final expected = states.contains(WidgetState.error)
+            ? [result.error8]
+            : states.contains(WidgetState.disabled)
+            ? <Color>[]
+            : [result.accentA8];
+        expect(
+          [
+            ...?result.spec.containerEffects?.overContent?.shadows.map(
+              (shadow) => shadow.color,
+            ),
+          ],
+          expected,
+          reason: '$brightness/$states',
+        );
+        expect(_color(result.spec.container.spec), switch (states) {
+          _ when states.contains(WidgetState.disabled) => result.grayA3,
+          _ => result.accentA3,
+        });
+      }
+    }
+  });
+
+  testWidgets('caller frame overrides stay in force on soft inputs', (
+    tester,
+  ) async {
+    const base = Color(0xff8038cc);
+    const disabled = Color(0xff3366cc);
+    final style = TextFieldStyler()
+        .containerEffects(
+          RemixBoxEffectsMix.overContent(fortalInsetSurface(strokes: [base])),
+        )
+        .onDisabled(
+          TextFieldStyler().containerEffects(
+            RemixBoxEffectsMix.overContent(
+              fortalInsetSurface(strokes: [disabled]),
+            ),
+          ),
+        );
+    for (final (states, expected) in <(Set<WidgetState>, Color)>[
+      ({}, base),
+      ({WidgetState.focused}, base),
+      ({WidgetState.disabled}, disabled),
+    ]) {
+      final result = await _resolve(
+        tester,
+        variant: .soft,
+        states: states,
+        style: style,
+      );
+      expect(
+        result.spec.containerEffects?.overContent?.shadows.single.color,
+        expected,
+        reason: '$states',
+      );
+    }
   });
 
   testWidgets('disabled and read-only roles resolve for every variant', (
@@ -138,7 +216,7 @@ void main() {
         expect(spec.containerEffects?.outline.style, BorderStyle.none);
         expect(
           spec.containerEffects?.overContent?.shadows.single.color,
-          result.errorA7,
+          result.error8,
         );
       }
     }
@@ -228,9 +306,11 @@ Future<
     Color grayA3,
     Color grayA7,
     Color gray7,
+    Color controlBorder,
     Color grayA10,
     Color accentA3,
     Color accentA5,
+    Color accentA8,
     Color accent12,
     Color focus8,
     Color focusA5,
@@ -247,6 +327,7 @@ _resolve(
   FortalScaling scaling = FortalScaling.percent100,
   Brightness brightness = Brightness.light,
   Set<WidgetState> states = const {},
+  TextFieldStyler style = const TextFieldStyler.create(),
 }) async {
   late ({
     TextFieldSpec spec,
@@ -259,9 +340,11 @@ _resolve(
     Color grayA3,
     Color grayA7,
     Color gray7,
+    Color controlBorder,
     Color grayA10,
     Color accentA3,
     Color accentA5,
+    Color accentA8,
     Color accent12,
     Color focus8,
     Color focusA5,
@@ -283,6 +366,7 @@ _resolve(
               spec: fortalTextFieldStyle(
                 size: size,
                 variant: variant,
+                style: style,
               ).build(context).spec,
               colorSurface: MixScope.tokenOf(
                 FortalTokens.colorSurface,
@@ -295,9 +379,14 @@ _resolve(
               gray12: MixScope.tokenOf(FortalTokens.gray12, context),
               grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
               gray7: MixScope.tokenOf(FortalTokens.gray7, context),
+              controlBorder: MixScope.tokenOf(
+                FortalTokens.controlBorder,
+                context,
+              ),
               grayA7: MixScope.tokenOf(FortalTokens.grayA7, context),
               grayA10: MixScope.tokenOf(FortalTokens.grayA10, context),
               accentA3: MixScope.tokenOf(FortalTokens.accentA3, context),
+              accentA8: MixScope.tokenOf(FortalTokens.accentA8, context),
               accentA5: MixScope.tokenOf(FortalTokens.accentA5, context),
               accent12: MixScope.tokenOf(FortalTokens.accent12, context),
               focus8: MixScope.tokenOf(FortalTokens.focus8, context),

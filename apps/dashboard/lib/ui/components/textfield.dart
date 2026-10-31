@@ -118,9 +118,10 @@ TextFieldStyler _uiApplySurfaceTextInput(TextFieldStyler base) =>
         .containerEffects(
           RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
         )
+        // An unlabeled field relies on its border to be found at all.
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            uiInsetSurface(strokes: [UiTokens.gray7()]),
+            uiInsetSurface(strokes: [UiTokens.controlBorder()]),
           ),
         )
         .onDisabled(
@@ -167,11 +168,24 @@ TextFieldStyler _uiApplySoftTextInput(TextFieldStyler base) => base
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
     )
+    // A blank soft field shows no text, hint or border of its own, and its
+    // tint alone is far below 3:1; the accent-8 ring keeps it findable. It is
+    // the base so caller base overrides still win; disabled clears it.
+    .containerEffects(
+      RemixBoxEffectsMix.overContent(
+        uiInsetSurface(strokes: [UiTokens.accentA8()]),
+      ),
+    )
     .onDisabled(
       _uiSoftTextInputDisabledStyle()
           .color(UiTokens.grayA3())
           .containerEffects(
             RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+          )
+          .containerEffects(
+            RemixBoxEffectsMix.overContent(
+              RemixBoxEffectLayerMix(shadows: const []),
+            ),
           ),
     );
 
@@ -211,7 +225,7 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
       shadows: [
         RemixBoxShadowMix(
           kind: .inset,
-          color: UiTokens.errorA7(),
+          color: UiTokens.error8(),
           spreadRadius: 1,
         ),
       ],

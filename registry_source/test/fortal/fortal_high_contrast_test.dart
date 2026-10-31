@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../helpers/contrast.dart';
+
 void main() {
   group('Fortal high-contrast recipes', () {
     testWidgets('solid controls retain dark high-contrast interaction roles', (
@@ -22,19 +24,22 @@ void main() {
           states: {state},
         );
 
+        // Hover and press recolor the step-12 fill itself (no subtree
+        // filter, so focus rings are untouched); the knockout keeps 7:1.
+        final fill = _flexBoxColor(button.spec.container)!;
+        final label = calcadao.dark.scale.step(1);
+        expect(_textColor(button.spec.label), label);
         expect(
-          _flexBoxColor(button.spec.container),
-          ceu.dark.scale.step(12),
+          contrastRatio(label, fill),
+          greaterThanOrEqualTo(7),
           reason: 'Button ${state.name} background must remain high contrast.',
         );
-        expect(_textColor(button.spec.label), calcadao.dark.scale.step(1));
         expect(
           _boxColor(iconButton.spec.container),
-          ceu.dark.scale.step(12),
-          reason:
-              'Icon button ${state.name} background must remain high contrast.',
+          fill,
+          reason: 'Icon button ${state.name} shares the button fill.',
         );
-        expect(iconButton.spec.icon.spec.color, calcadao.dark.scale.step(1));
+        expect(iconButton.spec.icon.spec.color, label);
       }
     });
 

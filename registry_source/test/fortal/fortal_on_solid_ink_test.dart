@@ -6,9 +6,11 @@ import 'package:remix/remix.dart';
 import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';
 
-/// Solid controls read one role for their foreground: the palette's on-solid
-/// ink. Labels, thumbs and marks therefore share the family's deep tone (or
-/// white) instead of generic basalt, and keep 4.5:1 on fill and hover.
+/// Solid controls read one role for their label and marks: the palette's
+/// on-solid ink, the family's own tone (or white) instead of generic basalt,
+/// at 4.5:1 on fill and hover. Switch thumbs are not ink discs: they are white
+/// with an `accentThumbRing` outline, which is that ink wherever the ink is
+/// darker than the fill.
 void main() {
   const palettes = <String, FortalColorTheme>{
     'calcadao': calcadao,
@@ -41,6 +43,7 @@ void main() {
               return (
                 button: fortalButtonStyle().build(context).spec,
                 toggle: fortalSwitchStyle().build(context).spec,
+                thumbRing: FortalTokens.accentThumbRing.resolve(context),
                 checkbox: fortalCheckboxStyle().build(context).spec,
                 radio: fortalRadioStyle().build(context).spec,
               );
@@ -66,7 +69,23 @@ void main() {
             greaterThanOrEqualTo(4.5),
             reason: '$reason label contrast',
           );
-          expect(box(resolved.toggle.thumb), ink, reason: '$reason thumb');
+          expect(
+            box(resolved.toggle.thumb),
+            const Color(0xffffffff),
+            reason: '$reason thumb',
+          );
+          final ring =
+              ((resolved.toggle.thumb.spec.decoration as BoxDecoration).border!
+                      as Border)
+                  .top;
+          final inkIsDarker =
+              ink.computeLuminance() < colors.scale.step(9).computeLuminance();
+          expect(
+            ring.color,
+            inkIsDarker ? ink : resolved.thumbRing,
+            reason: '$reason thumb ring',
+          );
+          expect(ring.width, 2, reason: '$reason thumb ring width');
           expect(
             resolved.checkbox.indicator.spec.color,
             ink,

@@ -70,19 +70,45 @@ reference (basalt), with a 4.6:1 generation margin above the 4.5:1 requirement.
 
 ### On-solid ink
 
-`contrast` is the one foreground role for solid fills: button and badge
-labels, solid avatar text, selected surface switch thumbs, checkbox marks,
-radio dots and solid menu/select highlights. Where white serves the fitted
-fill, it stays white. Otherwise the ink is a deep tone of the palette's own
-hue rather than generic basalt: the lightest tone up to OKLCH lightness 0.30
-that keeps 4.6:1 on both step 9 and step 10. Its chroma is 0.6× the seed's,
-at most 0.09, gamut-mapped by chroma reduction; yellow and sand hues rotate up
-to 18° toward orange so they read warm brown rather than olive. Lightness
-descends in 0.002 steps, and basalt is the fallback if no family tone passes.
-Fills are fitted first and never move for the ink, so hover cannot collapse.
-The neutral Calçadão keeps white on basalt and basalt on limestone; gray and
-near-white custom seeds get a deep neutral. Where a fill leaves little headroom
-(light Céu and Caju), the ink stays near basalt's lightness but keeps its hue.
+`contrast` is the one foreground role for labels and marks on solid fills:
+button and badge labels, solid avatar text, checkbox marks, radio dots and
+solid menu/select highlights. Where white serves the fitted fill, it stays
+white. Otherwise the ink is a tone of the palette's own hue rather than
+generic basalt: the lightest tone up to OKLCH lightness 0.70 that keeps 4.6:1
+on both step 9 and step 10, so it spends the fill's headroom instead of
+defaulting to near-black. Its chroma is 1.0× the seed's, at most 0.14,
+gamut-mapped by chroma reduction; yellow and sand hues rotate up to 18° toward
+orange so they read warm brown rather than olive. Lightness descends in 0.002
+steps, and basalt is the fallback if no family tone passes. Fills are fitted
+first and never move for the ink, so hover cannot collapse. Bright fills get a
+visibly coloured ink (Sol `#764B00`, Duna `#694624`/`#704D2B`); mid-tone fills
+(light Céu and Caju, the dark-mode solids) leave little headroom, so their ink
+stays deep but keeps its hue. The neutral Calçadão keeps white on basalt and
+basalt on limestone; gray and near-white custom seeds get a deep neutral.
+
+Normal selected surface-switch thumbs and enabled slider thumbs do not use the
+ink as a fill. They are a white surface with an outline, `accentThumbRing`: the
+ink where the ink is darker than the solid fill, otherwise `controlBorder`.
+These thumbs therefore never become dark discs on light fills, while the ring
+keeps them at 3:1 or more on the track. Off switch thumbs are white with a
+`controlBorder` ring. Selected soft thumbs keep their `accent11`/`accent12`
+fill, the explicit high-contrast surface thumb keeps its `accent1` knockout,
+and disabled thumbs keep gray 2 with a gray-6 border (see Components).
+
+### Control boundaries
+
+`controlBorder` is the neutral boundary of active empty controls: unchecked
+checkbox and radio outlines, the off switch's track edge and thumb ring, and
+surface text field and text area borders. It is gray step 8 deepened 15%
+toward step 11 in OKLab (light) and step 7 lifted 70% toward step 8 (dark), and
+keeps at least **3:1** against the page, the solid panel, the translucent
+panel over the default page, and the off track (gray alpha 3 over each). Soft
+empty checkboxes and radios, and soft text fields and text areas, add an
+`accentA8` inset ring for the same reason: their tint alone is near 1.2:1, and
+a blank soft input may show no text, hint or label at all. Disabled controls
+keep their quieter strokes. These guarantees cover Fortal's
+own page and panel surfaces; content placed over arbitrary colours or images
+must be checked in context.
 
 High-contrast variants are a deliberate knockout: their fill is step 12 and
 their foreground is step 1 (or neutral gray 1 for buttons), so in dark mode
@@ -95,6 +121,9 @@ they remain near-black on a pale tint, at 7:1 or more by construction.
   3–5 on both page and solid panel must also pass 4.5:1.
 - Step 12 on steps 1–5: at least **7:1**.
 - Step 8 on steps 1–2 and the neutral page/panel: at least **3:1**.
+- `controlBorder` on page, solid panel, translucent panel and off track: at
+  least **3:1**. A thumb's white fill or its `accentThumbRing` on steps 9–10:
+  at least **3:1**.
 
 Custom palettes generated from one `#RRGGBB` seed use the same model and can
 be supplied as `FortalTheme(accentPalette: brand)`. An explicit named accent
@@ -146,14 +175,33 @@ not a raised-card/control variant and uses the ordinary elevation scale.
 Cards and controls have no blurred/offset shadows or gradients. Crisp inset
 frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
 toasts retain outer elevation; a shadow means the surface floats. Surface text
-fields, text areas, and select triggers use opaque gray-2 fill and gray-7 border.
+fields and text areas use an opaque gray-2 fill and the `controlBorder` frame,
+so a field without a visible label can still be found; soft fields and areas
+keep their accent-3 fill inside an accent-8 ring, the recipe's base frame so
+caller frames still win. Error replaces either frame with error step 8, and
+disabled clears the soft ring (error keeps its precedence). Select triggers keep their gray-7 frame (gray alpha 8
+when open or hovered): their value and chevron identify them.
 Enabled surface input hints use secondary gray content; enabled soft input
 hints and icons use secondary accent content. Disabled input treatments stay separate.
 
-Selected surface switch thumbs use `accentContrast`, or `accent1` against the
-high-contrast `accent12` track. Selected soft thumbs use `accent11`, promoted
-to `accent12` at high contrast. Off thumbs stay white; disabled thumbs keep
-neutral gray-2 fill and a gray-6 border. Geometry and state precedence are shared.
+Selected surface switch thumbs are white with a 2px `accentThumbRing`, or
+`accent1` against the high-contrast `accent12` track. Selected soft thumbs use
+`accent11`, promoted to `accent12` at high contrast. Off thumbs stay white with
+a 1px `controlBorder` ring on a track edged in `controlBorder`; the selected
+surface track keeps its quiet gray-alpha-5 edge. Disabled switches keep a
+neutral gray-2 thumb with a gray-6 border and drop the active track edge
+(surface keeps the quiet edge, soft has none), whatever the selection, focus
+or press state. Slider thumbs are white with a 2px `accentThumbRing`; the thumb
+is identified by its fill or its ring. Geometry and state precedence are shared.
+
+Solid button hover and press recolor only the fill. Hover uses step 10. Press
+applies the Radix-derived CSS operations to the fill colour itself: darker
+(brightness 0.92, saturate 1.1) under a light label, lighter (brightness 1.08)
+under a deep ink, so the label keeps its contrast. High-contrast hover and
+press recolor the step-12 fill with their light/dark operation sets. No solid
+state filters the painted subtree, so labels, icons, spinners and the focus
+ring keep their colours, and `fortalClearFilter()` still clears a caller's
+own filter when disabled.
 
 The polish board presents all families and sizes in light/dark pairs on a 4px
 grid. Check padding against height, text centering, matched icon size/gap,
@@ -169,9 +217,16 @@ Caller style overrides are always merged last.
   labels, and compositing for every accent and the error red, plus
   non-curated/extreme brand seeds, the dark-solid policy, the on-solid ink
   policy, distinct hovers, and Fortal's own comparative separation between
-  accents and the error red. `test/fortal/fortal_on_solid_ink_test.dart`
-  resolves solid button labels, switch thumbs, checkbox marks and radio dots
-  to that ink for every palette in both modes.
+  accents and the error red, plus the `controlBorder` and `accentThumbRing`
+  guarantees. `test/fortal/fortal_on_solid_ink_test.dart` resolves solid
+  button labels, checkbox marks and radio dots to that ink, and switch thumbs
+  to white with that ring, for every palette in both modes.
+- `test/fortal/fortal_control_contrast_render_test.dart` renders mounted
+  controls on the page, solid panel and translucent panel for every palette
+  and both modes, and measures painted pixels: empty checkbox/radio outlines,
+  off and selected switch thumbs, slider thumbs, text input borders, and solid
+  and high-contrast button labels and focus rings through hover, press and
+  focus combinations, including a real pointer hover followed by a press.
 - `test/fortal/spec_conformance_test.dart` checks theme defaults, token values,
   error roles independent of accents and custom palettes, flat surfaces, filled
   fields, and scaling.

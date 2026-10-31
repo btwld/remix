@@ -88,13 +88,7 @@ SliderStyler _fortalSliderSurface(
         ),
       ),
     )
-    .thumb(
-      BoxStyler().decoration(
-        .border(
-          .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-        ),
-      ),
-    );
+    .thumb(_fortalSliderThumbRing());
 
 SliderStyler _fortalSliderSoft(
   SliderStyler base, {
@@ -128,13 +122,17 @@ SliderStyler _fortalSliderSoft(
         ),
       ),
     )
-    .thumb(
-      BoxStyler().decoration(
-        .border(
-          .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-        ),
-      ),
-    );
+    .thumb(_fortalSliderThumbRing());
+
+/// The white thumb's ring: on-solid ink on light fills, otherwise the neutral
+/// control border, so the thumb reads against the page, track and range.
+BoxStyler _fortalSliderThumbRing() => BoxStyler().decoration(
+  .border(
+    .all(
+      .color(FortalTokens.accentThumbRing()).width(FortalTokens.borderWidth2()),
+    ),
+  ),
+);
 
 SliderStyler _fortalSliderDisabled(
   FortalSliderVariant variant, {

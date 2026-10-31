@@ -129,7 +129,13 @@ Fortal's own seed-based generator, not an external dataset.
 The twelve flat-control families expose no `classic` constructor. Kbd defaults
 to `soft`; segmented control has only `surface`. Toast's independent `classic`
 variant remains a floating notification surface. Cards and controls have no
-elevation, surface fields use gray2/gray7, and focus is 2px step 8 with a 2px gap.
+elevation, surface fields use gray2 with the 3:1 `controlBorder` frame (select
+triggers keep gray7), and focus is 2px step 8 with a 2px gap. Normal selected
+surface-switch thumbs and enabled slider thumbs are white with an
+`accentThumbRing` outline rather than ink discs; off switch thumbs are white
+with a `controlBorder` ring. Selected soft thumbs keep accent11 (accent12 at
+high contrast), selected high-contrast surface thumbs keep accent1, and
+disabled thumbs keep gray2 with a gray6 border.
 The type ramp is 12/14/16/18/20/24/28/36/60.
 
 Generate custom brand source from a checkout with

@@ -293,11 +293,18 @@ Seeds identify each palette; the generator fits final colors to sRGB and the
 contrast contract. Background, border, and text steps share OKLCH lightness
 stops; seed-led solid steps 9–10 preserve each palette's identity. In dark
 mode the solid follows the seed's lightness within a 0.70–0.84 range, so dark
-seeds are lifted and Sol and Duna stay sunny and sandy. Labels, thumbs and
-marks on solid fills use one foreground role: white where the fill needs it,
-otherwise a deep tone of the palette's own hue (the lightest that keeps 4.6:1
-on fill and hover), so colored controls avoid harsh near-black text. High
-contrast variants keep their deliberate step-1 knockout. Transparent steps are
+seeds are lifted and Sol and Duna stay sunny and sandy. Labels and marks on
+solid fills use one foreground role: white where the fill needs it, otherwise
+a tone of the palette's own hue (the lightest that keeps 4.6:1 on fill and
+hover), so bright fills such as Sol and Duna get a coloured brown rather than
+near-black. Normal selected surface-switch thumbs and enabled slider thumbs
+are white with a thin ring in that tone (or a neutral ring), and off switch
+thumbs are white with a neutral ring. Selected soft switch thumbs keep their
+step-11 fill (step 12 at high contrast); high-contrast surface-switch thumbs
+keep their deliberate step-1 knockout, and disabled thumbs stay muted gray.
+Empty checkboxes, radios, off switch
+tracks and surface fields use a neutral control border at 3:1 or more; soft
+fields and empty soft controls keep an accent-8 ring. Transparent steps are
 solved against the neutral page. Their appearance on a different background
 follows ordinary alpha compositing.
 

@@ -118,9 +118,10 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
         .containerEffects(
           RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
         )
+        // An unlabeled field relies on its border to be found at all.
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            fortalInsetSurface(strokes: [FortalTokens.gray7()]),
+            fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
           ),
         )
         .onDisabled(
@@ -167,11 +168,24 @@ TextFieldStyler _fortalApplySoftTextInput(TextFieldStyler base) => base
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
     )
+    // A blank soft field shows no text, hint or border of its own, and its
+    // tint alone is far below 3:1; the accent-8 ring keeps it findable. It is
+    // the base so caller base overrides still win; disabled clears it.
+    .containerEffects(
+      RemixBoxEffectsMix.overContent(
+        fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+      ),
+    )
     .onDisabled(
       _fortalSoftTextInputDisabledStyle()
           .color(FortalTokens.grayA3())
           .containerEffects(
             RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+          )
+          .containerEffects(
+            RemixBoxEffectsMix.overContent(
+              RemixBoxEffectLayerMix(shadows: const []),
+            ),
           ),
     );
 
@@ -216,7 +230,7 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
       shadows: [
         RemixBoxShadowMix(
           kind: .inset,
-          color: FortalTokens.errorA7(),
+          color: FortalTokens.error8(),
           spreadRadius: 1,
         ),
       ],

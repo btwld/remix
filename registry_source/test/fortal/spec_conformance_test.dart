@@ -114,9 +114,17 @@ void main() {
                       (spec.container.spec.decoration as BoxDecoration).color,
                       neutral.scale.step(2),
                     );
+                    // Text inputs frame with the control border (3:1), so an
+                    // unlabeled field can still be found; the select trigger
+                    // below keeps gray 7, identified by its value and chevron.
                     final frame =
                         spec.containerEffects!.overContent!.shadows.single;
-                    expect(frame.color, neutral.scale.step(7));
+                    expect(
+                      frame.color,
+                      resolveFortalTokens(
+                        FortalTheme.of(context),
+                      ).controlBorder,
+                    );
                     expect(frame.blurRadius, 0);
                     expect(frame.offset, Offset.zero);
                   }

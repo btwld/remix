@@ -39,8 +39,11 @@ background/border/text roles, and preserves accessible seed-led solid fills.
 Dark solids take the seed's OKLCH lightness clamped to 0.70–0.84: dark seeds
 are lifted for visibility and light seeds keep their character. The solid and
 hover are fitted to white or a dark reference; a dark side then takes the
-palette's deep on-solid ink (its own hue, lightness up to 0.30, 4.6:1 on both
-fill and hover; warm brown for yellows; a deep neutral for gray seeds). See the
+palette's on-solid ink: its own hue, the lightest tone up to lightness 0.70
+that keeps 4.6:1 on both fill and hover, chroma up to the seed's (warm brown
+for yellows; a deep neutral for gray seeds). Bright fills get a visibly
+coloured ink; mid-tone fills keep a deep one. Thumbs are not inked: the theme
+outlines a white thumb with that ink as `accentThumbRing`. See the
 specification's on-solid ink policy. Every alpha step is solved against the
 neutral page. All steps are rounded to 8-bit sRGB before
 contrast is checked in tests.

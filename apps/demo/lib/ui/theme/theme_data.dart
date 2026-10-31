@@ -257,6 +257,8 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
         ? tokens.colorPanelSolid
         : tokens.colorPanelTranslucent,
     FortalTokens.colorOverlay: tokens.colorOverlay,
+    FortalTokens.controlBorder: tokens.controlBorder,
+    FortalTokens.accentThumbRing: tokens.accentThumbRing,
     FortalTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,

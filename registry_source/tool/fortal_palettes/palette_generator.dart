@@ -34,19 +34,23 @@ const fortalErrorDarkSolidLightness = .64;
 /// dark page; lighter seeds keep their identity up to the cap.
 const darkSolidLightnessRange = (min: .70, max: .84);
 
-/// Deep on-solid ink. Where white does not serve a solid fill, its label,
-/// thumb and marks use a deep tone of the palette's own hue instead of
-/// generic basalt: the lightest such tone up to [maxLightness] that keeps the
-/// 4.6:1 generation margin on both the fill and its hover. Fills are fitted
-/// first and never move for the ink, so the hover step cannot collapse.
-/// Chroma is [chromaScale] × the seed's, at most [maxChroma], gamut-mapped by
-/// chroma reduction. Yellow and sand hues rotate up to [warmHueShift] degrees
-/// toward orange so their deep tone reads warm brown rather than olive.
-/// Basalt remains the fallback and the neutral palette's dark ink.
+/// On-solid ink. Where white does not serve a solid fill, its label and marks
+/// use a tone of the palette's own hue instead of generic basalt: the
+/// lightest such tone up to [maxLightness] that keeps the 4.6:1 generation
+/// margin on both the fill and its hover. The ink spends the fill's headroom,
+/// so bright fills (Sol, Duna) get a visibly coloured brown rather than a
+/// near-black, while mid-tone fills still descend as far as contrast needs.
+/// Fills are fitted first and never move for the ink, so the hover step
+/// cannot collapse. Chroma is [chromaScale] × the seed's, at most
+/// [maxChroma], gamut-mapped by chroma reduction. Yellow and sand hues rotate
+/// up to [warmHueShift] degrees toward orange so their tone reads warm brown
+/// rather than olive. Basalt remains the fallback and the neutral palette's
+/// dark ink. Thumbs do not take this ink as a fill; they are light surfaces
+/// whose outline follows it (see the theme's `accentThumbRing`).
 const onSolidInk = (
-  maxLightness: .30,
-  chromaScale: .6,
-  maxChroma: .09,
+  maxLightness: .70,
+  chromaScale: 1.0,
+  maxChroma: .14,
   warmHueShift: 18.0,
 );
 

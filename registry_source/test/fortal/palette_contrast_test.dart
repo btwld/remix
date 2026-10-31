@@ -259,7 +259,7 @@ void main() {
     },
   );
 
-  test('on-solid inks are deep tones of their own family', () {
+  test('on-solid inks are tones of their own family', () {
     // Calçadão stays the neutral reference: white on basalt, basalt on
     // limestone.
     expect(calcadao.light.contrast, const Color(0xffffffff));
@@ -313,21 +313,97 @@ void main() {
           inInclusiveRange(-4, generator.onSolidInk.warmHueShift + 4),
           reason: '$name hue',
         );
-        expect(seed.c, greaterThan(tone.c), reason: '$name stays deep');
-        // The 4.6:1 generation margin holds on the fill and on its hover.
-        for (final step in [9, 10]) {
-          expect(
-            contrastRatio(ink, mode.scale.step(step)),
-            greaterThanOrEqualTo(4.6),
-            reason: '$name step $step',
-          );
+        // Deeper than its seed and never more saturated than it.
+        expect(tone.l, lessThan(seed.l), reason: '$name stays deeper');
+        expect(
+          tone.c,
+          lessThanOrEqualTo(seed.c + .002),
+          reason: '$name chroma',
+        );
+        // The 4.6:1 generation margin holds on the fill and on its hover, and
+        // the ink spends the remaining headroom: it is the lightest tone that
+        // keeps that margin, not a near-black with contrast to spare.
+        final ratios = [
+          for (final step in [9, 10]) contrastRatio(ink, mode.scale.step(step)),
+        ];
+        for (final ratio in ratios) {
+          expect(ratio, greaterThanOrEqualTo(4.6), reason: name);
         }
+        expect(ratios.reduce(math.min), lessThan(4.75), reason: '$name fit');
       }
     }
-    // Sol and Duna read warm brown, not olive.
+    // Sol and Duna read as a visibly coloured warm brown: not olive, and not
+    // the near-black a lower lightness cap produced.
     for (final theme in [sol, duna]) {
       for (final mode in [theme.light, theme.dark]) {
         expect(hueDegrees(mode.contrast), inInclusiveRange(55, 72));
+        final tone = generator.toOklch(mode.contrast.toARGB32());
+        expect(tone.l, greaterThanOrEqualTo(.40));
+        expect(tone.c, greaterThanOrEqualTo(.06));
+      }
+    }
+  });
+
+  test('control border keeps 3:1 against page, panels and the off track', () {
+    for (final dark in [false, true]) {
+      final colors = resolveFortalTokens(
+        FortalThemeConfig(brightness: dark ? .dark : .light),
+      );
+      final surfaces = {
+        'page': colors.colorBackground,
+        'panel': colors.colorPanelSolid,
+        'translucent panel': Color.alphaBlend(
+          colors.colorPanelTranslucent,
+          colors.colorBackground,
+        ),
+      };
+      for (final MapEntry(key: name, value: surface) in surfaces.entries) {
+        final track = Color.alphaBlend(colors.gray.scale.alphaStep(3), surface);
+        final reason = '${dark ? 'dark' : 'light'} $name';
+        expect(
+          contrastRatio(colors.controlBorder, surface),
+          greaterThanOrEqualTo(3),
+          reason: reason,
+        );
+        expect(
+          contrastRatio(colors.controlBorder, track),
+          greaterThanOrEqualTo(3),
+          reason: '$reason off track',
+        );
+      }
+    }
+  });
+
+  test('thumb ring follows the ink only where the ink is darker', () {
+    for (final MapEntry(key: name, value: palette) in shipped.entries) {
+      for (final dark in [false, true]) {
+        final colors = resolveFortalTokens(
+          FortalThemeConfig(
+            accentPalette: palette,
+            brightness: dark ? .dark : .light,
+          ),
+        );
+        final ink = colors.accent.contrast;
+        final fill = colors.accent.scale.step(9);
+        final reason = '$name/${dark ? 'dark' : 'light'}';
+        final inkIsDarker = ink.computeLuminance() < fill.computeLuminance();
+        expect(
+          colors.accentThumbRing,
+          inkIsDarker ? ink : colors.controlBorder,
+          reason: reason,
+        );
+        // A white thumb with that ring stands out on the fill and the hover.
+        for (final step in [9, 10]) {
+          final track = colors.accent.scale.step(step);
+          expect(
+            math.max(
+              contrastRatio(const Color(0xffffffff), track),
+              contrastRatio(colors.accentThumbRing, track),
+            ),
+            greaterThanOrEqualTo(3),
+            reason: '$reason step $step',
+          );
+        }
       }
     }
   });

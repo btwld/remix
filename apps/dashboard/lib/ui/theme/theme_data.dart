@@ -257,6 +257,8 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
         ? tokens.colorPanelSolid
         : tokens.colorPanelTranslucent,
     UiTokens.colorOverlay: tokens.colorOverlay,
+    UiTokens.controlBorder: tokens.controlBorder,
+    UiTokens.accentThumbRing: tokens.accentThumbRing,
     UiTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,

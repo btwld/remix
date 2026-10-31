@@ -50,6 +50,30 @@ Color computeColorPanelTranslucent(UiColorScale gray, {required bool isDark}) =>
 Color computeColorSurface({required bool isDark}) =>
     (isDark ? calcadao.dark : calcadao.light).scale.step(2);
 
+/// Computes the neutral boundary of active empty controls.
+///
+/// Unchecked checkboxes and radios, the off switch's track and thumb, and
+/// surface text inputs draw this line where it is the visual cue that a
+/// control is there. It keeps at least 3:1 against the page, the solid panel
+/// and the off track (gray alpha 3 over either): gray step 8 deepened toward
+/// step 11 in light mode, and step 7 lifted toward step 8 in dark mode.
+/// Disabled controls keep their quieter strokes.
+Color computeControlBorder(UiColorScale gray, {required bool isDark}) => isDark
+    ? mixOklabPremultiplied(gray.step(7), gray.step(8), .7)
+    : mixOklabPremultiplied(gray.step(8), gray.step(11), .15);
+
+/// Computes the outline of a light control thumb.
+///
+/// Switch and slider thumbs are a white surface with this ring rather than a
+/// disc of on-solid ink. Where the ink is darker than the solid fill, the ring
+/// is that ink, so the thumb stands out on a light fill. Where the ink is
+/// lighter (white on a deep fill), the white thumb already contrasts with the
+/// fill and the ring is [controlBorder], which separates it from the page.
+Color computeAccentThumbRing(UiColor accent, Color controlBorder) =>
+    accent.contrast.computeLuminance() < accent.indicator.computeLuminance()
+    ? accent.contrast
+    : controlBorder;
+
 /// Computes modal backdrop overlay color.
 ///
 /// Uses black alpha step 6 (light mode) or step 8 (dark mode).
@@ -216,6 +240,10 @@ class UiThemeColors {
   final Color colorOverlay;
   final Color shadowStroke;
 
+  // Control boundaries
+  final Color controlBorder;
+  final Color accentThumbRing;
+
   // Focus
   final Color focus8;
   final Color focusA5;
@@ -232,6 +260,8 @@ class UiThemeColors {
     required this.colorPanelTranslucent,
     required this.colorOverlay,
     required this.shadowStroke,
+    required this.controlBorder,
+    required this.accentThumbRing,
     required this.focus8,
     required this.focusA5,
     required this.focusA8,
@@ -282,6 +312,7 @@ UiThemeColors resolveUiTokens(UiThemeConfig theme) {
   final Color colorSurface = computeColorSurface(isDark: theme.isDark);
   final Color colorOverlay = computeColorOverlay(isDark: theme.isDark);
   final Color shadowStroke = computeShadowStroke(gray, isDark: theme.isDark);
+  final Color controlBorder = computeControlBorder(gray, isDark: theme.isDark);
 
   // Focus
   final Color focus8 = computeFocus8(accent);
@@ -299,6 +330,8 @@ UiThemeColors resolveUiTokens(UiThemeConfig theme) {
     colorPanelTranslucent: colorPanelTranslucent,
     colorOverlay: colorOverlay,
     shadowStroke: shadowStroke,
+    controlBorder: controlBorder,
+    accentThumbRing: computeAccentThumbRing(accentRC, controlBorder),
     focus8: focus8,
     focusA5: focusA5,
     focusA8: focusA8,

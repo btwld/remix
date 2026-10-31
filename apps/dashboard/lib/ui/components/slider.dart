@@ -88,11 +88,7 @@ SliderStyler _uiSliderSurface(
         ),
       ),
     )
-    .thumb(
-      BoxStyler().decoration(
-        .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))),
-      ),
-    );
+    .thumb(_uiSliderThumbRing());
 
 SliderStyler _uiSliderSoft(
   SliderStyler base, {
@@ -126,11 +122,15 @@ SliderStyler _uiSliderSoft(
         ),
       ),
     )
-    .thumb(
-      BoxStyler().decoration(
-        .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))),
-      ),
-    );
+    .thumb(_uiSliderThumbRing());
+
+/// The white thumb's ring: on-solid ink on light fills, otherwise the neutral
+/// control border, so the thumb reads against the page, track and range.
+BoxStyler _uiSliderThumbRing() => BoxStyler().decoration(
+  .border(
+    .all(.color(UiTokens.accentThumbRing()).width(UiTokens.borderWidth2())),
+  ),
+);
 
 SliderStyler _uiSliderDisabled(
   UiSliderVariant variant, {
