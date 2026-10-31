@@ -401,7 +401,10 @@ makes the active theme available to routes, dialogs, and overlays. See the
 
 The generated theme widgets expose `theme`, `darkTheme`, and `mode`. A root without
 arguments supplies the preset's light and dark defaults and follows the system.
-A nested theme inherits its parent's configured pair and active selection.
+A nested theme inherits its parent's configured pair and active selection. It
+installs its own complete token set rather than merging with the scope above it,
+so a token override made with `MixScope.inherit` does not apply below a nested
+theme; place the override inside the nested scope.
 
 | Preset | Theme widget | Theme values and modes |
 | --- | --- | --- |

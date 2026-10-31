@@ -46,6 +46,10 @@ void main() {
       final spec = tester.resolvedSpecOf<SelectTriggerSpec>(
         find.text('Choose'),
       );
+      expect(
+        spec.containerEffects?.outline.style ?? BorderStyle.none,
+        BorderStyle.none,
+      );
       expect(spec.containerEffects?.overContent, isNull);
     });
   });
@@ -261,6 +265,7 @@ void main() {
       expect(effects.outline.color, tokens.focus8);
       expect(effects.outline.width, 2);
       expect(effects.outlineOffset, 2);
+      expect(effects.overContent, isNull);
     });
 
     testWidgets(

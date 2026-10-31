@@ -68,8 +68,12 @@ set up every Remix design system the same way:
 
 - `AcmeTheme({theme, darkTheme, mode, child})`. `mode` selects between
   the pair; `system` reads `MediaQuery.maybePlatformBrightnessOf`, and a scope
-  mounted above any `MediaQuery` supplies one with `MediaQuery.fromView`. An
-  empty nested scope inherits the parent's pair and selection.
+  mounted above any `MediaQuery` supplies one with `MediaQuery.fromView`.
+  Detect that case with
+  `context.getElementForInheritedWidgetOfExactType<MediaQuery>()`, which does
+  not subscribe; `MediaQuery.maybeOf` would rebuild the scope on every
+  MediaQuery change. An empty nested scope inherits the parent's pair and
+  selection.
 - It installs a private `_AcmeInheritedTheme` (an `InheritedTheme`) and
   `MixScope(tokens: selected.tokens, child: child)` together.
 - `AcmeTheme.of(context)` throws a `FlutterError` naming the missing scope;
