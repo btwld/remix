@@ -184,22 +184,34 @@ abstract final class RemixIcons {
   static const IconData arrowDownFilled12 = OutlineIcons.arrowDownFilled12;
 
   /// Arrow up right, outline style, 24 px master. Same as [OutlineIcons.arrowUpRight].
+  ///
+  /// Opens another destination; keep a visible action label.
   static const IconData arrowUpRight = OutlineIcons.arrowUpRight;
 
   /// Arrow up right, filled style, 24 px master. Same as [OutlineIcons.arrowUpRightFilled].
+  ///
+  /// Opens another destination; keep a visible action label.
   static const IconData arrowUpRightFilled = OutlineIcons.arrowUpRightFilled;
 
   /// Arrow up right, outline style, 16 px master. Same as [OutlineIcons.arrowUpRight16].
+  ///
+  /// Opens another destination; keep a visible action label.
   static const IconData arrowUpRight16 = OutlineIcons.arrowUpRight16;
 
   /// Arrow up right, filled style, 16 px master. Same as [OutlineIcons.arrowUpRightFilled16].
+  ///
+  /// Opens another destination; keep a visible action label.
   static const IconData arrowUpRightFilled16 =
       OutlineIcons.arrowUpRightFilled16;
 
   /// Arrow up right, outline style, 12 px master. Same as [OutlineIcons.arrowUpRight12].
+  ///
+  /// Opens another destination; keep a visible action label.
   static const IconData arrowUpRight12 = OutlineIcons.arrowUpRight12;
 
   /// Arrow up right, filled style, 12 px master. Same as [OutlineIcons.arrowUpRightFilled12].
+  ///
+  /// Opens another destination; keep a visible action label.
   static const IconData arrowUpRightFilled12 =
       OutlineIcons.arrowUpRightFilled12;
 
@@ -675,38 +687,38 @@ abstract final class RemixIcons {
 
   /// Warning, outline style, 24 px master. Same as [OutlineIcons.warning].
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   static const IconData warning = OutlineIcons.warning;
 
   /// Warning, filled style, 24 px master. Same as [OutlineIcons.warningFilled].
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   static const IconData warningFilled = OutlineIcons.warningFilled;
 
   /// Warning, outline style, 16 px master. Same as [OutlineIcons.warning16].
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   static const IconData warning16 = OutlineIcons.warning16;
 
   /// Warning, filled style, 16 px master. Same as [OutlineIcons.warningFilled16].
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   static const IconData warningFilled16 = OutlineIcons.warningFilled16;
 
   /// Warning, outline style, 12 px master. Same as [OutlineIcons.warning12].
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   static const IconData warning12 = OutlineIcons.warning12;
 
   /// Warning, filled style, 12 px master. Same as [OutlineIcons.warningFilled12].
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   static const IconData warningFilled12 = OutlineIcons.warningFilled12;
 
   /// Info, outline style, 24 px master. Same as [OutlineIcons.info].
@@ -728,21 +740,33 @@ abstract final class RemixIcons {
   static const IconData infoFilled12 = OutlineIcons.infoFilled12;
 
   /// Help, outline style, 24 px master. Same as [OutlineIcons.help].
+  ///
+  /// A contextual label is recommended.
   static const IconData help = OutlineIcons.help;
 
   /// Help, filled style, 24 px master. Same as [OutlineIcons.helpFilled].
+  ///
+  /// A contextual label is recommended.
   static const IconData helpFilled = OutlineIcons.helpFilled;
 
   /// Help, outline style, 16 px master. Same as [OutlineIcons.help16].
+  ///
+  /// A contextual label is recommended.
   static const IconData help16 = OutlineIcons.help16;
 
   /// Help, filled style, 16 px master. Same as [OutlineIcons.helpFilled16].
+  ///
+  /// A contextual label is recommended.
   static const IconData helpFilled16 = OutlineIcons.helpFilled16;
 
   /// Help, outline style, 12 px master. Same as [OutlineIcons.help12].
+  ///
+  /// Requires a visible text label at 12 px.
   static const IconData help12 = OutlineIcons.help12;
 
   /// Help, filled style, 12 px master. Same as [OutlineIcons.helpFilled12].
+  ///
+  /// Requires a visible text label at 12 px.
   static const IconData helpFilled12 = OutlineIcons.helpFilled12;
 
   /// Lock, outline style, 24 px master. Same as [OutlineIcons.lock].
@@ -818,21 +842,33 @@ abstract final class RemixIcons {
   static const IconData terminalFilled12 = OutlineIcons.terminalFilled12;
 
   /// Branch, outline style, 24 px master. Same as [OutlineIcons.branch].
+  ///
+  /// A contextual label is recommended.
   static const IconData branch = OutlineIcons.branch;
 
   /// Branch, filled style, 24 px master. Same as [OutlineIcons.branchFilled].
+  ///
+  /// A contextual label is recommended.
   static const IconData branchFilled = OutlineIcons.branchFilled;
 
   /// Branch, outline style, 16 px master. Same as [OutlineIcons.branch16].
+  ///
+  /// A contextual label is recommended.
   static const IconData branch16 = OutlineIcons.branch16;
 
   /// Branch, filled style, 16 px master. Same as [OutlineIcons.branchFilled16].
+  ///
+  /// A contextual label is recommended.
   static const IconData branchFilled16 = OutlineIcons.branchFilled16;
 
   /// Branch, outline style, 12 px master. Same as [OutlineIcons.branch12].
+  ///
+  /// Requires a visible text label at 12 px.
   static const IconData branch12 = OutlineIcons.branch12;
 
   /// Branch, filled style, 12 px master. Same as [OutlineIcons.branchFilled12].
+  ///
+  /// Requires a visible text label at 12 px.
   static const IconData branchFilled12 = OutlineIcons.branchFilled12;
 
   /// Chart, outline style, 24 px master. Same as [OutlineIcons.chart].
@@ -890,21 +926,33 @@ abstract final class RemixIcons {
   static const IconData pauseFilled12 = OutlineIcons.pauseFilled12;
 
   /// Focus, outline style, 24 px master. Same as [OutlineIcons.focus].
+  ///
+  /// A contextual label is recommended.
   static const IconData focus = OutlineIcons.focus;
 
   /// Focus, filled style, 24 px master. Same as [OutlineIcons.focusFilled].
+  ///
+  /// A contextual label is recommended.
   static const IconData focusFilled = OutlineIcons.focusFilled;
 
   /// Focus, outline style, 16 px master. Same as [OutlineIcons.focus16].
+  ///
+  /// A contextual label is recommended.
   static const IconData focus16 = OutlineIcons.focus16;
 
   /// Focus, filled style, 16 px master. Same as [OutlineIcons.focusFilled16].
+  ///
+  /// A contextual label is recommended.
   static const IconData focusFilled16 = OutlineIcons.focusFilled16;
 
   /// Focus, outline style, 12 px master. Same as [OutlineIcons.focus12].
+  ///
+  /// Requires a visible text label at 12 px.
   static const IconData focus12 = OutlineIcons.focus12;
 
   /// Focus, filled style, 12 px master. Same as [OutlineIcons.focusFilled12].
+  ///
+  /// Requires a visible text label at 12 px.
   static const IconData focusFilled12 = OutlineIcons.focusFilled12;
 
   /// The remix_ui_icons 0.1.x name for [arrowUpRight].

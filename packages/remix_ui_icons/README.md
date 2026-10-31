@@ -58,10 +58,23 @@ Icon(OutlineIconSets.search.at(size), size: size);
 
 ## Labels
 
-Warning, in every family and style, needs a visible text label at every size;
-a tooltip or semantic label is not a substitute. So does the Mono Star, which
-reads as a favorite only with its label. Their constants say so in their
-documentation, and `RemixIconEntry.requiresLabel` is `true` for them.
+Some glyphs are recognized reliably only with a visible text label. The rules
+come from the Vector UI design contract and depend on the family and master:
+
+| Glyphs | Visible text label |
+| --- | --- |
+| Warning, every family and style | Required at every size. A tooltip or semantic label is not a substitute. |
+| Mono Star | Required at every size: the CAD-regular star reads as Favorite only with its label. |
+| Rounded Branch | Required at every size. |
+| Outline Help, Branch, Focus | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
+| Rounded Link; Mono Link and Branch | Required at 12 px. |
+| Mono Search | Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder. |
+| Outline Arrow up-right | Keep a visible action label: it opens another destination. |
+
+Each constant's documentation states its rule. In the opt-in index,
+`RemixIconEntry.requiresLabel` is `true` for every glyph that requires a label,
+and `RemixIconEntry.usage` carries the contract's notes, including the
+contextual ones.
 
 No glyph mirrors automatically in right-to-left layouts. Choose the left or
 right glyph when the direction carries meaning.

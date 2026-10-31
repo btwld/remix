@@ -21,6 +21,7 @@ REPOSITORY_ROOT = PACKAGE_ROOT.parents[1]
 MANIFEST_PATH = TOOL_ROOT / "manifest.yaml"
 
 STYLES = ("outline", "filled")
+USAGE_KINDS = ("label-required", "label-contextual", "note")
 MASTERS = (24, 16, 12)
 LEGACY_STATUSES = ("exact", "partial", "removed")
 
@@ -87,6 +88,25 @@ class Family:
 
 
 @dataclass(frozen=True)
+class UsageRule:
+    """One supported-use rule from the design contract.
+
+    `source` is a path below design/icons and `quote` the text there that
+    grounds the rule, so test_usage.py can hold the two together.
+    """
+
+    families: frozenset[str]
+    masters: frozenset[int]
+    kind: str
+    note: str
+    source: str
+    quote: str
+
+    def applies_to(self, family: str, master: int) -> bool:
+        return family in self.families and master in self.masters
+
+
+@dataclass(frozen=True)
 class Concept:
     id: str
     name: str
@@ -94,7 +114,7 @@ class Concept:
     families: tuple[str, ...]
     tags: tuple[str, ...]
     rtl: bool
-    requires_label: frozenset[str]
+    usage: tuple[UsageRule, ...]
     since: str
 
 
@@ -124,8 +144,22 @@ class Glyph:
         return f"{self.family.key}{member[:1].upper()}{member[1:]}"
 
     @property
+    def usage(self) -> tuple[UsageRule, ...]:
+        return tuple(
+            rule
+            for rule in self.concept.usage
+            if rule.applies_to(self.family.key, self.master)
+        )
+
+    @property
     def requires_label(self) -> bool:
-        return self.family.key in self.concept.requires_label
+        """Whether this glyph must be shown with a visible text label."""
+        return any(rule.kind == "label-required" for rule in self.usage)
+
+    @property
+    def usage_notes(self) -> tuple[str, ...]:
+        """Every supported-use note for this glyph, in manifest order."""
+        return tuple(dict.fromkeys(rule.note for rule in self.usage))
 
 
 @dataclass(frozen=True)
@@ -259,7 +293,7 @@ def load_manifest(path: Path = MANIFEST_PATH) -> Manifest:
             value,
             label,
             {"name", "label", "families", "tags", "rtl", "since"},
-            {"requiresLabel"},
+            {"usage"},
         )
         name = _identifier(value["name"], f"{label}.name")
         _require(name not in names, f"{label}.name {name!r} is not unique")
@@ -278,11 +312,41 @@ def load_manifest(path: Path = MANIFEST_PATH) -> Manifest:
             families[0].key in concept_families,
             f"{label} must exist in the default {families[0].key} family",
         )
-        requires_label = frozenset(value.get("requiresLabel", ()))
-        _require(
-            requires_label <= set(concept_families),
-            f"{label}.requiresLabel names a family that does not draw it",
-        )
+        usage = []
+        for index, item in enumerate(value.get("usage", ())):
+            rule_label = f"{label}.usage[{index}]"
+            item = _keys(
+                item,
+                rule_label,
+                {"families", "kind", "note", "source", "quote"},
+                {"masters"},
+            )
+            rule_families = frozenset(item["families"])
+            _require(
+                rule_families and rule_families <= set(concept_families),
+                f"{rule_label}.families must name families that draw {concept_id}",
+            )
+            rule_masters = frozenset(item.get("masters", MASTERS))
+            _require(
+                rule_masters and rule_masters <= set(MASTERS),
+                f"{rule_label}.masters must be a subset of {list(MASTERS)}",
+            )
+            _require(item["kind"] in USAGE_KINDS, f"{rule_label}.kind must be one of {USAGE_KINDS}")
+            for key in ("note", "source", "quote"):
+                _require(
+                    isinstance(item[key], str) and item[key].strip(),
+                    f"{rule_label}.{key} must be text",
+                )
+            usage.append(
+                UsageRule(
+                    families=rule_families,
+                    masters=rule_masters,
+                    kind=item["kind"],
+                    note=item["note"],
+                    source=item["source"],
+                    quote=item["quote"],
+                )
+            )
         _require(isinstance(value["rtl"], bool), f"{label}.rtl must be a boolean")
         _require(
             _VERSION.fullmatch(str(value["since"])) is not None,
@@ -297,7 +361,7 @@ def load_manifest(path: Path = MANIFEST_PATH) -> Manifest:
                 families=concept_families,
                 tags=tags,
                 rtl=value["rtl"],
-                requires_label=requires_label,
+                usage=tuple(usage),
                 since=str(value["since"]),
             )
         )

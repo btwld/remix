@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import re
+import textwrap
 from dataclasses import dataclass
 
 from manifest import Family, Glyph, LegacyIcon, Manifest
@@ -23,10 +24,12 @@ MASTER_RULE = (
     "master, up to 16 px the 16 px master, and the 24 px master above that.\n"
     "Sizes below 12 px are not reviewed."
 )
-LABEL_RULE = (
-    "Requires a visible text label at every size and in both styles. A\n"
-    "tooltip or semantic label is not a substitute."
-)
+
+
+def _usage(glyph: Glyph) -> str:
+    """The glyph's supported-use notes from the design contract, wrapped."""
+
+    return "\n\n".join(textwrap.fill(note, width=74) for note in glyph.usage_notes)
 
 
 @dataclass(frozen=True)
@@ -125,8 +128,8 @@ def family_library(
     for glyph in glyphs:
         out.append("\n")
         doc = _style_label(glyph)
-        if glyph.requires_label:
-            doc += f"\n\n{LABEL_RULE}"
+        if glyph.usage_notes:
+            doc += f"\n\n{_usage(glyph)}"
         doc += "\n\n" + _preview(svgs[glyph.source], _style_label(glyph).removesuffix("."))
         out.append(_doc("  ", doc))
         arguments = [
@@ -172,8 +175,8 @@ def facade_library(manifest: Manifest) -> Library:
             out.append("\n")
         first = False
         doc = f"{_style_label(glyph)} Same as [{family.class_name}.{glyph.member}]."
-        if glyph.requires_label:
-            doc += f"\n\n{LABEL_RULE}"
+        if glyph.usage_notes:
+            doc += f"\n\n{_usage(glyph)}"
         out.append(_doc("  ", doc))
         out.append(
             _assignment(
@@ -243,6 +246,16 @@ def _string_list(values: list[str]) -> str:
     return "[" + ", ".join(_dart_string(value) for value in values) + "]"
 
 
+def _list_field(indent: str, name: str, values: list[str]) -> str:
+    """`name: [...]` as a call argument at [indent], split when too long."""
+
+    single = f"{name}: {_string_list(values)}"
+    if _fits(f"{indent}{single},"):
+        return single
+    body = "".join(f"{indent}  {_dart_string(value)},\n" for value in values)
+    return f"{name}: [\n{body}{indent}]"
+
+
 def index_library(manifest: Manifest) -> Library:
     aliases: dict[str, list[str]] = {}
     for alias in manifest.deprecated_aliases:
@@ -279,6 +292,7 @@ def index_library(manifest: Manifest) -> Library:
             f"tags: {_string_list(list(glyph.concept.tags))}",
             f"aliases: {_string_list(aliases.get(glyph.member, []) if is_default else [])}",
             f"requiresLabel: {'true' if glyph.requires_label else 'false'}",
+            _list_field("    ", "usage", list(glyph.usage_notes)),
             f"since: {_dart_string(glyph.concept.since)}",
         ]
         out.append(_call("  ", "RemixIconEntry", fields, ","))

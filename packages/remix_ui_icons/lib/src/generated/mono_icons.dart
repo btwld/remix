@@ -78,6 +78,9 @@ abstract final class MonoIcons {
 
   /// Search, outline style, 24 px master.
   ///
+  /// Label it explicitly beside crop, frame, or view tools, where it can read
+  /// as a viewfinder.
+  ///
   /// ![Search, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE0TDQgMTZMMTQgMTZMMTQuMjkzIDE1LjcwN0wyMC43OTMgMjIuMjA3TDIyLjIwNyAyMC43OTNMMTUuNzA3IDE0LjI5M0wxNiAxNEwxNiA0TDE0IDJMNCAyTDIgNFpNMTQgNC44MjhMMTQgMTNMMTMgMTRMNC44MjggMTRMNCAxMy4xNzJMNCA0LjgyOEw0LjgyOCA0TDEzLjE3MiA0WiIvPjwvc3ZnPg==)
   static const IconData search = IconData(
     0xE36E,
@@ -86,6 +89,9 @@ abstract final class MonoIcons {
   );
 
   /// Search, filled style, 24 px master.
+  ///
+  /// Label it explicitly beside crop, frame, or view tools, where it can read
+  /// as a viewfinder.
   ///
   /// ![Search, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE0TDQgMTZMMTMuODc5IDE2TDIwLjQzOSAyMi41NjFMMjIuNTYxIDIwLjQzOUwxNiAxMy44NzlMMTYgNEwxNCAyTDQgMkwyIDRaTTEzIDUuMjQzTDEzIDEyLjc1N0wxMi43NTcgMTNMNS4yNDMgMTNMNSAxMi43NTdMNSA1LjI0M0w1LjI0MyA1TDEyLjc1NyA1WiIvPjwvc3ZnPg==)
   static const IconData searchFilled = IconData(
@@ -96,6 +102,9 @@ abstract final class MonoIcons {
 
   /// Search, outline style, 16 px master.
   ///
+  /// Label it explicitly beside crop, frame, or view tools, where it can read
+  /// as a viewfinder.
+  ///
   /// ![Search, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgOS41TDMgMTFMOS41IDExTDkuNzIgMTAuNzhMMTMuNDcgMTQuNTNMMTQuNTMgMTMuNDdMMTAuNzggOS43MkwxMSA5LjVMMTEgM0w5LjUgMS41TDMgMS41TDEuNSAzWk05LjUgMy42MjFMOS41IDguODc5TDguODc5IDkuNUwzLjYyMSA5LjVMMyA4Ljg3OUwzIDMuNjIxTDMuNjIxIDNMOC44NzkgM1oiLz48L3N2Zz4=)
   static const IconData search16 = IconData(
     0xE370,
@@ -104,6 +113,9 @@ abstract final class MonoIcons {
   );
 
   /// Search, filled style, 16 px master.
+  ///
+  /// Label it explicitly beside crop, frame, or view tools, where it can read
+  /// as a viewfinder.
   ///
   /// ![Search, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgOS41TDMgMTFMOS4yMzIgMTFMMTMuMTE2IDE0Ljg4NEwxNC44ODQgMTMuMTE2TDExIDkuMjMyTDExIDNMOS41IDEuNUwzIDEuNUwxLjUgM1pNOC41IDQuMDM2TDguNSA4LjQ2NEw4LjQ2NCA4LjVMNC4wMzYgOC41TDQgOC40NjRMNCA0LjAzNkw0LjAzNiA0TDguNDY0IDRaIi8+PC9zdmc+)
   static const IconData searchFilled16 = IconData(
@@ -114,6 +126,9 @@ abstract final class MonoIcons {
 
   /// Search, outline style, 12 px master.
   ///
+  /// Label it explicitly beside crop, frame, or view tools, where it can read
+  /// as a viewfinder.
+  ///
   /// ![Search, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDdMMiA4TDcgOEw3LjE0NiA3Ljg1NEwxMC4xNDYgMTAuODU0TDEwLjg1NCAxMC4xNDZMNy44NTQgNy4xNDZMOCA3TDggMkw3IDFMMiAxTDEgMlpNNyAyLjQxNEw3IDYuMjkzTDYuODU0IDYuMTQ2TDYuMTQ2IDYuODU0TDYuMjkzIDdMMi40MTQgN0wyIDYuNTg2TDIgMi40MTRMMi40MTQgMkw2LjU4NiAyWiIvPjwvc3ZnPg==)
   static const IconData search12 = IconData(
     0xE372,
@@ -122,6 +137,9 @@ abstract final class MonoIcons {
   );
 
   /// Search, filled style, 12 px master.
+  ///
+  /// Label it explicitly beside crop, frame, or view tools, where it can read
+  /// as a viewfinder.
   ///
   /// ![Search, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDdMMiA4TDYuNTg2IDhMOS43OTMgMTEuMjA3TDExLjIwNyA5Ljc5M0w4IDYuNTg2TDggMkw3IDFMMiAxTDEgMlpNNiA2TDMgNkwzIDNMNiAzWiIvPjwvc3ZnPg==)
   static const IconData searchFilled12 = IconData(
@@ -186,6 +204,9 @@ abstract final class MonoIcons {
 
   /// Plus, outline style, 24 px master.
   ///
+  /// Mono Plus keeps its tighter inset. Align mixed-family toolbars by control
+  /// bounds.
+  ///
   /// ![Plus, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMyAzTDExIDNMMTEgMTFMMyAxMUwzIDEzTDExIDEzTDExIDIxTDEzIDIxTDEzIDEzTDIxIDEzTDIxIDExTDEzIDExWiIvPjwvc3ZnPg==)
   static const IconData plus = IconData(
     0xE37A,
@@ -194,6 +215,9 @@ abstract final class MonoIcons {
   );
 
   /// Plus, filled style, 24 px master.
+  ///
+  /// Mono Plus keeps its tighter inset. Align mixed-family toolbars by control
+  /// bounds.
   ///
   /// ![Plus, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMy41IDNMMTAuNSAzTDEwLjUgMTAuNUwzIDEwLjVMMyAxMy41TDEwLjUgMTMuNUwxMC41IDIxTDEzLjUgMjFMMTMuNSAxMy41TDIxIDEzLjVMMjEgMTAuNUwxMy41IDEwLjVaIi8+PC9zdmc+)
   static const IconData plusFilled = IconData(
@@ -204,6 +228,9 @@ abstract final class MonoIcons {
 
   /// Plus, outline style, 16 px master.
   ///
+  /// Mono Plus keeps its tighter inset. Align mixed-family toolbars by control
+  /// bounds.
+  ///
   /// ![Plus, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04Ljc1IDIuNUw3LjI1IDIuNUw3LjI1IDcuMjVMMi41IDcuMjVMMi41IDguNzVMNy4yNSA4Ljc1TDcuMjUgMTMuNUw4Ljc1IDEzLjVMOC43NSA4Ljc1TDEzLjUgOC43NUwxMy41IDcuMjVMOC43NSA3LjI1WiIvPjwvc3ZnPg==)
   static const IconData plus16 = IconData(
     0xE37C,
@@ -212,6 +239,9 @@ abstract final class MonoIcons {
   );
 
   /// Plus, filled style, 16 px master.
+  ///
+  /// Mono Plus keeps its tighter inset. Align mixed-family toolbars by control
+  /// bounds.
   ///
   /// ![Plus, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05LjI1IDIuNUw2Ljc1IDIuNUw2Ljc1IDYuNzVMMi41IDYuNzVMMi41IDkuMjVMNi43NSA5LjI1TDYuNzUgMTMuNUw5LjI1IDEzLjVMOS4yNSA5LjI1TDEzLjUgOS4yNUwxMy41IDYuNzVMOS4yNSA2Ljc1WiIvPjwvc3ZnPg==)
   static const IconData plusFilled16 = IconData(
@@ -222,6 +252,9 @@ abstract final class MonoIcons {
 
   /// Plus, outline style, 12 px master.
   ///
+  /// Mono Plus keeps its tighter inset. Align mixed-family toolbars by control
+  /// bounds.
+  ///
   /// ![Plus, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjUgMkw1LjUgMkw1LjUgNS41TDIgNS41TDIgNi41TDUuNSA2LjVMNS41IDEwTDYuNSAxMEw2LjUgNi41TDEwIDYuNUwxMCA1LjVMNi41IDUuNVoiLz48L3N2Zz4=)
   static const IconData plus12 = IconData(
     0xE37E,
@@ -230,6 +263,9 @@ abstract final class MonoIcons {
   );
 
   /// Plus, filled style, 12 px master.
+  ///
+  /// Mono Plus keeps its tighter inset. Align mixed-family toolbars by control
+  /// bounds.
   ///
   /// ![Plus, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik03IDJMNSAyTDUgNUwyIDVMMiA3TDUgN0w1IDEwTDcgMTBMNyA3TDEwIDdMMTAgNUw3IDVaIi8+PC9zdmc+)
   static const IconData plusFilled12 = IconData(
@@ -384,6 +420,8 @@ abstract final class MonoIcons {
 
   /// Link, outline style, 12 px master.
   ///
+  /// Requires a visible text label at 12 px.
+  ///
   /// ![Link, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDcuNUwyIDguNUw2IDguNUwxMCA4LjVMMTEgNy41TDExIDQuNUwxMCAzLjVMNiAzLjVMMiAzLjVMMSA0LjVaTTcgNC41TDkuNTg2IDQuNUwxMCA0LjkxNEwxMCA3LjA4Nkw5LjU4NiA3LjVMNyA3LjVaTTIuNDE0IDcuNUwyIDcuMDg2TDIgNC45MTRMMi40MTQgNC41TDUgNC41TDUgNy41WiIvPjwvc3ZnPg==)
   static const IconData link12 = IconData(
     0xE390,
@@ -392,6 +430,8 @@ abstract final class MonoIcons {
   );
 
   /// Link, filled style, 12 px master.
+  ///
+  /// Requires a visible text label at 12 px.
   ///
   /// ![Link, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDcuNUwyIDguNUw2IDguNUwxMCA4LjVMMTEgNy41TDExIDQuNUwxMCAzLjVMNiAzLjVMMiAzLjVMMSA0LjVaTTcgNS41TDkgNS41TDkgNi41TDcgNi41Wk01IDYuNUwzIDYuNUwzIDUuNUw1IDUuNVoiLz48L3N2Zz4=)
   static const IconData linkFilled12 = IconData(
@@ -402,8 +442,8 @@ abstract final class MonoIcons {
 
   /// Star, outline style, 24 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Give the CAD-regular Mono star a Favorite label; it is not recognized as
+  /// Favorite by its shape alone.
   ///
   /// ![Star, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05LjczNyA4Ljg4NUwyLjQ4OSA4LjkxTDguMzM4IDEzLjE5TDYuMTIyIDIwLjA5TDEyIDE1Ljg1TDE3Ljg3OCAyMC4wOUwxNS42NjIgMTMuMTlMMjEuNTExIDguOTFMMTQuMjYzIDguODg1TDEyIDJaTTEyLjgxMyAxMC44OEwxNS40MTkgMTAuODg5TDEzLjMxNiAxMi40MjhMMTQuMTEzIDE0LjkwOEwxMiAxMy4zODRMOS44ODcgMTQuOTA4TDEwLjY4NCAxMi40MjhMOC41ODEgMTAuODg5TDExLjE4NyAxMC44OEwxMiA4LjQwNVoiLz48L3N2Zz4=)
   static const IconData star = IconData(
@@ -414,8 +454,8 @@ abstract final class MonoIcons {
 
   /// Star, filled style, 24 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Give the CAD-regular Mono star a Favorite label; it is not recognized as
+  /// Favorite by its shape alone.
   ///
   /// ![Star, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAyTDE0LjI2MyA4Ljg4NUwyMS41MTEgOC45MUwxNS42NjIgMTMuMTlMMTcuODc4IDIwLjA5TDEyIDE1Ljg1TDYuMTIyIDIwLjA5TDguMzM4IDEzLjE5TDIuNDg5IDguOTFMOS43MzcgOC44ODVaIi8+PC9zdmc+)
   static const IconData starFilled = IconData(
@@ -426,8 +466,8 @@ abstract final class MonoIcons {
 
   /// Star, outline style, 16 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Give the CAD-regular Mono star a Favorite label; it is not recognized as
+  /// Favorite by its shape alone.
   ///
   /// ![Star, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjUwMSA1LjkzN0wxLjcyMyA1Ljk2TDUuNTc1IDguNzg4TDQuMTIxIDEzLjM0TDggMTAuNTVMMTEuODc5IDEzLjM0TDEwLjQyNSA4Ljc4OEwxNC4yNzcgNS45Nkw5LjQ5OSA1LjkzN0w4IDEuNFpNOC40MTMgNy40MzJMOS43MjkgNy40MzhMOC42NjggOC4yMTdMOS4wNjkgOS40NzFMOCA4LjcwMkw2LjkzMSA5LjQ3MUw3LjMzMiA4LjIxN0w2LjI3MSA3LjQzOEw3LjU4NyA3LjQzMkw4IDYuMTgyWiIvPjwvc3ZnPg==)
   static const IconData star16 = IconData(
@@ -438,8 +478,8 @@ abstract final class MonoIcons {
 
   /// Star, filled style, 16 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Give the CAD-regular Mono star a Favorite label; it is not recognized as
+  /// Favorite by its shape alone.
   ///
   /// ![Star, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04IDEuNEw5LjQ5OSA1LjkzN0wxNC4yNzcgNS45NkwxMC40MjUgOC43ODhMMTEuODc5IDEzLjM0TDggMTAuNTVMNC4xMjEgMTMuMzRMNS41NzUgOC43ODhMMS43MjMgNS45Nkw2LjUwMSA1LjkzN1oiLz48L3N2Zz4=)
   static const IconData starFilled16 = IconData(
@@ -450,8 +490,8 @@ abstract final class MonoIcons {
 
   /// Star, outline style, 12 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Give the CAD-regular Mono star a Favorite label; it is not recognized as
+  /// Favorite by its shape alone.
   ///
   /// ![Star, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00Ljc5NSA0LjM0MkwxLjI0NSA0LjQ1NUw0LjA1IDYuNjMzTDMuMDYxIDEwLjA0NUw2IDguMDVMOC45MzkgMTAuMDQ1TDcuOTUgNi42MzNMMTAuNzU1IDQuNDU1TDcuMjA1IDQuMzQyTDYgMVpNNi40OTUgNS4zMTlMNy45NTIgNS4zNjZMNi44IDYuMjZMNy4yMDYgNy42Nkw2IDYuODQxTDQuNzk0IDcuNjZMNS4yIDYuMjZMNC4wNDggNS4zNjZMNS41MDUgNS4zMTlMNiAzLjk0OFoiLz48L3N2Zz4=)
   static const IconData star12 = IconData(
@@ -462,8 +502,8 @@ abstract final class MonoIcons {
 
   /// Star, filled style, 12 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Give the CAD-regular Mono star a Favorite label; it is not recognized as
+  /// Favorite by its shape alone.
   ///
   /// ![Star, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02IDFMNy4yMDUgNC4zNDJMMTAuNzU1IDQuNDU1TDcuOTUgNi42MzNMOC45MzkgMTAuMDQ1TDYgOC4wNUwzLjA2MSAxMC4wNDVMNC4wNSA2LjYzM0wxLjI0NSA0LjQ1NUw0Ljc5NSA0LjM0MloiLz48L3N2Zz4=)
   static const IconData starFilled12 = IconData(
@@ -582,8 +622,8 @@ abstract final class MonoIcons {
 
   /// Warning, outline style, 24 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   ///
   /// ![Warning, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDIyTDIwIDIyTDIxLjEwNiAyMC4yMTFMMTIuODk0IDMuNzg5TDExLjEwNiAzLjc4OUwyLjg5NCAyMC4yMTFaTTUuMjM2IDIwTDEyIDYuNDcyTDE4Ljc2NCAyMFpNMTMgMTUuNUwxMyAxMy41TDExIDEzLjVMMTEgMTUuNVpNMTMgMTguNUwxMyAxNi43NUwxMSAxNi43NUwxMSAxOC41WiIvPjwvc3ZnPg==)
   static const IconData warning = IconData(
@@ -594,8 +634,8 @@ abstract final class MonoIcons {
 
   /// Warning, filled style, 24 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   ///
   /// ![Warning, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjg5NCAyMC4yMTFMNCAyMkwyMCAyMkwyMS4xMDYgMjAuMjExTDEyLjg5NCAzLjc4OUwxMS4xMDYgMy43ODlaTTEzIDEzLjVMMTMgMTUuNUwxMSAxNS41TDExIDEzLjVaTTEzIDE2Ljc1TDEzIDE4LjVMMTEgMTguNUwxMSAxNi43NVoiLz48L3N2Zz4=)
   static const IconData warningFilled = IconData(
@@ -606,8 +646,8 @@ abstract final class MonoIcons {
 
   /// Warning, outline style, 16 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   ///
   /// ![Warning, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDE0LjVMMTMgMTQuNUwxMy44MjkgMTMuMTU4TDguNjcxIDIuODQyTDcuMzI5IDIuODQyTDIuMTcxIDEzLjE1OFpNMy45MjcgMTNMOCA0Ljg1NEwxMi4wNzMgMTNaTTguNzUgMTAuODVMOC43NSA5Ljg1TDcuMjUgOS44NUw3LjI1IDEwLjg1Wk04Ljc1IDEyLjRMOC43NSAxMS41TDcuMjUgMTEuNUw3LjI1IDEyLjRaIi8+PC9zdmc+)
   static const IconData warning16 = IconData(
@@ -618,8 +658,8 @@ abstract final class MonoIcons {
 
   /// Warning, filled style, 16 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   ///
   /// ![Warning, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjE3MSAxMy4xNThMMyAxNC41TDEzIDE0LjVMMTMuODI5IDEzLjE1OEw4LjY3MSAyLjg0Mkw3LjMyOSAyLjg0MlpNOC43NSA5Ljg1TDguNzUgMTAuODVMNy4yNSAxMC44NUw3LjI1IDkuODVaTTguNzUgMTEuNUw4Ljc1IDEyLjRMNy4yNSAxMi40TDcuMjUgMTEuNVoiLz48L3N2Zz4=)
   static const IconData warningFilled16 = IconData(
@@ -630,8 +670,8 @@ abstract final class MonoIcons {
 
   /// Warning, outline style, 12 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   ///
   /// ![Warning, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDExTDEwIDExTDEwLjU1MyAxMC4xMDZMNi40NDcgMS44OTRMNS41NTMgMS44OTRMMS40NDcgMTAuMTA2Wk0yLjYxOCAxMEw2IDMuMjM2TDkuMzgyIDEwWk02LjUgNy41TDYuNSA2LjVMNS41IDYuNUw1LjUgNy41Wk02LjUgOUw2LjUgOC41TDUuNSA4LjVMNS41IDlaIi8+PC9zdmc+)
   static const IconData warning12 = IconData(
@@ -642,8 +682,8 @@ abstract final class MonoIcons {
 
   /// Warning, filled style, 12 px master.
   ///
-  /// Requires a visible text label at every size and in both styles. A
-  /// tooltip or semantic label is not a substitute.
+  /// Requires a visible text label at every size and in both styles, including
+  /// scaled uses. A tooltip or semantic label is not a substitute.
   ///
   /// ![Warning, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjQ0NyAxMC4xMDZMMiAxMUwxMCAxMUwxMC41NTMgMTAuMTA2TDYuNDQ3IDEuODk0TDUuNTUzIDEuODk0Wk02LjUgNi41TDYuNSA3LjVMNS41IDcuNUw1LjUgNi41Wk02LjUgOC41TDYuNSA5TDUuNSA5TDUuNSA4LjVaIi8+PC9zdmc+)
   static const IconData warningFilled12 = IconData(
@@ -690,6 +730,8 @@ abstract final class MonoIcons {
 
   /// Branch, outline style, 12 px master.
   ///
+  /// Requires a visible text label at 12 px.
+  ///
   /// ![Branch, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04Ljc1IDRMMTAuMjUgNEwxMSAzLjI1TDExIDEuNzVMMTAuMjUgMUw4Ljc1IDFMOCAxLjc1TDggMkw2IDJMNiAyLjVMNS41IDIuNUw1LjUgNS41TDQgNS41TDQgNS4yNUwzLjI1IDQuNUwxLjc1IDQuNUwxIDUuMjVMMSA2Ljc1TDEuNzUgNy41TDMuMjUgNy41TDQgNi43NUw0IDYuNUw1LjUgNi41TDUuNSA5LjVMNiA5LjVMNiAxMEw4IDEwTDggMTAuMjVMOC43NSAxMUwxMC4yNSAxMUwxMSAxMC4yNUwxMSA4Ljc1TDEwLjI1IDhMOC43NSA4TDggOC43NUw4IDlMNi41IDlMNi41IDNMOCAzTDggMy4yNVpNMTAgMi44MzZMOS44MzYgM0w5LjE2NCAzTDkgMi44MzZMOSAyLjE2NEw5LjE2NCAyTDkuODM2IDJMMTAgMi4xNjRaTTMgNi4zMzZMMi44MzYgNi41TDIuMTY0IDYuNUwyIDYuMzM2TDIgNS42NjRMMi4xNjQgNS41TDIuODM2IDUuNUwzIDUuNjY0Wk0xMCA5LjgzNkw5LjgzNiAxMEw5LjE2NCAxMEw5IDkuODM2TDkgOS4xNjRMOS4xNjQgOUw5LjgzNiA5TDEwIDkuMTY0WiIvPjwvc3ZnPg==)
   static const IconData branch12 = IconData(
     0xE3AE,
@@ -698,6 +740,8 @@ abstract final class MonoIcons {
   );
 
   /// Branch, filled style, 12 px master.
+  ///
+  /// Requires a visible text label at 12 px.
   ///
   /// ![Branch, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04IDJMNiAyTDYgMi41TDUuNSAyLjVMNS41IDUuNUw0IDUuNUw0IDUuMjVMMy4yNSA0LjVMMS43NSA0LjVMMSA1LjI1TDEgNi43NUwxLjc1IDcuNUwzLjI1IDcuNUw0IDYuNzVMNCA2LjVMNS41IDYuNUw1LjUgOS41TDYgOS41TDYgMTBMOCAxMEw4IDEwLjI1TDguNzUgMTFMMTAuMjUgMTFMMTEgMTAuMjVMMTEgOC43NUwxMC4yNSA4TDguNzUgOEw4IDguNzVMOCA5TDYuNSA5TDYuNSAzTDggM0w4IDMuMjVMOC43NSA0TDEwLjI1IDRMMTEgMy4yNUwxMSAxLjc1TDEwLjI1IDFMOC43NSAxTDggMS43NVoiLz48L3N2Zz4=)
   static const IconData branchFilled12 = IconData(

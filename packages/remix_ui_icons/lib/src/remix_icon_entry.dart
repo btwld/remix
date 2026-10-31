@@ -20,6 +20,7 @@ final class RemixIconEntry {
     required this.tags,
     required this.aliases,
     required this.requiresLabel,
+    required this.usage,
     required this.since,
   });
 
@@ -46,9 +47,15 @@ final class RemixIconEntry {
   /// Deprecated `RemixIcons` names that resolve to this exact glyph.
   final List<String> aliases;
 
-  /// Whether this glyph must be shown with a visible text label at every
-  /// size. A tooltip or semantic label is not a substitute.
+  /// Whether this glyph must be shown with a visible text label. A tooltip
+  /// or semantic label is not a substitute. The design contract sets this
+  /// per family and master: Warning everywhere, the Mono Star, Rounded
+  /// Branch, and some concepts only at their 12 px master.
   final bool requiresLabel;
+
+  /// The design contract's supported-use notes for this glyph: why it needs
+  /// a label, where a contextual label is recommended, and other limits.
+  final List<String> usage;
 
   /// The package version that introduced the concept.
   final String since;

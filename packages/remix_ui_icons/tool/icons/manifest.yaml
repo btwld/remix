@@ -60,6 +60,12 @@ concepts:
     tags: [find, lookup]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [mono]
+        kind: label-contextual
+        note: "Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder."
+        source: mono/source/contract.py
+        quote: "Label Search explicitly beside crop, frame, or view tools; the viewfinder metaphor is not recognition-tested."
   grid:
     name: grid
     label: "Grid"
@@ -102,6 +108,12 @@ concepts:
     tags: [external, outbound]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [outline]
+        kind: label-contextual
+        note: "Opens another destination; keep a visible action label."
+        source: outline/catalog/icons.json
+        quote: "Open another destination. Keep a visible action label."
   chevron-left:
     name: chevronLeft
     label: "Chevron left"
@@ -137,6 +149,12 @@ concepts:
     tags: [add, new, create]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [mono]
+        kind: note
+        note: "Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds."
+        source: mono/source/contract.py
+        quote: "Mono plus keeps its tighter inset. Align mixed-family toolbars by control bounds, not by changing the drawing."
   minus:
     name: minus
     label: "Minus"
@@ -242,6 +260,19 @@ concepts:
     tags: [url, chain]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [rounded]
+        masters: [12]
+        kind: label-required
+        note: "Requires a visible text label at 12 px."
+        source: rounded/README.md
+        quote: "Branch and 12 px Link should keep a visible label"
+      - families: [mono]
+        masters: [12]
+        kind: label-required
+        note: "Requires a visible text label at 12 px."
+        source: mono/source/contract.py
+        quote: "Keep visible labels for 12 px Link and Branch; native-size recognition is not established."
   bookmark:
     name: bookmark
     label: "Bookmark"
@@ -255,8 +286,13 @@ concepts:
     families: [outline, rounded, mono]
     tags: [favorite, rating]
     rtl: false
-    requiresLabel: [mono]
     since: 1.0.0-beta.1
+    usage:
+      - families: [mono]
+        kind: label-required
+        note: "Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone."
+        source: mono/source/contract.py
+        quote: "Give the CAD-regular star a Favorite label; recognition as Favorite is not established by geometry."
   calendar:
     name: calendar
     label: "Calendar"
@@ -291,8 +327,13 @@ concepts:
     families: [outline, rounded, mono]
     tags: [caution, attention]
     rtl: false
-    requiresLabel: [outline, rounded, mono]
     since: 1.0.0-beta.1
+    usage:
+      - families: [outline, rounded, mono]
+        kind: label-required
+        note: "Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute."
+        source: README.md
+        quote: "Warning requires a visible text label at every native size (12, 16, and 24) and both appearances (outline and filled), in every family, including scaled uses of those masters."
   info:
     name: info
     label: "Info"
@@ -307,6 +348,19 @@ concepts:
     tags: [question, support]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [outline]
+        masters: [12]
+        kind: label-required
+        note: "Requires a visible text label at 12 px."
+        source: outline/catalog/icons.json
+        quote: "Visible label required at 12 px; contextual label recommended at other sizes."
+      - families: [outline]
+        masters: [24, 16]
+        kind: label-contextual
+        note: "A contextual label is recommended."
+        source: outline/catalog/icons.json
+        quote: "Visible label required at 12 px; contextual label recommended at other sizes."
   lock:
     name: lock
     label: "Lock"
@@ -342,6 +396,30 @@ concepts:
     tags: [workflow, fork]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [outline]
+        masters: [12]
+        kind: label-required
+        note: "Requires a visible text label at 12 px."
+        source: outline/catalog/icons.json
+        quote: "Visible label required at 12 px; contextual label recommended at other sizes."
+      - families: [mono]
+        masters: [12]
+        kind: label-required
+        note: "Requires a visible text label at 12 px."
+        source: mono/source/contract.py
+        quote: "Keep visible labels for 12 px Link and Branch; native-size recognition is not established."
+      - families: [outline]
+        masters: [24, 16]
+        kind: label-contextual
+        note: "A contextual label is recommended."
+        source: outline/catalog/icons.json
+        quote: "Visible label required at 12 px; contextual label recommended at other sizes."
+      - families: [rounded]
+        kind: label-required
+        note: "Requires a visible text label at every size."
+        source: rounded/README.md
+        quote: "Branch and 12 px Link should keep a visible label"
   chart:
     name: chart
     label: "Chart"
@@ -370,6 +448,19 @@ concepts:
     tags: [target, region]
     rtl: false
     since: 1.0.0-beta.1
+    usage:
+      - families: [outline]
+        masters: [12]
+        kind: label-required
+        note: "Requires a visible text label at 12 px."
+        source: outline/catalog/icons.json
+        quote: "Visible label required at 12 px; contextual label recommended at other sizes."
+      - families: [outline]
+        masters: [24, 16]
+        kind: label-contextual
+        note: "A contextual label is recommended."
+        source: outline/catalog/icons.json
+        quote: "Visible label required at 12 px; contextual label recommended at other sizes."
 # Every remix_ui_icons 0.1.x name. `exact` names stay on RemixIcons as
 # @Deprecated aliases until 2.0.0 (or remain canonical when the name is
 # unchanged); `partial` and `removed` names are gone in 1.0.0 and appear

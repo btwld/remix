@@ -47,17 +47,51 @@ void main() {
     }
   });
 
-  test('flags the glyphs that need a visible label', () {
+  test('flags the glyphs that need a visible label, per family and master', () {
+    String key(RemixIconEntry entry) =>
+        '${entry.family.name}.${entry.concept}@${entry.master}';
     final labelled = {
       for (final entry in remixIconEntries)
-        if (entry.requiresLabel) '${entry.family.name}.${entry.concept}',
+        if (entry.requiresLabel) key(entry),
     };
     expect(labelled, {
-      'outline.warning',
-      'rounded.warning',
-      'mono.warning',
-      'mono.star',
+      for (final family in ['outline', 'rounded', 'mono'])
+        for (final master in [12, 16, 24]) '$family.warning@$master',
+      for (final master in [12, 16, 24]) 'mono.star@$master',
+      for (final master in [12, 16, 24]) 'rounded.branch@$master',
+      'outline.help@12',
+      'outline.branch@12',
+      'outline.focus@12',
+      'rounded.link@12',
+      'mono.link@12',
+      'mono.branch@12',
     });
+    // A requirement covers both styles of a master, and always says why.
+    for (final entry in remixIconEntries.where(
+      (entry) => entry.requiresLabel,
+    )) {
+      expect(entry.usage, isNotEmpty, reason: key(entry));
+      expect(
+        remixIconEntries.where(
+          (other) => key(other) == key(entry) && !other.requiresLabel,
+        ),
+        isEmpty,
+      );
+    }
+  });
+
+  test('carries contextual guidance that is not a hard requirement', () {
+    final search = remixIconEntries.singleWhere(
+      (entry) => entry.family == RemixIconFamily.mono && entry.name == 'search',
+    );
+    expect(search.requiresLabel, isFalse);
+    expect(search.usage.single, contains('crop, frame, or view tools'));
+    final help = remixIconEntries.singleWhere(
+      (entry) =>
+          entry.family == RemixIconFamily.outline && entry.name == 'help',
+    );
+    expect(help.requiresLabel, isFalse);
+    expect(help.usage.single, contains('contextual label'));
   });
 
   test('records the deprecated aliases on the glyph they render', () {

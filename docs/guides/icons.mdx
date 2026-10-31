@@ -74,10 +74,21 @@ Widget searchIcon(double size) =>
 
 ## Labels and direction
 
-Warning, in every family and style, needs a visible text label at every size.
-A tooltip or semantic label is not a substitute. The Mono Star reads as a
-favorite only with its label, so it needs one too. Their constants say so in
-their documentation.
+Some glyphs are recognized reliably only with a visible text label. The rules
+come from the Vector UI design contract and depend on the family and master:
+
+| Glyphs | Visible text label |
+| --- | --- |
+| Warning, every family and style | Required at every size. A tooltip or semantic label is not a substitute. |
+| Mono Star | Required at every size: the CAD-regular star reads as Favorite only with its label. |
+| Rounded Branch | Required at every size. |
+| Outline Help, Branch, Focus | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
+| Rounded Link; Mono Link and Branch | Required at 12 px. |
+| Mono Search | Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder. |
+| Outline Arrow up-right | Keep a visible action label: it opens another destination. |
+
+Each constant's documentation states its rule, and the index below reports it
+as `requiresLabel` and `usage`.
 
 No glyph mirrors in right-to-left layouts. When direction carries meaning,
 choose the left or right glyph yourself.
@@ -85,9 +96,9 @@ choose the left or right glyph yourself.
 ## Catalogs
 
 `package:remix_ui_icons/icons_index.dart` lists every glyph with its family,
-style, master, tags, and whether it needs a label. It refers to every glyph,
-so importing it keeps the whole font: use it in galleries and tests, not in
-application code.
+style, master, tags, whether it needs a label, and the contract's usage notes.
+It refers to every glyph, so importing it keeps the whole font: use it in
+galleries and tests, not in application code.
 
 ```dart
 import 'package:remix_ui_icons/icons_index.dart';

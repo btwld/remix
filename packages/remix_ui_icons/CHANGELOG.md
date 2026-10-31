@@ -56,8 +56,12 @@ replacements, until 2.0.0:
 - `package:remix_ui_icons/sized.dart` (opt-in) adds `RemixIconSet` and the
   `OutlineIconSets`, `RoundedIconSets`, and `MonoIconSets` constants, whose
   `at(size)` picks the master for a size at runtime.
-- Every constant's documentation shows its drawing, and Warning (every family)
-  and the Mono Star note that they need a visible text label.
+- Every constant's documentation shows its drawing and the design contract's
+  usage notes. Labels are required per family and master: Warning everywhere,
+  the Mono Star and Rounded Branch at every size, and Outline Help, Branch,
+  and Focus, Rounded Link, and Mono Link and Branch at 12 px. Mono Search
+  carries contextual guidance. `RemixIconEntry` reports them as
+  `requiresLabel` and `usage`.
 
 ## 0.1.0
 

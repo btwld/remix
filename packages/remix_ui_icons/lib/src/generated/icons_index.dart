@@ -22,6 +22,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -35,6 +36,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -48,6 +50,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -61,6 +64,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -74,6 +78,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -87,6 +92,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -100,6 +106,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hamburger', 'navigation'],
     aliases: ['hamburgerMenu'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -113,6 +120,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hamburger', 'navigation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -126,6 +134,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hamburger', 'navigation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -139,6 +148,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hamburger', 'navigation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -152,6 +162,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hamburger', 'navigation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -165,6 +176,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hamburger', 'navigation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -178,6 +190,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['overflow', 'ellipsis'],
     aliases: ['dotsHorizontal'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -191,6 +204,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['overflow', 'ellipsis'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -204,6 +218,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['overflow', 'ellipsis'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -217,6 +232,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['overflow', 'ellipsis'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -230,6 +246,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['overflow', 'ellipsis'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -243,6 +260,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['overflow', 'ellipsis'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -256,6 +274,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: ['magnifyingGlass'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -269,6 +288,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -282,6 +302,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -295,6 +316,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -308,6 +330,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -321,6 +344,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -334,6 +358,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['apps', 'tiles'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -347,6 +372,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['apps', 'tiles'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -360,6 +386,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['apps', 'tiles'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -373,6 +400,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['apps', 'tiles'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -386,6 +414,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['apps', 'tiles'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -399,6 +428,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['apps', 'tiles'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -412,6 +442,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -425,6 +456,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -438,6 +470,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -451,6 +484,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -464,6 +498,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -477,6 +512,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -490,6 +526,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -503,6 +540,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -516,6 +554,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -529,6 +568,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -542,6 +582,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -555,6 +596,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -568,6 +610,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['up', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -581,6 +624,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['up', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -594,6 +638,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['up', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -607,6 +652,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['up', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -620,6 +666,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['up', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -633,6 +680,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['up', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -646,6 +694,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['down', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -659,6 +708,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['down', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -672,6 +722,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['down', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -685,6 +736,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['down', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -698,6 +750,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['down', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -711,6 +764,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['down', 'move'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -724,6 +778,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: ['arrowTopRight'],
     requiresLabel: false,
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -737,6 +792,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -750,6 +806,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -763,6 +820,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -776,6 +834,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -789,6 +848,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -802,6 +862,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -815,6 +876,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -828,6 +890,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -841,6 +904,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -854,6 +918,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -867,6 +932,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['previous', 'back'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -880,6 +946,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -893,6 +960,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -906,6 +974,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -919,6 +988,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -932,6 +1002,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -945,6 +1016,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -958,6 +1030,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['collapse', 'up'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -971,6 +1044,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['collapse', 'up'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -984,6 +1058,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['collapse', 'up'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -997,6 +1072,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['collapse', 'up'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1010,6 +1086,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['collapse', 'up'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1023,6 +1100,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['collapse', 'up'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1036,6 +1114,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['expand', 'down'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1049,6 +1128,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['expand', 'down'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1062,6 +1142,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['expand', 'down'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1075,6 +1156,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['expand', 'down'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1088,6 +1170,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['expand', 'down'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1101,6 +1184,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['expand', 'down'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1114,6 +1198,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1127,6 +1212,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1140,6 +1226,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1153,6 +1240,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1166,6 +1254,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1179,6 +1268,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1192,6 +1282,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['subtract', 'decrease'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1205,6 +1296,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['subtract', 'decrease'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1218,6 +1310,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['subtract', 'decrease'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1231,6 +1324,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['subtract', 'decrease'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1244,6 +1338,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['subtract', 'decrease'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1257,6 +1352,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['subtract', 'decrease'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1270,6 +1366,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['done', 'complete', 'success'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1283,6 +1380,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['done', 'complete', 'success'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1296,6 +1394,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['done', 'complete', 'success'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1309,6 +1408,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['done', 'complete', 'success'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1322,6 +1422,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['done', 'complete', 'success'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1335,6 +1436,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['done', 'complete', 'success'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1348,6 +1450,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dismiss', 'cancel'],
     aliases: ['cross1', 'cross2'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1361,6 +1464,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dismiss', 'cancel'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1374,6 +1478,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dismiss', 'cancel'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1387,6 +1492,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dismiss', 'cancel'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1400,6 +1506,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dismiss', 'cancel'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1413,6 +1520,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dismiss', 'cancel'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1426,6 +1534,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['pencil', 'modify'],
     aliases: ['pencil1', 'pencil2'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1439,6 +1548,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['pencil', 'modify'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1452,6 +1562,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['pencil', 'modify'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1465,6 +1576,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['pencil', 'modify'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1478,6 +1590,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['pencil', 'modify'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1491,6 +1604,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['pencil', 'modify'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1504,6 +1618,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['duplicate', 'clipboard'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1517,6 +1632,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['duplicate', 'clipboard'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1530,6 +1646,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['duplicate', 'clipboard'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1543,6 +1660,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['duplicate', 'clipboard'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1556,6 +1674,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['duplicate', 'clipboard'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1569,6 +1688,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['duplicate', 'clipboard'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1582,6 +1702,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['delete', 'remove'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1595,6 +1716,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['delete', 'remove'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1608,6 +1730,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['delete', 'remove'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1621,6 +1744,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['delete', 'remove'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1634,6 +1758,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['delete', 'remove'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1647,6 +1772,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['delete', 'remove'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1660,6 +1786,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reload', 'update'],
     aliases: ['reload'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1673,6 +1800,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reload', 'update'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1686,6 +1814,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reload', 'update'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1699,6 +1828,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reload', 'update'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1712,6 +1842,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reload', 'update'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1725,6 +1856,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reload', 'update'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1738,6 +1870,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['funnel', 'results'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1751,6 +1884,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['funnel', 'results'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1764,6 +1898,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['funnel', 'results'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1777,6 +1912,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['funnel', 'results'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1790,6 +1926,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['funnel', 'results'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1803,6 +1940,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['funnel', 'results'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1816,6 +1954,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: ['mixerHorizontal'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1829,6 +1968,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1842,6 +1982,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1855,6 +1996,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1868,6 +2010,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1881,6 +2024,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1894,6 +2038,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['import', 'send'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1907,6 +2052,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['import', 'send'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1920,6 +2066,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['import', 'send'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1933,6 +2080,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['import', 'send'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1946,6 +2094,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['import', 'send'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1959,6 +2108,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['import', 'send'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1972,6 +2122,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['export', 'receive'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1985,6 +2136,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['export', 'receive'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -1998,6 +2150,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['export', 'receive'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2011,6 +2164,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['export', 'receive'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2024,6 +2178,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['export', 'receive'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2037,6 +2192,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['export', 'receive'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2050,6 +2206,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['disk', 'commit'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2063,6 +2220,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['disk', 'commit'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2076,6 +2234,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['disk', 'commit'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2089,6 +2248,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['disk', 'commit'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2102,6 +2262,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['disk', 'commit'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2115,6 +2276,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['disk', 'commit'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2128,6 +2290,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2141,6 +2304,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2154,6 +2318,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2167,6 +2332,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2180,6 +2346,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2193,6 +2360,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2206,6 +2374,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['directory', 'organize'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2219,6 +2388,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['directory', 'organize'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2232,6 +2402,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['directory', 'organize'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2245,6 +2416,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['directory', 'organize'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2258,6 +2430,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['directory', 'organize'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2271,6 +2444,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['directory', 'organize'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2284,6 +2458,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: ['link1', 'link2'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2297,6 +2472,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2310,6 +2486,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2323,6 +2500,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2336,6 +2514,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2349,6 +2528,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2362,6 +2542,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reading', 'later'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2375,6 +2556,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reading', 'later'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2388,6 +2570,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reading', 'later'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2401,6 +2584,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reading', 'later'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2414,6 +2598,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reading', 'later'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2427,6 +2612,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['reading', 'later'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2440,6 +2626,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2453,6 +2640,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2466,6 +2654,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2479,6 +2668,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2492,6 +2682,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2505,6 +2696,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2518,6 +2710,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2531,6 +2724,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2544,6 +2738,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2557,6 +2752,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2570,6 +2766,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2583,6 +2780,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2596,6 +2794,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: ['person'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2609,6 +2808,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2622,6 +2822,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2635,6 +2836,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2648,6 +2850,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2661,6 +2864,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2674,6 +2878,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['message', 'conversation'],
     aliases: ['chatBubble'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2687,6 +2892,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['message', 'conversation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2700,6 +2906,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['message', 'conversation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2713,6 +2920,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['message', 'conversation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2726,6 +2934,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['message', 'conversation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2739,6 +2948,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['message', 'conversation'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2752,6 +2962,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['notification', 'alert'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2765,6 +2976,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['notification', 'alert'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2778,6 +2990,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['notification', 'alert'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2791,6 +3004,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['notification', 'alert'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2804,6 +3018,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['notification', 'alert'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2817,6 +3032,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['notification', 'alert'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2830,6 +3046,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: ['exclamationTriangle'],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2843,6 +3062,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2856,6 +3078,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2869,6 +3094,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2882,6 +3110,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2895,6 +3126,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2908,6 +3142,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['information', 'about'],
     aliases: ['infoCircled'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2921,6 +3156,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['information', 'about'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2934,6 +3170,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['information', 'about'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2947,6 +3184,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['information', 'about'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2960,6 +3198,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['information', 'about'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2973,6 +3212,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['information', 'about'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2986,6 +3226,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['question', 'support'],
     aliases: ['questionMarkCircled'],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -2999,6 +3240,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['question', 'support'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3012,6 +3254,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['question', 'support'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3025,6 +3268,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['question', 'support'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3037,7 +3281,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.help12,
     tags: ['question', 'support'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3050,7 +3295,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.helpFilled12,
     tags: ['question', 'support'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3064,6 +3310,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['secure', 'private'],
     aliases: ['lockClosed'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3077,6 +3324,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['secure', 'private'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3090,6 +3338,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['secure', 'private'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3103,6 +3352,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['secure', 'private'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3116,6 +3366,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['secure', 'private'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3129,6 +3380,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['secure', 'private'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3142,6 +3394,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['protection', 'policy'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3155,6 +3408,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['protection', 'policy'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3168,6 +3422,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['protection', 'policy'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3181,6 +3436,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['protection', 'policy'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3194,6 +3450,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['protection', 'policy'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3207,6 +3464,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['protection', 'policy'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3220,6 +3478,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'cog', 'preferences'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3233,6 +3492,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'cog', 'preferences'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3246,6 +3506,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'cog', 'preferences'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3259,6 +3520,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'cog', 'preferences'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3272,6 +3534,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'cog', 'preferences'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3285,6 +3548,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'cog', 'preferences'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3298,6 +3562,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['console', 'command'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3311,6 +3576,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['console', 'command'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3324,6 +3590,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['console', 'command'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3337,6 +3604,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['console', 'command'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3350,6 +3618,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['console', 'command'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3363,6 +3632,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['console', 'command'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3376,6 +3646,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3389,6 +3660,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3402,6 +3674,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3415,6 +3688,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3427,7 +3701,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.branch12,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3440,7 +3715,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.branchFilled12,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3454,6 +3730,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['analytics', 'metrics'],
     aliases: ['barChart'],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3467,6 +3744,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['analytics', 'metrics'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3480,6 +3758,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['analytics', 'metrics'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3493,6 +3772,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['analytics', 'metrics'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3506,6 +3786,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['analytics', 'metrics'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3519,6 +3800,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['analytics', 'metrics'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3532,6 +3814,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['run', 'start'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3545,6 +3828,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['run', 'start'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3558,6 +3842,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['run', 'start'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3571,6 +3856,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['run', 'start'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3584,6 +3870,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['run', 'start'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3597,6 +3884,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['run', 'start'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3610,6 +3898,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hold', 'wait'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3623,6 +3912,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hold', 'wait'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3636,6 +3926,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hold', 'wait'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3649,6 +3940,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hold', 'wait'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3662,6 +3954,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hold', 'wait'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3675,6 +3968,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['hold', 'wait'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3688,6 +3982,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['target', 'region'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3701,6 +3996,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['target', 'region'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3714,6 +4010,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['target', 'region'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3727,6 +4024,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['target', 'region'],
     aliases: [],
     requiresLabel: false,
+    usage: ['A contextual label is recommended.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3739,7 +4037,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.focus12,
     tags: ['target', 'region'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3752,7 +4051,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.focusFilled12,
     tags: ['target', 'region'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3766,6 +4066,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3779,6 +4080,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3792,6 +4094,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3805,6 +4108,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3818,6 +4122,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3831,6 +4136,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3844,6 +4150,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3857,6 +4164,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3870,6 +4178,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3883,6 +4192,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3896,6 +4206,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3909,6 +4220,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3922,6 +4234,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3935,6 +4248,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3948,6 +4262,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3961,6 +4276,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3974,6 +4290,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -3987,6 +4304,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4000,6 +4318,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4013,6 +4332,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4026,6 +4346,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4039,6 +4360,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4052,6 +4374,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4065,6 +4388,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4078,6 +4402,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4091,6 +4416,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4104,6 +4430,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4117,6 +4444,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4130,6 +4458,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4143,6 +4472,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4156,6 +4486,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4169,6 +4500,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4182,6 +4514,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4195,6 +4528,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4208,6 +4542,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4221,6 +4556,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4234,6 +4570,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4247,6 +4584,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4260,6 +4598,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4273,6 +4612,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4285,7 +4625,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.link12,
     tags: ['url', 'chain'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4298,7 +4639,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.linkFilled12,
     tags: ['url', 'chain'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4312,6 +4654,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4325,6 +4668,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4338,6 +4682,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4351,6 +4696,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4364,6 +4710,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4377,6 +4724,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4390,6 +4738,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4403,6 +4752,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4416,6 +4766,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4429,6 +4780,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4442,6 +4794,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4455,6 +4808,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4468,6 +4822,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4481,6 +4836,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4494,6 +4850,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4507,6 +4864,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4520,6 +4878,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4533,6 +4892,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4546,6 +4906,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4559,6 +4922,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4572,6 +4938,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4585,6 +4954,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4598,6 +4970,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4611,6 +4986,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4623,7 +5001,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.branch,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at every size.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4636,7 +5015,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.branchFilled,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at every size.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4649,7 +5029,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.branch16,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at every size.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4662,7 +5043,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.branchFilled16,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at every size.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4675,7 +5057,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.branch12,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at every size.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4688,7 +5071,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.branchFilled12,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at every size.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4702,6 +5086,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4715,6 +5100,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4728,6 +5114,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4741,6 +5128,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4754,6 +5142,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4767,6 +5156,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dashboard', 'main'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4780,6 +5170,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4793,6 +5186,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4806,6 +5202,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4819,6 +5218,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4832,6 +5234,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4845,6 +5250,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['find', 'lookup'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4858,6 +5266,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4871,6 +5280,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4884,6 +5294,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4897,6 +5308,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4910,6 +5322,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4923,6 +5336,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['next', 'forward'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4936,6 +5350,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4949,6 +5366,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4962,6 +5382,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4975,6 +5398,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -4988,6 +5414,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5001,6 +5430,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['add', 'new', 'create'],
     aliases: [],
     requiresLabel: false,
+    usage: [
+      'Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5014,6 +5446,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5027,6 +5460,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5040,6 +5474,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5053,6 +5488,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5066,6 +5502,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5079,6 +5516,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['settings', 'adjust', 'controls'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5092,6 +5530,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5105,6 +5544,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5118,6 +5558,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5131,6 +5572,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5144,6 +5586,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5157,6 +5600,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['document', 'page'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5170,6 +5614,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5183,6 +5628,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5196,6 +5642,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5209,6 +5656,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['url', 'chain'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5221,7 +5669,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: MonoIcons.link12,
     tags: ['url', 'chain'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5234,7 +5683,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: MonoIcons.linkFilled12,
     tags: ['url', 'chain'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5248,6 +5698,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5261,6 +5714,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5274,6 +5730,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5287,6 +5746,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5300,6 +5762,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5313,6 +5778,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['favorite', 'rating'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5326,6 +5794,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5339,6 +5808,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5352,6 +5822,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5365,6 +5836,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5378,6 +5850,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5391,6 +5864,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['date', 'schedule'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5404,6 +5878,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5417,6 +5892,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5430,6 +5906,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5443,6 +5920,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5456,6 +5934,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5469,6 +5948,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['person', 'account'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5482,6 +5962,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5495,6 +5978,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5508,6 +5994,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5521,6 +6010,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5534,6 +6026,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5547,6 +6042,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['caution', 'attention'],
     aliases: [],
     requiresLabel: true,
+    usage: [
+      'Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5560,6 +6058,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5573,6 +6072,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5586,6 +6086,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5599,6 +6100,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['workflow', 'fork'],
     aliases: [],
     requiresLabel: false,
+    usage: [],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5611,7 +6113,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: MonoIcons.branch12,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -5624,7 +6127,8 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: MonoIcons.branchFilled12,
     tags: ['workflow', 'fork'],
     aliases: [],
-    requiresLabel: false,
+    requiresLabel: true,
+    usage: ['Requires a visible text label at 12 px.'],
     since: '1.0.0-beta.1',
   ),
 ];
