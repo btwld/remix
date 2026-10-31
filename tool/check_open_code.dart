@@ -19,8 +19,10 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
+import '../packages/remix_cli/lib/src/icon_registry.dart';
 import 'compile_registry_consumer.dart';
 
 const _fixtureAppFiles = <String>[
@@ -199,14 +201,13 @@ const _fortalPreset = _PresetContract(
 /// that ships more, as Vanilla ships its fonts, extends this in its own
 /// [_PresetContract].
 ///
-/// `registry/icons.yaml` renders the icons remix_ui_icons does not draw from
-/// Lucide, so the default `remix` icon library installs both packages.
+/// `remix_ui_icons` stands for the icon packages, which come from the
+/// `icons.yaml` of the registry under test; see [iconPackagesFor].
 const _baseRuntimeDependencies = <String>[
   'remix',
   'mix_annotations',
   'mix_chart',
   'remix_ui_icons',
-  'lucide_flutter',
 ];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
 const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
@@ -218,15 +219,95 @@ const _baseImportPackages = <String>[
   'mix_annotations',
   'mix_chart',
   'remix_ui_icons',
-  'lucide_flutter',
 ];
 
-/// The packages each `iconLibrary` in `registry/icons.yaml` installs: its own,
-/// and the fallback library's for the icons it does not draw.
-const _iconPackages = {
-  'remix': ['remix_ui_icons', 'lucide_flutter'],
-  'lucide': ['lucide_flutter'],
-};
+/// The `iconLibrary` values a fresh app may select.
+const _iconLibraries = {'remix', 'lucide'};
+
+/// The official registry the published CLI reads.
+const _officialRepository = 'btwld/remix';
+const _officialRegistryPath = 'registry';
+
+/// The published ref a fresh app's CLI reads, or null for this checkout's
+/// `registry/`.
+///
+/// Checkout validation compiles the checkout CLI against this tree's
+/// `registry/`: the candidate registry. A hosted CLI, and the release smoke
+/// that gates publishing a CLI (`REMIX_REGISTRY_RELEASE_SMOKE`), read the
+/// promoted `registry-stable` the way an application does. The registry
+/// workflow's smoke names a commit in `REMIX_REGISTRY_RELEASE_REF`. A
+/// candidate and the stable registry can disagree on icon packages and
+/// floors, because the candidate may need releases the stable one predates,
+/// so the install contract follows whichever registry is under test.
+String? publishedRegistryRef({
+  required bool hostedCli,
+  required Map<String, String> environment,
+}) {
+  if (hostedCli || environment['REMIX_REGISTRY_RELEASE_SMOKE'] == '1') {
+    return 'registry-stable';
+  }
+  return environment['REMIX_REGISTRY_RELEASE_REF'];
+}
+
+/// The packages a full install of a registry adds for [iconLibrary]'s icons:
+/// that library's package, and the package of every fallback library that
+/// renders an icon [iconLibrary] does not draw. Schema 1 tables have no
+/// fallbacks, so they add exactly one package.
+List<String> iconPackagesFor(String iconsYaml, String iconLibrary) {
+  final table = IconRegistry.parse(iconsYaml);
+  final libraries = {
+    iconLibrary,
+    for (final canonical in table.icons.keys)
+      table.resolve(canonical, iconLibrary).library,
+  };
+  return [
+    for (final name in libraries) table.library(name).dependencies.keys.single,
+  ];
+}
+
+/// Whether a checkout install resolves `remix_ui_icons` from this tree: only
+/// when the registry under test floors it at a version the checkout package
+/// satisfies. A candidate registry may require an unpublished release; the
+/// stable registry's older floor resolves the published one.
+bool iconsResolveFromCheckout(String iconsYaml, String checkoutVersion) {
+  final constraint = IconRegistry.parse(
+    iconsYaml,
+  ).library(defaultIconLibrary).dependencies['remix_ui_icons'];
+  return constraint != null &&
+      constraint.allows(Version.parse(checkoutVersion));
+}
+
+String _packageVersion(Directory repositoryRoot, String package) =>
+    (loadYaml(
+              File(
+                '${repositoryRoot.path}/packages/$package/pubspec.yaml',
+              ).readAsStringSync(),
+            )
+            as YamlMap)['version']
+        as String;
+
+Future<String> _registryIcons(Directory repositoryRoot, String? ref) async {
+  if (ref == null) {
+    return File(
+      '${repositoryRoot.path}/registry/icons.yaml',
+    ).readAsStringSync();
+  }
+  final client = HttpClient();
+  try {
+    final uri = Uri.https(
+      'raw.githubusercontent.com',
+      '/$_officialRepository/$ref/$_officialRegistryPath/icons.yaml',
+    );
+    final response = await (await client.getUrl(uri)).close();
+    final body = await response.transform(utf8.decoder).join();
+    if (response.statusCode != 200) {
+      throw HttpException('GET $uri returned ${response.statusCode}', uri: uri);
+    }
+    return body;
+  } finally {
+    client.close();
+  }
+}
 
 final class _PresetContract {
   const _PresetContract({
@@ -236,6 +317,7 @@ final class _PresetContract {
     this.generatedSnapshots = const {},
     this.requiredRuntimeDependencies = _baseRuntimeDependencies,
     this.allowedImportPackages = _baseImportPackages,
+    this.iconsFromCheckout = false,
   });
 
   final String name;
@@ -249,15 +331,21 @@ final class _PresetContract {
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
 
-  /// This contract with the icon packages [iconLibrary] installs.
-  _PresetContract withIconLibrary(String iconLibrary) {
-    if (iconLibrary == 'remix') return this;
-    final icons = _iconPackages[iconLibrary]!;
-    final all = {for (final packages in _iconPackages.values) ...packages};
+  /// Whether a checkout install resolves `remix_ui_icons` from this tree.
+  final bool iconsFromCheckout;
+
+  /// This contract for one registry's `icons.yaml` and the app's
+  /// `iconLibrary`: `remix_ui_icons` gives way to the icon packages that
+  /// registry installs.
+  _PresetContract forIcons(
+    String iconsYaml,
+    String iconLibrary, {
+    required String checkoutIconsVersion,
+  }) {
+    final icons = iconPackagesFor(iconsYaml, iconLibrary);
     List<String> swap(List<String> packages) => [
       for (final package in packages)
-        if (!all.contains(package)) package,
-      ...icons,
+        if (package == 'remix_ui_icons') ...icons else package,
     ];
     return _PresetContract(
       name: name,
@@ -266,6 +354,9 @@ final class _PresetContract {
       generatedSnapshots: generatedSnapshots,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
       allowedImportPackages: swap(allowedImportPackages),
+      iconsFromCheckout:
+          icons.contains('remix_ui_icons') &&
+          iconsResolveFromCheckout(iconsYaml, checkoutIconsVersion),
     );
   }
 
@@ -402,7 +493,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
       if (sawIconLibrary || index + 1 >= arguments.length) return null;
       sawIconLibrary = true;
       final selected = arguments[++index];
-      if (!_iconPackages.containsKey(selected)) return null;
+      if (!_iconLibraries.contains(selected)) return null;
       iconLibrary = selected;
       continue;
     }
@@ -459,10 +550,32 @@ Future<void> main(List<String> arguments) async {
   }
 
   final repositoryRoot = Directory.current.absolute;
+  final ref = publishedRegistryRef(
+    hostedCli: parsed.hostedCli,
+    environment: Platform.environment,
+  );
+  final String icons;
+  try {
+    icons = await _registryIcons(repositoryRoot, ref);
+  } on IOException catch (error) {
+    stderr.writeln(
+      'open-code check failed: could not read the '
+      '${ref ?? 'checkout'} registry\'s icons.yaml: $error',
+    );
+    exitCode = 1;
+    return;
+  }
+  stdout.writeln(
+    'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
+  );
   final failure = await _run(
     repositoryRoot,
     keep: parsed.keep,
-    preset: _presetByName(parsed.preset).withIconLibrary(parsed.iconLibrary),
+    preset: _presetByName(parsed.preset).forIcons(
+      icons,
+      parsed.iconLibrary,
+      checkoutIconsVersion: _packageVersion(repositoryRoot, 'remix_ui_icons'),
+    ),
     iconLibrary: parsed.iconLibrary,
     source: parsed.source,
     hostedCli: parsed.hostedCli,
@@ -1076,10 +1189,10 @@ Future<_Failure?> _checkIndependentItems({
 
 /// The checkout packages a preset's install resolves locally: Remix, its
 /// workspace primitive package `naked_ui`, the fonts package when the
-/// preset's theme depends on it, and the icon package when the preset's
-/// icon library is Remix's own. The registry floors those two at the
-/// checkout's versions, which may not be published yet; the hosted release
-/// check requires them from pub.dev.
+/// preset's theme depends on it, and `remix_ui_icons` when the registry under
+/// test floors it at the checkout's version, which may not be published yet
+/// ([iconsResolveFromCheckout]). The hosted release check requires every one
+/// of them from pub.dev.
 Map<String, Directory> _checkoutPackages(
   Directory remixSource,
   _PresetContract preset,
@@ -1088,7 +1201,7 @@ Map<String, Directory> _checkoutPackages(
   'naked_ui': Directory('${remixSource.parent.path}/naked_ui'),
   if (preset.requiredRuntimeDependencies.contains('remix_ui_fonts'))
     'remix_ui_fonts': Directory('${remixSource.parent.path}/remix_ui_fonts'),
-  if (preset.requiredRuntimeDependencies.contains('remix_ui_icons'))
+  if (preset.iconsFromCheckout)
     'remix_ui_icons': Directory('${remixSource.parent.path}/remix_ui_icons'),
 };
 
@@ -1794,9 +1907,35 @@ String? registryCoverageProblem(
 String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
     _verifyInstalledUi(app, _presetByName(preset))?.message;
 
-/// Returns the hosted runtime dependencies a preset's installed app declares.
+/// Returns the hosted runtime dependencies a preset's installed app declares
+/// before the registry under test names its icon packages.
 List<String> requiredRuntimeDependenciesForTest(String preset) =>
     _presetByName(preset).requiredRuntimeDependencies;
+
+/// The install contract for [preset] against one registry's [iconsYaml]:
+/// the runtime dependencies an installed app must declare, and the packages a
+/// checkout install resolves from this tree.
+({List<String> runtime, List<String> imports, Set<String> checkout})
+iconContractForTest(
+  String preset,
+  String iconsYaml, {
+  String iconLibrary = 'remix',
+  String checkoutIconsVersion = '1.0.0-beta.1',
+}) {
+  final contract = _presetByName(preset).forIcons(
+    iconsYaml,
+    iconLibrary,
+    checkoutIconsVersion: checkoutIconsVersion,
+  );
+  return (
+    runtime: contract.requiredRuntimeDependencies,
+    imports: contract.allowedImportPackages,
+    checkout: _checkoutPackages(
+      Directory('packages/remix'),
+      contract,
+    ).keys.toSet(),
+  );
+}
 
 /// Returns the expected installed UI inventory for focused regression tests.
 List<String> installedUiFilesForTest({String preset = 'vanilla'}) =>
