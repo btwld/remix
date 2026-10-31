@@ -14,6 +14,6 @@ rounded/generated/** linguist-generated=true
 rounded/docs/catalog/** linguist-generated=true
 rounded/catalog/exceptions.json linguist-generated=true
 
-technical/generated/** linguist-generated=true
-technical/proof/** linguist-generated=true
-technical/catalog/*.json linguist-generated=true
+mono/generated/** linguist-generated=true
+mono/proof/** linguist-generated=true
+mono/catalog/*.json linguist-generated=true
