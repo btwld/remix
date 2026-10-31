@@ -236,9 +236,9 @@ class _AccentSwatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The ring belongs to the panel's theme: gray-12 once checked, accent-9
-    // while focused, the later rule winning as in theme-panel.css:36-47. Read
-    // inside the accent scope below, accent-9 would be the swatch's own color.
+    // The ring belongs to the panel's theme: gray-12 once selected, focus-8
+    // while focused, taking precedence over selection like shared controls.
+    // Resolve outside the accent scope so focus follows the panel's theme.
     final width = MixScope.tokenOf(UiTokens.focusRingWidth, context);
     final offset = MixScope.tokenOf(UiTokens.focusRingOffset, context);
     ToggleStyler ring(ColorToken color) =>
@@ -257,7 +257,7 @@ class _AccentSwatch extends StatelessWidget {
                   .iconColor(UiTokens.accentContrast())
                   .merge(ring(UiTokens.gray12)),
             )
-            .onFocusVisible(ring(UiTokens.accent9)),
+            .onFocusVisible(ring(UiTokens.focus8)),
       ),
     );
   }

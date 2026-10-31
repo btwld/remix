@@ -156,9 +156,9 @@ void main() {
   group('accent swatch', () {
     // A swatch draws
     //   outline-offset: 2px; outline-width: 2px;
-    // and nothing until it is :checked (outline-color: gray-12) or
-    // :focus-visible (outline-color: accent-9). The later rule wins, so a
-    // focused swatch rings in accent-9 whether or not it is checked.
+    // and nothing until it is selected (gray-12) or focus-visible (focus-8).
+    // Focus uses the panel's shared control ring color and takes precedence
+    // over selection, regardless of the swatch's own accent.
     late GlobalKey panel;
 
     /// Pumps the panel the way the dashboard hosts it: the popover in a 400px
@@ -169,6 +169,8 @@ void main() {
     Future<void> pumpPanel(
       WidgetTester tester, {
       Map<SpaceToken, double>? ringTokens,
+      Map<ColorToken, Color>? colors,
+      FortalThemeMode mode = FortalThemeMode.light,
       Axis scroll = Axis.vertical,
     }) async {
       tester.view.physicalSize = const Size(800, 1200);
@@ -176,21 +178,25 @@ void main() {
       addTearDown(tester.view.reset);
       panel = GlobalKey();
       await tester.pumpRemixApp(
-        RepaintBoundary(
-          key: panel,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              width: 400,
-              height: scroll == Axis.vertical ? 300 : null,
-              child: MixScope.inherit(
-                spaces: ringTokens,
-                child: FortalDashboardThemeScope(
-                  settings: const FortalThemeSettings(),
-                  onChanged: (_) {},
-                  child: SingleChildScrollView(
-                    scrollDirection: scroll,
-                    child: const FortalThemePanel(),
+        FortalTheme(
+          mode: mode,
+          child: RepaintBoundary(
+            key: panel,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                width: 400,
+                height: scroll == Axis.vertical ? 300 : null,
+                child: MixScope.inherit(
+                  spaces: ringTokens,
+                  colors: colors,
+                  child: FortalDashboardThemeScope(
+                    settings: const FortalThemeSettings(),
+                    onChanged: (_) {},
+                    child: SingleChildScrollView(
+                      scrollDirection: scroll,
+                      child: const FortalThemePanel(),
+                    ),
                   ),
                 ),
               ),
@@ -253,7 +259,9 @@ void main() {
       _expectNear(at(3), panelToken(tester, FortalTokens.gray12));
     });
 
-    testWidgets('a focused swatch rings in the panel accent', (tester) async {
+    testWidgets('a focused swatch uses the panel shared focus color', (
+      tester,
+    ) async {
       await pumpPanel(tester);
       focusSwatch(tester, 'mangue');
       await tester.pump();
@@ -261,8 +269,36 @@ void main() {
       final at = await probe(tester, 'mangue');
 
       expect(at(1), at(5));
-      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
+      _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
     });
+
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      for (final accent in ['mangue', 'calcadao']) {
+        testWidgets('a focused $accent swatch follows the shared ring override '
+            'in ${mode.name} mode', (tester) async {
+          const focusColor = Color(0xFFFF00FF);
+          const accentColor = Color(0xFF00FFFF);
+          await pumpPanel(
+            tester,
+            mode: mode,
+            colors: {
+              FortalTokens.focus8: focusColor,
+              FortalTokens.accent9: accentColor,
+            },
+          );
+          focusSwatch(tester, accent);
+          await tester.pump();
+
+          final context = tester.element(find.byType(FortalThemePanel));
+          final sharedRing = fortalFocusOutline().resolve(context);
+          expect(sharedRing.outline.color, focusColor);
+          expect(panelToken(tester, FortalTokens.accent9), accentColor);
+          final at = await probe(tester, accent);
+          expect(at(1), at(5));
+          _expectNear(at(3), focusColor);
+        });
+      }
+    }
 
     testWidgets('focus stays visible on the selected swatch', (tester) async {
       await pumpPanel(tester);
@@ -271,7 +307,7 @@ void main() {
 
       final at = await probe(tester, 'calcadao');
 
-      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
+      _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
     });
 
     testWidgets('the ring shows on the first column of the panel', (
@@ -283,7 +319,7 @@ void main() {
 
       final at = await probe(tester, 'calcadao', left: true);
 
-      _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
+      _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
     });
 
     testWidgets('the ring does not change the swatch layout', (tester) async {
@@ -315,8 +351,8 @@ void main() {
 
       expect(at(1.5), at(7));
       expect(at(2.5), at(7));
-      _expectNear(at(3.5), panelToken(tester, FortalTokens.accent9));
-      _expectNear(at(5.5), panelToken(tester, FortalTokens.accent9));
+      _expectNear(at(3.5), panelToken(tester, FortalTokens.focus8));
+      _expectNear(at(5.5), panelToken(tester, FortalTokens.focus8));
       expect(at(6.5), at(7));
     });
 
