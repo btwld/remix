@@ -130,16 +130,14 @@ ToggleGroupItemStyler _content(Color foreground) =>
 
 /// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// A *foreground* decoration, because `ToggleGroupItemSpec` has no
-/// `containerEffects` layer to paint an outline into. It is stroked inside
-/// the option rather than outside: the strip clips its options, and an
-/// outside ring on the first or last option would be cut off at its edge.
+/// An outline rather than a border, so focusing an option takes no layout
+/// space. It is drawn inside the option rather than outside: the strip clips
+/// its options, and an outside ring on the first or last option would be cut
+/// off at its edge.
 ToggleGroupItemStyler _focusVisibleStyle() =>
-    ToggleGroupItemStyler().foregroundDecoration(
-      playgroundFocusRingDecoration(radius: Radius.zero, inset: true),
-    );
+    ToggleGroupItemStyler().containerEffects(playgroundFocusRing(inset: true));
 
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
-    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .containerEffects(.outline(.style(.none)))
     .wrap(.opacity(PlaygroundTokens.disabledOpacity));

@@ -60,20 +60,19 @@ ToggleGroupStyler uiToggleGroupStyle({
         .onPressed(ToggleGroupItemStyler().color(UiTokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
-              .container(
-                FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
-              )
               .color(selectedColor)
               .labelColor(selectedForeground)
               .iconColor(selectedForeground)
               .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
-        .onFocusVisible(ToggleGroupItemStyler().uiFocusRing())
+        .onFocusVisible(
+          ToggleGroupItemStyler().containerEffects(uiFocusOutline()),
+        )
         .onDisabled(
           ToggleGroupItemStyler()
-              .container(
-                FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
+              .containerEffects(
+                RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
               )
               .color(UiTokens.grayA3())
               .labelColor(UiTokens.gray8())

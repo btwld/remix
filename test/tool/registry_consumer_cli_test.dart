@@ -43,6 +43,7 @@ void main() {
       required Directory app,
       required bool compiled,
       String? registryRoot,
+      bool ownershipProbe = false,
     }) => Process.run(
       Platform.resolvedExecutable,
       [
@@ -58,10 +59,12 @@ void main() {
       environment: {
         for (final entry in Platform.environment.entries)
           if (entry.key != 'REMIX_REGISTRY_RELEASE_REF' &&
-              entry.key != 'REMIX_REGISTRY_ROOT')
+              entry.key != 'REMIX_REGISTRY_ROOT' &&
+              entry.key != 'REMIX_REGISTRY_OWNERSHIP_PROBE')
             entry.key: entry.value,
         if (compiled || registryRoot != null)
           'REMIX_REGISTRY_ROOT': registryRoot ?? '${root.path}/registry',
+        if (ownershipProbe) 'REMIX_REGISTRY_OWNERSHIP_PROBE': '1',
       },
       includeParentEnvironment: false,
     );
@@ -169,6 +172,32 @@ void main() {
         outputs.add([result.stdout, result.stderr]);
       }
       expect(outputs[1], outputs[0]);
+    });
+
+    test('compiled ownership probe uses the explicit checkout root', () async {
+      final app = Directory('${sandbox.path}/ownership');
+      await _writeCliConsumer(app);
+      Future<ProcessResult> probe(List<String> arguments) =>
+          runCli(arguments, app: app, compiled: true, ownershipProbe: true);
+      final initialized = await probe(['init', '--prefix', 'Solo']);
+      expect(initialized.exitCode, 0, reason: initialized.stderr as String);
+      final registered = await probe([
+        'registry',
+        'add',
+        '@addon',
+        '--repository',
+        'fixture/addon',
+        '--ref',
+        'v1',
+      ]);
+      expect(registered.exitCode, 0, reason: registered.stderr as String);
+      final before = _cliConsumerFiles(app);
+      final preview = await probe(['add', '@addon/extra_button', '--dry-run']);
+      expect(preview.exitCode, 0, reason: preview.stderr as String);
+      expect(preview.stdout, contains('lib/ui/components/button.dart'));
+      expect(preview.stdout, contains('lib/ui/addons/extra_button.dart'));
+      expect(preview.stderr, isEmpty);
+      expect(_cliConsumerFiles(app), before);
     });
 
     test('compilation failure reports compiler diagnostics', () async {

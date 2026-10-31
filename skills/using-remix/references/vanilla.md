@@ -57,9 +57,12 @@ spacing (`s0_5` through `s16`, a 4px grid), sizes (`controlSm`/`controlMd`/`cont
   another in the dark.
 - `<Prefix>Shadow.xs` to `.lg`: the shadow scale, as `.box` for a
   styler's `shadows` or `.effects` for a `containerEffects` layer.
-- `<prefix>FocusRing()`, `<prefix>FocusRingDecoration()`, and
-  `<prefix>FocusBorder()`: the 3px `ring` band at half strength, and a
-  bordered control's outline turned `ring`.
+- `<prefix>FocusRing()` and `<prefix>FocusBorder()`: the 3px `ring` band at
+  half strength as a `RemixBoxEffectsMix`, and a bordered control's outline
+  turned `ring`. The ring goes in `containerEffects` (`triggerEffects` on an
+  accordion or disclosure, `trackEffects` on a switch), so it paints outside
+  the part without taking layout space. `inset: true` draws it inside, for a
+  part whose container clips it, such as a toggle group's option.
 
 ## Theme scope
 
@@ -92,10 +95,29 @@ families carry over.
   lands on the hover fill.
 - **Toggle** — on is `accent` with `accentForeground`; a ghost toggle hovers
   onto `muted` with `mutedForeground`. There is no selected border.
+- **Radio and Switch** — pass `label` for visible text. It is part of the
+  control's tap and focus target and gives its accessible name, and it is set
+  as a form label: `textSm` at medium weight in `foreground`, 12px from a
+  radio's circle and 8px from a switch's track. The focus ring wraps the circle
+  or track only. Without a `label`, give a `semanticLabel`.
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
   `filled` (the default) is a recessed pill list, `line` an underline.
   Pass the same variant to the bar and to each tab.
+- **Menu** — the standard trigger is a quiet label. To open a menu from a real
+  button, such as `<Prefix>IconButton.ghost`, pass
+  `RemixMenuTrigger.control(builder: ...)` and give the button the handle's
+  `focusNode` and `toggle` as its `focusNode` and `onPressed`; the button then
+  owns the look and accessible name, and `<Prefix>Menu` styles only the panel.
+  A `RemixMenuTrigger.builder` replaces the styled trigger, ring included, so
+  its content draws its own `onFocusVisible` ring, as the dashboard's account
+  row does with `RemixCard` and `<prefix>FocusRing()`.
+- **Popover** — `<Prefix>Popover` opens on a tap of its own child, which a
+  button with its own `onPressed` consumes. To open it from a real button, set
+  `openOnTap: false`, toggle a `MenuController` from the button, and pass one
+  `FocusNode` as the popover's `triggerFocusNode` and the button's `focusNode`.
+  Keep the controller and node in a `State` and dispose the node there. The
+  button is then the only tab stop and gets focus back when the popover closes.
 - **Toast** — style lives on the scope:
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)
@@ -126,3 +148,10 @@ names and stops compiling. Then rename `focusRing` to `ring` in your own code,
 replace `Tokens.radius` with a step (`radiusMd` for controls), and give a
 hand-built `ThemeData` the new required colors (`card`, `popover`, `input`,
 `ring`, and the `sidebar*` set), or start from `.light().copyWith(...)`.
+
+The same applies to the focus ring helper. A theme installed before the ring
+moved onto the effects slots also exports `<prefix>FocusRingDecoration()`,
+which the tab, toggle, toggle group, menu, and disclosure recipes used. The
+current theme drops it: those recipes draw the ring with `<prefix>FocusRing()`
+(`triggerEffects` on the accordion and disclosure), so reinstall them with the
+theme in one command, and replace the helper in your own code.

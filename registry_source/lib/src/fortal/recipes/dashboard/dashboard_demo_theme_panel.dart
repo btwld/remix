@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -31,9 +33,20 @@ class FortalThemePanel extends StatelessWidget {
       ),
     );
 
+    // A swatch ring reaches its offset plus its width past the swatch. The
+    // hosting scroll views clip at the panel's edge, so the panel insets its
+    // content by that much and grows by the same amount to stay 360 wide.
+    final ringReach = math.max(
+      0.0,
+      MixScope.tokenOf(FortalTokens.focusRingOffset, context) +
+          MixScope.tokenOf(FortalTokens.focusRingWidth, context),
+    );
+
     return Box(
       key: const ValueKey('theme-panel'),
-      style: BoxStyler().width(360),
+      style: BoxStyler()
+          .width(360 + 2 * ringReach)
+          .padding(.horizontal(ringReach)),
       child: ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(18),
         children: [
@@ -177,12 +190,6 @@ class _AccentSwatch extends StatelessWidget {
     required this.onPressed,
   });
 
-  static final _ring = ToggleStyler().border(
-    .color(FortalTokens.focus8())
-        .width(FortalTokens.focusRingWidth())
-        .strokeAlign(BorderSide.strokeAlignOutside),
-  );
-
   static final _style =
       ToggleStyler(
             container: FlexBoxStyler()
@@ -196,26 +203,32 @@ class _AccentSwatch extends StatelessWidget {
           .iconColor(const Color(0x00000000))
           .onHovered(ToggleStyler().color(FortalTokens.accent10()))
           .onPressed(ToggleStyler().color(FortalTokens.accent10()))
-          .onSelected(
-            ToggleStyler()
-                .iconColor(FortalTokens.accentContrast())
-                .merge(_ring),
-          )
-          .onFocusVisible(_ring);
+          .onSelected(ToggleStyler().iconColor(FortalTokens.accentContrast()));
 
   final FortalAccentColor accent;
   final bool selected;
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => FortalAccentScope(
-    accent: accent,
-    child: RemixToggle(
-      selected: selected,
-      onChanged: (_) => onPressed(),
-      icon: RemixIcons.check,
-      semanticLabel: '${enumLabel(accent)} accent',
-      style: _style,
-    ),
-  );
+  Widget build(BuildContext context) {
+    // The swatch changes its fill palette, while its ring belongs to the
+    // surrounding panel and must retain that scope's token overrides.
+    final outline = fortalFocusOutline().resolve(context);
+    final ring = ToggleStyler().containerEffects(
+      RemixBoxEffectsMix.create(
+        outline: Prop.value(outline.outline),
+        outlineOffset: Prop.value(outline.outlineOffset),
+      ),
+    );
+    return FortalAccentScope(
+      accent: accent,
+      child: RemixToggle(
+        selected: selected,
+        onChanged: (_) => onPressed(),
+        icon: RemixIcons.check,
+        semanticLabel: '${enumLabel(accent)} accent',
+        style: _style.onSelected(ring).onFocusVisible(ring),
+      ),
+    );
+  }
 }

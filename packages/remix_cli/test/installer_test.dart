@@ -249,6 +249,7 @@ registries:
       );
 
       expect(writer.paths, [
+        'remix.ownership.json',
         'lib/ui/theme/effects.dart',
         'lib/ui/theme/theme_data.dart',
         'lib/ui/theme/theme_scope.dart',

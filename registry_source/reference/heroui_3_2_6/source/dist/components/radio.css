@@ -1,0 +1,175 @@
+/* ==========================================================================
+   Base radio styles
+
+   Structure (explicit composition):
+     .radio                      → RadioField wrapper (column)
+       .radio__content            → RadioButton: the clickable row (control + label)
+         .radio__control
+         [data-slot="label"]
+       [data-slot="description"] → field-level sibling, below the row
+       [data-slot="field-error"]
+   ========================================================================== */
+
+.radio {
+  @apply flex flex-col items-start gap-1 outline-none no-highlight;
+
+  cursor: var(--cursor-interactive);
+
+  [data-slot="label"] {
+    @apply select-none;
+  }
+
+  .radio__content [data-slot="label"] {
+    cursor: var(--cursor-interactive);
+  }
+
+  /* Field-level help text (siblings of the button), indented to align under the label */
+  & > [data-slot="description"],
+  & > [data-slot="field-error"] {
+    @apply w-full min-w-0 cursor-default ps-7 text-xs text-wrap wrap-break-word text-muted select-none;
+  }
+
+  /* Disabled state */
+  &:disabled,
+  &[data-disabled="true"],
+  &[aria-disabled="true"] {
+    @apply status-disabled;
+
+    [data-slot="description"],
+    [data-slot="field-error"] {
+      @apply status-disabled;
+    }
+  }
+}
+
+/* Radio content — the clickable label (control + label text) */
+.radio__content {
+  @apply relative inline-flex cursor-[inherit] items-center gap-3 text-sm font-medium text-foreground outline-none select-none no-highlight;
+}
+
+/* ==========================================================================
+   Radio control (the circular button)
+   ========================================================================== */
+
+.radio__control {
+  @apply relative inline-flex size-4 shrink-0 items-center justify-center rounded-lg border [border-width:var(--border-width-field)] border-field-border bg-field shadow-field outline-none no-highlight;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    transform 100ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  cursor: var(--cursor-interactive);
+
+  /* Interactive states */
+  /* Focus */
+  .radio:has([data-slot="radio-content"][data-focus-visible="true"]) &,
+  .radio [data-slot="radio-content"][data-focus-visible="true"] & {
+    @apply status-focused;
+  }
+
+  /* Hover */
+  .radio:has([data-slot="radio-content"][data-hovered="true"]) &,
+  .radio [data-slot="radio-content"][data-hovered="true"] & {
+    @apply border-field-border-hover;
+  }
+
+  /* Hover - only when not selected */
+  .radio:has([data-slot="radio-content"][data-hovered="true"]):not([data-selected]):not(
+      :has(input:checked)
+    )
+    & {
+    .radio__indicator:empty::before {
+      @apply bg-field-hover;
+    }
+  }
+
+  /* Pressed */
+  .radio:has([data-slot="radio-content"][data-pressed="true"]) &,
+  .radio [data-slot="radio-content"][data-pressed="true"] & {
+    @apply scale-95;
+  }
+
+  /* Selection states */
+  /* Selected */
+  .radio[data-selected] &,
+  .radio:has([data-slot="radio-content"][aria-checked="true"]) &,
+  .radio:has(input:checked) & {
+    @apply border-transparent bg-accent;
+  }
+
+  /* Selected + Pressed */
+  .radio[data-selected]:has([data-slot="radio-content"][data-pressed="true"]) &,
+  .radio:has([data-slot="radio-content"][data-pressed="true"][aria-checked="true"]) &,
+  .radio:has(input:checked):has([data-slot="radio-content"][data-pressed="true"]) & {
+    @apply bg-accent-hover;
+  }
+
+  /* Validation states */
+  /* Invalid */
+  .radio[data-invalid="true"] &,
+  .radio[aria-invalid="true"] & {
+    @apply status-invalid-field;
+  }
+
+  /* Invalid + Selected */
+  .radio[data-invalid="true"][data-selected] &,
+  .radio[aria-invalid="true"][data-selected] &,
+  .radio[data-invalid="true"]:has(input:checked) &,
+  .radio[aria-invalid="true"]:has(input:checked) & {
+    @apply status-invalid-field;
+  }
+}
+
+/* ==========================================================================
+   Radio indicator (the inner dot)
+   ========================================================================== */
+
+.radio__indicator {
+  @apply absolute inset-0 flex items-center justify-center;
+
+  pointer-events: none;
+}
+
+/* :empty pseudo-class ensures these styles only apply when the indicator has no custom children
+   (e.g., custom icon). When custom content is present, these default dot styles are not applied. */
+.radio__indicator:empty::before {
+  content: "";
+  @apply rounded-lg bg-field;
+
+  width: 100%;
+  height: 100%;
+  scale: 1;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    scale 200ms var(--ease-out),
+    background-color 200ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+}
+
+/* Selected state */
+.radio[data-selected] .radio__indicator:empty::before,
+.radio:has([data-slot="radio-content"][aria-checked="true"]) .radio__indicator:empty::before,
+.radio:has(input:checked) .radio__indicator:empty::before {
+  @apply bg-accent-foreground;
+  scale: 0.4286; /* 6px */
+}
+
+/* Selected + Pressed state */
+.radio[data-selected]:has([data-slot="radio-content"][data-pressed="true"])
+  .radio__indicator:empty::before,
+.radio:has([data-slot="radio-content"][data-pressed="true"][aria-checked="true"])
+  .radio__indicator:empty::before,
+.radio:has(input:checked):has([data-slot="radio-content"][data-pressed="true"])
+  .radio__indicator:empty::before {
+  scale: 0.5714; /* 8px */
+}

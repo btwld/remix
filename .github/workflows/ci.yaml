@@ -6,8 +6,9 @@ name: CI
 # took this pipeline from ~20 minutes to roughly the length of `open-code`.
 #
 # Jobs are sized by cost, not by theme: `checks` bundles the contract checkers
-# that together take seconds, while the two open-code presets get a job each
-# purely because they are ~5 minutes apiece and were half the old wall clock.
+# that together take seconds, while each open-code preset gets a job of its own
+# because installing every registry item takes 15 to 25 minutes, far longer
+# than anything else here.
 #
 # The workflow restates the `ci` steps instead of deriving them, which is the
 # one hazard of this layout: a step added to `ci` but not wired in here would
@@ -60,17 +61,17 @@ jobs:
       - uses: ./.github/actions/setup-workspace
       - run: dart run melos run ci:cli
 
-  # Both presets install every registry item into a throwaway consumer app, and
-  # neither reads the other's output. Sequentially they were ~10 of the old ~20
-  # minutes; as a matrix they cost one preset. `fail-fast: false` so a break in
-  # one preset still reports the other rather than masking it.
+  # Each preset installs every registry item into a throwaway consumer app, and
+  # none reads another's output. Sequentially they dominated the old run; as a
+  # matrix they cost the slowest preset. `fail-fast: false` so a break in one
+  # preset still reports the others rather than masking them.
   open-code:
     name: Open-code consumers (${{ matrix.preset }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        preset: [vanilla, fortal]
+        preset: [vanilla, fortal, heroui]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace

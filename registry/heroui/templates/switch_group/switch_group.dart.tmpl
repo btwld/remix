@@ -1,0 +1,81 @@
+import 'package:flutter/widgets.dart';
+
+import '../theme/theme.dart';
+import 'field_layout.dart';
+import 'switch.dart';
+
+/// One labeled switch of a [{{typePrefix}}SwitchGroup].
+class {{typePrefix}}SwitchOption {
+  const {{typePrefix}}SwitchOption({
+    required this.selected,
+    required this.label,
+    this.onChanged,
+    this.description,
+    this.invalid = false,
+    this.enabled = true,
+  });
+
+  final bool selected;
+  final String label;
+  final ValueChanged<bool>? onChanged;
+  final String? description;
+
+  /// Turns the label danger, as `[data-invalid] .label`; the switch itself has
+  /// no invalid treatment.
+  final bool invalid;
+  final bool enabled;
+}
+
+/// Labeled switches laid out as HeroUI's `SwitchGroup`.
+///
+/// Each switch keeps its own value, so the group coordinates nothing: it lays
+/// the optional [label] and the switches out with `gap-4`. Horizontal groups
+/// wrap where the CSS row would shrink.
+class {{typePrefix}}SwitchGroup extends StatelessWidget {
+  const {{typePrefix}}SwitchGroup({
+    super.key,
+    required this.items,
+    this.size = .md,
+    this.orientation = Axis.vertical,
+    this.enabled = true,
+    this.label,
+  });
+
+  final List<{{typePrefix}}SwitchOption> items;
+  final {{typePrefix}}SwitchSize size;
+  final Axis orientation;
+  final bool enabled;
+  final String? label;
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = [
+      for (final item in items)
+        _row(
+          item,
+          itemEnabled: enabled && item.enabled && item.onChanged != null,
+        ),
+    ];
+    return {{typePrefix}}FieldLayout(
+      axis: orientation,
+      label: label,
+      enabled: enabled,
+      items: rows,
+    );
+  }
+
+  Widget _row({{typePrefix}}SwitchOption item, {required bool itemEnabled}) =>
+      {{typePrefix}}DescribedControl(
+        descriptionInset: size.trackWidth + {{valuePrefix}}ControlGap,
+        enabled: itemEnabled,
+        description: item.description,
+        control: {{typePrefix}}Switch(
+          size: size,
+          selected: item.selected,
+          onChanged: item.onChanged,
+          enabled: itemEnabled,
+          label: item.label,
+          invalid: item.invalid,
+        ),
+      );
+}

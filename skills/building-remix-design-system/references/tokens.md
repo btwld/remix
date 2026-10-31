@@ -21,7 +21,7 @@ Extraction is done when this is filled, or a gap is explicitly marked.
 
 Per component (feeds the worksheet): anatomy, variants, sizes and the
 default, every state with distinct visuals, the tokens each state consumes,
-non-token measurements with their source, and keyboard/focus/RTL behavior.
+and non-token measurements with their source.
 
 ## 2. Invariants
 
@@ -137,12 +137,19 @@ tokens:
   small. When it runs to hundreds of values (full palettes), generate the
   value file from the YAML with a deterministic script that has a `--check`
   mode, like derivation.
-- Normalize while writing: colors as `#RRGGBB` (opaque) or `#AARRGGBB`, rem
-  converted once by a stated base, durations in milliseconds, curves as four
-  numbers. Parse both legacy and CSS Color 4 color syntax
-  (`rgb(141 141 141 / 30%)`), and reject NaN.
-- Keep provenance in `specs/`, not in shipped Dart comments: shipped source
-  must not contain the authoring word (`references/registry.md` §3).
+- Preserve declared expressions and dependencies alongside normalized values.
+  For an sRGB target, store colors as `#RRGGBB` (opaque) or `#AARRGGBB` and
+  record conversion, gamut mapping, alpha, and rounding rules. Do not silently
+  flatten OKLCH/OKLab or Display-P3 to hex, or replace `color-mix(in oklab, …)`
+  with sRGB interpolation. Keep the declared expression beside the resolved
+  value in `specs/tokens.yaml`. The Dart theme holds resolved values, unless
+  the target system's own theming derives colors from others (as HeroUI's
+  `color-mix` variables do) and overrides must propagate.
+  Convert rem once by a stated root size; store durations in milliseconds and
+  cubic curves as four numbers. Parse CSS Color 4 syntax and reject NaN.
+- Keep research provenance in `specs/`. Preserve required license, copyright,
+  attribution, and change notices in installed source; they must survive
+  prefix substitution verbatim (`references/registry.md` §3).
 
 A test in the authoring package keeps the two in step. It fails when a theme
 token has no entry or a value differs; add encoders as token types grow.

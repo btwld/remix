@@ -105,8 +105,14 @@ class UiTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // `mode: system` needs a platform brightness. A scope mounted above any
+    // MediaQuery still has to resolve, so supply one from the view. The
+    // lookup does not subscribe, so unrelated MediaQuery changes (keyboard
+    // insets, padding) do not rebuild the app below the scope.
     final view = View.maybeOf(context);
-    if (MediaQuery.maybeOf(context) == null && view != null) {
+    final hasMediaQuery =
+        context.getElementForInheritedWidgetOfExactType<MediaQuery>() != null;
+    if (!hasMediaQuery && view != null) {
       return MediaQuery.fromView(
         view: view,
         child: Builder(builder: _build),

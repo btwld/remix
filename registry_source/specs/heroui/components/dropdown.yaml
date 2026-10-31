@@ -1,0 +1,39 @@
+component: Dropdown
+widget: HeroUiDropdown
+target: RemixMenu
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/dropdown.css, dist/components/menu.css, dist/components/menu-item.css, dist/components/separator.css]
+anatomy: [trigger, popover, menu, item, indicator, divider]
+variants: [default (defaultItem), danger]
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, focus-visible, disabled, open]
+tokens:
+  - overlay and overlay shadow (popover), radius-panel (popover), radius-2xl (item)
+  - default (item hover), foreground (label), muted (indicator)
+  - danger (danger label and indicator), focus (ring), separator (divider)
+  - text-sm
+measurements:
+  - {what: popover, value: "220 x 162 from md; radius 24", cite: dropdown-default-keyboard-open-dropdown-popover}
+  - {what: menu padding and gap, value: "6, 2", cite: dropdown-default-keyboard-open-dropdown-menu}
+  - {what: item, value: "36 high, radius 16, gap 12", cite: "dropdown-default-keyboard-open-menu-item:Apple"}
+  - {what: item padding, value: "6px 10px 6px 28px on rows that carry an indicator (ps-7); 10 x 6 on plain rows", cite: "chromium/dropdown_visual.json, default light 1024 keyboard-open, the four rows"}
+  - {what: label, value: "14/20 medium, foreground", cite: "dropdown-default-keyboard-open-label:Apple"}
+  - {what: check mark, value: "10 in a 16 box, muted; danger on danger items", cite: "dropdown-default-keyboard-open-menu-item-indicator--checkmark, dropdown-danger-keyboard-open-menu-item-indicator"}
+  - {what: disabled, value: "row 0.5, label 0.5 again", cite: "menu-default-rest-menu-item:Banana, menu-default-rest-label:Banana"}
+  - {what: focus ring, value: "2px background gap, then a 2px focus ring", cite: "dropdown-default-keyboard-open-menu-item:Apple"}
+  - {what: divider, value: "1px, separator", cite: "separator.css h-px bg-separator"}
+  - {what: pressed, value: "trigger scale 0.97, item scale 0.98, 250ms ease-out-quart", cite: "dropdown.css .dropdown__trigger, menu-item.css .menu-item"}
+approximations:
+  - Standalone Menu (menu.css) is deferred. It is a different list (`p-1 gap-1`, items `px-2`; measured `menu-default-rest-menu`), and RemixMenu always draws a trigger, so a bare menu has no Remix target.
+  - "A `HeroUiButton` is the trigger through `RemixMenuTrigger.control`: it keeps its own look, press scale, and focus ring, and `MenuStyler.trigger` does not apply to it. The recipe's `trigger` style is the bare `.dropdown__trigger` (press scale and focus ring) for label and builder triggers."
+  - "Once the list is long enough to scroll, Remix clips it at the scroll view, inside the popover's padding, so the outside row ring loses its sides and the edge rows lose their outer edge."
+  - A disabled `HeroUiButton` trigger dims as a button and does not open the menu; `RemixMenu` has no `enabled`, so the bare label trigger has no disabled style.
+  - The popover's `max-w-[48svw]` is viewport-relative and is not modeled.
+  - The separator spans the menu; HeroUI insets it to 94%.
+  - The CSS sets no size for content icons; leading icons are 16px in the label colour (HeroUI's examples use `size-4`), and the trailing submenu chevron is 14px muted (`submenu-indicator svg size-3.5`).
+  - A row with a checkbox or radio indicator lays the indicator out in the row. Its label starts at 10 + 10 + 12 = 32px; upstream draws the indicator absolutely and pads the row `ps-7`, so its label starts at 28.
+  - The check mark is 10 (`size-2.5`); the radio dot is `size-2` (8) upstream, but the recipe gives checkbox and radio rows the one indicator size.
+  - Hover and focus colors ease over the 250ms press curve; the CSS does not transition them.
+  - The 150ms popover enter and 100ms exit motion is not reproduced.

@@ -1,0 +1,24 @@
+component: Disclosure
+widget: HeroUiDisclosure
+target: RemixDisclosure
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/disclosure.css]
+anatomy: [trigger, content, body]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, expanded, focus-visible, disabled]
+tokens:
+  - focus (ring)
+measurements:
+  - {what: body, value: "padding 8; 40 high around one 24px line", cite: "disclosure-open-body"}
+  - {what: panel, value: "0 high collapsed, 40 high open", cite: "disclosure-closed-content, disclosure-open-content"}
+  - {what: panel motion, value: "200ms ease-out-quad", cite: "disclosure.css .disclosure__content transition"}
+  - {what: disabled, value: opacity 0.5, cite: "disclosure-disabled-trigger"}
+  - {what: focus ring, value: "2px background gap, then a 2px focus ring", cite: "disclosure-closed-focus-trigger"}
+approximations:
+  - The indicator and its -180 degree turn (`disclosure-open-indicator`) belong to the trigger content; `triggerBuilder` receives the expanded state for it.
+  - The trigger has no layout of its own upstream (`disclosure-closed-trigger` is a bare 49.6 x 40 inline-block; a HeroUI Button trigger is 97.5 x 36), so its size is the app's.
+  - The panel animates height and opacity with one curve, ease-out-quad; the CSS uses ease-out for opacity.
+  - Disclosure groups are not mapped.

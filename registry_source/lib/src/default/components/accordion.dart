@@ -129,12 +129,13 @@ AccordionStyler _openStyle() => AccordionStyler()
 /// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
 /// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// section without taking layout space, and the section's own border is
-/// already carrying the rule between rows.
+/// trigger without taking layout space. It is on the trigger, not the section:
+/// the section also holds the revealed panel, and a ring there would grow with
+/// it.
 AccordionStyler _focusVisibleStyle() =>
-    AccordionStyler().containerEffects(vanillaFocusRing());
+    AccordionStyler().triggerEffects(vanillaFocusRing());
 
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
-    .containerEffects(.outline(.style(.none)))
+    .triggerEffects(.outline(.style(.none)))
     .wrap(.opacity(VanillaTokens.disabledOpacity));

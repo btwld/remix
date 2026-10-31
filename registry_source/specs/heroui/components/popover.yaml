@@ -1,0 +1,26 @@
+component: Popover
+widget: HeroUiPopover
+target: RemixPopover
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/popover.css]
+anatomy: [trigger, surface]
+variants: []
+sizes: {supported: [], default: null}
+states: [closed, open]
+tokens:
+  - overlay and overlay shadow (surface), radius-panel (surface radius)
+  - text-sm (body text)
+measurements:
+  - {what: surface, value: "252.28 x 108 around a 220.28 x 76 body", cite: popover-open}
+  - {what: radius, value: 24, cite: popover-open}
+  - {what: inset, value: 16, cite: "popover p-0 around popover__dialog p-4"}
+  - {what: body text, value: "14/20, foreground", cite: popover-open}
+  - {what: shadow, value: overlay shadow, cite: popover-open}
+approximations:
+  - One 16px inset stands for `.popover` (p-0) plus `.popover__dialog` (p-4); content that wants other padding sets it through `style`.
+  - A button trigger needs no shared change. RemixPopover takes any child as its trigger; with `openOnTap: false` and a `MenuController`, the button opens the popover from its own `onPressed`, and Escape and outside taps close it. One `FocusNode` shared as `triggerFocusNode` and the button's `focusNode` keeps the button the only tab stop and returns focus to it on close.
+  - The `.popover__heading` weight and the arrow are the app's content; there is no arrow.
+  - The 150ms enter and 100ms exit fade, zoom, and slide are not reproduced, and neither is document scroll locking.
+  - Placement is Remix's default; HeroUI's offset and collision padding are not in the CSS.

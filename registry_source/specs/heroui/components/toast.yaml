@@ -1,0 +1,36 @@
+component: Toast
+widget: HeroUiToast
+target: RemixToast
+composes: [button, close_button, spinner]
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/toast.css, dist/components/close-button.css, dist/components/button.css]
+anatomy: [surface, indicator, title, description, action, close button]
+variants: [default (defaultToast), accent, success, warning, danger]
+sizes: {supported: [], default: null}
+states: [rest, close hover, close focus-visible, close pressed]
+tokens:
+  - surface (fill), overlay and overlay shadow, radius-panel
+  - overlay-foreground (title and indicator of the default toast; indicator of the accent toast), muted (description, close icon)
+  - accent-soft-foreground, success-soft-foreground, warning-soft-foreground, danger-soft-foreground (variants)
+  - default, overlay, border (close button)
+measurements:
+  - {what: surface, value: "460 x 64 at 1024 with a description and an action; 48 high for title only; padding 16 x 12, gap 6", cite: "toast-default-root, toast-single-root"}
+  - {what: radius and shadow, value: "24, overlay shadow", cite: toast-default-root}
+  - {what: indicator, value: "icon 16 with 4 around it", cite: "toast-default-icon, toast-default-indicator"}
+  - {what: title, value: "14/20 medium", cite: toast-default-title}
+  - {what: description, value: "14/20, muted", cite: toast-default-description}
+  - {what: variant colors, value: "title and icon in the variant's soft foreground; the accent toast keeps its indicator in overlay-foreground", cite: "toast-accent-title, toast-accent-icon, toast-success-title, toast-success-icon"}
+  - {what: close button, value: "20 x 20, radius 12; bordered overlay fill from sm, default fill below; icon 12 from sm, 14 below", cite: "toast-default-close, toast-default-close-icon"}
+  - {what: close hover, value: "default fill (not default-hover)", cite: toast-default-close-hover-close}
+  - {what: close focus and press, value: "the close button's ring and 0.93 scale", cite: "close-button-focus, close-button-pressed"}
+  - {what: action, value: "the primary md button: 36 high at 1024, 40 at 375", cite: toast-default-action}
+  - {what: stacked action, value: "at 375 the toast is 343 x 112: the action sits under the description at the text start, 8 below it (`mt-2`)", cite: "toast-default-root, toast-default-description, toast-default-action at 375"}
+approximations:
+  - Stacking, placement, timing, and the enter and exit motion are RemixToastScope's.
+  - "The action stacks under the description from 768 down (`actionPlacement: below` under `Breakpoint.maxWidth(768)`, inclusive like `max-width: 768px`; the rule is `useMediaQuery("(max-width: 768px)")` in `toast.js` of the published `@heroui/react` 3.2.6, which is not pinned in this repo) and gains `mt-2` below 640 by restating the action style under `onNot(Breakpoint.minWidth(640))`, the exact complement of `sm:mt-0`; an `action` replaces rather than merges, so a caller restates `heroUiButtonStyle()` in their base `action` and in that fragment. The stacked gap is the container's 6, so the margin is 2. From 640 to 768 upstream has no margin (`sm:mt-0`) and Remix keeps the 6, so its toast is 110 high at 640 and 106 at 768 against upstream's 104 and 100. Only 375 and 1024 are measured (`toast-default-root`); the 104 and 100 are derived from the CSS: padding 24, title 20, description 20, and the action (40 below `md`, 36 from it, with no margin from `sm`)."
+  - The close button sits inline at the end of the row and is always visible; HeroUI pins it 4px outside the top-end corner and shows it while the toast is hovered.
+  - The close button composes `heroUiCloseButtonStyle()` and overrides only what toast.css does (size, fill, border, icon size, hover fill); its muted icon, press scale and focus ring come from that recipe.
+  - The action's variant is not in toast.css; the toast uses HeroUI's default button and `ToastStyler.action` restyles it.
+  - HeroUI centers the message block against the row (`self-center`); Remix aligns the row to the start.

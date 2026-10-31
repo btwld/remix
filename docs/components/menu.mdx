@@ -132,19 +132,22 @@ class _MenuExampleState extends State<MenuExample> {
 ## Custom trigger content
 
 `RemixMenuTrigger` is a configuration object, not a widget. The same object is
-the trigger for `FortalMenu`; there is no separate Fortal trigger type.
+the trigger for `FortalMenu`; there is no separate Fortal trigger type. It has
+three constructors:
 
-Use the unnamed constructor for the standard label/icon surface. Use
-`RemixMenuTrigger.builder` when the trigger needs richer visual content such as
-an avatar or profile row. The builder receives the current menu state and the
-already styled default trigger as `defaultTrigger`. It may wrap that child or
-replace it.
+- The unnamed constructor is the standard label/icon surface.
+- `RemixMenuTrigger.builder` is custom *visual content*, such as an avatar or
+  profile row. The builder receives the current menu state and the already
+  styled default trigger as `defaultTrigger`. It may wrap that child or replace
+  it. `NakedMenu` owns tapping, focus, keyboard behavior, and expanded state.
+- `RemixMenuTrigger.control` is a *real button*, such as a `FortalButton`. The
+  button owns its look, label, enabled state, and activation.
 
 <Warning>
   Builder output must be non-interactive visual content. Returning a
   `FortalButton`, `FortalIconButton`, or any other nested interactive control
-  creates duplicate semantics and a second tap target. `NakedMenu` already owns
-  tapping, focus, keyboard behavior, and expanded state.
+  from `RemixMenuTrigger.builder` creates duplicate semantics and a second tap
+  target. Use `RemixMenuTrigger.control` when the trigger is a button.
 </Warning>
 
 <CodeGroup title="Builder-backed avatar trigger" defaultLanguage="dart">
@@ -161,8 +164,20 @@ class AccountMenuExample extends StatelessWidget {
     return FortalMenu<String>(
       trigger: RemixMenuTrigger.builder(
         label: 'Account menu',
-        builder: (context, state, defaultTrigger) =>
-            const FortalAvatar(label: 'LF'),
+        // The builder replaces the styled trigger, so it draws its own ring.
+        builder: (context, state, defaultTrigger) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.circular(999))
+              .onFocusVisible(
+                CardStyler().containerEffects(
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(color: Colors.indigo, width: 2),
+                    outlineOffset: 2,
+                  ),
+                ),
+              ),
+          child: const FortalAvatar(label: 'LF'),
+        ),
       ),
       items: const [
         RemixMenuItem(value: 'profile', label: 'View profile'),
@@ -176,6 +191,69 @@ class AccountMenuExample extends StatelessWidget {
 }
 ```
 </CodeGroup>
+
+### Use a button as the trigger
+
+`RemixMenuTrigger.control` takes a builder that receives a
+`RemixMenuTriggerHandle`. Pass the handle's `focusNode` and `toggle` to your
+button as its `focusNode` and `onPressed`.
+
+<CodeGroup title="A button as the trigger" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+class ActionsMenuExample extends StatelessWidget {
+  const ActionsMenuExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalMenu<String>(
+      trigger: RemixMenuTrigger.control(
+        builder: (context, menu) => FortalButton(
+          label: 'Actions',
+          trailingIcon: Icons.keyboard_arrow_down,
+          focusNode: menu.focusNode,
+          onPressed: menu.toggle,
+        ),
+      ),
+      items: const [
+        RemixMenuItem(value: 'edit', label: 'Edit'),
+        RemixMenuItem(value: 'duplicate', label: 'Duplicate'),
+        RemixMenuDivider(),
+        RemixMenuItem(value: 'delete', label: 'Delete'),
+      ],
+      onSelected: (value) => debugPrint(value),
+    );
+  }
+}
+```
+</CodeGroup>
+
+The handle exposes:
+
+- `isOpen`: whether the menu is open.
+- `controller`: the `MenuController` that opens and closes the menu. It is the
+  `controller` you passed to the menu, or one the menu creates.
+- `focusNode`: the node that receives focus when the menu closes; on open,
+  focus moves into the menu panel. It is the `triggerFocusNode` you passed to
+  the menu, or a node the menu creates and disposes.
+- `toggle()`: opens a closed menu and closes an open one.
+
+The menu keeps the overlay, Escape, outside taps, focus return to the button,
+and the expanded state, which it merges onto the button's own semantics node so
+a screen reader announces one expandable button. The button keeps its look,
+accessible name, enabled state, and Enter and Space activation. Pass
+`onPressed: null` to disable it; a disabled button does not open the menu.
+
+The builder must return a single control, because everything it returns is
+merged into one semantics node. A split button or a loading button would merge
+its labels and actions into that node.
+
+`MenuStyler.trigger` and `RemixMenu.semanticLabel` do not apply to a control
+trigger, because the button owns its look and name. Setting `semanticLabel` on a
+menu with a control trigger fails an assertion.
 
 ## Checkboxes, radio groups, and submenus
 
@@ -398,10 +476,33 @@ final ringedMenuStyle = MenuStyler()
 
 A popup that clips (`clipBehavior` on `overlay`) crops an outside row ring at
 its edge. Pad the popup by at least the ring's offset plus width, or use a
-negative `outlineOffset` to draw the row ring inside the row.
+negative `outlineOffset` to draw the row ring inside the row. Once the items
+are long enough to scroll, the list clips at its own edges, inside the popup's
+padding, so only an inside ring stays whole.
 
 A `RemixMenuTrigger.builder` that returns a different widget instead of its
-child replaces the styled trigger and its effects.
+child replaces the styled trigger and its effects, so the returned content has
+to draw its own focus ring, as the avatar example above does. A builder runs
+under the menu's widget states, so `onFocusVisible` on its styles works.
+
+## Long menus
+
+The panel scrolls when its items are taller than the room beside the trigger.
+It is laid out no taller than the room above or below the trigger, after the
+`positioning` `sideOffset` and `collisionPadding`, and opens on the side with
+more room, so a long menu scrolls there instead of covering the trigger. Every
+submenu panel scrolls the same way, within the room the overlay has. A
+`maxHeight` on the `overlay` style caps the panel lower still. A menu that fits
+keeps the size of its items, and the overlay's padding, decoration, and effects
+stay in place while the items scroll.
+
+```dart
+import 'package:remix/remix.dart';
+
+void main() {
+  MenuStyler().overlay(FlexBoxStyler().maxHeight(320));
+}
+```
 
 ## Fortal widgets
 
@@ -527,10 +628,12 @@ Optional. Controls how one widget replaces another widget in the tree.
 #### `trigger` → `RemixMenuTrigger`
 
 **Required**. Configuration for the menu's button, not a widget. Use
-`RemixMenuTrigger(label:, icon:)` for the standard surface or
+`RemixMenuTrigger(label:, icon:)` for the standard surface,
 `RemixMenuTrigger.builder(label:, icon:, builder:)` for custom visual
-content. `label` is the visible default label and the accessible fallback
-for a builder-backed trigger. The same object works with `FortalMenu`.
+content, or `RemixMenuTrigger.control(builder:)` for a real button. `label` is
+the visible default label and the accessible fallback for a builder-backed
+trigger; it is `null` for a control trigger. The same object works with
+`FortalMenu`.
 
 #### `items` → `List<RemixMenuItemData<T>>`
 
@@ -578,7 +681,7 @@ Optional. Whether taps outside the overlay close the menu.
 
 #### `triggerFocusNode` → `FocusNode?`
 
-Optional. Optional focus node for the trigger.
+Optional. Optional focus node for the trigger. A `RemixMenuTrigger.control` receives it as `menu.focusNode`; without one the menu creates and disposes a node for the control.
 
 #### `positioning` → `OverlayPositionConfig`
 
@@ -586,7 +689,7 @@ Optional. Overlay positioning configuration.
 
 #### `semanticLabel` → `String?`
 
-Optional. The accessible label for the menu trigger.
+Optional. The accessible label for the menu trigger. Must be `null` with `RemixMenuTrigger.control`, whose button owns its label.
 
 #### `excludeSemantics` → `bool`
 

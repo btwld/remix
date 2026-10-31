@@ -1,0 +1,77 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'effects.dart';
+import 'tokens.dart';
+
+/// `.label`: `text-sm font-medium text-foreground` (label.css).
+final {{valuePrefix}}LabelText = TextStyler()
+    .style({{typePrefix}}Tokens.textSm.mix())
+    .fontWeight(.w500)
+    .color({{typePrefix}}Tokens.foreground());
+
+/// `.description`: `text-xs text-muted` (description.css).
+final {{valuePrefix}}DescriptionText = TextStyler()
+    .style({{typePrefix}}Tokens.textXs.mix())
+    .color({{typePrefix}}Tokens.muted());
+
+/// `.field-error`: `text-xs text-danger px-1` (field-error.css).
+final {{valuePrefix}}ErrorText = {{valuePrefix}}DescriptionText
+    .color({{typePrefix}}Tokens.danger())
+    .wrap(.padding(.horizontal(_errorPaddingX)));
+
+const _errorPaddingX = 4.0;
+
+/// `.checkbox__content`, `.radio__content`, `.switch__content`: `gap-3` between
+/// a control and its label.
+const {{valuePrefix}}ControlGap = 12.0;
+
+/// The color of a disabled field's label: `status-disabled` dims the whole
+/// field, and `.label` in a disabled field dims its text again (`label.css`).
+///
+/// Pair it with the field's own `opacity(disabledOpacity)` wrap. [danger] is the
+/// label of an invalid field.
+ContextToken<Color> {{valuePrefix}}DisabledLabelColor({bool danger = false}) =>
+    danger ? _dimmedDanger : _dimmedForeground;
+
+final _dimmedForeground = {{valuePrefix}}Alpha(
+  {{typePrefix}}Tokens.foreground,
+  {{typePrefix}}Tokens.disabledOpacity,
+);
+final _dimmedDanger = {{valuePrefix}}Alpha(
+  {{typePrefix}}Tokens.danger,
+  {{typePrefix}}Tokens.disabledOpacity,
+);
+
+/// The text of an input, a select value, or a placeholder: `text-base`, then
+/// `sm:text-sm` from 640px up.
+TextStyler {{valuePrefix}}FieldText(ColorToken color) => TextStyler()
+    .style({{typePrefix}}Tokens.textBase.mix())
+    .color(color())
+    .onBreakpoint(
+      const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointSm),
+      TextStyler().style({{typePrefix}}Tokens.textSm.mix()),
+    );
+
+/// The fill of a field-like control at rest, hovered, and focused.
+typedef {{typePrefix}}FieldFill = ({
+  ColorToken rest,
+  ColorToken hover,
+  ColorToken focus,
+});
+
+/// `--field-background`, `--field-hover`, `--field-focus`: the `primary`
+/// variant of the input, select, checkbox, and radio.
+const {{typePrefix}}FieldFill {{valuePrefix}}PrimaryFieldFill = (
+  rest: {{typePrefix}}Tokens.fieldBackground,
+  hover: {{typePrefix}}Tokens.fieldHover,
+  focus: {{typePrefix}}Tokens.fieldFocus,
+);
+
+/// `--default` and `--default-hover`: the `secondary` variant of the same
+/// controls.
+const {{typePrefix}}FieldFill {{valuePrefix}}SecondaryFieldFill = (
+  rest: {{typePrefix}}Tokens.defaultColor,
+  hover: {{typePrefix}}Tokens.defaultHover,
+  focus: {{typePrefix}}Tokens.defaultColor,
+);

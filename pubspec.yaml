@@ -79,6 +79,7 @@ melos:
         mix: ^2.3.1
         mix_annotations: ^2.2.0-beta.1
         mix_chart: ^0.0.1-beta.3
+        crypto: ^3.0.7
         pub_semver: ^2.2.0
         yaml: ^3.1.3
         naked_ui: ^1.2.3
@@ -165,13 +166,15 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
         - dart run tool/check_open_code.dart --preset fortal --source checkout
-      description: Install every item from both presets against the Remix checkout
+        - dart run tool/check_open_code.dart --preset heroui --source checkout
+      description: Install every item from all presets against the Remix checkout
 
     open-code:release:check:
       steps:
         - dart run tool/check_open_code.dart --source hosted
         - dart run tool/check_open_code.dart --preset fortal --source hosted
-      description: Verify both presets against the required published Remix release
+        - dart run tool/check_open_code.dart --preset heroui --source hosted
+      description: Verify all presets against the required published Remix release
 
     open-code:registry:build:
       run: dart run tool/build_registry.dart
@@ -228,9 +231,8 @@ melos:
     # tool/check_ci_coverage.dart fails when a `ci` step and the workflow's
     # `melos run` list drift, and runs inside `ci:checks`.
     #
-    # Group by cost, not by theme. The two open-code presets are separate steps
-    # purely because they are ~5 minutes each and independent, and together
-    # they were half the old wall clock.
+    # Group by cost, not by theme. The open-code presets are separate steps
+    # purely because each takes 15 to 25 minutes and they are independent.
     ci:
       steps:
         - ci:checks
@@ -239,6 +241,7 @@ melos:
         - ci:flutter
         - ci:open-code:vanilla
         - ci:open-code:fortal
+        - ci:open-code:heroui
         - ci:open-code:icons
       description: >-
         Verify generated sources, docs, the Fortal specification, tests, and the
@@ -255,6 +258,7 @@ melos:
         - material:check
         - docs:check
         - fortal:check
+        - heroui:parity:check
         - open-code:registry:check
         - vanilla:scale:check
       description: >-
@@ -284,6 +288,7 @@ melos:
     # The release check separately requires the published Remix version.
     ci:open-code:vanilla:
       steps:
+        - dart run tool/check_open_code.dart --source checkout --item ownership
         - dart test test/tool/check_open_code_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
@@ -296,6 +301,10 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout
       description: Install every Fortal-preset item against the Remix checkout
+
+    ci:open-code:heroui:
+      run: dart run tool/check_open_code.dart --preset heroui --source checkout
+      description: Install every HeroUI item against the Remix checkout
 
     ci:open-code:icons:
       steps:
@@ -316,6 +325,12 @@ melos:
         - dart run tool/check_fortal.dart
         - dart run registry_source/tool/fortal_palettes/generate.dart --check
       description: Verify Fortal's owned specification, API catalog, and palette generation
+
+    heroui:parity:check:
+      exec: dart run tool/heroui_parity/check.dart
+      description: Verify the pinned HeroUI reference, token inventory, and item mapping
+      packageFilters:
+        scope: registry_source
 
     docs:catalog:
       run: dart run tool/generate_fortal_catalog.dart

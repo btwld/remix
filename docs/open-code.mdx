@@ -10,8 +10,8 @@ command and configuration reference.
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
-small `vanilla` preset or the full Fortaleza-inspired `fortal` preset when
-you initialize the project.
+small `vanilla` preset, the Fortaleza-inspired `fortal` preset, or the
+HeroUI-inspired `heroui` preset when you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
 handling, focus management, accessibility semantics, and the loading/disabled
@@ -24,21 +24,21 @@ The Fortal preset does not add a `remix_fortal` dependency.
 
 ## Choose a preset
 
-| | `vanilla` | `fortal` |
-|---|---|---|
-| Design language | Neutral and minimal, inspired by shadcn/ui | Independent, Fortaleza-inspired, with flat controls and solid panels |
-| Theme | 32 color tokens, a radius scale, and a type scale | Seven generated palettes, neutral Calçadão defaults, scaling, radius, and panel modes |
-| Component axes | Small default vocabulary | `solid`, `soft`, `surface`, `outline`, and `ghost` where applicable; floating toast also has `classic` |
-| Best for | A house system you intend to shape | A complete system with contrast-tested colors and consistent focus rings |
+| | `vanilla` | `fortal` | `heroui` |
+|---|---|---|---|
+| Design language | Neutral and minimal, inspired by shadcn/ui | Independent, Fortaleza-inspired, with flat controls and solid panels | HeroUI web 3.2.6 |
+| Theme | 32 color tokens, a radius scale, and a type scale | Seven generated palettes, neutral Calçadão defaults, scaling, radius, and panel modes | HeroUI's 68 color roles, derived like its CSS variables, and a radius scale |
+| Component axes | Small default vocabulary | `solid`, `soft`, `surface`, `outline`, and `ghost` where applicable; floating toast also has `classic` | HeroUI's `primary`, `secondary`, `tertiary`, `soft`, and `ghost` vocabulary where applicable |
+| Best for | A house system you intend to shape | A complete system with contrast-tested colors and consistent focus rings | Starting from a HeroUI-like system |
 
-Both choices install local Dart under `lib/`, use Remix for behavior, and use
+Every choice installs local Dart under `lib/`, uses Remix for behavior, and uses
 the same `add --diff` / `add --overwrite` review workflow. They cannot be mixed
 inside one initialized source tree because their tokens and variant
 vocabularies are different.
 
 ## Install
 
-Both presets require Remix `^1.0.0-beta.13`, which `add` declares for you.
+Every preset requires Remix `^1.0.0-beta.13`, which `add` declares for you.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
@@ -241,7 +241,7 @@ registries:
 |---|---|---|
 | `schema` | `3` | The only readable schema. Schemas 1–2 shipped in earlier prereleases and named no registry; such a project is reinitialized, not migrated. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
-| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla` or `fortal` at `init`. |
+| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla`, `fortal`, or `heroui` at `init`. |
 | `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
 | `registries` | official GitHub source | Each namespace records repository, path, requested ref and full commit revision. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
@@ -401,15 +401,19 @@ makes the active theme available to routes, dialogs, and overlays. See the
 
 The generated theme widgets expose `theme`, `darkTheme`, and `mode`. A root without
 arguments supplies the preset's light and dark defaults and follows the system.
-A nested theme inherits its parent's configured pair and active selection.
+A nested theme inherits its parent's configured pair and active selection. It
+installs its own complete token set rather than merging with the scope above it,
+so a token override made with `MixScope.inherit` does not apply below a nested
+theme; place the override inside the nested scope.
 
 | Preset | Theme widget | Theme values and modes |
 | --- | --- | --- |
 | `vanilla` | `AcmeTheme` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
 | `fortal` | `AcmeTheme` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
+| `heroui` | `AcmeTheme` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
 
 Use your configured prefix in place of `Acme`. The same parameters apply to
-both presets:
+every preset:
 
 {/* dart-excerpt: illustrative Acme prefix */}
 
@@ -443,7 +447,7 @@ the newly installed theme while building, put Flutter's `Builder` below the
 theme and use that callback's context.
 
 The [downloadable tutorial apps](/tutorials/settings-screen) show the same API
-in both presets. Their generated theme files are editable application source;
+in the Vanilla and Fortal presets. Their generated theme files are editable application source;
 regeneration still preserves existing authored files unless you explicitly use
 `--overwrite`. The CLI installs the theme layer, not a complete app host or
 appearance picker. Selection controls and persistence belong to the application.
@@ -591,7 +595,13 @@ Then adjust any code of your own that read the old names:
   `UiThemeData.light().copyWith(...)` instead.
 - `UiTokens.focusRing` is `UiTokens.ring`. Recipes draw the ring at half
   strength, 3px wide with no offset, and turn a bordered control's outline
-  `ring` while it has focus.
+  `ring` while it has focus. A toggle-group option draws the band inside
+  itself, because the group clips its options.
+- `uiFocusRingDecoration()` is gone. `UiTab`, `UiToggle`, `UiToggleGroup`,
+  `UiMenu`, `UiAccordion`, and `UiDisclosure` draw their rings with
+  `uiFocusRing()` through `containerEffects` (`triggerEffects` on the
+  accordion and disclosure), so reinstall them with the theme, and replace the
+  helper in your own code.
 - `UiTokens.radius` is replaced by four steps derived from the theme's one
   `radius` value (now 10): `radiusSm` (6), `radiusMd` (8, the control radius),
   `radiusLg` (10), and `radiusXl` (14, cards).
@@ -782,6 +792,15 @@ components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
+The `heroui` catalog follows HeroUI's names. Beside shared names such as
+`button`, `select`, and `tabs`, it adds `alert`, `avatar_group`, `breadcrumbs`,
+`button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
+`field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
+`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+and `toggle_button_group`. It ships no `app_bar`, `sidebar`, `sidebar_layout`,
+dashboard, `chart`, or `icons` items and no Agent items. Families that need
+behavior Remix does not provide, such as Form and ComboBox, are not included.
+
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
 recipe declares, and a recipe whose axis is named `variant` also gets one
@@ -848,10 +867,12 @@ Edit the tokens in `UiThemeData` for a design-system change.
 Pass `palette` or `style` for a one-chart override. The UI barrel does not
 re-export `mix_chart`.
 
-`remix add icons` installs a small app-owned alias surface. Registry templates
-resolve the `iconLibrary` in `remix.yaml` to either `RemixIcons` (the default)
-or `LucideIcons`, and add the selected package. Four items use icons:
-`icons`, `dashboard_shell`, `dashboard_demo`, and `support`. To switch an
+In Vanilla and Fortal, `remix add icons` installs a small app-owned alias
+surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
+`RemixIcons` (the default) or `LucideIcons`, and add the selected package.
+Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
+`dashboard_demo`, and `support`. HeroUI has no `icons` item; its three icon
+users are `breadcrumbs`, `close_button`, and `search_field`. To switch an
 existing install, change `iconLibrary`, then reinstall every one of those you
 have installed in one command, reviewing first (`--overwrite` replaces only
 the items you name, so one left out keeps the old library):
@@ -859,6 +880,13 @@ the items you name, so one left out keeps the old library):
 ```shell
 remix add icons dashboard_shell dashboard_demo support --diff
 remix add icons dashboard_shell dashboard_demo support --overwrite
+```
+
+For HeroUI:
+
+```shell
+remix add breadcrumbs close_button search_field --diff
+remix add breadcrumbs close_button search_field --overwrite
 ```
 
 Icons you reference in your own code stay as you wrote them. Import
@@ -890,7 +918,7 @@ If generation or analysis fails *after* installation, the authored source stays
 on disk for inspection. Fix the reported problem and rerun the same command.
 
 
-## Agent surfaces in both presets
+## Agent surfaces in the Vanilla and Fortal presets
 
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript` install unstyled, application-owned behavior source in either
@@ -908,7 +936,8 @@ These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
 opt-in spec-styler builder for their installed source paths in `build.yaml`,
 preserving other builder settings and comments. Explicit exclusions or disabled
 generation are reported before writes. `--dry-run` and `--diff` remain read-only.
-Agent recipes extend both existing presets; they do not constitute a third preset.
+Agent recipes extend the Vanilla and Fortal presets; they do not constitute
+another preset or claim Radix component parity.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

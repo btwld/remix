@@ -45,10 +45,14 @@ DataTableStyler uiDataTableStyle({
         ).fontWeight(UiTokens.fontWeightRegular()).color(UiTokens.gray11()),
       )
       .headerCell(
-        _uiDataTableCell(metrics).onFocusVisible(
-          // Keep the common outline inside the padding of clipped tables.
-          BoxStyler().uiFocusRing(inset: UiTokens.space2()),
-        ),
+        _uiDataTableCell(metrics)
+            // Keep the painter mounted so focusing a custom header preserves
+            // its element and state.
+            .wrap(uiFocusRingModifier(visible: false, inset: UiTokens.space2()))
+            .onFocusVisible(
+              // Keep the common outline inside the padding of clipped tables.
+              BoxStyler().uiFocusRing(inset: UiTokens.space2()),
+            ),
       )
       .bodyCell(_uiDataTableCell(metrics))
       .selectionCell(BoxStyler().alignment(Alignment.center))

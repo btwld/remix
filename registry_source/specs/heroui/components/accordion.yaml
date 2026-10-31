@@ -1,0 +1,36 @@
+component: Accordion
+widget: HeroUiAccordion, HeroUiAccordionGroup
+target: RemixAccordion, RemixAccordionGroup
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/accordion.css]
+anatomy: [group, container, trigger, title, indicator, content]
+variants: [default (defaultAccordion), surface]
+sizes: {supported: [], default: null}
+states: [rest, hover, expanded, focus-visible, disabled]
+tokens:
+  - surface (group card of the surface variant), radius-panel
+  - foreground at 3% (hover), default (surface hover)
+  - muted (indicator, body), separator (rule), surface-foreground at 6% (surface rule)
+  - focus (ring), text-sm
+measurements:
+  - {what: group, value: "360 wide fixture; 192 high with one open and two closed items", cite: "accordion-default-root, accordion-surface-root"}
+  - {what: surface card, value: "surface fill, radius 24, one card for all items", cite: accordion-surface-root}
+  - {what: item heights, value: "52 closed, 88 open with a one-line body", cite: "accordion-default-closed-item, accordion-default-open-item, accordion-default-last-item"}
+  - {what: trigger, value: "padding 16, title 14/20 medium: 52 high", cite: "accordion-default-closed-trigger"}
+  - {what: indicator, value: "size 16, muted, rotated -180 degrees expanded", cite: "accordion-default-closed-indicator, accordion-default-open-indicator"}
+  - {what: body, value: "padding 0/16/16, muted, 14", cite: "accordion-default-open-body-inner"}
+  - {what: rule, value: "1px under the item, painted over its last pixel; separator, surface-foreground at 6% on surface", cite: "accordion-default-closed-separator, accordion-surface-closed-separator"}
+  - {what: hover, value: "foreground at 3%, collapsed items only; default on surface", cite: "accordion-default-hover-trigger, accordion-surface-hover-trigger"}
+  - {what: focus ring, value: "2px background gap, then a 2px focus ring", cite: accordion-default-focus-trigger}
+  - {what: disabled, value: "opacity 0.5", cite: accordion-disabled-trigger}
+  - {what: column at 375, value: "327 wide", cite: "accordion-default-root (375)"}
+approximations:
+  - "The surface card comes from HeroUiAccordionGroup (surface fill, radius 24, antiAlias clip), which wraps RemixAccordionGroup; an item paints no fill or radius. Upstream rounds the first trigger 24 24 0 0 and the last 0 0 24 24 (collapsed); here the card's clip rounds the hover fill instead."
+  - "The rule under the last item is not removed (upstream: `accordion-default-last-separator` has no box), and the surface rule is not inset to 3% / 94% (`accordion-surface-closed-separator` is 338.39 of 360 wide); an item cannot know it is last."
+  - The indicator is `trailingIcon`; pass a chevron for HeroUI's glyph, otherwise Remix's plus and minus are used.
+  - The hover fill animates over the indicator's 250ms; the CSS does not transition it.
+  - The panel opens with Remix's 200ms fade and size transition, not ease-out-quad.
+  - "The surface variant's card clips, so its trigger draws the ring inside (outline offset -2, no background gap), where `accordion.css` has no `ring-inset` and upstream's ring extends outside the card. The default variant draws the measured ring outside."
+  - "The card's rounded clip (radius 24 by default) also crops the inside ring at the card's two outer corners: it tapers over the first 24px of each edge and is gone within about 14px of the corner. Giving every surface trigger the panel radius would round the middle items' hover fill and ring too, which upstream does only for the first and last trigger, and an item cannot know its position, so the crop is recorded rather than fixed."

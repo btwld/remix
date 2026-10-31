@@ -2,8 +2,8 @@
 
 `remix_cli` installs editable preset source into your app. Remix retains
 rendering, interaction and accessibility; you own the theme, recipes and
-installed Agent behavior. Choose one preset: neutral **Vanilla** or **Fortal**
-with its own visual contract. Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
+installed Agent behavior. Choose one preset: neutral **Vanilla**, **Fortal**
+with its own visual contract, or **HeroUI** inspired by HeroUI web 3.2.6. Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
 ## Install the CLI in a project
 
@@ -141,3 +141,19 @@ Agent source: `activity`, `answer`, `composer`, `execution`, `message`,
 transitively. Styled bundles: `activity_recipe`, `answer_recipe`,
 `composer_recipe`, `execution_recipe`, `message_recipe`, `permission_recipe`,
 `plan_recipe`, `transcript_recipe`.
+
+## HeroUI preset
+
+Initialize with `dart run remix_cli:remix init --prefix Acme --preset heroui`.
+The registry follows HeroUI's component names, adding `alert`, `avatar_group`,
+`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
+`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`toggle_button`, and `toggle_button_group` to shared names such as `button` and
+`select`.
+HeroUI does not ship Agent or dashboard recipes.
+
+`open_code/heroui_fixture` exercises every installed widget. Run
+`dart run tool/check_open_code.dart --preset heroui --source checkout --keep`
+to retain the review gallery. See [Adding a preset](ADDING_PRESETS.md) for the
+first-party authoring workflow.

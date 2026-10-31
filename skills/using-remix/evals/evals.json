@@ -136,11 +136,12 @@
     {
       "id": 13,
       "prompt": "Our Fortal dashboard opens the same action menu from an avatar, a profile row, and a kebab icon. Should we add FortalMenuTrigger or put a custom trigger widget on FortalMenu? Show the reusable shape.",
-      "expected_output": "Keeps FortalMenu as the menu and passes RemixMenuTrigger.builder as its trigger configuration; does not invent FortalMenuTrigger. Requires a meaningful label, returns non-interactive avatar/row/icon visuals from the builder, and keeps interaction and semantics on the menu trigger instead of nesting a button. An app-owned DashboardActionMenu is justified only to centralize the repeated product concept, actions, sizing, or positioning; gallery examples still use FortalMenu directly.",
+      "expected_output": "Keeps FortalMenu as the menu and passes the trigger as RemixMenuTrigger configuration; does not invent FortalMenuTrigger. Makes the avatar and the kebab real buttons through RemixMenuTrigger.control, returning a Fortal icon button that is given the handle's focusNode and toggle, so the button keeps its own label, one tab stop, expanded semantics, and its own focus ring. Uses RemixMenuTrigger.builder with a meaningful label only for the profile row, which is visual content: a builder replaces the styled trigger and its effects, so the row draws its own focus ring (for example a RemixCard whose containerEffects take fortalFocusOutline on focus-visible) and never nests a button. An app-owned DashboardActionMenu is justified only to centralize the repeated product concept, actions, sizing, or positioning; gallery examples still use FortalMenu directly.",
       "files": [],
       "expectations": [
-        "Passes RemixMenuTrigger.builder to FortalMenu and does not invent FortalMenuTrigger.",
-        "Provides a meaningful trigger label and returns non-interactive visual content from the builder.",
+        "Passes a RemixMenuTrigger to FortalMenu and does not invent FortalMenuTrigger.",
+        "Uses RemixMenuTrigger.control with a real icon button, wired to the handle's focusNode and toggle, for the avatar and the kebab.",
+        "Uses RemixMenuTrigger.builder with a meaningful label and non-interactive content only for the profile row, and draws its focus ring itself.",
         "Limits an app-owned menu wrapper to repeated product policy while keeping gallery examples on FortalMenu directly."
       ]
     },
@@ -293,6 +294,18 @@
         "Runs add theme button --diff before changing anything, and reads the hunks rather than trusting an empty-diff assumption.",
         "Runs add theme button --overwrite naming both items explicitly to adopt the change.",
         "Explains that --overwrite only rewrites items named on the command line, leaving other installed dependencies untouched."
+      ]
+    },
+    {
+      "id": 27,
+      "prompt": "Our app has preset: heroui and prefix: Acme in remix.yaml. Add a fruit ComboBox, a submit button that shows HeroUI's pending state, and an email field that turns red when invalid.",
+      "expected_output": "Reads the HeroUI reference and uses Acme-prefixed names. Explains that ComboBox is not in the preset (it needs behavior Remix does not provide) and offers AcmeSelect or a composition instead of building a combobox. Maps pending to Remix loading on AcmeButton and invalid to error: true with the message in helperText on AcmeTextField, keeping validation in the app.",
+      "files": [],
+      "expectations": [
+        "Uses the configured Acme prefix, not HeroUi names.",
+        "States that ComboBox is not included and offers AcmeSelect or a composition.",
+        "Uses loading on AcmeButton for the pending state.",
+        "Uses error and helperText on AcmeTextField; validation stays in the app."
       ]
     }
   ]

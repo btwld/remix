@@ -85,6 +85,12 @@ A nested scope updates design tokens for its subtree. When the nested scope
 changes `brightness` or `gray`, it updates `DefaultTextStyle` and `IconTheme` to
 the new `gray12` color while preserving existing font metrics.
 
+Each scope installs a complete token set instead of merging with the scope above
+it. A token override made with `MixScope.inherit`, such as a custom
+`focusRingWidth`, reaches only the widgets between it and the next `FortalTheme`
+below. That nested `FortalTheme` restores the theme's own values, so place the
+override inside the nested scope.
+
 Use `WidgetsApp` for the application host. For an application with routes, put
 `FortalTheme` in `builder`, above the Navigator, so pushed routes and dialogs
 inherit the same tokens and text style:

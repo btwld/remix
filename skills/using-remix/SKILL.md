@@ -2,7 +2,7 @@
 name: using-remix
 description: >-
   Builds Flutter UI with the Remix component library: hand-styled `Remix*`
-  widgets or an app-installed Vanilla or Fortal preset (`remix_cli`,
+  widgets or an app-installed Vanilla, Fortal, or HeroUI preset (`remix_cli`,
   `remix.yaml`, generated `<Prefix>Button`,
   `<Prefix>Theme`). Use when setting up or updating
   preset items and registry pins, placing the theme scope, wiring overlays,
@@ -21,15 +21,16 @@ Inspect `pubspec.yaml`, `remix.yaml` and installed source first. Use this skill
 for app UI and restyling owned source; use `building-remix-design-system` for a
 reusable registry, and the `mix` skill for general styling syntax.
 
-## Choose base Remix, Vanilla, or Fortal
+## Choose base Remix, Vanilla, Fortal, or HeroUI
 
 | Need | Start with |
 | --- | --- |
 | Hand-written widgets, no source generation | `remix`; `Remix*` widgets and `*Styler`s |
 | Neutral editable recipes | Vanilla (CLI default), then customize |
 | Fortal's visual language | Fortal preset |
+| HeroUI web 3.2.6 visuals | HeroUI preset; see [HeroUI](references/heroui.md) |
 
-A project has one preset and prefix, recorded in `remix.yaml`. Both presets
+A project has one preset and prefix, recorded in `remix.yaml`. All presets
 write the same theme/component paths; do not mix them. A prefix is independent
 of the preset: `UiButton` can be Fortal. Read the installed enums instead of
 assuming one preset's variants or sizes carry over.
@@ -158,6 +159,7 @@ controller rules. See [Components](references/components.md#navigation).
 | Behavior rules for a component category and doc links | [Components](references/components.md) |
 | Fortal scope/config, typography, and token rules | [Fortal](references/fortal.md) |
 | Vanilla tokens, theme values, and per-component rules | [Vanilla](references/vanilla.md) |
+| HeroUI recipes, compositions, theme overrides, and what is not included | [HeroUI](references/heroui.md) |
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 | A reusable design system published as a Remix registry | `building-remix-design-system` |

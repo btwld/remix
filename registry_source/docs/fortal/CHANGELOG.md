@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Move tab, toggle, toggle-group, accordion and disclosure focus rings to
+  `containerEffects`/`triggerEffects`, retaining the shared `focus8`,
+  `focusRingWidth`, and `focusRingOffset` tokens. Adopt caller-owned menu
+  controls, anchor-width select sizing, and styled radio/switch labels.
+
 - Refresh Fortal as an independent, Fortaleza-inspired design system: seven
   generated OKLCH palettes, neutral Calçadão defaults, Caju errors, and tested
   contrast in both modes. Apps can generate a custom palette from one seed.

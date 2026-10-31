@@ -57,42 +57,51 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
     ),
     child: {{typePrefix}}ActionMenu(
       key: const ValueKey('sidebar-account-trigger'),
-      semanticLabel: 'Workspace account menu',
-      trigger: RowBox(
-        style: FlexBoxStyler()
-            .minHeight(48)
-            .crossAxisAlignment(.center)
-            .spacing(10),
-        children: [
-          const {{typePrefix}}Avatar(label: 'LF', size: .size2),
-          Expanded(
-            child: ColumnBox(
-              style: FlexBoxStyler()
-                  .mainAxisSize(.min)
-                  .crossAxisAlignment(.start),
-              children: [
-                const {{typePrefix}}Text(
-                  'Leo Farias',
-                  size: .size2,
-                  weight: .medium,
-                  softWrap: false,
-                  truncate: true,
+      trigger: RemixMenuTrigger.builder(
+        label: 'Workspace account menu',
+        builder: (_, _, _) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.all({{typePrefix}}Tokens.radius2()))
+              .onFocusVisible(
+                CardStyler().containerEffects({{valuePrefix}}FocusOutline()),
+              ),
+          child: RowBox(
+            style: FlexBoxStyler()
+                .minHeight(48)
+                .crossAxisAlignment(.center)
+                .spacing(10),
+            children: [
+              const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+              Expanded(
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.start),
+                  children: [
+                    const {{typePrefix}}Text(
+                      'Leo Farias',
+                      size: .size2,
+                      weight: .medium,
+                      softWrap: false,
+                      truncate: true,
+                    ),
+                    StyledText(
+                      'Northstar workspace',
+                      style: dashboardText(
+                        .size1,
+                        tone: .muted,
+                      ).maxLines(1).softWrap(false).overflow(.ellipsis),
+                    ),
+                  ],
                 ),
-                StyledText(
-                  'Northstar workspace',
-                  style: dashboardText(
-                    .size1,
-                    tone: .muted,
-                  ).maxLines(1).softWrap(false).overflow(.ellipsis),
-                ),
-              ],
-            ),
+              ),
+              StyledIcon(
+                icon: {{icon:dotsHorizontal}},
+                style: IconStyler().size(18).color({{typePrefix}}Tokens.gray11()),
+              ),
+            ],
           ),
-          StyledIcon(
-            icon: {{icon:dotsHorizontal}},
-            style: IconStyler().size(18).color({{typePrefix}}Tokens.gray11()),
-          ),
-        ],
+        ),
       ),
       actions: const [
         {{typePrefix}}Action(value: 'profile', label: 'View profile'),
@@ -293,13 +302,22 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
         if (!compact)
           {{typePrefix}}ActionMenu(
             key: const ValueKey('topbar-account-trigger'),
-            semanticLabel: 'Account menu',
             positioning: const OverlayPositionConfig(
               side: .bottom,
               alignment: .end,
               sideOffset: 8,
             ),
-            trigger: const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+            trigger: RemixMenuTrigger.control(
+              builder: (_, menu) => RemixIconButton(
+                semanticLabel: 'Account menu',
+                style: _toolbarButtonStyle,
+                focusNode: menu.focusNode,
+                onPressed: menu.toggle,
+                icon: null,
+                iconBuilder: (_, _, _) =>
+                    const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+              ),
+            ),
             actions: const [
               {{typePrefix}}Action(value: 'profile', label: 'Profile'),
               {{typePrefix}}Action(value: 'preferences', label: 'Preferences'),

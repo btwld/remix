@@ -1,5 +1,7 @@
+import 'dart:collection' show UnmodifiableListView;
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
@@ -586,7 +588,31 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}Them
     {{typePrefix}}Tokens.skeletonPulseDuration: const Duration(milliseconds: 1000),
   };
 
-  return allTokens;
+  return {
+    for (final MapEntry(:key, :value) in allTokens.entries)
+      key: switch (value) {
+        List<RemixBoxShadow>() => _ValueList(value),
+        List<BoxShadow>() => _ValueList(value),
+        _ => value,
+      },
+  };
+}
+
+/// An unmodifiable list that compares by value.
+///
+/// [MixScope] decides whether to notify token readers by comparing the old and
+/// new token maps value by value, and a plain [List] equals only itself. The
+/// shadow tokens are lists, so without this every rebuild of an unchanged
+/// theme would restyle every widget that reads a {{typePrefix}} token.
+class _ValueList<E> extends UnmodifiableListView<E> {
+  _ValueList(super.source);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _ValueList<E> && listEquals(this, other);
+
+  @override
+  int get hashCode => Object.hashAll(this);
 }
 
 TextStyle _avatarFallbackText({

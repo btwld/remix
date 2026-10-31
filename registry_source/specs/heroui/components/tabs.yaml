@@ -1,0 +1,34 @@
+component: Tabs
+widget: HeroUiTabBar, HeroUiTab, HeroUiTabView
+target: RemixTabBar, RemixTab, RemixTabView
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/tabs.css]
+anatomy: [list container, tab, panel]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, selected, focus-visible, disabled]
+tokens:
+  - default (primary list), border (secondary list underline)
+  - muted (tab), segment, segment-foreground and surface shadow (primary selected)
+  - accent and foreground (secondary selected), focus (ring), radius-lg (list radius)
+measurements:
+  - {what: list container height, value: 40, cite: tabs-primary-rest-tabs-list-container}
+  - {what: list radius, value: "radius x 2.5 = 20", cite: tabs-primary-rest-tabs-list-container}
+  - {what: list padding, value: 4, cite: "tabs__list p-1"}
+  - {what: tab height, value: 32, cite: "tabs-primary-rest-tabs-tab:One"}
+  - {what: tab radius, value: 24, cite: "tabs-primary-rest-tabs-tab:One"}
+  - {what: tab label, value: "14/20 medium", cite: "tabs-primary-rest-tabs-tab:One"}
+  - {what: hover, value: "opacity 0.7, unselected only", cite: "tabs__tab hover opacity-70"}
+  - {what: selected shadow, value: surface shadow, cite: tabs-primary-rest-tabs-indicator}
+  - {what: panel padding, value: 8, cite: "tabs-primary-rest-tabs-panel; tabs__panel p-2"}
+  - {what: secondary list, value: "33 high: a 32 tab and the 1px rule", cite: tabs-secondary-rest-tabs-list-container}
+  - {what: secondary indicator, value: "2px accent", cite: tabs-secondary-rest-tabs-indicator}
+  - {what: focus ring, value: "2px background gap, then a 2px focus ring", cite: "tabs-primary-keyboard-three-tabs-tab:Three"}
+approximations:
+  - The selected tab paints its own pill or underline; upstream slides one indicator.
+  - Tabs size to their content; upstream stretches them across a wider list.
+  - "The secondary tab's `h-0.5` indicator is its own bottom edge, transparent until selected, with top padding to keep the label centered."
+  - The 8px gap between list and panel (`.tabs` gap-2) belongs to the app's layout.
+  - Tab separators (`Tabs.Separator`) and vertical orientation are not styled.
