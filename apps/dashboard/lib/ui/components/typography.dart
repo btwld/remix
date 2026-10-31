@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The nine-step Radix Themes text scale supplied by [UiTokens].
+/// The nine-step Ui text scale supplied by [UiTokens].
 enum UiTextSize {
   size1,
   size2,
@@ -18,8 +18,6 @@ enum UiTextSize {
 
 /// Font weights supported by the Ui typography scale.
 ///
-/// Closed rather than Flutter's [FontWeight], which is an open class accepting
-/// any value from 1 to 1000; Radix ships exactly these four.
 enum UiTextWeight { light, regular, medium, bold }
 
 TextStyleToken uiTextSizeToken(UiTextSize size) => switch (size) {

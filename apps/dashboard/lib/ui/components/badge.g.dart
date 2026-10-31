@@ -6,7 +6,7 @@ part of 'badge.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Badge with the Radix size, variant, and override contract.
+/// Ui-themed Badge with Ui sizes, variants, and overrides.
 class UiBadge extends StatelessWidget {
   const UiBadge({
     super.key,

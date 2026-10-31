@@ -7,13 +7,13 @@ import '../theme/theme.dart';
 
 part 'button.g.dart';
 
-/// Radix Themes Button size presets.
+/// Ui Button size presets.
 enum UiButtonSize { size1, size2, size3, size4 }
 
-/// Radix Themes Button variants.
-enum UiButtonVariant { classic, solid, soft, surface, outline, ghost }
+/// Ui Button variants.
+enum UiButtonVariant { solid, soft, surface, outline, ghost }
 
-/// Ui-themed Button with the Radix size, variant, and override contract.
+/// Ui-themed Button with Ui sizes, variants, and overrides.
 ///
 /// Default icon slots use the preset's icon size, not the ambient IconTheme.
 /// An explicit icon size in [style] overrides that default.
@@ -30,11 +30,14 @@ ButtonStyler uiButtonStyle({
     highContrast: highContrast,
   );
 
-  return _applyUiButtonStateStyles(
-    base,
-    stateStyles,
-    pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
-  ).merge(style);
+  return _applyUiButtonStateStyles(base, stateStyles)
+      .wrap(uiTouchTarget())
+      .onDisabled(
+        ButtonStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
 ButtonStyler _uiButtonBaseStyler(
@@ -75,7 +78,6 @@ ButtonStyler _uiButtonBaseStyler(
 
 UiBaseButtonVariant _uiBaseButtonVariant(UiButtonVariant variant) =>
     switch (variant) {
-      .classic => .classic,
       .solid => .solid,
       .soft => .soft,
       .surface => .surface,
@@ -92,16 +94,12 @@ UiBaseButtonSize _uiBaseButtonSize(UiButtonSize size) => switch (size) {
 
 ButtonStyler _applyUiButtonStateStyles(
   ButtonStyler base,
-  UiBaseButtonStateStyles stateStyles, {
-  required double? pressedPaddingTop,
-}) {
-  var pressed = _applyUiButtonState(
+  UiBaseButtonStateStyles stateStyles,
+) {
+  final pressed = _applyUiButtonState(
     ButtonStyler().animate(uiBaseButtonActiveMotion),
     stateStyles.pressed,
   );
-  if (pressedPaddingTop != null) {
-    pressed = pressed.padding(.top(pressedPaddingTop));
-  }
 
   return _applyUiButtonState(
         base.animate(uiBaseButtonRestMotion),

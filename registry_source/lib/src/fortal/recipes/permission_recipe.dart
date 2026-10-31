@@ -38,29 +38,43 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
   ButtonStyler denyStyle = const ButtonStyler.create(),
 }) => FortalAgentPermissionRecipe(
   style: AgentPermissionStyler(
-    header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
-    actions: FlexBoxStyler().spacing(8).padding(.top(8)),
+    header: FlexBoxStyler()
+        .spacing(FortalTokens.space2())
+        .crossAxisAlignment(.center),
+    actions: FlexBoxStyler()
+        .spacing(FortalTokens.space2())
+        .padding(.top(FortalTokens.space2())),
     title: TextStyler()
         .color(FortalTokens.gray12())
-        .fontWeight(FontWeight.w600),
+        .fontWeight(FortalTokens.fontWeightSemibold()),
     tool: TextStyler()
         .color(FortalTokens.gray11())
-        .fontSize(12)
-        .wrap(.padding(.top(2))),
+        .style(FortalTokens.text1.mix())
+        .wrap(.padding(.top(FortalTokens.space1()))),
     description: TextStyler()
         .color(FortalTokens.gray11())
-        .wrap(.padding(.symmetric(vertical: 6))),
-    status: TextStyler().color(FortalTokens.gray11()).fontSize(12),
-    detailsLabel: TextStyler().color(FortalTokens.gray12()).fontSize(13),
-    toolIcon: IconStyler().color(FortalTokens.gray12()).size(16),
-    statusIcon: IconStyler().color(FortalTokens.accent9()).size(12),
-    indicator: IconStyler().color(FortalTokens.gray12()).size(16),
+        .wrap(.padding(.vertical(FortalTokens.space2()))),
+    status: TextStyler()
+        .color(FortalTokens.gray11())
+        .style(FortalTokens.text1.mix()),
+    detailsLabel: TextStyler()
+        .color(FortalTokens.gray12())
+        .style(FortalTokens.text2.mix()),
+    toolIcon: IconStyler()
+        .color(FortalTokens.gray12())
+        .size(FortalTokens.space4()),
+    statusIcon: IconStyler()
+        .color(FortalTokens.accent9())
+        .size(FortalTokens.space3()),
+    indicator: IconStyler()
+        .color(FortalTokens.gray12())
+        .size(FortalTokens.space4()),
   ).merge(style),
   surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
   detailsStyle: fortalDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(4)))
+        .container(BoxStyler().margin(.top(FortalTokens.space1())))
         .merge(detailsStyle),
   ),
   parametersStyle: fortalDataListStyle(style: parametersStyle),

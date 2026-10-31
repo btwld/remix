@@ -97,6 +97,7 @@ class SaveButton extends StatelessWidget {
 - **Action placement.** `RemixToastActionPlacement.inline`, the default, keeps the action in the row with the icon, message, and close button while the message has room. `below` puts the action under the title and description, aligned with their start, and aligns the icon, message, and close button to the top of the row, so the close button stays on the first line, after the message. A toast without an action ignores the setting.
 - **Narrow fallback.** An inline toast that is too narrow for one row uses the `below` arrangement. The width counts the container's margin and its style max width, and the cutoff is about 280 logical pixels at the default text size; larger text raises it. A squeezed message is never wanted, so `inline` cannot keep the row below that width. `IntrinsicWidth` and `IntrinsicHeight` can size default-action toasts as well as explicit-below and action-less toasts.
 - **Theme.** Toasts render through one overlay portal, so they inherit the scope's `MixScope` tokens and update live when the theme changes.
+- **Reduced motion.** Toasts enter and leave at once while the user asks to reduce motion: `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion setting is on (iOS reports it separately). A toast reads the setting when it enters and again when it leaves.
 
 ### Action placement by screen width
 
@@ -128,7 +129,7 @@ A breakpoint follows the viewport, while the narrow fallback follows the width t
 
 The application-owned Fortal preset provides `fortalToastStyle`, a recipe for the scope, and the generated `FortalToast` for static previews:
 
-`fortalToastStyle` defaults to `FortalToastVariant.classic`, `FortalToastSize.size2`, and `FortalToastIntent.accent`. The surface caps at 360 logical pixels and shrinks on narrow screens. Toast is a Fortal extension: Radix Themes has no toast, so the recipe reuses the Card panel and shadow tokens.
+`fortalToastStyle` defaults to `FortalToastVariant.classic`, `FortalToastSize.size2`, and `FortalToastIntent.accent`. The surface caps at 360 logical pixels and shrinks on narrow screens. Toast uses the shared floating-layer elevation scale; cards remain flat.
 
 <CodeGroup title="Fortal recipe" defaultLanguage="dart">
 ```dart

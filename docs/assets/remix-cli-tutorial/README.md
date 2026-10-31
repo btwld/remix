@@ -1,8 +1,7 @@
 # Tutorial assets
 
-These assets belong to `docs/tutorials/settings-screen.mdx`, rendered by the
-Fumadocs app in `apps/docs`. The old standalone HTML, custom CSS/JavaScript,
-Prism bundles, and standalone fonts have been removed; Git history preserves them.
+These assets belong to [the settings tutorial](../../tutorials/settings-screen.mdx).
+Git history preserves the retired standalone presentation.
 
 ## Samples and evidence
 
@@ -21,10 +20,6 @@ source change, never merely to bypass a failing check.
 Run `python3 tool/check_tutorial_assets.py` from the repository root, or run
 `fvm dart run melos run docs:check` for the full documentation gate and tests.
 These checks do not replace a fresh Flutter replay when the samples or CLI change.
-
-The screenshots and downloadable projects are unchanged by the presentation
-migration. Fumadocs now supplies the site's typography and code highlighting;
-no separate third-party font or Prism bundle is distributed in this directory.
 
 On 2026-09-12, the downloadable apps moved to `WidgetsApp` with a Navigator.
 Their workflow tests also assert the neutral host. Source and archive hashes

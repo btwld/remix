@@ -1,7 +1,8 @@
 # Behavioral benchmark provenance
 
-`remix_agent` used the BeUI agent components as a behavior, anatomy, and icon
-vocabulary benchmark. The pinned local checkout is:
+The former `remix_agent` package (now shared Agent source in
+`registry_source/lib/src/agent`) used BeUI as a behavior, anatomy and icon
+vocabulary benchmark, pinned to:
 
 - Repository: <https://github.com/starc007/ui-components.git>
 - Commit: `1942f3f93d8d36dba8a0dd8366699a933f56b135`
@@ -26,17 +27,16 @@ The benchmark informed workflow questions such as component boundaries,
 disclosure placement, lifecycle states, live-edge behavior, and functional icon
 choices. It is not an API, branding, or pixel-parity target. The implementation
 uses Flutter, Naked UI behavior, Remix controls, generated Mix specs, and
-this repository's own `remix_ui_icons` font for its functional glyphs. It
-deliberately ships empty visual defaults; the example's light/dark appearance
-is local and non-exported. Remix Agent also defines its own
-controlled/uncontrolled contracts, accessibility tree, keyboard behavior,
-lifecycle transitions, and scroll-controller ownership rules.
+this repository's `remix_ui_icons` font. Domain specs have empty visual
+defaults; both presets supply installed recipe bundles. Agent defines its own
+controlled/uncontrolled, accessibility, keyboard, lifecycle and scroll ownership
+contracts rather than copying the benchmark API.
 
 ## License and NOTICE conclusion
 
 The benchmark repository's MIT license was reviewed at the pinned commit. No
 benchmark source code, runtime asset, branding, or substantial copied portion
-is distributed by `remix_agent`; the implementation was written against the
+is distributed by Agent source; the implementation was written against the
 behavioral/anatomical observations above. On that basis there is no benchmark
-license text or NOTICE file to add to the package artifact. Preserve this
+license text or NOTICE file to add to the distributed source. Preserve this
 record and reassess that conclusion if future work copies source or assets.

@@ -6,10 +6,6 @@ import 'dashboard_demo_typography.dart';
 
 /// The title, description, and optional actions at the top of a page.
 ///
-/// Titles are [FortalHeading] so the page publishes a real heading tree: the
-/// page title is level 1 and every card or section title below it is level 2.
-/// The visual size is chosen independently of that level, exactly as Radix
-/// separates `as` from `size`.
 class FortalPageHeader extends StatelessWidget {
   const FortalPageHeader({
     super.key,

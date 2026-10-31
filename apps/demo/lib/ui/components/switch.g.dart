@@ -27,25 +27,6 @@ class FortalSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// Raised treatment with Radix's classic shadows.
-  const FortalSwitch.classic({
-    super.key,
-    this.size = .size2,
-    this.highContrast = false,
-    this.style = const SwitchStyler.create(),
-    required this.selected,
-    this.label,
-    this.semanticLabel,
-    this.minimumTapTargetSize = Size.zero,
-    this.onChanged,
-    this.enabled = true,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalSwitchVariant.classic;
-
   /// Surface treatment with a visible border.
   const FortalSwitch.surface({
     super.key,

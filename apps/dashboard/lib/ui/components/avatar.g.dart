@@ -6,7 +6,7 @@ part of 'avatar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Avatar with the Radix size, variant, and override contract.
+/// Ui-themed Avatar with Ui sizes, variants, and overrides.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.

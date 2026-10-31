@@ -64,8 +64,6 @@ Widget buildTabsCatalogUseCase(BuildContext context) {
     cellWidth: 220,
     columns: labelsOf(FortalTabsSize.values),
     rows: noRowAxis,
-    // Size is set on the tabs, not on the bar: the Fortal tab-list border is a
-    // single hairline at every Radix size, so only per-tab metrics vary.
     cell: (row, column) => RemixTabs(
       selectedTabId: 'one',
       child: FortalTabBar(

@@ -98,7 +98,7 @@ melos:
   scripts:
     # No `release:*` versioning scripts here on purpose. The version workflow
     # is the supported path for the published Remix package; registry_source is
-    # the internal authoring and parity package whose source derives the remote
+    # the internal authoring and specification package whose source derives the remote
     # presets, so release automation must not version it.
     generate:
       description: Regenerate Remix sources
@@ -241,7 +241,7 @@ melos:
         - ci:open-code:fortal
         - ci:open-code:icons
       description: >-
-        Verify generated sources, docs, Fortal parity, tests, and the
+        Verify generated sources, docs, the Fortal specification, tests, and the
         open-code consumer boundary
 
     ci:checks:
@@ -254,7 +254,7 @@ melos:
         - mix:consumer:check
         - material:check
         - docs:check
-        - fortal:parity:check
+        - fortal:check
         - open-code:registry:check
         - vanilla:scale:check
       description: >-
@@ -311,18 +311,19 @@ melos:
       run: dart run tool/check_ci_coverage.dart
       description: Fail when `melos run ci` and the CI workflow disagree
 
-    fortal:parity:check:
-      exec: dart run tool/fortal_parity/check.dart
-      description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage
-      packageFilters:
-        scope: registry_source
+    fortal:check:
+      steps:
+        - dart test test/tool/check_fortal_test.dart
+        - dart run tool/check_fortal.dart
+        - dart run registry_source/tool/fortal_palettes/generate.dart --check
+      description: Verify Fortal's owned specification, API catalog, and palette generation
 
     docs:catalog:
       run: dart run tool/generate_fortal_catalog.dart
-      description: Regenerate the Fortal widget catalog from the parity manifest
+      description: Regenerate the Fortal widget catalog from its owned specification
 
     docs:check:
-      # The catalog is rendered from the same manifest `fortal:parity:check`
+      # The catalog is rendered from the same specification `fortal:check`
       # holds against the recipes, so a stale page is drift, not a doc edit.
       steps:
         - dart run tool/validate_docs.dart

@@ -30,14 +30,8 @@ void main() {
                 color: const Color(0xFF000000),
                 builder: (context, child) {
                   space4 = MixScope.tokenOf(FortalTokens.space4, context);
-                  toggleGap1 = MixScope.tokenOf(
-                    FortalTokens.toggleGap1,
-                    context,
-                  );
-                  toggleGap3 = MixScope.tokenOf(
-                    FortalTokens.toggleGap3,
-                    context,
-                  );
+                  toggleGap1 = MixScope.tokenOf(FortalTokens.space1, context);
+                  toggleGap3 = MixScope.tokenOf(FortalTokens.space2, context);
                   borderWidth = MixScope.tokenOf(
                     FortalTokens.borderWidth1,
                     context,
@@ -62,7 +56,7 @@ void main() {
                   text1 = MixScope.tokenOf(FortalTokens.text1, context);
                   text3 = MixScope.tokenOf(FortalTokens.text3, context);
                   accordionText2 = MixScope.tokenOf(
-                    FortalTokens.accordionText2,
+                    FortalTokens.text2,
                     context,
                   );
                   return const SizedBox.shrink();
@@ -85,8 +79,8 @@ void main() {
           };
 
           expect(space4, closeTo(16 * scaling.factor, 1e-9));
-          expect(toggleGap1, closeTo(2 * scaling.factor, 1e-9));
-          expect(toggleGap3, closeTo(6 * scaling.factor, 1e-9));
+          expect(toggleGap1, closeTo(4 * scaling.factor, 1e-9));
+          expect(toggleGap3, closeTo(8 * scaling.factor, 1e-9));
           expect(borderWidth, 1);
           expect(radius3.x, closeTo(expectedRadius3, 1e-9));
           expect(radius3.y, closeTo(expectedRadius3, 1e-9));
@@ -106,8 +100,8 @@ void main() {
           expect(text1.height, closeTo(16 / 12, 1e-9));
           expect(text3.fontSize, closeTo(16 * scaling.factor, 1e-9));
           expect(text3.height, closeTo(24 / 16, 1e-9));
-          expect(accordionText2.fontSize, closeTo(15 * scaling.factor, 1e-9));
-          expect(accordionText2.height, closeTo(20 / 15, 1e-9));
+          expect(accordionText2.fontSize, closeTo(14 * scaling.factor, 1e-9));
+          expect(accordionText2.height, closeTo(20 / 14, 1e-9));
         });
       }
     }
@@ -120,8 +114,8 @@ void main() {
     await tester.pumpWidget(
       FortalTheme(
         mode: .light,
-        accent: .gray,
-        gray: .slate,
+        accent: .calcadao,
+        gray: .calcadao,
         child: WidgetsApp(
           color: const Color(0xFF000000),
           builder: (context, child) {
@@ -134,6 +128,6 @@ void main() {
     );
 
     expect(accent9, gray9);
-    expect(accent9, slate.light.scale.step(9));
+    expect(accent9, calcadao.light.scale.step(9));
   });
 }

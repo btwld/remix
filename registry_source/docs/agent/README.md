@@ -8,10 +8,10 @@ See [ADR 0001](../adr/agent/0001-package-boundary.md) for the private authoring
 package boundary and the runtime/recipe split. They are available from both
 existing presets; there is no separate Agent preset.
 
-This private workspace package depends on [remix](https://pub.dev/packages/remix),
-Mix's styling runtime, and remix_ui_icons. It ships no theme, token scope,
-Fortal dependency, or model SDK. Every visual surface exposes a generated
-`Agent*Spec` and `Agent*Styler`; every visual field is empty until the host
+Agent domain source composes [remix](https://pub.dev/packages/remix), Mix
+styling and remix_ui_icons inside the private authoring package. The domain
+itself defines no theme, token scope or model SDK. Every visual surface exposes
+a generated `Agent*Spec` and `Agent*Styler`; every visual field is empty until the host
 supplies a style.
 Those specs describe Agent-owned, noninteractive anatomy. Remix child controls
 receive independent unresolved stylers such as `submitStyle`, `detailsStyle`,
@@ -23,13 +23,13 @@ have neutral Material-free `remix_ui_icons` defaults. Their public builders rema
 replacement point; visual color and size still come from host styles.
 
 A `MixScope` is not an Agent requirement. Add one only when the host's own
-styles resolve scoped Mix tokens. The catalog's Composer uses the installed
-`UiTheme` for its light and dark tokens; the other demos use local styles.
+styles resolve scoped Mix tokens. The playground and dashboard use installed
+preset recipe bundles and their theme for all eight surfaces.
 
 ## Install
 
 The package remains unpublished authoring/test source. Install individual
-surfaces through the project-local checkout CLI (see [open-code setup](../../open_code/README.md)):
+surfaces through the project-local checkout CLI (see [open-code setup](../../../open_code/README.md)):
 
 ```shell
 dart run remix_cli:remix init --prefix Ui --preset vanilla
@@ -138,5 +138,5 @@ WidgetsApp(
 );
 ```
 
-See [`docs/provenance.md`](docs/provenance.md) for the behavioral benchmark
+See [provenance](../adr/agent/provenance.md) for the behavioral benchmark
 record.

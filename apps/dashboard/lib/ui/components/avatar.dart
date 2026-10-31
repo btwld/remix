@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'avatar.g.dart';
 
-/// Radix Themes Avatar size presets.
+/// Ui Avatar size presets.
 enum UiAvatarSize {
   size1,
   size2,
@@ -19,10 +19,10 @@ enum UiAvatarSize {
   size9,
 }
 
-/// Radix Themes Avatar variants.
+/// Ui Avatar variants.
 enum UiAvatarVariant { soft, solid }
 
-/// Ui-themed Avatar with the Radix size, variant, and override contract.
+/// Ui-themed Avatar with Ui sizes, variants, and overrides.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -84,14 +84,14 @@ double _uiAvatarDimension(UiAvatarSize size) => switch (size) {
 };
 
 double _uiAvatarIconSize(UiAvatarSize size) => switch (size) {
-  .size1 => UiTokens.avatarIconSize1(),
-  .size2 => UiTokens.avatarIconSize2(),
+  .size1 => UiTokens.space3(),
+  .size2 => UiTokens.space4(),
   .size3 => UiTokens.avatarIconSize3(),
-  .size4 => UiTokens.avatarIconSize4(),
-  .size5 => UiTokens.avatarIconSize5(),
-  .size6 => UiTokens.avatarIconSize6(),
-  .size7 => UiTokens.avatarIconSize7(),
-  .size8 => UiTokens.avatarIconSize8(),
+  .size4 => UiTokens.space5(),
+  .size5 => UiTokens.space6(),
+  .size6 => UiTokens.space7(),
+  .size7 => UiTokens.space8(),
+  .size8 => UiTokens.space9(),
   .size9 => UiTokens.avatarIconSize9(),
 };
 

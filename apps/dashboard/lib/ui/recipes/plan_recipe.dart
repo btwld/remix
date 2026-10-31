@@ -17,26 +17,36 @@ UiAgentPlanRecipe uiAgentPlanRecipe({
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
 }) => UiAgentPlanRecipe(
   style: UiPlanStyler(
-    viewport: BoxStyler().maxHeight(220),
+    viewport: BoxStyler().maxHeight(UiTokens.planMaxHeight()),
     item: FlexBoxStyler()
-        .spacing(8)
+        .spacing(UiTokens.space2())
         .crossAxisAlignment(.center)
-        .padding(.symmetric(vertical: 6)),
+        .padding(.vertical(UiTokens.space2())),
     summaryTitle: TextStyler()
         .color(UiTokens.gray12())
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
-    itemTitle: TextStyler().color(UiTokens.gray12()).fontSize(14),
-    itemDetail: TextStyler().color(UiTokens.gray11()).fontSize(12),
+        .style(UiTokens.text2.mix())
+        .fontWeight(UiTokens.fontWeightSemibold()),
+    itemTitle: TextStyler()
+        .color(UiTokens.gray12())
+        .style(UiTokens.text2.mix()),
+    itemDetail: TextStyler()
+        .color(UiTokens.gray11())
+        .style(UiTokens.text1.mix()),
     count: TextStyler()
         .color(UiTokens.gray11())
-        .fontSize(12)
-        .wrap(.padding(.right(8))),
-    indicator: IconStyler().color(UiTokens.gray12()).size(16),
-    pendingStatus: IconStyler().color(UiTokens.gray9()).size(16),
-    activeStatus: IconStyler().color(UiTokens.accent9()).size(16),
-    completedStatus: IconStyler().color(UiTokens.accent9()).size(16),
-    cancelledStatus: IconStyler().color(UiTokens.gray9()).size(16),
+        .style(UiTokens.text1.mix())
+        .wrap(.padding(.right(UiTokens.space2()))),
+    indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
+    pendingStatus: IconStyler().color(UiTokens.gray9()).size(UiTokens.space4()),
+    activeStatus: IconStyler()
+        .color(UiTokens.accent9())
+        .size(UiTokens.space4()),
+    completedStatus: IconStyler()
+        .color(UiTokens.accent9())
+        .size(UiTokens.space4()),
+    cancelledStatus: IconStyler()
+        .color(UiTokens.gray9())
+        .size(UiTokens.space4()),
   ).merge(style),
   disclosureStyle: uiDisclosureStyle(style: disclosureStyle),
 );

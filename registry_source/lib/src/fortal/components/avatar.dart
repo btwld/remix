@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'avatar.g.dart';
 
-/// Radix Themes Avatar size presets.
+/// Fortal Avatar size presets.
 enum FortalAvatarSize {
   size1,
   size2,
@@ -19,10 +19,10 @@ enum FortalAvatarSize {
   size9,
 }
 
-/// Radix Themes Avatar variants.
+/// Fortal Avatar variants.
 enum FortalAvatarVariant { soft, solid }
 
-/// Fortal-themed Avatar with the Radix size, variant, and override contract.
+/// Fortal-themed Avatar with Fortal sizes, variants, and overrides.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -88,14 +88,14 @@ double _fortalAvatarDimension(FortalAvatarSize size) => switch (size) {
 };
 
 double _fortalAvatarIconSize(FortalAvatarSize size) => switch (size) {
-  .size1 => FortalTokens.avatarIconSize1(),
-  .size2 => FortalTokens.avatarIconSize2(),
+  .size1 => FortalTokens.space3(),
+  .size2 => FortalTokens.space4(),
   .size3 => FortalTokens.avatarIconSize3(),
-  .size4 => FortalTokens.avatarIconSize4(),
-  .size5 => FortalTokens.avatarIconSize5(),
-  .size6 => FortalTokens.avatarIconSize6(),
-  .size7 => FortalTokens.avatarIconSize7(),
-  .size8 => FortalTokens.avatarIconSize8(),
+  .size4 => FortalTokens.space5(),
+  .size5 => FortalTokens.space6(),
+  .size6 => FortalTokens.space7(),
+  .size7 => FortalTokens.space8(),
+  .size8 => FortalTokens.space9(),
   .size9 => FortalTokens.avatarIconSize9(),
 };
 

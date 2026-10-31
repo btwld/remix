@@ -20,9 +20,6 @@ enum UiRadioSize {
 
 /// Ui radio color variants.
 enum UiRadioVariant {
-  /// Raised treatment with Radix's classic shadow and gradient layers.
-  classic,
-
   /// Surface treatment with neutral border.
   surface,
 
@@ -39,13 +36,19 @@ RadioStyler uiRadioStyle({
   RadioStyler style = const RadioStyler.create(),
 }) {
   return (switch (variant) {
-    .classic => _uiRadioClassicStyler(size, highContrast: highContrast),
-    .surface => _uiRadioSurfaceStyler(size, highContrast: highContrast),
-    .soft => _uiRadioSoftStyler(size, highContrast: highContrast),
-  }).merge(style);
+        .surface => _uiRadioSurfaceStyler(size, highContrast: highContrast),
+        .soft => _uiRadioSoftStyler(size, highContrast: highContrast),
+      })
+      .wrap(uiTouchTarget())
+      .onDisabled(
+        RadioStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+        ),
+      )
+      .merge(style);
 }
 
-RadioStyler _uiRadioBaseStyler(UiRadioSize size, {required Color focusColor}) {
+RadioStyler _uiRadioBaseStyler(UiRadioSize size) {
   final metrics = _uiRadioMetrics(size);
   return RadioStyler(
     container: .size(
@@ -60,91 +63,14 @@ RadioStyler _uiRadioBaseStyler(UiRadioSize size, {required Color focusColor}) {
       behindContent: RemixBoxEffectLayerMix(),
       overContent: RemixBoxEffectLayerMix(),
     ),
-  ).onFocusVisible(
-    .containerEffects(
-      uiFocusOutline(focusColor, offset: UiTokens.focusRingOffset()),
-    ),
-  );
-}
-
-RadioStyler _uiRadioClassicStyler(
-  UiRadioSize size, {
-  required bool highContrast,
-}) {
-  final selectedColor = highContrast
-      ? UiTokens.accent12()
-      : UiTokens.accentIndicator();
-  return _uiRadioBaseStyler(size, focusColor: UiTokens.focus8())
-      .color(UiTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          RemixBoxEffectLayerMix(shadowToken: UiTokens.shadow1Layers),
-        ),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          uiInsetSurface(strokes: [UiTokens.gray7()]),
-        ),
-      )
-      .indicatorColor(
-        highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
-      )
-      .onSelected(
-        .color(selectedColor)
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                RemixBoxEffectLayerMix(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [
-                        UiTokens.whiteA3(),
-                        const Color(0x00000000),
-                        UiTokens.blackA3(),
-                      ],
-                    ),
-                  ],
-                  shadows: [
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: UiTokens.whiteA4(),
-                      offset: const Offset(0, 0.5),
-                      blurRadius: 0.5,
-                    ),
-                    RemixBoxShadowMix(
-                      kind: .inset,
-                      color: UiTokens.blackA4(),
-                      offset: const Offset(0, -0.5),
-                      blurRadius: 0.5,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .indicatorColor(
-              highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
-            ),
-      )
-      .onDisabled(
-        .color(UiTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                RemixBoxEffectLayerMix(shadowToken: UiTokens.shadow1Layers),
-              ),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(UiTokens.grayA8()),
-      );
+  ).onFocusVisible(.containerEffects(uiFocusOutline()));
 }
 
 RadioStyler _uiRadioSurfaceStyler(
   UiRadioSize size, {
   required bool highContrast,
 }) {
-  return _uiRadioBaseStyler(size, focusColor: UiTokens.focus8())
+  return _uiRadioBaseStyler(size)
       .color(UiTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -186,7 +112,7 @@ RadioStyler _uiRadioSurfaceStyler(
 }
 
 RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
-  return _uiRadioBaseStyler(size, focusColor: UiTokens.accentA8())
+  return _uiRadioBaseStyler(size)
       .color(UiTokens.accentA4())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -226,6 +152,6 @@ RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
       ),
       .size3 => (
         size: UiTokens.checkboxSize3(),
-        indicatorSize: UiTokens.radioIndicatorSize3(),
+        indicatorSize: UiTokens.space2(),
       ),
     };

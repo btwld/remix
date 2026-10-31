@@ -11,9 +11,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../helpers/test_helpers.dart';
 
-/// Focus rings of the Fortal recipes against `@radix-ui/themes@3.3.0`: the
-/// color each variant rings in, the layer the slider thumb's halo paints in, and
-/// the dashboard accent swatch's ring.
+/// Shared Fortal control rings and the dashboard accent swatch ring.
 void main() {
   late FocusHighlightStrategy previousStrategy;
 
@@ -25,12 +23,10 @@ void main() {
 
   tearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
 
-  testWidgets('only the soft radio rings in accent-a8', (tester) async {
-    // base-radio.css:46-49 gives every radio
-    // `outline: 2px solid var(--focus-8)`. The soft block then sets, at
-    // base-radio.css:165-168:
-    //   &:where(:focus-visible)::before { outline-color: var(--accent-a8); }
-    final (rings, accentA8, focus8) = await _resolveFocused(
+  testWidgets('every radio variant uses the shared focus color', (
+    tester,
+  ) async {
+    final (rings, focus8) = await _resolveFocused(
       tester,
       (context) => (
         {
@@ -39,79 +35,68 @@ void main() {
               variant: variant,
             ).build(context).spec.containerEffects!.outline.color,
         },
-        MixScope.tokenOf(FortalTokens.accentA8, context),
         MixScope.tokenOf(FortalTokens.focus8, context),
       ),
     );
 
     expect(rings, {
-      FortalRadioVariant.classic: focus8,
       FortalRadioVariant.surface: focus8,
-      FortalRadioVariant.soft: accentA8,
+      FortalRadioVariant.soft: focus8,
     });
   });
 
-  testWidgets('only the soft select rings in accent-8, not the focus color', (
+  testWidgets('every select variant follows an overridden focus color', (
     tester,
   ) async {
-    // select.css:15-18 gives every trigger `outline: 2px solid var(--focus-8)`.
-    // The soft trigger then sets, at select.css:430-433:
-    //   &:where(:focus-visible) { outline-color: var(--accent-8); }
-    // Fortal resolves both tokens to the same step, so the focus color is
-    // overridden here to tell the two apart.
+    // Distinct overrides catch recipes accidentally using the accent token.
     const focusOverride = Color(0xFFFF00FF);
-    final (rings, accent8) = await _resolveFocused(
+    final rings = await _resolveFocused(
       tester,
       colors: {FortalTokens.focus8: focusOverride},
-      (context) => (
-        {
-          for (final variant in FortalSelectVariant.values)
-            variant: fortalSelectStyle(
-              variant: variant,
-            ).build(context).spec.trigger.spec.containerEffects!.outline.color,
-        },
-        MixScope.tokenOf(FortalTokens.accent8, context),
-      ),
+      (context) => {
+        for (final variant in FortalSelectVariant.values)
+          variant: fortalSelectStyle(
+            variant: variant,
+          ).build(context).spec.trigger.spec.containerEffects!.outline.color,
+      },
     );
 
     expect(rings, {
       FortalSelectVariant.surface: focusOverride,
-      FortalSelectVariant.soft: accent8,
+      FortalSelectVariant.soft: focusOverride,
       FortalSelectVariant.ghost: focusOverride,
     });
   });
 
   group('slider thumb', () {
-    testWidgets('paints the halo beneath the thumb shadows', (tester) async {
-      // slider.css:88-93 lists the thumb's own box-shadow first and the halo
-      // after it, so the halo is the lower layer:
-      //   box-shadow: var(--slider-thumb-box-shadow),
-      //     0 0 0 3px var(--accent-3), 0 0 0 5px var(--focus-8);
-      // The thumb's shadows are its decoration, which a behindContent layer
-      // sits under; overContent would paint over them.
+    testWidgets('uses the shared ring without a thumb halo', (tester) async {
       for (final variant in FortalSliderVariant.values) {
-        final (ring, accent3) = await _resolveFocused(
+        final (ring, focus8) = await _resolveFocused(
           tester,
           (context) => (
             fortalSliderStyle(
               variant: variant,
             ).build(context).spec.thumbFocusEffects!,
-            MixScope.tokenOf(FortalTokens.accent3, context),
+            FortalTokens.focus8.resolve(context),
           ),
         );
-
         final reason = '$variant';
         expect(ring.overContent?.shadows ?? const [], isEmpty, reason: reason);
-        expect(ring.behindContent!.shadows, hasLength(1), reason: reason);
-        expect(ring.behindContent!.shadows.single.color, accent3);
-        expect(ring.behindContent!.shadows.single.spreadRadius, 3);
+        expect(
+          ring.behindContent?.shadows ?? const [],
+          isEmpty,
+          reason: reason,
+        );
+        expect(ring.outline.color, focus8, reason: reason);
+        expect(ring.outline.width, 2, reason: reason);
+        expect(ring.outlineOffset, 2, reason: reason);
       }
     });
 
     for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
       for (final radius in FortalRadius.values) {
         testWidgets(
-          'keeps the thumb 1px edge above the halo at ${radius.name} radius '
+          'keeps the thumb 1px edge inside the shared ring at ${radius.name} radius '
           'in ${mode.name} mode',
           (tester) async {
             final node = FocusNode();
@@ -141,29 +126,26 @@ void main() {
             await tester.pump();
 
             final context = tester.element(find.byType(FortalSlider));
-            final accent3 = MixScope.tokenOf(FortalTokens.accent3, context);
-            final blackA4 = MixScope.tokenOf(FortalTokens.blackA4, context);
+            final edgeColor = FortalTokens.gray7.resolve(context);
             final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
             final pixels = await _capture(tester, slider);
             final thumb = tester.getCenter(find.byType(FortalSlider));
             final origin = tester.getTopLeft(find.byKey(slider));
 
-            // Walk up the thumb's center column from its white fill. At 4x the
-            // thumb's 1px `black-a4` edge is 4 device pixels, the 3px halo
-            // shows 8 beyond that edge, and the 2px ring is 8. Each sample is
-            // the center of a band, so it holds whether or not the thumb's top
-            // row is anti-aliased.
+            // Sample the 1px border, 2px clear gap and 2px shared ring
+            // along the thumb's center column at four device pixels per px.
             var y = ((thumb.dy - origin.dy) * _scale).round();
             final x = ((thumb.dx - origin.dx) * _scale).round();
             while (pixels.at(x, y) == const Color(0xFFFFFFFF)) {
               y--;
             }
             final edge = y - 1;
-            final halo = y - 4 - 4;
+            final gap = y - 4 - 4;
             final ring = y - 4 - 8 - 4;
 
-            _expectNear(pixels.at(x, edge), Color.alphaBlend(blackA4, accent3));
-            _expectNear(pixels.at(x, halo), accent3);
+            _expectNear(pixels.at(x, edge), edgeColor);
+            // The capture excludes the theme background, so the gap is clear.
+            expect(pixels.at(x, gap), const Color(0x00000000));
             _expectNear(pixels.at(x, ring), focus8);
           },
         );
@@ -172,7 +154,7 @@ void main() {
   });
 
   group('accent swatch', () {
-    // theme-panel.css:15-47: a swatch's input draws
+    // A swatch draws
     //   outline-offset: 2px; outline-width: 2px;
     // and nothing until it is :checked (outline-color: gray-12) or
     // :focus-visible (outline-color: accent-9). The later rule wins, so a
@@ -249,12 +231,12 @@ void main() {
       );
     }
 
-    // At Radix's defaults the gap is 0-2px out, the ring 2-4px, and the page
+    // At Fortal's defaults the gap is 0-2px out, the ring 2-4px, and the page
     // is beyond: 1, 3 and 5 are the centers.
     testWidgets('an idle swatch draws no ring', (tester) async {
       await pumpPanel(tester);
 
-      final at = await probe(tester, 'grass');
+      final at = await probe(tester, 'mangue');
 
       expect(at(1), at(5));
       expect(at(3), at(5));
@@ -265,7 +247,7 @@ void main() {
     ) async {
       await pumpPanel(tester);
 
-      final at = await probe(tester, 'indigo');
+      final at = await probe(tester, 'calcadao');
 
       expect(at(1), at(5));
       _expectNear(at(3), panelToken(tester, FortalTokens.gray12));
@@ -273,10 +255,10 @@ void main() {
 
     testWidgets('a focused swatch rings in the panel accent', (tester) async {
       await pumpPanel(tester);
-      focusSwatch(tester, 'grass');
+      focusSwatch(tester, 'mangue');
       await tester.pump();
 
-      final at = await probe(tester, 'grass');
+      final at = await probe(tester, 'mangue');
 
       expect(at(1), at(5));
       _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
@@ -284,10 +266,10 @@ void main() {
 
     testWidgets('focus stays visible on the selected swatch', (tester) async {
       await pumpPanel(tester);
-      focusSwatch(tester, 'indigo');
+      focusSwatch(tester, 'calcadao');
       await tester.pump();
 
-      final at = await probe(tester, 'indigo');
+      final at = await probe(tester, 'calcadao');
 
       _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
     });
@@ -296,20 +278,20 @@ void main() {
       tester,
     ) async {
       await pumpPanel(tester);
-      focusSwatch(tester, 'gray');
+      focusSwatch(tester, 'calcadao');
       await tester.pump();
 
-      final at = await probe(tester, 'gray', left: true);
+      final at = await probe(tester, 'calcadao', left: true);
 
       _expectNear(at(3), panelToken(tester, FortalTokens.accent9));
     });
 
     testWidgets('the ring does not change the swatch layout', (tester) async {
       await pumpPanel(tester);
-      final swatch = find.byKey(const ValueKey('accent-grass'));
+      final swatch = find.byKey(const ValueKey('accent-mangue'));
       final idle = tester.getRect(swatch);
 
-      focusSwatch(tester, 'grass');
+      focusSwatch(tester, 'mangue');
       await tester.pump();
 
       expect(tester.getRect(swatch), idle);
@@ -325,11 +307,11 @@ void main() {
           FortalTokens.focusRingOffset: 3,
         },
       );
-      focusSwatch(tester, 'gray');
+      focusSwatch(tester, 'calcadao');
       await tester.pump();
 
       // The gap is 0-3px out, the ring 3-6px, and the page is beyond.
-      final at = await probe(tester, 'gray', left: true);
+      final at = await probe(tester, 'calcadao', left: true);
 
       expect(at(1.5), at(7));
       expect(at(2.5), at(7));
@@ -370,12 +352,12 @@ void main() {
             FortalTokens.focusRingOffset: offset,
           },
         );
-        focusSwatch(tester, 'grass');
+        focusSwatch(tester, 'mangue');
         await tester.pump();
 
         expect(tester.takeException(), isNull);
-        // Indigo is selected and grass is focused.
-        for (final accent in ['indigo', 'grass']) {
+        // Calçadão is selected and Mangue is focused.
+        for (final accent in ['calcadao', 'mangue']) {
           final at = await probe(tester, accent);
           for (final out in [0.5, 1.0, 2.0, 3.0, 4.0]) {
             expect(at(out), at(6), reason: '$accent $out px out');
