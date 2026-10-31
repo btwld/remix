@@ -118,6 +118,10 @@ Use [Styling](styling.md#styling-with-installed-tokens) for token call forms,
 
 ## Updating an older install
 
+If installed targets have no recorded owner, first complete
+[legacy adoption](cli.md#projects-from-an-earlier-prerelease) and commit
+`remix.ownership.json` with configuration and source.
+
 A theme installed before the current token set names `focusRing` and a single
 `radius` token. `--overwrite` replaces only the items named, so reinstall the
 theme together with every installed Vanilla item in one command (check

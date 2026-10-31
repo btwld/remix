@@ -129,6 +129,13 @@ If provenance is uncertain or systems were previously mixed, restore a known
 configuration/source pair from version control or start a clean installation
 and reapply local edits. Do not use adoption to relabel another system's files.
 
+Commit `remix.ownership.json` with `remix.yaml` and the installed source after
+adoption. Its prefix, preset, and UI path must continue to match the project
+configuration. Renaming identifiers or deleting source does not release its
+reservations. Restore matching configuration, ownership, and source after an
+accidental context change; for an intentional change, initialize a clean
+installation in a separate app and reapply your edits.
+
 Upgrade the project-local CLI before migrating. Older CLIs ignore this record
 and do not enforce the boundary; do not downgrade installer commands afterward.
 This installer behavior requires a new CLI release; updating a registry pin

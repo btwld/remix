@@ -29,8 +29,10 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `--ui-path`, then verifying the installed source's provenance before adoption.
 
 CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. The current
-CLI rejects unknown existing targets before mutation. After verifying their
-source, name every existing dependency explicitly when adopting:
+CLI rejects unknown existing targets before mutation, including `--diff` and
+`--dry-run`. After verifying their source, name every existing dependency
+explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal
+Button also needs `base_button` when its targets already exist:
 
 ```bash
 dart run remix_cli:remix add theme button --adopt --diff
@@ -42,6 +44,12 @@ Adoption preserves authored edits and records provenance in
 additions remain supported. A known different owner is rejected in every mode,
 even `--overwrite` and `--adopt`. An old CLI does not enforce these reservations;
 use the upgraded project-local CLI consistently.
+
+The ownership record also binds the prefix, preset, and UI path. If those no
+longer match, restore the matching configuration, ownership record, and source.
+Renaming identifiers or deleting installed files does not release reservations.
+For an intentional context change, initialize a clean installation in a separate
+app and reapply edits; do not relabel the ownership record.
 
 ## Install from another registry
 
