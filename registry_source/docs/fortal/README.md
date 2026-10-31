@@ -232,7 +232,7 @@ import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
 final style = ButtonStyler()
-  .color(FortalTokens.accent9())
+  .color(FortalTokens.accentSolid())
   .padding(.all(FortalTokens.space4()))
   .borderRadius(.all(FortalTokens.radius3()))
   .label(TextStyler().color(FortalTokens.accentContrast()));

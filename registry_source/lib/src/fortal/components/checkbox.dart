@@ -124,7 +124,9 @@ CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
         ),
       )
       .indicatorColor(
-        highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
+        highContrast
+            ? FortalTokens.accent1()
+            : FortalTokens.accentIndicatorContrast(),
       );
 
   return base

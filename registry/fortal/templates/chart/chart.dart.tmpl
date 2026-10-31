@@ -27,7 +27,8 @@ const _highContrastLineWidthToken = ContextToken<double>(
 ///
 /// The first entry follows the configured {{typePrefix}} accent. Remaining entries use
 /// {{typePrefix}} color families selected for clear categorical separation. Set
-/// [highContrast] to use step 12 instead of the standard solid-color step 9.
+/// [highContrast] to use step 12 instead of the standard step 9, each
+/// palette's mark fill.
 List<Color> resolve{{typePrefix}}ChartPalette(
   BuildContext context, {
   bool highContrast = false,
@@ -156,6 +157,9 @@ PieChartStyler {{valuePrefix}}PieChartStyle({
         PieSliceStyler()
             .showLabel(showLabels)
             .cornerRadius({{typePrefix}}Tokens.borderWidth2())
+            // Opt-in slice labels take the accent's label colour, which is
+            // fitted to the accent's labelled solid, not to every slice of
+            // the categorical palette. Check contrast when enabling them.
             .label(
               TextStyler()
                   .style({{typePrefix}}Tokens.text1.mix())

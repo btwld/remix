@@ -252,12 +252,12 @@ _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
       foreground: foreground,
       background: highContrast
           ? FortalTokens.accent12()
-          : FortalTokens.accent9(),
+          : FortalTokens.accentSolid(),
     ),
     hovered: FortalBaseButtonStateStyle(
       background: highContrast
           ? _highContrastHoveredFill()
-          : FortalTokens.accent10(),
+          : FortalTokens.accentSolidHover(),
     ),
     pressed: FortalBaseButtonStateStyle(
       background: highContrast
@@ -371,16 +371,16 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   ),
 );
 
-/// Ordinary solid press: the hover fill darkens under a light label and
-/// lightens under a deep on-solid ink, so the label keeps its contrast in
-/// both modes and for every palette, including custom ones.
+/// Ordinary solid press: the labelled hover fill darkens under a light label
+/// and lightens under a dark ink, so the label keeps its contrast in both
+/// modes and for every palette, including custom ones.
 const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
 
 Color _resolveSolidPressedFill(BuildContext context) {
   final label = FortalTokens.accentContrast.resolve(context);
-  final fill = FortalTokens.accent9.resolve(context);
+  final fill = FortalTokens.accentSolid.resolve(context);
   return _fortalFilteredColor(
-    FortalTokens.accent10.resolve(context),
+    FortalTokens.accentSolidHover.resolve(context),
     label.computeLuminance() > fill.computeLuminance()
         ? const [
             RemixCssColorFilterOperation.brightness(0.92),

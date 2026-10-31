@@ -185,9 +185,10 @@ BoxStyler _uiSwitchOffThumbStyler() => BoxStyler()
       .all(.color(UiTokens.controlBorder()).width(UiTokens.borderWidth1())),
     );
 
-/// The selected surface thumb stays a light surface rather than a disc of
-/// on-solid ink: a 2px [UiTokens.accentThumbRing] carries its contrast on
-/// light fills. High contrast keeps its deliberate step-1 knockout thumb.
+/// The selected surface thumb stays a light surface rather than a disc of ink.
+/// Its 2px [UiTokens.accentThumbRing] follows the track wherever white
+/// already stands out on it, and carries the contrast on bright tracks. High
+/// contrast keeps its deliberate step-1 knockout thumb.
 BoxStyler _uiSwitchSelectedThumbStyler(bool highContrast) => highContrast
     ? BoxStyler()
           .color(UiTokens.accent1())

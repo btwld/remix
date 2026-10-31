@@ -249,12 +249,12 @@ _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   return (
     idle: UiBaseButtonStateStyle(
       foreground: foreground,
-      background: highContrast ? UiTokens.accent12() : UiTokens.accent9(),
+      background: highContrast ? UiTokens.accent12() : UiTokens.accentSolid(),
     ),
     hovered: UiBaseButtonStateStyle(
       background: highContrast
           ? _highContrastHoveredFill()
-          : UiTokens.accent10(),
+          : UiTokens.accentSolidHover(),
     ),
     pressed: UiBaseButtonStateStyle(
       background: highContrast
@@ -360,16 +360,16 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   ),
 );
 
-/// Ordinary solid press: the hover fill darkens under a light label and
-/// lightens under a deep on-solid ink, so the label keeps its contrast in
-/// both modes and for every palette, including custom ones.
+/// Ordinary solid press: the labelled hover fill darkens under a light label
+/// and lightens under a dark ink, so the label keeps its contrast in both
+/// modes and for every palette, including custom ones.
 const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
 
 Color _resolveSolidPressedFill(BuildContext context) {
   final label = UiTokens.accentContrast.resolve(context);
-  final fill = UiTokens.accent9.resolve(context);
+  final fill = UiTokens.accentSolid.resolve(context);
   return _uiFilteredColor(
-    UiTokens.accent10.resolve(context),
+    UiTokens.accentSolidHover.resolve(context),
     label.computeLuminance() > fill.computeLuminance()
         ? const [
             RemixCssColorFilterOperation.brightness(0.92),

@@ -94,7 +94,9 @@ RadioStyler _uiRadioSurfaceStyler(
               ),
             )
             .indicatorColor(
-              highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
+              highContrast
+                  ? UiTokens.accent1()
+                  : UiTokens.accentIndicatorContrast(),
             ),
       )
       .onDisabled(

@@ -209,8 +209,12 @@ void _writePalette(
       }
       out.writeln('}),');
     }
+    // The labelled solid is written only where it differs from steps 9/10,
+    // the fallback the palette class applies otherwise.
+    final split = mode.fill != mode.solid[8] || mode.fillHover != mode.solid[9];
     out.writeln(
-      '), Color(${_hex(mode.surface)}), Color(${_hex(mode.indicator)}), Color(${_hex(mode.track)}), Color(${_hex(mode.contrast)})),',
+      '), Color(${_hex(mode.surface)}), Color(${_hex(mode.indicator)}), Color(${_hex(mode.track)}), Color(${_hex(mode.contrast)})'
+      '${split ? ', solid: Color(${_hex(mode.fill)}), solidHover: Color(${_hex(mode.fillHover)})' : ''}),',
     );
   }
   out.writeln(');');

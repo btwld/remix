@@ -9,7 +9,7 @@ import 'theme_scope.dart' show FortalTheme;
 ///
 /// Example:
 /// ```dart
-/// ButtonStyler().color(FortalTokens.accent9())
+/// ButtonStyler().color(FortalTokens.accentSolid())
 /// ```
 ///
 /// Must be used within [FortalTheme] to resolve actual values.
@@ -73,10 +73,12 @@ class FortalTokens {
   /// Subtle accent surface for soft button variants and chips.
   static const accentSurface = ColorToken('fortal.accent.surface');
 
-  /// Active indicator color for progress bars and sliders.
+  /// Mark fill of selected checkboxes, radios and tab indicators; white or
+  /// [accentIndicatorContrast] marks keep 3:1 on it.
   static const accentIndicator = ColorToken('fortal.accent.indicator');
 
-  /// Track/rail background color for sliders and progress bars.
+  /// Selected switch track and slider and progress range, under a light
+  /// thumb outlined by [accentThumbRing].
   static const accentTrack = ColorToken('fortal.accent.track');
 
   /// Mode-aware overlay used by high-contrast slider ranges.
@@ -84,11 +86,26 @@ class FortalTokens {
     'fortal.slider.high-contrast-overlay',
   );
 
-  /// High contrast foreground for solid accent backgrounds.
+  /// Label colour on [accentSolid] and [accentSolidHover] (4.5:1 or more).
   static const accentContrast = ColorToken('fortal.accent.contrast');
 
-  /// Outline of a white switch or slider thumb: the on-solid ink where that
-  /// ink is darker than the solid fill, otherwise [controlBorder].
+  /// Labelled solid fill of buttons, icon buttons, solid badges, avatars,
+  /// code and highlighted menu and select items. It can be deeper than
+  /// [accent9], which is the mark fill.
+  static const accentSolid = ColorToken('fortal.accent.solid');
+
+  /// Hovered [accentSolid]; pressed fills are derived from it.
+  static const accentSolidHover = ColorToken('fortal.accent.solid-hover');
+
+  /// Check and radio-dot ink on [accentIndicator] (3:1 or more): white where
+  /// it fits, otherwise a dark ink.
+  static const accentIndicatorContrast = ColorToken(
+    'fortal.accent.indicator-contrast',
+  );
+
+  /// Outline of a white switch or slider thumb: the track colour where white
+  /// stands out on the track, [controlBorder] where the track is too light
+  /// against the page, and a dark ink on bright tracks.
   static const accentThumbRing = ColorToken('fortal.accent.thumb-ring');
 
   /// Neutral boundary of active empty controls (unchecked checkbox and radio,
@@ -137,10 +154,13 @@ class FortalTokens {
   /// Accent step 8 - Component borders on hover and focus.
   static const accent8 = ColorToken('fortal.accent.8');
 
-  /// Accent step 9 - Primary solid background.
+  /// Accent step 9 - The most chromatic step: the mark fill behind
+  /// [accentIndicator] and [accentTrack], and accent dots and icons. Labelled
+  /// fills use [accentSolid].
   static const accent9 = ColorToken('fortal.accent.9');
 
-  /// Accent step 10 - Solid background on hover.
+  /// Accent step 10 - Pressed or hovered mark fill. Labelled fills use
+  /// [accentSolidHover].
   static const accent10 = ColorToken('fortal.accent.10');
 
   /// Accent step 11 - Low contrast text.

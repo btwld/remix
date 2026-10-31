@@ -65,17 +65,54 @@ Color computeControlBorder({{typePrefix}}ColorScale gray, {required bool isDark}
     ? mixOklabPremultiplied(gray.step(7), gray.step(8), .7)
     : mixOklabPremultiplied(gray.step(8), gray.step(11), .15);
 
-/// Computes the outline of a light control thumb.
+/// Computes the ink of checks and radio dots on the accent's indicator.
 ///
-/// Switch and slider thumbs are a white surface with this ring rather than a
-/// disc of on-solid ink. Where the ink is darker than the solid fill, the ring
-/// is that ink, so the thumb stands out on a light fill. Where the ink is
-/// lighter (white on a deep fill), the white thumb already contrasts with the
-/// fill and the ring is [controlBorder], which separates it from the page.
-Color computeAccentThumbRing({{typePrefix}}Color accent, Color controlBorder) =>
-    accent.contrast.computeLuminance() < accent.indicator.computeLuminance()
-    ? accent.contrast
-    : controlBorder;
+/// Marks need 3:1 on the fill they sit on, which is the indicator, not the
+/// labelled solid. White wherever it keeps 3:1 on the indicator; otherwise the
+/// palette's [{{typePrefix}}Color.contrast] when that keeps 3:1 there; otherwise
+/// Calçadão's dark ink, which always does where white cannot.
+Color computeAccentIndicatorContrast({{typePrefix}}Color accent) =>
+    _markInk(accent.indicator, accent.contrast);
+
+/// Computes the outline of track-coloured shapes: light switch and slider
+/// thumbs, and the filled extent of a surface progress bar.
+///
+/// Where white keeps 3:1 on the accent's track, a white thumb already stands
+/// out there and the outline only separates the shape from the page and
+/// panels around it: the track colour itself where it keeps 3:1 against every
+/// one of [surfaces], otherwise [controlBorder]. Without [surfaces] that
+/// cannot be judged, so the conservative [controlBorder] is used. On a bright
+/// track the outline carries the contrast instead, with the same ink rule as
+/// [computeAccentIndicatorContrast].
+Color computeAccentThumbRing(
+  {{typePrefix}}Color accent,
+  Color controlBorder, {
+  List<Color>? surfaces,
+}) {
+  final track = accent.track;
+  if (!_keepsMarkContrast(_white, track)) {
+    return _markInk(track, accent.contrast);
+  }
+  final clear =
+      surfaces != null &&
+      surfaces.every((surface) => _keepsMarkContrast(track, surface));
+  return clear ? track : controlBorder;
+}
+
+const _white = Color(0xFFFFFFFF);
+
+Color _markInk(Color fill, Color supplied) {
+  if (_keepsMarkContrast(_white, fill)) return _white;
+  if (_keepsMarkContrast(supplied, fill)) return supplied;
+  return calcadao.dark.contrast;
+}
+
+/// WCAG 2 contrast of at least 3:1, the non-text threshold.
+bool _keepsMarkContrast(Color first, Color second) {
+  final a = first.computeLuminance();
+  final b = second.computeLuminance();
+  return (math.max(a, b) + .05) / (math.min(a, b) + .05) >= 3;
+}
 
 /// Computes modal backdrop overlay color.
 ///
@@ -252,6 +289,9 @@ class {{typePrefix}}ThemeColors {
   final Color focusA5;
   final Color focusA8;
 
+  /// Ink of checks and radio dots on the accent's indicator.
+  Color get accentIndicatorContrast => computeAccentIndicatorContrast(accent);
+
   const {{typePrefix}}ThemeColors({
     required this.accent,
     required this.gray,
@@ -336,7 +376,15 @@ const Map<String, {{typePrefix}}ColorTheme> _accentThemesByName = {
     colorOverlay: colorOverlay,
     shadowStroke: shadowStroke,
     controlBorder: controlBorder,
-    accentThumbRing: computeAccentThumbRing(accentRC, controlBorder),
+    accentThumbRing: computeAccentThumbRing(
+      accentRC,
+      controlBorder,
+      surfaces: [
+        colorBackground,
+        colorPanelSolid,
+        Color.alphaBlend(colorPanelTranslucent, colorBackground),
+      ],
+    ),
     focus8: focus8,
     focusA5: focusA5,
     focusA8: focusA8,

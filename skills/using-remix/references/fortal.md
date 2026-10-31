@@ -130,10 +130,16 @@ The twelve flat-control families expose no `classic` constructor. Kbd defaults
 to `soft`; segmented control has only `surface`. Toast's independent `classic`
 variant remains a floating notification surface. Cards and controls have no
 elevation, surface fields use gray2 with the 3:1 `controlBorder` frame (select
-triggers keep gray7), and focus is 2px step 8 with a 2px gap. Normal selected
-surface-switch thumbs and enabled slider thumbs are white with an
-`accentThumbRing` outline rather than ink discs; off switch thumbs are white
-with a `controlBorder` ring. Selected soft thumbs keep accent11 (accent12 at
+triggers keep gray7), and focus is 2px step 8 with a 2px gap. Labelled fills
+(solid buttons, badges, avatars, menu highlights) read `accentSolid` and
+`accentSolidHover` with `accentContrast`. `accent9`/`accent10` are the mark
+fill of selected controls and progress, and checks read
+`accentIndicatorContrast`; pair a custom fill with the matching role. Most
+palettes carry white labels in both modes; Sol and Duna keep warm-brown labels
+and marks. Normal selected surface-switch thumbs and enabled slider thumbs are
+white with an `accentThumbRing` outline rather than ink discs; off switch
+thumbs are white with a `controlBorder` ring. Progress tracks are edged in
+`controlBorder`. Selected soft thumbs keep accent11 (accent12 at
 high contrast), selected high-contrast surface thumbs keep accent1, and
 disabled thumbs keep gray2 with a gray6 border.
 The type ramp is 12/14/16/18/20/24/28/36/60.

@@ -134,7 +134,9 @@ void main() {
         );
 
         if (variant == .solid) {
-          expect(_boxColor(normal.spec.container), ceu.light.scale.step(9));
+          // The labelled solid, not the mark fill: Céu splits the two.
+          expect(_boxColor(normal.spec.container), ceu.light.solid);
+          expect(ceu.light.solid, isNot(ceu.light.indicator));
           expect(
             _boxColor(highContrast.spec.container),
             ceu.light.scale.step(12),
@@ -166,7 +168,7 @@ void main() {
         );
 
         if (variant == .solid) {
-          expect(_boxColor(normal.spec.container), ceu.light.scale.step(9));
+          expect(_boxColor(normal.spec.container), ceu.light.solid);
           expect(
             _boxColor(highContrast.spec.container),
             ceu.light.scale.step(12),

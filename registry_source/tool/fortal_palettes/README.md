@@ -34,19 +34,35 @@ A custom name may not reuse a built-in identifier (`calcadao`, `serra`,
 `<prefix>Error`, `blackAlpha` and the rest), and a custom palette is never
 generated as the neutral because of its name.
 
-Generation reduces chroma to fit sRGB, uses common lightness stops for
-background/border/text roles, and preserves accessible seed-led solid fills.
-Dark solids take the seed's OKLCH lightness clamped to 0.70–0.84: dark seeds
-are lifted for visibility and light seeds keep their character. The solid and
-hover are fitted to white or a dark reference; a dark side then takes the
-palette's on-solid ink: its own hue, the lightest tone up to lightness 0.70
-that keeps 4.6:1 on both fill and hover, chroma up to the seed's (warm brown
-for yellows; a deep neutral for gray seeds). Bright fills get a visibly
-coloured ink; mid-tone fills keep a deep one. Thumbs are not inked: the theme
-outlines a white thumb with that ink as `accentThumbRing`. See the
-specification's on-solid ink policy. Every alpha step is solved against the
-neutral page. All steps are rounded to 8-bit sRGB before
-contrast is checked in tests.
+Generation reduces chroma to fit sRGB and uses common lightness stops for
+background, border and text roles. Chromatic seeds tint steps 1–8, 11 and 12
+with at least 0.09 chroma, so low-chroma seeds read as their hue; step 11 is
+the lightest same-hue tone that keeps 4.6:1 on the step-5 tint over the solid
+panel.
+
+Labels and marks are separate roles:
+
+- **Luminous seeds** (a white label would need more than 0.12 OKLCH lightness
+  of darkening: Sol, Duna, near-white seeds) keep one bright fill. Their dark
+  fill keeps the seed's lightness clamped to 0.70–0.84, with a same-hue ink:
+  the lightest tone up to lightness 0.70 that keeps 4.6:1 on fill and hover,
+  warm brown for yellows and a deep neutral for gray seeds.
+- **Every other seed** gets a mark fill (steps 9 and 10) and a labelled solid
+  with white labels:
+  - the mark fill is the seed where white marks, the page and the panel keep
+    3:1, deepened just enough otherwise; in dark mode it starts from the
+    seed's lightness clamped to 0.58–0.72 instead of being lifted;
+  - the labelled solid deepens further only as far as a white label needs on
+    it and its hover.
+
+The output writes `solid:`/`solidHover:` only where they differ from steps 9
+and 10, and needs the installed `palette.dart` that accepts them; older
+five-argument palettes still compile and keep their labels on steps 9 and 10.
+Checks and thumb outlines are derived by the theme from the indicator and
+track (see the specification's labels-and-marks section). Every alpha step is
+solved against the neutral page, so alpha steps are fills, not overlays for
+other accent steps. All steps are rounded to 8-bit sRGB before contrast is
+checked in tests.
 
 ## Very light custom accents
 

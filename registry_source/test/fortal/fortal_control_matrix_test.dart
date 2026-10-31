@@ -229,16 +229,17 @@ void main() {
             } else {
               expect(color, resolved.tokens.gray);
             }
+            // Labelled fills read the solid role; marks read the indicator.
             expect(
               (resolved.button.container.spec.box!.spec.decoration
                       as BoxDecoration)
                   .color,
-              color.scale.step(9),
+              color.solid,
             );
             expect(
               (resolved.iconButton.container.spec.decoration as BoxDecoration)
                   .color,
-              color.scale.step(9),
+              color.solid,
             );
             expect(
               (resolved.checkbox.container.spec.decoration as BoxDecoration)
@@ -252,7 +253,7 @@ void main() {
             expect(
               (resolved.progress.indicator.spec.decoration as BoxDecoration)
                   .color,
-              color.scale.step(9),
+              color.track,
             );
             expect(
               resolved.badge.label.spec.style?.color,

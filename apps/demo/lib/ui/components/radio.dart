@@ -102,7 +102,7 @@ RadioStyler _fortalRadioSurfaceStyler(
             .indicatorColor(
               highContrast
                   ? FortalTokens.accent1()
-                  : FortalTokens.accentContrast(),
+                  : FortalTokens.accentIndicatorContrast(),
             ),
       )
       .onDisabled(

@@ -22,8 +22,10 @@ import '../helpers/contrast.dart';
 ///
 /// Thresholds follow WCAG 2.2 AA: 4.5:1 for button labels; 3:1 for the cue
 /// that identifies a control or its state (the outline of an empty control,
-/// the off track, the thumb's fill or ring, the focus ring). A pale selected
-/// fill is not itself required to reach 3:1 when its mark carries the state.
+/// the off track, the thumb's fill or ring, the focus ring), and for the two
+/// extents a bare progress bar shows (its whole track and its filled part). A
+/// pale selected fill is not itself required to reach 3:1 when its mark
+/// carries the state.
 void main() {
   const palettes = <String, FortalColorTheme>{
     'calcadao': calcadao,
@@ -279,6 +281,25 @@ List<_Probe> _probes() {
         _sliderThumb,
         width: 144,
       ),
+    // A bare progress bar has no visible value text: the track's extent shows
+    // the total and the filled extent shows the value, at 0, part and full.
+    for (final variant in FortalProgressVariant.values)
+      for (final highContrast in [false, true])
+        for (final value in [0.0, .5, 1.0])
+          _Probe(
+            'progress.${variant.name}${highContrast ? '.highContrast' : ''}'
+            '.$value',
+            SizedBox(
+              width: 120,
+              child: FortalProgress(
+                value: value,
+                variant: variant,
+                highContrast: highContrast,
+              ),
+            ),
+            (image, rects) => _progressExtents(image, rects, value),
+            width: 144,
+          ),
     _Probe(
       'textField',
       const SizedBox(width: 120, child: FortalTextField(hintText: 'Name')),
@@ -429,6 +450,30 @@ String? _sliderThumb(_Image image, _Rects rects) {
       contrastRatio(run.color, outside),
   ].reduce((a, b) => a > b ? a : b);
   return best < 3 ? 'thumb against ${_hex(outside)} = $best ($runs)' : null;
+}
+
+/// Each extent a progress bar carries (filled near its start, unfilled near
+/// its end) has a fully covered band reaching 3:1 against the surface: the
+/// fill or its outline, and the track's boundary.
+String? _progressExtents(_Image image, _Rects rects, double value) {
+  String? extent(String name, double x) {
+    final runs = image.columnRuns(x, rects.cell.top, rects.cell.bottom);
+    if (runs.length < 3) return '$name not found: $runs';
+    final outside = runs.first.color;
+    final best = [
+      for (final run in runs.sublist(1, runs.length - 1))
+        contrastRatio(run.color, outside),
+    ].reduce((a, b) => a > b ? a : b);
+    return best < 3 ? '$name against ${_hex(outside)} = $best ($runs)' : null;
+  }
+
+  final start = rects.child.left + 10;
+  final end = rects.child.right - 10;
+  return switch (value) {
+    0.0 => extent('empty track', end) ?? extent('empty track', start),
+    1.0 => extent('fill', start) ?? extent('fill', end),
+    _ => extent('fill', start) ?? extent('track', end),
+  };
 }
 
 /// A surface text input's border against the surface outside it.
@@ -594,6 +639,34 @@ class _Image {
         }
       }
       runStart = x;
+      if (next != null) color = next;
+    }
+    return runs;
+  }
+
+  /// Runs of identical pixels down the device column through logical [x].
+  List<_Run> columnRuns(double x, double fromY, double toY) {
+    final column = (x * _scale).floor() + 1;
+    final start = (fromY * _scale).round();
+    final end = (toY * _scale).round();
+    final runs = <_Run>[];
+    var runStart = start;
+    var color = _at(column, start);
+    for (var y = start + 1; y <= end; y++) {
+      final next = y == end ? null : _at(column, y);
+      if (next == color) continue;
+      if (y - runStart >= 3) {
+        if (runs.isNotEmpty && runs.last.color == color) {
+          final last = runs.removeLast();
+          runs.add((
+            color: color,
+            length: last.length + (y - runStart) / _scale,
+          ));
+        } else {
+          runs.add((color: color, length: (y - runStart) / _scale));
+        }
+      }
+      runStart = y;
       if (next != null) color = next;
     }
     return runs;

@@ -131,7 +131,7 @@ MenuItemStyler _fortalMenuHighlightedItemStyler(
     .solid =>
       MenuItemStyler()
           .color(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+            highContrast ? FortalTokens.accent12() : FortalTokens.accentSolid(),
           )
           .label(.color(solidForeground))
           .leadingIcon(.color(solidForeground))

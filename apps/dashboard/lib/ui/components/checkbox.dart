@@ -122,7 +122,7 @@ CheckboxStyler _uiCheckboxSurface(CheckboxStyler base, bool highContrast) {
         ),
       )
       .indicatorColor(
-        highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
+        highContrast ? UiTokens.accent1() : UiTokens.accentIndicatorContrast(),
       );
 
   return base

@@ -191,12 +191,16 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          .color(UiTokens.accent9())
+          // A swatch is the palette's mark fill, so its selected tick takes
+          // the mark ink; the focus-coloured ring also marks the selection.
+          .color(UiTokens.accentIndicator())
           .iconColor(const Color(0x00000000))
           .onHovered(ToggleStyler().color(UiTokens.accent10()))
           .onPressed(ToggleStyler().color(UiTokens.accent10()))
           .onSelected(
-            ToggleStyler().iconColor(UiTokens.accentContrast()).merge(_ring),
+            ToggleStyler()
+                .iconColor(UiTokens.accentIndicatorContrast())
+                .merge(_ring),
           )
           .onFocusVisible(_ring);
 

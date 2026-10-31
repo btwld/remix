@@ -7,7 +7,8 @@
   `fortalError` (`#C92E3B`, installed as `<prefix>Error`), instead of Caju. It is
   not a selectable accent. Destructive content that used `accent: .caju` for red
   should use `accentPalette: fortalError`. Its dark solid is a deeper red so it
-  stays apart from Caju. The dashboard recipe's negative statuses, deltas, and
+  stays apart from Caju (dark mark at OKLCH lightness 0.61, labelled solid at
+  0.53 in both modes). The dashboard recipe's negative statuses, deltas, and
   destructive actions use it via `FortalAccentScope.error`; positive statuses
   use Serra, and every status keeps its text label.
 - **Breaking:** the exported `FortalThemeColors` constructor (installed as
@@ -19,19 +20,62 @@
   `textfield` recipes, which read the new tokens.
 - Caju becomes a cashew-fruit orange-red (`#E76A32`) and Céu a sky blue
   (`#1A95D8`).
-- Solid foregrounds (`contrast`) use a tone of each palette instead of basalt
-  where white does not serve the fill: the lightest tone that keeps 4.6:1 on
-  both fill and hover (lightness up to 0.70, chroma up to the seed's), with
-  fills unchanged. Sol and Duna read amber/warm brown (`#764B00`, `#694624`,
-  `#704D2B`) instead of near-black; teal, navy, olive, brown and crimson inks
-  on mid-tone fills stay deep. Calçadão and high-contrast knockouts are
-  unchanged; custom palettes regenerate with their own ink.
+- **Breaking (role semantics):** labelled solids and marks are separate
+  roles.
+  - Buttons, icon buttons, solid badges, avatars, solid code and highlighted
+    menu/select items read the new `accentSolid`/`accentSolidHover` tokens,
+    paired with `accentContrast`.
+  - `accent9`/`accent10` are now the mark fill and its pressed step (selected
+    checkbox/radio, switch track, slider and progress range, dots, chart
+    series).
+  - Checks and radio dots read the new `accentIndicatorContrast`, derived from
+    the indicator instead of the label.
+  - `FortalColor` (installed `<Prefix>Color`) accepts optional named `solid`
+    and `solidHover`. Omitted, they are steps 9 and 10, so existing
+    five-argument palettes compile and keep their labels on those steps. A
+    `solid` without `solidHover` is also its own hover.
+  - Migration: code that paints `accent9` behind `accentContrast` text should
+    use `accentSolid`, and `accent10` should become `accentSolidHover`.
+    Hand-authored palettes that set a deeper label fill supply both `solid`
+    and `solidHover`. Refresh the complete `theme` item with the `avatar`,
+    `badge`, `base_button`, `checkbox`, `code`, `menu`, `progress`, `radio`,
+    `select` and `slider` recipes (and the dashboard recipe, if installed).
+    Custom palettes regenerate with the split.
+- Non-luminous palettes carry white labels in both modes.
+  - Light Céu and Caju labelled solids deepen just enough
+    (`#007BB7`, `#C84E09`), while their marks keep the seed.
+  - Dark solids are no longer lifted to OKLCH 0.70–0.84: dark marks start from
+    the seed's lightness within 0.58–0.72 and deepen only for white marks and
+    the page.
+  - Luminous palettes (Sol, Duna, near-white seeds) keep their bright fill for
+    labels and marks with a warm-brown or deep-neutral ink (`#764B00`,
+    `#694624`, `#704D2B`).
+  - The error red's labelled solid is `#C22535` in both modes.
+- Secondary surfaces show their hue: chromatic tints carry at least 0.09
+  chroma, so Mar, Serra and Duna soft, surface and toggle fills are no longer
+  near-gray. Step 11 is the lightest same-hue tone that keeps 4.6:1 on the
+  pressed soft tint over the panel, so soft, surface, outline and ghost labels
+  read lighter. Calçadão and the page and panel surfaces are unchanged.
 - Normal selected surface-switch thumbs and enabled slider thumbs are light
-  surfaces instead of ink discs: white with a 2px `accentThumbRing` outline
-  (the ink where it is darker than the fill, otherwise `controlBorder`). Off
-  switch thumbs stay white with a neutral ring. Selected soft thumbs keep
+  surfaces instead of ink discs: white with a 2px `accentThumbRing` outline.
+  - The outline is the track colour where white stands out on the track and
+    the track keeps 3:1 on the page and panels.
+  - It is `controlBorder` where the track does not.
+  - It is a dark ink on bright tracks (warm brown on Sol and Duna).
+  - `computeAccentThumbRing(accent, controlBorder)` keeps its two-argument
+    form and gains an optional `surfaces` list; without it, the result stays
+    `controlBorder` wherever white fits the track.
+
+  Off switch thumbs stay white with a neutral ring. Selected soft thumbs keep
   step 11/12, explicit high-contrast surface thumbs keep step 1, and disabled
   thumbs keep gray 2 with a gray-6 border.
+- Progress bars show their value without text.
+  - Both tracks gain a 1px inset `controlBorder` edge, so the total extent
+    keeps 3:1 at value 0.
+  - The surface fill gains a 1px inset `accentThumbRing` outline: seamless on
+    fills that already contrast, warm brown on Sol and Duna.
+  - The soft fill is step 8 without an accent-alpha overlay, which could be
+    opaque and replace it. The soft slider range is likewise step 6 alone.
 - Add `controlBorder`, a neutral boundary at 3:1 or more against the page,
   panels and off track, for unchecked checkbox/radio outlines (formerly gray
   alpha 7, about 2.1:1), the off switch track and thumb, and surface text
@@ -47,9 +91,8 @@
   high-contrast hover/press recolor the fill instead of filtering the whole
   button, so the focus ring keeps its 3:1 contrast while a key or pointer is
   held, and caller label colours are no longer filtered.
-- Dark solids take the seed's lightness within 0.70–0.84: Sol is gold
-  (`#F3C442`, formerly mustard `#C49800`) and Duna keeps its sand seed. Custom
-  palettes with seeds lighter than L 0.70 regenerate with lighter dark solids.
+- Sol's dark fill is gold (`#F3C442`, formerly mustard `#C49800`) and Duna
+  keeps its sand seed in dark mode.
 - The palette tool rejects custom names that reuse built-in identifiers and no
   longer infers the neutral palette from a custom name.
 - Correct selected switch thumbs in both modes: normal surface thumbs are white

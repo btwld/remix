@@ -110,22 +110,22 @@ SliderStyler _uiSliderSoft(
         ),
       ),
     )
+    // The range is step 6 alone. Alpha steps reconstruct their tint over the
+    // page and can be opaque, so layering accent alpha 5 here would replace
+    // step 6 rather than deepen it.
     .rangeEffects(
       RemixBoxEffectsMix.behindContent(
         RemixBoxEffectLayerMix(
-          gradients: [
-            RemixLinearGradientMix(
-              colors: [UiTokens.accentA5(), UiTokens.accentA5()],
-            ),
-            ..._uiSliderHighContrastGradients(highContrast),
-          ],
+          gradients: _uiSliderHighContrastGradients(highContrast),
         ),
       ),
     )
     .thumb(_uiSliderThumbRing());
 
-/// The white thumb's ring: on-solid ink on light fills, otherwise the neutral
-/// control border, so the thumb reads against the page, track and range.
+/// The white thumb's ring ([UiTokens.accentThumbRing]): the range colour
+/// where white stands out on it and it keeps 3:1 on the page and panels, the
+/// neutral control border where it does not, and a dark ink on bright ranges.
+/// The thumb overhangs the track, so the ring and white face carry it.
 BoxStyler _uiSliderThumbRing() => BoxStyler().decoration(
   .border(
     .all(.color(UiTokens.accentThumbRing()).width(UiTokens.borderWidth2())),

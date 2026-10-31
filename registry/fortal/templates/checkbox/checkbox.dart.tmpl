@@ -124,7 +124,9 @@ CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highCon
         ),
       )
       .indicatorColor(
-        highContrast ? {{typePrefix}}Tokens.accent1() : {{typePrefix}}Tokens.accentContrast(),
+        highContrast
+            ? {{typePrefix}}Tokens.accent1()
+            : {{typePrefix}}Tokens.accentIndicatorContrast(),
       );
 
   return base

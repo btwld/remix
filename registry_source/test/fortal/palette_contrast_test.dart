@@ -25,6 +25,10 @@ const shipped = <String, FortalColorTheme>{
   'fortalError': fortalError,
 };
 
+/// Palettes too luminous to carry a white label: one bright fill for labels
+/// and marks with a same-hue dark ink.
+const luminous = {'sol', 'duna'};
+
 /// OKLab distance, used for Fortal's own comparative separation checks.
 double oklabDistance(Color first, Color second) {
   final a = generator.toOklch(first.toARGB32());
@@ -45,13 +49,35 @@ void main() {
       final page = (dark ? calcadao.dark : calcadao.light).scale.step(1);
       final panel = (dark ? calcadao.dark : calcadao.light).scale.step(2);
 
-      test('$name: solid and hover labels meet 4.5:1', () {
+      test('$name: labels meet 4.5:1 on the labelled solid and hover', () {
+        for (final fill in [color.solid, color.solidHover]) {
+          expect(
+            contrastRatio(color.contrast, fill),
+            greaterThanOrEqualTo(4.5),
+            reason: name,
+          );
+        }
+      });
+      test('$name: marks meet 3:1 on the mark fill and its pressed step', () {
+        final ink = computeAccentIndicatorContrast(color);
         for (final step in [9, 10]) {
           expect(
-            contrastRatio(color.contrast, color.scale.step(step)),
-            greaterThanOrEqualTo(4.5),
+            contrastRatio(ink, color.scale.step(step)),
+            greaterThanOrEqualTo(3),
             reason: '$name step $step',
           );
+        }
+        // Luminous palettes keep their bright identity fill and rely on the
+        // dark mark and ring; every other mark fill also stands out on the
+        // page and panel.
+        if (!luminous.contains(entry.key)) {
+          for (final background in [page, panel]) {
+            expect(
+              contrastRatio(color.indicator, background),
+              greaterThanOrEqualTo(3),
+              reason: name,
+            );
+          }
         }
       });
       test('$name: secondary text meets 4.5:1 on steps 1–3', () {
@@ -155,10 +181,19 @@ void main() {
               );
             }
           }
+          for (final fill in [mode.fill, mode.fillHover]) {
+            expect(
+              contrastRatio(Color(mode.contrast), Color(fill)),
+              greaterThanOrEqualTo(4.5),
+              reason: '$seed/$dark label',
+            );
+          }
+          final markInk = computeAccentIndicatorContrast(_mode(mode));
           for (final step in [9, 10]) {
             expect(
-              contrastRatio(Color(mode.contrast), Color(mode.solid[step - 1])),
-              greaterThanOrEqualTo(4.5),
+              contrastRatio(markInk, Color(mode.solid[step - 1])),
+              greaterThanOrEqualTo(3),
+              reason: '$seed/$dark mark $step',
             );
           }
           for (var step = 1; step <= 5; step++) {
@@ -264,8 +299,11 @@ void main() {
     // limestone.
     expect(calcadao.light.contrast, const Color(0xffffffff));
     expect(calcadao.dark.contrast, const Color(generator.basalt));
-    // White remains where the fill needs it.
-    const whiteSide = {'mar/light', 'serra/light', 'fortalError/light'};
+    // Every non-luminous palette carries white on its labelled solid.
+    final whiteSide = {
+      for (final name in shipped.keys)
+        if (!luminous.contains(name)) ...['$name/light', '$name/dark'],
+    };
     final basaltL = generator.toOklch(generator.basalt).l;
     for (final entry in shipped.entries) {
       if (entry.key == 'calcadao') continue;
@@ -324,7 +362,8 @@ void main() {
         // the ink spends the remaining headroom: it is the lightest tone that
         // keeps that margin, not a near-black with contrast to spare.
         final ratios = [
-          for (final step in [9, 10]) contrastRatio(ink, mode.scale.step(step)),
+          for (final fill in [mode.solid, mode.solidHover])
+            contrastRatio(ink, fill),
         ];
         for (final ratio in ratios) {
           expect(ratio, greaterThanOrEqualTo(4.6), reason: name);
@@ -374,7 +413,7 @@ void main() {
     }
   });
 
-  test('thumb ring follows the ink only where the ink is darker', () {
+  test('thumb ring follows the track where white already stands out', () {
     for (final MapEntry(key: name, value: palette) in shipped.entries) {
       for (final dark in [false, true]) {
         final colors = resolveFortalTokens(
@@ -383,15 +422,35 @@ void main() {
             brightness: dark ? .dark : .light,
           ),
         );
-        final ink = colors.accent.contrast;
-        final fill = colors.accent.scale.step(9);
+        final track = colors.accent.track;
         final reason = '$name/${dark ? 'dark' : 'light'}';
-        final inkIsDarker = ink.computeLuminance() < fill.computeLuminance();
-        expect(
-          colors.accentThumbRing,
-          inkIsDarker ? ink : colors.controlBorder,
-          reason: reason,
-        );
+        final surfaces = [
+          colors.colorBackground,
+          colors.colorPanelSolid,
+          Color.alphaBlend(
+            colors.colorPanelTranslucent,
+            colors.colorBackground,
+          ),
+        ];
+        if (contrastRatio(const Color(0xffffffff), track) >= 3) {
+          // Seamless with the track, and visible where a slider thumb
+          // overhangs the page and panels.
+          expect(colors.accentThumbRing, track, reason: reason);
+          for (final surface in surfaces) {
+            expect(
+              contrastRatio(colors.accentThumbRing, surface),
+              greaterThanOrEqualTo(3),
+              reason: reason,
+            );
+          }
+        } else {
+          // A bright track: the ring carries the contrast.
+          expect(
+            colors.accentThumbRing,
+            computeAccentIndicatorContrast(colors.accent),
+            reason: reason,
+          );
+        }
         // A white thumb with that ring stands out on the fill and the hover.
         for (final step in [9, 10]) {
           final track = colors.accent.scale.step(step);
@@ -431,11 +490,11 @@ void main() {
           lessThanOrEqualTo(generator.onSolidInk.maxLightness + .005),
           reason: reason,
         );
-        for (final step in [9, 10]) {
+        for (final fill in [mode.fill, mode.fillHover]) {
           expect(
-            contrastRatio(Color(mode.contrast), Color(mode.solid[step - 1])),
+            contrastRatio(Color(mode.contrast), Color(fill)),
             greaterThanOrEqualTo(4.6),
-            reason: '$reason step $step',
+            reason: reason,
           );
         }
         // Gray and near-white seeds get a deep neutral, not an invented hue.
@@ -455,41 +514,57 @@ void main() {
     const reviewed = {'ceu', 'serra', 'sol', 'duna', 'caju', 'fortalError'};
     for (final entry in shipped.entries) {
       for (final dark in [false, true]) {
-        final scale = (dark ? entry.value.dark : entry.value.light).scale;
+        final color = dark ? entry.value.dark : entry.value.light;
+        final floor = reviewed.contains(entry.key) ? .025 : .015;
+        final reason = '${entry.key}/${dark ? 'dark' : 'light'}';
         expect(
-          oklabDistance(scale.step(9), scale.step(10)),
-          greaterThanOrEqualTo(reviewed.contains(entry.key) ? .025 : .015),
-          reason: '${entry.key}/${dark ? 'dark' : 'light'}',
+          oklabDistance(color.scale.step(9), color.scale.step(10)),
+          greaterThanOrEqualTo(floor),
+          reason: '$reason mark',
+        );
+        expect(
+          oklabDistance(color.solid, color.solidHover),
+          greaterThanOrEqualTo(floor),
+          reason: '$reason labelled solid',
         );
       }
     }
   });
 
-  test('dark solids follow seed lightness within the dark range', () {
-    final range = generator.darkSolidLightnessRange;
-    for (final seed in [
-      0xff000000,
-      0xff036f6b,
-      0xffe76a32,
-      0xffe5c79a,
-      0xffffcf50,
-      0xfff4f4f0,
-      0xffffffff,
+  test('dark mark fills start from seed lightness and only deepen', () {
+    for (final (seed, isLuminous) in [
+      (0xff000000, false),
+      (0xff036f6b, false),
+      (0xffe76a32, false),
+      (0xff1a95d8, false),
+      (0xffe5c79a, true),
+      (0xffffcf50, true),
+      (0xfff4f4f0, true),
+      (0xffffffff, true),
     ]) {
-      final expected = generator
+      final range = isLuminous
+          ? generator.luminousDarkLightnessRange
+          : generator.darkMarkLightnessRange;
+      final start = generator
           .toOklch(seed)
           .l
           .clamp(range.min, range.max)
           .toDouble();
-      final actual = generator
-          .toOklch(generator.generatePalette(seed).dark.solid[8])
-          .l;
-      // Contrast fitting may nudge lightness; stay within one fitting band.
-      expect(
-        actual,
-        closeTo(expected, .02),
-        reason: '#${seed.toRadixString(16)}',
-      );
+      final palette = generator.generatePalette(seed);
+      final actual = generator.toOklch(palette.dark.solid[8]).l;
+      final reason = '#${seed.toRadixString(16)}';
+      // Luminous fills are nudged toward their ink; marks deepen only as far
+      // as white marks and the page need.
+      if (isLuminous) {
+        expect(actual, closeTo(start, .02), reason: reason);
+      } else {
+        // 8-bit rounding can move OKLCH lightness by a few thousandths.
+        expect(actual, lessThanOrEqualTo(start + .005), reason: reason);
+        expect(actual, greaterThan(start - .15), reason: reason);
+      }
+      // Dark mode is no longer lifted toward pastel: non-luminous palettes
+      // carry white labels.
+      expect(palette.dark.contrast == 0xffffffff, !isLuminous, reason: reason);
     }
     // Sol keeps a sunny gold instead of the former L .70 mustard (#C49800).
     expect(sol.dark.scale.step(9), const Color(0xfff3c442));
@@ -508,12 +583,22 @@ void main() {
     for (final dark in [false, true]) {
       for (var i = 0; i < names.length; i++) {
         for (var j = i + 1; j < names.length; j++) {
-          Color fill(String name) =>
-              (dark ? shipped[name]!.dark : shipped[name]!.light).scale.step(9);
+          FortalColor color(String name) =>
+              dark ? shipped[name]!.dark : shipped[name]!.light;
+          final reason = '${names[i]}/${names[j]} ${dark ? 'dark' : 'light'}';
+          // Mark fills (charts, selected controls) and labelled solids.
           expect(
-            oklabDistance(fill(names[i]), fill(names[j])),
+            oklabDistance(
+              color(names[i]).scale.step(9),
+              color(names[j]).scale.step(9),
+            ),
             greaterThanOrEqualTo(.08),
-            reason: '${names[i]}/${names[j]} ${dark ? 'dark' : 'light'}',
+            reason: '$reason mark',
+          );
+          expect(
+            oklabDistance(color(names[i]).solid, color(names[j]).solid),
+            greaterThanOrEqualTo(.08),
+            reason: '$reason labelled solid',
           );
         }
       }
@@ -529,16 +614,26 @@ void main() {
       }
       final orange = dark ? caju.dark : caju.light;
       expect(hueDegrees(orange.scale.step(9)), greaterThan(38));
+      expect(hueDegrees(orange.solid), greaterThan(38));
+      expect(hueDegrees(error.solid), inInclusiveRange(10, 32));
       expect(
         oklabDistance(error.scale.step(9), orange.scale.step(9)),
         greaterThanOrEqualTo(.08),
       );
+      expect(
+        oklabDistance(error.solid, orange.solid),
+        greaterThanOrEqualTo(.08),
+      );
+      // Destructive labels are white in both modes, on a curated deep red.
+      expect(error.contrast, const Color(0xffffffff));
+      expect(
+        generator.toOklch(error.solid.toARGB32()).l,
+        closeTo(generator.fortalErrorPlacement.solidLightness, .01),
+      );
     }
-    // Light errors keep white labels; the dark solid is curated deeper.
-    expect(fortalError.light.contrast, const Color(0xffffffff));
     expect(
       generator.toOklch(fortalError.dark.scale.step(9).toARGB32()).l,
-      closeTo(generator.fortalErrorDarkSolidLightness, .02),
+      closeTo(generator.fortalErrorPlacement.darkMarkLightness, .02),
     );
   });
 
@@ -582,4 +677,6 @@ FortalColor _mode(generator.GeneratedMode mode) => FortalColor(
   Color(mode.indicator),
   Color(mode.track),
   Color(mode.contrast),
+  solid: Color(mode.fill),
+  solidHover: Color(mode.fillHover),
 );

@@ -27,7 +27,8 @@ const _highContrastLineWidthToken = ContextToken<double>(
 ///
 /// The first entry follows the configured Fortal accent. Remaining entries use
 /// Fortal color families selected for clear categorical separation. Set
-/// [highContrast] to use step 12 instead of the standard solid-color step 9.
+/// [highContrast] to use step 12 instead of the standard step 9, each
+/// palette's mark fill.
 List<Color> resolveFortalChartPalette(
   BuildContext context, {
   bool highContrast = false,
@@ -156,6 +157,9 @@ PieChartStyler fortalPieChartStyle({
         PieSliceStyler()
             .showLabel(showLabels)
             .cornerRadius(FortalTokens.borderWidth2())
+            // Opt-in slice labels take the accent's label colour, which is
+            // fitted to the accent's labelled solid, not to every slice of
+            // the categorical palette. Check contrast when enabling them.
             .label(
               TextStyler()
                   .style(FortalTokens.text1.mix())

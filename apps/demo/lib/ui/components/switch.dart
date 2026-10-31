@@ -203,9 +203,10 @@ BoxStyler _fortalSwitchOffThumbStyler() => BoxStyler()
       ),
     );
 
-/// The selected surface thumb stays a light surface rather than a disc of
-/// on-solid ink: a 2px [FortalTokens.accentThumbRing] carries its contrast on
-/// light fills. High contrast keeps its deliberate step-1 knockout thumb.
+/// The selected surface thumb stays a light surface rather than a disc of ink.
+/// Its 2px [FortalTokens.accentThumbRing] follows the track wherever white
+/// already stands out on it, and carries the contrast on bright tracks. High
+/// contrast keeps its deliberate step-1 knockout thumb.
 BoxStyler _fortalSwitchSelectedThumbStyler(bool highContrast) => highContrast
     ? BoxStyler()
           .color(FortalTokens.accent1())

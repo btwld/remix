@@ -89,7 +89,7 @@ import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
 final accentButton = ButtonStyler()
-    .color(FortalTokens.accent9())
+    .color(FortalTokens.accentSolid())
     .label(TextStyler().style(FortalTokens.text2.mix())
         .color(FortalTokens.accentContrast()));
 
