@@ -1,4 +1,4 @@
-"""Serialize Soft geometry to standalone SVG.
+"""Serialize Rounded geometry to standalone SVG.
 
 Product paths are expanded evenodd M/L/Z polylines. Round caps/joins and
 circles are flattened at construction quad_segs. Curve commands are accepted

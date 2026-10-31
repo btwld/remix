@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministically build Angular SVGs, sprites, registry and catalog.
+"""Deterministically build Outline SVGs, sprites, registry and catalog.
 
 Run from the repository root: python source/build.py
 Generated files must not be edited by hand.
@@ -9,7 +9,7 @@ import sys, json, hashlib, html, csv, re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from source.angular import baseline, additions
+from source.outline import baseline, additions
 
 
 def svg_text(label: str, appearance: str, n: int, path: str) -> str:
@@ -33,19 +33,20 @@ def build() -> dict:
                 g=(additions.draw if id in additions.NAMES else baseline.draw)(id,n,a)
                 if not g.is_valid or g.is_empty: raise ValueError(f'Invalid geometry {id}/{a}/{n}')
                 path=baseline.path_data(g)
-                rel=f'angular/{a}/{n}/{id}.svg'
+                rel=f'outline/{a}/{n}/{id}.svg'
                 file=generated/rel;file.parent.mkdir(parents=True,exist_ok=True)
                 txt=svg_text(meta['label'],a,n,path);file.write_text(txt,encoding='utf-8')
-                inventory.append({'id':id,'pack':'angular','appearance':a,'master':n,'path':rel,'sha256':hashlib.sha256(txt.encode()).hexdigest()})
+                inventory.append({'id':id,'pack':'outline','appearance':a,'master':n,'path':rel,'sha256':hashlib.sha256(txt.encode()).hexdigest()})
                 paths[id][a][str(n)]=path
     (generated/'registry.json').write_text(json.dumps({'version':catalog['version'],'paths':paths},indent=2)+'\n')
     sprites=generated/'sprites';sprites.mkdir(exist_ok=True)
     for a in ('outline','filled'):
         for n in (12,16,24):
+            # Public symbol IDs are held pending an API naming decision.
             syms=[f'<symbol id="vui-angular-{m["id"]}-{a}-{n}" viewBox="0 0 {n} {n}"><path fill="currentColor" fill-rule="evenodd" d="{paths[m["id"]][a][str(n)]}"/></symbol>' for m in catalog['icons']]
-            (sprites/f'angular-{a}-{n}.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg">\n'+'\n'.join(syms)+'\n</svg>\n')
+            (sprites/f'outline-{a}-{n}.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg">\n'+'\n'.join(syms)+'\n</svg>\n')
             all_symbols.extend(syms)
-    (sprites/'angular-all.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg">\n'+'\n'.join(all_symbols)+'\n</svg>\n')
+    (sprites/'outline-all.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg">\n'+'\n'.join(all_symbols)+'\n</svg>\n')
     (generated/'inventory.json').write_text(json.dumps(inventory,indent=2)+'\n')
     with (generated/'inventory.csv').open('w',newline='') as f:
         wr=csv.DictWriter(f,fieldnames=list(inventory[0]));wr.writeheader();wr.writerows(inventory)

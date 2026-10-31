@@ -1,8 +1,8 @@
-"""SVG serialization and fail-closed M/L/Z parser for Technical.
+"""SVG serialization and fail-closed M/L/Z parser for Mono.
 
 Straight-line expanded polygons are sufficient for this grammar (orthogonal
 plates, square-cut bars, 45° chamfers, star and warning as polygons).
-Curves are rejected, never ignored. This is not a Rounded/Soft parser.
+Curves are rejected, never ignored. This is not a legacy fillet proposal or Rounded parser.
 """
 from __future__ import annotations
 import html
@@ -56,7 +56,7 @@ def svg_text(label, appearance, n, path):
 
 def parse_path(d):
     if not isinstance(d, str) or not SAFE_PATH.fullmatch(d):
-        raise ValueError("Unsupported or unsafe Technical path syntax")
+        raise ValueError("Unsupported or unsafe Mono path syntax")
     tokens = TOKEN.findall(d)
     if "".join(tokens) != re.sub(r"\s+", "", d):
         raise ValueError("Unparsed path content")
@@ -97,7 +97,7 @@ def parse_path(d):
 
 
 def parse_svg(text):
-    """Accept only the standalone expanded Technical SVG export format."""
+    """Accept only the standalone expanded Mono SVG export format."""
     if not isinstance(text, str) or len(text.encode("utf-8")) > 262144:
         raise ValueError("SVG must be a UTF-8 string under 256 KiB")
     if "<!" in text or "<?" in text:

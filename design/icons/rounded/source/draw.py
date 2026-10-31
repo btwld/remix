@@ -1,6 +1,6 @@
-"""Author the 12 Soft calibration icons from Soft primitives.
+"""Author the 12 Rounded calibration icons from Rounded primitives.
 
-Native 12 / 16 / 24 masters. Outline and filled. No Angular path reuse.
+Native 12 / 16 / 24 masters. Outline and filled. No Outline path reuse.
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from source.seams import (
 
 def _tokens(n: int, appearance: str):
     if n not in MASTERS:
-        raise UnknownMasterError(f'No native Soft master {n}')
+        raise UnknownMasterError(f'No native Rounded master {n}')
     if appearance not in ('outline', 'filled'):
         raise UnknownAppearanceError(f'Unknown appearance {appearance!r}')
     w = OUTLINE_WIDTH[n]
@@ -306,11 +306,11 @@ _DRAWERS = {
 
 
 def draw(icon_id: str, master: int, appearance: str):
-    """Return Shapely geometry for one Soft drawing. Raises on unknown inputs."""
+    """Return Shapely geometry for one Rounded drawing. Raises on unknown inputs."""
     if icon_id not in CANONICAL_IDS:
-        raise UnknownIconError(f'Unknown Soft icon {icon_id!r}')
+        raise UnknownIconError(f'Unknown Rounded icon {icon_id!r}')
     if icon_id not in _DRAWERS:
-        raise UnknownIconError(f'Soft icon {icon_id!r} is not drawn in this pilot')
+        raise UnknownIconError(f'Rounded icon {icon_id!r} is not drawn in this pilot')
     g = clean(_DRAWERS[icon_id](master, appearance))
     if g is None or g.is_empty or not g.is_valid:
         raise ValueError(f'Invalid geometry {icon_id}/{appearance}/{master}')

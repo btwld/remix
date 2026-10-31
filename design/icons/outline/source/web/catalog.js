@@ -110,7 +110,7 @@ const dialog=$('#inspector');
 dialog.addEventListener('close',()=>{proofGeneration++;cancelAnimationFrame(proofFrame);});let selected='sliders';let activeAppearance='outline';
 function updateInspector(){
  const n=+$('#inspect-size').value,z=+$('#inspect-zoom').value,m=INDEX[selected];
- $('#inspect-title').textContent=m.label;$('#inspect-code-name').textContent=`angular / ${selected}`;
+ $('#inspect-title').textContent=m.label;$('#inspect-code-name').textContent=`outline / ${selected}`;
  $('#inspect-stage').dataset.theme=$('#theme').value;
  $('#native-proof').dataset.theme=$('#theme').value;
  $('#inspect-pair').innerHTML=geometryPair(selected,n,z);

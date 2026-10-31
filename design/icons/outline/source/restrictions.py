@@ -13,7 +13,7 @@ def load_restrictions(root: Path) -> dict:
     if len({(r['icon'], r['pack']) for r in records}) != len(records):
         raise ValueError('One consolidated restriction record is required per icon and pack')
     for record in records:
-        if record['pack'] != 'angular' or set(record['sizes']) != {'12', '16', '24'}:
+        if record['pack'] != 'outline' or set(record['sizes']) != {'12', '16', '24'}:
             raise ValueError('Incomplete restriction size matrix')
         for master, appearances in record['sizes'].items():
             if set(appearances) != {'outline', 'filled'}:
@@ -66,7 +66,8 @@ def write_usage_outputs(root: Path, catalog: dict, restrictions: dict) -> None:
              'An accessible name or tooltip is not a substitute for a visible text label.', '']
     data = {}
     for record in restrictions.values():
-        data[record['icon']] = record
+        # Preserve the web API's existing pack identity until its rename is approved.
+        data[record['icon']] = {**record, 'pack': 'angular'}
         lines += [f"## {record['icon'].title()}", '', usage_text(record), '',
                   f"Status: `{record['status']}`. Named owner and reviewer: **pending**.", '',
                   '| Master | Appearance | Visible label | Exceptions | Exact SVG SHA-256 |',

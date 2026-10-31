@@ -1,8 +1,8 @@
-# Vector UI Soft — 12-icon calibration pack
+# Vector UI Rounded — 12-icon calibration pack
 
 **Working name · 0.1.0-soft-pilot · private review build, not a public release**
 
-12 canonical icons, two appearances, and three optical masters: **72 individual SVG drawings**. Soft is a sibling Vector UI pack, not a filter on Angular and not the planned Rounded pack.
+12 canonical icons, two appearances, and three optical masters: **72 individual SVG drawings**. Rounded is a sibling Vector UI pack, not a filter on Outline and distinct from the undrawn fillet proposal previously called Rounded.
 
 Open [`docs/catalog/index.html`](docs/catalog/index.html) for the review catalog. Grammar: [`GRAMMAR.md`](GRAMMAR.md).
 
@@ -10,16 +10,16 @@ This package stays `private: true`. Do not publish it.
 
 ## What this is
 
-Same IDs and meanings as the Angular pilot:
+Same IDs and meanings as the Outline pilot:
 
 ```text
 home search plus arrow-right user file
 calendar sliders warning link branch star
 ```
 
-Soft is constructed from circles, stadiums, and round joins. Angular SVG bytes under `design/icons/angular/` are not edited. Product SVGs serialize as expanded `M L Z` polylines; the validator remains curve-aware.
+Rounded is constructed from circles, stadiums, and round joins. Outline SVG bytes under `design/icons/outline/` are not edited. Product SVGs serialize as expanded `M L Z` polylines; the validator remains curve-aware.
 
-License: BSD 3-Clause, copyright Leo Farias, consistent with the Angular family decision.
+License: BSD 3-Clause, copyright Leo Farias, consistent with the Outline family decision.
 
 ## Build and check
 
@@ -35,8 +35,8 @@ python tools/run_checks.py
 ```
 
 Catalog: `docs/catalog/index.html`  
-Native proofs: `docs/proof/soft-native.png`  
-Angular vs Soft: `docs/proof/angular-vs-soft-12.png`, `docs/proof/angular-vs-soft-24.png`
+Native proofs: `docs/proof/rounded-native.png`
+Outline vs Rounded: `docs/proof/outline-vs-rounded-12.png`, `docs/proof/outline-vs-rounded-24.png`
 
 ## Seams
 
@@ -51,4 +51,4 @@ Warning requires a **visible text label** in every appearance and native size, i
 
 ## Out of scope
 
-Public publication, Remix catalog/web API, the remaining 36 Angular IDs, Rounded. The unified pack comparison catalog includes the shipped families.
+Public publication, Remix catalog/web API, the remaining 36 Outline IDs, legacy fillet proposal. The unified pack comparison catalog includes the shipped families.

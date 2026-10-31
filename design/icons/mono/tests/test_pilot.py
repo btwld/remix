@@ -1,7 +1,7 @@
-"""Seam tests for the Technical calibration pilot.
+"""Seam tests for the Mono calibration pilot.
 
 Tests cover the contract, grammar primitives, drawings, generated matrix,
-SVG safety, fail-closed lookup, rebuild, native rasters, and Angular lock.
+SVG safety, fail-closed lookup, rebuild, native rasters, and Outline lock.
 They do not assert private vertex lists.
 """
 from __future__ import annotations
@@ -41,7 +41,7 @@ from source.grammar import CHAMFER, CHAMFER_OVERRIDE, bar, edge_angles_deg, part
 from source.icons import draw
 import jsonschema
 
-ANGULAR = ROOT.parents[2] / "design/icons/angular"
+OUTLINE = ROOT.parents[2] / "design/icons/outline"
 GEN = ROOT / "generated"
 INV_PATH = GEN / "inventory.json"
 
@@ -70,7 +70,7 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(len(ICONS), 12)
         self.assertEqual(len(set(IDS)), 12)
 
-    def test_pair_models_match_angular_concepts(self):
+    def test_pair_models_match_outline_concepts(self):
         self.assertEqual(PAIR_MODEL["home"], "silhouette")
         self.assertEqual(PAIR_MODEL["search"], "weight")
         self.assertEqual(PAIR_MODEL["plus"], "weight")
@@ -85,19 +85,19 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(PAIR_MODEL["star"], "silhouette")
 
     def test_resolve_fail_closed(self):
-        self.assertEqual(resolve("technical", "home", "outline", 24), ("technical", "home", "outline", 24))
+        self.assertEqual(resolve("mono", "home", "outline", 24), ("mono", "home", "outline", 24))
         with self.assertRaises(UnavailablePack):
-            resolve("angular", "home", "outline", 24)
+            resolve("outline", "home", "outline", 24)
         with self.assertRaises(UnavailablePack):
             resolve("rounded", "home", "outline", 24)
         with self.assertRaises(UnknownIcon):
-            resolve("technical", "gear", "outline", 24)
+            resolve("mono", "gear", "outline", 24)
         with self.assertRaises(UnavailableAppearance):
-            resolve("technical", "home", "duotone", 24)
+            resolve("mono", "home", "duotone", 24)
         with self.assertRaises(UnavailableMaster):
-            resolve("technical", "home", "outline", 14)
+            resolve("mono", "home", "outline", 14)
         with self.assertRaises(UnavailableMaster):
-            resolve("technical", "home", "outline", 32)
+            resolve("mono", "home", "outline", 32)
 
     def test_display_master_mapping_does_not_invent_sizes(self):
         self.assertEqual(select_master(14), 16)
@@ -172,11 +172,11 @@ class DrawTests(unittest.TestCase):
     def test_plus_twelve_outline_stays_canvas_centered(self):
         g = draw("plus", 12, "outline")
         self.assertAlmostEqual((g.bounds[0] + g.bounds[2]) / 2.0, 6.0, places=3)
-        # 1px stem on even canvas: half-pixel edges, not Angular's 5–6 split.
+        # 1px stem on even canvas: half-pixel edges, not Outline's 5–6 split.
         self.assertAlmostEqual(g.bounds[0], 2.0)
         self.assertAlmostEqual(g.bounds[2], 10.0)
 
-    def test_plus_is_not_a_padded_angular_copy(self):
+    def test_plus_is_not_a_padded_outline_copy(self):
         g = draw("plus", 24, "outline")
         self.assertGreaterEqual(g.bounds[0], 2.5)
 
@@ -198,12 +198,12 @@ class AssetTests(unittest.TestCase):
         cls.cat = json.loads((ROOT / "catalog/icons.json").read_text())
 
     def test_matrix_is_exactly_72(self):
-        files = {str(p.relative_to(GEN)) for p in (GEN / "technical").rglob("*.svg")}
+        files = {str(p.relative_to(GEN)) for p in (GEN / "mono").rglob("*.svg")}
         self.assertEqual(len(files), 72)
         self.assertEqual(len(self.inv), 72)
         self.assertEqual(self.cat["counts"], {"icons": 12, "drawings": 72})
         expected = {
-            "technical/%s/%s/%s.svg" % (a, n, i)
+            "mono/%s/%s/%s.svg" % (a, n, i)
             for i in IDS
             for a in APPEARANCES
             for n in MASTERS
@@ -224,7 +224,7 @@ class AssetTests(unittest.TestCase):
         for d in ["M0 0C1 2 3 4 5 6Z", "M0 0Q1 2 3 4Z", "M0 0LNaN 2Z", "M0 0L1 1", "M0 0L1 1Z<script>"]:
             with self.assertRaises(ValueError):
                 parse_path(d)
-        base = (GEN / "technical/outline/24/home.svg").read_text()
+        base = (GEN / "mono/outline/24/home.svg").read_text()
         for bad in [
             base.replace("<path ", '<image href="https://example.invalid/a"/><path '),
             base.replace("<path ", "<script>alert(1)</script><path "),
@@ -236,8 +236,9 @@ class AssetTests(unittest.TestCase):
                 parse_svg(bad)
 
     def test_no_silent_pack_in_catalog(self):
-        self.assertTrue(self.cat["packs"]["technical"]["available"])
-        self.assertFalse(self.cat["packs"]["angular"]["available"])
+        self.assertTrue(self.cat["packs"]["mono"]["available"])
+        self.assertFalse(self.cat["packs"]["outline"]["available"])
+        # Legacy roadmap keys are held pending a naming decision.
         self.assertFalse(self.cat["packs"]["rounded"]["available"])
         self.assertFalse(self.cat["packs"]["soft"]["available"])
         self.assertFalse(self.cat["releaseApproval"]["promotedToPublicCatalog"])
@@ -274,7 +275,7 @@ class AssetTests(unittest.TestCase):
                 continue
             self.assertIn("%s-chamfer-%s" % (icon_id, n), ids)
         self.assertIn("plus-12-outline-centered-odd-width", ids)
-        styles = json.loads((ROOT / "catalog/styles.json").read_text())["technical"]
+        styles = json.loads((ROOT / "catalog/styles.json").read_text())["mono"]
         override_ids = {o["exceptionId"] for o in styles["chamferPartOverrides"]}
         for (icon_id, n), used in CHAMFER_OVERRIDE.items():
             if abs(used - CHAMFER[n]) < 1e-9:
@@ -302,7 +303,7 @@ class AssetTests(unittest.TestCase):
             "masters-12-4x.png",
             "masters-16-4x.png",
             "masters-24-4x.png",
-            "angular-vs-technical-24.png",
+            "outline-vs-mono-24.png",
             "index.html",
         ):
             self.assertTrue((proof / name).exists(), name)
@@ -326,14 +327,14 @@ class AssetTests(unittest.TestCase):
         self.assertIsInstance(exceptions, list)
         self.assertTrue(any(e["id"].startswith("warning-gap-") for e in exceptions))
         for e in exceptions:
-            self.assertEqual(e["pack"], "technical")
+            self.assertEqual(e["pack"], "mono")
 
 
-class DistinctFromAngularTests(unittest.TestCase):
-    def test_technical_paths_differ_from_angular(self):
+class DistinctFromOutlineTests(unittest.TestCase):
+    def test_mono_paths_differ_from_outline(self):
         if not INV_PATH.exists():
             self.skipTest("generated inventory missing")
-        ang_reg = json.loads((ANGULAR / "generated/registry.json").read_text())["paths"]
+        ang_reg = json.loads((OUTLINE / "generated/registry.json").read_text())["paths"]
         tech_reg = json.loads((GEN / "registry.json").read_text())["paths"]
         for icon_id in IDS:
             for appearance in APPEARANCES:
@@ -343,21 +344,21 @@ class DistinctFromAngularTests(unittest.TestCase):
                     self.assertNotEqual(
                         a,
                         b,
-                        "%s %s %s Technical path equals Angular — grammar failed" % (icon_id, appearance, n),
+                        "%s %s %s Mono path equals Outline — grammar failed" % (icon_id, appearance, n),
                     )
 
 
-class AngularLockTests(unittest.TestCase):
-    def test_angular_svg_hashes_unchanged(self):
-        inv = json.loads((ANGULAR / "generated/inventory.json").read_text())
+class OutlineLockTests(unittest.TestCase):
+    def test_outline_svg_hashes_unchanged(self):
+        inv = json.loads((OUTLINE / "generated/inventory.json").read_text())
         for row in inv:
-            path = ANGULAR / "generated" / row["path"]
+            path = OUTLINE / "generated" / row["path"]
             actual = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(actual, row["sha256"], row["path"])
 
-    def test_pilot_did_not_add_technical_under_angular(self):
-        self.assertFalse((ANGULAR / "generated/technical").exists())
-        self.assertFalse((ANGULAR / "generated/rounded").exists())
+    def test_pilot_did_not_add_mono_under_outline(self):
+        self.assertFalse((OUTLINE / "generated/mono").exists())
+        self.assertFalse((OUTLINE / "generated/rounded").exists())
 
 
 class RebuildTests(unittest.TestCase):
@@ -377,7 +378,7 @@ class RebuildTests(unittest.TestCase):
                 "proof/masters-12-4x.png",
                 "proof/masters-16-4x.png",
                 "proof/masters-24-4x.png",
-                "proof/angular-vs-technical-24.png",
+                "proof/outline-vs-mono-24.png",
             )
         }
         build()

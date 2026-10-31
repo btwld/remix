@@ -1,4 +1,4 @@
-"""Write the one Angular / Soft / Technical comparison catalog.
+"""Write the one Outline / Rounded / Mono comparison catalog.
 
 The page inlines generated SVGs. It does not redraw them and it does not
 fetch anything from the network.
@@ -9,7 +9,7 @@ import html
 import json
 from pathlib import Path
 
-FAMILIES = ("angular", "soft", "technical")
+FAMILIES = ("outline", "rounded", "mono")
 MASTERS = (12, 16, 24)
 APPEARANCES = ("outline", "filled")
 SHARED = (
@@ -26,7 +26,7 @@ SHARED = (
     "branch",
     "star",
 )
-FAMILY_LABEL = {"angular": "Angular", "soft": "Soft", "technical": "Technical"}
+FAMILY_LABEL = {"outline": "Outline", "rounded": "Rounded", "mono": "Mono"}
 WARNING_SENTENCE = (
     "Visible text label required for outline at 12 / 16 / 24 px and filled at "
     "12 / 16 / 24 px. This also applies to scaled uses of those masters. "
@@ -89,31 +89,31 @@ def _figure(root: Path, family: str, appearance: str, size: int, icon_id: str) -
 
 
 def _grammar(root: Path) -> str:
-    soft = _load_json(root / "soft" / "catalog" / "styles.json")["soft"]
-    technical = _load_json(root / "technical" / "catalog" / "styles.json")["technical"]
-    angular = _load_json(root / "angular" / "catalog" / "styles.json")["angular"]
+    rounded = _load_json(root / "rounded" / "catalog" / "styles.json")["rounded"]
+    mono = _load_json(root / "mono" / "catalog" / "styles.json")["mono"]
+    outline = _load_json(root / "outline" / "catalog" / "styles.json")["outline"]
     cards = [
         (
-            "Angular",
+            "Outline",
             "Validated geometry at native 12 / 16 / 24. "
-            f"Corners: {angular['corners']}. Terminals: {angular['terminals']}. "
+            f"Corners: {outline['corners']}. Terminals: {outline['terminals']}. "
             "Outline and filled path commands are "
-            + " ".join(angular["pathCommands"])
+            + " ".join(outline["pathCommands"])
             + ".",
         ),
         (
-            "Soft",
-            f"{soft['notAngularFilter']}. {soft['corners']}. "
-            f"Terminals are {soft['terminals']}. Product commands are "
-            + " ".join(soft["productPathCommands"])
-            + f". {soft['notRounded']}.",
+            "Rounded",
+            f"{rounded['notOutlineFilter']}. {rounded['corners']}. "
+            f"Terminals are {rounded['terminals']}. Product commands are "
+            + " ".join(rounded["productPathCommands"])
+            + f". {rounded['legacyRoundedPlan']}.",
         ),
         (
-            "Technical",
-            f"Corners: {technical['corners']}. Terminals: {technical['terminals']}. "
-            f"{technical['diagonals']}. Path commands are "
-            + " ".join(technical["pathCommands"])
-            + ". Plates and bars are drawn from Technical primitives.",
+            "Mono",
+            f"Corners: {mono['corners']}. Terminals: {mono['terminals']}. "
+            f"{mono['diagonals']}. Path commands are "
+            + " ".join(mono["pathCommands"])
+            + ". Plates and bars are drawn from Mono primitives.",
         ),
     ]
     body = []
@@ -165,7 +165,7 @@ def _exceptions(root: Path) -> str:
 def _usage_limits(root: Path) -> str:
     # Load the maintained family contract without aliasing another family's source package.
     import runpy
-    limits = runpy.run_path(str(root / "technical/source/contract.py"))["USAGE_LIMITS"]
+    limits = runpy.run_path(str(root / "mono/source/contract.py"))["USAGE_LIMITS"]
     items = []
     for question in limits:
         icons = ", ".join(question.get("icons") or [])
@@ -194,7 +194,7 @@ def _proof(root: Path, labels: dict[str, str]) -> str:
         '<section id="proof">'
         "<h2>Proof at 24 outline</h2>"
         "<p>Same native master, shown at 4×. Read across a row to compare families. "
-        "Soft and Technical geometry is not an Angular path filter.</p>"
+        "Rounded and Mono geometry is not an Outline path filter.</p>"
         f'<div class="proof"><div></div>{headers}{"".join(rows)}</div>'
         "</section>"
     )
@@ -230,13 +230,13 @@ def _detail(root: Path, labels: dict[str, str]) -> str:
     )
 
 
-def _angular_only(root: Path, labels: dict[str, str]) -> str:
-    angular_ids = [icon["id"] for icon in _icons(root, "angular")]
-    extra = [icon_id for icon_id in angular_ids if icon_id not in SHARED]
+def _outline_only(root: Path, labels: dict[str, str]) -> str:
+    outline_ids = [icon["id"] for icon in _icons(root, "outline")]
+    extra = [icon_id for icon_id in outline_ids if icon_id not in SHARED]
     cards = []
     for icon_id in extra:
-        outline = _figure(root, "angular", "outline", 24, icon_id)
-        filled = _figure(root, "angular", "filled", 24, icon_id)
+        outline = _figure(root, "outline", "outline", 24, icon_id)
+        filled = _figure(root, "outline", "filled", 24, icon_id)
         cards.append(
             f'<article id="{_esc(icon_id)}">'
             f"<h3>{_esc(labels[icon_id])} <code>{_esc(icon_id)}</code></h3>"
@@ -244,9 +244,9 @@ def _angular_only(root: Path, labels: dict[str, str]) -> str:
             "</article>"
         )
     return (
-        '<section id="angular-only">'
-        "<h2>Angular icons without a Soft or Technical sibling</h2>"
-        f"<p>{len(extra)} Angular icons are in this pack. Soft and Technical currently "
+        '<section id="outline-only">'
+        "<h2>Outline icons without a Rounded or Mono sibling</h2>"
+        f"<p>{len(extra)} Outline icons are in this pack. Rounded and Mono currently "
         "cover the shared 12 only. Shown here at native 24, outline then filled.</p>"
         f'<div class="solo-grid">{"".join(cards)}</div>'
         "</section>"
@@ -259,12 +259,12 @@ def render_catalog(root: Path) -> str:
         names = {labels[family][icon_id] for family in FAMILIES}
         if len(names) != 1:
             raise ValueError(f"label mismatch for {icon_id}: {names}")
-    shared_labels = labels["angular"]
+    shared_labels = labels["outline"]
     counts = {
         family: len(list((root / family / "generated" / family).rglob("*.svg")))
         for family in FAMILIES
     }
-    expected = {"angular": 288, "soft": 72, "technical": 72}
+    expected = {"outline": 288, "rounded": 72, "mono": 72}
     if counts != expected:
         raise ValueError(f"unexpected SVG counts: {counts}")
     return f"""<!DOCTYPE html>
@@ -379,8 +379,8 @@ body:has(#surface:checked) {{
 <header>
 <p class="kicker">Private review pack · not for publication</p>
 <h1>Vector UI icon families</h1>
-<p>Angular, Soft, and Technical live here as siblings. Angular has {counts["angular"]} SVGs. Soft has {counts["soft"]}. Technical has {counts["technical"]}. Each drawing is outline or filled at native 12, 16, or 24.</p>
-<p class="banner"><strong>Warning.</strong> {WARNING_SENTENCE} The rule applies to Angular, Soft, and Technical. A recorded gap exception does not lift it.</p>
+<p>Outline, Rounded, and Mono live here as siblings. Outline has {counts["outline"]} SVGs. Rounded has {counts["rounded"]}. Mono has {counts["mono"]}. Each drawing is outline or filled at native 12, 16, or 24.</p>
+<p class="banner"><strong>Warning.</strong> {WARNING_SENTENCE} The rule applies to Outline, Rounded, and Mono. A recorded gap exception does not lift it.</p>
 <label class="surface"><input id="surface" type="checkbox"> Dark surface</label>
 <nav>
 <a href="#proof">24 outline proof</a>
@@ -389,7 +389,7 @@ body:has(#surface:checked) {{
 <a href="#questions">Open questions</a>
 <a href="#families">All masters</a>
 <a href="#warning">Warning icon</a>
-<a href="#angular-only">Angular only</a>
+<a href="#outline-only">Outline only</a>
 </nav>
 </header>
 <main>
@@ -405,16 +405,16 @@ body:has(#surface:checked) {{
 {_exceptions(root)}
 </section>
 <section id="questions">
-<h2>Technical usage limits</h2>
-<p>Keep labels and mixed-family alignment consistent with the Technical contract.</p>
+<h2>Mono usage limits</h2>
+<p>Keep labels and mixed-family alignment consistent with the Mono contract.</p>
 {_usage_limits(root)}
 </section>
 {_detail(root, shared_labels)}
-{_angular_only(root, shared_labels)}
+{_outline_only(root, shared_labels)}
 </main>
 <footer>
 <p>BSD 3-Clause. Copyright 2026, Leo Farias. <code>package.json</code> is <code>private</code>. This pack is not published to npm or pub.dev, and it is not <code>remix_ui_icons</code>.</p>
-<p>Family catalogs remain build products: <a href="../angular/docs/catalog/index.html">Angular</a>, <a href="../soft/docs/catalog/index.html">Soft</a>, <a href="../technical/proof/index.html">Technical proof</a>.</p>
+<p>Family catalogs remain build products: <a href="../outline/docs/catalog/index.html">Outline</a>, <a href="../rounded/docs/catalog/index.html">Rounded</a>, <a href="../mono/proof/index.html">Mono proof</a>.</p>
 </footer>
 </body>
 </html>

@@ -20,17 +20,17 @@ sys.path.insert(0, str(ROOT))
 from source.catalog import FAMILIES, MASTERS, APPEARANCES, SHARED, render_catalog, svg_file
 
 CONSTRUCTORS = (
-    "soft/source/draw.py",
-    "soft/source/primitives.py",
-    "technical/source/icons.py",
-    "technical/source/grammar.py",
-    "technical/source/export.py",
+    "rounded/source/draw.py",
+    "rounded/source/primitives.py",
+    "mono/source/icons.py",
+    "mono/source/grammar.py",
+    "mono/source/export.py",
 )
 FORBIDDEN = (
-    "generated/angular",
+    "generated/outline",
     "baseline.draw",
-    "source.angular",
-    "angular.baseline",
+    "source.outline",
+    "outline.baseline",
 )
 
 
@@ -44,19 +44,19 @@ class PackageTests(unittest.TestCase):
         self.assertIs(package["private"], True)
         self.assertEqual(package["license"], "BSD-3-Clause")
         self.assertNotIn("publishConfig", package)
-        web = _json(ROOT / "angular" / "packages" / "web" / "package.json")
-        soft = _json(ROOT / "soft" / "package.json")
+        web = _json(ROOT / "outline" / "packages" / "web" / "package.json")
+        rounded = _json(ROOT / "rounded" / "package.json")
         self.assertIs(web["private"], True)
-        self.assertIs(soft["private"], True)
+        self.assertIs(rounded["private"], True)
         self.assertEqual(web["license"], "BSD-3-Clause")
-        self.assertEqual(soft["license"], "BSD-3-Clause")
+        self.assertEqual(rounded["license"], "BSD-3-Clause")
 
     def test_license_names_leo_farias(self):
         for path in (
             ROOT / "LICENSE",
-            ROOT / "angular" / "LICENSE",
-            ROOT / "soft" / "LICENSE",
-            ROOT / "technical" / "LICENSE",
+            ROOT / "outline" / "LICENSE",
+            ROOT / "rounded" / "LICENSE",
+            ROOT / "mono" / "LICENSE",
         ):
             text = path.read_text(encoding="utf-8")
             self.assertIn("BSD 3-Clause License", text)
@@ -67,13 +67,13 @@ class PackageTests(unittest.TestCase):
             self.assertTrue((ROOT / family / "source").is_dir(), family)
         self.assertEqual(list(ROOT.rglob("pubspec.yaml")), [])
 
-    def test_constructors_do_not_read_angular_paths(self):
+    def test_constructors_do_not_read_outline_paths(self):
         for relative in CONSTRUCTORS:
             text = (ROOT / relative).read_text(encoding="utf-8")
             for token in FORBIDDEN:
                 self.assertNotIn(token, text, f"{relative} contains {token}")
-        soft = _json(ROOT / "soft" / "catalog" / "styles.json")["soft"]
-        self.assertIn("not offset Angular paths", soft["notAngularFilter"])
+        rounded = _json(ROOT / "rounded" / "catalog" / "styles.json")["rounded"]
+        self.assertIn("not offset Outline paths", rounded["notOutlineFilter"])
 
 
 class WarningTests(unittest.TestCase):
@@ -95,35 +95,35 @@ class WarningTests(unittest.TestCase):
 
 
 class GeometryTests(unittest.TestCase):
-    def test_counts_and_angular_hashes(self):
-        inventory = _json(ROOT / "angular" / "generated" / "inventory.json")
+    def test_counts_and_outline_hashes(self):
+        inventory = _json(ROOT / "outline" / "generated" / "inventory.json")
         self.assertEqual(len(inventory), 288)
         for row in inventory:
-            path = ROOT / "angular" / "generated" / row["path"]
+            path = ROOT / "outline" / "generated" / row["path"]
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(digest, row["sha256"], row["path"])
-        self.assertEqual(len(list((ROOT / "soft" / "generated" / "soft").rglob("*.svg"))), 72)
+        self.assertEqual(len(list((ROOT / "rounded" / "generated" / "rounded").rglob("*.svg"))), 72)
         self.assertEqual(
-            len(list((ROOT / "technical" / "generated" / "technical").rglob("*.svg"))),
+            len(list((ROOT / "mono" / "generated" / "mono").rglob("*.svg"))),
             72,
         )
 
-    def test_soft_and_technical_paths_differ_from_angular_and_each_other(self):
+    def test_rounded_and_mono_paths_differ_from_outline_and_each_other(self):
         registries = {
-            "angular": _json(ROOT / "angular" / "generated" / "registry.json")["paths"],
-            "soft": _json(ROOT / "soft" / "generated" / "registry.json")["paths"],
-            "technical": _json(ROOT / "technical" / "generated" / "registry.json")["paths"],
+            "outline": _json(ROOT / "outline" / "generated" / "registry.json")["paths"],
+            "rounded": _json(ROOT / "rounded" / "generated" / "registry.json")["paths"],
+            "mono": _json(ROOT / "mono" / "generated" / "registry.json")["paths"],
         }
         for icon_id in SHARED:
             for appearance in APPEARANCES:
                 for size in MASTERS:
-                    angular = registries["angular"][icon_id][appearance][str(size)]
-                    soft = registries["soft"][icon_id][appearance][str(size)]
-                    technical = registries["technical"][icon_id][appearance][str(size)]
+                    outline = registries["outline"][icon_id][appearance][str(size)]
+                    rounded = registries["rounded"][icon_id][appearance][str(size)]
+                    mono = registries["mono"][icon_id][appearance][str(size)]
                     with self.subTest(icon=icon_id, appearance=appearance, size=size):
-                        self.assertNotEqual(soft, angular)
-                        self.assertNotEqual(technical, angular)
-                        self.assertNotEqual(soft, technical)
+                        self.assertNotEqual(rounded, outline)
+                        self.assertNotEqual(mono, outline)
+                        self.assertNotEqual(rounded, mono)
 
 
 class CatalogTests(unittest.TestCase):
@@ -133,7 +133,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(page.read_text(encoding="utf-8"), rendered)
         self.assertIn("Visible text label required", rendered)
         self.assertIn("A tooltip or accessible name alone does not replace the visible label.", rendered)
-        for family in ("Angular", "Soft", "Technical"):
+        for family in ("Outline", "Rounded", "Mono"):
             self.assertIn(family, rendered)
         for icon_id in SHARED:
             self.assertIn(f'id="{icon_id}"', rendered)

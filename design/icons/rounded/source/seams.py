@@ -1,11 +1,11 @@
-"""Public seams for the Soft calibration pilot.
+"""Public seams for the Rounded calibration pilot.
 
 Tests bind to these names and behaviors, not to helper internals.
 Implementation lives in draw / svg / lookup; this module is the contract.
 """
 from __future__ import annotations
 
-PACK = 'soft'
+PACK = 'rounded'
 FAMILY = 'Vector UI'
 VERSION = '0.1.0-soft-pilot'
 STATUS = 'calibration-pilot-not-public'
@@ -21,12 +21,12 @@ MASTERS = (12, 16, 24)
 PRODUCT_PATH_COMMANDS = ('M', 'L', 'Z')
 VALIDATOR_PATH_COMMANDS = ('M', 'L', 'C', 'Q', 'A', 'Z')
 
-# Nominal tokens — same numbers as Angular, different join/cap model.
+# Nominal tokens — same numbers as Outline, different join/cap model.
 OUTLINE_WIDTH = {12: 1.0, 16: 1.5, 24: 2.0}
 BOLD_WIDTH = {12: 2.0, 16: 2.5, 24: 3.0}
 PADDING = {12: 1.0, 16: 1.5, 24: 2.0}
 GAP_TARGET = {12: 1.0, 16: 1.5, 24: 2.0}
-# Object outer corners ≈ 1.6–1.7× outline. Wired into drawers. Not Rounded's 0.5–1× fillet.
+# Object outer corners ≈ 1.6–1.7× outline. Wired into drawers. Not legacy fillet proposal's 0.5–1× fillet.
 CORNER_TOKEN = {12: 1.6, 16: 2.4, 24: 3.4}
 # Acute cues (dog-ear, apex, roof peak) stay round but may be smaller.
 ACUTE_JOIN = {12: 1.0, 16: 1.5, 24: 2.0}
@@ -85,11 +85,11 @@ LABELS = {
 FLATTEN_TOLERANCE_PX = 0.05
 QUAD_SEGS = 8
 
-ANGULAR_ROOT_REL = ('design', 'icons', 'angular')
+OUTLINE_ROOT_REL = ('design', 'icons', 'outline')
 
 
 class UnknownIconError(LookupError):
-    """Canonical ID is not in the Soft pilot set. Do not substitute."""
+    """Canonical ID is not in the Rounded pilot set. Do not substitute."""
 
 
 class UnknownAppearanceError(LookupError):
@@ -101,4 +101,4 @@ class UnknownMasterError(LookupError):
 
 
 class CrossPackFallbackError(LookupError):
-    """Asked for a pack this pilot will not serve. Never return Angular/Rounded silently."""
+    """Asked for a pack this pilot will not serve. Never return another family silently."""

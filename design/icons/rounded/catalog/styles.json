@@ -1,5 +1,5 @@
 {
-  "soft": {
+  "rounded": {
     "outlineWidth": {"12": 1, "16": 1.5, "24": 2},
     "openGlyphFilledWidth": {"12": 2, "16": 2.5, "24": 3},
     "meaningfulGapTarget": {"12": 1, "16": 1.5, "24": 2},
@@ -14,7 +14,7 @@
     "productRepresentation": "expanded-mlz-flattening-of-round-construction",
     "flatteningTolerancePx": 0.05,
     "quadSegs": 8,
-    "notRounded": "Rounded is a planned fillet-on-Angular pack (0.5–1×) and is not drawn here",
-    "notAngularFilter": "Soft icons are constructed from Soft primitives, not offset Angular paths"
+    "legacyRoundedPlan": "The undrawn fillet proposal previously called Rounded (0.5–1× on Outline) needs a product naming decision",
+    "notOutlineFilter": "Rounded icons are constructed from Rounded primitives, not offset Outline paths"
   }
 }

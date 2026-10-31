@@ -22,4 +22,4 @@ Introduced the manifest/schema, deterministic repository build, seven sprites, 4
 
 Local drawing corrections during the pilot: enlarged Gear's filled hub; removed small inward contour artifacts by using a clean octagonal hub; widened the 16 px Edit counter; removed Save's thin slot seam; opened Info/Help punctuation spacing to the authored native gap targets.
 
-No public release, license grant, Core 120 completion, Rounded availability, user-recognition result, or cross-browser certification is implied by this version.
+No public release, license grant, Core 120 completion, legacy fillet proposal availability, user-recognition result, or cross-browser certification is implied by this version.

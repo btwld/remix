@@ -4,11 +4,11 @@
     {
       "id": "warning-visible-label",
       "icon": "warning",
-      "pack": "soft",
+      "pack": "rounded",
       "status": "concept-level-restriction-pilot",
       "owner": null,
       "reviewer": null,
-      "reason": "The Warning visible-label rule is a family concept, not an Angular-only leftover. Soft inherits the meaning; hashes bind to Soft artwork after build.",
+      "reason": "The Warning visible-label rule is a family concept, not an Outline-only leftover. Rounded inherits the meaning; hashes bind to Rounded artwork after build.",
       "sizes": {
         "12": {
           "outline": {

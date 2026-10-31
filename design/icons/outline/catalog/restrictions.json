@@ -4,7 +4,7 @@
     {
       "id": "warning-visible-label",
       "icon": "warning",
-      "pack": "angular",
+      "pack": "outline",
       "status": "inherited-restriction-owner-review-pending",
       "owner": null,
       "reviewer": null,

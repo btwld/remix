@@ -6,7 +6,7 @@
   "properties": {
     "schemaVersion": {"type": "integer"},
     "family": {"type": "string"},
-    "pack": {"const": "soft"},
+    "pack": {"const": "rounded"},
     "nameStatus": {"type": "string"},
     "version": {"type": "string"},
     "status": {"type": "string"},
@@ -35,7 +35,7 @@
           "keywords": {"type": "array"},
           "availability": {
             "const": {
-              "soft": {
+              "rounded": {
                 "appearances": ["outline", "filled"],
                 "opticalSizes": [12, 16, 24]
               }

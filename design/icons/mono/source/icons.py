@@ -1,6 +1,6 @@
-"""Technical 12-icon construction. Independent drawings per native master.
+"""Mono 12-icon construction. Independent drawings per native master.
 
-Skeletons follow the grammar spec. Paths are not Angular copies and are not
+Skeletons follow the grammar spec. Paths are not Outline copies and are not
 scaled from another master after expansion.
 """
 from __future__ import annotations
@@ -22,7 +22,7 @@ from source.grammar import (
 )
 
 
-def draw(icon_id, n, appearance, pack="technical"):
+def draw(icon_id, n, appearance, pack="mono"):
     resolve(pack, icon_id, appearance, n)
     fn = DRAW[icon_id]
     g = fn(n, appearance)

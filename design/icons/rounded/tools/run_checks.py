@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run Soft pilot checks from the pilot root."""
+"""Run Rounded pilot checks from the pilot root."""
 from __future__ import annotations
 import subprocess
 import sys

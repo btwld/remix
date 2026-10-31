@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-FAMILIES = ("angular", "soft", "technical")
+FAMILIES = ("outline", "rounded", "mono")
 
 
 def main() -> None:

@@ -1,13 +1,13 @@
-"""Shared identity and fail-closed resolve seam for the Technical pilot.
+"""Shared identity and fail-closed resolve seam for the Mono pilot.
 
-This module does not draw glyphs and does not import Angular construction.
+This module does not draw glyphs and does not import Outline construction.
 Unknown pack / id / appearance / master raise. Nothing is substituted.
 """
 from __future__ import annotations
 
 APPEARANCES = ("outline", "filled")
 MASTERS = (12, 16, 24)
-PACK = "technical"
+PACK = "mono"
 FAMILY = "Vector UI"
 PILOT_VERSION = "0.1.0-technical-pilot"
 
@@ -145,7 +145,7 @@ PAIR_MODEL = {i["id"]: i["pairModel"] for i in ICONS}
 
 
 class UnavailablePack(KeyError):
-    """This pilot does not serve another style pack (including Angular)."""
+    """This pilot does not serve another style pack (including Outline)."""
 
 
 class UnknownIcon(KeyError):
@@ -164,17 +164,17 @@ def resolve(pack, icon_id, appearance, master):
     """Validate a drawing request. Returns a tuple key. Never substitutes."""
     if pack != PACK:
         raise UnavailablePack(
-            "Pack %r is not served by the Technical pilot (no fallback)" % (pack,)
+            "Pack %r is not served by the Mono pilot (no fallback)" % (pack,)
         )
     if icon_id not in ICON_BY_ID:
-        raise UnknownIcon("Unknown Technical icon %r (no fallback)" % (icon_id,))
+        raise UnknownIcon("Unknown Mono icon %r (no fallback)" % (icon_id,))
     if appearance not in APPEARANCES:
         raise UnavailableAppearance(
             "Appearance %r is unavailable for %s (no fallback)" % (appearance, icon_id)
         )
     if master not in MASTERS:
         raise UnavailableMaster(
-            "Master %r is not a native Technical size for %s (no fallback)"
+            "Master %r is not a native Mono size for %s (no fallback)"
             % (master, icon_id)
         )
     return pack, icon_id, appearance, int(master)
@@ -184,7 +184,7 @@ def select_master(display_size):
     """Map a display size to a native master. Unknown sizes raise, never clamp."""
     if display_size not in MASTER_FOR_DISPLAY:
         raise UnavailableMaster(
-            "Display size %r has no reviewed Technical master (no fallback)"
+            "Display size %r has no reviewed Mono master (no fallback)"
             % (display_size,)
         )
     return MASTER_FOR_DISPLAY[display_size]
@@ -205,7 +205,7 @@ USAGE_LIMITS = (
     {
         "id": "plus-keyline-mixed-toolbar",
         "icons": ["plus"],
-        "guidance": "Technical plus keeps its tighter inset. Align mixed-family toolbars by control bounds, not by changing the drawing.",
+        "guidance": "Mono plus keeps its tighter inset. Align mixed-family toolbars by control bounds, not by changing the drawing.",
     },
     {
         "id": "density-12-link-branch",

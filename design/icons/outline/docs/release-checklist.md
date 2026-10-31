@@ -17,7 +17,7 @@ The private pilot can be reviewed and integrated locally. Public release remains
 
 After conducting the work, save actual findings in the external evidence
 directory and create `recognition-approval.json` and `screen-audit-approval.json`
-in its `angular/` subdirectory. Each must have `status: "approved"`, a named
+in its `outline/` subdirectory. Each must have `status: "approved"`, a named
 `reviewer`, the current `catalogSha256`, and an `evidenceFile` path relative to
 that subdirectory. The target must remain inside the evidence directory.
 Empty templates and participant plans do not satisfy the gate.

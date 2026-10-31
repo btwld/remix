@@ -29,7 +29,7 @@ PACKAGES = ('shapely', 'CairoSVG', 'cairocffi', 'cffi', 'Pillow', 'jsonschema',
 def report_directory(root: Path = ROOT) -> Path:
     """Ephemeral evidence, shared by runners and the release gate, never source."""
     default = Path(tempfile.gettempdir()) / ('vector-ui-' + digest_bytes(str(root.resolve()).encode())[:12])
-    directory = Path(os.environ.get('VECTOR_UI_EVIDENCE_DIR', default)).resolve() / 'angular'
+    directory = Path(os.environ.get('VECTOR_UI_EVIDENCE_DIR', default)).resolve() / 'outline'
     if directory.is_relative_to(root.resolve()):
         raise ValueError('VECTOR_UI_EVIDENCE_DIR must be outside the family source tree')
     directory.mkdir(parents=True, exist_ok=True)

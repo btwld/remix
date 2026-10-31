@@ -1,8 +1,8 @@
-"""Soft geometry primitives.
+"""Rounded geometry primitives.
 
 These are the construction vocabulary. Icons are authored from circles,
 stadiums, rounded rects, round-capped strokes, and round-joined polygons.
-They are not offset/fillet filters applied to Angular paths.
+They are not offset/fillet filters applied to Outline paths.
 """
 from __future__ import annotations
 

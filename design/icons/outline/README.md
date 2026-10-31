@@ -1,4 +1,4 @@
-# Vector UI — Angular pilot 48
+# Vector UI — Outline pilot 48
 
 **Working name · 0.5.0-pilot.2 · private review build, not a public release**
 
@@ -20,8 +20,8 @@ Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catal
 
 ## What is not finished
 
-This private pack includes 48 Angular, 12 Soft, and 12 Technical concepts.
-Rounded, independent design approval, recognition testing, final naming, and
+This private pack includes 48 Outline, 12 Rounded, and 12 Mono concepts.
+The legacy fillet proposal, independent design approval, recognition testing, final naming, and
 publication are not included. BSD 3-Clause is selected; no package is published.
 
 Forced-color selected controls retain the system Highlight fill and declare
@@ -36,9 +36,9 @@ operating-system contrast themes.
 
 ## Use the SVGs
 
-`generated/angular/outline/16/sliders.svg`
+`generated/outline/outline/16/sliders.svg`
 
-`generated/angular/filled/24/gear.svg`
+`generated/outline/filled/24/gear.svg`
 
 Inline SVG inherits `currentColor`. An SVG used as an `<img src>` is a separate document: parent text color does not automatically recolor it. Each raw file has a standalone title. When placing it inside a labeled button, hide the inner SVG from assistive technology instead of announcing both the icon and the button.
 
@@ -75,7 +75,7 @@ Evidence records actual runtime versions; results must be rerun across toolchain
 
 Runners write reports and captures outside the source tree. Set
 `VECTOR_UI_EVIDENCE_DIR` to an external directory shared by the runners and gate;
-the Angular evidence lives in its `angular/` subdirectory. Without that setting,
+the Outline evidence lives in its `outline/` subdirectory. Without that setting,
 a checkout-specific directory under the system temporary directory is used.
 No generated test or release-status report is committed.
 
@@ -118,10 +118,10 @@ Do not use `--create-baseline` to hide a failed diff. That option is a maintaine
 
 ```text
 catalog/                 identities, availability, keywords, schemas, exceptions
-source/angular/          locked baseline and 15 authored additions
+source/outline/          locked baseline and 15 authored additions
 source/web/              guide presentation and behavior
 source/build.py          one deterministic generation entry point
-generated/angular/       288 standalone SVG assets
+generated/outline/       288 standalone SVG assets
 generated/sprites/       six size/appearance sprites and one combined sprite
 packages/web/            ES-module API and isolated imports
 docs/catalog/            self-contained catalog and proof pages

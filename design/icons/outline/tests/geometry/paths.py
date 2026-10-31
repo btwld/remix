@@ -1,6 +1,6 @@
-"""Strict expanded-polygon parser for Angular only.
+"""Strict expanded-polygon parser for Outline only.
 
-Unknown commands fail closed. This module does NOT claim to validate Rounded.
+Unknown commands fail closed. This module does NOT claim to validate legacy planned Rounded.
 The independent XML parser checks serialized outputs, not just builder objects.
 """
 import re,math
@@ -10,7 +10,7 @@ from shapely.geometry import Polygon,GeometryCollection
 TOKEN=re.compile(r'[MLZ]|-?(?:\d+(?:\.\d*)?|\.\d+)')
 
 def parse_path(d):
-    if not isinstance(d,str) or not re.fullmatch(r'[MLZ0-9.\-\s]+',d):raise ValueError('Unsupported or unsafe Angular path syntax')
+    if not isinstance(d,str) or not re.fullmatch(r'[MLZ0-9.\-\s]+',d):raise ValueError('Unsupported or unsafe Outline path syntax')
     tokens=TOKEN.findall(d)
     if ''.join(tokens)!=re.sub(r'\s+','',d):raise ValueError('Unparsed path content')
     i=0;g=GeometryCollection();rings=[]
@@ -35,7 +35,7 @@ def parse_path(d):
 
 
 def parse_svg(text):
-    """Accept only the standalone expanded Angular SVG export format.
+    """Accept only the standalone expanded Outline SVG export format.
 
     This is not a general-purpose SVG sanitizer. Unknown presentation, geometry,
     namespace or scripting features are rejected, never silently ignored.

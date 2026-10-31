@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render native 12/16/24 raster proofs for the Soft pilot."""
+"""Render native 12/16/24 raster proofs for the Rounded pilot."""
 from __future__ import annotations
 
 import io
@@ -35,7 +35,7 @@ def sheet(out: Path, dark: bool = False) -> None:
     d = ImageDraw.Draw(im)
     font = ImageFont.truetype(FONT, 20)
     small = ImageFont.truetype(FONT, 13)
-    d.text((24, 18), 'SOFT / NATIVE OPTICAL DRAWINGS', font=font, fill=ink)
+    d.text((24, 18), 'ROUNDED / NATIVE OPTICAL DRAWINGS', font=font, fill=ink)
     for col, n in enumerate([12, 16, 24]):
         d.text((250 + col * 320, 54), f'{n} px / outline + filled / 4× + native', font=small, fill=ink)
     for row, name in enumerate(names):
@@ -44,7 +44,7 @@ def sheet(out: Path, dark: bool = False) -> None:
         d.text((24, y + 40), LABELS[name], font=ImageFont.truetype(FONT, 16), fill=ink)
         for col, n in enumerate([12, 16, 24]):
             for j, appearance in enumerate(['outline', 'filled']):
-                svg = ROOT / 'generated' / 'soft' / appearance / str(n) / f'{name}.svg'
+                svg = ROOT / 'generated' / 'rounded' / appearance / str(n) / f'{name}.svg'
                 big = _svg_png(svg, ink, 4)
                 native = _svg_png(svg, ink, 1)
                 x = 250 + col * 320 + j * 140
@@ -55,7 +55,7 @@ def sheet(out: Path, dark: bool = False) -> None:
 
 
 def compare_sheet(out: Path, master: int = 24) -> None:
-    angular = ROOT.parents[2] / 'design' / 'icons' / 'angular' / 'generated' / 'angular'
+    outline = ROOT.parents[2] / 'design' / 'icons' / 'outline' / 'generated' / 'outline'
     names = list(CANONICAL_IDS)
     scale = 4 if master == 24 else 6
     cell = master * scale
@@ -65,17 +65,17 @@ def compare_sheet(out: Path, master: int = 24) -> None:
     d = ImageDraw.Draw(im)
     font = ImageFont.truetype(FONT, 18)
     small = ImageFont.truetype(FONT, 12)
-    d.text((24, 18), f'ANGULAR {master} vs SOFT {master}  (Angular is read-only)', font=font, fill=INK)
-    for i, cap in enumerate(['Angular outline', 'Soft outline', 'Angular filled', 'Soft filled']):
+    d.text((24, 18), f'OUTLINE {master} vs ROUNDED {master}  (Outline is read-only)', font=font, fill=INK)
+    for i, cap in enumerate(['Outline outline', 'Rounded outline', 'Outline filled', 'Rounded filled']):
         d.text((260 + i * 200, 48), cap, font=small, fill=INK)
     for row, name in enumerate(names):
         y = 72 + row * row_h
         d.text((24, y + 40), LABELS[name], font=ImageFont.truetype(FONT, 15), fill=INK)
         specs = [
-            (angular / 'outline' / str(master) / f'{name}.svg', INK),
-            (ROOT / 'generated' / 'soft' / 'outline' / str(master) / f'{name}.svg', INK),
-            (angular / 'filled' / str(master) / f'{name}.svg', INK),
-            (ROOT / 'generated' / 'soft' / 'filled' / str(master) / f'{name}.svg', INK),
+            (outline / 'outline' / str(master) / f'{name}.svg', INK),
+            (ROOT / 'generated' / 'rounded' / 'outline' / str(master) / f'{name}.svg', INK),
+            (outline / 'filled' / str(master) / f'{name}.svg', INK),
+            (ROOT / 'generated' / 'rounded' / 'filled' / str(master) / f'{name}.svg', INK),
         ]
         for i, (path, color) in enumerate(specs):
             pic = _svg_png(path, color, scale)
@@ -85,8 +85,8 @@ def compare_sheet(out: Path, master: int = 24) -> None:
 
 
 if __name__ == '__main__':
-    sheet(ROOT / 'docs' / 'proof' / 'soft-native.png')
-    sheet(ROOT / 'docs' / 'proof' / 'soft-native-dark.png', dark=True)
-    compare_sheet(ROOT / 'docs' / 'proof' / 'angular-vs-soft-24.png', 24)
-    compare_sheet(ROOT / 'docs' / 'proof' / 'angular-vs-soft-12.png', 12)
+    sheet(ROOT / 'docs' / 'proof' / 'rounded-native.png')
+    sheet(ROOT / 'docs' / 'proof' / 'rounded-native-dark.png', dark=True)
+    compare_sheet(ROOT / 'docs' / 'proof' / 'outline-vs-rounded-24.png', 24)
+    compare_sheet(ROOT / 'docs' / 'proof' / 'outline-vs-rounded-12.png', 12)
     print('Wrote native and comparison raster proofs')

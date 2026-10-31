@@ -9,7 +9,7 @@ from shapely.geometry import Polygon,MultiPolygon
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from tests.geometry.paths import parse_svg,parse_path
 from tools.evidence import report_directory
-from source.angular import additions,baseline
+from source.outline import additions,baseline
 CAT=json.loads((ROOT/'catalog/icons.json').read_text());INV=json.loads((ROOT/'generated/inventory.json').read_text());REG=json.loads((ROOT/'generated/registry.json').read_text())['paths']
 
 class ManifestTests(unittest.TestCase):
@@ -22,12 +22,12 @@ class ManifestTests(unittest.TestCase):
             self.assertIn(m['pairModel'],['weight','silhouette'])
             self.assertEqual(m['aliases'],[])
     def test_declared_matrix_matches_files(self):
-        expected={f'angular/{m["id"]}' for m in CAT['icons']};self.assertEqual(len(expected),48)
-        files={str(p.relative_to(ROOT/'generated')) for p in (ROOT/'generated/angular').rglob('*.svg')}
+        expected={f'outline/{m["id"]}' for m in CAT['icons']};self.assertEqual(len(expected),48)
+        files={str(p.relative_to(ROOT/'generated')) for p in (ROOT/'generated/outline').rglob('*.svg')}
         actual={r['path'] for r in INV};self.assertEqual(files,actual);self.assertEqual(len(files),288)
         self.assertEqual(len(REG),48);self.assertEqual(CAT['counts'],{'icons':48,'drawings':288})
         for m in CAT['icons']:
-            self.assertEqual(m['availability'],{'angular':{'appearances':['outline','filled'],'opticalSizes':[12,16,24]}})
+            self.assertEqual(m['availability'],{'outline':{'appearances':['outline','filled'],'opticalSizes':[12,16,24]}})
     def test_unavailable_packs_are_not_shipped(self):
         self.assertFalse(CAT['packs']['rounded']['available']);self.assertFalse((ROOT/'generated/rounded').exists())
         self.assertEqual(CAT['status'],'private-pilot-awaiting-signoff');self.assertFalse(CAT['releaseApproval']['publicReleaseApproved'])
@@ -40,7 +40,7 @@ class AssetTests(unittest.TestCase):
     def test_baseline_bytes(self):
         frozen=json.loads((ROOT/'tests/fixtures/baseline-sha256.json').read_text());self.assertEqual(len(frozen),198)
         for p,h in frozen.items():
-            with self.subTest(path=p):self.assertEqual(hashlib.sha256((ROOT/'generated/angular'/p).read_bytes()).hexdigest(),h)
+            with self.subTest(path=p):self.assertEqual(hashlib.sha256((ROOT/'generated/outline'/p).read_bytes()).hexdigest(),h)
     def test_xml_geometry_and_hashes(self):
         measurements=[]
         for r in INV:
@@ -71,18 +71,18 @@ class AssetTests(unittest.TestCase):
         ns={'s':'http://www.w3.org/2000/svg'};all_count=0
         for a in ('outline','filled'):
             for n in (12,16,24):
-                root=ET.fromstring((ROOT/f'generated/sprites/angular-{a}-{n}.svg').read_text());symbols=root.findall('s:symbol',ns);self.assertEqual(len(symbols),48)
+                root=ET.fromstring((ROOT/f'generated/sprites/outline-{a}-{n}.svg').read_text());symbols=root.findall('s:symbol',ns);self.assertEqual(len(symbols),48)
                 for s in symbols:
                     prefix='vui-angular-';suffix=f'-{a}-{n}';name=s.attrib['id'][len(prefix):-len(suffix)]
                     self.assertEqual(s.find('s:path',ns).attrib['d'],REG[name][a][str(n)])
                 all_count+=len(symbols)
-        combined=ET.fromstring((ROOT/'generated/sprites/angular-all.svg').read_text());ids=[s.attrib['id'] for s in combined]
+        combined=ET.fromstring((ROOT/'generated/sprites/outline-all.svg').read_text());ids=[s.attrib['id'] for s in combined]
         self.assertEqual(len(ids),288);self.assertEqual(len(set(ids)),288)
     def test_fail_closed_parser(self):
         for d in ['M0 0C1 2 3 4 5 6Z','M0 0Q1 2 3 4Z','M0 0LNaN 2Z','M0 0L1 1','M0 0L0 0L0 0Z','M0 0L1 1Z<script>']:
             with self.subTest(path=d),self.assertRaises(ValueError):parse_path(d)
     def test_svg_safety_rejects_unexpected_content(self):
-        base=(ROOT/'generated/angular/outline/24/home.svg').read_text()
+        base=(ROOT/'generated/outline/outline/24/home.svg').read_text()
         for bad in [base.replace('<path ', '<image href="https://example.invalid/a"/><path '),
                     base.replace('<path ', '<script>alert(1)</script><path '),
                     base.replace('<path ', '<path onclick="x()" '),
@@ -91,7 +91,7 @@ class AssetTests(unittest.TestCase):
             with self.assertRaises(ValueError):parse_svg(bad)
     def test_missing_appearance_is_rejected_by_schema(self):
         clone=json.loads(json.dumps(CAT))
-        clone['icons'][0]['availability']['angular']['appearances']=['outline']
+        clone['icons'][0]['availability']['outline']['appearances']=['outline']
         with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(clone,json.loads((ROOT/'catalog/schemas/catalog.schema.json').read_text()))
     def test_generated_fingerprints(self):
         h=json.loads((ROOT/'generated-sha256.json').read_text())

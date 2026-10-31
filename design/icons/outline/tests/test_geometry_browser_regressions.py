@@ -22,7 +22,7 @@ from source.restrictions import load_restrictions, usage_text, effective_catalog
 
 class StrictSvgRegression(unittest.TestCase):
     def setUp(self):
-        self.svg = (ROOT/'generated/angular/outline/24/home.svg').read_text()
+        self.svg = (ROOT/'generated/outline/outline/24/home.svg').read_text()
 
     def test_root_overrides_are_rejected(self):
         attributes = {'opacity':'0','display':'none','visibility':'hidden',
@@ -64,7 +64,7 @@ class StrictSvgRegression(unittest.TestCase):
                 parse_svg(text)
 
     def test_all_current_files_still_parse(self):
-        files=list((ROOT/'generated/angular').rglob('*.svg'))
+        files=list((ROOT/'generated/outline').rglob('*.svg'))
         self.assertEqual(len(files),288)
         for file in files:
             with self.subTest(file=str(file.relative_to(ROOT))):
@@ -100,7 +100,7 @@ class RestrictionRegression(unittest.TestCase):
                 cell=self.record['sizes'][str(n)][a]
                 with self.subTest(master=n,appearance=a):
                     self.assertIs(cell['visibleLabelRequired'],True)
-                    expected=hashlib.sha256((ROOT/f'generated/angular/{a}/{n}/warning.svg').read_bytes()).hexdigest()
+                    expected=hashlib.sha256((ROOT/f'generated/outline/{a}/{n}/warning.svg').read_bytes()).hexdigest()
                     self.assertEqual(cell['geometrySha256'],expected)
                     self.assertIn(f'{n} px',usage_text(self.record,n))
         self.assertIsNone(self.record['owner']);self.assertIsNone(self.record['reviewer'])
@@ -115,7 +115,7 @@ class RestrictionRegression(unittest.TestCase):
             self.assertEqual(exception['restrictionId'],self.record['id'])
             self.assertEqual(exception['geometrySha256'],cell['geometrySha256'])
             self.assertEqual(exception['permittedUse'],'visible-label-required')
-            g=parse_svg((ROOT/f'generated/angular/{a}/{n}/warning.svg').read_text())[2]
+            g=parse_svg((ROOT/f'generated/outline/{a}/{n}/warning.svg').read_text())[2]
             if a=='filled':
                 holes=[Polygon(r) for r in g.interiors]
                 sizes=sorted([(round(h.bounds[2]-h.bounds[0],4),round(h.bounds[3]-h.bounds[1],4)) for h in holes],key=lambda x:x[1])
@@ -130,15 +130,16 @@ class RestrictionRegression(unittest.TestCase):
     def test_entire_pilot_artwork_unchanged(self):
         original=json.loads((ROOT/'tests/fixtures/pilot1-sha256.json').read_text())
         self.assertEqual(len(original),288)
-        current={str(p.relative_to(ROOT/'generated')):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'generated/angular').rglob('*.svg')}
+        # Keep the immutable pilot fixture's historical keys; only map the moved paths.
+        current={'angular/'+str(p.relative_to(ROOT/'generated/outline')):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'generated/outline').rglob('*.svg')}
         self.assertEqual(current,original)
 
 
 class EvidenceFreshnessRegression(unittest.TestCase):
     def fixture(self,root):
-        for name in ['source/angular/draw.py','source/build.py','tests/test_sample.py',
+        for name in ['source/outline/draw.py','source/build.py','tests/test_sample.py',
                      'tools/check.py','catalog/icons.json','requirements-dev.txt',
-                     'generated/angular/outline/24/home.svg','docs/catalog/index.html',
+                     'generated/outline/outline/24/home.svg','docs/catalog/index.html',
                      '.github/workflows/test.yml','packages/web/render.mjs']:
             path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('fixture\n')
 
@@ -183,7 +184,7 @@ class EvidenceFreshnessRegression(unittest.TestCase):
             shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('.git','__pycache__','reports','review','qa','node_modules'))
             external=Path(directory)/'evidence'
             env={**os.environ, 'VECTOR_UI_EVIDENCE_DIR':str(external)}
-            reports=external/'angular'; reports.mkdir(parents=True)
+            reports=external/'outline'; reports.mkdir(parents=True)
             start=snapshot(root)
             filenames=['asset-checks.json','web-adapter.json','rebuild.json','pixel-regression.json']
             for name in filenames:

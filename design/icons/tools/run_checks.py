@@ -20,17 +20,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     env = os.environ.copy()
-    # Angular's Node adapter calls $PYTHON, then `python`. Point it at this
+    # Outline's Node adapter calls $PYTHON, then `python`. Point it at this
     # interpreter so the suite does not depend on a `python` binary name.
     env["PYTHON"] = sys.executable
     steps = (
         ("pack", [sys.executable, "-m", "unittest", "tests.test_pack", "-v"], ROOT),
-        ("angular", [sys.executable, "tools/run_checks.py"], ROOT / "angular"),
-        ("soft", [sys.executable, "tools/run_checks.py"], ROOT / "soft"),
+        ("outline", [sys.executable, "tools/run_checks.py"], ROOT / "outline"),
+        ("rounded", [sys.executable, "tools/run_checks.py"], ROOT / "rounded"),
         (
-            "technical",
+            "mono",
             [sys.executable, "-m", "unittest", "tests.test_pilot", "-v"],
-            ROOT / "technical",
+            ROOT / "mono",
         ),
     )
     for name, command, cwd in steps:

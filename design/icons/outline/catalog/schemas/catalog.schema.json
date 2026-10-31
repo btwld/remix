@@ -128,7 +128,7 @@
           },
           "availability": {
             "const": {
-              "angular": {
+              "outline": {
                 "appearances": [
                   "outline",
                   "filled"

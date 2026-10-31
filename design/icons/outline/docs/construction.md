@@ -1,6 +1,6 @@
-# Angular construction contract
+# Outline construction contract
 
-The visual direction remains the supplied angular interface family: flat expanded paths, square terminals, sharp or deliberately chamfered corners, restrained detail, and editable `currentColor` artwork. The build is geometry-driven, not generated-image crops.
+The visual direction remains the supplied outline interface family: flat expanded paths, square terminals, sharp or deliberately chamfered corners, restrained detail, and editable `currentColor` artwork. The build is geometry-driven, not generated-image crops.
 
 | Native canvas | Nominal outline | Open-glyph heavier token | Meaningful gap target |
 |---|---:|---:|---:|
@@ -16,7 +16,7 @@ A canvas is not a compulsory painted box. Key shapes guide proportions; dense sy
 
 The gap rule concerns meaningful openings or separated parts, not every tapered corner. A geometric minimum over every edge pair is not a reliable universal acceptance measure. Info and Help have authored frame/punctuation regions; their 12/16/24 frame clearances meet 1/1.5/2 px respectively. Warning remains an explicit inherited exception.
 
-Only M/L/Z expanded polygons are supported by the Angular parser. It rejects curves rather than silently ignoring them. Rounded requires a curve-aware bounds and measurement implementation or tested flattening with a declared tolerance before any Rounded release.
+Only M/L/Z expanded polygons are supported by the Outline parser. It rejects curves rather than silently ignoring them. legacy fillet proposal requires a curve-aware bounds and measurement implementation or tested flattening with a declared tolerance before any legacy fillet proposal release.
 
 ## Scope heuristic
 

@@ -1,16 +1,16 @@
-# Vector UI — Technical grammar (calibration spec)
+# Vector UI — Mono grammar (calibration spec)
 
 **Status:** local calibration spec · not a public style pack · 25 September 2026
 **Scope:** 12-icon pilot only (`home`, `search`, `plus`, `arrow-right`, `user`, `file`, `calendar`, `sliders`, `warning`, `link`, `branch`, `star`)
-**Location:** this file is the written grammar. Implementation lives in this package (`design/icons/technical/`). Do not edit Angular geometry. Not a public catalog.
+**Location:** this file is the written grammar. Implementation lives in this package (`design/icons/mono/`). Do not edit Outline geometry. Not a public catalog.
 
-This document is written **before drawing**. Artwork that disagrees with it is a spec bug or a recorded exception. It is not an automatic transform of Angular paths, and it is not a renamed Angular pack.
+This document is written **before drawing**. Artwork that disagrees with it is a spec bug or a recorded exception. It is not an automatic transform of Outline paths, and it is not a renamed Outline pack.
 
 ---
 
 ## 1. Visual intent and target product contexts
 
-Technical is the **instrument / CAD / console** grammar of Vector UI.
+Mono is the **instrument / CAD / console** grammar of Vector UI.
 
 It should read as machined plates, orthogonal pipes, and 45° chamfers: the marks you would cut on a panel, not the marks you would draw with a round nib. Target contexts, when a product actually needs this voice:
 
@@ -18,29 +18,29 @@ It should read as machined plates, orthogonal pipes, and 45° chamfers: the mark
 - data platforms, observability, and industrial readouts
 - settings and inspector chrome where precision matters more than friendliness
 
-It is **not** the default product UI voice. Angular remains the existing interface family. Technical is an alternate pack with the same semantic IDs.
+It is **not** the default product UI voice. Outline remains the existing interface family. Mono is an alternate pack with the same semantic IDs.
 
-Calibration question this pilot answers: can twelve diverse concepts (open actions, objects, dense controls, status, diagonal metaphors) be drawn in this grammar at native 12 / 16 / 24 without copying Angular geometry?
+Calibration question this pilot answers: can twelve diverse concepts (open actions, objects, dense controls, status, diagonal metaphors) be drawn in this grammar at native 12 / 16 / 24 without copying Outline geometry?
 
 ---
 
 ## 2. Shared family contract (unchanged)
 
-Technical must honor the Vector UI contract already proven on Angular:
+Mono must honor the Vector UI contract already proven on Outline:
 
 | Dimension | Rule |
 |---|---|
-| Canonical IDs | Same twelve IDs and meanings as Angular. No aliases in this pilot. |
+| Canonical IDs | Same twelve IDs and meanings as Outline. No aliases in this pilot. |
 | Appearances | `outline` and `filled` for every ID. |
 | Optical masters | Native drawings at 12, 16, and 24 px. Display 14 uses 16; 20 and 32 use 24. No master is a scaled copy of another. |
 | Color | `currentColor` only. No baked fills, no multi-color. |
 | Warning | Visible-label restriction remains **concept-level** for every appearance and master, including scaled uses. Geometry improvements do not lift the restriction. |
-| Fail closed | Unknown pack, ID, appearance, or master raises. No silent fallback to Angular, to another size, or to a substitute metaphor. |
-| Angular lock | Angular SVG bytes are read-only. This pilot must not edit them. |
+| Fail closed | Unknown pack, ID, appearance, or master raises. No silent fallback to Outline, to another size, or to a substitute metaphor. |
+| Outline lock | Outline SVG bytes are read-only. This pilot must not edit them. |
 
 Pair models stay with the concept, not the pack:
 
-| ID | Pair model | Meaning (Angular, retained) |
+| ID | Pair model | Meaning (Outline, retained) |
 |---|---|---|
 | `home` | silhouette | Home or top-level destination. Not Back. |
 | `search` | weight | Find content. Lens stays open in both weights. |
@@ -92,7 +92,7 @@ There is no round corner in this pack.
 
 **Joints** of orthogonal pipes are T or L unions. Inner corners of pipe joints stay square. Outer corners of **plates** take the chamfer.
 
-**Mitre on 45°** bars: the end is square to the bar, which on a 45° bar is itself 45° to the canvas. That is correct Technical, not an Angular leftover.
+**Mitre on 45°** bars: the end is square to the bar, which on a 45° bar is itself 45° to the canvas. That is correct Mono, not an Outline leftover.
 
 Do not use Shapely round caps (`cap_style=1`) or round joins (`join_style=1`). If a boolean op introduces a near-touching hairline, rewrite the parts; do not leave a gap that will fill at raster size.
 
@@ -108,7 +108,7 @@ Expanded fills, not live SVG strokes. Final artwork is `fill="currentColor"` + `
 
 Weights are **not** scaled after expansion. A 12 px master is drawn at 12, not reduced from 24.
 
-Technical uses the same numeric tokens as Angular (1 / 1.5 / 2 and 2 / 2.5 / 3) so the pack can sit in the same chrome. Difference is grammar, not a global hairline restyle.
+Mono uses the same numeric tokens as Outline (1 / 1.5 / 2 and 2 / 2.5 / 3) so the pack can sit in the same chrome. Difference is grammar, not a global hairline restyle.
 
 ---
 
@@ -120,7 +120,7 @@ Allowed non-axis angles:
 |---|---|
 | **45° only** | Chamfers; `search` handle; `arrow-right` head; `home` roof planes; `file` dog-ear; `link` is **not** diagonal (axis-aligned shackles). |
 | **Metaphor exception** | `warning` triangle sides (isosceles warning plate). Vertices still receive plate chamfers. |
-| **Metaphor exception** | `star` five-point geometry (regular star, not an optically fudged Angular copy). |
+| **Metaphor exception** | `star` five-point geometry (regular star, not an optically fudged Outline copy). |
 
 Forbidden in this pack: arbitrary 20–40° “friendly” diagonals, circular approximations beyond the 45° octagon that a chamfered square already is, and any curve.
 
@@ -165,46 +165,46 @@ Dense symbols may occupy less than the full padded field (`sliders` may sit in a
 Masters are independent drawings that share a skeleton.
 
 - **12:** keep the metaphor, drop secondary interior marks, keep chamfer ≥ 1 if the part is large enough.
-- **Odd-width centering (allowed policy, not an Angular copy):** a 1 px orthogonal bar on a 12 px even canvas cannot be both canvas-centered and integer-edged. Technical **keeps the canvas center**. A 1 px `plus` stem therefore occupies `5.5–6.5`, not Angular’s integer `5–6` split (center `5.5`, shifted off the canvas midpoint). Half-pixel edges here are the 1 px token plus centering, not a crispness fudge. Record the policy in `catalog/styles.json` so it cannot silently flip.
+- **Odd-width centering (allowed policy, not an Outline copy):** a 1 px orthogonal bar on a 12 px even canvas cannot be both canvas-centered and integer-edged. Mono **keeps the canvas center**. A 1 px `plus` stem therefore occupies `5.5–6.5`, not Outline’s integer `5–6` split (center `5.5`, shifted off the canvas midpoint). Half-pixel edges here are the 1 px token plus centering, not a crispness fudge. Record the policy in `catalog/styles.json` so it cannot silently flip.
 - **16:** intermediate; two calendar cells; no file content slot.
 - **24:** full grammar, including file slot and calendar header rail.
 
 Never generate 12 by scaling 24 expanded paths. Never generate 16 by averaging 12 and 24.
 
-Reviewed display sizes remain 12 / 14 / 16 / 20 / 24 / 32 with the Angular master-selection rule. This pilot does not ship a web helper; the rule is documented so a future API cannot invent a fourth master.
+Reviewed display sizes remain 12 / 14 / 16 / 20 / 24 / 32 with the Outline master-selection rule. This pilot does not ship a web helper; the rule is documented so a future API cannot invent a fourth master.
 
 ---
 
-## 10. How Technical differs visibly from Angular, Rounded, and Soft
+## 10. How Mono differs visibly from Outline, the legacy fillet proposal, and Rounded
 
 These are **recognition tests**, not marketing copy. A reviewer should tell the packs apart at 24 px outline without reading labels.
 
-| | Angular (exists) | Technical (this spec) | Rounded (not drawn) | Soft (12 icons shipped) |
+| | Outline (exists) | Mono (this spec) | legacy fillet proposal (not drawn) | Rounded (12 icons shipped) |
 |---|---|---|---|---|
 | Corners | Sharp, or *ad hoc* chamfer / octagon | **Systematic 45° plate chamfer** | Curve radius | Larger, friendlier radius |
 | Terminals | Square from stroke buffer | Square-cut bars; plates chamfered | Round caps | Pill caps |
 | Circles | Octagon approximating a circle (`search`, `user`) | Chamfered **square** viewfinder / ID plate | True curves | True curves, lighter |
 | Structure | Mixed diagonals, some optical offsets | Orthogonal pipes + 45° only | Same skeletons, round joins | Looser, more organic |
-| Objects | UI-friendly houses, docs, stars | Machined plates, dog-ear fold, junction boxes | Same objects, round | Same objects, soft |
+| Objects | UI-friendly houses, docs, stars | Machined plates, dog-ear fold, junction boxes | Same objects, round | Same objects, rounded |
 | Curves | None (M/L/Z) | None (M/L/Z) | Required | Required |
-| Personality | Product UI | Instrument / CAD | Friendly UI | Soft / consumer |
+| Personality | Product UI | Instrument / CAD | Friendly UI | Rounded / consumer |
 
 Concrete anti-copies for this pilot:
 
-- `search` is a **viewfinder square**, not Angular’s circular octagon.
-- `user` is a **chamfered ID plate + torso**, not Angular’s circular-octagon head.
+- `search` is a **viewfinder square**, not Outline’s circular octagon.
+- `user` is a **chamfered ID plate + torso**, not Outline’s circular-octagon head.
 - `home` uses **45° roof planes** on a chamfered body; peak stays sharp.
 - `file` uses a **large 45° dog-ear** plus three small plate chamfers, not a single clipped corner on an otherwise sharp sheet.
 - `arrow-right` head is a **45° chevron of two bars**, not a stretched polyline.
 - `link` is two **axis-aligned chamfered shackles**, not U-shaped chain ends.
-- `star` is a **regular five-point star** (CAD-regular), not Angular’s optically tuned coordinates.
+- `star` is a **regular five-point star** (CAD-regular), not Outline’s optically tuned coordinates.
 - `warning` is a **chamfered caution plate**, not a sharp yield triangle.
-- `plus` is inset to a tighter keyline than Angular’s pad-to-pad cross. At 12 px outline it stays canvas-centered (half-pixel edges); it does not use Angular’s integer `5–6` stem split.
+- `plus` is inset to a tighter keyline than Outline’s pad-to-pad cross. At 12 px outline it stays canvas-centered (half-pixel edges); it does not use Outline’s integer `5–6` stem split.
 - `sliders` knobs are **chamfered plates** on orthogonal rails, full padded width at 24.
 - `branch` nodes are **chamfered junction boxes**.
-- `calendar` keeps a **header rail** at 24 (Angular removed it).
+- `calendar` keeps a **header rail** at 24 (Outline removed it).
 
-If a Technical drawing’s path `d` equals the Angular `d` for the same ID/appearance/master, the drawing has failed this spec.
+If a Mono drawing’s path `d` equals the Outline `d` for the same ID/appearance/master, the drawing has failed this spec.
 
 ---
 
@@ -212,7 +212,7 @@ If a Technical drawing’s path `d` equals the Angular `d` for the same ID/appea
 
 Icons do not provide the accessible name, the visible warning label, contrast against arbitrary product surfaces, RTL flipping, or 44 px hit targets.
 
-Component rules (same as Angular; not solved by redrawing):
+Component rules (same as Outline; not solved by redrawing):
 
 - Label the control. Hide decorative inline SVG (`aria-hidden="true"`). Do not double-name icon + button.
 - `warning` requires a **visible** text label at every master and scaled use. A tooltip or `aria-label` is not a substitute.
@@ -228,15 +228,15 @@ Component rules (same as Angular; not solved by redrawing):
 
 **Sufficient primitives: `M` / `L` / `Z` only.**
 
-Why curves are not needed: Technical structure is axis-aligned plates, square-cut bars, and 45° chamfers. All of those are straight-edged polygons. A chamfered rectangle is an octagon. A 45° bar is a rectangle rotated in coordinate space, still `L` segments. Star and warning are straight-sided polygons.
+Why curves are not needed: Mono structure is axis-aligned plates, square-cut bars, and 45° chamfers. All of those are straight-edged polygons. A chamfered rectangle is an octagon. A 45° bar is a rectangle rotated in coordinate space, still `L` segments. Star and warning are straight-sided polygons.
 
 Validator implications:
 
 - Fail closed on `C`, `Q`, `A`, `S`, `T`, `H`, `V` (compact), lowercase relative commands, and any non-`[MLZ0-9.\-\s]` content.
-- Do **not** add curve support in this pilot “for completeness.” Soft has a separate curve-aware validator. Technical retains its strict straight-path grammar; accepting curves here would weaken that contract.
+- Do **not** add curve support in this pilot “for completeness.” Rounded has a separate curve-aware validator. Mono retains its strict straight-path grammar; accepting curves here would weaken that contract.
 - Independent XML parse of serialized SVG: exact `svg > title + path`, `fill="currentColor"`, `fill-rule="evenodd"`, native `width`/`height`/`viewBox`, no event handlers, no images, no doctype/entities.
 - Geometry must be finite, non-empty, valid, and inside the canvas.
-- No additional path commands are introduced. If a future icon genuinely needs a curve, that is a Rounded/Soft problem or a spec revision — not a silent parser relaxation.
+- No additional path commands are introduced. If a future icon genuinely needs a curve, that is a legacy fillet proposal or Rounded problem or a spec revision — not a silent parser relaxation.
 
 ---
 
@@ -247,13 +247,13 @@ Tests exercise these contracts rather than private vertex lists.
 | Seam | Module | Contract |
 |---|---|---|
 | Identity | `source/contract.py` | Frozen 12 IDs, appearances, masters, pair models, meanings. |
-| Resolve | `contract.resolve(pack, id, appearance, master)` | Returns a drawing key or raises `UnavailablePack`, `UnknownIcon`, `UnavailableAppearance`, `UnavailableMaster`. Never returns Angular. |
+| Resolve | `contract.resolve(pack, id, appearance, master)` | Returns a drawing key or raises `UnavailablePack`, `UnknownIcon`, `UnavailableAppearance`, `UnavailableMaster`. Never returns Outline. |
 | Tokens | `source/grammar.py` | `tokens(n) -> {weight outline/heavy, chamfer, pad, gap}` |
 | Primitives | `source/grammar.py` | `plate`, `bar`, `ring`, `chamfer_polygon` — unit-tested for 8-vertex plates and 45° edges. |
 | Draw | `source/icons.py` | `draw(id, n, appearance) -> shapely geometry` |
 | Export | `source/export.py` | `path_data`, `svg_text`, `parse_path`, `parse_svg` |
 | Build | `source/build.py` | Writes 72 SVGs + registry/inventory/proof. Deterministic. |
-| Angular lock | tests | SHA-256 of `design/icons/angular/generated/angular/**` matches committed inventory. |
+| Outline lock | tests | SHA-256 of `design/icons/outline/generated/outline/**` matches committed inventory. |
 
 Implementation details (Shapely boolean order, helper names) are not the spec.
 
@@ -261,17 +261,17 @@ Implementation details (Shapely boolean order, helper names) are not the spec.
 
 ## 14. Supported scope
 
-Technical ships 12 concepts, 72 SVGs, catalog metadata, restrictions, exceptions,
-native proof rasters, and geometry/build validation. Soft ships a separate
+Mono ships 12 concepts, 72 SVGs, catalog metadata, restrictions, exceptions,
+native proof rasters, and geometry/build validation. Rounded ships a separate
 12-concept family. The unified pack comparison catalog preserves their distinct
-construction systems. Rounded, Core 120 expansion, public API promotion, and
+construction systems. The legacy fillet proposal, Core 120 expansion, public API promotion, and
 publication are not included.
 
 ## 15. Usage limits
 
 Label Search when adjacent to crop/frame/view tools; its viewfinder metaphor is
 not recognition-tested. Give the CAD-regular star an explicit Favorite label.
-Technical plus retains its tighter inset; align mixed-family controls by their
+Mono plus retains its tighter inset; align mixed-family controls by their
 bounds. Keep visible labels on 12 px Link and Branch. Warning requires visible
 text at every master and appearance, irrespective of measured punctuation gaps.
 Record measured geometry exceptions in `catalog/exceptions.json`; tests do not

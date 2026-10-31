@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Deterministically build the Technical 12-icon calibration pilot.
+"""Deterministically build the Mono 12-icon calibration pilot.
 
 Run from the package root:  python source/build.py
-Does not write into design/icons/angular/.
+Does not write into design/icons/outline/.
 """
 from __future__ import annotations
 import csv
@@ -40,19 +40,19 @@ PROOF_PNGS = (
     "masters-12-4x.png",
     "masters-16-4x.png",
     "masters-24-4x.png",
-    "angular-vs-technical-24.png",
+    "outline-vs-mono-24.png",
 )
 
 
 def workspace_root(start: Path) -> Path:
     for p in [start, *start.parents]:
-        if (p / "design/icons/angular/generated/angular").is_dir():
+        if (p / "design/icons/outline/generated/outline").is_dir():
             return p
     return start.parents[2]
 
 
 WORKSPACE = workspace_root(ROOT)
-ANGULAR_GEN = WORKSPACE / "design/icons/angular/generated/angular"
+OUTLINE_GEN = WORKSPACE / "design/icons/outline/generated/outline"
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -80,16 +80,16 @@ def catalog_document():
             "rtlPolicy": meta["rtlPolicy"],
             "example": meta["example"],
             "availability": {
-                "technical": {
+                "mono": {
                     "appearances": list(APPEARANCES),
                     "opticalSizes": list(MASTERS),
                 }
             },
             "provenance": {
-                "method": "original-technical-construction",
+                "method": "original-mono-construction",
                 "source": "source/icons.py",
                 "externalArtworkUsed": False,
-                "angularGeometryCopied": False,
+                "outlineGeometryCopied": False,
             },
             "review": {
                 "technical": "checked-by-build-and-validation",
@@ -117,16 +117,17 @@ def catalog_document():
         "status": "calibration-pilot-not-public",
         "counts": {"icons": len(icons), "drawings": len(icons) * 6},
         "packs": {
-            "technical": {
+            "mono": {
                 "available": True,
                 "nativeSizes": list(MASTERS),
                 "status": "calibration-pilot",
             },
-            "angular": {
+            "outline": {
                 "available": False,
                 "status": "not-in-this-pilot-package",
-                "note": "Angular remains in design/icons/angular; this package does not re-export or edit it.",
+                "note": "Outline remains in design/icons/outline; this package does not re-export or edit it.",
             },
+            # Preserve legacy roadmap keys until their naming collision is resolved.
             "rounded": {"available": False, "status": "not-drawn"},
             "soft": {"available": False, "status": "not-drawn"},
         },
@@ -246,7 +247,7 @@ def measure_exceptions(inventory):
             "rule": "odd-width-canvas-centering",
             "reason": (
                 "A 1 px stem on a 12 px even canvas stays on center 6, so edges are "
-                "5.5–6.5. This is Technical centering, not Angular's integer 5–6 split."
+                "5.5–6.5. This is Mono centering, not Outline's integer 5–6 split."
             ),
             "geometrySha256": sha_for(inventory, "plus", "outline", 12),
         }
@@ -293,16 +294,16 @@ def write_proof(catalog, paths, exceptions):
             )
         )
     compare_rows = []
-    angular_note = "Angular comparison omitted — generated Angular SVGs not found in this checkout."
-    if ANGULAR_GEN.exists():
-        angular_note = (
-            "Angular drawings are inlined read-only for comparison. "
-            "This pilot does not copy them into generated/technical/."
+    outline_note = "Outline comparison omitted — generated Outline SVGs not found in this checkout."
+    if OUTLINE_GEN.exists():
+        outline_note = (
+            "Outline drawings are inlined read-only for comparison. "
+            "This pilot does not copy them into generated/mono/."
         )
         for meta in catalog["icons"]:
             icon_id = meta["id"]
             tech = paths[icon_id]["outline"]["24"]
-            ang_svg = (ANGULAR_GEN / "outline/24" / ("%s.svg" % icon_id)).read_text()
+            ang_svg = (OUTLINE_GEN / "outline/24" / ("%s.svg" % icon_id)).read_text()
             _n, ang_d, _g = parse_svg(ang_svg)
             def mark(d, n=24, css=48):
                 return (
@@ -311,8 +312,8 @@ def write_proof(catalog, paths, exceptions):
                     'aria-hidden="true"><path d="%s"/></svg>' % (css, css, n, n, d)
                 )
             compare_rows.append(
-                '<tr><th>%s</th><td><div class="cmp">%s<span>Angular</span></div></td>'
-                '<td><div class="cmp">%s<span>Technical</span></div></td></tr>'
+                '<tr><th>%s</th><td><div class="cmp">%s<span>Outline</span></div></td>'
+                '<td><div class="cmp">%s<span>Mono</span></div></td></tr>'
                 % (meta["label"], mark(ang_d), mark(tech))
             )
     ex_html = (
@@ -341,7 +342,7 @@ def write_proof(catalog, paths, exceptions):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vector UI — Technical calibration pilot</title>
+<title>Vector UI — Mono calibration pilot</title>
 <style>
 :root { --ink:#101218; --muted:#5b6170; --line:#d8dbe3; --paper:#f6f7f9; --accent:#0b5fff; }
 * { box-sizing:border-box; }
@@ -375,10 +376,10 @@ footer { margin-top:40px; color:var(--muted); font-size:13px; }
 </head>
 <body>
 <main class="wrap">
-<header class="top"><div class="brand">VECTOR UI</div><div class="brand">TECHNICAL / CALIBRATION PILOT</div></header>
-<h1>Technical 12</h1>
+<header class="top"><div class="brand">VECTOR UI</div><div class="brand">MONO / CALIBRATION PILOT</div></header>
+<h1>Mono 12</h1>
 <p class="lede">Instrument grammar: orthogonal plates, 45° chamfers, square-cut terminals.
-Same semantic IDs as Angular. Not a public catalog, not a transform of Angular paths.</p>
+Same semantic IDs as Outline. Not a public catalog, not a transform of Outline paths.</p>
 <div class="stats">
 <div><strong>12</strong><span>icons</span></div>
 <div><strong>2</strong><span>appearances</span></div>
@@ -393,7 +394,7 @@ Same semantic IDs as Angular. Not a public catalog, not a transform of Angular p
 <tr><td>16</td><td>1.5</td><td>2.5</td><td>1.5</td><td>1.5</td></tr>
 <tr><td>24</td><td>2</td><td>3</td><td>2</td><td>2</td></tr>
 </table>
-<p class="lede">M/L/Z only. currentColor. No silent fallback to Angular or another size. Warning keeps a visible-label restriction at concept level.</p>
+<p class="lede">M/L/Z only. currentColor. No silent fallback to Outline or another size. Warning keeps a visible-label restriction at concept level.</p>
 </section>
 <section>
 <h2>Native matrix</h2>
@@ -408,9 +409,9 @@ Same semantic IDs as Angular. Not a public catalog, not a transform of Angular p
 </div>
 </section>
 <section>
-<h2>Angular vs Technical at 24 outline</h2>
+<h2>Outline vs Mono at 24 outline</h2>
 <p class="lede">%s</p>
-<table><thead><tr><th>ID</th><th>Angular 24</th><th>Technical 24</th></tr></thead><tbody>%s</tbody></table>
+<table><thead><tr><th>ID</th><th>Outline 24</th><th>Mono 24</th></tr></thead><tbody>%s</tbody></table>
 </section>
 <section>
 <h2>Spacing / construction exceptions</h2>
@@ -421,7 +422,7 @@ Same semantic IDs as Angular. Not a public catalog, not a transform of Angular p
 <p class="lede">Geometry does not establish recognition. Keep these usage restrictions in product interfaces.</p>
 %s
 </section>
-<footer>Vector UI Technical calibration · %s · private review · not promoted to the public catalog.<br>
+<footer>Vector UI Mono calibration · %s · private review · not promoted to the public catalog.<br>
 Proof rasters: proof/rasters/ · Rebuild with <code>python source/build.py</code></footer>
 </main>
 </body>
@@ -444,7 +445,7 @@ Proof rasters: proof/rasters/ · Rebuild with <code>python source/build.py</code
             )
             for i in IDS
         ),
-        angular_note,
+        outline_note,
         "".join(compare_rows),
         ex_html,
         q_html,
@@ -496,19 +497,19 @@ def write_rasters(inventory, paths):
                 src = src.resize((n * scale, n * scale), Image.NEAREST)
                 im.alpha_composite(src, (20 + c * cell_n, 20 + r * cell_n))
         im.save(proof / ("masters-%s-4x.png" % n))
-    if ANGULAR_GEN.exists():
+    if OUTLINE_GEN.exists():
         scale = 6
         cell_n = 24 * scale + 28
         cmp_im = Image.new("RGBA", (2 * cell_n + 48, 12 * cell_n + 80), (255, 255, 255, 255))
         for r, icon_id in enumerate(IDS):
             tech = Image.open(rasters / "outline" / "24" / ("%s.png" % icon_id)).convert("RGBA")
             tech = tech.resize((24 * scale, 24 * scale), Image.NEAREST)
-            ang_txt = (ANGULAR_GEN / "outline/24" / ("%s.svg" % icon_id)).read_text().replace("currentColor", "#111318")
+            ang_txt = (OUTLINE_GEN / "outline/24" / ("%s.svg" % icon_id)).read_text().replace("currentColor", "#111318")
             ang_png = cairosvg.svg2png(bytestring=ang_txt.encode("utf-8"), output_width=24, output_height=24)
             ang = Image.open(io.BytesIO(ang_png)).convert("RGBA").resize((24 * scale, 24 * scale), Image.NEAREST)
             cmp_im.alpha_composite(ang, (24, 48 + r * cell_n))
             cmp_im.alpha_composite(tech, (24 + cell_n, 48 + r * cell_n))
-        cmp_im.save(proof / "angular-vs-technical-24.png")
+        cmp_im.save(proof / "outline-vs-mono-24.png")
     return proof / "contact-sheet.png"
 
 
@@ -516,7 +517,7 @@ def build():
     catalog = catalog_document()
     (ROOT / "catalog").mkdir(exist_ok=True)
     generated = ROOT / "generated"
-    out = generated / "technical"
+    out = generated / "mono"
     if out.exists():
         for p in out.rglob("*.svg"):
             p.unlink()
@@ -530,7 +531,7 @@ def build():
             for n in MASTERS:
                 g = draw(icon_id, n, appearance)
                 path = path_data(g)
-                rel = "technical/%s/%s/%s.svg" % (appearance, n, icon_id)
+                rel = "mono/%s/%s/%s.svg" % (appearance, n, icon_id)
                 dest = generated / rel
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 txt = svg_text(meta["label"], appearance, n, path)
@@ -591,7 +592,7 @@ def build():
     }
     (ROOT / "catalog/restrictions.json").write_text(json.dumps(restrictions, indent=2) + "\n")
     styles = {
-        "technical": {
+        "mono": {
             "outlineWidth": {str(k): v for k, v in OUTLINE.items()},
             "openGlyphFilledWidth": {str(k): v for k, v in HEAVY.items()},
             "meaningfulGapTarget": {str(k): v for k, v in GAP.items()},
@@ -610,7 +611,7 @@ def build():
             "oddWidthCentering": {
                 "policy": "canvas-center",
                 "twelvePxOutlinePlus": "half-pixel-edges",
-                "note": "1px bar at 12 remains centered at 6 (edges 5.5-6.5). Not Angular's 5-6 integer split.",
+                "note": "1px bar at 12 remains centered at 6 (edges 5.5-6.5). Not Outline's 5-6 integer split.",
                 "exceptionId": "plus-12-outline-centered-odd-width",
             },
             "padding": {str(k): v for k, v in PAD.items()},
@@ -625,7 +626,7 @@ def build():
     (ROOT / "catalog/aliases.json").write_text("{}\n")
     write_proof(catalog, registry_paths, exceptions)
     write_rasters(inventory, registry_paths)
-    # Hash reproducible products, not the checksum file itself (Angular
+    # Hash reproducible products, not the checksum file itself (Outline
     # writes generated-sha256.json outside the hashed tree for the same reason).
     products = [p for p in generated.rglob("*") if p.is_file() and p.name != "sha256.json"]
     products += [p for p in (ROOT / "proof").rglob("*") if p.is_file()]

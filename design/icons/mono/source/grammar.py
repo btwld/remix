@@ -1,4 +1,4 @@
-"""Technical construction tokens and primitives.
+"""Mono construction tokens and primitives.
 
 Plates are chamfered rectangles. Bars have square-cut terminals.
 No round caps, no curves, no live SVG strokes.
@@ -16,7 +16,7 @@ CHAMFER = {12: 1.0, 16: 1.5, 24: 2.0}
 PAD = {12: 1.0, 16: 1.5, 24: 2.0}
 GAP = {12: 1.0, 16: 1.5, 24: 2.0}
 
-# Plus uses a tighter keyline than PAD so it is not an Angular pad-to-pad copy.
+# Plus uses a tighter keyline than PAD so it is not an Outline pad-to-pad copy.
 PLUS_INSET = {12: 2.0, 16: 2.5, 24: 3.0}
 
 # Dense junction/knob plates cannot take the full chamfer token without

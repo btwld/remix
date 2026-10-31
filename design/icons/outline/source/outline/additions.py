@@ -1,4 +1,4 @@
-"""Authored Angular pilot drawings. No external artwork or font glyphs.
+"""Authored Outline pilot drawings. No external artwork or font glyphs.
 
 Arrows and chevrons are intentional directional variants. Dimensions listed for
 other symbols are native optical decisions; the export never scales a finished

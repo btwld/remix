@@ -9,7 +9,7 @@
     "drawings": 288
   },
   "packs": {
-    "angular": {
+    "outline": {
       "available": true,
       "nativeSizes": [
         12,
@@ -45,7 +45,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Overview",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -59,7 +59,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -88,7 +88,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Open menu",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -102,7 +102,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -131,7 +131,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "More actions",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -145,7 +145,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -174,7 +174,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Search workspace",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -188,7 +188,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -217,7 +217,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "All applications",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -231,7 +231,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -260,7 +260,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Previous step",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -274,7 +274,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -303,7 +303,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Next step",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -317,7 +317,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -346,7 +346,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Move up",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -360,7 +360,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -389,7 +389,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Move down",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -403,7 +403,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -432,7 +432,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Open externally",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -446,7 +446,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -475,7 +475,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Previous page",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -489,7 +489,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -518,7 +518,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Next page",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -532,7 +532,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -561,7 +561,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Collapse details",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -575,7 +575,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -604,7 +604,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Expand details",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -618,7 +618,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -648,7 +648,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Create item",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -662,7 +662,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -691,7 +691,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Remove quantity",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -705,7 +705,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -735,7 +735,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Approved",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -749,7 +749,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -778,7 +778,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Close panel",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -792,7 +792,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -821,7 +821,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Edit details",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -835,7 +835,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -864,7 +864,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Copy item",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -878,7 +878,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -907,7 +907,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Delete item",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -921,7 +921,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -950,7 +950,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Refresh data",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -964,7 +964,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -972,7 +972,7 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "One open angular cycle and one arrowhead. No double arrows or decorative cuts.",
+        "note": "One open outline cycle and one arrowhead. No double arrows or decorative cuts.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -993,7 +993,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Filter results",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1007,7 +1007,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1037,7 +1037,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Adjust view",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1051,7 +1051,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1080,7 +1080,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Upload file",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1094,7 +1094,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1123,7 +1123,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Download file",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1137,7 +1137,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1166,7 +1166,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Save changes",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1180,7 +1180,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1209,7 +1209,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Read document",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1223,7 +1223,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1252,7 +1252,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Project files",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1266,7 +1266,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1295,7 +1295,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Copy link",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1309,7 +1309,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1338,7 +1338,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Bookmark page",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1352,7 +1352,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1381,7 +1381,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Favorite",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1395,7 +1395,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1424,7 +1424,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Choose date",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1438,7 +1438,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1467,7 +1467,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Your profile",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1481,7 +1481,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1510,7 +1510,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Open messages",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1524,7 +1524,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1553,7 +1553,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Notifications",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1567,7 +1567,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1596,7 +1596,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Needs attention",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1610,7 +1610,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1645,7 +1645,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "About this item",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1659,7 +1659,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1688,7 +1688,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Help center",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1702,7 +1702,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1731,7 +1731,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Private access",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1745,7 +1745,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1774,7 +1774,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Protection enabled",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1788,7 +1788,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1818,7 +1818,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "General settings",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1832,7 +1832,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/angular/additions.py",
+        "source": "source/outline/additions.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1861,7 +1861,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Open terminal",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1875,7 +1875,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1904,7 +1904,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Workflow branch",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1918,7 +1918,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1947,7 +1947,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "View analytics",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -1961,7 +1961,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -1990,7 +1990,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Run preview",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -2004,7 +2004,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -2033,7 +2033,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Pause preview",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -2047,7 +2047,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -2076,7 +2076,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Focus selection",
       "availability": {
-        "angular": {
+        "outline": {
           "appearances": [
             "outline",
             "filled"
@@ -2090,7 +2090,7 @@
       },
       "provenance": {
         "method": "preserved-user-supplied-construction",
-        "source": "source/angular/baseline.py",
+        "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {

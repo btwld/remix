@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Deterministically build the 12-icon Soft calibration pilot.
+"""Deterministically build the 12-icon Rounded calibration pilot.
 
 Run from the pilot root: python source/build.py
-Does not write into design/icons/angular/.
+Does not write into design/icons/outline/.
 """
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ from source.seams import (
 from source.svg import path_data, svg_text
 from source.validate import parse_svg
 
-ANGULAR_GENERATED = REPO / 'design' / 'icons' / 'angular' / 'generated' / 'angular'
+OUTLINE_GENERATED = REPO / 'design' / 'icons' / 'outline' / 'generated' / 'outline'
 
 
 def _sha(data: bytes) -> str:
@@ -90,17 +90,17 @@ def build_catalog_html(catalog: dict, paths: dict, inventory: list[dict]) -> Non
                     f'<div class="stage s{n}">{svg}</div></figure>'
                 )
         compare = ''
-        if ANGULAR_GENERATED.is_dir():
-            a_out = (ANGULAR_GENERATED / 'outline' / '24' / f'{icon_id}.svg').read_text()
-            a_fill = (ANGULAR_GENERATED / 'filled' / '24' / f'{icon_id}.svg').read_text()
+        if OUTLINE_GENERATED.is_dir():
+            a_out = (OUTLINE_GENERATED / 'outline' / '24' / f'{icon_id}.svg').read_text()
+            a_fill = (OUTLINE_GENERATED / 'filled' / '24' / f'{icon_id}.svg').read_text()
             s_out = (ROOT / 'generated' / PACK / 'outline' / '24' / f'{icon_id}.svg').read_text()
             s_fill = (ROOT / 'generated' / PACK / 'filled' / '24' / f'{icon_id}.svg').read_text()
             compare = (
                 '<div class="compare">'
-                f'<figure><figcaption>Angular 24 outline (frozen, read-only)</figcaption><div class="stage s24">{a_out}</div></figure>'
-                f'<figure><figcaption>Soft 24 outline</figcaption><div class="stage s24">{s_out}</div></figure>'
-                f'<figure><figcaption>Angular 24 filled (frozen, read-only)</figcaption><div class="stage s24">{a_fill}</div></figure>'
-                f'<figure><figcaption>Soft 24 filled</figcaption><div class="stage s24">{s_fill}</div></figure>'
+                f'<figure><figcaption>Outline 24 outline (frozen, read-only)</figcaption><div class="stage s24">{a_out}</div></figure>'
+                f'<figure><figcaption>Rounded 24 outline</figcaption><div class="stage s24">{s_out}</div></figure>'
+                f'<figure><figcaption>Outline 24 filled (frozen, read-only)</figcaption><div class="stage s24">{a_fill}</div></figure>'
+                f'<figure><figcaption>Rounded 24 filled</figcaption><div class="stage s24">{s_fill}</div></figure>'
                 '</div>'
             )
         cards.append(
@@ -117,9 +117,9 @@ def build_catalog_html(catalog: dict, paths: dict, inventory: list[dict]) -> Non
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vector UI Soft calibration pack — 12 icons</title>
+<title>Vector UI Rounded calibration pack — 12 icons</title>
 <style>
-:root {{ --ink:#1b1612; --paper:#f6f1ea; --card:#fffaf4; --line:#d9cfc4; --soft:#c45c26; }}
+:root {{ --ink:#1b1612; --paper:#f6f1ea; --card:#fffaf4; --line:#d9cfc4; --rounded:#c45c26; }}
 * {{ box-sizing:border-box; }}
 body {{ margin:0; font:15px/1.45 "Liberation Sans", "Noto Sans", sans-serif; background:var(--paper); color:var(--ink); }}
 header.hero {{ padding:2.2rem 1.5rem 1rem; max-width:1100px; margin:auto; }}
@@ -146,9 +146,9 @@ figcaption {{ font-size:.75rem; color:#6a6158; margin-bottom:.25rem; }}
 </head>
 <body>
 <header class="hero">
-<h1>Vector UI Soft — 12-icon calibration pack</h1>
+<h1>Vector UI Rounded — 12-icon calibration pack</h1>
 <p class="meta">{VERSION} · {len(CANONICAL_IDS)} IDs × 2 appearances × 3 masters = {len(inventory)} SVGs · private pilot, not a public pack</p>
-<p>Same canonical IDs and meanings as Angular. Soft is a separate grammar (capsule terminals, circular nodes, continuous curvature). Angular drawings below are <strong>read-only snapshots</strong> for comparison; this build does not edit them.</p>
+<p>Same canonical IDs and meanings as Outline. Rounded is a separate grammar (capsule terminals, circular nodes, continuous curvature). Outline drawings below are <strong>read-only snapshots</strong> for comparison; this build does not edit them.</p>
 <p>Product files are expanded <code>M L Z</code> polylines: round construction is flattened at quad_segs=8. That is the shipping representation. The validator still accepts <code>C Q A</code> so a curve cannot be ignored; products do not emit native arcs.</p>
 <div class="banner"><strong>Warning</strong> requires a visible text label in every appearance and native size, including scaled uses of those masters. A tooltip or accessible name is not a substitute. Branch should keep a visible label at 12 px.</div>
 </header>
@@ -232,7 +232,7 @@ def build() -> dict:
             rec['status'] = 'pilot-exception-needs-design-review'
             rec['permittedUse'] = 'visible-label-required'
             rec['reason'] = (
-                'Soft Warning punctuation/frame spacing is below the nominal gap target. '
+                'Rounded Warning punctuation/frame spacing is below the nominal gap target. '
                 'The concept-level visible-label restriction remains in force. Do not treat this as a pass.'
             )
             exceptions.append(rec)
@@ -250,7 +250,7 @@ def build() -> dict:
     products += [ROOT / 'docs' / 'catalog' / 'index.html']
     sums = {str(p.relative_to(ROOT)): _sha(p.read_bytes()) for p in sorted(products)}
     (ROOT / 'generated' / 'sha256.json').write_text(json.dumps(sums, indent=2) + '\n')
-    print(f'Built {len(paths)} Soft icons / {len(inventory)} SVGs')
+    print(f'Built {len(paths)} Rounded icons / {len(inventory)} SVGs')
     return paths
 
 

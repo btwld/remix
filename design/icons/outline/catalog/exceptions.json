@@ -2,7 +2,7 @@
   {
     "id": "warning-gap-12",
     "icon": "warning",
-    "pack": "angular",
+    "pack": "outline",
     "appearance": "outline",
     "nativeSize": 12,
     "target": 1,
@@ -19,7 +19,7 @@
   {
     "id": "warning-gap-16",
     "icon": "warning",
-    "pack": "angular",
+    "pack": "outline",
     "appearance": "outline",
     "nativeSize": 16,
     "target": 1.5,
@@ -36,7 +36,7 @@
   {
     "id": "warning-gap-24",
     "icon": "warning",
-    "pack": "angular",
+    "pack": "outline",
     "appearance": "outline",
     "nativeSize": 24,
     "target": 2,
@@ -53,7 +53,7 @@
   {
     "id": "warning-filled-punctuation-16",
     "icon": "warning",
-    "pack": "angular",
+    "pack": "outline",
     "appearance": "filled",
     "nativeSize": 16,
     "target": 1.5,
@@ -76,7 +76,7 @@
   {
     "id": "warning-filled-punctuation-24",
     "icon": "warning",
-    "pack": "angular",
+    "pack": "outline",
     "appearance": "filled",
     "nativeSize": 24,
     "target": 2,

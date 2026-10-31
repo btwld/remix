@@ -1,1 +1,1 @@
-# Tests for the Technical calibration pilot.
+# Tests for the Mono calibration pilot.

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Vector UI Technical calibration catalog",
+  "title": "Vector UI Mono calibration catalog",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,7 +17,7 @@
   "properties": {
     "schemaVersion": { "type": "integer", "const": 1 },
     "family": { "type": "string", "minLength": 1 },
-    "pack": { "const": "technical" },
+    "pack": { "const": "mono" },
     "nameStatus": { "type": "string" },
     "version": { "type": "string", "minLength": 1 },
     "status": { "type": "string", "minLength": 1 },

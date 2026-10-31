@@ -65,7 +65,7 @@ def main():
             check('per-icon review notes',page.locator('[data-review]').count()==48)
             # Compare all runtime SVG downloads to the exported files, not only counts.
             blobs=page.evaluate('''() => Object.fromEntries(window.VectorUIPilot.ids.flatMap(id => ['outline','filled'].flatMap(a => [12,16,24].map(n => [a+'/'+n+'/'+id+'.svg',window.VectorUIPilot.exported(id,a,n)]))))''')
-            mismatch=[p for p,t in blobs.items() if t!=(R/'generated/angular'/p).read_text()]
+            mismatch=[p for p,t in blobs.items() if t!=(R/'generated/outline'/p).read_text()]
             check('all 288 runtime SVG strings match files',len(blobs)==288 and not mismatch)
             page.locator('#new-only').click();check('pilot filter returns 15',page.locator('.icon-card:visible').count()==15)
             page.locator('#reset').click();page.locator('#search').fill('settings')
@@ -104,13 +104,13 @@ def main():
             for a in ['outline','filled']:
                 try:
                     with page.expect_download(timeout=7000) as pending:page.locator(f'[data-download="{a}"]').click()
-                    dl=pending.value;local=Path(dl.path());expected=(R/f'generated/angular/{a}/16/help.svg').read_bytes()
+                    dl=pending.value;local=Path(dl.path());expected=(R/f'generated/outline/{a}/16/help.svg').read_bytes()
                     check('real download bytes '+a,local.read_bytes()==expected)
                     downloads.append({'appearance':a,'master':16,'status':'passed','filename':dl.suggested_filename})
                 except PWTimeout:
                     downloads.append({'appearance':a,'master':16,'status':'blocked-or-unavailable'})
                     if args.mode=='full':raise
-            page.locator('#code-appearance').select_option('filled');check('code view is selected appearance',page.locator('#code').input_value()==(R/'generated/angular/filled/16/help.svg').read_text())
+            page.locator('#code-appearance').select_option('filled');check('code view is selected appearance',page.locator('#code').input_value()==(R/'generated/outline/filled/16/help.svg').read_text())
             page.locator('#copy-svg').click()
             # Clipboard success and the rejected-permission fallback are async.
             page.wait_for_function("document.querySelector('#copy-status').textContent.trim().length > 0")

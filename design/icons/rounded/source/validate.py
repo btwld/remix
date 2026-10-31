@@ -1,6 +1,6 @@
-"""Curve-aware path parser for the Soft pilot.
+"""Curve-aware path parser for the Rounded pilot.
 
-Angular's parser rejects curves. Soft requires this module: construction uses
+Outline's parser rejects curves. Rounded requires this module: construction uses
 round caps/joins and circular nodes, and serialized files may contain A/C/Q.
 
 Flattening is a measurement implementation with a declared 0.05 px flatness.
@@ -110,7 +110,7 @@ def flatten_arc(p0, rx, ry, phi_deg, large, sweep, p1, tol=FLATTEN_TOLERANCE_PX)
 
 def parse_path(d: str):
     if not isinstance(d, str) or not SAFE_PATH.fullmatch(d):
-        raise ValueError('Unsupported or unsafe Soft path syntax')
+        raise ValueError('Unsupported or unsafe Rounded path syntax')
     tokens = TOKEN.findall(d)
     if ''.join(tokens) != re.sub(r'\s+', '', d):
         raise ValueError('Unparsed path content')
@@ -185,7 +185,7 @@ def parse_path(d: str):
 
 
 def parse_svg(text: str):
-    """Accept only the standalone Soft SVG export format."""
+    """Accept only the standalone Rounded SVG export format."""
     if not isinstance(text, str) or len(text.encode('utf-8')) > 262144:
         raise ValueError('SVG must be a UTF-8 string under 256 KiB')
     if '<!' in text or '<?' in text:

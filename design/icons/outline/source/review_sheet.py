@@ -13,7 +13,7 @@ def sheet(names,out,dark=False):
     W=1280;H=100+len(names)*116
     bg='#101112' if dark else '#f9f7f2'; ink='#f9f7f2' if dark else '#080808'
     im=Image.new('RGB',(W,H),bg);d=ImageDraw.Draw(im)
-    d.text((24,20),'ANGULAR / NATIVE OPTICAL DRAWINGS',font=ImageFont.truetype(FONT,20),fill=ink)
+    d.text((24,20),'OUTLINE / NATIVE OPTICAL DRAWINGS',font=ImageFont.truetype(FONT,20),fill=ink)
     for col,n in enumerate([12,16,24]):d.text((240+col*300,58),f'{n} px / outline + filled / enlarged 4×',font=ImageFont.truetype(FONT,13),fill=ink)
     for row,name in enumerate(names):
         y=98+row*116
@@ -21,7 +21,7 @@ def sheet(names,out,dark=False):
         d.text((24,y+34),name,font=ImageFont.truetype(FONT,17),fill=ink)
         for col,n in enumerate([12,16,24]):
             for j,a in enumerate(['outline','filled']):
-                txt=(ROOT/f'generated/angular/{a}/{n}/{name}.svg').read_text().replace('currentColor',ink)
+                txt=(ROOT/f'generated/outline/{a}/{n}/{name}.svg').read_text().replace('currentColor',ink)
                 b=cairosvg.svg2png(bytestring=txt.encode(),output_width=n*4,output_height=n*4)
                 pic=Image.open(io.BytesIO(b)); x=240+col*300+j*130
                 im.paste(pic,(x,y+(116-n*4)//2),pic)

@@ -1,1 +1,1 @@
-"""Soft calibration pilot tests."""
+"""Rounded calibration pilot tests."""
