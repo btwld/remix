@@ -81,7 +81,7 @@ melos:
         mix_chart: ^0.0.1-beta.3
         pub_semver: ^2.2.0
         yaml: ^3.1.3
-        naked_ui: ^1.2.3
+        naked_ui: ^1.3.0
         remix: ^1.0.0-beta.13
         remix_ui_icons: ^0.1.0
         remix_ui_fonts: ^0.1.0

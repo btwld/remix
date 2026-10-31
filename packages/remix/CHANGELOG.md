@@ -19,6 +19,8 @@
 
 ### Fixes
 
+- Require `naked_ui ^1.3.0` for control triggers, focus, slider-track geometry,
+  and overlay positioning behavior.
 - Map slider pointer input to its painted rail, including thumb and track
   clearance, so grabbing a thumb does not change its value before movement.
 - `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
