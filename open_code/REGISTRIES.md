@@ -24,7 +24,9 @@ registries:
 
 The optional `iconLibrary` is resolved when templates are installed.
 Registries publish `icons.yaml` beside their preset catalogs; the CLI must
-ship support for that table before a registry begins using its placeholders.
+ship support for that table, and for its schema, before a registry begins
+using them. Schema 2 (`remix_cli` 1.0.0-beta.1) lets an icon name a `fallback`
+library for the libraries that do not draw it.
 
 `ref` records the requested branch, tag, or SHA. `revision` is the immutable
 commit used for every index, catalog, and template read. Commit `remix.yaml`;

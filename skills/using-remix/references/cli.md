@@ -52,6 +52,10 @@ iconLibrary: lucide # remix (default) or lucide
 ```
 
 The CLI adds `lucide_flutter` instead of `remix_ui_icons` when it is selected.
+With the default, icons Remix does not draw render from Lucide, so the CLI adds
+both packages. The registry requires `remix_ui_icons` `^1.0.0-beta.1`; a
+project still on `^0.1.0` must update that constraint before installing, and
+migrate its own icon references with the package's `MIGRATION.md`.
 The choice applies at install. Four items use icons (`icons`,
 `dashboard_shell`, `dashboard_demo`, `support`). To switch an installed
 project, change the setting and reinstall every one of them you have, in one

@@ -52,8 +52,10 @@ registries:
 ```
 
 `remix.yaml` may also set `iconLibrary: remix|lucide`. Icon placeholders are
-resolved at install. Publish the CLI that understands those placeholders
-before publishing a registry that contains them.
+resolved at install through `registry/icons.yaml`. Its schema 2 lets an icon
+the `remix` library does not draw name Lucide as its `fallback`, which needs
+`remix_cli` 1.0.0-beta.1. Publish the CLI that understands a table's schema
+and placeholders before publishing a registry that uses them.
 
 The index exposes `vanilla` and `fortal`; `default` was the name an earlier
 prerelease used for `vanilla` and is not a preset any registry serves.
@@ -76,8 +78,8 @@ preset's own components and variants. The host still owns the entry point,
 theme scope, routes, authentication, and persistence.
 
 Installed Dart imports the public `remix` API, not `registry_source`.
-`mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
-that use them. Vanilla's `theme` also declares `remix_ui_fonts`, because its
+`mix_chart`, `remix_ui_icons`, and `lucide_flutter` (the icon fallback) remain
+opt-in hosted dependencies of the items that use them. Vanilla's `theme` also declares `remix_ui_fonts`, because its
 themes set the type in Geist and Geist Mono; Fortal pins no font family. Items
 with generated parts declare the generation dependencies; the consumer generates
 its own adapters rather than copying authoring outputs.

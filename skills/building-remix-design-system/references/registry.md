@@ -114,11 +114,15 @@ consumer's pubspec step in the README. Record the choice in the ADR.
 **No literal `{{`** anywhere in source; the CLI rejects any placeholder other
 than the ones it renders: `{{typePrefix}}`, `{{valuePrefix}}`,
 `{{icon:import}}`, and `{{icon:<name>}}`. The icon pair resolves through
-`icons.yaml` beside `index.yaml` (`schema: 1`, `libraries` with each
+`icons.yaml` beside `index.yaml` (`schema: 1` or `2`, `libraries` with each
 library's `dependency`, `import`, and `class`, and `icons` mapping every
-canonical name to a constant in every library). A template with an icon
-constant also carries `{{icon:import}}` in its import block; the CLI adds the
-chosen library's package.
+canonical name to a constant in every library). In schema 2 an icon may leave
+out a library that does not draw it by naming a `fallback` library that does
+(`checkCircled: {lucide: circleCheck, fallback: lucide}`), and the default
+library's constant may differ from the canonical name; schema 2 needs
+`remix_cli` 1.0.0-beta.1. A template with an icon constant also carries
+`{{icon:import}}` in its import block; the CLI imports and adds the package of
+every library the file's icons render from.
 
 ## 4. Derivation
 

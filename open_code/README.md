@@ -153,10 +153,10 @@ Fortal also installs shared source items without generated parts, such as
 preset's files and dependencies.
 
 `dart run remix_cli:remix add icons` instead adds `lib/ui/icons.dart`, declares
-`remix_ui_icons`, and exposes a small, application-owned `UiIcons` alias set
-without a generated adapter. Add or rename aliases there as the application
-evolves. The complete 318-icon catalog is one direct
-`package:remix_ui_icons/remix_ui_icons.dart` import away.
+`remix_ui_icons` and its `lucide_flutter` fallback, and exposes a small,
+application-owned `UiIcons` alias set without a generated adapter. Add or
+rename aliases there as the application evolves. The rest of the Vector UI
+pack is one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
 Recipe-only installs need no `build.yaml`. Agent surfaces use `@MixableSpec`,
 whose styler builder is opt-in in the supported Mix generator. The CLI enables
