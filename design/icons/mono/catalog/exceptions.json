@@ -2,7 +2,7 @@
   {
     "id": "warning-gap-16",
     "icon": "warning",
-    "pack": "technical",
+    "pack": "mono",
     "appearance": "outline",
     "nativeSize": 16,
     "target": 1.5,
@@ -19,7 +19,7 @@
   {
     "id": "warning-gap-24",
     "icon": "warning",
-    "pack": "technical",
+    "pack": "mono",
     "appearance": "outline",
     "nativeSize": 24,
     "target": 2.0,
@@ -36,7 +36,7 @@
   {
     "id": "branch-chamfer-12",
     "icon": "branch",
-    "pack": "technical",
+    "pack": "mono",
     "nativeSize": 12,
     "target": 1.0,
     "measuredApprox": 0.75,
@@ -53,7 +53,7 @@
   {
     "id": "branch-chamfer-16",
     "icon": "branch",
-    "pack": "technical",
+    "pack": "mono",
     "nativeSize": 16,
     "target": 1.5,
     "measuredApprox": 1.0,
@@ -70,7 +70,7 @@
   {
     "id": "branch-chamfer-24",
     "icon": "branch",
-    "pack": "technical",
+    "pack": "mono",
     "nativeSize": 24,
     "target": 2.0,
     "measuredApprox": 1.5,
@@ -87,7 +87,7 @@
   {
     "id": "sliders-chamfer-12",
     "icon": "sliders",
-    "pack": "technical",
+    "pack": "mono",
     "nativeSize": 12,
     "target": 1.0,
     "measuredApprox": 0.75,
@@ -104,7 +104,7 @@
   {
     "id": "sliders-chamfer-16",
     "icon": "sliders",
-    "pack": "technical",
+    "pack": "mono",
     "nativeSize": 16,
     "target": 1.5,
     "measuredApprox": 1.0,
@@ -121,7 +121,7 @@
   {
     "id": "sliders-chamfer-24",
     "icon": "sliders",
-    "pack": "technical",
+    "pack": "mono",
     "nativeSize": 24,
     "target": 2.0,
     "measuredApprox": 1.5,
@@ -138,12 +138,12 @@
   {
     "id": "plus-12-outline-centered-odd-width",
     "icon": "plus",
-    "pack": "technical",
+    "pack": "mono",
     "appearance": "outline",
     "nativeSize": 12,
     "status": "allowed-optical-policy",
     "rule": "odd-width-canvas-centering",
-    "reason": "A 1 px stem on a 12 px even canvas stays on center 6, so edges are 5.5\u20136.5. This is Technical centering, not Angular's integer 5\u20136 split.",
+    "reason": "A 1 px stem on a 12 px even canvas stays on center 6, so edges are 5.5\u20136.5. This is Mono centering, not Outline's integer 5\u20136 split.",
     "geometrySha256": "3f1188d4f0d27e8716413bf099ba61a849cb96920f2f66e9b591e7cbc11a9144"
   }
 ]

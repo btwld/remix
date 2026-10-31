@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "family": "Vector UI",
-  "pack": "technical",
+  "pack": "mono",
   "nameStatus": "working-name",
   "version": "0.1.0-technical-pilot",
   "status": "calibration-pilot-not-public",
@@ -10,7 +10,7 @@
     "drawings": 72
   },
   "packs": {
-    "technical": {
+    "mono": {
       "available": true,
       "nativeSizes": [
         12,
@@ -19,10 +19,10 @@
       ],
       "status": "calibration-pilot"
     },
-    "angular": {
+    "outline": {
       "available": false,
       "status": "not-in-this-pilot-package",
-      "note": "Angular remains in design/icons/angular; this package does not re-export or edit it."
+      "note": "Outline remains in design/icons/outline; this package does not re-export or edit it."
     },
     "rounded": {
       "available": false,
@@ -54,7 +54,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Overview",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -67,10 +67,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -96,7 +96,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Search workspace",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -109,10 +109,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -139,7 +139,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Create item",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -152,10 +152,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -183,7 +183,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Next step",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -196,10 +196,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -225,7 +225,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Your profile",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -238,10 +238,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -267,7 +267,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Read document",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -280,10 +280,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -309,7 +309,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Choose date",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -322,10 +322,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -352,7 +352,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Adjust view",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -365,10 +365,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -398,7 +398,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Needs attention",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -411,10 +411,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -444,7 +444,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Copy link",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -457,10 +457,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -486,7 +486,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Workflow branch",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -499,10 +499,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
@@ -532,7 +532,7 @@
       "rtlPolicy": "literal-no-automatic-mirroring",
       "example": "Favorite",
       "availability": {
-        "technical": {
+        "mono": {
           "appearances": [
             "outline",
             "filled"
@@ -545,10 +545,10 @@
         }
       },
       "provenance": {
-        "method": "original-technical-construction",
+        "method": "original-mono-construction",
         "source": "source/icons.py",
         "externalArtworkUsed": false,
-        "angularGeometryCopied": false
+        "outlineGeometryCopied": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",

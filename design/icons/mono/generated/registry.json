@@ -1,6 +1,6 @@
 {
   "version": "0.1.0-technical-pilot",
-  "pack": "technical",
+  "pack": "mono",
   "paths": {
     "home": {
       "outline": {

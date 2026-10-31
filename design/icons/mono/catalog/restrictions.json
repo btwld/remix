@@ -4,7 +4,7 @@
     {
       "id": "warning-visible-label",
       "icon": "warning",
-      "pack": "technical",
+      "pack": "mono",
       "status": "concept-level-restriction",
       "owner": null,
       "reviewer": null,
