@@ -314,6 +314,9 @@ final class Installer {
         .toList();
     final rendered = <String, String>{};
     final iconTables = <RegistryReader, IconRegistry>{};
+    // The icon libraries each registry's templates rendered from: the chosen
+    // library, and any fallback library for an icon it does not have.
+    final iconLibraries = <RegistryReader, Set<String>>{};
     final filesByItem = <String, List<String>>{};
     for (final item in items) {
       final targets = <String>[];
@@ -328,6 +331,15 @@ final class Installer {
         IconRegistry? icons;
         if (source.contains('{{icon:')) {
           icons = iconTables[owner] ??= IconRegistry.parse(await owner.icons());
+          iconLibraries
+              .putIfAbsent(owner, () => {})
+              .addAll(
+                _renderer.iconLibraries(
+                  source,
+                  icons: icons,
+                  iconLibrary: config.iconLibrary,
+                ),
+              );
         }
         rendered[relative] = _renderer.render(
           source,
@@ -353,9 +365,9 @@ final class Installer {
     final exports = [for (final item in items) ...item.exports];
     final proposedBarrel = updateManagedBarrel(currentBarrel, exports);
     final requirements = _collectRequirements(items, [
-      // The chosen icon package, once per registry whose templates used it.
-      for (final table in iconTables.values)
-        table.library(config.iconLibrary).dependencies,
+      // Each icon package a registry's templates rendered from, once.
+      for (final MapEntry(key: owner, value: names) in iconLibraries.entries)
+        for (final name in names) iconTables[owner]!.library(name).dependencies,
     ]);
     final pubspec = File(p.join(root.path, 'pubspec.yaml'));
     final missingDependencies = _inspectDependencies(
@@ -1004,7 +1016,11 @@ List<_DependencyRequirement> _inspectDependencies(
     if (existing != null &&
         existing.intersect(requirement.constraint).isEmpty) {
       throw FormatException(
-        'Existing ${requirement.name} constraint $existing is incompatible with ${requirement.constraint}.',
+        'Existing ${requirement.name} constraint $existing is incompatible with '
+        '${requirement.constraint}, which the registry requires. Change '
+        '${requirement.name} in pubspec.yaml to ${requirement.constraint} and '
+        'rerun; read its changelog first, since a new major version can '
+        'rename or remove APIs your own code uses. No source was written.',
       );
     }
   }
