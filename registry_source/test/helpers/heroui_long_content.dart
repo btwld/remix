@@ -51,3 +51,29 @@ void expectHeroUiTextInside(WidgetTester tester, Finder text, Rect bounds) {
   expect(rect.top, greaterThanOrEqualTo(bounds.top - .01));
   expect(rect.bottom, lessThanOrEqualTo(bounds.bottom + .01));
 }
+
+/// Expects every glyph of [label] to be painted inside its own paragraph.
+///
+/// A fixed-height recipe can hand its label a box shorter than the lines the
+/// text lays out: the paragraph's rect stays inside the component while the
+/// lines past the first are clipped away. Glyph boxes expose that, where
+/// [expectHeroUiTextInside] cannot.
+void expectHeroUiGlyphsInside(WidgetTester tester, String label) {
+  final paragraph = heroUiParagraph(tester, label);
+  final boxes = paragraph.getBoxesForSelection(
+    TextSelection(baseOffset: 0, extentOffset: label.length),
+  );
+  expect(boxes, isNotEmpty, reason: 'no glyphs for "$label"');
+  for (final box in boxes) {
+    expect(
+      box.bottom,
+      lessThanOrEqualTo(paragraph.size.height + .01),
+      reason: 'glyph below the paragraph of "$label"',
+    );
+    expect(
+      box.right,
+      lessThanOrEqualTo(paragraph.size.width + .01),
+      reason: 'glyph beyond the paragraph of "$label"',
+    );
+  }
+}

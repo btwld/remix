@@ -27,3 +27,4 @@ approximations:
   - The `fullWidth` modifier (`flex-1` items) is not supported.
   - "`iconOnly` and `detached` apply to every item; mix sizes or shapes with each item's `style`."
   - Items use the toggle button's 2px inside border for focus, which is also how upstream insets the ring in a group.
+  - "Item labels follow the toggle button's one-line ellipsis policy. A group of long labels is still wider than a phone, as upstream's `w-fit` group is."

@@ -106,7 +106,10 @@ ToggleStyler heroUiToggleButtonStyle({
             label: TextStyler()
                 .style(size.text.mix())
                 .fontWeight(.w500)
-                .color(foreground),
+                .color(foreground)
+                .softWrap(false)
+                .maxLines(1)
+                .overflow(TextOverflow.ellipsis),
             icon: IconStyler().size(size.icon.mobile).color(foreground),
           )
           .height(size.height.mobile)

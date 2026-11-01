@@ -30,3 +30,4 @@ approximations:
   - The icon's `-mx-0.5` margins are not expressible, so a button with an icon and a label is 4px wider than upstream.
   - The fill, the press scale, and the focus ring share one 100ms ease-out; upstream eases `transform` over 250ms.
   - "`iconOnly` stands in for `isIconOnly`: it removes the padding and squares the button."
+  - "Long labels ellipsize on one line within the space left after an icon. Upstream is `whitespace-nowrap` on a fixed height, which overflows the page; the single line matches, while the ellipsis keeps every glyph that is painted legible."
