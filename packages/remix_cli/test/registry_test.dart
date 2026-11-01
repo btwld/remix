@@ -779,6 +779,7 @@ items:
       'mix_annotations',
       'mix_chart',
       'remix_ui_icons',
+      'lucide_flutter',
       'remix_ui_fonts',
     };
     final directive = RegExp(r'''(?:import|export|part)\s+['"]([^'"]+)['"]''');

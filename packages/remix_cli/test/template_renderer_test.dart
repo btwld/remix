@@ -139,6 +139,215 @@ icons:
         failsWith('libraries.lucide.dependency must name one package'),
       );
     });
+
+    test('schema 1 rejects fallback keys on otherwise valid mappings', () {
+      expect(
+        () => IconRegistry.parse(
+          table(
+            lucide: '{remix: update, lucide: loaderCircle, fallback: lucide}',
+          ),
+        ),
+        failsWith('icons.update has unknown keys: fallback'),
+      );
+    });
+  });
+
+  group('icons.yaml schema 2', () {
+    String table({String extra = ''}) => '''
+schema: 2
+libraries:
+  remix: {dependency: {remix_ui_icons: ^1.0.0-beta.1}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
+icons:
+  magnifyingGlass: {remix: search, lucide: search}
+  checkCircled: {lucide: circleCheck, fallback: lucide}
+$extra''';
+
+    Matcher failsWith(String message) => throwsA(
+      isA<FormatException>().having(
+        (error) => error.message,
+        'message',
+        contains(message),
+      ),
+    );
+
+    test('a default constant may differ from the canonical name', () {
+      final icons = IconRegistry.parse(table());
+      expect(icons.schema, 2);
+      expect(icons.constant('magnifyingGlass', 'remix'), 'search');
+      expect(icons.canonicalFor('remix', 'search'), 'magnifyingGlass');
+      expect(icons.canonicalFor('remix', 'magnifyingGlass'), isNull);
+    });
+
+    test('an icon a library lacks resolves to its fallback', () {
+      final icons = IconRegistry.parse(table());
+      expect(icons.resolve('checkCircled', 'remix'), (
+        library: 'lucide',
+        constant: 'circleCheck',
+      ));
+      expect(icons.resolve('checkCircled', 'lucide'), (
+        library: 'lucide',
+        constant: 'circleCheck',
+      ));
+      expect(icons.fallbacks, {'checkCircled': 'lucide'});
+      // A fallback constant stands for the icon only where the default
+      // library has none: Lucide's search is magnifyingGlass's, not ours.
+      expect(icons.canonicalFor('lucide', 'circleCheck'), 'checkCircled');
+      expect(icons.canonicalFor('lucide', 'search'), isNull);
+    });
+
+    test('rejects a missing mapping without a fallback', () {
+      expect(
+        () => IconRegistry.parse(table(extra: '  box: {lucide: box}\n')),
+        failsWith('icons.box has no remix mapping'),
+      );
+    });
+
+    test('rejects a library whose name is reserved for fallbacks', () {
+      expect(
+        () => IconRegistry.parse(
+          table().replaceFirst(
+            '  lucide:',
+            '  fallback: {dependency: {fallback_icons: ^1.0.0}, '
+                'import: package:fallback_icons/icons.dart, class: FallbackIcons}\n'
+                '  lucide:',
+          ),
+        ),
+        failsWith('library fallback clashes with the fallback key'),
+      );
+    });
+
+    test('rejects a fallback that cannot render the icon', () {
+      expect(
+        () => IconRegistry.parse(
+          table(extra: '  box: {lucide: box, fallback: material}\n'),
+        ),
+        failsWith('icons.box.fallback names material'),
+      );
+      expect(
+        () => IconRegistry.parse(
+          table(extra: '  box: {remix: box, fallback: lucide}\n'),
+        ),
+        failsWith('so icons.box must map lucide'),
+      );
+      expect(
+        () => IconRegistry.parse(
+          table(extra: '  box: {remix: box, lucide: box, fallback: lucide}\n'),
+        ),
+        failsWith('its fallback is never used'),
+      );
+    });
+
+    test('names the schemas it supports', () {
+      expect(
+        () =>
+            IconRegistry.parse(table().replaceFirst('schema: 2', 'schema: 3')),
+        failsWith('remix_cli supports 1 and 2'),
+      );
+      expect(
+        () =>
+            IconRegistry.parse(table().replaceFirst('schema: 2', 'schema: 1')),
+        failsWith('icons.magnifyingGlass.remix must be magnifyingGlass'),
+      );
+    });
+
+    test('requires an integer schema rather than a number or string', () {
+      for (final schema in ['2.0', '"2"', 'true']) {
+        expect(
+          () => IconRegistry.parse(
+            table().replaceFirst('schema: 2', 'schema: $schema'),
+          ),
+          failsWith('Unsupported icons.yaml schema'),
+          reason: schema,
+        );
+      }
+    });
+
+    test('imports every library a template renders from', () {
+      final icons = IconRegistry.parse(table());
+      const source = '''
+import 'package:flutter/widgets.dart';
+{{icon:import}}
+
+const a = {{icon:magnifyingGlass}};
+const b = {{icon:checkCircled}};
+''';
+      expect(
+        renderer.render(
+          source,
+          typePrefix: 'Ui',
+          valuePrefix: 'ui',
+          icons: icons,
+        ),
+        '''
+import 'package:flutter/widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+const a = RemixIcons.search;
+const b = LucideIcons.circleCheck;
+''',
+      );
+      expect(renderer.iconLibraries(source, icons: icons), {'remix', 'lucide'});
+      expect(
+        renderer.iconLibraries(source, icons: icons, iconLibrary: 'lucide'),
+        {'lucide'},
+      );
+    });
+
+    test('imports only the fallback when every icon falls back', () {
+      final icons = IconRegistry.parse(table());
+      const source = "{{icon:import}}\nconst b = {{icon:checkCircled}};\n";
+      final rendered = renderer.render(
+        source,
+        typePrefix: 'Ui',
+        valuePrefix: 'ui',
+        icons: icons,
+      );
+      expect(rendered, contains('package:lucide_flutter/lucide_flutter.dart'));
+      expect(rendered, isNot(contains('remix_ui_icons')));
+      expect(renderer.iconLibraries(source, icons: icons), {'lucide'});
+      expect(renderer.iconLibraries('{{icon:import}}\n', icons: icons), {
+        'remix',
+      });
+    });
+
+    test('keeps CRLF and orders each generated icon import separately', () {
+      final source = [
+        "import 'local.dart';",
+        "import 'package:middle/icons.dart';",
+        '{{icon:import}}',
+        "import 'dart:math';",
+        '',
+        'const search = {{icon:magnifyingGlass}};',
+        'const checked = {{icon:checkCircled}};',
+        '',
+      ].join('\r\n');
+
+      final rendered = renderer.render(
+        source,
+        typePrefix: 'Ui',
+        valuePrefix: 'ui',
+        icons: IconRegistry.parse(table()),
+      );
+
+      expect(
+        rendered,
+        [
+          "import 'dart:math';",
+          '',
+          "import 'package:lucide_flutter/lucide_flutter.dart';",
+          "import 'package:middle/icons.dart';",
+          "import 'package:remix_ui_icons/remix_ui_icons.dart';",
+          '',
+          "import 'local.dart';",
+          '',
+          'const search = RemixIcons.search;',
+          'const checked = LucideIcons.circleCheck;',
+          '',
+        ].join('\r\n'),
+      );
+    });
   });
 
   test('leaves a template without icons exactly as authored', () {
