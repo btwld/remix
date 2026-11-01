@@ -1,5 +1,15 @@
-## Unreleased
+## 1.0.0-beta.1
 
+### Features
+
+- Read `icons.yaml` schemas 1 and 2. Schema 2 permits renamed default glyphs
+  and explicit per-icon fallbacks, with imports and dependencies for the
+  libraries actually used. Existing schema 1 registries remain supported.
+
+### Fixes
+
+- Name the required dependency constraint and migration guidance when a
+  project's existing constraint excludes the registry's requirement.
 - Reserve authored and generated target ownership across installs, rejecting
   conflicting registries before dependency or source mutation in every mode.
 - Preserve same-owner edits and disjoint registry additions. Add explicit
