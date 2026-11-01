@@ -17,13 +17,17 @@ void main() {
             tester,
           ) async {
             String? selected;
+            final changes = <String>[];
             await pumpHeroUiLongContent(
               tester,
               Directionality(
                 textDirection: direction,
                 child: RemixTabs(
                   selectedTabId: 'one',
-                  onChanged: (value) => selected = value,
+                  onChanged: (value) {
+                    selected = value;
+                    changes.add(value);
+                  },
                   child: HeroUiTabBar(
                     variant: variant,
                     child: Row(
@@ -82,6 +86,26 @@ void main() {
             await tester.sendKeyEvent(LogicalKeyboardKey.end);
             await tester.pumpAndSettle();
             expectHeroUiTextInside(tester, last, viewport);
+            // Arrows follow the reading direction, so the key pointing at the
+            // neighbouring tab reaches it in both directions.
+            await tester.sendKeyEvent(LogicalKeyboardKey.home);
+            await tester.pumpAndSettle();
+            changes.clear();
+            final [
+              towardsNext,
+              towardsPrevious,
+            ] = direction == TextDirection.ltr
+                ? [LogicalKeyboardKey.arrowRight, LogicalKeyboardKey.arrowLeft]
+                : [LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.arrowRight];
+            await tester.sendKeyEvent(towardsNext);
+            await tester.pumpAndSettle();
+            expect(changes, ['two']);
+            await tester.sendKeyEvent(towardsNext);
+            await tester.pumpAndSettle();
+            expect(changes, ['two', 'three']);
+            await tester.sendKeyEvent(towardsPrevious);
+            await tester.pumpAndSettle();
+            expect(changes, ['two', 'three', 'two']);
             expect(tester.takeException(), isNull);
           });
         }
