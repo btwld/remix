@@ -4,6 +4,10 @@ Prepared in source; publication is on hold.
 
 ### Breaking changes
 
+- Item columns in scrolling `RemixMenu` panels styled through `overlay` and
+  `RemixSelect` panels styled through `menuContainer` now shrink-wrap. Their
+  `mainAxisAlignment` and `mainAxisSize.max` no longer distribute spare vertical
+  space; callers relying on that distribution must revise their layout.
 - `RemixToast` now extends `StatefulWidget`. Type references as `Widget`
   instead of `StatelessWidget`, and compose it rather than extending it.
 - Radio and switch `semanticLabel` fields and styler parameters are now
