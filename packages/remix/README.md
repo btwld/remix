@@ -27,7 +27,7 @@ Use `Remix*` widgets with your own stylers, or install a neutral Vanilla or
 Fortal preset as editable application source:
 
 ```bash
-flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
+flutter pub add dev:remix_cli
 dart run remix_cli:remix init --preset vanilla
 dart run remix_cli:remix add button
 ```

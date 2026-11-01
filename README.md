@@ -46,7 +46,7 @@ Widget saveButton(VoidCallback save) => RemixButton(
 Or install editable theme and component source:
 
 ```bash
-flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
+flutter pub add dev:remix_cli
 dart run remix_cli:remix init --preset vanilla
 dart run remix_cli:remix add button
 ```
