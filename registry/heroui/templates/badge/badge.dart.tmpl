@@ -38,29 +38,15 @@ class {{typePrefix}}Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // `.badge--top-right`: `absolute top-0 right-0` shifted by a quarter of
-    // the badge's own size, outward.
-    final (top, bottom, left, right, shift) = switch (placement) {
-      .topRight => (0.0, null, null, 0.0, const Offset(.25, -.25)),
-      .topLeft => (0.0, null, 0.0, null, const Offset(-.25, -.25)),
-      .bottomRight => (null, 0.0, null, 0.0, const Offset(.25, .25)),
-      .bottomLeft => (null, 0.0, 0.0, null, const Offset(-.25, .25)),
-    };
-
     return Stack(
       clipBehavior: Clip.none,
       children: [
         child,
-        Positioned(
-          top: top,
-          bottom: bottom,
-          left: left,
-          right: right,
-          child: FractionalTranslation(
-            translation: shift,
-            // The badge centres its label in its minimum size, which would
-            // otherwise fill the stack's loose constraints.
-            child: UnconstrainedBox(
+        Positioned.fill(
+          child: CustomSingleChildLayout(
+            delegate: _BadgeLayout(placement, _metrics(size).minSize),
+            // Preserve intrinsic count/dot sizing within the anchor's width.
+            child: IntrinsicWidth(
               child: RemixBadge(
                 label: label ?? '',
                 style: _style(
@@ -78,6 +64,37 @@ class {{typePrefix}}Badge extends StatelessWidget {
   }
 }
 
+/// Counts retain HeroUI's quarter-outward shift. Longer text stays inside
+/// the anchor horizontally, so its shift cannot push it beyond the page.
+class _BadgeLayout extends SingleChildLayoutDelegate {
+  const _BadgeLayout(this.placement, this.minSize);
+
+  final {{typePrefix}}BadgePlacement placement;
+  final double minSize;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      BoxConstraints(maxWidth: constraints.maxWidth);
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final onRight = placement == .topRight || placement == .bottomRight;
+    final onTop = placement == .topRight || placement == .topLeft;
+    final shiftX =
+        childSize.width < size.width && childSize.width <= minSize * 2
+        ? childSize.width / 4
+        : 0.0;
+    return Offset(
+      onRight ? size.width - childSize.width + shiftX : -shiftX,
+      onTop ? -childSize.height / 4 : size.height - childSize.height * .75,
+    );
+  }
+
+  @override
+  bool shouldRelayout(_BadgeLayout oldDelegate) =>
+      placement != oldDelegate.placement || minSize != oldDelegate.minSize;
+}
+
 /// `.badge`, with the caller's [style] merged last.
 BadgeStyler _style({
   required {{typePrefix}}BadgeVariant variant,
@@ -91,7 +108,10 @@ BadgeStyler _style({
       .style(metrics.text.mix())
       .height(metrics.lineHeight)
       .fontWeight(.w500)
-      .color(palette.foreground);
+      .color(palette.foreground)
+      .softWrap(false)
+      .maxLines(1)
+      .overflow(TextOverflow.ellipsis);
   if (size == .sm) label = label.fontSize(_smFontSize);
 
   return BadgeStyler()
