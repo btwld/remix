@@ -15,7 +15,7 @@ dependencies:
   # hosted constraints keep the app manifest deployable outside the workspace.
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.3
-  remix: ^1.0.0-beta.13
+  remix: ^1.0.0-beta.14
   remix_ui_icons: ^0.1.0
 
 dev_dependencies:

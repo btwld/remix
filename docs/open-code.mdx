@@ -38,7 +38,10 @@ vocabularies are different.
 
 ## Install
 
-Every preset requires Remix `^1.0.0-beta.13`, which `add` declares for you.
+The registry in this checkout requires Remix `^1.0.0-beta.14`, which `add`
+declares for you. Beta.14 is not published yet; the currently hosted Remix
+release is beta.13. Registry pins and their floors remain independent of the
+CLI version.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
@@ -168,7 +171,7 @@ remix add button --dry-run
 
 ```
 Items: theme -> button
-Dependencies: remix@^1.0.0-beta.13, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.14, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart
@@ -679,7 +682,7 @@ a later `remix` that these templates were never tested against. `add` reports
 that after it resolves your lockfile:
 
 ```
-Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.13. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
+Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.14. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
 ```
 
 Upgrading the CLI does not change the pin, so the notice names
