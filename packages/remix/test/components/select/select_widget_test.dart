@@ -1950,6 +1950,7 @@ void main() {
         await _pumpOpenSelect(tester, optionCount: 20, maxHeight: 200);
         expect(_isInView(tester, 7), isFalse);
 
+        // naked_ui 1.3.0 focuses item0 on open; seven moves still reach item7.
         await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 7);
 
         expect(_focusedOptionValue(), 'item7');
@@ -1968,6 +1969,7 @@ void main() {
           onChanged: (value) => selected = value,
         );
 
+        // Initial focus is item0, so reaching item19 needs nineteen moves.
         await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 19);
         expect(_focusedOptionValue(), 'item19');
         expect(_isInView(tester, 19), isTrue);
@@ -1981,6 +1983,7 @@ void main() {
 
         await _pressKey(tester, LogicalKeyboardKey.arrowDown, times: 12);
         expect(_panelScrollPosition(tester).pixels, greaterThan(0));
+        // Starting at item0 makes twelve down/up moves return to item0.
         await _pressKey(tester, LogicalKeyboardKey.arrowUp, times: 12);
 
         expect(_focusedOptionValue(), 'item0');

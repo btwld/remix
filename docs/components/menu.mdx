@@ -247,9 +247,9 @@ a screen reader announces one expandable button. The button keeps its look,
 accessible name, enabled state, and Enter and Space activation. Pass
 `onPressed: null` to disable it; a disabled button does not open the menu.
 
-The builder must return a single control, because everything it returns is
-merged into one semantics node. A split button or a loading button would merge
-its labels and actions into that node.
+The builder must return a single control. Its expanded state stays on the
+button, while a loading button's live announcement remains a separate node.
+A split button needs separate menu controls.
 
 `MenuStyler.trigger` and `RemixMenu.semanticLabel` do not apply to a control
 trigger, because the button owns its look and name. Setting `semanticLabel` on a
@@ -395,6 +395,25 @@ The renderer reserves one leading choice slot for every row in a panel when
 that panel directly contains a checkbox or radio group. Nested submenu panels
 decide this independently. A custom `trailingIcon` replaces the default
 directional submenu chevron.
+
+## Long menus
+
+The panel scrolls when its items are taller than the room beside the trigger.
+It is laid out no taller than the room above or below the trigger, after the
+`positioning` `sideOffset` and `collisionPadding`, and opens on the side with
+more room, so a long menu scrolls there instead of covering the trigger. Every
+submenu panel scrolls the same way, within the room the overlay has. A
+`maxHeight` on the `overlay` style caps the panel lower still. A menu that fits
+keeps the size of its items, and the overlay's padding, decoration, and effects
+stay in place while the items scroll.
+
+```dart
+import 'package:remix/remix.dart';
+
+void main() {
+  MenuStyler().overlay(FlexBoxStyler().maxHeight(320));
+}
+```
 
 ## Match the trigger width
 

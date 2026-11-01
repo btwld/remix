@@ -155,8 +155,8 @@ for Overlay, Navigator and toast scope placement.
   trigger is a real button such as `FortalButton`: pass `menu.focusNode` as
   its `focusNode` and `menu.toggle` as its `onPressed` (`menu` also exposes
   `isOpen` and `controller`). The builder must return a single control,
-  because everything it returns is merged into one semantics node (a split
-  button or a loading button would merge labels and actions). The button
+  with expanded state on its button; a loading announcement stays separate.
+  A split button needs separate menu controls. The button
   keeps its own look, label, and enabled state, `MenuStyler.trigger` and
   `RemixMenu.semanticLabel` do not apply to it, and
   `RemixMenuTrigger.label` is null. The same
