@@ -193,6 +193,10 @@ class OverlayPositioner extends StatefulWidget {
   /// layout; the panel stays on the preferred side when it fits there,
   /// otherwise it flips.
   ///
+  /// With collision avoidance, if neither side has any vertical room, uses
+  /// the overlay's height instead so the panel remains usable. It may then
+  /// overlap the anchor.
+  ///
   /// Content that cannot scroll overflows the capped height. Placements to
   /// the left or right of the anchor are not capped, because shifting already
   /// keeps them beside the anchor rather than over it.
@@ -289,12 +293,15 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
     final loose = constraints.loosen();
     if (!constrainToAvailableHeight) return loose;
 
-    return loose.copyWith(
-      maxHeight: math.min(
-        loose.maxHeight,
-        _availableHeight(targetRect, loose.maxHeight, positioning),
-      ),
+    final available = _availableHeight(
+      targetRect,
+      loose.maxHeight,
+      positioning,
     );
+    // A viewport-height anchor leaves no space beside it. Keep the panel
+    // usable and let collision positioning shift it into the overlay instead.
+    if (positioning.avoidCollisions && available <= 0) return loose;
+    return loose.copyWith(maxHeight: math.min(loose.maxHeight, available));
   }
 
   @override

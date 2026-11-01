@@ -324,6 +324,21 @@ void main() {
       Rect panelRect(WidgetTester tester) =>
           tester.getRect(find.byKey(childKey));
 
+      testWidgets('a full-height anchor keeps a constrained panel usable', (
+        tester,
+      ) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 0, 50, 300),
+          positioning: const OverlayPositionConfig(sideOffset: 6),
+        );
+        final rect = panelRect(tester);
+        expect(rect.height, 300);
+        expect(rect.top, 0);
+        expect(rect.bottom, 300);
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('follows the option as it is turned on and off', (
         tester,
       ) async {

@@ -2,6 +2,9 @@
 
 ### Fixes
 
+- Keep a height-constrained overlay usable when its anchor leaves no room
+  above or below it; collision positioning may overlap the anchor instead of
+  laying the panel out at zero height.
 - Keep live loading announcements separate from a caller-owned menu trigger's
   accessible name, while preserving its expanded state.
 

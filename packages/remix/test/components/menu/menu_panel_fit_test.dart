@@ -20,6 +20,7 @@ Future<void> _pumpOpenMenu(
   WidgetTester tester, {
   required int itemCount,
   Alignment alignment = Alignment.topCenter,
+  bool fullHeight = false,
   ValueChanged<String>? onSelected,
 }) async {
   await tester.pumpWidget(
@@ -30,6 +31,7 @@ Future<void> _pumpOpenMenu(
             alignment: alignment,
             child: SizedBox(
               key: _triggerKey,
+              height: fullHeight ? double.infinity : null,
               child: RemixMenu<String>(
                 trigger: const RemixMenuTrigger(label: 'Options'),
                 positioning: const OverlayPositionConfig(
@@ -112,6 +114,30 @@ void main() {
       final panel = tester.getRect(_menuPanel());
       expect(panel.top, trigger.bottom + _sideOffset);
       expect(panel.height, 3 * _itemHeight);
+    });
+    testWidgets('a full-height menu trigger keeps the panel usable', (
+      tester,
+    ) async {
+      String? selected;
+      await _pumpOpenMenu(
+        tester,
+        itemCount: 3,
+        fullHeight: true,
+        onSelected: (value) => selected = value,
+      );
+      expect(tester.takeException(), isNull);
+      expect(
+        tester.getSize(find.byKey(_triggerKey)).height,
+        _overlayHeight(tester),
+      );
+      final panel = tester.getRect(_menuPanel());
+      expect(panel.height, 3 * _itemHeight);
+      expect(panel.top, greaterThanOrEqualTo(0));
+      expect(panel.bottom, lessThanOrEqualTo(_overlayHeight(tester)));
+      expect(find.text('Item 2').hitTestable(), findsOneWidget);
+      await tester.tap(find.text('Item 2'));
+      await tester.pumpAndSettle();
+      expect(selected, 'item2');
     });
   });
 }

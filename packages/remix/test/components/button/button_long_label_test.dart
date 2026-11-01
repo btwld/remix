@@ -286,6 +286,37 @@ void main() {
     update(() => maxAxis = false);
     await tester.pump();
     expect(tester.getSize(button).width, naturalWidth);
+    update(() => maxAxis = true);
+    await tester.pump();
+    expect(tester.getSize(button).width, 240);
     expect(tester.element(button), same(element));
+  });
+
+  testWidgets('unbounded max-axis dry layout agrees with real layout', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: RemixButton(
+          label: 'Save',
+          onPressed: () {},
+          leadingIcon: const IconData(0xe000),
+          style: ButtonStyler()
+              .mainAxisSize(.max)
+              .height(40)
+              .spacing(8)
+              .icon(.size(16)),
+        ),
+      ),
+    );
+    final flex = tester.renderObject<RenderFlex>(
+      find.byWidgetPredicate((widget) => widget is Flex),
+    );
+    expect(flex.constraints.hasBoundedWidth, isFalse);
+    expect(flex.mainAxisSize, MainAxisSize.max);
+    expect(flex.size.width, greaterThan(0));
+    expect(flex.getDryLayout(flex.constraints), flex.size);
+    expect(tester.takeException(), isNull);
   });
 }

@@ -132,9 +132,12 @@ class {{typePrefix}}ControlRow extends StatelessWidget {
             // Let long labels wrap in the space left after the control and
             // gap, while short labels keep their natural width.
             Flexible(
-              child: StyledText(
-                label,
-                style: enabled ? labelStyle : labelStyle.wrap(dimmed),
+              // The control already supplies the option's accessible name.
+              child: ExcludeSemantics(
+                child: StyledText(
+                  label,
+                  style: enabled ? labelStyle : labelStyle.wrap(dimmed),
+                ),
               ),
             ),
           ],
