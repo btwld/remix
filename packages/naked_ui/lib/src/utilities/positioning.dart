@@ -40,10 +40,13 @@ class OverlayPositionConfig {
     this.alignmentOffset = 0,
     this.collisionPadding = EdgeInsets.zero,
     this.avoidCollisions = true,
+    this.minimumAvailableHeight = 48,
   }) : assert(sideOffset > double.negativeInfinity),
        assert(sideOffset < double.infinity),
        assert(alignmentOffset > double.negativeInfinity),
-       assert(alignmentOffset < double.infinity);
+       assert(alignmentOffset < double.infinity),
+       assert(minimumAvailableHeight >= 0),
+       assert(minimumAvailableHeight < double.infinity);
 
   /// The preferred side of the anchor.
   final OverlaySide side;
@@ -69,6 +72,19 @@ class OverlayPositionConfig {
   /// Whether the overlay may flip and shift to remain within available bounds.
   final bool avoidCollisions;
 
+  /// Minimum useful height beside an anchor before a constrained panel may
+  /// overlap it instead.
+  ///
+  /// Used only when [OverlayPositioner.constrainToAvailableHeight] and
+  /// [avoidCollisions] are true, for top or bottom placements. The default of
+  /// 48 logical pixels reserves room for a typical interactive row. Increase
+  /// this for larger rows or panel padding; it is a placement threshold, not a
+  /// minimum child size. A panel that fits beside the anchor stays there.
+  /// Set to zero to always cap at the available side height, including zero.
+  /// The default is a policy, not a guarantee for arbitrary row sizes or
+  /// padding; callers must choose a threshold that suits their content.
+  final double minimumAvailableHeight;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -78,7 +94,8 @@ class OverlayPositionConfig {
           sideOffset == other.sideOffset &&
           alignmentOffset == other.alignmentOffset &&
           collisionPadding == other.collisionPadding &&
-          avoidCollisions == other.avoidCollisions;
+          avoidCollisions == other.avoidCollisions &&
+          minimumAvailableHeight == other.minimumAvailableHeight;
 
   @override
   int get hashCode => Object.hash(
@@ -88,6 +105,7 @@ class OverlayPositionConfig {
     alignmentOffset,
     collisionPadding,
     avoidCollisions,
+    minimumAvailableHeight,
   );
 }
 
@@ -193,9 +211,11 @@ class OverlayPositioner extends StatefulWidget {
   /// layout; the panel stays on the preferred side when it fits there,
   /// otherwise it flips.
   ///
-  /// With collision avoidance, if neither side has any vertical room, uses
-  /// the overlay's height instead so the panel remains usable. It may then
-  /// overlap the anchor.
+  /// With collision avoidance, if neither side has
+  /// [OverlayPositionConfig.minimumAvailableHeight] of vertical room, uses
+  /// the collision-padded overlay height instead so the panel remains usable.
+  /// It may then overlap the anchor. A smaller child that fits still stays
+  /// beside the anchor.
   ///
   /// Content that cannot scroll overflows the capped height. Placements to
   /// the left or right of the anchor are not capped, because shifting already
@@ -298,9 +318,17 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
       loose.maxHeight,
       positioning,
     );
-    // A viewport-height anchor leaves no space beside it. Keep the panel
-    // usable and let collision positioning shift it into the overlay instead.
-    if (positioning.avoidCollisions && available <= 0) return loose;
+    // A sliver beside a stretched anchor may leave no scroll viewport after
+    // panel padding. Allow overlap below the caller's usable-height threshold.
+    if (positioning.avoidCollisions &&
+        available < positioning.minimumAvailableHeight) {
+      return loose.copyWith(
+        maxHeight: math.max(
+          0,
+          loose.maxHeight - positioning.collisionPadding.vertical,
+        ),
+      );
+    }
     return loose.copyWith(maxHeight: math.min(loose.maxHeight, available));
   }
 
