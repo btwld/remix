@@ -32,28 +32,17 @@ enum {{typePrefix}}TextFieldVariant {
   soft,
 }
 
-Color _resolveNeutralTextInputPlaceholder(BuildContext context) {
+Color _resolveDisabledNeutralTextInputPlaceholder(BuildContext context) {
   final color = {{typePrefix}}Tokens.grayA10.resolve(context);
   return color.withValues(alpha: color.a * 0.5);
 }
 
-const _neutralTextInputPlaceholder = ContextToken<Color>(
-  _resolveNeutralTextInputPlaceholder,
-);
-
-Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
-    {{typePrefix}}Tokens.accent12.resolve(context).withValues(alpha: alpha);
-
-final _softTextFieldPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.60),
-);
-
-final _softTextAreaPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.65),
+const _disabledNeutralTextInputPlaceholder = ContextToken<Color>(
+  _resolveDisabledNeutralTextInputPlaceholder,
 );
 
 final _softTextInputDisabledPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.5),
+  (context) => {{typePrefix}}Tokens.accent12.resolve(context).withValues(alpha: 0.5),
 );
 
 /// {{typePrefix}}-themed preset for [RemixTextField].
@@ -77,10 +66,7 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
 
   final recipe = switch (variant) {
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
-    .soft => _{{valuePrefix}}ApplySoftTextInput(
-      base,
-      placeholder: _softTextFieldPlaceholder,
-    ),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(base),
   };
 
   return recipe
@@ -129,9 +115,10 @@ TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
         .containerEffects(
           RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
         )
+        // An unlabeled field relies on its border to be found at all.
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.gray7()]),
+            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.controlBorder()]),
           ),
         )
         .onDisabled(
@@ -155,10 +142,7 @@ TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
               ),
         );
 
-TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
-  TextFieldStyler base, {
-  required ContextToken<Color> placeholder,
-}) => base
+TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(TextFieldStyler base) => base
     .merge(
       TextFieldStyler(
         text: .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
@@ -174,17 +158,31 @@ TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
     )
     .textColor({{typePrefix}}Tokens.accent12())
     .text(.selectionColor({{typePrefix}}Tokens.accentA5()))
-    .onEnabled(.hintText(.color(placeholder())))
-    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()))
+    .onEnabled(.hintText(.color({{typePrefix}}Tokens.accentA11())))
+    // Base-level icon overrides remain available while enabled.
+    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent11()))
     .color({{typePrefix}}Tokens.accentA3())
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+    )
+    // A blank soft field shows no text, hint or border of its own, and its
+    // tint alone is far below 3:1; the accent-8 ring keeps it findable. It is
+    // the base so caller base overrides still win; disabled clears it.
+    .containerEffects(
+      RemixBoxEffectsMix.overContent(
+        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+      ),
     )
     .onDisabled(
       _{{valuePrefix}}SoftTextInputDisabledStyle()
           .color({{typePrefix}}Tokens.grayA3())
           .containerEffects(
             RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+          )
+          .containerEffects(
+            RemixBoxEffectsMix.overContent(
+              RemixBoxEffectLayerMix(shadows: const []),
+            ),
           ),
     );
 
@@ -194,7 +192,7 @@ TextFieldStyler _{{valuePrefix}}ApplyNeutralTextInput(TextFieldStyler base) =>
         text: .color(
           {{typePrefix}}Tokens.gray12(),
         ).selectionColor({{typePrefix}}Tokens.focusA5()),
-        hintText: .color(_neutralTextInputPlaceholder()),
+        hintText: .color({{typePrefix}}Tokens.grayA11()),
         cursorColor: {{typePrefix}}Tokens.gray12(),
         helperText: .color({{typePrefix}}Tokens.gray11()),
         label: .color(
@@ -212,13 +210,13 @@ TextFieldStyler _{{valuePrefix}}TextInputDisabledBaseStyle() => TextFieldStyler(
 
 TextFieldStyler _{{valuePrefix}}NeutralTextInputDisabledStyle() =>
     _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
-      .color(_neutralTextInputPlaceholder()),
+      .color(_disabledNeutralTextInputPlaceholder()),
     );
 
 TextFieldStyler _{{valuePrefix}}SoftTextInputDisabledStyle() =>
-    _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
-      .color(_softTextInputDisabledPlaceholder()),
-    );
+    _{{valuePrefix}}TextInputDisabledBaseStyle()
+        .hintText(.color(_softTextInputDisabledPlaceholder()))
+        .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()));
 
 TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
   helperText: .color({{typePrefix}}Tokens.error11()),
@@ -229,7 +227,7 @@ TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
       shadows: [
         RemixBoxShadowMix(
           kind: .inset,
-          color: {{typePrefix}}Tokens.errorA7(),
+          color: {{typePrefix}}Tokens.error8(),
           spreadRadius: 1,
         ),
       ],
@@ -298,10 +296,7 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
 
   final recipe = switch (variant) {
     .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
-    .soft => _{{valuePrefix}}ApplySoftTextInput(
-      base,
-      placeholder: _softTextAreaPlaceholder,
-    ),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(base),
   };
 
   return recipe

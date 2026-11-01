@@ -11,8 +11,9 @@ import 'palette.dart';
 import 'theme_scope.dart' show {{typePrefix}}Theme;
 import 'tokens.dart';
 
-/// {{typePrefix}} palettes, named for the landscapes and coastal materials.
-enum {{typePrefix}}AccentColor { calcadao, mar, ceu, mangue, sol, duna, caju }
+/// {{typePrefix}} palettes, named for the landscapes and coastal materials. Error
+/// roles use a dedicated red palette that is not a selectable accent.
+enum {{typePrefix}}AccentColor { calcadao, mar, ceu, serra, sol, duna, caju }
 
 /// The neutral palette. The enum leaves room for future neutral families.
 enum {{typePrefix}}GrayColor { calcadao }
@@ -240,6 +241,10 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}Them
   final tokens = resolve{{typePrefix}}Tokens(theme);
   final scaling = theme.scaling.factor;
   final shadows = build{{typePrefix}}Shadows(isDark: theme.isDark, colors: tokens);
+  // Error roles never follow the accent or a custom palette.
+  final error = theme.isDark
+      ? colors.{{valuePrefix}}Error.dark.scale
+      : colors.{{valuePrefix}}Error.light.scale;
 
   final colorTokens = {
     // Role and functional tokens
@@ -254,30 +259,18 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}Them
         ? tokens.colorPanelSolid
         : tokens.colorPanelTranslucent,
     {{typePrefix}}Tokens.colorOverlay: tokens.colorOverlay,
+    {{typePrefix}}Tokens.controlBorder: tokens.controlBorder,
+    {{typePrefix}}Tokens.accentThumbRing: tokens.accentThumbRing,
     {{typePrefix}}Tokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
-    {{typePrefix}}Tokens.error3: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(3),
-    {{typePrefix}}Tokens.error7: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(7),
-    {{typePrefix}}Tokens.error8: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(8),
-    {{typePrefix}}Tokens.error9: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(9),
-    {{typePrefix}}Tokens.error11: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(11),
-    {{typePrefix}}Tokens.error12: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(12),
-    {{typePrefix}}Tokens.errorA7: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .alphaStep(7),
+    {{typePrefix}}Tokens.error3: error.step(3),
+    {{typePrefix}}Tokens.error7: error.step(7),
+    {{typePrefix}}Tokens.error8: error.step(8),
+    {{typePrefix}}Tokens.error9: error.step(9),
+    {{typePrefix}}Tokens.error11: error.step(11),
+    {{typePrefix}}Tokens.error12: error.step(12),
+    {{typePrefix}}Tokens.errorA7: error.alphaStep(7),
     ..._accentColorTokens(tokens),
     // Gray steps
     {{typePrefix}}Tokens.gray1: tokens.gray.scale.step(1),
@@ -696,6 +689,9 @@ Map<ColorToken, Color> _accentColorTokens({{typePrefix}}ThemeColors tokens) {
     {{typePrefix}}Tokens.accentIndicator: tokens.accent.indicator,
     {{typePrefix}}Tokens.accentTrack: tokens.accent.track,
     {{typePrefix}}Tokens.accentContrast: tokens.accent.contrast,
+    {{typePrefix}}Tokens.accentSolid: tokens.accent.solid,
+    {{typePrefix}}Tokens.accentSolidHover: tokens.accent.solidHover,
+    {{typePrefix}}Tokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
     {{typePrefix}}Tokens.focus8: tokens.focus8,
     {{typePrefix}}Tokens.focusA5: tokens.focusA5,
     {{typePrefix}}Tokens.focusA8: tokens.focusA8,

@@ -96,7 +96,7 @@ void main() {
     for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
       for (final radius in FortalRadius.values) {
         testWidgets(
-          'keeps the thumb 1px edge inside the shared ring at ${radius.name} radius '
+          'keeps the thumb 2px edge inside the shared ring at ${radius.name} radius '
           'in ${mode.name} mode',
           (tester) async {
             final node = FocusNode();
@@ -126,22 +126,22 @@ void main() {
             await tester.pump();
 
             final context = tester.element(find.byType(FortalSlider));
-            final edgeColor = FortalTokens.gray7.resolve(context);
+            final edgeColor = FortalTokens.accentThumbRing.resolve(context);
             final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
             final pixels = await _capture(tester, slider);
             final thumb = tester.getCenter(find.byType(FortalSlider));
             final origin = tester.getTopLeft(find.byKey(slider));
 
-            // Sample the 1px border, 2px clear gap and 2px shared ring
+            // Sample the 2px border, 2px clear gap and 2px shared ring
             // along the thumb's center column at four device pixels per px.
             var y = ((thumb.dy - origin.dy) * _scale).round();
             final x = ((thumb.dx - origin.dx) * _scale).round();
             while (pixels.at(x, y) == const Color(0xFFFFFFFF)) {
               y--;
             }
-            final edge = y - 1;
-            final gap = y - 4 - 4;
-            final ring = y - 4 - 8 - 4;
+            final edge = y - _scale;
+            final gap = y - 3 * _scale;
+            final ring = y - 5 * _scale;
 
             _expectNear(pixels.at(x, edge), edgeColor);
             // The capture excludes the theme background, so the gap is clear.
@@ -242,7 +242,7 @@ void main() {
     testWidgets('an idle swatch draws no ring', (tester) async {
       await pumpPanel(tester);
 
-      final at = await probe(tester, 'mangue');
+      final at = await probe(tester, 'serra');
 
       expect(at(1), at(5));
       expect(at(3), at(5));
@@ -263,17 +263,17 @@ void main() {
       tester,
     ) async {
       await pumpPanel(tester);
-      focusSwatch(tester, 'mangue');
+      focusSwatch(tester, 'serra');
       await tester.pump();
 
-      final at = await probe(tester, 'mangue');
+      final at = await probe(tester, 'serra');
 
       expect(at(1), at(5));
       _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
     });
 
     for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
-      for (final accent in ['mangue', 'calcadao']) {
+      for (final accent in ['serra', 'calcadao']) {
         testWidgets('a focused $accent swatch follows the shared ring override '
             'in ${mode.name} mode', (tester) async {
           const focusColor = Color(0xFFFF00FF);
@@ -324,10 +324,10 @@ void main() {
 
     testWidgets('the ring does not change the swatch layout', (tester) async {
       await pumpPanel(tester);
-      final swatch = find.byKey(const ValueKey('accent-mangue'));
+      final swatch = find.byKey(const ValueKey('accent-serra'));
       final idle = tester.getRect(swatch);
 
-      focusSwatch(tester, 'mangue');
+      focusSwatch(tester, 'serra');
       await tester.pump();
 
       expect(tester.getRect(swatch), idle);
@@ -388,12 +388,12 @@ void main() {
             FortalTokens.focusRingOffset: offset,
           },
         );
-        focusSwatch(tester, 'mangue');
+        focusSwatch(tester, 'serra');
         await tester.pump();
 
         expect(tester.takeException(), isNull);
-        // Calçadão is selected and Mangue is focused.
-        for (final accent in ['calcadao', 'mangue']) {
+        // Calçadão is selected and Serra is focused.
+        for (final accent in ['calcadao', 'serra']) {
           final at = await probe(tester, accent);
           for (final out in [0.5, 1.0, 2.0, 3.0, 4.0]) {
             expect(at(out), at(6), reason: '$accent $out px out');

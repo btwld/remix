@@ -112,7 +112,8 @@ class FortalThemePanel extends StatelessWidget {
                 style: BoxStyler()
                     .width(28)
                     .height(28)
-                    .color(FortalTokens.accent9())
+                    // A swatch uses the palette's mark fill and selected-mark ink.
+                    .color(FortalTokens.accentIndicator())
                     .borderRadius(.all(FortalTokens.radius3())),
               ),
             ],
@@ -199,7 +200,8 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          .color(FortalTokens.accent9())
+          // A swatch uses the palette's mark fill and selected-mark ink.
+          .color(FortalTokens.accentIndicator())
           .iconColor(const Color(0x00000000))
           .onHovered(ToggleStyler().color(FortalTokens.accent10()))
           .onPressed(ToggleStyler().color(FortalTokens.accent10()));
@@ -255,7 +257,7 @@ class _AccentSwatch extends StatelessWidget {
         style: _style
             .onSelected(
               ToggleStyler()
-                  .iconColor(FortalTokens.accentContrast())
+                  .iconColor(FortalTokens.accentIndicatorContrast())
                   .merge(ring(FortalTokens.gray12)),
             )
             .onFocusVisible(ring(FortalTokens.focus8)),

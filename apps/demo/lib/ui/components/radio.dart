@@ -77,7 +77,7 @@ RadioStyler _fortalRadioSurfaceStyler(
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
+          fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
         ),
       )
       .indicator(
@@ -102,7 +102,7 @@ RadioStyler _fortalRadioSurfaceStyler(
             .indicatorColor(
               highContrast
                   ? FortalTokens.accent1()
-                  : FortalTokens.accentContrast(),
+                  : FortalTokens.accentIndicatorContrast(),
             ),
       )
       .onDisabled(
@@ -128,6 +128,13 @@ RadioStyler _fortalRadioSoftStyler(
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
+      // The tint alone is too faint to show an empty control; the accent-8
+      // ring keeps a 3:1 boundary in every enabled state.
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+        ),
+      )
       .indicator(
         .color(
           highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
@@ -150,6 +157,11 @@ RadioStyler _fortalRadioSoftStyler(
         .color(FortalTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
             )
             .indicatorColor(FortalTokens.grayA8()),
       );

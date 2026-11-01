@@ -5,11 +5,11 @@
   },
   "reviewed-checkout": {
     "language": "bash",
-    "sha256": "2bfbd3074f221bd372bc511dd42711a2a4be3da3c939b7dc359c0abbfb07ce7a"
+    "sha256": "a8784d126478895a93fb7de4f8d56eb31aa8b61ba47a8716bd1bd489c8c061f5"
   },
   "remix-override": {
     "language": "yaml",
-    "sha256": "20d0455d269012b7df71529d90bc01db476e55d55bd16bc9ccaba2828e092f22"
+    "sha256": "5851cede2a2c67270464917a760d2e0fe419c65d6632eb9ff106dd5b48dac041"
   },
   "install-local-cli": {
     "language": "bash",
@@ -17,7 +17,7 @@
   },
   "init-default": {
     "language": "bash",
-    "sha256": "a2ea41d47eacad1542cc7ff4eee9f6eb8aa61f46ca27d54e231ea5fa60505aed"
+    "sha256": "c2870c0cbe74c59c3ec9aaaf80eaf4cbf19ffac1ede3dccd242dc0ec35474a9c"
   },
   "preview-button": {
     "language": "bash",
@@ -37,7 +37,7 @@
   },
   "install-screen": {
     "language": "bash",
-    "sha256": "0c9832469ae8f1cc90fbf2521be93debc344f4e077c1fd282eafb757920850e8"
+    "sha256": "4ccc36d2c072ef9c2422202c1c2701ae3fc0b7e640307d269b1bcaf71d8572f2"
   },
   "diff-button": {
     "language": "bash",
@@ -53,7 +53,7 @@
   },
   "install-fortal": {
     "language": "bash",
-    "sha256": "21f06c711d445f00e0bb258726f785210efd2360a990f147072023e95c46ae29"
+    "sha256": "8bee78102698e89ae0aed479575d5e6c24a8aa945692af1e7f6d83993b27398d"
   },
   "analysis-options": {
     "language": "yaml",

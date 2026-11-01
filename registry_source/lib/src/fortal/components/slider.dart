@@ -88,13 +88,7 @@ SliderStyler _fortalSliderSurface(
         ),
       ),
     )
-    .thumb(
-      BoxStyler().decoration(
-        .border(
-          .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-        ),
-      ),
-    );
+    .thumb(_fortalSliderThumbRing());
 
 SliderStyler _fortalSliderSoft(
   SliderStyler base, {
@@ -116,25 +110,29 @@ SliderStyler _fortalSliderSoft(
         ),
       ),
     )
+    // The range is step 6 alone. Alpha steps reconstruct their tint over the
+    // page and can be opaque, so layering accent alpha 5 here would replace
+    // step 6 rather than deepen it.
     .rangeEffects(
       RemixBoxEffectsMix.behindContent(
         RemixBoxEffectLayerMix(
-          gradients: [
-            RemixLinearGradientMix(
-              colors: [FortalTokens.accentA5(), FortalTokens.accentA5()],
-            ),
-            ..._fortalSliderHighContrastGradients(highContrast),
-          ],
+          gradients: _fortalSliderHighContrastGradients(highContrast),
         ),
       ),
     )
-    .thumb(
-      BoxStyler().decoration(
-        .border(
-          .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-        ),
-      ),
-    );
+    .thumb(_fortalSliderThumbRing());
+
+/// The white thumb's ring ([FortalTokens.accentThumbRing]): the range colour
+/// where white stands out on it and it keeps 3:1 on the page and panels, the
+/// neutral control border where it does not, and a dark ink on bright ranges.
+/// The thumb overhangs the track, so the ring and white face carry it.
+BoxStyler _fortalSliderThumbRing() => BoxStyler().decoration(
+  .border(
+    .all(
+      .color(FortalTokens.accentThumbRing()).width(FortalTokens.borderWidth2()),
+    ),
+  ),
+);
 
 SliderStyler _fortalSliderDisabled(
   FortalSliderVariant variant, {

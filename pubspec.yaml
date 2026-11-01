@@ -313,7 +313,7 @@ melos:
 
     fortal:check:
       steps:
-        - dart test test/tool/check_fortal_test.dart
+        - dart test test/tool/check_fortal_test.dart test/tool/fortal_palettes_test.dart
         - dart run tool/check_fortal.dart
         - dart run registry_source/tool/fortal_palettes/generate.dart --check
       description: Verify Fortal's owned specification, API catalog, and palette generation

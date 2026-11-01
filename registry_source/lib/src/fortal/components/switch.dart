@@ -58,7 +58,15 @@ SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
         ),
       )
       .thumbColor(const Color(0xFFFFFFFF))
-      .onFocusVisible(.trackEffects(fortalFocusOutline()));
+      .onFocusVisible(.trackEffects(fortalFocusOutline()))
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          _fortalSwitchInsetRing(FortalTokens.controlBorder()),
+        ),
+      )
+      .thumb(_fortalSwitchOffThumbStyler());
 }
 
 SwitchStyler _fortalSwitchSurfaceStyler(
@@ -66,16 +74,6 @@ SwitchStyler _fortalSwitchSurfaceStyler(
   required bool highContrast,
 }) {
   return _fortalSwitchBaseStyler(size)
-      .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          _fortalSwitchInsetRing(FortalTokens.grayA5()),
-        ),
-      )
-      .thumb(
-        _fortalSwitchThumbStyler(selected: false, highContrast: highContrast),
-      )
       .onSelected(
         SwitchStyler()
             .trackColor(
@@ -86,12 +84,12 @@ SwitchStyler _fortalSwitchSurfaceStyler(
             .trackEffects(
               RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             )
-            .thumb(
-              _fortalSwitchThumbStyler(
-                selected: true,
-                highContrast: highContrast,
+            .trackEffects(
+              RemixBoxEffectsMix.overContent(
+                _fortalSwitchInsetRing(FortalTokens.grayA5()),
               ),
-            ),
+            )
+            .thumb(_fortalSwitchSelectedThumbStyler(highContrast)),
       )
       .onPressed(
         SwitchStyler()
@@ -115,9 +113,6 @@ SwitchStyler _fortalSwitchSoftStyler(
   required bool highContrast,
 }) {
   return _fortalSwitchBaseStyler(size)
-      .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
-      .thumb(_fortalSwitchSoftThumbStyler(false))
       .onSelected(
         SwitchStyler()
             .trackColor(
@@ -126,7 +121,10 @@ SwitchStyler _fortalSwitchSoftStyler(
             .trackEffects(
               RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             )
-            .thumb(_fortalSwitchSoftThumbStyler(true)),
+            .trackEffects(
+              RemixBoxEffectsMix.overContent(_fortalSwitchInsetRing(null)),
+            )
+            .thumb(_fortalSwitchSoftSelectedThumbStyler(highContrast)),
       )
       .onPressed(
         SwitchStyler()
@@ -169,8 +167,16 @@ _fortalSwitchMetrics(FortalSwitchSize size) {
   return (width: width, height: height, thumbSize: thumbSize, radius: radius);
 }
 
+/// Disabled switches stay muted: the active off-track boundary is replaced by
+/// the quiet gray-alpha-5 edge (surface) or removed (soft), whatever the
+/// selection, focus or press state.
 SwitchStyler _fortalSwitchDisabledStyler({bool soft = false}) => SwitchStyler()
     .trackColor(soft ? FortalTokens.grayA4() : FortalTokens.grayA3())
+    .trackEffects(
+      RemixBoxEffectsMix.overContent(
+        _fortalSwitchInsetRing(soft ? null : FortalTokens.grayA5()),
+      ),
+    )
     .thumbColor(FortalTokens.gray2())
     .thumb(
       .border(
@@ -179,20 +185,52 @@ SwitchStyler _fortalSwitchDisabledStyler({bool soft = false}) => SwitchStyler()
     )
     .trackEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
 
-BoxStyler _fortalSwitchThumbStyler({
-  required bool selected,
-  required bool highContrast,
-}) => BoxStyler().border(
-  .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-);
+/// The off thumb is a light surface; its neutral ring separates it from the
+/// off track in light mode, where white alone is too close to the track.
+BoxStyler _fortalSwitchOffThumbStyler() => BoxStyler()
+    .color(const Color(0xFFFFFFFF))
+    .border(
+      .all(
+        .color(FortalTokens.controlBorder()).width(FortalTokens.borderWidth1()),
+      ),
+    );
 
-BoxStyler _fortalSwitchSoftThumbStyler(bool selected) => BoxStyler().border(
-  .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-);
+/// The selected surface thumb stays a light surface rather than a disc of ink.
+/// Its 2px [FortalTokens.accentThumbRing] follows the track wherever white
+/// already stands out on it, and carries the contrast on bright tracks. High
+/// contrast keeps its deliberate step-1 knockout thumb.
+BoxStyler _fortalSwitchSelectedThumbStyler(bool highContrast) => highContrast
+    ? BoxStyler()
+          .color(FortalTokens.accent1())
+          .border(
+            .all(
+              .color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()),
+            ),
+          )
+    : BoxStyler()
+          .color(const Color(0xFFFFFFFF))
+          .border(
+            .all(
+              .color(
+                FortalTokens.accentThumbRing(),
+              ).width(FortalTokens.borderWidth2()),
+            ),
+          );
 
-RemixBoxEffectLayerMix _fortalSwitchInsetRing(Color color) =>
+/// Selected soft thumbs keep their accent content role on the tinted track.
+BoxStyler _fortalSwitchSoftSelectedThumbStyler(bool highContrast) => BoxStyler()
+    .color(highContrast ? FortalTokens.accent12() : FortalTokens.accent11())
+    .border(
+      .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
+    );
+
+/// A 1px inset track ring, or none when [color] is null.
+RemixBoxEffectLayerMix _fortalSwitchInsetRing(Color? color) =>
     _fortalSwitchLayer(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+      shadows: [
+        if (color != null)
+          RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1),
+      ],
     );
 
 RemixBoxEffectLayerMix _fortalSwitchLayer({

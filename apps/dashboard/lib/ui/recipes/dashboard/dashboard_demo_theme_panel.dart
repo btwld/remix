@@ -112,7 +112,8 @@ class UiThemePanel extends StatelessWidget {
                 style: BoxStyler()
                     .width(28)
                     .height(28)
-                    .color(UiTokens.accent9())
+                    // A swatch uses the palette's mark fill and selected-mark ink.
+                    .color(UiTokens.accentIndicator())
                     .borderRadius(.all(UiTokens.radius3())),
               ),
             ],
@@ -198,7 +199,8 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          .color(UiTokens.accent9())
+          // A swatch uses the palette's mark fill and selected-mark ink.
+          .color(UiTokens.accentIndicator())
           .iconColor(const Color(0x00000000))
           .onHovered(ToggleStyler().color(UiTokens.accent10()))
           .onPressed(ToggleStyler().color(UiTokens.accent10()));
@@ -254,7 +256,7 @@ class _AccentSwatch extends StatelessWidget {
         style: _style
             .onSelected(
               ToggleStyler()
-                  .iconColor(UiTokens.accentContrast())
+                  .iconColor(UiTokens.accentIndicatorContrast())
                   .merge(ring(UiTokens.gray12)),
             )
             .onFocusVisible(ring(UiTokens.focus8)),

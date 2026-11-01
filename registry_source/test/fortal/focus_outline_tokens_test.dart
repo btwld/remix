@@ -213,14 +213,14 @@ void main() {
           {WidgetState.focused, WidgetState.error},
           {WidgetState.error},
         ]) {
-          final (effects, focus8, errorA7) = await _resolveFocused(
+          final (effects, focus8, error8) = await _resolveFocused(
             tester,
             overridden: overridden,
             states: widgetStates,
             (context) => (
               fortalTextFieldStyle().build(context).spec.containerEffects!,
               FortalTokens.focus8.resolve(context),
-              FortalTokens.errorA7.resolve(context),
+              FortalTokens.error8.resolve(context),
             ),
           );
           final reason = '$widgetStates at width $width, offset $offset';
@@ -236,7 +236,7 @@ void main() {
           if (widgetStates.contains(WidgetState.error)) {
             final frame = effects.overContent!.shadows.single;
             expect(frame.kind, RemixBoxShadowKind.inset, reason: reason);
-            expect(frame.color, errorA7, reason: reason);
+            expect(frame.color, error8, reason: reason);
             expect(frame.spreadRadius, 1, reason: reason);
           }
         }

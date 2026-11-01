@@ -52,6 +52,68 @@ Color computeColorPanelTranslucent(
 Color computeColorSurface({required bool isDark}) =>
     (isDark ? calcadao.dark : calcadao.light).scale.step(2);
 
+/// Computes the neutral boundary of active empty controls.
+///
+/// Unchecked checkboxes and radios, the off switch's track and thumb, and
+/// surface text inputs draw this line where it is the visual cue that a
+/// control is there. It keeps at least 3:1 against the page, the solid panel
+/// and the off track (gray alpha 3 over either): gray step 8 deepened toward
+/// step 11 in light mode, and step 7 lifted toward step 8 in dark mode.
+/// Disabled controls keep their quieter strokes.
+Color computeControlBorder(FortalColorScale gray, {required bool isDark}) =>
+    isDark
+    ? mixOklabPremultiplied(gray.step(7), gray.step(8), .7)
+    : mixOklabPremultiplied(gray.step(8), gray.step(11), .15);
+
+/// Computes the ink of checks and radio dots on the accent's indicator.
+///
+/// Marks need 3:1 on the fill they sit on, which is the indicator, not the
+/// labelled solid. White wherever it keeps 3:1 on the indicator; otherwise the
+/// palette's [FortalColor.contrast] when that keeps 3:1 there; otherwise
+/// Calçadão's dark ink, which always does where white cannot.
+Color computeAccentIndicatorContrast(FortalColor accent) =>
+    _markInk(accent.indicator, accent.contrast);
+
+/// Computes the outline of track-coloured shapes: light switch and slider
+/// thumbs, and the filled extent of a surface progress bar.
+///
+/// Where white keeps 3:1 on the accent's track, a white thumb already stands
+/// out there and the outline only separates the shape from the page and
+/// panels around it: the track colour itself where it keeps 3:1 against every
+/// one of [surfaces], otherwise [controlBorder]. Without [surfaces] that
+/// cannot be judged, so the conservative [controlBorder] is used. On a bright
+/// track the outline carries the contrast instead, with the same ink rule as
+/// [computeAccentIndicatorContrast].
+Color computeAccentThumbRing(
+  FortalColor accent,
+  Color controlBorder, {
+  List<Color>? surfaces,
+}) {
+  final track = accent.track;
+  if (!_keepsMarkContrast(_white, track)) {
+    return _markInk(track, accent.contrast);
+  }
+  final clear =
+      surfaces != null &&
+      surfaces.every((surface) => _keepsMarkContrast(track, surface));
+  return clear ? track : controlBorder;
+}
+
+const _white = Color(0xFFFFFFFF);
+
+Color _markInk(Color fill, Color supplied) {
+  if (_keepsMarkContrast(_white, fill)) return _white;
+  if (_keepsMarkContrast(supplied, fill)) return supplied;
+  return calcadao.dark.contrast;
+}
+
+/// WCAG 2 contrast of at least 3:1, the non-text threshold.
+bool _keepsMarkContrast(Color first, Color second) {
+  final a = first.computeLuminance();
+  final b = second.computeLuminance();
+  return (math.max(a, b) + .05) / (math.min(a, b) + .05) >= 3;
+}
+
 /// Computes modal backdrop overlay color.
 ///
 /// Uses black alpha step 6 (light mode) or step 8 (dark mode).
@@ -218,10 +280,17 @@ class FortalThemeColors {
   final Color colorOverlay;
   final Color shadowStroke;
 
+  // Control boundaries
+  final Color controlBorder;
+  final Color accentThumbRing;
+
   // Focus
   final Color focus8;
   final Color focusA5;
   final Color focusA8;
+
+  /// Ink of checks and radio dots on the accent's indicator.
+  Color get accentIndicatorContrast => computeAccentIndicatorContrast(accent);
 
   const FortalThemeColors({
     required this.accent,
@@ -234,6 +303,8 @@ class FortalThemeColors {
     required this.colorPanelTranslucent,
     required this.colorOverlay,
     required this.shadowStroke,
+    required this.controlBorder,
+    required this.accentThumbRing,
     required this.focus8,
     required this.focusA5,
     required this.focusA8,
@@ -245,7 +316,7 @@ const Map<String, FortalColorTheme> _accentThemesByName = {
   'calcadao': calcadao,
   'mar': mar,
   'ceu': ceu,
-  'mangue': mangue,
+  'serra': serra,
   'sol': sol,
   'duna': duna,
   'caju': caju,
@@ -286,6 +357,7 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
   final Color colorSurface = computeColorSurface(isDark: theme.isDark);
   final Color colorOverlay = computeColorOverlay(isDark: theme.isDark);
   final Color shadowStroke = computeShadowStroke(gray, isDark: theme.isDark);
+  final Color controlBorder = computeControlBorder(gray, isDark: theme.isDark);
 
   // Focus
   final Color focus8 = computeFocus8(accent);
@@ -303,6 +375,16 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
     colorPanelTranslucent: colorPanelTranslucent,
     colorOverlay: colorOverlay,
     shadowStroke: shadowStroke,
+    controlBorder: controlBorder,
+    accentThumbRing: computeAccentThumbRing(
+      accentRC,
+      controlBorder,
+      surfaces: [
+        colorBackground,
+        colorPanelSolid,
+        Color.alphaBlend(colorPanelTranslucent, colorBackground),
+      ],
+    ),
     focus8: focus8,
     focusA5: focusA5,
     focusA8: focusA8,

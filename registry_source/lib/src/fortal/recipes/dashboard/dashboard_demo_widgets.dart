@@ -72,10 +72,14 @@ class FortalStatCard extends StatelessWidget {
         fortalStatTagsStyle(
           children: [
             if (delta case final delta?)
-              FortalAccentScope(
-                accent: positive ? .mangue : .caju,
-                child: FortalBadge(highContrast: true, label: delta),
-              ),
+              positive
+                  ? FortalAccentScope(
+                      accent: .serra,
+                      child: FortalBadge(highContrast: true, label: delta),
+                    )
+                  : FortalAccentScope.error(
+                      child: FortalBadge(highContrast: true, label: delta),
+                    ),
             StyledText(caption, style: dashboardText(.size1, tone: .muted)),
           ],
         ),
@@ -92,13 +96,10 @@ class FortalStatCard extends StatelessWidget {
   }
 }
 
-/// Domain status badge rendered with a status-specific Fortal accent.
+/// Domain status badge. Its text label carries the status; the color only
+/// reinforces it. Negative statuses use the dedicated error red.
 class FortalStatusBadge extends StatelessWidget {
-  const FortalStatusBadge._({
-    super.key,
-    required this.label,
-    required this.accent,
-  });
+  const FortalStatusBadge._({super.key, required this.label, this.accent});
 
   factory FortalStatusBadge.order(
     RegistryDashboardOrderStatus status, {
@@ -107,9 +108,9 @@ class FortalStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .paid => .mangue,
+      .paid => .serra,
       .pending => .sol,
-      .refunded => .caju,
+      .refunded => null,
       .cancelled => .calcadao,
     },
   );
@@ -121,9 +122,9 @@ class FortalStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .active => .mangue,
+      .active => .serra,
       .invited => .ceu,
-      .suspended => .caju,
+      .suspended => null,
     },
   );
 
@@ -133,9 +134,9 @@ class FortalStatusBadge extends StatelessWidget {
       key: key,
       label: capitalize(normalized),
       accent: switch (normalized) {
-        'paid' || 'active' || 'fulfilled' || 'ready' => .mangue,
+        'paid' || 'active' || 'fulfilled' || 'ready' => .serra,
         'pending' || 'processing' || 'review' => .sol,
-        'refunded' || 'suspended' => .caju,
+        'refunded' || 'suspended' => null,
         'cancelled' => .calcadao,
         'invited' => .ceu,
         _ => .mar,
@@ -144,13 +145,18 @@ class FortalStatusBadge extends StatelessWidget {
   }
 
   final String label;
-  final FortalAccentColor accent;
+
+  /// The status accent, or null for the dedicated error red.
+  final FortalAccentColor? accent;
 
   @override
-  Widget build(BuildContext context) => FortalAccentScope(
-    accent: accent,
-    child: FortalBadge(highContrast: true, label: label),
-  );
+  Widget build(BuildContext context) {
+    final badge = FortalBadge(highContrast: true, label: label);
+    return switch (accent) {
+      final accent? => FortalAccentScope(accent: accent, child: badge),
+      null => FortalAccentScope.error(child: badge),
+    };
+  }
 }
 
 /// Compact single-line cell text for a [RemixDataTable] body cell.

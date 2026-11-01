@@ -134,6 +134,10 @@ final _retiredApis = <(RegExp, String)>[
     'retired theme scope class; use <Prefix>Theme',
   ),
   (
+    RegExp(r'\.mangue\b'),
+    'retired Mangue accent; use serra (errors use the dedicated error palette)',
+  ),
+  (
     RegExp(
       r'\b(?:Vanilla|Ui|Acme|Playground)(?:Space|Size|Stroke|Opacity|Motion)\b',
     ),

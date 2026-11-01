@@ -10,25 +10,137 @@ import 'dart:math' as math;
 const basalt = 0xff13181d;
 const limestone = 0xfffaf9f6;
 
-/// Original design seeds from the Fortal refresh brief, 2026-10-29.
+/// Selectable accent seeds. Calçadão, Mar, Sol and Duna keep the refresh brief
+/// (2026-10-29) values; the 2026-10-31 palette review set Céu, Serra and Caju.
 const fortalSeeds = <String, int>{
   'calcadao': basalt,
   'mar': 0xff036f6b,
-  'ceu': 0xff006ebe,
-  'mangue': 0xff1d7d3e,
+  'ceu': 0xff1a95d8,
+  'serra': 0xff6f7845,
   'sol': 0xffffcf50,
   'duna': 0xffe5c79a,
-  'caju': 0xffcb4333,
+  'caju': 0xffe76a32,
 };
+
+/// Dedicated error red. It is generated with the accents but is not one of
+/// them: error roles read it regardless of the accent or a custom palette.
+const fortalErrorSeed = 0xffc92e3b;
+
+/// Curated placement of [fortalErrorSeed]. Its dark mark fill starts at
+/// [darkMarkLightness] instead of the accent band, and its labelled solid sits
+/// at [solidLightness] in both modes, so destructive marks and actions read as
+/// red rather than coral and stay apart from Caju's orange.
+const fortalErrorPlacement = (darkMarkLightness: .61, solidLightness: .53);
+
+/// Generation margins over the WCAG 2 thresholds (4.5:1 for labels, 3:1 for
+/// marks), so rounding to 8-bit sRGB cannot pull a pair under its threshold.
+const contrastMargin = (text: 4.6, mark: 3.05);
+
+/// Dark mark fills start at the seed's OKLCH lightness clamped to this band,
+/// then deepen as needed. Unlike a lifted pastel, the band leaves room for
+/// white marks and labels.
+const darkMarkLightnessRange = (min: .58, max: .72);
+
+/// A seed is luminous when a white label would need its fill darkened by more
+/// than this OKLCH lightness to reach [contrastMargin]. Luminous palettes
+/// (Sol, Duna and near-white custom seeds) keep their bright fill for labels
+/// and marks and take a same-hue dark ink ([onSolidInk]).
+const luminousShift = .12;
+
+/// Dark luminous fills keep the seed's OKLCH lightness within these bounds.
+const luminousDarkLightnessRange = (min: .70, max: .84);
+
+/// Tint chroma (steps 1–8, 11 and 12) for chromatic seeds: the step weight
+/// times the seed's chroma, but at least [floor], so low-chroma seeds such as
+/// Mar, Serra and Duna read as their hue instead of gray. Seeds below
+/// [achromatic] chroma, and the neutral, keep [baseChromaWeight] on their own
+/// chroma.
+const tintChroma = (floor: .09, achromatic: .02);
+const lightTintWeight = <double>[
+  .04,
+  .12,
+  .22,
+  .30,
+  .38,
+  .48,
+  .62,
+  .80,
+  1,
+  1,
+  .95,
+  .55,
+];
+const darkTintWeight = <double>[
+  .08,
+  .22,
+  .40,
+  .48,
+  .55,
+  .62,
+  .72,
+  .85,
+  1,
+  1,
+  .85,
+  .45,
+];
+const baseChromaWeight = <double>[
+  .02,
+  .04,
+  .08,
+  .12,
+  .16,
+  .23,
+  .4,
+  .7,
+  1,
+  1,
+  .75,
+  .35,
+];
+
+/// Step 11 (secondary text) of a chromatic seed starts at this OKLCH
+/// lightness and moves toward contrast until it keeps [contrastMargin] text
+/// contrast on the step-5 tint over the solid panel: the lightest same-hue
+/// label that soft, surface, outline and ghost treatments can carry.
+const secondaryTextLightness = (light: .52, dark: .82);
+
+/// On-solid ink of luminous palettes. Their label and marks use a tone of the
+/// palette's own hue instead of generic basalt: the lightest such tone up to
+/// [maxLightness] that keeps the [contrastMargin] text contrast on both the
+/// fill and its hover, so Sol and Duna get a visibly coloured brown rather
+/// than a near-black. Chroma is [chromaScale] × the seed's, at most
+/// [maxChroma], gamut-mapped by chroma reduction. Yellow and sand hues rotate
+/// up to [warmHueShift] degrees toward orange so their tone reads warm brown
+/// rather than olive. Basalt remains the fallback and the neutral palette's
+/// dark ink.
+const onSolidInk = (
+  maxLightness: .70,
+  chromaScale: 1.0,
+  maxChroma: .14,
+  warmHueShift: 18.0,
+);
 
 typedef Oklch = ({double l, double c, double h});
 
+/// One generated appearance. [solid] step 9 and 10 are the mark fill and its
+/// pressed step (selected checkbox, radio, switch track, slider range);
+/// [fill] and [fillHover] are the labelled solid that carries [contrast].
+/// They are equal to steps 9 and 10 wherever one fill serves both.
 class GeneratedMode {
-  const GeneratedMode(this.solid, this.alpha, this.contrast);
+  const GeneratedMode(
+    this.solid,
+    this.alpha,
+    this.contrast, {
+    required this.fill,
+    required this.fillHover,
+  });
 
   final List<int> solid;
   final List<int> alpha;
   final int contrast;
+  final int fill;
+  final int fillHover;
   int get surface => alpha[2];
   int get indicator => solid[8];
   int get track => solid[8];
@@ -41,96 +153,250 @@ class GeneratedPalette {
   final GeneratedMode dark;
 }
 
-GeneratedPalette generatePalette(int seed, {bool neutral = false}) =>
-    GeneratedPalette(
-      _generateMode(seed, dark: false, neutral: neutral),
-      _generateMode(seed, dark: true, neutral: neutral),
-    );
+/// Generates both appearances of [seed].
+///
+/// Non-luminous palettes split their solid roles. The mark fill keeps the seed
+/// where white marks and the page keep 3:1, and otherwise deepens just enough.
+/// The labelled solid deepens further only as far as a white label needs on it
+/// and on its hover. Luminous palettes keep one bright fill for both with a
+/// same-hue ink, and [neutral] inverts basalt and limestone. Fill-to-page
+/// contrast is guaranteed for non-luminous mark fills only; use high-contrast
+/// recipes or an explicit step-8 border when a very light seed needs a visible
+/// boundary.
+///
+/// [darkMarkLightness] and [solidLightness] replace the default placement for
+/// a curated semantic palette.
+GeneratedPalette generatePalette(
+  int seed, {
+  bool neutral = false,
+  double? darkMarkLightness,
+  double? solidLightness,
+}) {
+  final luminous = !neutral && _isLuminous(seed);
+  GeneratedMode mode({required bool dark}) => _generateMode(
+    seed,
+    dark: dark,
+    neutral: neutral,
+    luminous: luminous,
+    darkMarkLightness: darkMarkLightness,
+    solidLightness: solidLightness,
+  );
+  return GeneratedPalette(mode(dark: false), mode(dark: true));
+}
+
+/// Generates [fortalErrorSeed] with its curated placement.
+GeneratedPalette generateErrorPalette() => generatePalette(
+  fortalErrorSeed,
+  darkMarkLightness: fortalErrorPlacement.darkMarkLightness,
+  solidLightness: fortalErrorPlacement.solidLightness,
+);
+
+const _white = 0xffffffff;
+
+/// Whether a white label would need more than [luminousShift] of darkening.
+bool _isLuminous(int seed) {
+  final brand = toOklch(seed);
+  final chroma = brand.c.clamp(.035, .22).toDouble();
+  var l = brand.l;
+  int at(double lightness) =>
+      fromOklch((l: lightness.clamp(0, 1), c: chroma, h: brand.h));
+  while (l > 0 &&
+      (_ratio(_white, at(l)) < contrastMargin.text ||
+          _ratio(_white, at(l - .035)) < contrastMargin.text)) {
+    l -= .002;
+  }
+  return brand.l - l > luminousShift;
+}
+
+/// The neutral page (step 1) or solid panel (step 2) of either appearance.
+int neutralSurface(int step, {required bool dark}) {
+  final lightness = dark ? [.19, .225] : [.985, .97];
+  return fromOklch((
+    l: lightness[step - 1],
+    c: dark ? .012 * baseChromaWeight[step - 1] : .004,
+    h: dark ? toOklch(basalt).h : 90,
+  ));
+}
 
 GeneratedMode _generateMode(
   int seed, {
   required bool dark,
   required bool neutral,
+  required bool luminous,
+  double? darkMarkLightness,
+  double? solidLightness,
 }) {
   final brand = toOklch(seed);
-  // Common lightness by role, except the seed-led solid/hover pair. Keeping
-  // Sol yellow and Calçadão basalt is intentional: equal solid lightness would
-  // turn both into midtones. Text/border contrast is checked after quantizing.
+  final page = neutralSurface(1, dark: dark);
+  final panel = neutralSurface(2, dark: dark);
+  final chromatic = !neutral && brand.c >= tintChroma.achromatic;
+  final chroma = neutral ? .012 : brand.c.clamp(.035, .22).toDouble();
+  final tint = chromatic ? math.max(chroma, tintChroma.floor) : chroma;
+  final weights = !chromatic
+      ? baseChromaWeight
+      : dark
+      ? darkTintWeight
+      : lightTintWeight;
+  // Common lightness by role. Steps 9 and 10 are placed below; step 11 of a
+  // chromatic seed is fitted.
   final lightness = dark
       ? <double>[.19, .225, .27, .305, .34, .39, .46, .64, .70, .74, .84, .97]
-      : <double>[
-          .985,
-          .97,
-          .94,
-          .915,
-          .89,
-          .84,
-          .76,
-          .62,
-          brand.l,
-          brand.l,
-          .40,
-          .22,
-        ];
-  const chromaWeight = <double>[
-    .02,
-    .04,
-    .08,
-    .12,
-    .16,
-    .23,
-    .4,
-    .7,
-    1,
-    1,
-    .75,
-    .35,
-  ];
-  final chroma = neutral ? .012 : brand.c.clamp(.035, .22).toDouble();
+      : <double>[.985, .97, .94, .915, .89, .84, .76, .62, .5, .5, .40, .22];
+  Oklch tone(double l, int index) => (
+    l: l,
+    c: neutral && !dark && index < 8 ? .004 : tint * weights[index],
+    h: neutral && !dark && index < 8 ? 90 : brand.h,
+  );
   final solid = <int>[
-    for (var i = 0; i < 12; i++)
-      fromOklch((
-        l: lightness[i],
-        c: neutral && !dark && i < 8 ? .004 : chroma * chromaWeight[i],
-        h: neutral && !dark && i < 8 ? 90 : brand.h,
-      )),
+    for (var i = 0; i < 12; i++) fromOklch(tone(lightness[i], i)),
   ];
-  // Retain the exact seed for light solid fills whenever it passes contrast.
-  solid[8] = neutral && dark
-      ? limestone
-      : dark
-      ? solid[8]
-      : seed;
-  final white = 0xffffffff;
-  final onSolid = _ratio(white, solid[8]) >= _ratio(basalt, solid[8])
-      ? white
-      : basalt;
-  final seedLightness = toOklch(solid[8]).l;
-  for (final index in [8, 9]) {
-    var l = seedLightness + (index == 9 ? (dark ? .035 : -.035) : 0);
-    if (!(index == 8 && (!dark || neutral))) {
-      solid[index] = fromOklch((l: l.clamp(0, 1), c: chroma, h: brand.h));
+
+  late int fill, fillHover, contrast;
+  if (neutral || luminous) {
+    // One bright (or inverted neutral) fill for labels and marks, fitted to
+    // its ink like the seed-led solids it has always been.
+    final start = dark
+        ? brand.l
+              .clamp(
+                luminousDarkLightnessRange.min,
+                luminousDarkLightnessRange.max,
+              )
+              .toDouble()
+        : brand.l;
+    solid[8] = neutral && dark
+        ? limestone
+        : dark
+        ? fromOklch((l: start, c: chroma, h: brand.h))
+        : seed;
+    final onSolid = _ratio(_white, solid[8]) >= _ratio(basalt, solid[8])
+        ? _white
+        : basalt;
+    final seedLightness = toOklch(solid[8]).l;
+    for (final index in [8, 9]) {
+      var l = seedLightness + (index == 9 ? (dark ? .035 : -.035) : 0);
+      if (!(index == 8 && (!dark || neutral))) {
+        solid[index] = fromOklch((l: l.clamp(0, 1), c: chroma, h: brand.h));
+      }
+      // Basalt rather than pure black leaves a small luminance interval in
+      // which neither foreground passes. Move out of it deterministically.
+      for (
+        var attempt = 0;
+        _ratio(onSolid, solid[index]) < contrastMargin.text;
+        attempt++
+      ) {
+        if (attempt > 1000) throw StateError('Cannot fit solid contrast');
+        l += onSolid == _white ? -.002 : .002;
+        solid[index] = fromOklch((l: l.clamp(0, 1), c: chroma, h: brand.h));
+      }
     }
-    // Basalt rather than pure black leaves a small luminance interval in
-    // which neither foreground passes. Move out of it deterministically.
-    for (var attempt = 0; _ratio(onSolid, solid[index]) < 4.6; attempt++) {
-      if (attempt > 1000) throw StateError('Cannot fit solid contrast');
-      l += onSolid == white ? -.002 : .002;
-      solid[index] = fromOklch((l: l.clamp(0, 1), c: chroma, h: brand.h));
+    fill = solid[8];
+    fillHover = solid[9];
+    contrast = onSolid == _white || neutral
+        ? onSolid
+        : deepInk(seed, fill: fill, hover: fillHover);
+  } else {
+    // Mark fill: the exact seed in light mode when it qualifies; otherwise the
+    // seed's hue and chroma, deepened until white marks, the page and the
+    // solid panel all keep the mark margin. Its pressed step is deeper still.
+    int at(double l) => !dark && l == brand.l
+        ? seed
+        : fromOklch((l: l.clamp(0, 1), c: chroma, h: brand.h));
+    bool marks(int fill) => [
+      _white,
+      page,
+      panel,
+    ].every((other) => _ratio(fill, other) >= contrastMargin.mark);
+    var markLightness = dark
+        ? (darkMarkLightness ??
+              brand.l
+                  .clamp(darkMarkLightnessRange.min, darkMarkLightnessRange.max)
+                  .toDouble())
+        : brand.l;
+    for (var attempt = 0; !marks(at(markLightness)); attempt++) {
+      if (attempt > 1000) throw StateError('Cannot fit mark fill');
+      markLightness -= .002;
+    }
+    solid[8] = at(markLightness);
+    solid[9] = at(markLightness - .035);
+    // Labelled solid: from the mark (or a curated placement), deepened until
+    // white keeps the text margin on the fill and on its hover.
+    var l = math.min(markLightness, solidLightness ?? markLightness);
+    for (
+      var attempt = 0;
+      _ratio(_white, at(l)) < contrastMargin.text ||
+          _ratio(_white, at(l - .035)) < contrastMargin.text;
+      attempt++
+    ) {
+      if (attempt > 1000) throw StateError('Cannot fit labelled solid');
+      l -= .002;
+    }
+    fill = at(l);
+    fillHover = at(l - .035);
+    contrast = _white;
+  }
+
+  if (chromatic) {
+    // The lightest step 11 that keeps the text margin on the panel and on the
+    // pressed soft tint composited over it.
+    final tintOverPanel = _over(transparentOver(solid[4], page), panel);
+    var l = dark ? secondaryTextLightness.dark : secondaryTextLightness.light;
+    for (var attempt = 0; ; attempt++) {
+      if (attempt > 1000) throw StateError('Cannot fit secondary text');
+      final candidate = fromOklch(tone(l, 10));
+      if (_ratio(candidate, tintOverPanel) >= contrastMargin.text &&
+          _ratio(candidate, panel) >= contrastMargin.text) {
+        solid[10] = candidate;
+        break;
+      }
+      l += dark ? .002 : -.002;
     }
   }
-  final page = fromOklch((
-    l: dark ? .19 : .985,
-    c: dark ? .00024 : .004,
-    h: dark ? toOklch(basalt).h : 90,
-  ));
+
   return GeneratedMode(
     List.unmodifiable(solid),
     List.unmodifiable([
       for (final color in solid) transparentOver(color, page),
     ]),
-    onSolid,
+    contrast,
+    fill: fill,
+    fillHover: fillHover,
   );
+}
+
+/// The [onSolidInk] for a luminous palette whose fitted fill and hover take a
+/// dark label. Deterministic: lightness descends in 0.002 steps from the cap
+/// to basalt's lightness; basalt is returned if no family tone qualifies.
+int deepInk(int seed, {required int fill, required int hover}) {
+  final brand = toOklch(seed);
+  final hue = brand.h * 180 / math.pi % 360;
+  // Full rotation at yellow (85°), tapering to none at 55° and 115°.
+  final warmth = (1 - ((hue - 85).abs() / 30)).clamp(0, 1);
+  final inkHue = (hue - onSolidInk.warmHueShift * warmth) * math.pi / 180;
+  final chroma = math.min(
+    brand.c * onSolidInk.chromaScale,
+    onSolidInk.maxChroma,
+  );
+  final floor = toOklch(basalt).l;
+  for (var step = 0; ; step++) {
+    final l = onSolidInk.maxLightness - step * .002;
+    if (l < floor) return basalt;
+    final ink = fromOklch((l: l, c: chroma, h: inkHue));
+    if (_ratio(ink, fill) >= contrastMargin.text &&
+        _ratio(ink, hover) >= contrastMargin.text) {
+      return ink;
+    }
+  }
+}
+
+/// Composites [color] (with alpha) over an opaque [background].
+int _over(int color, int background) {
+  final a = (color >> 24 & 255) / 255;
+  final fg = _channels(color);
+  final bg = _channels(background);
+  return 0xff000000 |
+      _byte(fg[0] * a + bg[0] * (1 - a)) << 16 |
+      _byte(fg[1] * a + bg[1] * (1 - a)) << 8 |
+      _byte(fg[2] * a + bg[2] * (1 - a));
 }
 
 /// Minimal-alpha sRGB source that reconstructs [solid] over [background].

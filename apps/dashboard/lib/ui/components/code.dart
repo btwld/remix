@@ -61,12 +61,12 @@ BadgeStyler uiCodeStyle(
   final accent1 = uiResolveColor(context, UiTokens.accent1);
   final accent12 = uiResolveColor(context, UiTokens.accent12);
   final accentA3 = uiResolveColor(context, UiTokens.accentA3);
-  final accentA9 = uiResolveColor(context, UiTokens.accentA9);
+  final accentSolid = uiResolveColor(context, UiTokens.accentSolid);
   final accentA11 = uiResolveColor(context, UiTokens.accentA11);
   final accentContrast = uiResolveColor(context, UiTokens.accentContrast);
   switch (variant) {
     case .solid:
-      fill = highContrast ? accent12 : accentA9;
+      fill = highContrast ? accent12 : accentSolid;
       foreground = highContrast ? accent1 : accentContrast;
     case .soft:
       fill = accentA3;

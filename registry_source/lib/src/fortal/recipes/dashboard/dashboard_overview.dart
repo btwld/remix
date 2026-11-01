@@ -260,7 +260,7 @@ class _FortalActivityIcon extends StatelessWidget {
     final (icon, accent) = switch (kind) {
       .customer => (RemixIcons.person, FortalAccentColor.ceu),
       .order => (RemixIcons.box, FortalAccentColor.ceu),
-      .payment => (RemixIcons.checkCircled, FortalAccentColor.mangue),
+      .payment => (RemixIcons.checkCircled, FortalAccentColor.serra),
       .alert => (RemixIcons.exclamationTriangle, FortalAccentColor.sol),
     };
 

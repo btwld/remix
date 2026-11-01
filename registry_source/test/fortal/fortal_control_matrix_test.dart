@@ -190,6 +190,80 @@ void main() {
       expect(link.underline, FortalLinkUnderline.auto);
     });
 
+    for (final dark in [false, true]) {
+      for (final accent in [
+        FortalAccentColor.calcadao,
+        FortalAccentColor.mar,
+      ]) {
+        testWidgets(
+          '${accent.name}/${dark ? 'dark' : 'light'} accent recipes',
+          (tester) async {
+            final resolved = await resolveInFortalTheme(
+              tester,
+              (context) {
+                expect(
+                  FortalTheme.of(context).brightness,
+                  dark ? Brightness.dark : Brightness.light,
+                );
+                return (
+                  tokens: resolveFortalTokens(FortalTheme.of(context)),
+                  button: fortalButtonStyle().build(context).spec,
+                  iconButton: fortalIconButtonStyle().build(context).spec,
+                  checkbox: fortalCheckboxStyle().build(context).spec,
+                  radio: fortalRadioStyle().build(context).spec,
+                  progress: fortalProgressStyle().build(context).spec,
+                  badge: fortalBadgeStyle().build(context).spec,
+                );
+              },
+              // The Calçadão cases deliberately exercise the omitted default.
+              accent: accent == .mar ? .mar : null,
+              mode: dark ? .dark : .light,
+              states: {WidgetState.selected},
+            );
+            final color = resolved.tokens.accent;
+            if (accent == .mar) {
+              expect(
+                color.scale.step(9),
+                isNot(resolved.tokens.gray.scale.step(9)),
+              );
+            } else {
+              expect(color, resolved.tokens.gray);
+            }
+            // Labelled fills read the solid role; marks read the indicator.
+            expect(
+              (resolved.button.container.spec.box!.spec.decoration
+                      as BoxDecoration)
+                  .color,
+              color.solid,
+            );
+            expect(
+              (resolved.iconButton.container.spec.decoration as BoxDecoration)
+                  .color,
+              color.solid,
+            );
+            expect(
+              (resolved.checkbox.container.spec.decoration as BoxDecoration)
+                  .color,
+              color.indicator,
+            );
+            expect(
+              (resolved.radio.container.spec.decoration as BoxDecoration).color,
+              color.indicator,
+            );
+            expect(
+              (resolved.progress.indicator.spec.decoration as BoxDecoration)
+                  .color,
+              color.track,
+            );
+            expect(
+              resolved.badge.label.spec.style?.color,
+              color.scale.alphaStep(11),
+            );
+          },
+        );
+      }
+    }
+
     testWidgets('icon button sizes resolve exact square and icon metrics', (
       tester,
     ) async {
