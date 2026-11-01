@@ -1,3 +1,10 @@
+## 1.3.1
+
+### Fixes
+
+- In right-to-left horizontal tab bars, Left and Right move focus to the
+  visually adjacent tab, including wrapping and skipping disabled tabs.
+
 ## 1.3.0
 
 ### Features
