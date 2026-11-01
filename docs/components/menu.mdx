@@ -235,9 +235,9 @@ a screen reader announces one expandable button. The button keeps its look,
 accessible name, enabled state, and Enter and Space activation. Pass
 `onPressed: null` to disable it; a disabled button does not open the menu.
 
-The builder must return a single control, because everything it returns is
-merged into one semantics node. A split button or a loading button would merge
-its labels and actions into that node.
+The builder must return a single control. Its expanded state stays on the
+button, while a loading button's live announcement remains a separate node.
+A split button needs separate menu controls.
 
 `MenuStyler.trigger` and `RemixMenu.semanticLabel` do not apply to a control
 trigger, because the button owns its look and name. Setting `semanticLabel` on a

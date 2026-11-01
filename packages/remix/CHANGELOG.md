@@ -65,6 +65,9 @@
 
 ### Fixes
 
+- Constrain button labels to the width left beside their icons. Unbounded
+  horizontal layouts still shrink-wrap, including explicit max-axis styles,
+  and intrinsic sizing and loading geometry are preserved.
 - Require `naked_ui ^1.3.0` for control triggers, focus, slider-track geometry,
   and overlay positioning behavior.
 - Map slider pointer input to its painted rail, including thumb and track
