@@ -24,3 +24,4 @@ approximations:
   - The area reuses the text field recipe; `.textarea` repeats `.input` and adds `min-height`.
   - Remix's area starts at two lines (`minLines`) and grows with the text; upstream's browser resize handle is not drawn.
   - The content is top-aligned (`crossAxisAlignment: start`), as `.input-group:has(textarea)` does; a bare `.textarea` has no such rule.
+  - "The placeholder wraps, unlike the text field's, and ellipsizes after the two lines `minLines` shows by default, which keeps it inside the field instead of laying out lines the box clips. An area with more lines passes its own `hintText` style."

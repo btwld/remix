@@ -11,6 +11,9 @@ const longHeroUiAction =
     'Speichern und Benachrichtigungseinstellungen aktualisieren';
 const longHeroUiLabel =
     'Email delivery preferences and important account notifications';
+const longHeroUiHint =
+    'Beschreiben Sie Ihr Anliegen so genau wie möglich, damit unser '
+    'Support-Team schnell weiterhelfen kann';
 
 Future<void> loadHeroUiGeist() async {
   final loader = FontLoader(RemixFonts.geist);

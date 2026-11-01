@@ -41,9 +41,18 @@ final _dimmedDanger = {{valuePrefix}}Alpha(
 
 /// The text of an input, a select value, or a placeholder: `text-base`, then
 /// `sm:text-sm` from 640px up.
-TextStyler {{valuePrefix}}FieldText(ColorToken color) => TextStyler()
+///
+/// `.input` and `.select__value` never wrap upstream, so a value or
+/// placeholder longer than the field keeps [lines] = 1 and ellipsizes, the
+/// same one-line policy the toggle button's label follows. A text area shows
+/// several lines and passes the count its editor does, which is where its
+/// placeholder ellipsizes instead of laying out lines its box then clips.
+TextStyler {{valuePrefix}}FieldText(ColorToken color, {int lines = 1}) => TextStyler()
     .style({{typePrefix}}Tokens.textBase.mix())
     .color(color())
+    .maxLines(lines)
+    .softWrap(lines > 1)
+    .overflow(TextOverflow.ellipsis)
     .onBreakpoint(
       const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointSm),
       TextStyler().style({{typePrefix}}Tokens.textSm.mix()),

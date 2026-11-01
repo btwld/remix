@@ -7,20 +7,30 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/theme.dart';
 import 'textfield.dart';
 
 part 'textarea.g.dart';
 
 /// HeroUI recipe for [RemixTextArea]: the text field chrome over several lines.
 ///
-/// `.textarea` repeats `.input` and adds `min-height: 38px`.
+/// `.textarea` repeats `.input` and adds `min-height: 38px`. Unlike the text
+/// field, the placeholder wraps: it keeps the [RemixTextArea.minLines] lines
+/// the editor shows by default, then ellipsizes rather than laying out lines
+/// the field's box clips away. A text area with more lines than that passes
+/// its own `hintText` style.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler heroUiTextAreaStyle({
   HeroUiTextFieldVariant variant = .primary,
   TextFieldStyler style = const TextFieldStyler.create(),
-}) => heroUiTextFieldStyle(
-  variant: variant,
-).minHeight(_minHeight).crossAxisAlignment(.start).merge(style);
+}) => heroUiTextFieldStyle(variant: variant)
+    .minHeight(_minHeight)
+    .crossAxisAlignment(.start)
+    .hintText(heroUiFieldText(HeroUiTokens.fieldPlaceholder, lines: _hintLines))
+    .merge(style);
 
 /// `.textarea`: `min-height: 38px`; `items-start` is `.input-group:has(textarea)`.
 const _minHeight = 38.0;
+
+/// [RemixTextArea.minLines]'s default, the lines a text area shows unasked.
+const _hintLines = 2;
