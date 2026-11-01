@@ -413,24 +413,33 @@ class _NakedTabState extends State<NakedTab>
     _scope.selectTab(widget.tabId);
   }
 
+  /// Moves focus along the tab bar's widget order.
+  bool _moveFocus(FocusScopeNode scope, {required bool forward}) =>
+      forward ? scope.nextFocus() : scope.previousFocus();
+
   void _handleDirectionalFocus(TraversalDirection direction) {
     if (!_isEnabled) return;
 
     final focusScope = FocusScope.of(context);
     final isHorizontal = _scope.orientation == Axis.horizontal;
+    // Tabs traverse in widget order, which a horizontal strip lays out from
+    // the right in RTL: there the left arrow reaches the next tab and the
+    // right arrow the previous one. Vertical strips stack downwards in both
+    // directions.
+    final rtl = Directionality.of(context) == TextDirection.rtl;
 
     switch (direction) {
       case TraversalDirection.left:
-        if (isHorizontal) focusScope.previousFocus();
+        if (isHorizontal) _moveFocus(focusScope, forward: rtl);
         break;
       case TraversalDirection.right:
-        if (isHorizontal) focusScope.nextFocus();
+        if (isHorizontal) _moveFocus(focusScope, forward: !rtl);
         break;
       case TraversalDirection.up:
-        if (!isHorizontal) focusScope.previousFocus();
+        if (!isHorizontal) _moveFocus(focusScope, forward: false);
         break;
       case TraversalDirection.down:
-        if (!isHorizontal) focusScope.nextFocus();
+        if (!isHorizontal) _moveFocus(focusScope, forward: true);
         break;
     }
   }

@@ -1324,6 +1324,251 @@ void main() {
     });
   });
 
+  group('Directional focus follows the reading direction', () {
+    Widget directionHarness({
+      required String initialSelected,
+      required List<FocusNode> nodes,
+      required TextDirection textDirection,
+      Set<String> disabled = const <String>{},
+      ValueChanged<String>? onChangedSpy,
+    }) {
+      String selected = initialSelected;
+      const ids = ['tab1', 'tab2', 'tab3'];
+
+      return WidgetsApp(
+        color: const Color(0xFF000000),
+        builder: (context, child) => child ?? const SizedBox.shrink(),
+        pageRouteBuilder: _defaultPageRouteBuilder,
+        home: Directionality(
+          textDirection: textDirection,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              void handleChanged(String id) {
+                onChangedSpy?.call(id);
+                selected = id;
+                setState(() {});
+              }
+
+              return NakedTabs(
+                selectedTabId: selected,
+                onChanged: handleChanged,
+                child: NakedTabBar(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final (index, id) in ids.indexed)
+                        NakedTab(
+                          tabId: id,
+                          enabled: !disabled.contains(id),
+                          focusNode: nodes[index],
+                          child: SizedBox(
+                            key: Key(id),
+                            width: 100,
+                            height: 40,
+                            child: Center(child: Text(id)),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
+
+    List<FocusNode> threeNodes() {
+      final nodes = [
+        for (final id in ['tab1', 'tab2', 'tab3']) FocusNode(debugLabel: id),
+      ];
+      addTearDown(() {
+        for (final node in nodes) {
+          node.dispose();
+        }
+      });
+
+      return nodes;
+    }
+
+    testWidgets('RTL arrows move between visually adjacent tabs', (
+      tester,
+    ) async {
+      final changes = <String>[];
+      final nodes = threeNodes();
+
+      await tester.pumpWidget(
+        directionHarness(
+          initialSelected: 'tab1',
+          nodes: nodes,
+          textDirection: TextDirection.rtl,
+          onChangedSpy: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The first tab is the rightmost one, so its neighbour is to its left.
+      expect(
+        tester.getCenter(find.byKey(const Key('tab1'))).dx,
+        greaterThan(tester.getCenter(find.byKey(const Key('tab2'))).dx),
+      );
+
+      nodes[0].requestFocus();
+      await tester.pump();
+      changes.clear();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(changes, ['tab2']);
+      expect(nodes[1].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(changes.last, 'tab3');
+      expect(nodes[2].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes.last, 'tab2');
+      expect(nodes[1].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes.last, 'tab1');
+      expect(nodes[0].hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('RTL arrows wrap at the ends of the strip', (tester) async {
+      final changes = <String>[];
+      final nodes = threeNodes();
+
+      await tester.pumpWidget(
+        directionHarness(
+          initialSelected: 'tab1',
+          nodes: nodes,
+          textDirection: TextDirection.rtl,
+          onChangedSpy: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      nodes[0].requestFocus();
+      await tester.pump();
+      changes.clear();
+
+      // Right of the first tab is past the start of the strip.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes.last, 'tab3');
+      expect(nodes[2].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(changes.last, 'tab1');
+      expect(nodes[0].hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('RTL arrows skip a disabled tab', (tester) async {
+      final changes = <String>[];
+      final nodes = threeNodes();
+
+      await tester.pumpWidget(
+        directionHarness(
+          initialSelected: 'tab1',
+          nodes: nodes,
+          textDirection: TextDirection.rtl,
+          disabled: const {'tab2'},
+          onChangedSpy: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      nodes[0].requestFocus();
+      await tester.pump();
+      changes.clear();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(changes, ['tab3']);
+      expect(nodes[1].hasPrimaryFocus, isFalse);
+      expect(nodes[2].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes.last, 'tab1');
+      expect(nodes[0].hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('RTL arrows skip a disabled tab at the start of the strip', (
+      tester,
+    ) async {
+      final changes = <String>[];
+      final nodes = threeNodes();
+
+      await tester.pumpWidget(
+        directionHarness(
+          initialSelected: 'tab3',
+          nodes: nodes,
+          textDirection: TextDirection.rtl,
+          disabled: const {'tab1'},
+          onChangedSpy: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      nodes[2].requestFocus();
+      await tester.pump();
+      changes.clear();
+
+      // Left of the last tab wraps past the disabled first one.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(changes, ['tab2']);
+      expect(nodes[0].hasPrimaryFocus, isFalse);
+      expect(nodes[1].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes.last, 'tab3');
+      expect(nodes[0].hasPrimaryFocus, isFalse);
+      expect(nodes[2].hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('LTR arrows keep moving along widget order', (tester) async {
+      final changes = <String>[];
+      final nodes = threeNodes();
+
+      await tester.pumpWidget(
+        directionHarness(
+          initialSelected: 'tab2',
+          nodes: nodes,
+          textDirection: TextDirection.ltr,
+          onChangedSpy: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getCenter(find.byKey(const Key('tab1'))).dx,
+        lessThan(tester.getCenter(find.byKey(const Key('tab2'))).dx),
+      );
+
+      nodes[1].requestFocus();
+      await tester.pump();
+      changes.clear();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(changes, ['tab1']);
+      expect(nodes[0].hasPrimaryFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(changes.last, 'tab2');
+      expect(nodes[1].hasPrimaryFocus, isTrue);
+    });
+  });
+
   group('Controller state management', () {
     testWidgets('one press produces one controller notification', (
       tester,
