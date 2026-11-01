@@ -61,10 +61,15 @@ A project-local development dependency is preferred because the app's lockfile
 pins the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 ```
+
+Select the prerelease explicitly: the beta.14 registry's icon table requires
+CLI `1.0.0-beta.1` or later. An unversioned install can select stable `0.1.0`,
+which supports older schema 1 icon tables. Existing projects should update
+their CLI dependency before advancing to the new registry pin.
 
 To run an unreleased build, point at a checkout or staged package path:
 
@@ -81,7 +86,7 @@ Global activation is convenient for experiments. Registry content remains
 pinned per project in `remix.yaml`:
 
 ```shell
-dart pub global activate remix_cli
+dart pub global activate remix_cli '^1.0.0-beta.1'
 ```
 
 `remix_cli` is versioned independently of `remix`, so its version does not
