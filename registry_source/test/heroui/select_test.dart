@@ -220,8 +220,6 @@ void main() {
       await tester.focusWithTab();
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
       final item = heroUiCase(
         'select-primary-keyboard-open-list-box-item:Apple',
         mode: mode,
@@ -229,11 +227,11 @@ void main() {
       // A background gap, then the focus colour; the recipe draws the focus
       // colour as a ring-width inside border.
       final layers = cssRemixShadows(item.styles['boxShadow']!);
-      final before = tester.getRect(find.text('Apple'));
-      Border ring() =>
+      final before = tester.getRect(find.text('Banana'));
+      Border ring(String label) =>
           (tester
                           .resolvedSpecOf<SelectMenuItemSpec>(
-                            find.text('Apple'),
+                            find.text(label),
                           )
                           .container
                           .spec
@@ -244,14 +242,22 @@ void main() {
               as Border;
 
       expect(
-        ring().top.color,
+        ring('Apple').top.color,
         isSameColorAs(layers.last.color, threshold: _colorTolerance),
       );
       expect(
-        ring().top.width,
+        ring('Apple').top.width,
         layers.last.spreadRadius - layers.first.spreadRadius,
       );
-      expect(tester.getRect(find.text('Apple')), before);
+      // Opening focuses the first enabled option; ArrowDown moves to the next.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pumpAndSettle();
+      expect(ring('Apple').top.color, const Color(0x00000000));
+      expect(
+        ring('Banana').top.color,
+        isSameColorAs(layers.last.color, threshold: _colorTolerance),
+      );
+      expect(tester.getRect(find.text('Banana')), before);
     });
 
     testWidgets('hovering an item fills it with default in $mode', (
