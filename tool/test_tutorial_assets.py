@@ -1,12 +1,14 @@
 """Regression tests for the recorded-evidence and documentation drift gate."""
 
+import hashlib
+import io
 import json
 from pathlib import Path
 import shutil
 import tempfile
 import unittest
 
-from check_tutorial_assets import check_assets, check_content
+from check_tutorial_assets import check_assets, check_content, check_sample_api
 from prepare_docs_site import expand_sources, prepare
 import zipfile
 
@@ -36,6 +38,58 @@ class TutorialAssetTests(unittest.TestCase):
         path.write_text(json.dumps(evidence))
         self.assertTrue(any("main.dart" in error for error in check_assets(self.root)))
 
+    def test_unknown_accent_member_fails_independently_of_hashes(self):
+        archive = self.root / "docs/assets/remix-cli-tutorial/sample-projects.zip"
+        with zipfile.ZipFile(archive) as original:
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, "w") as changed:
+                for name in original.namelist():
+                    data = original.read(name)
+                    if name == "fortal_demo/lib/main.dart":
+                        data = data.replace(b"AcmeAccentColor.mar", b"AcmeAccentColor.violet")
+                    changed.writestr(name, data)
+        with zipfile.ZipFile(buffer) as samples:
+            self.assertTrue(any("AcmeAccentColor.violet" in error
+                                for error in check_sample_api(samples, "fortal_demo/")))
+
+    def test_historical_theme_constructor_drift_fails_after_rehashing_archive(self):
+        archive = self.root / "docs/assets/remix-cli-tutorial/sample-projects.zip"
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(archive) as original, zipfile.ZipFile(buffer, "w") as changed:
+            for name in original.namelist():
+                data = original.read(name)
+                if name == "fortal_demo/lib/ui/theme/theme_scope.dart":
+                    self.assertIn(b"this.theme,", data)
+                    data = data.replace(b"this.theme,", b"required this.data,", 1)
+                changed.writestr(name, data)
+        archive.write_bytes(buffer.getvalue())
+        evidence_path = archive.parent / "evidence.json"
+        evidence = json.loads(evidence_path.read_text())
+        evidence["archive_sha256"] = hashlib.sha256(buffer.getvalue()).hexdigest()
+        evidence_path.write_text(json.dumps(evidence))
+        failures = check_assets(self.root)
+        self.assertTrue(any("theme_scope.dart" in error and "pinned CLI output" in error for error in failures))
+        self.assertFalse(any("sample-projects.zip: SHA-256" in error for error in failures))
+
+    def test_cli_source_receipt_must_use_replay_pin(self):
+        assets = self.root / "docs/assets/remix-cli-tutorial"
+        path = assets / "cli-source-evidence.json"
+        receipt = json.loads(path.read_text())
+        receipt["revision"] = "0" * 40
+        path.write_text(json.dumps(receipt))
+        evidence_path = assets / "evidence.json"
+        evidence = json.loads(evidence_path.read_text())
+        evidence["replay"]["cli_source_evidence_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        evidence_path.write_text(json.dumps(evidence))
+        self.assertTrue(any("receipt revision" in error for error in check_assets(self.root)))
+
+    def test_archived_sdk_pin_drift_fails(self):
+        path = self.root / "docs/assets/remix-cli-tutorial/evidence.json"
+        evidence = json.loads(path.read_text())
+        evidence["replay"]["flutter"] = "3.47.9"
+        path.write_text(json.dumps(evidence))
+        self.assertTrue(any("SDK differs" in error for error in check_assets(self.root)))
+
     def test_native_command_drift_fails(self):
         path = self.root / "docs/tutorials/settings-screen.mdx"
         path.write_text(path.read_text().replace("--dry-run", "--overwrite"))
@@ -58,7 +112,7 @@ class TutorialAssetTests(unittest.TestCase):
     def test_capture_pin_drift_fails(self):
         path = self.root / "docs/assets/remix-cli-tutorial/evidence.json"
         evidence = json.loads(path.read_text())
-        evidence["source_checkout"] = "0" * 40
+        evidence["replay"]["source_checkout"] = "0" * 40
         path.write_text(json.dumps(evidence))
         self.assertTrue(any("checkout pin" in error for error in check_content(self.root)))
 

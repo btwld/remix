@@ -77,7 +77,7 @@ RadioStyler _uiRadioSurfaceStyler(
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          uiInsetSurface(strokes: [UiTokens.grayA7()]),
+          uiInsetSurface(strokes: [UiTokens.controlBorder()]),
         ),
       )
       .indicator(
@@ -94,7 +94,9 @@ RadioStyler _uiRadioSurfaceStyler(
               ),
             )
             .indicatorColor(
-              highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
+              highContrast
+                  ? UiTokens.accent1()
+                  : UiTokens.accentIndicatorContrast(),
             ),
       )
       .onDisabled(
@@ -117,6 +119,13 @@ RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
+      // The tint alone is too faint to show an empty control; the accent-8
+      // ring keeps a 3:1 boundary in every enabled state.
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          uiInsetSurface(strokes: [UiTokens.accentA8()]),
+        ),
+      )
       .indicator(
         .color(
           highContrast ? UiTokens.accent12() : UiTokens.accent11(),
@@ -135,6 +144,11 @@ RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
         .color(UiTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
             )
             .indicatorColor(UiTokens.grayA8()),
       );

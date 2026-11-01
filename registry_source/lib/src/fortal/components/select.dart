@@ -255,7 +255,7 @@ SelectMenuItemStyler _fortalSelectItemStyler(
     .surface || .ghost =>
       SelectMenuItemStyler()
           .color(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+            highContrast ? FortalTokens.accent12() : FortalTokens.accentSolid(),
           )
           .text(
             TextStyler().color(

@@ -27,7 +27,8 @@ const _highContrastLineWidthToken = ContextToken<double>(
 ///
 /// The first entry follows the configured Ui accent. Remaining entries use
 /// Ui color families selected for clear categorical separation. Set
-/// [highContrast] to use step 12 instead of the standard solid-color step 9.
+/// [highContrast] to use step 12 instead of the standard step 9, each
+/// palette's mark fill.
 List<Color> resolveUiChartPalette(
   BuildContext context, {
   bool highContrast = false,
@@ -37,7 +38,7 @@ List<Color> resolveUiChartPalette(
   final step = highContrast ? 12 : 9;
   final candidates = <Color>[
     colors.accent.scale.step(step),
-    for (final family in [calcadao, mar, ceu, mangue, sol, duna, caju])
+    for (final family in [calcadao, mar, ceu, serra, sol, duna, caju])
       (theme.isDark ? family.dark : family.light).scale.step(step),
   ];
 
@@ -156,6 +157,9 @@ PieChartStyler uiPieChartStyle({
         PieSliceStyler()
             .showLabel(showLabels)
             .cornerRadius(UiTokens.borderWidth2())
+            // Opt-in slice labels take the accent's label colour, which is
+            // fitted to the accent's labelled solid, not to every slice of
+            // the categorical palette. Check contrast when enabling them.
             .label(
               TextStyler()
                   .style(UiTokens.text1.mix())

@@ -122,7 +122,7 @@ MenuItemStyler _uiMenuHighlightedItemStyler(
   return switch (variant) {
     .solid =>
       MenuItemStyler()
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accent9())
+          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
           .label(.color(solidForeground))
           .leadingIcon(.color(solidForeground))
           .trailingIcon(.color(solidForeground))

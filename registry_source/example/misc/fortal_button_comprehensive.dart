@@ -375,7 +375,7 @@ class _AccentShowcaseSection extends StatelessWidget {
     final popularAccents = [
       FortalAccentColor.ceu,
       FortalAccentColor.ceu,
-      FortalAccentColor.mangue,
+      FortalAccentColor.serra,
       FortalAccentColor.caju,
       FortalAccentColor.ceu,
       FortalAccentColor.sol,

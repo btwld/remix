@@ -255,7 +255,7 @@ SelectMenuItemStyler _{{valuePrefix}}SelectItemStyler(
     .surface || .ghost =>
       SelectMenuItemStyler()
           .color(
-            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent9(),
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentSolid(),
           )
           .text(
             TextStyler().color(

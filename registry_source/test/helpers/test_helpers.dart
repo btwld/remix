@@ -18,9 +18,15 @@ extension WidgetTesterHelpers on WidgetTester {
   Future<void> pumpRemixApp(
     Widget widget, {
     TextDirection textDirection = TextDirection.ltr,
+    FortalAccentColor? accent,
+    FortalColorTheme? accentPalette,
+    FortalThemeMode? mode,
   }) async {
     await pumpWidget(
       FortalTheme(
+        accent: accent,
+        accentPalette: accentPalette,
+        mode: mode,
         child: WidgetsApp(
           color: const Color(0xFFFFFFFF),
           pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
@@ -46,24 +52,30 @@ extension WidgetTesterHelpers on WidgetTester {
   }
 }
 
-/// Resolves a value against a `BuildContext` inside a default [FortalTheme].
-///
-/// Use this for assertions on token or style resolution that need no scope
-/// configuration. Suites that vary the accent, brightness, radius, or widget
-/// states keep their own richer local resolver.
+/// Resolves a value inside [FortalTheme], optionally selecting the accent or
+/// palette, appearance, and widget states. Defaults retain the neutral preset.
 Future<T> resolveInFortalTheme<T>(
   WidgetTester tester,
-  T Function(BuildContext context) resolve,
-) async {
+  T Function(BuildContext context) resolve, {
+  FortalAccentColor? accent,
+  FortalColorTheme? accentPalette,
+  FortalThemeMode? mode,
+  Set<WidgetState> states = const {},
+}) async {
   late T result;
   await tester.pumpRemixApp(
-    Builder(
-      builder: (context) {
-        result = resolve(context);
-
-        return const SizedBox.shrink();
-      },
+    WidgetStateProvider(
+      states: states,
+      child: Builder(
+        builder: (context) {
+          result = resolve(context);
+          return const SizedBox.shrink();
+        },
+      ),
     ),
+    accent: accent,
+    accentPalette: accentPalette,
+    mode: mode,
   );
 
   return result;

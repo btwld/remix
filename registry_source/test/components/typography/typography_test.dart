@@ -581,7 +581,11 @@ void main() {
 
             switch (variant) {
               case FortalCodeVariant.solid:
-                expect(fill, highContrast ? tokens.accent12 : tokens.accentA9);
+                // The opaque labelled solid its label is fitted to.
+                expect(
+                  fill,
+                  highContrast ? tokens.accent12 : tokens.accentSolid,
+                );
                 expect(
                   fg,
                   highContrast ? tokens.accent1 : tokens.accentContrast,
@@ -1359,7 +1363,7 @@ Future<
     Color accentA3,
     Color accentA7,
     Color accentA8,
-    Color accentA9,
+    Color accentSolid,
     Color accentA11,
     Color accentContrast,
   })
@@ -1371,7 +1375,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
     Color accentA3,
     Color accentA7,
     Color accentA8,
-    Color accentA9,
+    Color accentSolid,
     Color accentA11,
     Color accentContrast,
   })
@@ -1388,7 +1392,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
             accentA3: token(FortalTokens.accentA3),
             accentA7: token(FortalTokens.accentA7),
             accentA8: token(FortalTokens.accentA8),
-            accentA9: token(FortalTokens.accentA9),
+            accentSolid: token(FortalTokens.accentSolid),
             accentA11: token(FortalTokens.accentA11),
             accentContrast: token(FortalTokens.accentContrast),
           );

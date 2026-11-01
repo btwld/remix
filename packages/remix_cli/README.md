@@ -30,6 +30,11 @@ or an application entry point.
 The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. Registry content is published independently on GitHub and pinned in `remix.yaml`.
 Registry updates change pins only; installed source remains application-owned.
+Commit `remix.ownership.json` with the configuration and installed source.
+Target ownership is checked across separate installs; overlapping registries
+are rejected even with `--overwrite`. Existing installations without ownership
+records require verified, explicit `add theme button --adopt` migration; see
+[legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
 Both presets additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
@@ -426,8 +431,11 @@ There is no automatic merge or migration layer in 0.1.0.
 
 Because `--overwrite` replaces only files present in the incoming registry item
 and `updateManagedBarrel` preserves existing exports without pruning, removing
-an obsolete template file during an upgrade requires manual cleanup. If upgrading
-an existing Vanilla project installed prior to token consolidation:
+an obsolete template file during an upgrade requires manual cleanup. Before
+upgrading an existing Vanilla project installed prior to token consolidation,
+complete [legacy ownership adoption](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record)
+for every existing item and dependency. Commit `remix.ownership.json` with the
+configuration and source, then update the theme:
 
 1. run `remix add theme --overwrite` (or `dart run remix_cli:remix add theme --overwrite`)
    to update `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`;

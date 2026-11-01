@@ -130,6 +130,9 @@ uiBaseButtonGhostMetrics(UiBaseButtonSize size) => switch (size) {
 };
 
 /// Resolves a mode-aware ordered CSS filter at the component build context.
+///
+/// Ui's own solid states recolor fills rather than filtering the painted
+/// subtree; this remains for callers that deliberately filter a button.
 WidgetModifierConfig uiModeAwareFilter({
   required List<RemixCssColorFilterOperation> light,
   required List<RemixCssColorFilterOperation> dark,
@@ -233,6 +236,11 @@ typedef _InteractionStateStyles = ({
   UiBaseButtonStateStyle disabled,
 });
 
+// Solid hover and press recolor only the fill. The Radix-derived CSS filter
+// operations are applied to the fill color itself, never to the painted
+// subtree, so the label, icon, spinner and 2px focus ring keep their colors
+// (a subtree filter would also dim or lighten the focus ring against the
+// unfiltered page) and caller foreground overrides stay in force.
 _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   final foreground = highContrast
       ? UiTokens.gray1()
@@ -241,15 +249,17 @@ _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   return (
     idle: UiBaseButtonStateStyle(
       foreground: foreground,
-      background: highContrast ? UiTokens.accent12() : UiTokens.accent9(),
+      background: highContrast ? UiTokens.accent12() : UiTokens.accentSolid(),
     ),
     hovered: UiBaseButtonStateStyle(
-      background: highContrast ? UiTokens.accent12() : UiTokens.accent10(),
-      modifier: _hoverFilter(highContrast),
+      background: highContrast
+          ? _highContrastHoveredFill()
+          : UiTokens.accentSolidHover(),
     ),
     pressed: UiBaseButtonStateStyle(
-      background: highContrast ? UiTokens.accent12() : UiTokens.accent10(),
-      modifier: _pressedFilter(highContrast),
+      background: highContrast
+          ? _highContrastPressedFill()
+          : _solidPressedFill(),
     ),
     disabled: UiBaseButtonStateStyle(
       foreground: UiTokens.grayA8(),
@@ -350,43 +360,88 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   ),
 );
 
-WidgetModifierConfig _hoverFilter(bool highContrast) {
-  if (!highContrast) return uiClearFilter();
+/// Ordinary solid press: the labelled hover fill darkens under a light label
+/// and lightens under a dark ink, so the label keeps its contrast in both
+/// modes and for every palette, including custom ones.
+const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
 
-  return uiModeAwareFilter(
-    light: const [
-      RemixCssColorFilterOperation.contrast(0.88),
-      RemixCssColorFilterOperation.saturate(1.1),
-      RemixCssColorFilterOperation.brightness(1.1),
-    ],
-    dark: const [
-      RemixCssColorFilterOperation.contrast(0.88),
-      RemixCssColorFilterOperation.saturate(1.3),
-      RemixCssColorFilterOperation.brightness(1.18),
-    ],
+Color _resolveSolidPressedFill(BuildContext context) {
+  final label = UiTokens.accentContrast.resolve(context);
+  final fill = UiTokens.accentSolid.resolve(context);
+  return _uiFilteredColor(
+    UiTokens.accentSolidHover.resolve(context),
+    label.computeLuminance() > fill.computeLuminance()
+        ? const [
+            RemixCssColorFilterOperation.brightness(0.92),
+            RemixCssColorFilterOperation.saturate(1.1),
+          ]
+        : const [RemixCssColorFilterOperation.brightness(1.08)],
   );
 }
 
-WidgetModifierConfig _pressedFilter(bool highContrast) {
-  if (highContrast) {
-    return uiModeAwareFilter(
-      light: const [
-        RemixCssColorFilterOperation.contrast(0.82),
-        RemixCssColorFilterOperation.saturate(1.2),
-        RemixCssColorFilterOperation.brightness(1.16),
-      ],
-      dark: const [
-        RemixCssColorFilterOperation.brightness(0.95),
-        RemixCssColorFilterOperation.saturate(1.2),
-      ],
-    );
-  }
+const _highContrastHoveredFill = ContextToken<Color>(
+  _resolveHighContrastHoveredFill,
+);
 
-  return uiModeAwareFilter(
-    light: const [
-      RemixCssColorFilterOperation.brightness(0.92),
-      RemixCssColorFilterOperation.saturate(1.1),
-    ],
-    dark: const [RemixCssColorFilterOperation.brightness(1.08)],
+Color _resolveHighContrastHoveredFill(BuildContext context) => _uiFilteredColor(
+  UiTokens.accent12.resolve(context),
+  UiTheme.of(context).isDark
+      ? const [
+          RemixCssColorFilterOperation.contrast(0.88),
+          RemixCssColorFilterOperation.saturate(1.3),
+          RemixCssColorFilterOperation.brightness(1.18),
+        ]
+      : const [
+          RemixCssColorFilterOperation.contrast(0.88),
+          RemixCssColorFilterOperation.saturate(1.1),
+          RemixCssColorFilterOperation.brightness(1.1),
+        ],
+);
+
+const _highContrastPressedFill = ContextToken<Color>(
+  _resolveHighContrastPressedFill,
+);
+
+Color _resolveHighContrastPressedFill(BuildContext context) => _uiFilteredColor(
+  UiTokens.accent12.resolve(context),
+  UiTheme.of(context).isDark
+      ? const [
+          RemixCssColorFilterOperation.brightness(0.95),
+          RemixCssColorFilterOperation.saturate(1.2),
+        ]
+      : const [
+          RemixCssColorFilterOperation.contrast(0.82),
+          RemixCssColorFilterOperation.saturate(1.2),
+          RemixCssColorFilterOperation.brightness(1.16),
+        ],
+);
+
+/// Applies ordered CSS color-filter [operations] to one color with the same
+/// matrices and per-function clamping that [RemixOrderedColorFilterModifier]
+/// applies to a painted subtree.
+Color _uiFilteredColor(
+  Color color,
+  List<RemixCssColorFilterOperation> operations,
+) {
+  var channels = [color.r * 255, color.g * 255, color.b * 255];
+  final alpha = color.a * 255;
+  for (final operation in operations) {
+    if (operation.isIdentity) continue;
+    final matrix = operation.matrix;
+    channels = [
+      for (var row = 0; row < 3; row++)
+        (matrix[row * 5] * channels[0] +
+                matrix[row * 5 + 1] * channels[1] +
+                matrix[row * 5 + 2] * channels[2] +
+                matrix[row * 5 + 3] * alpha +
+                matrix[row * 5 + 4])
+            .clamp(0.0, 255.0),
+    ];
+  }
+  return Color.from(
+    alpha: color.a,
+    red: channels[0] / 255,
+    green: channels[1] / 255,
+    blue: channels[2] / 255,
   );
 }

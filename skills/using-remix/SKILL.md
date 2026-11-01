@@ -98,6 +98,8 @@ For Vanilla use `UiTheme(child: child!)` in the same position, with optional
   no brightness observer is needed.
 - Fortal's root installs fallback text/icon styling (`gray12`, `text3`). A
   nested brightness/gray change recolors that fallback; components use tokens.
+- Each theme installs a complete token set. Place `MixScope.inherit` overrides,
+  such as Fortal's `focusRingWidth`, inside the nested theme they should affect.
 
 ## Customize installed source
 

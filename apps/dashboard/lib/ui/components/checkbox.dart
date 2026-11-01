@@ -122,7 +122,7 @@ CheckboxStyler _uiCheckboxSurface(CheckboxStyler base, bool highContrast) {
         ),
       )
       .indicatorColor(
-        highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
+        highContrast ? UiTokens.accent1() : UiTokens.accentIndicatorContrast(),
       );
 
   return base
@@ -132,7 +132,7 @@ CheckboxStyler _uiCheckboxSurface(CheckboxStyler base, bool highContrast) {
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          uiInsetSurface(strokes: [UiTokens.grayA7()]),
+          uiInsetSurface(strokes: [UiTokens.controlBorder()]),
         ),
       )
       .onSelected(selected)
@@ -161,12 +161,24 @@ CheckboxStyler _uiCheckboxSoft(CheckboxStyler base, bool highContrast) {
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
+      // The tint alone is too faint to show an empty control; the accent-8
+      // ring keeps a 3:1 boundary in every enabled state.
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          uiInsetSurface(strokes: [UiTokens.accentA8()]),
+        ),
+      )
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         .color(UiTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
             )
             .indicatorColor(UiTokens.grayA8()),
       );

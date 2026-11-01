@@ -9,7 +9,7 @@
           "calcadao",
           "mar",
           "ceu",
-          "mangue",
+          "serra",
           "sol",
           "duna",
           "caju"
@@ -829,7 +829,8 @@
       "tests": [
         "test/fortal/fortal_control_matrix_test.dart",
         "test/fortal/fortal_high_contrast_test.dart",
-        "test/fortal/spec_conformance_test.dart"
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_switch_contrast_test.dart"
       ]
     },
     {
@@ -928,7 +929,8 @@
         "test/components/textfield/textfield_widget_test.dart",
         "test/components/textfield/fortal_textfield_disabled_test.dart",
         "test/fortal/fortal_control_matrix_test.dart",
-        "test/fortal/spec_conformance_test.dart"
+        "test/fortal/spec_conformance_test.dart",
+        "test/components/textfield/fortal_input_content_contrast_test.dart"
       ]
     },
     {
@@ -1031,7 +1033,8 @@
       "tests": [
         "test/components/textfield/text_area_fortal_test.dart",
         "test/components/textfield/textfield_widget_test.dart",
-        "test/fortal/spec_conformance_test.dart"
+        "test/fortal/spec_conformance_test.dart",
+        "test/components/textfield/fortal_input_content_contrast_test.dart"
       ]
     },
     {

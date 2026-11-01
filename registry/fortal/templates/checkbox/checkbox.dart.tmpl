@@ -124,7 +124,9 @@ CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highCon
         ),
       )
       .indicatorColor(
-        highContrast ? {{typePrefix}}Tokens.accent1() : {{typePrefix}}Tokens.accentContrast(),
+        highContrast
+            ? {{typePrefix}}Tokens.accent1()
+            : {{typePrefix}}Tokens.accentIndicatorContrast(),
       );
 
   return base
@@ -134,7 +136,7 @@ CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highCon
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.controlBorder()]),
         ),
       )
       .onSelected(selected)
@@ -163,12 +165,24 @@ CheckboxStyler _{{valuePrefix}}CheckboxSoft(CheckboxStyler base, bool highContra
       .containerEffects(
         RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
+      // The tint alone is too faint to show an empty control; the accent-8
+      // ring keeps a 3:1 boundary in every enabled state.
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+        ),
+      )
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         .color({{typePrefix}}Tokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
             )
             .indicatorColor({{typePrefix}}Tokens.grayA8()),
       );

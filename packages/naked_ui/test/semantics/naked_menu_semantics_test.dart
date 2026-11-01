@@ -264,6 +264,131 @@ void main() {
         });
       }
 
+      for (final material in [false, true]) {
+        testWidgets(
+          'a live-region ${material ? 'Material' : 'Naked'} button keeps '
+          'expanded state through open and close',
+          (tester) async {
+            final handle = tester.ensureSemantics();
+            final controller = MenuController();
+
+            await tester.pumpWidget(
+              _buildTestApp(
+                buildMenu(
+                  controller,
+                  (toggle) => Semantics(
+                    liveRegion: true,
+                    child: material
+                        ? TextButton(
+                            onPressed: toggle,
+                            child: const Text('Actions'),
+                          )
+                        : NakedButton(
+                            onPressed: toggle,
+                            child: const Text('Actions'),
+                          ),
+                  ),
+                ),
+              ),
+            );
+
+            void expectControl(Tristate expanded) {
+              final root = semanticsRootOf(tester);
+              final buttons = collectSemanticsNodes(root, (node) {
+                final data = node.getSemanticsData();
+                return data.flagsCollection.isButton && data.label == 'Actions';
+              });
+              expect(buttons, hasLength(1));
+              final data = buttons.single.getSemanticsData();
+              expect(data.flagsCollection.isLiveRegion, isTrue);
+              expect(data.flagsCollection.isExpanded, expanded);
+              expect(data.hasAction(SemanticsAction.tap), isTrue);
+              expect(
+                collectSemanticsNodes(
+                  root,
+                  (node) =>
+                      node.getSemanticsData().flagsCollection.isExpanded !=
+                      Tristate.none,
+                ),
+                buttons,
+              );
+            }
+
+            expectControl(Tristate.isFalse);
+            controller.open();
+            await tester.pumpAndSettle();
+            expectControl(Tristate.isTrue);
+            controller.close();
+            await tester.pumpAndSettle();
+            expectControl(Tristate.isFalse);
+            handle.dispose();
+          },
+        );
+      }
+
+      for (final material in [false, true]) {
+        testWidgets('keeps a loading announcement separate from the '
+            '${material ? 'Material' : 'Naked'} button name', (tester) async {
+          final handle = tester.ensureSemantics();
+          final controller = MenuController();
+
+          await tester.pumpWidget(
+            _buildTestApp(
+              buildMenu(
+                controller,
+                (toggle) => Stack(
+                  children: [
+                    if (material)
+                      const TextButton(
+                        onPressed: null,
+                        child: Text('Account actions'),
+                      )
+                    else
+                      NakedButton(
+                        enabled: false,
+                        semanticLabel: 'Account actions',
+                        child: const SizedBox(width: 160, height: 40),
+                      ),
+                    Semantics(
+                      liveRegion: true,
+                      label: 'Account actions, loading',
+                      child: const SizedBox.square(dimension: 1),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+
+          debugPrint(semanticsRootOf(tester).toStringDeep());
+          expect(find.semantics.byLabel('Account actions'), findsOne);
+          expect(find.semantics.byLabel('Account actions, loading'), findsOne);
+          var button = find.semantics
+              .byLabel('Account actions')
+              .evaluate()
+              .single;
+          while (button.isMergedIntoParent) {
+            button = button.parent!;
+          }
+          final loading = find.semantics
+              .byLabel('Account actions, loading')
+              .evaluate()
+              .single;
+          expect(button.isMergedIntoParent, isFalse);
+          expect(loading.isMergedIntoParent, isFalse);
+          final data = button.getSemanticsData();
+          expect(data.label, 'Account actions');
+          expect(data.flagsCollection.isButton, isTrue);
+          expect(data.flagsCollection.isLiveRegion, isFalse);
+          expect(data.flagsCollection.isExpanded, Tristate.isFalse);
+          expect(
+            loading.getSemanticsData().flagsCollection.isLiveRegion,
+            isTrue,
+          );
+          handle.dispose();
+        });
+      }
+
       testWidgets('a non-interactive child is not exposed as a button', (
         tester,
       ) async {

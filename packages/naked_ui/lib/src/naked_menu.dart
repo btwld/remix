@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:ui' show SemanticsRole;
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -819,9 +819,10 @@ class NakedMenu<T> extends StatefulWidget {
   /// menu closes. The [builder] receives no widget states in this mode; only
   /// [NakedMenuState.isOpen] is meaningful.
   ///
-  /// The menu merges the control's semantics into one node that carries the
-  /// expanded state. Pass a single control and do not wrap it in
-  /// [MergeSemantics]. Label the control itself: [semanticLabel] must be null.
+  /// The menu adds the expanded state to the control's semantics, keeping live
+  /// announcements separate from its accessible name. Pass a single control
+  /// and do not wrap it in [MergeSemantics]. Label the control itself:
+  /// [semanticLabel] must be null.
   ///
   /// Must be true for a menu that is an item of a [NakedMenubar].
   final bool openOnTap;
@@ -1038,9 +1039,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         ? trigger
         : widget.openOnTap
         ? Semantics(expanded: _isOpen, child: trigger)
-        : MergeSemantics(
-            child: Semantics(expanded: _isOpen, child: trigger),
-          );
+        : _MenuControlSemantics(expanded: _isOpen, child: trigger);
 
     return RawMenuAnchor(
       controller: widget.controller,
@@ -1083,5 +1082,57 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
       },
       child: menuChild,
     );
+  }
+}
+
+class _MenuControlSemantics extends SingleChildRenderObjectWidget {
+  const _MenuControlSemantics({required this.expanded, required super.child});
+
+  final bool expanded;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderMenuControlSemantics(expanded);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderMenuControlSemantics renderObject,
+  ) {
+    renderObject.expanded = expanded;
+  }
+}
+
+class _RenderMenuControlSemantics extends RenderMergeSemantics {
+  _RenderMenuControlSemantics(this._expanded);
+
+  bool _expanded;
+  set expanded(bool value) {
+    if (value == _expanded) return;
+    _expanded = value;
+    markNeedsSemanticsUpdate();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..isExpanded = _expanded
+      ..childConfigurationsDelegate = _separateAnnouncements;
+  }
+
+  ChildSemanticsConfigurationsResult _separateAnnouncements(
+    List<SemanticsConfiguration> children,
+  ) {
+    final result = ChildSemanticsConfigurationsResultBuilder();
+    // Unlabelled live regions can wrap controls with their own semantics.
+    for (final child in children) {
+      if (child.liveRegion && !child.isButton && child.label.isNotEmpty) {
+        result.markAsSiblingMergeGroup([child]);
+      } else {
+        result.markAsMergeUp(child);
+      }
+    }
+    return result.build();
   }
 }

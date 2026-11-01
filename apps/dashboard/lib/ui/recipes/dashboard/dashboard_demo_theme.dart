@@ -90,12 +90,25 @@ class UiDashboardThemeScope extends InheritedWidget {
 
 /// Applies a local Ui accent without painting a background surface.
 class UiAccentScope extends StatelessWidget {
-  const UiAccentScope({super.key, required this.accent, required this.child});
+  const UiAccentScope({
+    super.key,
+    required UiAccentColor this.accent,
+    required this.child,
+  });
 
-  final UiAccentColor accent;
+  /// Applies the dedicated error red to destructive or negative content.
+  /// Error is a semantic palette, not a selectable accent.
+  const UiAccentScope.error({super.key, required this.child}) : accent = null;
+
+  /// The local accent, or null for the error palette.
+  final UiAccentColor? accent;
   final Widget child;
 
   @override
-  Widget build(BuildContext context) =>
-      UiTheme(accent: accent, hasBackground: false, child: child);
+  Widget build(BuildContext context) => UiTheme(
+    accent: accent,
+    accentPalette: accent == null ? uiError : null,
+    hasBackground: false,
+    child: child,
+  );
 }

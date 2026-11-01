@@ -238,7 +238,7 @@ SelectMenuItemStyler _uiSelectItemStyler(
   final highlighted = switch (variant) {
     .surface || .ghost =>
       SelectMenuItemStyler()
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accent9())
+          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
           .text(
             TextStyler().color(
               highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),

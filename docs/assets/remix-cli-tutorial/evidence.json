@@ -12,57 +12,117 @@
     {
       "file": "default-dialog.jpg",
       "sha256": "ce74dc4a7dfccb9e9ae13c7cd208f841992089946b34a5c7947677e543ed1c98",
-      "bytes": 61908
+      "bytes": 61908,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "default-finished.jpg",
       "sha256": "423a23eea0750abd8c39cc8bc43d337e00743131746509e52f9ab7e03613e153",
-      "bytes": 51326
+      "bytes": 51326,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "first-render.jpg",
       "sha256": "ca40c02ea3691b1d1e60521dcfa81b10b356d34edcbc045d0833b3954a6fcb9e",
-      "bytes": 3498
+      "bytes": 3498,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "fortal-dark.jpg",
       "sha256": "3b6ed40836934a0796248714a6bc9a0dc592ea99633331b7eb948203bce1d125",
-      "bytes": 52461
+      "bytes": 52461,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "fortal-dialog.jpg",
       "sha256": "7e493ff0bb93bbf6cec0fe96490f127ef92cdc60df52595c8dffaf86d91b96fb",
-      "bytes": 61134
+      "bytes": 61134,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "recipe-edit.jpg",
       "sha256": "173218812562927a40eab0e70ad6a2faec176b3590882a1e967749740c33e3d8",
-      "bytes": 203814
+      "bytes": 203814,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "saved.jpg",
       "sha256": "cc9dbe3fe9401633a06463b65f1e82378751c8951b65d6b11fecbcef463b73d2",
-      "bytes": 21988
+      "bytes": 21988,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
     },
     {
       "file": "saving.jpg",
       "sha256": "6c401cd2affe46987081aa00ec8bc064c4eb767f2d3f18aec3d01aa8f801f6d5",
-      "bytes": 19881
+      "bytes": 19881,
+      "date": "2026-09-07",
+      "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+      "method": "Historical browser/editor capture; original bytes retained"
+    },
+    {
+      "file": "current-default.png",
+      "sha256": "a8ae74918c2d74eb648a8895bec213717ff60ff650565d35893fc7841c878b81",
+      "bytes": 92819,
+      "date": "2026-10-31",
+      "source_checkout": "2556203413520874c4e6d7682e8e1737f4b9f360",
+      "method": "Flutter 3.44.0 widget-test renderer; Geist/Material Icons; 1440x1000; not a browser capture",
+      "main_sha256": "80732e10baa1195c8020cc15d955ee5b11419eaadf8c516238a5fa963093aa9b",
+      "archive_sha256": "1cbf52669cd678363a9e58d2d063fb3cc5a9f6985d3a30a4af066d2334faa290",
+      "capture_harness_sha256": "1bcc02975ea93eabc1fae146bdfdf81df7715aba9bd303957e30ec2791510945",
+      "host": {
+        "os": "macOS",
+        "version": "27.0.1",
+        "architecture": "arm64",
+        "flutter_test_engine": "darwin-x64"
+      },
+      "capture_harness_availability": "local task evidence artifact; not published"
+    },
+    {
+      "file": "current-fortal-dark.png",
+      "sha256": "fa903702a8fa0cdf9942e1071d0f844752ea43940a297ac8317ad99fd2ff392f",
+      "bytes": 92318,
+      "date": "2026-10-31",
+      "source_checkout": "2556203413520874c4e6d7682e8e1737f4b9f360",
+      "method": "Flutter 3.44.0 widget-test renderer; Geist/Material Icons; 1440x1000; not a browser capture",
+      "main_sha256": "e56de3f0f42c3c6386da9b2be7ec185c5112a558dec354dbb09f56dd7625fbf5",
+      "archive_sha256": "1cbf52669cd678363a9e58d2d063fb3cc5a9f6985d3a30a4af066d2334faa290",
+      "capture_harness_sha256": "1bcc02975ea93eabc1fae146bdfdf81df7715aba9bd303957e30ec2791510945",
+      "host": {
+        "os": "macOS",
+        "version": "27.0.1",
+        "architecture": "arm64",
+        "flutter_test_engine": "darwin-x64"
+      },
+      "capture_harness_availability": "local task evidence artifact; not published"
     }
   ],
   "source": [
     {
       "preset": "default",
-      "main_sha256": "a4f28113cdaccc9096ad136542b72573e9cf24b35c94a36c938917f9df31130c",
+      "main_sha256": "80732e10baa1195c8020cc15d955ee5b11419eaadf8c516238a5fa963093aa9b",
       "test_sha256": "c480e6f5b025bad32d236dc22ae66403e45ab946953a0f2d70b78f7b533b4d92"
     },
     {
       "preset": "fortal",
-      "main_sha256": "2729f655ffd1beb4c2f2f3b3ab8da97b27ffafbaf607ec76c4015799db0cfe97",
+      "main_sha256": "e56de3f0f42c3c6386da9b2be7ec185c5112a558dec354dbb09f56dd7625fbf5",
       "test_sha256": "37b7be5ce79290a951544184372a618b969f5ba5f3af27da4bacf0932f50701f"
     }
   ],
-  "archive_sha256": "d251fd36f18da93d0962f992e21c3d2128e24399fbebb2906af2a7c1e9c0684a",
+  "archive_sha256": "1cbf52669cd678363a9e58d2d063fb3cc5a9f6985d3a30a4af066d2334faa290",
   "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
   "validation": {
     "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",
@@ -442,5 +502,669 @@
     "date": "2026-09-13",
     "changes": "Added resolved-token, custom-color, and text-inheritance regression tests. Screenshots unchanged.",
     "validation": "Both downloadable projects passed their suites against the local checkout: 13 default tests and 14 Fortal tests, including actual inherited colors and Fortal text-style placement."
+  },
+  "replay": {
+    "date": "2026-10-31",
+    "source_checkout": "2556203413520874c4e6d7682e8e1737f4b9f360",
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "remix": "1.0.0-beta.13",
+    "cli": "1.0.0-beta.0",
+    "registry_revision": "2556203413520874c4e6d7682e8e1737f4b9f360",
+    "fortal_accent": "mar",
+    "source_generation": "Real public GitHub CLI at the pinned registry revision, build_runner generated adapters",
+    "validation": "Both samples: dependency resolution, no analyzer findings, workflow/appearance tests, release web builds. First-render source compiled separately; Vanilla diff/add preserves the 44px edit. See evidence directory logs.",
+    "command_results": [
+      {
+        "label": "default-create",
+        "command": [
+          "fvm",
+          "flutter",
+          "create",
+          "--empty",
+          "--platforms=web",
+          "--project-name",
+          "remix_default_demo",
+          "/path/to/evidence/current-tutorial-344/default_demo"
+        ],
+        "directory": "current-tutorial-344",
+        "exit_code": 0
+      },
+      {
+        "label": "default-cli",
+        "command": [
+          "fvm",
+          "dart",
+          "pub",
+          "add",
+          "dev:remix_cli:{path: /path/to/remix/packages/remix_cli}"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-init",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "init",
+          "--prefix",
+          "Acme",
+          "--preset",
+          "vanilla"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-pin",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "registry",
+          "update",
+          "@remix",
+          "--ref",
+          "2556203413520874c4e6d7682e8e1737f4b9f360"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-dry-run",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "button",
+          "--dry-run"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-button",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "button"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-checkbox",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "checkbox"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-textfield",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "textfield"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-dialog",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "dialog"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-card",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "card"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-sidebar",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "sidebar"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-add-sidebar_layout",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "sidebar_layout"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-format",
+        "command": [
+          "fvm",
+          "dart",
+          "format",
+          "lib/main.dart",
+          "test"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-analyze",
+        "command": [
+          "fvm",
+          "flutter",
+          "analyze"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-test",
+        "command": [
+          "fvm",
+          "flutter",
+          "test"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-build",
+        "command": [
+          "fvm",
+          "flutter",
+          "build",
+          "web",
+          "--release"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-create",
+        "command": [
+          "fvm",
+          "flutter",
+          "create",
+          "--empty",
+          "--platforms=web",
+          "--project-name",
+          "remix_fortal_demo",
+          "/path/to/evidence/current-tutorial-344/fortal_demo"
+        ],
+        "directory": "current-tutorial-344",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-cli",
+        "command": [
+          "fvm",
+          "dart",
+          "pub",
+          "add",
+          "dev:remix_cli:{path: /path/to/remix/packages/remix_cli}"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-init",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "init",
+          "--prefix",
+          "Acme",
+          "--preset",
+          "fortal"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-pin",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "registry",
+          "update",
+          "@remix",
+          "--ref",
+          "2556203413520874c4e6d7682e8e1737f4b9f360"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-dry-run",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "button",
+          "--dry-run"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-button",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "button"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-checkbox",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "checkbox"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-textfield",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "textfield"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-dialog",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "dialog"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-card",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "card"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-sidebar",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "sidebar"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-add-sidebar_layout",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "sidebar_layout"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-format",
+        "command": [
+          "fvm",
+          "dart",
+          "format",
+          "lib/main.dart",
+          "test"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-analyze",
+        "command": [
+          "fvm",
+          "flutter",
+          "analyze"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-test",
+        "command": [
+          "fvm",
+          "flutter",
+          "test"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-build",
+        "command": [
+          "fvm",
+          "flutter",
+          "build",
+          "web",
+          "--release"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "current-first-render-analyze",
+        "command": [
+          "fvm",
+          "flutter",
+          "analyze",
+          "lib"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "current-first-render-build",
+        "command": [
+          "fvm",
+          "flutter",
+          "build",
+          "web",
+          "--release"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "current-recipe-diff",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "button",
+          "--diff"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "current-recipe-preservation",
+        "command": [
+          "fvm",
+          "dart",
+          "run",
+          "remix_cli:remix",
+          "add",
+          "button"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "current-default-capture",
+        "command": [
+          "fvm",
+          "flutter",
+          "test",
+          "test/capture_test.dart",
+          "--reporter",
+          "expanded"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "current-fortal-capture",
+        "command": [
+          "fvm",
+          "flutter",
+          "test",
+          "test/capture_test.dart",
+          "--reporter",
+          "expanded"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "default-final-format",
+        "command": [
+          "fvm",
+          "dart",
+          "format",
+          "lib/main.dart"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-final-analyze",
+        "command": [
+          "fvm",
+          "flutter",
+          "analyze"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-final-test",
+        "command": [
+          "fvm",
+          "flutter",
+          "test"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "default-final-build",
+        "command": [
+          "fvm",
+          "flutter",
+          "build",
+          "web",
+          "--release"
+        ],
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-final-format",
+        "command": [
+          "fvm",
+          "dart",
+          "format",
+          "lib/main.dart"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-final-analyze",
+        "command": [
+          "fvm",
+          "flutter",
+          "analyze"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-final-test",
+        "command": [
+          "fvm",
+          "flutter",
+          "test"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "fortal-final-build",
+        "command": [
+          "fvm",
+          "flutter",
+          "build",
+          "web",
+          "--release"
+        ],
+        "directory": "fortal_demo",
+        "exit_code": 0
+      }
+    ],
+    "limits": [
+      "Local browser automation disabled in Work settings; no new browser screenshots or browser interaction claims.",
+      "Original September JPGs retained and explicitly historical."
+    ],
+    "cli_source_evidence_sha256": "c0a2ba94115af288113d42b7551995c4cf5d68cd5146485048a2213238fa2544",
+    "cli_source_receipt": "Independent clean public-CLI installs at the pinned GitHub revision, before customization; all lib/ui Dart bytes compared, with only the documented 44px Vanilla edit allowed.",
+    "download_validation": {
+      "command_results": [
+        {
+          "label": "download-default-pub-get",
+          "command": [
+            "fvm",
+            "flutter",
+            "pub",
+            "get"
+          ],
+          "exit_code": 0
+        },
+        {
+          "label": "download-default-analyze",
+          "command": [
+            "fvm",
+            "flutter",
+            "analyze"
+          ],
+          "exit_code": 0
+        },
+        {
+          "label": "download-default-test",
+          "command": [
+            "fvm",
+            "flutter",
+            "test"
+          ],
+          "exit_code": 0
+        },
+        {
+          "label": "download-fortal-pub-get",
+          "command": [
+            "fvm",
+            "flutter",
+            "pub",
+            "get"
+          ],
+          "exit_code": 0
+        },
+        {
+          "label": "download-fortal-analyze",
+          "command": [
+            "fvm",
+            "flutter",
+            "analyze"
+          ],
+          "exit_code": 0
+        },
+        {
+          "label": "download-fortal-test",
+          "command": [
+            "fvm",
+            "flutter",
+            "test"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "result": "Fresh extraction: pub get, clean analysis, Vanilla 13 and Fortal 14 tests passed under each included FVM 3.44.0 pin."
+    },
+    "capture_host": {
+      "os": "macOS",
+      "version": "27.0.1",
+      "architecture": "arm64",
+      "flutter_test_engine": "darwin-x64"
+    },
+    "capture_harness": {
+      "availability": "local task evidence artifact; not published in this repository",
+      "file": "capture_test.dart",
+      "private_location": "retained by the maintainer; not published"
+    }
   }
 }

@@ -24,7 +24,7 @@ BadgeStyler uiBadgeStyle({
   return (switch (variant) {
     .solid =>
       base
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accent9())
+          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
           .labelColor(
             highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
           ),
