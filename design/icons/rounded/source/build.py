@@ -12,6 +12,7 @@ import json
 import sys
 from pathlib import Path
 
+from shapely import maximum_inscribed_circle
 from shapely.geometry import MultiPolygon, Polygon
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,7 +22,8 @@ sys.path.insert(0, str(ROOT))
 from source.draw import draw
 from source.lookup import icon_svg
 from source.seams import (
-    APPEARANCES, CANONICAL_IDS, GAP_TARGET, LABELS, MASTERS, PACK, VERSION,
+    APPEARANCES, BOLD_WIDTH, CANONICAL_IDS, COUNTER_FLOOR, GAP_TARGET, LABELS, MASTERS, PACK,
+    VERSION,
 )
 from source.svg import path_data, svg_text
 from source.validate import parse_svg
@@ -73,6 +75,87 @@ def measure_warning() -> list[dict]:
                 'rule': rule,
                 'meetsTarget': gap is not None and gap + 1e-6 >= target,
             })
+    return records
+
+
+# Flattened arcs measure slightly under their nominal width.
+FLATTENING_SLACK = 0.02
+
+
+def _stroke_width(g) -> float:
+    return max(2 * maximum_inscribed_circle(p).length for p in _components(g))
+
+
+def _canvas_offset(g, n: int, axis: int) -> float:
+    return abs((g.bounds[axis] + g.bounds[axis + 2]) / 2 - n / 2)
+
+
+def _tradeoff(icon, appearance, n, rule, target, measured, permitted, reason) -> dict:
+    return {
+        'id': f'{icon}-{appearance}-{n}-{rule}',
+        'icon': icon,
+        'pack': PACK,
+        'appearance': appearance,
+        'nativeSize': n,
+        'target': target,
+        'measuredApprox': round(measured, 4),
+        'rule': rule,
+        'meetsTarget': False,
+        'status': 'design-tradeoff-owner-review-pending',
+        'permittedUse': permitted,
+        'owner': None,
+        'reviewer': None,
+        'reason': reason,
+    }
+
+
+def measure_tradeoffs() -> list[dict]:
+    """Measure the registered tradeoffs. A value that reaches its target drops off the register."""
+    records = []
+    for n in MASTERS:
+        link_use = 'visible-label-required' if n == 12 else 'name-on-enclosing-control'
+        for appearance in APPEARANCES:
+            parts = _components(draw('link', n, appearance))
+            separation = float(parts[0].distance(parts[1]))
+            if separation < GAP_TARGET[n]:
+                records.append(_tradeoff(
+                    'link', appearance, n, 'weave-separation', GAP_TARGET[n], separation, link_use,
+                    'An over/under cut between two crossing strokes, not a counter or an opening: '
+                    'reaching the gap target would cut the rings apart. Counters are measured '
+                    'separately and meet the floor.'))
+        filled = draw('link', n, 'filled')
+        if _stroke_width(filled) < BOLD_WIDTH[n] - FLATTENING_SLACK:
+            records.append(_tradeoff(
+                'link', 'filled', n, 'open-glyph-filled-width', BOLD_WIDTH[n], _stroke_width(filled),
+                link_use,
+                'The filled stroke is thinned so the three counters stay open at 1x. It remains '
+                'on the outline centerline.'))
+        for appearance in APPEARANCES:
+            for hole in (Polygon(h) for p in _components(draw('branch', n, appearance)) for h in p.interiors):
+                diameter = 2 * maximum_inscribed_circle(hole).length
+                if diameter < COUNTER_FLOOR[n] - FLATTENING_SLACK:
+                    records.append(_tradeoff(
+                        'branch', appearance, n, 'counter-inscribed-diameter', COUNTER_FLOOR[n],
+                        diameter, 'visible-label-required',
+                        'Node ring counters distinguish outline from filled, so this small shortfall '
+                        'is kept rather than removing them. Nominal diameter is 1.3 px; artwork unchanged.'))
+                    break
+    arrow = _canvas_offset(draw('arrow-right', 12, 'outline'), 12, 1)
+    if arrow > 0.01:
+        records.append(_tradeoff(
+            'arrow-right', 'outline', 12, 'weight-pair-centerline-offset', 0, arrow,
+            'name-on-enclosing-control',
+            'The 1 px shaft sits on one pixel row, so it matches the head at 1x. Filled stays on the '
+            'canvas centre, where its 2 px shaft is already crisp.'))
+    for n in MASTERS:
+        for appearance in APPEARANCES:
+            offset = _canvas_offset(draw('warning', n, appearance), n, 0)
+            if offset > 0.01:
+                records.append(_tradeoff(
+                    'warning', appearance, n, 'canvas-centre-offset', 0, offset,
+                    'visible-label-required',
+                    'Centred on a pixel column so the punctuation is solid at 1x. An icon-only '
+                    'centred use would sit 0.5 px left, but Warning always carries a visible label.'))
     return records
 
 
@@ -238,6 +321,12 @@ def build() -> dict:
             exceptions.append(rec)
         else:
             rec['status'] = 'meets-gap-target'
+    for rec in measure_tradeoffs():
+        rec['geometrySha256'] = next(
+            r['sha256'] for r in inventory
+            if r['id'] == rec['icon'] and r['appearance'] == rec['appearance'] and r['master'] == rec['nativeSize']
+        )
+        exceptions.append(rec)
     (ROOT / 'catalog' / 'exceptions.json').write_text(json.dumps(exceptions, indent=2) + '\n')
     bind_warning_hashes(inventory, exceptions)
 

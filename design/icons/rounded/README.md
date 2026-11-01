@@ -51,6 +51,10 @@ Warning requires a **visible text label** in every appearance and native size, i
 
 Branch also requires a visible text label at every size and appearance, and Link requires one at 12 px. These rules are separate from the Warning record.
 
+## Exceptions
+
+Below-target values are measured on each build and listed in [`catalog/exceptions.json`](catalog/exceptions.json). A record discloses a tradeoff; `owner` and `reviewer` stay `null` until a person accepts it. See [`GRAMMAR.md`](GRAMMAR.md) section 6.
+
 ## Out of scope
 
 Public publication, Remix catalog/web API, the remaining 36 Outline IDs, legacy fillet proposal. The unified pack comparison catalog includes the shipped families.

@@ -62,7 +62,7 @@ Open-glyph ends are **round caps** (full semicircles with radius = stroke/2).
 - Plus, arrows, link strokes, search handles, and branch connectors terminate in capsules.
 - Square caps are Outline. Rounded does not use them.
 - Pointed arrow tips in Rounded are round-joined polylines: the tip is a circular arc of radius stroke/2, not a mitre and not a square cut. Direction must still read; if a blunt tip fails at 12 px, lengthen the head or simplify, do not switch to a square cap.
-- Arrows are one continuous shape: the shaft runs into the tip, at a 45° head half-angle and a head span of two thirds of the canvas, in all six drawings. This is a design judgment; a detached shaft was not a functional failure.
+- Arrows are one continuous shape: the shaft runs into the tip, at a 45° head half-angle and a head span of two thirds of the canvas, in all six drawings. This is a design judgment; a detached shaft was not a functional failure. The outline 12 shaft sits on a pixel row (y 5–6), so it is as solid as its head at 1×.
 
 ---
 
@@ -102,7 +102,19 @@ Rounded prefers **slightly larger counters** than Outline at the same size, beca
 - Do not crowd micro punctuation. Calendar has no date marks at 12 or 16 and a row of three at 24. File has two unequal left-aligned lines at 24 only, because one centered bar has the form of file-minus.
 - Dense compositions (sliders, calendar, warning, branch) occupy only the space they need; a canvas is not a compulsory painted box.
 - Avoid sub-pixel holes. If a counter cannot stay ≥ ~0.9 / 1.35 / 1.8 px inscribed diameter at 12 / 16 / 24, remove it. This is why File's turned-down corner is solid in outline.
-- **Recorded exception:** Link's weave gap is 0.65 / 0.9 / 1.25 px, below the gap target. It is an over/under cue between two strokes, not an opening, and the target would cut the rings apart. Its three counters do meet the floor above. The existing 16 px Branch node counters measure 1.3 px, just under the 1.35 floor; they are unchanged.
+- An odd-width mark needs an odd-pixel centre. Warning is centred on a pixel column at 12 and 16 (x 5.5 and 7.5), so its stem paints one solid column at 1×. Its gaps stay at target.
+
+### Registered exceptions
+
+`catalog/exceptions.json` is rebuilt from measurements by `source/build.py`. It lists only values currently below their contract, in one schema (`catalog/schemas/exceptions.schema.json`). A value that reaches its target drops off, so resolved records do not linger as active failures. `owner` and `reviewer` stay `null` until a person accepts the tradeoff; a record is a disclosure, not an approval. Targets above do not change because a value is registered.
+
+| Rule | Where | Why it stays |
+|---|---|---|
+| `weave-separation` | Link, all six drawings | An over/under cut between two crossing strokes. It is not a counter or an opening, and the gap target would cut the rings apart. Link's three counters are measured separately and meet the floor. |
+| `open-glyph-filled-width` | Link filled 12 | 1.75 px, not 2, so it is no denser than the 16 master and its counters stay open at 1×. |
+| `counter-inscribed-diameter` | Branch outline 16 | The one exception to "remove it" above: the node rings distinguish outline from filled. Measured about 1.28 px on the flattened path (1.3 nominal) against 1.35. |
+| `weight-pair-centerline-offset` | Arrow right outline 12 | 0.5 px above its filled partner, whose 2 px shaft is already crisp on the canvas centre. |
+| `canvas-centre-offset` | Warning 12 and 16, both styles | 0.5 px left of the canvas centre. It would show in an icon-only centred use, and Warning always carries a visible label. |
 
 ---
 
@@ -111,7 +123,7 @@ Rounded prefers **slightly larger counters** than Outline at the same size, beca
 | Model | Outline | Filled | Bound rule |
 |---|---|---|---|
 | `silhouette` | Ring (and positive marks) of the shared outer shape | Solid outer shape minus the same counters | Outer bounds match within 0.05 px |
-| `weight` | Nominal capsule width | Heavier capsule on the same centerline | Filled area > outline area; bounds may grow with the heavier cap |
+| `weight` | Nominal capsule width | Heavier capsule on the same centerline | Filled area > outline area; bounds may grow with the heavier cap. Registered exceptions: Link filled 12 width, Arrow right outline 12 centerline |
 
 Filled is never “outline with the hole painted in” for search, link, or other hole-as-meaning glyphs.
 

@@ -2,6 +2,8 @@
   "rounded": {
     "outlineWidth": {"12": 1, "16": 1.5, "24": 2},
     "openGlyphFilledWidth": {"12": 2, "16": 2.5, "24": 3},
+    "linkFilledWidth": {"12": 1.75, "16": 2.5, "24": 3},
+    "counterFloor": {"12": 0.9, "16": 1.35, "24": 1.8},
     "meaningfulGapTarget": {"12": 1, "16": 1.5, "24": 2},
     "productPathCommands": ["M", "L", "Z"],
     "validatorPathCommands": ["M", "L", "C", "Q", "A", "Z"],

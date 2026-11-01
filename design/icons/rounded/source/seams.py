@@ -24,8 +24,12 @@ VALIDATOR_PATH_COMMANDS = ('M', 'L', 'C', 'Q', 'A', 'Z')
 # Nominal tokens — same numbers as Outline, different join/cap model.
 OUTLINE_WIDTH = {12: 1.0, 16: 1.5, 24: 2.0}
 BOLD_WIDTH = {12: 2.0, 16: 2.5, 24: 3.0}
+# Filled Link 12 is thinner than BOLD_WIDTH so its counters stay open. Registered exception.
+LINK_BOLD_WIDTH = {12: 1.75, 16: 2.5, 24: 3.0}
 PADDING = {12: 1.0, 16: 1.5, 24: 2.0}
 GAP_TARGET = {12: 1.0, 16: 1.5, 24: 2.0}
+# Smallest inscribed diameter of a transparent counter (GRAMMAR section 6).
+COUNTER_FLOOR = {12: 0.9, 16: 1.35, 24: 1.8}
 # Object outer corners ≈ 1.6–1.7× outline. Wired into drawers. Not legacy fillet proposal's 0.5–1× fillet.
 CORNER_TOKEN = {12: 1.6, 16: 2.4, 24: 3.4}
 # Acute cues (dog-ear, apex, roof peak) stay round but smaller. Above the outline

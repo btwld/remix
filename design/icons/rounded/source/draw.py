@@ -14,8 +14,8 @@ from source.primitives import (
     rounded_hull, rounded_rect, stadium_line, union,
 )
 from source.seams import (
-    ACUTE_JOIN, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, CUT_JOIN, GAP_TARGET, MASTERS,
-    OUTLINE_WIDTH, PADDING, QUAD_SEGS, STAR_JOIN, UnknownAppearanceError, UnknownIconError,
+    ACUTE_JOIN, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, CUT_JOIN, GAP_TARGET, LINK_BOLD_WIDTH,
+    MASTERS, OUTLINE_WIDTH, PADDING, QUAD_SEGS, STAR_JOIN, UnknownAppearanceError, UnknownIconError,
     UnknownMasterError,
 )
 
@@ -93,7 +93,8 @@ def _plus(n, appearance):
 
 def _arrow_right(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
-    c = n / 2
+    # The 1 px shaft sits on a pixel row: on the even canvas centre it paints two half rows.
+    c = 5.5 if n == 12 and outlined else n / 2
     # One continuous shaft into a 45-degree head, spanning two thirds of the canvas.
     tail, tip, reach = {12: (1.5, 10.5, 4.0), 16: (2.25, 13.75, 5.25), 24: (3.0, 21.0, 8.0)}[n]
     return union(
@@ -197,17 +198,17 @@ def _sliders(n, appearance):
 def _warning(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
     # The apex circle sits on the top keyline, so its radius recedes nothing.
-    c = n / 2
+    # At 12 and 16 the glyph is centred on a pixel column, so the mark paints one solid column.
     if n == 12:
-        half, top, bottom = 5.25, 1.0, 11.0
-        stem = stadium_line(c, 4.85, c, 6.45, 0.9)
-        dot = circle(c, 8.45, 0.55)
+        c, half, top, bottom = 5.5, 5.25, 1.0, 11.0
+        stem = stadium_line(c, 5.0, c, 6.5, 1.0)
+        dot = circle(c, 8.5, 0.5)
     elif n == 16:
-        half, top, bottom = 6.9, 1.5, 14.5
-        stem = stadium_line(c, 6.9, c, 7.9, 1.2)
-        dot = circle(c, 10.75, 0.75)
+        c, half, top, bottom = 7.5, 6.9, 1.5, 14.5
+        stem = stadium_line(c, 7.02, c, 7.975, 1.35)
+        dot = circle(c, 10.825, 0.675)
     else:
-        half, top, bottom = 10.2, 2.0, 22.0
+        c, half, top, bottom = 12.0, 10.2, 2.0, 22.0
         stem = stadium_line(c, 9.9, c, 12.9, 1.8)
         dot = circle(c, 16.9, 1.1)
     shape = rounded_hull(
@@ -230,6 +231,7 @@ def _chain_link(start, end, centerline_r, t):
 def _link(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
     # Two capsule rings on one 45-degree axis, woven: each crosses over the other once.
+    t = w if outlined else LINK_BOLD_WIDTH[n]
     centerline_r, outer, inner = {12: (2.0, 3.54, 0.5), 16: (2.75, 4.24, 0.7), 24: (4.0, 7.07, 1.4)}[n]
     gap = {12: 0.65, 16: 0.9, 24: 1.25}[n]
     a = _chain_link(inner, outer, centerline_r, t)

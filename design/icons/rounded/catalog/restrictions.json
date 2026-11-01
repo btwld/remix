@@ -13,25 +13,33 @@
         "12": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "999cf68b307be1a8449ecc8a84c89e1d01bba518642c4a36f41af4dc48a03c66",
-            "exceptionIds": []
+            "geometrySha256": "b6bf3819f577f56b58ed5e80186e93c73617e0b786af7ba2dc478ff5a7a59087",
+            "exceptionIds": [
+              "warning-outline-12-canvas-centre-offset"
+            ]
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "6415b6f3c9168e253796c3f13207aea2c47c46e91085582661004ae766c3d794",
-            "exceptionIds": []
+            "geometrySha256": "a071b89023e4d145fef099ffa01b4517d47460fbdfbda323091204a7a2270f90",
+            "exceptionIds": [
+              "warning-filled-12-canvas-centre-offset"
+            ]
           }
         },
         "16": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "4400740380f3c1d76555e0788a68f165b59ec5afc8b7fc5f4066643f33b74b93",
-            "exceptionIds": []
+            "geometrySha256": "a20bd8c409e3c3c39033bb4c7b2eecb8ff3fa221898e6407a3bf7a91e8c6b6fd",
+            "exceptionIds": [
+              "warning-outline-16-canvas-centre-offset"
+            ]
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "d145cd589783833d0f262f53535fb124a77c608fd8c13dcf92dfa51e0056b142",
-            "exceptionIds": []
+            "geometrySha256": "082b40abe68413d5ab5988e827686abff4469b86dbdc13ad0910f13cc84f5ea4",
+            "exceptionIds": [
+              "warning-filled-16-canvas-centre-offset"
+            ]
           }
         },
         "24": {

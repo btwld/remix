@@ -19,12 +19,13 @@ from shapely.geometry import LineString, MultiPolygon, Point, Polygon, box
 from source.draw import draw
 from source.lookup import icon_svg, icon_svg_for_display, select_master
 from source.seams import (
-    ACUTE_JOIN, APPEARANCES, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, CUT_JOIN,
-    CrossPackFallbackError, GAP_TARGET, MASTERS, MASTER_SELECTION, OUTLINE_WIDTH,
+    ACUTE_JOIN, APPEARANCES, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, COUNTER_FLOOR, CUT_JOIN,
+    CrossPackFallbackError, GAP_TARGET, LINK_BOLD_WIDTH, MASTERS, MASTER_SELECTION, OUTLINE_WIDTH,
     PADDING, PAIR_MODEL, PRODUCT_PATH_COMMANDS, STAR_JOIN,
     UnknownAppearanceError, UnknownIconError, UnknownMasterError,
 )
 from source.primitives import polygon, round_convex, rounded_hull, stadium_line, union
+from source.svg import path_data, svg_text
 from source.validate import parse_path, parse_svg
 
 try:
@@ -184,7 +185,7 @@ def box_x(x0, x1, n):
 
 # Measurement probes. They read exported SVG geometry, never drawer arguments.
 # NegativeControlTests proves that each one fails on the defect it guards against.
-COUNTER_FLOOR = {12: 0.9, 16: 1.35, 24: 1.8}  # GRAMMAR section 6
+FLATTENING_SLACK = 0.02  # Flattened arcs measure slightly under their nominal width.
 MID_WIDTH_BLOB = 0.69  # A triangle at the full CORNER_TOKEN reaches this on every master.
 
 
@@ -283,6 +284,71 @@ def counters(g, n):
     return sorted(found)
 
 
+def hole_diameters(g):
+    return sorted(2 * maximum_inscribed_circle(h).length for h in holes(g))
+
+
+def stroke_width(g):
+    return max(2 * maximum_inscribed_circle(p).length for p in parts(g))
+
+
+def pixel_alpha(g, n):
+    """Native 1x coverage, through the same CairoSVG path as the proofs."""
+    text = svg_text('probe', 'outline', n, path_data(g)).replace('currentColor', '#000000')
+    return Image.open(io.BytesIO(cairosvg.svg2png(bytestring=text.encode()))).convert('RGBA').getchannel('A')
+
+
+def line_concentration(alpha, cells):
+    """(peak coverage, peak share of the ink) across cells that lie in a line across a stroke."""
+    values = [alpha.getpixel(cell) / 255 for cell in cells]
+    return max(values), max(values) / sum(values)
+
+
+def expected_register(geometry):
+    """Below-target values, measured independently of source/build.py, as {id: (target, measured)}."""
+    found = {}
+    for n in MASTERS:
+        for appearance in APPEARANCES:
+            link = geometry('link', n, appearance)
+            separation = parts(link)[0].distance(parts(link)[1])
+            if separation < GAP_TARGET[n]:
+                found[f'link-{appearance}-{n}-weave-separation'] = (GAP_TARGET[n], separation)
+            if appearance == 'filled' and stroke_width(link) < BOLD_WIDTH[n] - FLATTENING_SLACK:
+                found[f'link-filled-{n}-open-glyph-filled-width'] = (BOLD_WIDTH[n], stroke_width(link))
+            branch = hole_diameters(geometry('branch', n, appearance))
+            if branch and branch[0] < COUNTER_FLOOR[n] - FLATTENING_SLACK:
+                found[f'branch-{appearance}-{n}-counter-inscribed-diameter'] = (COUNTER_FLOOR[n], branch[0])
+            arrow = geometry('arrow-right', n, appearance).bounds
+            if abs((arrow[1] + arrow[3]) / 2 - n / 2) > 0.01:
+                found[f'arrow-right-{appearance}-{n}-weight-pair-centerline-offset'] = (
+                    0, abs((arrow[1] + arrow[3]) / 2 - n / 2))
+            warning = geometry('warning', n, appearance).bounds
+            if abs((warning[0] + warning[2]) / 2 - n / 2) > 0.01:
+                found[f'warning-{appearance}-{n}-canvas-centre-offset'] = (
+                    0, abs((warning[0] + warning[2]) / 2 - n / 2))
+    return found
+
+
+def register_problems(records, expected, sha_of):
+    """Why a register does not describe the current artwork. Empty means it is fresh."""
+    problems = []
+    by_id = {r['id']: r for r in records}
+    if len(by_id) != len(records):
+        problems.append('duplicate id')
+    for missing in expected.keys() - by_id.keys():
+        problems.append(f'unregistered {missing}')
+    for record in records:
+        if record['id'] not in expected:
+            problems.append(f'stale {record["id"]}')
+            continue
+        target, measured = expected[record['id']]
+        if record['target'] != target or abs(record['measuredApprox'] - measured) > 0.001:
+            problems.append(f'wrong measurement {record["id"]}')
+        if record['geometrySha256'] != sha_of(record['icon'], record['nativeSize'], record['appearance']):
+            problems.append(f'wrong hash {record["id"]}')
+    return problems
+
+
 def long_axis_degrees(g):
     """Direction of the artwork's long axis, in canvas degrees: 45 points up and to the right."""
     hull = list(g.convex_hull.exterior.coords)
@@ -347,6 +413,46 @@ class NegativeControlTests(unittest.TestCase):
         frame = self.triangle.difference(self.triangle.buffer(-2))
         crowded = stadium_line(12, 6.5, 12, 12, 1.55)
         self.assertLess(frame.distance(crowded), GAP_TARGET[24])
+
+
+    def test_pixel_probe_rejects_a_mark_straddling_two_columns(self):
+        straddling = pixel_alpha(stadium_line(6, 4, 6, 8, 0.9), 12)
+        self.assertAlmostEqual(line_concentration(straddling, [(x, 6) for x in (4, 5, 6, 7)])[1], 0.5, delta=0.01)
+        solid = pixel_alpha(stadium_line(5.5, 4, 5.5, 8, 1), 12)
+        self.assertGreater(line_concentration(solid, [(x, 6) for x in (4, 5, 6)])[1], 0.95)
+
+    def test_register_check_rejects_stale_and_tampered_records(self):
+        records = json.loads((ROOT / 'catalog' / 'exceptions.json').read_text())
+        expected = expected_register(product)
+        sha = artwork_sha
+        self.assertEqual(register_problems(records, expected, sha), [])
+        self.assertTrue(register_problems(records[1:], expected, sha), 'missing record')
+        altered = [dict(r) for r in records]
+        altered[0]['measuredApprox'] += 0.05
+        self.assertTrue(register_problems(altered, expected, sha), 'changed measurement')
+        altered = [dict(r) for r in records]
+        altered[0]['geometrySha256'] = '0' * 64
+        self.assertTrue(register_problems(altered, expected, sha), 'old artwork hash')
+        # Artwork that reaches its floor leaves the record stale, so it must come off the register.
+        def opened(icon, n, appearance):
+            if (icon, n, appearance) == ('branch', 16, 'outline'):
+                return box(0, 0, 16, 16).difference(Point(8, 8).buffer(1, quad_segs=8))
+            return product(icon, n, appearance)
+        self.assertTrue(register_problems(records, expected_register(opened), sha), 'resolved value')
+
+    def test_exception_schema_rejects_an_invented_approval_and_a_missing_measurement(self):
+        schema = json.loads((ROOT / 'catalog' / 'schemas' / 'exceptions.schema.json').read_text())
+        record = json.loads((ROOT / 'catalog' / 'exceptions.json').read_text())[0]
+        jsonschema.validate([record], schema)
+        with self.assertRaises(jsonschema.ValidationError):
+            jsonschema.validate([{**record, 'owner': 'someone'}], schema)
+        with self.assertRaises(jsonschema.ValidationError):
+            jsonschema.validate([{k: v for k, v in record.items() if k != 'measuredApprox'}], schema)
+
+
+def artwork_sha(icon_id, n, appearance):
+    path = ROOT / 'generated' / 'rounded' / appearance / str(n) / f'{icon_id}.svg'
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 class ShapeContractTests(unittest.TestCase):
@@ -439,8 +545,9 @@ class ShapeContractTests(unittest.TestCase):
                 self.assertGreaterEqual(marks[0].distance(marks[1]) + 1e-6, target)
                 stem, dot = sorted(marks, key=lambda m: m.bounds[1])
                 self.assertGreater(stem.bounds[3] - stem.bounds[1], 1.4 * (dot.bounds[3] - dot.bounds[1]))
-                self.assertAlmostEqual(stem.centroid.x, n / 2, delta=0.01)
-                self.assertAlmostEqual(dot.centroid.x, n / 2, delta=0.01)
+                middle = (frame.bounds[0] + frame.bounds[2]) / 2
+                self.assertAlmostEqual(stem.centroid.x, middle, delta=0.01)
+                self.assertAlmostEqual(dot.centroid.x, middle, delta=0.01)
                 filled = product('warning', n, 'filled')
                 cut = holes(filled)
                 self.assertEqual(len(cut), 2)
@@ -449,8 +556,30 @@ class ShapeContractTests(unittest.TestCase):
                 for hole in cut:
                     self.assertGreaterEqual(solid.exterior.distance(hole) + 1e-6, target)
 
-    def test_warning_exceptions_are_resolved_and_the_label_rule_remains(self):
-        self.assertEqual(json.loads((ROOT / 'catalog' / 'exceptions.json').read_text()), [])
+    def test_warning_punctuation_is_solid_on_one_column_at_small_masters(self):
+        for n, share in ((12, 0.95), (16, 0.7)):
+            for appearance in APPEARANCES:
+                with self.subTest(master=n, appearance=appearance):
+                    g = product('warning', n, appearance)
+                    centre = int((g.bounds[0] + g.bounds[2]) / 2)
+                    outline = product('warning', n, 'outline')
+                    stem = sorted(parts(outline)[1:], key=lambda m: m.bounds[1])[0]
+                    row = int((stem.bounds[1] + stem.bounds[3]) / 2)
+                    alpha = pixel_alpha(g, n)
+                    cells = [(x, row) for x in (centre - 1, centre, centre + 1)]
+                    if appearance == 'filled':
+                        # The mark is a cut, so measure the missing ink.
+                        values = [1 - alpha.getpixel(c) / 255 for c in cells]
+                        peak, ratio = max(values), max(values) / sum(values)
+                    else:
+                        peak, ratio = line_concentration(alpha, cells)
+                    self.assertGreater(peak, 0.95)
+                    self.assertGreater(ratio, share)
+
+    def test_warning_gap_exceptions_stay_resolved_and_the_label_rule_remains(self):
+        records = json.loads((ROOT / 'catalog' / 'exceptions.json').read_text())
+        warning = [r for r in records if r['icon'] == 'warning']
+        self.assertEqual({r['rule'] for r in warning}, {'canvas-centre-offset'})
         record = json.loads((ROOT / 'catalog' / 'restrictions.json').read_text())['records'][0]
         inventory = {
             (r['appearance'], r['master']): r['sha256']
@@ -460,7 +589,52 @@ class ShapeContractTests(unittest.TestCase):
             cell = record['sizes'][str(n)][appearance]
             self.assertTrue(cell['visibleLabelRequired'])
             self.assertEqual(cell['geometrySha256'], sha)
-            self.assertEqual(cell['exceptionIds'], [])
+            self.assertEqual(
+                cell['exceptionIds'],
+                [r['id'] for r in warning if r['appearance'] == appearance and r['nativeSize'] == n])
+
+    def test_exception_register_describes_the_current_artwork(self):
+        records = json.loads((ROOT / 'catalog' / 'exceptions.json').read_text())
+        jsonschema.validate(records, json.loads((ROOT / 'catalog' / 'schemas' / 'exceptions.schema.json').read_text()))
+        self.assertEqual(register_problems(records, expected_register(product), artwork_sha), [])
+        for record in records:
+            self.assertIsNone(record['owner'])
+            self.assertIsNone(record['reviewer'])
+
+    def test_every_closed_counter_meets_the_floor_or_is_registered(self):
+        registered = {
+            (r['icon'], r['nativeSize'], r['appearance'])
+            for r in json.loads((ROOT / 'catalog' / 'exceptions.json').read_text())
+            if r['rule'] == 'counter-inscribed-diameter'
+        }
+        self.assertEqual(registered, {('branch', 16, 'outline')})
+        for icon_id in CANONICAL_IDS:
+            for n in MASTERS:
+                for appearance in APPEARANCES:
+                    with self.subTest(icon=icon_id, master=n, appearance=appearance):
+                        for diameter in hole_diameters(product(icon_id, n, appearance)):
+                            if (icon_id, n, appearance) not in registered:
+                                self.assertGreaterEqual(diameter + FLATTENING_SLACK, COUNTER_FLOOR[n])
+
+    def test_branch_keeps_three_nodes_and_its_label_rule(self):
+        for n in MASTERS:
+            with self.subTest(master=n):
+                outline, filled = product('branch', n, 'outline'), product('branch', n, 'filled')
+                self.assertEqual(len(parts(outline)), 1)
+                self.assertEqual(len(parts(filled)), 1)
+                self.assertEqual(holes(filled), [])
+                nodes = sorted(holes(outline), key=lambda h: h.centroid.x)
+                self.assertEqual(len(nodes), 3)
+                for node in nodes:
+                    self.assertGreater(4 * math.pi * node.area / node.length ** 2, 0.98)
+                # One node on the left, two stacked symmetrically on the right.
+                left, *right = nodes
+                self.assertLess(left.centroid.x, right[0].centroid.x)
+                self.assertAlmostEqual(right[0].centroid.x, right[1].centroid.x, delta=0.01)
+                self.assertAlmostEqual(right[0].centroid.y + right[1].centroid.y, n, delta=0.01)
+                self.assertAlmostEqual(left.centroid.y, n / 2, delta=0.01)
+        meta = next(m for m in json.loads((ROOT / 'catalog' / 'icons.json').read_text())['icons'] if m['id'] == 'branch')
+        self.assertIn('every size', meta['review']['usage'])
 
     def test_link_is_one_woven_chain_on_a_single_axis(self):
         def check(n, appearance, g):
@@ -486,9 +660,27 @@ class ShapeContractTests(unittest.TestCase):
             with self.subTest(master=n):
                 outline, filled = product('link', n, 'outline'), product('link', n, 'filled')
                 self.assertGreater(filled.area, outline.area)
-                grown = (BOLD_WIDTH[n] - OUTLINE_WIDTH[n]) / 2
+                grown = (LINK_BOLD_WIDTH[n] - OUTLINE_WIDTH[n]) / 2
                 self.assertAlmostEqual(filled.bounds[0], outline.bounds[0] - grown, delta=0.02)
                 self.assertAlmostEqual(filled.bounds[2], outline.bounds[2] + grown, delta=0.02)
+
+    def test_filled_link_12_stays_open_at_1x(self):
+        ink = {n: product('link', n, 'filled').area / n ** 2 for n in MASTERS}
+        # No denser than the 16 master: at 2 px it carried 38.2% ink and its lens barely cleared the floor.
+        self.assertLessEqual(ink[12], ink[16])
+        self.assertAlmostEqual(stroke_width(product('link', 12, 'filled')), LINK_BOLD_WIDTH[12], delta=FLATTENING_SLACK)
+        self.assertGreater(product('link', 12, 'filled').area, 1.5 * product('link', 12, 'outline').area)
+        self.assertGreaterEqual(counters(product('link', 12, 'filled'), 12)[0], 1.2)
+
+    def test_arrow_12_outline_shaft_matches_its_head_at_1x(self):
+        g = product('arrow-right', 12, 'outline')
+        peak, ratio = line_concentration(pixel_alpha(g, 12), [(3, y) for y in range(3, 9)])
+        self.assertGreater(peak, 0.95)
+        self.assertGreater(ratio, 0.95)
+        # That row is inside the filled partner's 2 px shaft, so switching style does not jump.
+        filled = pixel_alpha(product('arrow-right', 12, 'filled'), 12)
+        self.assertGreater(filled.getpixel((3, 5)) / 255, 0.95)
+        self.assertGreater(filled.getpixel((3, 6)) / 255, 0.95)
 
     def test_arrow_is_continuous_with_one_head_angle(self):
         def check(n, appearance, g):
@@ -496,15 +688,17 @@ class ShapeContractTests(unittest.TestCase):
             self.assertEqual(holes(g), [])
             t = OUTLINE_WIDTH[n] if appearance == 'outline' else BOLD_WIDTH[n]
             minx, miny, maxx, maxy = g.bounds
-            self.assertAlmostEqual((miny + maxy) / 2, n / 2, delta=0.01)
-            tip = (maxx - t / 2, n / 2)
+            # Outline 12 sits on a pixel row; expected_register holds it to the register.
+            centre = 5.5 if (n, appearance) == (12, 'outline') else n / 2
+            self.assertAlmostEqual((miny + maxy) / 2, centre, delta=0.01)
+            tip = (maxx - t / 2, centre)
             top = [x for x, y in parts(g)[0].exterior.coords if y < miny + 1e-3]
             cap = (sum(top) / len(top), miny + t / 2)
             half_angle = math.degrees(math.atan2(tip[1] - cap[1], tip[0] - cap[0]))
             self.assertAlmostEqual(half_angle, 45, delta=1)
             # The notch between arm and shaft stays open at the arm's end.
-            shaft_top = n / 2 - t / 2
-            column = g.intersection(LineString([(cap[0], 0), (cap[0], n / 2)]))
+            shaft_top = centre - t / 2
+            column = g.intersection(LineString([(cap[0], 0), (cap[0], centre)]))
             arm = min(column.geoms, key=lambda s: s.bounds[1]) if hasattr(column, 'geoms') else column
             self.assertGreaterEqual(shaft_top - arm.bounds[3], GAP_TARGET[n])
         self.check_each('arrow-right', check)

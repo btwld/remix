@@ -59,7 +59,7 @@
       "keywords": ["next", "forward"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "One continuous round-capped shaft into a round-joined head, at a 45-degree half-angle and a two-thirds-canvas span on all six drawings.",
+        "note": "One continuous round-capped shaft into a round-joined head, at a 45-degree half-angle and a two-thirds-canvas span on all six drawings. The outline 12 shaft sits on a pixel row, a registered 0.5 px offset from its filled partner.",
         "usage": "The application chooses left/right; artwork does not auto-mirror."
       }
     },
@@ -124,7 +124,7 @@
       "keywords": ["caution", "attention"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "ACUTE_JOIN triangle authored from its corner circles, so the apex stays on the keyline, with capsule stem and circular dot at the gap target. Visible-label restriction is concept-level.",
+        "note": "ACUTE_JOIN triangle authored from its corner circles, so the apex stays on the keyline, with capsule stem and circular dot at the gap target. At 12 and 16 px the glyph is centred on a pixel column, a registered 0.5 px offset, so the mark is solid at 1x. Visible-label restriction is concept-level.",
         "usageRestriction": "warning-visible-label"
       }
     },
@@ -137,7 +137,7 @@
       "keywords": ["url", "chain"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Two capsule rings on one 45-degree axis, woven so that each crosses over the other once, at every master and style. The weave gap is a recorded grammar exception below the meaningful-gap target. Requires a visible text label at 12 px.",
+        "note": "Two capsule rings on one 45-degree axis, woven so that each crosses over the other once, at every master and style. The weave separation and the thinner filled 12 px stroke are registered in catalog/exceptions.json. Requires a visible text label at 12 px.",
         "usage": "Requires a visible text label at 12 px. At 16 and 24 px, use the action name on the enclosing control."
       }
     },
@@ -150,7 +150,7 @@
       "keywords": ["workflow", "fork"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Three circular nodes and round-joined connectors. Outline uses square nodes.",
+        "note": "Three circular nodes and round-joined connectors. Outline uses square nodes. The 16 px outline node counters are a registered shortfall against the counter floor.",
         "usage": "Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record."
       }
     },
