@@ -129,6 +129,33 @@ class _MenuExampleState extends State<MenuExample> {
 ```
 </CodeGroup>
 
+## Button triggers
+
+Use `RemixMenuTrigger.control` to supply a button that owns its styling,
+accessible name, and activation. Pass the handle's `focusNode` and `toggle`
+to the button. The menu supplies expanded semantics, closes on Escape or an
+outside tap, and returns focus to the button.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget actionsMenu(ValueChanged<String> onSelected) => RemixMenu<String>(
+  trigger: RemixMenuTrigger.control(
+    builder: (context, menu) => RemixButton(
+      label: 'Actions',
+      focusNode: menu.focusNode,
+      onPressed: menu.toggle,
+    ),
+  ),
+  items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+  onSelected: onSelected,
+);
+```
+
+Return a single control. `MenuStyler.trigger` and `RemixMenu.semanticLabel`
+do not apply to a control trigger; style and label the button itself.
+
 ## Custom trigger content
 
 `RemixMenuTrigger` is a configuration object, not a widget. The same object is

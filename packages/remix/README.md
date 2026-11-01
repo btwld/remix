@@ -5,7 +5,7 @@ styling. Remix supplies component anatomy and behavior; your app supplies its
 visual language, state and navigation.
 
 ```bash
-flutter pub add remix:^1.0.0-beta.13
+flutter pub add remix:^1.0.0-beta.14
 ```
 
 ```dart

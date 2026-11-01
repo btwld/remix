@@ -24,7 +24,7 @@ Flutter components with Naked UI behavior and Mix styling.
 ## Start with a component
 
 ```bash
-flutter pub add remix:^1.0.0-beta.13
+flutter pub add remix:^1.0.0-beta.14
 ```
 
 ```dart
