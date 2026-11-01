@@ -1,3 +1,10 @@
+## 1.3.2
+
+### Fixes
+
+- Keep live loading announcements separate from a caller-owned menu trigger's
+  accessible name, while preserving its expanded state.
+
 ## 1.3.1
 
 ### Fixes
