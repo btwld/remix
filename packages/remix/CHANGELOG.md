@@ -2,6 +2,8 @@
 
 ### Breaking changes
 
+- `RemixToast` now extends `StatefulWidget`. Type references as `Widget`
+  instead of `StatelessWidget`, and compose it rather than extending it.
 - Radio and switch `semanticLabel` fields and styler parameters are now
   `String?`. Provide either `label` or `semanticLabel` for an accessible name.
 - `RemixMenuTrigger.label` is now `String?`; `.control` triggers use their
