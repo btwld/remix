@@ -611,6 +611,7 @@ void main() {
           positioning: const OverlayPositionConfig(
             side: OverlaySide.right,
             minimumAvailableHeight: 1000,
+            collisionPadding: EdgeInsets.all(20),
           ),
           panel: LayoutBuilder(
             builder: (context, value) {
