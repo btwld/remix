@@ -27,15 +27,15 @@ CATALOG_USAGE = {
     # Direction, not labels: every concept is `rtl: false` in the manifest.
     "The application chooses left/right; artwork does not auto-mirror.": None,
     "Visible label required at 12 px; contextual label recommended at other sizes.": frozenset({12}),
-    "Keep a visible label, especially at 12 px. This is a usage note, not the Warning restriction record.": ALL,
-    "Visible text label required for outline and filled Warning at 12 / 16 / 24 px, including scaled uses of those masters.": ALL,
+    "Requires a visible text label at 12 px. At 16 and 24 px, use the action name on the enclosing control.": frozenset({12}),
+    "Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record.": ALL,
 }
 CATALOG_RESTRICTIONS = {"warning-visible-label": ALL}
 
 # Requirements stated only in prose: (source, quote, family, concept, masters).
 PROSE = (
-    ("rounded/README.md", "Branch and 12 px Link should keep a visible label", "rounded", "link", frozenset({12})),
-    ("rounded/README.md", "Branch and 12 px Link should keep a visible label", "rounded", "branch", ALL),
+    ("rounded/README.md", "Branch also requires a visible text label at every size and appearance, and Link requires one at 12 px", "rounded", "link", frozenset({12})),
+    ("rounded/README.md", "Branch also requires a visible text label at every size and appearance, and Link requires one at 12 px", "rounded", "branch", ALL),
 )
 
 

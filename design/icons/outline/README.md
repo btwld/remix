@@ -20,7 +20,7 @@ Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catal
 
 ## What is not finished
 
-This private pack includes 48 Outline, 12 Rounded, and 12 Mono concepts.
+This private pack includes 48 Outline and 12 Rounded concepts.
 The legacy fillet proposal, independent design approval, recognition testing, final naming, and
 publication are not included. BSD 3-Clause is selected; no package is published.
 
