@@ -4,14 +4,14 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the neutral `vanilla` preset, the Fortaleza-inspired `fortal`
-preset, or the HeroUI-inspired `heroui` preset at initialization. Remix remains
-the behavior dependency; the
+Choose a preset offered by your pinned registry. The official catalog serves
+`vanilla` and `fortal`; the beta.14 catalog adds the HeroUI-inspired `heroui`
+preset after its registry promotion. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
 
-The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
-component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
+The Vanilla and Fortal catalogs include an opt-in `icons` seam and cover the
+core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
@@ -61,10 +61,15 @@ A project-local development dependency is preferred because the app's lockfile
 pins the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 ```
+
+Select the prerelease explicitly: the beta.14 registry's icon table requires
+CLI `1.0.0-beta.1` or later. An unversioned install can select stable `0.1.0`,
+which supports older schema 1 icon tables. Existing projects should update
+their CLI dependency before advancing to the new registry pin.
 
 To run an unreleased build, point at a checkout or staged package path:
 
@@ -72,13 +77,16 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Every preset requires Remix `^1.0.0-beta.13`, which `add` declares for you.
+The pinned catalog declares its required Remix version, which `add` records
+for you. Existing beta.13 catalog pins remain usable; the beta.14 catalog
+requires Remix `^1.0.0-beta.14`. Updating the CLI alone does not advance a
+project's catalog pin.
 
 Global activation is convenient for experiments. Registry content remains
 pinned per project in `remix.yaml`:
 
 ```shell
-dart pub global activate remix_cli
+dart pub global activate remix_cli '^1.0.0-beta.1'
 ```
 
 `remix_cli` is versioned independently of `remix`, so its version does not
@@ -155,6 +163,14 @@ Schema 3 projects may also set `iconLibrary: remix|lucide`; omitting it keeps
 Remix icons. It applies when items are installed; after changing it, reinstall
 every installed item that uses icons (`icons`, `dashboard_shell`,
 `dashboard_demo`, `support`) in one `add --diff`, then `add --overwrite`.
+
+A registry's `icons.yaml` maps each icon to a constant in every library. From
+schema 2, an icon a library does not draw names a `fallback` library instead:
+installing it on that library renders the fallback's constant and adds the
+fallback's package too. The schema 2 official icon table uses Lucide for icons
+Remix does not draw, so those installs add `lucide_flutter` alongside
+`remix_ui_icons`. Earlier schema 1 pins keep their original icon package
+requirements.
 
 ### Fortal as owned source
 
@@ -311,8 +327,8 @@ dart run tool/check_open_code.dart --preset fortal --source checkout --item dash
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
 application-owned `UiIcons` alias set with no generated adapter. Add or rename
-aliases there as your interface evolves. The complete 318-icon catalog remains
-one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
+aliases there as your interface evolves. Every Remix icon remains one direct
+`package:remix_ui_icons/remix_ui_icons.dart` import away.
 
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
@@ -406,7 +422,8 @@ writes.
 
 Section placement is checked but never rewritten. Packages the installed source
 imports at runtime (`remix`, `mix_annotations`, `mix_chart` for `chart`,
-`remix_ui_icons` for `icons`, and `remix_ui_fonts` for the Vanilla `theme`)
+`remix_ui_icons` and its `lucide_flutter` fallback for `icons`, and
+`remix_ui_fonts` for the Vanilla `theme`)
 must be declared under
 `dependencies`; build-only packages (`build_runner`, `mix_generator`) may sit in
 either section. Declaring the same package in both sections is rejected. A
@@ -437,7 +454,7 @@ the source you install; the registry pin in `remix.yaml` does:
 5. reapply or refine application-specific changes and commit `remix.yaml`
    and the regenerated adapter.
 
-There is no automatic merge or migration layer in 0.1.0.
+There is no automatic merge or migration layer.
 
 Because `--overwrite` replaces only files present in the incoming registry item
 and `updateManagedBarrel` preserves existing exports without pruning, removing

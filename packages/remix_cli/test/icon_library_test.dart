@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:test/test.dart';
 
 import 'test_support.dart';
@@ -13,6 +14,80 @@ void main() {
 
   setUp(() => root = createFlutterPackage());
   tearDown(() => root.deleteSync(recursive: true));
+
+  test('schema 2 installs renamed glyphs and fallback dependencies', () async {
+    final sources = GitHubSources(
+      transport: (uri) async {
+        if (uri.host == 'api.github.com') {
+          return RegistryResponse(200, '{"sha":"${'a' * 40}"}');
+        }
+        final contents = switch (uri.pathSegments.last) {
+          'index.yaml' =>
+            'schema: 1\npresets: {vanilla: vanilla/registry.yaml}',
+          'registry.yaml' =>
+            '''
+schema: 2
+items:
+  icons:
+    files:
+      - {source: templates/icons.dart.tmpl, target: "@ui/icons.dart"}
+    exports: [icons.dart]
+''',
+          'icons.yaml' =>
+            '''
+schema: 2
+libraries:
+  remix: {dependency: {remix_ui_icons: ^1.0.0-beta.1}, import: package:remix_ui_icons/remix_ui_icons.dart, class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: package:lucide_flutter/lucide_flutter.dart, class: LucideIcons}
+icons:
+  magnifyingGlass: {remix: search, lucide: search}
+  doubleArrowLeft: {lucide: chevronsLeft, fallback: lucide}
+''',
+          'icons.dart.tmpl' =>
+            '''
+{{icon:import}}
+const search = {{icon:magnifyingGlass}};
+const previous = {{icon:doubleArrowLeft}};
+''',
+          _ => null,
+        };
+        return RegistryResponse(contents == null ? 404 : 200, contents ?? '');
+      },
+    );
+    final runner = _choiceRunner(root, remixUiIcons: '1.0.0-beta.1');
+    final installer = Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      processRunner: runner,
+      sources: sources,
+    );
+    await installer.initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
+    );
+    await installer.add(
+      const AddOptions(items: ['icons'], mode: AddMode.write),
+    );
+
+    final icons = File('${root.path}/lib/ui/icons.dart').readAsStringSync();
+    expect(icons, contains('RemixIcons.search'));
+    expect(icons, contains('LucideIcons.chevronsLeft'));
+    expect(icons, isNot(contains('RemixIcons.magnifyingGlass')));
+    expect(
+      icons,
+      contains("import 'package:remix_ui_icons/remix_ui_icons.dart';"),
+    );
+    expect(
+      icons,
+      contains("import 'package:lucide_flutter/lucide_flutter.dart';"),
+    );
+    final added = runner.calls
+        .map((call) => call.arguments.join(' '))
+        .where((command) => command.startsWith('pub add'))
+        .join('\n');
+    expect(added, contains('remix_ui_icons@^1.0.0-beta.1'));
+    expect(added, contains('lucide_flutter@^1.47.0'));
+    expect(File('${root.path}/remix.ownership.json').existsSync(), isTrue);
+  });
 
   test(
     'installing icons with lucide uses Lucide and not remix_ui_icons',
@@ -59,7 +134,7 @@ void main() {
   );
 }
 
-RecordingProcessRunner _choiceRunner(Directory root) =>
+RecordingProcessRunner _choiceRunner(Directory root, {String? remixUiIcons}) =>
     RecordingProcessRunner((invocation) async {
       if (invocation.executable == 'flutter' &&
           invocation.arguments.join(' ') == '--version --machine') {
@@ -74,15 +149,10 @@ RecordingProcessRunner _choiceRunner(Directory root) =>
         return successProcessOutput;
       }
       if (command == 'pub get') {
-        writeRequiredLock(root, remixUiIcons: '0.1.0');
-        final lock = File(p.join(root.path, 'pubspec.lock'));
-        lock.writeAsStringSync(
-          lock.readAsStringSync().replaceFirst(
-            'packages:\n',
-            'packages:\n'
-                '  lucide_flutter:\n'
-                '    version: "1.47.0"\n',
-          ),
+        writeRequiredLock(
+          root,
+          remixUiIcons: remixUiIcons,
+          lucideFlutter: '1.47.0',
         );
         return successProcessOutput;
       }
