@@ -44,7 +44,7 @@ Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 ```
 
 ## Running the CLI
@@ -56,7 +56,7 @@ The command is called `remix`. How you reach it depends on how it is installed:
 dart run remix_cli:remix <command>
 
 # Global install
-dart pub global activate remix_cli
+dart pub global activate remix_cli '^1.0.0-beta.1'
 remix <command>
 ```
 

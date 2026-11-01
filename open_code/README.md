@@ -9,7 +9,7 @@ Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 ## Install the CLI in a project
 
 ```shell
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 dart run remix_cli:remix init --prefix Acme --preset vanilla
 dart run remix_cli:remix add button
 ```
