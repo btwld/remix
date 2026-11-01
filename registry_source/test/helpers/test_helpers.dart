@@ -20,16 +20,12 @@ extension WidgetTesterHelpers on WidgetTester {
     TextDirection textDirection = TextDirection.ltr,
     FortalAccentColor? accent,
     FortalColorTheme? accentPalette,
-    FortalThemeConfig? theme,
-    FortalThemeConfig? darkTheme,
     FortalThemeMode? mode,
   }) async {
     await pumpWidget(
       FortalTheme(
         accent: accent,
         accentPalette: accentPalette,
-        theme: theme,
-        darkTheme: darkTheme,
         mode: mode,
         child: WidgetsApp(
           color: const Color(0xFFFFFFFF),
@@ -56,15 +52,13 @@ extension WidgetTesterHelpers on WidgetTester {
   }
 }
 
-/// Resolves a value inside [FortalTheme], optionally selecting appearance,
-/// theme configuration, and widget states. Defaults retain the neutral preset.
+/// Resolves a value inside [FortalTheme], optionally selecting the accent or
+/// palette, appearance, and widget states. Defaults retain the neutral preset.
 Future<T> resolveInFortalTheme<T>(
   WidgetTester tester,
   T Function(BuildContext context) resolve, {
   FortalAccentColor? accent,
   FortalColorTheme? accentPalette,
-  FortalThemeConfig? theme,
-  FortalThemeConfig? darkTheme,
   FortalThemeMode? mode,
   Set<WidgetState> states = const {},
 }) async {
@@ -81,8 +75,6 @@ Future<T> resolveInFortalTheme<T>(
     ),
     accent: accent,
     accentPalette: accentPalette,
-    theme: theme,
-    darkTheme: darkTheme,
     mode: mode,
   );
 

@@ -133,12 +133,13 @@ def check_content(root):
     # Keep original capture provenance independent of the current replay pin.
     evidence = json.loads((root / "docs/assets/remix-cli-tutorial/evidence.json").read_text())
     # The commands and downloaded projects use the same reviewed revision.
+    replay_pin = evidence["replay"]["source_checkout"]
     pin = re.search(r"git -C remix-review checkout ([a-f0-9]{40})", source)
-    if not pin or pin.group(1) != evidence.get("replay", evidence)["source_checkout"]:
+    if not pin or pin.group(1) != replay_pin:
         failures.append("Native tutorial checkout pin differs from recorded evidence")
 
     registry_pins = re.findall(r"registry update @remix --ref ([a-f0-9]{40})", source)
-    if registry_pins != [evidence["replay"]["source_checkout"]] * 2:
+    if registry_pins != [replay_pin] * 2:
         failures.append("Native tutorial registry command pins differ from replay evidence")
 
     for page in [native, root / "docs/index.mdx", root / "docs/getting-started.mdx",

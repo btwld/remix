@@ -305,7 +305,6 @@ Future<
     Color gray12,
     Color grayA3,
     Color grayA7,
-    Color gray7,
     Color controlBorder,
     Color grayA10,
     Color accentA3,
@@ -317,7 +316,6 @@ Future<
     Color error8,
     Color error9,
     Color error11,
-    Color errorA7,
   })
 >
 _resolve(
@@ -339,7 +337,6 @@ _resolve(
     Color gray12,
     Color grayA3,
     Color grayA7,
-    Color gray7,
     Color controlBorder,
     Color grayA10,
     Color accentA3,
@@ -351,7 +348,6 @@ _resolve(
     Color error8,
     Color error9,
     Color error11,
-    Color errorA7,
   })
   result;
   await tester.pumpWidget(
@@ -378,7 +374,6 @@ _resolve(
               grayA11: MixScope.tokenOf(FortalTokens.grayA11, context),
               gray12: MixScope.tokenOf(FortalTokens.gray12, context),
               grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
-              gray7: MixScope.tokenOf(FortalTokens.gray7, context),
               controlBorder: MixScope.tokenOf(
                 FortalTokens.controlBorder,
                 context,
@@ -394,7 +389,6 @@ _resolve(
               error8: MixScope.tokenOf(FortalTokens.error8, context),
               error9: MixScope.tokenOf(FortalTokens.error9, context),
               error11: MixScope.tokenOf(FortalTokens.error11, context),
-              errorA7: MixScope.tokenOf(FortalTokens.errorA7, context),
             );
             return const SizedBox.shrink();
           },

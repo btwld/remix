@@ -41,11 +41,8 @@ const _disabledNeutralTextInputPlaceholder = ContextToken<Color>(
   _resolveDisabledNeutralTextInputPlaceholder,
 );
 
-Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
-    UiTokens.accent12.resolve(context).withValues(alpha: alpha);
-
 final _softTextInputDisabledPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.5),
+  (context) => UiTokens.accent12.resolve(context).withValues(alpha: 0.5),
 );
 
 /// Ui-themed preset for [RemixTextField].

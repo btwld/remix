@@ -58,14 +58,7 @@ SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
         ),
       )
       .thumbColor(const Color(0xFFFFFFFF))
-      .onFocusVisible(.trackEffects(fortalFocusOutline()));
-}
-
-SwitchStyler _fortalSwitchSurfaceStyler(
-  FortalSwitchSize size, {
-  required bool highContrast,
-}) {
-  return _fortalSwitchBaseStyler(size)
+      .onFocusVisible(.trackEffects(fortalFocusOutline()))
       .trackColor(FortalTokens.grayA3())
       .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
       .trackEffects(
@@ -73,7 +66,14 @@ SwitchStyler _fortalSwitchSurfaceStyler(
           _fortalSwitchInsetRing(FortalTokens.controlBorder()),
         ),
       )
-      .thumb(_fortalSwitchOffThumbStyler())
+      .thumb(_fortalSwitchOffThumbStyler());
+}
+
+SwitchStyler _fortalSwitchSurfaceStyler(
+  FortalSwitchSize size, {
+  required bool highContrast,
+}) {
+  return _fortalSwitchBaseStyler(size)
       .onSelected(
         SwitchStyler()
             .trackColor(
@@ -113,14 +113,6 @@ SwitchStyler _fortalSwitchSoftStyler(
   required bool highContrast,
 }) {
   return _fortalSwitchBaseStyler(size)
-      .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          _fortalSwitchInsetRing(FortalTokens.controlBorder()),
-        ),
-      )
-      .thumb(_fortalSwitchOffThumbStyler())
       .onSelected(
         SwitchStyler()
             .trackColor(

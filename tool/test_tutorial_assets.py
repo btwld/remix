@@ -112,7 +112,7 @@ class TutorialAssetTests(unittest.TestCase):
     def test_capture_pin_drift_fails(self):
         path = self.root / "docs/assets/remix-cli-tutorial/evidence.json"
         evidence = json.loads(path.read_text())
-        evidence.get("replay", evidence)["source_checkout"] = "0" * 40
+        evidence["replay"]["source_checkout"] = "0" * 40
         path.write_text(json.dumps(evidence))
         self.assertTrue(any("checkout pin" in error for error in check_content(self.root)))
 

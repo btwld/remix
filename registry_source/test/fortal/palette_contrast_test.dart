@@ -299,26 +299,22 @@ void main() {
     // limestone.
     expect(calcadao.light.contrast, const Color(0xffffffff));
     expect(calcadao.dark.contrast, const Color(generator.basalt));
-    // Every non-luminous palette carries white on its labelled solid.
-    final whiteSide = {
-      for (final name in shipped.keys)
-        if (!luminous.contains(name)) ...['$name/light', '$name/dark'],
-    };
     final basaltL = generator.toOklch(generator.basalt).l;
     for (final entry in shipped.entries) {
       if (entry.key == 'calcadao') continue;
+      final seedArgb =
+          generator.fortalSeeds[entry.key] ?? generator.fortalErrorSeed;
+      final seed = generator.toOklch(seedArgb);
       for (final dark in [false, true]) {
         final name = '${entry.key}/${dark ? 'dark' : 'light'}';
         final mode = dark ? entry.value.dark : entry.value.light;
         final ink = mode.contrast;
-        if (whiteSide.contains(name)) {
+        // Every non-luminous palette carries white on its labelled solid.
+        if (!luminous.contains(entry.key)) {
           expect(ink, const Color(0xffffffff), reason: name);
           continue;
         }
         final tone = generator.toOklch(ink.toARGB32());
-        final seed = generator.toOklch(
-          generator.fortalSeeds[entry.key] ?? generator.fortalErrorSeed,
-        );
         // Neither generic basalt nor a light midtone.
         expect(
           oklabDistance(ink, const Color(generator.basalt)),
@@ -336,16 +332,7 @@ void main() {
         expect(tone.c, greaterThan(.03), reason: '$name chroma');
         // The family hue, warmed by at most the documented rotation.
         final hueShift =
-            (hueDegrees(
-                      Color(
-                        generator.fortalSeeds[entry.key] ??
-                            generator.fortalErrorSeed,
-                      ),
-                    ) -
-                    hueDegrees(ink) +
-                    540) %
-                360 -
-            180;
+            (hueDegrees(Color(seedArgb)) - hueDegrees(ink) + 540) % 360 - 180;
         expect(
           hueShift,
           inInclusiveRange(-4, generator.onSolidInk.warmHueShift + 4),

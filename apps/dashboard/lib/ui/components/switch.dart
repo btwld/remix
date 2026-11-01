@@ -58,14 +58,7 @@ SwitchStyler _uiSwitchBaseStyler(UiSwitchSize size) {
         ),
       )
       .thumbColor(const Color(0xFFFFFFFF))
-      .onFocusVisible(.trackEffects(uiFocusOutline()));
-}
-
-SwitchStyler _uiSwitchSurfaceStyler(
-  UiSwitchSize size, {
-  required bool highContrast,
-}) {
-  return _uiSwitchBaseStyler(size)
+      .onFocusVisible(.trackEffects(uiFocusOutline()))
       .trackColor(UiTokens.grayA3())
       .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
       .trackEffects(
@@ -73,7 +66,14 @@ SwitchStyler _uiSwitchSurfaceStyler(
           _uiSwitchInsetRing(UiTokens.controlBorder()),
         ),
       )
-      .thumb(_uiSwitchOffThumbStyler())
+      .thumb(_uiSwitchOffThumbStyler());
+}
+
+SwitchStyler _uiSwitchSurfaceStyler(
+  UiSwitchSize size, {
+  required bool highContrast,
+}) {
+  return _uiSwitchBaseStyler(size)
       .onSelected(
         SwitchStyler()
             .trackColor(
@@ -105,14 +105,6 @@ SwitchStyler _uiSwitchSoftStyler(
   required bool highContrast,
 }) {
   return _uiSwitchBaseStyler(size)
-      .trackColor(UiTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          _uiSwitchInsetRing(UiTokens.controlBorder()),
-        ),
-      )
-      .thumb(_uiSwitchOffThumbStyler())
       .onSelected(
         SwitchStyler()
             .trackColor(

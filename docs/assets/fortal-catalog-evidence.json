@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-31",
+  "date": "2026-11-01",
   "base_commit": "2556203413520874c4e6d7682e8e1737f4b9f360",
   "method": "Actual Flutter widget-test renderer on Ubuntu 24.04 x64, run locally in Docker. Not a browser screenshot.",
   "flutter": "3.44.0",
@@ -71,13 +71,13 @@
     "apps/demo/lib/ui/components/slider.g.dart": "1c101555e3466cc8fa36156b4e55d7a820ec55c0ae78e0fff0451040a4928041",
     "apps/demo/lib/ui/components/spinner.dart": "7a76cfc8f8c9e8b98ed8d464144e33f40550e49ed09f562a0f2315325e3f2b2f",
     "apps/demo/lib/ui/components/spinner.g.dart": "272d3cd0376ecfb39c71c5690b0ca71bf8f922a644aea09ff9821d78386f9db6",
-    "apps/demo/lib/ui/components/switch.dart": "bffbc031421a57452629f858cb357dafc4894e56613f03848edbb3fa6af7e9be",
+    "apps/demo/lib/ui/components/switch.dart": "1e67a53c89ebc1e7c41feb2c673c1e37dacde0bda6319a6989308c458881d27c",
     "apps/demo/lib/ui/components/switch.g.dart": "1a6670622804a47d7bcb027c56b4da758e1de8f3e00763a14422c04a48110909",
     "apps/demo/lib/ui/components/tabs.dart": "b4b37a1bce1fa49382108e3281028c60eb804b3e75c7bb4486556d48b2a76158",
     "apps/demo/lib/ui/components/tabs.g.dart": "a1876d8d0a8030b462b09a5d3be234326a4bf171e2ab12ee52371722e40ee8da",
     "apps/demo/lib/ui/components/text.dart": "d46c3eaeb74d579aa5858561e4dd4161262c23a0a0bdb28389213fa27e9e7f38",
     "apps/demo/lib/ui/components/text.g.dart": "197f346afa046968f359921cb0f97309cf08c4ba913a1beeb29a6cb5267f6bdc",
-    "apps/demo/lib/ui/components/textfield.dart": "17498a422fd763770c67e8934fa82bbfbf7d1eb82ea336e997ddec2509ad556b",
+    "apps/demo/lib/ui/components/textfield.dart": "b4414274bd9e22b20133201d212ffe6ef4a6f3f2d2ccdc5b776026bca25b8492",
     "apps/demo/lib/ui/components/textfield.g.dart": "f7b864f281a807471ab80a4f0ab82f97fd0e8eb41179395e45111003378a84a7",
     "apps/demo/lib/ui/components/toast.dart": "7c6f43ae52737557f6c5b7a22a704a1737dd85f88f128554ede5f307df417456",
     "apps/demo/lib/ui/components/toast.g.dart": "87e4a6900ae1b0e060b98e189dc64bad1465f503c05a2fd0d25ad757a3eb6703",
@@ -158,13 +158,13 @@
     "registry_source/lib/src/fortal/components/slider.g.dart": "1c101555e3466cc8fa36156b4e55d7a820ec55c0ae78e0fff0451040a4928041",
     "registry_source/lib/src/fortal/components/spinner.dart": "7a76cfc8f8c9e8b98ed8d464144e33f40550e49ed09f562a0f2315325e3f2b2f",
     "registry_source/lib/src/fortal/components/spinner.g.dart": "272d3cd0376ecfb39c71c5690b0ca71bf8f922a644aea09ff9821d78386f9db6",
-    "registry_source/lib/src/fortal/components/switch.dart": "bffbc031421a57452629f858cb357dafc4894e56613f03848edbb3fa6af7e9be",
+    "registry_source/lib/src/fortal/components/switch.dart": "1e67a53c89ebc1e7c41feb2c673c1e37dacde0bda6319a6989308c458881d27c",
     "registry_source/lib/src/fortal/components/switch.g.dart": "1a6670622804a47d7bcb027c56b4da758e1de8f3e00763a14422c04a48110909",
     "registry_source/lib/src/fortal/components/tabs.dart": "b4b37a1bce1fa49382108e3281028c60eb804b3e75c7bb4486556d48b2a76158",
     "registry_source/lib/src/fortal/components/tabs.g.dart": "a1876d8d0a8030b462b09a5d3be234326a4bf171e2ab12ee52371722e40ee8da",
     "registry_source/lib/src/fortal/components/text.dart": "d46c3eaeb74d579aa5858561e4dd4161262c23a0a0bdb28389213fa27e9e7f38",
     "registry_source/lib/src/fortal/components/text.g.dart": "197f346afa046968f359921cb0f97309cf08c4ba913a1beeb29a6cb5267f6bdc",
-    "registry_source/lib/src/fortal/components/textfield.dart": "17498a422fd763770c67e8934fa82bbfbf7d1eb82ea336e997ddec2509ad556b",
+    "registry_source/lib/src/fortal/components/textfield.dart": "b4414274bd9e22b20133201d212ffe6ef4a6f3f2d2ccdc5b776026bca25b8492",
     "registry_source/lib/src/fortal/components/textfield.g.dart": "f7b864f281a807471ab80a4f0ab82f97fd0e8eb41179395e45111003378a84a7",
     "registry_source/lib/src/fortal/components/toast.dart": "7c6f43ae52737557f6c5b7a22a704a1737dd85f88f128554ede5f307df417456",
     "registry_source/lib/src/fortal/components/toast.g.dart": "87e4a6900ae1b0e060b98e189dc64bad1465f503c05a2fd0d25ad757a3eb6703",
@@ -317,22 +317,22 @@
       "apps/demo/test/goldens/fortal_layers.png": "870a66ae72cebddabb43e9eedbb5e17bd03386b7963055d9583c01983e4b8da7"
     },
     "log_sha256": {
-      "contrast-tests.log": "2df67169bd34aae44f92f364322423bfb0923eeeb585f343b5e595994e6ecdb2",
-      "render.log": "759fa981da0236b4055e3179bbc8dcebee216d83c585c65d7610ed141a5f72bb",
-      "demo-tests.log": "3b00a1f57c4c219f754f7d621cf77e6aec21d6be624d266c93ded050c04d288e",
+      "contrast-tests.log": "92ca507213a33956c4a203e52c2ff79eb33faef78a338724c2bf6dba82e9b58d",
+      "render.log": "d028b7d7a69306fcdfa1cf046600dae5b863784f77dcf90310c6424d65a0c0f0",
+      "demo-tests.log": "4f28363b9671a5b580ee9d2a71f297a4b4c4f017f3564582bde6548017d32da1",
       "environment.txt": "f9387fbaa7c1511ca76fc5fdf706a34b439042afdee690a2df86e9d7c3efeef3"
     },
     "private_evidence": "Complete capture input snapshot and logs retained by the maintainer; no private paths published."
   },
-  "source_parent_commit": "6d962dc1e86c9d7448b17e491849e511d8635a9f",
-  "source_state": "Capture from the merged working-tree source before the merge commit. All ten canonical images reproduced byte-for-byte. The snapshot contains those image masters and the preceding receipt; this provenance refresh was installed after capture.",
+  "source_parent_commit": "40fa25851c4cc4a24f5cfdd2306c89991dc18c62",
+  "source_state": "Working-tree cleanup capture before publication. All ten canonical images reproduced byte-for-byte after the behavior-preserving component cleanup. The snapshot contains the image masters and preceding receipt; this provenance refresh was installed after capture.",
   "supersedes_capture_sha256": "078b32636b6d0ac5043d751a963b6c823c97bf39d5de5ad0a82fcd852713373d",
-  "source_snapshot_manifest_sha256": "e88dbb31924e66070a13e0a1162c98b78699b2c4c2f85e554eaa3b39174cf042",
-  "captured_at_utc": "2026-10-31T23:47:29.303576+00:00",
-  "source_merge_parent_commit": "0587b537169f4c03047734e739bdef7f23a6e4cf",
-  "integration_refresh": {
-    "previous_receipt_sha256": "e0522538aef29ee540c8592ccc520565f5791e4b889d4f323e553527badb3a04",
-    "reason": "Revalidate rendering after integrating theme equality, scope and palette-picker focus fixes.",
+  "source_snapshot_manifest_sha256": "cb2e5c0ac7226bcebdac4fce5377d1b5d45f126aad2fee4f0d6551e52f1991e1",
+  "captured_at_utc": "2026-11-01T04:57:01.893953+00:00",
+  "cleanup_refresh": {
+    "previous_receipt_sha256": "c2b3468447b9d88776c87d807118aaeb54fbd145198aecf25e498a82f4ff8b54",
+    "reason": "Revalidate shared switch off-state and disabled input helper simplification.",
+    "unchanged_output_count": 10,
     "reproduced_output_sha256": {
       "apps/demo/test/goldens/fortal_inputs.png": "ef9858749119332f10a53f7c9e91e9b91d968868bf78a0c11b6b19d205fd5112",
       "apps/demo/test/goldens/fortal_layout.png": "f210a31287a8e5e940e4a37135341f1c6992cbb9981d3f3d53bb4a0b2573f8bb",
@@ -344,7 +344,6 @@
       "apps/demo/test/goldens/fortal_actions.png": "b4e6b3a56a3b803035e6a2f010114169bc168466cdefe2ca3f4063f31a683d28",
       "apps/demo/test/goldens/fortal_layers.png": "870a66ae72cebddabb43e9eedbb5e17bd03386b7963055d9583c01983e4b8da7",
       "docs/assets/fortal-catalog.png": "8e8a0fd8c11f7a6096bbced109fdf4441388eb7e1c699e3608eb8c7bf1e85d53"
-    },
-    "unchanged_output_count": 10
+    }
   }
 }

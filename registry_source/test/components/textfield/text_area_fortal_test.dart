@@ -264,10 +264,9 @@ _resolve(
   return result;
 }
 
-Future<({TextFieldSpec spec, Color accent8, Color accent12, Color accentA11})>
+Future<({TextFieldSpec spec, Color accent8, Color accentA11})>
 _resolveTextFieldSoft(WidgetTester tester) async {
-  late ({TextFieldSpec spec, Color accent8, Color accent12, Color accentA11})
-  result;
+  late ({TextFieldSpec spec, Color accent8, Color accentA11}) result;
   await tester.pumpWidget(
     FortalTheme(
       child: WidgetStateProvider(
@@ -277,7 +276,6 @@ _resolveTextFieldSoft(WidgetTester tester) async {
             result = (
               spec: fortalTextFieldStyle(variant: .soft).build(context).spec,
               accent8: MixScope.tokenOf(FortalTokens.accent8, context),
-              accent12: MixScope.tokenOf(FortalTokens.accent12, context),
               accentA11: MixScope.tokenOf(FortalTokens.accentA11, context),
             );
             return const SizedBox.shrink();
