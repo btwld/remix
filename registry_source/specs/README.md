@@ -3,6 +3,11 @@
 [Vanilla](vanilla.md) and [Fortal](fortal.md) own their shipped visual
 contracts. Use those specifications and the authored recipes for current
 measurements; the presets need not share dimensions.
+[`heroui/`](heroui/) holds HeroUI's token inventory (`tokens.json`) and component
+worksheets, checked by `tool/heroui_parity/check.dart`.
+
+[`heroui/`](heroui/) owns the HeroUI token inventory and component worksheets,
+checked by `tool/heroui_parity/check.dart`.
 
 ## Benchmark versus contract
 

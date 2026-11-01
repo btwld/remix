@@ -1,0 +1,31 @@
+component: Slider
+widget: HeroUiSlider
+target: RemixSlider
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/slider.css]
+anatomy: [track, fill, thumb]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, dragging, focus-visible, disabled]
+tokens:
+  - default (track), accent (fill, thumb rim), accent-foreground (thumb)
+  - radius-xl, surface shadow (field shadow), focus (ring)
+measurements:
+  - {what: track, value: "360 x 20 in the fixture column, radius 12, default fill", cite: "slider-mid-track"}
+  - {what: fill, value: "accent, 20 high", cite: "slider-mid-fill"}
+  - {what: thumb, value: "28 x 20 accent, radius 12", cite: "slider-mid-thumb"}
+  - {what: thumb pill, value: "24 x 16 accent-foreground, radius 8, with the field shadow (none in dark)", cite: "slider-mid-thumb-pill"}
+  - {what: dragging, value: "the pill scales to 0.9", cite: "slider-mid-drag-thumb-pill"}
+  - {what: focus, value: "2px background gap, then a 2px focus ring on the thumb", cite: "slider-mid-focus-thumb"}
+  - {what: disabled, value: "root opacity 0.5", cite: "slider-disabled-root"}
+  - {what: root height, value: "44 with a label and output row (20 + 4 gap + 20 track); 24 for a bare slider", cite: "slider-mid-root, slider-bare-root"}
+approximations:
+  - The label and the value output above the track are the app's composition.
+  - "RemixSlider reserves thumb height plus track thickness (20 + 20 = 40px) for a bare slider; HeroUI's is 24px (a 20px track and the 4px gap of the empty label row), 44px with a label and output."
+  - "The thumb's pill is its fill inside a 2px accent border. The inner corner radius is therefore 10 (the 12px thumb less the 2px rim); upstream's `::after` is `rounded-lg` (8). The field shadow falls around the whole thumb, and dragging scales the whole thumb where upstream scales only the pill."
+  - The track is inset by half the thumb (14px) so the thumb stays inside; the CSS uses 12px transparent borders.
+  - RemixSlider is horizontal with one thumb; vertical sliders and ranges are not mapped.
+  - The 250ms thumb transition runs on every state change, not only background and transform.
+  - The focus ring is the thumb's outline effect: a background gap, then the focus ring, as upstream.

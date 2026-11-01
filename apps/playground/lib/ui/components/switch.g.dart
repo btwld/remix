@@ -13,8 +13,9 @@ part of 'switch.dart';
 /// leading edge when off and the trailing edge when on. This recipe supplies
 /// only the two boxes' geometry and their colors.
 ///
-/// `RemixSwitch` requires a `semanticLabel` because a switch has no visible
-/// text of its own. That is a Remix rule, not a recipe choice.
+/// A switch takes a `label`, drawn beside the track inside the switch's own
+/// tap, focus, and semantics target, as a form label: `textSm` at medium
+/// weight, 8px from the track. A switch without one needs a `semanticLabel`.
 class PlaygroundSwitch extends StatelessWidget {
   const PlaygroundSwitch({
     super.key,

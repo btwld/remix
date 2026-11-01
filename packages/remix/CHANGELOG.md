@@ -1,94 +1,73 @@
-## Unreleased
+## 1.0.0-beta.14
+
+Prepared in source; publication is on hold.
 
 ### Breaking changes
 
-- `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel`, and the
-  matching parameters of `RadioStyler.call`, `SwitchStyler.call`, and
-  generated preset wrappers, are now `String?`. Code that reads them as a
-  non-null `String` needs a null check. A radio or switch must still have a
-  `label` or a `semanticLabel`; that rule is now a debug-mode assert instead
-  of a required parameter.
+- Item columns in scrolling `RemixMenu` panels styled through `overlay` and
+  `RemixSelect` panels styled through `menuContainer` now shrink-wrap. Their
+  `mainAxisAlignment` and `mainAxisSize.max` no longer distribute spare vertical
+  space; callers relying on that distribution must revise their layout.
+- `RemixToast` now extends `StatefulWidget`. Type references as `Widget`
+  instead of `StatelessWidget`, and compose it rather than extending it.
+- Radio and switch `semanticLabel` fields and styler parameters are now
+  `String?`. Provide either `label` or `semanticLabel` for an accessible name.
+- `RemixMenuTrigger.label` is now `String?`; `.control` triggers use their
+  button's label.
 
 ### Features
 
-- Add `ToastSpec.actionPlacement`, `ToastStyler.actionPlacement`, and
-  `RemixToastActionPlacement`. `inline` (the default) keeps the action in the
-  row while the message has room and otherwise uses the `below` arrangement;
-  `below` always puts the action under the title and description, aligned with
-  their start, with the close button on the first line after the message. It
-  is a spec field, so a style can switch it with a variant such as
-  `onBreakpoint`.
-- Add `remixAnchorWidth`, a token that resolves to the width of the trigger of
-  the surrounding `RemixSelect` or `RemixMenu`, and to 0 elsewhere. Pass it to
-  `minWidth`, `width`, or `maxWidth` to size the panel from its trigger, for
-  example `SelectContentStyler().minWidth(remixAnchorWidth())` or
-  `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`. Submenu
-  panels get the root trigger's width. Panels are unchanged unless a style uses
-  it.
-- Add `containerEffects` to `TabStyler`, `ToggleStyler`,
-  `ToggleGroupItemStyler`, `SelectMenuItemStyler`, `MenuItemStyler`, and
-  `MenuTriggerStyler`, and `triggerEffects` to `AccordionStyler` and
-  `DisclosureStyler`. An outline or paint layer draws around the part without
-  taking layout space, so a focus ring no longer resizes the part or shifts its
-  neighbors. `RemixSidebar` destinations, which use `ToggleStyler` through
-  `SidebarDestinationStyler`, draw `containerEffects` too. On the accordion and
-  disclosure, `containerEffects` still covers the whole panel and
-  `triggerEffects` covers only the trigger, including the widget a custom
-  `RemixAccordion.builder` or `RemixDisclosure.triggerBuilder` returns. A toggle
-  group styled with `clipBehavior` (every shipped preset sets one) crops an
-  outside ring on its end items; use a negative `outlineOffset` there.
-- Add an optional styled `label` to `RemixRadio` and `RemixSwitch`, drawn
-  inside the control's pointer, hover, press, focus, and single semantics
-  target and used as its accessible name, as `RemixCheckbox.label` is.
-  `RadioStyler` and `SwitchStyler` gain `label`, `labelSpacing` (default 8),
-  and the `labelColor`, `labelFontSize`, and other label style helpers. Both
-  widgets gain `minimumTapTargetSize`, which defaults to `Size.zero` so
-  existing layouts are unchanged, unlike `RemixCheckbox`, which defaults to
-  `Size.square(48)`; pass `Size.square(48)` to meet touch target guidance.
-- Add `RemixReducedMotionBuilder`. Its builder receives whether the user asked
-  for reduced motion and rebuilds when that changes. It combines
-  `MediaQuery.disableAnimations` with the platform's accessibility
-  `reduceMotion`, the only flag iOS Reduce Motion sets. A `MediaQuery`
-  override can force reduced motion on but cannot turn the platform's
-  `reduceMotion` off.
+- Add `OverlayPositionConfig.minimumAvailableHeight` for constrained menu and
+  select panels. The default 48px threshold is configurable for row sizes and
+  panel padding; zero keeps strict side-capping, including at zero headroom.
+- Add `RemixMenuTrigger.control` for caller-owned buttons, with a handle for
+  menu state, controller, focus return, and activation.
+- Add toast action placement: `inline` shares the message row when it fits;
+  `below` places the action under the title and description.
+- Add `remixAnchorWidth` to size menu and select panels from their trigger.
+- Add `containerEffects` to tab, toggle, toggle group item, select menu item,
+  menu item, and menu trigger stylers, and `triggerEffects` to accordion and
+  disclosure stylers. Focus rings can paint without changing layout.
+- Add styled labels and `minimumTapTargetSize` to radios and switches. Each
+  label shares the control's interaction target and accessible name.
+- Add `RemixReducedMotionBuilder` to observe both MediaQuery and platform
+  reduced-motion settings.
 
 ### Fixes
 
-- `RemixToast` stacks an inline action below the message when the toast is
-  too narrow to share a row, so the message is no longer squeezed beside it.
-  The cutoff follows the width the toast gets, including its margin and style
-  max width, and grows with the text scale. Wider toasts keep the single row.
-- Tab, toggle, toggle group item, select menu item, menu item, menu trigger,
-  accordion trigger, and disclosure trigger content keeps its state when a
-  style adds or removes a decoration such as a focus ring. Previously such a
-  change rebuilt the part's content from scratch.
-- A `RemixCheckbox` with a `label` can be measured by intrinsic-sizing
-  parents, such as `IntrinsicWidth`, `IntrinsicHeight`, and Material
-  `AlertDialog` content. It previously asserted "LayoutBuilder does not
-  support returning intrinsic dimensions" in debug mode and collapsed in
-  release mode.
-- Honor reduced motion in components that hard-code their own motion. The
-  select menu and accordion panel now open and close without a transition,
-  including one already under way. Skeleton and sidebar, which already
-  followed `MediaQuery.disableAnimations`, now follow iOS Reduce Motion too,
-  including a sidebar transition already under way. Essential spinner motion
-  stays unchanged. Style animations declared
-  with `.animate(...)` are driven by Mix and are not affected.
-- `RemixSkeleton` no longer throws when built without a `MediaQuery` ancestor.
-- `RemixSidebar` rebuilds only when `MediaQuery.disableAnimations` changes,
-  not on every `MediaQuery` change such as keyboard insets.
-- Data-table headers without `sortable`, including the selection header, no
-  longer read widget state from outside the table. A table inside a focused,
-  hovered, or pressed ancestor, such as a `Pressable`, no longer lights their
-  `onFocusVisible`, `onHovered`, or `onPressed` styles. Sortable headers still
-  resolve against their own state. Content of a non-sortable header's custom
-  `header` resolves widget-state variants against an empty state, so wrap a
-  widget in its own `Pressable` if it should react to its own hover or press.
-- Accordion and disclosure content no longer resolves widget-state variants
-  against the trigger, so widgets in the panel no longer change with the
-  trigger's state.
-- `RemixSidebar` header and footer content no longer resolves `onDisabled`
-  variants when the sidebar is disabled. The sidebar's own regions still do.
+- Map slider input to the painted rail, including thumb and track clearance,
+  so grabbing a thumb does not change its value before movement.
+- Scroll oversized menu and select lists within their decorated panels. Fit
+  root panels beside their triggers and choose the side with more room. Below
+  `minimumAvailableHeight`, collision-avoiding panels may overlap the anchor
+  within the collision-padded overlay bounds rather than collapsing. A short
+  panel that fits stays beside its trigger. Submenus keep overlay room;
+  scrolling columns size to content rather than distributing spare space.
+- Allow caller-owned popover triggers to disable automatic activation and
+  provide their focus node for focus return after dismissal.
+
+- Constrain button labels to the space left beside icons, preserving loading
+  geometry and allowing long labels to ellipsize. Unbounded horizontal layouts
+  still shrink-wrap with explicit `mainAxisSize.max`, and intrinsic and dry
+  sizing remain supported.
+- Stack inline toast actions below the message when the available width or
+  text scale leaves too little room for a row.
+- Preserve content state when decorations change on tabs, toggles, toggle
+  group items, select menu items, menu items, menu triggers, accordion
+  triggers, and disclosure triggers.
+- Allow labelled checkboxes in intrinsic-sizing parents such as
+  `IntrinsicWidth`, `IntrinsicHeight`, and `AlertDialog` content.
+- Honor platform reduced motion in select, accordion, skeleton, and sidebar
+  animations, including transitions already running.
+- Allow skeletons without a `MediaQuery` ancestor.
+- Stop rebuilding sidebars for unrelated `MediaQuery` changes.
+- Keep non-sortable data-table headers and their custom content independent
+  of enclosing hover, press, and focus state.
+- Keep accordion and disclosure panel content independent of trigger state.
+- Keep sidebar header and footer content independent of its disabled state.
+- Require `naked_ui ^1.4.0` for separate loading menu announcements, focus,
+  slider-track geometry, and usable collision-padded overlay positioning.
+- Correct arrow-key navigation in RTL tabs.
 
 ## 1.0.0-beta.13
 

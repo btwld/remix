@@ -179,8 +179,7 @@ class _FortalDashboardSettingsPageState
                 ],
               ),
             ),
-            FortalAccentScope(
-              accent: .caju,
+            FortalAccentScope.error(
               child: FortalDisclosure.soft(
                 key: const ValueKey('settings-danger-zone'),
                 size: .size3,
@@ -244,8 +243,7 @@ class _FortalDashboardSettingsPageState
             onPressed: () => Navigator.of(context).pop(false),
             label: 'Cancel',
           ),
-          FortalAccentScope(
-            accent: .caju,
+          FortalAccentScope.error(
             child: FortalButton(
               onPressed: () => Navigator.of(context).pop(true),
               label: 'Delete',

@@ -2,7 +2,9 @@
 
 How a design system becomes a Remix registry: repository layout, authoring
 rules, derivation, the catalog format, and the publish-and-test loop. Examples
-use a system named "Acme" registered as `@acme`.
+use a third-party system named "Acme" registered as `@acme`. For a first-party
+preset in `btwld/remix`, follow `open_code/ADDING_PRESETS.md` in that checkout:
+reuse its authoring package, builder, and checkout consumer harness.
 
 ## 1. Repository layout
 
@@ -50,7 +52,9 @@ application.
   [`registry/vanilla/registry.yaml` on `registry-stable`](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/registry.yaml)
   rather than copying a version from memory. Upgrade them together.
 - `@MixWidget` recipe installs stay build-config-free. `@MixableSpec` installs
-  write a consumer `build.yaml` that enables the spec-styler builder.
+  write a consumer `build.yaml` that enables the spec-styler builder, scoped to
+  installed paths; existing filters and exclusions are checked. Prefer
+  `@MixWidget` wherever it expresses the target API.
 - Commit the generated `.g.dart` parts so the package analyzes and tests; they
   are not templates.
 
@@ -77,8 +81,12 @@ word of its own:
 | `const title = 'ACME';` | not replaced; ships as written | **no** |
 | file `acme_button.dart` or `AcmeButton.dart` | file names are not rendered | **no** |
 
-Write prose as "this design system"; keep upstream package names and
-provenance out of shipped source (keep it in the brief/spec or decision log).
+Write ordinary prose as "this design system"; keep research provenance in the
+brief/spec or decision log. Required license, copyright, attribution and change
+notices are an exception: preserve them verbatim in installed source. Choose an
+authoring word that does not collide with those notices, or protect the notice
+text during derivation and test byte preservation. Never replace an upstream
+rights holder's name with the consumer prefix.
 
 **Imports.** Templates may import:
 
@@ -91,7 +99,8 @@ provenance out of shipped source (keep it in the brief/spec or decision log).
 - any other package the item declares under `dependencies`, as the official
   Vanilla catalog does for `mix_chart` (declare
   `naked_ui` with the constraint `remix` uses when a component needs behavior
-  Remix does not wrap);
+  Remix does not wrap; third-party registries only, first-party presets
+  compose or defer);
 - relative imports of files the same item or its dependencies install.
 
 **Fonts, icons, and assets.** The CLI writes Dart files into the UI folder
@@ -223,8 +232,11 @@ Item design rules:
 
 ## 6. Publish and test
 
-The CLI reads registries from GitHub only. Test every catalog or template
-change from a pushed branch in a scratch application initialized with the
+The production CLI reads registries from GitHub only. The Remix repository's
+internal checkout harness tests first-party changes without a push; it does
+not expose a local-registry CLI flag. For third-party distribution, when a
+push is authorized, test catalog or template changes from that branch in a
+scratch application initialized with the
 `vanilla` preset (the CLI refuses a Flutter older than its minimum and names
 the version it needs):
 
@@ -273,6 +285,9 @@ it should install only `@acme/*` items.
 ## 7. Limits
 
 The [main skill](../SKILL.md#constraints-that-shape-every-decision) owns preset,
-public-GitHub and placeholder limits. There is no offline cache; installs need
+public-GitHub and placeholder limits. Initializing a preset absent from the
+official index fails even when its identifier is valid. The internal first-party
+checkout harness does not expose a local-registry option in the production CLI.
+There is no offline cache; installs need
 network access. The CLI does not change a consumer's `defaultRegistry`, so name
 third-party items explicitly (`add @acme/button`).

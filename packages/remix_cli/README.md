@@ -4,13 +4,14 @@ See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, re
 migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the neutral `vanilla` preset or the Fortaleza-inspired `fortal`
-preset at initialization. Remix remains the behavior dependency; the
+Choose a preset offered by your pinned registry. The official catalog serves
+`vanilla` and `fortal`; the beta.14 catalog adds the HeroUI-inspired `heroui`
+preset after its registry promotion. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
 
-The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
-component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
+The Vanilla and Fortal catalogs include an opt-in `icons` seam and cover the
+core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
@@ -30,8 +31,20 @@ or an application entry point.
 The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. Registry content is published independently on GitHub and pinned in `remix.yaml`.
 Registry updates change pins only; installed source remains application-owned.
+Commit `remix.ownership.json` with the configuration and installed source.
+Target ownership is checked across separate installs; overlapping registries
+are rejected even with `--overwrite`. Existing installations without ownership
+records require verified, explicit `add theme button --adopt` migration; see
+[legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
-Both presets additionally distribute the unstyled Agent items:
+The `heroui` preset follows HeroUI's names, adding `alert`, `avatar_group`,
+`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
+`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`toggle_button`, and `toggle_button_group` to shared names such as `button` and
+`select`.
+
+The Vanilla and Fortal presets additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript`, with shared `models` and `support` dependencies. These are
 application-owned source, not a dependency on the private authoring source.
@@ -48,10 +61,15 @@ A project-local development dependency is preferred because the app's lockfile
 pins the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 ```
+
+Select the prerelease explicitly: the beta.14 registry's icon table requires
+CLI `1.0.0-beta.1` or later. An unversioned install can select stable `0.1.0`,
+which supports older schema 1 icon tables. Existing projects should update
+their CLI dependency before advancing to the new registry pin.
 
 To run an unreleased build, point at a checkout or staged package path:
 
@@ -59,13 +77,16 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.13`, which `add` declares for you.
+The pinned catalog declares its required Remix version, which `add` records
+for you. Existing beta.13 catalog pins remain usable; the beta.14 catalog
+requires Remix `^1.0.0-beta.14`. Updating the CLI alone does not advance a
+project's catalog pin.
 
 Global activation is convenient for experiments. Registry content remains
 pinned per project in `remix.yaml`:
 
 ```shell
-dart pub global activate remix_cli
+dart pub global activate remix_cli '^1.0.0-beta.1'
 ```
 
 `remix_cli` is versioned independently of `remix`, so its version does not
@@ -146,9 +167,10 @@ every installed item that uses icons (`icons`, `dashboard_shell`,
 A registry's `icons.yaml` maps each icon to a constant in every library. From
 schema 2, an icon a library does not draw names a `fallback` library instead:
 installing it on that library renders the fallback's constant and adds the
-fallback's package too. The official registry renders the icons Remix does
-not draw from Lucide, so a `remix` project installs `lucide_flutter`
-alongside `remix_ui_icons`.
+fallback's package too. The schema 2 official icon table uses Lucide for icons
+Remix does not draw, so those installs add `lucide_flutter` alongside
+`remix_ui_icons`. Earlier schema 1 pins keep their original icon package
+requirements.
 
 ### Fortal as owned source
 
@@ -157,7 +179,7 @@ With `preset: fortal`, `add button` installs the full local theme layer,
 prefix replaces Fortal throughout: `--prefix Acme` creates `AcmeTheme`,
 `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. The installed application
 does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
-the Radix color data, tokens, recipes, and instance overrides as ordinary app
+the generated palette data, tokens, recipes, and instance overrides as ordinary app
 source.
 
 Place `AcmeTheme` below the application host. For a routed `WidgetsApp`, wrap
@@ -165,15 +187,15 @@ the child of `WidgetsApp.builder` with `AcmeTheme`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
 
-Both presets support `theme`, `darkTheme`, and `mode` on their generated scope.
+Every preset supports `theme`, `darkTheme`, and `mode` on its generated scope.
 The old scope `data` and `brightness` parameters and config `createScope`
 shortcut are removed. Update application-owned callers to this API.
 With no configuration, roots use the generated light/dark pair and follow the
 system. Nested scopes inherit the pair and active selection. A custom `theme`
 without `darkTheme` is used in both modes; supplying `darkTheme` alone keeps the
-base default. Both presets generate `AcmeThemeData.light()`, `.dark()`, and
-`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeTheme` for both presets,
-with your configured prefix.
+base default. Every preset generates `AcmeThemeData.light()`, `.dark()`, and
+`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeTheme` with your
+configured prefix.
 
 Place the scope in `WidgetsApp.builder` above the Navigator. The CLI installs
 theme files, not a complete app host or appearance picker. See the
@@ -267,7 +289,8 @@ use `--diff` and explicit `--overwrite` for template updates.
 
 ### Add the full dashboard demo
 
-Initialize either preset, then use the same item and public dashboard API:
+Initialize the Vanilla or Fortal preset (HeroUI ships no dashboard), then use
+the same item and public dashboard API:
 
 ```shell
 dart run remix_cli:remix init --prefix Ui --preset vanilla
@@ -293,7 +316,8 @@ Installed recipe source follows the normal update contract. Re-running `add
 dashboard_demo` preserves local edits. Inspect a newer template with `--diff`, and
 use `--overwrite` only when deliberately replacing the installed recipe.
 
-Contributors can reproduce the isolated consumer gates for either preset:
+Contributors can reproduce the isolated dashboard consumer gates for Vanilla
+and Fortal:
 
 ```shell
 dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep
@@ -301,8 +325,11 @@ dart run tool/check_open_code.dart --preset fortal --source checkout --item dash
 ```
 
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
-`lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
-application-owned `UiIcons` alias set with no generated adapter. Add or rename
+`lib/ui/icons.dart`, declares the selected icon package and any per-icon
+fallback packages, and exposes a small, application-owned `UiIcons` alias set
+with no generated adapter. The
+default Remix selection uses `remix_ui_icons`, plus `lucide_flutter` for the
+schema 2 official table's fallbacks. Add or rename
 aliases there as your interface evolves. Every Remix icon remains one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
@@ -430,12 +457,15 @@ the source you install; the registry pin in `remix.yaml` does:
 5. reapply or refine application-specific changes and commit `remix.yaml`
    and the regenerated adapter.
 
-There is no automatic merge or migration layer in 0.1.0.
+There is no automatic merge or migration layer.
 
 Because `--overwrite` replaces only files present in the incoming registry item
 and `updateManagedBarrel` preserves existing exports without pruning, removing
-an obsolete template file during an upgrade requires manual cleanup. If upgrading
-an existing Vanilla project installed prior to token consolidation:
+an obsolete template file during an upgrade requires manual cleanup. Before
+upgrading an existing Vanilla project installed prior to token consolidation,
+complete [legacy ownership adoption](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record)
+for every existing item and dependency. Commit `remix.ownership.json` with the
+configuration and source, then update the theme:
 
 1. run `remix add theme --overwrite` (or `dart run remix_cli:remix add theme --overwrite`)
    to update `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`;

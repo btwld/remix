@@ -7,6 +7,7 @@ import '../../components/avatar.dart';
 import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/data_table.dart';
+import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/segmented_control.dart';
 import '../../components/textfield.dart';
@@ -378,24 +379,14 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
 ];
 
 Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
-  trigger: RemixMenuTrigger.builder(
-    label: 'Actions for $value',
-    icon: RemixIcons.more,
-    builder: (_, _, _) => Semantics(
-      label: 'Actions for $value',
-      button: true,
-      child: Box(
-        style: BoxStyler()
-            .size(28, 28)
-            .alignment(.center)
-            .borderRadius(.all(PlaygroundTokens.radiusSm())),
-        child: StyledIcon(
-          icon: RemixIcons.more,
-          style: IconStyler()
-              .size(PlaygroundTokens.icon)
-              .color(PlaygroundTokens.mutedForeground()),
-        ),
-      ),
+  trigger: RemixMenuTrigger.control(
+    builder: (_, menu) => PlaygroundIconButton.ghost(
+      size: .small,
+      icon: RemixIcons.more,
+      semanticLabel: 'Actions for $value',
+      focusNode: menu.focusNode,
+      onPressed: menu.toggle,
+      style: _kebabStyle(open: menu.isOpen),
     ),
   ),
   items: const [
@@ -407,6 +398,20 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
   onSelected: (action) =>
       playgroundDashboardToast(context, '$action selected for $value'),
 );
+
+/// The kebab: a muted glyph, filled with `muted` while its menu is open. Hover
+/// and press come after the base in Mix, so the open look repeats there to stay
+/// in force under the pointer.
+IconButtonStyler _kebabStyle({required bool open}) {
+  final resting = IconButtonStyler().icon(
+    .color(PlaygroundTokens.mutedForeground()),
+  );
+  if (!open) return resting;
+
+  final filled = resting.color(PlaygroundTokens.muted());
+
+  return filled.onHovered(filled).onPressed(filled);
+}
 
 Widget _status(String value) => switch (value) {
   'active' || 'paid' => PlaygroundBadge(label: value),

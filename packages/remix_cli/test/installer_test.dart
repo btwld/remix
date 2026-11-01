@@ -65,8 +65,8 @@ void main() {
   test(
     'Agent install configures generation and repairs a missing config',
     () async {
-      writeRequiredPubspec(root, remixUiIcons: '^1.0.0-beta.1');
-      writeRequiredLock(root, remixUiIcons: '1.0.0-beta.1');
+      writeRequiredPubspec(root, remixUiIcons: registryRemixIconsConstraint);
+      writeRequiredLock(root, remixUiIcons: '$registryRemixIconsFloor');
       final runner = happyRunner(root, writeLockOnPubGet: false);
       final installer = Installer(
         projectRoot: root,
@@ -134,8 +134,8 @@ void main() {
     test(
       'Agent install preserves named default $target in every mode',
       () async {
-        writeRequiredPubspec(root, remixUiIcons: '^1.0.0-beta.1');
-        writeRequiredLock(root, remixUiIcons: '1.0.0-beta.1');
+        writeRequiredPubspec(root, remixUiIcons: registryRemixIconsConstraint);
+        writeRequiredLock(root, remixUiIcons: '$registryRemixIconsFloor');
         final config = File(p.join(root.path, 'build.yaml'));
         config.writeAsStringSync('targets: {$target: {sources: []}}');
         final output = <String>[];
@@ -249,6 +249,7 @@ registries:
       );
 
       expect(writer.paths, [
+        'remix.ownership.json',
         'lib/ui/theme/effects.dart',
         'lib/ui/theme/theme_data.dart',
         'lib/ui/theme/theme_scope.dart',
@@ -620,8 +621,11 @@ packages:
         main.path: main.readAsBytesSync(),
         routes.path: routes.readAsBytesSync(),
       };
-      writeRequiredPubspec(caseRoot, remixUiIcons: '^1.0.0-beta.1');
-      writeRequiredLock(caseRoot, remixUiIcons: '1.0.0-beta.1');
+      writeRequiredPubspec(
+        caseRoot,
+        remixUiIcons: registryRemixIconsConstraint,
+      );
+      writeRequiredLock(caseRoot, remixUiIcons: '$registryRemixIconsFloor');
 
       final installer = Installer(
         projectRoot: caseRoot,
@@ -716,12 +720,12 @@ packages:
         writeRequiredPubspec(
           caseRoot,
           mixChart: registryMixChartConstraint,
-          remixUiIcons: '^1.0.0-beta.1',
+          remixUiIcons: registryRemixIconsConstraint,
         );
         writeRequiredLock(
           caseRoot,
           mixChart: '$registryMixChartFloor',
-          remixUiIcons: '1.0.0-beta.1',
+          remixUiIcons: '$registryRemixIconsFloor',
         );
 
         final installer = Installer(
@@ -989,7 +993,7 @@ packages:
           ),
         );
         final remixUiIcons = await _itemUsesRemixIcons(catalog, item)
-            ? '1.0.0-beta.1'
+            ? '$registryRemixIconsFloor'
             : null;
         final mixChart =
             catalog
@@ -1144,6 +1148,7 @@ packages:
 
       barrel.writeAsStringSync(emptyManagedBarrel);
       writeRequiredPubspec(root, remix: '^0.9.0');
+      final before = snapshotFiles(root);
       await expectLater(
         Installer(
           projectRoot: root,
@@ -1151,9 +1156,23 @@ packages:
           processRunner: runner,
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsFormatException,
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('Existing remix constraint ^0.9.0 is incompatible'),
+              contains(
+                'Change remix in pubspec.yaml to $registryRemixConstraint',
+              ),
+              contains('read its changelog first'),
+              contains('No source was written.'),
+            ),
+          ),
+        ),
       );
       expect(runner.calls, isEmpty);
+      expect(snapshotFiles(root), before);
     },
   );
 
@@ -1655,8 +1674,8 @@ dev_dependencies:
     test('resolves, formats, and generates once for the whole batch', () async {
       // This is the reason the batch exists: the expensive tail runs per
       // invocation, so four items in one call must not pay it four times.
-      writeRequiredPubspec(root, remixUiIcons: '^1.0.0-beta.1');
-      writeRequiredLock(root, remixUiIcons: '1.0.0-beta.1');
+      writeRequiredPubspec(root, remixUiIcons: registryRemixIconsConstraint);
+      writeRequiredLock(root, remixUiIcons: '$registryRemixIconsFloor');
       final runner = happyRunner(root, writeLockOnPubGet: false);
 
       await Installer(

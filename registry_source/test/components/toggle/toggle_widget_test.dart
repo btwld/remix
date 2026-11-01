@@ -165,38 +165,47 @@ void main() {
         FocusManager.instance.highlightStrategy = previousStrategy;
       });
 
-      testWidgets(
-        'outline toggle keeps a separate outside focus ring when selected',
-        (tester) async {
-          FocusManager.instance.highlightStrategy =
-              FocusHighlightStrategy.alwaysTraditional;
-          for (final selected in [false, true]) {
-            final focusNode = FocusNode();
-            addTearDown(focusNode.dispose);
-            await tester.pumpRemixApp(
-              RemixToggle(
-                selected: selected,
-                onChanged: (_) {},
-                label: 'T',
-                focusNode: focusNode,
-                style: fortalToggleStyle(variant: .outline),
-              ),
-            );
-            final bounds = tester.getRect(find.byType(RemixToggle));
-            focusNode.requestFocus();
-            await tester.pumpAndSettle();
-            expect(focusNode.hasFocus, isTrue);
-            expect(tester.getRect(find.byType(RemixToggle)), bounds);
-            expect(
-              find.descendant(
-                of: find.byType(RemixToggle),
-                matching: find.byType(CustomPaint),
-              ),
-              findsWidgets,
-            );
-          }
-        },
-      );
+      testWidgets('outline toggle keeps focus ring when selected', (
+        tester,
+      ) async {
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.alwaysTraditional;
+        final focusRingColor = await resolveInFortalTheme(
+          tester,
+          (context) => MixScope.tokenOf(FortalTokens.focus8, context),
+        );
+
+        Future<Color?> ringColorFor({required bool selected}) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+          await tester.pumpRemixApp(
+            RemixToggle(
+              selected: selected,
+              onChanged: (_) {},
+              label: 'T',
+              focusNode: focusNode,
+              style: fortalToggleStyle(variant: .outline),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          focusNode.requestFocus();
+          await tester.pumpAndSettle();
+
+          expect(focusNode.hasFocus, isTrue);
+          return _focusRing(tester)?.color;
+        }
+
+        final unselected = await ringColorFor(selected: false);
+        final selected = await ringColorFor(selected: true);
+
+        expect(unselected, focusRingColor);
+        expect(
+          selected,
+          unselected,
+          reason: 'focus ring must survive selection',
+        );
+      });
 
       testWidgets('outline toggle hides focus ring in touch mode', (
         tester,
@@ -216,25 +225,18 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        final unfocused = _outlineBorderColor(tester);
-
         focusNode.requestFocus();
         await tester.pumpAndSettle();
 
         expect(focusNode.hasFocus, isTrue);
-        expect(_outlineBorderColor(tester), unfocused);
+        expect(_focusRing(tester), isNull);
       });
     });
   });
 }
 
-Color? _outlineBorderColor(WidgetTester tester) {
-  final spec = tester.resolvedSpecOf<ToggleSpec>(find.text('T'));
-  final decoration = spec.container.spec.box?.spec.decoration;
-  if (decoration is! BoxDecoration || decoration.border is! Border) return null;
-  return (decoration.border! as Border).top.color;
-}
-
+BorderSide? _focusRing(WidgetTester tester) =>
+    tester.resolvedSpecOf<ToggleSpec>(find.text('T')).containerEffects?.outline;
 // ignore: invalid_use_of_internal_member
 final _toggleRowFinder = find.byType(RemixFlexBoxAdapter);
 

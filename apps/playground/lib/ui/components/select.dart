@@ -120,7 +120,8 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     );
 
 /// The floating panel the options live in: `popover` inside a `border`
-/// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow.
+/// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow. It is at
+/// least 128px wide and at least as wide as its trigger.
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(PlaygroundTokens.popover())
     .border(
@@ -129,6 +130,9 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
     .padding(.all(PlaygroundTokens.s1))
     .minWidth(PlaygroundTokens.panelMinWidth)
+    // A second minimum on a modifier: the trigger's width still holds where a
+    // caller replaces the 128px floor through `style`.
+    .wrap(.box(BoxStyler().minWidth(remixAnchorWidth())))
     .maxHeight(_panelMaxHeight)
     .containerEffects(.behindContent(PlaygroundShadow.md.effects));
 

@@ -29,8 +29,10 @@ using them. Schema 2 (`remix_cli` 1.0.0-beta.1) lets an icon name a `fallback`
 library for the libraries that do not draw it.
 
 `ref` records the requested branch, tag, or SHA. `revision` is the immutable
-commit used for every index, catalog, and template read. Commit `remix.yaml`;
-there is no separate source lockfile. `add`, `--diff`, and `--dry-run` never
+commit used for every index, catalog, and template read. Commit `remix.yaml`
+and, after installation, `remix.ownership.json`. The
+ownership record reserves authored and generated targets; it does not pin
+content or hash local edits. `add`, `--diff`, and `--dry-run` never
 resolve a newer ref or change the configuration. Network or source failures
 never fall back to other content; the CLI ships none. No persistent offline
 cache is provided.
@@ -77,11 +79,69 @@ the complete dependency graph and templates before dependency installation or
 writes, rejects cycles and conflicting target owners, and intersects package
 constraints. Output identifies namespaces and the resolved revisions.
 
+Ownership checks also cover earlier installs, including files subsequently
+removed or targets no longer present in the latest catalog. The durable owner
+is the GitHub repository (case insensitive), registry path, preset, and item.
+Updating a ref/revision or registering another namespace for the same source
+does not change ownership. Changing the repository or registry path does.
+Neither `--overwrite` nor `--adopt` can replace a known different owner.
+Internal symlink aliases and case-only target differences also conflict, so
+the boundary remains portable to Windows and default macOS filesystems.
+
+One prefix, preset, and UI root remain the supported boundary. Additive
+registries may depend on existing items and install to disjoint targets;
+overlapping replacement design systems require a separate application setup.
+The same preflight runs for ordinary installs, `--dry-run`, and `--diff`, before
+any dependency process or source write. Previews never write ownership.
+Commit the record with the matching configuration and source, and restore all
+three together on rollback. Reservations survive source/generation failures so
+rerunning the original owner can repair the installation. Run installer
+commands serially within an application.
+
 Installed generated adapters remain included in generation, including those
 from registries outside the current dependency graph. Source remains owned by
 the application. Restoring a previously committed configuration pin is the
 registry rollback; it does not revert installed source. Review and restore that
 source separately through the application's version control.
+
+## Existing source without an ownership record
+
+CLI 0.1.0 and 1.0.0-beta.0 did not record target owners. Upgrading the CLI
+cannot infer provenance from file names, exports, a configured namespace, or
+customized content. Existing unknown targets therefore fail preflight, even
+with `--overwrite`. Disjoint additions remain supported and do not claim
+unrelated legacy files.
+
+After verifying where each existing item came from, attest to it explicitly.
+Name every existing unknown dependency as well as the requested recipe:
+
+```shell
+remix add theme button --adopt --dry-run
+remix add theme button --adopt --diff
+remix add theme button --adopt
+```
+
+`--adopt` preserves authored bytes and records ownership for explicitly named
+items. It otherwise follows normal installation: missing source is installed,
+dependencies resolved, missing adapters generated, and source analyzed. It
+cannot be combined with `--overwrite`. Known owners still take precedence, and
+partially installed items still require repair. Adoption is a declaration by
+the application maintainer, not automatic verification of legacy provenance.
+If provenance is uncertain or systems were previously mixed, restore a known
+configuration/source pair from version control or start a clean installation
+and reapply local edits. Do not use adoption to relabel another system's files.
+
+Commit `remix.ownership.json` with `remix.yaml` and the installed source after
+adoption. Its prefix, preset, and UI path must continue to match the project
+configuration. Renaming identifiers or deleting source does not release its
+reservations. Restore matching configuration, ownership, and source after an
+accidental context change; for an intentional change, initialize a clean
+installation in a separate app and reapply your edits.
+
+Upgrade the project-local CLI before migrating. Older CLIs ignore this record
+and do not enforce the boundary; do not downgrade installer commands afterward.
+This installer behavior requires a new CLI release; updating a registry pin
+alone does not deliver it.
 
 ## Projects from an earlier prerelease
 
@@ -93,18 +153,19 @@ project is reinitialized.
 ```shell
 rm remix.yaml
 remix init --prefix Acme --preset vanilla
-remix add button --diff
+remix add theme button --adopt --diff
+remix add theme button --adopt
 ```
 
 Pass the prefix, preset and UI path the old file recorded; a schema-1 project
 recorded no preset and its `default` corresponds to `vanilla`. `init` rewrites
 configuration only: installed files and generated adapters are preserved, and
 nothing claims they still match the newly pinned source. That is what the
-`--diff` is for.
+`--adopt --diff` is for. Verify provenance before adoption as described above.
 
 ## Preset and generation contract
 
-Choose one preset and prefix at initialization; both official presets own the
+Choose one preset and prefix at initialization; the official presets own the
 same installed paths, so their source trees cannot be mixed. `Fortal` is an
 authoring word, not a required installed prefix. A recipe installs only its
 item dependency closure. Agent surfaces may install bare or through their
@@ -150,6 +211,7 @@ schema: 1
 presets:
   vanilla: vanilla/registry.yaml
   fortal: fortal/registry.yaml
+  heroui: heroui/registry.yaml
 ```
 
 Within a schema-2 catalog, `registryDependencies: [theme, "@company/icons"]`
@@ -165,14 +227,15 @@ require promoting `registry-stable`, not a new CLI release.
 
 ## Vanilla preset naming
 
-New projects select `vanilla` when `--preset` is omitted. The official remote
-index exposes only `vanilla` and `fortal`; `default` is not a remote alias.
+New projects select `vanilla` when `--preset` is omitted. The checkout index
+exposes `vanilla`, `fortal`, and `heroui`; the served stable index gains a new
+preset only after registry promotion. `default` is not a remote alias.
 A project reinitialized from schema 1 or 2 records `vanilla` in its place. The
 internal authoring directory remains `registry_source/lib/src/default/`.
 
 ## Authoring and derivation
 
-`registry_source/lib/src/default`, `fortal`, `agent` and `dashboard` own the
+`registry_source/lib/src/default`, `fortal`, `heroui`, `agent` and `dashboard` own the
 analyzed Dart. Edit it, never `.tmpl` output. The builder asserts prefix round
 trips and rewrites shared Agent imports to installed relative paths. Imports
 determine item dependencies; parts determine adapter targets. Whole-tree checks
@@ -186,7 +249,7 @@ owns the visual contract.
 
 Catalog structure and templates are derived. Maintained inputs are
 `registry/icons.yaml` (mapping/library floors) and Vanilla's dependency and
-dev-dependency floors, read back by the builder and shared with Fortal. Change
+dev-dependency floors, read back by the builder and shared with Fortal and HeroUI. Change
 floors through the [package release workflow](../.claude/skills/releasing-a-package/SKILL.md).
 
 ## Repository consumers

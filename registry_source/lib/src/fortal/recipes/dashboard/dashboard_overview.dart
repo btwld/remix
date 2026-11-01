@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -19,6 +18,7 @@ import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_widgets.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 class FortalDashboardOverview extends StatelessWidget {
   const FortalDashboardOverview({
@@ -261,7 +261,7 @@ class _FortalActivityIcon extends StatelessWidget {
     final (icon, accent) = switch (kind) {
       .customer => (RemixIcons.user, FortalAccentColor.ceu),
       .order => (LucideIcons.box, FortalAccentColor.ceu),
-      .payment => (LucideIcons.circleCheck, FortalAccentColor.mangue),
+      .payment => (LucideIcons.circleCheck, FortalAccentColor.serra),
       .alert => (RemixIcons.warning, FortalAccentColor.sol),
     };
 

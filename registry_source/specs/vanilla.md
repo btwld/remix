@@ -125,7 +125,8 @@ Tailwind's `transition` default, `cubic-bezier(0.4, 0, 0.2, 1)`.
 **Focus.** `focus-visible:ring-[3px] ring-ring/50`: a 3px band of `ring` at 50%,
 drawn outside the control with no offset. A control with a border also turns
 its border `ring` (`focus-visible:border-ring`). Text fields and text areas
-ring on any focus, including a click (see Deviations).
+ring on any focus, including a click (see Deviations). A toggle-group option
+draws the band inside itself (see Deviations).
 
 **Disabled.** Opacity 0.5; colors are unchanged.
 
@@ -143,17 +144,17 @@ the steps above. The source column names the file under
 | Icon button | 32/36/40 squares, icon 16, the button's fills | `button.tsx` (`icon-*` sizes) |
 | Link | `text-sm`, underline on hover | `button.tsx` (`link`) |
 | Badge | radius full; 1px border on every variant, transparent except outline; `text-xs` w500; px 8, py 2 | `badge.tsx` |
-| Toggle | h 32/36/40, min-w equal to h; px 6/8/10; `text-sm` w500; hover muted + muted-fg; on accent + accent-fg; outline adds an `input` border | `toggle.tsx` |
+| Toggle | h 32/36/40, min-w equal to h; px 6/8/10; `text-sm` w500; hover muted + muted-fg; on accent + accent-fg; outline adds an `input` border and `shadow-xs` | `toggle.tsx` |
 | Toggle group | items px 12, radius 0 inside a clipped md container, gap 0; outline adds the border | `toggle-group.tsx` |
 | Text field | h 36; px 12, py 4; border `input`, transparent fill, `shadow-xs`; `text-sm`; placeholder muted-fg | `input.tsx` |
 | Text area | min-h 64; px 12, py 8 | `textarea.tsx` |
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
 | Select trigger | the text field's metrics, gap 8; chevron 10 at 50% (see Deviations) | `select.tsx` |
-| Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128 | `select.tsx` |
+| Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128, never narrower than the trigger (the default `item-aligned` position) | `select.tsx` |
 | Select item | h 32; px 8, py 6 (see Deviations); radius sm; highlight accent; check 10 muted-fg | `select.tsx` |
 | Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
-| Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary | `radio-group.tsx` |
-| Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border | `switch.tsx` |
+| Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary; label `text-sm` w500, gap 12 | `radio-group.tsx`, `label.tsx` |
+| Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border; label `text-sm` w500, gap 8 | `switch.tsx`, `label.tsx` |
 | Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover and focus | `slider.tsx` |
 | Tabs (filled) | list h 36, p 3, radius lg, muted; tab radius md, px 8, py 4, gap 6; inactive foreground/60; active background + `shadow-sm` | `tabs.tsx` |
 | Tabs (line) | transparent list; active tab marked by a 2px `foreground` underline | `tabs.tsx` (`variant=line`) |
@@ -191,12 +192,13 @@ the steps above. The source column names the file under
 | Checkbox, select, and menu 9×9 glyphs | `size-3.5` (14) / `size-4` (16) | 10 (`VanillaTokens.s2_5`) | The reference sizes padded 24×24 Lucide icons; Remix draws edge-to-edge 9×9 paths (`thickCheck`, `chevronDown`, `thickChevronRight`), which match the painted mark at 10. |
 | Select item horizontal padding | `pl-2 pr-8` (8 / 32) | `px-2` (8) | CSS positions the check mark inside the 32px right gutter (`right-2`); Remix lays the check mark out in the row after the label, so `px-2` places it 8px from the trailing edge. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
-| Toggle and toggle group, outline | `shadow-xs` | no shadow | Their specs have no effects layer, and Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that do have an effects layer draw `shadow-xs` there, which cuts the box out as CSS does. |
+| Toggle group, outline | `shadow-xs` | no shadow | Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that draw `shadow-xs` in the effects layer cut the box out as CSS does, but the strip has no effects layer. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
 | Focus ring | `ring/50`, 3px | `ring` at 50%, 3px | Matches the reference, which is below the 3:1 non-text floor: about 1.5:1 on the light page and 1.85:1 on the dark. The old Vanilla `focusRing` cleared 3:1. Raise the band's alpha in the recipes, or darken `ring`, where focus visibility matters more than matching. |
+| Toggle group option focus | band drawn outside, the focused item lifted with `focus-visible:z-10` | the same 3px band drawn inside the option | The group clips its options to the rounded strip, which would crop an outside band on the first and last option, and a filled neighbor painted after the focused option would cover its side of one. A recipe cannot lift an option above its neighbors, so the band goes inside. |
 | Text field and text area focus | `focus-visible:` | any focus (`onFocused`) | Browsers treat a focused text input as `:focus-visible` even after a click, but Mix's `onFocusVisible` does not, so the recipe keys the ring on `onFocused` to show it on click as the reference does. Other controls stay on `onFocusVisible`. |
 | Callout, destructive | description at `destructive/90` | one text color for the whole callout | `CalloutSpec` has a single text role, so the description cannot take its own color. |
-| Current filled tab, dark | `bg-input/30` over the list | `input` at 30% pre-blended over `muted`, opaque | Flutter paints the tab's `shadow-sm` under the whole box, so a translucent fill would show it through and darken the tab. Tabs have no effects layer to move the shadow to. |
+| Current filled tab, dark | `bg-input/30` over the list | `input` at 30% pre-blended over `muted`, opaque | Flutter paints the tab's `shadow-sm` under the whole box, so a translucent fill would show it through and darken the tab. The shadow stays a decoration shadow rather than moving to the tab's effects layer. |
 | App bar | no `ui/` primitive | the header the Vanilla dashboard already shipped | shadcn builds page headers inline in its blocks. Vanilla keeps the dashboard's metrics so the `app_bar` item and the dashboard shell look the same, and names the row height `vanillaAppBarToolbarHeight` so a sidebar header can line up with it. |
 | Sidebar destination padding | `h-8 p-2` | 32 min height, 8px across and 6px down | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside it, so `p-2` would make a 36px row. |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |

@@ -1,0 +1,36 @@
+component: Select
+widget: HeroUiSelect
+target: RemixSelect
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/select.css, dist/components/list-box-item.css]
+anatomy: [trigger, value, indicator, popover, list, item]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, focus-visible, invalid, disabled, open, item hover, item pressed, item focus-visible]
+tokens:
+  - field-background, field-hover, field-focus, field-foreground, field-placeholder (primary)
+  - default, default-hover (secondary)
+  - overlay and overlay shadow (popover), default (item hover), default-foreground (item mark)
+  - danger (invalid ring), focus (ring), radius-field, radius-panel, radius-2xl
+measurements:
+  - {what: trigger height, value: "40 below 640px, 36 above", cite: select-primary-rest-select-trigger}
+  - {what: trigger radius, value: 12, cite: select-primary-rest-select-trigger}
+  - {what: value, value: "280 wide in a 320 trigger; 16px below 640px, 14px above", cite: select-primary-rest-select-value}
+  - {what: indicator slot, value: "16, at end-2", cite: "select-primary-rest-select-default-indicator; select.css select__indicator"}
+  - {what: chevron ink, value: "10.5 wide, centered in the slot", cite: "react/dist/components/icons.js IconChevronDown (path spans x 2.75 to 13.25 of 16)"}
+  - {what: popover radius, value: 24, cite: select-primary-keyboard-open-select-popover}
+  - {what: list padding and gap, value: "6, 4", cite: "select__popover list-box p-1.5; list-box mt-1"}
+  - {what: item, value: "36 high, radius 16, gap 12, padding 10x6", cite: "select-primary-keyboard-open-list-box-item:Apple"}
+  - {what: trigger fill, value: "field-background (primary), default (secondary)", cite: "select-primary-rest-select-trigger, select-secondary-rest-select-trigger"}
+  - {what: popover fill and shadow, value: "overlay and the overlay shadow", cite: select-primary-keyboard-open-select-popover}
+  - {what: item focus ring, value: "2px background gap, then a 2px focus ring", cite: "select-primary-keyboard-open-list-box-item:Apple"}
+  - {what: popover width, value: "at least the trigger's: 320 for a 320 trigger", cite: "select-primary-keyboard-open-select-popover; select.css min-w-(--trigger-width)"}
+approximations:
+  - "The trigger's padding is physical, so the indicator inset does not mirror in right-to-left. Mix cannot merge directional padding with a caller's physical padding, which would make a caller `style` with `padding(.all(..))` throw."
+  - "Remix centers a popover wider than its trigger under it by default (`positioning`). The pinned reference measures the popover only at the trigger's own width (320), where start and center alignment coincide, so upstream's placement of a wider popover is not recorded. Pass `OverlayPositionConfig(side: .bottom, alignment: .start)` to align the edges."
+  - "Once the list is long enough to scroll, Remix clips it at the scroll view, inside the popover's padding, so the outside row ring loses its sides and the edge rows lose their outer edge."
+  - The popover appears without upstream's 150ms fade and zoom.
+  - "The chevron is Remix's glyph at 11px, centered in the 16px slot's place (about 11 x 5.9 ink against 10.5 x 5.9). It flips when open without upstream's 150ms rotation."
+  - The trigger's optional leading icon is Remix's and is not styled; HeroUI has none.

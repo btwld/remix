@@ -257,7 +257,7 @@ class _UiActivityIcon extends StatelessWidget {
     final (icon, accent) = switch (kind) {
       .customer => (RemixIcons.user, UiAccentColor.ceu),
       .order => (LucideIcons.box, UiAccentColor.ceu),
-      .payment => (LucideIcons.circleCheck, UiAccentColor.mangue),
+      .payment => (LucideIcons.circleCheck, UiAccentColor.serra),
       .alert => (RemixIcons.warning, UiAccentColor.sol),
     };
 

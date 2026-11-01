@@ -11,7 +11,8 @@ placement, and theme selection shared with the Vanilla preset, see the
 
 Sections: [Presets and recipes](#presets-and-recipes) ·
 [Typography](#typography) · [Scope and theme config](#scope-and-theme-config) ·
-[Token rules](#token-rules).
+[Token rules](#token-rules) · [Palettes and review](#palettes-and-review) ·
+[Focus rings](#focus-rings).
 
 ## Presets and recipes
 
@@ -104,7 +105,9 @@ the rules that are not obvious from a token's name:
 - `colorPanel` follows `panelBackground`: it resolves to `colorPanelSolid`
   when `panelBackground == .solid`, otherwise to `colorPanelTranslucent`.
 - `colorBackground` and `colorPanelSolid` use Calçadão `gray1`/`gray2` in
-  both modes. Error tokens use Caju regardless of the active accent.
+  both modes. Error tokens use the dedicated error red (`<prefix>Error` in
+  `ui/theme/fortal_colors.dart`) regardless of the active accent or a custom
+  palette; it is not a selectable accent, and Caju is an orange-red accent.
 - Component sizing frequently reuses space tokens rather than fixed
   literals and does not always step evenly — e.g. `FortalProgress` heights
   are `space1`/`progressHeight2`/`space2` (4/6/8px) × the theme's `scaling`,
@@ -118,14 +121,28 @@ call-form mechanics (`.mix()`, `.resolve(context)`).
 
 ## Palettes and review
 
-The accents are `calcadao`, `mar`, `ceu`, `mangue`, `sol`, `duna`, and `caju`.
+The accents are `calcadao`, `mar`, `ceu`, `serra`, `sol`, `duna`, and `caju`.
+For destructive or negative content, scope the error palette with
+`accentPalette:` instead of choosing Caju, and keep a text label or icon.
 Both the accent and sole gray default to `calcadao`. All colors come from
 Fortal's own seed-based generator, not an external dataset.
 
 The twelve flat-control families expose no `classic` constructor. Kbd defaults
 to `soft`; segmented control has only `surface`. Toast's independent `classic`
 variant remains a floating notification surface. Cards and controls have no
-elevation, surface fields use gray2/gray7, and focus is 2px step 8 with a 2px gap.
+elevation, surface fields use gray2 with the 3:1 `controlBorder` frame (select
+triggers keep gray7), and focus is 2px step 8 with a 2px gap. Labelled fills
+(solid buttons, badges, avatars, menu highlights) read `accentSolid` and
+`accentSolidHover` with `accentContrast`. `accent9`/`accent10` are the mark
+fill of selected controls and progress, and checks read
+`accentIndicatorContrast`; pair a custom fill with the matching role. Most
+palettes carry white labels in both modes; Sol and Duna keep warm-brown labels
+and marks. Normal selected surface-switch thumbs and enabled slider thumbs are
+white with an `accentThumbRing` outline rather than ink discs; off switch
+thumbs are white with a `controlBorder` ring. Progress tracks are edged in
+`controlBorder`. Selected soft thumbs keep accent11 (accent12 at
+high contrast), selected high-contrast surface thumbs keep accent1, and
+disabled thumbs keep gray2 with a gray6 border.
 The type ramp is 12/14/16/18/20/24/28/36/60.
 
 Generate custom brand source from a checkout with
@@ -138,3 +155,14 @@ The independent contract is `registry_source/specs/fortal.md` and its catalog;
 `tool/check_fortal.dart` verifies APIs and test ownership. Use the
 `apps/demo/lib/polish_main.dart` playground to review every size/variant in
 both modes on a 4px grid, with palette and interaction-state selectors.
+
+## Focus rings
+
+Fortal uses one shared outline from `focus8`, `focusRingWidth`, and
+`focusRingOffset` (2px wide, 2px outside by default). Effects-capable controls
+paint it through `containerEffects`, accordion/disclosure use `triggerEffects`,
+switches use `trackEffects`, and sliders use `thumbFocusEffects`. The ring
+takes no layout space. Disabled controls do not ring.
+
+Select panels use `minWidth(remixAnchorWidth())`; a smaller `maxWidth` override
+must also replace that minimum.

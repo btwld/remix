@@ -19,10 +19,10 @@
     {
       "id": 2,
       "prompt": "Our design system should just be its own preset called acme, so people run `remix init --preset acme`. Set that up in our GitHub registry.",
-      "expected_output": "Explains that a third-party registry cannot introduce a preset: init always pins the official registry, and every registry a project registers must offer the project's already-selected preset, so registry add would fail. Publishes the system under the vanilla preset in its own repository and identifies it by namespace (@acme), with consumers running remix init (vanilla) then registry add @acme and add @acme/<item>. Keeps the registry self-contained with its own theme item and no @remix dependencies.",
+      "expected_output": "Explains that preset identifiers are not hardcoded to vanilla/fortal, but normal init resolves the official index. A preset declared only by a third-party registry therefore cannot bootstrap through init. Uses the supported third-party flow: vanilla init, registry add @acme, and self-contained @acme items. Distinguishes this from maintainers adding a first-party preset to the official registry.",
       "files": [],
       "expectations": [
-        "States that a custom preset name is unsupported for third-party registries and why.",
+        "Distinguishes identifier validation from official-index availability; does not claim the CLI has a two-value preset enum.",
         "Publishes under the vanilla preset and uses the @acme namespace to identify the system.",
         "Gives the consumer flow of remix init, registry add @acme, and add @acme/<item>.",
         "Keeps the registry self-contained with its own theme and no @remix item dependencies."
@@ -133,11 +133,11 @@
     {
       "id": 11,
       "prompt": "Carbon has a Breadcrumb component. Remix has no breadcrumb widget. Add it to our Carbon-on-Remix registry.",
-      "expected_output": "Writes the worksheet first, then composes existing Remix widgets and Mix primitives (RemixLink items separated by styled FlexBox/StyledText separators) in a facade in the target vocabulary, styled through tokens, rather than reaching for Material or a hand-rolled gesture stack. Uses Naked UI only for behavior Remix does not wrap, declaring naked_ui on the item, and treats @MixableSpec as a last resort that edits the consumer's build.yaml and must be recorded in the ADR. Adds the catalog item with any dependencies it imports.",
+      "expected_output": "Writes the worksheet first, then composes existing Remix widgets and Mix primitives (RemixLink items separated by styled FlexBox/StyledText separators) in a facade in the target vocabulary, styled through tokens, rather than reaching for Material or a hand-rolled gesture stack. Reaches for Naked UI or @MixableSpec only as a recorded third-party exception, never for gestures or focus a composition can't supply. Adds the catalog item with any dependencies it imports.",
       "files": [],
       "expectations": [
         "Writes the worksheet before code.",
-        "Composes existing Remix widgets and Mix primitives before considering Naked UI or @MixableSpec.",
+        "Composes existing Remix widgets and Mix primitives; does not add gesture, focus, or keyboard handling.",
         "Declares any extra package the template imports on the catalog item.",
         "Does not use Material widgets."
       ]
@@ -152,6 +152,54 @@
         "Keeps the theme, darkTheme, and mode scope contract.",
         "Fixes InheritedTheme.wrap so it rebuilds the MixScope for routes and overlays.",
         "Adds a test that renders an overlay in dark mode."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "In btwld/remix, add a HeroUI v3 web preset beside Fortal. First check our skills and process.",
+      "expected_output": "Uses the first-party route in open_code/ADDING_PRESETS.md and reuses registry_source, the builder, the checkout harness, and CI. Pins the exact HeroUI web release and source commit, separating v3 web from v2 and HeroUI Native. Maps each HeroUI family onto an existing Remix widget as a @MixWidget recipe or a thin composition, and defers families without a Remix base. Plans appearance evidence (tokens and measurements) rather than behavior recordings.",
+      "files": [],
+      "expectations": [
+        "Routes to the first-party checklist and reuses registry_source and the existing builder.",
+        "Separates web v3 from v2 and HeroUI Native and pins matching source artifacts.",
+        "Maps families onto Remix widgets as recipes or compositions and defers the rest.",
+        "Treats behavior as Remix's and plans appearance evidence only."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "HeroUI v3 uses OKLCH colors, color-mix(in oklab), Tailwind @apply, and md:h-9 buttons. Can we copy hex colors and Fortal button dimensions?",
+      "expected_output": "Rejects copying Fortal's decisions. Compiles the pinned Tailwind stylesheet, resolves OKLCH and color-mix with a recorded sRGB conversion policy, and measures rendered upstream components on both sides of the breakpoint. Expresses the responsive height in the recipe with Mix breakpoint variants. Flutter goldens alone do not establish the upstream values.",
+      "files": [],
+      "expectations": [
+        "Does not substitute sRGB interpolation for color-mix in oklab silently.",
+        "Compiles CSS before measuring; raw @apply is not resolved geometry.",
+        "Measures both sides of the breakpoint and maps it to a Mix breakpoint variant.",
+        "Derives expected values from upstream evidence, not from the Flutter code."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Our new official preset is only on this checkout, not registry-stable. How do we test it before pushing? Also, should HeroUI's isPending map to RemixButton.loading?",
+      "expected_output": "Uses the internal checkout harness after adding the preset's contract and fixture; does not invent a public local-registry flag or require a push. Explains that init against stable followed by an update cannot bootstrap a preset absent from stable. Maps pending onto Remix's own `loading` parameter and styles that state in the recipe, and does not rebuild React Aria's pending focus and semantics in a facade.",
+      "files": [],
+      "expectations": [
+        "Uses the checkout harness and notes its preset contract and fixture must be extended.",
+        "Distinguishes internal injection from the production GitHub-only CLI.",
+        "Does not propose init-then-update as bootstrap for a missing stable preset.",
+        "Maps pending to loading and keeps behavior in Remix."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "The HeroUI inventory lists ComboBox, NumberField, and a Form system that Remix doesn't have, and our checkbox can't draw HeroUI's animated check mark. Should the preset build those, or add flags to RemixCheckbox?",
+      "expected_output": "Defers families without a Remix base instead of building engines in the preset or the shared library. For the check mark, follows the extension order: try the checkbox styler, then a composition, then propose a general part builder on RemixCheckbox (useful to every preset, following Remix's builder convention) as a separate reviewed change, otherwise approximate and record it in the worksheet. Never adds preset-specific flags or behavior to shared components.",
+      "files": [],
+      "expectations": [
+        "Defers ComboBox, NumberField, and Form rather than building them.",
+        "Applies style, compose, general API, approximate in that order.",
+        "Any shared API is general, convention-following, additive, tested, and recorded in the preset's ADR.",
+        "Records approximations in the worksheet."
       ]
     }
   ]

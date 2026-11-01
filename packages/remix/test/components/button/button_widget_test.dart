@@ -831,7 +831,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Find the Flex widget (the internal flex used by the button)
-        final flexFinder = find.byType(Flex);
+        final flexFinder = find.byWidgetPredicate((widget) => widget is Flex);
         expect(flexFinder, findsOneWidget);
 
         // Get the Flex widget and verify its mainAxisSize

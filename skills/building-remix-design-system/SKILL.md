@@ -1,12 +1,13 @@
 ---
 name: building-remix-design-system
 description: >-
-  Builds reusable design systems on Remix (Mix + Naked UI) and publishes them
-  as Remix registries that applications install with `remix_cli`: registry
+  Builds reusable design systems on Remix (Mix + Naked UI), including
+  first-party presets beside Fortal and third-party registries that
+  applications install with `remix_cli`: registry
   repository scaffolding, `index.yaml` and `registry.yaml` catalogs,
   `.dart.tmpl` derivation with `{{typePrefix}}`/`{{valuePrefix}}`, cited token
   extraction, the theme item, and `@MixWidget` component recipes. Use when
-  porting Material, Polaris, Fluent, Carbon, or a brand to Remix as
+  porting HeroUI web, Material, Polaris, Fluent, Carbon, or a brand to Remix as
   installable source (even if one app consumes it first), from token
   packages, Figma, docs, PDFs, screenshots, or a brief; or when authoring,
   reviewing, or publishing a Remix registry. Not for consuming a registry or
@@ -15,10 +16,11 @@ description: >-
 
 # Building a Design System Registry on Remix
 
-A design system built with this skill is a **Remix registry**: a public GitHub
-repository of analyzer-checked Dart that applications install as source they
-own, with `remix_cli`. Consumers register it under a namespace and install its
-items:
+A design system built with this skill ships through a **Remix registry**:
+analyzer-checked Dart that applications install as source they own, with
+`remix_cli`. It can be a first-party preset in `btwld/remix` or a self-contained
+third-party registry. Third-party consumers register a namespace and install
+its items:
 
 ```shell
 dart run remix_cli:remix registry add @acme --repository acme/design-system --path registry --ref stable
@@ -29,6 +31,20 @@ Use `using-remix` for application UI that consumes Remix or an installed
 preset, including restyling that installed source inside one application. Use
 the `mix` skill alongside this one for exact Mix styler and `@MixWidget`
 syntax.
+
+## Choose the authoring route first
+
+| Task | Route |
+| --- | --- |
+| Add a preset beside Vanilla/Fortal in `btwld/remix` | Read `open_code/ADDING_PRESETS.md` in that checkout. Extend `registry_source` and the existing builder, consumer harness, and CI; do not scaffold another repository or force the new preset under `vanilla`. |
+| Publish a separate design-system registry | Use the repository and distribution workflow below and `references/registry.md`. |
+| Port an existing web design system | Also read `references/reference-parity.md` before extracting tokens or writing recipes. |
+| Restyle source owned by one app | Use `using-remix`. |
+
+The first-party checklist is also available in the
+[Remix repository](https://github.com/btwld/remix/blob/main/open_code/ADDING_PRESETS.md).
+The phases below apply to both authoring routes; repository creation and
+publication instructions default to the third-party route.
 
 ## What you are building
 
@@ -47,6 +63,12 @@ Your registry adds only the target system's design decisions. Remix keeps
 rendering, interaction, accessibility, and loading/disabled rules; never
 reimplement them.
 
+Target the exported Remix components and thin compositions of them. When
+styling cannot express a decision, extend in order: style, compose, propose a
+general Remix API as a separate change, or approximate and record it
+(`references/reference-parity.md` §2). A family that needs behavior Remix
+does not provide is deferred, not built in the preset.
+
 The official Vanilla preset is the reference implementation for every layer:
 its [catalog](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/registry.yaml),
 [theme templates](https://github.com/btwld/remix/tree/registry-stable/registry/vanilla/templates/theme),
@@ -55,31 +77,37 @@ Follow its shape; do not clone its values.
 
 ## Constraints that shape every decision
 
-These are enforced by the CLI; design around them rather than discovering
-them at publish time. Four names are easy to confuse:
+Distinguish CLI constraints from the recommended third-party distribution
+route. Four names are easy to confuse:
 
 | Name | Who picks it | Example | Meaning |
 | --- | --- | --- | --- |
-| Preset | fixed by the official registry | `vanilla`, `fortal` | the design language a project selects once at `remix init` |
+| Preset | registry maintainers | `vanilla`, `fortal` | the design language a project selects once at `remix init` |
 | Namespace | the consumer, at `registry add` | `@acme` | how a project refers to your registry |
 | Prefix | the consumer, at `remix init` | `Shop` | the word rendered into every installed name (`ShopButton`) |
 | Authoring word | you, once | `Acme` (value form `acme`) | the word your source uses where the prefix goes; derivation turns it into the placeholders |
 
-- **Publish under the `vanilla` preset.** A project selects one preset at
-  `remix init`, and every registry it registers must offer that preset. A
-  third-party registry cannot introduce a new preset such as `acme`.
+- **Use `vanilla` for the normal third-party setup.** `init` resolves the
+  official registry, which must contain the requested preset. The config
+  accepts lowercase preset identifiers; it is not a two-name enum. Adding a
+  custom preset to a third-party index alone does not make
+  `remix init --preset acme` work. Every registered registry must offer the
+  project's selected preset. First-party maintainers can add an official
+  preset through the checklist above.
   `vanilla` is the default preset. Do not also map `fortal`: a Fortal project
-  already owns `@ui/theme/*`, so your theme item would be skipped as installed
-  and your recipes would then fail against Fortal's tokens. Your namespace,
-  not the preset, identifies your system. Recommend a namespace and a prefix in your README (for example
+  already owns `@ui/theme/*`, so an overlapping theme is rejected before
+  installation. Your namespace, not the preset, identifies your system. Recommend a namespace and a prefix in your README (for example
   `@acme` and `--prefix Acme`).
-- **Make the registry self-contained.** Ship your own `theme` item and depend
+- **Make a third-party registry self-contained.** Ship your own `theme` item and depend
   on no `@remix/*` items. Official and third-party items render the same
   prefixed names (`<Prefix>Tokens`, `<Prefix>Button`) into the same targets,
-  and the CLI treats an existing file as installed without checking which
-  registry wrote it. Tell consumers to install only `@acme/*` items.
-- **Public github.com only.** There is no private, enterprise, HTTP, or local
-  registry, so every test of catalog changes goes through a pushed branch.
+  and the CLI rejects overlapping owners across installations. Legacy source
+  without recorded ownership requires explicit, verified `--adopt` migration.
+  Tell consumers to install only `@acme/*` items.
+- **Public github.com only in the production CLI.** There is no private,
+  enterprise, HTTP, or local registry option. First-party maintainers can
+  test unpushed catalogs through the internal checkout consumer harness;
+  this is not a consumer-facing local-registry feature.
 - **Templates are Dart with placeholders**: `{{typePrefix}}` (the
   consumer's prefix, `Shop`), `{{valuePrefix}}` (its lower-camel form,
   `shop`), and the icon pair `{{icon:import}}` / `{{icon:<name>}}`, which
@@ -96,6 +124,8 @@ them at publish time. Four names are easy to confuse:
    in the brief/spec. Record a short decision only for a costly boundary,
    rejected direction or lasting tradeoff; prefer an existing architecture log
    over creating a numbered ADR. Routine reversible choices need no new record.
+   For reference ports, map each upstream family to a Remix recipe, composition,
+   or deferred family and plan appearance evidence with the porting reference.
 2. **Authoring and derivation.** Use the [registry layout](references/registry.md):
    a private analyzed Dart package mirroring installed paths, generated
    templates, catalogs, prefix round trips and whole-tree `--check` coverage.
@@ -109,12 +139,18 @@ them at publish time. Four names are easy to confuse:
    See [components](references/components.md) for loading/focus, unresolved child
    styles, merge order and overlay scope hazards.
 5. **Publish and verify.** Analyze/test authored code, derive and check for
-   drift, then use a pushed branch in a fresh `vanilla` scratch app with a
-   different prefix. Install every item, generate, analyze, build and render
-   each component/mode. Advance the consumer ref only after those checks.
+   drift. First-party presets use the checkout consumer harness and their
+   parity gates; verify hosted publication separately per `open_code/RELEASING.md`.
+   Third-party registries use a pushed branch in a fresh `vanilla` scratch app
+   with a different prefix when publication is authorized. Install every item,
+   generate, analyze, build and render each component/mode. Advance the consumer
+   ref only after those checks. Reference ports also need measured geometry,
+   a reviewed side-by-side capture, and stated approximations.
 
-The consumer README must state namespace, repository/path/ref, required preset,
-exclusive `@<namespace>/*` use and host/theme setup. Refresh every changed item,
+The third-party consumer README must state namespace, repository/path/ref,
+required preset, exclusive `@<namespace>/*` use and host/theme setup. First-party
+setup uses `init --preset <preset>` once the served index includes it.
+Refresh every changed item,
 including theme dependencies, during iteration; `--overwrite` only replaces
 named items. [Registry](references/registry.md#6-publish-and-test) owns that loop.
 
@@ -126,3 +162,5 @@ named items. [Registry](references/registry.md#6-publish-and-test) owns that loo
   and deliberate upgrades.
 - [Components](references/components.md): scope/recipe shapes, concrete runtime
   pitfalls, contract worksheets and tests.
+- [Reference ports](references/reference-parity.md): family mapping, extension
+  order, appearance evidence and acceptance for a web design system.

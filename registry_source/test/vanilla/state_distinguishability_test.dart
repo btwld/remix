@@ -263,6 +263,7 @@ final _cases = <_Case>[
         spec.spec.container,
         label: spec.spec.label.spec.style,
         icon: spec.spec.icon.spec.color,
+        effects: spec.spec.containerEffects,
       ),
     ),
   for (final variant in VanillaToggleGroupVariant.values)
@@ -278,6 +279,7 @@ final _cases = <_Case>[
         spec.spec.item.spec.container,
         label: spec.spec.item.spec.label.spec.style,
         icon: spec.spec.item.spec.icon.spec.color,
+        effects: spec.spec.item.spec.containerEffects,
       ),
     ),
   _resolved<TabSpec>(
@@ -294,6 +296,7 @@ final _cases = <_Case>[
       spec.spec.container,
       label: spec.spec.label.spec.style,
       icon: spec.spec.icon.spec.color,
+      effects: spec.spec.containerEffects,
     ),
   ),
   _resolved<SegmentedControlSpec>(
@@ -412,7 +415,7 @@ final _cases = <_Case>[
     ],
     read: (spec) => [
       ..._flexLook(spec.spec.trigger, label: spec.spec.title.spec.style),
-      spec.spec.containerEffects?.outline,
+      spec.spec.triggerEffects?.outline,
       spec.spec.trailingIcon.spec.color,
     ],
   ),
@@ -436,7 +439,7 @@ final _cases = <_Case>[
       );
 
       return [
-        ..._boxLook(spec.spec.trigger, effects: spec.spec.containerEffects),
+        ..._boxLook(spec.spec.trigger, effects: spec.spec.triggerEffects),
         spec.spec.trigger.widgetModifiers,
       ];
     },
@@ -454,6 +457,7 @@ final _cases = <_Case>[
       spec.spec.destination.spec.container,
       label: spec.spec.destination.spec.label.spec.style,
       icon: spec.spec.destination.spec.icon.spec.color,
+      effects: spec.spec.destination.spec.containerEffects,
     ),
   ),
   _resolved<DataTableSpec>(

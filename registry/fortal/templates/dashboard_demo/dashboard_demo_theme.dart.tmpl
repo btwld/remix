@@ -92,14 +92,24 @@ class {{typePrefix}}DashboardThemeScope extends InheritedWidget {
 class {{typePrefix}}AccentScope extends StatelessWidget {
   const {{typePrefix}}AccentScope({
     super.key,
-    required this.accent,
+    required {{typePrefix}}AccentColor this.accent,
     required this.child,
   });
 
-  final {{typePrefix}}AccentColor accent;
+  /// Applies the dedicated error red to destructive or negative content.
+  /// Error is a semantic palette, not a selectable accent.
+  const {{typePrefix}}AccentScope.error({super.key, required this.child})
+    : accent = null;
+
+  /// The local accent, or null for the error palette.
+  final {{typePrefix}}AccentColor? accent;
   final Widget child;
 
   @override
-  Widget build(BuildContext context) =>
-      {{typePrefix}}Theme(accent: accent, hasBackground: false, child: child);
+  Widget build(BuildContext context) => {{typePrefix}}Theme(
+    accent: accent,
+    accentPalette: accent == null ? {{valuePrefix}}Error : null,
+    hasBackground: false,
+    child: child,
+  );
 }

@@ -2,18 +2,21 @@
 
 ### Features
 
-- Read `icons.yaml` schema 2. An icon may leave out a library it is not drawn
-  in by naming a `fallback` library that maps it; installing on the missing
-  library renders the fallback's constant and adds the fallback's package.
-  The default library's constant may differ from the canonical name. Schema 1
-  tables still parse with their old rules, so this release reads the current
-  `registry-stable`.
+- Read `icons.yaml` schemas 1 and 2. Schema 2 permits renamed default glyphs
+  and explicit per-icon fallbacks, with imports and dependencies for the
+  libraries actually used. Existing schema 1 registries remain supported.
 
 ### Fixes
 
-- An existing dependency constraint that excludes the registry's now names
-  the constraint to declare, and warns that a new major version can change
-  APIs, instead of only reporting the conflict.
+- Preserve CRLF line endings and import ordering when a template renders
+  icons from multiple libraries.
+- Name the required dependency constraint and migration guidance when a
+  project's existing constraint excludes the registry's requirement.
+- Reserve authored and generated target ownership across installs, rejecting
+  conflicting registries before dependency or source mutation in every mode.
+- Preserve same-owner edits and disjoint registry additions. Add explicit
+  `--adopt` migration for verified legacy source without ownership metadata;
+  commit `remix.ownership.json` alongside configuration and source.
 
 ## 1.0.0-beta.0
 

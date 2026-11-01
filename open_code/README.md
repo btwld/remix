@@ -1,9 +1,15 @@
 # Application-owned Remix UI
 
+Release staging: Remix beta.14 and CLI beta.1 are unpublished. Hosted CLI
+install commands remain unversioned for the existing stable/schema-1 path;
+Git or checkout activation previews unreleased features. Pin the hosted
+beta.1 CLI after publication and before registry cutover.
+
 `remix_cli` installs editable preset source into your app. Remix retains
 rendering, interaction and accessibility; you own the theme, recipes and
-installed Agent behavior. Choose one preset: neutral **Vanilla** or **Fortal**
-with its own visual contract. Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
+installed Agent behavior. Choose one preset: neutral **Vanilla**, **Fortal**
+with its own visual contract, or **HeroUI** following HeroUI web 3.2.6.
+Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
 ## Install the CLI in a project
 
@@ -13,7 +19,8 @@ dart run remix_cli:remix init --prefix Acme --preset vanilla
 dart run remix_cli:remix add button
 ```
 
-Use `--preset fortal` at initialization for Fortal. Preset, prefix and UI path
+Use `--preset fortal` for Fortal or `--preset heroui` for HeroUI at initialization.
+Preset, prefix and UI path
 are chosen once; `Ui` and `lib/ui` are defaults. `Remix` and `Mix` are reserved
 prefixes. Each `add` installs only the requested item and its dependency closure.
 `init` pins `registry-stable` to a full GitHub commit in `remix.yaml`; commit it
@@ -80,6 +87,13 @@ files and includes already-installed adapters in generation.
 
 ## Source ownership
 
+Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
+reserves authored and generated targets across separate installs, so another
+registry cannot silently preserve or overwrite a different owner's recipe.
+Disjoint additive registries remain supported. Existing files from CLI beta.0
+or earlier need explicit provenance verification and `--adopt`; see the
+[migration instructions](REGISTRIES.md#existing-source-without-an-ownership-record).
+
 Updating a pin and adopting source are separate operations:
 
 ```shell
@@ -128,7 +142,7 @@ published-CLI gates; these prove different boundaries.
 
 ## Item catalog
 
-Both presets: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
+Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 `badge`, `button`, `callout`, `card`, `checkbox`, `dashboard_demo`,
 `dashboard_shell`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`, `segmented_control`,
@@ -137,8 +151,32 @@ Both presets: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
 
-Agent source: `activity`, `answer`, `composer`, `execution`, `message`,
+HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
+`button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
+`field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
+`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+and `toggle_button_group` to shared names such as `button` and `select`.
+It includes no Agent, dashboard, chart or icons items. Its installed-source
+gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md).
+
+Vanilla and Fortal Agent source: `activity`, `answer`, `composer`, `execution`, `message`,
 `permission`, `plan`, `transcript`; shared `models` and `support` install
 transitively. Styled bundles: `activity_recipe`, `answer_recipe`,
 `composer_recipe`, `execution_recipe`, `message_recipe`, `permission_recipe`,
 `plan_recipe`, `transcript_recipe`.
+
+## HeroUI preset
+
+Initialize with `dart run remix_cli:remix init --prefix Acme --preset heroui`.
+The registry follows HeroUI's component names, adding `alert`, `avatar_group`,
+`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
+`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`toggle_button`, and `toggle_button_group` to shared names such as `button` and
+`select`.
+HeroUI does not ship Agent or dashboard recipes.
+
+`open_code/heroui_fixture` exercises every installed widget. Run
+`dart run tool/check_open_code.dart --preset heroui --source checkout --keep`
+to retain the review gallery. See [Adding a preset](ADDING_PRESETS.md) for the
+first-party authoring workflow.

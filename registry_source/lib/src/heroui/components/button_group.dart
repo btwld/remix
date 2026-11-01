@@ -1,0 +1,131 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'button.dart';
+
+/// Builds one button of a [HeroUiButtonGroup] around the [style] it supplies,
+/// for example `(context, style) => RemixButton(label: 'Save', style: style)`.
+typedef HeroUiButtonGroupItemBuilder =
+    Widget Function(BuildContext context, ButtonStyler style);
+
+/// HeroUI's `ButtonGroup`: buttons joined edge to edge, rounded only at the
+/// outer corners.
+///
+/// Each builder receives the HeroUI button style for the group's [variant] and
+/// [size], with the corners and shared borders of its position, so the buttons
+/// keep their own labels, icons, and callbacks. Builders, rather than data
+/// items, keep every `RemixButton` parameter available.
+class HeroUiButtonGroup extends StatelessWidget {
+  const HeroUiButtonGroup({
+    super.key,
+    required this.buttons,
+    this.variant = .primary,
+    this.size = .md,
+    this.orientation = Axis.horizontal,
+    this.fullWidth = false,
+  });
+
+  final List<HeroUiButtonGroupItemBuilder> buttons;
+  final HeroUiButtonVariant variant;
+  final HeroUiButtonSize size;
+  final Axis orientation;
+
+  /// Shares the available width equally (`w-full`).
+  final bool fullWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final horizontal = orientation == Axis.horizontal;
+    final direction = Directionality.of(context);
+    return Flex(
+      direction: orientation,
+      mainAxisSize: fullWidth && horizontal
+          ? MainAxisSize.max
+          : MainAxisSize.min,
+      crossAxisAlignment: fullWidth && !horizontal
+          ? CrossAxisAlignment.stretch
+          : CrossAxisAlignment.center,
+      children: [
+        for (final (index, builder) in buttons.indexed)
+          _wrap(
+            builder(
+              context,
+              heroUiButtonStyle(
+                variant: variant,
+                size: size,
+                style: _positionStyle(index, buttons.length, direction),
+              ),
+            ),
+            expand: fullWidth && horizontal,
+            flexible: horizontal,
+          ),
+      ],
+    );
+  }
+
+  Widget _wrap(Widget button, {required bool expand, required bool flexible}) =>
+      expand
+      ? Expanded(child: button)
+      : flexible
+      ? Flexible(child: button)
+      : button;
+
+  /// `rounded-none` with the outer corners restored on the first and last
+  /// button; outline buttons drop the borders their neighbours already draw.
+  /// Corners and borders are physical, since Mix cannot merge directional ones
+  /// into the recipe's.
+  ButtonStyler _positionStyle(int index, int count, TextDirection direction) {
+    final first = index == 0;
+    final last = index == count - 1;
+    final round = HeroUiTokens.radius3xl();
+    const square = Radius.zero;
+
+    // The leading and trailing edges of the main axis, as physical sides.
+    final ltr = direction == TextDirection.ltr;
+    final horizontal = orientation == Axis.horizontal;
+    final startRounded = first ? round : square;
+    final endRounded = last ? round : square;
+
+    var style = ButtonStyler()
+        .borderRadius(
+          horizontal
+              ? ltr
+                    ? .only(
+                        topLeft: startRounded,
+                        bottomLeft: startRounded,
+                        topRight: endRounded,
+                        bottomRight: endRounded,
+                      )
+                    : .only(
+                        topRight: startRounded,
+                        bottomRight: startRounded,
+                        topLeft: endRounded,
+                        bottomLeft: endRounded,
+                      )
+              : .only(
+                  topLeft: startRounded,
+                  topRight: startRounded,
+                  bottomLeft: endRounded,
+                  bottomRight: endRounded,
+                ),
+        )
+        // Buttons in a group do not shrink on press.
+        .onPressed(ButtonStyler().scale(1));
+
+    if (variant == .outline) {
+      final none = BorderSideMix.none;
+      final dropStart = first ? null : none;
+      final dropEnd = last ? null : none;
+      style = style.border(
+        horizontal
+            ? BorderMix(
+                left: ltr ? dropStart : dropEnd,
+                right: ltr ? dropEnd : dropStart,
+              )
+            : BorderMix(top: dropStart, bottom: dropEnd),
+      );
+    }
+    return style;
+  }
+}

@@ -1,0 +1,25 @@
+component: Breadcrumbs
+widget: HeroUiBreadcrumbs
+target: composition over RemixLink
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/breadcrumbs.css, dist/components/link.css]
+anatomy: [row, link, separator]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, hover, focus-visible, current]
+tokens:
+  - muted (links and separator), link (current page)
+  - radius-xl, focus (ring), text-sm
+measurements:
+  - {what: row, value: "gap 6, 20 tall", cite: breadcrumbs-rest}
+  - {what: link, value: "14/20 medium muted", cite: "breadcrumbs.css .breadcrumbs__link; breadcrumbs-rest-item:Home is 20 tall"}
+  - {what: link to separator, value: 4, cite: breadcrumbs.css .breadcrumbs__item (gap-1)}
+  - {what: separator, value: "12x12 muted, mirrored in right-to-left", cite: "breadcrumbs.css .breadcrumbs__separator (size-3 text-muted rtl:rotate-180)"}
+  - {what: current page, value: "link colour, not actionable, full opacity", cite: "breadcrumbs.css [data-current]; breadcrumbs-rest-item:Book has no separator"}
+approximations:
+  - Each step is the HeroUI link recipe with the breadcrumb overrides, so it carries the link's hover underline and focus ring.
+  - The last step is a disabled RemixLink at full opacity. Upstream also marks it aria-current, which Remix links do not expose.
+  - "The glyph is the project icon library's chevronRight, not HeroUI's own chevron; pass `separator` to replace it. It sits in a 12px box and is mirrored with Transform.flip in right-to-left text."
+  - "To satisfy the mobile overflow gate, complete steps wrap onto additional lines and an oversized step label wraps within the remaining space before its separator. This deliberately differs from upstream nowrap overflow and preserves every ancestor and the full current-page label."

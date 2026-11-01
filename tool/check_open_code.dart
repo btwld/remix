@@ -2,10 +2,10 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset vanilla|fortal]
+/// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
 ///     [--source both|hosted|checkout]
 ///     [--item dashboard_demo|dashboard_shell|icons]
-///     [--icon-library remix|lucide] [--hosted-cli] [--keep]
+///     [--icon-library remix|lucide] [--hosted-cli] [--jobs N] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -14,10 +14,15 @@
 /// hosted Remix first, then regenerates against the checkout. CI selects the
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
+///
+/// The independent-item installs run in parallel: `--jobs N` or
+/// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
+/// core, never fewer than two or more than four.
 library;
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
@@ -197,6 +202,73 @@ const _fortalPreset = _PresetContract(
   registryItems: _fortalRegistryItems,
 );
 
+const _herouiRegistryItems = [
+  'accordion',
+  'alert',
+  'avatar',
+  'avatar_group',
+  'badge',
+  'breadcrumbs',
+  'button',
+  'button_group',
+  'card',
+  'checkbox',
+  'checkbox_group',
+  'chip',
+  'close_button',
+  'disclosure',
+  'dropdown',
+  'field_layout',
+  'input_group',
+  'kbd',
+  'link',
+  'modal',
+  'popover',
+  'progress',
+  'radio',
+  'radio_group',
+  'search_field',
+  'select',
+  'separator',
+  'skeleton',
+  'slider',
+  'spinner',
+  'surface',
+  'switch',
+  'switch_group',
+  'table',
+  'tabs',
+  'textarea',
+  'textfield',
+  'toast',
+  'toggle_button',
+  'toggle_button_group',
+  'tooltip',
+  'typography',
+];
+
+const _herouiPreset = _PresetContract(
+  name: 'heroui',
+  fixtureDirectory: 'heroui_fixture',
+  registryItems: _herouiRegistryItems,
+  foundationItems: {'theme'},
+  independentItems: null,
+  specStylerItems: [],
+  requiredRuntimeDependencies: [
+    'remix',
+    'mix_annotations',
+    'remix_ui_fonts',
+    'remix_ui_icons',
+  ],
+  allowedImportPackages: [
+    'flutter',
+    'remix',
+    'mix_annotations',
+    'remix_ui_fonts',
+    'remix_ui_icons',
+  ],
+);
+
 /// The hosted packages every preset's installed application declares. A preset
 /// that ships more, as Vanilla ships its fonts, extends this in its own
 /// [_PresetContract].
@@ -317,6 +389,9 @@ final class _PresetContract {
     this.generatedSnapshots = const {},
     this.requiredRuntimeDependencies = _baseRuntimeDependencies,
     this.allowedImportPackages = _baseImportPackages,
+    this.foundationItems = _foundationItems,
+    this.independentItems = _independentRegistryItems,
+    this.specStylerItems = _agentComponentItems,
     this.iconsFromCheckout = false,
   });
 
@@ -327,6 +402,16 @@ final class _PresetContract {
 
   /// Hosted runtime dependencies the CLI must add to the consumer, exactly.
   final List<String> requiredRuntimeDependencies;
+
+  final Set<String> foundationItems;
+
+  /// Items installed alone in a fresh app, so an omitted dependency cannot
+  /// hide behind the full gallery. Each one costs a `remix init`, and a fresh
+  /// init makes one unauthenticated GitHub API request (60 an hour). `null`
+  /// derives the list from `registry.yaml`: the items whose dependencies name
+  /// anything besides a foundation item.
+  final List<String>? independentItems;
+  final List<String> specStylerItems;
 
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
@@ -354,6 +439,9 @@ final class _PresetContract {
       generatedSnapshots: generatedSnapshots,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
       allowedImportPackages: swap(allowedImportPackages),
+      foundationItems: foundationItems,
+      independentItems: independentItems,
+      specStylerItems: specStylerItems,
       iconsFromCheckout:
           icons.contains('remix_ui_icons') &&
           iconsResolveFromCheckout(iconsYaml, checkoutIconsVersion),
@@ -417,6 +505,20 @@ final class _PresetContract {
     }.toList();
   }
 
+  List<String> independentInstalls([Directory? repositoryRoot]) {
+    final listed = independentItems;
+    if (listed != null) return listed;
+    final items = _loadItems(repositoryRoot);
+    return [
+      for (final key in items.keys.cast<String>())
+        if (!foundationItems.contains(key) &&
+            ((items[key] as YamlMap)['registryDependencies'] as YamlList? ??
+                    const [])
+                .any((dependency) => !foundationItems.contains(dependency)))
+          key,
+    ];
+  }
+
   List<String> get installedUiFiles {
     final items = _loadItems();
     return <String>{
@@ -444,6 +546,7 @@ final class ConsumerCheckOptions {
     required this.hostedCli,
     required this.item,
     this.iconLibrary = 'remix',
+    this.jobs,
   });
 
   final bool keep;
@@ -451,6 +554,9 @@ final class ConsumerCheckOptions {
   final RemixSource source;
   final bool hostedCli;
   final String? item;
+
+  /// Independent items installed at once, or null to resolve the default.
+  final int? jobs;
 
   /// The `iconLibrary` written to the fresh app's remix.yaml before install.
   final String iconLibrary;
@@ -465,6 +571,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var hostedCli = false;
   var iconLibrary = 'remix';
   var sawIconLibrary = false;
+  int? jobs;
   String? item;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
@@ -478,11 +585,18 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
       keep = true;
       continue;
     }
+    if (argument == '--jobs') {
+      if (jobs != null || index + 1 >= arguments.length) return null;
+      jobs = _positiveInt(arguments[++index]);
+      if (jobs == null) return null;
+      continue;
+    }
     if (argument == '--item') {
       if (item != null || index + 1 >= arguments.length) return null;
       final selected = arguments[++index];
       if (selected != 'dashboard_demo' &&
           selected != 'dashboard_shell' &&
+          selected != 'ownership' &&
           selected != 'icons') {
         return null;
       }
@@ -506,6 +620,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
           preset = _defaultPreset;
         case 'fortal':
           preset = _fortalPreset;
+        case 'heroui':
+          preset = _herouiPreset;
         default:
           return null;
       }
@@ -524,7 +640,14 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   if (hostedCli && source != RemixSource.hosted) return null;
   if (item != null && source != RemixSource.checkout) return null;
-  if (item == 'icons' && preset.name != 'vanilla') return null;
+  if (item != null && jobs != null) return null;
+  if ((item == 'icons' || item == 'ownership') && preset.name != 'vanilla')
+    return null;
+  if (item != null &&
+      item != 'ownership' &&
+      !preset.registryItems.contains(item)) {
+    return null;
+  }
   return ConsumerCheckOptions(
     keep: keep,
     preset: preset.name,
@@ -532,7 +655,35 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     hostedCli: hostedCli,
     item: item,
     iconLibrary: iconLibrary,
+    jobs: jobs,
   );
+}
+
+int? _positiveInt(String text) {
+  final value = int.tryParse(text);
+  return value != null && value > 0 ? value : null;
+}
+
+/// The default cap on concurrent installs. Each is a `pub get`, an analyzer
+/// run, and, for items with generated files, a `build_runner` build; past a few
+/// at once they contend for CPU and memory instead of finishing sooner.
+const _maxDefaultJobs = 4;
+
+/// How many independent items are installed at once: [requested] (`--jobs`),
+/// else [fromEnvironment] (`REMIX_OPEN_CODE_JOBS`), else one per processor up
+/// to [_maxDefaultJobs], never fewer than two.
+///
+/// Null when [requested] is absent and [fromEnvironment] is not a positive
+/// integer, so a misspelled override fails the run instead of silently falling
+/// back to the default.
+int? resolveJobs({
+  int? requested,
+  String? fromEnvironment,
+  required int processors,
+}) {
+  if (requested != null) return requested;
+  if (fromEnvironment != null) return _positiveInt(fromEnvironment);
+  return min(max(processors, 2), _maxDefaultJobs);
 }
 
 Future<void> main(List<String> arguments) async {
@@ -540,11 +691,22 @@ Future<void> main(List<String> arguments) async {
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset vanilla|fortal] [--source both|hosted|checkout] '
-      '[--item dashboard_demo|dashboard_shell|icons (requires --source '
-      'checkout; icons is vanilla)] [--icon-library remix|lucide] '
-      '[--hosted-cli (requires --source hosted)] [--keep]',
+      '[--preset vanilla|fortal|heroui] [--source both|hosted|checkout] '
+      '[--item dashboard_demo|dashboard_shell|icons|ownership (requires --source '
+      'checkout; icons/ownership are vanilla)] [--icon-library remix|lucide] '
+      '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
+      '[--keep]',
     );
+    exitCode = 64;
+    return;
+  }
+  final jobs = resolveJobs(
+    requested: parsed.jobs,
+    fromEnvironment: Platform.environment['REMIX_OPEN_CODE_JOBS'],
+    processors: Platform.numberOfProcessors,
+  );
+  if (jobs == null) {
+    stderr.writeln('REMIX_OPEN_CODE_JOBS must be a positive integer.');
     exitCode = 64;
     return;
   }
@@ -580,6 +742,7 @@ Future<void> main(List<String> arguments) async {
     source: parsed.source,
     hostedCli: parsed.hostedCli,
     item: parsed.item,
+    jobs: jobs,
   );
   if (failure != null) {
     stderr.writeln('open-code check failed: ${failure.message}');
@@ -595,6 +758,7 @@ Future<_Failure?> _run(
   required bool hostedCli,
   required String? item,
   required String iconLibrary,
+  required int jobs,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -637,6 +801,7 @@ Future<_Failure?> _run(
       hostedCli: hostedCli,
       item: item,
       iconLibrary: iconLibrary,
+      jobs: jobs,
     );
     if (checkFailure != null) {
       return _retainedFailure(parent, checkFailure);
@@ -672,7 +837,7 @@ Future<_Failure?> _run(
       ..writeln('Review local source against the registry:')
       ..writeln(
         '  cd ${app.path} && ${sdk.dart} run remix_cli:remix add '
-        '${item ?? preset.registryItems.first} --diff',
+        '${item == 'ownership' ? '@addon/extra_button' : item ?? preset.registryItems.first} --diff',
       );
   }
 
@@ -690,6 +855,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required bool hostedCli,
   required String? item,
   required String iconLibrary,
+  required int jobs,
 }) async {
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
@@ -774,6 +940,14 @@ Future<_Failure?> _checkInTemporaryApp({
   if (init != null) return _Failure('remix init failed in the fresh app');
   _writeIconLibrary(app, iconLibrary);
 
+  if (item == 'ownership') {
+    return _checkOwnershipComposition(
+      sdk: sdk,
+      app: app,
+      fixtureRoot: fixtureRoot,
+      environment: environment,
+    );
+  }
   if (item != null) {
     return _checkFocusedItem(
       sdk: sdk,
@@ -793,6 +967,7 @@ Future<_Failure?> _checkInTemporaryApp({
     app: app,
     preset: preset,
     environment: environment,
+    jobs: jobs,
   );
   if (independent != null) return independent;
 
@@ -936,6 +1111,106 @@ Future<_Failure?> _checkInTemporaryApp({
     _step('Current-source regeneration matches the committed Acme adapter.');
   }
 
+  return _analyzeAndTest(
+    sdk: sdk,
+    app: app,
+    dependencySource: 'current checkout',
+    environment: environment,
+  );
+}
+
+/// Real processes and generated adapters; only registry transport is local.
+Future<_Failure?> _checkOwnershipComposition({
+  required _Toolchain sdk,
+  required Directory app,
+  required Directory fixtureRoot,
+  required Map<String, String> environment,
+}) async {
+  final fixtureFailure = _applyFocusedFixture(
+    app: app,
+    fixtureRoot: fixtureRoot,
+    item: 'ownership',
+  );
+  if (fixtureFailure != null) return fixtureFailure;
+  environment['REMIX_REGISTRY_OWNERSHIP_PROBE'] = '1';
+  Future<_Failure?> cli(List<String> arguments) => _runProcess(
+    sdk.dart,
+    ['run', 'remix_cli:remix', ...arguments],
+    workingDirectory: app.path,
+    environment: environment,
+  );
+  final buttonInstall = await cli(['add', 'button']);
+  if (buttonInstall != null) return buttonInstall;
+  final customized = <String, String>{};
+  for (final relative in ['components/button.dart', 'theme/tokens.dart']) {
+    final file = File('${app.path}/lib/ui/$relative');
+    final source =
+        '${file.readAsStringSync()}// consumer customization retained\n';
+    file.writeAsStringSync(source);
+    customized[relative] = source;
+  }
+  final register = await cli([
+    'registry',
+    'add',
+    '@addon',
+    '--repository',
+    'fixture/addon',
+    '--ref',
+    'v1',
+  ]);
+  if (register != null) return register;
+  final manifest = File('${app.path}/pubspec.yaml');
+  manifest.writeAsStringSync(
+    manifest.readAsStringSync().replaceFirst(
+      'mix_annotations: ^2.2.0-beta.1',
+      "mix_annotations: '>=2.2.0-beta.1 <3.0.0' # consumer constraint",
+    ),
+  );
+  final pubspec = manifest.readAsStringSync();
+  for (final arguments in [
+    ['add', '@addon/extra_button', '--dry-run'],
+    ['add', '@addon/extra_button', '--diff'],
+    ['add', '@addon/extra_button'],
+    ['add', '@addon/extra_button', '--overwrite'],
+    ['add', 'button'],
+  ]) {
+    final failure = await cli(arguments);
+    if (failure != null) return failure;
+    for (final entry in customized.entries) {
+      if (File('${app.path}/lib/ui/${entry.key}').readAsStringSync() !=
+          entry.value) {
+        return _Failure('Additive install replaced customized ${entry.key}.');
+      }
+    }
+  }
+  if (File('${app.path}/pubspec.yaml').readAsStringSync() != pubspec) {
+    return _Failure(
+      'Additive registry changed customized dependency declarations.',
+    );
+  }
+  for (final target in [
+    'components/button.g.dart',
+    'addons/extra_button.g.dart',
+  ]) {
+    if (!File('${app.path}/lib/ui/$target').existsSync()) {
+      return _Failure('Additive install removed generated $target.');
+    }
+  }
+  final ownership =
+      jsonDecode(File('${app.path}/remix.ownership.json').readAsStringSync())
+          as Map;
+  final targets = ownership['targets'] as Map;
+  if (targets['lib/ui/addons/extra_button.g.dart'] !=
+          'fixture/addon/registry#vanilla/extra_button' ||
+      targets['lib/ui/components/button.g.dart'] !=
+          'btwld/remix/registry#vanilla/button') {
+    return _Failure(
+      'Composition did not retain distinct generated-target owners.',
+    );
+  }
+  _step(
+    'Separate disjoint registries retained custom recipes, tokens, dependencies, adapters and owners.',
+  );
   return _analyzeAndTest(
     sdk: sdk,
     app: app,
@@ -1127,15 +1402,24 @@ _Failure? _verifyFocusedDependencies(
 
 /// Each surface must compile with only its own dependency closure. The full
 /// gallery installs every item and would otherwise mask an omitted dependency.
+///
+/// Each item gets its own directory, resolution, and generator run, and shares
+/// only the pub cache and the Flutter SDK, so up to [jobs] of them are
+/// installed at once. Concurrent `flutter` calls queue on the SDK's startup
+/// lock, which slows them without blocking them.
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
   required _PresetContract preset,
   required Map<String, String> environment,
+  required int jobs,
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  for (final item in _independentRegistryItems) {
+  final items = preset.independentInstalls();
+
+  Future<_Failure?> checkItem(String item, StringSink log) async {
+    final elapsed = Stopwatch()..start();
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
@@ -1164,6 +1448,7 @@ Future<_Failure?> _checkIndependentItems({
         command,
         workingDirectory: isolated.path,
         environment: environment,
+        log: log,
       );
       if (failure != null)
         return _Failure('Independent $item install failed: ${failure.message}');
@@ -1181,10 +1466,73 @@ Future<_Failure?> _checkIndependentItems({
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
     _step(
-      'Independent $item installed, generated, and analyzed with its own dependencies.',
+      'Independent $item installed, generated, and analyzed with its own '
+      'dependencies (${elapsed.elapsed.inSeconds}s).',
+      log,
     );
+    return null;
   }
-  return null;
+
+  _step('Checking ${items.length} independent items, up to $jobs at a time.');
+  return runPooled(items, limit: jobs, out: stdout, work: checkItem);
+}
+
+/// Runs [work] for every input with at most [limit] in flight, and returns the
+/// failure of the earliest input that failed, or null.
+///
+/// Each call gets its own log, and the logs reach [out] in input order as soon
+/// as every earlier one has, so the output does not depend on which task
+/// finished first. After a failure or an exception no further input is
+/// started; the tasks already running are awaited, so nothing outlives the
+/// call, and their logs are still written.
+///
+/// An exception from [work] is rethrown after that, but only when no earlier
+/// input failed or threw, so the outcome is the one a serial run would reach.
+Future<F?> runPooled<T, F extends Object>(
+  List<T> inputs, {
+  required int limit,
+  required StringSink out,
+  required Future<F?> Function(T input, StringSink log) work,
+}) async {
+  if (limit < 1) throw ArgumentError.value(limit, 'limit', 'must be positive');
+  final logs = [for (final _ in inputs) StringBuffer()];
+  final finished = List.filled(inputs.length, false);
+  final failures = <int, F>{};
+  final errors = <int, (Object, StackTrace)>{};
+  var started = 0;
+  var written = 0;
+  var stopped = false;
+
+  Future<void> worker() async {
+    while (!stopped && started < inputs.length) {
+      final index = started++;
+      try {
+        final failure = await work(inputs[index], logs[index]);
+        if (failure != null) {
+          failures[index] = failure;
+          stopped = true;
+        }
+      } catch (error, stackTrace) {
+        errors[index] = (error, stackTrace);
+        stopped = true;
+      } finally {
+        finished[index] = true;
+        while (written < inputs.length && finished[written]) {
+          out.write(logs[written++]);
+        }
+      }
+    }
+  }
+
+  await Future.wait([
+    for (var slot = 0; slot < min(limit, inputs.length); slot += 1) worker(),
+  ]);
+  final problems = [...failures.keys, ...errors.keys];
+  if (problems.isEmpty) return null;
+  final first = problems.reduce(min);
+  final error = errors[first];
+  if (error != null) Error.throwWithStackTrace(error.$1, error.$2);
+  return failures[first];
 }
 
 /// The checkout packages a preset's install resolves locally: Remix, its
@@ -1364,7 +1712,7 @@ _Failure? _verifyRegistryCoverage(
     for (final key in (document['items'] as YamlMap).keys)
       if (key is String) key,
   };
-  final installed = {..._foundationItems, ...preset.registryItems};
+  final installed = {...preset.foundationItems, ...preset.registryItems};
   final problems = <String>[
     for (final item in catalogItems.difference(installed))
       'registry.yaml has $item, which this check never installs',
@@ -1558,7 +1906,7 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
           'mix_generator:spec_styler_generator': {
             'enabled': true,
             'generate_for': [
-              for (final item in _agentComponentItems)
+              for (final item in preset.specStylerItems)
                 'lib/ui/components/$item.dart',
             ]..sort(),
           },
@@ -1566,9 +1914,13 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
       },
     },
   };
-  if (!buildConfig.existsSync() ||
-      _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
-          _canonicalYaml(expected)) {
+  if (preset.specStylerItems.isEmpty && buildConfig.existsSync()) {
+    return _Failure('consumer build.yaml is unnecessary for ${preset.name}');
+  }
+  if (preset.specStylerItems.isNotEmpty &&
+      (!buildConfig.existsSync() ||
+          _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
+              _canonicalYaml(expected))) {
     return _Failure(
       'consumer build.yaml does not match the scoped Agent builder contract',
     );
@@ -1822,11 +2174,17 @@ bool _isWithin(String path, String parent) =>
 
 String _basename(String path) => path.split(Platform.pathSeparator).last;
 
+/// Runs a process, streaming its output to this process' stdio.
+///
+/// Concurrent callers pass a [log] instead: inherited stdio from several
+/// processes at once interleaves into an unreadable log, so the output goes to
+/// the buffer for the caller to emit as one block.
 Future<_Failure?> _runProcess(
   String executable,
   List<String> arguments, {
   required String workingDirectory,
   Map<String, String>? environment,
+  StringSink? log,
 }) async {
   final harness = environment?['REMIX_REGISTRY_CONSUMER_CLI'];
   if (harness != null &&
@@ -1835,7 +2193,7 @@ Future<_Failure?> _runProcess(
       arguments[1] == 'remix_cli:remix') {
     arguments = [harness, ...arguments.skip(2)];
   }
-  stdout.writeln('\$ $executable ${arguments.join(' ')}');
+  (log ?? stdout).writeln('\$ $executable ${arguments.join(' ')}');
   final Process process;
   try {
     process = await Process.start(
@@ -1843,12 +2201,26 @@ Future<_Failure?> _runProcess(
       arguments,
       workingDirectory: workingDirectory,
       environment: environment,
-      mode: ProcessStartMode.inheritStdio,
+      mode: log == null
+          ? ProcessStartMode.inheritStdio
+          : ProcessStartMode.normal,
     );
   } on ProcessException catch (error) {
     return _Failure('could not start `$executable`: ${error.message}');
   }
+  // A process that fills a pipe nobody reads never exits, and one that reads
+  // stdin never would, so stdin is closed and both pipes are drained alongside
+  // the exit code.
+  const decoder = Utf8Decoder(allowMalformed: true);
+  final drained = <Future<Object?>>[
+    if (log != null) ...[
+      process.stdin.close(),
+      process.stdout.transform(decoder).forEach(log.write),
+      process.stderr.transform(decoder).forEach(log.write),
+    ],
+  ];
   final code = await process.exitCode;
+  await Future.wait(drained);
   if (code == 0) return null;
   return _Failure('`$executable ${arguments.join(' ')}` exited $code');
 }
@@ -1888,7 +2260,12 @@ bool _sameBytes(List<int> left, List<int> right) {
 _PresetContract _presetByName(String name) => switch (name) {
   'vanilla' => _defaultPreset,
   'fortal' => _fortalPreset,
-  _ => throw ArgumentError.value(name, 'preset', 'must be vanilla or fortal'),
+  'heroui' => _herouiPreset,
+  _ => throw ArgumentError.value(
+    name,
+    'preset',
+    'must be vanilla, fortal, or heroui',
+  ),
 };
 
 /// Returns the fixture contract error for focused regression tests.
@@ -1911,6 +2288,30 @@ String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
 /// before the registry under test names its icon packages.
 List<String> requiredRuntimeDependenciesForTest(String preset) =>
     _presetByName(preset).requiredRuntimeDependencies;
+
+/// Runs the production independent-install boundary with a fixture CLI harness.
+Future<String?> independentItemsProblemForTest(
+  Directory app, {
+  required int jobs,
+  required Map<String, String> environment,
+}) async => (await _checkIndependentItems(
+  sdk: _Toolchain(
+    version: Platform.version,
+    root: File(Platform.resolvedExecutable).parent.parent.path,
+    flutter: '', // Independent installs invoke Dart, not Flutter.
+    dart: Platform.resolvedExecutable,
+  ),
+  app: app,
+  preset: _defaultPreset,
+  environment: environment,
+  jobs: jobs,
+))?.message;
+
+/// Returns the items a preset installs alone, for focused regression tests.
+List<String> independentInstallsForTest(
+  String preset, {
+  Directory? repositoryRoot,
+}) => _presetByName(preset).independentInstalls(repositoryRoot);
 
 /// The install contract for [preset] against one registry's [iconsYaml]:
 /// the runtime dependencies an installed app must declare, and the packages a
@@ -1980,7 +2381,8 @@ _Failure _retainedFailure(
   exitCode: problem is _Failure ? problem.exitCode : 1,
 );
 
-void _step(String message) => stdout.writeln('✓ $message');
+void _step(String message, [StringSink? sink]) =>
+    (sink ?? stdout).writeln('✓ $message');
 
 final class _Toolchain {
   const _Toolchain({

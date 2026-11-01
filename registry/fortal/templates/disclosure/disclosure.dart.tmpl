@@ -22,14 +22,11 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
   return (switch (variant) {
     .surface => _{{valuePrefix}}DisclosureSurfaceStyler(size),
     .soft => _{{valuePrefix}}DisclosureSoftStyler(size),
-  }).merge(style);
+  }).container(BoxStyler().clipBehavior(.none)).merge(style);
 }
 
-// Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, frame, fill, and clipping, while trigger and
-// content stay flat rectangles that simply get cropped to its rounded shape.
-// The frame and divider are foreground borders so edge-to-edge child fills
-// cannot partially cover their antialiased edges.
+// The frame paints above the parts, whose own clips leave focus outlines free
+// to extend outside the container without changing layout.
 DisclosureStyler _{{valuePrefix}}DisclosureBaseStyler({{typePrefix}}DisclosureSize size) {
   final metrics = _{{valuePrefix}}DisclosureMetrics(size);
 
@@ -37,6 +34,8 @@ DisclosureStyler _{{valuePrefix}}DisclosureBaseStyler({{typePrefix}}DisclosureSi
       .trigger(
         BoxStyler()
             .width(.infinity)
+            .borderRadius(.all(metrics.radius))
+            .clipBehavior(.antiAlias)
             .minHeight({{typePrefix}}Tokens.touchTargetMin())
             .alignment(.centerLeft)
             .padding(.all(metrics.padding))
@@ -49,9 +48,28 @@ DisclosureStyler _{{valuePrefix}}DisclosureBaseStyler({{typePrefix}}DisclosureSi
               ),
             ),
       )
+      .onExpanded(
+        DisclosureStyler().trigger(
+          BoxStyler().borderRadius(
+            BorderRadiusMix(
+              topLeft: metrics.radius,
+              topRight: metrics.radius,
+              bottomLeft: Radius.zero,
+              bottomRight: Radius.zero,
+            ),
+          ),
+        ),
+      )
       .content(
         BoxStyler()
             .width(.infinity)
+            .borderRadius(
+              BorderRadiusMix(
+                bottomLeft: metrics.radius,
+                bottomRight: metrics.radius,
+              ),
+            )
+            .clipBehavior(.antiAlias)
             .padding(.all(metrics.padding))
             .wrap(
               _{{valuePrefix}}DisclosureTypography(
@@ -87,11 +105,7 @@ DisclosureStyler _{{valuePrefix}}DisclosureSurfaceStyler({{typePrefix}}Disclosur
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
-      .onFocusVisible(
-        DisclosureStyler().container(
-          BoxStyler().{{valuePrefix}}FocusRing(radius: metrics.radius),
-        ),
-      )
+      .onFocusVisible(DisclosureStyler().triggerEffects({{valuePrefix}}FocusOutline()))
       .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
 }
 
@@ -134,17 +148,13 @@ DisclosureStyler _{{valuePrefix}}DisclosureSoftStyler({{typePrefix}}DisclosureSi
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
-      .onFocusVisible(
-        DisclosureStyler().container(
-          BoxStyler().{{valuePrefix}}FocusRing(radius: metrics.radius),
-        ),
-      )
+      .onFocusVisible(DisclosureStyler().triggerEffects({{valuePrefix}}FocusOutline()))
       .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
 }
 
 DisclosureStyler _{{valuePrefix}}DisclosureDisabledStyler() {
   return DisclosureStyler()
-      .container(BoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)))
+      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .trigger(
         BoxStyler()
             .color({{typePrefix}}Tokens.grayA3())

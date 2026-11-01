@@ -308,9 +308,8 @@ final _customerColumns = <RemixDataTableColumn<UiDashboardCustomer>>[
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (context, customer) => UiActionMenu(
       key: ValueKey('customer-actions-${customer.id}'),
-      semanticLabel: 'Actions for ${customer.name}',
       positioning: uiDataTableActionsPositioning,
-      trigger: uiDataTableActionsTrigger,
+      trigger: uiDataTableActionsTrigger('Actions for ${customer.name}'),
       actions: const [
         UiAction(value: 'view', label: 'View profile'),
         UiAction(value: 'email', label: 'Send email'),
@@ -369,9 +368,8 @@ final _orderColumns = <RemixDataTableColumn<UiDashboardOrder>>[
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (context, order) => UiActionMenu(
       key: ValueKey('order-actions-${order.id}'),
-      semanticLabel: 'Actions for ${order.id}',
       positioning: uiDataTableActionsPositioning,
-      trigger: uiDataTableActionsTrigger,
+      trigger: uiDataTableActionsTrigger('Actions for ${order.id}'),
       actions: const [
         UiAction(value: 'view', label: 'View order'),
         UiAction(value: 'receipt', label: 'Download receipt'),

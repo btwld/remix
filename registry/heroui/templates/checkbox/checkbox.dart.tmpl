@@ -1,0 +1,87 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'checkbox.g.dart';
+
+/// HeroUI checkbox variants: `primary` on the field surface with its shadow,
+/// `secondary` on the default fill.
+enum {{typePrefix}}CheckboxVariant { primary, secondary }
+
+/// HeroUI recipe for [RemixCheckbox].
+///
+/// [invalid] paints the error treatment; validation stays with the app.
+/// [minimumTapTargetSize] sets the widget's default tap target to HeroUI's 24px
+/// `touch-target`; the style itself does not read it.
+@MixWidget(target: RemixCheckbox.new)
+CheckboxStyler {{valuePrefix}}CheckboxStyle({
+  {{typePrefix}}CheckboxVariant variant = .primary,
+  bool invalid = false,
+  Size minimumTapTargetSize = {{valuePrefix}}CheckboxTapTarget,
+  CheckboxStyler style = const CheckboxStyler.create(),
+}) {
+  final field = switch (variant) {
+    .primary => {{valuePrefix}}PrimaryFieldFill,
+    .secondary => {{valuePrefix}}SecondaryFieldFill,
+  };
+  final fill = invalid ? {{typePrefix}}Tokens.danger : {{typePrefix}}Tokens.accent;
+  final mark = invalid
+      ? {{typePrefix}}Tokens.dangerForeground
+      : {{typePrefix}}Tokens.accentForeground;
+  final label = invalid ? {{typePrefix}}Tokens.danger : {{typePrefix}}Tokens.foreground;
+
+  var result = CheckboxStyler()
+      .size(_control, _control)
+      .alignment(.center)
+      .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+      .color(field.rest())
+      .indicator(.size(_checkmark).color(mark()))
+      .label({{valuePrefix}}LabelText.color(label()))
+      .labelSpacing({{valuePrefix}}ControlGap)
+      .onSelected(.color(fill()))
+      .onIndeterminate(.color(fill()).indicator(.size(_indeterminate)))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+      .animate({{typePrefix}}Tokens.selectionMotion);
+
+  if (variant == .primary) {
+    result = result.containerEffects({{valuePrefix}}SurfaceEffects());
+    if (!invalid) {
+      result = result.onHovered(
+        CheckboxStyler().onSelected(.color({{typePrefix}}Tokens.accentHover())),
+      );
+    }
+  }
+  if (invalid) {
+    // The 1px danger outline shows only while unselected.
+    result = result
+        .containerEffects({{valuePrefix}}InvalidRing())
+        .onSelected(.containerEffects(.outline(.style(.none))))
+        .onIndeterminate(.containerEffects(.outline(.style(.none))));
+  } else {
+    result = result.onIndeterminate(
+      CheckboxStyler().onPressed(.color({{typePrefix}}Tokens.accentHover())),
+    );
+  }
+
+  return result
+      .onDisabled(
+        CheckboxStyler()
+            .label(.color({{valuePrefix}}DisabledLabelColor(danger: invalid)()))
+            .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      )
+      .merge(style);
+}
+
+/// `touch-target`: the 24px square around the 16px control.
+const {{valuePrefix}}CheckboxTapTarget = Size.square(24);
+
+/// `.checkbox__control`: `size-4`.
+const _control = 16.0;
+
+/// The check mark svg's `size-2.5` and the indeterminate line's `size-3`
+/// (`checkbox.css`). Remix's glyphs nearly fill their box, so the box sizes
+/// the mark.
+const _checkmark = 10.0;
+const _indeterminate = 12.0;

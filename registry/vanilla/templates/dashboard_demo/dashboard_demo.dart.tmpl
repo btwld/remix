@@ -10,6 +10,7 @@ import '../../components/menu.dart';
 import '../../components/popover.dart';
 import '../../components/segmented_control.dart';
 import '../../components/toast.dart';
+import '../../theme/effects.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
 import '../../theme/tokens.dart';
@@ -179,8 +180,10 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
-    {{typePrefix}}Popover(
-      semanticLabel: 'Notifications',
+    _{{typePrefix}}HeaderPopover(
+      icon: {{icon:bell}},
+      semanticLabel: 'Open notifications',
+      showBadge: !_notificationsRead,
       popoverChild: Box(
         style: BoxStyler()
             .width({{typePrefix}}Tokens.popoverWidth)
@@ -229,31 +232,10 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
           ],
         ),
       ),
-      child: StackBox(
-        style: StackBoxStyler().clipBehavior(.none),
-        children: [
-          const {{typePrefix}}IconButton.ghost(
-            icon: {{icon:bell}},
-            semanticLabel: 'Open notifications',
-          ),
-          if (!_notificationsRead)
-            Positioned(
-              right: 8,
-              top: 8,
-              child: IgnorePointer(
-                child: Box(
-                  style: BoxStyler()
-                      .size(7, 7)
-                      .borderRadius(.circular(99))
-                      .color({{typePrefix}}Tokens.primary()),
-                ),
-              ),
-            ),
-        ],
-      ),
     ),
-    {{typePrefix}}Popover(
-      semanticLabel: 'Theme settings',
+    _{{typePrefix}}HeaderPopover(
+      icon: {{icon:gear}},
+      semanticLabel: 'Open theme settings',
       popoverChild: Box(
         style: BoxStyler()
             .width({{typePrefix}}Tokens.popoverWidth)
@@ -284,10 +266,6 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
             _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
           ],
         ),
-      ),
-      child: const {{typePrefix}}IconButton.ghost(
-        icon: {{icon:gear}},
-        semanticLabel: 'Open theme settings',
       ),
     ),
   ];
@@ -326,6 +304,72 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
           time,
           style: _textStyle(token: {{typePrefix}}Tokens.textXs, muted: true),
         ),
+      ],
+    ),
+  );
+}
+
+/// A header icon button that opens a popover.
+///
+/// The button owns activation (`openOnTap: false`), so the popover adds no
+/// focus stop of its own, and the one node shared with `triggerFocusNode` is
+/// what closing returns focus to.
+class _{{typePrefix}}HeaderPopover extends StatefulWidget {
+  const _{{typePrefix}}HeaderPopover({
+    required this.icon,
+    required this.semanticLabel,
+    required this.popoverChild,
+    this.showBadge = false,
+  });
+
+  final IconData icon;
+  final String semanticLabel;
+  final Widget popoverChild;
+  final bool showBadge;
+
+  @override
+  State<_{{typePrefix}}HeaderPopover> createState() => _{{typePrefix}}HeaderPopoverState();
+}
+
+class _{{typePrefix}}HeaderPopoverState extends State<_{{typePrefix}}HeaderPopover> {
+  final _controller = MenuController();
+  final _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => {{typePrefix}}Popover(
+    controller: _controller,
+    openOnTap: false,
+    triggerFocusNode: _focusNode,
+    popoverChild: widget.popoverChild,
+    child: StackBox(
+      style: StackBoxStyler().clipBehavior(.none),
+      children: [
+        {{typePrefix}}IconButton.ghost(
+          icon: widget.icon,
+          semanticLabel: widget.semanticLabel,
+          focusNode: _focusNode,
+          onPressed: () =>
+              _controller.isOpen ? _controller.close() : _controller.open(),
+        ),
+        if (widget.showBadge)
+          Positioned(
+            right: 8,
+            top: 8,
+            child: IgnorePointer(
+              child: Box(
+                style: BoxStyler()
+                    .size(7, 7)
+                    .borderRadius(.circular(99))
+                    .color({{typePrefix}}Tokens.primary()),
+              ),
+            ),
+          ),
       ],
     ),
   );
@@ -383,8 +427,8 @@ class _{{typePrefix}}Account extends StatelessWidget {
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
       icon: {{icon:person}},
-      builder: (context, _, _) => Box(
-        style: BoxStyler()
+      builder: (context, _, _) => RemixCard(
+        style: CardStyler()
             .padding(
               .symmetric(
                 horizontal: {{typePrefix}}Tokens.s2_5,
@@ -393,7 +437,12 @@ class _{{typePrefix}}Account extends StatelessWidget {
             )
             .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
             .border(.all(.color({{typePrefix}}Tokens.border())))
-            .color({{typePrefix}}Tokens.card()),
+            .color({{typePrefix}}Tokens.card())
+            .onFocusVisible(
+              CardStyler()
+                  .containerEffects({{valuePrefix}}FocusRing())
+                  .border({{valuePrefix}}FocusBorder()),
+            ),
         child: RowBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)

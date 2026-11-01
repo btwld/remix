@@ -32,28 +32,17 @@ enum FortalTextFieldVariant {
   soft,
 }
 
-Color _resolveNeutralTextInputPlaceholder(BuildContext context) {
+Color _resolveDisabledNeutralTextInputPlaceholder(BuildContext context) {
   final color = FortalTokens.grayA10.resolve(context);
   return color.withValues(alpha: color.a * 0.5);
 }
 
-const _neutralTextInputPlaceholder = ContextToken<Color>(
-  _resolveNeutralTextInputPlaceholder,
-);
-
-Color _resolveAccent12Alpha(BuildContext context, double alpha) =>
-    FortalTokens.accent12.resolve(context).withValues(alpha: alpha);
-
-final _softTextFieldPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.60),
-);
-
-final _softTextAreaPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.65),
+const _disabledNeutralTextInputPlaceholder = ContextToken<Color>(
+  _resolveDisabledNeutralTextInputPlaceholder,
 );
 
 final _softTextInputDisabledPlaceholder = ContextToken<Color>(
-  (context) => _resolveAccent12Alpha(context, 0.5),
+  (context) => FortalTokens.accent12.resolve(context).withValues(alpha: 0.5),
 );
 
 /// Fortal-themed preset for [RemixTextField].
@@ -77,10 +66,7 @@ TextFieldStyler fortalTextFieldStyle({
 
   final recipe = switch (variant) {
     .surface => _fortalApplySurfaceTextInput(base),
-    .soft => _fortalApplySoftTextInput(
-      base,
-      placeholder: _softTextFieldPlaceholder,
-    ),
+    .soft => _fortalApplySoftTextInput(base),
   };
 
   return recipe
@@ -129,9 +115,10 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
         .containerEffects(
           RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
         )
+        // An unlabeled field relies on its border to be found at all.
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            fortalInsetSurface(strokes: [FortalTokens.gray7()]),
+            fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
           ),
         )
         .onDisabled(
@@ -155,10 +142,7 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
               ),
         );
 
-TextFieldStyler _fortalApplySoftTextInput(
-  TextFieldStyler base, {
-  required ContextToken<Color> placeholder,
-}) => base
+TextFieldStyler _fortalApplySoftTextInput(TextFieldStyler base) => base
     .merge(
       TextFieldStyler(
         text: .fontWeight(FortalTokens.fontWeightRegular()),
@@ -174,17 +158,31 @@ TextFieldStyler _fortalApplySoftTextInput(
     )
     .textColor(FortalTokens.accent12())
     .text(.selectionColor(FortalTokens.accentA5()))
-    .onEnabled(.hintText(.color(placeholder())))
-    .wrap(.iconTheme(color: FortalTokens.accent10()))
+    .onEnabled(.hintText(.color(FortalTokens.accentA11())))
+    // Base-level icon overrides remain available while enabled.
+    .wrap(.iconTheme(color: FortalTokens.accent11()))
     .color(FortalTokens.accentA3())
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+    )
+    // A blank soft field shows no text, hint or border of its own, and its
+    // tint alone is far below 3:1; the accent-8 ring keeps it findable. It is
+    // the base so caller base overrides still win; disabled clears it.
+    .containerEffects(
+      RemixBoxEffectsMix.overContent(
+        fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+      ),
     )
     .onDisabled(
       _fortalSoftTextInputDisabledStyle()
           .color(FortalTokens.grayA3())
           .containerEffects(
             RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+          )
+          .containerEffects(
+            RemixBoxEffectsMix.overContent(
+              RemixBoxEffectLayerMix(shadows: const []),
+            ),
           ),
     );
 
@@ -194,7 +192,7 @@ TextFieldStyler _fortalApplyNeutralTextInput(TextFieldStyler base) =>
         text: .color(
           FortalTokens.gray12(),
         ).selectionColor(FortalTokens.focusA5()),
-        hintText: .color(_neutralTextInputPlaceholder()),
+        hintText: .color(FortalTokens.grayA11()),
         cursorColor: FortalTokens.gray12(),
         helperText: .color(FortalTokens.gray11()),
         label: .color(
@@ -212,13 +210,13 @@ TextFieldStyler _fortalTextInputDisabledBaseStyle() => TextFieldStyler(
 
 TextFieldStyler _fortalNeutralTextInputDisabledStyle() =>
     _fortalTextInputDisabledBaseStyle().hintText(
-      .color(_neutralTextInputPlaceholder()),
+      .color(_disabledNeutralTextInputPlaceholder()),
     );
 
 TextFieldStyler _fortalSoftTextInputDisabledStyle() =>
-    _fortalTextInputDisabledBaseStyle().hintText(
-      .color(_softTextInputDisabledPlaceholder()),
-    );
+    _fortalTextInputDisabledBaseStyle()
+        .hintText(.color(_softTextInputDisabledPlaceholder()))
+        .wrap(.iconTheme(color: FortalTokens.accent10()));
 
 TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
   helperText: .color(FortalTokens.error11()),
@@ -229,7 +227,7 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
       shadows: [
         RemixBoxShadowMix(
           kind: .inset,
-          color: FortalTokens.errorA7(),
+          color: FortalTokens.error8(),
           spreadRadius: 1,
         ),
       ],
@@ -298,10 +296,7 @@ TextFieldStyler fortalTextAreaStyle({
 
   final recipe = switch (variant) {
     .surface => _fortalApplySurfaceTextInput(base),
-    .soft => _fortalApplySoftTextInput(
-      base,
-      placeholder: _softTextAreaPlaceholder,
-    ),
+    .soft => _fortalApplySoftTextInput(base),
   };
 
   return recipe

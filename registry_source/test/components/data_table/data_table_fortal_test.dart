@@ -459,7 +459,13 @@ void main() {
               ),
             );
             final before = tester.getRect(header);
-            expect(ring, findsNothing);
+            expect(ring, findsOneWidget);
+            final idlePaint = tester.renderObject<RenderCustomPaint>(ring);
+            expect(
+              (Canvas canvas) =>
+                  idlePaint.foregroundPainter!.paint(canvas, idlePaint.size),
+              paintsNothing,
+            );
             await tester.sendKeyEvent(LogicalKeyboardKey.tab);
             await tester.pumpAndSettle();
             expect(
@@ -472,6 +478,7 @@ void main() {
             expect(tester.getRect(header), before);
 
             final paint = tester.renderObject<RenderCustomPaint>(ring);
+            expect(identical(paint, idlePaint), isTrue);
             final context = tester.element(header);
             final inset = FortalTokens.space2.resolve(context);
             final bounds = Offset.zero & paint.size;

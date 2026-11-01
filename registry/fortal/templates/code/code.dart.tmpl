@@ -61,7 +61,7 @@ BadgeStyler {{valuePrefix}}CodeStyle(
   final accent1 = {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.accent1);
   final accent12 = {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.accent12);
   final accentA3 = {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.accentA3);
-  final accentA9 = {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.accentA9);
+  final accentSolid = {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.accentSolid);
   final accentA11 = {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.accentA11);
   final accentContrast = {{valuePrefix}}ResolveColor(
     context,
@@ -69,7 +69,7 @@ BadgeStyler {{valuePrefix}}CodeStyle(
   );
   switch (variant) {
     case .solid:
-      fill = highContrast ? accent12 : accentA9;
+      fill = highContrast ? accent12 : accentSolid;
       foreground = highContrast ? accent1 : accentContrast;
     case .soft:
       fill = accentA3;

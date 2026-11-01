@@ -46,48 +46,55 @@ ProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
   );
 }
 
+// A bare progress bar carries its value in two extents: the whole track
+// (the total) and the filled indicator (the value). The track is edged in
+// controlBorder, which keeps 3:1 on the page and panels, so the total stays
+// readable at 0. The fill keeps 3:1 against those surroundings through its own
+// colour or, for the surface variant, an inset outline in accentThumbRing:
+// seamless on fills that already contrast, a dark ink on bright fills.
+
 ProgressStyler _fortalProgressSurfaceStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
-  return _fortalProgressBaseStyler(size)
+  final styler = _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
       .trackEffects(
         RemixBoxEffectsMix.overContent(
-          _fortalProgressLayer(
-            shadows: [
-              RemixBoxShadowMix(
-                kind: .inset,
-                color: FortalTokens.grayA4(),
-                spreadRadius: 1,
-              ),
-            ],
-          ),
+          _fortalProgressInsetRing(FortalTokens.controlBorder()),
         ),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
       );
+  return highContrast
+      ? styler
+      : styler.indicatorEffects(
+          RemixBoxEffectsMix.overContent(
+            _fortalProgressInsetRing(FortalTokens.accentThumbRing()),
+          ),
+        );
 }
 
 ProgressStyler _fortalProgressSoftStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
+  // Step 8 already keeps 3:1 on the page and panels. No accent alpha is
+  // layered over it: alpha steps reconstruct their tint over the page and can
+  // be opaque, which would replace the fill.
   return _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA4())
       .track(
         .foregroundDecoration(BoxDecorationMix(color: FortalTokens.whiteA1())),
       )
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          _fortalProgressInsetRing(FortalTokens.controlBorder()),
+        ),
+      )
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
-      )
-      .indicator(
-        .foregroundDecoration(
-          BoxDecorationMix(
-            color: highContrast ? null : FortalTokens.accentA5(),
-          ),
-        ),
       );
 }
 
@@ -107,6 +114,12 @@ ProgressStyler _fortalProgressSoftStyler(
     radius: FortalTokens.progressRadius3(),
   ),
 };
+
+/// A 1px inset ring that follows the bar's radius.
+RemixBoxEffectLayerMix _fortalProgressInsetRing(Color color) =>
+    _fortalProgressLayer(
+      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+    );
 
 RemixBoxEffectLayerMix _fortalProgressLayer({
   List<RemixBoxShadowMix>? shadows,

@@ -1,0 +1,89 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'radio.g.dart';
+
+/// HeroUI radio variants: `primary` on the field surface with its shadow,
+/// `secondary` on the default fill.
+enum {{typePrefix}}RadioVariant { primary, secondary }
+
+/// HeroUI recipe for [RemixRadio].
+///
+/// The label sits inside the control's tap target. A description beneath it is
+/// `{{typePrefix}}RadioGroup`'s. [invalid] paints the error treatment and turns the
+/// label danger; validation stays with the app.
+@MixWidget(target: RemixRadio.new)
+RadioStyler {{valuePrefix}}RadioStyle({
+  {{typePrefix}}RadioVariant variant = .primary,
+  bool invalid = false,
+  RadioStyler style = const RadioStyler.create(),
+}) {
+  final field = switch (variant) {
+    .primary => {{valuePrefix}}PrimaryFieldFill,
+    .secondary => {{valuePrefix}}SecondaryFieldFill,
+  };
+  final label = invalid ? {{typePrefix}}Tokens.danger : {{typePrefix}}Tokens.foreground;
+
+  var result =
+      RadioStyler(
+            container: BoxStyler()
+                .size({{valuePrefix}}RadioSize, {{valuePrefix}}RadioSize)
+                .alignment(.center)
+                .borderRadius(.all({{typePrefix}}Tokens.radiusLg())),
+            indicator: _dot(_dotScale),
+          )
+          .label({{valuePrefix}}LabelText.color(label()))
+          .labelSpacing({{valuePrefix}}ControlGap)
+          .color(field.rest())
+          // The unselected dot is `bg-field-hover` while hovered, which fills the
+          // whole control.
+          .onHovered(.color(field.hover()))
+          .onSelected(RadioStyler().color({{typePrefix}}Tokens.accent()))
+          .onPressed(
+            RadioStyler()
+                .scale(_pressedScale)
+                .onSelected(
+                  RadioStyler()
+                      .color({{typePrefix}}Tokens.accentHover())
+                      .indicator(_dot(_pressedDotScale)),
+                ),
+          )
+          .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+          .animate({{typePrefix}}Tokens.selectionMotion);
+
+  if (variant == .primary) {
+    result = result.containerEffects({{valuePrefix}}SurfaceEffects());
+  }
+  if (invalid) {
+    // The 1px danger outline stays when selected; focus still shows the
+    // ordinary ring.
+    result = result.containerEffects({{valuePrefix}}InvalidRing());
+  }
+
+  return result
+      .onDisabled(
+        RadioStyler()
+            .label(.color({{valuePrefix}}DisabledLabelColor(danger: invalid)()))
+            .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      )
+      .merge(style);
+}
+
+/// `.radio__control`: `size-4`. Also the description indent in
+/// `{{typePrefix}}RadioGroup`, with the label gap.
+const {{valuePrefix}}RadioSize = 16.0;
+
+/// The selected dot, `scale: 0.4286` of the control, and `0.5714` while pressed.
+const _dotScale = 0.4286;
+const _pressedDotScale = 0.5714;
+
+/// `.radio__control` while pressed: `scale-95`.
+const _pressedScale = 0.95;
+
+BoxStyler _dot(double scale) => BoxStyler()
+    .size({{valuePrefix}}RadioSize * scale, {{valuePrefix}}RadioSize * scale)
+    .borderRadius(.all({{typePrefix}}Tokens.radiusLg()))
+    .color({{typePrefix}}Tokens.accentForeground());

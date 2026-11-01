@@ -1,0 +1,99 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'effects.dart';
+import 'tokens.dart';
+
+/// `.label`: `text-sm font-medium text-foreground` (label.css).
+final {{valuePrefix}}LabelText = TextStyler()
+    .style({{typePrefix}}Tokens.textSm.mix())
+    .fontWeight(.w500)
+    .color({{typePrefix}}Tokens.foreground());
+
+/// `.description`: `text-xs text-muted` (description.css).
+final {{valuePrefix}}DescriptionText = TextStyler()
+    .style({{typePrefix}}Tokens.textXs.mix())
+    .color({{typePrefix}}Tokens.muted());
+
+/// `.field-error`: `text-xs text-danger px-1` (field-error.css).
+final {{valuePrefix}}ErrorText = {{valuePrefix}}DescriptionText
+    .color({{typePrefix}}Tokens.danger())
+    .wrap(.padding(.horizontal(_errorPaddingX)));
+
+const _errorPaddingX = 4.0;
+
+/// `.checkbox__content`, `.radio__content`, `.switch__content`: `gap-3` between
+/// a control and its label.
+const {{valuePrefix}}ControlGap = 12.0;
+
+/// The color of a disabled field's label: `status-disabled` dims the whole
+/// field, and `.label` in a disabled field dims its text again (`label.css`).
+///
+/// Pair it with the field's own `opacity(disabledOpacity)` wrap. [danger] is the
+/// label of an invalid field.
+ContextToken<Color> {{valuePrefix}}DisabledLabelColor({bool danger = false}) =>
+    danger ? _dimmedDanger : _dimmedForeground;
+
+final _dimmedForeground = {{valuePrefix}}Alpha(
+  {{typePrefix}}Tokens.foreground,
+  {{typePrefix}}Tokens.disabledOpacity,
+);
+final _dimmedDanger = {{valuePrefix}}Alpha(
+  {{typePrefix}}Tokens.danger,
+  {{typePrefix}}Tokens.disabledOpacity,
+);
+
+/// The text of an input, a select value, or a placeholder: `text-base`, then
+/// `sm:text-sm` from 640px up.
+///
+/// `.input` and `.select__value` never wrap upstream, so a value or
+/// placeholder longer than the field keeps [lines] = 1 and ellipsizes, the
+/// same one-line policy the toggle button's label follows. A text area shows
+/// several lines and passes the count its editor does, which is where its
+/// placeholder ellipsizes instead of laying out lines its box then clips.
+TextStyler {{valuePrefix}}FieldText(ColorToken color, {int lines = 1}) => TextStyler()
+    .style({{typePrefix}}Tokens.textBase.mix())
+    .color(color())
+    .maxLines(lines)
+    .softWrap(lines > 1)
+    .overflow(TextOverflow.ellipsis)
+    .onBreakpoint(
+      const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointSm),
+      TextStyler().style({{typePrefix}}Tokens.textSm.mix()),
+    );
+
+/// The lines a placeholder may fill in a field whose editor shows [minLines]
+/// to [maxLines] lines.
+///
+/// The placeholder is only visible while the editor is empty, where the editor
+/// is as tall as the lines it reserves: [minLines], or the single line a field
+/// without one shows. A [maxLines] below that caps the editor and the
+/// placeholder with it. Stopping there is what keeps the ellipsis on the last
+/// visible line instead of laying out lines the field's box clips away.
+int {{valuePrefix}}HintLines({int? minLines, int? maxLines}) {
+  final lines = minLines ?? 1;
+  return maxLines != null && maxLines < lines ? maxLines : lines;
+}
+
+/// The fill of a field-like control at rest, hovered, and focused.
+typedef {{typePrefix}}FieldFill = ({
+  ColorToken rest,
+  ColorToken hover,
+  ColorToken focus,
+});
+
+/// `--field-background`, `--field-hover`, `--field-focus`: the `primary`
+/// variant of the input, select, checkbox, and radio.
+const {{typePrefix}}FieldFill {{valuePrefix}}PrimaryFieldFill = (
+  rest: {{typePrefix}}Tokens.fieldBackground,
+  hover: {{typePrefix}}Tokens.fieldHover,
+  focus: {{typePrefix}}Tokens.fieldFocus,
+);
+
+/// `--default` and `--default-hover`: the `secondary` variant of the same
+/// controls.
+const {{typePrefix}}FieldFill {{valuePrefix}}SecondaryFieldFill = (
+  rest: {{typePrefix}}Tokens.defaultColor,
+  hover: {{typePrefix}}Tokens.defaultHover,
+  focus: {{typePrefix}}Tokens.defaultColor,
+);

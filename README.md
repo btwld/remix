@@ -12,7 +12,8 @@ Flutter components with Naked UI behavior and Mix styling.
 - Mix owns styling: specs, stylers, tokens, variants and animation.
 - Remix composes both: use `Remix*` with your own styles, or install a preset.
 - Presets are editable app source: choose one per app. Vanilla is neutral;
-  Fortal has its own visual language. The CLI installs items and their dependencies.
+  Fortal has its own visual language; HeroUI follows HeroUI web 3.2.6.
+  The CLI installs items and their dependencies.
 - The app owns its UI and host: themes, recipes, state and navigation. Supply
   an Overlay, Navigator or toast scope where the component needs it.
 - Registries are pinned: `remix.yaml` records a GitHub commit. Updating that
@@ -23,8 +24,12 @@ Flutter components with Naked UI behavior and Mix styling.
 
 ## Start with a component
 
+This checkout prepares `1.0.0-beta.14`, which is not published yet. The
+currently hosted version is `1.0.0-beta.13`; use the matching release docs or
+a local path dependency while beta.14 is staged. After publication:
+
 ```bash
-flutter pub add remix:^1.0.0-beta.13
+flutter pub add remix:^1.0.0-beta.14
 ```
 
 ```dart

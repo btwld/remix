@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -12,6 +11,7 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 /// Tag row under a stat card's value: delta badge plus caption.
 final fortalStatTagsStyle = WrapBoxStyler()
@@ -73,10 +73,14 @@ class FortalStatCard extends StatelessWidget {
         fortalStatTagsStyle(
           children: [
             if (delta case final delta?)
-              FortalAccentScope(
-                accent: positive ? .mangue : .caju,
-                child: FortalBadge(highContrast: true, label: delta),
-              ),
+              positive
+                  ? FortalAccentScope(
+                      accent: .serra,
+                      child: FortalBadge(highContrast: true, label: delta),
+                    )
+                  : FortalAccentScope.error(
+                      child: FortalBadge(highContrast: true, label: delta),
+                    ),
             StyledText(caption, style: dashboardText(.size1, tone: .muted)),
           ],
         ),
@@ -93,13 +97,10 @@ class FortalStatCard extends StatelessWidget {
   }
 }
 
-/// Domain status badge rendered with a status-specific Fortal accent.
+/// Domain status badge. Its text label carries the status; the color only
+/// reinforces it. Negative statuses use the dedicated error red.
 class FortalStatusBadge extends StatelessWidget {
-  const FortalStatusBadge._({
-    super.key,
-    required this.label,
-    required this.accent,
-  });
+  const FortalStatusBadge._({super.key, required this.label, this.accent});
 
   factory FortalStatusBadge.order(
     RegistryDashboardOrderStatus status, {
@@ -108,9 +109,9 @@ class FortalStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .paid => .mangue,
+      .paid => .serra,
       .pending => .sol,
-      .refunded => .caju,
+      .refunded => null,
       .cancelled => .calcadao,
     },
   );
@@ -122,9 +123,9 @@ class FortalStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .active => .mangue,
+      .active => .serra,
       .invited => .ceu,
-      .suspended => .caju,
+      .suspended => null,
     },
   );
 
@@ -134,9 +135,9 @@ class FortalStatusBadge extends StatelessWidget {
       key: key,
       label: capitalize(normalized),
       accent: switch (normalized) {
-        'paid' || 'active' || 'fulfilled' || 'ready' => .mangue,
+        'paid' || 'active' || 'fulfilled' || 'ready' => .serra,
         'pending' || 'processing' || 'review' => .sol,
-        'refunded' || 'suspended' => .caju,
+        'refunded' || 'suspended' => null,
         'cancelled' => .calcadao,
         'invited' => .ceu,
         _ => .mar,
@@ -145,13 +146,18 @@ class FortalStatusBadge extends StatelessWidget {
   }
 
   final String label;
-  final FortalAccentColor accent;
+
+  /// The status accent, or null for the dedicated error red.
+  final FortalAccentColor? accent;
 
   @override
-  Widget build(BuildContext context) => FortalAccentScope(
-    accent: accent,
-    child: FortalBadge(highContrast: true, label: label),
-  );
+  Widget build(BuildContext context) {
+    final badge = FortalBadge(highContrast: true, label: label);
+    return switch (accent) {
+      final accent? => FortalAccentScope(accent: accent, child: badge),
+      null => FortalAccentScope.error(child: badge),
+    };
+  }
 }
 
 /// Compact single-line cell text for a [RemixDataTable] body cell.
@@ -233,7 +239,6 @@ class FortalAction {
 class FortalActionMenu extends StatelessWidget {
   const FortalActionMenu({
     super.key,
-    required this.semanticLabel,
     required this.trigger,
     required this.actions,
     required this.onSelected,
@@ -246,8 +251,7 @@ class FortalActionMenu extends StatelessWidget {
     this.width = 180,
   });
 
-  final String semanticLabel;
-  final Widget trigger;
+  final RemixMenuTrigger trigger;
   final List<FortalAction> actions;
   final ValueChanged<String> onSelected;
   final OverlayPositionConfig positioning;
@@ -261,10 +265,7 @@ class FortalActionMenu extends StatelessWidget {
     return FortalMenu<String>(
       size: .size1,
       positioning: positioning,
-      trigger: RemixMenuTrigger.builder(
-        label: semanticLabel,
-        builder: (_, _, _) => trigger,
-      ),
+      trigger: trigger,
       items: [
         for (final action in actions) ...[
           if (action.dividerBefore) const RemixMenuDivider(),
@@ -289,11 +290,17 @@ const fortalDataTableActionsPositioning = OverlayPositionConfig(
   sideOffset: 4,
 );
 
-/// Compact kebab trigger shared by data-table actions columns.
-final fortalDataTableActionsTrigger = Box(
-  style: BoxStyler().padding(.all(6)),
-  child: StyledIcon(icon: RemixIcons.more, style: IconStyler().size(18)),
-);
+/// Kebab button shared by data-table actions columns.
+RemixMenuTrigger fortalDataTableActionsTrigger(String semanticLabel) =>
+    RemixMenuTrigger.control(
+      builder: (_, menu) => FortalIconButton.ghost(
+        icon: RemixIcons.more,
+        semanticLabel: semanticLabel,
+        focusNode: menu.focusNode,
+        onPressed: menu.toggle,
+        style: IconButtonStyler().margin(.all(0)).icon(.size(18)),
+      ),
+    );
 
 /// Empty state card used when search or filter queries match no rows.
 class FortalEmptyState extends StatelessWidget {

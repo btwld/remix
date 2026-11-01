@@ -29,33 +29,25 @@ Widget buildRadioUseCase(BuildContext context) {
                     .map(
                       (theme) => Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          mainAxisSize: .min,
-                          children: [
-                            FortalRadio(
-                              semanticLabel: 'Option',
-                              variant: context.knobs.object.dropdown(
-                                label: 'variant',
-                                options: FortalRadioVariant.values,
-                                labelBuilder: (variant) => variant.name,
-                              ),
-                              size: context.knobs.object.dropdown(
-                                label: 'size',
-                                options: FortalRadioSize.values,
-                                labelBuilder: (size) => size.name,
-                                initialOption: FortalRadioSize.size2,
-                              ),
-                              value: theme,
-                              enabled: context.knobs.boolean(
-                                label: 'Enabled',
-                                initialValue: true,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
+                        child: FortalRadio(
+                          label:
                               '${theme.name[0].toUpperCase()}${theme.name.substring(1)}',
-                            ),
-                          ],
+                          variant: context.knobs.object.dropdown(
+                            label: 'variant',
+                            options: FortalRadioVariant.values,
+                            labelBuilder: (variant) => variant.name,
+                          ),
+                          size: context.knobs.object.dropdown(
+                            label: 'size',
+                            options: FortalRadioSize.values,
+                            labelBuilder: (size) => size.name,
+                            initialOption: FortalRadioSize.size2,
+                          ),
+                          value: theme,
+                          enabled: context.knobs.boolean(
+                            label: 'Enabled',
+                            initialValue: true,
+                          ),
                         ),
                       ),
                     )

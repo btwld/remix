@@ -47,7 +47,7 @@ AvatarStyler uiAvatarStyle({
           .iconColor(softContent),
     .solid =>
       base
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accent9())
+          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
           .labelColor(solidContent)
           .iconColor(solidContent),
   }).merge(style);

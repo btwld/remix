@@ -8,5 +8,8 @@ export 'theme_data.dart' hide buildUiScopeTokens;
 export 'theme_scope.dart';
 export 'tokens.dart';
 
-// Palette constants stay out of this internal barrel to avoid bare-name
+// Accent palette constants stay out of this internal barrel to avoid bare-name
 // collisions. Consumers can import theme/fortal_colors.dart and palette.dart.
+// The prefixed error palette is exported so applications can scope
+// destructive content without a deep import.
+export 'fortal_colors.dart' show uiError;

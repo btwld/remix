@@ -1,0 +1,191 @@
+import 'package:flutter/animation.dart';
+import 'package:remix/remix.dart';
+
+/// A value that changes at a breakpoint: [mobile] by default, [desktop] from
+/// the one the CSS names.
+typedef {{typePrefix}}Responsive = ({double mobile, double desktop});
+
+/// Semantic names from the pinned HeroUI web theme.
+abstract final class {{typePrefix}}Tokens {
+  static const white = ColorToken('{{valuePrefix}}.color.white');
+  static const black = ColorToken('{{valuePrefix}}.color.black');
+  static const snow = ColorToken('{{valuePrefix}}.color.snow');
+  static const eclipse = ColorToken('{{valuePrefix}}.color.eclipse');
+  static const accent = ColorToken('{{valuePrefix}}.color.accent');
+  static const accentForeground = ColorToken('{{valuePrefix}}.color.accent-foreground');
+  static const success = ColorToken('{{valuePrefix}}.color.success');
+  static const successForeground = ColorToken(
+    '{{valuePrefix}}.color.success-foreground',
+  );
+  static const fieldBorder = ColorToken('{{valuePrefix}}.color.field-border');
+  static const background = ColorToken('{{valuePrefix}}.color.background');
+  static const foreground = ColorToken('{{valuePrefix}}.color.foreground');
+  static const surface = ColorToken('{{valuePrefix}}.color.surface');
+  static const surfaceForeground = ColorToken(
+    '{{valuePrefix}}.color.surface-foreground',
+  );
+  static const surfaceSecondary = ColorToken('{{valuePrefix}}.color.surface-secondary');
+  static const surfaceSecondaryForeground = ColorToken(
+    '{{valuePrefix}}.color.surface-secondary-foreground',
+  );
+  static const surfaceTertiary = ColorToken('{{valuePrefix}}.color.surface-tertiary');
+  static const surfaceTertiaryForeground = ColorToken(
+    '{{valuePrefix}}.color.surface-tertiary-foreground',
+  );
+  static const overlay = ColorToken('{{valuePrefix}}.color.overlay');
+  static const overlayForeground = ColorToken(
+    '{{valuePrefix}}.color.overlay-foreground',
+  );
+  static const muted = ColorToken('{{valuePrefix}}.color.muted');
+  static const defaultColor = ColorToken('{{valuePrefix}}.color.default');
+  static const defaultForeground = ColorToken(
+    '{{valuePrefix}}.color.default-foreground',
+  );
+  static const fieldBackground = ColorToken('{{valuePrefix}}.color.field-background');
+  static const fieldForeground = ColorToken('{{valuePrefix}}.color.field-foreground');
+  static const fieldPlaceholder = ColorToken('{{valuePrefix}}.color.field-placeholder');
+  static const warning = ColorToken('{{valuePrefix}}.color.warning');
+  static const warningForeground = ColorToken(
+    '{{valuePrefix}}.color.warning-foreground',
+  );
+  static const danger = ColorToken('{{valuePrefix}}.color.danger');
+  static const dangerForeground = ColorToken('{{valuePrefix}}.color.danger-foreground');
+  static const segment = ColorToken('{{valuePrefix}}.color.segment');
+  static const segmentForeground = ColorToken(
+    '{{valuePrefix}}.color.segment-foreground',
+  );
+  static const border = ColorToken('{{valuePrefix}}.color.border');
+  static const separator = ColorToken('{{valuePrefix}}.color.separator');
+  static const focus = ColorToken('{{valuePrefix}}.color.focus');
+  static const link = ColorToken('{{valuePrefix}}.color.link');
+  static const backdrop = ColorToken('{{valuePrefix}}.color.backdrop');
+  static const surfaceHover = ColorToken('{{valuePrefix}}.color.surface-hover');
+  static const backgroundSecondary = ColorToken(
+    '{{valuePrefix}}.color.background-secondary',
+  );
+  static const backgroundTertiary = ColorToken(
+    '{{valuePrefix}}.color.background-tertiary',
+  );
+  static const backgroundInverse = ColorToken(
+    '{{valuePrefix}}.color.background-inverse',
+  );
+  static const defaultHover = ColorToken('{{valuePrefix}}.color.default-hover');
+  static const accentHover = ColorToken('{{valuePrefix}}.color.accent-hover');
+  static const successHover = ColorToken('{{valuePrefix}}.color.success-hover');
+  static const warningHover = ColorToken('{{valuePrefix}}.color.warning-hover');
+  static const dangerHover = ColorToken('{{valuePrefix}}.color.danger-hover');
+  static const fieldHover = ColorToken('{{valuePrefix}}.color.field-hover');
+  static const fieldFocus = ColorToken('{{valuePrefix}}.color.field-focus');
+  static const fieldBorderHover = ColorToken('{{valuePrefix}}.color.field-border-hover');
+  static const fieldBorderFocus = ColorToken('{{valuePrefix}}.color.field-border-focus');
+  static const defaultSoft = ColorToken('{{valuePrefix}}.color.default-soft');
+  static const defaultSoftForeground = ColorToken(
+    '{{valuePrefix}}.color.default-soft-foreground',
+  );
+  static const defaultSoftHover = ColorToken('{{valuePrefix}}.color.default-soft-hover');
+  static const accentSoft = ColorToken('{{valuePrefix}}.color.accent-soft');
+  static const accentSoftForeground = ColorToken(
+    '{{valuePrefix}}.color.accent-soft-foreground',
+  );
+  static const accentSoftHover = ColorToken('{{valuePrefix}}.color.accent-soft-hover');
+  static const dangerSoft = ColorToken('{{valuePrefix}}.color.danger-soft');
+  static const dangerSoftForeground = ColorToken(
+    '{{valuePrefix}}.color.danger-soft-foreground',
+  );
+  static const dangerSoftHover = ColorToken('{{valuePrefix}}.color.danger-soft-hover');
+  static const warningSoft = ColorToken('{{valuePrefix}}.color.warning-soft');
+  static const warningSoftForeground = ColorToken(
+    '{{valuePrefix}}.color.warning-soft-foreground',
+  );
+  static const warningSoftHover = ColorToken('{{valuePrefix}}.color.warning-soft-hover');
+  static const successSoft = ColorToken('{{valuePrefix}}.color.success-soft');
+  static const successSoftForeground = ColorToken(
+    '{{valuePrefix}}.color.success-soft-foreground',
+  );
+  static const successSoftHover = ColorToken('{{valuePrefix}}.color.success-soft-hover');
+  static const separatorSecondary = ColorToken(
+    '{{valuePrefix}}.color.separator-secondary',
+  );
+  static const separatorTertiary = ColorToken(
+    '{{valuePrefix}}.color.separator-tertiary',
+  );
+  static const borderSecondary = ColorToken('{{valuePrefix}}.color.border-secondary');
+  static const borderTertiary = ColorToken('{{valuePrefix}}.color.border-tertiary');
+  static const radiusXs = RadiusToken('{{valuePrefix}}.radius.xs');
+  static const radiusSm = RadiusToken('{{valuePrefix}}.radius.sm');
+  static const radiusMd = RadiusToken('{{valuePrefix}}.radius.md');
+  static const radiusLg = RadiusToken('{{valuePrefix}}.radius.lg');
+  static const radiusXl = RadiusToken('{{valuePrefix}}.radius.xl');
+  static const radius2xl = RadiusToken('{{valuePrefix}}.radius.2xl');
+  static const radius3xl = RadiusToken('{{valuePrefix}}.radius.3xl');
+  static const radius4xl = RadiusToken('{{valuePrefix}}.radius.4xl');
+  static const radiusField = RadiusToken('{{valuePrefix}}.radius.field');
+  static const radiusPanel = RadiusToken('{{valuePrefix}}.radius.panel');
+  static const textXs = TextStyleToken('{{valuePrefix}}.text.xs');
+  static const textSm = TextStyleToken('{{valuePrefix}}.text.sm');
+  static const textBase = TextStyleToken('{{valuePrefix}}.text.base');
+
+  /// Tailwind `sm` and `md`; responsive recipes are mobile-first.
+  static const breakpointSm = 640.0;
+  static const breakpointMd = 768.0;
+
+  /// `--disabled-opacity`.
+  static const disabledOpacity = 0.5;
+
+  /// `focus-ring`: `ring-2` with `--ring-offset-width: 2px`.
+  static const focusWidth = 2.0;
+  static const ringOffset = 2.0;
+
+  /// `invalid-field-ring`: a 1px outline.
+  static const invalidWidth = 1.0;
+
+  /// `--ease-smooth` (CSS `ease`) and Tailwind's `--ease-out`.
+  static const easeSmooth = Curves.ease;
+  static const easeOut = Cubic(0, 0, .2, 1);
+
+  /// `--ease-out-quart` (themes/shared/theme.css:127).
+  static const easeOutQuart = Cubic(0.165, 0.84, 0.44, 1);
+
+  /// `--ease-out-quad` (themes/shared/theme.css:125).
+  static const easeOutQuad = Cubic(0.25, 0.46, 0.45, 0.94);
+
+  /// `--ease-out-fluid` (themes/shared/theme.css:132).
+  static const easeOutFluid = Cubic(0.32, 0.72, 0, 1);
+
+  /// Tailwind's default `transition` curve, `cubic-bezier(0.4, 0, 0.2, 1)`.
+  static const easeDefault = Cubic(0.4, 0, 0.2, 1);
+
+  /// `background-color 100ms var(--ease-out)`: the fill change of buttons and
+  /// the controls styled like them.
+  static const fillMotion = CurveAnimationConfig(
+    duration: Duration(milliseconds: 100),
+    curve: easeOut,
+  );
+
+  /// `150ms var(--ease-smooth)`: the state change of `input.css` and
+  /// `select.css` (`background-color, border-color`) and of `tabs.css`, which
+  /// also moves color, shadow, and opacity at this timing.
+  static const smoothMotion = CurveAnimationConfig(
+    duration: Duration(milliseconds: 150),
+    curve: easeSmooth,
+  );
+
+  /// `background-color 200ms var(--ease-out)`: the fill of a checkbox or radio
+  /// control (`checkbox.css`, `radio.css`).
+  static const selectionMotion = CurveAnimationConfig(
+    duration: Duration(milliseconds: 200),
+    curve: easeOut,
+  );
+
+  /// `transform 250ms var(--ease-out-quart)`: the press scale of the close
+  /// button, the dropdown trigger, and menu rows (`close-button.css`,
+  /// `dropdown.css`, `menu-item.css`).
+  static const transformMotion = CurveAnimationConfig(
+    duration: Duration(milliseconds: 250),
+    curve: easeOutQuart,
+  );
+
+  /// CSS `transparent`: the fill of the `ghost`, `outline`, and `tertiary`
+  /// variants, and the resting colour of the secondary tab's indicator edge.
+  static const transparent = Color(0x00000000);
+}

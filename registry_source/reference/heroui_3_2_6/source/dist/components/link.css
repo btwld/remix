@@ -1,0 +1,79 @@
+/* Base link styles */
+.link {
+  @apply relative inline-flex h-fit w-fit items-center rounded-xl font-medium text-link no-underline decoration-separator-tertiary decoration-[1.5px] underline-offset-4 no-highlight;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    color 100ms var(--ease-smooth),
+    background-color 150ms var(--ease-smooth),
+    box-shadow 150ms var(--ease-out),
+    opacity 100ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  /* Cursor */
+  cursor: var(--cursor-interactive);
+
+  /* Hover state */
+  @media (hover: hover) {
+    &:hover,
+    &[data-hovered="true"] {
+      @apply underline decoration-muted/50;
+
+      .link__icon {
+        @apply opacity-100;
+      }
+    }
+  }
+
+  /* Pressed state */
+  &:active,
+  &[data-pressed="true"] {
+    @apply underline decoration-muted;
+
+    .link__icon {
+      @apply opacity-100;
+    }
+  }
+
+  /* Focus state */
+  &:focus-visible:not([data-focused]),
+  &[data-focus-visible="true"] {
+    @apply status-focused;
+
+    .link__icon {
+      @apply opacity-100;
+    }
+  }
+
+  /* Disabled state */
+  &[aria-disabled="true"] {
+    @apply status-disabled;
+  }
+
+  .link__icon {
+    @apply pointer-events-none inline-flex size-[0.75em] shrink-0 items-center justify-center text-current opacity-60;
+
+    /**
+     * Transitions
+     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+     */
+    transition: opacity 150ms var(--ease-out);
+    @apply motion-reduce:transition-none;
+
+    & svg {
+      @apply transform-gpu;
+    }
+  }
+
+  .link__icon[data-default-icon="true"] {
+    @apply ms-1 pb-1.5;
+  }
+
+  /* Handle Link with Button Variants */
+  &.button {
+    @apply gap-0 no-underline;
+  }
+}

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+// `RemixBoxAdapter` is `@internal` to `remix`, but the panel is only reachable
+// through the box Remix draws around the options. Suppressed per use below.
+import 'package:remix/src/rendering/remix_box_effects.dart';
 // Deliberate: RemixPathIcon/RemixPathGlyph stay unexported, but this suite
 // pins the *glyph* the trigger draws, not just that some widget sits under the
 // indicator key. Exporting them to satisfy a test would widen the public API
@@ -45,6 +48,10 @@ void main() {
       expect(focusNode.hasFocus, isTrue);
       final spec = tester.resolvedSpecOf<SelectTriggerSpec>(
         find.text('Choose'),
+      );
+      expect(
+        spec.containerEffects?.outline.style ?? BorderStyle.none,
+        BorderStyle.none,
       );
       expect(spec.containerEffects?.overContent, isNull);
     });
@@ -200,6 +207,117 @@ void main() {
     });
   });
 
+  group('Fortal Select panel width', () {
+    // select.css:45 gives the content `min-width: var(--radix-select-trigger-width)`.
+    Future<({double trigger, double panel})> openedWidths(
+      WidgetTester tester, {
+      required double triggerWidth,
+      required String label,
+      required FortalSelectSize size,
+    }) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: triggerWidth,
+          child: FortalSelect<String>(
+            size: size,
+            trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+            items: [RemixSelectItem(value: 'a', label: label)],
+            onChanged: (_) {},
+            positioning: const OverlayPositionConfig(
+              side: .bottom,
+              alignment: .start,
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byType(RemixSelect<String>));
+      await tester.pumpAndSettle();
+
+      // The panel is the outermost box above an option's label.
+      final panel = find
+          .ancestor(
+            of: find.text(label),
+            // ignore: invalid_use_of_internal_member
+            matching: find.byType(RemixBoxAdapter),
+          )
+          .last;
+      return (
+        trigger: tester.getSize(find.byType(RemixSelect<String>)).width,
+        panel: tester.getSize(panel).width,
+      );
+    }
+
+    for (final size in FortalSelectSize.values) {
+      testWidgets('${size.name} panel is as wide as a wider trigger', (
+        tester,
+      ) async {
+        final widths = await openedWidths(
+          tester,
+          triggerWidth: 280,
+          label: 'A',
+          size: size,
+        );
+
+        expect(widths.trigger, 280);
+        expect(widths.panel, 280);
+      });
+
+      testWidgets('${size.name} panel grows past a narrower trigger', (
+        tester,
+      ) async {
+        final widths = await openedWidths(
+          tester,
+          triggerWidth: 100,
+          label: 'An option label wider than the trigger',
+          size: size,
+        );
+
+        expect(widths.panel, greaterThan(widths.trigger));
+      });
+    }
+  });
+
+  group('Fortal Select panel width override', () {
+    testWidgets('a maxWidth below the trigger works once minWidth is reset', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 280,
+          child: FortalSelect<String>(
+            style: SelectStyler().content(
+              SelectContentStyler().maxWidth(120).minWidth(0),
+            ),
+            trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+            items: const [
+              RemixSelectItem(
+                value: 'a',
+                label: 'An option label wider than the cap',
+              ),
+            ],
+            onChanged: (_) {},
+            positioning: const OverlayPositionConfig(
+              side: .bottom,
+              alignment: .start,
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byType(RemixSelect<String>));
+      await tester.pumpAndSettle();
+
+      final panel = find
+          .ancestor(
+            of: find.text('An option label wider than the cap'),
+            // ignore: invalid_use_of_internal_member
+            matching: find.byType(RemixBoxAdapter),
+          )
+          .last;
+      expect(tester.getSize(panel).width, 120);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   group('Fortal Select state recipes', () {
     testWidgets('surface trigger uses exact idle, open, and disabled roles', (
       tester,
@@ -261,6 +379,7 @@ void main() {
       expect(effects.outline.color, tokens.focus8);
       expect(effects.outline.width, 2);
       expect(effects.outlineOffset, 2);
+      expect(effects.overContent, isNull);
     });
 
     testWidgets(

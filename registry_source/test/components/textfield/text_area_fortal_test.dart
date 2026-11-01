@@ -50,37 +50,33 @@ void main() {
     }
   });
 
-  testWidgets('soft TextArea uses accent-12 at 0.65 and accent-8 focus', (
-    tester,
-  ) async {
-    final idle = await _resolve(tester, variant: .soft);
-    final focused = await _resolve(
-      tester,
-      variant: .soft,
-      states: {WidgetState.focused},
-    );
+  testWidgets(
+    'soft TextArea uses secondary accent content and accent-8 focus',
+    (tester) async {
+      final idle = await _resolve(tester, variant: .soft);
+      final focused = await _resolve(
+        tester,
+        variant: .soft,
+        states: {WidgetState.focused},
+      );
 
-    expect(
-      idle.spec.hintText.spec.style?.color,
-      idle.accent12.withValues(alpha: 0.65),
-    );
-    expect(idle.spec.text.spec.selectionColor, idle.accentA5);
-    expect(focused.spec.containerEffects?.outline.color, idle.accent8);
-    expect(focused.spec.containerEffects?.outline.width, 2);
-    expect(focused.spec.containerEffects?.outlineOffset, 2);
-  });
+      expect(idle.spec.hintText.spec.style?.color, idle.accentA11);
+      expect(idle.spec.text.spec.selectionColor, idle.accentA5);
+      expect(focused.spec.containerEffects?.outline.color, idle.accent8);
+      expect(focused.spec.containerEffects?.outline.width, 2);
+      expect(focused.spec.containerEffects?.outlineOffset, 2);
+    },
+  );
 
-  testWidgets('TextField soft placeholder stays distinct at 0.60', (
-    tester,
-  ) async {
-    final result = await _resolveTextFieldSoft(tester);
+  testWidgets(
+    'TextField soft placeholder uses the secondary accent content role',
+    (tester) async {
+      final result = await _resolveTextFieldSoft(tester);
 
-    expect(
-      result.spec.hintText.spec.style?.color,
-      result.accent12.withValues(alpha: 0.60),
-    );
-    expect(result.spec.containerEffects?.outline.color, result.accent8);
-  });
+      expect(result.spec.hintText.spec.style?.color, result.accentA11);
+      expect(result.spec.containerEffects?.outline.color, result.accent8);
+    },
+  );
 
   testWidgets('disabled and error states reuse TextField visual policy', (
     tester,
@@ -198,6 +194,7 @@ Future<
     Color accent8,
     Color accentA5,
     Color accent12,
+    Color accentA11,
     Color focusA5,
     Color gray8,
     Color grayA5,
@@ -221,6 +218,7 @@ _resolve(
     Color accent8,
     Color accentA5,
     Color accent12,
+    Color accentA11,
     Color focusA5,
     Color gray8,
     Color grayA5,
@@ -247,6 +245,7 @@ _resolve(
               accent8: MixScope.tokenOf(FortalTokens.accent8, context),
               accentA5: MixScope.tokenOf(FortalTokens.accentA5, context),
               accent12: MixScope.tokenOf(FortalTokens.accent12, context),
+              accentA11: MixScope.tokenOf(FortalTokens.accentA11, context),
               focusA5: MixScope.tokenOf(FortalTokens.focusA5, context),
               gray8: MixScope.tokenOf(FortalTokens.gray8, context),
               grayA5: MixScope.tokenOf(FortalTokens.grayA5, context),
@@ -265,9 +264,9 @@ _resolve(
   return result;
 }
 
-Future<({TextFieldSpec spec, Color accent8, Color accent12})>
+Future<({TextFieldSpec spec, Color accent8, Color accentA11})>
 _resolveTextFieldSoft(WidgetTester tester) async {
-  late ({TextFieldSpec spec, Color accent8, Color accent12}) result;
+  late ({TextFieldSpec spec, Color accent8, Color accentA11}) result;
   await tester.pumpWidget(
     FortalTheme(
       child: WidgetStateProvider(
@@ -277,7 +276,7 @@ _resolveTextFieldSoft(WidgetTester tester) async {
             result = (
               spec: fortalTextFieldStyle(variant: .soft).build(context).spec,
               accent8: MixScope.tokenOf(FortalTokens.accent8, context),
-              accent12: MixScope.tokenOf(FortalTokens.accent12, context),
+              accentA11: MixScope.tokenOf(FortalTokens.accentA11, context),
             );
             return const SizedBox.shrink();
           },

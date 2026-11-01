@@ -48,19 +48,18 @@ replacements, until 2.0.0:
 
 ### Features
 
-- `OutlineIcons`, `RoundedIcons`, and `MonoIcons` hold each family's glyphs.
+- `OutlineIcons` and `RoundedIcons` hold each family's glyphs.
   The bare name is the outline style at the 24 px master; `Filled`, `16`, and
   `12` suffixes select the other style and masters, as in `searchFilled16`.
 - `RemixIcons` is the default: every `OutlineIcons` glyph under the same name,
   plus the deprecated 0.1.x aliases.
 - `package:remix_ui_icons/sized.dart` (opt-in) adds `RemixIconSet` and the
-  `OutlineIconSets`, `RoundedIconSets`, and `MonoIconSets` constants, whose
+  `OutlineIconSets` and `RoundedIconSets` constants, whose
   `at(size)` picks the master for a size at runtime.
 - Every constant's documentation shows its drawing and the design contract's
   usage notes. Labels are required per family and master: Warning everywhere,
-  the Mono Star and Rounded Branch at every size, and Outline Help, Branch,
-  and Focus, Rounded Link, and Mono Link and Branch at 12 px. Mono Search
-  carries contextual guidance. `RemixIconEntry` reports them as
+  Rounded Branch at every size, and Outline Help, Branch,
+  and Focus, and Rounded Link at 12 px. `RemixIconEntry` reports them as
   `requiresLabel` and `usage`.
 
 ## 0.1.0

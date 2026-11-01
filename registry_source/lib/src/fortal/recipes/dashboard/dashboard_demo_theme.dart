@@ -92,14 +92,24 @@ class FortalDashboardThemeScope extends InheritedWidget {
 class FortalAccentScope extends StatelessWidget {
   const FortalAccentScope({
     super.key,
-    required this.accent,
+    required FortalAccentColor this.accent,
     required this.child,
   });
 
-  final FortalAccentColor accent;
+  /// Applies the dedicated error red to destructive or negative content.
+  /// Error is a semantic palette, not a selectable accent.
+  const FortalAccentScope.error({super.key, required this.child})
+    : accent = null;
+
+  /// The local accent, or null for the error palette.
+  final FortalAccentColor? accent;
   final Widget child;
 
   @override
-  Widget build(BuildContext context) =>
-      FortalTheme(accent: accent, hasBackground: false, child: child);
+  Widget build(BuildContext context) => FortalTheme(
+    accent: accent,
+    accentPalette: accent == null ? fortalError : null,
+    hasBackground: false,
+    child: child,
+  );
 }

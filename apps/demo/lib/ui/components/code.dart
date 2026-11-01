@@ -61,7 +61,7 @@ BadgeStyler fortalCodeStyle(
   final accent1 = fortalResolveColor(context, FortalTokens.accent1);
   final accent12 = fortalResolveColor(context, FortalTokens.accent12);
   final accentA3 = fortalResolveColor(context, FortalTokens.accentA3);
-  final accentA9 = fortalResolveColor(context, FortalTokens.accentA9);
+  final accentSolid = fortalResolveColor(context, FortalTokens.accentSolid);
   final accentA11 = fortalResolveColor(context, FortalTokens.accentA11);
   final accentContrast = fortalResolveColor(
     context,
@@ -69,7 +69,7 @@ BadgeStyler fortalCodeStyle(
   );
   switch (variant) {
     case .solid:
-      fill = highContrast ? accent12 : accentA9;
+      fill = highContrast ? accent12 : accentSolid;
       foreground = highContrast ? accent1 : accentContrast;
     case .soft:
       fill = accentA3;

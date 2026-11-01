@@ -46,43 +46,52 @@ ProgressStyler _uiProgressBaseStyler(UiProgressSize size) {
   );
 }
 
+// A bare progress bar carries its value in two extents: the whole track
+// (the total) and the filled indicator (the value). The track is edged in
+// controlBorder, which keeps 3:1 on the page and panels, so the total stays
+// readable at 0. The fill keeps 3:1 against those surroundings through its own
+// colour or, for the surface variant, an inset outline in accentThumbRing:
+// seamless on fills that already contrast, a dark ink on bright fills.
+
 ProgressStyler _uiProgressSurfaceStyler(
   UiProgressSize size, {
   required bool highContrast,
 }) {
-  return _uiProgressBaseStyler(size)
+  final styler = _uiProgressBaseStyler(size)
       .trackColor(UiTokens.grayA3())
       .trackEffects(
         RemixBoxEffectsMix.overContent(
-          _uiProgressLayer(
-            shadows: [
-              RemixBoxShadowMix(
-                kind: .inset,
-                color: UiTokens.grayA4(),
-                spreadRadius: 1,
-              ),
-            ],
-          ),
+          _uiProgressInsetRing(UiTokens.controlBorder()),
         ),
       )
       .indicatorColor(
         highContrast ? UiTokens.accent12() : UiTokens.accentTrack(),
       );
+  return highContrast
+      ? styler
+      : styler.indicatorEffects(
+          RemixBoxEffectsMix.overContent(
+            _uiProgressInsetRing(UiTokens.accentThumbRing()),
+          ),
+        );
 }
 
 ProgressStyler _uiProgressSoftStyler(
   UiProgressSize size, {
   required bool highContrast,
 }) {
+  // Step 8 already keeps 3:1 on the page and panels. No accent alpha is
+  // layered over it: alpha steps reconstruct their tint over the page and can
+  // be opaque, which would replace the fill.
   return _uiProgressBaseStyler(size)
       .trackColor(UiTokens.grayA4())
       .track(.foregroundDecoration(BoxDecorationMix(color: UiTokens.whiteA1())))
-      .indicatorColor(highContrast ? UiTokens.accent12() : UiTokens.accent8())
-      .indicator(
-        .foregroundDecoration(
-          BoxDecorationMix(color: highContrast ? null : UiTokens.accentA5()),
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          _uiProgressInsetRing(UiTokens.controlBorder()),
         ),
-      );
+      )
+      .indicatorColor(highContrast ? UiTokens.accent12() : UiTokens.accent8());
 }
 
 ({double height, Radius radius}) _uiProgressMetrics(UiProgressSize size) =>
@@ -94,6 +103,11 @@ ProgressStyler _uiProgressSoftStyler(
       ),
       .size3 => (height: UiTokens.space2(), radius: UiTokens.progressRadius3()),
     };
+
+/// A 1px inset ring that follows the bar's radius.
+RemixBoxEffectLayerMix _uiProgressInsetRing(Color color) => _uiProgressLayer(
+  shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+);
 
 RemixBoxEffectLayerMix _uiProgressLayer({
   List<RemixBoxShadowMix>? shadows,

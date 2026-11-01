@@ -73,10 +73,14 @@ class UiStatCard extends StatelessWidget {
         uiStatTagsStyle(
           children: [
             if (delta case final delta?)
-              UiAccentScope(
-                accent: positive ? .mangue : .caju,
-                child: UiBadge(highContrast: true, label: delta),
-              ),
+              positive
+                  ? UiAccentScope(
+                      accent: .serra,
+                      child: UiBadge(highContrast: true, label: delta),
+                    )
+                  : UiAccentScope.error(
+                      child: UiBadge(highContrast: true, label: delta),
+                    ),
             StyledText(caption, style: dashboardText(.size1, tone: .muted)),
           ],
         ),
@@ -93,18 +97,19 @@ class UiStatCard extends StatelessWidget {
   }
 }
 
-/// Domain status badge rendered with a status-specific Ui accent.
+/// Domain status badge. Its text label carries the status; the color only
+/// reinforces it. Negative statuses use the dedicated error red.
 class UiStatusBadge extends StatelessWidget {
-  const UiStatusBadge._({super.key, required this.label, required this.accent});
+  const UiStatusBadge._({super.key, required this.label, this.accent});
 
   factory UiStatusBadge.order(UiDashboardOrderStatus status, {Key? key}) =>
       UiStatusBadge._(
         key: key,
         label: capitalize(status.name),
         accent: switch (status) {
-          .paid => .mangue,
+          .paid => .serra,
           .pending => .sol,
-          .refunded => .caju,
+          .refunded => null,
           .cancelled => .calcadao,
         },
       );
@@ -116,9 +121,9 @@ class UiStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .active => .mangue,
+      .active => .serra,
       .invited => .ceu,
-      .suspended => .caju,
+      .suspended => null,
     },
   );
 
@@ -128,9 +133,9 @@ class UiStatusBadge extends StatelessWidget {
       key: key,
       label: capitalize(normalized),
       accent: switch (normalized) {
-        'paid' || 'active' || 'fulfilled' || 'ready' => .mangue,
+        'paid' || 'active' || 'fulfilled' || 'ready' => .serra,
         'pending' || 'processing' || 'review' => .sol,
-        'refunded' || 'suspended' => .caju,
+        'refunded' || 'suspended' => null,
         'cancelled' => .calcadao,
         'invited' => .ceu,
         _ => .mar,
@@ -139,13 +144,18 @@ class UiStatusBadge extends StatelessWidget {
   }
 
   final String label;
-  final UiAccentColor accent;
+
+  /// The status accent, or null for the dedicated error red.
+  final UiAccentColor? accent;
 
   @override
-  Widget build(BuildContext context) => UiAccentScope(
-    accent: accent,
-    child: UiBadge(highContrast: true, label: label),
-  );
+  Widget build(BuildContext context) {
+    final badge = UiBadge(highContrast: true, label: label);
+    return switch (accent) {
+      final accent? => UiAccentScope(accent: accent, child: badge),
+      null => UiAccentScope.error(child: badge),
+    };
+  }
 }
 
 /// Compact single-line cell text for a [RemixDataTable] body cell.
@@ -227,7 +237,6 @@ class UiAction {
 class UiActionMenu extends StatelessWidget {
   const UiActionMenu({
     super.key,
-    required this.semanticLabel,
     required this.trigger,
     required this.actions,
     required this.onSelected,
@@ -240,8 +249,7 @@ class UiActionMenu extends StatelessWidget {
     this.width = 180,
   });
 
-  final String semanticLabel;
-  final Widget trigger;
+  final RemixMenuTrigger trigger;
   final List<UiAction> actions;
   final ValueChanged<String> onSelected;
   final OverlayPositionConfig positioning;
@@ -255,10 +263,7 @@ class UiActionMenu extends StatelessWidget {
     return UiMenu<String>(
       size: .size1,
       positioning: positioning,
-      trigger: RemixMenuTrigger.builder(
-        label: semanticLabel,
-        builder: (_, _, _) => trigger,
-      ),
+      trigger: trigger,
       items: [
         for (final action in actions) ...[
           if (action.dividerBefore) const RemixMenuDivider(),
@@ -283,11 +288,17 @@ const uiDataTableActionsPositioning = OverlayPositionConfig(
   sideOffset: 4,
 );
 
-/// Compact kebab trigger shared by data-table actions columns.
-final uiDataTableActionsTrigger = Box(
-  style: BoxStyler().padding(.all(6)),
-  child: StyledIcon(icon: RemixIcons.more, style: IconStyler().size(18)),
-);
+/// Kebab button shared by data-table actions columns.
+RemixMenuTrigger uiDataTableActionsTrigger(String semanticLabel) =>
+    RemixMenuTrigger.control(
+      builder: (_, menu) => UiIconButton.ghost(
+        icon: RemixIcons.more,
+        semanticLabel: semanticLabel,
+        focusNode: menu.focusNode,
+        onPressed: menu.toggle,
+        style: IconButtonStyler().margin(.all(0)).icon(.size(18)),
+      ),
+    );
 
 /// Empty state card used when search or filter queries match no rows.
 class UiEmptyState extends StatelessWidget {

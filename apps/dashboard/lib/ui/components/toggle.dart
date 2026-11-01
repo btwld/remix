@@ -26,8 +26,8 @@ ToggleStyler uiToggleStyle({
       })
       .wrap(uiTouchTarget())
       .onDisabled(
-        ToggleStyler().container(
-          FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
+        ToggleStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
       .merge(style);
@@ -42,7 +42,8 @@ ToggleStyler _uiToggleBaseStyler(UiToggleSize size) {
       .merge(_uiToggleSizeStyler(size));
 }
 
-ToggleStyler _uiToggleFocusStyler() => ToggleStyler().uiFocusRing();
+ToggleStyler _uiToggleFocusStyler() =>
+    ToggleStyler().containerEffects(uiFocusOutline());
 
 ToggleStyler _uiToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()

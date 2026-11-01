@@ -116,8 +116,8 @@ void main() {
 
       expect(_color(hovered.trigger), isNot(_color(idle.trigger)));
       expect(_color(pressed.trigger), isNot(_color(idle.trigger)));
-      expect(focused.container.widgetModifiers, isNotEmpty);
-      expect(focused.trigger.spec.decoration, idle.trigger.spec.decoration);
+      expect(idle.triggerEffects, isNull);
+      expect(focused.triggerEffects?.outline.width, greaterThan(0));
       expect(_color(disabled.trigger), isNot(_color(idle.trigger)));
     });
   });

@@ -1,0 +1,64 @@
+import 'dart:ui' show Color;
+
+import 'tokens.dart';
+
+/// HeroUI's semantic colour axis, shared by chip, badge, avatar, and progress.
+enum {{typePrefix}}Color { defaultColor, accent, success, warning, danger }
+
+/// A fill and the foreground drawn on it.
+typedef {{typePrefix}}ColorPair = ({Color fill, Color foreground});
+
+/// `--<color>` over `--<color>-foreground`: the `primary` compound variants.
+{{typePrefix}}ColorPair {{valuePrefix}}Solid({{typePrefix}}Color color) => switch (color) {
+  .defaultColor => (
+    fill: {{typePrefix}}Tokens.defaultColor(),
+    foreground: {{typePrefix}}Tokens.defaultForeground(),
+  ),
+  .accent => (
+    fill: {{typePrefix}}Tokens.accent(),
+    foreground: {{typePrefix}}Tokens.accentForeground(),
+  ),
+  .success => (
+    fill: {{typePrefix}}Tokens.success(),
+    foreground: {{typePrefix}}Tokens.successForeground(),
+  ),
+  .warning => (
+    fill: {{typePrefix}}Tokens.warning(),
+    foreground: {{typePrefix}}Tokens.warningForeground(),
+  ),
+  .danger => (
+    fill: {{typePrefix}}Tokens.danger(),
+    foreground: {{typePrefix}}Tokens.dangerForeground(),
+  ),
+};
+
+/// `--<color>-soft` over `--<color>-soft-foreground`: the `soft` compound
+/// variants.
+{{typePrefix}}ColorPair {{valuePrefix}}Soft({{typePrefix}}Color color) => switch (color) {
+  .defaultColor => (
+    fill: {{typePrefix}}Tokens.defaultSoft(),
+    foreground: {{typePrefix}}Tokens.defaultSoftForeground(),
+  ),
+  .accent => (
+    fill: {{typePrefix}}Tokens.accentSoft(),
+    foreground: {{typePrefix}}Tokens.accentSoftForeground(),
+  ),
+  .success => (
+    fill: {{typePrefix}}Tokens.successSoft(),
+    foreground: {{typePrefix}}Tokens.successSoftForeground(),
+  ),
+  .warning => (
+    fill: {{typePrefix}}Tokens.warningSoft(),
+    foreground: {{typePrefix}}Tokens.warningSoftForeground(),
+  ),
+  .danger => (
+    fill: {{typePrefix}}Tokens.dangerSoft(),
+    foreground: {{typePrefix}}Tokens.dangerSoftForeground(),
+  ),
+};
+
+/// The label colour `secondary` and `tertiary` keep (`chip.css`, `badge.css`):
+/// `default-foreground` for the default colour, the soft foreground otherwise.
+Color {{valuePrefix}}LabelColor({{typePrefix}}Color color) => color == .defaultColor
+    ? {{typePrefix}}Tokens.defaultForeground()
+    : {{valuePrefix}}Soft(color).foreground;

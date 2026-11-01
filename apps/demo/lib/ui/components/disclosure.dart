@@ -22,14 +22,11 @@ DisclosureStyler fortalDisclosureStyle({
   return (switch (variant) {
     .surface => _fortalDisclosureSurfaceStyler(size),
     .soft => _fortalDisclosureSoftStyler(size),
-  }).merge(style);
+  }).container(BoxStyler().clipBehavior(.none)).merge(style);
 }
 
-// Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, frame, fill, and clipping, while trigger and
-// content stay flat rectangles that simply get cropped to its rounded shape.
-// The frame and divider are foreground borders so edge-to-edge child fills
-// cannot partially cover their antialiased edges.
+// The frame paints above the parts, whose own clips leave focus outlines free
+// to extend outside the container without changing layout.
 DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
   final metrics = _fortalDisclosureMetrics(size);
 
@@ -37,6 +34,8 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
       .trigger(
         BoxStyler()
             .width(.infinity)
+            .borderRadius(.all(metrics.radius))
+            .clipBehavior(.antiAlias)
             .minHeight(FortalTokens.touchTargetMin())
             .alignment(.centerLeft)
             .padding(.all(metrics.padding))
@@ -49,9 +48,28 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
               ),
             ),
       )
+      .onExpanded(
+        DisclosureStyler().trigger(
+          BoxStyler().borderRadius(
+            BorderRadiusMix(
+              topLeft: metrics.radius,
+              topRight: metrics.radius,
+              bottomLeft: Radius.zero,
+              bottomRight: Radius.zero,
+            ),
+          ),
+        ),
+      )
       .content(
         BoxStyler()
             .width(.infinity)
+            .borderRadius(
+              BorderRadiusMix(
+                bottomLeft: metrics.radius,
+                bottomRight: metrics.radius,
+              ),
+            )
+            .clipBehavior(.antiAlias)
             .padding(.all(metrics.padding))
             .wrap(
               _fortalDisclosureTypography(
@@ -87,11 +105,7 @@ DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
       )
       .onHovered(.trigger(.color(FortalTokens.gray2())))
       .onPressed(.trigger(.color(FortalTokens.gray3())))
-      .onFocusVisible(
-        DisclosureStyler().container(
-          BoxStyler().fortalFocusRing(radius: metrics.radius),
-        ),
-      )
+      .onFocusVisible(DisclosureStyler().triggerEffects(fortalFocusOutline()))
       .onDisabled(_fortalDisclosureDisabledStyler());
 }
 
@@ -134,17 +148,13 @@ DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
       )
       .onHovered(.trigger(.color(FortalTokens.accent3())))
       .onPressed(.trigger(.color(FortalTokens.accent4())))
-      .onFocusVisible(
-        DisclosureStyler().container(
-          BoxStyler().fortalFocusRing(radius: metrics.radius),
-        ),
-      )
+      .onFocusVisible(DisclosureStyler().triggerEffects(fortalFocusOutline()))
       .onDisabled(_fortalDisclosureDisabledStyler());
 }
 
 DisclosureStyler _fortalDisclosureDisabledStyler() {
   return DisclosureStyler()
-      .container(BoxStyler().wrap(fortalFocusRingModifier(visible: false)))
+      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .trigger(
         BoxStyler()
             .color(FortalTokens.grayA3())

@@ -1,0 +1,51 @@
+/* Card component styles */
+
+/* Block */
+.card {
+  @apply relative flex flex-col gap-3 overflow-visible p-4;
+  @apply shadow-surface;
+  border-radius: min(32px, var(--radius-3xl));
+}
+
+/* Element - header */
+.card__header {
+  @apply flex flex-col;
+}
+
+/* Element - title */
+.card__title {
+  @apply text-sm leading-6 font-medium text-foreground;
+}
+
+/* Element - description */
+.card__description {
+  @apply text-sm leading-5 text-muted;
+}
+
+/* Element - content */
+.card__content {
+  @apply flex flex-1 flex-col gap-1;
+}
+
+/* Element - footer */
+.card__footer {
+  @apply flex flex-row items-center;
+}
+
+/* Modifier - variant */
+
+.card--transparent {
+  @apply border-none bg-transparent shadow-none;
+}
+
+.card--default {
+  @apply bg-surface;
+}
+
+.card--secondary {
+  @apply bg-surface-secondary;
+}
+
+.card--tertiary {
+  @apply bg-surface-tertiary;
+}

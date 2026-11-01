@@ -1,0 +1,97 @@
+// `DragStartBehavior` and `MaxLengthEnforcement` appear in the generated
+// {{typePrefix}}TextField constructor, so they must be visible from this library even
+// though nothing here references them directly.
+import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'textfield.g.dart';
+
+/// HeroUI field variants: `primary` on the field surface with its shadow,
+/// `secondary` on the default fill.
+enum {{typePrefix}}TextFieldVariant { primary, secondary }
+
+/// HeroUI recipe for [RemixTextField]: label, input, and description or error.
+///
+/// Pass [RemixTextField.error] for the error treatment, and the error message
+/// as `helperText`; validation stays with the app.
+///
+/// [minLines] and [maxLines] reach the field itself and the placeholder's line
+/// budget, which is why they are named here: see [{{valuePrefix}}HintLines].
+@MixWidget(target: RemixTextField.new)
+TextFieldStyler {{valuePrefix}}TextFieldStyle({
+  {{typePrefix}}TextFieldVariant variant = .primary,
+  int? maxLines = 1,
+  int? minLines,
+  TextFieldStyler style = const TextFieldStyler.create(),
+}) {
+  final field = switch (variant) {
+    .primary => {{valuePrefix}}PrimaryFieldFill,
+    .secondary => {{valuePrefix}}SecondaryFieldFill,
+  };
+
+  var result = TextFieldStyler()
+      .layout(FlexBoxStyler().spacing(_fieldGap))
+      .padding(.horizontal(_paddingX))
+      .padding(.vertical(_paddingY))
+      .borderRadius(.all({{typePrefix}}Tokens.radiusField()))
+      .color(field.rest())
+      .text({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldForeground))
+      .hintText(
+        {{valuePrefix}}FieldText(
+          {{typePrefix}}Tokens.fieldPlaceholder,
+          lines: {{valuePrefix}}HintLines(minLines: minLines, maxLines: maxLines),
+        ),
+      )
+      // A browser draws the caret in the text color.
+      .cursorColor({{typePrefix}}Tokens.fieldForeground())
+      .label({{valuePrefix}}LabelText)
+      .helperText({{valuePrefix}}DescriptionText)
+      .onHovered(.color(field.hover()))
+      .onFocused(
+        TextFieldStyler()
+            .color(field.focus())
+            .containerEffects({{valuePrefix}}FocusRing(offset: 0)),
+      )
+      .animate({{typePrefix}}Tokens.smoothMotion);
+
+  if (variant == .primary) {
+    result = result.containerEffects({{valuePrefix}}SurfaceEffects());
+  }
+
+  return result
+      .variant(
+        ContextVariant.widgetState(.error),
+        TextFieldStyler()
+            .color(field.focus())
+            .containerEffects({{valuePrefix}}InvalidRing())
+            .label(.color({{typePrefix}}Tokens.danger()))
+            .helperText({{valuePrefix}}ErrorText)
+            // `.input:hover:not(:focus)` (0,4,0) beats `.input[data-invalid]`
+            // (0,2,0): a hovered invalid field keeps the hover fill.
+            .onHovered(.color(field.hover()))
+            .onFocused(
+              TextFieldStyler()
+                  .color(field.focus())
+                  .containerEffects({{valuePrefix}}InvalidRing(focused: true)),
+            ),
+      )
+      // `status-disabled` dims the input and its label, not the description.
+      .onDisabled(
+        TextFieldStyler()
+            .container(BoxStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
+            .label(TextStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity))),
+      )
+      .merge(style);
+}
+
+/// `.input`: `px-3 py-2`.
+const _paddingX = 12.0;
+const _paddingY = 8.0;
+
+/// `.textfield`: `gap-1` between label, input, and description.
+const _fieldGap = 4.0;

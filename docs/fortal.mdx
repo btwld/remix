@@ -7,7 +7,9 @@ description: An independent, Fortaleza-inspired design system for Remix
 Seven city-inspired palettes, neutral defaults, flat controls, and shared token
 scales give apps a complete starting point without locking away the source.
 
-![A selection of Fortal components and variants](/assets/fortal-catalog.png)
+![Fortal palettes, switch states, and input content in light and dark](/assets/fortal-catalog.png)
+
+[Capture provenance](/assets/fortal-catalog-evidence.json).
 
 This overview covers installation and theming. Use the [Catalog](/fortal/catalog)
 for widget sizes, variants, and defaults, or [Typography](/fortal/typography)
@@ -84,6 +86,12 @@ active theme tokens instead.
 A nested scope updates design tokens for its subtree. When the nested scope
 changes `brightness` or `gray`, it updates `DefaultTextStyle` and `IconTheme` to
 the new `gray12` color while preserving existing font metrics.
+
+Each scope installs a complete token set instead of merging with the scope above
+it. A token override made with `MixScope.inherit`, such as a custom
+`focusRingWidth`, reaches only the widgets between it and the next `FortalTheme`
+below. That nested `FortalTheme` restores the theme's own values, so place the
+override inside the nested scope.
 
 Use `WidgetsApp` for the application host. For an application with routes, put
 `FortalTheme` in `builder`, above the Navigator, so pushed routes and dialogs
@@ -200,7 +208,7 @@ import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
 final style = ButtonStyler()
-  .color(FortalTokens.accent9())
+  .color(FortalTokens.accentSolid())
   .padding(.all(FortalTokens.space4()))
   .borderRadius(.all(FortalTokens.radius3()))
   .label(TextStyler().color(FortalTokens.accentContrast()));
@@ -280,21 +288,38 @@ Both the default accent and the sole gray family are **Calçadão**: basalt and
 limestone neutrals. The page uses neutral step 1 and solid panels use step 2
 in both modes. Choose a named accent with `FortalTheme(accent: .mar, child: child)`.
 
-| Palette | Enum | Seed | Solid foreground |
-| --- | --- | --- | --- |
-| Calçadão | `calcadao` | `#13181D` | Limestone / basalt by mode |
-| Mar | `mar` | `#036F6B` | White or basalt, contrast-fitted |
-| Céu | `ceu` | `#006EBE` | White or basalt, contrast-fitted |
-| Mangue | `mangue` | `#1D7D3E` | White or basalt, contrast-fitted |
-| Sol | `sol` | `#FFCF50` | Basalt |
-| Duna | `duna` | `#E5C79A` | Basalt |
-| Caju | `caju` | `#CB4333` | White or basalt, contrast-fitted |
+| Palette | Enum | Seed | Character | Solid foreground |
+| --- | --- | --- | --- | --- |
+| Calçadão | `calcadao` | `#13181D` | Basalt and limestone neutral | Limestone / basalt by mode |
+| Mar | `mar` | `#036F6B` | Signature sea green | White |
+| Céu | `ceu` | `#1A95D8` | Sky blue | White |
+| Serra | `serra` | `#6F7845` | Earthy olive | White |
+| Sol | `sol` | `#FFCF50` | Sunny yellow | Warm brown |
+| Duna | `duna` | `#E5C79A` | Warm sand | Warm brown |
+| Caju | `caju` | `#E76A32` | Cashew-fruit orange-red | White |
 
 Seeds identify each palette; the generator fits final colors to sRGB and the
 contrast contract. Background, border, and text steps share OKLCH lightness
-stops; seed-led solid steps 9–10 preserve each palette's identity. Transparent
-steps are solved against the neutral page. Their appearance on a different
-background follows ordinary alpha compositing.
+stops, and secondary surfaces carry visible hue. Steps 9–10 are the mark fill
+of selected checkboxes, radios, switch and slider tracks and progress; they
+keep the seed wherever white marks and the page keep 3:1. Labelled fills
+(buttons, solid badges, avatars, menu highlights) use the separate
+`accentSolid`/`accentSolidHover` tokens with `accentContrast`. Most palettes
+carry white labels in both modes on a fill deepened only as far as the label
+needs, and dark solids are no longer lifted toward pastel. Sol and Duna are
+too luminous for white: they keep one sunny or sandy fill with a warm-brown
+label, check and thumb outline. Checks and radio dots read
+`accentIndicatorContrast`, derived from the fill they sit on. Normal selected
+surface-switch thumbs and enabled slider thumbs are white with a thin outline
+that follows the track (or a neutral or warm-brown outline where the track
+needs it), and off switch thumbs are white with a neutral ring. Selected soft switch thumbs keep their
+step-11 fill (step 12 at high contrast); high-contrast surface-switch thumbs
+keep their deliberate step-1 knockout, and disabled thumbs stay muted gray.
+Empty checkboxes, radios, off switch
+tracks and surface fields use a neutral control border at 3:1 or more; soft
+fields and empty soft controls keep an accent-8 ring. Transparent steps are
+solved against the neutral page. Their appearance on a different background
+follows ordinary alpha compositing.
 
 | Steps | Job |
 | --- | --- |
@@ -305,7 +330,12 @@ background follows ordinary alpha compositing.
 | 11–12 | Secondary and primary text |
 
 The `contrast`, `surface`, `indicator`, and `track` roles remain available.
-Error tokens always use Caju, independently of the selected accent.
+Error tokens always use a dedicated red, `fortalError` (`#C92E3B`; installed as
+`<prefix>Error` in `fortal_colors.dart`), independently of the selected accent or
+a custom palette. It is not a selectable accent, so a
+Caju accent stays orange while errors stay red. To give destructive content the
+error red, scope it with `FortalTheme(accentPalette: fortalError, child: child)`
+and keep a text label or icon, because color alone must not carry meaning.
 
 ## Contrast and geometry
 
@@ -347,6 +377,14 @@ when the file lives elsewhere. Import the generated file in the app and pass
 `accentPalette: brand` to its theme. A custom palette supplies both modes and
 inherits through nested scopes; an explicit named `accent` in a nested scope
 selects that built-in palette again.
+
+### Very light custom accents
+
+A near-white seed can blend with the page while retaining readable labels.
+Use a control's `highContrast: true` treatment or an explicit step-8 border
+when a visible boundary matters. See the
+[owned custom-palette policy](https://github.com/btwld/remix/blob/main/registry_source/specs/fortal.md#very-light-custom-accents)
+for the guarantees, limits, and near-white measurements.
 
 ## Owned specification and review
 

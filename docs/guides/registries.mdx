@@ -15,7 +15,7 @@ Six words carry the whole system.
 | --- | --- |
 | **Registry** | A public GitHub repository holding a directory of component source. |
 | **Namespace** | The name your project gives a registry, like `@remix`. Commands and dependencies use it to say which registry they mean. |
-| **Preset** | One design language inside a registry — `vanilla` or `fortal` officially. A project picks exactly one. |
+| **Preset** | One design language inside a registry — `vanilla`, `fortal`, or `heroui` officially. A project picks exactly one. |
 | **Catalog** | The `registry.yaml` for one preset. It lists items. |
 | **Item** | One installable unit: its templates, its dependencies, what it exports. |
 | **Pin** | The exact commit your project reads from, recorded in `remix.yaml`. |
@@ -73,7 +73,9 @@ registries:
     revision: "<full commit sha>"
 ```
 
-Commit `remix.yaml`. There is no separate lockfile.
+Commit `remix.yaml` and, after installation, `remix.ownership.json` with the
+installed source. The ownership record reserves authored and generated targets;
+it does not lock content or hash your edits.
 
 `init` registers the official registry under the namespace `@remix` and makes
 it `defaultRegistry`, so bare names like `add button` install from it. Keep
@@ -92,6 +94,11 @@ dart run remix_cli:remix add button --overwrite # replace just this item
 
 `--overwrite` replaces only the item you name. It never touches a dependency
 you have customized.
+
+All install modes, including `--diff` and `--dry-run`, check target ownership
+before writing or running package tools. Existing files without a recorded
+owner require the [legacy adoption step](#projects-from-an-earlier-prerelease).
+Neither `--overwrite` nor `--adopt` can replace a known different owner.
 
 ## Move to newer source
 
@@ -133,14 +140,45 @@ migrate a pin *from*, so such a project is reinitialized:
 ```shell
 rm remix.yaml
 dart run remix_cli:remix init --prefix Acme --preset vanilla
-dart run remix_cli:remix add button --diff
 ```
 
 Pass the `--prefix`, `--preset` and `--ui-path` the old file recorded; `init`
-writes the new configuration and leaves everything else alone. Your installed
-source and generated adapters are yours and stay where they are, which is why
-the `--diff` on the third line is the part that matters: it is what tells you
-whether the source you own still matches the registry you just pinned.
+writes configuration and preserves installed source and generated adapters.
+For schema 1, the old `default` preset corresponds to `vanilla`.
+
+CLI 0.1.0 and 1.0.0-beta.0 also wrote schema 3 without an ownership record.
+Keep that configuration. In either case, upgrade the project-local CLI, verify
+which registry and preset each installed item came from, then explicitly adopt
+it. Plain `add button --diff` now rejects unknown existing targets, as do
+`--dry-run` and `--overwrite`.
+
+For a Vanilla Button installation, name both Theme and Button because existing
+unknown dependencies must also be requested explicitly:
+
+```shell
+dart run remix_cli:remix add theme button --adopt --diff
+dart run remix_cli:remix add theme button --adopt
+```
+
+The first command compares the pinned templates with your source without
+writing ownership. Review the differences and verify provenance before running
+the second command: `--adopt` is your declaration of ownership, not an automatic
+provenance check. Name every other existing item and dependency you need to
+adopt; Fortal Button also requires `base_button` when present.
+
+Adoption preserves authored edits and records ownership in
+`remix.ownership.json`. It otherwise follows a normal install, including
+installing missing source, resolving dependencies, generating missing adapters,
+and analysis. It cannot be combined with `--overwrite`. Commit the ownership
+record with `remix.yaml` and installed source. Later previews and explicit
+overwrites work without `--adopt`; do not downgrade to a CLI that ignores the
+ownership record.
+
+If provenance is uncertain or presets were mixed, restore a known matching
+configuration, ownership record (if one existed), and source from version
+control, or initialize a clean installation and reapply your edits. Changing
+the prefix, preset, or UI path conflicts with an existing ownership record;
+renaming or deleting source files does not release its reservations.
 
 ## Publish your own registry
 
@@ -359,7 +397,9 @@ There is no persistent offline cache.
 | `Registry dependency cycle: ...` | Items depend on each other in a loop. |
 | `GitHub rate limit exceeded` | Unauthenticated GitHub API limits are per IP; shared CI runners hit them. Retry after the reset. |
 | `Registry constraints for <pkg> do not intersect.` | Two items in one graph require incompatible versions of the same package. |
-| `<item> is partially installed` | Some of an item's files exist and some do not. Use `--diff` or `--overwrite`. |
+| `<item> is partially installed` | Some of an item's files exist and some do not. For a recorded owner, use `--diff` or `--overwrite`. For unknown legacy source, restore the incomplete item from version control before adoption. |
+| `<path> has unknown registry ownership` | Verify provenance, then explicitly name the item and its existing dependencies with `--adopt --diff`, followed by `--adopt`. See [legacy adoption](#projects-from-an-earlier-prerelease). |
+| `remix.ownership.json does not match the project prefix, preset, and UI path` | Restore the matching configuration and source. Renaming or deleting installed files does not change the recorded context. |
 
 ## Reference
 

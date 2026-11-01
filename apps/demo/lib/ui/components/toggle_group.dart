@@ -64,20 +64,19 @@ ToggleGroupStyler fortalToggleGroupStyle({
         .onPressed(ToggleGroupItemStyler().color(FortalTokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
-              .container(
-                FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
-              )
               .color(selectedColor)
               .labelColor(selectedForeground)
               .iconColor(selectedForeground)
               .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
-        .onFocusVisible(ToggleGroupItemStyler().fortalFocusRing())
+        .onFocusVisible(
+          ToggleGroupItemStyler().containerEffects(fortalFocusOutline()),
+        )
         .onDisabled(
           ToggleGroupItemStyler()
-              .container(
-                FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+              .containerEffects(
+                RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
               )
               .color(FortalTokens.grayA3())
               .labelColor(FortalTokens.gray8())

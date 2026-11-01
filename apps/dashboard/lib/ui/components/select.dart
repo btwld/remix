@@ -16,6 +16,10 @@ enum UiSelectVariant { surface, soft, ghost }
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
+///
+/// The panel is at least as wide as its trigger. A [style] that gives the
+/// content a `maxWidth` below the trigger's width must also set `minWidth`,
+/// which replaces the minimum, because a minimum above a maximum is invalid.
 @MixWidget(target: RemixSelect.new)
 SelectStyler uiSelectStyle({
   UiSelectVariant variant = .surface,
@@ -201,6 +205,8 @@ SelectContentStyler _uiSelectContentStyler(UiSelectSize size) {
     .size2 || .size3 => UiTokens.radius4(),
   };
   return SelectContentStyler()
+      // select.css:45: `min-width: var(--radix-select-trigger-width)`.
+      .minWidth(remixAnchorWidth())
       .padding(
         .all(switch (size) {
           .size1 => UiTokens.space1(),
@@ -238,7 +244,7 @@ SelectMenuItemStyler _uiSelectItemStyler(
   final highlighted = switch (variant) {
     .surface || .ghost =>
       SelectMenuItemStyler()
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accent9())
+          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
           .text(
             TextStyler().color(
               highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),

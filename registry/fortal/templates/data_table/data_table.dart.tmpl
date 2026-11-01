@@ -47,10 +47,19 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
             .color({{typePrefix}}Tokens.gray11()),
       )
       .headerCell(
-        _{{valuePrefix}}DataTableCell(metrics).onFocusVisible(
-          // Keep the common outline inside the padding of clipped tables.
-          BoxStyler().{{valuePrefix}}FocusRing(inset: {{typePrefix}}Tokens.space2()),
-        ),
+        _{{valuePrefix}}DataTableCell(metrics)
+            // Keep the painter mounted so focusing a custom header preserves
+            // its element and state.
+            .wrap(
+              {{valuePrefix}}FocusRingModifier(
+                visible: false,
+                inset: {{typePrefix}}Tokens.space2(),
+              ),
+            )
+            .onFocusVisible(
+              // Keep the common outline inside the padding of clipped tables.
+              BoxStyler().{{valuePrefix}}FocusRing(inset: {{typePrefix}}Tokens.space2()),
+            ),
       )
       .bodyCell(_{{valuePrefix}}DataTableCell(metrics))
       .selectionCell(BoxStyler().alignment(Alignment.center))

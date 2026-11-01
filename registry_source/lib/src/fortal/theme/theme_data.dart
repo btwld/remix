@@ -1,5 +1,7 @@
+import 'dart:collection' show UnmodifiableListView;
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
@@ -9,8 +11,9 @@ import 'palette.dart';
 import 'theme_scope.dart' show FortalTheme;
 import 'tokens.dart';
 
-/// Fortal palettes, named for the landscapes and coastal materials.
-enum FortalAccentColor { calcadao, mar, ceu, mangue, sol, duna, caju }
+/// Fortal palettes, named for the landscapes and coastal materials. Error
+/// roles use a dedicated red palette that is not a selectable accent.
+enum FortalAccentColor { calcadao, mar, ceu, serra, sol, duna, caju }
 
 /// The neutral palette. The enum leaves room for future neutral families.
 enum FortalGrayColor { calcadao }
@@ -238,6 +241,10 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
   final tokens = resolveFortalTokens(theme);
   final scaling = theme.scaling.factor;
   final shadows = buildFortalShadows(isDark: theme.isDark, colors: tokens);
+  // Error roles never follow the accent or a custom palette.
+  final error = theme.isDark
+      ? colors.fortalError.dark.scale
+      : colors.fortalError.light.scale;
 
   final colorTokens = {
     // Role and functional tokens
@@ -252,30 +259,18 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
         ? tokens.colorPanelSolid
         : tokens.colorPanelTranslucent,
     FortalTokens.colorOverlay: tokens.colorOverlay,
+    FortalTokens.controlBorder: tokens.controlBorder,
+    FortalTokens.accentThumbRing: tokens.accentThumbRing,
     FortalTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
-    FortalTokens.error3: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(3),
-    FortalTokens.error7: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(7),
-    FortalTokens.error8: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(8),
-    FortalTokens.error9: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(9),
-    FortalTokens.error11: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(11),
-    FortalTokens.error12: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .step(12),
-    FortalTokens.errorA7: (theme.isDark ? colors.caju.dark : colors.caju.light)
-        .scale
-        .alphaStep(7),
+    FortalTokens.error3: error.step(3),
+    FortalTokens.error7: error.step(7),
+    FortalTokens.error8: error.step(8),
+    FortalTokens.error9: error.step(9),
+    FortalTokens.error11: error.step(11),
+    FortalTokens.error12: error.step(12),
+    FortalTokens.errorA7: error.alphaStep(7),
     ..._accentColorTokens(tokens),
     // Gray steps
     FortalTokens.gray1: tokens.gray.scale.step(1),
@@ -586,7 +581,31 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.skeletonPulseDuration: const Duration(milliseconds: 1000),
   };
 
-  return allTokens;
+  return {
+    for (final MapEntry(:key, :value) in allTokens.entries)
+      key: switch (value) {
+        List<RemixBoxShadow>() => _ValueList(value),
+        List<BoxShadow>() => _ValueList(value),
+        _ => value,
+      },
+  };
+}
+
+/// An unmodifiable list that compares by value.
+///
+/// [MixScope] decides whether to notify token readers by comparing the old and
+/// new token maps value by value, and a plain [List] equals only itself. The
+/// shadow tokens are lists, so without this every rebuild of an unchanged
+/// theme would restyle every widget that reads a Fortal token.
+class _ValueList<E> extends UnmodifiableListView<E> {
+  _ValueList(super.source);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _ValueList<E> && listEquals(this, other);
+
+  @override
+  int get hashCode => Object.hashAll(this);
 }
 
 TextStyle _avatarFallbackText({
@@ -670,6 +689,9 @@ Map<ColorToken, Color> _accentColorTokens(FortalThemeColors tokens) {
     FortalTokens.accentIndicator: tokens.accent.indicator,
     FortalTokens.accentTrack: tokens.accent.track,
     FortalTokens.accentContrast: tokens.accent.contrast,
+    FortalTokens.accentSolid: tokens.accent.solid,
+    FortalTokens.accentSolidHover: tokens.accent.solidHover,
+    FortalTokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
     FortalTokens.focus8: tokens.focus8,
     FortalTokens.focusA5: tokens.focusA5,
     FortalTokens.focusA8: tokens.focusA8,

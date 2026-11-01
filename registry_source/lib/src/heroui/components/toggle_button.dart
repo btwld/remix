@@ -1,0 +1,154 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'toggle_button.g.dart';
+
+/// HeroUI toggle button variants, with the `--toggle-button-bg`, `-bg-hover`,
+/// and `-fg` tokens of each. `defaultToggle` is the `default` variant, on the
+/// default fill; `ghost` is transparent until hovered. A null [fill] is
+/// transparent.
+enum HeroUiToggleButtonVariant {
+  defaultToggle(
+    fill: HeroUiTokens.defaultColor,
+    hover: HeroUiTokens.defaultHover,
+    foreground: HeroUiTokens.foreground,
+  ),
+  ghost(
+    hover: HeroUiTokens.defaultColor,
+    foreground: HeroUiTokens.defaultForeground,
+  );
+
+  const HeroUiToggleButtonVariant({
+    this.fill,
+    required this.hover,
+    required this.foreground,
+  });
+
+  final ColorToken? fill;
+  final ColorToken hover;
+  final ColorToken foreground;
+}
+
+/// HeroUI toggle button sizes, with the `.toggle-button` and `--sm`/`--lg`
+/// metrics of each. Heights step down from `md` (768px), icons from `sm`
+/// (640px).
+enum HeroUiToggleButtonSize {
+  // `h-9 px-3 md:h-8`, icons `size-4`, `scale(0.98)` while pressed.
+  sm(
+    height: (mobile: 36, desktop: 32),
+    paddingX: 12,
+    text: HeroUiTokens.textSm,
+    icon: (mobile: 16, desktop: 16),
+    pressedScale: 0.98,
+  ),
+  // `h-10 px-4 md:h-9`, icons `size-5 sm:size-4`, `scale(0.97)`.
+  md(
+    height: (mobile: 40, desktop: 36),
+    paddingX: 16,
+    text: HeroUiTokens.textSm,
+    icon: (mobile: 20, desktop: 16),
+    pressedScale: 0.97,
+  ),
+  // `h-11 px-4 text-base md:h-10`, icons as `md`, `scale(0.96)`.
+  lg(
+    height: (mobile: 44, desktop: 40),
+    paddingX: 16,
+    text: HeroUiTokens.textBase,
+    icon: (mobile: 20, desktop: 16),
+    pressedScale: 0.96,
+  );
+
+  const HeroUiToggleButtonSize({
+    required this.height,
+    required this.paddingX,
+    required this.text,
+    required this.icon,
+    required this.pressedScale,
+  });
+
+  final HeroUiResponsive height;
+  final double paddingX;
+  final TextStyleToken text;
+  final HeroUiResponsive icon;
+  final double pressedScale;
+}
+
+/// HeroUI recipe for [RemixToggle].
+///
+/// Sizes are mobile-first, as in the CSS: heights step down at the `md`
+/// breakpoint and icons at `sm`. [iconOnly] makes the button square, for a
+/// toggle with an icon and no label.
+///
+/// The pressed scale shares the 100ms fill motion; upstream eases `transform`
+/// over 250ms.
+@MixWidget(target: RemixToggle.new)
+ToggleStyler heroUiToggleButtonStyle({
+  HeroUiToggleButtonVariant variant = .defaultToggle,
+  HeroUiToggleButtonSize size = .md,
+  bool iconOnly = false,
+  ToggleStyler style = const ToggleStyler.create(),
+}) {
+  final fill = variant.fill?.call() ?? HeroUiTokens.transparent;
+  final hover = variant.hover();
+  final foreground = variant.foreground();
+
+  var result =
+      ToggleStyler(
+            container: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .mainAxisAlignment(.center)
+                .spacing(heroUiToggleButtonGap),
+            label: TextStyler()
+                .style(size.text.mix())
+                .fontWeight(.w500)
+                .color(foreground)
+                .softWrap(false)
+                .maxLines(1)
+                .overflow(TextOverflow.ellipsis),
+            icon: IconStyler().size(size.icon.mobile).color(foreground),
+          )
+          .height(size.height.mobile)
+          .borderRadius(.all(HeroUiTokens.radius3xl()))
+          .color(fill)
+          .onBreakpoint(
+            const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+            ToggleStyler().icon(IconStyler().size(size.icon.desktop)),
+          )
+          .onBreakpoint(
+            const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
+            ToggleStyler().height(size.height.desktop),
+          );
+
+  // `p-0 w-10 md:w-9` square the icon-only button.
+  result = iconOnly
+      ? result
+            .width(size.height.mobile)
+            .onBreakpoint(
+              const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
+              ToggleStyler().width(size.height.desktop),
+            )
+      : result.padding(.horizontal(size.paddingX));
+
+  return result
+      .onHovered(ToggleStyler().color(hover))
+      .onPressed(ToggleStyler().color(hover).scale(size.pressedScale))
+      .onSelected(
+        ToggleStyler()
+            .color(HeroUiTokens.accentSoft())
+            .labelColor(HeroUiTokens.accentSoftForeground())
+            .iconColor(HeroUiTokens.accentSoftForeground())
+            .onHovered(ToggleStyler().color(HeroUiTokens.accentSoftHover()))
+            .onPressed(ToggleStyler().color(HeroUiTokens.accentSoftHover())),
+      )
+      .onFocusVisible(ToggleStyler().containerEffects(heroUiFocusRing()))
+      .onDisabled(ToggleStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))
+      .animate(HeroUiTokens.fillMotion)
+      .merge(style);
+}
+
+/// `.toggle-button`: `gap-2`, between an icon and its label. Shared with
+/// `heroUiToggleButtonGroupStyle`.
+const heroUiToggleButtonGap = 8.0;

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:remix_cli/src/installer.dart';
+import 'package:remix_cli/src/icon_registry.dart';
 import 'package:remix_cli/src/registry_reader.dart';
 import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/process_runner.dart';
@@ -21,6 +22,21 @@ final Version registryRemixFloor = _floorOf(registryRemixConstraint);
 /// The same, for the `mix_chart` release the `chart` item is built against.
 final String registryMixChartConstraint = _readRegistryConstraint('mix_chart');
 final Version registryMixChartFloor = _floorOf(registryMixChartConstraint);
+
+/// Icon floors and fallbacks follow the catalog under test, before and after
+/// the schema-2 migration. A CLI release can read both distributions.
+final _registryIcons = IconRegistry.parse(
+  File('${findCheckoutRegistry().path}/icons.yaml').readAsStringSync(),
+);
+final String registryRemixIconsConstraint = _registryIcons
+    .library(defaultIconLibrary)
+    .dependencies['remix_ui_icons']!
+    .toString();
+final Version registryRemixIconsFloor = _floorOf(registryRemixIconsConstraint);
+final bool _registryUsesLucideFallback = _registryIcons.icons.keys.any(
+  (icon) =>
+      _registryIcons.resolve(icon, defaultIconLibrary).library == 'lucide',
+);
 
 Version _floorOf(String constraint) =>
     (VersionConstraint.parse(constraint) as VersionRange).min!;
@@ -79,13 +95,13 @@ void writeRequiredPubspec(
   String buildRunner = '^2.10.1',
   String mixGenerator = '^2.2.0-beta.3',
 }) {
-  // The official registry renders the icons remix_ui_icons does not draw from
-  // Lucide, so a project on Remix icons declares lucide_flutter too.
-  final lucide = lucideFlutter ?? (remixUiIcons == null ? null : '^1.47.0');
+  final lucide =
+      lucideFlutter ??
+      (remixUiIcons != null && _registryUsesLucideFallback ? '^1.47.0' : null);
+  final lucideDependency = lucide == null ? '' : '  lucide_flutter: $lucide\n';
   final remixUiIconsDependency = remixUiIcons == null
       ? ''
       : '  remix_ui_icons: $remixUiIcons\n';
-  final lucideDependency = lucide == null ? '' : '  lucide_flutter: $lucide\n';
   final remixUiFontsDependency = remixUiFonts == null
       ? ''
       : '  remix_ui_fonts: $remixUiFonts\n';
@@ -115,12 +131,15 @@ void writeRequiredLock(
   String buildRunner = '2.10.1',
   String mixGenerator = '2.2.0-beta.3',
 }) {
-  final lucide = lucideFlutter ?? (remixUiIcons == null ? null : '1.47.0');
-  final remixUiIconsPackage =
-      (remixUiIcons == null
-          ? ''
-          : '  remix_ui_icons:\n    version: "$remixUiIcons"\n') +
-      (lucide == null ? '' : '  lucide_flutter:\n    version: "$lucide"\n');
+  final lucide =
+      lucideFlutter ??
+      (remixUiIcons != null && _registryUsesLucideFallback ? '1.47.0' : null);
+  final lucidePackage = lucide == null
+      ? ''
+      : '  lucide_flutter:\n    version: "$lucide"\n';
+  final remixUiIconsPackage = remixUiIcons == null
+      ? ''
+      : '  remix_ui_icons:\n    version: "$remixUiIcons"\n';
   // The Vanilla theme sets its type in Geist, so a Vanilla install locks it.
   final remixUiFontsPackage = remixUiFonts == null
       ? ''
@@ -133,7 +152,7 @@ void writeRequiredLock(
     version: "${remix ?? registryRemixFloor}"
   mix_annotations:
     version: "$mixAnnotations"
-$mixChartPackage$remixUiIconsPackage${remixUiFontsPackage}  build_runner:
+$mixChartPackage$remixUiIconsPackage$lucidePackage${remixUiFontsPackage}  build_runner:
     version: "$buildRunner"
   mix_generator:
     version: "$mixGenerator"

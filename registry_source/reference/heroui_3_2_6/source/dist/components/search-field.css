@@ -1,0 +1,186 @@
+/* Search field styles */
+.search-field {
+  @apply flex flex-col gap-1;
+
+  &[data-invalid="true"],
+  &[aria-invalid="true"] {
+    [data-slot="description"] {
+      @apply hidden;
+    }
+  }
+
+  [data-slot="label"] {
+    @apply w-fit;
+  }
+
+  &[data-empty="true"] {
+    [data-slot="search-field-clear-button"] {
+      @apply pointer-events-none opacity-0;
+    }
+  }
+}
+
+.search-field__group {
+  @apply relative inline-flex h-9 items-center overflow-hidden rounded-field border bg-field text-sm text-field-foreground shadow-field outline-none;
+  border-width: var(--border-width-field);
+  border-color: var(--field-border);
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    background-color 150ms var(--ease-smooth),
+    border-color 150ms var(--ease-smooth),
+    box-shadow 150ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  /* Hover state */
+  @media (hover: hover) {
+    &:hover:not(:focus-within),
+    &[data-hovered="true"]:not([data-focus-within="true"]) {
+      @apply bg-field-hover;
+      border-color: var(--field-border-hover);
+    }
+  }
+
+  /* Focus within state */
+  &[data-focus-within="true"],
+  &:focus-within {
+    @apply status-focused-field;
+  }
+
+  /* Invalid state */
+  &[data-invalid="true"] {
+    @apply status-invalid-field;
+    background-color: var(--field-focus);
+    border-color: var(--color-field-border-invalid);
+  }
+
+  /* Disabled state */
+  &[data-disabled="true"],
+  &[aria-disabled="true"] {
+    @apply status-disabled;
+  }
+
+  /**
+   * Browser autofill state.
+   * The user-agent paints `:-webkit-autofill`/`:autofill` on the inner <input>
+   * only. Because the input has its border-radius stripped on whichever side
+   * touches the search icon or clear button, the autofill highlight ends up
+   * as a sharp-cornered rectangle and the sibling slots receive no highlight.
+   * Lift the highlight onto the group so the rounded shell + icon + clear
+   * button all share it.
+   */
+  &:has([data-slot="search-field-input"]:-webkit-autofill),
+  &:has([data-slot="search-field-input"]:autofill) {
+    background-color: var(--field-focus);
+    border-color: var(--field-border-focus);
+  }
+}
+
+.search-field__input {
+  @apply flex-1 rounded-none border-0 bg-transparent px-3 py-2 text-base shadow-none outline-none sm:text-sm;
+
+  /* Hide browser default search clear button */
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Remove border radius on left side when search icon is present */
+  .search-field__group:has([data-slot="search-field-search-icon"]) & {
+    @apply rounded-s-none ps-2;
+  }
+
+  /* Remove border radius on right side when clear button is present */
+  .search-field__group:has([slot="clear"]) & {
+    @apply rounded-e-none pe-2;
+  }
+
+  /* Focus state - handled by group */
+  &:focus,
+  &:focus-visible {
+    @apply outline-none;
+  }
+
+  /**
+   * Neutralize the browser's per-input autofill paint so the inner <input>
+   * doesn't draw a sharp-cornered yellow rectangle. The unified highlight
+   * is applied to `.search-field__group` above. Preserve the autofilled
+   * text and caret colors, and pin the background-color transition so the
+   * inset box-shadow trick doesn't flicker on state changes.
+   */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active,
+  &:autofill {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    box-shadow: 0 0 0 1000px transparent inset;
+    -webkit-text-fill-color: var(--field-foreground);
+    caret-color: var(--field-foreground);
+    transition: background-color 9999s ease-in-out 0s;
+  }
+}
+
+.search-field__search-icon {
+  @apply pointer-events-none shrink-0 text-field-placeholder;
+  @apply ms-3 me-0 size-4;
+}
+
+.search-field__clear-button {
+  @apply me-2 size-5 shrink-0;
+
+  /* Overrides close button default icon size from 16px to 12px */
+  [data-slot="close-button-icon"] {
+    @apply size-3;
+  }
+}
+
+/* Variant property definitions */
+.search-field--primary {
+  /* Default styles */
+}
+
+.search-field--secondary .search-field__group {
+  @apply shadow-none;
+  background-color: var(--search-field-group-bg);
+
+  --search-field-group-bg: var(--default);
+  --search-field-group-bg-hover: var(--default-hover);
+  --search-field-group-bg-focus: var(--default);
+
+  @media (hover: hover) {
+    &:hover:not(:focus-within),
+    &[data-hovered="true"]:not([data-focus-within="true"]) {
+      background-color: var(--search-field-group-bg-hover);
+    }
+  }
+
+  &:focus-within,
+  &[data-focus-within="true"] {
+    background-color: var(--search-field-group-bg-focus);
+  }
+
+  /* Invalid state */
+  &[data-invalid="true"] {
+    @apply status-invalid-field;
+    border-color: var(--color-field-border-invalid);
+    background-color: var(--search-field-group-bg-focus);
+  }
+
+  [data-slot="search-field-input"] {
+    @apply bg-transparent;
+  }
+}
+
+/* Full width modifier */
+.search-field--full-width {
+  @apply w-full;
+}
+
+.search-field__group--full-width {
+  @apply w-full;
+}

@@ -35,6 +35,7 @@ icons:
   check: {remix: check, lucide: check}
   checkCircled: {lucide: circleCheck, fallback: lucide}
   chevronDown: {remix: chevronDown, lucide: chevronDown}
+  chevronRight: {remix: chevronRight, lucide: chevronRight}
   chevronUp: {remix: chevronUp, lucide: chevronUp}
   circle: {lucide: circle, fallback: lucide}
   circleBackslash: {lucide: ban, fallback: lucide}

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -31,9 +33,20 @@ class FortalThemePanel extends StatelessWidget {
       ),
     );
 
+    // A swatch ring reaches its offset plus its width past the swatch. The
+    // hosting scroll views clip at the panel's edge, so the panel insets its
+    // content by that much and grows by the same amount to stay 360 wide.
+    final ringReach = math.max(
+      0.0,
+      MixScope.tokenOf(FortalTokens.focusRingOffset, context) +
+          MixScope.tokenOf(FortalTokens.focusRingWidth, context),
+    );
+
     return Box(
       key: const ValueKey('theme-panel'),
-      style: BoxStyler().width(360),
+      style: BoxStyler()
+          .width(360 + 2 * ringReach)
+          .padding(.horizontal(ringReach)),
       child: ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(18),
         children: [
@@ -99,7 +112,8 @@ class FortalThemePanel extends StatelessWidget {
                 style: BoxStyler()
                     .width(28)
                     .height(28)
-                    .color(FortalTokens.accent9())
+                    // A swatch uses the palette's mark fill and selected-mark ink.
+                    .color(FortalTokens.accentIndicator())
                     .borderRadius(.all(FortalTokens.radius3())),
               ),
             ],
@@ -177,12 +191,6 @@ class _AccentSwatch extends StatelessWidget {
     required this.onPressed,
   });
 
-  static final _ring = ToggleStyler().border(
-    .color(FortalTokens.focus8())
-        .width(FortalTokens.focusRingWidth())
-        .strokeAlign(BorderSide.strokeAlignOutside),
-  );
-
   static final _style =
       ToggleStyler(
             container: FlexBoxStyler()
@@ -192,30 +200,47 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          .color(FortalTokens.accent9())
+          // A swatch uses the palette's mark fill and selected-mark ink.
+          .color(FortalTokens.accentIndicator())
           .iconColor(const Color(0x00000000))
           .onHovered(ToggleStyler().color(FortalTokens.accent10()))
-          .onPressed(ToggleStyler().color(FortalTokens.accent10()))
-          .onSelected(
-            ToggleStyler()
-                .iconColor(FortalTokens.accentContrast())
-                .merge(_ring),
-          )
-          .onFocusVisible(_ring);
+          .onPressed(ToggleStyler().color(FortalTokens.accent10()));
 
   final FortalAccentColor accent;
   final bool selected;
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => FortalAccentScope(
-    accent: accent,
-    child: RemixToggle(
-      selected: selected,
-      onChanged: (_) => onPressed(),
-      icon: RemixIcons.check,
-      semanticLabel: '${enumLabel(accent)} accent',
-      style: _style,
-    ),
-  );
+  Widget build(BuildContext context) {
+    // The ring belongs to the panel's theme: gray-12 once selected, focus-8
+    // while focused, taking precedence over selection like shared controls.
+    // Resolve outside the accent scope so focus follows the panel's theme.
+    final width = MixScope.tokenOf(FortalTokens.focusRingWidth, context);
+    final offset = MixScope.tokenOf(FortalTokens.focusRingOffset, context);
+    ToggleStyler ring(ColorToken color) => ToggleStyler().containerEffects(
+      RemixBoxEffectsMix.create(
+        outline: Prop.value(
+          BorderSide(color: MixScope.tokenOf(color, context), width: width),
+        ),
+        outlineOffset: Prop.value(offset),
+      ),
+    );
+
+    return FortalAccentScope(
+      accent: accent,
+      child: RemixToggle(
+        selected: selected,
+        onChanged: (_) => onPressed(),
+        icon: RemixIcons.check,
+        semanticLabel: '${enumLabel(accent)} accent',
+        style: _style
+            .onSelected(
+              ToggleStyler()
+                  .iconColor(FortalTokens.accentIndicatorContrast())
+                  .merge(ring(FortalTokens.gray12)),
+            )
+            .onFocusVisible(ring(FortalTokens.focus8)),
+      ),
+    );
+  }
 }
