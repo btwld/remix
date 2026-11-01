@@ -264,6 +264,59 @@ void main() {
         });
       }
 
+      testWidgets(
+        'keeps a loading announcement separate from the button name',
+        (tester) async {
+          final handle = tester.ensureSemantics();
+          final controller = MenuController();
+
+          await tester.pumpWidget(
+            _buildTestApp(
+              buildMenu(
+                controller,
+                (toggle) => Stack(
+                  children: [
+                    NakedButton(
+                      enabled: false,
+                      semanticLabel: 'Account actions',
+                      child: const SizedBox(width: 160, height: 40),
+                    ),
+                    Semantics(
+                      liveRegion: true,
+                      label: 'Account actions, loading',
+                      child: const SizedBox.square(dimension: 1),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+
+          debugPrint(semanticsRootOf(tester).toStringDeep());
+          expect(find.semantics.byLabel('Account actions'), findsOne);
+          expect(find.semantics.byLabel('Account actions, loading'), findsOne);
+          final button = find.semantics
+              .byLabel('Account actions')
+              .evaluate()
+              .single;
+          final loading = find.semantics
+              .byLabel('Account actions, loading')
+              .evaluate()
+              .single;
+          expect(button.isMergedIntoParent, isFalse);
+          expect(loading.isMergedIntoParent, isFalse);
+          final data = button.getSemanticsData();
+          expect(data.flagsCollection.isButton, isTrue);
+          expect(data.flagsCollection.isLiveRegion, isFalse);
+          expect(data.flagsCollection.isExpanded, Tristate.isFalse);
+          expect(
+            loading.getSemanticsData().flagsCollection.isLiveRegion,
+            isTrue,
+          );
+          handle.dispose();
+        },
+      );
+
       testWidgets('a non-interactive child is not exposed as a button', (
         tester,
       ) async {

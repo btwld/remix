@@ -94,4 +94,90 @@ void main() {
       },
     );
   }
+
+  testWidgets('loading announcements stay attached across trigger updates', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final menu = MenuController();
+    final loading = ValueNotifier(true);
+    addTearDown(loading.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: NakedMenu<String>(
+            controller: menu,
+            openOnTap: false,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: loading,
+              builder: (context, isLoading, child) => Stack(
+                children: [
+                  NakedButton(
+                    enabled: !isLoading,
+                    onPressed: menu.open,
+                    semanticLabel: 'Account actions',
+                    child: const SizedBox(width: 160, height: 40),
+                  ),
+                  if (isLoading)
+                    Semantics(
+                      liveRegion: true,
+                      label: 'Account actions, loading',
+                      child: const SizedBox.square(dimension: 1),
+                    ),
+                ],
+              ),
+            ),
+            overlayBuilder: (context, info) =>
+                const NakedMenuItem<String>(value: 'item', child: Text('Item')),
+          ),
+        ),
+      ),
+    );
+
+    for (final isLoading in [true, false, true]) {
+      loading.value = isLoading;
+      await tester.pump();
+      final button = find.semantics
+          .byLabel('Account actions')
+          .evaluate()
+          .single;
+      expect(button.isMergedIntoParent, isFalse);
+      expect(button.getSemanticsData().flagsCollection.isLiveRegion, isFalse);
+      final announcements = find.semantics.byLabel('Account actions, loading');
+      expect(announcements, isLoading ? findsOne : findsNothing);
+      if (isLoading) {
+        expect(announcements.evaluate().single.isMergedIntoParent, isFalse);
+      }
+      expect(binding.detachedNodes, isEmpty);
+    }
+
+    menu.open();
+    await tester.pumpAndSettle();
+    expect(
+      find.semantics
+          .byLabel('Account actions')
+          .evaluate()
+          .single
+          .getSemanticsData()
+          .flagsCollection
+          .isExpanded,
+      Tristate.isTrue,
+    );
+    expect(binding.detachedNodes, isEmpty);
+    menu.close();
+    await tester.pumpAndSettle();
+    expect(
+      find.semantics
+          .byLabel('Account actions')
+          .evaluate()
+          .single
+          .getSemanticsData()
+          .flagsCollection
+          .isExpanded,
+      Tristate.isFalse,
+    );
+    expect(binding.detachedNodes, isEmpty);
+    handle.dispose();
+  });
 }
