@@ -1,7 +1,17 @@
-## 1.3.2
+## 1.4.0
+
+### Features
+
+- Add `OverlayPositionConfig.minimumAvailableHeight`, a configurable policy
+  for height-constrained top/bottom panels with collision avoidance. It defaults
+  to 48 logical pixels for a typical interactive row; adjust it for content and
+  padding, or set zero for strict side-capping even at zero headroom.
 
 ### Fixes
 
+- Keep constrained overlays usable when an anchor leaves too little room above
+  or below it. Collision positioning may overlap the anchor below the configured
+  threshold; the fallback still respects collision padding.
 - Keep live loading announcements separate from a caller-owned menu trigger's
   accessible name, while preserving its expanded state.
 

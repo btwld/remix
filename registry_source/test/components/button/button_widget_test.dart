@@ -121,7 +121,16 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          tester.getSize(find.byType(RowBox)).height,
+          tester
+              .getSize(
+                find
+                    .descendant(
+                      of: find.byType(FortalButton),
+                      matching: find.byType(StyleSpecBuilder<BoxSpec>),
+                    )
+                    .first,
+              )
+              .height,
           entry.value,
           reason: entry.key.name,
         );

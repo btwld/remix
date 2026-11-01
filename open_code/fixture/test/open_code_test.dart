@@ -4800,6 +4800,7 @@ void main() {
 
       await tester.tap(find.text('Choose'));
       await tester.pumpAndSettle();
+      expect(find.text('Pro').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Pro'));
       await tester.pumpAndSettle();
 

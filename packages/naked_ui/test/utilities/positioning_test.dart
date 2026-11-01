@@ -13,6 +13,21 @@ void main() {
       expect(config.alignmentOffset, 0);
       expect(config.collisionPadding, EdgeInsets.zero);
       expect(config.avoidCollisions, isTrue);
+      expect(config.minimumAvailableHeight, 48);
+    });
+
+    test('rejects negative and non-finite usable-height thresholds', () {
+      for (final invalid in [
+        -1.0,
+        double.negativeInfinity,
+        double.infinity,
+        double.nan,
+      ]) {
+        expect(
+          () => OverlayPositionConfig(minimumAvailableHeight: invalid),
+          throwsAssertionError,
+        );
+      }
     });
 
     test('supports all placement controls and value equality', () {
@@ -23,6 +38,7 @@ void main() {
         alignmentOffset: -4,
         collisionPadding: EdgeInsets.all(12),
         avoidCollisions: false,
+        minimumAvailableHeight: 24,
       );
       const second = OverlayPositionConfig(
         side: OverlaySide.left,
@@ -31,10 +47,15 @@ void main() {
         alignmentOffset: -4,
         collisionPadding: EdgeInsets.all(12),
         avoidCollisions: false,
+        minimumAvailableHeight: 24,
       );
 
       expect(first, second);
       expect(first.hashCode, second.hashCode);
+      expect(
+        const OverlayPositionConfig(minimumAvailableHeight: 24),
+        isNot(const OverlayPositionConfig(minimumAvailableHeight: 48)),
+      );
     });
   });
 
@@ -324,6 +345,118 @@ void main() {
       Rect panelRect(WidgetTester tester) =>
           tester.getRect(find.byKey(childKey));
 
+      testWidgets('overlaps below the usable-height threshold, not at it', (
+        tester,
+      ) async {
+        for (final gap in [47.0, 48.0]) {
+          await pumpPanel(
+            tester,
+            targetRect: Rect.fromLTWH(100, gap, 50, 300 - 2 * gap),
+          );
+          expect(panelRect(tester).height, gap < 48 ? 300 : gap);
+          expect(tester.takeException(), isNull);
+        }
+      });
+
+      testWidgets(
+        'caller threshold changes layout and zero keeps positive gaps',
+        (tester) async {
+          for (final threshold in [64.0, 0.0]) {
+            await pumpPanel(
+              tester,
+              targetRect: const Rect.fromLTWH(100, 48, 50, 204),
+              positioning: OverlayPositionConfig(
+                minimumAvailableHeight: threshold,
+              ),
+            );
+            expect(panelRect(tester).height, threshold == 0 ? 48 : 300);
+          }
+        },
+      );
+
+      testWidgets(
+        'zero threshold restores strict capping at zero headroom on update',
+        (tester) async {
+          for (final threshold in [48.0, 0.0, 48.0]) {
+            await pumpPanel(
+              tester,
+              targetRect: const Rect.fromLTWH(100, 0, 50, 300),
+              positioning: OverlayPositionConfig(
+                minimumAvailableHeight: threshold,
+              ),
+            );
+            expect(panelRect(tester).height, threshold == 0 ? 0 : 300);
+          }
+        },
+      );
+
+      testWidgets(
+        'a small panel still fits beside an anchor below the threshold',
+        (tester) async {
+          await pumpPanel(
+            tester,
+            targetRect: const Rect.fromLTWH(100, 16, 50, 268),
+            panel: SizedBox(key: childKey, width: 80, height: 8),
+          );
+          expect(panelRect(tester), const Rect.fromLTWH(100, 284, 80, 8));
+        },
+      );
+
+      testWidgets('fallback keeps asymmetric collision padding clear', (
+        tester,
+      ) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 0, 50, 300),
+          positioning: const OverlayPositionConfig(
+            collisionPadding: EdgeInsets.fromLTRB(0, 20, 0, 30),
+          ),
+        );
+        expect(panelRect(tester), const Rect.fromLTWH(100, 20, 80, 250));
+      });
+
+      testWidgets(
+        'fallback with excessive collision padding never has negative height',
+        (tester) async {
+          await pumpPanel(
+            tester,
+            targetRect: const Rect.fromLTWH(100, 0, 50, 300),
+            positioning: const OverlayPositionConfig(
+              collisionPadding: EdgeInsets.all(160),
+            ),
+          );
+          expect(panelRect(tester).height, 0);
+          expect(tester.takeException(), isNull);
+        },
+      );
+
+      testWidgets(
+        'usable-height policy does not change explicit no-collision placement',
+        (tester) async {
+          await pumpPanel(
+            tester,
+            targetRect: const Rect.fromLTWH(100, 16, 50, 268),
+            positioning: const OverlayPositionConfig(avoidCollisions: false),
+          );
+          expect(panelRect(tester), const Rect.fromLTWH(100, 284, 80, 16));
+        },
+      );
+
+      testWidgets('a full-height anchor keeps a constrained panel usable', (
+        tester,
+      ) async {
+        await pumpPanel(
+          tester,
+          targetRect: const Rect.fromLTWH(100, 0, 50, 300),
+          positioning: const OverlayPositionConfig(sideOffset: 6),
+        );
+        final rect = panelRect(tester);
+        expect(rect.height, 300);
+        expect(rect.top, 0);
+        expect(rect.bottom, 300);
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('follows the option as it is turned on and off', (
         tester,
       ) async {
@@ -475,7 +608,10 @@ void main() {
         await pumpPanel(
           tester,
           targetRect: const Rect.fromLTWH(100, 100, 50, 30),
-          positioning: const OverlayPositionConfig(side: OverlaySide.right),
+          positioning: const OverlayPositionConfig(
+            side: OverlaySide.right,
+            minimumAvailableHeight: 1000,
+          ),
           panel: LayoutBuilder(
             builder: (context, value) {
               constraints = value;
