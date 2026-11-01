@@ -413,24 +413,29 @@ class _NakedTabState extends State<NakedTab>
     _scope.selectTab(widget.tabId);
   }
 
+  bool _moveFocus(FocusScopeNode scope, {required bool forward}) =>
+      forward ? scope.nextFocus() : scope.previousFocus();
+
   void _handleDirectionalFocus(TraversalDirection direction) {
     if (!_isEnabled) return;
 
     final focusScope = FocusScope.of(context);
     final isHorizontal = _scope.orientation == Axis.horizontal;
+    // Widget order runs right to left in horizontal RTL strips.
+    final rtl = Directionality.of(context) == TextDirection.rtl;
 
     switch (direction) {
       case TraversalDirection.left:
-        if (isHorizontal) focusScope.previousFocus();
+        if (isHorizontal) _moveFocus(focusScope, forward: rtl);
         break;
       case TraversalDirection.right:
-        if (isHorizontal) focusScope.nextFocus();
+        if (isHorizontal) _moveFocus(focusScope, forward: !rtl);
         break;
       case TraversalDirection.up:
-        if (!isHorizontal) focusScope.previousFocus();
+        if (!isHorizontal) _moveFocus(focusScope, forward: false);
         break;
       case TraversalDirection.down:
-        if (!isHorizontal) focusScope.nextFocus();
+        if (!isHorizontal) _moveFocus(focusScope, forward: true);
         break;
     }
   }
