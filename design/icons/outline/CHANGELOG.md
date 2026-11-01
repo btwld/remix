@@ -1,3 +1,16 @@
+# Unreleased — shape corrections
+
+Owner-authorized local corrections after the 2026-11-01 shape reviews. No version, release or approval status changes. The exact revised SVGs are listed in `tests/fixtures/shape-revision-2026-11-01.json`.
+
+- Warning: redraw frame and punctuation. Outline clearances and filled widths now meet their targets, except the 16 px outline stem-to-dot gap. The visible-label rule is unchanged.
+- Link: replace bracket-and-dash with two open interlocking hooks on one diagonal axis.
+- Calendar: add a contour-weight header rail, use one off-center date at 16/24 px and none at 12 px, and remove the cut corner.
+- Terminal: use a square window, with an open prompt and a cursor at every master.
+- File: use two unequal left-aligned lines at 24 px instead of one centered bar.
+- Help: give the 16 px hook a short stem centered over the dot.
+- Small-master grid: record one odd-width policy and apply it to Pause, Chat, Lock, Menu, More, Chart, Search, Refresh, the arrows, Download, Upload, Arrow up right, Folder, Home, User, Copy and Bell. See `docs/optical-sizing.md`.
+- Tests: add measured geometry and raster regressions, and pin revisions in a hash ledger while the original fixtures stay immutable.
+
 # 0.5.0-pilot.2 — Audit patch
 
 - Fix selected controls and their SVGs in forced-colors mode.

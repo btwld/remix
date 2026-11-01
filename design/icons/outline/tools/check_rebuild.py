@@ -40,7 +40,7 @@ def main() -> int:
             changed = sorted(key for key in expected.keys()|actual.keys() if expected.get(key) != actual.get(key))
             if changed:
                 raise ValueError('Rebuild changed products: '+', '.join(changed))
-        report.update(status='passed', cleanBuild=True, productsCompared=len(expected), baselineSVGsPreserved=198)
+        report.update(status='passed', cleanBuild=True, productsCompared=len(expected))
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         report['error'] = str(exc)
     stamped = write_report(destination, report, before, R)

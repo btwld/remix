@@ -12,7 +12,7 @@ Author native geometry in `source/outline/additions.py` or a new construction mo
 
 Every promised concept has outline / filled at 12 / 16 / 24 px. Open glyphs may use a regular/heavier pair. Do not produce micro versions only by scaling 24 px output. Directional copies may share native geometry through exact rotation/reflection.
 
-Do not edit `generated/`, the registry, sprites, helper path data, or catalog HTML by hand. Change the authoritative construction or catalog and rebuild. Existing baseline paths are locked; a deliberate baseline change needs a separate migration decision and updated evidence, not an unexplained hash refresh.
+Do not edit `generated/`, the registry, sprites, helper path data, or catalog HTML by hand. Change the authoritative construction or catalog and rebuild. Existing paths are locked; a deliberate change needs a separate owner decision, updated evidence, and an old-to-new hash entry in a `tests/fixtures/shape-revision-*.json` ledger, not an unexplained hash refresh. The fixture hashes themselves stay immutable.
 
 ## Validate
 

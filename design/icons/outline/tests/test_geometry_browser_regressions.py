@@ -107,9 +107,12 @@ class RestrictionRegression(unittest.TestCase):
 
     def test_exception_metrics_and_geometry_binding(self):
         exceptions=json.loads((ROOT/'catalog/exceptions.json').read_text())
-        self.assertEqual(len(exceptions),5)
+        self.assertEqual({e['id'] for e in exceptions},{'warning-gap-12','warning-gap-16','warning-gap-24','warning-filled-punctuation-16','warning-filled-punctuation-24','warning-stem-dot-gap-16'})
         for exception in exceptions:
             n,a=exception['nativeSize'],exception['appearance']
+            # Geometry cannot grant approval: no record may claim an owner or a passed review.
+            self.assertIsNone(exception['owner']);self.assertIsNone(exception['reviewer'])
+            self.assertIn('pending',exception['status'])
             cell=self.record['sizes'][str(n)][a]
             self.assertIn(exception['id'],cell['exceptionIds'])
             self.assertEqual(exception['restrictionId'],self.record['id'])
@@ -121,18 +124,34 @@ class RestrictionRegression(unittest.TestCase):
                 sizes=sorted([(round(h.bounds[2]-h.bounds[0],4),round(h.bounds[3]-h.bounds[1],4)) for h in holes],key=lambda x:x[1])
                 m=exception['punctuation']
                 self.assertEqual(sizes,[(m['dotWidth'],m['dotHeight']),(m['stemWidth'],m['stemHeight'])])
-                self.assertLess(m['stemWidth'],exception['target'])
+                self.assertGreaterEqual(m['stemWidth'],exception['target'])
             else:
                 parts=sorted(list(g.geoms),key=lambda x:x.area,reverse=True)
-                actual=min(parts[0].distance(part) for part in parts[1:])
+                if exception['rule']=='mark-internal-gap':
+                    actual=parts[1].distance(parts[2])
+                    self.assertLess(actual,exception['target'])
+                else:
+                    actual=min(parts[0].distance(part) for part in parts[1:])
+                    self.assertGreaterEqual(actual,exception['target']-.002)
                 self.assertAlmostEqual(actual,exception['measuredApprox'],delta=.015)
 
-    def test_entire_pilot_artwork_unchanged(self):
+    def test_pilot_artwork_matches_fixture_or_revision_ledger(self):
         original=json.loads((ROOT/'tests/fixtures/pilot1-sha256.json').read_text())
         self.assertEqual(len(original),288)
+        ledger=json.loads((ROOT/'tests/fixtures/shape-revision-2026-11-01.json').read_text())['files']
         # Keep the immutable pilot fixture's historical keys; only map the moved paths.
         current={'angular/'+str(p.relative_to(ROOT/'generated/outline')):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'generated/outline').rglob('*.svg')}
-        self.assertEqual(current,original)
+        self.assertEqual(set(current),set(original))
+        for key,digest in original.items():
+            rel=key.split('/',1)[1]
+            with self.subTest(path=rel):
+                if rel in ledger:
+                    self.assertEqual(ledger[rel]['from'],digest)
+                    self.assertEqual(ledger[rel]['to'],current[key])
+                    self.assertNotEqual(ledger[rel]['from'],ledger[rel]['to'])
+                else:
+                    self.assertEqual(current[key],digest)
+        self.assertTrue(set(ledger)<={k.split('/',1)[1] for k in original})
 
 
 class EvidenceFreshnessRegression(unittest.TestCase):

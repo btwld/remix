@@ -22,10 +22,10 @@ Status: `inherited-restriction-owner-review-pending`. Named owner and reviewer: 
 
 | Master | Appearance | Visible label | Exceptions | Exact SVG SHA-256 |
 |---|---|---|---|---|
-| 12 | outline | Required | warning-gap-12 | `d9d01bee7f8a4fe661d57aa621344b624ca4ecd78e9cf99fe06c1741199ec0d7` |
-| 12 | filled | Required | None | `08e261fd0b04e6a36ab85c8884347a95bb3c826dc6951bd9ba4129b42bb560e6` |
-| 16 | outline | Required | warning-gap-16 | `25208022afec19c70a90e9e5d37d56368da7b2df774027c719bb6fa8c564bcf5` |
-| 16 | filled | Required | warning-filled-punctuation-16 | `43979e5c0d923bbf75381a5267f32f65355482fd93f20a62c92c757ed7912ffe` |
-| 24 | outline | Required | warning-gap-24 | `2387cc9c7e37ce8e2d3230061aa5be1858a86f7c39aacc442dbdb02b7dcb806b` |
-| 24 | filled | Required | warning-filled-punctuation-24 | `a538654374507fdbe1ece22a1f7f3b21dbf3c06138600c9c30c9f4229dc62be3` |
+| 12 | outline | Required | warning-gap-12 | `fe469b881ac3b31a565231051aaafa255405277978a16d13ca85f191b2f86dac` |
+| 12 | filled | Required | None | `7845ad6471a730e397347a3b5cc3046c780fca453a16e5d4ce63f699bfec4636` |
+| 16 | outline | Required | warning-gap-16, warning-stem-dot-gap-16 | `3519bb8c5aed14581041f99b27e886947cadf8e129b85a6d7e57589c3e5aacb9` |
+| 16 | filled | Required | warning-filled-punctuation-16 | `fd93e4569b5c982532275052af8f7a27998613e3e386513dc4efa596a9db5823` |
+| 24 | outline | Required | warning-gap-24 | `17aa70594f1eb4578fb62302466ecb905d5541d9ebd073e8657cf01106c4e9d6` |
+| 24 | filled | Required | warning-filled-punctuation-24 | `d8bd8d73af829ba8418cb8eb0bddb1db38321eebfa3f7574a45cca4e4e9b791e` |
 

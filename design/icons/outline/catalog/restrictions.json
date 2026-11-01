@@ -8,33 +8,34 @@
       "status": "inherited-restriction-owner-review-pending",
       "owner": null,
       "reviewer": null,
-      "reason": "Retain the stronger inherited labeling rule without silently approving or redrawing the locked geometry.",
+      "reason": "Retain the stronger visible-label rule at every master and appearance. The 2026-11-01 redraw improved the spacing; better spacing does not remove this rule or establish recognition.",
       "sizes": {
         "12": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "d9d01bee7f8a4fe661d57aa621344b624ca4ecd78e9cf99fe06c1741199ec0d7",
+            "geometrySha256": "fe469b881ac3b31a565231051aaafa255405277978a16d13ca85f191b2f86dac",
             "exceptionIds": [
               "warning-gap-12"
             ]
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "08e261fd0b04e6a36ab85c8884347a95bb3c826dc6951bd9ba4129b42bb560e6",
+            "geometrySha256": "7845ad6471a730e397347a3b5cc3046c780fca453a16e5d4ce63f699bfec4636",
             "exceptionIds": []
           }
         },
         "16": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "25208022afec19c70a90e9e5d37d56368da7b2df774027c719bb6fa8c564bcf5",
+            "geometrySha256": "3519bb8c5aed14581041f99b27e886947cadf8e129b85a6d7e57589c3e5aacb9",
             "exceptionIds": [
-              "warning-gap-16"
+              "warning-gap-16",
+              "warning-stem-dot-gap-16"
             ]
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "43979e5c0d923bbf75381a5267f32f65355482fd93f20a62c92c757ed7912ffe",
+            "geometrySha256": "fd93e4569b5c982532275052af8f7a27998613e3e386513dc4efa596a9db5823",
             "exceptionIds": [
               "warning-filled-punctuation-16"
             ]
@@ -43,14 +44,14 @@
         "24": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "2387cc9c7e37ce8e2d3230061aa5be1858a86f7c39aacc442dbdb02b7dcb806b",
+            "geometrySha256": "17aa70594f1eb4578fb62302466ecb905d5541d9ebd073e8657cf01106c4e9d6",
             "exceptionIds": [
               "warning-gap-24"
             ]
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "a538654374507fdbe1ece22a1f7f3b21dbf3c06138600c9c30c9f4229dc62be3",
+            "geometrySha256": "d8bd8d73af829ba8418cb8eb0bddb1db38321eebfa3f7574a45cca4e4e9b791e",
             "exceptionIds": [
               "warning-filled-punctuation-24"
             ]

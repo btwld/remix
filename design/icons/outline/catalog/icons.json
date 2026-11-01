@@ -58,16 +58,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the roof, doorway, and body pair. The silhouette remains a useful family reference without requiring all icons to match its area. At 16 px, the roof/body has a small documented overshoot beyond the nominal 1.5 px padding.",
+        "note": "Retained the roof, doorway, and body pair. The silhouette remains a useful family reference without requiring all icons to match its area. At 16 px, the roof/body has a small documented overshoot beyond the nominal 1.5 px padding. The 12 px drawing moved to whole pixels and the 16 px drawing to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -101,16 +101,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the three bars after comparing crisp and strictly centered micro variants. The original 12 px outline raster is clearer. The 0.5 px optical offset is intentional. A larger clickable area and an accessible name are still required.",
+        "note": "Retained the three bars after comparing crisp and strictly centered micro variants. The original 12 px outline raster is clearer. The 0.5 px optical offset is intentional. A larger clickable area and an accessible name are still required. The 16 px bars moved to one shared half-pixel phase so all three render at equal weight (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -144,16 +144,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained crisp 1 px micro dots rather than replacing them with blurred centered marks. The 12 px offset is intentional and documented; larger masters remain balanced. Use 16 px or larger for an overflow control, with an accessible More options name.",
+        "note": "Retained crisp 1 px micro dots rather than replacing them with blurred centered marks. The 12 px offset is intentional and documented; larger masters remain balanced. Use 16 px or larger for an overflow control, with an accessible More options name. The 16 px dots moved to one shared pixel phase so all three render at equal weight (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -187,16 +187,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the open octagonal lens and diagonal handle. The lens stays transparent in both weights; filling it would change the metaphor. The 12 px filled lens is relatively dense; use a label or a clearly identified search field.",
+        "note": "Retained the open octagonal lens and diagonal handle. The lens stays transparent in both weights; filling it would change the metaphor. The 12 px filled lens is relatively dense; use a label or a clearly identified search field. The 12 px lens moved to whole pixels, keeping its octagon, so all four walls render at equal strength (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -282,7 +282,7 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Reflected from the locked right-arrow geometry. Stroke width is not rescaled.",
+        "note": "Reflected from the locked right-arrow geometry. Stroke width is not rescaled. The 12 px outline shaft stays on pixel row 5-6 under the odd-width rule (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -316,16 +316,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Removed post-stroke stretching; rebuilt the arrow on shared centerlines. Actual native stroke width now follows the action-weight tokens. The filled arrow can have slightly larger painted bounds. Retain a text label when the destination is not obvious.",
+        "note": "Removed post-stroke stretching; rebuilt the arrow on shared centerlines. Actual native stroke width now follows the action-weight tokens. The filled arrow can have slightly larger painted bounds. Retain a text label when the destination is not obvious. The 12 px outline shaft moved to pixel row 5-6 under the odd-width rule (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -368,7 +368,7 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Quarter-turn of the locked right arrow, preserving native stroke width.",
+        "note": "Quarter-turn of the locked right arrow, preserving native stroke width. The 12 px outline shaft sits on pixel column 5-6 under the odd-width rule (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -411,7 +411,7 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Quarter-turn of the locked right arrow, preserving native stroke width.",
+        "note": "Quarter-turn of the locked right arrow, preserving native stroke width. The 12 px outline shaft stays on pixel column 5-6 under the odd-width rule (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -445,16 +445,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Shortened the large corner arms and removed post-stroke stretching. Less top/right mass; one diagonal and a 90\u00b0 arrowhead, with unchanged external-destination meaning. Do not mirror this automatically for right-to-left layouts without checking the intended meaning.",
+        "note": "Shortened the large corner arms and removed post-stroke stretching. Less top/right mass; one diagonal and a 90° arrowhead, with unchanged external-destination meaning. Do not mirror this automatically for right-to-left layouts without checking the intended meaning. The 16 px corner arms moved to the half-pixel grid in both weights (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -877,16 +877,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the offset sheets and subordinate rear contour. The rear sheet does not become a second filled block; the front sheet carries the style change. Keep the duplicate action named in the product.",
+        "note": "Retained the offset sheets and subordinate rear contour. The rear sheet does not become a second filled block; the front sheet carries the style change. Keep the duplicate action named in the product. The 16 px sheets moved from scaled thirds to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -972,7 +972,7 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "One open outline cycle and one arrowhead. No double arrows or decorative cuts.",
+        "note": "One open outline cycle and one arrowhead. No double arrows or decorative cuts. The 12 px outline moved to half-pixel centerlines so its 1 px strokes render on whole pixels (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1059,7 +1059,7 @@
         "optical": "baseline-preserved",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Two rails at every size; smaller 24 px field and handles; pixel-aligned 12 px construction. The 24 px artwork is 18 \u00d7 16 px, with 6 px handles and unchanged 2 px rails. Outline centers remain open. Use the canonical name Sliders. Settings, Adjust, and Filters are search aliases, not duplicate drawings.",
+        "note": "Two rails at every size; smaller 24 px field and handles; pixel-aligned 12 px construction. The 24 px artwork is 18 × 16 px, with 6 px handles and unchanged 2 px rails. Outline centers remain open. Use the canonical name Sliders. Settings, Adjust, and Filters are search aliases, not duplicate drawings.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1093,16 +1093,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Rebuilt the upward arrow and preserved the same baseline as Download. Independent native spacing prevents the heavier arrow from crowding the baseline. The upward point needs more top clearance than the flat end of Download.",
+        "note": "Rebuilt the upward arrow and preserved the same baseline as Download. Independent native spacing prevents the heavier arrow from crowding the baseline. The upward point needs more top clearance than the flat end of Download. The 12 px outline shaft moved to pixel column 5-6 under the odd-width rule (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1136,16 +1136,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Rebuilt the arrow without stretching and opened clearance above the baseline. The baseline and action stroke widths now follow the native weight tokens, including the filled micro version. Keep Upload and Download together as a matched directional pair.",
+        "note": "Rebuilt the arrow without stretching and opened clearance above the baseline. The baseline and action stroke widths now follow the native weight tokens, including the filled micro version. Keep Upload and Download together as a matched directional pair. The 12 px outline shaft moved to pixel column 5-6 under the odd-width rule (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1222,16 +1222,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Removed the internal fold elbow and extra lines. The clipped outer corner identifies the file. One content line remains only at 24 px, with 2 px clearance. At 12/16 px this is an intentionally simpler clipped document, not a scaled detailed drawing.",
+        "note": "Removed the internal fold elbow and extra lines; the clipped outer corner identifies the file. At 24 px, two unequal left-aligned lines replace the single centered bar, which had the form of a file-minus (revised 2026-11-01). At 12/16 px this is an intentionally simpler clipped document, on the half-pixel grid at 16 px.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1265,16 +1265,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the tabbed silhouette and compact detail reduction. The 12 px master omits the filled header slit. No added decorative cuts are needed. Filled areas are intentional; do not normalize them to the area of line glyphs.",
+        "note": "Retained the tabbed silhouette and compact detail reduction. The 12 px master omits the filled header slit. No added decorative cuts are needed. Filled areas are intentional; do not normalize them to the area of line glyphs. The 12 px drawing moved to whole pixels and the 16 px drawing to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1308,16 +1308,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Redrew the chain as three deliberately separated parts at every size. Removed near-touching joins and the 16 px connectivity change. The heavier style uses a restrained 1.5 / 2 / 2.5 px stroke. Label the actual action: Copy URL, Open link, or Attach link are different operations.",
+        "note": "Redrawn 2026-11-01 as two open hooks on one 45° axis, each returning into the other's mouth. Same two-part topology at every size and no closed counters, so nothing fills in at 12 px. A local design judgment chosen over bracket-and-dash and closed-ring prototypes, not a recognition result. The heavier style uses a restrained 1.5 / 2 / 2.5 px stroke. Label the actual action: Copy URL, Open link, or Attach link are different operations.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1437,16 +1437,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Removed the narrow header divider and reduced the date details. Bindings plus one date at 12 px or two dates at 16/24 px preserve recognition with less clutter. The date mark count is a deliberate optical-size change, not data.",
+        "note": "Redrawn 2026-11-01. A contour-weight header rail and contour-weight bindings carry the calendar reading; one off-center date at 16/24 px replaces the two date marks, and 12 px keeps only frame, bindings and rail. The single cut corner is gone because it competed with the rail. A local design judgment, not a recognition result.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1480,16 +1480,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the octagonal head and cut shoulders. The head and body remain distinct in both styles, with no extra facial details. The small outlined head is only an identity cue; it is not a detailed avatar.",
+        "note": "Retained the octagonal head and cut shoulders. The head and body remain distinct in both styles, with no extra facial details. The small outlined head is only an identity cue; it is not a detailed avatar. The 12 px body moved to whole pixels and the 16 px drawing to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1523,16 +1523,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the message silhouette and micro detail removal. The tail remains the identifying feature. No content line is added at 12 px. The 16 px outline deliberately omits the line that appears as a cutout in the filled body.",
+        "note": "Retained the message silhouette and micro detail removal. The tail remains the identifying feature. No content line is added at 12 px. The 16 px outline deliberately omits the line that appears as a cutout in the filled body. The 16 px bubble and filled line moved from scaled thirds to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1566,16 +1566,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the crown, bell body, and detached clapper. The clapper gap remains open instead of adding visual mass by joining the parts. Pair the icon with notification text or a named control.",
+        "note": "Retained the crown, bell body, and detached clapper. The clapper gap remains open instead of adding visual mass by joining the parts. Pair the icon with notification text or a named control. The 16 px bell and clapper moved from scaled thirds to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1609,22 +1609,23 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Locked geometry retained. Outline punctuation/frame gaps are below the nominal targets. Filled punctuation is an explicit optical exception at 16 and 24 px. The size-aware restriction record governs use; independent approval remains pending.",
+        "note": "Redrawn 2026-11-01. The triangle overshoots the keyline so the punctuation has a real field: outline mark-to-frame clearance now meets 1 / 1.5 / 2 px, and filled punctuation meets 1.5 / 2 px wide at 16 / 24 px. At 12/16 px the triangle is built around the pixel column left of center so the 1 px mark stays crisp. The 16 px outline stem-to-dot gap stays at 1 px, a recorded exception. The size-aware restriction record still governs use; independent approval remains pending.",
         "exceptions": [
           "warning-gap-12",
           "warning-gap-16",
           "warning-gap-24",
           "warning-filled-punctuation-16",
-          "warning-filled-punctuation-24"
+          "warning-filled-punctuation-24",
+          "warning-stem-dot-gap-16"
         ],
         "usageRestriction": "warning-visible-label"
       }
@@ -1710,7 +1711,7 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Octagonal frame with a simplified question mark. Explicit native punctuation spacing.",
+        "note": "Octagonal frame with a simplified question mark. Explicit native punctuation spacing. The 16 px hook now ends in a short stem centered over the dot, as at 24 px (2026-11-01).",
         "exceptions": [],
         "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
       }
@@ -1744,16 +1745,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the open shackle and contrasting body pair. The shackle stays open in both styles. Small outlines omit the keyhole rather than crowding the frame. Do not use a padlock alone to assert that a process is secure.",
+        "note": "Retained the open shackle and contrasting body pair. The shackle stays open in both styles. Small outlines omit the keyhole rather than crowding the frame. Do not use a padlock alone to assert that a process is secure. The 16 px body and keyhole moved from scaled thirds to the half-pixel grid (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1874,16 +1875,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Reduced the enclosing box and redrew the prompt with more clearance. A wider, lower window is less heavy than the old square; the underscore is omitted at compact sizes. The micro prompt is simplified. Prefer a labeled 16 px or larger developer-tool control.",
+        "note": "Redrawn 2026-11-01. A square window no longer repeats File's clipped corner. The prompt keeps open arms and a cursor at every size. Prefer a labeled 16 px or larger developer-tool control. A local design judgment, not a recognition result.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -1960,16 +1961,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained the ascending bars after reviewing the 12 px raster. The micro outline keeps its optical half-pixel x offset for crisp verticals. Baselines match across weights. Do not force a heavier chart into the painted area of a single thin line.",
+        "note": "Retained the ascending bars after reviewing the 12 px raster. The micro outline keeps its optical half-pixel x offset for crisp verticals. Baselines match across weights. Do not force a heavier chart into the painted area of a single thin line. The 16 px bars moved to one shared pixel phase so all three render at equal weight (2026-11-01).",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -2046,16 +2047,16 @@
         }
       },
       "provenance": {
-        "method": "preserved-user-supplied-construction",
+        "method": "revised-from-user-supplied-construction",
         "source": "source/outline/baseline.py",
         "externalArtworkUsed": false
       },
       "review": {
         "technical": "checked-by-build-and-validation",
-        "optical": "baseline-preserved",
+        "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Retained two regular/heavier solid bars. Hollowing the narrow bars would create fragile internal slots at small sizes. Do not interpret filled styling alone as playback state.",
+        "note": "Retained two regular/heavier solid bars. Hollowing the narrow bars would create fragile internal slots at small sizes. Do not interpret filled styling alone as playback state. Bars revised 2026-11-01 to mirror about the center on one pixel phase; the 12 px filled bars are now 2 px on whole pixels.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }

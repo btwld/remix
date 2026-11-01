@@ -31,7 +31,7 @@ def frame_and_mark(name: str, n: int):
             hook=line([(3.75,4.5),(3.75,4.25),(4.5,3.5),(6.5,3.5),(7.5,4.5),(7.5,5),(5.5,6.5)],1)
             dot=box(5,8,6,9)
         elif n==16:
-            hook=line([(5.5,7),(5.5,6.5),(7,5.25),(9,5.25),(10.25,6.25),(10.25,6.75),(8,7.5)],1.5)
+            hook=line([(5.75,7),(5.75,6),(6.5,5.25),(9.5,5.25),(10.25,6),(10.25,6.75),(8,8),(8,8.5)],1.5)
             dot=box(7.25,10,8.75,11.5)
         else:
             hook=line([(8,9),(8,8),(10,7),(14,7),(16,9),(16,10),(12,12.5),(12,13)],2)
@@ -57,7 +57,12 @@ def draw(name: str,n: int,appearance: str):
     outlined=appearance=='outline'; w=OUTLINE[n]; t=w if outlined else BOLD[n]; c=n/2
     if name in ('arrow-left','arrow-up','arrow-down'):
         base=baseline_draw('arrow-right',n,appearance)
-        return affinity.rotate(base,{'arrow-left':180,'arrow-up':-90,'arrow-down':90}[name],origin=(c,c))
+        turned=affinity.rotate(base,{'arrow-left':180,'arrow-up':-90,'arrow-down':90}[name],origin=(c,c))
+        # The 12 px outline shaft sits on row 5-6. Rotation lands left and down on
+        # 6-7; nudge them back so a row of arrows shares one pixel line.
+        if n==12 and outlined:
+            turned=affinity.translate(turned,*{'arrow-left':(0,-1),'arrow-up':(0,0),'arrow-down':(-1,0)}[name])
+        return turned
     if name.startswith('chevron-'):
         pts={12:[(4,2.5),(7.5,6),(4,9.5)],16:[(5.5,3.5),(10,8),(5.5,12.5)],24:[(8,5),(15,12),(8,19)]}[n]
         shape=line(pts,t)
@@ -68,10 +73,10 @@ def draw(name: str,n: int,appearance: str):
         return box(p,c-t/2,n-p,c+t/2)
     if name=='refresh':
         # Open clockwise cycle; no extra circular frame. All slopes are 45°.
-        pts={12:[(10,8),(8,10),(4,10),(2,8),(2,4),(4,2),(7.5,2),(9.5,4)],
+        pts={12:[(10.5,8.5),(8.5,10.5),(3.5,10.5),(1.5,8.5),(1.5,3.5),(3.5,1.5),(7.5,1.5),(9.5,3.5)] if outlined else [(10,8),(8,10),(4,10),(2,8),(2,4),(4,2),(7.5,2),(9.5,4)],
              16:[(13,10.5),(10.5,13),(5.5,13),(3,10.5),(3,5.5),(5.5,3),(10,3),(12.5,5.5)],
              24:[(20,16),(16,20),(8,20),(4,16),(4,8),(8,4),(15,4),(19,8)]}[n]
-        arrow={12:[(9.5,1),(9.5,4),(6.5,4)],16:[(12.5,1.5),(12.5,5.5),(8.5,5.5)],24:[(19,2),(19,8),(13,8)]}[n]
+        arrow={12:[(9.5,1),(9.5,3.5),(6.5,3.5)] if outlined else [(9.5,1),(9.5,4),(6.5,4)],16:[(12.5,1.5),(12.5,5.5),(8.5,5.5)],24:[(19,2),(19,8),(13,8)]}[n]
         return U(line(pts,t),line(arrow,t))
     if name=='edit':
         shaft={12:[(2.5,7),(7,2.5),(9.5,5),(5,9.5),(1.5,10.5)],

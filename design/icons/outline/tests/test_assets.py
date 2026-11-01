@@ -39,8 +39,12 @@ class ManifestTests(unittest.TestCase):
 class AssetTests(unittest.TestCase):
     def test_baseline_bytes(self):
         frozen=json.loads((ROOT/'tests/fixtures/baseline-sha256.json').read_text());self.assertEqual(len(frozen),198)
+        revised=json.loads((ROOT/'tests/fixtures/shape-revision-2026-11-01.json').read_text())['files']
+        # A deliberate revision is pinned from its exact old hash to its exact new hash.
         for p,h in frozen.items():
-            with self.subTest(path=p):self.assertEqual(hashlib.sha256((ROOT/'generated/outline'/p).read_bytes()).hexdigest(),h)
+            with self.subTest(path=p):
+                if p in revised:self.assertEqual(revised[p]['from'],h)
+                self.assertEqual(hashlib.sha256((ROOT/'generated/outline'/p).read_bytes()).hexdigest(),revised[p]['to'] if p in revised else h)
     def test_xml_geometry_and_hashes(self):
         measurements=[]
         for r in INV:
@@ -103,7 +107,10 @@ class OpticalInvariants(unittest.TestCase):
             for a in ('outline','filled'):
                 g=parse_path(REG['arrow-right'][a][str(n)])
                 for id,angle in [('arrow-left',180),('arrow-up',-90),('arrow-down',90)]:
-                    h=parse_path(REG[id][a][str(n)]);self.assertLess(g.symmetric_difference(affinity.rotate(h,-angle,origin=(n/2,n/2))).area,.025)
+                    h=parse_path(REG[id][a][str(n)])
+                    # The 12 px outline shaft keeps one pixel line; see docs/optical-sizing.md.
+                    if n==12 and a=='outline':h=affinity.translate(h,*{'arrow-left':(0,1),'arrow-up':(0,0),'arrow-down':(1,0)}[id])
+                    self.assertLess(g.symmetric_difference(affinity.rotate(h,-angle,origin=(n/2,n/2))).area,.025)
                 g=parse_path(REG['chevron-right'][a][str(n)])
                 for id,angle in [('chevron-left',180),('chevron-up',-90),('chevron-down',90)]:
                     h=parse_path(REG[id][a][str(n)]);self.assertLess(g.symmetric_difference(affinity.rotate(h,-angle,origin=(n/2,n/2))).area,.025)

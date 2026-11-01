@@ -8,4 +8,4 @@ Checked 24 September 2026. These inform the implementation; no external icon SVG
 - Playwright Python, Continuous Integration: https://playwright.dev/python/docs/ci — installing browsers/dependencies and running in GitHub Actions. CI and the browser audit share the 1.64.1 pin in `requirements-lock.txt`, including its browser revisions. Chromium must support `contrast-color()` for the forced-colors audit.
 - GitHub, Secure use reference: https://docs.github.com/en/actions/reference/security/secure-use — minimal workflow permissions and immutable action references. Final action SHA pinning remains a public-release gate.
 
-The unresolved requested reference “idea icons” has no assumed source mapping. `catalog/reference-map.json` records that gap. Existing drawings came from the user-supplied v0.4.1 package; its byte hashes are preserved.
+The unresolved requested reference “idea icons” has no assumed source mapping. `catalog/reference-map.json` records that gap. Existing drawings came from the user-supplied v0.4.1 package; its byte hashes are preserved in the test fixtures, and deliberate later revisions are listed in `tests/fixtures/shape-revision-2026-11-01.json`.

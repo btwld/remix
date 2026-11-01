@@ -6,15 +6,15 @@
     "appearance": "outline",
     "nativeSize": 12,
     "target": 1,
-    "measuredApprox": 0.5,
-    "status": "inherited-restriction-owner-review-pending",
+    "measuredApprox": 1.0,
+    "status": "geometry-meets-target-owner-review-pending",
     "rule": "meaningful-mark-to-frame-gap",
     "permittedUse": "visible-label-required",
     "owner": null,
     "reviewer": null,
-    "reason": "Preserve locked v0.4.1 geometry; do not represent this as passing the general gap target.",
+    "reason": "The 2026-11-01 redraw meets the general target. Kept on record until a named owner and reviewer accept it; meeting the target does not remove the visible-label rule.",
     "restrictionId": "warning-visible-label",
-    "geometrySha256": "d9d01bee7f8a4fe661d57aa621344b624ca4ecd78e9cf99fe06c1741199ec0d7"
+    "geometrySha256": "fe469b881ac3b31a565231051aaafa255405277978a16d13ca85f191b2f86dac"
   },
   {
     "id": "warning-gap-16",
@@ -23,15 +23,15 @@
     "appearance": "outline",
     "nativeSize": 16,
     "target": 1.5,
-    "measuredApprox": 1.03,
-    "status": "inherited-restriction-owner-review-pending",
+    "measuredApprox": 1.5,
+    "status": "geometry-meets-target-owner-review-pending",
     "rule": "meaningful-mark-to-frame-gap",
     "permittedUse": "visible-label-required",
     "owner": null,
     "reviewer": null,
-    "reason": "Preserve locked v0.4.1 geometry; do not represent this as passing the general gap target.",
+    "reason": "The 2026-11-01 redraw meets the general target. Kept on record until a named owner and reviewer accept it; meeting the target does not remove the visible-label rule.",
     "restrictionId": "warning-visible-label",
-    "geometrySha256": "25208022afec19c70a90e9e5d37d56368da7b2df774027c719bb6fa8c564bcf5"
+    "geometrySha256": "3519bb8c5aed14581041f99b27e886947cadf8e129b85a6d7e57589c3e5aacb9"
   },
   {
     "id": "warning-gap-24",
@@ -40,15 +40,15 @@
     "appearance": "outline",
     "nativeSize": 24,
     "target": 2,
-    "measuredApprox": 1.58,
-    "status": "inherited-restriction-owner-review-pending",
+    "measuredApprox": 2.0,
+    "status": "geometry-meets-target-owner-review-pending",
     "rule": "meaningful-mark-to-frame-gap",
     "permittedUse": "visible-label-required",
     "owner": null,
     "reviewer": null,
-    "reason": "Preserve locked v0.4.1 geometry; do not represent this as passing the general gap target.",
+    "reason": "The 2026-11-01 redraw meets the general target. Kept on record until a named owner and reviewer accept it; meeting the target does not remove the visible-label rule.",
     "restrictionId": "warning-visible-label",
-    "geometrySha256": "2387cc9c7e37ce8e2d3230061aa5be1858a86f7c39aacc442dbdb02b7dcb806b"
+    "geometrySha256": "17aa70594f1eb4578fb62302466ecb905d5541d9ebd073e8657cf01106c4e9d6"
   },
   {
     "id": "warning-filled-punctuation-16",
@@ -57,21 +57,21 @@
     "appearance": "filled",
     "nativeSize": 16,
     "target": 1.5,
-    "measuredApprox": 1,
+    "measuredApprox": 1.5,
     "punctuation": {
-      "stemWidth": 1,
-      "stemHeight": 1.5,
-      "dotWidth": 1,
-      "dotHeight": 1
+      "stemWidth": 1.5,
+      "stemHeight": 4.0,
+      "dotWidth": 1.5,
+      "dotHeight": 1.5
     },
     "rule": "negative-punctuation-width",
-    "status": "inherited-restriction-owner-review-pending",
+    "status": "geometry-meets-target-owner-review-pending",
     "permittedUse": "visible-label-required",
     "restrictionId": "warning-visible-label",
-    "geometrySha256": "43979e5c0d923bbf75381a5267f32f65355482fd93f20a62c92c757ed7912ffe",
+    "geometrySha256": "fd93e4569b5c982532275052af8f7a27998613e3e386513dc4efa596a9db5823",
     "owner": null,
     "reviewer": null,
-    "reason": "Narrow negative punctuation is retained for optical balance. It does not meet the general opening-width target. Human approval remains pending."
+    "reason": "The 2026-11-01 redraw widens the negative punctuation to the general target. Kept on record until a named owner and reviewer accept it; meeting the target does not remove the visible-label rule."
   },
   {
     "id": "warning-filled-punctuation-24",
@@ -80,20 +80,37 @@
     "appearance": "filled",
     "nativeSize": 24,
     "target": 2,
-    "measuredApprox": 1.5,
+    "measuredApprox": 2.0,
     "punctuation": {
-      "stemWidth": 1.5,
-      "stemHeight": 3,
-      "dotWidth": 1.5,
-      "dotHeight": 1.5
+      "stemWidth": 2.0,
+      "stemHeight": 6.0,
+      "dotWidth": 2.0,
+      "dotHeight": 2.0
     },
     "rule": "negative-punctuation-width",
-    "status": "inherited-restriction-owner-review-pending",
+    "status": "geometry-meets-target-owner-review-pending",
     "permittedUse": "visible-label-required",
     "restrictionId": "warning-visible-label",
-    "geometrySha256": "a538654374507fdbe1ece22a1f7f3b21dbf3c06138600c9c30c9f4229dc62be3",
+    "geometrySha256": "d8bd8d73af829ba8418cb8eb0bddb1db38321eebfa3f7574a45cca4e4e9b791e",
     "owner": null,
     "reviewer": null,
-    "reason": "Narrow negative punctuation is retained for optical balance. It does not meet the general opening-width target. Human approval remains pending."
+    "reason": "The 2026-11-01 redraw widens the negative punctuation to the general target. Kept on record until a named owner and reviewer accept it; meeting the target does not remove the visible-label rule."
+  },
+  {
+    "id": "warning-stem-dot-gap-16",
+    "icon": "warning",
+    "pack": "outline",
+    "appearance": "outline",
+    "nativeSize": 16,
+    "target": 1.5,
+    "measuredApprox": 1.0,
+    "status": "restriction-owner-review-pending",
+    "rule": "mark-internal-gap",
+    "permittedUse": "visible-label-required",
+    "owner": null,
+    "reviewer": null,
+    "reason": "Clearing the frame leaves four pixel rows for the mark. A 1.5 px gap would shrink the stem to the height of the dot and read as a colon, so the 16 px gap stays at 1 px. It does not meet the general target.",
+    "restrictionId": "warning-visible-label",
+    "geometrySha256": "3519bb8c5aed14581041f99b27e886947cadf8e129b85a6d7e57589c3e5aacb9"
   }
 ]

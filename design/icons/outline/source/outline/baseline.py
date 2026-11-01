@@ -8,6 +8,7 @@ regular/bold weight pair rather than a hollow contour around a thin line.
 from __future__ import annotations
 import json, math
 from pathlib import Path
+from shapely import affinity
 from shapely.geometry import Polygon, MultiPolygon, GeometryCollection, LineString, box
 from shapely.ops import unary_union
 
@@ -68,7 +69,7 @@ INFO = [
  ('grid','Grid','Navigation','silhouette','Apps or grid view. Four equal cells; removed the isolated corner cut from v0.2.'),
  ('sliders','Sliders','Navigation','silhouette','Adjust. Hollow versus solid handles. Two rails at every size; compact 18 × 16 px footprint at 24 px.'),
  ('folder','Folder','Content','silhouette','Folder. Same tab and clipped corner. Filled has a header slit only at 16/24 px.'),
- ('file','File','Content','silhouette','Document. Clipped corner, no internal fold pocket. One content mark at 24 px only.'),
+ ('file','File','Content','silhouette','Document. Clipped corner, no internal fold pocket. Two unequal text lines at 24 px only.'),
  ('download','Download','Actions','weight','Download. A matched arrow and baseline; neither becomes an outlined block shape.'),
  ('upload','Upload','Actions','weight','Upload. Shares the baseline and arrow proportions of Download.'),
  ('user','User','People','silhouette','Profile. Octagonal head and cut shoulders. Both outline counters stay open at 12 px.'),
@@ -76,19 +77,37 @@ INFO = [
  ('bell','Bell','People','silhouette','Notifications. Same bell and separated clapper. No ornamental cuts.'),
  ('lock','Lock','System','silhouette','Lock. Shackle stays open in both styles; filled uses a solid body and negative keyhole.'),
  ('shield','Shield','System','silhouette','Protection. Added a truly solid shield; v0.2 used a thick outline.'),
- ('warning','Warning','System','silhouette','Warning. Slimmer positive/negative punctuation clears the frame. A documented spacing exception; keep a visible label.'),
+ ('warning','Warning','System','silhouette','Warning. An overshooting triangle gives the punctuation room to clear the frame. Keep a visible label.'),
  ('focus','Focus','System','weight','Focus region. Four corner brackets and a center square, not a star. Use a label for product-specific actions.'),
  ('branch','Branch','System','silhouette','Branch. Same three-node topology; outlined nodes become filled. Label at small sizes.'),
  ('copy','Copy','Content','silhouette','Copy. Rear sheet stays a partial contour; front sheet changes from outlined to solid.'),
  ('trash','Trash','Content','silhouette','Delete. Lid and bin share placement. Slots appear only where there is enough space.'),
  ('bookmark','Bookmark','Content','silhouette','Save. Same bookmark notch. The interior is open in outline and solid in filled.'),
- ('link','Link','Content','weight','Link. Open chain loops remain recognizable in regular and bold; do not fill the lens-like centers.'),
+ ('link','Link','Content','weight','Link. Two open hooks interlock on one diagonal axis in regular and bold; no closed counters to fill in.'),
  ('chart','Chart','System','weight','Analytics. Three regular or bold bars, not tiny hollow columns.'),
- ('calendar','Calendar','Content','silhouette','Calendar. Binding tabs without a cramped header divider. One date mark at 12 px; two at 16/24 px.'),
- ('terminal','Terminal','System','silhouette','Terminal. Outlined window with positive prompt; filled window with negative prompt.'),
+ ('calendar','Calendar','Content','silhouette','Calendar. Contour-weight bindings and header rail. One off-center date at 16/24 px; none at 12 px.'),
+ ('terminal','Terminal','System','silhouette','Terminal. Square window with an open prompt and cursor; positive in outline, negative in filled.'),
  ('more','More','Actions','weight','More actions. Three solid square dots at two weights; hollow dots are too fragile at micro size.'),
  ('star','Star','Content','silhouette','Favorite. A conventional five-point star, distinct from the four-corner Focus reticle.')
 ]
+
+def warning_parts(n,style):
+    """Inspectable frame and punctuation for the gap contract in docs/construction.md.
+
+    A triangle has much less room near its apex than a square, so it overshoots
+    the keyline to give the punctuation a real field. At 12/16 px it is built
+    around the pixel column left of center: a 1 px mark straddling the center
+    would render as two half-strength columns. Filled punctuation has no inner
+    contour to clear, so it uses the taller stem and the full negative width.
+    """
+    apex,x0,x1,base={12:((5.5,0),0,11,11),16:((7.5,.5),0,15,15),24:((12,1),1,23,23)}[n]
+    cx=apex[0]
+    if style=='outline':
+        mw,sy,ey,dy,dh={12:(1,5.5,7,8,9),16:(1,8,10,11,12),24:(2,12,15,17,19)}[n]
+    else:
+        mw,sy,ey,dy,dh={12:(1,4,7,8,9),16:(1.5,6.5,10.5,12,13.5),24:(2,10,16,18,20)}[n]
+    return (P([apex,(x1,base),(x0,base)]),
+            U(box(cx-mw/2,sy,cx+mw/2,ey),box(cx-mw/2,dy,cx+mw/2,dh)))
 
 def draw(name,n,style):
     s=n/24; p=PADDING[n]; q=n-p; c=n/2
@@ -99,12 +118,20 @@ def draw(name,n,style):
     def pp(points):return P([(k(x),k(y)) for x,y in points])
     def obj(shape):return ring(shape,w) if outlined else shape
     def ln(points,weight=None):return line([(k(x),k(y)) for x,y in points],t if weight is None else weight)
+    # 16 px objects sit on the half-pixel grid. Scaling the 24 px drawing leaves
+    # their straight edges on thirds, which rasterize unevenly at 1x and 2x.
+    def hk(v):return round(k(v)*2)/2 if n==16 else k(v)
+    def hp(points):return P([(hk(x),hk(y)) for x,y in points])
 
     if name=='arrow-right':
         # Construct the stroke at its final native width. Do not stretch
         # expanded paths to a box: that changes stems and diagonals unequally.
+        if n==12 and outlined:  # Odd-width rule: see docs/optical-sizing.md.
+            return U(line([(1.5,5.5),(9.5,5.5)],t),line([(6,2),(9.5,5.5),(6,9)],t))
         return U(ln([(3,12),(19,12)]),ln([(12,5),(19,12),(12,19)]))
     if name=='arrow-up-right':
+        if n==16:  # Both weights keep their corner edges on the half-pixel grid.
+            return U(line([(2.75,13.25),(12.75,3.25)],t),line([(6,3.25),(12.75,3.25),(12.75,10)],t))
         return U(ln([(4,20),(19,5)]),ln([(9,5),(19,5),(19,15)]))
     if name=='plus':
         if n==12 and outlined:c=5.5  # Optical half-pixel correction for a crisp 1px stem.
@@ -115,25 +142,27 @@ def draw(name,n,style):
     if name=='check':
         return ln([(4,12),(9,17),(20,6)])
     if name=='menu':
-        ys=(2.5,5.5,8.5) if n==12 and outlined else (3,6,9) if n==12 else (k(5),c,k(19))
+        ys=(2.5,5.5,8.5) if n==12 and outlined else (3,6,9) if n==12 else (3.25,8.25,13.25) if n==16 else (k(5),c,k(19))
         return U(*[box(p,y-t/2,q,y+t/2) for y in ys])
     if name=='play':
         shape=pp([(6,3),(22,12),(6,21)])
         return obj(shape)
     if name=='pause':
-        centers=(k(7),k(17))
-        wt=t if outlined else {12:2.25,16:3,24:4}[n]
+        # Bars mirror about the canvas center and share one pixel phase.
+        centers={12:(3.5,8.5) if outlined else (4,8),16:(4.75,11.25) if outlined else (4.5,11.5),24:(7,17)}[n]
+        wt=t if outlined else {12:2,16:3,24:4}[n]
         return U(*[box(x-wt/2,p,x+wt/2,q) for x in centers])
     if name=='home':
-        shape=pp([(12,2),(22,11),(20,11),(20,22),(4,22),(4,11),(2,11)])
-        door=box(c-k(2),k(15),c+k(2),n)
+        shape=P([(6,1),(11,6),(10,6),(10,11),(2,11),(2,6),(1,6)]) if n==12 else hp([(12,2),(22,11),(20,11),(20,22),(4,22),(4,11),(2,11)])
+        door_top=8 if n==12 else k(15)
+        door=box(c-hk(2),door_top,c+hk(2),n)
         if not outlined:return shape.difference(door)
         shell=ring(shape,w)
-        arch=box(c-k(2)-w,k(15)-w,c+k(2)+w,k(22)).difference(door)
+        arch=box(c-hk(2)-w,door_top-w,c+hk(2)+w,hk(22)).difference(door)
         return U(shell,arch).intersection(shape).difference(door)
     if name=='search':
         # Dedicated lens dimensions; micro gets a wider opening than v0.2.
-        a,z,corner={12:(1,8.5,1.75),16:(1.5,11.5,2.5),24:(2,17,4)}[n]
+        a,z,corner={12:(1,9,2),16:(1.5,11.5,2.5),24:(2,17,4)}[n]
         shape=octagon(a,a,z,z,corner)
         g=U(ring(shape,t),line([(z-corner/2-t*.2,z-corner/2-t*.2),(q-t*.354,q-t*.354)],t))
         return g
@@ -155,17 +184,19 @@ def draw(name,n,style):
             parts += [rail,ring(knob,w) if outlined else knob]
         return U(*parts)
     if name=='folder':
-        shape=pp([(2,4),(9,4),(12,7),(22,7),(22,19),(19,22),(2,22)])
+        shape=P([(1,2),(4,2),(6,4),(11,4),(11,10),(10,11),(1,11)]) if n==12 else hp([(2,4),(9,4),(12,7),(22,7),(22,19),(19,22),(2,22)])
         if outlined:return ring(shape,w)
         if n==12:return shape
-        return shape.difference(box(k(4),k(9),k(20),k(9)+w))
+        return shape.difference(box(p+w if n==16 else k(4),k(9),q-w if n==16 else k(20),k(9)+w))
     if name=='file':
         # The clipped outer corner is the document cue. Removing the inner
         # folded-corner elbow eliminates the subpixel triangular pocket.
-        shape=pp([(4,2),(14,2),(20,8),(20,22),(4,22)])
+        shape=hp([(4,2),(14,2),(20,8),(20,22),(4,22)])
         g=ring(shape,w) if outlined else shape
         if n==24:
-            content=box(8,13,16,15)
+            # Two unequal, left-aligned lines read as text. A single centered
+            # bar reads as a file-minus action.
+            content=U(box(8,12,16,14),box(8,16,13,18))
             g=U(g,content) if outlined else g.difference(content)
         return g
     if name in ('download','upload'):
@@ -175,6 +206,7 @@ def draw(name,n,style):
             12:(3,9,6.5,1,2.5,7.5),
             16:(4,12,8.5,1.5,3.5,9.5),
             24:(6,18,14.5,2,4.5,16)}[n]
+        if n==12 and outlined:c,left,right=5.5,2.5,8.5  # Odd-width rule.
         arm=c-left
         if name=='download':
             arrow=U(line([(c,down_start),(c,down_tip)],t),
@@ -184,28 +216,29 @@ def draw(name,n,style):
                     line([(left,up_tip+arm),(c,up_tip),(right,up_tip+arm)],t))
         return U(arrow,box(p,q-t,q,q))
     if name=='user':
-        head=octagon(k(8),p,k(16),k(10),k(2))
-        body=pp([(7,13),(17,13),(22,18),(22,22),(2,22),(2,18)])
+        head=octagon(hk(8),p,hk(16),hk(10),hk(2))
+        body=P([(3,7),(9,7),(11,9),(11,11),(1,11),(1,9)]) if n==12 else hp([(7,13),(17,13),(22,18),(22,22),(2,22),(2,18)])
         return U(obj(head),obj(body))
     if name=='chat':
-        shape=P([(1,2),(11,2),(11,8),(7,8),(4,11),(4,8),(1,8)]) if n==12 else pp([(2,3),(22,3),(22,17),(13,17),(7,22),(7,17),(2,17)])
+        shape=P([(1,2),(11,2),(11,8),(7,8),(4,11),(4,8),(1,8)]) if n==12 else hp([(2,3),(22,3),(22,17),(13,17),(7,22),(7,17),(2,17)])
         if outlined:
             g=ring(shape,w)
             if n==24:g=U(g,r(6,8,18,10))
         else:
             g=shape
-            if n>=16:g=g.difference(box(k(6),k(8),k(18),k(8)+w))
+            line_top=6 if n==16 else k(8)  # Centered in the 16 px bubble.
+            if n>=16:g=g.difference(box(k(6),line_top,k(18),line_top+w))
         return g
     if name=='bell':
-        shape=pp([(10,2),(14,2),(14,4),(18,8),(18,14),(21,17),(21,18),(3,18),(3,17),(6,14),(6,8),(10,4)])
-        clapper=box(c-k(2),k(20),c+k(2),q)
+        shape=P([(6.5,1.5),(9.5,1.5),(9.5,2.5),(12,5),(12,9.5),(14,11.5),(14,12),(2,12),(2,11.5),(4,9.5),(4,5),(6.5,2.5)]) if n==16 else pp([(10,2),(14,2),(14,4),(18,8),(18,14),(21,17),(21,18),(3,18),(3,17),(6,14),(6,8),(10,4)])
+        clapper=box(c-hk(2),hk(20),c+hk(2),q)
         return U(obj(shape),clapper)
     if name=='lock':
         shackle=octagon(k(6),p,k(18),k(15),k(3))
-        shackle=ring(shackle,w).difference(box(0,k(11),n,n))
-        body=cutbox(p,k(10),q,q,k(2))
+        shackle=ring(shackle,w).difference(box(0,hk(11),n,n))
+        body=cutbox(p,hk(10),q,q,hk(2))
         kw=2 if n==12 else w
-        key=box(c-kw/2,k(14),c+kw/2,k(18))
+        key=box(c-kw/2,hk(14),c+kw/2,hk(18))
         if outlined:
             g=ring(body,w)
             if n==24:g=U(g,key)
@@ -218,13 +251,7 @@ def draw(name,n,style):
                24:[(3,3),(21,3),(21,12),(12,21),(3,12)]}[n]
         return obj(P(shape))
     if name=='warning':
-        # A triangle has much less room near its apex than a square. Keep a
-        # shorter lower-set exclamation, and document the micro-size exception.
-        shape=pp([(12,2),(22,22),(2,22)])
-        mw,sy,ey,dy,dh={12:(1,5.5,7.5,8.5,9.5),
-                       16:(1,8,9.5,11,12),
-                       24:(1.5,11.5,14.5,16.5,18)}[n]
-        marks=U(box(c-mw/2,sy,c+mw/2,ey),box(c-mw/2,dy,c+mw/2,dh))
+        shape,marks=warning_parts(n,style)
         return U(ring(shape,w),marks) if outlined else shape.difference(marks)
     if name=='focus':
         pad={12:1,16:2,24:3}[n]; end=n-pad
@@ -248,8 +275,8 @@ def draw(name,n,style):
         nodes=U(left,top,bot)
         return U(rails.difference(nodes),*[ring(x,w) if outlined else x for x in (left,top,bot)])
     if name=='copy':
-        front=cutbox(4,4,11,11,1) if n==12 else cutbox(k(8),k(7),q,q,k(2))
-        rear=U(box(p,p,k(15),p+w),box(p,p,p+w,k(17)))
+        front=cutbox(4,4,11,11,1) if n==12 else cutbox(hk(8),hk(7),q,q,hk(2))
+        rear=U(box(p,p,hk(15),p+w),box(p,p,p+w,hk(17)))
         return U(rear,obj(front))
     if name=='trash':
         if n==12:
@@ -270,48 +297,49 @@ def draw(name,n,style):
         shape=P([(3,1),(8,1),(9,2),(9,11),(6,8),(3,11)]) if n==12 else P([(3.5,1.5),(11,1.5),(12.5,3),(12.5,14.5),(8,10.5),(3.5,14.5)]) if n==16 else pp([(5,2),(16,2),(19,5),(19,22),(12,16),(5,22)])
         return obj(shape)
     if name=='link':
-        # Intentional three-part chain: two open ends plus one bridge.
-        # No nearly-touching joins, and no topology change between sizes.
-        left={12:[(4.5,3),(3,3),(2,4),(2,8),(3,9),(4.5,9)],
-              16:[(6,4),(4,4),(2.5,5.5),(2.5,10.5),(4,12),(6,12)],
-              24:[(9,6),(6,6),(4,8),(4,16),(6,18),(9,18)]}[n]
-        wt=w if outlined else {12:1.5,16:2,24:2.5}[n]
-        bridge={12:(4.5,7.5),16:(6,10),24:(8,16)}[n]
-        return U(line(left,wt),line([(n-x,y) for x,y in left],wt),box(bridge[0],c-wt/2,bridge[1],c+wt/2))
+        # Two open hooks on one 45° axis, each returning into the other's mouth.
+        # Open strokes keep the same two-part topology at every size, so no
+        # closed counter can fill in at 12 px.
+        hook=line({12:[(5.5,7),(6.5,8),(10.5,4),(10.5,2.5),(9.5,1.5),(8,1.5),(7,2.5)],
+                   16:[(7.75,9.75),(9,11),(13.75,6.25),(13.75,3.75),(12.25,2.25),(10.25,2.25),(9,3.5)],
+                   24:[(11.5,14.5),(13,16),(21,8),(21,5),(19,3),(16,3),(13.25,5.75)]}[n],
+                  w if outlined else {12:1.5,16:2,24:2.5}[n])
+        return U(hook,affinity.rotate(hook,180,origin=(c,c)))
     if name=='chart':
         widths={12:(1,2),16:(1.5,3),24:(2,4)}[n]
         wt=widths[0 if outlined else 1]
-        xs=(1.5,5.5,9.5) if n==12 and outlined else (k(4),c,k(20)); heights=(4,7,10) if n==12 else (k(8),k(13),k(20))
+        xs=(1.5,5.5,9.5) if n==12 and outlined else (3.25,8.25,13.25) if n==16 and outlined else (3,8,13) if n==16 else (k(4),c,k(20)); heights=(4,7,10) if n==12 else (5.5,8.5,13) if n==16 else (k(8),k(13),k(20))
         return U(*[box(x-wt/2,q-h,x+wt/2,q) for x,h in zip(xs,heights)])
     if name=='calendar':
-        # Remove the cramped header slit. Bindings plus one/two date marks
-        # identify the calendar without a second dividing line.
-        if n==12:
-            body=cutbox(1,3,11,11,1)
-            tabs=U(box(3,1,4,4),box(8,1,9,4));marks=box(5,6,7,8)
-        elif n==16:
-            body=cutbox(2,4,14,14,1)
-            tabs=U(box(4.5,1.5,6,5.5),box(10,1.5,11.5,5.5))
-            marks=U(box(5,8,7,10),box(9,8,11,10))
-        else:
-            body=cutbox(3,5,21,21,2)
-            tabs=U(box(7,2,9,7),box(15,2,17,7))
-            marks=U(box(7,12,10,15),box(14,12,17,15))
-        return U(ring(body,w),tabs,marks) if outlined else U(body,tabs).difference(marks)
+        # A header rail at contour weight says "calendar". Two date marks under
+        # no rail read as a face, so one off-center date replaces them, and the
+        # micro master keeps only the frame, bindings and rail. Square corners:
+        # a single cut corner would compete with the rail.
+        x0,y0,x1,y1={12:(1,3,11,11),16:(2,3,14,14),24:(3,5,21,21)}[n]
+        body=box(x0,y0,x1,y1)
+        tabs=U(*[box(a,y0-{12:2,16:2,24:3}[n],a+w,y0) for a in {12:(3,8),16:(4.5,10),24:(7,15)}[n]])
+        rail_top={12:5,16:6,24:9}[n]
+        date={16:box(9,9,11,11),24:box(14,14,17,17)}.get(n)
+        if outlined:
+            return U(ring(body,w),tabs,box(x0,rail_top,x1,rail_top+w),*([date] if date else []))
+        solid=U(body,tabs).difference(box(x0+w,rail_top,x1-w,rail_top+w))
+        return solid.difference(date) if date else solid
     if name=='terminal':
+        # A square window, so the frame cannot read as File's clipped page. The
+        # prompt keeps open arms at every size and is always followed by a cursor.
         if n==12:
-            shape=P([(1,2),(10,2),(11,3),(11,10),(1,10)])
-            mark=line([(4,4.5),(6,6),(4,7.5)],1)
+            shape=box(1,2,11,11)
+            mark=U(line([(3.5,4.5),(5.5,6.5),(3.5,8.5)],1),box(7,8,9,9))
         elif n==16:
-            shape=P([(2,2.5),(12,2.5),(14,4.5),(14,13.5),(2,13.5)])
-            mark=line([(6,6.25),(8,8),(6,9.75)],1.5)
+            shape=box(1,2,15,14)
+            mark=U(line([(4.6,5.6),(7,8),(4.6,10.4)],1.5),box(9.5,9.5,12,11))
         else:
-            shape=P([(3,4),(18,4),(21,7),(21,20),(3,20)])
+            shape=box(3,4,21,20)
             mark=U(line([(8,9),(11,12),(8,15)],2),box(14,14,17,16))
         return U(ring(shape,w),mark) if outlined else shape.difference(mark)
     if name=='more':
         wt={12:(1,2),16:(2,3),24:(3,4)}[n][0 if outlined else 1]
-        xs=(1.5,5.5,9.5) if n==12 and outlined else (k(4),c,k(20))
+        xs=(1.5,5.5,9.5) if n==12 and outlined else (3,8,13) if n==16 else (k(4),c,k(20))
         if n==12 and outlined:c=5.5
         return U(*[box(x-wt/2,c-wt/2,x+wt/2,c+wt/2) for x in xs])
     if name=='star':
