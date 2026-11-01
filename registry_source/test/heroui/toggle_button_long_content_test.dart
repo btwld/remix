@@ -1,8 +1,10 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/heroui.dart';
 import 'package:remix/remix.dart';
 
+import '../helpers/heroui.dart';
 import '../helpers/heroui_long_content.dart';
 
 void main() {
@@ -75,39 +77,74 @@ void main() {
     }
 
     // A joined group of long labels is wider than a phone, as upstream's
-    // `w-fit` group is, so the one-line policy is asserted at desktop width.
-    for (final detached in [false, true]) {
-      testWidgets('group item labels fit 1024 $mode detached=$detached', (
-        tester,
-      ) async {
-        await pumpHeroUiLongContent(
+    // `w-fit` group is, so the group scrolls its row inside the width it is
+    // given rather than overflowing it.
+    for (final width in [375.0, 1024.0]) {
+      for (final detached in [false, true]) {
+        testWidgets('group item labels fit $width $mode detached=$detached', (
           tester,
-          HeroUiToggleButtonGroup<String>(
-            selectedValue: 'long',
-            onChanged: (_) {},
-            detached: detached,
-            items: const [
-              RemixToggleGroupItem(value: 'long', label: longHeroUiAction),
-              RemixToggleGroupItem(value: 'short', label: 'Aus'),
-            ],
-          ),
-          width: 1024,
-          mode: mode,
-        );
-        expect(tester.takeException(), isNull);
-        final group = find.byType(HeroUiToggleButtonGroup<String>);
-        expectHeroUiTextInside(
-          tester,
-          find.text(longHeroUiAction),
-          tester.getRect(group),
-        );
-        expectHeroUiGlyphsInside(tester, longHeroUiAction);
-        expect(
-          heroUiParagraph(tester, longHeroUiAction).size.height,
-          20,
-          reason: 'item labels keep one line',
-        );
-      });
+        ) async {
+          String? selected = 'long';
+          await pumpHeroUiLongContent(
+            tester,
+            StatefulBuilder(
+              builder: (context, setState) => HeroUiToggleButtonGroup<String>(
+                selectedValue: selected,
+                onChanged: (value) => setState(() => selected = value),
+                detached: detached,
+                items: const [
+                  RemixToggleGroupItem(value: 'long', label: longHeroUiAction),
+                  RemixToggleGroupItem(value: 'short', label: 'Aus'),
+                ],
+              ),
+            ),
+            width: width,
+            mode: mode,
+          );
+          expect(tester.takeException(), isNull);
+          final group = find.byType(HeroUiToggleButtonGroup<String>);
+          final viewport = tester.getRect(group);
+          expect(viewport.left, greaterThanOrEqualTo(24));
+          expect(viewport.right, lessThanOrEqualTo(width - 24));
+          expectHeroUiGlyphsInside(tester, longHeroUiAction);
+          expect(
+            heroUiParagraph(tester, longHeroUiAction).size.height,
+            20,
+            reason: 'item labels keep one line',
+          );
+          // Only a group wider than its viewport scrolls; one that fits keeps
+          // the size it had without the scroll.
+          final position = tester
+              .state<ScrollableState>(
+                find.descendant(of: group, matching: find.byType(Scrollable)),
+              )
+              .position;
+          expect(position.maxScrollExtent, width == 375 ? greaterThan(0) : 0);
+          // Keyboard focus reveals the item it reaches and activates it
+          // there: Tab enters at the first item, an arrow moves on.
+          await tester.focusWithTab();
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+          expectHeroUiTextInside(tester, find.text('Aus'), viewport);
+          await tester.sendKeyEvent(LogicalKeyboardKey.space);
+          await tester.pumpAndSettle();
+          expect(selected, 'short');
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+          await tester.pumpAndSettle();
+          expect(position.pixels, 0, reason: 'the long item scrolls back');
+          await tester.sendKeyEvent(LogicalKeyboardKey.space);
+          await tester.pumpAndSettle();
+          expect(selected, 'long');
+          // A drag reaches the item at the end, where a tap selects it.
+          await tester.drag(group, const Offset(-1000, 0));
+          await tester.pumpAndSettle();
+          expectHeroUiTextInside(tester, find.text('Aus'), viewport);
+          await tester.tap(find.text('Aus'));
+          await tester.pumpAndSettle();
+          expect(selected, 'short');
+          expect(tester.takeException(), isNull);
+        });
+      }
     }
   }
 }

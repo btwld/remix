@@ -87,12 +87,21 @@ ToggleGroupStyler {{valuePrefix}}ToggleButtonGroupStyle({
       .animate({{typePrefix}}Tokens.fillMotion);
 
   // Attached items are square inside one rounded, clipped pill.
+  final container = detached
+      ? FlexBoxStyler().spacing(_detachedGap)
+      : FlexBoxStyler()
+            .borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
+            .clipBehavior(.antiAlias);
+
   return ToggleGroupStyler(
-    container: detached
-        ? FlexBoxStyler().spacing(_detachedGap)
-        : FlexBoxStyler()
-              .borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
-              .clipBehavior(.antiAlias),
+    // Items keep their size and their one-line labels, so a group of long
+    // ones is wider than a phone, as upstream's `w-fit` group is. Scrolling
+    // the row contains it within the available width, the way the tab strip
+    // does, instead of overflowing it. The group's own intrinsic width sizes
+    // the viewport, so a group that fits still shrink-wraps and one in an
+    // unbounded row still lays out. A vertical group scrolls the same axis:
+    // its labels are the part that outgrows the width.
+    container: container.wrap(.scrollView(scrollDirection: .horizontal)),
     item: detached ? item.borderRadius(.all({{typePrefix}}Tokens.radius3xl())) : item,
   ).merge(style);
 }
