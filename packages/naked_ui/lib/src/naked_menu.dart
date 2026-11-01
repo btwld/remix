@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -1126,9 +1125,9 @@ class _RenderMenuControlSemantics extends RenderMergeSemantics {
     List<SemanticsConfiguration> children,
   ) {
     final result = ChildSemanticsConfigurationsResultBuilder();
-    // Live regions belong beside the trigger, outside its merged button node.
+    // Unlabelled live regions can wrap controls with their own semantics.
     for (final child in children) {
-      if (child.liveRegion) {
+      if (child.liveRegion && !child.isButton && child.label.isNotEmpty) {
         result.markAsSiblingMergeGroup([child]);
       } else {
         result.markAsMergeUp(child);
