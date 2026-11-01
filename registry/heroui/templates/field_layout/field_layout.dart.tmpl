@@ -129,9 +129,13 @@ class {{typePrefix}}ControlRow extends StatelessWidget {
               .spacing(_contentGap),
           children: [
             control,
-            StyledText(
-              label,
-              style: enabled ? labelStyle : labelStyle.wrap(dimmed),
+            // Let long labels wrap in the space left after the control and
+            // gap, while short labels keep their natural width.
+            Flexible(
+              child: StyledText(
+                label,
+                style: enabled ? labelStyle : labelStyle.wrap(dimmed),
+              ),
             ),
           ],
         ),
