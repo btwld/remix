@@ -305,7 +305,10 @@ class NakedSelect<T> extends StatefulWidget {
   /// than the space beside the trigger slides over the trigger. When true, the
   /// panel is capped at the space on the side [positioning] resolves to, after
   /// its side offset and collision padding, so a scrollable panel scrolls
-  /// there. Content that cannot scroll overflows the capped panel. See
+  /// there. With collision avoidance, if neither side has
+  /// [OverlayPositionConfig.minimumAvailableHeight] of room, the panel may
+  /// overlap the trigger within the collision-padded overlay bounds instead.
+  /// Content that cannot scroll overflows the capped panel. See
   /// [OverlayPositioner.constrainToAvailableHeight].
   final bool constrainToAvailableHeight;
 
