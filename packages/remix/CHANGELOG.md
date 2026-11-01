@@ -17,6 +17,9 @@ Prepared in source; publication is on hold.
 
 ### Features
 
+- Add `OverlayPositionConfig.minimumAvailableHeight` for constrained menu and
+  select panels. The default 48px threshold is configurable for row sizes and
+  panel padding; zero keeps strict side-capping, including at zero headroom.
 - Add `RemixMenuTrigger.control` for caller-owned buttons, with a handle for
   menu state, controller, focus return, and activation.
 - Add toast action placement: `inline` shares the message row when it fits;
@@ -35,10 +38,11 @@ Prepared in source; publication is on hold.
 - Map slider input to the painted rail, including thumb and track clearance,
   so grabbing a thumb does not change its value before movement.
 - Scroll oversized menu and select lists within their decorated panels. Fit
-  root panels beside their triggers and choose the side with more room. If
-  neither side has headroom, collision-avoiding panels use the overlay height
-  and may overlap the anchor rather than collapsing. Submenus keep overlay
-  room; scrolling columns size to content rather than distributing spare space.
+  root panels beside their triggers and choose the side with more room. Below
+  `minimumAvailableHeight`, collision-avoiding panels may overlap the anchor
+  within the collision-padded overlay bounds rather than collapsing. A short
+  panel that fits stays beside its trigger. Submenus keep overlay room;
+  scrolling columns size to content rather than distributing spare space.
 - Allow caller-owned popover triggers to disable automatic activation and
   provide their focus node for focus return after dismissal.
 
@@ -61,8 +65,8 @@ Prepared in source; publication is on hold.
   of enclosing hover, press, and focus state.
 - Keep accordion and disclosure panel content independent of trigger state.
 - Keep sidebar header and footer content independent of its disabled state.
-- Keep loading menu announcements separate from button names with
-  `naked_ui ^1.3.2`.
+- Require `naked_ui ^1.4.0` for separate loading menu announcements, focus,
+  slider-track geometry, and usable collision-padded overlay positioning.
 - Correct arrow-key navigation in RTL tabs.
 
 ## 1.0.0-beta.13
