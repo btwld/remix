@@ -20,6 +20,11 @@ This directory is the source pack. `package.json` is `"private": true`. The lice
 
 Warning requires a visible text label at every native size (12, 16, and 24) and both appearances (outline and filled), in every family, including scaled uses of those masters. A tooltip or accessible name is not a substitute. Gap exceptions do not lift the rule.
 
+Each family's `catalog/exceptions.json` lists active departures from its geometry
+rules. Measurements that meet their target belong in ordinary geometry checks,
+not the active exception register. Removing a resolved entry does not approve
+the design or change a visible-label restriction.
+
 ## Build and check
 
 Pinned for this pack: CPython 3.13, Shapely 2.1.2, CairoSVG 2.8.2.
