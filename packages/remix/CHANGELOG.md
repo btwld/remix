@@ -89,6 +89,11 @@
   trigger's state.
 - `RemixSidebar` header and footer content no longer resolves `onDisabled`
   variants when the sidebar is disabled. The sidebar's own regions still do.
+- A `RemixButton` label takes the width left over after its leading and
+  trailing icons, so a label longer than the button ellipsizes or wraps as its
+  style asks instead of overflowing the row. The bound sits outside the
+  loading `Visibility`, so a loading button keeps the same geometry, and a
+  label from a custom `textBuilder` is bounded too.
 
 ## 1.0.0-beta.13
 

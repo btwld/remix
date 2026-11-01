@@ -1,3 +1,14 @@
+## Unreleased
+
+### Fixes
+
+- `NakedTab` arrow keys follow the reading direction. Tabs traverse in widget
+  order, which a horizontal strip lays out from the right under a right-to-left
+  `Directionality`, so the left arrow now reaches the next tab and the right
+  arrow the previous one. Until now both moved against the layout there: from
+  the first tab, ArrowLeft wrapped to the last instead of reaching its
+  neighbour. Left-to-right strips and vertical strips are unchanged.
+
 ## 1.3.0
 
 ### Features
