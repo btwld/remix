@@ -68,8 +68,8 @@
 - Constrain button labels to the width left beside their icons. Unbounded
   horizontal layouts still shrink-wrap, including explicit max-axis styles,
   and intrinsic sizing and loading geometry are preserved.
-- Require `naked_ui ^1.3.0` for control triggers, focus, slider-track geometry,
-  and overlay positioning behavior.
+- Require `naked_ui ^1.3.2` for control triggers with separate loading
+  announcements, focus, slider-track geometry, and overlay positioning.
 - Map slider pointer input to its painted rail, including thumb and track
   clearance, so grabbing a thumb does not change its value before movement.
 - `RemixSelect` scrolls a list taller than its overlay or than a `maxHeight`
@@ -89,7 +89,9 @@
   `collisionPadding`, instead of as tall as the whole overlay. A long list now
   scrolls beside the trigger rather than sliding over it, and opens on the side
   with more room. A panel that fits is unchanged, and so is a submenu, which
-  keeps the room the overlay has.
+  keeps the room the overlay has. If a trigger fills the overlay height,
+  the panel uses the overlay's height and may overlap the trigger so options
+  remain usable.
 - `RemixToast` stacks an inline action below the message when the toast is
   too narrow to share a row, so the message is no longer squeezed beside it.
   The cutoff follows the width the toast gets, including its margin and style

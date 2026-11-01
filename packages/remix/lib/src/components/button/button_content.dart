@@ -93,13 +93,4 @@ class _RenderButtonFlex extends RenderFlex {
     constraints,
     () => super.computeDryLayout(constraints),
   );
-
-  @override
-  double? computeDryBaseline(
-    BoxConstraints constraints,
-    TextBaseline baseline,
-  ) => _withWidthConstraints(
-    constraints,
-    () => super.computeDryBaseline(constraints, baseline),
-  );
 }

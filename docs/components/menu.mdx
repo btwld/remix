@@ -405,7 +405,8 @@ more room, so a long menu scrolls there instead of covering the trigger. Every
 submenu panel scrolls the same way, within the room the overlay has. A
 `maxHeight` on the `overlay` style caps the panel lower still. A menu that fits
 keeps the size of its items, and the overlay's padding, decoration, and effects
-stay in place while the items scroll.
+stay in place while the items scroll. If the trigger fills the
+available height, the panel may overlap it to keep the options usable.
 
 ```dart
 import 'package:remix/remix.dart';
