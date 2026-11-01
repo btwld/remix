@@ -8,7 +8,11 @@ part of 'textarea.dart';
 
 /// HeroUI recipe for [RemixTextArea]: the text field chrome over several lines.
 ///
-/// `.textarea` repeats `.input` and adds `min-height: 38px`.
+/// `.textarea` repeats `.input` and adds `min-height: 38px`. Unlike the text
+/// field, the placeholder wraps: it keeps the [RemixTextArea.minLines] lines
+/// the editor shows by default, then ellipsizes rather than laying out lines
+/// the field's box clips away. A text area with more lines than that passes
+/// its own `hintText` style.
 class HeroUiTextArea extends StatelessWidget {
   const HeroUiTextArea({
     super.key,
