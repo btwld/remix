@@ -63,8 +63,9 @@ final class TemplateRenderer {
         ))
           "import '${icons.library(name).import}';",
       ]..sort();
+      final eol = source.contains('\r\n') ? '\r\n' : '\n';
       rendered = rendered.replaceAllMapped(_iconPattern, (match) {
-        if (match[0] == iconImportToken) return imports.join('\n');
+        if (match[0] == iconImportToken) return imports.join(eol);
         final resolved = icons.resolve(match[1]!, iconLibrary);
         return '${icons.library(resolved.library).className}.'
             '${resolved.constant}';
