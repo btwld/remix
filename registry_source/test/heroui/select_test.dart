@@ -230,9 +230,7 @@ void main() {
       final before = tester.getRect(find.text('Banana'));
       Border ring(String label) =>
           (tester
-                          .resolvedSpecOf<SelectMenuItemSpec>(
-                            find.text(label),
-                          )
+                          .resolvedSpecOf<SelectMenuItemSpec>(find.text(label))
                           .container
                           .spec
                           .boxSpec
