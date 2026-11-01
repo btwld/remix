@@ -1,45 +1,5 @@
 part of 'menu.dart';
 
-/// Configuration for a [RemixMenu] trigger.
-///
-/// This is a configuration object, not a widget. The same object is the trigger
-/// for Fortal menus; there is no separate Fortal trigger type.
-///
-/// Use the unnamed constructor for the standard label/icon trigger. Use
-/// [RemixMenuTrigger.builder] when the trigger needs richer visual content.
-/// Builder output must be non-interactive visual content — not a nested
-/// button. [NakedMenu] continues to own tapping, focus, keyboard behavior,
-/// expanded semantics, and overlay state.
-///
-/// [label] is the visible default label and the accessible fallback for a
-/// builder-backed trigger.
-class RemixMenuTrigger {
-  /// Creates a standard label/icon trigger.
-  const RemixMenuTrigger({required this.label, this.icon}) : builder = null;
-
-  /// Creates a trigger that supplies custom visual content.
-  ///
-  /// The builder receives the current [NakedMenuState] and the already styled
-  /// default label/icon trigger as its child. It may wrap that child or
-  /// replace it entirely. Returned content must not add a second interactive
-  /// control.
-  const RemixMenuTrigger.builder({
-    required this.label,
-    this.icon,
-    required this.builder,
-  });
-
-  /// The visible default label and the accessible fallback for a
-  /// builder-backed trigger.
-  final String label;
-
-  /// Optional icon shown before [label] in the default trigger.
-  final IconData? icon;
-
-  /// Optional custom trigger content. Null for the standard trigger.
-  final ValueWidgetBuilder<NakedMenuState>? builder;
-}
-
 /// Base sealed class for all menu item types.
 ///
 /// This ensures type safety and exhaustive pattern matching when
@@ -374,8 +334,8 @@ class RemixMenu<T> extends StatefulWidget {
   /// Trigger configuration for the menu's button.
   ///
   /// A configuration object, not a widget. Use [RemixMenuTrigger] for the
-  /// standard label/icon surface or [RemixMenuTrigger.builder] for custom
-  /// visual content.
+  /// standard label/icon surface, [RemixMenuTrigger.builder] for custom visual
+  /// content, or [RemixMenuTrigger.control] for a caller-owned button.
   final RemixMenuTrigger trigger;
 
   /// The declarative ordinary, compound, submenu, and divider data.
@@ -412,6 +372,10 @@ class RemixMenu<T> extends StatefulWidget {
   final bool useRootOverlay;
 
   /// Optional focus node for the trigger.
+  ///
+  /// A [RemixMenuTrigger.control] receives it as
+  /// [RemixMenuTriggerHandle.focusNode]; without one the menu owns a node for
+  /// the control.
   final FocusNode? triggerFocusNode;
 
   /// Overlay positioning configuration.
@@ -421,7 +385,8 @@ class RemixMenu<T> extends StatefulWidget {
   ///
   /// Standard triggers keep descendant-derived names unless this is set.
   /// Builder-backed triggers use this value when set and otherwise fall back
-  /// to [RemixMenuTrigger.label].
+  /// to [RemixMenuTrigger.label]. Must be null for a
+  /// [RemixMenuTrigger.control], whose button owns its label.
   final String? semanticLabel;
 
   /// Whether to hide the menu trigger from the semantic tree.
@@ -445,11 +410,18 @@ class RemixMenu<T> extends StatefulWidget {
 
 class _RemixMenuState<T> extends State<RemixMenu<T>> {
   late final MenuController _internalController;
+  FocusNode? _ownedControlFocusNode;
 
   @override
   void initState() {
     super.initState();
     _internalController = widget.controller ?? MenuController();
+  }
+
+  @override
+  void dispose() {
+    _ownedControlFocusNode?.dispose();
+    super.dispose();
   }
 
   // Note: MenuController doesn't require disposal - it's not a ChangeNotifier
@@ -463,6 +435,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   MenuController get _effectiveController =>
       widget.controller ?? _internalController;
+
+  FocusNode get _controlFocusNode =>
+      widget.triggerFocusNode ??
+      (_ownedControlFocusNode ??= FocusNode(debugLabel: 'RemixMenu control'));
 
   String? get _resolvedTriggerSemanticLabel {
     if (widget.trigger.builder == null) {
@@ -480,7 +456,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
         if (widget.trigger.icon != null)
           StyledIcon(icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
         Flexible(
-          child: StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
+          child: StyledText(
+            widget.trigger.label!,
+            styleSpec: triggerSpec.label,
+          ),
         ),
       ],
     );
@@ -489,6 +468,12 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
+    final control = widget.trigger.control;
+    assert(
+      control == null || widget.semanticLabel == null,
+      'RemixMenu.semanticLabel does not apply to RemixMenuTrigger.control; '
+      'give the control its own label.',
+    );
 
     return NakedMenu<T>(
       // Render items list with direct spec passing
@@ -527,12 +512,27 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       consumeOutsideTaps: widget.consumeOutsideTaps,
       useRootOverlay: widget.useRootOverlay,
       closeOnClickOutside: widget.closeOnClickOutside,
-      triggerFocusNode: widget.triggerFocusNode,
+      openOnTap: control == null,
+      triggerFocusNode: control == null
+          ? widget.triggerFocusNode
+          : _controlFocusNode,
       positioning: widget.positioning,
+      constrainToAvailableHeight: true,
       semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
+        if (control != null) {
+          return control(
+            context,
+            RemixMenuTriggerHandle._(
+              isOpen: state.isOpen,
+              controller: _effectiveController,
+              focusNode: _controlFocusNode,
+            ),
+          );
+        }
+
         return RemixStyleSpecBuilder<MenuSpec>(
           style: style,
           styleSpec: widget.styleSpec,
@@ -663,6 +663,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       styleSpec: overlayStyleSpec,
       direction: Axis.vertical,
       containerEffects: containerEffects,
+      scrollable: true,
       children: snapshot
           .map(
             (item) => switch (item) {

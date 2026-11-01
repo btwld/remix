@@ -14,8 +14,10 @@ renames one Fortal constructor makes the example harder to learn from.
 Use the extension points owned by the component:
 
 - Build rich menu visuals with `RemixMenuTrigger.builder`, even when the menu
-  is `FortalMenu`. The trigger is a configuration object, not a widget, and
-  there is no separate `FortalMenuTrigger`.
+  is `FortalMenu`. Use `RemixMenuTrigger.control` when the trigger is a real
+  button such as `FortalButton`, passing the handle's `focusNode` and
+  `toggle`. The trigger is a configuration object, not a widget, and there is
+  no separate `FortalMenuTrigger`.
 - Build a disclosure indicator with `FortalDisclosure.triggerBuilder` and
   `state.isExpanded`. Return visual content, not another button; the
   disclosure keeps the interaction and semantics.
