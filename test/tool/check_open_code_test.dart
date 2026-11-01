@@ -843,6 +843,112 @@ import 'package:flutter/widgets.dart'
       );
     },
   );
+  group('icon packages follow the registry under test', () {
+    // registry-stable as promoted before schema 2: every icon in both
+    // libraries, remix_ui_icons floored at 0.1.0, and no Lucide fallback.
+    const stable = '''
+schema: 1
+libraries:
+  remix: {dependency: {remix_ui_icons: ^0.1.0}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
+icons:
+  check: {remix: check, lucide: check}
+  checkCircled: {remix: checkCircled, lucide: circleCheck}
+''';
+    const candidate = '''
+schema: 2
+libraries:
+  remix: {dependency: {remix_ui_icons: ^1.0.0-beta.1}, import: "package:remix_ui_icons/remix_ui_icons.dart", class: RemixIcons}
+  lucide: {dependency: {lucide_flutter: ^1.47.0}, import: "package:lucide_flutter/lucide_flutter.dart", class: LucideIcons}
+icons:
+  check: {remix: check, lucide: check}
+  checkCircled: {lucide: circleCheck, fallback: lucide}
+''';
+
+    test('a CLI release smoke reads registry-stable', () {
+      // publish.yml verifies a new CLI against the promoted registry before
+      // publishing it, the same registry applications read.
+      final workflow = File('.github/workflows/publish.yml').readAsStringSync();
+      expect(workflow, contains("REMIX_REGISTRY_RELEASE_SMOKE: '1'"));
+      expect(workflow, contains('melos run open-code:release:check'));
+      expect(
+        checker.publishedRegistryRef(
+          hostedCli: false,
+          environment: const {'REMIX_REGISTRY_RELEASE_SMOKE': '1'},
+        ),
+        'registry-stable',
+      );
+      expect(
+        checker.publishedRegistryRef(hostedCli: true, environment: const {}),
+        'registry-stable',
+      );
+      expect(
+        checker.publishedRegistryRef(
+          hostedCli: false,
+          environment: const {'REMIX_REGISTRY_RELEASE_REF': 'abc123'},
+        ),
+        'abc123',
+      );
+      expect(
+        checker.publishedRegistryRef(hostedCli: false, environment: const {}),
+        isNull,
+      );
+    });
+
+    test('a schema 1 stable registry needs no Lucide and the hosted icons', () {
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final contract = checker.iconContractForTest(preset, stable);
+        expect(contract.runtime, contains('remix_ui_icons'));
+        expect(contract.runtime, isNot(contains('lucide_flutter')));
+        expect(contract.imports, isNot(contains('lucide_flutter')));
+        // ^0.1.0 excludes the checkout's 1.0.0-beta.1, so even a checkout
+        // install resolves the published package.
+        expect(contract.checkout, isNot(contains('remix_ui_icons')));
+      }
+    });
+
+    test('the candidate registry adds Lucide and the checkout icons', () {
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final contract = checker.iconContractForTest(preset, candidate);
+        expect(
+          contract.runtime,
+          containsAll(['remix_ui_icons', 'lucide_flutter']),
+        );
+        expect(
+          contract.imports,
+          containsAll(['remix_ui_icons', 'lucide_flutter']),
+        );
+        expect(contract.checkout, contains('remix_ui_icons'));
+      }
+    });
+
+    test('the lucide library installs Lucide alone from either registry', () {
+      for (final icons in [stable, candidate]) {
+        final contract = checker.iconContractForTest(
+          'vanilla',
+          icons,
+          iconLibrary: 'lucide',
+        );
+        expect(contract.runtime, contains('lucide_flutter'));
+        expect(contract.runtime, isNot(contains('remix_ui_icons')));
+        expect(contract.checkout, isNot(contains('remix_ui_icons')));
+      }
+    });
+
+    test('icon packages are the library and its fallbacks', () {
+      expect(checker.iconPackagesFor(stable, 'remix'), ['remix_ui_icons']);
+      expect(checker.iconPackagesFor(candidate, 'remix'), [
+        'remix_ui_icons',
+        'lucide_flutter',
+      ]);
+      expect(checker.iconPackagesFor(candidate, 'lucide'), ['lucide_flutter']);
+      expect(checker.iconsResolveFromCheckout(stable, '1.0.0-beta.1'), isFalse);
+      expect(
+        checker.iconsResolveFromCheckout(candidate, '1.0.0-beta.1'),
+        isTrue,
+      );
+    });
+  });
 
   test('retained failure reporting includes the temporary directory', () {
     expect(
