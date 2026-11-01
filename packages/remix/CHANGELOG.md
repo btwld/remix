@@ -43,7 +43,9 @@
   of enclosing hover, press, and focus state.
 - Keep accordion and disclosure panel content independent of trigger state.
 - Keep sidebar header and footer content independent of its disabled state.
-- Require `naked_ui ^1.3.1` for corrected arrow-key navigation in RTL tabs.
+- Keep loading menu announcements separate from button names with
+  `naked_ui ^1.3.2`.
+- Correct arrow-key navigation in RTL tabs.
 
 ## 1.0.0-beta.13
 

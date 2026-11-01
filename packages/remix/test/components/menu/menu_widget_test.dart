@@ -475,6 +475,62 @@ void main() {
       },
     );
 
+    testWidgets('keeps a loading control name separate from its announcement', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: RemixMenuTrigger.control(
+            builder: (context, menu) => RemixButton(
+              label: 'Account actions',
+              loading: true,
+              focusNode: menu.focusNode,
+              onPressed: menu.toggle,
+            ),
+          ),
+          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+
+      debugPrint(
+        tester.binding.pipelineOwner.semanticsOwner!.rootSemanticsNode!
+            .toStringDeep(),
+      );
+      expect(find.semantics.byLabel('Account actions'), findsOne);
+      expect(find.semantics.byLabel('Account actions, loading'), findsOne);
+      final button = find.semantics
+          .byLabel('Account actions')
+          .evaluate()
+          .single;
+      final loading = find.semantics
+          .byLabel('Account actions, loading')
+          .evaluate()
+          .single;
+      expect(button.isMergedIntoParent, isFalse);
+      expect(loading.isMergedIntoParent, isFalse);
+      expect(
+        button,
+        isSemantics(
+          label: 'Account actions',
+          isButton: true,
+          hasEnabledState: true,
+          isEnabled: false,
+          hasExpandedState: true,
+          isExpanded: false,
+          isLiveRegion: false,
+          hasTapAction: false,
+        ),
+      );
+      expect(
+        loading,
+        isSemantics(label: 'Account actions, loading', isLiveRegion: true),
+      );
+      semantics.dispose();
+    });
+
     testWidgets('a disabled control does not open the menu', (tester) async {
       final handles = <RemixMenuTriggerHandle>[];
 
