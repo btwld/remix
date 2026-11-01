@@ -20,7 +20,7 @@
       "keywords": ["dashboard", "main"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "legacy planned Rounded roof (acute join) and CORNER_TOKEN body. 16 px door is narrower and sits lower so the outline still reads as a house.",
+        "note": "One rounded pentagon: ACUTE_JOIN gable and shoulders, CORNER_TOKEN feet, apex on the top keyline. 16 px door is narrower and sits lower so the outline still reads as a house.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
@@ -59,7 +59,7 @@
       "keywords": ["next", "forward"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Round-capped shaft and round-joined chevron. 12 px filled lengthens the head so the tip still reads as direction.",
+        "note": "One continuous round-capped shaft into a round-joined head, at a 45-degree half-angle and a two-thirds-canvas span on all six drawings.",
         "usage": "The application chooses left/right; artwork does not auto-mirror."
       }
     },
@@ -72,7 +72,7 @@
       "keywords": ["person", "account"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Circular head and stadium-shouldered body. Outline uses an octagonal head.",
+        "note": "Circular head over a dome torso: broad shoulder circles and smaller base corners. Outline uses an octagonal head.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
@@ -85,7 +85,7 @@
       "keywords": ["document", "page"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Rounded-folded page: moderate dog-ear with CORNER_TOKEN on page corners and an outline crease along the fold. Content bar at 24 px only. 12 px filled has no crease (a slit would look like damage); the cut itself is the fold.",
+        "note": "Portrait page with CORNER_TOKEN on its three page corners and a turned-down corner: solid in outline, where a counter would be a sub-pixel pocket, and split off by a gap-target slit in filled. Two unequal left-aligned lines at 24 px only.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
@@ -98,7 +98,7 @@
       "keywords": ["date", "schedule"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "legacy planned Rounded body, capsule tabs, one date mark at 12 and two at 16/24. No header slit.",
+        "note": "CORNER_TOKEN body with tabs and a header rail at contour weight. No date marks at 12 or 16 px; a row of three at 24 px.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
@@ -124,7 +124,7 @@
       "keywords": ["caution", "attention"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "legacy planned Rounded triangle with capsule stem and circular dot. Visible-label restriction is concept-level.",
+        "note": "ACUTE_JOIN triangle authored from its corner circles, so the apex stays on the keyline, with capsule stem and circular dot at the gap target. Visible-label restriction is concept-level.",
         "usageRestriction": "warning-visible-label"
       }
     },
@@ -137,8 +137,8 @@
       "keywords": ["url", "chain"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Two overlapping loops. At 12 px the rings sit on a diagonal so filled weight does not read as a peanut or a horizontal infinity. 16/24 use rotated stadiums. 12 px can still be mistaken for infinity; keep a visible label.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "note": "Two capsule rings on one 45-degree axis, woven so that each crosses over the other once, at every master and style. The weave gap is a recorded grammar exception below the meaningful-gap target. Requires a visible text label at 12 px.",
+        "usage": "Requires a visible text label at 12 px. At 16 and 24 px, use the action name on the enclosing control."
       }
     },
     {
@@ -146,12 +146,12 @@
       "label": "Branch",
       "category": "system-data",
       "pairModel": "silhouette",
-      "meaning": "A branching relationship. Use a visible label, especially at 12 px.",
+      "meaning": "A branching relationship. Requires a visible text label at every size.",
       "keywords": ["workflow", "fork"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "Three circular nodes and round-joined connectors. Outline uses square nodes.",
-        "usage": "Keep a visible label, especially at 12 px. This is a usage note, not the Warning restriction record."
+        "usage": "Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record."
       }
     },
     {

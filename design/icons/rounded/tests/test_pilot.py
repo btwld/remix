@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import hashlib
+from itertools import combinations
 import io
 import json
+import math
 import sys
 import unittest
 from pathlib import Path
@@ -11,13 +13,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from shapely import affinity, maximum_inscribed_circle
+from shapely.geometry import LineString, MultiPolygon, Point, Polygon, box
+
 from source.draw import draw
 from source.lookup import icon_svg, icon_svg_for_display, select_master
 from source.seams import (
-    APPEARANCES, CANONICAL_IDS, CORNER_TOKEN, CrossPackFallbackError, MASTERS,
-    MASTER_SELECTION, PAIR_MODEL, PRODUCT_PATH_COMMANDS, STAR_JOIN,
+    ACUTE_JOIN, APPEARANCES, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, CUT_JOIN,
+    CrossPackFallbackError, GAP_TARGET, MASTERS, MASTER_SELECTION, OUTLINE_WIDTH,
+    PADDING, PAIR_MODEL, PRODUCT_PATH_COMMANDS, STAR_JOIN,
     UnknownAppearanceError, UnknownIconError, UnknownMasterError,
 )
+from source.primitives import polygon, round_convex, rounded_hull, stadium_line, union
 from source.validate import parse_path, parse_svg
 
 try:
@@ -71,7 +78,7 @@ class ContractTests(unittest.TestCase):
         with self.assertRaises(CrossPackFallbackError):
             icon_svg('home', appearance='outline', master=24, pack='outline')
         with self.assertRaises(CrossPackFallbackError):
-            icon_svg_for_display('home', appearance='outline', size=16, pack='mono')
+            icon_svg_for_display('home', appearance='outline', size=16, pack='another-family')
         for size, master in MASTER_SELECTION.items():
             self.assertEqual(select_master(size), master)
             self.assertEqual(icon_svg_for_display('home', appearance='outline', size=size, pack='rounded'),
@@ -138,24 +145,21 @@ class GeometryGrammarTests(unittest.TestCase):
                 self.assertGreater(b.area, a.area)
 
     def test_weight_pairs_are_heavier_not_filled_holes(self):
-        for icon_id in ('search', 'link'):
-            for n in MASTERS:
-                outline = draw(icon_id, n, 'outline')
-                filled = draw(icon_id, n, 'filled')
-                self.assertGreater(filled.area, outline.area)
-                for g in (outline, filled):
-                    holes = []
-                    for p in (list(g.geoms) if g.geom_type == 'MultiPolygon' else [g]):
-                        holes.extend(p.interiors)
-                    self.assertTrue(holes, f'{icon_id} lost its open counters at {n}')
+        for n in MASTERS:
+            outline = draw('search', n, 'outline')
+            filled = draw('search', n, 'filled')
+            self.assertGreater(filled.area, outline.area)
+            for g in (outline, filled):
+                holes = []
+                for p in (list(g.geoms) if g.geom_type == 'MultiPolygon' else [g]):
+                    holes.extend(p.interiors)
+                self.assertTrue(holes, f'search lost its open counter at {n}')
 
-    def test_corner_token_is_wired_into_drawers(self):
-        src = (ROOT / 'source' / 'draw.py').read_text()
-        self.assertIn('CORNER_TOKEN', src)
-        self.assertIn('ACUTE_JOIN', src)
-        self.assertIn('STAR_JOIN', src)
-        self.assertEqual(CORNER_TOKEN, {12: 1.6, 16: 2.4, 24: 3.4})
-        self.assertEqual(STAR_JOIN, {12: 0.65, 16: 0.85, 24: 1.0})
+    def test_token_hierarchy(self):
+        for n in MASTERS:
+            self.assertLess(STAR_JOIN[n], OUTLINE_WIDTH[n])
+            self.assertGreater(ACUTE_JOIN[n], OUTLINE_WIDTH[n])
+            self.assertLess(ACUTE_JOIN[n], CORNER_TOKEN[n])
 
     def test_star_mass_is_not_thirty_percent_light(self):
         ang = parse_svg((OUTLINE / 'generated' / 'outline' / 'filled' / '24' / 'star.svg').read_text())[2]
@@ -176,6 +180,386 @@ class GeometryGrammarTests(unittest.TestCase):
 def box_x(x0, x1, n):
     from shapely.geometry import box
     return box(x0, 0, x1, n)
+
+
+# Measurement probes. They read exported SVG geometry, never drawer arguments.
+# NegativeControlTests proves that each one fails on the defect it guards against.
+COUNTER_FLOOR = {12: 0.9, 16: 1.35, 24: 1.8}  # GRAMMAR section 6
+MID_WIDTH_BLOB = 0.69  # A triangle at the full CORNER_TOKEN reaches this on every master.
+
+
+def product(icon_id, n, appearance):
+    path = ROOT / 'generated' / 'rounded' / appearance / str(n) / f'{icon_id}.svg'
+    return parse_svg(path.read_text())[2]
+
+
+def parts(g):
+    return sorted(g.geoms if isinstance(g, MultiPolygon) else [g], key=lambda p: p.area, reverse=True)
+
+
+def holes(g):
+    return [Polygon(h) for p in parts(g) for h in p.interiors]
+
+
+def convex_radii(ring):
+    """Local convex radius at each vertex, as (x, y, radius).
+
+    Walks each convex run until it has turned 30 degrees and divides the path
+    length by the turn. An arc reports its radius; a sharp corner reports about 0.
+    """
+    pts = []
+    for point in list(ring.coords)[:-1]:
+        # Boolean noise leaves 0.001 px steps. They are not corners; a real one survives.
+        if not pts or math.dist(pts[-1], point) > 0.01:
+            pts.append(point)
+    sign = 1 if ring.is_ccw else -1
+    count = len(pts)
+
+    def turn(i):
+        ax, ay = pts[i - 1]
+        bx, by = pts[i]
+        cx, cy = pts[(i + 1) % count]
+        return sign * math.atan2(
+            (bx - ax) * (cy - by) - (by - ay) * (cx - bx),
+            (bx - ax) * (cx - bx) + (by - ay) * (cy - by))
+
+    turns = [turn(i) for i in range(count)]
+    found = []
+    for start in range(count):
+        if turns[start] <= 1e-3:
+            continue
+        total, length, i = 0.0, 0.0, start
+        for _ in range(count):
+            total += turns[i]
+            if turns[i] < -1e-3:
+                total = 0.0
+                break
+            if total >= math.pi / 6:
+                break
+            j = (i + 1) % count
+            length += math.dist(pts[i], pts[j])
+            i = j
+        if total >= math.pi / 6:
+            bend = total - (turns[start] + turns[i]) / 2
+            found.append((*pts[start], length / bend if bend > 1e-6 else 0.0))
+    return found
+
+
+def min_convex_radius(g, region=None):
+    radii = []
+    for part in parts(g):
+        radii += [r for x, y, r in convex_radii(part.exterior)
+                  if region is None or region.contains(Point(x, y))]
+    return min(radii)
+
+
+def corner_setback(g, x, y):
+    """Distance from a bounding-box corner to the artwork: 0.414 R for an arc of radius R."""
+    return g.distance(Point(x, y))
+
+
+def mid_width_ratio(g, n):
+    """Silhouette width halfway down, over the widest extent: 0.5 for a sharp triangle."""
+    minx, miny, maxx, maxy = g.bounds
+    middle = (miny + maxy) / 2
+    solid = Polygon(parts(g)[0].exterior)
+    return solid.intersection(LineString([(0, middle), (n, middle)])).length / (maxx - minx)
+
+
+def counters(g, n):
+    """Transparent regions enclosed at the GRAMMAR floor, as inscribed diameters.
+
+    Air narrower than the floor counts as closed, so a slit does not merge two
+    counters, and a pocket below the floor never registers as one.
+    """
+    floor = COUNTER_FLOOR[n]
+    air = box(-4, -4, n + 4, n + 4).difference(g).buffer(-floor / 2)
+    found = []
+    for part in parts(air):
+        if part.contains(Point(-2, -2)):
+            continue
+        region = part.buffer(floor / 2)
+        found.append(2 * maximum_inscribed_circle(region).length)
+    return sorted(found)
+
+
+def long_axis_degrees(g):
+    """Direction of the artwork's long axis, in canvas degrees: 45 points up and to the right."""
+    hull = list(g.convex_hull.exterior.coords)
+    (ax, ay), (bx, by) = max(combinations(hull, 2), key=lambda pair: math.dist(*pair))
+    return math.degrees(math.atan2(ay - by, bx - ax)) % 180
+
+
+class NegativeControlTests(unittest.TestCase):
+    """Each probe must reject the shape that the review actually found."""
+
+    def setUp(self):
+        self.triangle = polygon([(12, 2), (22, 21), (2, 21)])
+
+    def test_radius_probe_rejects_sharp_and_expand_first_corners(self):
+        self.assertLess(min_convex_radius(self.triangle), 0.05)
+        # The recipe that shipped: it passes a radius of 2 and restores the sharp corner.
+        expand_first = self.triangle.buffer(2, quad_segs=8).buffer(-2, quad_segs=8)
+        self.assertLess(min_convex_radius(expand_first), 0.2)
+        self.assertGreater(min_convex_radius(round_convex(self.triangle, 2)), 1.9)
+
+    def test_radius_probe_reads_authored_radius(self):
+        for r in (0.65, 1.25, 2.6):
+            hull = rounded_hull((12, 2 + r, r), (2 + r, 21 - r, r), (22 - r, 21 - r, r))
+            self.assertAlmostEqual(min_convex_radius(hull), r, delta=0.05 * r)
+
+    def test_rounded_hull_fails_closed_on_a_swallowed_corner(self):
+        with self.assertRaises(ValueError):
+            rounded_hull((2, 2, 1), (10, 2, 1), (6, 10, 1), (6, 5, 1))
+
+    def test_mid_width_probe_rejects_sharp_and_blob_triangles(self):
+        self.assertAlmostEqual(mid_width_ratio(self.triangle, 24), 0.5, delta=0.01)
+        for n, half, top, bottom in ((12, 5.25, 1.0, 11.0), (16, 6.9, 1.5, 14.5), (24, 10.2, 2.0, 22.0)):
+            r, c = CORNER_TOKEN[n], n / 2
+            blob = rounded_hull((c, top + r, r), (c - half + r, bottom - r, r), (c + half - r, bottom - r, r))
+            self.assertGreaterEqual(mid_width_ratio(blob, n), MID_WIDTH_BLOB)
+
+    def test_setback_rejects_near_square_page(self):
+        near_square = box(3.9, 2, 20, 22).buffer(3.4).buffer(-3.4)
+        self.assertLess(corner_setback(near_square, 3.9, 2), 0.05)
+
+    def test_counter_probe_rejects_pockets_and_filled_holes(self):
+        plate = box(2, 2, 22, 22)
+        self.assertEqual(counters(plate, 24), [])
+        pocket = plate.difference(Point(12, 12).buffer(0.7))
+        self.assertEqual(counters(pocket, 24), [])
+        window = plate.difference(Point(12, 12).buffer(1.2))
+        self.assertAlmostEqual(counters(window, 24)[0], 2.4, delta=0.05)
+
+    def test_axis_probe_rejects_the_former_bow(self):
+        # The 16 master as reviewed: two stadiums splayed about the vertical.
+        bow = union(
+            affinity.rotate(stadium_line(2.3, 8, 8.5, 8, 6.4), 32, origin=(5.4, 8)),
+            affinity.rotate(stadium_line(7.5, 8, 13.7, 8, 6.4), -32, origin=(10.6, 8)),
+        )
+        self.assertGreater(abs(long_axis_degrees(bow) - 45), 20)
+
+    def test_gap_probes_reject_detached_arrow_and_crowded_warning(self):
+        # The 24 outline as reviewed: the shaft stops short of the chevron.
+        detached = union(stadium_line(3, 12, 16.2, 12, 2), LineString(
+            [(10.6, 4.8), (20.2, 12), (10.6, 19.2)]).buffer(1, quad_segs=8))
+        self.assertEqual(len(parts(detached)), 2)
+        frame = self.triangle.difference(self.triangle.buffer(-2))
+        crowded = stadium_line(12, 6.5, 12, 12, 1.55)
+        self.assertLess(frame.distance(crowded), GAP_TARGET[24])
+
+
+class ShapeContractTests(unittest.TestCase):
+    """Measured corner, topology and gap contracts on the exported products."""
+
+    def check_each(self, icon_id, check):
+        for n in MASTERS:
+            for appearance in APPEARANCES:
+                with self.subTest(icon=icon_id, master=n, appearance=appearance):
+                    check(n, appearance, product(icon_id, n, appearance))
+
+    def test_corrected_key_shapes_have_no_sharp_convex_corner(self):
+        for icon_id in ('home', 'file', 'calendar', 'warning', 'link', 'user', 'arrow-right'):
+            def check(n, appearance, g):
+                self.assertGreater(min_convex_radius(g), 0.9 * CUT_JOIN[n])
+            self.check_each(icon_id, check)
+
+    def test_warning_apex_is_round_and_stays_on_its_keyline(self):
+        def check(n, appearance, g):
+            minx, miny, maxx, maxy = g.bounds
+            self.assertAlmostEqual(miny, PADDING[n], delta=0.01)
+            apex = box(0, miny, n, miny + ACUTE_JOIN[n])
+            radius = min_convex_radius(g, apex)
+            self.assertGreater(radius, 0.95 * ACUTE_JOIN[n])
+            self.assertLess(radius, CORNER_TOKEN[n])
+            # Rounder than a sharp triangle, short of the full object radius.
+            self.assertGreater(mid_width_ratio(g, n), 0.55)
+            self.assertLess(mid_width_ratio(g, n), MID_WIDTH_BLOB)
+        self.check_each('warning', check)
+
+    def test_home_roof_is_round_and_stays_on_its_keyline(self):
+        def check(n, appearance, g):
+            minx, miny, maxx, maxy = g.bounds
+            self.assertAlmostEqual(miny, PADDING[n], delta=0.01)
+            # round_convex resamples this arc for the door jambs, so the estimate reads low.
+            self.assertGreater(min_convex_radius(g, box(0, miny, n, miny + ACUTE_JOIN[n])), 0.85 * ACUTE_JOIN[n])
+            # The feet are the softer object corners.
+            self.assertAlmostEqual(
+                corner_setback(g, minx, maxy), (math.sqrt(2) - 1) * CORNER_TOKEN[n], delta=0.05)
+        self.check_each('home', check)
+
+    def test_file_page_corners_and_proportion(self):
+        def check(n, appearance, g):
+            minx, miny, maxx, maxy = g.bounds
+            for corner in ((minx, miny), (minx, maxy), (maxx, maxy)):
+                self.assertAlmostEqual(
+                    corner_setback(g, *corner), (math.sqrt(2) - 1) * CORNER_TOKEN[n], delta=0.05)
+            self.assertLess((maxx - minx) / (maxy - miny), 0.87)
+            self.assertGreater((maxx - minx) / (maxy - miny), 0.75)
+        self.check_each('file', check)
+
+    def test_file_shows_a_turned_down_corner(self):
+        for n in MASTERS:
+            with self.subTest(master=n):
+                outline, filled = product('file', n, 'outline'), product('file', n, 'filled')
+                page, ear = parts(filled)[:2]
+                self.assertGreaterEqual(page.distance(ear) + 1e-6, GAP_TARGET[n])
+                # The ear sits in the page's upper right, inside the fold's silhouette.
+                self.assertGreater(ear.centroid.x, page.centroid.x)
+                self.assertLess(ear.centroid.y, page.centroid.y)
+                self.assertGreater(ear.area, 0.2 * OUTLINE_WIDTH[n] * 3 * OUTLINE_WIDTH[n])
+                # Outline carries the same ear as solid mass, leaving no pocket beside it.
+                self.assertTrue(outline.contains(ear.centroid))
+                self.assertEqual(len(holes(outline)), len(counters(outline, n)))
+
+    def test_file_content_marks_are_two_unequal_left_aligned_lines_at_24_only(self):
+        for n in (12, 16):
+            self.assertEqual(len(holes(product('file', n, 'filled'))), 0)
+            self.assertEqual(len(parts(product('file', n, 'outline'))), 1)
+        filled = sorted(holes(product('file', 24, 'filled')), key=lambda h: h.bounds[1])
+        self.assertEqual(len(filled), 2)
+        top, lower = filled
+        self.assertAlmostEqual(top.bounds[0], lower.bounds[0], delta=0.01)
+        self.assertGreater(top.bounds[2], lower.bounds[2] + 1)
+        self.assertGreaterEqual(top.distance(lower) + 1e-6, GAP_TARGET[24])
+        outline_lines = sorted(parts(product('file', 24, 'outline'))[1:], key=lambda p: p.bounds[1])
+        self.assertEqual(len(outline_lines), 2)
+        for line in outline_lines:
+            self.assertGreaterEqual(
+                parts(product('file', 24, 'outline'))[0].distance(line) + 1e-6, GAP_TARGET[24])
+
+    def test_warning_punctuation_meets_every_gap_target(self):
+        for n in MASTERS:
+            with self.subTest(master=n):
+                target = GAP_TARGET[n]
+                frame, *marks = parts(product('warning', n, 'outline'))
+                self.assertEqual(len(marks), 2)
+                self.assertGreaterEqual(frame.distance(marks[0]) + 1e-6, target)
+                self.assertGreaterEqual(frame.distance(marks[1]) + 1e-6, target)
+                self.assertGreaterEqual(marks[0].distance(marks[1]) + 1e-6, target)
+                stem, dot = sorted(marks, key=lambda m: m.bounds[1])
+                self.assertGreater(stem.bounds[3] - stem.bounds[1], 1.4 * (dot.bounds[3] - dot.bounds[1]))
+                self.assertAlmostEqual(stem.centroid.x, n / 2, delta=0.01)
+                self.assertAlmostEqual(dot.centroid.x, n / 2, delta=0.01)
+                filled = product('warning', n, 'filled')
+                cut = holes(filled)
+                self.assertEqual(len(cut), 2)
+                self.assertGreaterEqual(cut[0].distance(cut[1]) + 1e-6, target)
+                solid = Polygon(parts(filled)[0].exterior)
+                for hole in cut:
+                    self.assertGreaterEqual(solid.exterior.distance(hole) + 1e-6, target)
+
+    def test_warning_exceptions_are_resolved_and_the_label_rule_remains(self):
+        self.assertEqual(json.loads((ROOT / 'catalog' / 'exceptions.json').read_text()), [])
+        record = json.loads((ROOT / 'catalog' / 'restrictions.json').read_text())['records'][0]
+        inventory = {
+            (r['appearance'], r['master']): r['sha256']
+            for r in json.loads((ROOT / 'generated' / 'inventory.json').read_text()) if r['id'] == 'warning'
+        }
+        for (appearance, n), sha in inventory.items():
+            cell = record['sizes'][str(n)][appearance]
+            self.assertTrue(cell['visibleLabelRequired'])
+            self.assertEqual(cell['geometrySha256'], sha)
+            self.assertEqual(cell['exceptionIds'], [])
+
+    def test_link_is_one_woven_chain_on_a_single_axis(self):
+        def check(n, appearance, g):
+            self.assertAlmostEqual(long_axis_degrees(g), 45, delta=1)
+            self.assertEqual(len(parts(g)), 2)
+            self.assertAlmostEqual(parts(g)[0].area, parts(g)[1].area, delta=0.01 * g.area)
+            # A half turn carries one link onto the other, so neither master can splay.
+            turned = affinity.rotate(g, 180, origin=(n / 2, n / 2))
+            self.assertLess(turned.symmetric_difference(g).area, 0.01 * g.area)
+            # The weave is a visible cut, not a hairline.
+            self.assertGreaterEqual(parts(g)[0].distance(parts(g)[1]), 0.6 * OUTLINE_WIDTH[n] - 0.01)
+        self.check_each('link', check)
+
+    def test_link_keeps_three_transparent_counters(self):
+        def check(n, appearance, g):
+            found = counters(g, n)
+            self.assertEqual(len(found), 3, found)
+            self.assertGreaterEqual(found[0] + 0.02, COUNTER_FLOOR[n])
+        self.check_each('link', check)
+
+    def test_link_weight_pair_shares_a_centerline(self):
+        for n in MASTERS:
+            with self.subTest(master=n):
+                outline, filled = product('link', n, 'outline'), product('link', n, 'filled')
+                self.assertGreater(filled.area, outline.area)
+                grown = (BOLD_WIDTH[n] - OUTLINE_WIDTH[n]) / 2
+                self.assertAlmostEqual(filled.bounds[0], outline.bounds[0] - grown, delta=0.02)
+                self.assertAlmostEqual(filled.bounds[2], outline.bounds[2] + grown, delta=0.02)
+
+    def test_arrow_is_continuous_with_one_head_angle(self):
+        def check(n, appearance, g):
+            self.assertEqual(len(parts(g)), 1)
+            self.assertEqual(holes(g), [])
+            t = OUTLINE_WIDTH[n] if appearance == 'outline' else BOLD_WIDTH[n]
+            minx, miny, maxx, maxy = g.bounds
+            self.assertAlmostEqual((miny + maxy) / 2, n / 2, delta=0.01)
+            tip = (maxx - t / 2, n / 2)
+            top = [x for x, y in parts(g)[0].exterior.coords if y < miny + 1e-3]
+            cap = (sum(top) / len(top), miny + t / 2)
+            half_angle = math.degrees(math.atan2(tip[1] - cap[1], tip[0] - cap[0]))
+            self.assertAlmostEqual(half_angle, 45, delta=1)
+            # The notch between arm and shaft stays open at the arm's end.
+            shaft_top = n / 2 - t / 2
+            column = g.intersection(LineString([(cap[0], 0), (cap[0], n / 2)]))
+            arm = min(column.geoms, key=lambda s: s.bounds[1]) if hasattr(column, 'geoms') else column
+            self.assertGreaterEqual(shaft_top - arm.bounds[3], GAP_TARGET[n])
+        self.check_each('arrow-right', check)
+
+    def test_calendar_tabs_and_rail_carry_contour_weight(self):
+        def check(n, appearance, g):
+            w = OUTLINE_WIDTH[n]
+            minx, miny, maxx, maxy = g.bounds
+            band = g.intersection(box(0, miny, n, miny + 0.8 * w))
+            tabs = parts(band)
+            self.assertEqual(len(tabs), 2)
+            for tab in tabs:
+                self.assertLessEqual(tab.bounds[2] - tab.bounds[0], w + 0.02)
+            self.assertAlmostEqual(tabs[0].centroid.x + tabs[1].centroid.x, n, delta=0.02)
+        self.check_each('calendar', check)
+
+    def test_calendar_header_is_a_real_rail(self):
+        for n in MASTERS:
+            with self.subTest(master=n):
+                w = OUTLINE_WIDTH[n]
+                outline, filled = product('calendar', n, 'outline'), product('calendar', n, 'filled')
+                header, lower = parts(filled)[1], parts(filled)[0]
+                self.assertAlmostEqual(lower.bounds[1] - header.bounds[3], w, delta=0.02)
+                for found in counters(outline, n)[:2]:
+                    self.assertGreaterEqual(found + 0.02, COUNTER_FLOOR[n])
+                self.assertGreaterEqual(len(counters(outline, n)), 2)
+
+    def test_calendar_date_marks_reduce_with_the_master(self):
+        self.assertEqual(len(holes(product('calendar', 12, 'filled'))), 0)
+        self.assertEqual(len(holes(product('calendar', 16, 'filled'))), 0)
+        row = sorted(holes(product('calendar', 24, 'filled')), key=lambda h: h.bounds[0])
+        self.assertEqual(len(row), 3)
+        for left, right in zip(row, row[1:]):
+            self.assertGreaterEqual(left.distance(right) + 1e-6, GAP_TARGET[24])
+
+    def test_user_keeps_circular_head_and_a_dome_torso(self):
+        def check(n, appearance, g):
+            torso = parts(g)[0]
+            head = parts(g)[1]
+            compact = 4 * math.pi * Polygon(head.exterior).area / head.exterior.length ** 2
+            self.assertGreater(compact, 0.99)
+            self.assertLess(head.bounds[3], torso.bounds[1])
+            self.assertGreaterEqual(torso.distance(head) + 1e-6, GAP_TARGET[n] - 0.01)
+            minx, miny, maxx, maxy = torso.bounds
+            shoulder = torso.distance(Point(minx, miny))
+            foot = torso.distance(Point(minx, maxy))
+            # A pill has equal corners, so this ratio would be 1.
+            self.assertGreater(shoulder, 1.3 * foot)
+        self.check_each('user', check)
+
+    def test_preserved_star_join_stays_smaller_than_acute(self):
+        def check(n, appearance, g):
+            self.assertLess(min_convex_radius(g), ACUTE_JOIN[n])
+            self.assertGreater(min_convex_radius(g), 0.9 * STAR_JOIN[n])
+        self.check_each('star', check)
 
 
 class SvgSafetyTests(unittest.TestCase):

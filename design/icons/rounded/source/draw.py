@@ -7,14 +7,16 @@ from __future__ import annotations
 import math
 
 from shapely import affinity
+from shapely.geometry import box
 
 from source.primitives import (
     circle, clean, polygon, polyline_capsule, ring, round_all, round_convex,
-    rounded_rect, stadium_line, union,
+    rounded_hull, rounded_rect, stadium_line, union,
 )
 from source.seams import (
-    ACUTE_JOIN, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, MASTERS, OUTLINE_WIDTH,
-    PADDING, STAR_JOIN, UnknownAppearanceError, UnknownIconError, UnknownMasterError,
+    ACUTE_JOIN, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, CUT_JOIN, GAP_TARGET, MASTERS,
+    OUTLINE_WIDTH, PADDING, QUAD_SEGS, STAR_JOIN, UnknownAppearanceError, UnknownIconError,
+    UnknownMasterError,
 )
 
 
@@ -41,21 +43,26 @@ def _doorway(shape, door, w, outlined):
 
 def _home(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
+    # One rounded pentagon: acute gable, softer shoulders, CORNER_TOKEN feet.
     if n == 12:
-        roof = round_convex(polygon([(6, 1.15), (11.05, 5.85), (0.95, 5.85)]), acute)
-        body = rounded_rect(1.35, 5.15, 10.65, 11, R)
-        door = rounded_rect(4.9, 8.35, 7.1, 11.12, 0.65)
+        x0, x1, top, shoulder, bottom = 1.0, 11.0, 1.0, 5.1, 11.0
+        door = rounded_rect(5.0, 8.0, 7.0, 11.12, 0.65)
     elif n == 16:
         # Narrower, lower door so the 16 outline still reads as a house, not an arch.
-        roof = round_convex(polygon([(8, 1.35), (14.9, 7.7), (1.1, 7.7)]), acute)
-        body = rounded_rect(2.0, 6.9, 14.0, 14.5, R)
-        door = rounded_rect(7.05, 11.7, 8.95, 14.62, 0.7)
+        x0, x1, top, shoulder, bottom = 2.0, 14.0, 1.5, 6.9, 14.5
+        door = rounded_rect(7.0, 11.5, 9.0, 14.62, 0.7)
     else:
-        roof = round_convex(polygon([(12, 1.85), (22.2, 11.3), (1.8, 11.3)]), acute)
-        body = rounded_rect(3.9, 10.0, 20.1, 22.0, R)
-        door = rounded_rect(9.85, 15.4, 14.15, 22.18, 1.35)
-    shape = union(roof, body)
-    return _doorway(shape, door, w, outlined)
+        x0, x1, top, shoulder, bottom = 3.0, 21.0, 2.0, 10.3, 22.0
+        door = rounded_rect(10.0, 15.0, 14.0, 22.18, 1.35)
+    c = n / 2
+    shape = rounded_hull(
+        (c, top + acute, acute),
+        (x0 + acute, shoulder, acute),
+        (x1 - acute, shoulder, acute),
+        (x0 + R, bottom - R, R),
+        (x1 - R, bottom - R, R),
+    )
+    return round_convex(_doorway(shape, door, w, outlined), CUT_JOIN[n])
 
 
 def _search(n, appearance):
@@ -87,30 +94,32 @@ def _plus(n, appearance):
 def _arrow_right(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
     c = n / 2
-    if n == 12:
-        # Longer chevron so filled 2 px round joins still read as a tip, not a blob.
-        shaft = stadium_line(1.4, c, 6.0, c, t)
-        head = polyline_capsule([(4.15, 2.35), (10.7, c), (4.15, 9.65)], t)
-    elif n == 16:
-        shaft = stadium_line(2.0, c, 10.4, c, t)
-        head = polyline_capsule([(6.6, 3.05), (13.7, c), (6.6, 12.95)], t)
-    else:
-        shaft = stadium_line(3.0, c, 16.2, c, t)
-        head = polyline_capsule([(10.6, 4.8), (20.2, c), (10.6, 19.2)], t)
-    return union(shaft, head)
+    # One continuous shaft into a 45-degree head, spanning two thirds of the canvas.
+    tail, tip, reach = {12: (1.5, 10.5, 4.0), 16: (2.25, 13.75, 5.25), 24: (3.0, 21.0, 8.0)}[n]
+    return union(
+        stadium_line(tail, c, tip, c, t),
+        polyline_capsule([(tip - reach, c - reach), (tip, c), (tip - reach, c + reach)], t),
+    )
 
 
 def _user(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
+    # Dome torso: broad shoulder circles over small base corners.
     if n == 12:
-        head = circle(6.0, 3.35, 2.2)
-        body = rounded_rect(1.2, 6.55, 10.8, 11.0, R)
+        head = circle(6.0, 3.3, 2.2)
+        x0, x1, top, bottom, shoulder = 2.0, 10.0, 6.5, 11.0, 2.2
     elif n == 16:
         head = circle(8.0, 4.45, 2.85)
-        body = rounded_rect(1.7, 8.7, 14.3, 14.5, R)
+        x0, x1, top, bottom, shoulder = 2.5, 13.5, 8.8, 14.5, 2.8
     else:
         head = circle(12.0, 6.55, 4.15)
-        body = rounded_rect(3.4, 12.7, 20.6, 22.0, 4.5)
+        x0, x1, top, bottom, shoulder = 4.0, 20.0, 12.7, 22.0, 4.6
+    body = rounded_hull(
+        (x0 + shoulder, top + shoulder, shoulder),
+        (x1 - shoulder, top + shoulder, shoulder),
+        (x0 + acute, bottom - acute, acute),
+        (x1 - acute, bottom - acute, acute),
+    )
     if outlined:
         return union(ring(head, w), ring(body, w))
     return union(head, body)
@@ -118,65 +127,54 @@ def _user(n, appearance):
 
 def _file(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
+    # A page taller than wide. fold is the leg of the turned-down corner.
     if n == 12:
-        # Moderate dog-ear: large enough to read as a fold after CORNER_TOKEN,
-        # small enough that the page does not become a pentagon-tag.
-        shape = round_convex(
-            polygon([(1.4, 1.2), (7.45, 1.2), (10.7, 4.45), (10.7, 10.8), (1.4, 10.8)]),
-            R)
-        fold = (7.65, 1.4, 10.5, 4.25)
-        mark = None
+        x0, x1, y0, y1, fold = 2.0, 10.0, 1.0, 11.0, 3.25
+        lines = ()
     elif n == 16:
-        shape = round_convex(
-            polygon([(2.0, 1.5), (10.05, 1.5), (14.35, 5.8), (14.35, 14.5), (2.0, 14.5)]),
-            R)
-        fold = (10.2, 1.7, 14.15, 5.65)
-        mark = None
+        x0, x1, y0, y1, fold = 2.5, 13.5, 1.5, 14.5, 4.25
+        lines = ()
     else:
-        shape = round_convex(
-            polygon([(3.9, 2.0), (15.15, 2.0), (20.15, 7.0), (20.15, 22.0), (3.9, 22.0)]),
-            R)
-        fold = (15.35, 2.25, 19.9, 6.8)
-        mark = rounded_rect(8.0, 13.1, 16.0, 15.1, 1.0)
-    crease = stadium_line(*fold, w).intersection(shape)
+        x0, x1, y0, y1, fold = 4.0, 20.0, 2.0, 22.0, 6.0
+        # Two unequal left-aligned lines, so the page does not read as file-minus.
+        lines = ((9.0, 15.0, 12.75), (9.0, 12.5, 16.75))
+    tangent = acute * math.tan(math.pi / 8)
+    fx, fy = x1 - fold, y0 + fold
+    shape = rounded_hull(
+        (x0 + R, y0 + R, R),
+        (fx - tangent, y0 + acute, acute),
+        (x1 - acute, fy + tangent, acute),
+        (x1 - R, y1 - R, R),
+        (x0 + R, y1 - R, R),
+    )
+    crease = [(fx, y0 - w), (fx, fy), (x1 + w, fy)]
+    marks = [stadium_line(a, y, b, y, w) for a, b, y in lines]
     if outlined:
-        g = union(ring(shape, w), crease)
-        return union(g, mark) if mark is not None else g
-    return shape.difference(mark) if mark is not None else shape
+        # The turned-down corner is solid: as a counter it would be a sub-pixel pocket.
+        ear = union(polygon(crease), polyline_capsule(crease, w)).intersection(shape)
+        return union(ring(shape, w), ear, *marks)
+    page = round_convex(shape.difference(polyline_capsule(crease, GAP_TARGET[n])), CUT_JOIN[n])
+    return page.difference(union(*marks)) if marks else page
 
 
 def _calendar(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
+    # Tabs and header rail carry the contour weight. A date row only fits at 24.
     if n == 12:
-        body = rounded_rect(1.15, 3.15, 10.85, 11.0, R)
-        tabs = union(
-            stadium_line(3.5, 1.35, 3.5, 4.2, 1.35),
-            stadium_line(8.5, 1.35, 8.5, 4.2, 1.35),
-        )
-        marks = rounded_rect(4.85, 6.35, 7.15, 8.55, 0.7)
+        x0, x1, y0, y1, tab_x, tab_top, rail_y = 1.0, 11.0, 3.0, 11.0, (3.5, 8.5), 1.0, 5.5
+        marks = ()
     elif n == 16:
-        body = rounded_rect(1.7, 4.15, 14.3, 14.5, R)
-        tabs = union(
-            stadium_line(4.7, 1.7, 4.7, 5.5, 1.8),
-            stadium_line(11.3, 1.7, 11.3, 5.5, 1.8),
-        )
-        marks = union(
-            rounded_rect(4.7, 8.15, 7.15, 10.5, 0.85),
-            rounded_rect(8.85, 8.15, 11.3, 10.5, 0.85),
-        )
+        x0, x1, y0, y1, tab_x, tab_top, rail_y = 1.5, 14.5, 3.5, 14.5, (4.75, 11.25), 1.5, 7.25
+        marks = ()
     else:
-        body = rounded_rect(3.0, 5.2, 21.0, 21.5, R)
-        tabs = union(
-            stadium_line(7.5, 2.2, 7.5, 7.2, 2.6),
-            stadium_line(16.5, 2.2, 16.5, 7.2, 2.6),
-        )
-        marks = union(
-            rounded_rect(7.0, 12.0, 10.3, 15.2, 1.15),
-            rounded_rect(13.7, 12.0, 17.0, 15.2, 1.15),
-        )
+        x0, x1, y0, y1, tab_x, tab_top, rail_y = 3.0, 21.0, 5.0, 22.0, (8.0, 16.0), 2.0, 10.0
+        marks = tuple(rounded_rect(x, 14.0, x + 2.0, 16.0, 0.7) for x in (7.0, 11.0, 15.0))
+    body = rounded_rect(x0, y0, x1, y1, R)
+    tabs = [stadium_line(x, tab_top + w / 2, x, y0 + w / 2, w) for x in tab_x]
+    rail = box(x0 - 1, rail_y - w / 2, x1 + 1, rail_y + w / 2).intersection(body)
     if outlined:
-        return union(ring(body, w), tabs, marks)
-    return union(body, tabs).difference(marks)
+        return union(ring(body, w), rail, *tabs, *marks)
+    return union(round_convex(body.difference(union(rail, *marks)), CUT_JOIN[n]), *tabs)
 
 
 def _sliders(n, appearance):
@@ -198,52 +196,51 @@ def _sliders(n, appearance):
 
 def _warning(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
+    # The apex circle sits on the top keyline, so its radius recedes nothing.
+    c = n / 2
     if n == 12:
-        shape = round_convex(polygon([(6.0, 1.25), (11.15, 10.8), (0.85, 10.8)]), R)
-        stem = stadium_line(6.0, 4.85, 6.0, 6.55, 0.9)
-        dot = circle(6.0, 8.35, 0.55)
+        half, top, bottom = 5.25, 1.0, 11.0
+        stem = stadium_line(c, 4.85, c, 6.45, 0.9)
+        dot = circle(c, 8.45, 0.55)
     elif n == 16:
-        shape = round_convex(polygon([(8.0, 1.45), (14.9, 14.4), (1.1, 14.4)]), R)
-        stem = stadium_line(8.0, 6.05, 8.0, 8.85, 1.15)
-        dot = circle(8.0, 11.15, 0.85)
+        half, top, bottom = 6.9, 1.5, 14.5
+        stem = stadium_line(c, 6.9, c, 7.9, 1.2)
+        dot = circle(c, 10.75, 0.75)
     else:
-        shape = round_convex(polygon([(12.0, 2.0), (22.2, 21.45), (1.8, 21.45)]), R)
-        stem = stadium_line(12.0, 8.4, 12.0, 12.6, 1.55)
-        dot = circle(12.0, 16.15, 1.1)
+        half, top, bottom = 10.2, 2.0, 22.0
+        stem = stadium_line(c, 9.9, c, 12.9, 1.8)
+        dot = circle(c, 16.9, 1.1)
+    shape = rounded_hull(
+        (c, top + acute, acute),
+        (c - half + acute, bottom - acute, acute),
+        (c + half - acute, bottom - acute, acute),
+    )
     marks = union(stem, dot)
     if outlined:
         return union(ring(shape, w), marks)
     return shape.difference(marks)
 
 
-def _chain_link(cx, cy, length, thick, stroke, angle):
-    r = thick / 2
-    outer = rounded_rect(cx - length / 2, cy - r, cx + length / 2, cy + r, r)
-    inner_len = length - 2 * stroke
-    inner_th = thick - 2 * stroke
-    if inner_len <= 0.8 or inner_th <= 0.8:
-        raise ValueError('chain link hole collapsed')
-    ir = inner_th / 2
-    inner = rounded_rect(cx - inner_len / 2, cy - ir, cx + inner_len / 2, cy + ir, ir)
-    g = outer.difference(inner)
-    return affinity.rotate(g, angle, origin=(cx, cy))
+def _chain_link(start, end, centerline_r, t):
+    """A closed capsule ring along the x axis."""
+    return stadium_line(start, 0, end, 0, 2 * centerline_r + t).difference(
+        stadium_line(start, 0, end, 0, 2 * centerline_r - t))
 
 
 def _link(n, appearance):
     w, t, p, outlined, R, acute = _tokens(n, appearance)
-    if n == 12:
-        # Diagonal interlocking rings: horizontal pair read as infinity/peanut.
-        r_out = 2.95
-        a = ring(circle(3.85, 5.2, r_out), t)
-        b = ring(circle(8.15, 6.8, r_out), t)
-        return union(a, b)
-    if n == 16:
-        a = _chain_link(5.4, 8.0, 9.8, 6.4, t, 32)
-        b = _chain_link(10.6, 8.0, 9.8, 6.4, t, -32)
-    else:
-        a = _chain_link(8.15, 12.0, 15.2, 9.2, t, 36)
-        b = _chain_link(15.85, 12.0, 15.2, 9.2, t, -36)
-    return union(a, b)
+    # Two capsule rings on one 45-degree axis, woven: each crosses over the other once.
+    centerline_r, outer, inner = {12: (2.0, 3.54, 0.5), 16: (2.75, 4.24, 0.7), 24: (4.0, 7.07, 1.4)}[n]
+    gap = {12: 0.65, 16: 0.9, 24: 1.25}[n]
+    a = _chain_link(inner, outer, centerline_r, t)
+    b = _chain_link(-outer, -inner, centerline_r, t)
+    over_a = a.buffer(gap, quad_segs=QUAD_SEGS).intersection(box(-n, 0, n, n))
+    over_b = b.buffer(gap, quad_segs=QUAD_SEGS).intersection(box(-n, -n, n, 0))
+    woven = union(
+        round_convex(a.difference(over_b), CUT_JOIN[n]),
+        round_convex(b.difference(over_a), CUT_JOIN[n]),
+    )
+    return affinity.translate(affinity.rotate(woven, -45, origin=(0, 0)), n / 2, n / 2)
 
 
 def _branch(n, appearance):

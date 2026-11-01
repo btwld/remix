@@ -28,8 +28,11 @@ PADDING = {12: 1.0, 16: 1.5, 24: 2.0}
 GAP_TARGET = {12: 1.0, 16: 1.5, 24: 2.0}
 # Object outer corners ≈ 1.6–1.7× outline. Wired into drawers. Not legacy fillet proposal's 0.5–1× fillet.
 CORNER_TOKEN = {12: 1.6, 16: 2.4, 24: 3.4}
-# Acute cues (dog-ear, apex, roof peak) stay round but may be smaller.
-ACUTE_JOIN = {12: 1.0, 16: 1.5, 24: 2.0}
+# Acute cues (dog-ear, apex, roof peak) stay round but smaller. Above the outline
+# width, so a ring's inner contour keeps a visible radius too.
+ACUTE_JOIN = {12: 1.25, 16: 2.0, 24: 2.6}
+# Terminals a boolean cut leaves behind: fold slit, header rail, door jambs, link weave.
+CUT_JOIN = {12: 0.3, 16: 0.45, 24: 0.6}
 # Pointed silhouette exception: star join ~0.5× outline. 1.0×+ collapses optical mass.
 STAR_JOIN = {12: 0.65, 16: 0.85, 24: 1.0}
 
@@ -62,7 +65,7 @@ MEANING = {
     'sliders': 'Adjust parameters. Not a funnel filter or gear glyph.',
     'warning': 'A warning requiring a visible text label in every supported appearance and native size.',
     'link': 'A link or related resource. Not external navigation by itself.',
-    'branch': 'A branching relationship. Use a visible label, especially at 12 px.',
+    'branch': 'A branching relationship. Requires a visible text label at every size.',
     'star': 'Favorite or rating, with context. Distinct from Focus.',
 }
 

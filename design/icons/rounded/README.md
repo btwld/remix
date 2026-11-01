@@ -47,7 +47,9 @@ Outline vs Rounded: `docs/proof/outline-vs-rounded-12.png`, `docs/proof/outline-
 
 ## Restrictions
 
-Warning requires a **visible text label** in every appearance and native size, including scaled uses of those masters. A tooltip or `aria-label` is not a substitute. Branch and 12 px Link should keep a visible label; those are usage notes, not the Warning record.
+Warning requires a **visible text label** in every appearance and native size, including scaled uses of those masters. A tooltip or `aria-label` is not a substitute.
+
+Branch also requires a visible text label at every size and appearance, and Link requires one at 12 px. These rules are separate from the Warning record. They supersede the earlier wording, "Branch and 12 px Link should keep a visible label", which the package manifest still quotes as its source.
 
 ## Out of scope
 

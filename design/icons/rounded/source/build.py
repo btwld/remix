@@ -150,7 +150,7 @@ figcaption {{ font-size:.75rem; color:#6a6158; margin-bottom:.25rem; }}
 <p class="meta">{VERSION} · {len(CANONICAL_IDS)} IDs × 2 appearances × 3 masters = {len(inventory)} SVGs · private pilot, not a public pack</p>
 <p>Same canonical IDs and meanings as Outline. Rounded is a separate grammar (capsule terminals, circular nodes, continuous curvature). Outline drawings below are <strong>read-only snapshots</strong> for comparison; this build does not edit them.</p>
 <p>Product files are expanded <code>M L Z</code> polylines: round construction is flattened at quad_segs=8. That is the shipping representation. The validator still accepts <code>C Q A</code> so a curve cannot be ignored; products do not emit native arcs.</p>
-<div class="banner"><strong>Warning</strong> requires a visible text label in every appearance and native size, including scaled uses of those masters. A tooltip or accessible name is not a substitute. Branch should keep a visible label at 12 px.</div>
+<div class="banner"><strong>Warning</strong> requires a visible text label in every appearance and native size, including scaled uses of those masters. A tooltip or accessible name is not a substitute. Branch requires one at every size, and Link at 12 px.</div>
 </header>
 <main>
 {''.join(cards)}

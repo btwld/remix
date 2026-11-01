@@ -13,49 +13,37 @@
         "12": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "7b4b84365acf60cf87b7f7e579f1adb69f668d25cb0d6005ad04d3bdf8fa1242",
-            "exceptionIds": [
-              "warning-outline-12"
-            ]
+            "geometrySha256": "999cf68b307be1a8449ecc8a84c89e1d01bba518642c4a36f41af4dc48a03c66",
+            "exceptionIds": []
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "08dbf2ec0fe74556ee95c509258d984f265a5375b7caf02fca85437ef320d8c4",
-            "exceptionIds": [
-              "warning-filled-12"
-            ]
+            "geometrySha256": "6415b6f3c9168e253796c3f13207aea2c47c46e91085582661004ae766c3d794",
+            "exceptionIds": []
           }
         },
         "16": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "69473a4a17ddf09244945ee8afdf0db931fb6b41561f86d08bbab1cce5e30dae",
-            "exceptionIds": [
-              "warning-outline-16"
-            ]
+            "geometrySha256": "4400740380f3c1d76555e0788a68f165b59ec5afc8b7fc5f4066643f33b74b93",
+            "exceptionIds": []
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "f2d7608c93fd4426028550cc67c17726d256f23e5179ef913ada45b559935975",
-            "exceptionIds": [
-              "warning-filled-16"
-            ]
+            "geometrySha256": "d145cd589783833d0f262f53535fb124a77c608fd8c13dcf92dfa51e0056b142",
+            "exceptionIds": []
           }
         },
         "24": {
           "outline": {
             "visibleLabelRequired": true,
-            "geometrySha256": "f7fa7feda2fda0c8b0d060922cb8d616973f85105e9584190b6985d594a9fbb2",
-            "exceptionIds": [
-              "warning-outline-24"
-            ]
+            "geometrySha256": "bd014f68ad48741ea3da723b01a53e9f3f03239eeb75f6d9ff8249160b10b9e0",
+            "exceptionIds": []
           },
           "filled": {
             "visibleLabelRequired": true,
-            "geometrySha256": "e12fc3666f57cbeba5215a2aae2cb1a2337acecb1e039862745cc480c4830653",
-            "exceptionIds": [
-              "warning-filled-24"
-            ]
+            "geometrySha256": "0d3bc1f997e47733e28ea0e4228bee6319c3eff3ec0fe46bcff646802b804363",
+            "exceptionIds": []
           }
         }
       }

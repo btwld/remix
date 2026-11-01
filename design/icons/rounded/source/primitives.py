@@ -78,12 +78,33 @@ def ring(poly: BaseGeometry, width: float) -> BaseGeometry:
     return g
 
 
-def round_convex(poly: BaseGeometry, r: float) -> BaseGeometry:
-    """Round convex corners by expanding then shrinking with round joins."""
+def rounded_hull(*corners: tuple[float, float, float]) -> BaseGeometry:
+    """Convex key shape authored as the hull of its (x, y, r) corner circles.
+
+    Each corner keeps its own radius and the bounds are read straight off the
+    circles, so an acute apex stays on its keyline instead of receding. A circle
+    swallowed by the hull has no corner, so it fails rather than silently vanishing.
+    """
+    if len(corners) < 3:
+        raise ValueError('rounded hull needs three corners')
+    g = union(*(circle(x, y, r) for x, y, r in corners)).convex_hull
+    for x, y, r in corners:
+        if abs(g.exterior.distance(Point(x, y)) - r) > 0.01 * max(r, 1.0):
+            raise ValueError(f'corner ({x}, {y}, {r}) does not reach the hull')
+    return g
+
+
+def round_convex(geom: BaseGeometry, r: float) -> BaseGeometry:
+    """Round every convex corner to radius r, by shrinking and then expanding.
+
+    The order matters: expanding first restores the original corners.
+    """
     if r <= 0:
-        return poly
-    g = poly.buffer(r, quad_segs=QUAD_SEGS, cap_style=CAP_ROUND, join_style=JOIN_ROUND)
-    g = g.buffer(-r, quad_segs=QUAD_SEGS, cap_style=CAP_ROUND, join_style=JOIN_ROUND)
+        return geom
+    g = geom.buffer(-r, quad_segs=QUAD_SEGS, cap_style=CAP_ROUND, join_style=JOIN_ROUND)
+    if g.is_empty:
+        raise ValueError('round_convex collapsed')
+    g = g.buffer(r, quad_segs=QUAD_SEGS, cap_style=CAP_ROUND, join_style=JOIN_ROUND)
     if g.is_empty or not g.is_valid:
         raise ValueError('round_convex collapsed')
     return g
