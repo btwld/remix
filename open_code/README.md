@@ -9,7 +9,7 @@ Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 ## Install the CLI in a project
 
 ```shell
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 dart run remix_cli:remix init --prefix Acme --preset vanilla
 dart run remix_cli:remix add button
 ```
@@ -158,3 +158,19 @@ Vanilla and Fortal Agent source: `activity`, `answer`, `composer`, `execution`, 
 transitively. Styled bundles: `activity_recipe`, `answer_recipe`,
 `composer_recipe`, `execution_recipe`, `message_recipe`, `permission_recipe`,
 `plan_recipe`, `transcript_recipe`.
+
+## HeroUI preset
+
+Initialize with `dart run remix_cli:remix init --prefix Acme --preset heroui`.
+The registry follows HeroUI's component names, adding `alert`, `avatar_group`,
+`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
+`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`toggle_button`, and `toggle_button_group` to shared names such as `button` and
+`select`.
+HeroUI does not ship Agent or dashboard recipes.
+
+`open_code/heroui_fixture` exercises every installed widget. Run
+`dart run tool/check_open_code.dart --preset heroui --source checkout --keep`
+to retain the review gallery. See [Adding a preset](ADDING_PRESETS.md) for the
+first-party authoring workflow.

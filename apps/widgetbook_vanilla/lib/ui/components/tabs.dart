@@ -130,7 +130,7 @@ TabStyler vanillaTabStyle({
         .line => _line(),
       })
       .onHovered(_current())
-      .onFocusVisible(_focusVisibleStyle(variant))
+      .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
 }
@@ -166,8 +166,7 @@ const _restingAlpha = 0.6;
 ///
 /// The dark fill is blended here rather than painted translucent: the tab's
 /// shadow is a decoration shadow, which Flutter paints under the whole box,
-/// so it would show through a translucent fill and darken it. Tabs have no
-/// effects layer to move the shadow to.
+/// so it would show through a translucent fill and darken it.
 final _currentFill = vanillaByBrightness(
   light: VanillaTokens.background,
   dark: _darkCurrentFill,
@@ -237,20 +236,11 @@ TabStyler _content(Color foreground) =>
 
 /// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// A *foreground* decoration rather than the box border: `TabSpec` has no
-/// `containerEffects` layer to paint an outline into, and Flutter insets a
-/// container's content by its border widths — so adding a real border on
-/// focus would nudge the label. The decoration strokes outside the tab and
-/// takes no layout space.
-TabStyler _focusVisibleStyle(VanillaTabsVariant variant) =>
-    TabStyler().foregroundDecoration(
-      vanillaFocusRingDecoration(
-        radius: switch (variant) {
-          .filled => null,
-          .line => Radius.zero,
-        },
-      ),
-    );
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the
+/// tab, following its corners, without taking layout space, so focusing a tab
+/// never nudges its label or its neighbors.
+TabStyler _focusVisibleStyle() =>
+    TabStyler().containerEffects(vanillaFocusRing());
 
 /// Declared last so it wins over every other state fragment.
 ///
@@ -258,5 +248,5 @@ TabStyler _focusVisibleStyle(VanillaTabsVariant variant) =>
 /// the focus ring is cleared because a disabled tab that still draws a focus
 /// ring reads as reachable.
 TabStyler _disabledStyle() => TabStyler()
-    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .containerEffects(.outline(.style(.none)))
     .wrap(.opacity(VanillaTokens.disabledOpacity));

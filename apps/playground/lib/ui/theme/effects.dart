@@ -69,9 +69,13 @@ final _byBrightness =
 ///
 /// A 3px band of [color] at [alpha] (or [dark] in a dark theme), drawn
 /// outside the control with no offset, for a spec's Remix effects slot:
-/// `containerEffects`, a switch's `trackEffects`, or a slider's
-/// `thumbFocusEffects`. An outline takes no layout space, so focusing a
-/// control never reflows the row it sits in.
+/// `containerEffects`, an accordion's `triggerEffects`, a switch's
+/// `trackEffects`, or a slider's `thumbFocusEffects`. An outline takes no
+/// layout space, so focusing a control never reflows the row it sits in.
+///
+/// A control clipped by its container, such as a toggle group's option, would
+/// have an outside band cut off at the container's edge; pass [inset] to draw
+/// it inside the control instead.
 ///
 /// A destructive control rings in its own color: `playgroundFocusRing(color:
 /// PlaygroundTokens.destructive, alpha: 0.2, dark: 0.4)`.
@@ -80,38 +84,13 @@ RemixBoxEffectsMix playgroundFocusRing({
   double alpha = _ringAlpha,
   double? dark,
   double width = PlaygroundTokens.strokeRing,
+  bool inset = false,
 }) => RemixBoxEffectsMix(
   outline: BorderSideMix(
     color: playgroundTint(color, alpha, dark: dark)(),
     width: width,
   ),
-  outlineOffset: 0,
-);
-
-/// [playgroundFocusRing] as a foreground decoration, for the specs that have no
-/// effects slot: a toggle, a toggle group's items, a tab, a menu trigger.
-///
-/// The border is stroked outside the box, so the ring sits where the effects
-/// outline would and still takes no layout space. [radius] is the control's
-/// own corner radius, which the ring follows.
-///
-/// A control clipped by its container (a toggle group's option) would have
-/// that outside stroke cut off at the container's edge; pass [inset] to
-/// stroke the ring inside the control instead.
-BoxDecorationMix playgroundFocusRingDecoration({
-  Radius? radius,
-  bool inset = false,
-}) => BoxDecorationMix(
-  border: .all(
-    BorderSideMix(
-      color: playgroundTint(PlaygroundTokens.ring, _ringAlpha)(),
-      width: PlaygroundTokens.strokeRing,
-      strokeAlign: inset
-          ? BorderSide.strokeAlignInside
-          : BorderSide.strokeAlignOutside,
-    ),
-  ),
-  borderRadius: .all(radius ?? PlaygroundTokens.radiusMd()),
+  outlineOffset: inset ? -width : 0,
 );
 
 /// A focused control's own border, turned `ring`.

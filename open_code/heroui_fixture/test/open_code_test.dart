@@ -98,6 +98,130 @@ void main() {
 
       await _tap(tester, find.text('Copy link'));
       expect(find.text('Share project'), findsNothing);
+      // The button shares its focus node with the popover, so it takes focus
+      // back.
+      expect(_focused('Open popover'), findsOneWidget);
+    });
+
+    testWidgets('the dropdown button opens its menu and a row reports its '
+        'action', (tester) async {
+      await _pumpGallery(tester, width: 1024);
+      expect(find.text('Last action: none'), findsOneWidget);
+
+      await _tap(tester, find.text('Actions'));
+      expect(find.text('Duplicate'), findsOneWidget);
+
+      await _tap(tester, find.text('Duplicate'));
+      expect(find.text('Last action: copy'), findsOneWidget);
+      expect(_focused('Actions'), findsOneWidget);
+    });
+
+    testWidgets('gallery dropdown has one button, tab stop and expanded node', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await _pumpGallery(tester, width: 1024);
+        await tester.ensureVisible(find.text('Actions'));
+        await tester.pump();
+
+        expect(
+          find.descendant(
+            of: find.byType(AcmeDropdown<String>),
+            matching: find.byType(AcmeButton),
+          ),
+          findsOneWidget,
+          reason: 'the installed Gallery supplies the styled control itself',
+        );
+        await _expectOneTabStop(tester, 'Actions');
+        expect(find.semantics.byLabel('Actions'), findsOne);
+        expect(
+          tester.getSemantics(find.text('Actions')),
+          isSemantics(
+            label: 'Actions',
+            isButton: true,
+            hasTapAction: true,
+            hasExpandedState: true,
+            isExpanded: false,
+          ),
+        );
+        tester.semantics.tap(find.semantics.byLabel('Actions'));
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.text('Duplicate'), findsOneWidget);
+        expect(find.semantics.byLabel('Actions'), findsOne);
+        expect(
+          tester.getSemantics(find.text('Actions')),
+          isSemantics(
+            label: 'Actions',
+            hasExpandedState: true,
+            isExpanded: true,
+          ),
+        );
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(_galleryButtonFocus(tester, 'Actions').hasPrimaryFocus, isTrue);
+      } finally {
+        semantics.dispose();
+      }
+    });
+
+    testWidgets('gallery popover returns focus to its own single control', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await _pumpGallery(tester, width: 1024);
+        await tester.ensureVisible(find.text('Open popover'));
+        await tester.pump();
+        await _expectOneTabStop(tester, 'Open popover');
+
+        // Remix merges the popover's expanded state onto the caller's button.
+        expect(find.semantics.byLabel('Open popover'), findsOne);
+        expect(
+          tester.getSemantics(find.text('Open popover')),
+          isSemantics(
+            label: 'Open popover',
+            isButton: true,
+            hasTapAction: true,
+            hasExpandedState: true,
+            isExpanded: false,
+          ),
+        );
+
+        // Opening without clicking the trigger distinguishes the Gallery's
+        // explicit shared-node wiring from incidental previous-focus return.
+        _galleryButtonFocus(tester, 'Open popover').unfocus();
+        await tester.pump();
+        final popover = tester.widget<AcmePopover>(find.byType(AcmePopover));
+        popover.controller!.open();
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.text('Share project'), findsOneWidget);
+        expect(
+          tester.getSemantics(find.text('Open popover')),
+          isSemantics(
+            label: 'Open popover',
+            hasExpandedState: true,
+            isExpanded: true,
+          ),
+        );
+        popover.controller!.close();
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.text('Share project'), findsNothing);
+        expect(
+          tester.getSemantics(find.text('Open popover')),
+          isSemantics(
+            label: 'Open popover',
+            hasExpandedState: true,
+            isExpanded: false,
+          ),
+        );
+        expect(
+          _galleryButtonFocus(tester, 'Open popover').hasPrimaryFocus,
+          isTrue,
+        );
+      } finally {
+        semantics.dispose();
+      }
     });
 
     testWidgets('a toast appears from the app-level scope', (tester) async {
@@ -184,6 +308,46 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.tap(finder);
   await tester.pump(const Duration(milliseconds: 400));
 }
+
+Future<void> _expectOneTabStop(WidgetTester tester, String label) async {
+  final control = _galleryButtonFocus(tester, label);
+  control.requestFocus();
+  await tester.pump();
+  expect(control.hasPrimaryFocus, isTrue);
+
+  await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+  await tester.pump();
+  expect(control.hasFocus, isFalse);
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+  await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+  await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+  await tester.pump();
+  expect(
+    control.hasPrimaryFocus,
+    isTrue,
+    reason: '$label has exactly one tab stop',
+  );
+}
+
+FocusNode _galleryButtonFocus(WidgetTester tester, String label) {
+  final button = tester.widget<AcmeButton>(
+    find.ancestor(of: find.text(label), matching: find.byType(AcmeButton)),
+  );
+  expect(
+    button.focusNode,
+    isNotNull,
+    reason: 'the Gallery attaches the trigger-owned node to its actual button',
+  );
+  return button.focusNode!;
+}
+
+/// [label] inside the control that has primary focus.
+Finder _focused(String label) => find.descendant(
+  of: find.byElementPredicate(
+    (element) => element == FocusManager.instance.primaryFocus?.context,
+  ),
+  matching: find.text(label),
+);
 
 Widget _host(Widget child) {
   return WidgetsApp(
@@ -326,7 +490,7 @@ final _cases = <_WidgetCase>[
     {
       AcmeRadioGroup<String>,
       AcmeFieldLayout,
-      AcmeControlRow,
+      AcmeDescribedControl,
       AcmeRadio<String>,
     },
   ),

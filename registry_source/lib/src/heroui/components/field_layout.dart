@@ -84,34 +84,29 @@ class HeroUiFieldLayout extends StatelessWidget {
   }
 }
 
-/// A radio or switch followed by its label, with an optional description
-/// beneath.
+/// A labeled radio or switch with an optional [description] beneath.
 ///
-/// Remix's radio and switch are bare controls, so the label is plain text next
-/// to them: it is not a tap target. [controlWidth] indents the description
-/// under the label. A disabled control dims itself; this dims the text.
-class HeroUiControlRow extends StatelessWidget {
-  const HeroUiControlRow({
+/// [descriptionInset] indents the description under the label: the control's
+/// width plus its label gap. The control dims itself and its label when
+/// disabled; this dims the description.
+class HeroUiDescribedControl extends StatelessWidget {
+  const HeroUiDescribedControl({
     super.key,
     required this.control,
-    required this.controlWidth,
-    required this.label,
+    required this.descriptionInset,
     this.description,
-    this.invalid = false,
     this.enabled = true,
   });
 
   final Widget control;
-  final double controlWidth;
-  final String label;
+  final double descriptionInset;
   final String? description;
-  final bool invalid;
   final bool enabled;
 
   @override
   Widget build(BuildContext context) {
-    final labelStyle = _label(invalid: invalid);
-    final dimmed = WidgetModifierConfig.opacity(_disabledTwice);
+    final description = this.description;
+    if (description == null) return control;
     return FlexBox(
       // `.radio` and `.switch`: `flex-col items-start gap-1`.
       style: FlexBoxStyler()
@@ -120,35 +115,18 @@ class HeroUiControlRow extends StatelessWidget {
           .crossAxisAlignment(.start)
           .spacing(_fieldGap),
       children: [
-        FlexBox(
-          // `__content`: `inline-flex items-center gap-3`.
-          style: FlexBoxStyler()
-              .direction(.horizontal)
-              .mainAxisSize(.min)
-              .crossAxisAlignment(.center)
-              .spacing(_contentGap),
-          children: [
-            control,
-            // Let long labels wrap in the space left after the control and
-            // gap, while short labels keep their natural width.
-            Flexible(
-              child: StyledText(
-                label,
-                style: enabled ? labelStyle : labelStyle.wrap(dimmed),
-              ),
-            ),
-          ],
-        ),
-        if (description != null)
-          Box(
-            style: BoxStyler().padding(.start(controlWidth + _contentGap)),
-            child: StyledText(
-              description!,
-              style: enabled
-                  ? heroUiDescriptionText
-                  : heroUiDescriptionText.wrap(dimmed),
-            ),
+        control,
+        Box(
+          style: BoxStyler().padding(.start(descriptionInset)),
+          child: StyledText(
+            description,
+            style: enabled
+                ? heroUiDescriptionText
+                : heroUiDescriptionText.wrap(
+                    WidgetModifierConfig.opacity(_disabledTwice),
+                  ),
           ),
+        ),
       ],
     );
   }
@@ -161,10 +139,7 @@ const _groupGap = 16.0;
 /// `.radio` and `.switch`: `gap-1`.
 const _fieldGap = 4.0;
 
-/// A disabled item is `status-disabled`, and so are its label (`.label` in a
-/// disabled field) and its description, so both dim twice.
+/// A disabled item is `status-disabled`, and so is its description, so it dims
+/// twice.
 const _disabledTwice =
     HeroUiTokens.disabledOpacity * HeroUiTokens.disabledOpacity;
-
-/// `.radio__content` and `.switch__content`: `gap-3`.
-const _contentGap = 12.0;

@@ -21,8 +21,11 @@ repository does not commit installed skills; the index points at the sources.
 |open_code:{README.md,REGISTRIES.md,PRESETS.md,ADDING_PRESETS.md,RELEASING.md}
 ```
 
-Use `using-remix` for app UI, `building-remix-design-system` for registry
-authoring, `mix` for styling APIs, and `releasing-a-package` for release work.
+- `using-remix`: app UI with `Remix*` widgets or an installed Vanilla/Fortal/HeroUI preset.
+- `building-remix-design-system`: authoring a first-party preset or a third-party registry; read `open_code/ADDING_PRESETS.md` before adding a preset beside Fortal.
+- `mix`: stylers, specs, tokens, variants, animations, and modifiers.
+- `releasing-a-package`: version bumps, contract checkers, release PRs, and tags.
+
 Architecture rationale lives in [ARCHITECTURE.md](ARCHITECTURE.md).
 Read [Adding a preset](open_code/ADDING_PRESETS.md) before adding a first-party
 design language beside Vanilla, Fortal, and HeroUI.

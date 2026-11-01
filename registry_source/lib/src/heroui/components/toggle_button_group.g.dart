@@ -11,9 +11,9 @@ part of 'toggle_button_group.dart';
 ///
 /// Remix's group selects one item at a time; HeroUI's also offers multiple
 /// selection. Items share the toggle button's looks without its pressed scale
-/// (`.toggle-button-group .toggle-button:active`). A transparent ring-width
-/// border is always present, which is also how upstream insets the ring in a
-/// group (`ring-inset`).
+/// (`.toggle-button-group .toggle-button:active`). The focus ring is drawn
+/// inside each item, as upstream's `ring-inset`, so the group's clip keeps it,
+/// except at the joined pill's rounded ends.
 class HeroUiToggleButtonGroup<T> extends StatelessWidget {
   const HeroUiToggleButtonGroup({
     super.key,

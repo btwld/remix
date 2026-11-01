@@ -103,13 +103,14 @@ ToggleStyler _variantStyle(VanillaToggleVariant variant) => switch (variant) {
   .ghost => ToggleStyler().onHovered(
     _content(VanillaTokens.mutedForeground()).color(VanillaTokens.muted()),
   ),
-  // No shadow: `ToggleSpec` has no effects layer, and a decoration shadow under
-  // a transparent control shows through it as a gray wash.
   .outline =>
     ToggleStyler()
         .border(
           .color(VanillaTokens.input()).width(VanillaTokens.strokeHairline),
         )
+        // In the effects layer rather than the decoration: the toggle is
+        // transparent, and a decoration shadow would show through it.
+        .containerEffects(.behindContent(VanillaShadow.xs.effects))
         .onHovered(
           _content(
             VanillaTokens.accentForeground(),
@@ -123,16 +124,11 @@ ToggleStyler _content(Color foreground) =>
 
 /// The keyboard focus ring: a 3px band of `ring` at half strength.
 ///
-/// A *foreground* decoration rather than the box border: `ToggleSpec` has no
-/// `containerEffects` layer to paint an outline into, and Flutter insets a
-/// container's content by its border widths — so adding a real border on
-/// focus would nudge the label. The decoration strokes outside the box, so
-/// the ring sits where an outline would and takes no layout space. The
-/// outline variant also turns its own border `ring`.
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the
+/// toggle without taking layout space, so focusing one never reflows the row
+/// it sits in. The outline variant also turns its own border `ring`.
 ToggleStyler _focusVisibleStyle(VanillaToggleVariant variant) {
-  final ring = ToggleStyler().foregroundDecoration(
-    vanillaFocusRingDecoration(),
-  );
+  final ring = ToggleStyler().containerEffects(vanillaFocusRing());
 
   return switch (variant) {
     .ghost => ring,
@@ -146,5 +142,5 @@ ToggleStyler _focusVisibleStyle(VanillaToggleVariant variant) {
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
-    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .containerEffects(.outline(.style(.none)))
     .wrap(.opacity(VanillaTokens.disabledOpacity));

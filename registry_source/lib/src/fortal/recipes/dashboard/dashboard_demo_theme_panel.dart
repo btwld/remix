@@ -206,33 +206,6 @@ class _AccentSwatch extends StatelessWidget {
           .onHovered(ToggleStyler().color(FortalTokens.accent10()))
           .onPressed(ToggleStyler().color(FortalTokens.accent10()));
 
-  /// Radix draws the ThemePanel swatch ring as `outline: 2px solid;
-  /// outline-offset: 2px`. A toggle has no outline slot, so the ring is a
-  /// foreground border pushed off the edge: a stroke align of
-  /// `1 + 2 * offset / width` starts the stroke [offset] outside the box,
-  /// and a foreground border reserves no layout space. A zero [width] draws
-  /// no ring, and has no stroke align to compute.
-  static ToggleStyler _ring(
-    Color color, {
-    required double width,
-    required double offset,
-  }) => width <= 0
-      ? ToggleStyler()
-      : ToggleStyler(
-          container: FlexBoxStyler().foregroundDecoration(
-            BoxDecorationMix(
-              shape: BoxShape.circle,
-              border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: color,
-                  width: width,
-                  strokeAlign: 1 + 2 * offset / width,
-                ),
-              ),
-            ),
-          ),
-        );
-
   final FortalAccentColor accent;
   final bool selected;
   final VoidCallback onPressed;
@@ -244,8 +217,14 @@ class _AccentSwatch extends StatelessWidget {
     // Resolve outside the accent scope so focus follows the panel's theme.
     final width = MixScope.tokenOf(FortalTokens.focusRingWidth, context);
     final offset = MixScope.tokenOf(FortalTokens.focusRingOffset, context);
-    ToggleStyler ring(ColorToken color) =>
-        _ring(MixScope.tokenOf(color, context), width: width, offset: offset);
+    ToggleStyler ring(ColorToken color) => ToggleStyler().containerEffects(
+      RemixBoxEffectsMix.create(
+        outline: Prop.value(
+          BorderSide(color: MixScope.tokenOf(color, context), width: width),
+        ),
+        outlineOffset: Prop.value(offset),
+      ),
+    );
 
     return FortalAccentScope(
       accent: accent,

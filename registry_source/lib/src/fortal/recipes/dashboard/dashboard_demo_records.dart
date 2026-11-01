@@ -309,9 +309,8 @@ final _customerColumns = <RemixDataTableColumn<RegistryDashboardCustomer>>[
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (context, customer) => FortalActionMenu(
       key: ValueKey('customer-actions-${customer.id}'),
-      semanticLabel: 'Actions for ${customer.name}',
       positioning: fortalDataTableActionsPositioning,
-      trigger: fortalDataTableActionsTrigger,
+      trigger: fortalDataTableActionsTrigger('Actions for ${customer.name}'),
       actions: const [
         FortalAction(value: 'view', label: 'View profile'),
         FortalAction(value: 'email', label: 'Send email'),
@@ -370,9 +369,8 @@ final _orderColumns = <RemixDataTableColumn<RegistryDashboardOrder>>[
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (context, order) => FortalActionMenu(
       key: ValueKey('order-actions-${order.id}'),
-      semanticLabel: 'Actions for ${order.id}',
       positioning: fortalDataTableActionsPositioning,
-      trigger: fortalDataTableActionsTrigger,
+      trigger: fortalDataTableActionsTrigger('Actions for ${order.id}'),
       actions: const [
         FortalAction(value: 'view', label: 'View order'),
         FortalAction(value: 'receipt', label: 'Download receipt'),

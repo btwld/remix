@@ -90,25 +90,18 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
 
 /// The keyboard focus ring, drawn on the trigger alone.
 ///
-/// Not on the container, which is where the effects layer lives and where the
-/// accordion puts its ring. Keyboard focus is on the trigger, and an expanded
-/// disclosure's container is the trigger *plus* everything it revealed — a
-/// ring there claims the content is focused too, and grows with it.
-///
-/// `foregroundDecoration` is what makes a trigger-only ring possible: it paints
-/// over the box's own bounds rather than beside them, so the ring takes no
-/// layout space and opening the section never reflows the page. A plain
-/// `.border(...)` would push the trigger's content in by two pixels the moment
-/// it took focus. The ring is a 3px band of `ring` at half strength, stroked
-/// outside the trigger.
-DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
-  .foregroundDecoration({{valuePrefix}}FocusRingDecoration()),
-);
+/// Not on the container, whose effects cover the trigger *plus* everything it
+/// revealed: a ring there claims the content is focused too, and grows with
+/// it. `triggerEffects` is an outline around the trigger, so it takes no
+/// layout space and opening the section never reflows the page. The ring is a
+/// 3px band of `ring` at half strength.
+DisclosureStyler _focusVisibleStyle() =>
+    DisclosureStyler().triggerEffects({{valuePrefix}}FocusRing());
 
 /// Declared last so it wins over every other state fragment.
 ///
 /// The ring is cleared as well as faded: a disabled control that still draws
 /// a focus ring reads as reachable.
 DisclosureStyler _disabledStyle() => DisclosureStyler()
-    .trigger(.foregroundDecoration(BoxDecorationMix.border(.style(.none))))
+    .triggerEffects(.outline(.style(.none)))
     .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

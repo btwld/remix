@@ -9,7 +9,15 @@ part of 'toast.dart';
 /// HeroUI recipe for [RemixToast] and, as its `style`, [RemixToastScope].
 ///
 /// Stacking, timing, and dismissal stay with Remix. The action is HeroUI's
-/// default button, as in `Toast` (`toast-default-action`).
+/// default button, as in `Toast` (`toast-default-action`): beside the message
+/// above 768px and under it from 768px down. Below 640px it adds `mt-2`
+/// through a second `action`.
+///
+/// An `action` replaces rather than merges, so a caller who styles it restates
+/// `heroUiButtonStyle()` in their `action`, and again, with `.margin(.top(2))`,
+/// in an `onNot(ContextVariant.breakpoint(Breakpoint.minWidth(
+/// HeroUiTokens.breakpointSm)), ...)` fragment; without that fragment the
+/// recipe's own action wins below 640px.
 class HeroUiToast extends StatelessWidget {
   const HeroUiToast({
     super.key,

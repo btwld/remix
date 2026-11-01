@@ -6,6 +6,7 @@ import '../../components/avatar.dart';
 import '../../components/badge.dart';
 import '../../components/button.dart';
 import '../../components/data_table.dart';
+import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/segmented_control.dart';
 import '../../components/textfield.dart';
@@ -374,24 +375,14 @@ List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>> _orderColumns(
 ];
 
 Widget _actions(BuildContext context, String value) => {{typePrefix}}Menu<String>(
-  trigger: RemixMenuTrigger.builder(
-    label: 'Actions for $value',
-    icon: {{icon:dotsHorizontal}},
-    builder: (_, _, _) => Semantics(
-      label: 'Actions for $value',
-      button: true,
-      child: Box(
-        style: BoxStyler()
-            .size(28, 28)
-            .alignment(.center)
-            .borderRadius(.all({{typePrefix}}Tokens.radiusSm())),
-        child: StyledIcon(
-          icon: {{icon:dotsHorizontal}},
-          style: IconStyler()
-              .size({{typePrefix}}Tokens.icon)
-              .color({{typePrefix}}Tokens.mutedForeground()),
-        ),
-      ),
+  trigger: RemixMenuTrigger.control(
+    builder: (_, menu) => {{typePrefix}}IconButton.ghost(
+      size: .small,
+      icon: {{icon:dotsHorizontal}},
+      semanticLabel: 'Actions for $value',
+      focusNode: menu.focusNode,
+      onPressed: menu.toggle,
+      style: _kebabStyle(open: menu.isOpen),
     ),
   ),
   items: const [
@@ -403,6 +394,20 @@ Widget _actions(BuildContext context, String value) => {{typePrefix}}Menu<String
   onSelected: (action) =>
       {{valuePrefix}}DashboardToast(context, '$action selected for $value'),
 );
+
+/// The kebab: a muted glyph, filled with `muted` while its menu is open. Hover
+/// and press come after the base in Mix, so the open look repeats there to stay
+/// in force under the pointer.
+IconButtonStyler _kebabStyle({required bool open}) {
+  final resting = IconButtonStyler().icon(
+    .color({{typePrefix}}Tokens.mutedForeground()),
+  );
+  if (!open) return resting;
+
+  final filled = resting.color({{typePrefix}}Tokens.muted());
+
+  return filled.onHovered(filled).onPressed(filled);
+}
 
 Widget _status(String value) => switch (value) {
   'active' || 'paid' => {{typePrefix}}Badge(label: value),

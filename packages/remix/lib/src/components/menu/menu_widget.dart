@@ -1,5 +1,38 @@
 part of 'menu.dart';
 
+/// Builds the control of a [RemixMenuTrigger.control] trigger.
+typedef RemixMenuControlBuilder =
+    Widget Function(BuildContext context, RemixMenuTriggerHandle menu);
+
+/// What a [RemixMenuTrigger.control] builder needs to wire a real button to
+/// its menu.
+final class RemixMenuTriggerHandle {
+  const RemixMenuTriggerHandle._({
+    required this.isOpen,
+    required this.controller,
+    required this.focusNode,
+  });
+
+  /// Whether the menu is open.
+  final bool isOpen;
+
+  /// The controller that opens and closes the menu.
+  final MenuController controller;
+
+  /// The node that receives focus when the menu closes. On open, focus moves
+  /// into the menu panel.
+  ///
+  /// Pass it to the control as its `focusNode`. It is
+  /// [RemixMenu.triggerFocusNode] when that is set, otherwise a node the menu
+  /// owns.
+  final FocusNode focusNode;
+
+  /// Opens the menu when it is closed and closes it when it is open.
+  ///
+  /// Pass it to the control as its `onPressed`.
+  void toggle() => controller.isOpen ? controller.close() : controller.open();
+}
+
 /// Configuration for a [RemixMenu] trigger.
 ///
 /// This is a configuration object, not a widget. The same object is the trigger
@@ -11,11 +44,15 @@ part of 'menu.dart';
 /// button. [NakedMenu] continues to own tapping, focus, keyboard behavior,
 /// expanded semantics, and overlay state.
 ///
-/// [label] is the visible default label and the accessible fallback for a
-/// builder-backed trigger.
+/// Use [RemixMenuTrigger.control] when the trigger is a real button, such as a
+/// styled [RemixButton]. The control owns its look, label, enabled state, and
+/// activation; the menu keeps the overlay, Escape, outside taps, focus return,
+/// and expanded semantics.
 class RemixMenuTrigger {
   /// Creates a standard label/icon trigger.
-  const RemixMenuTrigger({required this.label, this.icon}) : builder = null;
+  const RemixMenuTrigger({required String this.label, this.icon})
+    : builder = null,
+      control = null;
 
   /// Creates a trigger that supplies custom visual content.
   ///
@@ -24,20 +61,52 @@ class RemixMenuTrigger {
   /// replace it entirely. Returned content must not add a second interactive
   /// control.
   const RemixMenuTrigger.builder({
-    required this.label,
+    required String this.label,
     this.icon,
     required this.builder,
-  });
+  }) : control = null;
+
+  /// Creates a trigger that is a real button.
+  ///
+  /// The builder receives a [RemixMenuTriggerHandle]. Pass its
+  /// [RemixMenuTriggerHandle.focusNode] and [RemixMenuTriggerHandle.toggle] to
+  /// the button as its `focusNode` and `onPressed`:
+  ///
+  /// ```dart
+  /// RemixMenuTrigger.control(
+  ///   builder: (context, menu) => RemixButton(
+  ///     label: 'Actions',
+  ///     focusNode: menu.focusNode,
+  ///     onPressed: menu.toggle,
+  ///   ),
+  /// )
+  /// ```
+  ///
+  /// The control owns its look and accessible name, so [MenuStyler.trigger] and
+  /// [RemixMenu.semanticLabel] do not apply to it. The menu merges its expanded
+  /// state onto the control's semantics. The builder must return a single
+  /// control, because everything it returns is merged into one semantics node:
+  /// a split button or a loading button would merge its labels and actions.
+  const RemixMenuTrigger.control({required RemixMenuControlBuilder builder})
+    : control = builder,
+      label = null,
+      icon = null,
+      builder = null;
 
   /// The visible default label and the accessible fallback for a
-  /// builder-backed trigger.
-  final String label;
+  /// builder-backed trigger. Null for a [RemixMenuTrigger.control], which has
+  /// its own label.
+  final String? label;
 
   /// Optional icon shown before [label] in the default trigger.
   final IconData? icon;
 
   /// Optional custom trigger content. Null for the standard trigger.
   final ValueWidgetBuilder<NakedMenuState>? builder;
+
+  /// The builder of the caller's own button. Null unless built with
+  /// [RemixMenuTrigger.control].
+  final RemixMenuControlBuilder? control;
 }
 
 /// Base sealed class for all menu item types.
@@ -347,6 +416,18 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///   ),
 ///   items: [...],
 /// )
+///
+/// // A real button as the trigger
+/// RemixMenu<String>(
+///   trigger: RemixMenuTrigger.control(
+///     builder: (context, menu) => RemixButton(
+///       label: 'Actions',
+///       focusNode: menu.focusNode,
+///       onPressed: menu.toggle,
+///     ),
+///   ),
+///   items: [...],
+/// )
 /// ```
 class RemixMenu<T> extends StatefulWidget {
   const RemixMenu({
@@ -374,8 +455,8 @@ class RemixMenu<T> extends StatefulWidget {
   /// Trigger configuration for the menu's button.
   ///
   /// A configuration object, not a widget. Use [RemixMenuTrigger] for the
-  /// standard label/icon surface or [RemixMenuTrigger.builder] for custom
-  /// visual content.
+  /// standard label/icon surface, [RemixMenuTrigger.builder] for custom visual
+  /// content, or [RemixMenuTrigger.control] for a real button.
   final RemixMenuTrigger trigger;
 
   /// The declarative ordinary, compound, submenu, and divider data.
@@ -412,6 +493,10 @@ class RemixMenu<T> extends StatefulWidget {
   final bool useRootOverlay;
 
   /// Optional focus node for the trigger.
+  ///
+  /// A [RemixMenuTrigger.control] receives it as
+  /// [RemixMenuTriggerHandle.focusNode]; without one the menu owns a node for
+  /// the control.
   final FocusNode? triggerFocusNode;
 
   /// Overlay positioning configuration.
@@ -421,7 +506,8 @@ class RemixMenu<T> extends StatefulWidget {
   ///
   /// Standard triggers keep descendant-derived names unless this is set.
   /// Builder-backed triggers use this value when set and otherwise fall back
-  /// to [RemixMenuTrigger.label].
+  /// to [RemixMenuTrigger.label]. Must be null for a
+  /// [RemixMenuTrigger.control], whose button owns its label.
   final String? semanticLabel;
 
   /// Whether to hide the menu trigger from the semantic tree.
@@ -445,11 +531,18 @@ class RemixMenu<T> extends StatefulWidget {
 
 class _RemixMenuState<T> extends State<RemixMenu<T>> {
   late final MenuController _internalController;
+  FocusNode? _ownedControlFocusNode;
 
   @override
   void initState() {
     super.initState();
     _internalController = widget.controller ?? MenuController();
+  }
+
+  @override
+  void dispose() {
+    _ownedControlFocusNode?.dispose();
+    super.dispose();
   }
 
   // Note: MenuController doesn't require disposal - it's not a ChangeNotifier
@@ -463,6 +556,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   MenuController get _effectiveController =>
       widget.controller ?? _internalController;
+
+  FocusNode get _controlFocusNode =>
+      widget.triggerFocusNode ??
+      (_ownedControlFocusNode ??= FocusNode(debugLabel: 'RemixMenu control'));
 
   String? get _resolvedTriggerSemanticLabel {
     if (widget.trigger.builder == null) {
@@ -480,7 +577,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
         if (widget.trigger.icon != null)
           StyledIcon(icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
         Flexible(
-          child: StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
+          child: StyledText(
+            widget.trigger.label!,
+            styleSpec: triggerSpec.label,
+          ),
         ),
       ],
     );
@@ -489,6 +589,12 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
+    final control = widget.trigger.control;
+    assert(
+      control == null || widget.semanticLabel == null,
+      'RemixMenu.semanticLabel does not apply to RemixMenuTrigger.control; '
+      'give the control its own label.',
+    );
 
     return NakedMenu<T>(
       // Render items list with direct spec passing
@@ -527,12 +633,27 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       consumeOutsideTaps: widget.consumeOutsideTaps,
       useRootOverlay: widget.useRootOverlay,
       closeOnClickOutside: widget.closeOnClickOutside,
-      triggerFocusNode: widget.triggerFocusNode,
+      openOnTap: control == null,
+      triggerFocusNode: control == null
+          ? widget.triggerFocusNode
+          : _controlFocusNode,
       positioning: widget.positioning,
+      constrainToAvailableHeight: true,
       semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
+        if (control != null) {
+          return control(
+            context,
+            RemixMenuTriggerHandle._(
+              isOpen: state.isOpen,
+              controller: _effectiveController,
+              focusNode: _controlFocusNode,
+            ),
+          );
+        }
+
         return RemixStyleSpecBuilder<MenuSpec>(
           style: style,
           styleSpec: widget.styleSpec,
@@ -663,6 +784,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       styleSpec: overlayStyleSpec,
       direction: Axis.vertical,
       containerEffects: containerEffects,
+      scrollable: true,
       children: snapshot
           .map(
             (item) => switch (item) {

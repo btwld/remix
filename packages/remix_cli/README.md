@@ -163,7 +163,7 @@ With `preset: fortal`, `add button` installs the full local theme layer,
 prefix replaces Fortal throughout: `--prefix Acme` creates `AcmeTheme`,
 `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. The installed application
 does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
-the Radix color data, tokens, recipes, and instance overrides as ordinary app
+the generated palette data, tokens, recipes, and instance overrides as ordinary app
 source.
 
 Place `AcmeTheme` below the application host. For a routed `WidgetsApp`, wrap

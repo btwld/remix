@@ -102,6 +102,7 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   final _search = TextEditingController();
   final _popover = MenuController();
+  final _popoverTrigger = FocusNode();
   final _defaultAccordion = RemixAccordionController<String>();
   final _surfaceAccordion = RemixAccordionController<String>();
 
@@ -128,6 +129,7 @@ class _GalleryState extends State<Gallery> {
   @override
   void dispose() {
     _search.dispose();
+    _popoverTrigger.dispose();
     _defaultAccordion.dispose();
     _surfaceAccordion.dispose();
     super.dispose();
@@ -693,8 +695,13 @@ class _GalleryState extends State<Gallery> {
         ),
       _row([
         AcmeDropdown<String>(
-          semanticLabel: 'Actions',
-          trigger: const RemixMenuTrigger(label: 'Actions'),
+          trigger: RemixMenuTrigger.control(
+            builder: (context, menu) => AcmeButton.secondary(
+              label: 'Actions',
+              focusNode: menu.focusNode,
+              onPressed: menu.toggle,
+            ),
+          ),
           onSelected: (value) => setState(() => _lastAction = value),
           items: [
             const RemixMenuItem(
@@ -725,6 +732,7 @@ class _GalleryState extends State<Gallery> {
       _row([
         AcmePopover(
           controller: _popover,
+          triggerFocusNode: _popoverTrigger,
           openOnTap: false,
           popoverChild: SizedBox(
             width: 220,
@@ -752,6 +760,7 @@ class _GalleryState extends State<Gallery> {
           ),
           child: AcmeButton.secondary(
             label: 'Open popover',
+            focusNode: _popoverTrigger,
             onPressed: _popover.open,
           ),
         ),

@@ -27,9 +27,9 @@ measurements:
   - {what: pressed, value: "trigger scale 0.97, item scale 0.98, 250ms ease-out-quart", cite: "dropdown.css .dropdown__trigger, menu-item.css .menu-item"}
 approximations:
   - Standalone Menu (menu.css) is deferred. It is a different list (`p-1 gap-1`, items `px-2`; measured `menu-default-rest-menu`), and RemixMenu always draws a trigger, so a bare menu has no Remix target.
-  - RemixMenu renders `trigger` as non-interactive content inside its own button, so it cannot host a HeroUiButton; the recipe styles that content as the bare `.dropdown__trigger` and `style` can add chrome. A button trigger would need RemixMenu to accept a child like RemixPopover does.
-  - RemixMenu has no `enabled`, so the trigger's disabled style is not reachable.
-  - Row and trigger focus is a 2px inside border in the focus color, without the background gap; MenuItemStyler and MenuTriggerStyler have no outline effect. The trigger border makes it 4px larger than bare content.
+  - "A `HeroUiButton` is the trigger through `RemixMenuTrigger.control`: it keeps its own look, press scale, and focus ring, and `MenuStyler.trigger` does not apply to it. The recipe's `trigger` style is the bare `.dropdown__trigger` (press scale and focus ring) for label and builder triggers."
+  - "Once the list is long enough to scroll, Remix clips it at the scroll view, inside the popover's padding, so the outside row ring loses its sides and the edge rows lose their outer edge."
+  - A disabled `HeroUiButton` trigger dims as a button and does not open the menu; `RemixMenu` has no `enabled`, so the bare label trigger has no disabled style.
   - The popover's `max-w-[48svw]` is viewport-relative and is not modeled.
   - The separator spans the menu; HeroUI insets it to 94%.
   - The CSS sets no size for content icons; leading icons are 16px in the label colour (HeroUI's examples use `size-4`), and the trailing submenu chevron is 14px muted (`submenu-indicator svg size-3.5`).

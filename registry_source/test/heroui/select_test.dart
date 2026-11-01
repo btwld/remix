@@ -35,9 +35,6 @@ const _chevronInkWidth = 10.5;
 /// `.select__indicator` sits at `end-2`.
 const _indicatorEnd = 8.0;
 
-/// Browser colors are 8-bit; recipe colors come from the theme tokens.
-const _colorTolerance = 1.5 / 255;
-
 SelectTriggerSpec _trigger(WidgetTester tester) =>
     tester.resolvedSpecOf<SelectTriggerSpec>(find.text('Choose'));
 
@@ -213,49 +210,65 @@ void main() {
       expect(picked, 'banana');
     });
 
-    testWidgets('keyboard focus rings an item without moving it in $mode', (
+    testWidgets('keyboard focus draws the measured ring around an item '
+        'without moving it in $mode', (tester) async {
+      await tester.pumpHeroUi(_select(), mode: mode);
+      await tester.tap(find.text('Choose'));
+      await tester.pumpAndSettle();
+      SelectMenuItemSpec item(String label) =>
+          tester.resolvedSpecOf<SelectMenuItemSpec>(find.text(label));
+      expect(item('Apple').containerEffects?.isEmpty ?? true, isTrue);
+      final before = tester.getRect(find.text('Apple'));
+      final size = tester.getSize(
+        find
+            .ancestor(of: find.text('Apple'), matching: find.byType(Padding))
+            .first,
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pumpAndSettle();
+      expect(item('Apple').containerEffects?.isEmpty ?? true, isTrue);
+      expect(item('Banana').containerEffects?.isEmpty ?? true, isFalse);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.pumpAndSettle();
+      expectFocusRing(
+        item('Apple').containerEffects,
+        heroUiCase(
+          'select-primary-keyboard-open-list-box-item:Apple',
+          mode: mode,
+        ),
+      );
+      expect(item('Banana').containerEffects?.isEmpty ?? true, isTrue);
+      expect(
+        (item('Apple').container.spec.boxSpec.decoration as BoxDecoration)
+            .border,
+        isNull,
+      );
+      expect(tester.getRect(find.text('Apple')), before);
+      expect(
+        tester.getSize(
+          find
+              .ancestor(of: find.text('Apple'), matching: find.byType(Padding))
+              .first,
+        ),
+        size,
+      );
+    });
+
+    testWidgets('the popover is as wide as the trigger in $mode', (
       tester,
     ) async {
       await tester.pumpHeroUi(_select(), mode: mode);
-      await tester.focusWithTab();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.tap(find.text('Choose'));
       await tester.pumpAndSettle();
-      final item = heroUiCase(
-        'select-primary-keyboard-open-list-box-item:Apple',
+      final popover = heroUiCase(
+        'select-primary-keyboard-open-select-popover',
         mode: mode,
       );
-      // A background gap, then the focus colour; the recipe draws the focus
-      // colour as a ring-width inside border.
-      final layers = cssRemixShadows(item.styles['boxShadow']!);
-      final before = tester.getRect(find.text('Banana'));
-      Border ring(String label) =>
-          (tester
-                          .resolvedSpecOf<SelectMenuItemSpec>(find.text(label))
-                          .container
-                          .spec
-                          .boxSpec
-                          .decoration!
-                      as BoxDecoration)
-                  .border!
-              as Border;
-
-      expect(
-        ring('Apple').top.color,
-        isSameColorAs(layers.last.color, threshold: _colorTolerance),
-      );
-      expect(
-        ring('Apple').top.width,
-        layers.last.spreadRadius - layers.first.spreadRadius,
-      );
-      // Opening focuses the first enabled option; ArrowDown moves to the next.
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      expect(ring('Apple').top.color, const Color(0x00000000));
-      expect(
-        ring('Banana').top.color,
-        isSameColorAs(layers.last.color, threshold: _colorTolerance),
-      );
-      expect(tester.getRect(find.text('Banana')), before);
+      final surface = find
+          .ancestor(of: find.text('Apple'), matching: find.byType(DecoratedBox))
+          .last;
+      expect(tester.getSize(surface).width, popover.size.width);
     });
 
     testWidgets('hovering an item fills it with default in $mode', (

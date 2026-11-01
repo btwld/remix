@@ -23,10 +23,10 @@ measurements:
   - {what: icon-only, value: "square: width equals height", cite: toggle-default-md-icon-rest}
   - {what: selected, value: "accent-soft fill and foreground", cite: toggle-default-md-label-selected}
   - {what: pressed scale, value: "sm 0.98, md 0.97, lg 0.96", cite: "toggle-button.css :active"}
+  - {what: focus ring, value: "2px background gap, then a 2px focus ring, outside the button", cite: "toggle-button.css status-focused; close-button-focus"}
   - {what: disabled opacity, value: 0.5, cite: "toggle-default-md-label-disabled, toggle-default-md-label-disabled-selected"}
 approximations:
   - "The `default` variant is named `defaultToggle`, since `default` is a Dart keyword."
-  - The focus ring is a 2px border inside the button, recolored on keyboard focus; upstream draws it outside with a 2px gap, which `ToggleStyler` cannot.
   - The icon's `-mx-0.5` margins are not expressible, so a button with an icon and a label is 4px wider than upstream.
   - The fill, the press scale, and the focus ring share one 100ms ease-out; upstream eases `transform` over 250ms.
   - "`iconOnly` stands in for `isIconOnly`: it removes the padding and squares the button."

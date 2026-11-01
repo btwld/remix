@@ -11,7 +11,8 @@ placement, and theme selection shared with the Vanilla preset, see the
 
 Sections: [Presets and recipes](#presets-and-recipes) ·
 [Typography](#typography) · [Scope and theme config](#scope-and-theme-config) ·
-[Token rules](#token-rules).
+[Token rules](#token-rules) · [Palettes and review](#palettes-and-review) ·
+[Focus rings](#focus-rings).
 
 ## Presets and recipes
 
@@ -154,3 +155,14 @@ The independent contract is `registry_source/specs/fortal.md` and its catalog;
 `tool/check_fortal.dart` verifies APIs and test ownership. Use the
 `apps/demo/lib/polish_main.dart` playground to review every size/variant in
 both modes on a 4px grid, with palette and interaction-state selectors.
+
+## Focus rings
+
+Fortal uses one shared outline from `focus8`, `focusRingWidth`, and
+`focusRingOffset` (2px wide, 2px outside by default). Effects-capable controls
+paint it through `containerEffects`, accordion/disclosure use `triggerEffects`,
+switches use `trackEffects`, and sliders use `thumbFocusEffects`. The ring
+takes no layout space. Disabled controls do not ring.
+
+Select panels use `minWidth(remixAnchorWidth())`; a smaller `maxWidth` override
+must also replace that minimum.

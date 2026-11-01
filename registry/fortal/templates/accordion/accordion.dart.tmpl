@@ -22,19 +22,25 @@ AccordionStyler {{valuePrefix}}AccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) {
   return (switch (variant) {
-    .surface => _{{valuePrefix}}AccordionSurfaceStyler(size),
-    .soft => _{{valuePrefix}}AccordionSoftStyler(size),
-  }).merge(style);
+        .surface => _{{valuePrefix}}AccordionSurfaceStyler(size),
+        .soft => _{{valuePrefix}}AccordionSoftStyler(size),
+      })
+      // Clip each painted part so its effects can extend beyond the panel.
+      .container(BoxStyler().clipBehavior(.none))
+      .merge(style);
 }
 
-// Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, frame, fill, and clipping, while trigger and
-// content stay flat rectangles that simply get cropped to its rounded shape.
-// The frame and divider are foreground borders so edge-to-edge child fills
-// cannot partially cover their antialiased edges.
+// The container owns the fill and foreground frame. Each part clips its own
+// content, leaving trigger effects free to paint outside the panel's edges.
 AccordionStyler _{{valuePrefix}}AccordionBaseStyler({{typePrefix}}AccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal).minHeight({{typePrefix}}Tokens.touchTargetMin()))
+      .trigger(
+        FlexBoxStyler()
+            .direction(.horizontal)
+            .minHeight({{typePrefix}}Tokens.touchTargetMin())
+            .borderRadius(.all(_{{valuePrefix}}AccordionRadius(size)))
+            .clipBehavior(.antiAlias),
+      )
       .leadingIcon(.color({{typePrefix}}Tokens.gray11()))
       .title(
         .fontWeight(
@@ -42,29 +48,48 @@ AccordionStyler _{{valuePrefix}}AccordionBaseStyler({{typePrefix}}AccordionSize 
         ).color({{typePrefix}}Tokens.gray12()),
       )
       .trailingIcon(.color({{typePrefix}}Tokens.gray11()))
-      .content(.width(.infinity))
-      .onExpanded(
-        AccordionStyler().trailingIcon(
-          IconStyler().wrap(
-            WidgetModifierConfig.transform(
-              transform: Matrix4.rotationZ(math.pi),
-              alignment: .center,
+      .content(
+        BoxStyler()
+            .width(.infinity)
+            .clipBehavior(.antiAlias)
+            .borderRadius(
+              BorderRadiusMix(
+                bottomLeft: _{{valuePrefix}}AccordionRadius(size),
+                bottomRight: _{{valuePrefix}}AccordionRadius(size),
+              ),
             ),
-          ),
-        ),
+      )
+      .onExpanded(
+        AccordionStyler()
+            .trigger(
+              FlexBoxStyler().borderRadius(
+                BorderRadiusMix(
+                  topLeft: _{{valuePrefix}}AccordionRadius(size),
+                  topRight: _{{valuePrefix}}AccordionRadius(size),
+                  bottomLeft: Radius.zero,
+                  bottomRight: Radius.zero,
+                ),
+              ),
+            )
+            .trailingIcon(
+              IconStyler().wrap(
+                WidgetModifierConfig.transform(
+                  transform: Matrix4.rotationZ(math.pi),
+                  alignment: .center,
+                ),
+              ),
+            ),
       )
       .merge(_{{valuePrefix}}AccordionSizeStyler(size));
 }
 
-AccordionStyler _{{valuePrefix}}AccordionFocusStyler({{typePrefix}}AccordionSize size) {
-  return AccordionStyler().container(
-    BoxStyler().{{valuePrefix}}FocusRing(radius: _{{valuePrefix}}AccordionRadius(size)),
-  );
+AccordionStyler _{{valuePrefix}}AccordionFocusStyler() {
+  return AccordionStyler().triggerEffects({{valuePrefix}}FocusOutline());
 }
 
 AccordionStyler _{{valuePrefix}}AccordionDisabledStyler() {
   return AccordionStyler()
-      .container(BoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)))
+      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .trigger(.color({{typePrefix}}Tokens.grayA3()))
       .leadingIcon(.color({{typePrefix}}Tokens.gray8()))
       .title(.color({{typePrefix}}Tokens.gray8()))
@@ -97,7 +122,7 @@ AccordionStyler _{{valuePrefix}}AccordionSurfaceStyler([
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
-      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler(size))
+      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler())
       .onDisabled(_{{valuePrefix}}AccordionDisabledStyler());
 }
 
@@ -129,7 +154,7 @@ AccordionStyler _{{valuePrefix}}AccordionSoftStyler([
       )
       .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
       .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
-      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler(size))
+      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler())
       .onDisabled(_{{valuePrefix}}AccordionDisabledStyler());
 }
 

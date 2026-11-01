@@ -69,19 +69,19 @@ SelectTriggerStyler _trigger(
   return result;
 }
 
-/// `.select__popover`: `bg-overlay`, `min(32px, var(--radius-3xl))`.
+/// `.select__popover`: `min-w-(--trigger-width)`, `bg-overlay`,
+/// `min(32px, var(--radius-3xl))`.
 final _content = SelectContentStyler()
+    .minWidth(remixAnchorWidth())
     .color({{typePrefix}}Tokens.overlay())
     .borderRadius(.all({{typePrefix}}Tokens.radiusPanel()))
     .containerEffects({{valuePrefix}}SurfaceEffects(overlay: true));
 
-/// `.list-box-item` inside the select popover (`px-2.5`). A transparent
-/// ring-width border is always present so keyboard focus recolors it in place.
+/// `.list-box-item` inside the select popover (`px-2.5`).
 final _item = SelectMenuItemStyler()
     .minHeight(_minHeight)
-    .padding(.horizontal({{valuePrefix}}InsideRing(_itemPaddingX)))
-    .padding(.vertical({{valuePrefix}}InsideRing(_itemPaddingY)))
-    .border({{valuePrefix}}RingBorder())
+    .padding(.horizontal(_itemPaddingX))
+    .padding(.vertical(_itemPaddingY))
     .spacing(_itemGap)
     .borderRadius(.all({{typePrefix}}Tokens.radius2xl()))
     .text(.style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.foreground()))
@@ -89,9 +89,7 @@ final _item = SelectMenuItemStyler()
     .icon(.size(_itemMark).color({{typePrefix}}Tokens.defaultForeground()))
     .onHovered(.color({{typePrefix}}Tokens.defaultColor()))
     .onPressed(SelectMenuItemStyler().scale(_itemPressedScale))
-    .onFocusVisible(
-      SelectMenuItemStyler().border({{valuePrefix}}RingBorder(focused: true)),
-    )
+    .onFocusVisible(SelectMenuItemStyler().containerEffects({{valuePrefix}}FocusRing()))
     .onDisabled(
       SelectMenuItemStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
     );

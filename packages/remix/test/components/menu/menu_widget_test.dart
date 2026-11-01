@@ -1,7 +1,8 @@
-import 'dart:ui' show CheckedState, SemanticsRole;
+import 'dart:ui' show CheckedState, SemanticsRole, Tristate;
 
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart' show SemanticsNode;
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
@@ -36,6 +37,17 @@ void main() {
       expect(trigger.label, equals('Options'));
       expect(trigger.icon, equals(Icons.more_vert));
       expect(trigger.builder, isNull);
+    });
+
+    test('creates a control trigger without a label or icon', () {
+      final trigger = RemixMenuTrigger.control(
+        builder: (context, menu) => const SizedBox.shrink(),
+      );
+
+      expect(trigger.label, isNull);
+      expect(trigger.icon, isNull);
+      expect(trigger.builder, isNull);
+      expect(trigger.control, isNotNull);
     });
 
     test('creates const builder trigger with label and optional icon', () {
@@ -127,6 +139,386 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
       },
     );
+  });
+
+  group('RemixMenuTrigger.control', () {
+    Widget buildControlMenu({
+      List<RemixMenuTriggerHandle>? handles,
+      MenuController? controller,
+      FocusNode? triggerFocusNode,
+      VoidCallback? onOpen,
+      VoidCallback? onClose,
+      ValueChanged<String>? onSelected,
+      bool enabled = true,
+    }) {
+      return RemixMenu<String>(
+        controller: controller,
+        triggerFocusNode: triggerFocusNode,
+        onOpen: onOpen,
+        onClose: onClose,
+        onSelected: onSelected,
+        trigger: RemixMenuTrigger.control(
+          builder: (context, menu) {
+            handles?.add(menu);
+            return RemixButton(
+              label: 'Actions',
+              focusNode: menu.focusNode,
+              onPressed: enabled ? menu.toggle : null,
+            );
+          },
+        ),
+        items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+      );
+    }
+
+    testWidgets('renders the builder output instead of the default trigger', (
+      tester,
+    ) async {
+      const controlKey = Key('control');
+
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: RemixMenuTrigger.control(
+            builder: (context, menu) => const SizedBox(
+              key: controlKey,
+              width: 40,
+              height: 40,
+              child: Text('Custom'),
+            ),
+          ),
+          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+        ),
+      );
+
+      expect(find.byKey(controlKey), findsOneWidget);
+      expect(find.byType(RowBox), findsNothing);
+      expect(find.byType(NakedButton), findsNothing);
+    });
+
+    testWidgets('hands the control the menu state, controller and focus node', (
+      tester,
+    ) async {
+      final handles = <RemixMenuTriggerHandle>[];
+      final controller = MenuController();
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+
+      await tester.pumpRemixApp(
+        buildControlMenu(
+          handles: handles,
+          controller: controller,
+          triggerFocusNode: focusNode,
+        ),
+      );
+
+      expect(handles.last.isOpen, isFalse);
+      expect(handles.last.controller, same(controller));
+      expect(handles.last.focusNode, same(focusNode));
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+
+      expect(handles.last.isOpen, isTrue);
+      expect(handles.last.controller, same(controller));
+    });
+
+    testWidgets('a pointer tap opens the menu and a second tap closes it', (
+      tester,
+    ) async {
+      var opened = 0;
+      var closed = 0;
+
+      await tester.pumpRemixApp(
+        buildControlMenu(onOpen: () => opened++, onClose: () => closed++),
+      );
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsOneWidget);
+      expect((opened, closed), (1, 0));
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsNothing);
+      expect((opened, closed), (1, 1));
+    });
+
+    testWidgets('Enter on the focused control opens the menu', (tester) async {
+      final handles = <RemixMenuTriggerHandle>[];
+
+      await tester.pumpRemixApp(buildControlMenu(handles: handles));
+      handles.last.focusNode.requestFocus();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Copy'), findsOneWidget);
+    });
+
+    testWidgets('the controller opens and closes a control trigger', (
+      tester,
+    ) async {
+      final handles = <RemixMenuTriggerHandle>[];
+      final controller = MenuController();
+
+      await tester.pumpRemixApp(
+        buildControlMenu(handles: handles, controller: controller),
+      );
+
+      controller.open();
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsOneWidget);
+      expect(handles.last.isOpen, isTrue);
+
+      controller.close();
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsNothing);
+      expect(handles.last.isOpen, isFalse);
+    });
+
+    testWidgets('selecting an item reports it and closes the menu', (
+      tester,
+    ) async {
+      final selected = <String>[];
+
+      await tester.pumpRemixApp(buildControlMenu(onSelected: selected.add));
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Copy'));
+      await tester.pumpAndSettle();
+
+      expect(selected, ['copy']);
+      expect(find.text('Copy'), findsNothing);
+    });
+
+    testWidgets('an outside tap closes the menu', (tester) async {
+      await tester.pumpRemixApp(buildControlMenu());
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsOneWidget);
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsNothing);
+    });
+
+    for (final callerOwnsFocusNode in [false, true]) {
+      final owner = callerOwnsFocusNode ? 'caller-supplied' : 'menu-owned';
+
+      testWidgets('Escape returns focus to the control ($owner node)', (
+        tester,
+      ) async {
+        final handles = <RemixMenuTriggerHandle>[];
+        final supplied = callerOwnsFocusNode ? FocusNode() : null;
+        addTearDown(() => supplied?.dispose());
+
+        await tester.pumpRemixApp(
+          buildControlMenu(handles: handles, triggerFocusNode: supplied),
+        );
+        final control = supplied ?? handles.last.focusNode;
+
+        await tester.tap(find.text('Actions'));
+        await tester.pumpAndSettle();
+        expect(find.text('Copy'), findsOneWidget);
+        expect(control.hasFocus, isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Copy'), findsNothing);
+        expect(control.hasFocus, isTrue);
+      });
+
+      testWidgets(
+        'selecting an item returns focus to the control ($owner node)',
+        (tester) async {
+          final handles = <RemixMenuTriggerHandle>[];
+          final supplied = callerOwnsFocusNode ? FocusNode() : null;
+          addTearDown(() => supplied?.dispose());
+
+          await tester.pumpRemixApp(
+            buildControlMenu(handles: handles, triggerFocusNode: supplied),
+          );
+          final control = supplied ?? handles.last.focusNode;
+
+          await tester.tap(find.text('Actions'));
+          await tester.pumpAndSettle();
+          expect(control.hasFocus, isFalse);
+
+          await tester.tap(find.text('Copy'));
+          await tester.pumpAndSettle();
+
+          expect(find.text('Copy'), findsNothing);
+          expect(control.hasFocus, isTrue);
+        },
+      );
+
+      testWidgets('the control is one tab stop ($owner node)', (tester) async {
+        final handles = <RemixMenuTriggerHandle>[];
+        final supplied = callerOwnsFocusNode ? FocusNode() : null;
+        final before = FocusNode();
+        final after = FocusNode();
+        addTearDown(() {
+          supplied?.dispose();
+          before.dispose();
+          after.dispose();
+        });
+
+        await tester.pumpRemixApp(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Focus(focusNode: before, child: const SizedBox(height: 20)),
+              buildControlMenu(handles: handles, triggerFocusNode: supplied),
+              Focus(focusNode: after, child: const SizedBox(height: 20)),
+            ],
+          ),
+        );
+        before.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect((supplied ?? handles.last.focusNode).hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(after.hasFocus, isTrue);
+      });
+    }
+
+    testWidgets('exposes one node with the control name, role and state', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(buildControlMenu());
+
+      bool hasExpandedState(SemanticsNode node) =>
+          node.getSemanticsData().flagsCollection.isExpanded != Tristate.none;
+      bool isButton(SemanticsNode node) =>
+          node.getSemanticsData().flagsCollection.isButton;
+
+      expect(find.semantics.byLabel('Actions'), findsOne);
+      expect(find.semantics.byPredicate(isButton), findsOne);
+      expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+      expect(
+        tester.getSemantics(find.text('Actions')),
+        isSemantics(
+          label: 'Actions',
+          isButton: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      tester.semantics.tap(find.semantics.byLabel('Actions'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Copy'), findsOneWidget);
+      expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+      expect(find.semantics.byLabel('Copy'), findsOne);
+      expect(
+        tester.getSemantics(find.text('Actions')),
+        isSemantics(label: 'Actions', hasExpandedState: true, isExpanded: true),
+      );
+      semantics.dispose();
+    });
+
+    testWidgets(
+      'merges the expanded state onto a control that is its own semantics node',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            trigger: RemixMenuTrigger.control(
+              builder: (context, menu) => TextButton(
+                focusNode: menu.focusNode,
+                onPressed: menu.toggle,
+                child: const Text('Actions'),
+              ),
+            ),
+            items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+          ),
+        );
+
+        bool hasExpandedState(SemanticsNode node) =>
+            node.getSemanticsData().flagsCollection.isExpanded != Tristate.none;
+
+        expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+        expect(
+          tester.getSemantics(find.text('Actions')),
+          isSemantics(
+            label: 'Actions',
+            isButton: true,
+            hasTapAction: true,
+            hasExpandedState: true,
+            isExpanded: false,
+          ),
+        );
+
+        tester.semantics.tap(find.semantics.byLabel('Actions'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Copy'), findsOneWidget);
+        expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+        expect(
+          tester.getSemantics(find.text('Actions')),
+          isSemantics(hasExpandedState: true, isExpanded: true),
+        );
+        semantics.dispose();
+      },
+    );
+
+    testWidgets('a disabled control does not open the menu', (tester) async {
+      final handles = <RemixMenuTriggerHandle>[];
+
+      await tester.pumpRemixApp(
+        buildControlMenu(handles: handles, enabled: false),
+      );
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+      expect(find.text('Copy'), findsNothing);
+
+      expect(handles.last.focusNode.canRequestFocus, isFalse);
+    });
+
+    testWidgets('rejects a menu semantic label', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          semanticLabel: 'Actions menu',
+          trigger: RemixMenuTrigger.control(
+            builder: (context, menu) => const SizedBox.shrink(),
+          ),
+          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+        ),
+      );
+
+      expect(tester.takeException(), isA<AssertionError>());
+    });
+
+    testWidgets('disposes only a focus node it owns', (tester) async {
+      final handles = <RemixMenuTriggerHandle>[];
+      final supplied = FocusNode();
+      addTearDown(supplied.dispose);
+
+      await tester.pumpRemixApp(buildControlMenu(handles: handles));
+      final owned = handles.last.focusNode;
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(() => owned.addListener(() {}), throwsFlutterError);
+
+      await tester.pumpRemixApp(
+        buildControlMenu(handles: handles, triggerFocusNode: supplied),
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(() => supplied.addListener(() {}), returnsNormally);
+    });
   });
 
   group('RemixMenuItem', () {

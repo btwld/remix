@@ -41,7 +41,7 @@ For base widgets: `flutter pub add remix`, then import
 `package:remix/remix.dart` and widgets-layer Flutter. For editable source:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
 dart run remix_cli:remix init                  # vanilla, prefix Ui
 dart run remix_cli:remix add button textfield
 ```

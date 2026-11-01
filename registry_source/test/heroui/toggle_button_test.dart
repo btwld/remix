@@ -48,6 +48,9 @@ ToggleSpec _spec(WidgetTester tester, {bool iconOnly = false}) =>
       iconOnly ? find.byIcon(_icon) : find.text(_label),
     );
 
+BoxDecoration _decoration(ToggleSpec spec) =>
+    spec.container.spec.boxSpec.decoration! as BoxDecoration;
+
 Color? _fill(ToggleSpec spec) =>
     (spec.container.spec.boxSpec.decoration as BoxDecoration?)?.color;
 
@@ -223,22 +226,25 @@ void main() {
       });
     }
 
-    testWidgets('keyboard focus recolors the ring border without resizing in '
+    // `toggle-button.css` applies `status-focused`, the utility the close
+    // button's capture shows.
+    testWidgets('keyboard focus draws the measured ring without resizing in '
         '$mode', (tester) async {
-      await _pump(tester, _toggle(), mode: mode);
+      final rest = await _pump(tester, _toggle(), mode: mode);
+      expect(rest.containerEffects?.isEmpty ?? true, isTrue);
+      expect(_decoration(rest).border, isNull);
       final before = tester.getSize(find.byType(HeroUiToggleButton));
-      var border =
-          _spec(tester).container.spec.boxSpec.decoration as BoxDecoration;
-      expect((border.border as Border).top.width, HeroUiTokens.focusWidth);
-      expect((border.border as Border).top.color, HeroUiTokens.transparent);
+      final label = tester.getRect(find.text(_label));
 
       await tester.focusWithTab();
-      border = _spec(tester).container.spec.boxSpec.decoration as BoxDecoration;
-      expect(
-        (border.border as Border).top.color,
-        heroUiToken(HeroUiTokens.focus, mode),
+      final focused = _spec(tester);
+      expectFocusRing(
+        focused.containerEffects,
+        heroUiCase('close-button-focus', mode: mode, state: true),
       );
+      expect(_decoration(focused).border, isNull);
       expect(tester.getSize(find.byType(HeroUiToggleButton)), before);
+      expect(tester.getRect(find.text(_label)), label);
     });
 
     for (final selected in [false, true]) {
