@@ -19,9 +19,14 @@ enum {{typePrefix}}TextFieldVariant { primary, secondary }
 ///
 /// Pass [RemixTextField.error] for the error treatment, and the error message
 /// as `helperText`; validation stays with the app.
+///
+/// [minLines] and [maxLines] reach the field itself and the placeholder's line
+/// budget, which is why they are named here: see [{{valuePrefix}}HintLines].
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler {{valuePrefix}}TextFieldStyle({
   {{typePrefix}}TextFieldVariant variant = .primary,
+  int? maxLines = 1,
+  int? minLines,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   final field = switch (variant) {
@@ -36,7 +41,12 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
       .borderRadius(.all({{typePrefix}}Tokens.radiusField()))
       .color(field.rest())
       .text({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldForeground))
-      .hintText({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldPlaceholder))
+      .hintText(
+        {{valuePrefix}}FieldText(
+          {{typePrefix}}Tokens.fieldPlaceholder,
+          lines: {{valuePrefix}}HintLines(minLines: minLines, maxLines: maxLines),
+        ),
+      )
       // A browser draws the caret in the text color.
       .cursorColor({{typePrefix}}Tokens.fieldForeground())
       .label({{valuePrefix}}LabelText)

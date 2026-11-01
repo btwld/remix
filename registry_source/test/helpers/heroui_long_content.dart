@@ -14,6 +14,20 @@ const longHeroUiLabel =
 const longHeroUiHint =
     'Beschreiben Sie Ihr Anliegen so genau wie möglich, damit unser '
     'Support-Team schnell weiterhelfen kann';
+const longHeroUiParagraphHint =
+    'Beschreiben Sie Ihr Anliegen so genau wie möglich, damit unser '
+    'Support-Team schnell weiterhelfen kann, und nennen Sie dabei die '
+    'Bestellnummer sowie den Tag, an dem das Problem zum ersten Mal '
+    'aufgetreten ist';
+
+/// Geist has no Arabic glyphs, so this lays out in the test fallback font;
+/// the line counts and glyph boxes it is measured by hold all the same.
+const longHeroUiArabicHint =
+    'يرجى وصف المشكلة '
+    'بأكبر قدر ممكن من '
+    'التفاصيل حتى يتمكن '
+    'فريق الدعم من مساعدتك '
+    'بسرعة';
 
 Future<void> loadHeroUiGeist() async {
   final loader = FontLoader(RemixFonts.geist);
@@ -53,6 +67,28 @@ void expectHeroUiTextInside(WidgetTester tester, Finder text, Rect bounds) {
   expect(rect.right, lessThanOrEqualTo(bounds.right + .01));
   expect(rect.top, greaterThanOrEqualTo(bounds.top - .01));
   expect(rect.bottom, lessThanOrEqualTo(bounds.bottom + .01));
+}
+
+/// The lines [label]'s paragraph would take without a line budget.
+///
+/// Laying the same span out again at the width the paragraph settled on
+/// reproduces its line breaks, so a paragraph that was cut short reports the
+/// lines it was denied.
+int heroUiWantedLines(WidgetTester tester, String label) {
+  final paragraph = heroUiParagraph(tester, label);
+  final painter = TextPainter(
+    text: paragraph.text,
+    textAlign: paragraph.textAlign,
+    textDirection: paragraph.textDirection,
+    textScaler: paragraph.textScaler,
+    locale: paragraph.locale,
+    strutStyle: paragraph.strutStyle,
+    textWidthBasis: paragraph.textWidthBasis,
+  )..layout(maxWidth: paragraph.size.width);
+  final lines = painter.computeLineMetrics().length;
+  painter.dispose();
+
+  return lines;
 }
 
 /// Expects every glyph of [label] to be painted inside its own paragraph.

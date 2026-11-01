@@ -10,10 +10,15 @@ part of 'textfield.dart';
 ///
 /// Pass [RemixTextField.error] for the error treatment, and the error message
 /// as `helperText`; validation stays with the app.
+///
+/// [minLines] and [maxLines] reach the field itself and the placeholder's line
+/// budget, which is why they are named here: see [heroUiHintLines].
 class HeroUiTextField extends StatelessWidget {
   const HeroUiTextField({
     super.key,
     this.variant = .primary,
+    this.maxLines = 1,
+    this.minLines,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -29,8 +34,6 @@ class HeroUiTextField extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
@@ -76,6 +79,8 @@ class HeroUiTextField extends StatelessWidget {
 
   const HeroUiTextField.primary({
     super.key,
+    this.maxLines = 1,
+    this.minLines,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -91,8 +96,6 @@ class HeroUiTextField extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
@@ -138,6 +141,8 @@ class HeroUiTextField extends StatelessWidget {
 
   const HeroUiTextField.secondary({
     super.key,
+    this.maxLines = 1,
+    this.minLines,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -153,8 +158,6 @@ class HeroUiTextField extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
@@ -200,6 +203,10 @@ class HeroUiTextField extends StatelessWidget {
 
   final HeroUiTextFieldVariant variant;
 
+  final int? maxLines;
+
+  final int? minLines;
+
   final TextFieldStyler style;
 
   final TextEditingController? controller;
@@ -229,10 +236,6 @@ class HeroUiTextField extends StatelessWidget {
   final bool readOnly;
 
   final bool autofocus;
-
-  final int? maxLines;
-
-  final int? minLines;
 
   final bool expands;
 
@@ -320,7 +323,12 @@ class HeroUiTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: heroUiTextFieldStyle(variant: this.variant, style: this.style),
+      style: heroUiTextFieldStyle(
+        variant: this.variant,
+        maxLines: this.maxLines,
+        minLines: this.minLines,
+        style: this.style,
+      ),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

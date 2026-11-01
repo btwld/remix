@@ -15,6 +15,8 @@ class HeroUiInputGroup extends StatelessWidget {
   const HeroUiInputGroup({
     super.key,
     this.variant = .primary,
+    this.maxLines = 1,
+    this.minLines,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -30,8 +32,6 @@ class HeroUiInputGroup extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
@@ -77,6 +77,8 @@ class HeroUiInputGroup extends StatelessWidget {
 
   const HeroUiInputGroup.primary({
     super.key,
+    this.maxLines = 1,
+    this.minLines,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -92,8 +94,6 @@ class HeroUiInputGroup extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
@@ -139,6 +139,8 @@ class HeroUiInputGroup extends StatelessWidget {
 
   const HeroUiInputGroup.secondary({
     super.key,
+    this.maxLines = 1,
+    this.minLines,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -154,8 +156,6 @@ class HeroUiInputGroup extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
@@ -201,6 +201,10 @@ class HeroUiInputGroup extends StatelessWidget {
 
   final HeroUiTextFieldVariant variant;
 
+  final int? maxLines;
+
+  final int? minLines;
+
   final TextFieldStyler style;
 
   final TextEditingController? controller;
@@ -230,10 +234,6 @@ class HeroUiInputGroup extends StatelessWidget {
   final bool readOnly;
 
   final bool autofocus;
-
-  final int? maxLines;
-
-  final int? minLines;
 
   final bool expands;
 
@@ -321,7 +321,12 @@ class HeroUiInputGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: heroUiInputGroupStyle(variant: this.variant, style: this.style),
+      style: heroUiInputGroupStyle(
+        variant: this.variant,
+        maxLines: this.maxLines,
+        minLines: this.minLines,
+        style: this.style,
+      ),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

@@ -122,6 +122,68 @@ void main() {
         );
         expectHeroUiGlyphsInside(tester, longHeroUiAction);
       });
+
+      // The placeholder follows the editor's own line settings: it may fill
+      // the lines the empty editor shows, and no more.
+      for (final minLines in [null, 1, 2, 4]) {
+        testWidgets('the text area placeholder keeps to its '
+            '${minLines ?? 1} line(s) minLines=$minLines $width $mode', (
+          tester,
+        ) async {
+          await pumpHeroUiLongContent(
+            tester,
+            // Upstream renders the text area 320px wide; the German
+            // placeholder passes four lines there at both widths, while the
+            // English one fits in two.
+            SizedBox(
+              width: 320,
+              child: Column(
+                children: [
+                  HeroUiTextArea(
+                    minLines: minLines,
+                    hintText: longHeroUiParagraphHint,
+                  ),
+                  HeroUiTextArea(minLines: minLines, hintText: longHeroUiLabel),
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: HeroUiTextArea(
+                      minLines: minLines,
+                      hintText: longHeroUiArabicHint,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            width: width,
+            mode: mode,
+          );
+          expect(tester.takeException(), isNull);
+          final budget = minLines ?? 1;
+          final areas = find.byType(HeroUiTextArea);
+          expect(areas, findsNWidgets(3));
+          for (final (index, hintText) in [
+            longHeroUiParagraphHint,
+            longHeroUiLabel,
+            longHeroUiArabicHint,
+          ].indexed) {
+            final reason = 'minLines=$minLines "$hintText"';
+            // Nothing is laid out past the lines the editor shows, so the
+            // ellipsis lands on the last visible line.
+            expectHeroUiGlyphsInside(tester, hintText);
+            expectHeroUiTextInside(
+              tester,
+              find.text(hintText),
+              tester.getRect(areas.at(index)),
+            );
+            final wanted = heroUiWantedLines(tester, hintText);
+            final shown = wanted < budget ? wanted : budget;
+            final hint = heroUiParagraph(tester, hintText);
+            expect(hint.size.height, shown * line, reason: reason);
+            // A placeholder that fits in the editor keeps every line.
+            expect(hint.didExceedMaxLines, wanted > budget, reason: reason);
+          }
+        });
+      }
     }
   }
 }

@@ -19,9 +19,14 @@ enum HeroUiTextFieldVariant { primary, secondary }
 ///
 /// Pass [RemixTextField.error] for the error treatment, and the error message
 /// as `helperText`; validation stays with the app.
+///
+/// [minLines] and [maxLines] reach the field itself and the placeholder's line
+/// budget, which is why they are named here: see [heroUiHintLines].
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler heroUiTextFieldStyle({
   HeroUiTextFieldVariant variant = .primary,
+  int? maxLines = 1,
+  int? minLines,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   final field = switch (variant) {
@@ -36,7 +41,12 @@ TextFieldStyler heroUiTextFieldStyle({
       .borderRadius(.all(HeroUiTokens.radiusField()))
       .color(field.rest())
       .text(heroUiFieldText(HeroUiTokens.fieldForeground))
-      .hintText(heroUiFieldText(HeroUiTokens.fieldPlaceholder))
+      .hintText(
+        heroUiFieldText(
+          HeroUiTokens.fieldPlaceholder,
+          lines: heroUiHintLines(minLines: minLines, maxLines: maxLines),
+        ),
+      )
       // A browser draws the caret in the text color.
       .cursorColor(HeroUiTokens.fieldForeground())
       .label(heroUiLabelText)

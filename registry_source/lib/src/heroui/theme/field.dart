@@ -58,6 +58,19 @@ TextStyler heroUiFieldText(ColorToken color, {int lines = 1}) => TextStyler()
       TextStyler().style(HeroUiTokens.textSm.mix()),
     );
 
+/// The lines a placeholder may fill in a field whose editor shows [minLines]
+/// to [maxLines] lines.
+///
+/// The placeholder is only visible while the editor is empty, where the editor
+/// is as tall as the lines it reserves: [minLines], or the single line a field
+/// without one shows. A [maxLines] below that caps the editor and the
+/// placeholder with it. Stopping there is what keeps the ellipsis on the last
+/// visible line instead of laying out lines the field's box clips away.
+int heroUiHintLines({int? minLines, int? maxLines}) {
+  final lines = minLines ?? 1;
+  return maxLines != null && maxLines < lines ? maxLines : lines;
+}
+
 /// The fill of a field-like control at rest, hovered, and focused.
 typedef HeroUiFieldFill = ({
   ColorToken rest,

@@ -20,19 +20,26 @@ part 'input_group.g.dart';
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler heroUiInputGroupStyle({
   HeroUiTextFieldVariant variant = .primary,
+  int? maxLines = 1,
+  int? minLines,
   TextFieldStyler style = const TextFieldStyler.create(),
-}) => heroUiTextFieldStyle(variant: variant)
-    .minHeight(_minHeight)
-    .spacing(_accessoryGap)
-    .wrap(
-      .defaultText(
-        TextStyler()
-            .style(HeroUiTokens.textSm.mix())
-            .color(HeroUiTokens.fieldPlaceholder()),
-      ),
-    )
-    .wrap(.iconTheme(color: HeroUiTokens.fieldPlaceholder()))
-    .merge(style);
+}) =>
+    heroUiTextFieldStyle(
+          variant: variant,
+          maxLines: maxLines,
+          minLines: minLines,
+        )
+        .minHeight(_minHeight)
+        .spacing(_accessoryGap)
+        .wrap(
+          .defaultText(
+            TextStyler()
+                .style(HeroUiTokens.textSm.mix())
+                .color(HeroUiTokens.fieldPlaceholder()),
+          ),
+        )
+        .wrap(.iconTheme(color: HeroUiTokens.fieldPlaceholder()))
+        .merge(style);
 
 /// `.input-group`: `min-h-9`.
 const _minHeight = 36.0;

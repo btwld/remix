@@ -47,4 +47,4 @@ approximations:
   - Fill and ring changes share one 150ms ease-smooth transition; upstream eases the shadow with ease-out.
   - The caret takes the text color, as a browser's does; its width and blink are Remix's.
   - The textfield `full-width` modifier is the parent's constraint.
-  - "The value and the placeholder keep one line and ellipsize, as `.input` does by never wrapping; the label and the description wrap instead. The input group and the select trigger share the policy."
+  - "The value and the placeholder keep one line and ellipsize, as `.input` does by never wrapping; the label and the description wrap instead. The input group and the select trigger share the policy. A field asked for more lines gives its placeholder the lines its empty editor shows: `minLines`, capped by `maxLines`."

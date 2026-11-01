@@ -9,14 +9,15 @@ part of 'textarea.dart';
 /// HeroUI recipe for [RemixTextArea]: the text field chrome over several lines.
 ///
 /// `.textarea` repeats `.input` and adds `min-height: 38px`. Unlike the text
-/// field, the placeholder wraps: it keeps the [RemixTextArea.minLines] lines
-/// the editor shows by default, then ellipsizes rather than laying out lines
-/// the field's box clips away. A text area with more lines than that passes
-/// its own `hintText` style.
+/// field, the placeholder wraps: [minLines] and [maxLines] give it the lines
+/// the editor shows, so it ellipsizes on the last of them rather than laying
+/// out lines the field's box clips away. See [heroUiHintLines].
 class HeroUiTextArea extends StatelessWidget {
   const HeroUiTextArea({
     super.key,
     this.variant = .primary,
+    this.maxLines,
+    this.minLines = 2,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -31,8 +32,6 @@ class HeroUiTextArea extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines,
-    this.minLines = 2,
     this.maxLength,
     this.maxLengthEnforcement,
     this.onChanged,
@@ -76,6 +75,8 @@ class HeroUiTextArea extends StatelessWidget {
 
   const HeroUiTextArea.primary({
     super.key,
+    this.maxLines,
+    this.minLines = 2,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -90,8 +91,6 @@ class HeroUiTextArea extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines,
-    this.minLines = 2,
     this.maxLength,
     this.maxLengthEnforcement,
     this.onChanged,
@@ -135,6 +134,8 @@ class HeroUiTextArea extends StatelessWidget {
 
   const HeroUiTextArea.secondary({
     super.key,
+    this.maxLines,
+    this.minLines = 2,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -149,8 +150,6 @@ class HeroUiTextArea extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.autofocus = false,
-    this.maxLines,
-    this.minLines = 2,
     this.maxLength,
     this.maxLengthEnforcement,
     this.onChanged,
@@ -194,6 +193,10 @@ class HeroUiTextArea extends StatelessWidget {
 
   final HeroUiTextFieldVariant variant;
 
+  final int? maxLines;
+
+  final int? minLines;
+
   final TextFieldStyler style;
 
   final TextEditingController? controller;
@@ -221,10 +224,6 @@ class HeroUiTextArea extends StatelessWidget {
   final bool readOnly;
 
   final bool autofocus;
-
-  final int? maxLines;
-
-  final int? minLines;
 
   final int? maxLength;
 
@@ -308,7 +307,12 @@ class HeroUiTextArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextArea(
       key: this.key,
-      style: heroUiTextAreaStyle(variant: this.variant, style: this.style),
+      style: heroUiTextAreaStyle(
+        variant: this.variant,
+        maxLines: this.maxLines,
+        minLines: this.minLines,
+        style: this.style,
+      ),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,
