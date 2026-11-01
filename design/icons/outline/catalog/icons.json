@@ -1317,8 +1317,11 @@
         "optical": "pilot-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Redrawn 2026-11-01 as two open hooks on one 45° axis, each returning into the other's mouth. Same two-part topology at every size and no closed counters, so nothing fills in at 12 px. A local design judgment chosen over bracket-and-dash and closed-ring prototypes, not a recognition result. The heavier style uses a 1.5 / 2 / 3 px stroke: 24 px takes the heavier 3 px token so the selected style stays distinct, while 12/16 px stay lighter so the hooks do not clog. Label the actual action: Copy URL, Open link, or Attach link are different operations.",
-        "exceptions": [],
+        "note": "Redrawn 2026-11-01 as two open hooks on one 45° axis, each returning into the other's mouth. Same two-part topology at every size and no closed counters, so nothing fills in at 12 px. A local design judgment chosen over bracket-and-dash and closed-ring prototypes, not a recognition result. The heavier style uses a 1.5 / 2 / 3 px stroke: 24 px takes the heavier 3 px token so the selected style stays distinct, while 12/16 px stay lighter so the hooks do not clog. Label the actual action: Copy URL, Open link, or Attach link are different operations. The filled 12/16 px hook gaps sit just under the general gap target and are recorded as active exceptions.",
+        "exceptions": [
+          "link-filled-12-hook-gap",
+          "link-filled-16-hook-gap"
+        ],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },

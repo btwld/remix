@@ -12,6 +12,7 @@ Owner-authorized local corrections after the 2026-11-01 shape reviews. No versio
 - Link: raise the filled 24 px stroke to the heavier 3 px token, drawing its two ends back to hold the 2 px hook gap.
 - README: stop leading with the historical pilot capture, and label its age where it is linked.
 - Exceptions: keep only active below-target records. The five Warning records that now meet their targets leave the register; their measurements stay as ordinary tests, and every hold is unchanged.
+- Exceptions: register the filled Link 12/16 px hook gaps, which sit just under the general gap target. Filled 24 px meets its target and stays off the register. No artwork changes.
 - Tests: add measured geometry and raster regressions, and pin revisions in a hash ledger while the original fixtures stay immutable.
 
 # 0.5.0-pilot.2 — Audit patch

@@ -3,6 +3,7 @@
 These measure exported paths and native rasters. They guard construction and
 pixel behavior; they do not establish recognition or design approval.
 """
+import hashlib
 import io
 import json
 import math
@@ -264,6 +265,50 @@ class LinkChain(unittest.TestCase):
                 seen.add((x, y))
                 stack += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1), (x + 1, y + 1), (x - 1, y - 1), (x + 1, y - 1), (x - 1, y + 1)]
         self.assertEqual(components, 2)
+
+
+class LinkExceptionRegister(unittest.TestCase):
+    @staticmethod
+    def records():
+        return [e for e in json.loads((ROOT / 'catalog/exceptions.json').read_text()) if e['icon'] == 'link']
+
+    @staticmethod
+    def gap(style, n):
+        a, b = polygons(geometry('link', style, n))
+        return a.distance(b)
+
+    def test_register_matches_every_hook_gap_below_target(self):
+        below = {(n, style) for n in MASTERS for style in STYLES if self.gap(style, n) < GAP[n] - .002}
+        self.assertEqual({(e['nativeSize'], e['appearance']) for e in self.records()}, below)
+
+    def test_filled_12_and_16_are_really_below_target_and_24_is_not(self):
+        self.assertLess(self.gap('filled', 12), GAP[12] - .002)
+        self.assertLess(self.gap('filled', 16), GAP[16] - .002)
+        self.assertGreaterEqual(self.gap('filled', 24), GAP[24])
+        self.assertEqual({e['nativeSize'] for e in self.records()}, {12, 16})
+
+    def test_records_use_the_general_targets_and_current_bytes(self):
+        for record in self.records():
+            n = record['nativeSize']
+            path = ROOT / f'generated/outline/filled/{n}/link.svg'
+            with self.subTest(master=n):
+                self.assertEqual(record['target'], GAP[n])
+                self.assertAlmostEqual(record['measuredApprox'], self.gap('filled', n), delta=.001)
+                self.assertEqual(record['geometrySha256'], hashlib.sha256(path.read_bytes()).hexdigest())
+
+    def test_records_add_no_label_rule_or_approval(self):
+        restrictions = json.loads((ROOT / 'catalog/restrictions.json').read_text())['records']
+        self.assertNotIn('link', {r['icon'] for r in restrictions})
+        review = next(i for i in json.loads((ROOT / 'catalog/icons.json').read_text())['icons'] if i['id'] == 'link')['review']
+        self.assertNotIn('usageRestriction', review)
+        self.assertEqual(review['usage'], 'Use the action name on the enclosing control; 12 px is for labeled information.')
+        for record in self.records():
+            with self.subTest(master=record['nativeSize']):
+                self.assertEqual(record['permittedUse'], 'name-on-enclosing-control')
+                self.assertNotIn('restrictionId', record)
+                self.assertIsNone(record['owner'])
+                self.assertIsNone(record['reviewer'])
+                self.assertIn('owner-review-pending', record['status'])
 
 
 class CalendarHeaderRail(unittest.TestCase):

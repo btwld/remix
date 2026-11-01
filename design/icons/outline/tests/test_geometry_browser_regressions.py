@@ -105,40 +105,45 @@ class RestrictionRegression(unittest.TestCase):
                     self.assertIn(f'{n} px',usage_text(self.record,n))
         self.assertIsNone(self.record['owner']);self.assertIsNone(self.record['reviewer'])
 
-    def test_exception_metrics_and_geometry_binding(self):
+    def test_warning_cells_name_only_their_own_active_exceptions(self):
         exceptions=json.loads((ROOT/'catalog/exceptions.json').read_text())
-        self.assertEqual({e['id'] for e in exceptions},{'warning-stem-dot-gap-16'})
-        # The register is active-only: cells may name active records and nothing else.
-        active={e['id'] for e in exceptions}
-        cells={(int(n),a):cell['exceptionIds'] for n,appearances in self.record['sizes'].items() for a,cell in appearances.items()}
-        self.assertEqual({i for ids in cells.values() for i in ids},active)
-        warning=next(i for i in self.catalog['icons'] if i['id']=='warning')
-        self.assertEqual(set(warning['review']['exceptions']),active)
-        for (n,a),ids in cells.items():
-            self.assertEqual(sorted(ids),sorted(e['id'] for e in exceptions if (e['nativeSize'],e['appearance'])==(n,a)))
-        for exception in exceptions:
-            n,a=exception['nativeSize'],exception['appearance']
-            # Geometry cannot grant approval: no record may claim an owner or a passed review.
-            self.assertIsNone(exception['owner']);self.assertIsNone(exception['reviewer'])
-            self.assertIn('pending',exception['status'])
-            cell=self.record['sizes'][str(n)][a]
-            self.assertIn(exception['id'],cell['exceptionIds'])
+        own=[e for e in exceptions if e['icon']==self.record['icon']]
+        self.assertEqual({e['id'] for e in own},{'warning-stem-dot-gap-16'})
+        cells={(int(n),a):cell for n,appearances in self.record['sizes'].items() for a,cell in appearances.items()}
+        for (n,a),cell in cells.items():
+            with self.subTest(master=n,appearance=a):
+                self.assertEqual(sorted(cell['exceptionIds']),sorted(e['id'] for e in own if (e['nativeSize'],e['appearance'])==(n,a)))
+        for exception in own:
+            cell=cells[(exception['nativeSize'],exception['appearance'])]
             self.assertEqual(exception['restrictionId'],self.record['id'])
             self.assertEqual(exception['geometrySha256'],cell['geometrySha256'])
             self.assertEqual(exception['permittedUse'],'visible-label-required')
-            g=parse_svg((ROOT/f'generated/outline/{a}/{n}/warning.svg').read_text())[2]
-            if a=='filled':
-                holes=[Polygon(r) for r in g.interiors]
-                actual=min(h.bounds[2]-h.bounds[0] for h in holes)
-            else:
+
+    def test_exception_metrics_and_geometry_binding(self):
+        exceptions=json.loads((ROOT/'catalog/exceptions.json').read_text())
+        # The register is active-only: every record must still measure below its target.
+        self.assertEqual({e['id'] for e in exceptions},{'warning-stem-dot-gap-16','link-filled-12-hook-gap','link-filled-16-hook-gap'})
+        registered={i['id']:i['review']['exceptions'] for i in self.catalog['icons']}
+        for icon,ids in registered.items():
+            with self.subTest(catalog_icon=icon):
+                self.assertEqual(sorted(ids),sorted(e['id'] for e in exceptions if e['icon']==icon))
+        for exception in exceptions:
+            icon,n,a=exception['icon'],exception['nativeSize'],exception['appearance']
+            with self.subTest(exception=exception['id']):
+                # Geometry cannot grant approval: no record may claim an owner or a passed review.
+                self.assertIsNone(exception['owner']);self.assertIsNone(exception['reviewer'])
+                self.assertIn('pending',exception['status'])
+                self.assertTrue(exception['reason'].strip())
+                path=ROOT/f"generated/{exception['pack']}/{a}/{n}/{icon}.svg"
+                self.assertEqual(exception['geometrySha256'],hashlib.sha256(path.read_bytes()).hexdigest())
+                g=parse_svg(path.read_text())[2]
                 parts=sorted(list(g.geoms),key=lambda x:x.area,reverse=True)
-                if exception['rule']=='mark-internal-gap':
-                    actual=parts[1].distance(parts[2])
-                else:
-                    actual=min(parts[0].distance(part) for part in parts[1:])
-            self.assertAlmostEqual(actual,exception['measuredApprox'],delta=.015)
-            # A value that reaches its target stops being an exception.
-            self.assertLess(actual,exception['target']-.002)
+                # Warning has a frame, a stem and a dot; a separated-part gap has exactly two parts.
+                actual={'mark-internal-gap':lambda:parts[1].distance(parts[2]),
+                        'meaningful-separated-part-gap':lambda:parts[0].distance(parts[1])}[exception['rule']]()
+                self.assertAlmostEqual(actual,exception['measuredApprox'],delta=.015)
+                # A value that reaches its target stops being an exception.
+                self.assertLess(actual,exception['target']-.002)
 
     def test_pilot_artwork_matches_fixture_or_revision_ledger(self):
         original=json.loads((ROOT/'tests/fixtures/pilot1-sha256.json').read_text())
