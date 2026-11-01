@@ -4782,20 +4782,16 @@ void main() {
       await _pumpInScope(
         tester,
         _overlaid(
-          // Center inside the entry: Overlay otherwise stretches the trigger
-          // to the viewport, leaving no space beside it for the options.
-          Center(
-            child: SizedBox(
-              width: 200,
-              child: AcmeSelect<String>(
-                trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-                semanticLabel: 'Plan',
-                onChanged: chosen.add,
-                items: const [
-                  RemixSelectItem(value: 'free', label: 'Free'),
-                  RemixSelectItem(value: 'pro', label: 'Pro'),
-                ],
-              ),
+          SizedBox(
+            width: 200,
+            child: AcmeSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+              semanticLabel: 'Plan',
+              onChanged: chosen.add,
+              items: const [
+                RemixSelectItem(value: 'free', label: 'Free'),
+                RemixSelectItem(value: 'pro', label: 'Pro'),
+              ],
             ),
           ),
         ),

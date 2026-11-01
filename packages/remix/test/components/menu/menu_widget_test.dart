@@ -495,16 +495,6 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 100));
 
-      debugPrint(
-        tester
-            .binding
-            .renderViews
-            .single
-            .owner!
-            .semanticsOwner!
-            .rootSemanticsNode!
-            .toStringDeep(),
-      );
       expect(find.semantics.byLabel('Account actions'), findsOne);
       expect(find.semantics.byLabel('Account actions, loading'), findsOne);
       final button = find.semantics
