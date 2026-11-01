@@ -393,8 +393,15 @@ more room, so a long menu scrolls there instead of covering the trigger. Every
 submenu panel scrolls the same way, within the room the overlay has. A
 `maxHeight` on the `overlay` style caps the panel lower still. A menu that fits
 keeps the size of its items, and the overlay's padding, decoration, and effects
-stay in place while the items scroll. If the trigger fills the
-available height, the panel may overlap it to keep the options usable.
+stay in place while the items scroll. If neither side has
+`positioning.minimumAvailableHeight` of room (48 logical pixels by default),
+the panel may overlap the trigger to keep options usable, while respecting
+`collisionPadding`. Increase this threshold for larger rows or panel padding;
+it is a placement policy, not a guarantee for arbitrary content or a minimum
+panel size. Set it to zero to retain strict side-capping, even at zero headroom.
+A short
+panel that fits still stays beside its trigger. With `avoidCollisions: false`,
+only the requested side's space is used and the fallback does not apply.
 
 ```dart
 import 'package:remix/remix.dart';
