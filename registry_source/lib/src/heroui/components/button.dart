@@ -50,9 +50,12 @@ ButtonStyler heroUiButtonStyle({
       .borderRadius(.all(HeroUiTokens.radius3xl()))
       .color(palette.fill)
       .label(
-        .style(
-          metrics.text.mix(),
-        ).fontWeight(.w500).color(palette.foreground).softWrap(false),
+        .style(metrics.text.mix())
+            .fontWeight(.w500)
+            .color(palette.foreground)
+            .softWrap(false)
+            .maxLines(1)
+            .overflow(TextOverflow.ellipsis),
       )
       .icon(.size(metrics.icon).color(palette.foreground))
       .spinner(heroUiInlineSpinnerStyle(palette.foreground))

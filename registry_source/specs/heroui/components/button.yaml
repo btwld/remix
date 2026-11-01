@@ -38,3 +38,4 @@ approximations:
   - "`tertiary` keeps `--button-fg: currentColor`, i.e. it inherits the parent's text colour; the recipe uses the `foreground` token."
   - Icon-only is HeroUiIconButton over RemixIconButton, with the same variants and sizes; Remix keeps icon buttons separate from text buttons.
   - Form submission and type belong to the app; Remix has no submit button.
+  - "Long labels ellipsize within the space left after icons. This deliberately differs from upstream nowrap overflow: the mobile overflow gate takes priority, while fixed button heights, the full accessible name, and loading geometry remain intact."

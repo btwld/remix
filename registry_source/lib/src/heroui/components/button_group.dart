@@ -58,13 +58,18 @@ class HeroUiButtonGroup extends StatelessWidget {
               ),
             ),
             expand: fullWidth && horizontal,
+            flexible: horizontal,
           ),
       ],
     );
   }
 
-  Widget _wrap(Widget button, {required bool expand}) =>
-      expand ? Expanded(child: button) : button;
+  Widget _wrap(Widget button, {required bool expand, required bool flexible}) =>
+      expand
+      ? Expanded(child: button)
+      : flexible
+      ? Flexible(child: button)
+      : button;
 
   /// `rounded-none` with the outer corners restored on the first and last
   /// button; outline buttons drop the borders their neighbours already draw.

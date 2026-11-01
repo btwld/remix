@@ -25,3 +25,4 @@ approximations:
   - "Buttons keep their fractional text widths (`121.42 = 61.25 + 60.17`), and Flutter antialiases each button's edge on its own, so a joint can show a faint 1px seam in a filled variant. Chromium snaps box edges to device pixels. Overlapping or snapping the buttons would need negative spacing or measurement, which the recipe does not add."
   - ButtonGroup.Separator (a 1px divider at 15% of the label colour) is not drawn.
   - Group-level isDisabled is not carried; disable the buttons.
+  - "Horizontal buttons may shrink with a loose flex fit even without fullWidth, allowing their single-line labels to ellipsize within a narrow group. Full-width groups retain equal expanded shares."
