@@ -1,0 +1,27 @@
+component: Badge
+widget: HeroUiBadge
+target: composition over RemixBadge
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/badge.css]
+anatomy: [anchor, badge, label]
+variants: [primary, secondary, soft]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest]
+tokens:
+  - "colors (HeroUiColor, as the chip): default (defaultColor), accent, success, warning, danger"
+  - background (the 1px border), radius-xl, radius-3xl, radius-2xl
+  - text-xs, text-sm
+measurements:
+  - {what: minimum size, value: "sm 16, md 28, lg 32", cite: "badge-primary-accent-sm, -md, -lg"}
+  - {what: radius, value: "sm 12, md 24, lg 16", cite: "badge-primary-accent-sm, -md, -lg"}
+  - {what: border, value: "1px background token", cite: badge-primary-accent-md}
+  - {what: fill and label colour, value: "per variant and colour, in light and dark", cite: "badge-<variant>-<color>-md backgroundColor and color"}
+  - {what: label, value: "sm 10/13.4, md 12/16.08, lg 14/20.02, medium", cite: "badge-primary-accent-sm, -md, -lg"}
+  - {what: placement, value: "a corner pinned, shifted outward by 25% of the badge", cite: "badge.css .badge--top-right and siblings; badge-anchored-top-right is 28x28"}
+approximations:
+  - The composition places a RemixBadge over the child; it has no behavior, so the anchor keeps its own size.
+  - "Defaults are primary, default, md, top right (@heroui/styles defaultVariants)."
+  - A null label draws the empty dot.
+  - "Long labels ellipsize on one line within the anchor width, retaining the full semantic label. Text badges wider than twice the minimum badge size, or as wide as the anchor, align inside its horizontal edge instead of shifting outward; compact counts keep the upstream quarter shift. This intentionally contains upstream long-label overflow."

@@ -31,6 +31,57 @@ void main() {
   });
 
   test(
+    'HeroUI derives every component as a generated recipe and keeps notices',
+    () {
+      final output = PresetBuilder.forRepository(
+        Directory.current.absolute,
+        spec: herouiPreset,
+      ).derive();
+      final catalog = loadYaml(output.files['registry.yaml']!) as YamlMap;
+      final items = catalog['items'] as YamlMap;
+      final components = {
+        for (final file in Directory(
+          'registry_source/lib/src/heroui/components',
+        ).listSync())
+          if (file.path.endsWith('.dart') && !file.path.endsWith('.g.dart'))
+            file.uri.pathSegments.last.replaceAll('.dart', ''),
+      };
+      expect(items.keys.toSet(), {'theme', ...components});
+      final checkbox = items['checkbox'] as YamlMap;
+      expect(checkbox['generated'], ['@ui/components/checkbox.g.dart']);
+      expect(
+        (checkbox['devDependencies'] as YamlMap).keys,
+        contains('build_runner'),
+      );
+      final search =
+          output.files['templates/search_field/search_field.dart.tmpl']!;
+      expect(search, contains('{{icon:import}}'));
+      expect(search, contains('{{icon:magnifyingGlass}}'));
+      expect(search, isNot(contains('RemixIcons')));
+      final button = output.files['templates/button/button.dart.tmpl']!;
+      expect(button, contains('{{typePrefix}}Button'));
+      expect(button, isNot(contains('HeroUi')));
+      expect(button, isNot(contains('package:registry_source')));
+      final notice = output.files['templates/theme/license.dart.tmpl']!;
+      expect(notice, contains('Apache License'));
+      expect(notice, contains('Copyright 2025 NextUI Inc.'));
+      expect(notice, isNot(contains('{{')));
+      final preservedLicense = notice
+          .split('\n')
+          .skip(6)
+          .map((line) => line == '//' ? '' : line.replaceFirst('// ', ''))
+          .join('\n')
+          .trim();
+      expect(
+        preservedLicense,
+        File(
+          'registry_source/reference/heroui_3_2_6/LICENSE.upstream',
+        ).readAsStringSync().trim(),
+      );
+    },
+  );
+
+  test(
     'Fortal merges Agent behavior and recipes without changing base output',
     () {
       final root = Directory.current.absolute;

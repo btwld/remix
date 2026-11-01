@@ -1,0 +1,6 @@
+@import '@heroui/styles';
+@source './selection.jsx';
+body { margin: 0; padding: 24px; background: var(--background); color: var(--foreground); }
+main, section { display: flex; flex-direction: column; gap: 24px; }
+.matrix { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+.field-probe { width: 220px; }

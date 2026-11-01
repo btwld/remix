@@ -1,0 +1,42 @@
+component: SearchField
+widget: HeroUiSearchField, HeroUiSearchIcon, HeroUiSearchClearButton
+target: RemixTextField, RemixIconButton
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/search-field.css, dist/components/close-button.css, dist/components/textfield.css, dist/utilities/index.css]
+anatomy: [label, group, search icon, input, clear button, description or error]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, focus, error, disabled]
+tokens:
+  - the text field's tokens (see textfield.yaml)
+  - field-placeholder (search icon), default, default-hover, muted (clear button), radius-xl
+measurements:
+  - {what: group, value: "36 high, radius 12", cite: search-primary-full-rest-group}
+  - {what: group fill and shadow, value: "field-background and surface shadow (primary), default (secondary)", cite: "search-primary-full-rest-group, search-secondary-full-rest-group"}
+  - {what: search icon, value: "16, inset 12 from the group", cite: "search-primary-full-rest-icon; search-field.css .search-field__search-icon ms-3"}
+  - {what: input, value: "264 wide in a 320 group, with 8px padding beside each accessory", cite: search-primary-full-rest-input}
+  - {what: clear button, value: "20 x 20, padding 4, radius 12, default fill, muted icon", cite: "search-primary-full-rest-clear; search-field.css .search-field__clear-button"}
+  - {what: clear icon, value: 12, cite: "search-field.css .search-field__clear-button close-button-icon size-3"}
+  - {what: clear button inset, value: 8, cite: "search-field.css .search-field__clear-button me-2"}
+  - {what: clear button hover, value: default-hover, cite: close-button-hover}
+  - {what: root, value: "80 high at both widths: the group is a fixed h-9", cite: search-primary-full-rest}
+  - {what: hover fill, value: "field-hover (primary), default-hover (secondary)", cite: "search-field.css .search-field__group:hover:not(:focus-within)"}
+  - {what: focus ring, value: "2px focus on the group, no offset", cite: "search-field.css status-focused-field; input-invalid-focus"}
+  - {what: error ring, value: "1px danger outline on the group, 2px when focused", cite: "search-primary-full-invalid-group; utilities/index.css invalid-field-ring; input-invalid-focus"}
+  - {what: error message, value: "12/16 danger with the 4px inset", cite: search-primary-full-invalid-error}
+  - {what: disabled opacity, value: "0.5 on the group, and 0.5 again on the clear button (0.25 together)", cite: "search-primary-intrinsic-disabled-group, search-primary-intrinsic-disabled-clear"}
+approximations:
+  - "The row's trailing inset is a physical right padding, so it does not mirror in right-to-left. Mix cannot merge directional padding with a caller's physical padding, which would make a caller `style` with `padding(.all(..))` throw."
+  - The recipe styles `RemixTextField`; the app passes `HeroUiSearchIcon` as `leading` and `HeroUiSearchClearButton` as `trailing`. Without the clear button the right inset is 8, not the input's 12. The recipe exposes a curated parameter set: no `obscureText`, `maxLines`, `minLines`, or `expands`.
+  - "`HeroUiSearchClearButton` is the close button recipe at 20 x 20 with a 12px icon, the project icon library's cross, and the label 'Clear search'. It has no state: it does not read the controller, hide itself, or clear the text. Upstream hides it while the field is empty; the app decides, and passes `enabled` for the field and for the button."
+  - |
+    The app wires the button to its own controller:
+      trailing: ListenableBuilder(listenable: controller, builder: (_, _) =>
+          controller.text.isEmpty ? const SizedBox.shrink()
+          : HeroUiSearchClearButton(onPressed: controller.clear)),
+  - The search and clear glyphs are Remix icons (Radix magnifier and cross), not HeroUI's SVGs.
+  - While invalid, `search-field.css` hides the description and shows a FieldError; the recipe keeps one `helperText` line that becomes the message.
+  - Focus on the clear button does not keep the group's focus ring, which upstream draws on `:focus-within`.
+  - The browser's native clear control and autofill highlight do not exist in Flutter.

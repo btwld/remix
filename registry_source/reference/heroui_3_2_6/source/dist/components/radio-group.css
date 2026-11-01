@@ -1,0 +1,49 @@
+/* Radio Group base styles */
+.radio-group {
+  @apply flex flex-col;
+
+  /* Default orientation */
+  &[data-orientation="vertical"] {
+    [data-slot="radio"] {
+      @apply mt-4;
+    }
+  }
+
+  &[data-orientation="horizontal"] {
+    @apply flex-row flex-wrap gap-4;
+  }
+}
+
+/* Variant property definitions */
+.radio-group--primary {
+  /* Default styles */
+}
+
+.radio-group--secondary .radio__control {
+  @apply shadow-none;
+  background-color: var(--radio-control-bg);
+
+  --radio-control-bg: var(--default);
+  --radio-control-bg-hover: var(--default-hover);
+
+  /* Hover state */
+  .radio:has([data-slot="radio-content"][data-hovered="true"]) &,
+  .radio [data-slot="radio-content"][data-hovered="true"] & {
+    @apply border-field-border-hover;
+  }
+
+  /* Default indicator color (unselected) */
+  .radio:not([data-selected]):not(:has(input:checked)) & .radio__indicator:empty::before {
+    background-color: var(--radio-control-bg);
+  }
+
+  /* Hover indicator color (unselected) */
+  .radio:has([data-slot="radio-content"][data-hovered="true"]):not([data-selected]):not(
+      :has(input:checked)
+    )
+    & {
+    .radio__indicator:empty::before {
+      background-color: var(--radio-control-bg-hover);
+    }
+  }
+}

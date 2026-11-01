@@ -1,0 +1,22 @@
+component: Skeleton
+widget: HeroUiSkeleton
+target: RemixSkeleton
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/skeleton.css, dist/themes/default/variables.css]
+anatomy: [container]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - surface-tertiary at 70%
+  - radius-sm
+measurements:
+  - {what: fill, value: "surface-tertiary at 70% alpha", cite: skeleton-pulse}
+  - {what: radius, value: 4, cite: skeleton-pulse}
+  - {what: pulse, value: "opacity to 0.5 and back over 2s", cite: "Tailwind animate-pulse, applied by skeleton.css .skeleton--pulse"}
+approximations:
+  - HeroUI's default animation is a shimmer sweep (variables.css --skeleton-animation, skeleton.css .skeleton--shimmer); Remix pulses the opacity, which is HeroUI's pulse option. Remix has no static (none) mode.
+  - The pulse eases linearly where Tailwind uses cubic-bezier(0.4, 0, 0.6, 1).
+  - The placeholder has no size of its own, as upstream; the app sizes it.

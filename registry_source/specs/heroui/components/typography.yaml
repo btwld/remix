@@ -1,0 +1,26 @@
+component: Typography
+widget: HeroUiTypography
+target: composition over Mix StyledText and Box
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/typography.css]
+anatomy: [text, code box]
+variants: [h1, h2, h3, h4, h5, h6, body, body-sm (bodySm), body-xs (bodyXs), code]
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - foreground, muted, default (code fill)
+  - radius-md, text-base, text-sm, text-xs
+measurements:
+  - {what: headings, value: "36/40, 30/36, 24/32, 20/28, 18/28, 16/24; semibold, tracking -0.025em", cite: "typography-h1 to typography-h6 (letter spacing -0.9, -0.75, -0.6, -0.5, -0.45, -0.4)"}
+  - {what: body, value: "16/28, 14/24, 12/20 regular", cite: "typography-body, -body-sm, -body-xs"}
+  - {what: code, value: "14/20 in a box with 6x2 padding and radius 6; 24 tall", cite: typography-code}
+  - {what: weights, value: "400, 500, 600, 700", cite: typography-weight-normal to -bold}
+  - {what: muted colour, value: muted token, cite: typography-muted}
+  - {what: truncate, value: "one line with an ellipsis", cite: typography-truncate}
+approximations:
+  - One widget covers HeroUI's Typography, Heading, Paragraph, and Code; type picks the style.
+  - Code uses Geist Mono from remix_ui_fonts, because CanvasKit does not resolve the CSS monospace generic (ADR 0001).
+  - Prose styles HTML descendants, which Flutter has no counterpart for; compose headings, paragraphs, and code explicitly.
+  - Heading levels and semantics are not published; add Semantics where a screen reader needs them.

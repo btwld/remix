@@ -163,7 +163,7 @@ nothing claims they still match the newly pinned source. That is what the
 
 ## Preset and generation contract
 
-Choose one preset and prefix at initialization; both official presets own the
+Choose one preset and prefix at initialization; the official presets own the
 same installed paths, so their source trees cannot be mixed. `Fortal` is an
 authoring word, not a required installed prefix. A recipe installs only its
 item dependency closure. Agent surfaces may install bare or through their
@@ -207,6 +207,7 @@ schema: 1
 presets:
   vanilla: vanilla/registry.yaml
   fortal: fortal/registry.yaml
+  heroui: heroui/registry.yaml
 ```
 
 Within a schema-2 catalog, `registryDependencies: [theme, "@company/icons"]`
@@ -222,14 +223,15 @@ require promoting `registry-stable`, not a new CLI release.
 
 ## Vanilla preset naming
 
-New projects select `vanilla` when `--preset` is omitted. The official remote
-index exposes only `vanilla` and `fortal`; `default` is not a remote alias.
+New projects select `vanilla` when `--preset` is omitted. The checkout index
+exposes `vanilla`, `fortal`, and `heroui`; the served stable index gains a new
+preset only after registry promotion. `default` is not a remote alias.
 A project reinitialized from schema 1 or 2 records `vanilla` in its place. The
 internal authoring directory remains `registry_source/lib/src/default/`.
 
 ## Authoring and derivation
 
-`registry_source/lib/src/default`, `fortal`, `agent` and `dashboard` own the
+`registry_source/lib/src/default`, `fortal`, `heroui`, `agent` and `dashboard` own the
 analyzed Dart. Edit it, never `.tmpl` output. The builder asserts prefix round
 trips and rewrites shared Agent imports to installed relative paths. Imports
 determine item dependencies; parts determine adapter targets. Whole-tree checks
@@ -243,7 +245,7 @@ owns the visual contract.
 
 Catalog structure and templates are derived. Maintained inputs are
 `registry/icons.yaml` (mapping/library floors) and Vanilla's dependency and
-dev-dependency floors, read back by the builder and shared with Fortal. Change
+dev-dependency floors, read back by the builder and shared with Fortal and HeroUI. Change
 floors through the [package release workflow](../.claude/skills/releasing-a-package/SKILL.md).
 
 ## Repository consumers

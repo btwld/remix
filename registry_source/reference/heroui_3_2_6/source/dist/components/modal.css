@@ -1,0 +1,342 @@
+/* -------------------------------------------------------------------------------------------------
+ * Modal Component Styles
+ * Block: modal
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Element: trigger - the element that opens the modal
+ */
+.modal__trigger {
+  @apply inline-block cursor-(--cursor-interactive);
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    transform 250ms var(--ease-out-quart),
+    background-color 150ms var(--ease-smooth),
+    box-shadow 150ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  /* Focus state */
+  &:focus-visible:not([data-focused]),
+  &[data-focus-visible="true"] {
+    @apply status-focused;
+  }
+
+  /* Disabled state */
+  &:disabled,
+  &[aria-disabled="true"] {
+    @apply status-disabled;
+  }
+
+  /* Active/pressed state */
+  &:active,
+  &[data-pressed="true"] {
+    transform: scale(0.97);
+  }
+}
+
+/**
+ * Element: backdrop - the overlay behind the dialog
+ */
+.modal__backdrop {
+  @apply fixed inset-0 z-(--z-index-overlay);
+  @apply flex flex-row items-center justify-center;
+  @apply h-(--visual-viewport-height) w-full;
+
+  /* Entering animation */
+  &[data-entering="true"] {
+    @apply animate-in duration-150 ease-out fade-in-0;
+  }
+
+  /* Exiting animation */
+  &[data-exiting="true"] {
+    @apply animate-out duration-100 ease-out fade-out-0;
+  }
+
+  /**
+   * Reduce Animation
+   * CRITICAL: motion-reduce must be AFTER animate for correct override specificity
+   */
+  &[data-exiting="true"],
+  &[data-entering="true"] {
+    @apply will-change-[opacity];
+    @apply motion-reduce:animate-none;
+  }
+}
+
+/**
+ * Modifier: backdrop--transparent
+ */
+.modal__backdrop--transparent {
+  @apply bg-transparent;
+}
+
+/**
+ * Modifier: backdrop--opaque
+ */
+.modal__backdrop--opaque {
+  @apply bg-backdrop;
+}
+
+/**
+ * Modifier: backdrop--blur
+ */
+.modal__backdrop--blur {
+  @apply bg-backdrop backdrop-blur-md;
+}
+
+/**
+ * Element: container - the positioning wrapper for the modal
+ */
+.modal__container {
+  @apply flex flex-col items-center;
+  @apply h-(--visual-viewport-height) w-full min-w-0 flex-1;
+  @apply p-4;
+  @apply sm:w-fit sm:p-10;
+  @apply pointer-events-none;
+
+  /* Entering animation */
+  &[data-entering="true"] {
+    @apply animate-in duration-250 ease-out-quad fade-in-0 zoom-in-105;
+
+    &[data-placement="auto"] {
+      @apply slide-in-from-bottom-1;
+      @apply sm:slide-in-from-bottom-0;
+    }
+
+    &[data-placement="top"] {
+      @apply slide-in-from-top-1;
+    }
+
+    &[data-placement="center"] {
+      @apply slide-in-from-top-0;
+    }
+
+    &[data-placement="bottom"] {
+      @apply slide-in-from-bottom-1;
+    }
+  }
+
+  /* Exiting animation */
+  &[data-exiting="true"] {
+    @apply animate-out duration-100 ease-out-quad fade-out-0 zoom-out-95;
+  }
+
+  /**
+   * Reduce Animation
+   * CRITICAL: motion-reduce must be AFTER animate for correct override specificity
+   */
+  &[data-exiting="true"],
+  &[data-entering="true"] {
+    @apply will-change-[opacity,transform];
+    @apply motion-reduce:animate-none;
+  }
+}
+
+/**
+ * Modifier: container--scroll-outside
+ *
+ * The container is React Aria's modal ref, so it must stay `pointer-events: none`,
+ * otherwise clicks around the dialog count as inside the modal and never dismiss it.
+ * The backdrop owns the scrolling instead.
+ */
+.modal__container--scroll-outside {
+  @apply h-auto min-h-(--visual-viewport-height) overflow-y-visible;
+}
+
+.modal__backdrop:has(.modal__container--scroll-outside) {
+  @apply scrollbar items-start overflow-y-auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/**
+ * Modifier: container--full
+ */
+.modal__container--full {
+  @apply p-0 sm:p-0;
+
+  /* Entering animation */
+  &[data-entering="true"] {
+    @apply slide-in-from-bottom-0 zoom-in-100;
+    @apply sm:slide-in-from-bottom-0;
+  }
+
+  /* Exiting animation */
+  &[data-exiting="true"] {
+    @apply zoom-out-100;
+  }
+}
+
+/**
+ * Element: dialog - the content container for the modal
+ */
+.modal__dialog {
+  @apply relative;
+  @apply flex w-full flex-col;
+  @apply bg-overlay shadow-overlay outline-none;
+  border-radius: min(32px, var(--radius-3xl));
+  @apply p-6;
+  @apply pointer-events-auto;
+
+  &[data-placement="auto"] {
+    @apply mt-auto;
+    @apply sm:my-auto;
+  }
+
+  &[data-placement="center"] {
+    @apply my-auto;
+  }
+
+  &[data-placement="bottom"] {
+    @apply mt-auto;
+  }
+
+  &[data-placement="top"] {
+    @apply mt-0;
+  }
+}
+
+/**
+ * Modifier: dialog--scroll-inside
+ */
+.modal__dialog--scroll-inside {
+  @apply max-h-full min-h-0 overflow-clip;
+}
+
+/**
+ * Modifier: dialog--scroll-outside
+ */
+.modal__dialog--scroll-outside {
+  @apply h-auto;
+  @apply min-h-0 shrink-0;
+}
+
+/**
+ * Modifier: dialog--xs
+ */
+.modal__dialog--xs {
+  @apply max-w-xs;
+}
+
+/**
+ * Modifier: dialog--sm
+ */
+.modal__dialog--sm {
+  @apply max-w-sm;
+}
+
+/**
+ * Modifier: dialog--md
+ */
+.modal__dialog--md {
+  @apply max-w-md;
+}
+
+/**
+ * Modifier: dialog--lg
+ */
+.modal__dialog--lg {
+  @apply max-w-lg;
+}
+
+/**
+ * Modifier: dialog--cover
+ */
+.modal__dialog--cover {
+  @apply h-full min-h-full w-full;
+}
+
+/**
+ * Modifier: dialog--full
+ */
+.modal__dialog--full {
+  @apply h-full min-h-full w-full;
+  @apply rounded-none shadow-none;
+}
+
+/**
+ * Element: header - the top section with the title
+ */
+.modal__header {
+  @apply flex flex-col gap-3;
+  @apply mb-0;
+
+  /* When header contains icon, use flex-col layout with gap */
+  & > .modal__icon {
+    @apply mb-0;
+  }
+}
+
+/**
+ * Element: heading - the main title text
+ */
+.modal__heading {
+  @apply align-middle;
+  @apply text-base font-medium text-foreground;
+}
+
+/**
+ * Element: icon - the optional icon indicator
+ */
+.modal__icon {
+  @apply flex items-center justify-center;
+  @apply size-10 shrink-0;
+  @apply rounded-3xl select-none;
+}
+
+/**
+ * Element: body - the main content area
+ */
+.modal__body {
+  @apply min-h-0 flex-1;
+  @apply text-sm leading-[1.43] text-muted;
+  @apply -m-[3px] my-0 overflow-visible p-[3px];
+}
+
+/**
+ * Modifier: body--scroll-inside
+ */
+.modal__body--scroll-inside {
+  @apply scrollbar overflow-y-auto overscroll-contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/**
+ * Modifier: body--scroll-outside
+ */
+.modal__body--scroll-outside {
+  @apply overflow-y-visible;
+}
+
+/**
+ * Element: footer - the bottom action section
+ */
+.modal__footer {
+  @apply flex flex-row items-center justify-end gap-2;
+  @apply mt-0;
+}
+
+/**
+ * Element: close-trigger - the optional x icon button to close the modal
+ */
+.modal__close-trigger {
+  @apply absolute end-4 top-4;
+}
+
+/**
+ * Elements Spacing
+ */
+.modal__header + .modal__body {
+  @apply mt-2;
+}
+
+.modal__header + .modal__footer {
+  @apply mt-5;
+}
+
+.modal__body + .modal__footer {
+  @apply mt-5;
+}

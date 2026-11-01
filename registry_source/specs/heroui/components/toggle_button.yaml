@@ -1,0 +1,33 @@
+component: ToggleButton
+widget: HeroUiToggleButton
+target: RemixToggle
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/toggle-button.css]
+anatomy: [container, icon, label]
+variants: [defaultToggle, ghost]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest, hover, pressed, selected, focus-visible, disabled]
+tokens:
+  - default, default-hover, foreground (defaultToggle); default (ghost hover), default-foreground (ghost)
+  - accent-soft, accent-soft-hover, accent-soft-foreground (selected)
+  - focus (ring), radius-3xl
+measurements:
+  - {what: height, value: "at 375 px sm 36, md 40, lg 44; at 1024 px sm 32, md 36, lg 40; the step down is at 768px", cite: "toggle-default-sm-label-rest, toggle-default-md-label-rest, toggle-default-lg-label-rest"}
+  - {what: padding, value: "sm 12, md and lg 16", cite: "toggle-default-sm-label-rest, toggle-default-md-label-rest"}
+  - {what: radius, value: 24, cite: toggle-default-md-label-rest}
+  - {what: label, value: "14/20 medium; lg 16/24", cite: "toggle-default-md-label-rest, toggle-default-lg-label-rest"}
+  - {what: icon, value: "20 below 640px and 16 above; sm 16", cite: "toggle-button.css svg size-5 sm:size-4"}
+  - {what: icon gap, value: 8, cite: toggle-default-md-label-rest}
+  - {what: icon-only, value: "square: width equals height", cite: toggle-default-md-icon-rest}
+  - {what: selected, value: "accent-soft fill and foreground", cite: toggle-default-md-label-selected}
+  - {what: pressed scale, value: "sm 0.98, md 0.97, lg 0.96", cite: "toggle-button.css :active"}
+  - {what: disabled opacity, value: 0.5, cite: "toggle-default-md-label-disabled, toggle-default-md-label-disabled-selected"}
+approximations:
+  - "The `default` variant is named `defaultToggle`, since `default` is a Dart keyword."
+  - The focus ring is a 2px border inside the button, recolored on keyboard focus; upstream draws it outside with a 2px gap, which `ToggleStyler` cannot.
+  - The icon's `-mx-0.5` margins are not expressible, so a button with an icon and a label is 4px wider than upstream.
+  - The fill, the press scale, and the focus ring share one 100ms ease-out; upstream eases `transform` over 250ms.
+  - "`iconOnly` stands in for `isIconOnly`: it removes the padding and squares the button."
+  - "Long labels ellipsize on one line within the space left after an icon. Upstream is `whitespace-nowrap` on a fixed height, which overflows the page; the single line matches, while the ellipsis keeps every glyph that is painted legible."

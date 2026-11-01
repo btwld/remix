@@ -1,0 +1,30 @@
+component: Radio
+widget: HeroUiRadio
+target: RemixRadio
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/radio.css, dist/components/radio-group.css, dist/utilities/index.css]
+anatomy: [control, indicator]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, selected, invalid, focus-visible, disabled]
+tokens:
+  - field-background, field-hover, surface shadow (primary); default, default-hover (secondary)
+  - accent, accent-hover (selected, pressed), accent-foreground (dot)
+  - danger (invalid ring), focus (ring), background (ring gap), radius-lg
+measurements:
+  - {what: control, value: "16 x 16, radius 8", cite: radio-primary-vertical-rest-a-control}
+  - {what: selected dot, value: "control x 0.4286, x 0.5714 while pressed", cite: "radio.css radio__indicator ::before scale"}
+  - {what: pressed control, value: "scale 0.95 (15.2px), accent-hover fill when selected", cite: radio-primary-vertical-rest-a-pressed}
+  - {what: selected fill, value: "accent, also while hovered and invalid", cite: "radio-primary-vertical-rest-a-hover, radio-primary-vertical-invalid-a-control"}
+  - {what: unselected hover, value: "field-hover (default-hover when secondary) fills the control", cite: "radio.css radio__control hover: bg-field-hover on the dot"}
+  - {what: invalid ring, value: "1px danger outline, kept when selected", cite: "radio.css status-invalid-field; utilities/index.css invalid-field-ring"}
+  - {what: focus ring, value: "2px background gap, then a 2px focus ring", cite: radio-primary-vertical-rest-a-focus-control}
+  - {what: "focus ring, invalid", value: "not captured, derived from the cascade: the accent ring replaces the danger outline", cite: "radio.css radio__control focus-visible and [data-invalid] rules"}
+  - {what: disabled opacity, value: 0.5, cite: radio-primary-vertical-disabled-a}
+approximations:
+  - "An invalid radio keeps the accent focus ring because `.radio:has([data-focus-visible]) .radio__control` outranks `.radio[data-invalid] .radio__control`. `Invalid + Selected` in radio.css ties with it at (0,4,0) and comes later, so a selected invalid radio may keep the 1px danger outline with a wider ring gap upstream; no capture settles it."
+  - Remix draws the dot only while selected, so it appears at its selected size; upstream scales it in from the full control over 200ms.
+  - The press scale shares the 200ms fill transition; upstream eases `transform` over 100ms.
+  - Remix's radio is a bare control with a required `semanticLabel`; labels, descriptions, and the group label are `HeroUiRadioGroup`.

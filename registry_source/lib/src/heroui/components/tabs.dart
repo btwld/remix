@@ -1,0 +1,137 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'tabs.g.dart';
+
+/// HeroUI tab styles: a segmented pill list, or an underlined row.
+enum HeroUiTabsVariant { primary, secondary }
+
+/// A one-line tab strip that scrolls within its available width.
+///
+/// Scrolling wraps the semantic tab bar, keeping its direct semantic children
+/// as tabs and allowing Naked UI to reveal keyboard-focused tabs.
+class HeroUiTabBar extends StatelessWidget {
+  const HeroUiTabBar({
+    super.key,
+    this.variant = .primary,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  });
+
+  const HeroUiTabBar.primary({
+    super.key,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  }) : variant = HeroUiTabsVariant.primary;
+
+  const HeroUiTabBar.secondary({
+    super.key,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  }) : variant = HeroUiTabsVariant.secondary;
+
+  final HeroUiTabsVariant variant;
+  final TabBarStyler style;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: RemixTabBar(
+      style: heroUiTabBarStyle(variant: variant, style: style),
+      child: child,
+    ),
+  );
+}
+
+/// HeroUI recipe for [RemixTabBar], the tab list container.
+TabBarStyler heroUiTabBarStyle({
+  HeroUiTabsVariant variant = .primary,
+  TabBarStyler style = const TabBarStyler.create(),
+}) {
+  final result = switch (variant) {
+    .primary =>
+      TabBarStyler()
+          .color(HeroUiTokens.defaultColor())
+          .borderRadius(.all(_listRadius()))
+          .padding(.all(_listPadding)),
+    .secondary => TabBarStyler().border(
+      .bottom(.color(HeroUiTokens.border()).width(_ruleWidth)),
+    ),
+  };
+  return result.merge(style);
+}
+
+/// HeroUI recipe for [RemixTab].
+///
+/// The selected tab paints the indicator itself; upstream slides one shared
+/// indicator between tabs. A transparent ring-width border is always present
+/// so focus and selection recolor it without moving the label.
+@MixWidget(target: RemixTab.new)
+TabStyler heroUiTabStyle({
+  HeroUiTabsVariant variant = .primary,
+  TabStyler style = const TabStyler.create(),
+}) {
+  final result = TabStyler()
+      .height(_height)
+      .padding(.horizontal(heroUiInsideRing(_paddingX)))
+      .border(heroUiRingBorder())
+      .mainAxisAlignment(.center)
+      .label(
+        .style(
+          HeroUiTokens.textSm.mix(),
+        ).fontWeight(.w500).color(HeroUiTokens.muted()),
+      )
+      // Unselected tabs fade on hover; selected tabs restore it below.
+      .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
+      .animate(HeroUiTokens.smoothMotion);
+
+  final styled = switch (variant) {
+    .primary =>
+      result
+          .borderRadius(.all(HeroUiTokens.radius3xl()))
+          .onSelected(
+            _selected(
+              HeroUiTokens.segmentForeground,
+            ).color(HeroUiTokens.segment()).shadows(heroUiSurfaceBoxShadows),
+          ),
+    // The `h-0.5` indicator is the ring-width bottom edge, recolored.
+    .secondary => result.onSelected(
+      _selected(
+        HeroUiTokens.foreground,
+      ).border(.bottom(.color(HeroUiTokens.accent()))),
+    ),
+  };
+
+  return styled
+      .onFocusVisible(TabStyler().border(heroUiRingBorder(focused: true)))
+      .onDisabled(TabStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))
+      .merge(style);
+}
+
+/// HeroUI recipe for [RemixTabView], the panel below the list.
+@MixWidget(target: RemixTabView.new)
+TabViewStyler heroUiTabViewStyle({
+  TabViewStyler style = const TabViewStyler.create(),
+}) => TabViewStyler().padding(.all(_panelPadding)).merge(style);
+
+/// A selected tab's foreground, at full opacity even while hovered.
+TabStyler _selected(ColorToken foreground) =>
+    TabStyler().label(.color(foreground())).wrap(.opacity(1));
+
+/// `.tabs__tab`: `h-8 px-4`, and `opacity-70` while hovered.
+const _height = 32.0;
+const _paddingX = 16.0;
+const _hoverOpacity = .7;
+
+/// `.tabs__list`: `p-1`; the secondary list's `border-b`; `.tabs__panel`:
+/// `p-2`.
+const _listPadding = 4.0;
+const _ruleWidth = 1.0;
+const _panelPadding = 8.0;
+
+/// The list container's `calc(var(--radius) * 2.5)`.
+final _listRadius = heroUiRadius(HeroUiTokens.radiusLg, scale: 2.5);

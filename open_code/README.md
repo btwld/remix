@@ -2,8 +2,9 @@
 
 `remix_cli` installs editable preset source into your app. Remix retains
 rendering, interaction and accessibility; you own the theme, recipes and
-installed Agent behavior. Choose one preset: neutral **Vanilla** or **Fortal**
-with its own visual contract. Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
+installed Agent behavior. Choose one preset: neutral **Vanilla**, **Fortal**
+with its own visual contract, or **HeroUI** following HeroUI web 3.2.6.
+Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
 ## Install the CLI in a project
 
@@ -13,7 +14,8 @@ dart run remix_cli:remix init --prefix Acme --preset vanilla
 dart run remix_cli:remix add button
 ```
 
-Use `--preset fortal` at initialization for Fortal. Preset, prefix and UI path
+Use `--preset fortal` for Fortal or `--preset heroui` for HeroUI at initialization.
+Preset, prefix and UI path
 are chosen once; `Ui` and `lib/ui` are defaults. `Remix` and `Mix` are reserved
 prefixes. Each `add` installs only the requested item and its dependency closure.
 `init` pins `registry-stable` to a full GitHub commit in `remix.yaml`; commit it
@@ -134,7 +136,7 @@ published-CLI gates; these prove different boundaries.
 
 ## Item catalog
 
-Both presets: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
+Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 `badge`, `button`, `callout`, `card`, `checkbox`, `dashboard_demo`,
 `dashboard_shell`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`, `segmented_control`,
@@ -143,7 +145,15 @@ Both presets: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
 
-Agent source: `activity`, `answer`, `composer`, `execution`, `message`,
+HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
+`button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
+`field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
+`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+and `toggle_button_group` to shared names such as `button` and `select`.
+It includes no Agent, dashboard, chart or icons items. Its installed-source
+gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md).
+
+Vanilla and Fortal Agent source: `activity`, `answer`, `composer`, `execution`, `message`,
 `permission`, `plan`, `transcript`; shared `models` and `support` install
 transitively. Styled bundles: `activity_recipe`, `answer_recipe`,
 `composer_recipe`, `execution_recipe`, `message_recipe`, `permission_recipe`,

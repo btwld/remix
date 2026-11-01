@@ -232,17 +232,19 @@ class RemixButton extends StatelessWidget {
               ?trailingIconWidget,
             ],
           };
-    final rowChildren = children
-        .map(
-          (e) => Visibility(
-            visible: !loading,
-            maintainState: true,
-            maintainAnimation: true,
-            maintainSize: true,
-            child: e,
-          ),
-        )
-        .toList();
+    final rowChildren = children.map((child) {
+      final visible = Visibility(
+        visible: !loading,
+        maintainState: true,
+        maintainAnimation: true,
+        maintainSize: true,
+        child: child,
+      );
+      // Constrain the label after reserving space for icons. Flexible
+      // belongs outside Visibility's render objects so loading keeps
+      // the same row geometry and custom text builders also fit.
+      return identical(child, textWidget) ? Flexible(child: visible) : visible;
+    }).toList();
 
     // Create content row with visibility control for loading state
     final contentRow = RemixFlexBoxAdapter(

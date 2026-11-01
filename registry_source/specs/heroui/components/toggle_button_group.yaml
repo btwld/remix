@@ -1,0 +1,30 @@
+component: ToggleButtonGroup
+widget: HeroUiToggleButtonGroup
+target: RemixToggleGroup
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/toggle-button-group.css, dist/components/toggle-button.css]
+anatomy: [container, item]
+variants: [defaultToggle, ghost]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest, hover, pressed, selected, focus-visible, disabled, joined, detached]
+tokens:
+  - the toggle button's tokens (see toggle_button.yaml)
+measurements:
+  - {what: items, value: "the toggle button's sizes and paddings, without the pressed scale", cite: "group-horizontal-joined-auto-sm-a, group-horizontal-joined-auto-md-a, group-horizontal-joined-auto-lg-a; toggle-button-group.css :active"}
+  - {what: joined group, value: "items touch inside one radius-24 pill", cite: "group-horizontal-joined-auto-md, group-horizontal-joined-auto-md-a"}
+  - {what: detached group, value: "gap 4, each item radius 24", cite: "group-horizontal-detached-auto-md, group-horizontal-detached-auto-md-a"}
+  - {what: vertical group, value: "items stack, first and last rounded at the ends", cite: "group-vertical-joined-auto-md, group-vertical-joined-auto-md-a"}
+  - {what: item colors, value: "the toggle button's: default fill, accent-soft when selected, accent-soft-hover under the pointer", cite: "toggle-button.css; toggle-button-group.css"}
+  - {what: icon-only item, value: "square: icon size-5 below 640px, size-4 above", cite: "toggle-default-md-icon-rest; toggle-button.css svg size-5 sm:size-4"}
+  - {what: focus ring, value: "inset, within the item", cite: "toggle-button-group.css ring-inset"}
+  - {what: disabled item, value: 0.5, cite: toggle-default-md-label-disabled}
+approximations:
+  - Remix's group selects one item at a time; HeroUI's `selectionMode="multiple"` is not built.
+  - The joined pill is a rounded container of square items, clipped with anti-aliasing, which looks like upstream's per-end radii; vertical groups use the same container.
+  - The 1px separators between joined items (`ToggleButtonGroup.Separator`) are not drawn.
+  - The `fullWidth` modifier (`flex-1` items) is not supported.
+  - "`iconOnly` and `detached` apply to every item; mix sizes or shapes with each item's `style`."
+  - Items use the toggle button's 2px inside border for focus, which is also how upstream insets the ring in a group.
+  - "Item labels follow the toggle button's one-line ellipsis policy. A group of long labels is wider than a phone, as upstream's `w-fit` group is, so the row scrolls horizontally within the width the group is given rather than overflowing it; a group that fits still shrink-wraps, and keyboard focus reveals the item it reaches. A vertical group scrolls the same axis, which is where its one-line labels outgrow the width."

@@ -1,0 +1,87 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'card.g.dart';
+
+/// HeroUI card fills: `defaultCard` is HeroUI's `default` on the surface
+/// colour; `transparent` has neither fill nor shadow.
+enum {{typePrefix}}CardVariant { defaultCard, secondary, tertiary, transparent }
+
+/// HeroUI recipe for [RemixCard].
+///
+/// Lay the content out with a column spaced 12px (`gap-3`); [{{typePrefix}}CardTitle]
+/// and [{{typePrefix}}CardDescription] carry the header's text styles.
+@MixWidget(target: RemixCard.new)
+CardStyler {{valuePrefix}}CardStyle({
+  {{typePrefix}}CardVariant variant = .defaultCard,
+  CardStyler style = const CardStyler.create(),
+}) {
+  var result = CardStyler()
+      .padding(.all(_padding))
+      .borderRadius(.all({{typePrefix}}Tokens.radiusPanel()));
+  final fill = switch (variant) {
+    .defaultCard => {{typePrefix}}Tokens.surface(),
+    .secondary => {{typePrefix}}Tokens.surfaceSecondary(),
+    .tertiary => {{typePrefix}}Tokens.surfaceTertiary(),
+    .transparent => null,
+  };
+  // The transparent card has neither fill nor `shadow-surface`.
+  if (fill != null) {
+    result = result.color(fill).containerEffects({{valuePrefix}}SurfaceEffects());
+  }
+  return result.merge(style);
+}
+
+/// `p-4`.
+const _padding = 16.0;
+
+/// `leading-6` over the `text-sm` token's 14px.
+const _titleHeight = 24 / 14;
+
+/// `.card__title`: `text-sm leading-6 font-medium text-foreground`.
+class {{typePrefix}}CardTitle extends StatelessWidget {
+  const {{typePrefix}}CardTitle(
+    this.text, {
+    super.key,
+    this.style = const TextStyler.create(),
+  });
+
+  final String text;
+  final TextStyler style;
+
+  @override
+  Widget build(BuildContext context) => StyledText(
+    text,
+    style: TextStyler()
+        .style({{typePrefix}}Tokens.textSm.mix())
+        .height(_titleHeight)
+        .fontWeight(.w500)
+        .color({{typePrefix}}Tokens.foreground())
+        .merge(style),
+  );
+}
+
+/// `.card__description`: `text-sm leading-5 text-muted`; the `text-sm` token
+/// already carries `leading-5`.
+class {{typePrefix}}CardDescription extends StatelessWidget {
+  const {{typePrefix}}CardDescription(
+    this.text, {
+    super.key,
+    this.style = const TextStyler.create(),
+  });
+
+  final String text;
+  final TextStyler style;
+
+  @override
+  Widget build(BuildContext context) => StyledText(
+    text,
+    style: TextStyler()
+        .style({{typePrefix}}Tokens.textSm.mix())
+        .color({{typePrefix}}Tokens.muted())
+        .merge(style),
+  );
+}
