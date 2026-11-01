@@ -16,6 +16,8 @@ class HeroUiBreadcrumb {
 
 /// HeroUI's `Breadcrumbs`: [RemixLink]s separated by chevrons. The last step
 /// is the current page: coloured as a link and not actionable.
+/// Steps wrap onto another line when needed; a step wider than the available
+/// space wraps its label so the current page remains readable.
 class HeroUiBreadcrumbs extends StatelessWidget {
   const HeroUiBreadcrumbs({
     super.key,
@@ -33,21 +35,25 @@ class HeroUiBreadcrumbs extends StatelessWidget {
   final LinkStyler linkStyle;
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => Wrap(
     spacing: _itemGap,
+    runSpacing: _itemGap,
+    crossAxisAlignment: WrapCrossAlignment.center,
     children: [
       for (final (index, item) in items.indexed)
         Row(
           mainAxisSize: MainAxisSize.min,
           spacing: _separatorGap,
           children: [
-            RemixLink(
-              label: item.label,
-              onPressed: item.onPressed,
-              enabled: index != items.length - 1,
-              style: _linkStyle(
-                current: index == items.length - 1,
-              ).merge(linkStyle),
+            Flexible(
+              child: RemixLink(
+                label: item.label,
+                onPressed: item.onPressed,
+                enabled: index != items.length - 1,
+                style: _linkStyle(
+                  current: index == items.length - 1,
+                ).merge(linkStyle),
+              ),
             ),
             if (index != items.length - 1)
               SizedBox.square(

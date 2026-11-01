@@ -22,3 +22,4 @@ approximations:
   - Each step is the HeroUI link recipe with the breadcrumb overrides, so it carries the link's hover underline and focus ring.
   - The last step is a disabled RemixLink at full opacity. Upstream also marks it aria-current, which Remix links do not expose.
   - "The glyph is the project icon library's chevronRight, not HeroUI's own chevron; pass `separator` to replace it. It sits in a 12px box and is mirrored with Transform.flip in right-to-left text."
+  - "To satisfy the mobile overflow gate, complete steps wrap onto additional lines and an oversized step label wraps within the remaining space before its separator. This deliberately differs from upstream nowrap overflow and preserves every ancestor and the full current-page label."
