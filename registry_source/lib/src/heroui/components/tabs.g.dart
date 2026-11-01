@@ -6,43 +6,6 @@ part of 'tabs.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// HeroUI recipe for [RemixTabBar], the tab list container.
-class HeroUiTabBar extends StatelessWidget {
-  const HeroUiTabBar({
-    super.key,
-    this.variant = .primary,
-    this.style = const TabBarStyler.create(),
-    required this.child,
-  });
-
-  const HeroUiTabBar.primary({
-    super.key,
-    this.style = const TabBarStyler.create(),
-    required this.child,
-  }) : variant = HeroUiTabsVariant.primary;
-
-  const HeroUiTabBar.secondary({
-    super.key,
-    this.style = const TabBarStyler.create(),
-    required this.child,
-  }) : variant = HeroUiTabsVariant.secondary;
-
-  final HeroUiTabsVariant variant;
-
-  final TabBarStyler style;
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return RemixTabBar(
-      key: this.key,
-      style: heroUiTabBarStyle(variant: this.variant, style: this.style),
-      child: this.child,
-    );
-  }
-}
-
 /// HeroUI recipe for [RemixTab].
 ///
 /// The selected tab paints the indicator itself; upstream slides one shared

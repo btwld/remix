@@ -9,8 +9,45 @@ part 'tabs.g.dart';
 /// HeroUI tab styles: a segmented pill list, or an underlined row.
 enum {{typePrefix}}TabsVariant { primary, secondary }
 
+/// A one-line tab strip that scrolls within its available width.
+///
+/// Scrolling wraps the semantic tab bar, keeping its direct semantic children
+/// as tabs and allowing Naked UI to reveal keyboard-focused tabs.
+class {{typePrefix}}TabBar extends StatelessWidget {
+  const {{typePrefix}}TabBar({
+    super.key,
+    this.variant = .primary,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  });
+
+  const {{typePrefix}}TabBar.primary({
+    super.key,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  }) : variant = {{typePrefix}}TabsVariant.primary;
+
+  const {{typePrefix}}TabBar.secondary({
+    super.key,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  }) : variant = {{typePrefix}}TabsVariant.secondary;
+
+  final {{typePrefix}}TabsVariant variant;
+  final TabBarStyler style;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: RemixTabBar(
+      style: {{valuePrefix}}TabBarStyle(variant: variant, style: style),
+      child: child,
+    ),
+  );
+}
+
 /// HeroUI recipe for [RemixTabBar], the tab list container.
-@MixWidget(target: RemixTabBar.new)
 TabBarStyler {{valuePrefix}}TabBarStyle({
   {{typePrefix}}TabsVariant variant = .primary,
   TabBarStyler style = const TabBarStyler.create(),

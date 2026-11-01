@@ -33,3 +33,4 @@ approximations:
   - The surface shadow on the selected pill also applies in dark mode, where it is not visible.
   - The 8px gap between list and panel (`.tabs` gap-2) belongs to the app's layout.
   - Tab separators (`Tabs.Separator`) and vertical orientation are not styled.
+  - "Long tab lists scroll horizontally within the available width. This intentionally contains upstream nowrap overflow while retaining single-line fixed-height tabs and revealing keyboard-focused tabs. The scroll viewport wraps the semantic tab bar so its direct semantic children remain tabs."
