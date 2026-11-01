@@ -16,7 +16,6 @@ void main() {
   test('holds each style and family separately', () {
     expect(OutlineIconSets.searchFilled.s16, OutlineIcons.searchFilled16);
     expect(RoundedIconSets.home.s12, RoundedIcons.home12);
-    expect(MonoIconSets.starFilled.s24, MonoIcons.starFilled);
     expect(OutlineIconSets.search.masters, [
       OutlineIcons.search12,
       OutlineIcons.search16,

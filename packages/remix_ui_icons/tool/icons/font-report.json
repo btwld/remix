@@ -7,15 +7,15 @@
     "lossy": "error",
     "unrepresentable": "error"
   },
-  "glyphCount": 432,
-  "losslessGlyphCount": 432,
+  "glyphCount": 360,
+  "losslessGlyphCount": 360,
   "approximatedGlyphCount": 0,
   "skippedIconCount": 0,
   "issueCount": 0,
   "retiredCodepointCount": 0,
   "font": {
     "file": "fonts/RemixIcons.otf",
-    "sha256": "c8e945b9ae0f6f47c46de24e4c3b14440887cbee8a64161bd7569dd2e046d117",
-    "bytes": 65284
+    "sha256": "9f7c51e3531d4e097958623d0aed89178f1046f1c9926eb7dc7c1a8053fcc6b2",
+    "bytes": 56428
   }
 }

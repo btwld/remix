@@ -142,8 +142,8 @@ const Icon(FortalIcons.check)
 
 Import `package:remix_ui_icons/remix_ui_icons.dart` and use `RemixIcons`
 directly for the rest of the Vector UI pack: the Outline family in outline and
-filled styles at native 24, 16, and 12 px masters, with `RoundedIcons` and
-`MonoIcons` beside it. There is deliberately no runtime name-to-icon map on
+filled styles at native 24, 16, and 12 px masters, with `RoundedIcons`
+beside it. There is deliberately no runtime name-to-icon map on
 `RemixIcons` itself because dynamic lookup would keep the full font reachable.
 Fortal controls otherwise use Remix's inline Radix-shaped vector defaults.
 

@@ -1,4 +1,4 @@
-"""Write the one Outline / Rounded / Mono comparison catalog.
+"""Write the one Outline / Rounded comparison catalog.
 
 The page inlines generated SVGs. It does not redraw them and it does not
 fetch anything from the network.
@@ -9,7 +9,7 @@ import html
 import json
 from pathlib import Path
 
-FAMILIES = ("outline", "rounded", "mono")
+FAMILIES = ("outline", "rounded")
 MASTERS = (12, 16, 24)
 APPEARANCES = ("outline", "filled")
 SHARED = (
@@ -26,7 +26,7 @@ SHARED = (
     "branch",
     "star",
 )
-FAMILY_LABEL = {"outline": "Outline", "rounded": "Rounded", "mono": "Mono"}
+FAMILY_LABEL = {"outline": "Outline", "rounded": "Rounded"}
 WARNING_SENTENCE = (
     "Visible text label required for outline at 12 / 16 / 24 px and filled at "
     "12 / 16 / 24 px. This also applies to scaled uses of those masters. "
@@ -90,7 +90,6 @@ def _figure(root: Path, family: str, appearance: str, size: int, icon_id: str) -
 
 def _grammar(root: Path) -> str:
     rounded = _load_json(root / "rounded" / "catalog" / "styles.json")["rounded"]
-    mono = _load_json(root / "mono" / "catalog" / "styles.json")["mono"]
     outline = _load_json(root / "outline" / "catalog" / "styles.json")["outline"]
     cards = [
         (
@@ -108,13 +107,7 @@ def _grammar(root: Path) -> str:
             + " ".join(rounded["productPathCommands"])
             + f". {rounded['legacyRoundedPlan']}.",
         ),
-        (
-            "Mono",
-            f"Corners: {mono['corners']}. Terminals: {mono['terminals']}. "
-            f"{mono['diagonals']}. Path commands are "
-            + " ".join(mono["pathCommands"])
-            + ". Plates and bars are drawn from Mono primitives.",
-        ),
+
     ]
     body = []
     for title, text in cards:
@@ -163,19 +156,17 @@ def _exceptions(root: Path) -> str:
 
 
 def _usage_limits(root: Path) -> str:
-    # Load the maintained family contract without aliasing another family's source package.
-    import runpy
-    limits = runpy.run_path(str(root / "mono/source/contract.py"))["USAGE_LIMITS"]
     items = []
-    for question in limits:
-        icons = ", ".join(question.get("icons") or [])
-        items.append(
-            "<li>"
-            f"<code>{_esc(question['id'])}</code> "
-            f"({_esc(icons)}): {_esc(question['guidance'])}"
-            "</li>"
-        )
-    return "<ul class=\"questions\">" + "".join(items) + "</ul>"
+    for family in FAMILIES:
+        for icon in _icons(root, family):
+            review = icon.get("review", {})
+            guidance = review.get("usage")
+            if guidance:
+                items.append(
+                    f"<li><strong>{_esc(FAMILY_LABEL[family])} {_esc(icon['label'])}:</strong> "
+                    f"{_esc(guidance)}</li>"
+                )
+    return '<ul class="questions">' + "".join(items) + "</ul>"
 
 
 def _proof(root: Path, labels: dict[str, str]) -> str:
@@ -194,7 +185,7 @@ def _proof(root: Path, labels: dict[str, str]) -> str:
         '<section id="proof">'
         "<h2>Proof at 24 outline</h2>"
         "<p>Same native master, shown at 4×. Read across a row to compare families. "
-        "Rounded and Mono geometry is not an Outline path filter.</p>"
+        "Rounded geometry is not an Outline path filter.</p>"
         f'<div class="proof"><div></div>{headers}{"".join(rows)}</div>'
         "</section>"
     )
@@ -245,9 +236,9 @@ def _outline_only(root: Path, labels: dict[str, str]) -> str:
         )
     return (
         '<section id="outline-only">'
-        "<h2>Outline icons without a Rounded or Mono sibling</h2>"
-        f"<p>{len(extra)} Outline icons are in this pack. Rounded and Mono currently "
-        "cover the shared 12 only. Shown here at native 24, outline then filled.</p>"
+        "<h2>Outline icons without a Rounded sibling</h2>"
+        f"<p>{len(extra)} Outline icons are in this pack. Rounded currently "
+        "covers the shared 12 only. Shown here at native 24, outline then filled.</p>"
         f'<div class="solo-grid">{"".join(cards)}</div>'
         "</section>"
     )
@@ -264,7 +255,7 @@ def render_catalog(root: Path) -> str:
         family: len(list((root / family / "generated" / family).rglob("*.svg")))
         for family in FAMILIES
     }
-    expected = {"outline": 288, "rounded": 72, "mono": 72}
+    expected = {"outline": 288, "rounded": 72}
     if counts != expected:
         raise ValueError(f"unexpected SVG counts: {counts}")
     return f"""<!DOCTYPE html>
@@ -311,7 +302,7 @@ code {{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; f
 }}
 nav {{ display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: 14px; margin: 8px 0 18px; }}
 .surface {{ font-size: 14px; color: var(--muted); }}
-.grammar {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }}
+.grammar {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }}
 .grammar article, article, .solo-grid article {{
   background: var(--card);
   border: 1px solid var(--line);
@@ -321,12 +312,12 @@ nav {{ display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: 14px; margin: 
 .grammar article {{ padding: 12px 14px; }}
 .proof, .matrix {{
   display: grid;
-  grid-template-columns: 8.5rem repeat(3, minmax(0, 1fr));
+  grid-template-columns: 8.5rem repeat(2, minmax(0, 1fr));
   gap: 8px 10px;
   align-items: end;
   margin-top: 8px;
 }}
-.col, .proof > div:nth-child(-n+4) {{ font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }}
+.col, .proof > div:nth-child(-n+3) {{ font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }}
 .proof-label, .row-label {{ font-size: 14px; }}
 .row-label span, .proof-label code {{ display: block; color: var(--muted); font-size: 12px; }}
 .cell {{ margin: 0; }}
@@ -345,7 +336,7 @@ nav {{ display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: 14px; margin: 
 .s24 svg {{ width: 96px; height: 96px; }}
 figcaption {{ font-size: 11px; color: var(--muted); margin-top: 4px; }}
 #families article {{ margin: 14px 0; }}
-.solo-grid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }}
+.solo-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }}
 .solo {{ display: flex; gap: 12px; }}
 .table-wrap {{ overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }}
 table {{ width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); }}
@@ -365,7 +356,7 @@ body:has(#surface:checked) {{
 }}
 @media (max-width: 860px) {{
   .grammar, .solo-grid {{ grid-template-columns: 1fr; }}
-  .proof, .matrix {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+  .proof, .matrix {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   .proof > div:first-child:empty,
   .matrix > div:first-child:empty {{ display: none; }}
   .proof-label, .row-label {{ grid-column: 1 / -1; }}
@@ -379,8 +370,8 @@ body:has(#surface:checked) {{
 <header>
 <p class="kicker">Private review pack · not for publication</p>
 <h1>Vector UI icon families</h1>
-<p>Outline, Rounded, and Mono live here as siblings. Outline has {counts["outline"]} SVGs. Rounded has {counts["rounded"]}. Mono has {counts["mono"]}. Each drawing is outline or filled at native 12, 16, or 24.</p>
-<p class="banner"><strong>Warning.</strong> {WARNING_SENTENCE} The rule applies to Outline, Rounded, and Mono. A recorded gap exception does not lift it.</p>
+<p>Outline and Rounded live here as siblings. Outline has {counts["outline"]} SVGs. Rounded has {counts["rounded"]}. Each drawing is outline or filled at native 12, 16, or 24.</p>
+<p class="banner"><strong>Warning.</strong> {WARNING_SENTENCE} The rule applies to Outline and Rounded. A recorded gap exception does not lift it.</p>
 <label class="surface"><input id="surface" type="checkbox"> Dark surface</label>
 <nav>
 <a href="#proof">24 outline proof</a>
@@ -405,8 +396,8 @@ body:has(#surface:checked) {{
 {_exceptions(root)}
 </section>
 <section id="questions">
-<h2>Mono usage limits</h2>
-<p>Keep labels and mixed-family alignment consistent with the Mono contract.</p>
+<h2>Usage limits</h2>
+<p>Keep visible labels consistent with each family’s documented usage rules.</p>
 {_usage_limits(root)}
 </section>
 {_detail(root, shared_labels)}
@@ -414,7 +405,7 @@ body:has(#surface:checked) {{
 </main>
 <footer>
 <p>BSD 3-Clause. Copyright 2026, Leo Farias. <code>package.json</code> is <code>private</code>. This source pack is not published to npm or pub.dev; <code>remix_ui_icons</code> compiles its masters into a Flutter icon font.</p>
-<p>Family catalogs remain build products: <a href="../outline/docs/catalog/index.html">Outline</a>, <a href="../rounded/docs/catalog/index.html">Rounded</a>, <a href="../mono/proof/index.html">Mono proof</a>.</p>
+<p>Family catalogs remain build products: <a href="../outline/docs/catalog/index.html">Outline</a>, <a href="../rounded/docs/catalog/index.html">Rounded</a>.</p>
 </footer>
 </body>
 </html>

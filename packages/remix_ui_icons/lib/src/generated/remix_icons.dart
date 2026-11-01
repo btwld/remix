@@ -9,7 +9,7 @@ import 'outline_icons.dart';
 /// same name.
 ///
 /// `RemixIcons.search` is [OutlineIcons.search]. Use
-/// [RoundedIcons] or [MonoIcons] directly for the other families.
+/// [RoundedIcons] directly for the other family.
 ///
 /// Use the master closest to the rendered size: up to 12 px use the 12 px
 /// master, up to 16 px the 16 px master, and the 24 px master above that.

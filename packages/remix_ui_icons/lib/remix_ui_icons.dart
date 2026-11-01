@@ -1,7 +1,7 @@
 /// Vector UI icons for Flutter, as one tree-shakable icon font.
 ///
-/// Three families draw the same concepts in their own construction:
-/// [OutlineIcons], [RoundedIcons], and [MonoIcons]. [RemixIcons] is the
+/// Two families draw the same concepts in their own construction:
+/// [OutlineIcons] and [RoundedIcons]. [RemixIcons] is the
 /// default, and is the Outline family under the same names.
 ///
 /// Each concept comes in an outline and a filled style at native 24, 16, and
@@ -15,7 +15,6 @@
 /// every glyph for catalogs and tests.
 library;
 
-export 'src/generated/mono_icons.dart';
 export 'src/generated/outline_icons.dart';
 export 'src/generated/remix_icons.dart';
 export 'src/generated/rounded_icons.dart';

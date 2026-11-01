@@ -27,11 +27,6 @@ def main() -> int:
         ("pack", [sys.executable, "-m", "unittest", "tests.test_pack", "-v"], ROOT),
         ("outline", [sys.executable, "tools/run_checks.py"], ROOT / "outline"),
         ("rounded", [sys.executable, "tools/run_checks.py"], ROOT / "rounded"),
-        (
-            "mono",
-            [sys.executable, "-m", "unittest", "tests.test_pilot", "-v"],
-            ROOT / "mono",
-        ),
     )
     for name, command, cwd in steps:
         print(f"\n=== {name} ===", flush=True)

@@ -1,5 +1,5 @@
 # Source of truth for remix_ui_icons. tool/icons/generate.py reads this file
-# and design/icons/{outline,rounded,mono}; every artifact under lib/, the
+# and design/icons/{outline,rounded}; every artifact under lib/, the
 # migration guide, and the CHANGELOG fragment are generated from it.
 #
 # Codepoints are not assigned here. They live in codepoints.lock.json, which
@@ -18,6 +18,9 @@ reserved:
   - first: "0xE000"
     last: "0xE13D"
     reason: remix_ui_icons 0.1.x (Radix Icons 1.3.2)
+  - first: "0xE368"
+    last: "0xE3AF"
+    reason: Reserved unused codepoints
 families:
   outline:
     class: OutlineIcons
@@ -25,17 +28,13 @@ families:
   rounded:
     class: RoundedIcons
     label: Rounded
-  mono:
-    class: MonoIcons
-    label: Mono
-# Every family draws each concept in two styles at three native masters.
 styles: [outline, filled]
 masters: [24, 16, 12]
 concepts:
   home:
     name: home
     label: "Home"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [dashboard, main]
     rtl: false
     since: 1.0.0-beta.1
@@ -56,16 +55,10 @@ concepts:
   search:
     name: search
     label: "Search"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [find, lookup]
     rtl: false
     since: 1.0.0-beta.1
-    usage:
-      - families: [mono]
-        kind: label-contextual
-        note: "Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder."
-        source: mono/source/contract.py
-        quote: "Label Search explicitly beside crop, frame, or view tools; the viewfinder metaphor is not recognition-tested."
   grid:
     name: grid
     label: "Grid"
@@ -83,7 +76,7 @@ concepts:
   arrow-right:
     name: arrowRight
     label: "Arrow right"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [next, forward]
     rtl: false
     since: 1.0.0-beta.1
@@ -145,16 +138,10 @@ concepts:
   plus:
     name: plus
     label: "Plus"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [add, new, create]
     rtl: false
     since: 1.0.0-beta.1
-    usage:
-      - families: [mono]
-        kind: note
-        note: "Mono Plus keeps its tighter inset. Align mixed-family toolbars by control bounds."
-        source: mono/source/contract.py
-        quote: "Mono plus keeps its tighter inset. Align mixed-family toolbars by control bounds, not by changing the drawing."
   minus:
     name: minus
     label: "Minus"
@@ -214,7 +201,7 @@ concepts:
   sliders:
     name: sliders
     label: "Sliders"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [settings, adjust, controls]
     rtl: false
     since: 1.0.0-beta.1
@@ -242,7 +229,7 @@ concepts:
   file:
     name: file
     label: "File"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [document, page]
     rtl: false
     since: 1.0.0-beta.1
@@ -256,7 +243,7 @@ concepts:
   link:
     name: link
     label: "Link"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [url, chain]
     rtl: false
     since: 1.0.0-beta.1
@@ -267,12 +254,6 @@ concepts:
         note: "Requires a visible text label at 12 px."
         source: rounded/README.md
         quote: "Branch and 12 px Link should keep a visible label"
-      - families: [mono]
-        masters: [12]
-        kind: label-required
-        note: "Requires a visible text label at 12 px."
-        source: mono/source/contract.py
-        quote: "Keep visible labels for 12 px Link and Branch; native-size recognition is not established."
   bookmark:
     name: bookmark
     label: "Bookmark"
@@ -283,27 +264,21 @@ concepts:
   star:
     name: star
     label: "Star"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [favorite, rating]
     rtl: false
     since: 1.0.0-beta.1
-    usage:
-      - families: [mono]
-        kind: label-required
-        note: "Give the CAD-regular Mono star a Favorite label; it is not recognized as Favorite by its shape alone."
-        source: mono/source/contract.py
-        quote: "Give the CAD-regular star a Favorite label; recognition as Favorite is not established by geometry."
   calendar:
     name: calendar
     label: "Calendar"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [date, schedule]
     rtl: false
     since: 1.0.0-beta.1
   user:
     name: user
     label: "User"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [person, account]
     rtl: false
     since: 1.0.0-beta.1
@@ -324,12 +299,12 @@ concepts:
   warning:
     name: warning
     label: "Warning"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [caution, attention]
     rtl: false
     since: 1.0.0-beta.1
     usage:
-      - families: [outline, rounded, mono]
+      - families: [outline, rounded]
         kind: label-required
         note: "Requires a visible text label at every size and in both styles, including scaled uses. A tooltip or semantic label is not a substitute."
         source: README.md
@@ -392,7 +367,7 @@ concepts:
   branch:
     name: branch
     label: "Branch"
-    families: [outline, rounded, mono]
+    families: [outline, rounded]
     tags: [workflow, fork]
     rtl: false
     since: 1.0.0-beta.1
@@ -403,12 +378,6 @@ concepts:
         note: "Requires a visible text label at 12 px."
         source: outline/catalog/icons.json
         quote: "Visible label required at 12 px; contextual label recommended at other sizes."
-      - families: [mono]
-        masters: [12]
-        kind: label-required
-        note: "Requires a visible text label at 12 px."
-        source: mono/source/contract.py
-        quote: "Keep visible labels for 12 px Link and Branch; native-size recognition is not established."
       - families: [outline]
         masters: [24, 16]
         kind: label-contextual

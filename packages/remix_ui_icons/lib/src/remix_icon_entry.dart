@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 /// The family that drew a glyph.
-enum RemixIconFamily { outline, rounded, mono }
+enum RemixIconFamily { outline, rounded }
 
 /// Whether a glyph is the outline or the filled drawing of its concept.
 enum RemixIconStyle { outline, filled }
@@ -49,8 +49,7 @@ final class RemixIconEntry {
 
   /// Whether this glyph must be shown with a visible text label. A tooltip
   /// or semantic label is not a substitute. The design contract sets this
-  /// per family and master: Warning everywhere, the Mono Star, Rounded
-  /// Branch, and some concepts only at their 12 px master.
+  /// per family and master: Warning everywhere, Rounded Branch, and some concepts only at their 12 px master.
   final bool requiresLabel;
 
   /// The design contract's supported-use notes for this glyph: why it needs

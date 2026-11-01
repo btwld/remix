@@ -3,7 +3,7 @@
 ## Vector UI icons
 
 `remix_ui_icons` includes a generated icon font, `RemixIcons.otf`, compiled
-from the Vector UI Outline, Rounded, and Mono drawings in
+from the Vector UI Outline and Rounded drawings in
 [`design/icons`](https://github.com/btwld/remix/tree/main/design/icons). The
 drawings are distributed under the following license.
 

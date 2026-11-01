@@ -1,6 +1,6 @@
 name: remix_ui_icons
 description: >-
-  Vector UI icons for Flutter: the Outline, Rounded, and Mono families in one
+  Vector UI icons for Flutter: the Outline and Rounded families in one
   tree-shakable icon font, built for Remix UI.
 repository: https://github.com/btwld/remix
 issue_tracker: https://github.com/btwld/remix/issues

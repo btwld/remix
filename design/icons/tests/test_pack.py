@@ -22,9 +22,6 @@ from source.catalog import FAMILIES, MASTERS, APPEARANCES, SHARED, render_catalo
 CONSTRUCTORS = (
     "rounded/source/draw.py",
     "rounded/source/primitives.py",
-    "mono/source/icons.py",
-    "mono/source/grammar.py",
-    "mono/source/export.py",
 )
 FORBIDDEN = (
     "generated/outline",
@@ -56,13 +53,13 @@ class PackageTests(unittest.TestCase):
             ROOT / "LICENSE",
             ROOT / "outline" / "LICENSE",
             ROOT / "rounded" / "LICENSE",
-            ROOT / "mono" / "LICENSE",
         ):
             text = path.read_text(encoding="utf-8")
             self.assertIn("BSD 3-Clause License", text)
             self.assertIn("Leo Farias", text)
 
     def test_families_are_siblings_and_not_a_dart_package(self):
+        self.assertEqual(FAMILIES, ("outline", "rounded"))
         for family in FAMILIES:
             self.assertTrue((ROOT / family / "source").is_dir(), family)
         self.assertEqual(list(ROOT.rglob("pubspec.yaml")), [])
@@ -103,27 +100,19 @@ class GeometryTests(unittest.TestCase):
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(digest, row["sha256"], row["path"])
         self.assertEqual(len(list((ROOT / "rounded" / "generated" / "rounded").rglob("*.svg"))), 72)
-        self.assertEqual(
-            len(list((ROOT / "mono" / "generated" / "mono").rglob("*.svg"))),
-            72,
-        )
 
-    def test_rounded_and_mono_paths_differ_from_outline_and_each_other(self):
+    def test_rounded_paths_differ_from_outline(self):
         registries = {
             "outline": _json(ROOT / "outline" / "generated" / "registry.json")["paths"],
             "rounded": _json(ROOT / "rounded" / "generated" / "registry.json")["paths"],
-            "mono": _json(ROOT / "mono" / "generated" / "registry.json")["paths"],
         }
         for icon_id in SHARED:
             for appearance in APPEARANCES:
                 for size in MASTERS:
                     outline = registries["outline"][icon_id][appearance][str(size)]
                     rounded = registries["rounded"][icon_id][appearance][str(size)]
-                    mono = registries["mono"][icon_id][appearance][str(size)]
                     with self.subTest(icon=icon_id, appearance=appearance, size=size):
                         self.assertNotEqual(rounded, outline)
-                        self.assertNotEqual(mono, outline)
-                        self.assertNotEqual(rounded, mono)
 
 
 class CatalogTests(unittest.TestCase):
@@ -133,7 +122,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(page.read_text(encoding="utf-8"), rendered)
         self.assertIn("Visible text label required", rendered)
         self.assertIn("A tooltip or accessible name alone does not replace the visible label.", rendered)
-        for family in ("Outline", "Rounded", "Mono"):
+        for family in ("Outline", "Rounded"):
             self.assertIn(family, rendered)
         for icon_id in SHARED:
             self.assertIn(f'id="{icon_id}"', rendered)

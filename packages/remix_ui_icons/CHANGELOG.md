@@ -11,7 +11,7 @@ published.
   codepoint: glyphs start at `0xE200`, and the 0.1.x range `0xE000`–`0xE13D` is
   reserved and never reused.
 <!-- generated:1.0.0:begin -->
-- 432 glyphs: 48 concepts in Outline (48), Rounded (12), Mono (12), each in outline and filled styles at native 24, 16, and 12 px masters.
+- 360 glyphs: 48 concepts in Outline (48), Rounded (12), each in outline and filled styles at native 24, 16, and 12 px masters.
 - Of the 318 0.1.x names, 27 are unchanged, 19 are deprecated aliases until 2.0.0, and 272 are removed (25 partial matches, 247 with no match). [MIGRATION.md](MIGRATION.md) lists every name with its replacement or closest Lucide icon.
 <!-- generated:1.0.0:end -->
 - `remixIconsByName` is replaced by `remixIconEntries` in

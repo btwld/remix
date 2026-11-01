@@ -1,6 +1,6 @@
 /// Picks an icon's native master from a size at runtime.
 ///
-/// [OutlineIconSets], [RoundedIconSets], and [MonoIconSets] hold every
+/// [OutlineIconSets] and [RoundedIconSets] hold every
 /// concept and style as a [RemixIconSet]. Import this library only where the
 /// size is not known until runtime: a set refers to all three of its masters,
 /// so each set used keeps three glyphs in a release build.

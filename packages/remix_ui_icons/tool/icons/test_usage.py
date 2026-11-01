@@ -1,17 +1,15 @@
 """The manifest's usage rules agree with the Vector UI design contract.
 
-The contract lives in three places in design/icons: each family's catalog
-(`review.usage`, `review.usageRestriction`), Mono's `USAGE_LIMITS` in
-mono/source/contract.py, and the pack and family READMEs. This test derives
+The contract lives in each family's catalog (`review.usage`,
+`review.usageRestriction`) and the pack and family READMEs. This test derives
 which glyphs need a visible label from those sources and compares the result
 with the manifest, so a contract change cannot silently leave the generated
-`requiresLabel` metadata behind. Every distinct catalog usage text and Mono
-limit must be classified below; a new one fails until it is.
+`requiresLabel` metadata behind. Every distinct catalog usage text must be classified below; a new one
+fails until it is.
 """
 
 from __future__ import annotations
 
-import ast
 import json
 import re
 import unittest
@@ -34,14 +32,6 @@ CATALOG_USAGE = {
 }
 CATALOG_RESTRICTIONS = {"warning-visible-label": ALL}
 
-# Mono's USAGE_LIMITS ids: (manifest rule kind, masters it applies at).
-MONO_LIMITS = {
-    "search-as-viewfinder": ("label-contextual", ALL),
-    "cad-star-as-favorite": ("label-required", ALL),
-    "plus-keyline-mixed-toolbar": ("note", ALL),
-    "density-12-link-branch": ("label-required", frozenset({12})),
-}
-
 # Requirements stated only in prose: (source, quote, family, concept, masters).
 PROSE = (
     ("rounded/README.md", "Branch and 12 px Link should keep a visible label", "rounded", "link", frozenset({12})),
@@ -56,15 +46,6 @@ def _normalize(text: str) -> str:
 def _catalog(family: str) -> list[dict]:
     return json.loads((DESIGN / family / "catalog" / "icons.json").read_text(encoding="utf-8"))["icons"]
 
-
-def _mono_limits() -> tuple[dict, ...]:
-    tree = ast.parse((DESIGN / "mono" / "source" / "contract.py").read_text(encoding="utf-8"))
-    for node in tree.body:
-        if isinstance(node, ast.Assign) and any(
-            isinstance(target, ast.Name) and target.id == "USAGE_LIMITS" for target in node.targets
-        ):
-            return ast.literal_eval(node.value)
-    raise AssertionError("mono/source/contract.py has no USAGE_LIMITS")
 
 
 def _manifest_required() -> set[tuple[str, str, int]]:
@@ -101,7 +82,6 @@ class UsageContractTest(unittest.TestCase):
                 restriction = review.get("usageRestriction")
                 if restriction:
                     self.assertIn(restriction, CATALOG_RESTRICTIONS, f"{family.key}.{icon['id']}")
-        self.assertEqual({limit["id"] for limit in _mono_limits()}, set(MONO_LIMITS))
 
     def test_required_labels_match_the_contract(self) -> None:
         expected: set[tuple[str, str, int]] = set()
@@ -113,46 +93,13 @@ class UsageContractTest(unittest.TestCase):
                     CATALOG_RESTRICTIONS.get(review.get("usageRestriction")),
                 ):
                     expected |= {(family.key, icon["id"], master) for master in masters or ()}
-        for limit in _mono_limits():
-            kind, masters = MONO_LIMITS[limit["id"]]
-            if kind == "label-required":
-                expected |= {("mono", icon, master) for icon in limit["icons"] for master in masters}
         for source, quote, family, concept, masters in PROSE:
             self.assertIn(_normalize(quote), _normalize((DESIGN / source).read_text(encoding="utf-8")))
             expected |= {(family, concept, master) for master in masters}
 
         self.assertEqual(_manifest_required(), expected)
 
-    def test_mono_limits_reach_the_metadata(self) -> None:
-        notes = {
-            (glyph.concept.id, glyph.master): glyph
-            for glyph in MANIFEST.glyphs_of(MANIFEST.family("mono"))
-            if glyph.style == "outline"
-        }
-        for limit in _mono_limits():
-            kind, masters = MONO_LIMITS[limit["id"]]
-            for icon in limit["icons"]:
-                for master in MASTERS:
-                    rules = [
-                        rule
-                        for rule in notes[(icon, master)].usage
-                        if rule.source == "mono/source/contract.py" and rule.quote == limit["guidance"]
-                    ]
-                    if master in masters:
-                        self.assertEqual([rule.kind for rule in rules], [kind], f"mono.{icon}@{master}")
-                    else:
-                        self.assertEqual(rules, [], f"mono.{icon}@{master}")
 
-    def test_the_review_findings(self) -> None:
-        # The independent review of #336 found these reported no label.
-        glyphs = {
-            glyph.member: glyph for glyph in MANIFEST.glyphs_of(MANIFEST.family("mono"))
-        }
-        for member in ("link12", "linkFilled12", "branch12", "branchFilled12"):
-            self.assertTrue(glyphs[member].requires_label, member)
-        for member in ("link16", "branch", "search", "plus12"):
-            self.assertFalse(glyphs[member].requires_label, member)
-        self.assertIn("crop, frame, or view tools", glyphs["search"].usage_notes[0])
 
 
 if __name__ == "__main__":

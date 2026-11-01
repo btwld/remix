@@ -126,7 +126,7 @@ class LockTest(unittest.TestCase):
 
 class ManifestTest(unittest.TestCase):
     def test_counts(self) -> None:
-        self.assertEqual(len(MANIFEST.glyphs), 432)
+        self.assertEqual(len(MANIFEST.glyphs), 360)
         self.assertEqual(len(MANIFEST.legacy), 318)
         self.assertEqual(len(MANIFEST.deprecated_aliases), 19)
         statuses = [icon.status for icon in MANIFEST.legacy]
@@ -163,7 +163,7 @@ class CodegenTest(unittest.TestCase):
     def test_public_api_lists_every_constant_and_alias(self) -> None:
         api = codegen.public_api(MANIFEST)
         self.assertIn("RemixIcons.magnifyingGlass", api)
-        self.assertIn("MonoIcons.starFilled12", api)
+        self.assertIn("RoundedIcons.starFilled12", api)
         self.assertIn("OutlineIconSets.searchFilled", api)
         self.assertEqual(len(api), len(set(api)))
 

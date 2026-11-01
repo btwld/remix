@@ -1,1 +1,0 @@
-# Mono pilot construction package.

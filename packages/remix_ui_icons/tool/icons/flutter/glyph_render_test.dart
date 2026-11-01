@@ -192,7 +192,7 @@ void main() {
       (entry('arrowUp', .outline), entry('arrowDown', .outline)),
       (entry('plus16', .outline), entry('plusFilled16', .outline)),
       (entry('search', .outline), entry('search', .rounded)),
-      (entry('star12', .mono), entry('star12', .outline)),
+      (entry('star12', .rounded), entry('star12', .outline)),
     ];
     for (final (rendered, drawing) in pairs) {
       final difference = await _compare(

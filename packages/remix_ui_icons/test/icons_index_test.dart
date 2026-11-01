@@ -3,9 +3,9 @@ import 'package:remix_ui_icons/icons_index.dart';
 
 void main() {
   test('lists every glyph once, with a unique codepoint', () {
-    expect(remixIconEntries, hasLength(432));
+    expect(remixIconEntries, hasLength(360));
     final codepoints = remixIconEntries.map((entry) => entry.icon.codePoint);
-    expect(codepoints.toSet(), hasLength(432));
+    expect(codepoints.toSet(), hasLength(360));
     for (final entry in remixIconEntries) {
       expect(entry.icon.fontFamily, 'RemixIcons');
       expect(entry.icon.fontPackage, 'remix_ui_icons');
@@ -36,7 +36,6 @@ void main() {
 
     expect(count(RemixIconFamily.outline), 288);
     expect(count(RemixIconFamily.rounded), 72);
-    expect(count(RemixIconFamily.mono), 72);
     for (final family in RemixIconFamily.values) {
       final concepts = count(family) ~/ 6;
       for (final style in RemixIconStyle.values) {
@@ -55,16 +54,13 @@ void main() {
         if (entry.requiresLabel) key(entry),
     };
     expect(labelled, {
-      for (final family in ['outline', 'rounded', 'mono'])
+      for (final family in ['outline', 'rounded'])
         for (final master in [12, 16, 24]) '$family.warning@$master',
-      for (final master in [12, 16, 24]) 'mono.star@$master',
       for (final master in [12, 16, 24]) 'rounded.branch@$master',
       'outline.help@12',
       'outline.branch@12',
       'outline.focus@12',
       'rounded.link@12',
-      'mono.link@12',
-      'mono.branch@12',
     });
     // A requirement covers both styles of a master, and always says why.
     for (final entry in remixIconEntries.where(
@@ -81,11 +77,6 @@ void main() {
   });
 
   test('carries contextual guidance that is not a hard requirement', () {
-    final search = remixIconEntries.singleWhere(
-      (entry) => entry.family == RemixIconFamily.mono && entry.name == 'search',
-    );
-    expect(search.requiresLabel, isFalse);
-    expect(search.usage.single, contains('crop, frame, or view tools'));
     final help = remixIconEntries.singleWhere(
       (entry) =>
           entry.family == RemixIconFamily.outline && entry.name == 'help',

@@ -53,7 +53,6 @@ class App extends StatelessWidget {
         children: [
           const Icon(OutlineIcons.search),
           const Icon(RoundedIcons.homeFilled16),
-          const Icon(MonoIcons.star12),
           const Icon(RemixIcons.close),
           // ignore: deprecated_member_use
           const Icon(RemixIcons.cross2),
@@ -69,7 +68,6 @@ class App extends StatelessWidget {
 EXPECTED = (
     "outline/outline/24/search.svg",
     "rounded/filled/16/home.svg",
-    "mono/outline/12/star.svg",
     "outline/outline/24/close.svg",
     "outline/outline/12/chevron-down.svg",
     "outline/outline/16/chevron-down.svg",

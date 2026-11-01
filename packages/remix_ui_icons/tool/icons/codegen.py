@@ -157,7 +157,7 @@ def facade_library(manifest: Manifest) -> Library:
             "same name.\n"
             "\n"
             f"`RemixIcons.search` is [{family.class_name}.search]. Use\n"
-            "[RoundedIcons] or [MonoIcons] directly for the other families.\n"
+            "[RoundedIcons] directly for the other family.\n"
             "\n"
             f"{MASTER_RULE}\n"
             "\n"

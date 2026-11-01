@@ -4,7 +4,7 @@
 # Migrating from remix_ui_icons 0.1.x
 
 remix_ui_icons 1.0 replaces the 318 Radix Icons 1.3.2 glyphs of 0.1.x with
-the Vector UI pack: 48 concepts, 432 glyphs. The font family is
+the Vector UI pack: 48 concepts, 360 glyphs. The font family is
 still `RemixIcons`, but every glyph is new and every codepoint
 moved: 1.0 starts at `0xE200`, and the 0.1.x range
 `0xE000`–`0xE13D` is reserved and never reused, so a

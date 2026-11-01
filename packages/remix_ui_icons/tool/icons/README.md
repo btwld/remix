@@ -30,8 +30,7 @@ dart run melos run icons:check      # the checks CI runs, without Flutter
 
 - `lib/src/generated/fonts/RemixIcons.otf`, compiled by GlyphPact with
   lossless conversion required. `font-report.json` records the build.
-- `lib/src/generated/*_icons.dart`: `OutlineIcons`, `RoundedIcons`,
-  `MonoIcons`, and the `RemixIcons` facade with its deprecated aliases.
+- `lib/src/generated/*_icons.dart`: `OutlineIcons`, `RoundedIcons`, and the `RemixIcons` facade with its deprecated aliases.
 - `lib/src/generated/icon_sets.dart` (opt-in `sized.dart`) and
   `lib/src/generated/icons_index.dart` (opt-in `icons_index.dart`).
 - `MIGRATION.md` and the generated blocks in `README.md` and `CHANGELOG.md`.

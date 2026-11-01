@@ -10,7 +10,6 @@ void main() {
     const icons = [
       OutlineIcons.search,
       RoundedIcons.homeFilled16,
-      MonoIcons.star12,
       RemixIcons.close,
     ];
     for (final icon in icons) {
@@ -46,7 +45,6 @@ void main() {
 
   test('families draw the same concept as distinct glyphs', () {
     expect(OutlineIcons.search, isNot(RoundedIcons.search));
-    expect(RoundedIcons.search, isNot(MonoIcons.search));
     expect(OutlineIcons.search, isNot(OutlineIcons.search16));
     expect(OutlineIcons.search, isNot(OutlineIcons.searchFilled));
   });
@@ -76,7 +74,6 @@ void main() {
       multiLine: true,
     ).allMatches(library).map((match) => match[1]).toList();
     expect(exports, [
-      'src/generated/mono_icons.dart',
       'src/generated/outline_icons.dart',
       'src/generated/remix_icons.dart',
       'src/generated/rounded_icons.dart',
@@ -93,7 +90,6 @@ void main() {
       OutlineIcons.search,
       OutlineIcons.chevronDownFilled16,
       RoundedIcons.home,
-      MonoIcons.branch12,
       RemixIcons.check,
     ];
 

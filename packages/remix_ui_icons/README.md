@@ -1,7 +1,7 @@
 # remix_ui_icons
 
 `remix_ui_icons` is the [Vector UI](https://github.com/btwld/remix/tree/main/design/icons)
-icon pack for Flutter: three families in one icon font, as `const IconData`
+icon pack for Flutter: two families in one icon font, as `const IconData`
 constants. Release builds keep only the glyphs an application refers to.
 
 ```dart
@@ -20,12 +20,11 @@ const rounded = Icon(RoundedIcons.home);
 | --- | --- | ---: | ---: |
 | Outline | `OutlineIcons` | 48 | 288 |
 | Rounded | `RoundedIcons` | 12 | 72 |
-| Mono | `MonoIcons` | 12 | 72 |
-| **Total** | | | **432** |
+| **Total** | | | **360** |
 <!-- generated:coverage:end -->
 
-Rounded and Mono are siblings of Outline, not filters over it: each draws its
-concepts from its own primitives. They cover a subset of Outline's concepts.
+Rounded is a sibling of Outline, not a filter over it: it draws its
+concepts from its own primitives and covers a subset of Outline's concepts.
 `RemixIcons` is the default set and is the Outline family under the same names.
 
 ## Styles and masters
@@ -58,17 +57,15 @@ Icon(OutlineIconSets.search.at(size), size: size);
 
 ## Labels
 
-Some glyphs are recognized reliably only with a visible text label. The rules
-come from the Vector UI design contract and depend on the family and master:
+Some glyphs require a visible text label under the Vector UI design contract.
+The rules depend on the family and master:
 
 | Glyphs | Visible text label |
 | --- | --- |
 | Warning, every family and style | Required at every size. A tooltip or semantic label is not a substitute. |
-| Mono Star | Required at every size: the CAD-regular star reads as Favorite only with its label. |
 | Rounded Branch | Required at every size. |
 | Outline Help, Branch, Focus | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
-| Rounded Link; Mono Link and Branch | Required at 12 px. |
-| Mono Search | Label it explicitly beside crop, frame, or view tools, where it can read as a viewfinder. |
+| Rounded Link | Required at 12 px. |
 | Outline Arrow up-right | Keep a visible action label: it opens another destination. |
 
 Each constant's documentation states its rule. In the opt-in index,
