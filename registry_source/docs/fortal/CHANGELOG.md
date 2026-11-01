@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Adopt Remix effects slots for control focus, anchor-width select sizing,
+  styled radio/switch labels and caller-owned menu controls. Preserve the
+  shared focus tokens and the independent Fortal palette/contrast roles.
+
 - **Breaking:** replace Mangue with Serra, a new earthy olive (`#6F7845`).
   `FortalAccentColor.mangue` and the `mangue` palette constant are removed
   without an alias; use `.serra` and `serra`.

@@ -1,11 +1,11 @@
 component: Label, Description, FieldError
-widget: HeroUiFieldLayout, HeroUiControlRow
+widget: HeroUiFieldLayout, HeroUiDescribedControl
 target: composition (StyledText, FlexBox, Wrap)
 status: implemented
 source:
   ref: "@heroui/styles@3.2.6"
   pages: [dist/components/label.css, dist/components/description.css, dist/components/field-error.css, dist/components/radio.css, dist/components/switch.css, dist/components/checkbox-group.css]
-anatomy: [group label, items, helper text, error text, control row label, control row description]
+anatomy: [group label, items, helper text, error text, control description]
 variants: []
 sizes: {supported: [], default: null}
 states: [rest, invalid, disabled]
@@ -22,5 +22,5 @@ measurements:
 approximations:
   - "The label, description, and error are the theme's text styles (`theme/field.dart`: `heroUiLabelText`, `heroUiDescriptionText`, `heroUiErrorText`), shared with the text field; this file only lays them out."
   - "`errorText` shows after `helperText` while `invalid`, in `heroUiErrorText`. The description stays beside it. `.radio`, `.checkbox`, and `.switch` restyle their own FieldError as muted description text (`field-error.css`); the layout does not."
-  - The control row's label is plain text beside a bare RemixRadio or RemixSwitch; it is not a tap target.
+  - "A radio's or switch's own label is `RemixRadio.label` or `RemixSwitch.label`, inside the tap target; `HeroUiDescribedControl` lays out only the description beneath it."
   - Remix text fields carry their own label, helper text, and error; this layout serves groups and control rows.

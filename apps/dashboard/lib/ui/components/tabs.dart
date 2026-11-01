@@ -83,7 +83,7 @@ TabStyler uiTabStyle({
             .color(UiTokens.grayA3())
             .onFocusVisible(.color(UiTokens.accentA3())),
       )
-      .onFocusVisible(TabStyler().uiFocusRing(radius: metrics.radius))
+      .onFocusVisible(TabStyler().containerEffects(uiFocusOutline()))
       .onSelected(
         .label(
               .color(UiTokens.gray12())
@@ -107,8 +107,8 @@ TabStyler uiTabStyle({
       )
       .wrap(uiTouchTarget())
       .onDisabled(
-        TabStyler().container(
-          FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
+        TabStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
       .merge(style);

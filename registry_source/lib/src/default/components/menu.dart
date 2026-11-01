@@ -52,14 +52,12 @@ MenuStyler vanillaMenuStyle({MenuStyler style = const MenuStyler.create()}) =>
         .divider(_dividerStyle())
         .merge(style);
 
-/// The control that opens the menu.
+/// The standard label trigger of the menu.
 ///
-/// It is deliberately quiet at rest — no fill, no outline — because the
-/// trigger usually already wraps a button or an icon button with a recipe of
-/// its own, and two competing surfaces would read as a control inside a
-/// control. It still answers hover and focus, because a caller is equally
-/// free to wrap a bare `Text`, and that caller must not end up with a
-/// keyboard-reachable control that shows nothing when it is reached.
+/// It is quiet at rest, with no fill and no outline, and still answers hover
+/// and focus, so a bare label never ends up keyboard-reachable while showing
+/// nothing when it is reached. A real button is the trigger through
+/// `RemixMenuTrigger.control`, which owns its own look; none of this styles it.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .animate(VanillaTokens.motion)
     .direction(.horizontal)
@@ -81,11 +79,8 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     )
     .icon(.size(VanillaTokens.icon).color(VanillaTokens.foreground()))
     .onHovered(.color(VanillaTokens.accent()))
-    // A trigger is keyboard-reachable whether or not it wraps a control that
-    // rings itself, so it rings too. A *foreground* decoration, because
-    // `MenuTriggerSpec` has no `containerEffects` layer and a real border
-    // would nudge the label.
-    .onFocusVisible(.foregroundDecoration(vanillaFocusRingDecoration()))
+    // An outline rather than a border, which would nudge the label.
+    .onFocusVisible(.containerEffects(vanillaFocusRing()))
     .onDisabled(
       MenuTriggerStyler().wrap(.opacity(VanillaTokens.disabledOpacity)),
     );

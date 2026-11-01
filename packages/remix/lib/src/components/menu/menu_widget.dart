@@ -307,6 +307,18 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///   ),
 ///   items: [...],
 /// )
+///
+/// // A real button as the trigger
+/// RemixMenu<String>(
+///   trigger: RemixMenuTrigger.control(
+///     builder: (context, menu) => RemixButton(
+///       label: 'Actions',
+///       focusNode: menu.focusNode,
+///       onPressed: menu.toggle,
+///     ),
+///   ),
+///   items: [...],
+/// )
 /// ```
 class RemixMenu<T> extends StatefulWidget {
   const RemixMenu({

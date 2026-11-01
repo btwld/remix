@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/heroui.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import '../helpers/heroui.dart';
@@ -93,10 +94,16 @@ void main() {
               }
 
               // Wrapping text must not shrink the bare control.
+              final labeledControl = radio
+                  ? find.byType(HeroUiRadio<String>).first
+                  : find.byType(HeroUiSwitch).first;
               final control = tester.getSize(
-                radio
-                    ? find.byType(HeroUiRadio<String>).first
-                    : find.byType(HeroUiSwitch).first,
+                find
+                    .descendant(
+                      of: labeledControl,
+                      matching: find.byType(StyleSpecBuilder<BoxSpec>),
+                    )
+                    .first,
               );
               expect(control, radio ? const Size(16, 16) : const Size(40, 20));
             },

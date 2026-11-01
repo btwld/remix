@@ -592,14 +592,35 @@ final _toggleTargets = <SpecTarget>[
     read: (spec) => flexDecorationOf(spec.spec.container)?.border,
     expected: (theme) => _hairline(theme.input),
   ),
-  // Deviation: no `shadow-xs`. `ToggleSpec` has no effects layer, and a
-  // decoration shadow under a transparent fill reads as a gray wash.
   _toggle(
-    'outline has no decoration shadow',
+    'outline shadow',
     variant: .outline,
-    source: 'toggle.tsx: outline, shadow-xs (see specs/vanilla.md)',
-    read: (spec) => flexDecorationOf(spec.spec.container)?.boxShadow,
-    expected: (_) => anyOf(isNull, isEmpty),
+    source: 'toggle.tsx: outline, shadow-xs',
+    read: (spec) => (
+      flexDecorationOf(spec.spec.container)?.boxShadow,
+      spec.spec.containerEffects?.behindContent?.shadows,
+    ),
+    expected: (_) => (anyOf(isNull, isEmpty), _effectShadows(VanillaShadow.xs)),
+  ),
+  _toggle(
+    'ghost has no shadow',
+    source: 'toggle.tsx: default variant has no shadow',
+    read: (spec) => (
+      flexDecorationOf(spec.spec.container)?.boxShadow,
+      spec.spec.containerEffects?.behindContent?.shadows,
+    ),
+    expected: (_) => (anyOf(isNull, isEmpty), anyOf(isNull, isEmpty)),
+  ),
+  _toggle(
+    'outline keeps its shadow while focused',
+    variant: .outline,
+    states: const {WidgetState.focused},
+    source: 'toggle.tsx: shadow-xs and focus-visible:ring-[3px] together',
+    read: (spec) => (
+      spec.spec.containerEffects?.behindContent?.shadows,
+      spec.spec.containerEffects?.outline,
+    ),
+    expected: (theme) => (_effectShadows(VanillaShadow.xs), _focusRing(theme)),
   ),
   _toggle(
     'outline hover',
@@ -616,15 +637,11 @@ final _toggleTargets = <SpecTarget>[
     'focus ring',
     states: const {WidgetState.focused},
     source: 'toggle.tsx: focus-visible:ring-[3px] ring-ring/50',
-    read: (spec) {
-      final border = flexForegroundOf(spec.spec.container)?.border;
-      return border is Border ? border.top : null;
-    },
-    expected: (theme) => BorderSide(
-      color: tint(theme.ring, 0.5),
-      width: 3,
-      strokeAlign: BorderSide.strokeAlignOutside,
+    read: (spec) => (
+      spec.spec.containerEffects?.outline,
+      spec.spec.containerEffects?.outlineOffset,
     ),
+    expected: (theme) => (_focusRing(theme), 0.0),
   ),
   _toggle(
     'transition',
@@ -682,6 +699,18 @@ final _toggleGroupTargets = <SpecTarget>[
     source: 'toggle-group.tsx: px-3',
     read: (spec) => boxOf(spec.spec.item.spec.container)?.padding,
     expected: (_) => const EdgeInsets.symmetric(horizontal: 12),
+  ),
+  _toggleGroup(
+    'item focus ring sits inside the item',
+    states: const {WidgetState.focused},
+    source:
+        'toggle-group.tsx: focus-visible:ring-[3px] ring-ring/50, drawn '
+        'inside because the group clips',
+    read: (spec) => (
+      spec.spec.item.spec.containerEffects?.outline,
+      spec.spec.item.spec.containerEffects?.outlineOffset,
+    ),
+    expected: (theme) => (_focusRing(theme), -3.0),
   ),
   _toggleGroup(
     'outline border sits on the group',
@@ -1067,6 +1096,17 @@ final _radioTargets = <SpecTarget>[
     expected: (theme) => _hairline(theme.input),
   ),
   _radio(
+    'label',
+    source: 'label.tsx: text-sm font-medium; radio-group demo: gap-3',
+    read: (spec) => (
+      spec.spec.label.spec.style?.fontSize,
+      spec.spec.label.spec.style?.fontWeight,
+      spec.spec.label.spec.style?.color,
+      spec.spec.labelSpacing,
+    ),
+    expected: (theme) => (14.0, FontWeight.w500, theme.foreground, 12.0),
+  ),
+  _radio(
     'dot',
     states: const {WidgetState.selected},
     source: 'radio-group.tsx: CircleIcon size-2 fill-primary',
@@ -1114,6 +1154,17 @@ final _switchTargets = <SpecTarget>[
       _hairline(const Color(0x00000000)),
       _effectShadows(VanillaShadow.xs),
     ),
+  ),
+  _switch(
+    'label',
+    source: 'label.tsx: text-sm font-medium; switch demo: space-x-2',
+    read: (spec) => (
+      spec.spec.label.spec.style?.fontSize,
+      spec.spec.label.spec.style?.fontWeight,
+      spec.spec.label.spec.style?.color,
+      spec.spec.labelSpacing,
+    ),
+    expected: (theme) => (14.0, FontWeight.w500, theme.foreground, 8.0),
   ),
   _switch(
     'off track',
@@ -1306,6 +1357,18 @@ final _tabsTargets = <SpecTarget>[
     style: () => vanillaTabBarStyle(variant: .line),
     read: (spec) => flexDecorationOf(spec.spec.container)?.color,
     expected: (_) => anyOf(isNull, const Color(0x00000000)),
+  ),
+  _target<TabSpec>(
+    'tabs',
+    'focus ring',
+    source: 'tabs.tsx: focus-visible:ring-[3px] ring-ring/50',
+    style: vanillaTabStyle,
+    states: const {WidgetState.focused},
+    read: (spec) => (
+      spec.spec.containerEffects?.outline,
+      spec.spec.containerEffects?.outlineOffset,
+    ),
+    expected: (theme) => (_focusRing(theme), 0.0),
   ),
   _target<TabSpec>(
     'tabs',
@@ -1514,6 +1577,7 @@ final _sidebarTargets = <SpecTarget>[
 
 SpecTarget _menu(
   String property, {
+  Set<WidgetState> states = const {},
   required String source,
   required Object? Function(StyleSpec<MenuSpec> spec) read,
   required Object? Function(VanillaThemeData theme) expected,
@@ -1522,6 +1586,7 @@ SpecTarget _menu(
   property,
   source: source,
   style: vanillaMenuStyle,
+  states: states,
   read: read,
   expected: expected,
 );
@@ -1552,6 +1617,17 @@ final _menuTargets = <SpecTarget>[
       128.0,
       _effectShadows(VanillaShadow.md),
     ),
+  ),
+  _menu(
+    'trigger focus ring',
+    states: const {WidgetState.focused},
+    source:
+        'dropdown-menu.tsx: Trigger asChild Button, focus-visible:ring-[3px]',
+    read: (spec) {
+      final effects = spec.spec.trigger.spec.containerEffects;
+      return (effects?.outline, effects?.outlineOffset);
+    },
+    expected: (theme) => (_focusRing(theme), 0.0),
   ),
   _menu(
     'item',
@@ -1608,6 +1684,19 @@ final _accordionTargets = <SpecTarget>[
   ),
   _target<AccordionSpec>(
     'accordion',
+    'focus ring is on the trigger, not the section',
+    source: 'accordion.tsx: AccordionTrigger focus-visible:ring-[3px]',
+    style: vanillaAccordionStyle,
+    states: const {WidgetState.focused},
+    read: (spec) => (
+      spec.spec.triggerEffects?.outline,
+      spec.spec.triggerEffects?.outlineOffset,
+      spec.spec.containerEffects,
+    ),
+    expected: (theme) => (_focusRing(theme), 0.0, isNull),
+  ),
+  _target<AccordionSpec>(
+    'accordion',
     'content',
     source: 'accordion.tsx: AccordionContent pt-0 pb-4',
     style: vanillaAccordionStyle,
@@ -1634,6 +1723,32 @@ final _accordionTargets = <SpecTarget>[
       return spec.spec.trigger.spec.padding;
     },
     expected: (_) => const EdgeInsets.symmetric(vertical: 16),
+  ),
+  SpecTarget._(
+    component: 'disclosure',
+    property: 'focus ring is on the trigger, not the section',
+    source: 'accordion.tsx: AccordionTrigger focus-visible:ring-[3px]',
+    actual: (tester, theme) async {
+      final spec = await interactedSpec<DisclosureSpec>(
+        tester,
+        (focusNode) => SizedBox(
+          width: 320,
+          child: VanillaDisclosure(
+            trigger: const Text('Details'),
+            content: const Text('Body'),
+            focusNode: focusNode,
+          ),
+        ),
+        theme: theme,
+        focused: true,
+      );
+      return (
+        spec.spec.triggerEffects?.outline,
+        spec.spec.triggerEffects?.outlineOffset,
+        spec.spec.containerEffects,
+      );
+    },
+    expected: (theme) => (_focusRing(theme), 0.0, isNull),
   ),
 ];
 

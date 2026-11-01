@@ -52,6 +52,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace
       - run: dart run melos run ci:flutter
+      - name: Upload golden failure images
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-failures
+          path: apps/**/test/failures/*.png
+          if-no-files-found: ignore
+          retention-days: 7
 
   cli-tests:
     name: CLI tests and consumer mirrors

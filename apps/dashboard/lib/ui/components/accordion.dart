@@ -22,45 +22,70 @@ AccordionStyler uiAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) {
   return (switch (variant) {
-    .surface => _uiAccordionSurfaceStyler(size),
-    .soft => _uiAccordionSoftStyler(size),
-  }).merge(style);
+        .surface => _uiAccordionSurfaceStyler(size),
+        .soft => _uiAccordionSoftStyler(size),
+      })
+      // Clip each painted part so its effects can extend beyond the panel.
+      .container(BoxStyler().clipBehavior(.none))
+      .merge(style);
 }
 
-// Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, frame, fill, and clipping, while trigger and
-// content stay flat rectangles that simply get cropped to its rounded shape.
-// The frame and divider are foreground borders so edge-to-edge child fills
-// cannot partially cover their antialiased edges.
+// The container owns the fill and foreground frame. Each part clips its own
+// content, leaving trigger effects free to paint outside the panel's edges.
 AccordionStyler _uiAccordionBaseStyler(UiAccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal).minHeight(UiTokens.touchTargetMin()))
+      .trigger(
+        FlexBoxStyler()
+            .direction(.horizontal)
+            .minHeight(UiTokens.touchTargetMin())
+            .borderRadius(.all(_uiAccordionRadius(size)))
+            .clipBehavior(.antiAlias),
+      )
       .leadingIcon(.color(UiTokens.gray11()))
       .title(.fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()))
       .trailingIcon(.color(UiTokens.gray11()))
-      .content(.width(.infinity))
-      .onExpanded(
-        AccordionStyler().trailingIcon(
-          IconStyler().wrap(
-            WidgetModifierConfig.transform(
-              transform: Matrix4.rotationZ(math.pi),
-              alignment: .center,
+      .content(
+        BoxStyler()
+            .width(.infinity)
+            .clipBehavior(.antiAlias)
+            .borderRadius(
+              BorderRadiusMix(
+                bottomLeft: _uiAccordionRadius(size),
+                bottomRight: _uiAccordionRadius(size),
+              ),
             ),
-          ),
-        ),
+      )
+      .onExpanded(
+        AccordionStyler()
+            .trigger(
+              FlexBoxStyler().borderRadius(
+                BorderRadiusMix(
+                  topLeft: _uiAccordionRadius(size),
+                  topRight: _uiAccordionRadius(size),
+                  bottomLeft: Radius.zero,
+                  bottomRight: Radius.zero,
+                ),
+              ),
+            )
+            .trailingIcon(
+              IconStyler().wrap(
+                WidgetModifierConfig.transform(
+                  transform: Matrix4.rotationZ(math.pi),
+                  alignment: .center,
+                ),
+              ),
+            ),
       )
       .merge(_uiAccordionSizeStyler(size));
 }
 
-AccordionStyler _uiAccordionFocusStyler(UiAccordionSize size) {
-  return AccordionStyler().container(
-    BoxStyler().uiFocusRing(radius: _uiAccordionRadius(size)),
-  );
+AccordionStyler _uiAccordionFocusStyler() {
+  return AccordionStyler().triggerEffects(uiFocusOutline());
 }
 
 AccordionStyler _uiAccordionDisabledStyler() {
   return AccordionStyler()
-      .container(BoxStyler().wrap(uiFocusRingModifier(visible: false)))
+      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .trigger(.color(UiTokens.grayA3()))
       .leadingIcon(.color(UiTokens.gray8()))
       .title(.color(UiTokens.gray8()))
@@ -91,7 +116,7 @@ AccordionStyler _uiAccordionSurfaceStyler([UiAccordionSize size = .size2]) {
       )
       .onHovered(.trigger(.color(UiTokens.gray2())))
       .onPressed(.trigger(.color(UiTokens.gray3())))
-      .onFocusVisible(_uiAccordionFocusStyler(size))
+      .onFocusVisible(_uiAccordionFocusStyler())
       .onDisabled(_uiAccordionDisabledStyler());
 }
 
@@ -121,7 +146,7 @@ AccordionStyler _uiAccordionSoftStyler([UiAccordionSize size = .size2]) {
       )
       .onHovered(.trigger(.color(UiTokens.accent3())))
       .onPressed(.trigger(.color(UiTokens.accent4())))
-      .onFocusVisible(_uiAccordionFocusStyler(size))
+      .onFocusVisible(_uiAccordionFocusStyler())
       .onDisabled(_uiAccordionDisabledStyler());
 }
 

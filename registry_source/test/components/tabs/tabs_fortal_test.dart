@@ -15,7 +15,7 @@ void main() {
 
     expect(_containerColor(hovered.spec), hovered.grayA3);
     expect(_containerColor(focusedHovered.spec), focusedHovered.accentA3);
-    expect(focusedHovered.spec.container.widgetModifiers, isNotEmpty);
+    expect(focusedHovered.spec.containerEffects?.outline.width, 2);
   });
 }
 

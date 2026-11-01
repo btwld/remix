@@ -47,10 +47,19 @@ DataTableStyler fortalDataTableStyle({
             .color(FortalTokens.gray11()),
       )
       .headerCell(
-        _fortalDataTableCell(metrics).onFocusVisible(
-          // Keep the common outline inside the padding of clipped tables.
-          BoxStyler().fortalFocusRing(inset: FortalTokens.space2()),
-        ),
+        _fortalDataTableCell(metrics)
+            // Keep the painter mounted so focusing a custom header preserves
+            // its element and state.
+            .wrap(
+              fortalFocusRingModifier(
+                visible: false,
+                inset: FortalTokens.space2(),
+              ),
+            )
+            .onFocusVisible(
+              // Keep the common outline inside the padding of clipped tables.
+              BoxStyler().fortalFocusRing(inset: FortalTokens.space2()),
+            ),
       )
       .bodyCell(_fortalDataTableCell(metrics))
       .selectionCell(BoxStyler().alignment(Alignment.center))

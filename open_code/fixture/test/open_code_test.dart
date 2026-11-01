@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -2122,12 +2123,9 @@ void main() {
           states: const {WidgetState.focused},
         );
 
-        // A foreground decoration, because a real border would inset the
-        // label; `TabSpec` has no effects layer to paint an outline into.
-        expect(
-          _flexForegroundBorder(spec.spec.container),
-          _focusRingBorder(theme.data),
-        );
+        // An outline, because a real border would inset the label.
+        expect(spec.spec.containerEffects?.outline, _focusRing(theme.data));
+        expect(spec.spec.containerEffects?.outlineOffset ?? 0, 0);
       });
     }
 
@@ -2137,7 +2135,7 @@ void main() {
         theme: const AcmeThemeData.light(),
       );
 
-      expect(_flexForegroundBorder(spec.spec.container), isNull);
+      expect(spec.spec.containerEffects?.outline.width ?? 0, 0);
     });
 
     testWidgets('disabled fades the tab and clears the ring', (tester) async {
@@ -2155,10 +2153,7 @@ void main() {
       );
       // Merging leaves the ring's color and width in place and turns its
       // style off, which is what stops Flutter painting it.
-      expect(
-        (_flexForegroundBorder(spec.spec.container) as Border?)?.top.style,
-        BorderStyle.none,
-      );
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
     });
 
     testWidgets('the caller style merges last', (tester) async {
@@ -3500,11 +3495,8 @@ void main() {
         states: const {WidgetState.focused},
       );
 
-      expect(_flexForegroundBorder(idle.spec.container), isNull);
-      expect(
-        _flexForegroundBorder(focused.spec.container),
-        _focusRingBorder(theme),
-      );
+      expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
+      expect(focused.spec.containerEffects?.outline, _focusRing(theme));
       // And the ring genuinely does not move the label. Measured rather than
       // inferred: asserting *how* the ring is built only proves the mechanism
       // the recipe happens to use today, while this fails for any focus
@@ -3535,10 +3527,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        _flexForegroundBorder(
-          _resolvedSpecOf<ToggleSpec>(tester).spec.container,
-        ),
-        isNotNull,
+        _resolvedSpecOf<ToggleSpec>(tester).spec.containerEffects?.outline,
+        _focusRing(theme),
       );
       expect(tester.getRect(find.text('Bold')), restingLabel);
       // The control's own footprint too. A symmetric change — extra padding,
@@ -3563,10 +3553,7 @@ void main() {
           isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
         ),
       );
-      expect(
-        (_flexForegroundBorder(spec.spec.container) as Border?)?.top.style,
-        BorderStyle.none,
-      );
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
     });
 
     testWidgets('toggling reaches the callback and reports its state', (
@@ -3706,6 +3693,32 @@ void main() {
       );
       handle.dispose();
     });
+
+    testWidgets('the label is part of the switch and names it', (tester) async {
+      final handle = tester.ensureSemantics();
+      final changes = <bool>[];
+
+      await _pumpInScope(
+        tester,
+        AcmeSwitch(
+          selected: false,
+          label: 'Notifications',
+          onChanged: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Notifications')),
+        isSemantics(hasEnabledState: true, isEnabled: true, isToggled: false),
+      );
+
+      await tester.tap(find.text('Notifications'));
+      await tester.pumpAndSettle();
+
+      expect(changes, [true]);
+      handle.dispose();
+    });
   });
 
   group('acmeRadioStyle', () {
@@ -3780,8 +3793,8 @@ void main() {
                 child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AcmeRadio<String>(value: 'free', semanticLabel: 'Free'),
-                    AcmeRadio<String>(value: 'pro', semanticLabel: 'Pro'),
+                    AcmeRadio<String>(value: 'free', label: 'Free'),
+                    AcmeRadio<String>(value: 'pro', label: 'Pro'),
                   ],
                 ),
               ),
@@ -3791,7 +3804,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.bySemanticsLabel('Pro'));
+      await tester.tap(find.text('Pro'));
       await tester.pumpAndSettle();
 
       expect(chosen, 'pro');
@@ -4963,10 +4976,8 @@ void main() {
   });
 
   group('acmePopover opens', () {
-    // The gallery shipped a popover that could not open: `RemixPopover` opens
-    // on a tap of its own child, and the button used as the trigger consumed
-    // that tap first. Nothing failed — the panel simply never appeared, and
-    // the only assertion covering it checked that the trigger rendered.
+    // A popover that cannot open fails silently: the panel simply never
+    // appears. Each way of triggering it is opened for real.
 
     testWidgets('a plain child opens it on tap', (tester) async {
       await _pumpInScope(
@@ -4988,31 +4999,45 @@ void main() {
       expect(find.text('Filters go here.'), findsOneWidget);
     });
 
-    testWidgets('a button trigger needs a controller', (tester) async {
+    testWidgets('a button trigger is the only tab stop and gets focus back', (
+      tester,
+    ) async {
       final controller = MenuController();
+      final focusNode = FocusNode(debugLabel: 'filter');
+      addTearDown(focusNode.dispose);
 
       await _pumpInScope(
         tester,
         _overlaid(
           AcmePopover(
             controller: controller,
+            openOnTap: false,
+            triggerFocusNode: focusNode,
             popoverChild: const Text('Filters go here.'),
-            semanticLabel: 'Filters',
             child: AcmeButton.outline(
               label: 'Filter',
-              onPressed: () => controller.open(),
+              focusNode: focusNode,
+              onPressed: () =>
+                  controller.isOpen ? controller.close() : controller.open(),
             ),
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // The button consumes the tap, so `openOnTap` never fires — this is the
-      // trap. The controller is what makes the trigger work.
+      expect(_focusStops(tester, find.byType(AcmePopover)), 1);
+
       await tester.tap(find.text('Filter'));
       await tester.pumpAndSettle();
 
       expect(find.text('Filters go here.'), findsOneWidget);
+      expect(focusNode.hasFocus, isFalse, reason: 'focus moves into the panel');
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Filters go here.'), findsNothing);
+      expect(focusNode.hasFocus, isTrue, reason: 'focus returns to the button');
     });
   });
 
@@ -5282,7 +5307,9 @@ void main() {
   );
 
   group('acmeAccordionStyle states and surface', () {
-    testWidgets('focus-visible rings the section', (tester) async {
+    testWidgets('focus-visible rings the trigger, not the section', (
+      tester,
+    ) async {
       const theme = AcmeThemeData.light();
       final idle = await _resolve(tester, acmeAccordionStyle(), theme: theme);
       final focused = await _resolve(
@@ -5292,9 +5319,10 @@ void main() {
         states: const {WidgetState.focused},
       );
 
-      expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
-      expect(focused.spec.containerEffects?.outline, _focusRing(theme));
-      expect(focused.spec.containerEffects?.outlineOffset ?? 0, 0);
+      expect(idle.spec.triggerEffects?.outline.width ?? 0, 0);
+      expect(focused.spec.triggerEffects?.outline, _focusRing(theme));
+      expect(focused.spec.triggerEffects?.outlineOffset ?? 0, 0);
+      expect(focused.spec.containerEffects, isNull);
     });
 
     testWidgets('disabled fades the section and wins over focus-visible', (
@@ -5313,7 +5341,7 @@ void main() {
           isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
         ),
       );
-      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
+      expect(spec.spec.triggerEffects?.outline.style, BorderStyle.none);
     });
 
     testWidgets('forwards the curated RemixAccordion surface', (tester) async {
@@ -5928,11 +5956,6 @@ BorderSide _focusRing(AcmeThemeData theme) => BorderSide(
   width: 3,
 );
 
-/// [_focusRing] as the foreground border of a control with no effects slot.
-Border _focusRingBorder(AcmeThemeData theme) => Border.fromBorderSide(
-  _focusRing(theme).copyWith(strokeAlign: BorderSide.strokeAlignOutside),
-);
-
 /// A form control's fill: transparent, or `input` at 30% in the dark theme.
 Color _fieldFill(AcmeThemeData theme) => theme.input.withValues(
   alpha: theme.input.a * (theme.brightness == Brightness.dark ? 0.3 : 0),
@@ -5993,6 +6016,20 @@ Widget _host(Widget child) =>
 /// tests that focus a field add one rather than reaching for `MaterialApp`.
 Widget _overlaid(Widget child) =>
     Overlay(initialEntries: [OverlayEntry(builder: (_) => child)]);
+
+/// How many focus stops sit inside the widget [root] finds.
+int _focusStops(WidgetTester tester, Finder root) {
+  final rootElement = tester.element(root);
+
+  return FocusManager.instance.rootScope.traversalDescendants.where((node) {
+    var inside = false;
+    node.context?.visitAncestorElements((ancestor) {
+      inside = identical(ancestor, rootElement);
+      return !inside;
+    });
+    return inside;
+  }).length;
+}
 
 /// Renders [child] and hands its context back, so a test can read inherited
 /// values from exactly where a real widget would.
@@ -6325,9 +6362,6 @@ BoxDecoration? _flexDecoration(StyleSpec<FlexBoxSpec> container) =>
 
 BoxBorder? _flexBorder(StyleSpec<FlexBoxSpec> container) =>
     _flexDecoration(container)?.border;
-
-BoxBorder? _flexForegroundBorder(StyleSpec<FlexBoxSpec> container) =>
-    (container.spec.box?.spec.foregroundDecoration as BoxDecoration?)?.border;
 
 /// Asserts [content] stays readable where the recipe actually puts it.
 ///

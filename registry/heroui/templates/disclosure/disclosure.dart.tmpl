@@ -18,15 +18,8 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
   ),
   DisclosureStyler style = const DisclosureStyler.create(),
 }) => DisclosureStyler()
-    // A transparent ring-width border is always present so keyboard focus
-    // recolors it in place.
-    .trigger(BoxStyler().border({{valuePrefix}}RingBorder()))
     .content(BoxStyler().padding(.all(_bodyPadding)))
-    .onFocusVisible(
-      DisclosureStyler().trigger(
-        BoxStyler().border({{valuePrefix}}RingBorder(focused: true)),
-      ),
-    )
+    .onFocusVisible(DisclosureStyler().triggerEffects({{valuePrefix}}FocusRing()))
     .onDisabled(
       DisclosureStyler().trigger(
         BoxStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),

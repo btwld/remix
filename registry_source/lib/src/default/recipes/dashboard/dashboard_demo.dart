@@ -21,6 +21,7 @@ import '../message_recipe.dart';
 import '../permission_recipe.dart';
 import '../plan_recipe.dart';
 import '../transcript_recipe.dart';
+import '../../theme/effects.dart';
 import '../../theme/tokens.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -179,8 +180,10 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),
-    VanillaPopover(
-      semanticLabel: 'Notifications',
+    _VanillaHeaderPopover(
+      icon: RemixIcons.bell,
+      semanticLabel: 'Open notifications',
+      showBadge: !_notificationsRead,
       popoverChild: Box(
         style: BoxStyler()
             .width(VanillaTokens.popoverWidth)
@@ -229,31 +232,10 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
           ],
         ),
       ),
-      child: StackBox(
-        style: StackBoxStyler().clipBehavior(.none),
-        children: [
-          const VanillaIconButton.ghost(
-            icon: RemixIcons.bell,
-            semanticLabel: 'Open notifications',
-          ),
-          if (!_notificationsRead)
-            Positioned(
-              right: 8,
-              top: 8,
-              child: IgnorePointer(
-                child: Box(
-                  style: BoxStyler()
-                      .size(7, 7)
-                      .borderRadius(.circular(99))
-                      .color(VanillaTokens.primary()),
-                ),
-              ),
-            ),
-        ],
-      ),
     ),
-    VanillaPopover(
-      semanticLabel: 'Theme settings',
+    _VanillaHeaderPopover(
+      icon: RemixIcons.gear,
+      semanticLabel: 'Open theme settings',
       popoverChild: Box(
         style: BoxStyler()
             .width(VanillaTokens.popoverWidth)
@@ -284,10 +266,6 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
             _settingLine('Appearance', _isDark ? 'Dark' : 'Light'),
           ],
         ),
-      ),
-      child: const VanillaIconButton.ghost(
-        icon: RemixIcons.gear,
-        semanticLabel: 'Open theme settings',
       ),
     ),
   ];
@@ -326,6 +304,72 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
           time,
           style: _textStyle(token: VanillaTokens.textXs, muted: true),
         ),
+      ],
+    ),
+  );
+}
+
+/// A header icon button that opens a popover.
+///
+/// The button owns activation (`openOnTap: false`), so the popover adds no
+/// focus stop of its own, and the one node shared with `triggerFocusNode` is
+/// what closing returns focus to.
+class _VanillaHeaderPopover extends StatefulWidget {
+  const _VanillaHeaderPopover({
+    required this.icon,
+    required this.semanticLabel,
+    required this.popoverChild,
+    this.showBadge = false,
+  });
+
+  final IconData icon;
+  final String semanticLabel;
+  final Widget popoverChild;
+  final bool showBadge;
+
+  @override
+  State<_VanillaHeaderPopover> createState() => _VanillaHeaderPopoverState();
+}
+
+class _VanillaHeaderPopoverState extends State<_VanillaHeaderPopover> {
+  final _controller = MenuController();
+  final _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => VanillaPopover(
+    controller: _controller,
+    openOnTap: false,
+    triggerFocusNode: _focusNode,
+    popoverChild: widget.popoverChild,
+    child: StackBox(
+      style: StackBoxStyler().clipBehavior(.none),
+      children: [
+        VanillaIconButton.ghost(
+          icon: widget.icon,
+          semanticLabel: widget.semanticLabel,
+          focusNode: _focusNode,
+          onPressed: () =>
+              _controller.isOpen ? _controller.close() : _controller.open(),
+        ),
+        if (widget.showBadge)
+          Positioned(
+            right: 8,
+            top: 8,
+            child: IgnorePointer(
+              child: Box(
+                style: BoxStyler()
+                    .size(7, 7)
+                    .borderRadius(.circular(99))
+                    .color(VanillaTokens.primary()),
+              ),
+            ),
+          ),
       ],
     ),
   );
@@ -383,8 +427,8 @@ class _VanillaAccount extends StatelessWidget {
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
       icon: RemixIcons.person,
-      builder: (context, _, _) => Box(
-        style: BoxStyler()
+      builder: (context, _, _) => RemixCard(
+        style: CardStyler()
             .padding(
               .symmetric(
                 horizontal: VanillaTokens.s2_5,
@@ -393,7 +437,12 @@ class _VanillaAccount extends StatelessWidget {
             )
             .borderRadius(.all(VanillaTokens.radiusMd()))
             .border(.all(.color(VanillaTokens.border())))
-            .color(VanillaTokens.card()),
+            .color(VanillaTokens.card())
+            .onFocusVisible(
+              CardStyler()
+                  .containerEffects(vanillaFocusRing())
+                  .border(vanillaFocusBorder()),
+            ),
         child: RowBox(
           style: FlexBoxStyler()
               .crossAxisAlignment(.center)

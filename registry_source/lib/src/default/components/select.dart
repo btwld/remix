@@ -105,13 +105,17 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     );
 
 /// The floating panel the options live in: `popover` inside a `border`
-/// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow.
+/// hairline, `radiusMd` corners, a 4px inset, and the `md` shadow. It is at
+/// least 128px wide and at least as wide as its trigger.
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(VanillaTokens.popover())
     .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
     .borderRadius(.all(VanillaTokens.radiusMd()))
     .padding(.all(VanillaTokens.s1))
     .minWidth(VanillaTokens.panelMinWidth)
+    // A second minimum on a modifier: the trigger's width still holds where a
+    // caller replaces the 128px floor through `style`.
+    .wrap(.box(BoxStyler().minWidth(remixAnchorWidth())))
     .maxHeight(_panelMaxHeight)
     .containerEffects(.behindContent(VanillaShadow.md.effects));
 

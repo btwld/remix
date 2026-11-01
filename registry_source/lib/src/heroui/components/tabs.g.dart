@@ -9,8 +9,7 @@ part of 'tabs.dart';
 /// HeroUI recipe for [RemixTab].
 ///
 /// The selected tab paints the indicator itself; upstream slides one shared
-/// indicator between tabs. A transparent ring-width border is always present
-/// so focus and selection recolor it without moving the label.
+/// indicator between tabs.
 class HeroUiTab extends StatelessWidget {
   const HeroUiTab({
     super.key,

@@ -64,20 +64,19 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
         .onPressed(ToggleGroupItemStyler().color({{typePrefix}}Tokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
-              .container(
-                FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
-              )
               .color(selectedColor)
               .labelColor(selectedForeground)
               .iconColor(selectedForeground)
               .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
               .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
-        .onFocusVisible(ToggleGroupItemStyler().{{valuePrefix}}FocusRing())
+        .onFocusVisible(
+          ToggleGroupItemStyler().containerEffects({{valuePrefix}}FocusOutline()),
+        )
         .onDisabled(
           ToggleGroupItemStyler()
-              .container(
-                FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
+              .containerEffects(
+                RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
               )
               .color({{typePrefix}}Tokens.grayA3())
               .labelColor({{typePrefix}}Tokens.gray8())

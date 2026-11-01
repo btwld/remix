@@ -5,7 +5,7 @@ status: implemented
 source:
   ref: "@heroui/styles@3.2.6"
   pages: [dist/components/switch.css, dist/components/label.css]
-anatomy: [track, thumb]
+anatomy: [track, thumb, label]
 variants: []
 sizes: {supported: [sm, md, lg], default: md}
 states: [rest, hover, pressed, selected, invalid, focus-visible, disabled]
@@ -23,10 +23,12 @@ measurements:
   - {what: disabled, value: "0.5; unselected thumb default-foreground at 20%, selected thumb 0.4", cite: "switch-md-disabled, switch-md-disabled-thumb, switch-md-disabled-selected-thumb"}
   - {what: "focus ring, unselected", value: "2px background gap, then a 2px focus ring", cite: switch-md-rest-focus-control}
   - {what: "focus ring, selected", value: "the same ring", cite: switch-md-selected-focus-control}
+  - {what: label, value: "14/20 medium, foreground, 12 after the track and centered on it; inside the tap target, so pointing at it hovers and presses the track", cite: "switch-md-rest-label, switch-group-vertical-a-content"}
+  - {what: "label, invalid and disabled", value: "danger when invalid; the label's color dims again to 0.5 when disabled", cite: "switch-md-invalid-label, switch-md-disabled-label"}
 approximations:
   - The thumb slides by animating Remix's alignment, over the 300ms ease-out-fluid of its `margin`; the track fades over the same time, where upstream uses 250ms ease-smooth.
   - The thumb has no pressed size change; upstream's rule is empty.
   - Upstream clips the track (`overflow-hidden`); the thumb is padded inside it instead.
   - There is no `Switch.Icon` slot in the thumb.
-  - Remix's switch is a bare control with a required `semanticLabel`; labels, descriptions, and the invalid label are `HeroUiSwitchGroup`. The switch has no invalid treatment of its own, as in switch.css.
+  - "`RemixSwitch.label` draws the label and names the switch. `invalid` only turns the label danger: the switch has no invalid treatment of its own, as in switch.css. The description beneath the label and the group label are `HeroUiSwitchGroup`'s."
   - Remix declares its selected variant before the recipe's, so the hover and press fragments restate the selected track color.

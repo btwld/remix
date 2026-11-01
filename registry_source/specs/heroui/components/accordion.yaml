@@ -32,4 +32,5 @@ approximations:
   - The indicator is `trailingIcon`; pass a chevron for HeroUI's glyph, otherwise Remix's plus and minus are used.
   - The hover fill animates over the indicator's 250ms; the CSS does not transition it.
   - The panel opens with Remix's 200ms fade and size transition, not ease-out-quad.
-  - The focus ring is a 2px inside border in the focus color, without the background gap; AccordionStyler's trigger has no outline effect.
+  - "The surface variant's card clips, so its trigger draws the ring inside (outline offset -2, no background gap), where `accordion.css` has no `ring-inset` and upstream's ring extends outside the card. The default variant draws the measured ring outside."
+  - "The card's rounded clip (radius 24 by default) also crops the inside ring at the card's two outer corners: it tapers over the first 24px of each edge and is gone within about 14px of the corner. Giving every surface trigger the panel radius would round the middle items' hover fill and ring too, which upstream does only for the first and last trigger, and an item cannot know its position, so the crop is recorded rather than fixed."

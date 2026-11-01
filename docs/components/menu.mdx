@@ -164,8 +164,20 @@ class AccountMenuExample extends StatelessWidget {
     return FortalMenu<String>(
       trigger: RemixMenuTrigger.builder(
         label: 'Account menu',
-        builder: (context, state, defaultTrigger) =>
-            const FortalAvatar(label: 'LF'),
+        // The builder replaces the styled trigger, so it draws its own ring.
+        builder: (context, state, defaultTrigger) => RemixCard(
+          style: CardStyler()
+              .borderRadius(.circular(999))
+              .onFocusVisible(
+                CardStyler().containerEffects(
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(color: Colors.indigo, width: 2),
+                    outlineOffset: 2,
+                  ),
+                ),
+              ),
+          child: const FortalAvatar(label: 'LF'),
+        ),
       ),
       items: const [
         RemixMenuItem(value: 'profile', label: 'View profile'),
@@ -491,10 +503,33 @@ final ringedMenuStyle = MenuStyler()
 
 A popup that clips (`clipBehavior` on `overlay`) crops an outside row ring at
 its edge. Pad the popup by at least the ring's offset plus width, or use a
-negative `outlineOffset` to draw the row ring inside the row.
+negative `outlineOffset` to draw the row ring inside the row. Once the items
+are long enough to scroll, the list clips at its own edges, inside the popup's
+padding, so only an inside ring stays whole.
 
 A `RemixMenuTrigger.builder` that returns a different widget instead of its
-child replaces the styled trigger and its effects.
+child replaces the styled trigger and its effects, so the returned content has
+to draw its own focus ring, as the avatar example above does. A builder runs
+under the menu's widget states, so `onFocusVisible` on its styles works.
+
+## Long menus
+
+The panel scrolls when its items are taller than the room beside the trigger.
+It is laid out no taller than the room above or below the trigger, after the
+`positioning` `sideOffset` and `collisionPadding`, and opens on the side with
+more room, so a long menu scrolls there instead of covering the trigger. Every
+submenu panel scrolls the same way, within the room the overlay has. A
+`maxHeight` on the `overlay` style caps the panel lower still. A menu that fits
+keeps the size of its items, and the overlay's padding, decoration, and effects
+stay in place while the items scroll.
+
+```dart
+import 'package:remix/remix.dart';
+
+void main() {
+  MenuStyler().overlay(FlexBoxStyler().maxHeight(320));
+}
+```
 
 ## Fortal widgets
 

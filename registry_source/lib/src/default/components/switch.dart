@@ -14,8 +14,9 @@ part 'switch.g.dart';
 /// leading edge when off and the trailing edge when on. This recipe supplies
 /// only the two boxes' geometry and their colors.
 ///
-/// `RemixSwitch` requires a `semanticLabel` because a switch has no visible
-/// text of its own. That is a Remix rule, not a recipe choice.
+/// A switch takes a `label`, drawn beside the track inside the switch's own
+/// tap, focus, and semantics target, as a form label: `textSm` at medium
+/// weight, 8px from the track. A switch without one needs a `semanticLabel`.
 @MixWidget(target: RemixSwitch.new)
 SwitchStyler vanillaSwitchStyle({
   SwitchStyler style = const SwitchStyler.create(),
@@ -36,6 +37,12 @@ SwitchStyler vanillaSwitchStyle({
             .size(VanillaTokens.icon, VanillaTokens.icon)
             .borderRadius(.all(_pill))
             .color(_offThumb()),
+      )
+      .labelSpacing(VanillaTokens.s2)
+      .label(
+        .style(
+          VanillaTokens.textSm.mix(),
+        ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
       )
       .onSelected(
         SwitchStyler()

@@ -18,13 +18,13 @@ measurements:
   - {what: vertical group, value: "items stack, first and last rounded at the ends", cite: "group-vertical-joined-auto-md, group-vertical-joined-auto-md-a"}
   - {what: item colors, value: "the toggle button's: default fill, accent-soft when selected, accent-soft-hover under the pointer", cite: "toggle-button.css; toggle-button-group.css"}
   - {what: icon-only item, value: "square: icon size-5 below 640px, size-4 above", cite: "toggle-default-md-icon-rest; toggle-button.css svg size-5 sm:size-4"}
-  - {what: focus ring, value: "inset, within the item", cite: "toggle-button-group.css ring-inset"}
+  - {what: focus ring, value: "2px, inset within the item, no background gap; drawn as an outline at offset -2 so the group's clip keeps it", cite: "toggle-button-group.css ring-inset; close-button-focus"}
   - {what: disabled item, value: 0.5, cite: toggle-default-md-label-disabled}
 approximations:
   - Remix's group selects one item at a time; HeroUI's `selectionMode="multiple"` is not built.
+  - "The inside ring of a joined group's first and last item is cropped by the pill's clip at the rounded ends, because the items are square; upstream's ring follows each end item's own radius."
   - The joined pill is a rounded container of square items, clipped with anti-aliasing, which looks like upstream's per-end radii; vertical groups use the same container.
   - The 1px separators between joined items (`ToggleButtonGroup.Separator`) are not drawn.
   - The `fullWidth` modifier (`flex-1` items) is not supported.
   - "`iconOnly` and `detached` apply to every item; mix sizes or shapes with each item's `style`."
-  - Items use the toggle button's 2px inside border for focus, which is also how upstream insets the ring in a group.
   - "Item labels follow the toggle button's one-line ellipsis policy. A group of long labels is wider than a phone, as upstream's `w-fit` group is, so the row scrolls horizontally within the width the group is given rather than overflowing it; a group that fits still shrink-wraps, and keyboard focus reveals the item it reaches. A vertical group scrolls the same axis, which is where its one-line labels outgrow the width."

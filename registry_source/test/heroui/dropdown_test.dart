@@ -1,6 +1,10 @@
+import 'dart:ui' show Tristate;
+
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/dropdown.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
@@ -69,23 +73,24 @@ Finder get _popover => find
     .ancestor(of: find.text('Apple'), matching: find.byType(DecoratedBox))
     .last;
 
-/// The ring of a focused measured row: a background gap, then the focus
-/// colour. The recipe draws the focus colour as a ring-width inside border.
-({Color color, double width}) _measuredRing(String mode) {
-  final layers = cssRemixShadows(
-    heroUiCase(
-      'dropdown-default-keyboard-open-menu-item:Apple',
-      mode: mode,
-    ).styles['boxShadow']!,
-  );
-  return (
-    color: layers.last.color,
-    width: layers.last.spreadRadius - layers.first.spreadRadius,
-  );
-}
-
-/// Browser colors are 8-bit; recipe colors come from the theme tokens.
-const _colorTolerance = 1.5 / 255;
+/// A dropdown whose trigger is a [HeroUiButton], the way Remix hands a real
+/// control to the menu.
+Widget _buttonDropdown({
+  required List<RemixMenuTriggerHandle> handles,
+  bool enabled = true,
+}) => HeroUiDropdown<String>(
+  trigger: RemixMenuTrigger.control(
+    builder: (context, menu) {
+      handles.add(menu);
+      return HeroUiButton.secondary(
+        label: 'Actions',
+        focusNode: menu.focusNode,
+        onPressed: enabled ? menu.toggle : null,
+      );
+    },
+  ),
+  items: const [RemixMenuItem(value: 'apple', label: 'Apple')],
+);
 
 /// `transform: scale(0.98)` on a pressed row and `scale(0.97)` on the
 /// pressed trigger (`menu-item.css`, `dropdown.css`).
@@ -222,55 +227,58 @@ void main() {
       );
     });
 
-    testWidgets('keyboard focus rings a row without moving it in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring around a row without '
+        'moving it in $mode', (tester) async {
       await tester.pumpHeroUi(_dropdown(), mode: mode);
       await tester.focusWithTab();
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
       final before = tester.getRect(find.text('Apple'));
-      Border ring() => _decoration(_item(tester, 'Apple')).border! as Border;
-      final measured = _measuredRing(mode);
+      final size = tester.getSize(
+        find
+            .ancestor(of: find.text('Apple'), matching: find.byType(Padding))
+            .first,
+      );
+      final measured = heroUiCase(
+        'dropdown-default-keyboard-open-menu-item:Apple',
+        mode: mode,
+      );
+      expect(_item(tester, 'Apple').containerEffects?.isEmpty ?? true, isTrue);
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
-      expect(
-        ring().top.color,
-        isSameColorAs(measured.color, threshold: _colorTolerance),
-      );
-      expect(ring().top.width, measured.width);
+      expectFocusRing(_item(tester, 'Apple').containerEffects, measured);
+      expect(_decoration(_item(tester, 'Apple')).border, isNull);
       expect(tester.getRect(find.text('Apple')), before);
+      expect(
+        tester.getSize(
+          find
+              .ancestor(of: find.text('Apple'), matching: find.byType(Padding))
+              .first,
+        ),
+        size,
+      );
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
-      expect(
-        ring().top.color,
-        isNot(isSameColorAs(measured.color, threshold: _colorTolerance)),
-      );
+      expect(_item(tester, 'Apple').containerEffects?.isEmpty ?? true, isTrue);
       expect(tester.getRect(find.text('Apple')), before);
     });
 
-    testWidgets('keyboard focus rings the trigger in place in $mode', (
-      tester,
-    ) async {
+    testWidgets('keyboard focus draws the measured ring around the trigger '
+        'without moving it in $mode', (tester) async {
       await tester.pumpHeroUi(_dropdown(), mode: mode);
-      Border ring() =>
-          (tester
-                          .resolvedSpecOf<MenuTriggerSpec>(find.text('Actions'))
-                          .container
-                          .spec
-                          .boxSpec
-                          .decoration!
-                      as BoxDecoration)
-                  .border!
-              as Border;
+      MenuTriggerSpec spec() =>
+          tester.resolvedSpecOf<MenuTriggerSpec>(find.text('Actions'));
 
       final before = tester.getRect(find.text('Actions'));
-      expect(ring().top.color.a, 0);
+      expect(spec().containerEffects?.isEmpty ?? true, isTrue);
       await tester.focusWithTab();
-      expect(ring().top.color, heroUiToken(HeroUiTokens.focus, mode));
-      expect(ring().top.width, HeroUiTokens.focusWidth);
+      expectFocusRing(
+        spec().containerEffects,
+        heroUiCase('close-button-focus', mode: mode, state: true),
+      );
+      expect(spec().container.spec.boxSpec.decoration, isNull);
       expect(tester.getRect(find.text('Actions')), before);
     });
 
@@ -419,6 +427,79 @@ void main() {
       await press.up();
     });
   }
+
+  testWidgets('a HeroUiButton is the trigger: one tab stop that opens the menu '
+      'and takes focus back', (tester) async {
+    final handles = <RemixMenuTriggerHandle>[];
+    await tester.pumpHeroUi(_buttonDropdown(handles: handles));
+
+    await tester.focusWithTab();
+    expect(handles.last.focusNode.hasPrimaryFocus, isTrue);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsOneWidget);
+    expect(handles.last.isOpen, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsNothing);
+    expect(handles.last.focusNode.hasPrimaryFocus, isTrue);
+
+    // The button is the only tab stop, so Tab comes back to it.
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pumpAndSettle();
+    expect(handles.last.focusNode.hasPrimaryFocus, isTrue);
+  });
+
+  testWidgets('a HeroUiButton trigger keeps the button recipe and is one '
+      'expandable semantics node', (tester) async {
+    final handles = <RemixMenuTriggerHandle>[];
+    await tester.pumpHeroUi(_buttonDropdown(handles: handles));
+    final semantics = tester.ensureSemantics();
+    final button = find.byType(HeroUiButton);
+
+    final spec = tester.resolvedSpecOf<ButtonSpec>(find.text('Actions'));
+    expect(
+      (spec.container.spec.boxSpec.decoration as BoxDecoration).color,
+      heroUiToken(HeroUiTokens.defaultColor),
+    );
+    expect(
+      tester.getSize(button).height,
+      heroUiCase('button-secondary-md').size.height,
+    );
+
+    bool hasExpandedState(SemanticsNode node) =>
+        node.getSemanticsData().flagsCollection.isExpanded != Tristate.none;
+    expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+    expect(
+      tester.getSemantics(find.text('Actions')),
+      isSemantics(
+        label: 'Actions',
+        isButton: true,
+        hasTapAction: true,
+        hasExpandedState: true,
+        isExpanded: false,
+      ),
+    );
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+    expect(find.semantics.byPredicate(hasExpandedState), findsOne);
+    expect(
+      tester.getSemantics(find.text('Actions')),
+      isSemantics(label: 'Actions', hasExpandedState: true, isExpanded: true),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('a disabled HeroUiButton trigger does not open the menu', (
+    tester,
+  ) async {
+    await tester.pumpHeroUi(_buttonDropdown(handles: [], enabled: false));
+    await tester.tap(find.byType(HeroUiButton));
+    await tester.pumpAndSettle();
+    expect(find.text('Apple'), findsNothing);
+  });
 
   testWidgets('selecting a row reports its value through Remix', (
     tester,

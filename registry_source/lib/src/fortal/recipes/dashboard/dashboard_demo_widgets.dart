@@ -238,7 +238,6 @@ class FortalAction {
 class FortalActionMenu extends StatelessWidget {
   const FortalActionMenu({
     super.key,
-    required this.semanticLabel,
     required this.trigger,
     required this.actions,
     required this.onSelected,
@@ -251,8 +250,7 @@ class FortalActionMenu extends StatelessWidget {
     this.width = 180,
   });
 
-  final String semanticLabel;
-  final Widget trigger;
+  final RemixMenuTrigger trigger;
   final List<FortalAction> actions;
   final ValueChanged<String> onSelected;
   final OverlayPositionConfig positioning;
@@ -266,10 +264,7 @@ class FortalActionMenu extends StatelessWidget {
     return FortalMenu<String>(
       size: .size1,
       positioning: positioning,
-      trigger: RemixMenuTrigger.builder(
-        label: semanticLabel,
-        builder: (_, _, _) => trigger,
-      ),
+      trigger: trigger,
       items: [
         for (final action in actions) ...[
           if (action.dividerBefore) const RemixMenuDivider(),
@@ -294,14 +289,17 @@ const fortalDataTableActionsPositioning = OverlayPositionConfig(
   sideOffset: 4,
 );
 
-/// Compact kebab trigger shared by data-table actions columns.
-final fortalDataTableActionsTrigger = Box(
-  style: BoxStyler().padding(.all(6)),
-  child: StyledIcon(
-    icon: RemixIcons.dotsHorizontal,
-    style: IconStyler().size(18),
-  ),
-);
+/// Kebab button shared by data-table actions columns.
+RemixMenuTrigger fortalDataTableActionsTrigger(String semanticLabel) =>
+    RemixMenuTrigger.control(
+      builder: (_, menu) => FortalIconButton.ghost(
+        icon: RemixIcons.dotsHorizontal,
+        semanticLabel: semanticLabel,
+        focusNode: menu.focusNode,
+        onPressed: menu.toggle,
+        style: IconButtonStyler().margin(.all(0)).icon(.size(18)),
+      ),
+    );
 
 /// Empty state card used when search or filter queries match no rows.
 class FortalEmptyState extends StatelessWidget {

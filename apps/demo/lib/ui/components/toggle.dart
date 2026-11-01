@@ -29,8 +29,8 @@ ToggleStyler fortalToggleStyle({
       })
       .wrap(fortalTouchTarget())
       .onDisabled(
-        ToggleStyler().container(
-          FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+        ToggleStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
       .merge(style);
@@ -45,7 +45,8 @@ ToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
       .merge(_fortalToggleSizeStyler(size));
 }
 
-ToggleStyler _fortalToggleFocusStyler() => ToggleStyler().fortalFocusRing();
+ToggleStyler _fortalToggleFocusStyler() =>
+    ToggleStyler().containerEffects(fortalFocusOutline());
 
 ToggleStyler _fortalToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()

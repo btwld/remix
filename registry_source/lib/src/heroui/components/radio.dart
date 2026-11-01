@@ -10,10 +10,11 @@ part 'radio.g.dart';
 /// `secondary` on the default fill.
 enum HeroUiRadioVariant { primary, secondary }
 
-/// HeroUI recipe for [RemixRadio], the bare control.
+/// HeroUI recipe for [RemixRadio].
 ///
-/// Labels and descriptions are the app's composition; see `HeroUiRadioGroup`.
-/// [invalid] paints the error treatment; validation stays with the app.
+/// The label sits inside the control's tap target. A description beneath it is
+/// `HeroUiRadioGroup`'s. [invalid] paints the error treatment and turns the
+/// label danger; validation stays with the app.
 @MixWidget(target: RemixRadio.new)
 RadioStyler heroUiRadioStyle({
   HeroUiRadioVariant variant = .primary,
@@ -24,6 +25,7 @@ RadioStyler heroUiRadioStyle({
     .primary => heroUiPrimaryFieldFill,
     .secondary => heroUiSecondaryFieldFill,
   };
+  final label = invalid ? HeroUiTokens.danger : HeroUiTokens.foreground;
 
   var result =
       RadioStyler(
@@ -33,6 +35,8 @@ RadioStyler heroUiRadioStyle({
                 .borderRadius(.all(HeroUiTokens.radiusLg())),
             indicator: _dot(_dotScale),
           )
+          .label(heroUiLabelText.color(label()))
+          .labelSpacing(heroUiControlGap)
           .color(field.rest())
           // The unselected dot is `bg-field-hover` while hovered, which fills the
           // whole control.
@@ -60,12 +64,16 @@ RadioStyler heroUiRadioStyle({
   }
 
   return result
-      .onDisabled(RadioStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))
+      .onDisabled(
+        RadioStyler()
+            .label(.color(heroUiDisabledLabelColor(danger: invalid)()))
+            .wrap(.opacity(HeroUiTokens.disabledOpacity)),
+      )
       .merge(style);
 }
 
 /// `.radio__control`: `size-4`. Also the description indent in
-/// `HeroUiRadioGroup`.
+/// `HeroUiRadioGroup`, with the label gap.
 const heroUiRadioSize = 16.0;
 
 /// The selected dot, `scale: 0.4286` of the control, and `0.5714` while pressed.

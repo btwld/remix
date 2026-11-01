@@ -218,6 +218,24 @@ class _TriggerWidthSelectExampleState extends State<TriggerWidthSelectExample> {
 - A menu wider than its trigger is centered below it by default. Use
   `alignment: .start`, as above, to align the edges.
 
+## Long lists
+
+The option list scrolls when it is taller than the panel. The panel fits the
+space beside the trigger: it is laid out no taller than the room above or below
+the trigger, after the `positioning` `sideOffset` and `collisionPadding`, and
+opens on the side with more room, so a long list scrolls there instead of
+covering the trigger. A `maxHeight` on the `content` style, or on
+`menuContainer`, caps the panel lower still. Padding and decoration on either
+container stay in place while the options scroll.
+
+```dart
+import 'package:remix/remix.dart';
+
+void main() {
+  SelectStyler().content(SelectContentStyler().maxHeight(320));
+}
+```
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -599,9 +617,10 @@ Configures the menu item container style.
 #### `containerEffects(RemixBoxEffectsMix value)`
 
 Configures an outline and paint layers drawn around the item row without
-taking layout space, such as a focus ring in `onFocusVisible`. When the popup
-content clips (`clipBehavior` on its container), an outside ring is cropped at
-the popup edge; use a negative `outlineOffset` to draw it inside the row.
+taking layout space, such as a focus ring in `onFocusVisible`. An outside ring
+is cropped at the list edge once the options are long enough to scroll, and at
+the popup edge when the popup content clips (`clipBehavior` on its container);
+use a negative `outlineOffset` to draw it inside the row.
 
 #### `text(TextStyler value)`
 

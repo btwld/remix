@@ -91,7 +91,7 @@ TabStyler fortalTabStyle({
             .color(FortalTokens.grayA3())
             .onFocusVisible(.color(FortalTokens.accentA3())),
       )
-      .onFocusVisible(TabStyler().fortalFocusRing(radius: metrics.radius))
+      .onFocusVisible(TabStyler().containerEffects(fortalFocusOutline()))
       .onSelected(
         .label(
               .color(FortalTokens.gray12())
@@ -115,8 +115,8 @@ TabStyler fortalTabStyle({
       )
       .wrap(fortalTouchTarget())
       .onDisabled(
-        TabStyler().container(
-          FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+        TabStyler().containerEffects(
+          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
         ),
       )
       .merge(style);

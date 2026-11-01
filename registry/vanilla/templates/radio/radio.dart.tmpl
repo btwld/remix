@@ -22,8 +22,8 @@ part 'radio.g.dart';
 ///   groupValue: plan,
 ///   onChanged: (value) => setState(() => plan = value),
 ///   child: Column(children: const [
-///     {{typePrefix}}Radio(value: 'free', semanticLabel: 'Free'),
-///     {{typePrefix}}Radio(value: 'pro', semanticLabel: 'Pro'),
+///     {{typePrefix}}Radio(value: 'free', label: 'Free'),
+///     {{typePrefix}}Radio(value: 'pro', label: 'Pro'),
 ///   ]),
 /// )
 /// ```
@@ -36,8 +36,9 @@ part 'radio.g.dart';
 /// There is no hover fragment: choosing an option is the feedback, and the
 /// pointer cursor Remix sets says it can be chosen.
 ///
-/// `RemixRadio` requires a `semanticLabel` because it renders no text of its
-/// own — the visible label beside it belongs to the caller's layout.
+/// A radio takes a `label`, drawn beside the circle inside the radio's own tap,
+/// focus, and semantics target, and set like the checkbox's: `textSm` at medium
+/// weight, 12px from the circle. A radio without one needs a `semanticLabel`.
 @MixWidget(target: RemixRadio.new)
 RadioStyler {{valuePrefix}}RadioStyle({
   RadioStyler style = const RadioStyler.create(),
@@ -53,6 +54,12 @@ RadioStyler {{valuePrefix}}RadioStyle({
       // transparent, and a decoration shadow would show through it.
       .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects))
       .indicator(BoxStyler().size(_dot, _dot).borderRadius(.all(_circular)))
+      .labelSpacing({{typePrefix}}Tokens.s3)
+      .label(
+        .style(
+          {{typePrefix}}Tokens.textSm.mix(),
+        ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
+      )
       .onFocusVisible(_focusVisibleStyle())
       .onSelected(RadioStyler().indicatorColor({{typePrefix}}Tokens.primary()))
       .onDisabled(_disabledStyle())
