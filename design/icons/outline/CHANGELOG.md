@@ -11,6 +11,7 @@ Owner-authorized local corrections after the 2026-11-01 shape reviews. No versio
 - Small-master grid: record one odd-width policy and apply it to Pause, Chat, Lock, Menu, More, Chart, Search, Refresh, the arrows, Download, Upload, Arrow up right, Folder, Home, User, Copy and Bell. See `docs/optical-sizing.md`.
 - Link: raise the filled 24 px stroke to the heavier 3 px token, drawing its two ends back to hold the 2 px hook gap.
 - README: stop leading with the historical pilot capture, and label its age where it is linked.
+- Exceptions: keep only active below-target records. The five Warning records that now meet their targets leave the register; their measurements stay as ordinary tests, and every hold is unchanged.
 - Tests: add measured geometry and raster regressions, and pin revisions in a hash ledger while the original fixtures stay immutable.
 
 # 0.5.0-pilot.2 — Audit patch

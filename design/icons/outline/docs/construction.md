@@ -18,7 +18,7 @@ The gap rule concerns meaningful openings or separated parts, not every tapered 
 
 ## Warning gap contract
 
-`warning_parts()` in `source/outline/baseline.py` is the inspectable frame and punctuation. `tests/test_shape_corrections.py` measures the exported paths against these targets, and `catalog/exceptions.json` records the results.
+`warning_parts()` in `source/outline/baseline.py` is the inspectable frame and punctuation. `tests/test_shape_corrections.py` measures the exported paths against these targets.
 
 | Measure | Target 12 / 16 / 24 | Measured 12 / 16 / 24 |
 |---|---:|---:|
@@ -28,6 +28,8 @@ The gap rule concerns meaningful openings or separated parts, not every tapered 
 | Filled stem to dot | 1 / 1.5 / 2 | 1 / 1.5 / 2 |
 
 The 16 px outline stem-to-dot gap is a recorded exception: a 1.5 px gap would leave a stem no taller than its dot. To make this room the triangle overshoots the normal padding: a triangle covers far less of its box than a square does. Its painted bounds reach the canvas top and left at 12 px and the left at 16 px. Meeting these numbers does not remove the visible-label rule in `catalog/restrictions.json`, and it says nothing about recognition.
+
+`catalog/exceptions.json` is active-only: it lists values currently below their target, each with its measurement and reason. A value that reaches its target drops off the register, and the tests and Git history keep its measurement. A record is a disclosure, not an approval. Owner and reviewer stay null until a person accepts it, and dropping a record changes no visible-label, design, recognition or release hold.
 
 ## Recorded drawing decisions
 

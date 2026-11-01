@@ -1620,11 +1620,6 @@
         "independentApproval": "pending",
         "note": "Redrawn 2026-11-01. The triangle overshoots the keyline so the punctuation has a real field: outline mark-to-frame clearance now meets 1 / 1.5 / 2 px, and filled punctuation meets 1.5 / 2 px wide at 16 / 24 px. At 12/16 px the triangle is built around the pixel column left of center so the 1 px mark stays crisp. The 16 px outline stem-to-dot gap stays at 1 px, a recorded exception. The size-aware restriction record still governs use; independent approval remains pending.",
         "exceptions": [
-          "warning-gap-12",
-          "warning-gap-16",
-          "warning-gap-24",
-          "warning-filled-punctuation-16",
-          "warning-filled-punctuation-24",
           "warning-stem-dot-gap-16"
         ],
         "usageRestriction": "warning-visible-label"

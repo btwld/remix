@@ -118,6 +118,18 @@ class WarningGapContract(unittest.TestCase):
                     self.assertGreaterEqual(g.exterior.distance(opening), GAP[n] - .002)
                 self.assertGreaterEqual(openings[0].distance(openings[1]), GAP[n] - .002)
 
+    def test_met_targets_hold_their_measured_values(self):
+        for n, clearance in ((12, 1), (16, 1.5), (24, 2)):
+            frame, marks = split_outline(geometry('warning', 'outline', n))
+            with self.subTest(master=n, style='outline'):
+                self.assertAlmostEqual(min(frame.distance(mark) for mark in marks), clearance, delta=.015)
+        # Width and height of the negative dot, then the stem.
+        for n, dot, stem in ((16, (1.5, 1.5), (1.5, 4)), (24, (2, 2), (2, 6))):
+            openings = sorted(holes(geometry('warning', 'filled', n)), key=lambda part: part.bounds[3] - part.bounds[1])
+            sizes = [(round(p.bounds[2] - p.bounds[0], 4), round(p.bounds[3] - p.bounds[1], 4)) for p in openings]
+            with self.subTest(master=n, style='filled'):
+                self.assertEqual(sizes, [dot, stem])
+
     def test_stem_to_dot_gap_meets_target_except_the_registered_master(self):
         registered = {e['nativeSize']: e for e in json.loads((ROOT / 'catalog/exceptions.json').read_text()) if e['rule'] == 'mark-internal-gap'}
         self.assertEqual(set(registered), {16})

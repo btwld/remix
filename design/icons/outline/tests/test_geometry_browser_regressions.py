@@ -107,7 +107,15 @@ class RestrictionRegression(unittest.TestCase):
 
     def test_exception_metrics_and_geometry_binding(self):
         exceptions=json.loads((ROOT/'catalog/exceptions.json').read_text())
-        self.assertEqual({e['id'] for e in exceptions},{'warning-gap-12','warning-gap-16','warning-gap-24','warning-filled-punctuation-16','warning-filled-punctuation-24','warning-stem-dot-gap-16'})
+        self.assertEqual({e['id'] for e in exceptions},{'warning-stem-dot-gap-16'})
+        # The register is active-only: cells may name active records and nothing else.
+        active={e['id'] for e in exceptions}
+        cells={(int(n),a):cell['exceptionIds'] for n,appearances in self.record['sizes'].items() for a,cell in appearances.items()}
+        self.assertEqual({i for ids in cells.values() for i in ids},active)
+        warning=next(i for i in self.catalog['icons'] if i['id']=='warning')
+        self.assertEqual(set(warning['review']['exceptions']),active)
+        for (n,a),ids in cells.items():
+            self.assertEqual(sorted(ids),sorted(e['id'] for e in exceptions if (e['nativeSize'],e['appearance'])==(n,a)))
         for exception in exceptions:
             n,a=exception['nativeSize'],exception['appearance']
             # Geometry cannot grant approval: no record may claim an owner or a passed review.
@@ -121,19 +129,16 @@ class RestrictionRegression(unittest.TestCase):
             g=parse_svg((ROOT/f'generated/outline/{a}/{n}/warning.svg').read_text())[2]
             if a=='filled':
                 holes=[Polygon(r) for r in g.interiors]
-                sizes=sorted([(round(h.bounds[2]-h.bounds[0],4),round(h.bounds[3]-h.bounds[1],4)) for h in holes],key=lambda x:x[1])
-                m=exception['punctuation']
-                self.assertEqual(sizes,[(m['dotWidth'],m['dotHeight']),(m['stemWidth'],m['stemHeight'])])
-                self.assertGreaterEqual(m['stemWidth'],exception['target'])
+                actual=min(h.bounds[2]-h.bounds[0] for h in holes)
             else:
                 parts=sorted(list(g.geoms),key=lambda x:x.area,reverse=True)
                 if exception['rule']=='mark-internal-gap':
                     actual=parts[1].distance(parts[2])
-                    self.assertLess(actual,exception['target'])
                 else:
                     actual=min(parts[0].distance(part) for part in parts[1:])
-                    self.assertGreaterEqual(actual,exception['target']-.002)
-                self.assertAlmostEqual(actual,exception['measuredApprox'],delta=.015)
+            self.assertAlmostEqual(actual,exception['measuredApprox'],delta=.015)
+            # A value that reaches its target stops being an exception.
+            self.assertLess(actual,exception['target']-.002)
 
     def test_pilot_artwork_matches_fixture_or_revision_ledger(self):
         original=json.loads((ROOT/'tests/fixtures/pilot1-sha256.json').read_text())

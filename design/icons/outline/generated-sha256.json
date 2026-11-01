@@ -1,8 +1,8 @@
 {
-  "docs/catalog/index.html": "14ef869809212e3a7b5c46d19dc23f3ddaadbed3862c0039b136f5a630fa8166",
+  "docs/catalog/index.html": "2fc404f716eee365afcccba92e06d04e6ce1b9d1270dd7f5d79476cc5b51c5f9",
   "docs/catalog/proof-all.html": "eaba1884920fbbc31dd7024d0c0f2eea57cf1b0c15f4630b8876794c77e101c7",
   "docs/catalog/proof-new.html": "0b8d985f2dd7e6543104a89a1acd1eaaa515d092129757a4d178d7766a705444",
-  "docs/usage-restrictions.md": "d81e66e3ed6973839d587aa0d40405c70dc9108acbeaa2d29436366c512a66e0",
+  "docs/usage-restrictions.md": "b089e52e181009cb6bed987f6edb85bc52900dfa3cab780ca45a04ab4e2c292b",
   "generated/inventory.csv": "cf46038362665cbcb56e98ad7b4b7cb2725cadd903a60324f4b84f9d9cd250b8",
   "generated/inventory.json": "53e4d746e29a4dbcf4b93ecf1abb51b840ad2021b50540dbc06ac6a83aec367c",
   "generated/outline/filled/12/arrow-down.svg": "bc3bb7c7edbb5f64ea9d5549748cfce5f9d84c52ecf4086c6ee3ff9473725e6a",
@@ -353,6 +353,6 @@
   "packages/web/index.mjs": "f0a6eccb9d3dc6d673bdf8faa5ef6ca2eac01f0398723eea1235647802d5f938",
   "packages/web/package.json": "1d7dc9b4ac6eb62615d4f2d6302bb5fe7964dceeb64ac07c4ab618d191399de8",
   "packages/web/render.mjs": "89f3746cd1127abd84e8b7a0bb56bdb5ef40ae172d1f22b21501b2038b737599",
-  "packages/web/usage-data.mjs": "bdc4fac65ac16388415d03e7aaa9e8dbd76dfed1fa6d3bd05da97a7e7ef6c888",
+  "packages/web/usage-data.mjs": "5bbbed3a0e38d3f26c0aa0089079e8b777c1547cbdbd5c0a0298e65c12a228af",
   "packages/web/usage.mjs": "cc7984d75c694384b3040438a0d37cab9596693d99de8db21e8cd1425e0a3205"
 }
