@@ -33,7 +33,7 @@ The 16 px outline stem-to-dot gap is a recorded exception: a 1.5 px gap would le
 
 These are 2026-11-01 local design judgments between prototypes compared at native size. None is a recognition result.
 
-- **Link:** two open hooks on one 45° axis, each returning into the other's mouth. Closed interlocked rings read literally at 24 px but filled in at 12 px, and a staggered horizontal pair read as an S. Open strokes keep one topology at every master and no counter that can vanish.
+- **Link:** two open hooks on one 45° axis, each returning into the other's mouth. Closed interlocked rings read literally at 24 px but filled in at 12 px, and a staggered horizontal pair read as an S. Open strokes keep one topology at every master and no counter that can vanish. Filled 24 px uses the heavier 3 px token because 2.5 px barely separated it from the 2 px outline; its two ends are drawn back 0.35 px to hold the 2 px hook gap. Filled 12/16 px stay at 1.5/2 px.
 - **Calendar:** a header rail at contour weight, with one off-center date at 16/24 px. Two date marks read as eyes under the bindings. The 12 px master keeps only the frame, bindings and rail. The cut corner is removed here because it competed with the rail; it stays on Copy, Lock, Folder and Trash.
 - **Terminal:** a square window with an open prompt and a cursor at every master, so the frame does not repeat File's clipped corner and the prompt does not close into a play triangle.
 - **File:** two unequal left-aligned lines at 24 px, because a single centered bar has the form of a file-minus. 12/16 px stay plain.

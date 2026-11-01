@@ -299,11 +299,13 @@ def draw(name,n,style):
     if name=='link':
         # Two open hooks on one 45° axis, each returning into the other's mouth.
         # Open strokes keep the same two-part topology at every size, so no
-        # closed counter can fill in at 12 px.
+        # closed counter can fill in at 12 px. Filled 24 px takes the heavier 3 px
+        # token so selection stays visible, with its two ends drawn back to hold the
+        # 2 px gap. 12/16 px keep lighter strokes, which would otherwise clog.
         hook=line({12:[(5.5,7),(6.5,8),(10.5,4),(10.5,2.5),(9.5,1.5),(8,1.5),(7,2.5)],
                    16:[(7.75,9.75),(9,11),(13.75,6.25),(13.75,3.75),(12.25,2.25),(10.25,2.25),(9,3.5)],
-                   24:[(11.5,14.5),(13,16),(21,8),(21,5),(19,3),(16,3),(13.25,5.75)]}[n],
-                  w if outlined else {12:1.5,16:2,24:2.5}[n])
+                   24:[(11.5,14.5),(13,16),(21,8),(21,5),(19,3),(16,3),(13.25,5.75)] if outlined else [(11.75,14.75),(13,16),(21,8),(21,5),(19,3),(16,3),(13.5,5.5)]}[n],
+                  w if outlined else {12:1.5,16:2,24:3}[n])
         return U(hook,affinity.rotate(hook,180,origin=(c,c)))
     if name=='chart':
         widths={12:(1,2),16:(1.5,3),24:(2,4)}[n]

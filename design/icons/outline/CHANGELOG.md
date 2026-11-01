@@ -9,6 +9,8 @@ Owner-authorized local corrections after the 2026-11-01 shape reviews. No versio
 - File: use two unequal left-aligned lines at 24 px instead of one centered bar.
 - Help: give the 16 px hook a short stem centered over the dot.
 - Small-master grid: record one odd-width policy and apply it to Pause, Chat, Lock, Menu, More, Chart, Search, Refresh, the arrows, Download, Upload, Arrow up right, Folder, Home, User, Copy and Bell. See `docs/optical-sizing.md`.
+- Link: raise the filled 24 px stroke to the heavier 3 px token, drawing its two ends back to hold the 2 px hook gap.
+- README: stop leading with the historical pilot capture, and label its age where it is linked.
 - Tests: add measured geometry and raster regressions, and pin revisions in a hash ledger while the original fixtures stay immutable.
 
 # 0.5.0-pilot.2 — Audit patch

@@ -86,6 +86,11 @@ class LedgerScope(unittest.TestCase):
         ledger = json.loads((ROOT / 'tests/fixtures/shape-revision-2026-11-01.json').read_text())['files']
         self.assertEqual({path.rsplit('/', 1)[1][:-4] for path in ledger}, LEDGER_CONCEPTS)
 
+    def test_readme_does_not_embed_the_historical_capture(self):
+        readme = (ROOT / 'README.md').read_text()
+        self.assertNotRegex(readme, r'!\[[^\]]*\]\(review/')
+        self.assertIn('historical capture', readme)
+
     def test_inventory_is_not_expanded(self):
         self.assertEqual(len(REG), 48)
         for icon in REG:
@@ -203,12 +208,26 @@ class LinkChain(unittest.TestCase):
                     self.assertLess(g.symmetric_difference(affinity.rotate(g, 180, origin=(n / 2, n / 2))).area, .01)
 
     def test_hooks_never_nearly_touch(self):
-        minimum = {'outline': GAP, 'filled': {12: .9, 16: 1.1, 24: 1.5}}
+        minimum = {'outline': GAP, 'filled': {12: .9, 16: 1.1, 24: GAP[24]}}
         for n in MASTERS:
             for style in STYLES:
                 a, b = polygons(geometry('link', style, n))
                 with self.subTest(master=n, style=style):
                     self.assertGreaterEqual(a.distance(b), minimum[style][n] - .002)
+
+    def test_filled_24_is_visibly_heavier_than_outline(self):
+        ratio = geometry('link', 'filled', 24).area / geometry('link', 'outline', 24).area
+        self.assertGreaterEqual(ratio, 1.4)
+
+    def test_filled_24_mouth_stays_open(self):
+        # The clear width between one hook's arms, measured at the middle of the link.
+        # 4 px still leaves 2.5 px when the 24 px master is displayed at 15 px.
+        self.assertGreaterEqual(2 * Point(17, 7).distance(geometry('link', 'filled', 24)), 4)
+
+    def test_filled_24_edges_stay_on_the_half_pixel_grid(self):
+        for position, length in axis_edges(geometry('link', 'filled', 24)):
+            if length >= .5:
+                self.assertTrue(on_grid(position, .5), position)
 
     def test_stays_in_the_angular_vocabulary(self):
         for n in MASTERS:

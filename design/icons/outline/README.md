@@ -6,8 +6,6 @@
 
 Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catalog. The HTML embeds its data and artwork; it does not load fonts, libraries, or SVGs from a network. All cards, native pairs, examples, and notes are present without JavaScript. Search, inspector, downloads, and toggles require JavaScript.
 
-![The pilot additions](review/pilot-additions.png)
-
 ## What is finished in this pilot
 
 - 48 icons in `outline` / `filled`, at native 12 / 16 / 24 px.
@@ -127,9 +125,11 @@ packages/web/            ES-module API and isolated imports
 docs/catalog/            self-contained catalog and proof pages
 docs/                    design, accessibility, review, and release instructions
 tests/                   fixtures, geometry, runtime, pixel and browser checks
-review/                  README preview; validation captures are external
+review/                  historical pilot capture, kept as evidence; validation captures are external
 ../../../.github/workflows/vector-ui-icons.yml  maintained pack CI
 ```
+
+[`review/pilot-additions.png`](review/pilot-additions.png) is a historical capture of the 15 pilot additions, taken before the 2026-11-01 shape corrections. It shows older arrows, Refresh and Help, and its header uses the earlier "Angular" name. It is kept as evidence; use the catalog above to judge current artwork.
 
 See [construction rules](docs/construction.md),
 [usage restrictions](docs/usage-restrictions.md), and
