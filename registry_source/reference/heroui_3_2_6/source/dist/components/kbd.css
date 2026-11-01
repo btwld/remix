@@ -1,0 +1,27 @@
+/* Base styles */
+.kbd {
+  @apply inline-flex h-6 items-center space-x-0.5 rounded-lg bg-default px-2 text-center font-sans text-sm font-medium whitespace-nowrap text-muted rtl:space-x-reverse;
+  word-spacing: -0.25rem;
+}
+
+/* Key abbreviation styles */
+.kbd__abbr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+/* Content wrapper */
+.kbd__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Variant styles */
+.kbd--light {
+  @apply bg-transparent;
+}

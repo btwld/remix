@@ -60,8 +60,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.
   `TextArea` is a multiline facade with `minLines: 2`, `maxLines: null`,
-  `expands`/`obscureText` fixed to `false`. Vanilla and Fortal recipes ring
-  the field with `onFocused`, so a click shows the ring. Other controls use
+  `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
+  ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
 - **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but
@@ -91,7 +91,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 ## Layout and dashboard recipes
 
 
-Both presets also ship layout items beyond the core component set:
+Vanilla and Fortal also ship layout items beyond the core component set
+(HeroUI ships none of them):
 
 - **app_bar** — `RemixAppBar`: provides slots for leading widgets, title headings,
   actions, and bottom content. By default, `safeArea` is enabled (`true`). Wrap
@@ -115,8 +116,8 @@ Both presets also ship layout items beyond the core component set:
 
 
 For agent-run surfaces — `activity`, `answer`, `composer`, `execution`,
-`message`, `permission`, `plan`, `transcript` — install either preset's bare
-item, which is unstyled by default, plus the matching `<item>_recipe` for a
+`message`, `permission`, `plan`, `transcript` — install Vanilla's or Fortal's
+bare item (HeroUI ships none), which is unstyled by default, plus the matching `<item>_recipe` for a
 complete, preset-specific styler bundle. Even a bare item is not Remix-only:
 the shared `support` item brings in the preset `theme` and the selected icon library.
 Each agent item also declares its own `mix_annotations` dependency and

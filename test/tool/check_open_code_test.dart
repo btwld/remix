@@ -68,8 +68,8 @@ void main() {
       expect(options.item, isNull);
     });
 
-    test('either preset can select an explicit source', () {
-      for (final preset in ['vanilla', 'fortal']) {
+    test('every preset can select an explicit source', () {
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
             '--preset',
@@ -521,6 +521,78 @@ Future<void> main(List<String> arguments) async {
     expect(checker.fixtureContractProblem(fixture, preset: 'fortal'), isNull);
   });
 
+  group('independent installs', () {
+    test('Vanilla and Fortal install the Agent and dashboard items alone', () {
+      for (final preset in ['vanilla', 'fortal']) {
+        final items = checker.independentInstallsForTest(preset);
+
+        expect(items, hasLength(18), reason: preset);
+        expect(
+          items,
+          containsAll(['activity', 'transcript_recipe', 'dashboard_demo']),
+          reason: preset,
+        );
+      }
+    });
+
+    test('HeroUI installs alone only the items with a multi-item closure', () {
+      // Every fresh `remix init` is one unauthenticated GitHub API request, so
+      // the list stays short: these are the items that depend on another item
+      // besides the theme, and they include every item that uses an icon.
+      expect(
+        checker.independentInstallsForTest('heroui'),
+        unorderedEquals([
+          'avatar_group',
+          'breadcrumbs',
+          'button',
+          'button_group',
+          'checkbox_group',
+          'close_button',
+          'input_group',
+          'radio_group',
+          'search_field',
+          'switch_group',
+          'table',
+          'textarea',
+          'toast',
+          'toggle_button_group',
+        ]),
+      );
+    });
+
+    test('a derived list follows the registry dependencies', () {
+      final root = Directory('${sandbox.path}/repo');
+      final registry = File('${root.path}/registry/heroui/registry.yaml');
+      registry.parent.createSync(recursive: true);
+      registry.writeAsStringSync('''
+schema: 2
+items:
+  theme:
+    files: []
+  solo:
+    registryDependencies:
+      - theme
+    files: []
+  base:
+    files: []
+  composite:
+    registryDependencies:
+      - theme
+      - base
+    files: []
+  uses_composite:
+    registryDependencies:
+      - composite
+    files: []
+''');
+
+      expect(
+        checker.independentInstallsForTest('heroui', repositoryRoot: root),
+        ['composite', 'uses_composite'],
+      );
+    });
+  });
+
   group('registry coverage', () {
     test('the checkout catalog and the checker agree', () {
       expect(checker.registryCoverageProblem(Directory.current), isNull);
@@ -709,6 +781,68 @@ import 'package:flutter/widgets.dart'
     });
   });
 
+  test(
+    'Vanilla and HeroUI require their delivered fonts in a full install',
+    () {
+      expect(
+        checker.requiredRuntimeDependenciesForTest('vanilla'),
+        contains('remix_ui_fonts'),
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('heroui'),
+        contains('remix_ui_fonts'),
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('fortal'),
+        isNot(contains('remix_ui_fonts')),
+      );
+    },
+  );
+
+  test(
+    'HeroUI has its own small fixture, catalog, and dependency contract',
+    () {
+      expect(
+        checker.fixtureContractProblem(
+          Directory('open_code/heroui_fixture'),
+          preset: 'heroui',
+        ),
+        isNull,
+      );
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'heroui'),
+        isNull,
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('heroui'),
+        unorderedEquals([
+          'remix',
+          'mix_annotations',
+          'remix_ui_fonts',
+          'remix_ui_icons',
+        ]),
+      );
+      final app = Directory('${sandbox.path}/heroui');
+      _writeInstalledUi(app, preset: 'heroui');
+      expect(checker.installedUiProblem(app, preset: 'heroui'), isNull);
+      File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
+      expect(
+        checker.installedUiProblem(app, preset: 'heroui'),
+        contains('unnecessary'),
+      );
+      expect(
+        checker.parseConsumerCheckOptions([
+          '--preset',
+          'heroui',
+          '--source',
+          'checkout',
+          '--item',
+          'dashboard_demo',
+        ]),
+        isNull,
+      );
+    },
+  );
   group('icon packages follow the registry under test', () {
     // registry-stable as promoted before schema 2: every icon in both
     // libraries, remix_ui_icons floored at 0.1.0, and no Lucide fallback.
@@ -762,7 +896,7 @@ icons:
     });
 
     test('a schema 1 stable registry needs no Lucide and the hosted icons', () {
-      for (final preset in ['vanilla', 'fortal']) {
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
         final contract = checker.iconContractForTest(preset, stable);
         expect(contract.runtime, contains('remix_ui_icons'));
         expect(contract.runtime, isNot(contains('lucide_flutter')));
@@ -774,7 +908,7 @@ icons:
     });
 
     test('the candidate registry adds Lucide and the checkout icons', () {
-      for (final preset in ['vanilla', 'fortal']) {
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
         final contract = checker.iconContractForTest(preset, candidate);
         expect(
           contract.runtime,
@@ -816,17 +950,6 @@ icons:
     });
   });
 
-  test('only Vanilla requires the fonts package in an installed app', () {
-    expect(
-      checker.requiredRuntimeDependenciesForTest('vanilla'),
-      contains('remix_ui_fonts'),
-    );
-    expect(
-      checker.requiredRuntimeDependenciesForTest('fortal'),
-      isNot(contains('remix_ui_fonts')),
-    );
-  });
-
   test('retained failure reporting includes the temporary directory', () {
     expect(
       checker.retainedFailureMessage(sandbox, StateError('synthetic failure')),
@@ -866,7 +989,8 @@ dev_dependencies:
 void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
   final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
-  File('${app.path}/build.yaml').writeAsStringSync('''targets:
+  if (preset != 'heroui') {
+    File('${app.path}/build.yaml').writeAsStringSync('''targets:
   \$default:
     builders:
       mix_generator:spec_styler_generator:
@@ -881,6 +1005,7 @@ void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
           - lib/ui/components/plan.dart
           - lib/ui/components/transcript.dart
 ''');
+  }
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);

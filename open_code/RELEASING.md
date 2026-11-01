@@ -5,6 +5,12 @@ checkout version numbers. Runtime package publication, registry publication,
 and CLI publication have separate gates. Publishing tags/releases is a release
 operator action, not something the builder performs.
 
+When adding a preset, follow [Adding a first-party preset](ADDING_PRESETS.md).
+Extend both the aggregate hosted checks and the explicit remote-candidate smoke
+commands in `.github/workflows/registry.yml`, plus the examples below. Normal
+CI coverage does not establish that the promotion workflow smoke-tests a new
+preset. The commands here cover all currently implemented presets.
+
 ## Validate the candidate
 
 With the pinned Flutter 3.44.0 SDK (`icons` and `cli-windows` are CI-only):
@@ -27,7 +33,7 @@ content on GitHub. This is not a local-registry feature of the shipped CLI.
 Confirm every hosted dependency floor exists on pub.dev. Runtime releases use
 the existing package publishing workflows. Remix uses `v<version>` for pub.dev
 and `remix-v<version>` for Melos history. Runtime version preparation updates
-the remote catalog floor and regenerates both remote presets.
+the remote catalog floor and regenerates all affected remote presets.
 
 Validate against hosted runtimes, without checkout substitution:
 
@@ -38,7 +44,7 @@ fvm dart run melos run open-code:release:check
 ## Publish the registry before the GitHub-first CLI
 
 Merge the reviewed commit to `main`. **Promote registry** validates
-generation drift, dependency constraints, CLI compatibility, and both
+generation drift, dependency constraints, CLI compatibility, and all supported
 presets against hosted runtimes. It smoke-tests that commit, then
 fast-forwards `registry-stable`. A hand-started run promotes only when it
 is executing `main`.
@@ -67,6 +73,7 @@ with hosted dependencies for both presets:
 ```shell
 REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted
 REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset fortal --source hosted
+REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset heroui --source hosted
 ```
 
 Normal component changes require only that promotion. The same CLI installs
@@ -81,7 +88,7 @@ package release workflow; do not infer a new CLI version from a registry
 version.
 
 The CLI publish workflow requires `registry-stable` to resolve and runs
-both consumer presets against its GitHub content with hosted runtime packages.
+all supported consumer presets against its GitHub content with hosted runtime packages.
 A missing `registry-stable` branch must fail; there is no local content to
 substitute, and nothing may be added to bypass the bootstrap order.
 
@@ -95,7 +102,15 @@ After publication, verify the exact hosted CLI:
 ```shell
 fvm dart run tool/check_open_code.dart --source hosted --hosted-cli
 fvm dart run tool/check_open_code.dart --preset fortal --source hosted --hosted-cli
+fvm dart run tool/check_open_code.dart --preset heroui --source hosted --hosted-cli
 ```
+
+Every item a preset installs alone starts a fresh `remix init`, and an `init`
+that resolves the registry by branch name makes one unauthenticated GitHub API
+request; GitHub allows 60 an hour. The three presets' commands together use
+most of that, so keep each preset's list of independently installed items
+short. HeroUI's is derived from its registry: the items that depend on an item
+besides the theme.
 
 ## Rollback and migration
 

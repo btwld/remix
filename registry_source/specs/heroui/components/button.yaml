@@ -1,0 +1,41 @@
+component: Button
+widget: HeroUiButton, HeroUiIconButton
+target: RemixButton, RemixIconButton
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/button.css, dist/utilities/index.css]
+anatomy: [container, label, leading icon, trailing icon, spinner]
+variants: [primary, secondary, tertiary, outline, ghost, danger, danger-soft (dangerSoft)]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest, hover, pressed, focus-visible, disabled, loading]
+tokens:
+  - accent, accent-hover, accent-foreground (primary)
+  - default, default-hover, accent-soft-foreground (secondary), foreground (tertiary)
+  - default, default-foreground, border (outline; ghost without the border)
+  - danger, danger-hover, danger-foreground; danger-soft, danger-soft-hover, danger-soft-foreground
+  - radius-3xl, text-sm, text-base, focus (ring), disabled-opacity
+measurements:
+  - {what: height, value: "sm 36, md 40, lg 44; from 768px 32, 36, 40", cite: "button-primary-sm, -md, -lg at 375 and 1024"}
+  - {what: horizontal padding, value: "sm 12, md and lg 16", cite: "button-primary-sm, button-primary-md"}
+  - {what: radius, value: 24, cite: button-primary-md}
+  - {what: label, value: "14/20 medium; lg 16/24", cite: "button-primary-md, button-primary-lg"}
+  - {what: icon size, value: "20 below 640px, 16 from 640px; sm is always 16", cite: "button.css svg rule; button-leading minus button-primary-md is 24 at 375 and 20 at 1024"}
+  - {what: label to icon distance, value: 4, cite: "gap-2 less the icon's -mx-0.5 on both sides; button-leading minus button-primary-md is icon + 4"}
+  - {what: outline border, value: "1px border token; adds 2 to the width", cite: "button-outline-md, button-group-outline-md-horizontal-first"}
+  - {what: outline hover, value: "default at 60%", cite: "button-group-outline-md-horizontal-first-hover (light and dark)"}
+  - {what: hover and touch-press fills, value: "--button-bg-hover and --button-bg-pressed per variant; ghost and outline press to the full default", cite: "button.css .button--<variant> rules"}
+  - {what: pointer press, value: "keeps the hover fill and scales", cite: "button.css declares :hover after :active; button-group-outline-md-horizontal-first-pressed"}
+  - {what: pressed scale, value: "sm .98, md .97, lg .96", cite: "button.css :active rules"}
+  - {what: disabled and pending opacity, value: 0.5, cite: "button-disabled, button-pending"}
+  - {what: focus ring, value: "box-shadow 0 0 0 2px background, then 0 0 0 4px focus: a 2px background gap and a 2px ring, no size change", cite: "button-group-outline-md-horizontal-first-focus (light and dark)"}
+  - {what: icon-only, value: "square at the button height; same fills, hover, press, focus, disabled, and pending as the text button", cite: "button-icon: 36 at 1024, 40 at 375; button-primary-md for the colours"}
+approximations:
+  - Mix applies one animation per state. The fill fades over 100ms at rest and 250ms (ease) while pressed; CSS times the transform at 250ms and the fill at 100ms, so the scale returns over 100ms.
+  - The icon's -mx-0.5 becomes a 4px label spacing, which keeps the width and puts the icon 2px further from the edge than upstream.
+  - HeroUI's pending state is Remix loading. The button dims to 0.5 as upstream does, but Remix replaces the content with its spinner (an sm spinner in the foreground colour); HeroUI leaves the content to the app.
+  - Heights are onBreakpoint fragments (a caller height is ignored from 768px); a caller overriding height or size on wide screens supplies an onBreakpoint fragment of its own.
+  - "`tertiary` keeps `--button-fg: currentColor`, i.e. it inherits the parent's text colour; the recipe uses the `foreground` token."
+  - Icon-only is HeroUiIconButton over RemixIconButton, with the same variants and sizes; Remix keeps icon buttons separate from text buttons.
+  - Form submission and type belong to the app; Remix has no submit button.
+  - "Long labels ellipsize within the space left after icons. This deliberately differs from upstream nowrap overflow: the mobile overflow gate takes priority, while fixed button heights, the full accessible name, and loading geometry remain intact."

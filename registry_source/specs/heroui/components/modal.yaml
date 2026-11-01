@@ -1,0 +1,33 @@
+component: Modal
+widget: HeroUiModal
+target: RemixDialog
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/modal.css]
+anatomy: [container, dialog, heading, body, footer]
+variants: []
+sizes: {supported: [xs, sm, md, lg, cover, full], default: md}
+states: [closed, open]
+tokens:
+  - overlay and overlay shadow (dialog), radius-panel
+  - foreground (heading), muted (body)
+  - backdrop (route barrier, passed by the caller)
+  - text-base, text-sm
+measurements:
+  - {what: dialog, value: "padding 24, radius 24, overlay fill and overlay shadow; 448 x 162 around a one-line body at 1024", cite: "modal-md-auto-dialog"}
+  - {what: widths, value: "320, 384, 448, 512", cite: "modal-xs-auto-dialog, modal-sm-auto-dialog, modal-md-auto-dialog, modal-lg-auto-dialog"}
+  - {what: default, value: "size md, placement auto", cite: "modal-md-auto-dialog"}
+  - {what: width at 375, value: "343 (viewport less 2 x 16), 320 centered for xs", cite: "modal-md-auto-dialog, modal-xs-auto-dialog (375)"}
+  - {what: cover, value: "viewport less 2 x 40: 944 x 688 at 1024, 343 x 736 at 375", cite: "modal-cover-auto-dialog"}
+  - {what: full, value: "the viewport, radius 0, no shadow", cite: "modal-full-auto-dialog"}
+  - {what: placement, value: "auto is bottom below sm and centered from sm; top, center, bottom", cite: "modal-md-auto-dialog, modal-md-top-dialog, modal-md-center-dialog, modal-md-bottom-dialog"}
+  - {what: heading, value: "16/24 medium, foreground", cite: "modal-md-auto-heading"}
+  - {what: body, value: "14/20, muted; the body box has p-[3px], so the text sits 11px below the heading and 23px above the footer", cite: "modal-md-auto-body"}
+  - {what: footer, value: "gap 8, 20 above the body, buttons 36 high at 1024 and 40 at 375", cite: "modal-md-auto-footer"}
+  - {what: backdrop, value: "black at 0.5 in light, 0.6 in dark", cite: "modal-md-auto-backdrop"}
+approximations:
+  - The backdrop is the dialog route's barrier: pass `HeroUiTokens.backdrop` as `barrierColor`. Blur (`modal-backdrop-blur-backdrop`, `backdrop-filter`) and the transparent backdrop are not mapped.
+  - Alert dialogs use the same recipe inside `showRemixAlertDialog`; HeroUI's drawer has no CSS in the pinned set and is not mapped.
+  - The header icon (`modal-md-icon-icon`), the 24 x 24 close trigger (`modal-md-auto-close`), and the scroll modes are the app's composition or RemixDialog's own `scrollable`.
+  - The 250ms enter and 100ms exit zoom and slide are the route's transition, not reproduced.

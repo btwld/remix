@@ -1,0 +1,35 @@
+component: RadioGroup
+widget: HeroUiRadioGroup, HeroUiRadioOption
+target: RemixRadioGroup, RemixRadio
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/radio-group.css, dist/components/radio.css, dist/components/label.css, dist/components/field-error.css]
+anatomy: [label, options, option label, option description, group description, group error]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, selected, invalid, disabled]
+tokens:
+  - the radio's tokens (see radio.yaml)
+  - foreground, muted (labels, descriptions), danger (invalid labels and error)
+measurements:
+  - {what: option row, value: "control 16, gap 12", cite: radio-primary-vertical-rest-a-content}
+  - {what: option label, value: "14/20 medium", cite: radio-primary-vertical-rest-a-label}
+  - {what: option description, value: "12/16 muted, indented 28 (control + gap)", cite: radio-primary-vertical-rest-a-description}
+  - {what: option, value: "row, gap 4, description: 40 high", cite: radio-primary-vertical-rest-a}
+  - {what: vertical group, value: "204 = label 20 + 3 x (16 + 40) + description 16", cite: radio-primary-vertical-rest}
+  - {what: horizontal group, value: "one wrapping row, gap 16, label and description inline", cite: radio-primary-horizontal-rest}
+  - {what: invalid group, value: "220 = the 204 above + an error line of 16; the description stays", cite: radio-primary-vertical-invalid}
+  - {what: invalid option label, value: danger, cite: radio-primary-vertical-invalid-a-label}
+  - {what: invalid option description, value: "unchanged, muted", cite: radio-primary-vertical-invalid-a-description}
+  - {what: group error, value: "12/16 danger with a 4px inset, after the description", cite: "field-error.css; search-primary-intrinsic-invalid-error"}
+  - {what: disabled option control, value: 0.5, cite: radio-primary-vertical-disabled-a}
+  - {what: disabled option label, value: "0.5 again", cite: radio-primary-vertical-disabled-a-label}
+  - {what: disabled option description, value: "0.5 again", cite: radio-primary-vertical-disabled-a-description}
+approximations:
+  - "`HeroUiRadioGroup` renders each option as the radio, a 12px gap, and plain text, because `RemixRadio` has no label and a composition may not add gestures. The label is not a tap target; the control is."
+  - A `label` and `labelSpacing` on `RemixRadio`, as `RemixCheckbox` has, would let a tap on the label select. It passes the ADR 0002 tests (not expressible by composition, useful to every preset, additive) and is not built here.
+  - "While invalid, `errorText` shows after `helperText`, which stays: `radio-group.css` has no rule hiding the description, unlike `textfield.css`."
+  - The required asterisk (`label--required`) is the app's, in the label text.
+  - Without a group label, the first option has no top margin; the CSS gives every radio `mt-4`.
+  - Keyboard behavior is `RemixRadioGroup`'s.

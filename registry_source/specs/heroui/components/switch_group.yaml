@@ -1,0 +1,31 @@
+component: SwitchGroup
+widget: HeroUiSwitchGroup, HeroUiSwitchOption
+target: RemixSwitch
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/switch-group.css, dist/components/switch.css, dist/components/label.css]
+anatomy: [label, switches, switch label, switch description]
+variants: []
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest, selected, invalid, disabled]
+tokens:
+  - the switch's tokens (see switch.yaml)
+  - foreground, muted (labels, descriptions), danger (invalid labels)
+measurements:
+  - {what: switch row, value: "track, gap 12", cite: switch-group-vertical-a-content}
+  - {what: switch label, value: "14/20 medium", cite: switch-group-vertical-a-label}
+  - {what: description, value: "12/16 muted, indented track width + 12 (52 at md)", cite: switch-group-vertical-a-description}
+  - {what: switch, value: "row, gap 4, description: 40 high", cite: switch-group-vertical-a}
+  - {what: vertical group, value: "132 = label 20 + 2 x (16 + 40)", cite: switch-group-vertical}
+  - {what: horizontal group, value: "one row, gap 16, label inline", cite: switch-group-horizontal}
+  - {what: invalid label, value: "danger; the track, thumb, and description are unchanged", cite: "switch-md-invalid-label, switch-md-invalid-control, switch-md-invalid-thumb, switch-md-invalid-selected-label"}
+  - {what: disabled track, value: 0.5, cite: switch-md-disabled}
+  - {what: disabled label, value: "0.5 again", cite: switch-md-disabled-label}
+  - {what: disabled description, value: "0.5 again", cite: switch-md-disabled-description}
+approximations:
+  - "`HeroUiSwitchGroup` renders each switch as `RemixSwitch`, a 12px gap, and plain text, because `RemixSwitch` has no label and a composition may not add gestures. The label is not a tap target; the control is. A `label` on `RemixSwitch` would be the Remix API to propose."
+  - "`HeroUiSwitchOption.invalid` turns that switch's label danger, as `[data-invalid] .label`. `switch-md-invalid-error`, the muted FieldError line under the row, is not offered: an app passes the message as the description."
+  - The required asterisk (`label--required`) is the app's, in the label text.
+  - Each switch keeps its own value and callback; the group coordinates nothing.
+  - A horizontal group wraps where the CSS row would shrink its items.

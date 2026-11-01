@@ -1,0 +1,28 @@
+component: ButtonGroup
+widget: HeroUiButtonGroup
+target: composition over RemixButton
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/button-group.css, dist/components/button.css]
+anatomy: [group, buttons]
+variants: [primary, secondary, tertiary, outline, ghost, danger, dangerSoft]
+sizes: {supported: [sm, md, lg], default: md}
+states: [rest, focus-visible]
+tokens:
+  - "the button tokens (see button.yaml)"
+  - radius-3xl
+measurements:
+  - {what: corners, value: "outer corners 24, joints square", cite: "button-group-primary-md-horizontal-first (24 0 0 24), -last (0 24 24 0); vertical -first (24 24 0 0), -last (0 0 24 24)"}
+  - {what: joints, value: "no gap; the group is the sum of its buttons", cite: "button-group-primary-md-horizontal (121.42 = 61.25 + 60.17)"}
+  - {what: outline joints, value: "shared borders dropped", cite: "button-group-outline-md-horizontal-first (no right), -last (no left)"}
+  - {what: pressed scale, value: none, cite: "button-group.css transform: none"}
+  - {what: full width, value: "buttons share the width equally", cite: "button-group-fullwidth (140 + 140)"}
+  - {what: hover, pressed, and focus, value: "the button's own fills and ring, in group", cite: "button-group-outline-md-horizontal-first-hover, -pressed, -focus (light and dark)"}
+approximations:
+  - "Builders, not data items: each receives the button style for the group's variant and size plus its position and returns a RemixButton, so every RemixButton parameter (icons, loading, focus node, semantics) stays available. HeroUI clones its children instead; a child's own recipe would beat the group's corners and pressed scale."
+  - "The group cannot raise the focused button above its neighbours (button-group.css z-10), so the outer focus ring can be partly covered by the next button."
+  - "Buttons keep their fractional text widths (`121.42 = 61.25 + 60.17`), and Flutter antialiases each button's edge on its own, so a joint can show a faint 1px seam in a filled variant. Chromium snaps box edges to device pixels. Overlapping or snapping the buttons would need negative spacing or measurement, which the recipe does not add."
+  - ButtonGroup.Separator (a 1px divider at 15% of the label colour) is not drawn.
+  - Group-level isDisabled is not carried; disable the buttons.
+  - "Horizontal buttons may shrink with a loose flex fit even without fullWidth, allowing their single-line labels to ellipsize within a narrow group. Full-width groups retain equal expanded shares."

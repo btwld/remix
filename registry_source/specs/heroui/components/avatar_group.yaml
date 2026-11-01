@@ -1,0 +1,23 @@
+component: AvatarGroup
+widget: HeroUiAvatarGroup
+target: composition over HeroUiAvatar
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/avatar-group.css]
+anatomy: [group, avatars]
+variants: [clip, ring]
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - background (the ring)
+measurements:
+  - {what: overlap, value: "8px whatever the avatar size, so three avatars span 80, 104, 128", cite: "avatar-group-ring-sm, -md, -lg and avatar-group-clip-*; avatar-group.css margin-inline-start"}
+  - {what: ring, value: "2px background-colour ring on every avatar", cite: avatar-group-ring-md-0}
+  - {what: clip, value: "a circle centred 100% + size/2 - 8 with radius size/2 + 2, from the avatar's own size, removed from every avatar but the last", cite: "avatar-group.css .avatar-group--clip (--avatar-group-cut-center, --avatar-group-cut-radius)"}
+  - {what: grid gap, value: 12, cite: avatar-group-grid}
+approximations:
+  - Children are HeroUiAvatars, as HeroUI's group accepts avatars only, and the group has no size: each avatar's own size (heroUiAvatarDimension) sets how much of it the next one covers. A count is one more avatar labelled "+3" in place of HeroUI's max.
+  - The ring paints a background-coloured shadow under each avatar, where CSS box-shadow draws outside the box only. The two agree for opaque default avatars; with translucent soft avatars a neighbour no longer shows through the overlap.
+  - The clip variant's optical nudge on the fallback glyph (padding-inline-end of 0.35 x overlap) is not reproduced.
+  - The default overlap is clip, as upstream.

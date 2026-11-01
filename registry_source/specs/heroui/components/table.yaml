@@ -1,0 +1,41 @@
+component: Table
+widget: HeroUiTable
+target: RemixDataTable
+composes: [checkbox, select]
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6"
+  pages: [dist/components/table.css]
+anatomy: [frame, header, row, cell, sort indicator, footer]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, row hover, row selected, sortable header hover]
+tokens:
+  - surface-secondary (frame and header), surface (cells), default (secondary row hover)
+  - separator-tertiary at 50% (cell rules)
+  - surface at 40% (row hover), surface at 10% (row selected), default at 50% (secondary row hover)
+  - muted (header), foreground (cells, sortable header hover)
+  - radius-lg (frame), radius-2xl (secondary header card)
+  - text-xs, text-sm
+measurements:
+  - {what: primary frame, value: "976 wide, 264 high with the footer; padding 0/4/4/4, radius 20, surface-secondary fill", cite: "table-primary-root"}
+  - {what: secondary table, value: "976 wide, 260 high with the footer, no frame fill", cite: "table-secondary-root"}
+  - {what: header cell, value: "36 high, padding 16 x 10, 12/16 medium, muted", cite: "table-primary-column-start"}
+  - {what: header fill, value: surface-secondary, cite: "table-primary-header, table-secondary-column-start"}
+  - {what: body cell, value: "45 high: padding 16 x 12, a 20px line and a 1px rule, 14/20 foreground", cite: "table-primary-cell-mid, table-primary-row-first, table-primary-row-last"}
+  - {what: cell fill, value: "surface (primary); none (secondary)", cite: "table-primary-cell-mid, table-secondary-cell-mid"}
+  - {what: cell rule, value: "1px separator-tertiary at 50%, the last row's included", cite: "table-primary-cell-mid"}
+  - {what: row hover, value: "primary surface at 40%, secondary default at 50%", cite: "table-primary-hover-cell, table-secondary-hover-cell"}
+  - {what: row selected, value: "surface at 10%; hover wins when both apply", cite: "table-primary-select-cell-selected, table-primary-select-hover-cell, table-secondary-select-cell-selected"}
+  - {what: sortable header hover, value: label turns foreground, cite: "table-primary-column-sort, table-primary-hover-column-sort"}
+  - {what: sort indicator, value: 12, cite: "table-primary-sort-indicator"}
+  - {what: footer, value: "44 high: padding 16 x 10 around a 24px line", cite: "table-primary-footer"}
+  - {what: selectable rows, value: "the checkbox does not change the 36 and 45 heights", cite: "table-primary-select-column-start, table-primary-select-row-first"}
+approximations:
+  - "The header and row bottom rules do not paint upstream: `.table__content` is `border-separate`, which ignores row-group and row borders (`table-primary-header` reports a border that is never drawn). Only the cells' own rule paints, and the recipe draws only that."
+  - "Corners: for primary, the clip is the frame's 20px corner with 4px of bottom padding, so the body card's top and bottom corners are square (upstream: 16px, `table-primary-cell-bottom-start`). Remix paints rows cell by cell, so a row radius would round every cell, not only the outer ones. For secondary, the clip rounds all four corners at 16, where upstream rounds only the header cells' outer corners (`table-secondary-column-start`) and leaves the body square."
+  - "The sort indicator sits right after the header label; upstream's `.table__sortable-column-header` is `justify-between`, which pins it to the column's end (`table-primary-sort-indicator`). Remix lays the label and icon out as a shrink-wrapped row."
+  - The short vertical column separators (`::after`, `table-primary-column-start-separator`) are not drawn.
+  - Row and cell focus rings (inset shadows) and the drag, tree, resizer, and load-more parts are not mapped.
+  - The composed selection checkbox and page-size select take their HeroUI recipes; the page buttons stay Remix's until an icon-button recipe is composed in.
+  - The footer's height follows the composed paging controls, so it matches the 44px only as far as they do.

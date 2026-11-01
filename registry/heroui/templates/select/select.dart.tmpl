@@ -1,0 +1,130 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'select.g.dart';
+
+/// HeroUI select variants: `primary` on the field surface with its shadow,
+/// `secondary` on the default fill.
+enum {{typePrefix}}SelectVariant { primary, secondary }
+
+/// HeroUI recipe for [RemixSelect]: a field trigger over an overlay list.
+///
+/// [invalid] paints the error treatment; validation stays with the app.
+@MixWidget(target: RemixSelect.new)
+SelectStyler {{valuePrefix}}SelectStyle({
+  {{typePrefix}}SelectVariant variant = .primary,
+  bool invalid = false,
+  SelectStyler style = const SelectStyler.create(),
+}) => SelectStyler()
+    .trigger(_trigger(variant, invalid: invalid))
+    .content(_content)
+    .menuContainer(
+      FlexBoxStyler().padding(.all(_listPadding)).spacing(_listGap),
+    )
+    .item(_item)
+    .merge(style);
+
+SelectTriggerStyler _trigger(
+  {{typePrefix}}SelectVariant variant, {
+  required bool invalid,
+}) {
+  final field = switch (variant) {
+    .primary => {{valuePrefix}}PrimaryFieldFill,
+    .secondary => {{valuePrefix}}SecondaryFieldFill,
+  };
+
+  var result = SelectTriggerStyler()
+      .direction(.horizontal)
+      .minHeight(_minHeight)
+      .padding(.fromLTRB(_paddingX, _paddingY, _indicatorEnd, _paddingY))
+      .spacing(_valueGap)
+      .borderRadius(.all({{typePrefix}}Tokens.radiusField()))
+      .color(field.rest())
+      .label({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldForeground))
+      .placeholder({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldPlaceholder))
+      .indicator(.size(_indicator).color({{typePrefix}}Tokens.fieldPlaceholder()))
+      .onHovered(.color(field.hover()))
+      .onFocusVisible(
+        SelectTriggerStyler()
+            .color(field.focus())
+            .containerEffects({{valuePrefix}}FocusRing()),
+      )
+      .onDisabled(
+        SelectTriggerStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      )
+      .animate({{typePrefix}}Tokens.smoothMotion);
+
+  if (variant == .primary) {
+    result = result.containerEffects({{valuePrefix}}SurfaceEffects());
+  }
+  if (invalid) {
+    result = result
+        .color(field.focus())
+        .containerEffects({{valuePrefix}}InvalidRing())
+        .onFocusVisible(.containerEffects({{valuePrefix}}InvalidRing(focused: true)));
+  }
+  return result;
+}
+
+/// `.select__popover`: `bg-overlay`, `min(32px, var(--radius-3xl))`.
+final _content = SelectContentStyler()
+    .color({{typePrefix}}Tokens.overlay())
+    .borderRadius(.all({{typePrefix}}Tokens.radiusPanel()))
+    .containerEffects({{valuePrefix}}SurfaceEffects(overlay: true));
+
+/// `.list-box-item` inside the select popover (`px-2.5`). A transparent
+/// ring-width border is always present so keyboard focus recolors it in place.
+final _item = SelectMenuItemStyler()
+    .minHeight(_minHeight)
+    .padding(.horizontal({{valuePrefix}}InsideRing(_itemPaddingX)))
+    .padding(.vertical({{valuePrefix}}InsideRing(_itemPaddingY)))
+    .border({{valuePrefix}}RingBorder())
+    .spacing(_itemGap)
+    .borderRadius(.all({{typePrefix}}Tokens.radius2xl()))
+    .text(.style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.foreground()))
+    // The selected check mark: `text-default-foreground`.
+    .icon(.size(_itemMark).color({{typePrefix}}Tokens.defaultForeground()))
+    .onHovered(.color({{typePrefix}}Tokens.defaultColor()))
+    .onPressed(SelectMenuItemStyler().scale(_itemPressedScale))
+    .onFocusVisible(
+      SelectMenuItemStyler().border({{valuePrefix}}RingBorder(focused: true)),
+    )
+    .onDisabled(
+      SelectMenuItemStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+    );
+
+/// `.select__trigger` and `.list-box-item`: `min-h-9`.
+const _minHeight = 36.0;
+
+/// `.select__trigger`: `px-3 py-2`, and `pe-7` reserved for the indicator.
+const _paddingX = 12.0;
+const _paddingY = 8.0;
+const _reservedEnd = 28.0;
+
+/// `.select__indicator` is a `size-4` slot at `end-2`, centered on its chevron,
+/// which inks 10.5px wide (`IconChevronDown` in react `icons.js`). Remix's
+/// chevron fills the width of its box, so an 11px glyph centered in the same
+/// slot matches it.
+const _indicator = 11.0;
+const _indicatorEnd = 8 + (16 - _indicator) / 2;
+
+/// The value still ends at `pe-7`.
+const _valueGap = _reservedEnd - _indicatorEnd - _indicator;
+
+/// `.select__popover`'s list box: `p-1.5`, and `.list-box`'s `mt-1` between
+/// items.
+const _listPadding = 6.0;
+const _listGap = 4.0;
+
+/// `.list-box-item`: `gap-3`, `px-2` widened to `px-2.5` by the select popover,
+/// `py-1.5`, and the selected mark's `size-4`.
+const _itemGap = 12.0;
+const _itemPaddingX = 10.0;
+const _itemPaddingY = 6.0;
+const _itemMark = 16.0;
+
+/// `transform: scale(0.98)` on a pressed row (`list-box-item.css`).
+const _itemPressedScale = .98;

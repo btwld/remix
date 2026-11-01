@@ -1,0 +1,126 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'avatar.dart';
+
+/// How stacked avatars separate: `clip` cuts a seam out of each avatar's edge;
+/// `ring` draws a background-coloured ring around each.
+enum HeroUiAvatarGroupOverlap { clip, ring }
+
+/// HeroUI's `AvatarGroup`: avatars overlapping by 8px, or a wrapped grid.
+///
+/// Pass the avatars as [children]; add a final avatar labelled "+3" for a
+/// count. Each avatar's own size sets how much of it the next one covers.
+class HeroUiAvatarGroup extends StatelessWidget {
+  const HeroUiAvatarGroup({
+    super.key,
+    required this.children,
+    this.overlap = .clip,
+    this.grid = false,
+  });
+
+  final List<HeroUiAvatar> children;
+  final HeroUiAvatarGroupOverlap overlap;
+
+  /// Lays the avatars out in a wrapping grid instead of stacking them.
+  final bool grid;
+
+  @override
+  Widget build(BuildContext context) {
+    if (grid) {
+      return Wrap(
+        spacing: _gridGap,
+        runSpacing: _gridGap,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: children,
+      );
+    }
+    final direction = Directionality.of(context);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final (index, child) in children.indexed)
+          if (index == children.length - 1)
+            _separate(child, direction, last: true)
+          else
+            // The next avatar's negative `margin-inline-start`, expressed as a
+            // narrower slot for this one.
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              widthFactor: 1 - _overlap / heroUiAvatarDimension(child.size),
+              heightFactor: 1,
+              child: _separate(child, direction, last: false),
+            ),
+      ],
+    );
+  }
+
+  Widget _separate(
+    HeroUiAvatar child,
+    TextDirection direction, {
+    required bool last,
+  }) => switch (overlap) {
+    .ring => _Ring(child: child),
+    .clip when last => child,
+    .clip => ClipPath(clipper: _SeamClipper(direction), child: child),
+  };
+}
+
+/// `--avatar-group-overlap`, `--avatar-group-seam`, and the grid's `gap-3`.
+const _overlap = 8.0;
+const _seam = 2.0;
+const _gridGap = 12.0;
+
+/// `box-shadow: 0 0 0 var(--avatar-group-seam) var(--background)`.
+class _Ring extends StatelessWidget {
+  const _Ring({required this.child});
+
+  final HeroUiAvatar child;
+
+  @override
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        // Match the avatar's size-specific token before Flutter clamps each
+        // radius to half the side.
+        .borderRadius(
+          .all(
+            child.size == .sm
+                ? HeroUiTokens.radius2xl()
+                : HeroUiTokens.radius3xl(),
+          ),
+        )
+        .shadow(
+          BoxShadowMix(color: HeroUiTokens.background(), spreadRadius: _seam),
+        ),
+    child: child,
+  );
+}
+
+/// The mask of `.avatar-group--clip`: a circle the size of the next avatar plus
+/// the seam, centred on that avatar, removed from this one.
+class _SeamClipper extends CustomClipper<Path> {
+  const _SeamClipper(this.direction);
+
+  final TextDirection direction;
+
+  @override
+  Path getClip(Size size) {
+    final half = size.height / 2;
+    final centerX = switch (direction) {
+      TextDirection.ltr => size.width + half - _overlap,
+      TextDirection.rtl => -half + _overlap,
+    };
+    return Path.combine(
+      PathOperation.difference,
+      Path()..addRect(Offset.zero & size),
+      Path()..addOval(
+        Rect.fromCircle(center: Offset(centerX, half), radius: half + _seam),
+      ),
+    );
+  }
+
+  @override
+  bool shouldReclip(_SeamClipper oldClipper) =>
+      direction != oldClipper.direction;
+}

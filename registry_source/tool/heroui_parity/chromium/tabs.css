@@ -1,0 +1,3 @@
+@import '@heroui/styles';
+@source './tabs.jsx';
+body { margin: 0; padding: 24px; background: var(--background); color: var(--foreground); }
