@@ -8,6 +8,8 @@
 
 ### Fixes
 
+- Preserve CRLF line endings and import ordering when a template renders
+  icons from multiple libraries.
 - Name the required dependency constraint and migration guidance when a
   project's existing constraint excludes the registry's requirement.
 - Reserve authored and generated target ownership across installs, rejecting

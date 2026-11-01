@@ -1148,6 +1148,7 @@ packages:
 
       barrel.writeAsStringSync(emptyManagedBarrel);
       writeRequiredPubspec(root, remix: '^0.9.0');
+      final before = snapshotFiles(root);
       await expectLater(
         Installer(
           projectRoot: root,
@@ -1155,9 +1156,23 @@ packages:
           processRunner: runner,
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsFormatException,
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('Existing remix constraint ^0.9.0 is incompatible'),
+              contains(
+                'Change remix in pubspec.yaml to $registryRemixConstraint',
+              ),
+              contains('read its changelog first'),
+              contains('No source was written.'),
+            ),
+          ),
+        ),
       );
       expect(runner.calls, isEmpty);
+      expect(snapshotFiles(root), before);
     },
   );
 

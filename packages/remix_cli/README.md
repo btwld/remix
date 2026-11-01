@@ -325,8 +325,11 @@ dart run tool/check_open_code.dart --preset fortal --source checkout --item dash
 ```
 
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
-`lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
-application-owned `UiIcons` alias set with no generated adapter. Add or rename
+`lib/ui/icons.dart`, declares the selected icon package and any per-icon
+fallback packages, and exposes a small, application-owned `UiIcons` alias set
+with no generated adapter. The
+default Remix selection uses `remix_ui_icons`, plus `lucide_flutter` for the
+schema 2 official table's fallbacks. Add or rename
 aliases there as your interface evolves. Every Remix icon remains one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 

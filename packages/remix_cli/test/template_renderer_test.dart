@@ -139,6 +139,17 @@ icons:
         failsWith('libraries.lucide.dependency must name one package'),
       );
     });
+
+    test('schema 1 rejects fallback keys on otherwise valid mappings', () {
+      expect(
+        () => IconRegistry.parse(
+          table(
+            lucide: '{remix: update, lucide: loaderCircle, fallback: lucide}',
+          ),
+        ),
+        failsWith('icons.update has unknown keys: fallback'),
+      );
+    });
   });
 
   group('icons.yaml schema 2', () {
@@ -192,6 +203,20 @@ $extra''';
       );
     });
 
+    test('rejects a library whose name is reserved for fallbacks', () {
+      expect(
+        () => IconRegistry.parse(
+          table().replaceFirst(
+            '  lucide:',
+            '  fallback: {dependency: {fallback_icons: ^1.0.0}, '
+                'import: package:fallback_icons/icons.dart, class: FallbackIcons}\n'
+                '  lucide:',
+          ),
+        ),
+        failsWith('library fallback clashes with the fallback key'),
+      );
+    });
+
     test('rejects a fallback that cannot render the icon', () {
       expect(
         () => IconRegistry.parse(
@@ -224,6 +249,18 @@ $extra''';
             IconRegistry.parse(table().replaceFirst('schema: 2', 'schema: 1')),
         failsWith('icons.magnifyingGlass.remix must be magnifyingGlass'),
       );
+    });
+
+    test('requires an integer schema rather than a number or string', () {
+      for (final schema in ['2.0', '"2"', 'true']) {
+        expect(
+          () => IconRegistry.parse(
+            table().replaceFirst('schema: 2', 'schema: $schema'),
+          ),
+          failsWith('Unsupported icons.yaml schema'),
+          reason: schema,
+        );
+      }
     });
 
     test('imports every library a template renders from', () {
@@ -273,6 +310,43 @@ const b = LucideIcons.circleCheck;
       expect(renderer.iconLibraries('{{icon:import}}\n', icons: icons), {
         'remix',
       });
+    });
+
+    test('keeps CRLF and orders each generated icon import separately', () {
+      final source = [
+        "import 'local.dart';",
+        "import 'package:middle/icons.dart';",
+        '{{icon:import}}',
+        "import 'dart:math';",
+        '',
+        'const search = {{icon:magnifyingGlass}};',
+        'const checked = {{icon:checkCircled}};',
+        '',
+      ].join('\r\n');
+
+      final rendered = renderer.render(
+        source,
+        typePrefix: 'Ui',
+        valuePrefix: 'ui',
+        icons: IconRegistry.parse(table()),
+      );
+
+      expect(
+        rendered,
+        [
+          "import 'dart:math';",
+          '',
+          "import 'package:lucide_flutter/lucide_flutter.dart';",
+          "import 'package:middle/icons.dart';",
+          "import 'package:remix_ui_icons/remix_ui_icons.dart';",
+          '',
+          "import 'local.dart';",
+          '',
+          'const search = RemixIcons.search;',
+          'const checked = LucideIcons.circleCheck;',
+          '',
+        ].join('\r\n'),
+      );
     });
   });
 
