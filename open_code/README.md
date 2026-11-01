@@ -1,5 +1,10 @@
 # Application-owned Remix UI
 
+Release staging: Remix beta.14 and CLI beta.1 are unpublished. Hosted CLI
+install commands remain unversioned for the existing stable/schema-1 path;
+Git or checkout activation previews unreleased features. Pin the hosted
+beta.1 CLI after publication and before registry cutover.
+
 `remix_cli` installs editable preset source into your app. Remix retains
 rendering, interaction and accessibility; you own the theme, recipes and
 installed Agent behavior. Choose one preset: neutral **Vanilla** or **Fortal**
