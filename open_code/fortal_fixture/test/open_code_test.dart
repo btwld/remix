@@ -7,13 +7,18 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
-  test('the default palette retains its Fortal specification values', () {
-    final colors = resolveAcmeTokens(const AcmeThemeConfig());
+  test(
+    'the default Orla theme retains its paired Radix specification values',
+    () {
+      final colors = resolveAcmeTokens(const AcmeThemeConfig());
 
-    expect(colors.colorBackground, const Color(0xFFFAFAF7));
-    expect(colors.accent.scale.step(9), const Color(0xFF13181D));
-    expect(colors.gray.scale.step(12), const Color(0xFF191B1C));
-  });
+      expect(colors.colorBackground, const Color(0xFFFCFCFC));
+      expect(colors.accent.scale.step(9), const Color(0xFF8D8D8D));
+      expect(colors.gray.scale.step(12), const Color(0xFF202020));
+      expect(colors.accent.solid, const Color(0xFF202020));
+      expect(colors.accent.contrast, const Color(0xFFFFFFFF));
+    },
+  );
 
   testWidgets('the example application renders installed source', (
     tester,
