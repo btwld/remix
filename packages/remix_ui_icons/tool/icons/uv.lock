@@ -219,6 +219,7 @@ dependencies = [
     { name = "glyphpact" },
     { name = "pillow" },
     { name = "pyyaml" },
+    { name = "skia-pathops" },
 ]
 
 [package.metadata]
@@ -227,6 +228,7 @@ requires-dist = [
     { name = "glyphpact", specifier = "==1.1.0" },
     { name = "pillow", specifier = "==12.3.0" },
     { name = "pyyaml", specifier = "==6.0.3" },
+    { name = "skia-pathops", specifier = "==0.9.2" },
 ]
 
 [[package]]

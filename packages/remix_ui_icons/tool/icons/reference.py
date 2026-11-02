@@ -10,6 +10,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import xml.etree.ElementTree as ElementTree
+
+import pathops
 from pathlib import Path
 
 from fontTools.fontBuilder import FontBuilder
@@ -22,6 +25,29 @@ from fontTools.svgLib.path import parse_path
 from sources import Source
 
 REFERENCE_EM = 15360
+
+
+def _source_outline(source: Source) -> pathops.Path:
+    """Convert each SVG paint to winding geometry before combining paints.
+
+    CFF has nonzero filling, whereas an SVG path may use evenodd. Separate
+    SVG paths paint over each other; concatenating them could cancel overlaps.
+    This uses only source bytes, independently of the production font build.
+    """
+    root = ElementTree.fromstring(source.data)
+    fill = pathops.FillType.EVEN_ODD if root.get("fill-rule") == "evenodd" else pathops.FillType.WINDING
+    combined = None
+    for element in root:
+        if element.tag != "{http://www.w3.org/2000/svg}path":
+            continue
+        path = pathops.Path()
+        path.fillType = fill
+        parse_path(element.attrib["d"], path.getPen())
+        path = pathops.simplify(path)
+        combined = path if combined is None else pathops.op(combined, path, pathops.PathOp.UNION)
+    if combined is None or not combined.area:
+        raise ValueError(f"Empty reference drawing: {source.glyph.source}")
+    return combined
 
 
 def write_reference(sources: list[Source], directory: Path) -> None:
@@ -48,11 +74,12 @@ def write_reference(sources: list[Source], directory: Path) -> None:
         mapping[source.glyph.source] = codepoint
         scale = REFERENCE_EM / source.glyph.master
         transform = (scale, 0, 0, -scale, 0, REFERENCE_EM)
+        outline = _source_outline(source)
         pen = T2CharStringPen(REFERENCE_EM, None)
-        parse_path(source.path_data, TransformPen(pen, transform))
+        outline.draw(TransformPen(pen, transform))
         charstrings[name] = pen.getCharString()
         bounds = BoundsPen(None)
-        parse_path(source.path_data, TransformPen(bounds, transform))
+        outline.draw(TransformPen(bounds, transform))
         if bounds.bounds is None:
             raise ValueError(f"Empty reference drawing: {source.glyph.source}")
         metrics[name] = (REFERENCE_EM, otRound(bounds.bounds[0]))

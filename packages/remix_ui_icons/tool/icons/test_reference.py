@@ -43,15 +43,37 @@ class ReferenceTest(unittest.TestCase):
         self.assertEqual(font['head'].unitsPerEm, REFERENCE_EM)
 
     def test_contours_preserve_the_svg_and_its_counter(self):
+        self._assert_paint_matches_source(center=0)
+
+    def test_evenodd_counter_is_independent_of_contour_winding(self):
+        # Both rectangles run clockwise: evenodd still cuts the centre out.
+        self.source = Source(self.source.glyph, self.source.path,
+            self.source.data.replace(b'M8 8L8 16L16 16L16 8Z', b'M8 8L16 8L16 16L8 16Z'))
+        self._assert_paint_matches_source(center=0)
+
+    def test_nonzero_same_winding_counter_remains_filled(self):
+        self.source = Source(self.source.glyph, self.source.path,
+            self.source.data.replace(b'evenodd', b'nonzero').replace(
+                b'M8 8L8 16L16 16L16 8Z', b'M8 8L16 8L16 16L8 16Z'))
+        self._assert_paint_matches_source(center=255)
+
+    def test_separate_paths_paint_instead_of_canceling(self):
+        self.source = Source(self.source.glyph, self.source.path,
+            self.source.data.replace(b'evenodd', b'nonzero').replace(
+                b'ZM8 8', b'Z"/><path d="M8 8'))
+        self._assert_paint_matches_source(center=255)
+
+    def _assert_paint_matches_source(self, *, center):
         metadata = self.build()
-        font = TTFont(self.directory / 'source-reference.otf')
-        rendered = glyph_svg(font, metadata['codepoints'][self.source.glyph.source], 24)
+        with TTFont(self.directory / 'source-reference.otf') as font:
+            rendered = glyph_svg(font, metadata['codepoints'][self.source.glyph.source], 24)
         def alpha(data):
             return Image.open(io.BytesIO(cairosvg.svg2png(
                 bytestring=data, output_width=96, output_height=96,
             ))).getchannel('A')
         expected, actual = alpha(self.source.data), alpha(rendered)
-        self.assertEqual(actual.getpixel((48, 48)), 0)
+        self.assertEqual(expected.getpixel((48, 48)), center)
+        self.assertEqual(actual.getpixel((48, 48)), center)
         self.assertEqual(actual.getpixel((16, 16)), 255)
         self.assertLess(ImageStat.Stat(ImageChops.difference(actual, expected)).mean[0], .1)
 
