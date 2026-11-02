@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
 
 import '../../tool/check_open_code.dart' as checker;
 
@@ -856,6 +857,65 @@ import 'package:flutter/widgets.dart'
       );
     },
   );
+
+  test('HeroUI CI runs a focused web build beside the full install', () {
+    expect(
+      checker.parseConsumerCheckOptions([
+        '--preset',
+        'heroui',
+        '--source',
+        'checkout',
+        '--item',
+        'search_field',
+      ])!.item,
+      'search_field',
+    );
+    for (final arguments in [
+      ['--preset', 'heroui', '--source', 'hosted', '--item', 'search_field'],
+      ['--preset', 'fortal', '--source', 'checkout', '--item', 'search_field'],
+      ['--source', 'checkout', '--item', 'search_field'],
+    ]) {
+      expect(checker.parseConsumerCheckOptions(arguments), isNull);
+    }
+
+    final inventory = checker.focusedInventoryForTest(
+      'search_field',
+      preset: 'heroui',
+    );
+    expect(
+      inventory,
+      containsAll([
+        'components/search_field.dart',
+        'components/search_field.g.dart',
+        'components/close_button.dart',
+        'components/spinner.dart',
+        'components/textfield.dart',
+      ]),
+    );
+    expect(inventory, isNot(contains('components/toast.dart')));
+
+    for (final file in ['search_field_main.dart', 'search_field_test.dart']) {
+      expect(
+        File('open_code/heroui_fixture/focused/$file').existsSync(),
+        isTrue,
+      );
+    }
+
+    const full =
+        'dart run tool/check_open_code.dart --preset heroui --source checkout';
+    final scripts =
+        (loadYaml(File('pubspec.yaml').readAsStringSync())
+                as YamlMap)['melos']['scripts']
+            as YamlMap;
+    for (final script in ['open-code:check', 'ci:open-code:heroui']) {
+      expect(
+        (scripts[script] as YamlMap)['steps'],
+        containsAll(['$full --item search_field', full]),
+        reason: script,
+      );
+    }
+  });
+
   group('icon packages follow the registry under test', () {
     // registry-stable as promoted before schema 2: every icon in both
     // libraries, remix_ui_icons floored at 0.1.0, and no Lucide fallback.
