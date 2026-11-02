@@ -61,7 +61,7 @@ Color computeColorPanelTranslucent(UiColorScale gray, {required bool isDark}) {
         : 0.0;
     opacity = math.max(opacity, needed);
   }
-  if (opacity == 0) return const Color(0);
+  if (opacity == 0) return const Color(0x00000000);
   final alpha = (opacity * 255).ceil();
   final a = alpha / 255;
   int foreground(int i) => ((channels[i] - backgrounds[i] * (1 - a)) / a * 255)

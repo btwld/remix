@@ -6,7 +6,7 @@ import 'theme_data.dart';
 import 'tokens.dart';
 
 /// Establishes Fortal's body text and neutral foreground at the root.
-/// Nested scopes preserve the surrounding text run; mode changes recolor it.
+/// Nested scopes preserve text metrics; neutral foreground changes recolor it.
 Widget _fortalRootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
   required Widget child,
@@ -167,16 +167,17 @@ class FortalTheme extends StatelessWidget {
     Widget scoped = child;
     if (parent == null) {
       scoped = _fortalRootTextStyle(tokens: tokens, child: scoped);
-    } else if (parent.brightness != data.brightness) {
+    } else if (parent.brightness != data.brightness ||
+        MixScope.tokenOf(FortalTokens.gray12, context) != foreground) {
       scoped = _fortalRecolored(foreground, scoped);
     }
     Widget result = MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
       // Theme-root identity, not `hasBackground`, decides who owns the text
-      // run: a scope nested for its accent or scaling must leave the current
-      // run alone, while a root scope with `hasBackground: false` still
-      // establishes it.
+      // run: nested scopes preserve its metrics and only recolor when their
+      // neutral foreground changes. A root with `hasBackground: false` still
+      // establishes the run.
       child: scoped,
     );
     if (data.hasBackground) {

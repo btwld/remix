@@ -131,6 +131,9 @@ explicit `size:` selects another token size. Transparent, non-accent
 `FortalCode.ghost` is the deliberate exception for foreground only, so it can
 blend into surrounding text without inheriting that run's metrics.
 
+Nested themes retain the surrounding text metrics. When the paired neutral
+changes, bare text and icons use the new theme's neutral foreground.
+
 <Warning>
   If an overlay's text does not inherit your theme, ensure the theme scope wraps
   the Navigator or Overlay that owns the entry. A scope inside one route cannot

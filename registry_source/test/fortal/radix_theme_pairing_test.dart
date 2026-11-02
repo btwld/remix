@@ -120,7 +120,7 @@ void main() {
               colors.colorPanelSolid,
             ]) {
               final background = Color.alphaBlend(
-                fill ?? const Color(0),
+                fill ?? const Color(0x00000000),
                 surface,
               );
               expect(

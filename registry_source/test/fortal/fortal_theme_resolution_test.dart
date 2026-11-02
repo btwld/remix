@@ -144,8 +144,8 @@ void main() {
   testWidgets('a nested scope reanchors unsized typography to its tokens', (
     tester,
   ) async {
-    // Accent and scaling are the two reasons a real subtree re-scopes; neither
-    // is a reason to restate the run the surrounding page already set.
+    // Changing the theme or scaling must not reset the surrounding page's
+    // typographic metrics.
     await tester.pumpWidget(
       const FortalTheme(
         child: Directionality(
@@ -185,6 +185,73 @@ void main() {
       tester.widget<Text>(find.text('code')).style?.fontSize,
       closeTo(17.6 * 0.95 * 0.95, 1e-9),
     );
+  });
+
+  testWidgets(
+    'nested theme pairs recolor bare text and icons without resizing',
+    (tester) async {
+      for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+        late TextStyle inheritedText;
+        late Color? inheritedIcon;
+        late Color foreground;
+        await tester.pumpWidget(
+          FortalTheme(
+            accent: .mar,
+            mode: mode,
+            child: DefaultTextStyle.merge(
+              style: const TextStyle(fontSize: 20, letterSpacing: 2),
+              child: FortalTheme(
+                accent: .serra,
+                child: Builder(
+                  builder: (context) {
+                    inheritedText = DefaultTextStyle.of(context).style;
+                    inheritedIcon = IconTheme.of(context).color;
+                    foreground = MixScope.tokenOf(FortalTokens.gray12, context);
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(inheritedText.color, foreground, reason: mode.name);
+        expect(inheritedIcon, foreground, reason: mode.name);
+        expect(inheritedText.fontSize, 20);
+        expect(inheritedText.letterSpacing, 2);
+      }
+    },
+  );
+
+  testWidgets('themes sharing a neutral preserve the surrounding foreground', (
+    tester,
+  ) async {
+    late TextStyle inheritedText;
+    late Color? inheritedIcon;
+    await tester.pumpWidget(
+      FortalTheme(
+        accent: .duna,
+        child: DefaultTextStyle.merge(
+          style: const TextStyle(color: Colors.purple),
+          child: IconTheme.merge(
+            data: const IconThemeData(color: Colors.purple),
+            child: FortalTheme(
+              accent: .caju,
+              child: Builder(
+                builder: (context) {
+                  inheritedText = DefaultTextStyle.of(context).style;
+                  inheritedIcon = IconTheme.of(context).color;
+                  return const SizedBox();
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(inheritedText.color, Colors.purple);
+    expect(inheritedIcon, Colors.purple);
   });
 
   testWidgets('nested scopes inherit unspecified values without repainting', (
