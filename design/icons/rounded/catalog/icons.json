@@ -710,7 +710,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "Check inside the circular frame, clear of it by the gap target. Status needs its text as well.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information."
       }
     },
     {
@@ -723,7 +723,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "A circle on the padding keyline. Ring in outline, disc in filled. It implies no control behavior.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "A plain shape, not a control. Do not imply behavior; name any action on the enclosing control."
       }
     },
     {
@@ -736,7 +736,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "A heavier ring and bar in filled rather than a solid disc: the two counters are the prohibition sign, so they stay open.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information."
       }
     },
     {
@@ -749,7 +749,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "Close inside the circular frame, clear of it by the gap target. Status needs its text as well.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information."
       }
     },
     {
@@ -775,7 +775,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "Solid in both styles and well inside the keyline, so it cannot read as Circle. Filled is larger.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "A plain shape, not a control. Do not imply behavior; name any action on the enclosing control."
       }
     },
     {
@@ -892,7 +892,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "A capsule stick and a sparkle. The sparkle is a crossed capsule in outline and a four-point star in filled. A second accent at 24 px only.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Keep a visible action label: the wand does not say what the automatic action does."
       }
     },
     {
@@ -918,7 +918,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "A crescent cut by one circle, with rounded tips. Not a generic status.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Name the appearance on the enclosing control; this is not a generic status."
       }
     },
     {
@@ -931,7 +931,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "A rounded square, CORNER_TOKEN on all four corners. It implies no control behavior.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "A plain shape, not a control. Do not imply behavior; name any action on the enclosing control."
       }
     },
     {
@@ -957,7 +957,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "A round core and eight detached rays. Rays and bounds are shared; only the core fills.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Name the appearance on the enclosing control; this is not a generic status."
       }
     },
     {
@@ -983,7 +983,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "Eight capsule segments in a ring, with no centre, unlike Sun. Filled segments are registered below the action width at 12 and 16 px, to keep the gap target. Animation belongs to the caller.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Announce progress in text; the caller owns motion and reduced-motion behavior."
       }
     },
     {

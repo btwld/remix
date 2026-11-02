@@ -92,6 +92,11 @@ class InventoryTests(unittest.TestCase):
             'Visible label required at 12 px; contextual label recommended at other sizes.',
             'Requires a visible text label at 12 px. At 16 and 24 px, use the action name on the enclosing control.',
             'Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record.',
+            'Keep a visible action label: the wand does not say what the automatic action does.',
+            'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+            'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+            'Name the appearance on the enclosing control; this is not a generic status.',
+            'Announce progress in text; the caller owns motion and reduced-motion behavior.',
         }
         catalog = {m['id']: m['review'] for m in json.loads((ROOT / 'catalog' / 'icons.json').read_text())['icons']}
         for icon, review in catalog.items():

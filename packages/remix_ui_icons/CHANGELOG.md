@@ -69,9 +69,10 @@ replacements, until 2.0.0:
   `OutlineIconSets` and `RoundedIconSets` constants, whose
   `at(size)` picks the master for a size at runtime.
 - Every constant's documentation shows its drawing and the design contract's
-  usage notes. Labels are required per family and master: Warning everywhere,
-  Rounded Branch at every size, and Outline Help, Branch,
-  and Focus, and Rounded Link at 12 px. `RemixIconEntry` reports them as
+  usage notes. Labels are required per family and master: at every size for
+  Warning, Arrow up right, Wand, Check circle, Ban, and Close circle in both
+  families and Rounded Branch; and at 12 px for Help, Focus, and Group in both
+  families, Outline Branch, and Rounded Link. `RemixIconEntry` reports them as
   `requiresLabel` and `usage`.
 
 ## 0.1.0

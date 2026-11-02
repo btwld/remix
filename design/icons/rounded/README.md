@@ -51,7 +51,7 @@ Warning requires a **visible text label** in every appearance and native size, i
 
 Branch also requires a visible text label at every size and appearance, and Link requires one at 12 px. These rules are separate from the Warning record.
 
-Help, Focus, and Group require a visible text label at 12 px, and a contextual one is recommended at other sizes. Arrow up right keeps a visible action label. Other concepts take their name from the enclosing control, and 12 px remains for labeled information.
+Help, Focus, and Group require a visible text label at 12 px, and a contextual one is recommended at other sizes. Arrow up right and Wand keep a visible action label. Check circle, Ban, and Close circle are paired with text that states the status. Loader announces progress in text, Moon and Sun are named on the enclosing control, and Circle, Square, and Dot are plain shapes, not controls. These rules match Outline because they describe the concept, not its geometry. Other concepts take their name from the enclosing control, and 12 px remains for labeled information.
 
 ## Exceptions
 

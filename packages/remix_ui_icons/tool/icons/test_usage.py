@@ -125,6 +125,28 @@ class UsageContractTest(unittest.TestCase):
 
         self.assertEqual(_manifest_required(), expected)
 
+    def test_concept_rules_do_not_depend_on_the_family(self) -> None:
+        # Written out, not derived from the catalogs, because these rules are
+        # about what the concept means, which no family's geometry changes.
+        catalogs = {family.key: {icon["id"]: icon for icon in _catalog(family.key)} for family in MANIFEST.families}
+        required = _manifest_required()
+        for concept in ("check-circle", "ban", "close-circle", "wand"):
+            for family in ("outline", "rounded"):
+                for master in MASTERS:
+                    self.assertIn((family, concept, master), required)
+        for concept in ("check-circle", "ban", "close-circle", "wand", "loader", "moon", "sun", "circle", "dot", "square"):
+            self.assertEqual(
+                catalogs["outline"][concept]["review"]["usage"],
+                catalogs["rounded"][concept]["review"]["usage"],
+                concept,
+            )
+            notes = {
+                family: {note for glyph in MANIFEST.glyphs if glyph.concept.id == concept and glyph.family.key == family for note in glyph.usage_notes}
+                for family in ("outline", "rounded")
+            }
+            self.assertTrue(notes["outline"], concept)
+            self.assertEqual(notes["outline"], notes["rounded"], concept)
+
     def test_arrow_up_right_requires_its_action_label_everywhere(self) -> None:
         # Written out, not derived, so a catalog edit cannot quietly drop the rule.
         required = _manifest_required()

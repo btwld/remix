@@ -67,8 +67,9 @@ void main() {
       'rounded.help@12',
       'rounded.focus@12',
       for (final family in ['outline', 'rounded']) '$family.group@12',
-      for (final concept in ['wand', 'checkCircle', 'ban', 'closeCircle'])
-        for (final master in [12, 16, 24]) 'outline.$concept@$master',
+      for (final family in ['outline', 'rounded'])
+        for (final concept in ['wand', 'checkCircle', 'ban', 'closeCircle'])
+          for (final master in [12, 16, 24]) '$family.$concept@$master',
     });
     // A requirement covers both styles of a master, and always says why.
     for (final entry in remixIconEntries.where(
@@ -91,6 +92,23 @@ void main() {
     );
     expect(help.requiresLabel, isFalse);
     expect(help.usage.single, contains('contextual label'));
+
+    for (final concept in const [
+      'loader',
+      'moon',
+      'sun',
+      'circle',
+      'dot',
+      'square',
+    ]) {
+      for (final family in RemixIconFamily.values) {
+        final glyph = remixIconEntries.firstWhere(
+          (entry) => entry.family == family && entry.concept == concept,
+        );
+        expect(glyph.requiresLabel, isFalse, reason: '$family.$concept');
+        expect(glyph.usage, isNotEmpty, reason: '$family.$concept');
+      }
+    }
   });
 
   test('records the deprecated aliases on the glyph they render', () {

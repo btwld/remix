@@ -70,7 +70,7 @@ The rules depend on the family and master:
 | Rounded Branch | Required at every size. |
 | Help, Focus, Group in both families; Outline Branch | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
 | Rounded Link | Required at 12 px. |
-| Outline Wand; Outline Check circle, Ban, Close circle | Required at every size; state the action or status in text. |
+| Wand, Check circle, Ban, Close circle in both families | Required at every size; state the action or status in text. |
 | Arrow up-right in both families | Required at every size: it opens another destination, so state the action in text. |
 
 Each constant's documentation states its rule. In the opt-in index,
