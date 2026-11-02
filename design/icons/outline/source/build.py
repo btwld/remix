@@ -49,7 +49,7 @@ def build() -> dict:
     (sprites/'outline-all.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg">\n'+'\n'.join(all_symbols)+'\n</svg>\n')
     (generated/'inventory.json').write_text(json.dumps(inventory,indent=2)+'\n')
     with (generated/'inventory.csv').open('w',newline='') as f:
-        wr=csv.DictWriter(f,fieldnames=list(inventory[0]));wr.writeheader();wr.writerows(inventory)
+        wr=csv.DictWriter(f,fieldnames=list(inventory[0]),lineterminator="\n");wr.writeheader();wr.writerows(inventory)
     web=ROOT/'packages/web'
     web.mkdir(exist_ok=True)
     (web/'data.mjs').write_text('// GENERATED: do not edit.\nexport const paths = '+json.dumps(paths,separators=(',',':'))+';\nexport const labels = '+json.dumps({m['id']:m['label'] for m in catalog['icons']})+';\n')

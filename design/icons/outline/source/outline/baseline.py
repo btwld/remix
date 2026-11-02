@@ -352,4 +352,3 @@ def draw(name,n,style):
         shape=P(spec[n])
         return obj(shape)
     raise KeyError(name)
-
