@@ -258,10 +258,10 @@ class _FortalActivityIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
-      .customer => (RemixIcons.person, FortalAccentColor.ceu),
+      .customer => (RemixIcons.user, FortalAccentColor.ceu),
       .order => (RemixIcons.box, FortalAccentColor.ceu),
-      .payment => (RemixIcons.checkCircled, FortalAccentColor.serra),
-      .alert => (RemixIcons.exclamationTriangle, FortalAccentColor.sol),
+      .payment => (RemixIcons.checkCircle, FortalAccentColor.serra),
+      .alert => (RemixIcons.warning, FortalAccentColor.sol),
     };
 
     return FortalAccentScope(
@@ -287,7 +287,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .size1,
             label: 'View all',
-            trailingIcon: RemixIcons.doubleArrowRight,
+            trailingIcon: RemixIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],

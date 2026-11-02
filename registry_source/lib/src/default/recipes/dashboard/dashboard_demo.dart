@@ -426,7 +426,7 @@ class _VanillaAccount extends StatelessWidget {
   Widget build(BuildContext context) => VanillaMenu<String>(
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
-      icon: RemixIcons.person,
+      icon: RemixIcons.user,
       builder: (context, _, _) => RemixCard(
         style: CardStyler()
             .padding(
@@ -472,7 +472,7 @@ class _VanillaAccount extends StatelessWidget {
               ),
             ),
             StyledIcon(
-              icon: RemixIcons.dotsHorizontal,
+              icon: RemixIcons.more,
               style: IconStyler()
                   .size(VanillaTokens.icon)
                   .color(VanillaTokens.mutedForeground()),

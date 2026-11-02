@@ -61,7 +61,7 @@ TextFieldStyler heroUiSearchFieldStyle({
 /// hides it while the field is empty.
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler heroUiSearchClearButtonStyle({
-  IconData? icon = RemixIcons.cross2,
+  IconData? icon = RemixIcons.close,
   String semanticLabel = 'Clear search',
   IconButtonStyler style = const IconButtonStyler.create(),
 }) => heroUiCloseButtonStyle()
@@ -76,7 +76,7 @@ class HeroUiSearchIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ExcludeSemantics(
     child: StyledIcon(
-      icon: RemixIcons.magnifyingGlass,
+      icon: RemixIcons.search,
       style: IconStyler()
           .size(_iconSize)
           .color(HeroUiTokens.fieldPlaceholder()),

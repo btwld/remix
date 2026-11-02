@@ -1,0 +1,3410 @@
+{
+  "schemaVersion": 1,
+  "family": "Vector UI",
+  "nameStatus": "working-name",
+  "version": "0.5.0-pilot.2",
+  "status": "private-pilot-awaiting-signoff",
+  "counts": {
+    "icons": 77,
+    "drawings": 462
+  },
+  "packs": {
+    "outline": {
+      "available": true,
+      "nativeSizes": [
+        12,
+        16,
+        24
+      ]
+    },
+    "rounded": {
+      "available": false,
+      "status": "not-drawn"
+    }
+  },
+  "releaseApproval": {
+    "owner": null,
+    "designReviewer": null,
+    "licenseSelected": true,
+    "publicReleaseApproved": false
+  },
+  "icons": [
+    {
+      "id": "home",
+      "label": "Home",
+      "category": "navigation",
+      "legacyGroup": "Navigation",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Home or top-level destination. Do not substitute for Back.",
+      "keywords": [
+        "dashboard",
+        "main"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Overview",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the roof, doorway, and body pair. The silhouette remains a useful family reference without requiring all icons to match its area. At 16 px, the roof/body has a small documented overshoot beyond the nominal 1.5 px padding. The 12 px drawing moved to whole pixels and the 16 px drawing to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Open navigation or a menu.",
+      "keywords": [
+        "hamburger",
+        "navigation"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Open menu",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the three bars after comparing crisp and strictly centered micro variants. The original 12 px outline raster is clearer. The 0.5 px optical offset is intentional. A larger clickable area and an accessible name are still required. The 16 px bars moved to one shared half-pixel phase so all three render at equal weight (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "more",
+      "label": "More",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Additional actions in an overflow menu.",
+      "keywords": [
+        "overflow",
+        "ellipsis"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "More actions",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained crisp 1 px micro dots rather than replacing them with blurred centered marks. The 12 px offset is intentional and documented; larger masters remain balanced. Use 16 px or larger for an overflow control, with an accessible More options name. The 16 px dots moved to one shared pixel phase so all three render at equal weight (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "category": "navigation",
+      "legacyGroup": "Navigation",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Find content. A heavier lens still has an open center.",
+      "keywords": [
+        "find",
+        "lookup"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Search workspace",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the open octagonal lens and diagonal handle. The lens stays transparent in both weights; filling it would change the metaphor. The 12 px filled lens is relatively dense; use a label or a clearly identified search field. The 12 px lens moved to whole pixels, keeping its octagon, so all four walls render at equal strength (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "grid",
+      "label": "Grid",
+      "category": "navigation",
+      "legacyGroup": "Navigation",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Open an application grid or change to grid view.",
+      "keywords": [
+        "apps",
+        "tiles"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "All applications",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Reduced the 24 px footprint and increased separation at 16 px. Four frames no longer dominate as strongly. Native opening widths are 2 / 2 / 3 px. Four repeated cells naturally paint more area than one arrow. Equal area is not a target.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-left",
+      "label": "Arrow left",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Literal left arrow; application chooses its navigation role.",
+      "keywords": [
+        "previous",
+        "back"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Previous step",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Reflected from the locked right-arrow geometry. Stroke width is not rescaled. The 12 px outline shaft stays on pixel row 5-6 under the odd-width rule (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-right",
+      "label": "Arrow right",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "A literal right arrow. Navigation direction must be chosen by the application.",
+      "keywords": [
+        "next",
+        "forward"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Next step",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Removed post-stroke stretching; rebuilt the arrow on shared centerlines. Actual native stroke width now follows the action-weight tokens. The filled arrow can have slightly larger painted bounds. Retain a text label when the destination is not obvious. The 12 px outline shaft moved to pixel row 5-6 under the odd-width rule (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-up",
+      "label": "Arrow up",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Literal up arrow, not Upload.",
+      "keywords": [
+        "up",
+        "move"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Move up",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Quarter-turn of the locked right arrow, preserving native stroke width. The 12 px outline shaft sits on pixel column 5-6 under the odd-width rule (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-down",
+      "label": "Arrow down",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Literal down arrow, not Download.",
+      "keywords": [
+        "down",
+        "move"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Move down",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Quarter-turn of the locked right arrow, preserving native stroke width. The 12 px outline shaft stays on pixel column 5-6 under the odd-width rule (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-up-right",
+      "label": "Arrow up right",
+      "category": "navigation",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Open another destination. Keep a visible action label.",
+      "keywords": [
+        "external",
+        "outbound"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Open externally",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Shortened the large corner arms and removed post-stroke stretching. Less top/right mass; one diagonal and a 90° arrowhead, with unchanged external-destination meaning. Do not mirror this automatically for right-to-left layouts without checking the intended meaning. The 16 px corner arms moved to the half-pixel grid in both weights (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevron-left",
+      "label": "Chevron left",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Compact left direction. Navigation semantics stay in the component.",
+      "keywords": [
+        "previous",
+        "back"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Previous page",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Mirrored from Chevron right. The opposite pair shares exact construction.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevron-right",
+      "label": "Chevron right",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Compact right direction. Not an external-link marker.",
+      "keywords": [
+        "next",
+        "forward"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Next page",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A single 90-degree bend on shared native centerlines. Shorter field than an arrow.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevron-up",
+      "label": "Chevron up",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Up direction or collapse, with a label.",
+      "keywords": [
+        "collapse",
+        "up"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Collapse details",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Rotated from Chevron right without stretching expanded paths.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevron-down",
+      "label": "Chevron down",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Down direction or disclosure, with a label.",
+      "keywords": [
+        "expand",
+        "down"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Expand details",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Rotated from Chevron right without stretching expanded paths.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "plus",
+      "label": "Plus",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Add or create. Distinct from expand and zoom-in.",
+      "keywords": [
+        "add",
+        "new",
+        "create"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Create item",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the existing simple cross after native-pixel comparison. The 12 px outline uses a half-pixel optical offset for a crisp 1 px stem. Forcing the same center made it softer. A 0.5 px micro center difference is documented, not a layout shift. Keep the button box fixed.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "minus",
+      "label": "Minus",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Decrease or subtract. Not a destructive delete substitute.",
+      "keywords": [
+        "subtract",
+        "decrease"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Remove quantity",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Shares the Plus horizontal stem, including its micro optical adjustment.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "check",
+      "label": "Check",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Confirm or communicate completion.",
+      "keywords": [
+        "done",
+        "complete",
+        "success"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Approved",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Removed post-stroke stretching; preserved the asymmetric two-arm check. Its deliberately shorter height and exact stroke width balance it with other actions. Do not stretch it into a square to match Home.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "close",
+      "label": "Close",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Dismiss or close. Do not use as a destructive delete substitute.",
+      "keywords": [
+        "dismiss",
+        "cancel"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Close panel",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the clean two-diagonal construction. Two crossing strokes need no decorative opening or extra cuts. Diagonal antialiasing is expected. Keep a visible or accessible Close label.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "edit",
+      "label": "Edit",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "silhouette",
+      "meaning": "A pencil for editing content.",
+      "keywords": [
+        "pencil",
+        "modify"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Edit details",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Two separated pencil parts. Enlarged shaft counter, no decorative eraser lines.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "copy",
+      "label": "Copy",
+      "category": "actions",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Create a duplicate or copy to clipboard.",
+      "keywords": [
+        "duplicate",
+        "clipboard"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Copy item",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the offset sheets and subordinate rear contour. The rear sheet does not become a second filled block; the front sheet carries the style change. Keep the duplicate action named in the product. The 16 px sheets moved from scaled thirds to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "trash",
+      "label": "Trash",
+      "category": "actions",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Delete. Confirm destructive behavior at the application level.",
+      "keywords": [
+        "delete",
+        "remove"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Delete item",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Opened the lid/body gap and removed unnecessary internal slots. The gap is 1 / 1.5 / 2 px. Compact outlines stay empty; larger forms use one slot. Use a label and the appropriate product-level confirmation for destructive actions.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "refresh",
+      "label": "Refresh",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "weight",
+      "meaning": "Reload the current data. Not Undo or Redo.",
+      "keywords": [
+        "reload",
+        "update"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Refresh data",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "One open outline cycle and one arrowhead. No double arrows or decorative cuts. The 12 px outline moved to half-pixel centerlines so its 1 px strokes render on whole pixels (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "filter",
+      "label": "Filter",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "silhouette",
+      "meaning": "A funnel that narrows a result set. Not generic adjustment controls.",
+      "keywords": [
+        "funnel",
+        "results"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Filter results",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "One funnel silhouette. The narrow stem is intentionally solid in both appearances.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "sliders",
+      "label": "Sliders",
+      "category": "actions",
+      "legacyGroup": "Navigation",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Adjust parameters. Not a funnel filter or gear glyph.",
+      "keywords": [
+        "settings",
+        "adjust",
+        "controls"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Adjust view",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Two rails at every size; smaller 24 px field and handles; pixel-aligned 12 px construction. The 24 px artwork is 18 × 16 px, with 6 px handles and unchanged 2 px rails. Outline centers remain open. Use the canonical name Sliders. Settings, Adjust, and Filters are search aliases, not duplicate drawings.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "upload",
+      "label": "Upload",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Transfer into a service.",
+      "keywords": [
+        "import",
+        "send"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Upload file",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Rebuilt the upward arrow and preserved the same baseline as Download. Independent native spacing prevents the heavier arrow from crowding the baseline. The upward point needs more top clearance than the flat end of Download. The 12 px outline shaft moved to pixel column 5-6 under the odd-width rule (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "download",
+      "label": "Download",
+      "category": "actions",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Transfer out to this device.",
+      "keywords": [
+        "export",
+        "receive"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Download file",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Rebuilt the arrow without stretching and opened clearance above the baseline. The baseline and action stroke widths now follow the native weight tokens, including the filled micro version. Keep Upload and Download together as a matched directional pair. The 12 px outline shaft moved to pixel column 5-6 under the odd-width rule (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "save",
+      "label": "Save",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "silhouette",
+      "meaning": "A disk metaphor for committing changes. Not Bookmark or Download.",
+      "keywords": [
+        "disk",
+        "commit"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Save changes",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Clipped disk silhouette with native-size slots. No small label lines or tiny screws.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A document. Not a duplicate action.",
+      "keywords": [
+        "document",
+        "page"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Read document",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Removed the internal fold elbow and extra lines; the clipped outer corner identifies the file. At 24 px, two unequal left-aligned lines replace the single centered bar, which had the form of a file-minus (revised 2026-11-01). At 12/16 px this is an intentionally simpler clipped document, on the half-pixel grid at 16 px.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "folder",
+      "label": "Folder",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A folder or grouped files.",
+      "keywords": [
+        "directory",
+        "organize"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Project files",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the tabbed silhouette and compact detail reduction. The 12 px master omits the filled header slit. No added decorative cuts are needed. Filled areas are intentional; do not normalize them to the area of line glyphs. The 12 px drawing moved to whole pixels and the 16 px drawing to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "link",
+      "label": "Link",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "A link or related resource. Not external navigation by itself.",
+      "keywords": [
+        "url",
+        "chain"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Copy link",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Redrawn 2026-11-01 as two open hooks on one 45° axis, each returning into the other's mouth. Same two-part topology at every size and no closed counters, so nothing fills in at 12 px. A local design judgment chosen over bracket-and-dash and closed-ring prototypes, not a recognition result. The heavier style uses a 1.5 / 2 / 3 px stroke: 24 px takes the heavier 3 px token so the selected style stays distinct, while 12/16 px stay lighter so the hooks do not clog. Label the actual action: Copy URL, Open link, or Attach link are different operations. The filled 12/16 px hook gaps sit just under the general gap target and are recorded as active exceptions.",
+        "exceptions": [
+          "link-filled-12-hook-gap",
+          "link-filled-16-hook-gap"
+        ],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "bookmark",
+      "label": "Bookmark",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Save a reference for later. Different from saving changed data.",
+      "keywords": [
+        "reading",
+        "later"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Bookmark page",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Reduced the oversized 16 px silhouette to a 13 px height. It now respects the normal compact vertical field while remaining narrower than a square icon. Bookmark means save a resource; keep it distinct from Star/favorite in product copy.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "star",
+      "label": "Star",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Favorite or rating, with context. Distinct from Focus.",
+      "keywords": [
+        "favorite",
+        "rating"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Favorite",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the five-point outline/filled silhouette. It is distinct from Focus. Its pointed key shape must not be forced into square-icon proportions. A small 16 px horizontal overshoot is intentional; test the favorite state in context.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "category": "content",
+      "legacyGroup": "Content",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A date or calendar.",
+      "keywords": [
+        "date",
+        "schedule"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Choose date",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Redrawn 2026-11-01. A contour-weight header rail and contour-weight bindings carry the calendar reading; one off-center date at 16/24 px replaces the two date marks, and 12 px keeps only frame, bindings and rail. The single cut corner is gone because it competed with the rail. A local design judgment, not a recognition result.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "category": "people-communication",
+      "legacyGroup": "People",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A person or profile.",
+      "keywords": [
+        "person",
+        "account"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Your profile",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the octagonal head and cut shoulders. The head and body remain distinct in both styles, with no extra facial details. The small outlined head is only an identity cue; it is not a detailed avatar. The 12 px body moved to whole pixels and the 16 px drawing to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "category": "people-communication",
+      "legacyGroup": "People",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A message or conversation.",
+      "keywords": [
+        "message",
+        "conversation"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Open messages",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the message silhouette and micro detail removal. The tail remains the identifying feature. No content line is added at 12 px. The 16 px outline deliberately omits the line that appears as a cutout in the filled body. The 16 px bubble and filled line moved from scaled thirds to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "bell",
+      "label": "Bell",
+      "category": "people-communication",
+      "legacyGroup": "People",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Notifications. Do not imply a warning or failure by shape alone.",
+      "keywords": [
+        "notification",
+        "alert"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Notifications",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the crown, bell body, and detached clapper. The clapper gap remains open instead of adding visual mass by joining the parts. Pair the icon with notification text or a named control. The 16 px bell and clapper moved from scaled thirds to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "category": "status-security",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A warning requiring a visible text label in every supported appearance and native size.",
+      "keywords": [
+        "caution",
+        "attention"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Needs attention",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Redrawn 2026-11-01. The triangle overshoots the keyline so the punctuation has a real field: outline mark-to-frame clearance now meets 1 / 1.5 / 2 px, and filled punctuation meets 1.5 / 2 px wide at 16 / 24 px. At 12/16 px the triangle is built around the pixel column left of center so the 1 px mark stays crisp. The 16 px outline stem-to-dot gap stays at 1 px, a recorded exception. The size-aware restriction record still governs use; independent approval remains pending.",
+        "exceptions": [
+          "warning-stem-dot-gap-16"
+        ],
+        "usageRestriction": "warning-visible-label"
+      }
+    },
+    {
+      "id": "info",
+      "label": "Info",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "silhouette",
+      "meaning": "Information about content or a status. Distinct from Help and Warning.",
+      "keywords": [
+        "information",
+        "about"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "About this item",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Octagonal frame with positive/negative information mark. Square punctuation.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "help",
+      "label": "Help",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "silhouette",
+      "meaning": "Assistance or documentation. Distinct from information status.",
+      "keywords": [
+        "question",
+        "support"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Help center",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Octagonal frame with a simplified question mark. Explicit native punctuation spacing. The 16 px hook now ends in a short stem centered over the dot, as at 24 px (2026-11-01).",
+        "exceptions": [],
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "lock",
+      "label": "Lock",
+      "category": "status-security",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Restricted access or locked content.",
+      "keywords": [
+        "secure",
+        "private"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Private access",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the open shackle and contrasting body pair. The shackle stays open in both styles. Small outlines omit the keyhole rather than crowding the frame. Do not use a padlock alone to assert that a process is secure. The 16 px body and keyhole moved from scaled thirds to the half-pixel grid (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "shield",
+      "label": "Shield",
+      "category": "status-security",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Protection or policy. Pair with the actual status in text.",
+      "keywords": [
+        "protection",
+        "policy"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Protection enabled",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Shortened and lifted the 16/24 px body. Reduced low placement and edge pressure while keeping a stable, matching pair. A shield indicates a concept; visible text must describe the actual status.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "gear",
+      "label": "Gear",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "pilot-addition",
+      "pairModel": "silhouette",
+      "meaning": "A gear settings metaphor. Sliders remains a separate adjustment glyph.",
+      "keywords": [
+        "settings",
+        "cog",
+        "preferences"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "General settings",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/additions.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Eight simple teeth and one open hub. No concentric decorative rings.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "terminal",
+      "label": "Terminal",
+      "category": "system-data",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A command interface. Not an ordinary next arrow.",
+      "keywords": [
+        "console",
+        "command"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Open terminal",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Redrawn 2026-11-01. A square window no longer repeats File's clipped corner. The prompt keeps open arms and a cursor at every size. Prefer a labeled 16 px or larger developer-tool control. A local design judgment, not a recognition result.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "category": "system-data",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "A branching relationship. Use a visible label, especially at 12 px.",
+      "keywords": [
+        "workflow",
+        "fork"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Workflow branch",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Unified node contour weights; adjusted larger-node spacing and the 24 px footprint. All sizes keep one connected three-node structure. Outline node openings are 1 / 1.5 / 2 px. The 12 px outline remains dense. Label it, and prefer 16 px or larger for an action.",
+        "exceptions": [],
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "chart",
+      "label": "Chart",
+      "category": "system-data",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "A bar chart or analytics view.",
+      "keywords": [
+        "analytics",
+        "metrics"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "View analytics",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the ascending bars after reviewing the 12 px raster. The micro outline keeps its optical half-pixel x offset for crisp verticals. Baselines match across weights. Do not force a heavier chart into the painted area of a single thin line. The 16 px bars moved to one shared pixel phase so all three render at equal weight (2026-11-01).",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "play",
+      "label": "Play",
+      "category": "media",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "silhouette",
+      "meaning": "Play media or start an operation. Do not auto-mirror in RTL.",
+      "keywords": [
+        "run",
+        "start"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Run preview",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained the triangle and matching transparent outline. Its optical right shift is deliberate. A triangular form must not be centered by painted area alone. An interior taper is not a failed spacing channel.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "pause",
+      "label": "Pause",
+      "category": "media",
+      "legacyGroup": "Actions",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Pause an operation. Do not use for stop.",
+      "keywords": [
+        "hold",
+        "wait"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Pause preview",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "revised-from-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Retained two regular/heavier solid bars. Hollowing the narrow bars would create fragile internal slots at small sizes. Do not interpret filled styling alone as playback state. Bars revised 2026-11-01 to mirror about the center on one pixel phase; the 12 px filled bars are now 2 px on whole pixels.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "focus",
+      "label": "Focus",
+      "category": "media",
+      "legacyGroup": "System",
+      "stage": "baseline",
+      "pairModel": "weight",
+      "meaning": "Focus a region. Context is required; not a star or fullscreen symbol.",
+      "keywords": [
+        "target",
+        "region"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Focus selection",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "preserved-user-supplied-construction",
+        "source": "source/outline/baseline.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "baseline-preserved",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Shortened the corner brackets, reduced the larger footprint, and lightened the heavier variant. The center square stays distinct; the symbol is not Expand or a four-point Star. Product-dependent meaning. Use Focus selection or similarly specific text.",
+        "exceptions": [],
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "A pulse of activity; existing registry activity motif.",
+      "keywords": [
+        "pulse",
+        "log",
+        "history",
+        "activityLog"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "View activity",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "One open pulse stroke on a shared baseline, in regular and heavier weights. Its parallel 2:1 flanks keep it apart from Chart and from a plain zigzag. Peaks are cut flat on the pixel grid, because a full mitre left a sliver that font rendering turned into stray pixels. Filled 12 px uses a 1.5 px stroke: the 2 px token closed the pulse.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "align-center",
+      "label": "Align center",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Align selected objects on a horizontal center axis; distinct from text paragraph formatting.",
+      "keywords": [
+        "objects",
+        "selection",
+        "guide",
+        "center",
+        "alignCenterHorizontally"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Align objects center",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Two panels of different widths share one x center on a vertical guide, which runs above, between and below them. This is object alignment, not centered text. The guide sits on column 5-6 at 12 px, so the panels center on 5.5.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "align-left",
+      "label": "Align left",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Align selected objects to their left edge; distinct from paragraph formatting.",
+      "keywords": [
+        "objects",
+        "selection",
+        "guide",
+        "left",
+        "alignLeft"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Align objects left",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Two panels of different widths share one left edge beside a vertical guide. This is object alignment, not paragraph formatting.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "align-right",
+      "label": "Align right",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Align selected objects to their right edge; distinct from paragraph formatting.",
+      "keywords": [
+        "objects",
+        "selection",
+        "guide",
+        "right",
+        "alignRight"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Align objects right",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "The exact mirror of Align left. It describes the objects' edge and does not flip under RTL.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "box",
+      "label": "Box",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A package or inventory box.",
+      "keywords": [
+        "package",
+        "parcel",
+        "inventory",
+        "box"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "View inventory",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A hexagonal carton on 2:1 slopes. Three faces stay open in Outline; in Filled they are three solid faces divided by contour-weight seams. The 12 px master is one pixel narrower, so its center seam is a crisp column.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "check-circle",
+      "label": "Check circle",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Confirmed or successful status in an enclosing circle.",
+      "keywords": [
+        "success",
+        "done",
+        "confirmed",
+        "checkCircled"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Completed",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Info's frame with a Check proportion fitted inside the clearance target. Filled cuts a slightly heavier check, so the negative mark holds at 12 px.",
+        "exceptions": [],
+        "usage": "Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "circle",
+      "label": "Circle",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A circular shape; do not imply control behavior.",
+      "keywords": [
+        "shape",
+        "round",
+        "ellipse",
+        "circle"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Circle shape",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "The family's circle is a regular octagon: equal flats and diagonals, on the same keyline as Info. Its 12 px outline is the half-scale of 24 px because the 1 and 2 px contours keep that exact ratio; the drawing lands on whole pixels natively.",
+        "exceptions": [],
+        "usage": "A plain shape, not a control. Do not imply behavior; name any action on the enclosing control."
+      }
+    },
+    {
+      "id": "ban",
+      "label": "Ban",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Prohibited or unavailable action.",
+      "keywords": [
+        "prohibited",
+        "unavailable",
+        "block",
+        "circleBackslash"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Not allowed",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Info's frame with a falling diagonal running chamfer to chamfer. Filled divides the solid into two parts with a negative slash, so it cannot be mistaken for a filled Close circle.",
+        "exceptions": [],
+        "usage": "Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "close-circle",
+      "label": "Close circle",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Dismissed or failed status in an enclosing circle.",
+      "keywords": [
+        "error",
+        "dismissed",
+        "failure",
+        "crossCircled"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Failed",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Info's frame with a centered cross fitted inside the clearance target. Filled cuts a slightly heavier cross, so the negative mark holds at 12 px.",
+        "exceptions": [],
+        "usage": "Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A pointer or selection tool.",
+      "keywords": [
+        "pointer",
+        "selection",
+        "arrow",
+        "cursorArrow"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Select tool",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/symbols.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A pointer with a true vertical edge and a 45° leading edge, so both stay crisp. Its tail is narrower than two contours and stays solid in Outline. It is not a rotated Arrow.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "dot",
+      "label": "Dot",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "A small solid dot, optically distinct from the full-size Circle.",
+      "keywords": [
+        "bullet",
+        "indicator",
+        "point",
+        "dotFilled"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Status marker",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Always solid, because hollow belongs to Circle. A small chamfered dot, with Filled one step larger. Its 12 px Outline dot is 3 px on the 5.5 center, so it is crisp.",
+        "exceptions": [],
+        "usage": "A plain shape, not a control. Do not imply behavior; name any action on the enclosing control."
+      }
+    },
+    {
+      "id": "chevrons-left",
+      "label": "Chevrons left",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "Jump left or to the first item, with an enclosing action label.",
+      "keywords": [
+        "first",
+        "jump",
+        "rewind",
+        "doubleArrowLeft"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Go to first page",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/text.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "The exact 180° rotation of Chevrons right. It is literal and does not flip under RTL.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevrons-right",
+      "label": "Chevrons right",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "Jump right or to the last item, with an enclosing action label.",
+      "keywords": [
+        "last",
+        "jump",
+        "forward",
+        "doubleArrowRight"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Go to last page",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/text.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Two copies of the native Chevron right at each master, with the pitch tuned per weight so the 1, 1.5 and 2 px gap survives. Painted bounds are centered, not the tip coordinates.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "bold",
+      "label": "Bold",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Bold text formatting; authored letter B, no font outline reuse.",
+      "keywords": [
+        "font",
+        "format",
+        "weight",
+        "fontBold"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Bold text",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/text.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "An authored capital B, no font outline: chamfered bowls with a waist notch, and a larger lower bowl as in a drawn letter. Outline has contour-weight strokes; Filled has a heavy stem and two small counters.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "type",
+      "label": "Type",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "Typography or text-size controls; authored letter T.",
+      "keywords": [
+        "font",
+        "typography",
+        "size",
+        "fontSize"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Text size",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/text.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "An authored roman T, no font outline. The head drops and foot keep it apart from Plus, and 12 px outline strokes sit on column 5-6. Filled stems are 3 and 4 px at 16 and 24 px.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "group",
+      "label": "Group",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Group or arrange selected objects, matching the current selection-group meaning.",
+      "keywords": [
+        "selection",
+        "arrange",
+        "combine",
+        "group"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Group selection",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A marching-ants selection frame around two objects. It means grouped selection, not people. Side dashes separate it from Focus, which has corners only. Outline objects are apart; Filled objects overlap into one.",
+        "exceptions": [],
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "heart",
+      "label": "Heart",
+      "category": "content",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Like or favorite with context; distinct from Star.",
+      "keywords": [
+        "favorite",
+        "love",
+        "heart"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Like",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/symbols.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A chamfered heart on 45° edges with a real top notch. Distinct from Star; the meaning still needs context.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "input",
+      "label": "Input",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A text input field with an insertion cursor.",
+      "keywords": [
+        "field",
+        "form",
+        "text-box",
+        "input"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Text field",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "An I-beam taller than the field breaks the frame into two open brackets, so there is no boxed counter to confuse with Terminal.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "laptop",
+      "label": "Laptop",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A laptop device or desktop-sized preview.",
+      "keywords": [
+        "device",
+        "computer",
+        "desktop",
+        "laptop"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Desktop preview",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A landscape screen over a wider chamfered base, separated by the gap target. Filled makes the screen solid and keeps the base.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "wand",
+      "label": "Wand",
+      "category": "actions",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "An assisted or automatic action, with an action label.",
+      "keywords": [
+        "magic",
+        "automatic",
+        "assist",
+        "magicWand"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Generate summary",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/symbols.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A 45° rod with a separate spark. Outline uses a plus; Filled uses a concave four-point sparkle, because a solid diamond read as a hammer head. Accent marks: none at 12 px, one at 16 px, two at 24 px.",
+        "exceptions": [],
+        "usage": "Keep a visible action label: the wand does not say what the automatic action does."
+      }
+    },
+    {
+      "id": "smartphone",
+      "label": "Smartphone",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A mobile phone device or narrow preview.",
+      "keywords": [
+        "mobile",
+        "phone",
+        "device"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Mobile preview",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A portrait chamfered body with a low home mark: a square block at 12 px, a bar at 16 and 24 px. Filled turns the mark negative.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "moon",
+      "label": "Moon",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Dark appearance or night; not a generic status.",
+      "keywords": [
+        "dark",
+        "night",
+        "theme",
+        "moon"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Dark appearance",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/symbols.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A faceted crescent from octagon edges, symmetric about the falling diagonal. The inner edge has equal facets at 24 px, which keeps it from reading as an L.",
+        "exceptions": [],
+        "usage": "Name the appearance on the enclosing control; this is not a generic status."
+      }
+    },
+    {
+      "id": "square",
+      "label": "Square",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "A square shape; do not imply control behavior.",
+      "keywords": [
+        "shape",
+        "rectangle",
+        "square"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Square shape",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Sharp corners one step inside Circle's keyline, because corners carry more visual mass than chamfers. 12 and 16 px outer edges land on whole pixels.",
+        "exceptions": [],
+        "usage": "A plain shape, not a control. Do not imply behavior; name any action on the enclosing control."
+      }
+    },
+    {
+      "id": "layers",
+      "label": "Layers",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "A stack of layers or related objects.",
+      "keywords": [
+        "stack",
+        "sheets",
+        "levels"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "View layers",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "A top sheet over parallel sheet edges on 2:1 slopes. 12 and 16 px carry one lower sheet; 24 px carries two. Filled solidifies the top sheet.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "sun",
+      "label": "Sun",
+      "category": "status-security",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Light appearance or daylight.",
+      "keywords": [
+        "light",
+        "day",
+        "theme",
+        "sun"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Light appearance",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/symbols.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "An octagonal hub with eight rays that clear each other by the gap target, which is why rays stay short. The 12 px rays are single pixels on the 5.5 center. Filled has a solid hub, larger at 16 and 24 px, not heavier rays.",
+        "exceptions": [],
+        "usage": "Name the appearance on the enclosing control; this is not a generic status."
+      }
+    },
+    {
+      "id": "table",
+      "label": "Table",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "Tabular data with a header and cells.",
+      "keywords": [
+        "rows",
+        "columns",
+        "spreadsheet",
+        "table"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "View table",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "One connected frame with a header rail, a row rule and a column rule. Filled keeps a solid header and cuts four cells. The 12 px master is fully on whole pixels.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "loader",
+      "label": "Loader",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "An in-progress segmented ring; animation belongs to the caller.",
+      "keywords": [
+        "progress",
+        "spinner",
+        "pending",
+        "update"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Loading",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/status.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Seven of the eight facets of a regular octagon, with radial cuts that keep parallel gaps at or above the target. One facet is omitted so rotation stays visible. Filled uses a heavier ring, not larger facets. Animation belongs to the caller; no motion is included.",
+        "exceptions": [],
+        "usage": "Announce progress in text; the caller owns motion and reduced-motion behavior."
+      }
+    },
+    {
+      "id": "code",
+      "label": "Code",
+      "category": "system-data",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "weight",
+      "meaning": "Source code brackets, distinct from the Terminal prompt.",
+      "keywords": [
+        "source",
+        "developer",
+        "brackets",
+        "code"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "View source",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/text.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Source brackets and a slash with no frame, which separates it from Terminal’s windowed prompt. Filled stops at 1.25 and 1.75 px at 12 and 16 px: heavier strokes turned the brackets into arrowheads or broke the gap target.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "category": "navigation",
+      "legacyGroup": null,
+      "stage": "product-addition",
+      "pairModel": "silhouette",
+      "meaning": "An overview of multiple panels, distinct from a uniform Grid.",
+      "keywords": [
+        "overview",
+        "panels",
+        "home",
+        "dashboard"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Overview",
+      "availability": {
+        "outline": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-construction-with-family-primitives",
+        "source": "source/outline/product/objects.py",
+        "externalArtworkUsed": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "product-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Four panels in staggered columns: tall over short, then short over tall. Unequal panels separate it from Grid’s four equal cells.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    }
+  ]
+}

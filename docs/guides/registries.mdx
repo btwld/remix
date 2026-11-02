@@ -41,7 +41,7 @@ its full commit SHA. It checks that your preset exists in that branch and
 writes `remix.yaml`. If the branch is not published, initialization fails and
 creates no files.
 
-An optional `iconLibrary` (`remix` or `lucide`) lives in that same schema 3
+An optional `iconLibrary` (`remix`, `rounded`, or `lucide`) lives in that same schema 3
 file. Templates carry icon placeholders, resolved at install; to switch an
 installed project, change the setting and reinstall every installed item that
 uses icons with `add --diff`, then `--overwrite`, naming them all in one

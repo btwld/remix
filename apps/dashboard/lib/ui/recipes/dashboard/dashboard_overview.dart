@@ -254,10 +254,10 @@ class _UiActivityIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
-      .customer => (RemixIcons.person, UiAccentColor.ceu),
+      .customer => (RemixIcons.user, UiAccentColor.ceu),
       .order => (RemixIcons.box, UiAccentColor.ceu),
-      .payment => (RemixIcons.checkCircled, UiAccentColor.serra),
-      .alert => (RemixIcons.exclamationTriangle, UiAccentColor.sol),
+      .payment => (RemixIcons.checkCircle, UiAccentColor.serra),
+      .alert => (RemixIcons.warning, UiAccentColor.sol),
     };
 
     return UiAccentScope(
@@ -281,7 +281,7 @@ Widget _ordersCard(UiDashboardSampleData data, VoidCallback? onViewOrders) =>
                 key: const ValueKey('overview-view-orders'),
                 size: .size1,
                 label: 'View all',
-                trailingIcon: RemixIcons.doubleArrowRight,
+                trailingIcon: RemixIcons.chevronsRight,
                 onPressed: onViewOrders,
               ),
             ],

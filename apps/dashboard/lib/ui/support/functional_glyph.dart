@@ -6,20 +6,20 @@ abstract final class _Glyphs {
   static const arrowUp = RemixIcons.arrowUp;
   static const square = RemixIcons.square;
   static const copy = RemixIcons.copy;
-  static const rotateCcw = RemixIcons.reload;
+  static const rotateCcw = RemixIcons.refresh;
   static const chevronUp = RemixIcons.chevronUp;
   static const chevronDown = RemixIcons.chevronDown;
   static const circle = RemixIcons.circle;
   static const circleDot = RemixIcons.dotFilled;
   static const check = RemixIcons.check;
-  static const x = RemixIcons.cross2;
-  static const circleAlert = RemixIcons.exclamationTriangle;
-  static const squareTerminal = RemixIcons.code;
-  static const loaderCircle = RemixIcons.update;
-  static const circleCheck = RemixIcons.checkCircled;
-  static const ban = RemixIcons.circleBackslash;
-  static const circleX = RemixIcons.crossCircled;
-  static const shieldCheck = RemixIcons.lockClosed;
+  static const x = RemixIcons.close;
+  static const circleAlert = RemixIcons.warning;
+  static const squareTerminal = RemixIcons.terminal;
+  static const loaderCircle = RemixIcons.loader;
+  static const circleCheck = RemixIcons.checkCircle;
+  static const ban = RemixIcons.ban;
+  static const circleX = RemixIcons.closeCircle;
+  static const shieldCheck = RemixIcons.lock;
 }
 
 /// Builds the chevron that reports a collapsible surface's state.

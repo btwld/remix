@@ -5,7 +5,7 @@
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
 ///     [--source both|hosted|checkout]
 ///     [--item dashboard_demo|dashboard_shell|icons]
-///     [--icon-library remix|lucide] [--hosted-cli] [--jobs N] [--keep]
+///     [--icon-library remix|rounded|lucide] [--hosted-cli] [--jobs N] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -294,7 +294,7 @@ const _baseImportPackages = <String>[
 ];
 
 /// The `iconLibrary` values a fresh app may select.
-const _iconLibraries = {'remix', 'lucide'};
+const _iconLibraries = {'remix', 'rounded', 'lucide'};
 
 /// The official registry the published CLI reads.
 const _officialRepository = 'btwld/remix';
@@ -693,7 +693,7 @@ Future<void> main(List<String> arguments) async {
       'Usage: dart run tool/check_open_code.dart '
       '[--preset vanilla|fortal|heroui] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell|icons|ownership (requires --source '
-      'checkout; icons/ownership are vanilla)] [--icon-library remix|lucide] '
+      'checkout; icons/ownership are vanilla)] [--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep]',
     );

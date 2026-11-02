@@ -19,7 +19,7 @@ and `disclosureStyle`, so their hover, press, focus, selected variants,
 animations, and modifiers resolve against the child control's own state.
 
 Functional glyphs (send, stop, copy, retry, disclosure, tool, and statuses)
-have neutral Material-free `remix_ui_icons` defaults. Their public builders remain the
+have neutral Material-free defaults from `remix_ui_icons`. Their public builders remain the
 replacement point; visual color and size still come from host styles.
 
 A `MixScope` is not an Agent requirement. Add one only when the host's own

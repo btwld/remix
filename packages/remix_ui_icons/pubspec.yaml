@@ -1,5 +1,7 @@
 name: remix_ui_icons
-description: Tree-shakable icons for Flutter applications built with Remix UI.
+description: >-
+  Vector UI icons for Flutter: the Outline and Rounded families in one
+  tree-shakable icon font, built for Remix UI.
 repository: https://github.com/btwld/remix
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
@@ -10,7 +12,7 @@ topics:
   - design-system
   - remix
 
-version: 0.1.0
+version: 1.0.0-beta.1
 
 # Consumer floor, matching the published Remix packages.
 environment:

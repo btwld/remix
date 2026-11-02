@@ -75,7 +75,7 @@ class _VanillaDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: VanillaTextField(
                 key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
+                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
@@ -104,7 +104,7 @@ class _VanillaDashboardCustomersPageState
                       context,
                       RemixToastData(
                         title: '${_selectedIds.length} customers archived',
-                        icon: RemixIcons.checkCircled,
+                        icon: RemixIcons.checkCircle,
                         action: const RemixToastAction(
                           label: 'Undo',
                           onPressed: _noop,
@@ -378,7 +378,7 @@ Widget _actions(BuildContext context, String value) => VanillaMenu<String>(
   trigger: RemixMenuTrigger.control(
     builder: (_, menu) => VanillaIconButton.ghost(
       size: .small,
-      icon: RemixIcons.dotsHorizontal,
+      icon: RemixIcons.more,
       semanticLabel: 'Actions for $value',
       focusNode: menu.focusNode,
       onPressed: menu.toggle,
@@ -485,7 +485,7 @@ class _Empty extends StatelessWidget {
               .borderRadius(.all(VanillaTokens.radiusMd()))
               .color(VanillaTokens.secondary()),
           child: StyledIcon(
-            icon: RemixIcons.magnifyingGlass,
+            icon: RemixIcons.search,
             style: IconStyler()
                 .size(VanillaTokens.s5)
                 .color(VanillaTokens.secondaryForeground()),

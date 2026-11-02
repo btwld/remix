@@ -1,0 +1,7 @@
+{
+  "name": "vector-ui-icons",
+  "version": "0.1.0",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "description": "Private Vector UI icon pack. Outline and Rounded are sibling families. Not for npm or pub.dev publication."
+}

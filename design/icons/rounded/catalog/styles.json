@@ -1,0 +1,23 @@
+{
+  "rounded": {
+    "outlineWidth": {"12": 1, "16": 1.5, "24": 2},
+    "openGlyphFilledWidth": {"12": 2, "16": 2.5, "24": 3},
+    "linkFilledWidth": {"12": 1.75, "16": 2.5, "24": 3},
+    "counterFloor": {"12": 0.9, "16": 1.35, "24": 1.8},
+    "meaningfulGapTarget": {"12": 1, "16": 1.5, "24": 2},
+    "productPathCommands": ["M", "L", "Z"],
+    "validatorPathCommands": ["M", "L", "C", "Q", "A", "Z"],
+    "masterSelection": {"12": 12, "14": 16, "16": 16, "20": 24, "24": 24, "32": 24},
+    "objectCornerToken": {"12": 1.6, "16": 2.4, "24": 3.4},
+    "acuteJoin": {"12": 1.25, "16": 2, "24": 2.6},
+    "cutJoin": {"12": 0.3, "16": 0.45, "24": 0.6},
+    "starJoin": {"12": 0.65, "16": 0.85, "24": 1.0},
+    "corners": "object outer corners use CORNER_TOKEN (~1.6–1.7× outline); acute cues use ACUTE_JOIN (~1.25–1.33× outline), on the keyline; boolean cut terminals use CUT_JOIN (0.3× outline); star uses STAR_JOIN (~0.5×) so five-point mass survives",
+    "terminals": "round",
+    "productRepresentation": "expanded-mlz-flattening-of-round-construction",
+    "flatteningTolerancePx": 0.05,
+    "quadSegs": 8,
+    "legacyRoundedPlan": "The undrawn fillet proposal previously called Rounded (0.5–1× on Outline) needs a product naming decision",
+    "notOutlineFilter": "Rounded icons are constructed from Rounded primitives, not offset Outline paths"
+  }
+}

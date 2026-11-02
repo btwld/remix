@@ -183,7 +183,7 @@ class _PlaygroundDashboardSettingsPageState
                   .spacing(PlaygroundTokens.s4),
               children: [
                 const PlaygroundCallout(
-                  icon: RemixIcons.magicWand,
+                  icon: RemixIcons.wand,
                   text:
                       'Changes are deterministic and remain local to the demo.',
                 ),

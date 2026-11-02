@@ -1,0 +1,285 @@
+{
+  "decision": "Owner-authorized local shape corrections, 2026-11-01. This records intent and exact bytes. It is not a design, recognition, accessibility or release approval.",
+  "files": {
+    "filled/12/calendar.svg": {
+      "from": "453900957bd095b7f59c2457f4966b2247a9cdcb4c5669159a0e0f2f819358db",
+      "to": "daa6eaa9d23cd28dc40ee00953637465a6c56c20512d9b36ce3f2be55727bc62"
+    },
+    "filled/12/folder.svg": {
+      "from": "5ad7528b91ffb402b43360b21958a3936e038798edf729d1e6eb56361ef1cc12",
+      "to": "83f9cde3fdcef3d991f9b40a15e3cbce745af5fa3137c2ad4c62d2811a7ee333"
+    },
+    "filled/12/home.svg": {
+      "from": "bd2801a02a39a31ec9d36187cc6aec0791ea03e1fdb7767e855fbf440fb625f4",
+      "to": "dac07c4ce1b20797746a70a1fb9c51f3b32172066d2159059c4c0f355b4aace4"
+    },
+    "filled/12/link.svg": {
+      "from": "0595dd4613b62bf1bc99d900611d636dcea96d9942c9f9ff02b7e8ba5dc4bac1",
+      "to": "7ba3b689532558ebe8753235df30e06579e260541ac7881a3afb4d74653f1cdc"
+    },
+    "filled/12/pause.svg": {
+      "from": "7108161637e81f38bdb2c5041db5861de5e44f1525266c662363e6f50e1fc930",
+      "to": "52e07bb2772f70e40e819b91b2315c0492847a9cfc24ea69f07916ec55ec7a02"
+    },
+    "filled/12/search.svg": {
+      "from": "7521099c03e09dfaefc8f047ff5072c664769a214bcd10522660f93dac22d76d",
+      "to": "c46ad500d22de07942806b98821983b7ef7296ab00e1c5f28c3386788b3a6584"
+    },
+    "filled/12/terminal.svg": {
+      "from": "a65e8904f8e6e40deec6c5435796792dbad0a766b99d4319cdc039128fe2ce6f",
+      "to": "3a0fa5bb51bfaa839d11e0a2b50019c36de734f80601caa8b1455ac7f6171b97"
+    },
+    "filled/12/user.svg": {
+      "from": "ae8019993dee13b251d3014f72e7f49a952c9d9c9394d416017db4e3acd778c6",
+      "to": "cd0b967a90f70411105742f7a8d7222ba0d8fd55e917cf3683bc50ea9332c27a"
+    },
+    "filled/12/warning.svg": {
+      "from": "08e261fd0b04e6a36ab85c8884347a95bb3c826dc6951bd9ba4129b42bb560e6",
+      "to": "7845ad6471a730e397347a3b5cc3046c780fca453a16e5d4ce63f699bfec4636"
+    },
+    "filled/16/arrow-up-right.svg": {
+      "from": "e5d6a6a103cd3e79a67ad7f756f7bdd27eb58d8b0ebe29bed06c4a12c1e277a7",
+      "to": "c10702d9bb018dce3e4928a39f027b85312c68bf327f3d9906a19c9bfcb72b8e"
+    },
+    "filled/16/bell.svg": {
+      "from": "41f597e0603b47cf90fec5bd9785fe85f1c1e28b4899a96de408e0e432882e77",
+      "to": "7496293e9817ceb2327c175a5f52b9826345f64c9d9a302f73936611c740b86b"
+    },
+    "filled/16/calendar.svg": {
+      "from": "32c671166101ee8b8bcb7eb7fc3e3fb2d294afbb3aa9c38842ca73e591b5d019",
+      "to": "f2a5f41a5ef006b9860f381b761b1e1403e91619b6a01f21835ddf9d8d90ea44"
+    },
+    "filled/16/chart.svg": {
+      "from": "4e97dbabcf990fa43580082bef62bf758d388984a5e151d75267d2ede027ac0d",
+      "to": "858b6a18b96e1f4515f01fd73f546e884890816e7d138b18ddc8493473885e08"
+    },
+    "filled/16/chat.svg": {
+      "from": "738eff39a08be636c61ce59d925c8ac5a4a3738ad5dc3a5e2e84aaa1ea140acc",
+      "to": "6fdd9633950dcc59dcb62694f171d48166d265818a02de04d903dae8b66564f3"
+    },
+    "filled/16/copy.svg": {
+      "from": "2d2e195a98fbbd644f26e657846bcaa9b00d2f7e93f805fb366515ca3d90d352",
+      "to": "81edb0149ddce4801815d5f0b65775ae4894209366bd3e1ff5abb961a062b815"
+    },
+    "filled/16/file.svg": {
+      "from": "32ec77561f3e0afec43fcea3e4e7c24de3b9741f41839621d00556d095ee58fd",
+      "to": "e62a556cb685ba989103e9f7c1498174629f78b19a3f8963a7f03f7d2f0f8c62"
+    },
+    "filled/16/folder.svg": {
+      "from": "0743abeaf329ca808718a54916fc64091cdf446cb0c4471ca5b372c003d1ebac",
+      "to": "acb0abd539d8e962100c6ca4b77180cea024d5d72462ea44bcb4fce0bf8b4864"
+    },
+    "filled/16/help.svg": {
+      "from": "a10224850cf5cbaa1c94bb8d5c914d23587bcf4baa952a0deed744159ba656b5",
+      "to": "09f921b7db2e3c9812025dd58977eca5260c27ba131bc6fc371e20644d19f1af"
+    },
+    "filled/16/home.svg": {
+      "from": "06974b62f23acad500144644adfec8c61ac04d94ad657bb04118c58e0ef6bbce",
+      "to": "c12248fce2983cc1bd27bf432f25ef957f8f88e2dfb3f5e813643140a9e522a2"
+    },
+    "filled/16/link.svg": {
+      "from": "cd11dd1aa13e11790223dcfad0b2822db0e13ad8d23438ed7da6a2999f8fd816",
+      "to": "518aced9a7fa7af5816a9bc8dd27ba343782f3ceafe30064071e00bf7ad6189a"
+    },
+    "filled/16/lock.svg": {
+      "from": "76cd0582b3e12c81960f1fff2ebb9a7393b11b3b5dc652897088bce45ff14805",
+      "to": "21e6d15e7cf26547245cc31dae77b543b9923175627d9327e95a3108905c9e13"
+    },
+    "filled/16/menu.svg": {
+      "from": "3690f362dfd0f58e0036ed5e1ebd50ebb10c27abc6376d4d4ca2352699ba9559",
+      "to": "478844d39839de917add86038cc2692af3967fba397208ce40382220e0645751"
+    },
+    "filled/16/more.svg": {
+      "from": "e81a85dca7f37aa09d412383444c8f876c8669d6e9083c29bec0427a160c2cf1",
+      "to": "e135105ffd31494999d915bc85a18ff9a454812b4ae990450044ca05019c6a87"
+    },
+    "filled/16/pause.svg": {
+      "from": "f7eff183416315a52ad76e0b49b30981ce483ffafdf46c8734b1aed4435435c1",
+      "to": "c662b146f43a06be1ad4335b85d403e7fbbc413f3492063cbc2b04f398218efb"
+    },
+    "filled/16/terminal.svg": {
+      "from": "0bb10ac268bdaa44d670c0e6f58fc692e727c7afedf4c0e9b2cb1ef31191fa65",
+      "to": "0c0c1b38dd9fd86b48f1e4e8e39e3540de314f5c49de78d1ee00e15ff84aef25"
+    },
+    "filled/16/user.svg": {
+      "from": "f3dd3d88bcf1b823e15afc7fa8c0428d4f70cadd0036f0c6b8c71cd0c3807d4d",
+      "to": "4a10fa377caebc9f798fc337c26be654917ac0bd72491d422e2242b109ce8269"
+    },
+    "filled/16/warning.svg": {
+      "from": "43979e5c0d923bbf75381a5267f32f65355482fd93f20a62c92c757ed7912ffe",
+      "to": "fd93e4569b5c982532275052af8f7a27998613e3e386513dc4efa596a9db5823"
+    },
+    "filled/24/calendar.svg": {
+      "from": "404733e704876d22f00cb9f271579d58ce374c440513e158c921aa23c8a9e83a",
+      "to": "c8e9b41db6b2b3c2491718b68b445c32e94b04fb7a5e12c8bd8f9f8ddc7bb0e5"
+    },
+    "filled/24/file.svg": {
+      "from": "d08384f4ada0eb22ab1ca8481460066073282b8aea10d921ab0da88b3038e8d9",
+      "to": "69232d772bab8454d9a18a0fdc4ce0a5f3f019c068c55f43cc10d115a46a5bdc"
+    },
+    "filled/24/link.svg": {
+      "from": "30bfba71acbdda6a97660cfdd38cd20a661a5d7b956add001fe73e11d68de1c0",
+      "to": "2426c1e2ae63634a5bffb6b798eee13aa778af71fd58551f4eac19bed939077c"
+    },
+    "filled/24/terminal.svg": {
+      "from": "89ebfda82383bb5b0e0d0eb47fc29fbe503ee1a8e083d2a95efbd724e5e2640a",
+      "to": "515ce56080e81fb79d2a8329141b6b7420a912af3457dbb58ce38507b7cc8e6a"
+    },
+    "filled/24/warning.svg": {
+      "from": "a538654374507fdbe1ece22a1f7f3b21dbf3c06138600c9c30c9f4229dc62be3",
+      "to": "d8bd8d73af829ba8418cb8eb0bddb1db38321eebfa3f7574a45cca4e4e9b791e"
+    },
+    "outline/12/arrow-down.svg": {
+      "from": "8b14087d8ed84e26207a37903b4262aa401302acf9271a36b831e9c8a9562b8b",
+      "to": "9167dc22853e3123295a46b1601a162c063293b7e95bc69144f3ed729ed20020"
+    },
+    "outline/12/arrow-left.svg": {
+      "from": "ef3d23b7e79956b4de84e21f02e9dd2491dbca108dbd76faea16aa789607e191",
+      "to": "de74f34d9a971dea88bc02604c9a6c14a694a3d48cbb55c41d1ceeaad6f25c13"
+    },
+    "outline/12/arrow-right.svg": {
+      "from": "39d264770507bfd5796e85a0edc13e095c4e6a56056214520c9e75ad5adfbfbb",
+      "to": "07a220697d0d1b39b605df2d84e1cc907cebc248e6319ea69b7792f915c4fde8"
+    },
+    "outline/12/arrow-up.svg": {
+      "from": "63d27ddc3fa3f88f9fd4c0629308ee2d94e5055983959bff0925fe912b37cc37",
+      "to": "b1f179d4b68d0550ca9811dda22379a0f9fbf2ca84c8c7c6fc071e0001426d11"
+    },
+    "outline/12/calendar.svg": {
+      "from": "55ab6593000458c8de3162f00626a5378f345ad86c54e62ebc3d6f75bd812ef9",
+      "to": "ff402c3795bfdfb9e99535c450facbe6b76cad911264db21f628ba93dc2ca9c5"
+    },
+    "outline/12/download.svg": {
+      "from": "f3f15f963a17931e78516a8b2969f076635114db921effc5a9a76da3a4c7d614",
+      "to": "b11c08220eb1da01ba4de212ad3df746899ef032af39526878337831414ea3f8"
+    },
+    "outline/12/folder.svg": {
+      "from": "c76545f5dd37e43291bec78f07a6bc5c6cd77fdc1a411f7b76c0e30a9f28bd34",
+      "to": "f686648dbbde95a437b39014242994be935a81b50d155ba1c564344d2a388f27"
+    },
+    "outline/12/home.svg": {
+      "from": "d219f6450f80fce6fbcbd8e28dcbe840974bbe22024070ffb7fac1c269fca94d",
+      "to": "ed28873e42dc90d232b3c40a5b0ec8a7d703cee68a0dc8a18107aa2d6b1289a9"
+    },
+    "outline/12/link.svg": {
+      "from": "52bbce027b3dbe97505fb1f8cc310ca7d66bee1830812c90d41727158b8415d9",
+      "to": "a4e9cccb14ce7d010eec6af1afe2989be90339112b3577d32c69f29b0e9fefdb"
+    },
+    "outline/12/refresh.svg": {
+      "from": "a2b755c1ef6f6dd4cb77855264113a6188c96269ad84a0c7b0787608ff9ceda0",
+      "to": "f251b96a4852b120e1f9ef7c44b5ad2e7ad73d416734919475e22179deed4794"
+    },
+    "outline/12/search.svg": {
+      "from": "a893d56cbe38b88a00c3c70a72f06a7974870b7cb591473ac369af89ac70e9db",
+      "to": "48db3b6c58bbdacbc16428b3f0617e02811e423f615d1b6ceb1a6c309dd85ab6"
+    },
+    "outline/12/terminal.svg": {
+      "from": "45e73039cc5f9be94f7f7bd5754a3db49099b2af9456a5dcec4f0fac826d3d69",
+      "to": "a265f5d4ac4767771276310eb8ebf640f28937ba7c0f058a1d6e5c36a8f33bed"
+    },
+    "outline/12/upload.svg": {
+      "from": "04a8fc132bb7aa0e8b5d6de5329efa4fe895a1e8d4cf30a5bdcad3cd546b3af5",
+      "to": "7216c0c754b0aabebf59009b3a366a0395ba90e4186c9adcc48a9fd31a55b50f"
+    },
+    "outline/12/user.svg": {
+      "from": "b8edcd585517557b4d9291e0b4a999052026c292df227bd0d7992863fe5226f0",
+      "to": "fe4b9288544a61dfadf5c1be45021feafde39d797cb1054506837e0222423df2"
+    },
+    "outline/12/warning.svg": {
+      "from": "d9d01bee7f8a4fe661d57aa621344b624ca4ecd78e9cf99fe06c1741199ec0d7",
+      "to": "fe469b881ac3b31a565231051aaafa255405277978a16d13ca85f191b2f86dac"
+    },
+    "outline/16/arrow-up-right.svg": {
+      "from": "e74c3267275de05961d6a4c75a05a98380d28a14bfb8644322b3ec8570391ee2",
+      "to": "6adfa4dbd79134e50c181311b5e38162cbac753d5a30737dccd74e8db800d74c"
+    },
+    "outline/16/bell.svg": {
+      "from": "9d200c097681e70da0b36b432594be5036fc0f6e913aa3a87e8408c0e6ba42cd",
+      "to": "16d2c91cdedbad105b04f4977bee18b846c7945ac355d1390cddab06c81a7e23"
+    },
+    "outline/16/calendar.svg": {
+      "from": "4f5f75a149f53282ed3c9c04b4eb08710832e36d01949127ce980266bc011d2c",
+      "to": "18d278ff056160b3b5cee14c154ada8e26b0ee595d2e04c46d735962c726a65b"
+    },
+    "outline/16/chart.svg": {
+      "from": "a4b4fa7ea34915c1d8fd3ef3ac2a1af381c8cf9630dd6cadb42bc32ac591831b",
+      "to": "103c3a4018b4a9f40230b48f66c2f881243aa81ba032747d4e3c045e15d8429e"
+    },
+    "outline/16/chat.svg": {
+      "from": "0edd8b55a54917f817f512c9a1e7314f3624741040b3b9be2861aa1a1655deed",
+      "to": "dfa36dec4eb0faf3cb6d04edbb18086accea970355a73455a61fd34af1c75ba3"
+    },
+    "outline/16/copy.svg": {
+      "from": "502fa9d1f7ce52bc3824c62d58213c8632d3b32df8e63f547b35232d2af7916e",
+      "to": "c47a8b9ad85e91151b6cb39f32cfe50f8c8cb23308f71b0e9af19cb40795cd85"
+    },
+    "outline/16/file.svg": {
+      "from": "322b7a6471e33d22f073024e3cd2d17df5a2d8c231219f291b265620be4806f6",
+      "to": "01353638f2b3c45c61b922d50ac9d114cbe10cc7f1b47832178d2aa4de5cea3a"
+    },
+    "outline/16/folder.svg": {
+      "from": "bb762359e218a39b3b69a57ad16e4349a9e246d19df742c9fe307af1f3f918f7",
+      "to": "583de2c01b436d312af3618385d6892b344ee509a9168a24f38c581b1413f453"
+    },
+    "outline/16/help.svg": {
+      "from": "fb16928422a25b22ef78c7163cbb73067bd1dace3d4e1af4df4c7bf979951d50",
+      "to": "e9b1bfcf04ff7d9c27eefb7a3ef1acc6d94c5db4218bcbf921cc90a267f54b6a"
+    },
+    "outline/16/home.svg": {
+      "from": "450325dfc7d67592fc0ef268bde3f748e0643b9b92ca052b8a4767109570fed1",
+      "to": "621308754a446a7806ff4d0e3765595f7ae1433f843f9e85480818785d1de685"
+    },
+    "outline/16/link.svg": {
+      "from": "2384adb16ff3c9d7553ac8f784dc07ef39094412718f4011df89cb6c8295eaf0",
+      "to": "64a37bb6f592da506579478599abbb52833c2ea493076022221aef4101929ead"
+    },
+    "outline/16/lock.svg": {
+      "from": "0e038238a1e1b4483b72fc27f7f7b818c3b521263043bf163c5bf5c420087573",
+      "to": "8b1b360e7c5452b2d8785675d2ace767924dd37a258e75ab5841eb5379e48627"
+    },
+    "outline/16/menu.svg": {
+      "from": "901a0079a4137c14b8ab9cca45e96b99039a3f39c127d103fb0b9b00b5d39d76",
+      "to": "3afed56c3fdbde833fcf465084306b569a251a1678e272302e3a02cad02d4991"
+    },
+    "outline/16/more.svg": {
+      "from": "0b55268429e40885b749dd642dede932da8f33c7ecfd90f1d28d7bbedecd3485",
+      "to": "02bfdd2abf7785645db0c99c11e4256ae1d2ed57577fa80e9063df92c2f2d012"
+    },
+    "outline/16/pause.svg": {
+      "from": "cf930f487db7173f64a148f7333a9803d471f8fe4c96c99a3e17311c01dd72a5",
+      "to": "a385c2a79b30cd5130b705bf7a629a392b3ea87f40a3c79e3d77da69be71072c"
+    },
+    "outline/16/terminal.svg": {
+      "from": "9b16648eea009f051e731f90a087b673282a2f0f41d72354e10c15846b6df9a0",
+      "to": "a2cd1d874e0b798eb695e5e2fb85c22970af215dd69bfd1aac1d801d28b20de2"
+    },
+    "outline/16/user.svg": {
+      "from": "92bdc3fb4de88030465c6a3cfb0a12d8cb67174ff7b06e6df68253f1808ce94b",
+      "to": "e7b4317816e06213788952195303d34923ceb87025c2a0efb4de88dafeb71a0c"
+    },
+    "outline/16/warning.svg": {
+      "from": "25208022afec19c70a90e9e5d37d56368da7b2df774027c719bb6fa8c564bcf5",
+      "to": "3519bb8c5aed14581041f99b27e886947cadf8e129b85a6d7e57589c3e5aacb9"
+    },
+    "outline/24/calendar.svg": {
+      "from": "f535285770ff375c36d560b9f28019fc8c4a1c4fa80e52933fc78ff366e682d5",
+      "to": "5badf6b6fb74f0a4bf43023f39a95257788513f20d286d14f76f5265d2e250e9"
+    },
+    "outline/24/file.svg": {
+      "from": "f871368b184b6829f1ca4cc7233603648cd6be1cf7ce4c2ed3fa79fec6dd4b45",
+      "to": "7abe8715cd8b73451b04dfd7d5bee48eec925b356b1132d0415f35e52fb6d806"
+    },
+    "outline/24/link.svg": {
+      "from": "6fe9e11d5c249731e97e1ba24403d5595578973251c01f6f090875948de668d5",
+      "to": "07152523edb6f0e9a0f0adf84a5493e3ae3dd6c52d5cade3e429c2608b6afe95"
+    },
+    "outline/24/terminal.svg": {
+      "from": "3c20f61fd5981d1a6a1499c5ebfb42a8b1493763ac38d83c4ee2a65fe91d716d",
+      "to": "ca13983401ac7b803ac4b223f3eb579180bf1f9304b621c0018171df335e3aac"
+    },
+    "outline/24/warning.svg": {
+      "from": "2387cc9c7e37ce8e2d3230061aa5be1858a86f7c39aacc442dbdb02b7dcb806b",
+      "to": "17aa70594f1eb4578fb62302466ecb905d5541d9ebd073e8657cf01106c4e9d6"
+    }
+  }
+}

@@ -17,14 +17,10 @@ enum UiDashboardDemoSection {
 /// The navigation destinations in the dashboard demo.
 enum UiDashboardDemoPage {
   overview(UiDashboardDemoSection.workspace, 'Overview', RemixIcons.dashboard),
-  chat(UiDashboardDemoSection.workspace, 'Chat', RemixIcons.chatBubble),
-  customers(UiDashboardDemoSection.data, 'Customers', RemixIcons.group),
+  chat(UiDashboardDemoSection.workspace, 'Chat', RemixIcons.chat),
+  customers(UiDashboardDemoSection.data, 'Customers', RemixIcons.user),
   orders(UiDashboardDemoSection.data, 'Orders', RemixIcons.table),
-  settings(
-    UiDashboardDemoSection.manage,
-    'Settings',
-    RemixIcons.mixerHorizontal,
-  );
+  settings(UiDashboardDemoSection.manage, 'Settings', RemixIcons.sliders);
 
   const UiDashboardDemoPage(this.section, this.label, this.icon);
 

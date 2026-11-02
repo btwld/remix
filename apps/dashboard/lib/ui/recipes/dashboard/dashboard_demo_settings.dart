@@ -147,7 +147,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                         context,
                         const RemixToastData(
                           title: 'Profile settings saved',
-                          icon: RemixIcons.checkCircled,
+                          icon: RemixIcons.checkCircle,
                         ),
                       ),
                       label: 'Save changes',
@@ -166,7 +166,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                     description: 'Tune every Ui theme parameter in real time.',
                   ),
                   UiCallout(
-                    icon: RemixIcons.magicWand,
+                    icon: RemixIcons.wand,
                     text: 'Changes apply live across the entire dashboard.',
                   ),
                   SingleChildScrollView(
@@ -253,7 +253,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
       context,
       const RemixToastData(
         title: 'Demo workspace was not deleted',
-        icon: RemixIcons.infoCircled,
+        icon: RemixIcons.info,
       ),
     );
   }

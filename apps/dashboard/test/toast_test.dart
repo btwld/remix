@@ -16,13 +16,13 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircled),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
     final toastIcon = find.descendant(
       of: find.byType(RemixToast),
-      matching: find.byIcon(RemixIcons.checkCircled),
+      matching: find.byIcon(RemixIcons.checkCircle),
     );
     final before = tester.widget<Icon>(toastIcon).color;
 
@@ -59,7 +59,7 @@ void main() {
       context,
       RemixToastData(
         title: 'Customer archived',
-        icon: RemixIcons.checkCircled,
+        icon: RemixIcons.checkCircle,
         action: RemixToastAction(label: 'Undo', onPressed: () => actionCount++),
       ),
     );
@@ -79,7 +79,7 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircled),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
@@ -101,14 +101,11 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'First toast', icon: RemixIcons.checkCircled),
+      const RemixToastData(title: 'First toast', icon: RemixIcons.checkCircle),
     );
     showRemixToast(
       context,
-      const RemixToastData(
-        title: 'Second toast',
-        icon: RemixIcons.checkCircled,
-      ),
+      const RemixToastData(title: 'Second toast', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
@@ -146,7 +143,7 @@ void main() {
     // this only works when the scope sits above the Navigator.
     showRemixToast(
       dialogContext,
-      const RemixToastData(title: 'Invite sent', icon: RemixIcons.checkCircled),
+      const RemixToastData(title: 'Invite sent', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
@@ -163,7 +160,7 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircled),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 

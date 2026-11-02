@@ -148,7 +148,7 @@ class _FortalDashboardSettingsPageState
                         context,
                         const RemixToastData(
                           title: 'Profile settings saved',
-                          icon: RemixIcons.checkCircled,
+                          icon: RemixIcons.checkCircle,
                         ),
                       ),
                       label: 'Save changes',
@@ -168,7 +168,7 @@ class _FortalDashboardSettingsPageState
                         'Tune every Fortal theme parameter in real time.',
                   ),
                   FortalCallout(
-                    icon: RemixIcons.magicWand,
+                    icon: RemixIcons.wand,
                     text: 'Changes apply live across the entire dashboard.',
                   ),
                   SingleChildScrollView(
@@ -256,7 +256,7 @@ class _FortalDashboardSettingsPageState
       context,
       const RemixToastData(
         title: 'Demo workspace was not deleted',
-        icon: RemixIcons.infoCircled,
+        icon: RemixIcons.info,
       ),
     );
   }

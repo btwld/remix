@@ -44,11 +44,11 @@ class UiStatCard extends StatelessWidget {
     final resolvedIcon =
         icon ??
         switch (label) {
-          'Revenue' => RemixIcons.barChart,
-          'Active customers' => RemixIcons.person,
+          'Revenue' => RemixIcons.chart,
+          'Active customers' => RemixIcons.user,
           'Open orders' => RemixIcons.box,
-          'Fulfillment' => RemixIcons.activityLog,
-          _ => RemixIcons.activityLog,
+          'Fulfillment' => RemixIcons.activity,
+          _ => RemixIcons.activity,
         };
     final column = ColumnBox(
       style: FlexBoxStyler()
@@ -291,7 +291,7 @@ const uiDataTableActionsPositioning = OverlayPositionConfig(
 RemixMenuTrigger uiDataTableActionsTrigger(String semanticLabel) =>
     RemixMenuTrigger.control(
       builder: (_, menu) => UiIconButton.ghost(
-        icon: RemixIcons.dotsHorizontal,
+        icon: RemixIcons.more,
         semanticLabel: semanticLabel,
         focusNode: menu.focusNode,
         onPressed: menu.toggle,

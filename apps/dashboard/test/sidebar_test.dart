@@ -16,7 +16,7 @@ const _sections = <RemixSidebarSection<UiDashboardDemoPage>>[
       RemixSidebarDestination(
         value: UiDashboardDemoPage.overview,
         label: 'Overview',
-        icon: RemixIcons.dashboard,
+        icon: RemixIcons.grid,
       ),
     ],
   ),
@@ -26,7 +26,7 @@ const _sections = <RemixSidebarSection<UiDashboardDemoPage>>[
       RemixSidebarDestination(
         value: UiDashboardDemoPage.customers,
         label: 'Customers',
-        icon: RemixIcons.group,
+        icon: RemixIcons.user,
       ),
       RemixSidebarDestination(
         value: UiDashboardDemoPage.orders,
@@ -259,7 +259,7 @@ void main() {
                       value: UiDashboardDemoPage.overview,
                       label:
                           'Overview of every active workspace and its status',
-                      icon: RemixIcons.dashboard,
+                      icon: RemixIcons.grid,
                     ),
                   ],
                 ),

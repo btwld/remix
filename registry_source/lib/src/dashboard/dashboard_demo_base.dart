@@ -21,14 +21,10 @@ enum RegistryDashboardDemoPage {
     'Overview',
     RemixIcons.dashboard,
   ),
-  chat(RegistryDashboardDemoSection.workspace, 'Chat', RemixIcons.chatBubble),
-  customers(RegistryDashboardDemoSection.data, 'Customers', RemixIcons.group),
+  chat(RegistryDashboardDemoSection.workspace, 'Chat', RemixIcons.chat),
+  customers(RegistryDashboardDemoSection.data, 'Customers', RemixIcons.user),
   orders(RegistryDashboardDemoSection.data, 'Orders', RemixIcons.table),
-  settings(
-    RegistryDashboardDemoSection.manage,
-    'Settings',
-    RemixIcons.mixerHorizontal,
-  );
+  settings(RegistryDashboardDemoSection.manage, 'Settings', RemixIcons.sliders);
 
   const RegistryDashboardDemoPage(this.section, this.label, this.icon);
 

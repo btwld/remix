@@ -68,7 +68,7 @@ class _FortalDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: FortalTextField(
                 key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
+                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
@@ -128,7 +128,7 @@ class _FortalDashboardCustomersPageState
             _page = 0;
           }),
           emptyBuilder: (_) => const FortalEmptyState(
-            icon: RemixIcons.magnifyingGlass,
+            icon: RemixIcons.search,
             title: 'No customers found',
             body: 'Try a different name or email address.',
           ),
@@ -416,5 +416,5 @@ class _Page extends StatelessWidget {
 
 void _toast(BuildContext context, String title) => showRemixToast(
   context,
-  RemixToastData(title: title, icon: RemixIcons.checkCircled),
+  RemixToastData(title: title, icon: RemixIcons.checkCircle),
 );

@@ -88,10 +88,10 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
       initiallyCollapsed: initiallyCollapsed,
       onCollapsedChanged: onCollapsedChanged,
       sidebarHeaderStyle: sidebarHeaderStyle,
-      menuIcon: RemixIcons.hamburgerMenu,
-      searchIcon: RemixIcons.magnifyingGlass,
-      backwardIcon: RemixIcons.doubleArrowLeft,
-      forwardIcon: RemixIcons.doubleArrowRight,
+      menuIcon: RemixIcons.menu,
+      searchIcon: RemixIcons.search,
+      backwardIcon: RemixIcons.chevronsLeft,
+      forwardIcon: RemixIcons.chevronsRight,
       layoutBuilder:
           (
             context, {

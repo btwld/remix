@@ -75,7 +75,7 @@ class _PlaygroundDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: PlaygroundTextField(
                 key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: RemixIcons.magnifyingGlass),
+                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
@@ -104,7 +104,7 @@ class _PlaygroundDashboardCustomersPageState
                       context,
                       RemixToastData(
                         title: '${_selectedIds.length} customers archived',
-                        icon: RemixIcons.checkCircled,
+                        icon: RemixIcons.checkCircle,
                         action: const RemixToastAction(
                           label: 'Undo',
                           onPressed: _noop,
@@ -381,7 +381,7 @@ Widget _actions(BuildContext context, String value) => PlaygroundMenu<String>(
   trigger: RemixMenuTrigger.control(
     builder: (_, menu) => PlaygroundIconButton.ghost(
       size: .small,
-      icon: RemixIcons.dotsHorizontal,
+      icon: RemixIcons.more,
       semanticLabel: 'Actions for $value',
       focusNode: menu.focusNode,
       onPressed: menu.toggle,
@@ -488,7 +488,7 @@ class _Empty extends StatelessWidget {
               .borderRadius(.all(PlaygroundTokens.radiusMd()))
               .color(PlaygroundTokens.secondary()),
           child: StyledIcon(
-            icon: RemixIcons.magnifyingGlass,
+            icon: RemixIcons.search,
             style: IconStyler()
                 .size(PlaygroundTokens.s5)
                 .color(PlaygroundTokens.secondaryForeground()),

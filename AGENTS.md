@@ -66,7 +66,10 @@ system SDK is older.
 - `dart run melos run ci:checks`: contract checkers and analysis.
 - `dart run melos run docs:check`: after editing `docs/` or `skills/`; rejects
   retired APIs and compiles published Dart examples.
-- `dart run melos run ci`: the local scripts, in sequence. The `icons` and `cli-windows` jobs are CI-only.
+- `dart run melos run ci`: the local scripts, in sequence. The `icons`, `icons-tree-shake`, and `cli-windows` jobs are CI-only.
+- `dart run melos run icons:generate` and `icons:check`: regenerate and verify
+  `remix_ui_icons` from `packages/remix_ui_icons/tool/icons/manifest.yaml` and
+  the `design/icons` masters (needs uv 0.11.24).
 
 ## Conventions
 

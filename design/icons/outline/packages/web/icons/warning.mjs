@@ -1,0 +1,4 @@
+// GENERATED: isolated icon; does not import the full registry.
+import {renderIcon} from '../render.mjs';
+export const nativePaths = {"outline":{"12":"M11 11L5.5 0L0 11ZM1.618 10L5.5 2.236L9.382 10ZM6 7L6 5.5L5 5.5L5 7ZM6 9L6 8L5 8L5 9Z","16":"M15 15L7.5 0.5L0 15ZM2.465 13.5L7.5 3.765L12.535 13.5ZM8 10L8 8L7 8L7 10ZM8 12L8 11L7 11L7 12Z","24":"M23 23L12 1L1 23ZM4.236 21L12 5.472L19.764 21ZM13 15L13 12L11 12L11 15ZM13 19L13 17L11 17L11 19Z"},"filled":{"12":"M0 11L11 11L5.5 0ZM6 4L6 7L5 7L5 4ZM6 8L6 9L5 9L5 8Z","16":"M0 15L15 15L7.5 0.5ZM8.25 6.5L8.25 10.5L6.75 10.5L6.75 6.5ZM8.25 12L8.25 13.5L6.75 13.5L6.75 12Z","24":"M1 23L23 23L12 1ZM13 10L13 16L11 16L11 10ZM13 18L13 20L11 20L11 18Z"}};
+export default function icon(options = {}) { return renderIcon("warning","Warning",nativePaths,options); }

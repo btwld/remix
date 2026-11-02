@@ -345,10 +345,10 @@ Widget _activityCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
 );
 
 IconData _activityIcon(PlaygroundDashboardActivityKind kind) => switch (kind) {
-  .customer => RemixIcons.person,
+  .customer => RemixIcons.user,
   .order => RemixIcons.box,
-  .payment => RemixIcons.checkCircled,
-  .alert => RemixIcons.exclamationTriangle,
+  .payment => RemixIcons.checkCircle,
+  .alert => RemixIcons.warning,
 };
 
 Widget _ordersCard(
@@ -368,7 +368,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
-            trailingIcon: RemixIcons.doubleArrowRight,
+            trailingIcon: RemixIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],

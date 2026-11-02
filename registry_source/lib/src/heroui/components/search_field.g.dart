@@ -181,7 +181,7 @@ class HeroUiSearchField extends StatelessWidget {
 class HeroUiSearchClearButton extends StatelessWidget {
   const HeroUiSearchClearButton({
     super.key,
-    this.icon = RemixIcons.cross2,
+    this.icon = RemixIcons.close,
     this.semanticLabel = 'Clear search',
     this.style = const IconButtonStyler.create(),
     this.iconBuilder,

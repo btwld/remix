@@ -14,7 +14,7 @@ part 'close_button.g.dart';
 /// to replace it. [semanticLabel] defaults to "Close".
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler heroUiCloseButtonStyle({
-  IconData? icon = RemixIcons.cross2,
+  IconData? icon = RemixIcons.close,
   String semanticLabel = 'Close',
   IconButtonStyler style = const IconButtonStyler.create(),
 }) => IconButtonStyler()

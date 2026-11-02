@@ -429,7 +429,7 @@ class _PlaygroundAccount extends StatelessWidget {
   Widget build(BuildContext context) => PlaygroundMenu<String>(
     trigger: RemixMenuTrigger.builder(
       label: 'Ada Chen',
-      icon: RemixIcons.person,
+      icon: RemixIcons.user,
       builder: (context, _, _) => RemixCard(
         style: CardStyler()
             .padding(
@@ -475,7 +475,7 @@ class _PlaygroundAccount extends StatelessWidget {
               ),
             ),
             StyledIcon(
-              icon: RemixIcons.dotsHorizontal,
+              icon: RemixIcons.more,
               style: IconStyler()
                   .size(PlaygroundTokens.icon)
                   .color(PlaygroundTokens.mutedForeground()),

@@ -607,14 +607,13 @@ class _GalleryState extends State<Gallery> {
         AcmeToggleButton(
           selected: _bold,
           label: 'Bold',
-          icon: RemixIcons.fontBold,
+          icon: RemixIcons.bold,
           onChanged: (value) => setState(() => _bold = value),
         ),
         AcmeToggleButton(
           variant: .ghost,
           selected: _italic,
           label: 'Italic',
-          icon: RemixIcons.fontItalic,
           onChanged: (value) => setState(() => _italic = value),
         ),
       ]),
@@ -707,7 +706,7 @@ class _GalleryState extends State<Gallery> {
             const RemixMenuItem(
               value: 'edit',
               label: 'Edit',
-              leadingIcon: RemixIcons.pencil1,
+              leadingIcon: RemixIcons.edit,
             ),
             const RemixMenuItem(
               value: 'copy',
@@ -842,7 +841,7 @@ class _GalleryState extends State<Gallery> {
           RemixToastData(
             title: 'Draft saved',
             description: 'Your changes are stored locally.',
-            icon: RemixIcons.checkCircled,
+            icon: RemixIcons.checkCircle,
             style: acmeToastStyle(variant: .success),
           ),
         ),
@@ -851,43 +850,43 @@ class _GalleryState extends State<Gallery> {
       const AcmeToast(
         variant: .accent,
         title: 'Accent toast',
-        icon: RemixIcons.infoCircled,
+        icon: RemixIcons.info,
       ),
       const AcmeToast(
         variant: .success,
         title: 'Success toast',
-        icon: RemixIcons.checkCircled,
+        icon: RemixIcons.checkCircle,
       ),
       const AcmeToast(
         variant: .warning,
         title: 'Warning toast',
-        icon: RemixIcons.exclamationTriangle,
+        icon: RemixIcons.warning,
       ),
       const AcmeToast(
         variant: .danger,
         title: 'Danger toast',
-        icon: RemixIcons.crossCircled,
+        icon: RemixIcons.closeCircle,
       ),
-      const AcmeAlert(text: 'Default alert', icon: RemixIcons.infoCircled),
+      const AcmeAlert(text: 'Default alert', icon: RemixIcons.info),
       const AcmeAlert(
         status: .accent,
         text: 'Accent alert',
-        icon: RemixIcons.infoCircled,
+        icon: RemixIcons.info,
       ),
       const AcmeAlert(
         status: .success,
         text: 'Success alert',
-        icon: RemixIcons.checkCircled,
+        icon: RemixIcons.checkCircle,
       ),
       const AcmeAlert(
         status: .warning,
         text: 'Warning alert',
-        icon: RemixIcons.exclamationTriangle,
+        icon: RemixIcons.warning,
       ),
       const AcmeAlert(
         status: .danger,
         text: 'Danger alert',
-        icon: RemixIcons.crossCircled,
+        icon: RemixIcons.closeCircle,
       ),
     ]);
   }

@@ -73,10 +73,14 @@ Registry templates resolve icon placeholders from an optional `remix.yaml`
 setting:
 
 ```yaml
-iconLibrary: lucide # remix (default) or lucide
+iconLibrary: rounded # remix (default), rounded, or lucide
 ```
 
-The CLI adds `lucide_flutter` instead of `remix_ui_icons` when it is selected.
+`remix` and `rounded` both add `remix_ui_icons`, and each draws every registry
+icon. `lucide` adds `lucide_flutter` instead. The registry requires `remix_ui_icons` `^1.0.0-beta.1`;
+projects on `^0.1.0` must update that constraint and migrate their own icon
+references using the package’s `MIGRATION.md`.
+
 The choice applies at install. In Vanilla and Fortal four items use icons
 (`icons`, `dashboard_shell`, `dashboard_demo`, `support`); in HeroUI three do
 (`breadcrumbs`, `close_button`, `search_field`) and there is no `icons` item.

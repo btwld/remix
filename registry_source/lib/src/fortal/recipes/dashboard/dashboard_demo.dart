@@ -96,7 +96,7 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
                 ),
               ),
               StyledIcon(
-                icon: RemixIcons.dotsHorizontal,
+                icon: RemixIcons.more,
                 style: IconStyler().size(18).color(FortalTokens.gray11()),
               ),
             ],
@@ -114,7 +114,7 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
           title: value == 'signout'
               ? 'Signed out of demo'
               : '${capitalize(value)} opened',
-          icon: RemixIcons.checkCircled,
+          icon: RemixIcons.checkCircle,
         ),
       ),
     ),
@@ -201,7 +201,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                               context,
                               const RemixToastData(
                                 title: 'All notifications marked read',
-                                icon: RemixIcons.checkCircled,
+                                icon: RemixIcons.checkCircle,
                               ),
                             );
                           },
@@ -296,7 +296,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
             semanticLabel: 'Theme settings',
             style: _toolbarButtonStyle,
             onPressed: _toggleTheme,
-            icon: RemixIcons.mixerHorizontal,
+            icon: RemixIcons.sliders,
           ),
         ),
         if (!compact)
@@ -333,7 +333,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                 title: value == 'signout'
                     ? 'Signed out of demo'
                     : 'Opened $value',
-                icon: RemixIcons.checkCircled,
+                icon: RemixIcons.checkCircle,
               ),
             ),
           ),

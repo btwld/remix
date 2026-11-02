@@ -1,0 +1,18 @@
+[project]
+name = "remix-ui-icons-tool"
+version = "0.0.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "glyphpact==1.1.0",
+  "pyyaml==6.0.3",
+  # Normalize SVG fill rules in the independent native-render reference.
+  "skia-pathops==0.9.2",
+  # Raster comparison of every font glyph against its source SVG. The pins
+  # match design/icons/requirements.txt, which rasterizes the same drawings.
+  "cairosvg==2.8.2",
+  "pillow==12.3.0",
+]
+
+[tool.uv]
+required-version = "==0.11.24"
+package = false

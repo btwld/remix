@@ -1,0 +1,545 @@
+{
+  "source": "complete-product-icons-2026-11-01 shared inventory contract",
+  "baseCommit": "f5fec577707e83b571595dda4baf01e89b18787e",
+  "concepts": [
+    {
+      "id": "home",
+      "label": "Home",
+      "category": "navigation",
+      "meaning": "Home or top-level destination. Do not substitute for Back.",
+      "existing": true
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "category": "navigation",
+      "meaning": "Open navigation or a menu.",
+      "existing": true
+    },
+    {
+      "id": "more",
+      "label": "More",
+      "category": "navigation",
+      "meaning": "Additional actions in an overflow menu.",
+      "existing": true
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "category": "navigation",
+      "meaning": "Find content. A heavier lens still has an open center.",
+      "existing": true
+    },
+    {
+      "id": "grid",
+      "label": "Grid",
+      "category": "navigation",
+      "meaning": "Open an application grid or change to grid view.",
+      "existing": true
+    },
+    {
+      "id": "arrow-left",
+      "label": "Arrow left",
+      "category": "navigation",
+      "meaning": "Literal left arrow; application chooses its navigation role.",
+      "existing": true
+    },
+    {
+      "id": "arrow-right",
+      "label": "Arrow right",
+      "category": "navigation",
+      "meaning": "A literal right arrow. Navigation direction must be chosen by the application.",
+      "existing": true
+    },
+    {
+      "id": "arrow-up",
+      "label": "Arrow up",
+      "category": "navigation",
+      "meaning": "Literal up arrow, not Upload.",
+      "existing": true
+    },
+    {
+      "id": "arrow-down",
+      "label": "Arrow down",
+      "category": "navigation",
+      "meaning": "Literal down arrow, not Download.",
+      "existing": true
+    },
+    {
+      "id": "arrow-up-right",
+      "label": "Arrow up right",
+      "category": "navigation",
+      "meaning": "Open another destination. Keep a visible action label.",
+      "existing": true
+    },
+    {
+      "id": "chevron-left",
+      "label": "Chevron left",
+      "category": "navigation",
+      "meaning": "Compact left direction. Navigation semantics stay in the component.",
+      "existing": true
+    },
+    {
+      "id": "chevron-right",
+      "label": "Chevron right",
+      "category": "navigation",
+      "meaning": "Compact right direction. Not an external-link marker.",
+      "existing": true
+    },
+    {
+      "id": "chevron-up",
+      "label": "Chevron up",
+      "category": "navigation",
+      "meaning": "Up direction or collapse, with a label.",
+      "existing": true
+    },
+    {
+      "id": "chevron-down",
+      "label": "Chevron down",
+      "category": "navigation",
+      "meaning": "Down direction or disclosure, with a label.",
+      "existing": true
+    },
+    {
+      "id": "plus",
+      "label": "Plus",
+      "category": "actions",
+      "meaning": "Add or create. Distinct from expand and zoom-in.",
+      "existing": true
+    },
+    {
+      "id": "minus",
+      "label": "Minus",
+      "category": "actions",
+      "meaning": "Decrease or subtract. Not a destructive delete substitute.",
+      "existing": true
+    },
+    {
+      "id": "check",
+      "label": "Check",
+      "category": "actions",
+      "meaning": "Confirm or communicate completion.",
+      "existing": true
+    },
+    {
+      "id": "close",
+      "label": "Close",
+      "category": "actions",
+      "meaning": "Dismiss or close. Do not use as a destructive delete substitute.",
+      "existing": true
+    },
+    {
+      "id": "edit",
+      "label": "Edit",
+      "category": "actions",
+      "meaning": "A pencil for editing content.",
+      "existing": true
+    },
+    {
+      "id": "copy",
+      "label": "Copy",
+      "category": "actions",
+      "meaning": "Create a duplicate or copy to clipboard.",
+      "existing": true
+    },
+    {
+      "id": "trash",
+      "label": "Trash",
+      "category": "actions",
+      "meaning": "Delete. Confirm destructive behavior at the application level.",
+      "existing": true
+    },
+    {
+      "id": "refresh",
+      "label": "Refresh",
+      "category": "actions",
+      "meaning": "Reload the current data. Not Undo or Redo.",
+      "existing": true
+    },
+    {
+      "id": "filter",
+      "label": "Filter",
+      "category": "actions",
+      "meaning": "A funnel that narrows a result set. Not generic adjustment controls.",
+      "existing": true
+    },
+    {
+      "id": "sliders",
+      "label": "Sliders",
+      "category": "actions",
+      "meaning": "Adjust parameters. Not a funnel filter or gear glyph.",
+      "existing": true
+    },
+    {
+      "id": "upload",
+      "label": "Upload",
+      "category": "actions",
+      "meaning": "Transfer into a service.",
+      "existing": true
+    },
+    {
+      "id": "download",
+      "label": "Download",
+      "category": "actions",
+      "meaning": "Transfer out to this device.",
+      "existing": true
+    },
+    {
+      "id": "save",
+      "label": "Save",
+      "category": "actions",
+      "meaning": "A disk metaphor for committing changes. Not Bookmark or Download.",
+      "existing": true
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "category": "content",
+      "meaning": "A document. Not a duplicate action.",
+      "existing": true
+    },
+    {
+      "id": "folder",
+      "label": "Folder",
+      "category": "content",
+      "meaning": "A folder or grouped files.",
+      "existing": true
+    },
+    {
+      "id": "link",
+      "label": "Link",
+      "category": "content",
+      "meaning": "A link or related resource. Not external navigation by itself.",
+      "existing": true
+    },
+    {
+      "id": "bookmark",
+      "label": "Bookmark",
+      "category": "content",
+      "meaning": "Save a reference for later. Different from saving changed data.",
+      "existing": true
+    },
+    {
+      "id": "star",
+      "label": "Star",
+      "category": "content",
+      "meaning": "Favorite or rating, with context. Distinct from Focus.",
+      "existing": true
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "category": "content",
+      "meaning": "A date or calendar.",
+      "existing": true
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "category": "people-communication",
+      "meaning": "A person or profile.",
+      "existing": true
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "category": "people-communication",
+      "meaning": "A message or conversation.",
+      "existing": true
+    },
+    {
+      "id": "bell",
+      "label": "Bell",
+      "category": "people-communication",
+      "meaning": "Notifications. Do not imply a warning or failure by shape alone.",
+      "existing": true
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "category": "status-security",
+      "meaning": "A warning requiring a visible text label in every supported appearance and native size.",
+      "existing": true
+    },
+    {
+      "id": "info",
+      "label": "Info",
+      "category": "status-security",
+      "meaning": "Information about content or a status. Distinct from Help and Warning.",
+      "existing": true
+    },
+    {
+      "id": "help",
+      "label": "Help",
+      "category": "status-security",
+      "meaning": "Assistance or documentation. Distinct from information status.",
+      "existing": true
+    },
+    {
+      "id": "lock",
+      "label": "Lock",
+      "category": "status-security",
+      "meaning": "Restricted access or locked content.",
+      "existing": true
+    },
+    {
+      "id": "shield",
+      "label": "Shield",
+      "category": "status-security",
+      "meaning": "Protection or policy. Pair with the actual status in text.",
+      "existing": true
+    },
+    {
+      "id": "gear",
+      "label": "Gear",
+      "category": "system-data",
+      "meaning": "A gear settings metaphor. Sliders remains a separate adjustment glyph.",
+      "existing": true
+    },
+    {
+      "id": "terminal",
+      "label": "Terminal",
+      "category": "system-data",
+      "meaning": "A command interface. Not an ordinary next arrow.",
+      "existing": true
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "category": "system-data",
+      "meaning": "A branching relationship. Use a visible label, especially at 12 px.",
+      "existing": true
+    },
+    {
+      "id": "chart",
+      "label": "Chart",
+      "category": "system-data",
+      "meaning": "A bar chart or analytics view.",
+      "existing": true
+    },
+    {
+      "id": "play",
+      "label": "Play",
+      "category": "media",
+      "meaning": "Play media or start an operation. Do not auto-mirror in RTL.",
+      "existing": true
+    },
+    {
+      "id": "pause",
+      "label": "Pause",
+      "category": "media",
+      "meaning": "Pause an operation. Do not use for stop.",
+      "existing": true
+    },
+    {
+      "id": "focus",
+      "label": "Focus",
+      "category": "media",
+      "meaning": "Focus a region. Context is required; not a star or fullscreen symbol.",
+      "existing": true
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "category": "system-data",
+      "meaning": "A pulse of activity; existing registry activity motif.",
+      "existing": false
+    },
+    {
+      "id": "align-center",
+      "label": "Align center",
+      "category": "content",
+      "meaning": "Align selected objects on a horizontal center axis; distinct from text paragraph formatting.",
+      "existing": false
+    },
+    {
+      "id": "align-left",
+      "label": "Align left",
+      "category": "content",
+      "meaning": "Align selected objects to their left edge; distinct from paragraph formatting.",
+      "existing": false
+    },
+    {
+      "id": "align-right",
+      "label": "Align right",
+      "category": "content",
+      "meaning": "Align selected objects to their right edge; distinct from paragraph formatting.",
+      "existing": false
+    },
+    {
+      "id": "box",
+      "label": "Box",
+      "category": "content",
+      "meaning": "A package or inventory box.",
+      "existing": false
+    },
+    {
+      "id": "check-circle",
+      "label": "Check circle",
+      "category": "status-security",
+      "meaning": "Confirmed or successful status in an enclosing circle.",
+      "existing": false
+    },
+    {
+      "id": "circle",
+      "label": "Circle",
+      "category": "system-data",
+      "meaning": "A circular shape; do not imply control behavior.",
+      "existing": false
+    },
+    {
+      "id": "ban",
+      "label": "Ban",
+      "category": "status-security",
+      "meaning": "Prohibited or unavailable action.",
+      "existing": false
+    },
+    {
+      "id": "close-circle",
+      "label": "Close circle",
+      "category": "status-security",
+      "meaning": "Dismissed or failed status in an enclosing circle.",
+      "existing": false
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "category": "actions",
+      "meaning": "A pointer or selection tool.",
+      "existing": false
+    },
+    {
+      "id": "dot",
+      "label": "Dot",
+      "category": "system-data",
+      "meaning": "A small solid dot, optically distinct from the full-size Circle.",
+      "existing": false
+    },
+    {
+      "id": "chevrons-left",
+      "label": "Chevrons left",
+      "category": "navigation",
+      "meaning": "Jump left or to the first item, with an enclosing action label.",
+      "existing": false
+    },
+    {
+      "id": "chevrons-right",
+      "label": "Chevrons right",
+      "category": "navigation",
+      "meaning": "Jump right or to the last item, with an enclosing action label.",
+      "existing": false
+    },
+    {
+      "id": "bold",
+      "label": "Bold",
+      "category": "content",
+      "meaning": "Bold text formatting; authored letter B, no font outline reuse.",
+      "existing": false
+    },
+    {
+      "id": "type",
+      "label": "Type",
+      "category": "content",
+      "meaning": "Typography or text-size controls; authored letter T.",
+      "existing": false
+    },
+    {
+      "id": "group",
+      "label": "Group",
+      "category": "system-data",
+      "meaning": "Group or arrange selected objects, matching the current selection-group meaning.",
+      "existing": false
+    },
+    {
+      "id": "heart",
+      "label": "Heart",
+      "category": "content",
+      "meaning": "Like or favorite with context; distinct from Star.",
+      "existing": false
+    },
+    {
+      "id": "input",
+      "label": "Input",
+      "category": "system-data",
+      "meaning": "A text input field with an insertion cursor.",
+      "existing": false
+    },
+    {
+      "id": "laptop",
+      "label": "Laptop",
+      "category": "system-data",
+      "meaning": "A laptop device or desktop-sized preview.",
+      "existing": false
+    },
+    {
+      "id": "wand",
+      "label": "Wand",
+      "category": "actions",
+      "meaning": "An assisted or automatic action, with an action label.",
+      "existing": false
+    },
+    {
+      "id": "smartphone",
+      "label": "Smartphone",
+      "category": "system-data",
+      "meaning": "A mobile phone device or narrow preview.",
+      "existing": false
+    },
+    {
+      "id": "moon",
+      "label": "Moon",
+      "category": "status-security",
+      "meaning": "Dark appearance or night; not a generic status.",
+      "existing": false
+    },
+    {
+      "id": "square",
+      "label": "Square",
+      "category": "system-data",
+      "meaning": "A square shape; do not imply control behavior.",
+      "existing": false
+    },
+    {
+      "id": "layers",
+      "label": "Layers",
+      "category": "system-data",
+      "meaning": "A stack of layers or related objects.",
+      "existing": false
+    },
+    {
+      "id": "sun",
+      "label": "Sun",
+      "category": "status-security",
+      "meaning": "Light appearance or daylight.",
+      "existing": false
+    },
+    {
+      "id": "table",
+      "label": "Table",
+      "category": "system-data",
+      "meaning": "Tabular data with a header and cells.",
+      "existing": false
+    },
+    {
+      "id": "loader",
+      "label": "Loader",
+      "category": "system-data",
+      "meaning": "An in-progress segmented ring; animation belongs to the caller.",
+      "existing": false
+    },
+    {
+      "id": "code",
+      "label": "Code",
+      "category": "system-data",
+      "meaning": "Source code brackets, distinct from the Terminal prompt.",
+      "existing": false
+    },
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "category": "navigation",
+      "meaning": "An overview of multiple panels, distinct from a uniform Grid.",
+      "existing": false
+    }
+  ]
+}

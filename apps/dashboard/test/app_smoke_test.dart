@@ -45,7 +45,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: brand, matching: find.byIcon(RemixIcons.magicWand)),
+      find.descendant(of: brand, matching: find.byIcon(RemixIcons.wand)),
       findsNothing,
     );
   });

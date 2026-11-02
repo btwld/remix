@@ -1,0 +1,51 @@
+[
+  {
+    "id": "warning-stem-dot-gap-16",
+    "icon": "warning",
+    "pack": "outline",
+    "appearance": "outline",
+    "nativeSize": 16,
+    "target": 1.5,
+    "measuredApprox": 1.0,
+    "status": "restriction-owner-review-pending",
+    "rule": "mark-internal-gap",
+    "permittedUse": "visible-label-required",
+    "owner": null,
+    "reviewer": null,
+    "reason": "Clearing the frame leaves four pixel rows for the mark. A 1.5 px gap would shrink the stem to the height of the dot and read as a colon, so the 16 px gap stays at 1 px. It does not meet the general target.",
+    "restrictionId": "warning-visible-label",
+    "geometrySha256": "3519bb8c5aed14581041f99b27e886947cadf8e129b85a6d7e57589c3e5aacb9"
+  },
+  {
+    "id": "link-filled-12-hook-gap",
+    "icon": "link",
+    "pack": "outline",
+    "appearance": "filled",
+    "nativeSize": 12,
+    "target": 1,
+    "measuredApprox": 0.942,
+    "status": "design-tradeoff-owner-review-pending",
+    "rule": "meaningful-separated-part-gap",
+    "permittedUse": "name-on-enclosing-control",
+    "owner": null,
+    "reviewer": null,
+    "reason": "The heavier 1.5 px stroke on the outline's hook centerlines leaves 0.94 px between the two hooks, just under the general 1 px gap target. The drawing is kept as is, and no person has accepted this tradeoff yet. This adds no label rule beyond the existing usage guidance.",
+    "geometrySha256": "7ba3b689532558ebe8753235df30e06579e260541ac7881a3afb4d74653f1cdc"
+  },
+  {
+    "id": "link-filled-16-hook-gap",
+    "icon": "link",
+    "pack": "outline",
+    "appearance": "filled",
+    "nativeSize": 16,
+    "target": 1.5,
+    "measuredApprox": 1.475,
+    "status": "design-tradeoff-owner-review-pending",
+    "rule": "meaningful-separated-part-gap",
+    "permittedUse": "name-on-enclosing-control",
+    "owner": null,
+    "reviewer": null,
+    "reason": "The heavier 2 px stroke on the outline's hook centerlines leaves 1.48 px between the two hooks, just under the general 1.5 px gap target. The drawing is kept as is, and no person has accepted this tradeoff yet. This adds no label rule beyond the existing usage guidance.",
+    "geometrySha256": "518aced9a7fa7af5816a9bc8dd27ba343782f3ceafe30064071e00bf7ad6189a"
+  }
+]

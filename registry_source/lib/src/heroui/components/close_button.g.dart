@@ -13,7 +13,7 @@ part of 'close_button.dart';
 class HeroUiCloseButton extends StatelessWidget {
   const HeroUiCloseButton({
     super.key,
-    this.icon = RemixIcons.cross2,
+    this.icon = RemixIcons.close,
     this.semanticLabel = 'Close',
     this.style = const IconButtonStyler.create(),
     this.iconBuilder,

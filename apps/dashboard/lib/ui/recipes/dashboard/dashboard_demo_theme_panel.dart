@@ -137,7 +137,7 @@ class UiThemePanel extends StatelessWidget {
               size: .size1,
               onPressed: () => scope.onChanged(const UiThemeSettings()),
               label: 'Reset theme',
-              leadingIcon: RemixIcons.reload,
+              leadingIcon: RemixIcons.refresh,
             ),
           ),
         ],

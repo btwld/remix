@@ -21,13 +21,13 @@ enum PlaygroundDashboardDemoPage {
     'Overview',
     RemixIcons.dashboard,
   ),
-  chat(PlaygroundDashboardDemoSection.workspace, 'Chat', RemixIcons.chatBubble),
-  customers(PlaygroundDashboardDemoSection.data, 'Customers', RemixIcons.group),
+  chat(PlaygroundDashboardDemoSection.workspace, 'Chat', RemixIcons.chat),
+  customers(PlaygroundDashboardDemoSection.data, 'Customers', RemixIcons.user),
   orders(PlaygroundDashboardDemoSection.data, 'Orders', RemixIcons.table),
   settings(
     PlaygroundDashboardDemoSection.manage,
     'Settings',
-    RemixIcons.mixerHorizontal,
+    RemixIcons.sliders,
   );
 
   const PlaygroundDashboardDemoPage(this.section, this.label, this.icon);

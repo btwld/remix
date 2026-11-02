@@ -64,7 +64,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: answer, matching: _findIcon(RemixIcons.reload)),
+      find.descendant(of: answer, matching: _findIcon(RemixIcons.refresh)),
       findsOneWidget,
     );
   });
@@ -87,11 +87,11 @@ void main() {
 
     final execution = find.byType(AgentExecution);
     for (final icon in [
-      RemixIcons.code,
-      RemixIcons.checkCircled,
+      RemixIcons.terminal,
+      RemixIcons.checkCircle,
       RemixIcons.chevronUp,
       RemixIcons.copy,
-      RemixIcons.reload,
+      RemixIcons.refresh,
     ]) {
       expect(
         find.descendant(of: execution, matching: _findIcon(icon)),

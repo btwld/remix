@@ -1,0 +1,392 @@
+{
+  "status": "No external SVGs imported; catalog mapping deferred until intended reference is identified.",
+  "requestedReference": "idea icons (unresolved)",
+  "references": [],
+  "icons": [
+    {
+      "id": "home",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "menu",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "more",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "search",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "grid",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "arrow-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "arrow-right",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "arrow-up",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "arrow-down",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "arrow-up-right",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "chevron-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevron-right",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevron-up",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevron-down",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "plus",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "minus",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "check",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "close",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "edit",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "copy",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "trash",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "refresh",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "filter",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "sliders",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "upload",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "download",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "save",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "file",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "folder",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "link",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "bookmark",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "star",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "calendar",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "user",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "chat",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "bell",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "warning",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "info",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "help",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "lock",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "shield",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "gear",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "terminal",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "branch",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "chart",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "play",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "pause",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "focus",
+      "externalPathSource": null,
+      "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "activity",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "align-center",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "align-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "align-right",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "box",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "check-circle",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "circle",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "ban",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "close-circle",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "cursor",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "dot",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevrons-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevrons-right",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "bold",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "type",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "group",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "heart",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "input",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "laptop",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "wand",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "smartphone",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "moon",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "square",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "layers",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "sun",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "table",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "loader",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "code",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "dashboard",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    }
+  ]
+}

@@ -55,11 +55,26 @@ behavior tests and its own specification; there is no external parity pin.
   version leaves the old caret range (any minor bump while the package is
   0.x). `tool/check_version_alignment.dart` fails until the floor matches.
 
-**`remix_ui_icons` only — the icon table:**
+**`remix_ui_icons` only — the icon table and the generated API:**
 
-- `registry/icons.yaml` — the `remix` library's `remix_ui_icons` dependency
-  must floor at the new version. `tool/check_version_alignment.dart` fails
-  until it does.
+- `registry/icons.yaml` — every library that depends on `remix_ui_icons`
+  (`remix` and `rounded`) must floor at the new version.
+  `tool/check_version_alignment.dart` fails until they do. When the new version leaves the old caret range, also move
+  the melos shared constraint and every workspace pubspec that declares it.
+- The package is generated. Change `tool/icons/manifest.yaml` or the
+  `design/icons` masters, run `dart run melos run icons:generate`, and fill in
+  the CHANGELOG entry around its generated block. The `since:` of a new
+  concept is the new version.
+- Choose the bump from `tool/icons/README.md`: a new icon, family, master, or
+  redraw is minor; a removal is major; a codepoint never changes.
+  `tool/icons/check.py` fails a removal from `released_api.txt` that is not a
+  major version.
+- After the release is published, replace `tool/icons/released_api.txt` with
+  `tool/icons/public_api.txt` and set its `version:` line, so the next
+  release is compared with it.
+- The registry needs the CLI that reads its `icons.yaml` schema; publish
+  `remix_cli` first when the schema changes, then `remix_ui_icons`, and only
+  then let **Promote registry** run.
 
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
@@ -106,8 +121,9 @@ publishing" configuration. A mismatched tag fails OIDC auth.
 
 Rules that have already cost a release here:
 
-- **Never `git push --tags`.** Stale `v*` tags in this repo would start
-  publish runs from the wrong commits. Push one tag, explicitly.
+- **Never `git push --tags`.** Stale `v*` tags in this repo would start publish
+  runs from the wrong commits. Check the exact remote ref and push one tag,
+  explicitly, as described below.
 - `remix-v<version>` publishes **nothing** — `melos version` reads it to derive
   the next changelog. A remix release wants both `v<version>` (publishes) and
   `remix-v<version>` (melos reads).
@@ -128,3 +144,41 @@ Rules that have already cost a release here:
 - A `remix_cli` release additionally requires `registry-stable` to resolve and
   pass the hosted check; its publish job gates on
   `melos run open-code:release:check` against hosted packages.
+
+### Check a tag before creating it
+
+A local tag can hold an old commit under the name you are about to use. For
+example, a local `v1.0.0-beta.14` is a 2024 Mix release (tag object
+`41ebf88dbc1aeb2f1b1d5a7cd01f8f6b91aa89c8`, commit
+`f4ceeb4592210b3b43b2e6df1d4f30143c518868`), and that commit's own workflow
+publishes on `v*`. Inspect the real GitHub remote first; a checkout's `origin`
+can be a local path:
+
+```bash
+git ls-remote https://github.com/btwld/remix.git \
+  "refs/tags/<tag>" "refs/tags/<tag>^{}"
+```
+
+- **Absent from GitHub, stale locally:** record the IDs, delete only the local
+  tag, and recreate it at the reviewed merge:
+
+  ```bash
+  git rev-parse "refs/tags/<tag>" "refs/tags/<tag>^{commit}"
+  git tag -d "<tag>"
+  git tag "<tag>" <reviewed-merge>
+  ```
+
+- **Present on GitHub at the reviewed commit:** it is already pushed. Don't
+  push it again.
+- **Present on GitHub at any other commit:** stop. Moving a public tag needs an
+  explicit decision from Leo; never force or delete it.
+
+Then push that one ref:
+
+```bash
+git push https://github.com/btwld/remix.git "refs/tags/<tag>:refs/tags/<tag>"
+```
+
+For the order of the current `remix_cli`, `naked_ui`, `remix_ui_icons`, and
+Remix release, see
+[Bootstrap the current train](../../../open_code/RELEASING.md#bootstrap-the-current-train).

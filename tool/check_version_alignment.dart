@@ -155,12 +155,12 @@ void _checkRegistryFloor(
   );
 }
 
-/// The icon table that pins the default library's package for every item.
+/// The icon table that pins each library's package for every item.
 const _iconTablePath = 'registry/icons.yaml';
 
-/// Holds the icon table's `remix_ui_icons` constraint to the released
+/// Holds every icon library's `remix_ui_icons` constraint to the released
 /// package, for the same reason as [_checkRegistryFloor]: the table is data
-/// that no version bump rewrites.
+/// that no version bump rewrites, and each library declares its own copy.
 void _checkIconTableFloor(
   Directory workspaceRoot,
   Version version,
@@ -178,20 +178,34 @@ void _checkIconTableFloor(
     failures.add(error.message);
     return;
   }
-  final constraint = table
+  if (!table
       .library(defaultIconLibrary)
-      .dependencies['remix_ui_icons'];
-  final floor = constraint is VersionRange ? constraint.min : null;
-  if (floor != version) {
+      .dependencies
+      .containsKey('remix_ui_icons')) {
     failures.add(
-      '$_iconTablePath pins remix_ui_icons "$constraint", but '
-      'packages/remix_ui_icons is $version. Set the '
-      '$defaultIconLibrary library\'s dependency to the new version.',
+      '$_iconTablePath: the $defaultIconLibrary library does not depend on '
+      'remix_ui_icons.',
     );
     return;
   }
+  final aligned = <String>[];
+  for (final MapEntry(key: name, value: library) in table.libraries.entries) {
+    if (!library.dependencies.containsKey('remix_ui_icons')) continue;
+    final constraint = library.dependencies['remix_ui_icons'];
+    final floor = constraint is VersionRange ? constraint.min : null;
+    if (floor != version) {
+      failures.add(
+        '$_iconTablePath pins remix_ui_icons "$constraint" for the $name '
+        'library, but packages/remix_ui_icons is $version. Set that '
+        'library\'s dependency to the new version.',
+      );
+    } else {
+      aligned.add(name);
+    }
+  }
+  if (aligned.isEmpty) return;
   stdout.writeln(
-    'Icon table floor aligned: $_iconTablePath declares remix_ui_icons '
-    '"$constraint" against remix_ui_icons $version.',
+    'Icon table floor aligned: $_iconTablePath libraries '
+    '${aligned.join(', ')} floor remix_ui_icons at $version.',
   );
 }

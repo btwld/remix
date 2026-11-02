@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "icon",
+      "pack",
+      "appearance",
+      "nativeSize",
+      "target",
+      "measuredApprox",
+      "rule",
+      "meetsTarget",
+      "status",
+      "permittedUse",
+      "owner",
+      "reviewer",
+      "reason",
+      "geometrySha256"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "icon": {
+        "type": "string"
+      },
+      "pack": {
+        "const": "rounded"
+      },
+      "appearance": {
+        "enum": [
+          "outline",
+          "filled"
+        ]
+      },
+      "nativeSize": {
+        "enum": [
+          12,
+          16,
+          24
+        ]
+      },
+      "target": {
+        "type": "number"
+      },
+      "measuredApprox": {
+        "type": "number"
+      },
+      "rule": {
+        "enum": [
+          "meaningful-mark-to-frame-gap",
+          "negative-punctuation-separation",
+          "weave-separation",
+          "open-glyph-filled-width",
+          "counter-inscribed-diameter",
+          "weight-pair-centerline-offset",
+          "canvas-centre-offset"
+        ]
+      },
+      "meetsTarget": {
+        "const": false
+      },
+      "status": {
+        "enum": [
+          "design-tradeoff-owner-review-pending"
+        ]
+      },
+      "permittedUse": {
+        "enum": [
+          "visible-label-required",
+          "name-on-enclosing-control"
+        ]
+      },
+      "owner": {
+        "type": "null"
+      },
+      "reviewer": {
+        "type": "null"
+      },
+      "reason": {
+        "type": "string",
+        "minLength": 1
+      },
+      "geometrySha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    }
+  }
+}

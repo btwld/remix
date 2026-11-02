@@ -9,7 +9,7 @@ Widget buildVanillaToastUseCase(BuildContext context) => Scaffold(
     child: const VanillaToast(
       title: 'Changes saved',
       description: 'Your settings are up to date.',
-      icon: RemixIcons.checkCircled,
+      icon: RemixIcons.checkCircle,
     ),
   ),
 );

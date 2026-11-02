@@ -180,7 +180,7 @@ class _VanillaDashboardSettingsPageState
                   .spacing(VanillaTokens.s4),
               children: [
                 const VanillaCallout(
-                  icon: RemixIcons.magicWand,
+                  icon: RemixIcons.wand,
                   text:
                       'Changes are deterministic and remain local to the demo.',
                 ),

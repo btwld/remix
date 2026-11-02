@@ -35,5 +35,5 @@ class PlaygroundDashboardText extends StatelessWidget {
 void playgroundDashboardToast(BuildContext context, String title) =>
     showRemixToast(
       context,
-      RemixToastData(title: title, icon: RemixIcons.checkCircled),
+      RemixToastData(title: title, icon: RemixIcons.checkCircle),
     );
