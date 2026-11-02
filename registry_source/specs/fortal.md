@@ -26,7 +26,7 @@ unchanged; Anton, cobogó patterns, and full Fortaleza branding are out of scope
 
 | Palette / Dart name | Seed | Purpose |
 | --- | --- | --- |
-| Calçadão / `calcadao` | `#13181D` | Neutral accent and the sole gray; inverse limestone in dark mode |
+| Orla / `orla` | `#13181D` | Neutral accent and the sole gray; inverse limestone in dark mode |
 | Mar / `mar` | `#036F6B` | Signature sea green |
 | Céu / `ceu` | `#1A95D8` | Sky blue; white labels on a deeper sky solid |
 | Serra / `serra` | `#6F7845` | Earthy olive of the hills inland |
@@ -38,7 +38,7 @@ Error roles use a dedicated red, `fortalError` (seed `#C92E3B`, installed as
 `<prefix>Error`). It is generated with the accents but is not a selectable
 accent, so an orange Caju accent and a red error never share a palette.
 
-Both theme defaults are Calçadão. The page is gray step 1 in both modes; solid
+Both theme defaults are Orla. The page is gray step 1 in both modes; solid
 panels and surface fields are gray step 2. Panel background defaults to `solid`
 with zero blur; `translucent` remains opt-in. Error roles always resolve to the
 dedicated error red, independently of the current accent or a custom brand
@@ -113,12 +113,12 @@ rounding cannot cross them.
 and spinner foregrounds, solid badge and avatar text, solid code and solid
 menu/select highlights. It is white for every non-luminous palette in both
 modes, warm brown for Sol and Duna, and the basalt/limestone inversion for
-Calçadão.
+Orla.
 
 Checks and radio dots read `accentIndicatorContrast`, derived from the
 `indicator` they sit on rather than from the label. It is white where white
 keeps 3:1 on the indicator. Otherwise it is `contrast`, if that keeps 3:1
-there, and otherwise Calçadão's dark ink. A hand-authored palette that pairs a
+there, and otherwise Orla's dark ink. A hand-authored palette that pairs a
 deep labelled solid with a bright indicator therefore still gets a dark check.
 
 Normal selected surface-switch thumbs and enabled slider thumbs are white

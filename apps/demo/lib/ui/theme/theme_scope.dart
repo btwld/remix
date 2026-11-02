@@ -205,14 +205,14 @@ FortalThemeData _resolveFortalTheme(
   FortalThemeConfig config, {
   FortalThemeData? parent,
 }) {
-  final accent = config.accent ?? parent?.accent ?? FortalAccentColor.calcadao;
+  final accent = config.accent ?? parent?.accent ?? FortalAccentColor.orla;
 
   return FortalThemeData(
     accent: accent,
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? FortalGrayColor.calcadao,
+    gray: config.gray ?? parent?.gray ?? FortalGrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

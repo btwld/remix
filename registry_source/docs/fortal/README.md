@@ -4,7 +4,7 @@ An independent, city-inspired design system for [Remix](https://pub.dev/packages
 
 This private workspace package is the analyzed authoring source for the
 application-owned `fortal` preset, not a published consumer package. It owns
-seven seed-generated OKLCH palettes, neutral Calçadão defaults, flat controls,
+seven seed-generated OKLCH palettes, neutral Orla defaults, flat controls,
 solid panels, a shared focus ring, and contrast-tested soft labels.
 Consumers install editable source with the CLI.
 
@@ -97,8 +97,8 @@ Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
 
 ```dart
 FortalTheme(
-  theme: const FortalThemeData.light(accent: FortalAccentColor.calcadao),
-  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.calcadao),
+  theme: const FortalThemeData.light(accent: FortalAccentColor.orla),
+  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.orla),
   mode: FortalThemeMode.system,
   child: child,
 )
@@ -220,7 +220,7 @@ final donut = PieChart(
 
 Fortal styles are built on a token system that includes:
 
-- **Colors**: seven generated 12-step OKLCH palettes, with Calçadão as accent and sole gray by default
+- **Colors**: seven generated 12-step OKLCH palettes, with Orla as accent and sole gray by default
 - **Spacing**: 9-step spacing scale
 - **Border Radius**: 6-step radius scale
 - **Shadows**: 6-level shadow system

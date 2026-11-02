@@ -8,7 +8,7 @@ void main() {
       FortalAccentColor.values
           .where((value) => value.name == query['accent'])
           .firstOrNull ??
-      FortalAccentColor.calcadao;
+      FortalAccentColor.orla;
   runApp(
     FortalPolishBoard(
       initialAccent: accent,

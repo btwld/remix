@@ -28,7 +28,7 @@ Color computeFocusA8(UiColorScale accent) => accent.alphaStep(8);
 
 /// Computes primary page background color.
 ///
-/// Both modes use Calçadão step 1, including the warm off-white light page.
+/// Both modes use Orla step 1, including the warm off-white light page.
 Color computeColorBackground(UiColorScale gray, {required bool isDark}) =>
     gray.step(1);
 
@@ -48,7 +48,7 @@ Color computeColorPanelTranslucent(UiColorScale gray, {required bool isDark}) =>
 ///
 /// Controls use the neutral step-2 surface in the active mode.
 Color computeColorSurface({required bool isDark}) =>
-    (isDark ? calcadao.dark : calcadao.light).scale.step(2);
+    (isDark ? orla.dark : orla.light).scale.step(2);
 
 /// Computes the neutral boundary of active empty controls.
 ///
@@ -67,7 +67,7 @@ Color computeControlBorder(UiColorScale gray, {required bool isDark}) => isDark
 /// Marks need 3:1 on the fill they sit on, which is the indicator, not the
 /// labelled solid. White wherever it keeps 3:1 on the indicator; otherwise the
 /// palette's [UiColor.contrast] when that keeps 3:1 there; otherwise
-/// Calçadão's dark ink, which always does where white cannot.
+/// Orla's dark ink, which always does where white cannot.
 Color computeAccentIndicatorContrast(UiColor accent) =>
     _markInk(accent.indicator, accent.contrast);
 
@@ -101,7 +101,7 @@ const _white = Color(0xFFFFFFFF);
 Color _markInk(Color fill, Color supplied) {
   if (_keepsMarkContrast(_white, fill)) return _white;
   if (_keepsMarkContrast(supplied, fill)) return supplied;
-  return calcadao.dark.contrast;
+  return orla.dark.contrast;
 }
 
 /// WCAG 2 contrast of at least 3:1, the non-text threshold.
@@ -310,7 +310,7 @@ class UiThemeColors {
 
 // Named palettes share the same fixed-role model.
 const Map<String, UiColorTheme> _accentThemesByName = {
-  'calcadao': calcadao,
+  'orla': orla,
   'mar': mar,
   'ceu': ceu,
   'serra': serra,
@@ -321,8 +321,8 @@ const Map<String, UiColorTheme> _accentThemesByName = {
 
 /// Resolves all computed tokens for a theme configuration.
 UiThemeColors resolveUiTokens(UiThemeConfig theme) {
-  final accentColor = theme.accent ?? UiAccentColor.calcadao;
-  const grayTheme = calcadao;
+  final accentColor = theme.accent ?? UiAccentColor.orla;
+  const grayTheme = orla;
   final accentTheme =
       theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
   final UiColor accentRC = theme.isDark ? accentTheme.dark : accentTheme.light;

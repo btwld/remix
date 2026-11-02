@@ -85,7 +85,14 @@ void main() {
   });
 
   test('a custom name may not reuse a built-in identifier', () {
-    for (final name in ['acmeError', 'serra', 'blackAlpha']) {
+    for (final name in [
+      'acmeError',
+      'orla',
+      'ceu',
+      'calcadao',
+      'serra',
+      'blackAlpha',
+    ]) {
       final result = _generate([
         '--name',
         name,

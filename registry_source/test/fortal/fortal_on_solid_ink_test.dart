@@ -13,7 +13,7 @@ import '../helpers/test_helpers.dart';
 /// through their own face or their `accentThumbRing` outline.
 void main() {
   const palettes = <String, FortalColorTheme>{
-    'calcadao': calcadao,
+    'orla': orla,
     'mar': mar,
     'ceu': ceu,
     'serra': serra,
@@ -111,7 +111,7 @@ void main() {
 
   test('non-luminous palettes carry white labels and white marks', () {
     for (final MapEntry(key: name, value: palette) in palettes.entries) {
-      if (name == 'calcadao' || name == 'sol' || name == 'duna') continue;
+      if (name == 'orla' || name == 'sol' || name == 'duna') continue;
       for (final colors in [palette.light, palette.dark]) {
         expect(colors.contrast, white, reason: name);
         expect(

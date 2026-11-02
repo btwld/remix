@@ -253,7 +253,7 @@ void main() {
     ) async {
       await pumpPanel(tester);
 
-      final at = await probe(tester, 'calcadao');
+      final at = await probe(tester, 'orla');
 
       expect(at(1), at(5));
       _expectNear(at(3), panelToken(tester, FortalTokens.gray12));
@@ -273,7 +273,7 @@ void main() {
     });
 
     for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
-      for (final accent in ['serra', 'calcadao']) {
+      for (final accent in ['serra', 'orla']) {
         testWidgets('a focused $accent swatch follows the shared ring override '
             'in ${mode.name} mode', (tester) async {
           const focusColor = Color(0xFFFF00FF);
@@ -302,10 +302,10 @@ void main() {
 
     testWidgets('focus stays visible on the selected swatch', (tester) async {
       await pumpPanel(tester);
-      focusSwatch(tester, 'calcadao');
+      focusSwatch(tester, 'orla');
       await tester.pump();
 
-      final at = await probe(tester, 'calcadao');
+      final at = await probe(tester, 'orla');
 
       _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
     });
@@ -314,10 +314,10 @@ void main() {
       tester,
     ) async {
       await pumpPanel(tester);
-      focusSwatch(tester, 'calcadao');
+      focusSwatch(tester, 'orla');
       await tester.pump();
 
-      final at = await probe(tester, 'calcadao', left: true);
+      final at = await probe(tester, 'orla', left: true);
 
       _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
     });
@@ -343,11 +343,11 @@ void main() {
           FortalTokens.focusRingOffset: 3,
         },
       );
-      focusSwatch(tester, 'calcadao');
+      focusSwatch(tester, 'orla');
       await tester.pump();
 
       // The gap is 0-3px out, the ring 3-6px, and the page is beyond.
-      final at = await probe(tester, 'calcadao', left: true);
+      final at = await probe(tester, 'orla', left: true);
 
       expect(at(1.5), at(7));
       expect(at(2.5), at(7));
@@ -392,8 +392,8 @@ void main() {
         await tester.pump();
 
         expect(tester.takeException(), isNull);
-        // Calçadão is selected and Serra is focused.
-        for (final accent in ['calcadao', 'serra']) {
+        // Orla is selected and Serra is focused.
+        for (final accent in ['orla', 'serra']) {
           final at = await probe(tester, accent);
           for (final out in [0.5, 1.0, 2.0, 3.0, 4.0]) {
             expect(at(out), at(6), reason: '$accent $out px out');

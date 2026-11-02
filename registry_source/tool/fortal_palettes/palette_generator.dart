@@ -10,10 +10,10 @@ import 'dart:math' as math;
 const basalt = 0xff13181d;
 const limestone = 0xfffaf9f6;
 
-/// Selectable accent seeds. Calçadão, Mar, Sol and Duna keep the refresh brief
+/// Selectable accent seeds. Orla, Mar, Sol and Duna keep the refresh brief
 /// (2026-10-29) values; the 2026-10-31 palette review set Céu, Serra and Caju.
 const fortalSeeds = <String, int>{
-  'calcadao': basalt,
+  'orla': basalt,
   'mar': 0xff036f6b,
   'ceu': 0xff1a95d8,
   'serra': 0xff6f7845,

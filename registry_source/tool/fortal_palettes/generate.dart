@@ -111,13 +111,14 @@ String errorPaletteName(String typePrefix) =>
 /// palette with one of these names would be ambiguous beside it.
 Set<String> reservedPaletteNames(String typePrefix) => {
   ...fortalSeeds.keys,
+  'calcadao',
   errorPaletteName(typePrefix),
   'blackAlpha',
   'whiteAlpha',
 };
 
 /// Renders [seeds] as palette constants. [builtIns] marks the shipped file:
-/// Calçadão is generated as the neutral, and the dedicated error palette and
+/// Orla is generated as the neutral, and the dedicated error palette and
 /// neutral alpha swatches are appended. Custom output never infers either
 /// from its name. [errorName] is the built-in error identifier for the
 /// requested prefix; explicit custom names are never rewritten.
@@ -146,11 +147,15 @@ import '$paletteImport';
       entry.value,
       generatePalette(
         entry.value,
-        neutral: builtIns && entry.value == fortalSeeds['calcadao'],
+        neutral: builtIns && entry.value == fortalSeeds['orla'],
       ),
     );
   }
   if (builtIns) {
+    out.writeln('''@Deprecated('Use orla instead.')
+const calcadao = orla;
+
+''');
     _writePalette(
       out,
       errorName,

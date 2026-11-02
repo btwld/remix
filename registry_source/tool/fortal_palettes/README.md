@@ -30,7 +30,7 @@ in the app and pass `accentPalette: brand` to its prefixed theme widget. The
 palette owns both modes; all named accents remain available in nested scopes.
 The generated identifiers start with the requested lower-camel name, not the
 consumer's prefix, so a palette can be renamed independently of UI classes.
-A custom name may not reuse a built-in identifier (`calcadao`, `serra`,
+A custom name may not reuse a built-in identifier (`orla`, `serra`,
 `<prefix>Error`, `blackAlpha` and the rest), and a custom palette is never
 generated as the neutral because of its name.
 
