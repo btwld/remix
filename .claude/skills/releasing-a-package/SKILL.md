@@ -179,7 +179,3 @@ Then push that one ref:
 ```bash
 git push https://github.com/btwld/remix.git "refs/tags/<tag>:refs/tags/<tag>"
 ```
-
-For the order of the current `remix_cli`, `naked_ui`, `remix_ui_icons`, and
-Remix release, see
-[Bootstrap the current train](../../../open_code/RELEASING.md#bootstrap-the-current-train).
