@@ -13,7 +13,8 @@ preset. The commands here cover all currently implemented presets.
 
 ## Validate the candidate
 
-With the pinned Flutter 3.44.0 SDK (`icons` and `cli-windows` are CI-only):
+With the pinned Flutter 3.44.0 SDK (`icons`, `icons-tree-shake`, and
+`cli-windows` are CI-only):
 
 ```shell
 fvm flutter pub get
@@ -94,7 +95,7 @@ that already pinned a revision stay on it either way.
 
 The [package release skill](../.claude/skills/releasing-a-package/SKILL.md)
 owns package-specific bump files and tag patterns. Smoke-test the promoted branch
-with hosted dependencies for both presets:
+with hosted dependencies for every preset:
 
 ```shell
 REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted

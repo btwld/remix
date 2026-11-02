@@ -159,6 +159,7 @@ git ls-remote https://github.com/btwld/remix.git \
   "refs/tags/<tag>" "refs/tags/<tag>^{}"
 ```
 
+- **Absent from GitHub, no local tag:** create it at the reviewed merge.
 - **Absent from GitHub, stale locally:** record the IDs, delete only the local
   tag, and recreate it at the reviewed merge:
 
