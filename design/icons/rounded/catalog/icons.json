@@ -138,7 +138,7 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "One diagonal shaft running into a 90-degree round corner. The arms stop short, so the mass stays clear of the top and right keylines.",
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Requires a visible action label at every size: it opens another destination."
       }
     },
     {

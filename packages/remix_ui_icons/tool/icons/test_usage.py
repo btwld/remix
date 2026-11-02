@@ -32,6 +32,7 @@ CATALOG_USAGE = {
 }
 CATALOG_USAGE.update({
     'Keep a visible action label: the wand does not say what the automatic action does.': ALL,
+    'Requires a visible action label at every size: it opens another destination.': ALL,
     'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.': ALL,
     'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.': None,
     'Name the appearance on the enclosing control; this is not a generic status.': None,
@@ -43,7 +44,6 @@ CATALOG_RESTRICTIONS = {"warning-visible-label": ALL}
 # `None` means the meaning adds no requirement of its own: the enclosing control
 # can carry the name, or `review.usage` or a restriction record states the rule.
 CATALOG_MEANING = {
-    # The only place these two catalogs state Arrow up right's rule.
     "Open another destination. Keep a visible action label.": ALL,
     "Up direction or collapse, with a label.": None,
     "Down direction or disclosure, with a label.": None,
@@ -156,6 +156,9 @@ class UsageContractTest(unittest.TestCase):
         glyphs = [glyph for glyph in MANIFEST.glyphs if glyph.concept.id == "arrow-up-right"]
         self.assertEqual(len(glyphs), 12)  # Two families, two styles, three masters.
         self.assertTrue(all(glyph.requires_label for glyph in glyphs))
+        for family in ("outline", "rounded"):
+            icon = next(icon for icon in _catalog(family) if icon["id"] == "arrow-up-right")
+            self.assertIs(CATALOG_USAGE[icon["review"]["usage"]], ALL, family)
 
 
 

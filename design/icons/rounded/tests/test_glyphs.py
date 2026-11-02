@@ -104,6 +104,7 @@ class InventoryTests(unittest.TestCase):
             'Requires a visible text label at 12 px. At 16 and 24 px, use the action name on the enclosing control.',
             'Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record.',
             'Keep a visible action label: the wand does not say what the automatic action does.',
+            'Requires a visible action label at every size: it opens another destination.',
             'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
             'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
             'Name the appearance on the enclosing control; this is not a generic status.',

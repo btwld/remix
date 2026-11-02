@@ -456,7 +456,7 @@
         "independentApproval": "pending",
         "note": "Shortened the large corner arms and removed post-stroke stretching. Less top/right mass; one diagonal and a 90° arrowhead, with unchanged external-destination meaning. Do not mirror this automatically for right-to-left layouts without checking the intended meaning. The 16 px corner arms moved to the half-pixel grid in both weights (2026-11-01).",
         "exceptions": [],
-        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+        "usage": "Requires a visible action label at every size: it opens another destination."
       }
     },
     {
