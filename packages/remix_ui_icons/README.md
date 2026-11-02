@@ -46,6 +46,10 @@ Use the master closest to the rendered size: up to 12 px use the 12 px master,
 up to 16 px the 16 px master, and the 24 px master above that. Sizes below
 12 px are not reviewed.
 
+Use 12 px for secondary labeled information, 16 px for compact controls, and
+20–24 px for primary controls. Keep the clickable area independent of the icon
+size and give the enclosing control an accessible action name.
+
 When the size is only known at runtime, opt into `sized.dart`. Each set refers
 to all three of its masters, so it keeps three glyphs in a release build:
 
@@ -64,9 +68,10 @@ The rules depend on the family and master:
 | --- | --- |
 | Warning, every family and style | Required at every size. A tooltip or semantic label is not a substitute. |
 | Rounded Branch | Required at every size. |
-| Outline Help, Branch, Focus | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
+| Help, Focus, Group in both families; Outline Branch | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
 | Rounded Link | Required at 12 px. |
-| Outline Arrow up-right | Keep a visible action label: it opens another destination. |
+| Outline Wand; Outline Check circle, Ban, Close circle | Required at every size; state the action or status in text. |
+| Arrow up-right in both families | Keep a visible action label: it opens another destination. |
 
 Each constant's documentation states its rule. In the opt-in index,
 `RemixIconEntry.requiresLabel` is `true` for every glyph that requires a label,

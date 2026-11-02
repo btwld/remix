@@ -145,8 +145,11 @@ Future<_Difference> _compare(
       .sublist(parts.length - 4)
       .join('/')
       .replaceAll('.png', '.svg');
+  // This test alone loads an independently assigned source-font cmap.
   final expectedIcon = IconData(
+    // ignore: non_const_argument_for_const_parameter
     referenceCodes[source] as int,
+    // ignore: non_const_argument_for_const_parameter
     fontFamily: referenceFamily,
   );
   final actual = await _renderFont(

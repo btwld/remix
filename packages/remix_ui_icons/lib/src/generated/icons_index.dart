@@ -7377,7 +7377,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7391,7 +7391,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7405,7 +7405,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7419,7 +7419,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7433,7 +7433,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7447,7 +7447,7 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['external', 'outbound'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: ['Opens another destination; keep a visible action label.'],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(

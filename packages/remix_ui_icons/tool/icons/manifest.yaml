@@ -12,7 +12,7 @@ startCodepoint: "0xE200"
 source:
   root: ../../../../design/icons
   # Commit containing the current masters; glyph source hashes bind each drawing.
-  revision: 000f3fdf52ac24120493055f82c14da4c9a81894
+  revision: 20e148ea04ddf980fdf98618f66641bd95869be1
 reserved:
   # remix_ui_icons 0.1.x shipped the Radix Icons 1.3.2 glyphs here. Never reuse.
   - first: "0xE000"
@@ -106,6 +106,11 @@ concepts:
         kind: label-contextual
         note: "Opens another destination; keep a visible action label."
         source: outline/catalog/icons.json
+        quote: "Open another destination. Keep a visible action label."
+      - families: [rounded]
+        kind: label-contextual
+        note: "Opens another destination; keep a visible action label."
+        source: rounded/catalog/icons.json
         quote: "Open another destination. Keep a visible action label."
   chevron-left:
     name: chevronLeft

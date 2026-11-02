@@ -49,7 +49,7 @@ final class RemixIconEntry {
 
   /// Whether this glyph must be shown with a visible text label. A tooltip
   /// or semantic label is not a substitute. The design contract sets this
-  /// per family and master: Warning everywhere, Rounded Branch, and some concepts only at their 12 px master.
+  /// per family and master; [usage] explains the applicable requirement.
   final bool requiresLabel;
 
   /// The design contract's supported-use notes for this glyph: why it needs

@@ -2682,7 +2682,7 @@ abstract final class OutlineIcons {
 
   /// Activity, outline style, 24 px master.
   ///
-  /// ![Activity, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjExOCAxM0w4Ljc1IDcuNzM2TDE1LjI1IDIwLjczNkwxOS4xMTggMTNMMjIgMTNMMjIgMTFMMTcuODgyIDExTDE1LjI1IDE2LjI2NEw4Ljc1IDMuMjY0TDQuODgyIDExTDIgMTFMMiAxM1oiLz48L3N2Zz4=)
+  /// ![Activity, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04Ljc1IDcuNzM2TDE0Ljg4MiAyMEwxNS42MTggMjBMMTkuMTE4IDEzTDIyIDEzTDIyIDExTDE3Ljg4MiAxMUwxNS4yNSAxNi4yNjRMOS4xMTggNEw4LjM4MiA0TDQuODgyIDExTDIgMTFMMiAxM0w2LjExOCAxM1oiLz48L3N2Zz4=)
   static const IconData activity = IconData(
     0xE3B0,
     fontFamily: _fontFamily,
@@ -2691,7 +2691,7 @@ abstract final class OutlineIcons {
 
   /// Activity, filled style, 24 px master.
   ///
-  /// ![Activity, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjQyNyAxMy41TDguNzUgOC44NTRMMTUuMjUgMjEuODU0TDE5LjQyNyAxMy41TDIyIDEzLjVMMjIgMTAuNUwxNy41NzMgMTAuNUwxNS4yNSAxNS4xNDZMOC43NSAyLjE0Nkw0LjU3MyAxMC41TDIgMTAuNUwyIDEzLjVaIi8+PC9zdmc+)
+  /// ![Activity, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04Ljc1IDguODU0TDE0LjgyMyAyMUwxNS42NzcgMjFMMTkuNDI3IDEzLjVMMjIgMTMuNUwyMiAxMC41TDE3LjU3MyAxMC41TDE1LjI1IDE1LjE0Nkw5LjE3NyAzTDguMzIzIDNMNC41NzMgMTAuNUwyIDEwLjVMMiAxMy41TDYuNDI3IDEzLjVaIi8+PC9zdmc+)
   static const IconData activityFilled = IconData(
     0xE3B1,
     fontFamily: _fontFamily,
@@ -2700,7 +2700,7 @@ abstract final class OutlineIcons {
 
   /// Activity, outline style, 16 px master.
   ///
-  /// ![Activity, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjIxNCA4Ljc1TDUuNzAyIDUuNzczTDEwLjQ1MiAxMy4yNzNMMTIuNzE0IDguNzVMMTQuNSA4Ljc1TDE0LjUgNy4yNUwxMS43ODYgNy4yNUwxMC4yOTggMTAuMjI3TDUuNTQ4IDIuNzI3TDMuMjg2IDcuMjVMMS41IDcuMjVMMS41IDguNzVaIi8+PC9zdmc+)
+  /// ![Activity, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjEyNSA1LjkyN0w5LjY2MSAxM0wxMC4wODkgMTNMMTIuMjE0IDguNzVMMTQuNSA4Ljc1TDE0LjUgNy4yNUwxMS4yODYgNy4yNUw5Ljg3NSAxMC4wNzNMNi4zMzkgM0w1LjkxMSAzTDMuNzg2IDcuMjVMMS41IDcuMjVMMS41IDguNzVMNC43MTQgOC43NVoiLz48L3N2Zz4=)
   static const IconData activity16 = IconData(
     0xE3B2,
     fontFamily: _fontFamily,
@@ -2709,7 +2709,7 @@ abstract final class OutlineIcons {
 
   /// Activity, filled style, 16 px master.
   ///
-  /// ![Activity, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjUyMyA5LjI1TDUuNzUzIDYuNzg5TDEwLjUwMyAxNC4yODlMMTMuMDIzIDkuMjVMMTQuNSA5LjI1TDE0LjUgNi43NUwxMS40NzcgNi43NUwxMC4yNDcgOS4yMTFMNS40OTcgMS43MTFMMi45NzcgNi43NUwxLjUgNi43NUwxLjUgOS4yNVoiLz48L3N2Zz4=)
+  /// ![Activity, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjEyNSA3LjA0NUw5LjYwMiAxNEwxMC4xNDggMTRMMTIuNTIzIDkuMjVMMTQuNSA5LjI1TDE0LjUgNi43NUwxMC45NzcgNi43NUw5Ljg3NSA4Ljk1NUw2LjM5OCAyTDUuODUyIDJMMy40NzcgNi43NUwxLjUgNi43NUwxLjUgOS4yNUw1LjAyMyA5LjI1WiIvPjwvc3ZnPg==)
   static const IconData activityFilled16 = IconData(
     0xE3B3,
     fontFamily: _fontFamily,
@@ -2718,7 +2718,7 @@ abstract final class OutlineIcons {
 
   /// Activity, outline style, 12 px master.
   ///
-  /// ![Activity, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjMwOSA2TDQuNSAzLjYxOEw3LjUgOS42MThMOS4zMDkgNkwxMSA2TDExIDVMOC42OTEgNUw3LjUgNy4zODJMNC41IDEuMzgyTDIuNjkxIDVMMSA1TDEgNloiLz48L3N2Zz4=)
+  /// ![Activity, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjUgMy42MThMNy4xOTEgOUw3LjgwOSA5TDkuMzA5IDZMMTEgNkwxMSA1TDguNjkxIDVMNy41IDcuMzgyTDQuODA5IDJMNC4xOTEgMkwyLjY5MSA1TDEgNUwxIDZMMy4zMDkgNloiLz48L3N2Zz4=)
   static const IconData activity12 = IconData(
     0xE3B4,
     fontFamily: _fontFamily,
@@ -2727,7 +2727,7 @@ abstract final class OutlineIcons {
 
   /// Activity, filled style, 12 px master.
   ///
-  /// ![Activity, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjQ2NCA2Ljc1TDQuNSA0LjY3N0w3LjUgMTAuNjc3TDkuNDY0IDYuNzVMMTEgNi43NUwxMSA1LjI1TDguNTM2IDUuMjVMNy41IDcuMzIzTDQuNSAxLjMyM0wyLjUzNiA1LjI1TDEgNS4yNUwxIDYuNzVaIi8+PC9zdmc+)
+  /// ![Activity, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjUgNC42NzdMNy4xNjEgMTBMNy44MzkgMTBMOS40NjQgNi43NUwxMSA2Ljc1TDExIDUuMjVMOC41MzYgNS4yNUw3LjUgNy4zMjNMNC44MzkgMkw0LjE2MSAyTDIuNTM2IDUuMjVMMSA1LjI1TDEgNi43NUwzLjQ2NCA2Ljc1WiIvPjwvc3ZnPg==)
   static const IconData activityFilled12 = IconData(
     0xE3B5,
     fontFamily: _fontFamily,
@@ -2736,7 +2736,7 @@ abstract final class OutlineIcons {
 
   /// Align center, outline style, 24 px master.
   ///
-  /// ![Align center, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDVMMjIgNUwyMiAzTDIgM1pNNCAxNUwyMCAxNUwyMCAxM0w0IDEzWk02IDEwTDE4IDEwTDE4IDhMNiA4Wk04IDIwTDE2IDIwTDE2IDE4TDggMThaIi8+PC9zdmc+)
+  /// ![Align center, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSA0TDIgNEwyIDEwTDExIDEwTDExIDE0TDYgMTRMNiAyMEwxMSAyMEwxMSAyMkwxMyAyMkwxMyAyMEwxOCAyMEwxOCAxNEwxMyAxNEwxMyAxMEwyMiAxMEwyMiA0TDEzIDRMMTMgMkwxMSAyWk00IDZMMjAgNkwyMCA4TDQgOFpNMTYgMTZMMTYgMThMOCAxOEw4IDE2WiIvPjwvc3ZnPg==)
   static const IconData alignCenter = IconData(
     0xE3B6,
     fontFamily: _fontFamily,
@@ -2745,7 +2745,7 @@ abstract final class OutlineIcons {
 
   /// Align center, filled style, 24 px master.
   ///
-  /// ![Align center, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMjIgNkwyMiAzTDIgM1pNNCAxNkwyMCAxNkwyMCAxM0w0IDEzWk02IDExTDE4IDExTDE4IDhMNiA4Wk04IDIxTDE2IDIxTDE2IDE4TDggMThaIi8+PC9zdmc+)
+  /// ![Align center, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSA0TDIgNEwyIDEwTDExIDEwTDExIDE0TDYgMTRMNiAyMEwxMSAyMEwxMSAyMkwxMyAyMkwxMyAyMEwxOCAyMEwxOCAxNEwxMyAxNEwxMyAxMEwyMiAxMEwyMiA0TDEzIDRMMTMgMkwxMSAyWiIvPjwvc3ZnPg==)
   static const IconData alignCenterFilled = IconData(
     0xE3B7,
     fontFamily: _fontFamily,
@@ -2754,7 +2754,7 @@ abstract final class OutlineIcons {
 
   /// Align center, outline style, 16 px master.
   ///
-  /// ![Align center, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMi41TDEuNSA0TDE0LjUgNEwxNC41IDIuNVpNMyAxNEwxMyAxNEwxMyAxMi41TDMgMTIuNVpNNC41IDlMMTEuNSA5TDExLjUgNy41TDQuNSA3LjVaIi8+PC9zdmc+)
+  /// ![Align center, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik03LjI1IDIuNUwyIDIuNUwyIDdMNy4yNSA3TDcuMjUgOUw1IDlMNSAxMy41TDcuMjUgMTMuNUw3LjI1IDE0LjVMOC43NSAxNC41TDguNzUgMTMuNUwxMSAxMy41TDExIDlMOC43NSA5TDguNzUgN0wxNCA3TDE0IDIuNUw4Ljc1IDIuNUw4Ljc1IDEuNUw3LjI1IDEuNVpNMy41IDRMMTIuNSA0TDEyLjUgNS41TDMuNSA1LjVaTTkuNSAxMC41TDkuNSAxMkw2LjUgMTJMNi41IDEwLjVaIi8+PC9zdmc+)
   static const IconData alignCenter16 = IconData(
     0xE3B8,
     fontFamily: _fontFamily,
@@ -2763,7 +2763,7 @@ abstract final class OutlineIcons {
 
   /// Align center, filled style, 16 px master.
   ///
-  /// ![Align center, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMkwxLjUgNC41TDE0LjUgNC41TDE0LjUgMlpNMyAxNC41TDEzIDE0LjVMMTMgMTJMMyAxMlpNNC41IDkuNUwxMS41IDkuNUwxMS41IDdMNC41IDdaIi8+PC9zdmc+)
+  /// ![Align center, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik03LjI1IDIuNUwyIDIuNUwyIDdMNy4yNSA3TDcuMjUgOUw1IDlMNSAxMy41TDcuMjUgMTMuNUw3LjI1IDE0LjVMOC43NSAxNC41TDguNzUgMTMuNUwxMSAxMy41TDExIDlMOC43NSA5TDguNzUgN0wxNCA3TDE0IDIuNUw4Ljc1IDIuNUw4Ljc1IDEuNUw3LjI1IDEuNVoiLz48L3N2Zz4=)
   static const IconData alignCenterFilled16 = IconData(
     0xE3B9,
     fontFamily: _fontFamily,
@@ -2772,7 +2772,7 @@ abstract final class OutlineIcons {
 
   /// Align center, outline style, 12 px master.
   ///
-  /// ![Align center, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSAzTDExIDNMMTEgMlpNMiA5TDEwIDlMMTAgOEwyIDhaTTMgNkw5IDZMOSA1TDMgNVoiLz48L3N2Zz4=)
+  /// ![Align center, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDJMMSAyTDEgNUw1IDVMNSA3TDMgN0wzIDEwTDUgMTBMNSAxMUw2IDExTDYgMTBMOCAxMEw4IDdMNiA3TDYgNUwxMCA1TDEwIDJMNiAyTDYgMUw1IDFaTTIgM0w5IDNMOSA0TDIgNFpNNyA4TDcgOUw0IDlMNCA4WiIvPjwvc3ZnPg==)
   static const IconData alignCenter12 = IconData(
     0xE3BA,
     fontFamily: _fontFamily,
@@ -2781,7 +2781,7 @@ abstract final class OutlineIcons {
 
   /// Align center, filled style, 12 px master.
   ///
-  /// ![Align center, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSA0TDExIDRMMTEgMlpNMiAxMEwxMCAxMEwxMCA4TDIgOFpNMyA3TDkgN0w5IDVMMyA1WiIvPjwvc3ZnPg==)
+  /// ![Align center, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDJMMSAyTDEgNUw1IDVMNSA3TDMgN0wzIDEwTDUgMTBMNSAxMUw2IDExTDYgMTBMOCAxMEw4IDdMNiA3TDYgNUwxMCA1TDEwIDJMNiAyTDYgMUw1IDFaIi8+PC9zdmc+)
   static const IconData alignCenterFilled12 = IconData(
     0xE3BB,
     fontFamily: _fontFamily,
@@ -2790,7 +2790,7 @@ abstract final class OutlineIcons {
 
   /// Align left, outline style, 24 px master.
   ///
-  /// ![Align left, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDVMMjIgNUwyMiAzTDIgM1pNMiAxMEwxNCAxMEwxNCA4TDIgOFpNMiAxNUwxOCAxNUwxOCAxM0wyIDEzWk0yIDIwTDEwIDIwTDEwIDE4TDIgMThaIi8+PC9zdmc+)
+  /// ![Align left, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDIyTDQgMkwyIDJMMiAyMlpNNiAxMEwyMiAxMEwyMiA0TDYgNFpNOCA4TDggNkwyMCA2TDIwIDhaTTE0IDIwTDE0IDE0TDYgMTRMNiAyMFpNOCAxNkwxMiAxNkwxMiAxOEw4IDE4WiIvPjwvc3ZnPg==)
   static const IconData alignLeft = IconData(
     0xE3BC,
     fontFamily: _fontFamily,
@@ -2799,7 +2799,7 @@ abstract final class OutlineIcons {
 
   /// Align left, filled style, 24 px master.
   ///
-  /// ![Align left, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMjIgNkwyMiAzTDIgM1pNMiAxMUwxNCAxMUwxNCA4TDIgOFpNMiAxNkwxOCAxNkwxOCAxM0wyIDEzWk0yIDIxTDEwIDIxTDEwIDE4TDIgMThaIi8+PC9zdmc+)
+  /// ![Align left, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDIyTDQgMkwyIDJMMiAyMlpNNiA0TDYgMTBMMjIgMTBMMjIgNFpNNiAyMEwxNCAyMEwxNCAxNEw2IDE0WiIvPjwvc3ZnPg==)
   static const IconData alignLeftFilled = IconData(
     0xE3BD,
     fontFamily: _fontFamily,
@@ -2808,7 +2808,7 @@ abstract final class OutlineIcons {
 
   /// Align left, outline style, 16 px master.
   ///
-  /// ![Align left, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMi41TDEuNSA0TDE0LjUgNEwxNC41IDIuNVpNMS41IDlMOC41IDlMOC41IDcuNUwxLjUgNy41Wk0xLjUgMTRMMTEuNSAxNEwxMS41IDEyLjVMMS41IDEyLjVaIi8+PC9zdmc+)
+  /// ![Align left, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTQuNUwzLjUgMS41TDIgMS41TDIgMTQuNVpNNSA2LjVMMTQgNi41TDE0IDJMNSAyWk02LjUgNUw2LjUgMy41TDEyLjUgMy41TDEyLjUgNVpNMTEgMTRMMTEgOS41TDUgOS41TDUgMTRaTTYuNSAxMUw5LjUgMTFMOS41IDEyLjVMNi41IDEyLjVaIi8+PC9zdmc+)
   static const IconData alignLeft16 = IconData(
     0xE3BE,
     fontFamily: _fontFamily,
@@ -2817,7 +2817,7 @@ abstract final class OutlineIcons {
 
   /// Align left, filled style, 16 px master.
   ///
-  /// ![Align left, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMkwxLjUgNC41TDE0LjUgNC41TDE0LjUgMlpNMS41IDkuNUw4LjUgOS41TDguNSA3TDEuNSA3Wk0xLjUgMTQuNUwxMS41IDE0LjVMMTEuNSAxMkwxLjUgMTJaIi8+PC9zdmc+)
+  /// ![Align left, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTQuNUwzLjUgMS41TDIgMS41TDIgMTQuNVpNNSAyTDUgNi41TDE0IDYuNUwxNCAyWk01IDE0TDExIDE0TDExIDkuNUw1IDkuNVoiLz48L3N2Zz4=)
   static const IconData alignLeftFilled16 = IconData(
     0xE3BF,
     fontFamily: _fontFamily,
@@ -2826,7 +2826,7 @@ abstract final class OutlineIcons {
 
   /// Align left, outline style, 12 px master.
   ///
-  /// ![Align left, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSAzTDExIDNMMTEgMlpNMSA2TDcgNkw3IDVMMSA1Wk0xIDlMOSA5TDkgOEwxIDhaIi8+PC9zdmc+)
+  /// ![Align left, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDExTDIgMUwxIDFMMSAxMVpNMyA1TDExIDVMMTEgMkwzIDJaTTQgNEw0IDNMMTAgM0wxMCA0Wk04IDEwTDggN0wzIDdMMyAxMFpNNCA4TDcgOEw3IDlMNCA5WiIvPjwvc3ZnPg==)
   static const IconData alignLeft12 = IconData(
     0xE3C0,
     fontFamily: _fontFamily,
@@ -2835,7 +2835,7 @@ abstract final class OutlineIcons {
 
   /// Align left, filled style, 12 px master.
   ///
-  /// ![Align left, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSA0TDExIDRMMTEgMlpNMSA3TDcgN0w3IDVMMSA1Wk0xIDEwTDkgMTBMOSA4TDEgOFoiLz48L3N2Zz4=)
+  /// ![Align left, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDExTDIgMUwxIDFMMSAxMVpNMyAyTDMgNUwxMSA1TDExIDJaTTMgMTBMOCAxMEw4IDdMMyA3WiIvPjwvc3ZnPg==)
   static const IconData alignLeftFilled12 = IconData(
     0xE3C1,
     fontFamily: _fontFamily,
@@ -2844,7 +2844,7 @@ abstract final class OutlineIcons {
 
   /// Align right, outline style, 24 px master.
   ///
-  /// ![Align right, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDVMMjIgNUwyMiAzTDIgM1pNNiAxNUwyMiAxNUwyMiAxM0w2IDEzWk0xMCAxMEwyMiAxMEwyMiA4TDEwIDhaTTE0IDIwTDIyIDIwTDIyIDE4TDE0IDE4WiIvPjwvc3ZnPg==)
+  /// ![Align right, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xOCAxMEwyIDEwTDIgNEwxOCA0Wk0xNiA4TDE2IDZMNCA2TDQgOFpNMTAgMjBMMTAgMTRMMTggMTRMMTggMjBaTTE2IDE2TDEyIDE2TDEyIDE4TDE2IDE4Wk0yMCAyMkwyMCAyTDIyIDJMMjIgMjJaIi8+PC9zdmc+)
   static const IconData alignRight = IconData(
     0xE3C2,
     fontFamily: _fontFamily,
@@ -2853,7 +2853,7 @@ abstract final class OutlineIcons {
 
   /// Align right, filled style, 24 px master.
   ///
-  /// ![Align right, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMjIgNkwyMiAzTDIgM1pNNiAxNkwyMiAxNkwyMiAxM0w2IDEzWk0xMCAxMUwyMiAxMUwyMiA4TDEwIDhaTTE0IDIxTDIyIDIxTDIyIDE4TDE0IDE4WiIvPjwvc3ZnPg==)
+  /// ![Align right, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xOCA0TDE4IDEwTDIgMTBMMiA0Wk0xOCAyMEwxMCAyMEwxMCAxNEwxOCAxNFpNMjAgMjJMMjAgMkwyMiAyTDIyIDIyWiIvPjwvc3ZnPg==)
   static const IconData alignRightFilled = IconData(
     0xE3C3,
     fontFamily: _fontFamily,
@@ -2862,7 +2862,7 @@ abstract final class OutlineIcons {
 
   /// Align right, outline style, 16 px master.
   ///
-  /// ![Align right, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMi41TDEuNSA0TDE0LjUgNEwxNC41IDIuNVpNNC41IDE0TDE0LjUgMTRMMTQuNSAxMi41TDQuNSAxMi41Wk03LjUgOUwxNC41IDlMMTQuNSA3LjVMNy41IDcuNVoiLz48L3N2Zz4=)
+  /// ![Align right, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSA2LjVMMiA2LjVMMiAyTDExIDJaTTkuNSA1TDkuNSAzLjVMMy41IDMuNUwzLjUgNVpNNSAxNEw1IDkuNUwxMSA5LjVMMTEgMTRaTTkuNSAxMUw2LjUgMTFMNi41IDEyLjVMOS41IDEyLjVaTTEyLjUgMTQuNUwxMi41IDEuNUwxNCAxLjVMMTQgMTQuNVoiLz48L3N2Zz4=)
   static const IconData alignRight16 = IconData(
     0xE3C4,
     fontFamily: _fontFamily,
@@ -2871,7 +2871,7 @@ abstract final class OutlineIcons {
 
   /// Align right, filled style, 16 px master.
   ///
-  /// ![Align right, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMkwxLjUgNC41TDE0LjUgNC41TDE0LjUgMlpNNC41IDE0LjVMMTQuNSAxNC41TDE0LjUgMTJMNC41IDEyWk03LjUgOS41TDE0LjUgOS41TDE0LjUgN0w3LjUgN1oiLz48L3N2Zz4=)
+  /// ![Align right, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAyTDExIDYuNUwyIDYuNUwyIDJaTTExIDE0TDUgMTRMNSA5LjVMMTEgOS41Wk0xMi41IDE0LjVMMTIuNSAxLjVMMTQgMS41TDE0IDE0LjVaIi8+PC9zdmc+)
   static const IconData alignRightFilled16 = IconData(
     0xE3C5,
     fontFamily: _fontFamily,
@@ -2880,7 +2880,7 @@ abstract final class OutlineIcons {
 
   /// Align right, outline style, 12 px master.
   ///
-  /// ![Align right, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSAzTDExIDNMMTEgMlpNMyA5TDExIDlMMTEgOEwzIDhaTTUgNkwxMSA2TDExIDVMNSA1WiIvPjwvc3ZnPg==)
+  /// ![Align right, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05IDVMMSA1TDEgMkw5IDJaTTggNEw4IDNMMiAzTDIgNFpNNCAxMEw0IDdMOSA3TDkgMTBaTTggOEw1IDhMNSA5TDggOVpNMTAgMTFMMTAgMUwxMSAxTDExIDExWiIvPjwvc3ZnPg==)
   static const IconData alignRight12 = IconData(
     0xE3C6,
     fontFamily: _fontFamily,
@@ -2889,7 +2889,7 @@ abstract final class OutlineIcons {
 
   /// Align right, filled style, 12 px master.
   ///
-  /// ![Align right, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSA0TDExIDRMMTEgMlpNMyAxMEwxMSAxMEwxMSA4TDMgOFpNNSA3TDExIDdMMTEgNUw1IDVaIi8+PC9zdmc+)
+  /// ![Align right, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05IDJMOSA1TDEgNUwxIDJaTTkgMTBMNCAxMEw0IDdMOSA3Wk0xMCAxMUwxMCAxTDExIDFMMTEgMTFaIi8+PC9zdmc+)
   static const IconData alignRightFilled12 = IconData(
     0xE3C7,
     fontFamily: _fontFamily,
@@ -2898,7 +2898,7 @@ abstract final class OutlineIcons {
 
   /// Box, outline style, 24 px master.
   ///
-  /// ![Box, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDcuNjE4TDMgMThMMTEgMjJMMTMgMjJMMjEgMThMMjEgNy42MThMMjEgNi41TDE5Ljg4MiA1Ljk0MUwxMiAyTDQuMTE4IDUuOTQxTDMgNi41Wk0xOSAxNi43NjRMMTMgMTkuNzY0TDEzIDExLjYxOEwxOSA4LjYxOFpNNSAxNi43NjRMNSA4LjYxOEwxMSAxMS42MThMMTEgMTkuNzY0Wk0xMiA0LjIzNkwxNy42NDYgNy4wNTlMMTIgOS44ODJMNi4zNTQgNy4wNTlaIi8+PC9zdmc+)
+  /// ![Box, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDE4TDExIDIyTDEzIDIyTDIxIDE4TDIxIDYuNUwxMiAyTDMgNi41Wk0xOSAxNi43NjRMMTMgMTkuNzY0TDEzIDExLjYxOEwxOSA4LjYxOFpNNSAxNi43NjRMNSA4LjYxOEwxMSAxMS42MThMMTEgMTkuNzY0Wk0xMiA0LjIzNkwxNy42NDYgNy4wNTlMMTIgOS44ODJMNi4zNTQgNy4wNTlaIi8+PC9zdmc+)
   static const IconData box = IconData(
     0xE3C8,
     fontFamily: _fontFamily,
@@ -2916,7 +2916,7 @@ abstract final class OutlineIcons {
 
   /// Box, outline style, 16 px master.
   ///
-  /// ![Box, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDUuMzM5TDIgMTEuODc1TDcuMjUgMTQuNUw4Ljc1IDE0LjVMMTQgMTEuODc1TDE0IDUuMzM5TDE0IDQuNUwxMy4xNjEgNC4wODFMOCAxLjVMMi44MzkgNC4wODFMMiA0LjVaTTEyLjUgMTAuOTQ4TDguNzUgMTIuODIzTDguNzUgNy45NjRMMTIuNSA2LjA4OVpNMy41IDEwLjk0OEwzLjUgNi4wODlMNy4yNSA3Ljk2NEw3LjI1IDEyLjgyM1pNOCAzLjE3N0wxMS40ODQgNC45MTlMOCA2LjY2MUw0LjUxNiA0LjkxOVoiLz48L3N2Zz4=)
+  /// ![Box, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDExLjg3NUw3LjI1IDE0LjVMOC43NSAxNC41TDE0IDExLjg3NUwxNCA0LjVMOCAxLjVMMiA0LjVaTTEyLjUgMTAuOTQ4TDguNzUgMTIuODIzTDguNzUgNy45NjRMMTIuNSA2LjA4OVpNMy41IDEwLjk0OEwzLjUgNi4wODlMNy4yNSA3Ljk2NEw3LjI1IDEyLjgyM1pNOCAzLjE3N0wxMS40ODQgNC45MTlMOCA2LjY2MUw0LjUxNiA0LjkxOVoiLz48L3N2Zz4=)
   static const IconData box16 = IconData(
     0xE3CA,
     fontFamily: _fontFamily,
@@ -2934,7 +2934,7 @@ abstract final class OutlineIcons {
 
   /// Box, outline style, 12 px master.
   ///
-  /// ![Box, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDMuODA5TDEgOUw1IDExTDYgMTFMMTAgOUwxMCAzLjgwOUwxMCAzLjI1TDkuNDQxIDIuOTdMNS41IDFMMS41NTkgMi45N0wxIDMuMjVaTTkgOC4zODJMNiA5Ljg4Mkw2IDUuODA5TDkgNC4zMDlaTTIgOC4zODJMMiA0LjMwOUw1IDUuODA5TDUgOS44ODJaTTUuNSAyLjExOEw4LjMyMyAzLjUzTDUuNSA0Ljk0MUwyLjY3NyAzLjUzWiIvPjwvc3ZnPg==)
+  /// ![Box, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMNSAxMUw2IDExTDEwIDlMMTAgMy4yNUw1LjUgMUwxIDMuMjVaTTkgOC4zODJMNiA5Ljg4Mkw2IDUuODA5TDkgNC4zMDlaTTIgOC4zODJMMiA0LjMwOUw1IDUuODA5TDUgOS44ODJaTTUuNSAyLjExOEw4LjMyMyAzLjUzTDUuNSA0Ljk0MUwyLjY3NyAzLjUzWiIvPjwvc3ZnPg==)
   static const IconData box12 = IconData(
     0xE3CC,
     fontFamily: _fontFamily,
@@ -3099,7 +3099,7 @@ abstract final class OutlineIcons {
   /// Pair with text that states the status; shape and color do not carry it
   /// alone. 12 px is for labeled information.
   ///
-  /// ![Ban, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDYgMjJMMTggMjJMMTkuMjkzIDIwLjcwN0wyMC43MDcgMTkuMjkzTDIyIDE4TDIyIDZMMTggMkw2IDJMNC43MDcgMy4yOTNMNC43MDcgMy4yOTNMMy4yOTMgNC43MDdMMy4yOTMgNC43MDdMMiA2Wk0yMCA2LjgyOEwyMCAxNy4xNzJMMTkuMjkzIDE3Ljg3OUw2LjEyMSA0LjcwN0w2LjgyOCA0TDE3LjE3MiA0Wk0xNy4xNzIgMjBMNi44MjggMjBMNCAxNy4xNzJMNCA2LjgyOEw0LjcwNyA2LjEyMUwxNy44NzkgMTkuMjkzWiIvPjwvc3ZnPg==)
+  /// ![Ban, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDYgMjJMMTggMjJMMjIgMThMMjIgNkwxOCAyTDYgMkwyIDZaTTIwIDYuODI4TDIwIDE3LjE3MkwxOS4yOTMgMTcuODc5TDYuMTIxIDQuNzA3TDYuODI4IDRMMTcuMTcyIDRaTTE3LjE3MiAyMEw2LjgyOCAyMEw0IDE3LjE3Mkw0IDYuODI4TDQuNzA3IDYuMTIxTDE3Ljg3OSAxOS4yOTNaIi8+PC9zdmc+)
   static const IconData ban = IconData(
     0xE3DA,
     fontFamily: _fontFamily,
@@ -3123,7 +3123,7 @@ abstract final class OutlineIcons {
   /// Pair with text that states the status; shape and color do not carry it
   /// alone. 12 px is for labeled information.
   ///
-  /// ![Ban, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUw0LjUgMTQuNUwxMS41IDE0LjVMMTIuNDcgMTMuNTNMMTMuNTMgMTIuNDdMMTQuNSAxMS41TDE0LjUgNC41TDExLjUgMS41TDQuNSAxLjVMMy41MyAyLjQ3TDIuNDcgMy41M0wxLjUgNC41Wk0xMyA1LjEyMUwxMyAxMC44NzlMMTIuNDcgMTEuNDA5TDQuNTkxIDMuNTNMNS4xMjEgM0wxMC44NzkgM1pNMTAuODc5IDEzTDUuMTIxIDEzTDMgMTAuODc5TDMgNS4xMjFMMy41MyA0LjU5MUwxMS40MDkgMTIuNDdaIi8+PC9zdmc+)
+  /// ![Ban, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUw0LjUgMTQuNUwxMS41IDE0LjVMMTQuNSAxMS41TDE0LjUgNC41TDExLjUgMS41TDQuNSAxLjVMMS41IDQuNVpNMTMgNS4xMjFMMTMgMTAuODc5TDEyLjQ3IDExLjQwOUw0LjU5MSAzLjUzTDUuMTIxIDNMMTAuODc5IDNaTTEwLjg3OSAxM0w1LjEyMSAxM0wzIDEwLjg3OUwzIDUuMTIxTDMuNTMgNC41OTFMMTEuNDA5IDEyLjQ3WiIvPjwvc3ZnPg==)
   static const IconData ban16 = IconData(
     0xE3DC,
     fontFamily: _fontFamily,
@@ -3147,7 +3147,7 @@ abstract final class OutlineIcons {
   /// Pair with text that states the status; shape and color do not carry it
   /// alone. 12 px is for labeled information.
   ///
-  /// ![Ban, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyAxMUw5IDExTDkuNjQ2IDEwLjM1NEwxMC4zNTQgOS42NDZMMTEgOUwxMSAzTDkgMUwzIDFMMi4zNTQgMS42NDZMMi4zNTQgMS42NDZMMS42NDYgMi4zNTRMMS42NDYgMi4zNTRMMSAzWk0xMCAzLjQxNEwxMCA4LjU4Nkw5LjY0NiA4LjkzOUwzLjA2MSAyLjM1NEwzLjQxNCAyTDguNTg2IDJaTTguNTg2IDEwTDMuNDE0IDEwTDIgOC41ODZMMiAzLjQxNEwyLjM1NCAzLjA2MUw4LjkzOSA5LjY0NloiLz48L3N2Zz4=)
+  /// ![Ban, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyAxMUw5IDExTDExIDlMMTEgM0w5IDFMMyAxTDEgM1pNMTAgMy40MTRMMTAgOC41ODZMOS42NDYgOC45MzlMMy4wNjEgMi4zNTRMMy40MTQgMkw4LjU4NiAyWk04LjU4NiAxMEwzLjQxNCAxMEwyIDguNTg2TDIgMy40MTRMMi4zNTQgMy4wNjFMOC45MzkgOS42NDZaIi8+PC9zdmc+)
   static const IconData ban12 = IconData(
     0xE3DE,
     fontFamily: _fontFamily,
@@ -3474,7 +3474,7 @@ abstract final class OutlineIcons {
 
   /// Bold, outline style, 24 px master.
   ///
-  /// ![Bold, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDEyTDUgMjFMMTYgMjFMMTkgMThMMTkgMTVMMTYgMTJMMTYgMTBMMTggOEwxOCA2TDE1IDNMNSAzTDUgMTBaTTcgMTBMNyA1TDE0LjE3MiA1TDE2IDYuODI4TDE2IDcuMTcyTDE0IDkuMTcyTDE0IDEwWk0xNCAxMkwxNCAxMi44MjhMMTcgMTUuODI4TDE3IDE3LjE3MkwxNS4xNzIgMTlMNyAxOUw3IDEyWiIvPjwvc3ZnPg==)
+  /// ![Bold, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDIxTDE2IDIxTDE5IDE4TDE5IDE1TDE2IDEyTDE2IDEwTDE4IDhMMTggNkwxNSAzTDUgM1pNNyAxMEw3IDVMMTQuMTcyIDVMMTYgNi44MjhMMTYgNy4xNzJMMTQgOS4xNzJMMTQgMTBaTTE0IDEyTDE0IDEyLjgyOEwxNyAxNS44MjhMMTcgMTcuMTcyTDE1LjE3MiAxOUw3IDE5TDcgMTJaIi8+PC9zdmc+)
   static const IconData bold = IconData(
     0xE3FE,
     fontFamily: _fontFamily,
@@ -3492,7 +3492,7 @@ abstract final class OutlineIcons {
 
   /// Bold, outline style, 16 px master.
   ///
-  /// ![Bold, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgOC41TDMuNSAxNEwxMSAxNEwxMi41IDEyLjVMMTIuNSAxMUwxMCA4LjVMMTAgN0wxMS41IDUuNUwxMS41IDMuNUwxMCAyTDMuNSAyTDMuNSA3Wk01IDdMNSAzLjVMOS4zNzkgMy41TDEwIDQuMTIxTDEwIDQuODc5TDguNSA2LjM3OUw4LjUgN1pNOC41IDguNUw4LjUgOS4xMjFMMTEgMTEuNjIxTDExIDExLjg3OUwxMC4zNzkgMTIuNUw1IDEyLjVMNSA4LjVaIi8+PC9zdmc+)
+  /// ![Bold, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTRMMTEgMTRMMTIuNSAxMi41TDEyLjUgMTFMMTAgOC41TDEwIDdMMTEuNSA1LjVMMTEuNSAzLjVMMTAgMkwzLjUgMlpNNSA3TDUgMy41TDkuMzc5IDMuNUwxMCA0LjEyMUwxMCA0Ljg3OUw4LjUgNi4zNzlMOC41IDdaTTguNSA4LjVMOC41IDkuMTIxTDExIDExLjYyMUwxMSAxMS44NzlMMTAuMzc5IDEyLjVMNSAxMi41TDUgOC41WiIvPjwvc3ZnPg==)
   static const IconData bold16 = IconData(
     0xE400,
     fontFamily: _fontFamily,
@@ -3510,7 +3510,7 @@ abstract final class OutlineIcons {
 
   /// Bold, outline style, 12 px master.
   ///
-  /// ![Bold, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDZMMyAxMUw4IDExTDkgMTBMOSA4TDcgNkw3IDVMOCA0TDggMkw3IDFMMyAxTDMgNVpNNCA1TDQgMkw2LjU4NiAyTDcgMi40MTRMNyAzLjU4Nkw2IDQuNTg2TDYgNVpNNiA2TDYgNi40MTRMOCA4LjQxNEw4IDkuNTg2TDcuNTg2IDEwTDQgMTBMNCA2WiIvPjwvc3ZnPg==)
+  /// ![Bold, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDExTDggMTFMOSAxMEw5IDhMNyA2TDcgNUw4IDRMOCAyTDcgMUwzIDFaTTQgNUw0IDJMNi41ODYgMkw3IDIuNDE0TDcgMy41ODZMNiA0LjU4Nkw2IDVaTTYgNkw2IDYuNDE0TDggOC40MTRMOCA5LjU4Nkw3LjU4NiAxMEw0IDEwTDQgNloiLz48L3N2Zz4=)
   static const IconData bold12 = IconData(
     0xE402,
     fontFamily: _fontFamily,
@@ -3528,7 +3528,7 @@ abstract final class OutlineIcons {
 
   /// Type, outline style, 24 px master.
   ///
-  /// ![Type, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAzTDE4IDNMMTMgM0wxMSAzTDYgM0w0IDNMNCA1TDQgOEw2IDhMNiA1TDExIDVMMTEgMTlMOCAxOUw4IDIxTDExIDIxTDEzIDIxTDE2IDIxTDE2IDE5TDEzIDE5TDEzIDVMMTggNUwxOCA4TDIwIDhMMjAgNVoiLz48L3N2Zz4=)
+  /// ![Type, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAzTDQgM0w0IDhMNiA4TDYgNUwxMSA1TDExIDE5TDggMTlMOCAyMUwxNiAyMUwxNiAxOUwxMyAxOUwxMyA1TDE4IDVMMTggOEwyMCA4WiIvPjwvc3ZnPg==)
   static const IconData type = IconData(
     0xE404,
     fontFamily: _fontFamily,
@@ -3537,7 +3537,7 @@ abstract final class OutlineIcons {
 
   /// Type, filled style, 24 px master.
   ///
-  /// ![Type, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAzTDE3IDNMMTQgM0wxMCAzTDcgM0w0IDNMNCA2TDQgOUw3IDlMNyA2TDEwIDZMMTAgMThMNyAxOEw3IDIxTDEwIDIxTDE0IDIxTDE3IDIxTDE3IDE4TDE0IDE4TDE0IDZMMTcgNkwxNyA5TDIwIDlMMjAgNloiLz48L3N2Zz4=)
+  /// ![Type, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAzTDQgM0w0IDlMNyA5TDcgNkwxMCA2TDEwIDE4TDcgMThMNyAyMUwxNyAyMUwxNyAxOEwxNCAxOEwxNCA2TDE3IDZMMTcgOUwyMCA5WiIvPjwvc3ZnPg==)
   static const IconData typeFilled = IconData(
     0xE405,
     fontFamily: _fontFamily,
@@ -3546,7 +3546,7 @@ abstract final class OutlineIcons {
 
   /// Type, outline style, 16 px master.
   ///
-  /// ![Type, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDEyLjUgMkw4Ljc1IDJMNy4yNSAyTDMuNSAyTDIgMkwyIDMuNUwyIDUuNUwzLjUgNS41TDMuNSAzLjVMNy4yNSAzLjVMNy4yNSAxMi41TDUgMTIuNUw1IDE0TDcuMjUgMTRMOC43NSAxNEwxMSAxNEwxMSAxMi41TDguNzUgMTIuNUw4Ljc1IDMuNUwxMi41IDMuNUwxMi41IDUuNUwxNCA1LjVMMTQgMy41WiIvPjwvc3ZnPg==)
+  /// ![Type, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDIgMkwyIDUuNUwzLjUgNS41TDMuNSAzLjVMNy4yNSAzLjVMNy4yNSAxMi41TDUgMTIuNUw1IDE0TDExIDE0TDExIDEyLjVMOC43NSAxMi41TDguNzUgMy41TDEyLjUgMy41TDEyLjUgNS41TDE0IDUuNVoiLz48L3N2Zz4=)
   static const IconData type16 = IconData(
     0xE406,
     fontFamily: _fontFamily,
@@ -3555,7 +3555,7 @@ abstract final class OutlineIcons {
 
   /// Type, filled style, 16 px master.
   ///
-  /// ![Type, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDExLjUgMkw5LjUgMkw2LjUgMkw0LjUgMkwyIDJMMiA0LjVMMiA2TDQuNSA2TDQuNSA0LjVMNi41IDQuNUw2LjUgMTEuNUw0LjUgMTEuNUw0LjUgMTRMNi41IDE0TDkuNSAxNEwxMS41IDE0TDExLjUgMTEuNUw5LjUgMTEuNUw5LjUgNC41TDExLjUgNC41TDExLjUgNkwxNCA2TDE0IDQuNVoiLz48L3N2Zz4=)
+  /// ![Type, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDIgMkwyIDZMNC41IDZMNC41IDQuNUw2LjUgNC41TDYuNSAxMS41TDQuNSAxMS41TDQuNSAxNEwxMS41IDE0TDExLjUgMTEuNUw5LjUgMTEuNUw5LjUgNC41TDExLjUgNC41TDExLjUgNkwxNCA2WiIvPjwvc3ZnPg==)
   static const IconData typeFilled16 = IconData(
     0xE407,
     fontFamily: _fontFamily,
@@ -3564,7 +3564,7 @@ abstract final class OutlineIcons {
 
   /// Type, outline style, 12 px master.
   ///
-  /// ![Type, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMCAxTDkgMUw2IDFMNSAxTDIgMUwxIDFMMSAyTDEgM0wyIDNMMiAyTDUgMkw1IDlMMyA5TDMgMTBMNSAxMEw2IDEwTDggMTBMOCA5TDYgOUw2IDJMOSAyTDkgM0wxMCAzTDEwIDJaIi8+PC9zdmc+)
+  /// ![Type, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMCAxTDEgMUwxIDNMMiAzTDIgMkw1IDJMNSA5TDMgOUwzIDEwTDggMTBMOCA5TDYgOUw2IDJMOSAyTDkgM0wxMCAzWiIvPjwvc3ZnPg==)
   static const IconData type12 = IconData(
     0xE408,
     fontFamily: _fontFamily,
@@ -3573,7 +3573,7 @@ abstract final class OutlineIcons {
 
   /// Type, filled style, 12 px master.
   ///
-  /// ![Type, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxTDkgMUw3IDFMNSAxTDMgMUwxIDFMMSAzTDEgNEwzIDRMMyAzTDUgM0w1IDlMMyA5TDMgMTFMNSAxMUw3IDExTDkgMTFMOSA5TDcgOUw3IDNMOSAzTDkgNEwxMSA0TDExIDNaIi8+PC9zdmc+)
+  /// ![Type, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxTDEgMUwxIDRMMyA0TDMgM0w1IDNMNSA5TDMgOUwzIDExTDkgMTFMOSA5TDcgOUw3IDNMOSAzTDkgNEwxMSA0WiIvPjwvc3ZnPg==)
   static const IconData typeFilled12 = IconData(
     0xE409,
     fontFamily: _fontFamily,
@@ -3584,7 +3584,7 @@ abstract final class OutlineIcons {
   ///
   /// A contextual label is recommended.
   ///
-  /// ![Group, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDJMMiAyTDIgNEwyIDdMNCA3TDQgNEw3IDRMNyAyWk00IDlMMiA5TDIgMTVMNCAxNVpNMiAyMkw0IDIyTDcgMjJMNyAyMEw0IDIwTDQgMTdMMiAxN0wyIDIwWk0xMSA2TDYgNkw2IDExTDExIDExWk0xNSAyTDkgMkw5IDRMMTUgNFpNMTUgMjBMOSAyMEw5IDIyTDE1IDIyWk0xOCAxM0wxMyAxM0wxMyAxOEwxOCAxOFpNMTcgMkwxNyA0TDIwIDRMMjAgN0wyMiA3TDIyIDRMMjIgMkwyMCAyWk0xNyAyMkwyMCAyMkwyMiAyMkwyMiAyMEwyMiAxN0wyMCAxN0wyMCAyMEwxNyAyMFpNMjIgOUwyMCA5TDIwIDE1TDIyIDE1WiIvPjwvc3ZnPg==)
+  /// ![Group, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDJMMiA3TDQgN0w0IDRMNyA0TDcgMlpNNCA5TDIgOUwyIDE1TDQgMTVaTTIgMjJMNyAyMkw3IDIwTDQgMjBMNCAxN0wyIDE3Wk0xMSA2TDYgNkw2IDExTDExIDExWk0xNSAyTDkgMkw5IDRMMTUgNFpNMTUgMjBMOSAyMEw5IDIyTDE1IDIyWk0xOCAxM0wxMyAxM0wxMyAxOEwxOCAxOFpNMTcgMkwxNyA0TDIwIDRMMjAgN0wyMiA3TDIyIDJaTTE3IDIyTDIyIDIyTDIyIDE3TDIwIDE3TDIwIDIwTDE3IDIwWk0yMiA5TDIwIDlMMjAgMTVMMjIgMTVaIi8+PC9zdmc+)
   static const IconData group = IconData(
     0xE40A,
     fontFamily: _fontFamily,
@@ -3595,7 +3595,7 @@ abstract final class OutlineIcons {
   ///
   /// A contextual label is recommended.
   ///
-  /// ![Group, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDJMMiAyTDIgNEwyIDdMNCA3TDQgNEw3IDRMNyAyWk00IDlMMiA5TDIgMTVMNCAxNVpNMiAyMkw0IDIyTDcgMjJMNyAyMEw0IDIwTDQgMTdMMiAxN0wyIDIwWk0xMyA2TDYgNkw2IDEzTDExIDEzTDExIDE4TDE4IDE4TDE4IDExTDEzIDExWk0xNSAyTDkgMkw5IDRMMTUgNFpNMTUgMjBMOSAyMEw5IDIyTDE1IDIyWk0xNyAyTDE3IDRMMjAgNEwyMCA3TDIyIDdMMjIgNEwyMiAyTDIwIDJaTTE3IDIyTDIwIDIyTDIyIDIyTDIyIDIwTDIyIDE3TDIwIDE3TDIwIDIwTDE3IDIwWk0yMiA5TDIwIDlMMjAgMTVMMjIgMTVaIi8+PC9zdmc+)
+  /// ![Group, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDJMMiA3TDQgN0w0IDRMNyA0TDcgMlpNNCA5TDIgOUwyIDE1TDQgMTVaTTIgMjJMNyAyMkw3IDIwTDQgMjBMNCAxN0wyIDE3Wk0xMyA2TDYgNkw2IDEzTDExIDEzTDExIDE4TDE4IDE4TDE4IDExTDEzIDExWk0xNSAyTDkgMkw5IDRMMTUgNFpNMTUgMjBMOSAyMEw5IDIyTDE1IDIyWk0xNyAyTDE3IDRMMjAgNEwyMCA3TDIyIDdMMjIgMlpNMTcgMjJMMjIgMjJMMjIgMTdMMjAgMTdMMjAgMjBMMTcgMjBaTTIyIDlMMjAgOUwyMCAxNUwyMiAxNVoiLz48L3N2Zz4=)
   static const IconData groupFilled = IconData(
     0xE40B,
     fontFamily: _fontFamily,
@@ -3606,7 +3606,7 @@ abstract final class OutlineIcons {
   ///
   /// A contextual label is recommended.
   ///
-  /// ![Group, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEuNUwxLjUgMS41TDEuNSAzTDEuNSA0LjVMMyA0LjVMMyAzTDQuNSAzTDQuNSAxLjVaTTMgNkwxLjUgNkwxLjUgMTBMMyAxMFpNMS41IDE0LjVMMyAxNC41TDQuNSAxNC41TDQuNSAxM0wzIDEzTDMgMTEuNUwxLjUgMTEuNUwxLjUgMTNaTTcgNC41TDQuNSA0LjVMNC41IDdMNyA3Wk0xMCAxLjVMNiAxLjVMNiAzTDEwIDNaTTEwIDEzTDYgMTNMNiAxNC41TDEwIDE0LjVaTTExLjUgOUw5IDlMOSAxMS41TDExLjUgMTEuNVpNMTEuNSAxLjVMMTEuNSAzTDEzIDNMMTMgNC41TDE0LjUgNC41TDE0LjUgM0wxNC41IDEuNUwxMyAxLjVaTTExLjUgMTQuNUwxMyAxNC41TDE0LjUgMTQuNUwxNC41IDEzTDE0LjUgMTEuNUwxMyAxMS41TDEzIDEzTDExLjUgMTNaTTE0LjUgNkwxMyA2TDEzIDEwTDE0LjUgMTBaIi8+PC9zdmc+)
+  /// ![Group, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMS41TDEuNSA0LjVMMyA0LjVMMyAzTDQuNSAzTDQuNSAxLjVaTTMgNkwxLjUgNkwxLjUgMTBMMyAxMFpNMS41IDE0LjVMNC41IDE0LjVMNC41IDEzTDMgMTNMMyAxMS41TDEuNSAxMS41Wk03IDQuNUw0LjUgNC41TDQuNSA3TDcgN1pNMTAgMS41TDYgMS41TDYgM0wxMCAzWk0xMCAxM0w2IDEzTDYgMTQuNUwxMCAxNC41Wk0xMS41IDlMOSA5TDkgMTEuNUwxMS41IDExLjVaTTExLjUgMS41TDExLjUgM0wxMyAzTDEzIDQuNUwxNC41IDQuNUwxNC41IDEuNVpNMTEuNSAxNC41TDE0LjUgMTQuNUwxNC41IDExLjVMMTMgMTEuNUwxMyAxM0wxMS41IDEzWk0xNC41IDZMMTMgNkwxMyAxMEwxNC41IDEwWiIvPjwvc3ZnPg==)
   static const IconData group16 = IconData(
     0xE40C,
     fontFamily: _fontFamily,
@@ -3617,7 +3617,7 @@ abstract final class OutlineIcons {
   ///
   /// A contextual label is recommended.
   ///
-  /// ![Group, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEuNUwxLjUgMS41TDEuNSAzTDEuNSA0LjVMMyA0LjVMMyAzTDQuNSAzTDQuNSAxLjVaTTMgNkwxLjUgNkwxLjUgMTBMMyAxMFpNMS41IDE0LjVMMyAxNC41TDQuNSAxNC41TDQuNSAxM0wzIDEzTDMgMTEuNUwxLjUgMTEuNUwxLjUgMTNaTTkgNC41TDQuNSA0LjVMNC41IDlMNyA5TDcgMTEuNUwxMS41IDExLjVMMTEuNSA3TDkgN1pNMTAgMS41TDYgMS41TDYgM0wxMCAzWk0xMCAxM0w2IDEzTDYgMTQuNUwxMCAxNC41Wk0xMS41IDEuNUwxMS41IDNMMTMgM0wxMyA0LjVMMTQuNSA0LjVMMTQuNSAzTDE0LjUgMS41TDEzIDEuNVpNMTEuNSAxNC41TDEzIDE0LjVMMTQuNSAxNC41TDE0LjUgMTNMMTQuNSAxMS41TDEzIDExLjVMMTMgMTNMMTEuNSAxM1pNMTQuNSA2TDEzIDZMMTMgMTBMMTQuNSAxMFoiLz48L3N2Zz4=)
+  /// ![Group, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMS41TDEuNSA0LjVMMyA0LjVMMyAzTDQuNSAzTDQuNSAxLjVaTTMgNkwxLjUgNkwxLjUgMTBMMyAxMFpNMS41IDE0LjVMNC41IDE0LjVMNC41IDEzTDMgMTNMMyAxMS41TDEuNSAxMS41Wk05IDQuNUw0LjUgNC41TDQuNSA5TDcgOUw3IDExLjVMMTEuNSAxMS41TDExLjUgN0w5IDdaTTEwIDEuNUw2IDEuNUw2IDNMMTAgM1pNMTAgMTNMNiAxM0w2IDE0LjVMMTAgMTQuNVpNMTEuNSAxLjVMMTEuNSAzTDEzIDNMMTMgNC41TDE0LjUgNC41TDE0LjUgMS41Wk0xMS41IDE0LjVMMTQuNSAxNC41TDE0LjUgMTEuNUwxMyAxMS41TDEzIDEzTDExLjUgMTNaTTE0LjUgNkwxMyA2TDEzIDEwTDE0LjUgMTBaIi8+PC9zdmc+)
   static const IconData groupFilled16 = IconData(
     0xE40D,
     fontFamily: _fontFamily,
@@ -3628,7 +3628,7 @@ abstract final class OutlineIcons {
   ///
   /// Requires a visible text label at 12 px.
   ///
-  /// ![Group, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDFMMSAxTDEgMkwxIDNMMiAzTDIgMkwzIDJMMyAxWk0yIDVMMSA1TDEgN0wyIDdaTTEgMTFMMiAxMUwzIDExTDMgMTBMMiAxMEwyIDlMMSA5TDEgMTBaTTUgM0wzIDNMMyA1TDUgNVpNNyAxTDUgMUw1IDJMNyAyWk03IDEwTDUgMTBMNSAxMUw3IDExWk05IDdMNyA3TDcgOUw5IDlaTTkgMUw5IDJMMTAgMkwxMCAzTDExIDNMMTEgMkwxMSAxTDEwIDFaTTkgMTFMMTAgMTFMMTEgMTFMMTEgMTBMMTEgOUwxMCA5TDEwIDEwTDkgMTBaTTExIDVMMTAgNUwxMCA3TDExIDdaIi8+PC9zdmc+)
+  /// ![Group, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDFMMSAzTDIgM0wyIDJMMyAyTDMgMVpNMiA1TDEgNUwxIDdMMiA3Wk0xIDExTDMgMTFMMyAxMEwyIDEwTDIgOUwxIDlaTTUgM0wzIDNMMyA1TDUgNVpNNyAxTDUgMUw1IDJMNyAyWk03IDEwTDUgMTBMNSAxMUw3IDExWk05IDdMNyA3TDcgOUw5IDlaTTkgMUw5IDJMMTAgMkwxMCAzTDExIDNMMTEgMVpNOSAxMUwxMSAxMUwxMSA5TDEwIDlMMTAgMTBMOSAxMFpNMTEgNUwxMCA1TDEwIDdMMTEgN1oiLz48L3N2Zz4=)
   static const IconData group12 = IconData(
     0xE40E,
     fontFamily: _fontFamily,
@@ -3639,7 +3639,7 @@ abstract final class OutlineIcons {
   ///
   /// Requires a visible text label at 12 px.
   ///
-  /// ![Group, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDFMMSAxTDEgMkwxIDNMMiAzTDIgMkwzIDJMMyAxWk0yIDVMMSA1TDEgN0wyIDdaTTEgMTFMMiAxMUwzIDExTDMgMTBMMiAxMEwyIDlMMSA5TDEgMTBaTTcgM0wzIDNMMyA3TDUgN0w1IDlMOSA5TDkgNUw3IDVaTTcgMUw1IDFMNSAyTDcgMlpNNyAxMEw1IDEwTDUgMTFMNyAxMVpNOSAxTDkgMkwxMCAyTDEwIDNMMTEgM0wxMSAyTDExIDFMMTAgMVpNOSAxMUwxMCAxMUwxMSAxMUwxMSAxMEwxMSA5TDEwIDlMMTAgMTBMOSAxMFpNMTEgNUwxMCA1TDEwIDdMMTEgN1oiLz48L3N2Zz4=)
+  /// ![Group, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDFMMSAzTDIgM0wyIDJMMyAyTDMgMVpNMiA1TDEgNUwxIDdMMiA3Wk0xIDExTDMgMTFMMyAxMEwyIDEwTDIgOUwxIDlaTTcgM0wzIDNMMyA3TDUgN0w1IDlMOSA5TDkgNUw3IDVaTTcgMUw1IDFMNSAyTDcgMlpNNyAxMEw1IDEwTDUgMTFMNyAxMVpNOSAxTDkgMkwxMCAyTDEwIDNMMTEgM0wxMSAxWk05IDExTDExIDExTDExIDlMMTAgOUwxMCAxMEw5IDEwWk0xMSA1TDEwIDVMMTAgN0wxMSA3WiIvPjwvc3ZnPg==)
   static const IconData groupFilled12 = IconData(
     0xE40F,
     fontFamily: _fontFamily,
@@ -3702,7 +3702,7 @@ abstract final class OutlineIcons {
 
   /// Input, outline style, 24 px master.
   ///
-  /// ![Input, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDE4TDUgMTZMNCAxNkw0IDhMNSA4TDUgNkwyIDZMMiAxOFpNOSAyTDcgMkw1IDJMNSA0TDcgNEw3IDIwTDUgMjBMNSAyMkw3IDIyTDkgMjJMMTEgMjJMMTEgMjBMOSAyMEw5IDRMMTEgNEwxMSAyWk0xMSA2TDExIDhMMjAgOEwyMCAxNkwxMSAxNkwxMSAxOEwyMiAxOEwyMiA2WiIvPjwvc3ZnPg==)
+  /// ![Input, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDE4TDUgMTZMNCAxNkw0IDhMNSA4TDUgNkwyIDZMMiAxOFpNNSAyTDUgNEw3IDRMNyAyMEw1IDIwTDUgMjJMMTEgMjJMMTEgMjBMOSAyMEw5IDRMMTEgNEwxMSAyWk0xMSA2TDExIDhMMjAgOEwyMCAxNkwxMSAxNkwxMSAxOEwyMiAxOEwyMiA2WiIvPjwvc3ZnPg==)
   static const IconData input = IconData(
     0xE416,
     fontFamily: _fontFamily,
@@ -3711,7 +3711,7 @@ abstract final class OutlineIcons {
 
   /// Input, filled style, 24 px master.
   ///
-  /// ![Input, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDUgMThMNSA2TDIgNlpNOSAyTDcgMkw1IDJMNSA0TDcgNEw3IDIwTDUgMjBMNSAyMkw3IDIyTDkgMjJMMTEgMjJMMTEgMjBMOSAyMEw5IDRMMTEgNEwxMSAyWk0xMSA2TDExIDE4TDIyIDE4TDIyIDZaIi8+PC9zdmc+)
+  /// ![Input, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDUgMThMNSA2TDIgNlpNNSAyTDUgNEw3IDRMNyAyMEw1IDIwTDUgMjJMMTEgMjJMMTEgMjBMOSAyMEw5IDRMMTEgNEwxMSAyWk0xMSA2TDExIDE4TDIyIDE4TDIyIDZaIi8+PC9zdmc+)
   static const IconData inputFilled = IconData(
     0xE417,
     fontFamily: _fontFamily,
@@ -3720,7 +3720,7 @@ abstract final class OutlineIcons {
 
   /// Input, outline style, 16 px master.
   ///
-  /// ![Input, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTEuNUwzLjUgMTBMMyAxMEwzIDZMMy41IDZMMy41IDQuNUwxLjUgNC41TDEuNSAxMS41Wk02LjUgMS41TDUgMS41TDMuNSAxLjVMMy41IDNMNSAzTDUgMTNMMy41IDEzTDMuNSAxNC41TDUgMTQuNUw2LjUgMTQuNUw4IDE0LjVMOCAxM0w2LjUgMTNMNi41IDNMOCAzTDggMS41Wk04IDQuNUw4IDZMMTMgNkwxMyAxMEw4IDEwTDggMTEuNUwxNC41IDExLjVMMTQuNSA0LjVaIi8+PC9zdmc+)
+  /// ![Input, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTEuNUwzLjUgMTBMMyAxMEwzIDZMMy41IDZMMy41IDQuNUwxLjUgNC41TDEuNSAxMS41Wk0zLjUgMS41TDMuNSAzTDUgM0w1IDEzTDMuNSAxM0wzLjUgMTQuNUw4IDE0LjVMOCAxM0w2LjUgMTNMNi41IDNMOCAzTDggMS41Wk04IDQuNUw4IDZMMTMgNkwxMyAxMEw4IDEwTDggMTEuNUwxNC41IDExLjVMMTQuNSA0LjVaIi8+PC9zdmc+)
   static const IconData input16 = IconData(
     0xE418,
     fontFamily: _fontFamily,
@@ -3729,7 +3729,7 @@ abstract final class OutlineIcons {
 
   /// Input, filled style, 16 px master.
   ///
-  /// ![Input, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUwzLjUgMTEuNUwzLjUgNC41TDEuNSA0LjVaTTYuNSAxLjVMNSAxLjVMMy41IDEuNUwzLjUgM0w1IDNMNSAxM0wzLjUgMTNMMy41IDE0LjVMNSAxNC41TDYuNSAxNC41TDggMTQuNUw4IDEzTDYuNSAxM0w2LjUgM0w4IDNMOCAxLjVaTTggNC41TDggMTEuNUwxNC41IDExLjVMMTQuNSA0LjVaIi8+PC9zdmc+)
+  /// ![Input, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUwzLjUgMTEuNUwzLjUgNC41TDEuNSA0LjVaTTMuNSAxLjVMMy41IDNMNSAzTDUgMTNMMy41IDEzTDMuNSAxNC41TDggMTQuNUw4IDEzTDYuNSAxM0w2LjUgM0w4IDNMOCAxLjVaTTggNC41TDggMTEuNUwxNC41IDExLjVMMTQuNSA0LjVaIi8+PC9zdmc+)
   static const IconData inputFilled16 = IconData(
     0xE419,
     fontFamily: _fontFamily,
@@ -3738,7 +3738,7 @@ abstract final class OutlineIcons {
 
   /// Input, outline style, 12 px master.
   ///
-  /// ![Input, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDlMMyA4TDIgOEwyIDRMMyA0TDMgM0wxIDNMMSA5Wk01IDFMNCAxTDMgMUwzIDJMNCAyTDQgMTBMMyAxMEwzIDExTDQgMTFMNSAxMUw2IDExTDYgMTBMNSAxMEw1IDJMNiAyTDYgMVpNNiAzTDYgNEwxMCA0TDEwIDhMNiA4TDYgOUwxMSA5TDExIDNaIi8+PC9zdmc+)
+  /// ![Input, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDlMMyA4TDIgOEwyIDRMMyA0TDMgM0wxIDNMMSA5Wk0zIDFMMyAyTDQgMkw0IDEwTDMgMTBMMyAxMUw2IDExTDYgMTBMNSAxMEw1IDJMNiAyTDYgMVpNNiAzTDYgNEwxMCA0TDEwIDhMNiA4TDYgOUwxMSA5TDExIDNaIi8+PC9zdmc+)
   static const IconData input12 = IconData(
     0xE41A,
     fontFamily: _fontFamily,
@@ -3747,7 +3747,7 @@ abstract final class OutlineIcons {
 
   /// Input, filled style, 12 px master.
   ///
-  /// ![Input, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyA5TDMgM0wxIDNaTTUgMUw0IDFMMyAxTDMgMkw0IDJMNCAxMEwzIDEwTDMgMTFMNCAxMUw1IDExTDYgMTFMNiAxMEw1IDEwTDUgMkw2IDJMNiAxWk02IDNMNiA5TDExIDlMMTEgM1oiLz48L3N2Zz4=)
+  /// ![Input, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyA5TDMgM0wxIDNaTTMgMUwzIDJMNCAyTDQgMTBMMyAxMEwzIDExTDYgMTFMNiAxMEw1IDEwTDUgMkw2IDJMNiAxWk02IDNMNiA5TDExIDlMMTEgM1oiLz48L3N2Zz4=)
   static const IconData inputFilled12 = IconData(
     0xE41B,
     fontFamily: _fontFamily,
@@ -4206,7 +4206,7 @@ abstract final class OutlineIcons {
 
   /// Table, outline style, 24 px master.
   ///
-  /// ![Table, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMSAzTDMgM0wzIDdMMyA5TDMgMTNMMyAxNUwzIDIxTDExIDIxTDEzIDIxTDIxIDIxTDIxIDE1TDIxIDEzTDIxIDlMMjEgN1pNMTkgMTNMMTMgMTNMMTMgOUwxOSA5Wk0xOSAxOUwxMyAxOUwxMyAxNUwxOSAxNVpNNSAxOUw1IDE1TDExIDE1TDExIDE5Wk01IDlMMTEgOUwxMSAxM0w1IDEzWk01IDVMMTkgNUwxOSA3TDUgN1oiLz48L3N2Zz4=)
+  /// ![Table, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMSAzTDMgM0wzIDIxTDIxIDIxWk0xOSAxM0wxMyAxM0wxMyA5TDE5IDlaTTE5IDE5TDEzIDE5TDEzIDE1TDE5IDE1Wk01IDE5TDUgMTVMMTEgMTVMMTEgMTlaTTUgOUwxMSA5TDExIDEzTDUgMTNaTTUgNUwxOSA1TDE5IDdMNSA3WiIvPjwvc3ZnPg==)
   static const IconData table = IconData(
     0xE446,
     fontFamily: _fontFamily,
@@ -4224,7 +4224,7 @@ abstract final class OutlineIcons {
 
   /// Table, outline style, 16 px master.
   ///
-  /// ![Table, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNC41IDEuNUwxLjUgMS41TDEuNSA1TDEuNSA2LjVMMS41IDlMMS41IDEwLjVMMS41IDE0LjVMNy4yNSAxNC41TDguNzUgMTQuNUwxNC41IDE0LjVMMTQuNSAxMC41TDE0LjUgOUwxNC41IDYuNUwxNC41IDVaTTEzIDlMOC43NSA5TDguNzUgNi41TDEzIDYuNVpNMTMgMTNMOC43NSAxM0w4Ljc1IDEwLjVMMTMgMTAuNVpNMyAxM0wzIDEwLjVMNy4yNSAxMC41TDcuMjUgMTNaTTMgNi41TDcuMjUgNi41TDcuMjUgOUwzIDlaTTMgM0wxMyAzTDEzIDVMMyA1WiIvPjwvc3ZnPg==)
+  /// ![Table, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNC41IDEuNUwxLjUgMS41TDEuNSAxNC41TDE0LjUgMTQuNVpNMTMgOUw4Ljc1IDlMOC43NSA2LjVMMTMgNi41Wk0xMyAxM0w4Ljc1IDEzTDguNzUgMTAuNUwxMyAxMC41Wk0zIDEzTDMgMTAuNUw3LjI1IDEwLjVMNy4yNSAxM1pNMyA2LjVMNy4yNSA2LjVMNy4yNSA5TDMgOVpNMyAzTDEzIDNMMTMgNUwzIDVaIi8+PC9zdmc+)
   static const IconData table16 = IconData(
     0xE448,
     fontFamily: _fontFamily,
@@ -4242,7 +4242,7 @@ abstract final class OutlineIcons {
 
   /// Table, outline style, 12 px master.
   ///
-  /// ![Table, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxTDEgMUwxIDRMMSA1TDEgN0wxIDhMMSAxMUw1IDExTDYgMTFMMTEgMTFMMTEgOEwxMSA3TDExIDVMMTEgNFpNMTAgN0w2IDdMNiA1TDEwIDVaTTEwIDEwTDYgMTBMNiA4TDEwIDhaTTIgMTBMMiA4TDUgOEw1IDEwWk0yIDVMNSA1TDUgN0wyIDdaTTIgMkwxMCAyTDEwIDRMMiA0WiIvPjwvc3ZnPg==)
+  /// ![Table, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxTDEgMUwxIDExTDExIDExWk0xMCA3TDYgN0w2IDVMMTAgNVpNMTAgMTBMNiAxMEw2IDhMMTAgOFpNMiAxMEwyIDhMNSA4TDUgMTBaTTIgNUw1IDVMNSA3TDIgN1pNMiAyTDEwIDJMMTAgNEwyIDRaIi8+PC9zdmc+)
   static const IconData table12 = IconData(
     0xE44A,
     fontFamily: _fontFamily,
