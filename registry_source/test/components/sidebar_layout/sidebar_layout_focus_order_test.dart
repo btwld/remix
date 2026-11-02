@@ -83,8 +83,10 @@ void main() {
 
       final first = FocusNode(debugLabel: 'first');
       final second = FocusNode(debugLabel: 'second');
+      final third = FocusNode(debugLabel: 'third');
       addTearDown(first.dispose);
       addTearDown(second.dispose);
+      addTearDown(third.dispose);
 
       await tester.pumpWidget(
         WidgetsApp(
@@ -95,7 +97,13 @@ void main() {
               const SizedBox.shrink(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                // Stacked in reverse: by position alone, Tab from the bottom
+                // stop would wrap to the top one, third.
                 children: [
+                  FocusTraversalOrder(
+                    order: const NumericFocusOrder(3),
+                    child: _stop(third),
+                  ),
                   FocusTraversalOrder(
                     order: const NumericFocusOrder(2),
                     child: _stop(second),
