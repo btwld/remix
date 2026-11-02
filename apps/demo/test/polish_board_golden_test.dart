@@ -116,7 +116,7 @@ void main() {
     final key = await _pumpBoard(
       tester,
       _paletteBoard([
-        FortalAccentColor.calcadao,
+        FortalAccentColor.orla,
         FortalAccentColor.mar,
       ], overview: true),
     );
@@ -370,13 +370,13 @@ class _SemanticsPanel extends StatelessWidget {
     ('Paid', .serra),
     ('Pending', .sol),
     ('Invited', .ceu),
-    ('Cancelled', .calcadao),
+    ('Cancelled', .orla),
     ('Refunded', null),
     ('Caju accent', .caju),
   ];
 
   static const _families = <(String, FortalColorTheme)>[
-    ('Calçadão', calcadao),
+    ('Orla', orla),
     ('Mar', mar),
     ('Céu', ceu),
     ('Serra', serra),

@@ -31,8 +31,8 @@ void main() {
       ),
     );
 
-    expect(data.accent, FortalAccentColor.calcadao);
-    expect(data.gray, FortalGrayColor.calcadao);
+    expect(data.accent, FortalAccentColor.orla);
+    expect(data.gray, FortalGrayColor.orla);
     expect(data.brightness, Brightness.light);
     expect(data.panelBackground, FortalPanelBackground.solid);
     expect(data.radius, FortalRadius.medium);
@@ -198,7 +198,7 @@ void main() {
     await tester.pumpWidget(
       FortalTheme(
         accent: .caju,
-        gray: .calcadao,
+        gray: .orla,
         mode: .dark,
         radius: .large,
         child: Builder(

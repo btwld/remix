@@ -27,7 +27,7 @@ void main() {
         // Hover and press recolor the step-12 fill itself (no subtree
         // filter, so focus rings are untouched); the knockout keeps 7:1.
         final fill = _flexBoxColor(button.spec.container)!;
-        final label = calcadao.dark.scale.step(1);
+        final label = orla.dark.scale.step(1);
         expect(_textColor(button.spec.label), label);
         expect(
           contrastRatio(label, fill),
@@ -142,10 +142,7 @@ void main() {
             ceu.light.scale.step(12),
           );
           expect(normal.spec.icon.spec.color, ceu.light.contrast);
-          expect(
-            highContrast.spec.icon.spec.color,
-            calcadao.light.scale.step(1),
-          );
+          expect(highContrast.spec.icon.spec.color, orla.light.scale.step(1));
         } else {
           expect(normal.spec.icon.spec.color, ceu.light.scale.alphaStep(11));
           expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));

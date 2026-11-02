@@ -13,7 +13,7 @@ class FortalExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FortalTheme(
       accent: .ceu,
-      gray: .calcadao,
+      gray: .orla,
       mode: .light,
       child: WidgetsApp(
         color: const Color(0xFFF8FAFC),

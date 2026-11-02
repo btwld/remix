@@ -6,7 +6,7 @@
     "enums": {
       "accent": {
         "values": [
-          "calcadao",
+          "orla",
           "mar",
           "ceu",
           "serra",
@@ -14,13 +14,13 @@
           "duna",
           "caju"
         ],
-        "default": "calcadao"
+        "default": "orla"
       },
       "gray": {
         "values": [
-          "calcadao"
+          "orla"
         ],
-        "default": "calcadao"
+        "default": "orla"
       },
       "panelBackground": {
         "values": [

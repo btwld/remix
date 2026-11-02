@@ -10,7 +10,7 @@ import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';
 
 const palettes = <String, FortalColorTheme>{
-  'calcadao': calcadao,
+  'orla': orla,
   'mar': mar,
   'ceu': ceu,
   'serra': serra,
@@ -46,8 +46,8 @@ void main() {
     for (final dark in [false, true]) {
       final name = '${entry.key}/${dark ? 'dark' : 'light'}';
       final color = dark ? entry.value.dark : entry.value.light;
-      final page = (dark ? calcadao.dark : calcadao.light).scale.step(1);
-      final panel = (dark ? calcadao.dark : calcadao.light).scale.step(2);
+      final page = (dark ? orla.dark : orla.light).scale.step(1);
+      final panel = (dark ? orla.dark : orla.light).scale.step(2);
 
       test('$name: labels meet 4.5:1 on the labelled solid and hover', () {
         for (final fill in [color.solid, color.solidHover]) {
@@ -161,7 +161,7 @@ void main() {
         final palette = generator.generatePalette(seed);
         for (final dark in [false, true]) {
           final mode = dark ? palette.dark : palette.light;
-          final gray = dark ? calcadao.dark : calcadao.light;
+          final gray = dark ? orla.dark : orla.light;
           final page = gray.scale.step(1);
           final panel = gray.scale.step(2);
           for (final background in [page, panel]) {
@@ -226,7 +226,7 @@ void main() {
       expect(generator.generatePalette(seed).light.solid, palette.light.solid);
       for (final dark in [false, true]) {
         final mode = dark ? palette.dark : palette.light;
-        final neutral = dark ? calcadao.dark : calcadao.light;
+        final neutral = dark ? orla.dark : orla.light;
         final page = neutral.scale.step(1);
         expect(
           contrastRatio(Color(mode.solid[11]), page),
@@ -295,13 +295,13 @@ void main() {
   );
 
   test('on-solid inks are tones of their own family', () {
-    // Calçadão stays the neutral reference: white on basalt, basalt on
+    // Orla stays the neutral reference: white on basalt, basalt on
     // limestone.
-    expect(calcadao.light.contrast, const Color(0xffffffff));
-    expect(calcadao.dark.contrast, const Color(generator.basalt));
+    expect(orla.light.contrast, const Color(0xffffffff));
+    expect(orla.dark.contrast, const Color(generator.basalt));
     final basaltL = generator.toOklch(generator.basalt).l;
     for (final entry in shipped.entries) {
-      if (entry.key == 'calcadao') continue;
+      if (entry.key == 'orla') continue;
       final seedArgb =
           generator.fortalSeeds[entry.key] ?? generator.fortalErrorSeed;
       final seed = generator.toOklch(seedArgb);
@@ -496,7 +496,7 @@ void main() {
 
   test('every shipped solid keeps a visibly distinct hover', () {
     // Contrast fitting once collapsed hover onto the solid (OKLab 0.0003).
-    // Calçadão's dark limestone-to-white hover (0.018) is the stable minimum;
+    // Orla's dark limestone-to-white hover (0.018) is the stable minimum;
     // palettes changed in the 2026-10-31 review keep a full hover step.
     const reviewed = {'ceu', 'serra', 'sol', 'duna', 'caju', 'fortalError'};
     for (final entry in shipped.entries) {
@@ -626,17 +626,17 @@ void main() {
 
   test('custom generation never borrows built-in identities by name', () {
     final reserved = cli.reservedPaletteNames('Acme');
-    expect(reserved, containsAll(['calcadao', 'serra', 'caju', 'acmeError']));
+    expect(reserved, containsAll(['orla', 'serra', 'caju', 'acmeError']));
     expect(reserved, isNot(contains('mangue')));
     final custom = cli.renderPalettes({
-      'calcadao': generator.basalt,
+      'orla': generator.basalt,
     }, paletteImport: 'palette.dart');
     final builtIn = cli.renderPalettes(
-      {'calcadao': generator.basalt},
+      {'orla': generator.basalt},
       paletteImport: 'palette.dart',
       builtIns: true,
     );
-    // Only the shipped file renders Calçadão as the neutral (limestone dark
+    // Only the shipped file renders Orla as the neutral (limestone dark
     // solid) and appends the error palette and alpha swatches.
     expect(custom, isNot(contains('0xfffaf9f6')));
     expect(custom, isNot(contains('fortalError')));
@@ -646,8 +646,8 @@ void main() {
   });
 
   test('out-of-range steps fail in release builds as well as debug', () {
-    expect(() => calcadao.light.scale.step(0), throwsRangeError);
-    expect(() => calcadao.light.scale.alphaStep(13), throwsRangeError);
+    expect(() => orla.light.scale.step(0), throwsRangeError);
+    expect(() => orla.light.scale.alphaStep(13), throwsRangeError);
   });
 }
 

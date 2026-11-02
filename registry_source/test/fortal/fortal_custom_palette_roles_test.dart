@@ -161,7 +161,7 @@ void main() {
       computeAccentThumbRing(
         ceu.light,
         controlBorder,
-        surfaces: [calcadao.light.scale.step(1), calcadao.light.scale.step(2)],
+        surfaces: [orla.light.scale.step(1), orla.light.scale.step(2)],
       ),
       ceu.light.track,
     );

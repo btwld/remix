@@ -39,7 +39,7 @@ void main() {
         (FortalStatusBadge.order(.paid), 'Paid', serra),
         (FortalStatusBadge.order(.pending), 'Pending', sol),
         (FortalStatusBadge.order(.refunded), 'Refunded', fortalError),
-        (FortalStatusBadge.order(.cancelled), 'Cancelled', calcadao),
+        (FortalStatusBadge.order(.cancelled), 'Cancelled', orla),
         (FortalStatusBadge.customer(.active), 'Active', serra),
         (FortalStatusBadge.customer(.invited), 'Invited', ceu),
         (FortalStatusBadge.customer(.suspended), 'Suspended', fortalError),

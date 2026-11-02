@@ -191,10 +191,7 @@ void main() {
     });
 
     for (final dark in [false, true]) {
-      for (final accent in [
-        FortalAccentColor.calcadao,
-        FortalAccentColor.mar,
-      ]) {
+      for (final accent in [FortalAccentColor.orla, FortalAccentColor.mar]) {
         testWidgets(
           '${accent.name}/${dark ? 'dark' : 'light'} accent recipes',
           (tester) async {
@@ -215,7 +212,7 @@ void main() {
                   badge: fortalBadgeStyle().build(context).spec,
                 );
               },
-              // The Calçadão cases deliberately exercise the omitted default.
+              // The Orla cases deliberately exercise the omitted default.
               accent: accent == .mar ? .mar : null,
               mode: dark ? .dark : .light,
               states: {WidgetState.selected},

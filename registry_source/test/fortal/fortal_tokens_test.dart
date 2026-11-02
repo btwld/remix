@@ -15,7 +15,7 @@ void main() {
             : const FortalThemeData.light();
         final colors = resolveFortalTokens(data);
         final tokens = buildFortalScopeTokens(data);
-        final neutral = dark ? calcadao.dark : calcadao.light;
+        final neutral = dark ? orla.dark : orla.light;
         expect(colors.colorBackground, neutral.scale.step(1));
         expect(colors.colorPanelSolid, neutral.scale.step(2));
         expect(colors.colorSurface, neutral.scale.step(2));
