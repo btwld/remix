@@ -121,8 +121,8 @@ publishing" configuration. A mismatched tag fails OIDC auth.
 
 Rules that have already cost a release here:
 
-- **Never use `--tags`** to query, fetch, or push. Stale `v*` tags in this repo
-  would start publish runs from the wrong commits. Check and push one tag,
+- **Never `git push --tags`.** Stale `v*` tags in this repo would start publish
+  runs from the wrong commits. Check the exact remote ref and push one tag,
   explicitly, as described below.
 - `remix-v<version>` publishes **nothing** — `melos version` reads it to derive
   the next changelog. A remix release wants both `v<version>` (publishes) and

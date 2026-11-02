@@ -127,7 +127,7 @@ Removed in 1.0, with no Vector UI concept.
 | `backpack` | [`LucideIcons.backpack`](https://lucide.dev/icons/backpack) |  |
 | `badge` | [`LucideIcons.badge`](https://lucide.dev/icons/badge) |  |
 | `blendingMode` | [`LucideIcons.blend`](https://lucide.dev/icons/blend) |  |
-| `borderAll` | [`LucideIcons.grid2x2`](https://lucide.dev/icons/grid2x2) |  |
+| `borderAll` | [`LucideIcons.grid2x2`](https://lucide.dev/icons/grid-2x2) |  |
 | `borderBottom` | [`LucideIcons.panelBottom`](https://lucide.dev/icons/panel-bottom) |  |
 | `borderDashed` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `borderDotted` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
@@ -135,7 +135,7 @@ Removed in 1.0, with no Vector UI concept.
 | `borderNone` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `borderRight` | [`LucideIcons.panelRight`](https://lucide.dev/icons/panel-right) |  |
 | `borderSolid` | [`LucideIcons.square`](https://lucide.dev/icons/square) |  |
-| `borderSplit` | [`LucideIcons.grid2x2`](https://lucide.dev/icons/grid2x2) |  |
+| `borderSplit` | [`LucideIcons.grid2x2`](https://lucide.dev/icons/grid-2x2) |  |
 | `borderStyle` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `borderTop` | [`LucideIcons.panelTop`](https://lucide.dev/icons/panel-top) |  |
 | `borderWidth` | [`LucideIcons.lineSquiggle`](https://lucide.dev/icons/line-squiggle) |  |
@@ -152,7 +152,7 @@ Removed in 1.0, with no Vector UI concept.
 | `codesandboxLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `colorWheel` | [`LucideIcons.palette`](https://lucide.dev/icons/palette) |  |
 | `columnSpacing` | [`LucideIcons.betweenVerticalStart`](https://lucide.dev/icons/between-vertical-start) |  |
-| `columns` | [`LucideIcons.columns2`](https://lucide.dev/icons/columns2) |  |
+| `columns` | [`LucideIcons.columns2`](https://lucide.dev/icons/columns-2) |  |
 | `commit` | [`LucideIcons.gitCommitHorizontal`](https://lucide.dev/icons/git-commit-horizontal) |  |
 | `component1` | [`LucideIcons.component`](https://lucide.dev/icons/component) |  |
 | `component2` | [`LucideIcons.component`](https://lucide.dev/icons/component) |  |
@@ -230,9 +230,9 @@ Removed in 1.0, with no Vector UI concept.
 | `lightningBolt` | [`LucideIcons.zap`](https://lucide.dev/icons/zap) |  |
 | `lineHeight` | [`LucideIcons.listCollapse`](https://lucide.dev/icons/list-collapse) |  |
 | `linkBreak1` | [`LucideIcons.unlink`](https://lucide.dev/icons/unlink) |  |
-| `linkBreak2` | [`LucideIcons.unlink2`](https://lucide.dev/icons/unlink2) |  |
-| `linkNone1` | [`LucideIcons.link2Off`](https://lucide.dev/icons/link2-off) |  |
-| `linkNone2` | [`LucideIcons.link2Off`](https://lucide.dev/icons/link2-off) |  |
+| `linkBreak2` | [`LucideIcons.unlink2`](https://lucide.dev/icons/unlink-2) |  |
+| `linkNone1` | [`LucideIcons.link2Off`](https://lucide.dev/icons/link-2-off) |  |
+| `linkNone2` | [`LucideIcons.link2Off`](https://lucide.dev/icons/link-2-off) |  |
 | `linkedinLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `listBullet` | [`LucideIcons.list`](https://lucide.dev/icons/list) |  |
 | `lockOpen1` | [`LucideIcons.lockOpen`](https://lucide.dev/icons/lock-open) |  |
@@ -264,7 +264,7 @@ Removed in 1.0, with no Vector UI concept.
 | `rocket` | [`LucideIcons.rocket`](https://lucide.dev/icons/rocket) |  |
 | `rotateCounterClockwise` | [`LucideIcons.rotateCcw`](https://lucide.dev/icons/rotate-ccw) |  |
 | `rowSpacing` | [`LucideIcons.betweenHorizontalStart`](https://lucide.dev/icons/between-horizontal-start) |  |
-| `rows` | [`LucideIcons.rows2`](https://lucide.dev/icons/rows2) |  |
+| `rows` | [`LucideIcons.rows2`](https://lucide.dev/icons/rows-2) |  |
 | `rulerHorizontal` | [`LucideIcons.ruler`](https://lucide.dev/icons/ruler) |  |
 | `rulerSquare` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `scissors` | [`LucideIcons.scissors`](https://lucide.dev/icons/scissors) |  |
@@ -276,7 +276,7 @@ Removed in 1.0, with no Vector UI concept.
 | `shadowNone` | [`LucideIcons.square`](https://lucide.dev/icons/square) |  |
 | `shadowOuter` | [`LucideIcons.copy`](https://lucide.dev/icons/copy) |  |
 | `share1` | [`LucideIcons.share`](https://lucide.dev/icons/share) |  |
-| `share2` | [`LucideIcons.share2`](https://lucide.dev/icons/share2) |  |
+| `share2` | [`LucideIcons.share2`](https://lucide.dev/icons/share-2) |  |
 | `shuffle` | [`LucideIcons.shuffle`](https://lucide.dev/icons/shuffle) |  |
 | `size` | [`LucideIcons.scaling`](https://lucide.dev/icons/scaling) |  |
 | `sketchLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
@@ -286,8 +286,8 @@ Removed in 1.0, with no Vector UI concept.
 | `spaceBetweenVertically` | [`LucideIcons.alignVerticalSpaceBetween`](https://lucide.dev/icons/align-vertical-space-between) |  |
 | `spaceEvenlyHorizontally` | [`LucideIcons.alignHorizontalSpaceAround`](https://lucide.dev/icons/align-horizontal-space-around) |  |
 | `spaceEvenlyVertically` | [`LucideIcons.alignVerticalSpaceAround`](https://lucide.dev/icons/align-vertical-space-around) |  |
-| `speakerLoud` | [`LucideIcons.volume2`](https://lucide.dev/icons/volume2) |  |
-| `speakerModerate` | [`LucideIcons.volume1`](https://lucide.dev/icons/volume1) |  |
+| `speakerLoud` | [`LucideIcons.volume2`](https://lucide.dev/icons/volume-2) |  |
+| `speakerModerate` | [`LucideIcons.volume1`](https://lucide.dev/icons/volume-1) |  |
 | `speakerOff` | [`LucideIcons.volumeX`](https://lucide.dev/icons/volume-x) |  |
 | `speakerQuiet` | [`LucideIcons.volume`](https://lucide.dev/icons/volume) |  |
 | `stitchesLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
@@ -312,7 +312,7 @@ Removed in 1.0, with no Vector UI concept.
 | `trackNext` | [`LucideIcons.skipForward`](https://lucide.dev/icons/skip-forward) |  |
 | `trackPrevious` | [`LucideIcons.skipBack`](https://lucide.dev/icons/skip-back) |  |
 | `transform` | [`LucideIcons.scaling`](https://lucide.dev/icons/scaling) |  |
-| `transparencyGrid` | [`LucideIcons.grid2x2`](https://lucide.dev/icons/grid2x2) |  |
+| `transparencyGrid` | [`LucideIcons.grid2x2`](https://lucide.dev/icons/grid-2x2) |  |
 | `triangleDown` | [`LucideIcons.triangle`](https://lucide.dev/icons/triangle) |  |
 | `triangleLeft` | [`LucideIcons.triangle`](https://lucide.dev/icons/triangle) |  |
 | `triangleRight` | [`LucideIcons.triangleRight`](https://lucide.dev/icons/triangle-right) |  |
@@ -323,9 +323,9 @@ Removed in 1.0, with no Vector UI concept.
 | `valueNone` | [`LucideIcons.circleOff`](https://lucide.dev/icons/circle-off) |  |
 | `vercelLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `video` | [`LucideIcons.video`](https://lucide.dev/icons/video) |  |
-| `viewHorizontal` | [`LucideIcons.columns2`](https://lucide.dev/icons/columns2) |  |
+| `viewHorizontal` | [`LucideIcons.columns2`](https://lucide.dev/icons/columns-2) |  |
 | `viewNone` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
-| `viewVertical` | [`LucideIcons.rows2`](https://lucide.dev/icons/rows2) |  |
+| `viewVertical` | [`LucideIcons.rows2`](https://lucide.dev/icons/rows-2) |  |
 | `width` | [`LucideIcons.moveHorizontal`](https://lucide.dev/icons/move-horizontal) |  |
 | `zoomIn` | [`LucideIcons.zoomIn`](https://lucide.dev/icons/zoom-in) |  |
 | `zoomOut` | [`LucideIcons.zoomOut`](https://lucide.dev/icons/zoom-out) |  |
