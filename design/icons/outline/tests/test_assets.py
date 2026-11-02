@@ -16,16 +16,16 @@ class ManifestTests(unittest.TestCase):
     def test_schema(self):
         jsonschema.validate(CAT,json.loads((ROOT/'catalog/schemas/catalog.schema.json').read_text()))
     def test_unique_identity(self):
-        ids=[m['id'] for m in CAT['icons']];self.assertEqual(len(ids),len(set(ids)));self.assertEqual(len(ids),48)
+        ids=[m['id'] for m in CAT['icons']];self.assertEqual(len(ids),len(set(ids)));self.assertEqual(len(ids),77)
         for m in CAT['icons']:
             self.assertRegex(m['id'],r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
             self.assertIn(m['pairModel'],['weight','silhouette'])
             self.assertEqual(m['aliases'],[])
     def test_declared_matrix_matches_files(self):
-        expected={f'outline/{m["id"]}' for m in CAT['icons']};self.assertEqual(len(expected),48)
+        expected={f'outline/{m["id"]}' for m in CAT['icons']};self.assertEqual(len(expected),77)
         files={str(p.relative_to(ROOT/'generated')) for p in (ROOT/'generated/outline').rglob('*.svg')}
-        actual={r['path'] for r in INV};self.assertEqual(files,actual);self.assertEqual(len(files),288)
-        self.assertEqual(len(REG),48);self.assertEqual(CAT['counts'],{'icons':48,'drawings':288})
+        actual={r['path'] for r in INV};self.assertEqual(files,actual);self.assertEqual(len(files),462)
+        self.assertEqual(len(REG),77);self.assertEqual(CAT['counts'],{'icons':77,'drawings':462})
         for m in CAT['icons']:
             self.assertEqual(m['availability'],{'outline':{'appearances':['outline','filled'],'opticalSizes':[12,16,24]}})
     def test_unavailable_packs_are_not_shipped(self):
@@ -38,6 +38,7 @@ class ManifestTests(unittest.TestCase):
 
 class AssetTests(unittest.TestCase):
     def test_baseline_bytes(self):
+        # Legacy scope: the original 33 concepts. The fixture is immutable and predates the product inventory.
         frozen=json.loads((ROOT/'tests/fixtures/baseline-sha256.json').read_text());self.assertEqual(len(frozen),198)
         revised=json.loads((ROOT/'tests/fixtures/shape-revision-2026-11-01.json').read_text())['files']
         # A deliberate revision is pinned from its exact old hash to its exact new hash.
@@ -75,13 +76,13 @@ class AssetTests(unittest.TestCase):
         ns={'s':'http://www.w3.org/2000/svg'};all_count=0
         for a in ('outline','filled'):
             for n in (12,16,24):
-                root=ET.fromstring((ROOT/f'generated/sprites/outline-{a}-{n}.svg').read_text());symbols=root.findall('s:symbol',ns);self.assertEqual(len(symbols),48)
+                root=ET.fromstring((ROOT/f'generated/sprites/outline-{a}-{n}.svg').read_text());symbols=root.findall('s:symbol',ns);self.assertEqual(len(symbols),77)
                 for s in symbols:
                     prefix='vui-angular-';suffix=f'-{a}-{n}';name=s.attrib['id'][len(prefix):-len(suffix)]
                     self.assertEqual(s.find('s:path',ns).attrib['d'],REG[name][a][str(n)])
                 all_count+=len(symbols)
         combined=ET.fromstring((ROOT/'generated/sprites/outline-all.svg').read_text());ids=[s.attrib['id'] for s in combined]
-        self.assertEqual(len(ids),288);self.assertEqual(len(set(ids)),288)
+        self.assertEqual(len(ids),462);self.assertEqual(len(set(ids)),462)
     def test_fail_closed_parser(self):
         for d in ['M0 0C1 2 3 4 5 6Z','M0 0Q1 2 3 4Z','M0 0LNaN 2Z','M0 0L1 1','M0 0L0 0L0 0Z','M0 0L1 1Z<script>']:
             with self.subTest(path=d),self.assertRaises(ValueError):parse_path(d)

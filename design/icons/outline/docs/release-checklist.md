@@ -4,7 +4,7 @@ The private pilot can be reviewed and integrated locally. Public release remains
 
 - Choose the family name, public package names, owner, and independent reviewer.
 - Retain the selected BSD-3-Clause license and review provenance before distribution.
-- Approve the 15 new concepts and their outline/filled/size drawings; retain or resolve each exception.
+- Approve the 15 pilot and 29 product concepts and their outline/filled/size drawings; retain or resolve each exception.
 - Run strict HTTP/file/module tests and record the declared browser support. WebKit engine testing is not branded Safari testing.
 - Supply actual recognition findings and product-specific label requirements.
 - Audit target workflows before claiming broader coverage.

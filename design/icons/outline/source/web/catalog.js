@@ -14,7 +14,7 @@ function refreshCatalog(){
  const q=$('#search').value.trim().toLowerCase();const group=$('#category').value;const onlyNew=$('#new-only').getAttribute('aria-pressed')==='true';
  let visible=0;
  $$('.icon-card').forEach(card=>{const m=INDEX[card.dataset.icon];const hay=[m.id,m.label,m.meaning,...m.keywords].join(' ').toLowerCase();
-   const show=(!q||hay.includes(q))&&(!group||m.category===group)&&(!onlyNew||m.stage==='pilot-addition');card.hidden=!show;if(show)visible++;});
+   const show=(!q||hay.includes(q))&&(!group||m.category===group)&&(!onlyNew||m.stage==='product-addition');card.hidden=!show;if(show)visible++;});
  $$('.family').forEach(f=>{f.hidden=!Array.from(f.querySelectorAll('.icon-card')).some(c=>!c.hidden);});
  $('#count').textContent=`${visible} of ${DATA.catalog.icons.length} icons shown`;
  $('#empty').style.display=visible?'none':'block';
@@ -118,7 +118,7 @@ function updateInspector(){
  scheduleNativeProof();
  $('#inspect-note').textContent=m.review.note;
  $('#inspect-usage').textContent=usageFor(selected,n);
- $('#inspect-meta').textContent=`${m.pairModel==='weight'?'Regular/heavier open symbol':'Matched outline/filled object'} · ${n} px native · ${z}× vector view · 1 native unit = ${z} CSS px · ${m.stage==='baseline'?'Preserved baseline':'New pilot drawing'}`;
+ $('#inspect-meta').textContent=`${m.pairModel==='weight'?'Regular/heavier open symbol':'Matched outline/filled object'} · ${n} px native · ${z}× vector view · 1 native unit = ${z} CSS px · ${{baseline:'Preserved baseline','pilot-addition':'Pilot drawing','product-addition':'New product drawing'}[m.stage]}`;
  $('#code').value=exported(selected,activeAppearance,n);$('#copy-status').textContent='';
  $('#code-appearance').value=activeAppearance;
 }

@@ -1,3 +1,12 @@
+# Unreleased — complete product inventory
+
+Adds 29 concepts and 174 native SVGs, for 77 concepts and 462 SVGs. All 288 existing SVG bytes, the 70-entry revision ledger and the frozen fixtures are unchanged, and those fixtures are now explicitly legacy scope. No version, release or approval status changes.
+
+- Add Activity, Align center/left/right, Ban, Bold, Box, Check circle, Chevrons left/right, Circle, Close circle, Code, Cursor, Dashboard, Dot, Group, Heart, Input, Laptop, Layers, Loader, Moon, Smartphone, Square, Sun, Table, Type and Wand. See `docs/construction.md`.
+- Add `tests/test_product_inventory.py`, which checks semantics, bounds, counters, pairs and master independence from exported paths, and 174 native pixel snapshots created after reviewing light and dark boards. Thresholds are unchanged.
+- The guide's new-concepts filter now shows these 29; earlier additions are tagged PILOT.
+- Add no exception or restriction records. New usage guidance for Group, Wand and status marks is in the catalog notes.
+
 # Unreleased — shape corrections
 
 Owner-authorized local corrections after the 2026-11-01 shape reviews. No version, release or approval status changes. The exact revised SVGs are listed in `tests/fixtures/shape-revision-2026-11-01.json`.

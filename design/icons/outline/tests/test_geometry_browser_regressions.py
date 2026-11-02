@@ -65,7 +65,7 @@ class StrictSvgRegression(unittest.TestCase):
 
     def test_all_current_files_still_parse(self):
         files=list((ROOT/'generated/outline').rglob('*.svg'))
-        self.assertEqual(len(files),288)
+        self.assertEqual(len(files),462)
         for file in files:
             with self.subTest(file=str(file.relative_to(ROOT))):
                 n,d,g=parse_svg(file.read_text())
@@ -145,13 +145,19 @@ class RestrictionRegression(unittest.TestCase):
                 # A value that reaches its target stops being an exception.
                 self.assertLess(actual,exception['target']-.002)
 
-    def test_pilot_artwork_matches_fixture_or_revision_ledger(self):
+    def test_legacy_pilot_artwork_matches_fixture_or_revision_ledger(self):
+        # Legacy scope: the 48 pilot concepts and their 288 SVGs. The fixture and the
+        # ledger are immutable history; later inventory is pinned by its own snapshots.
         original=json.loads((ROOT/'tests/fixtures/pilot1-sha256.json').read_text())
         self.assertEqual(len(original),288)
         ledger=json.loads((ROOT/'tests/fixtures/shape-revision-2026-11-01.json').read_text())['files']
+        self.assertEqual(len(ledger),70)
         # Keep the immutable pilot fixture's historical keys; only map the moved paths.
         current={'angular/'+str(p.relative_to(ROOT/'generated/outline')):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'generated/outline').rglob('*.svg')}
-        self.assertEqual(set(current),set(original))
+        self.assertTrue(set(original)<=set(current))
+        added={key.rsplit('/',1)[1][:-4] for key in set(current)-set(original)}
+        self.assertEqual(added,{i['id'] for i in self.catalog['icons'] if i['stage']=='product-addition'})
+        self.assertEqual(len(set(current)-set(original)),174)
         for key,digest in original.items():
             rel=key.split('/',1)[1]
             with self.subTest(path=rel):

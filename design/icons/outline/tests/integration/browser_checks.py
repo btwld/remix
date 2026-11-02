@@ -58,21 +58,21 @@ def main():
                     page.set_content(source,wait_until='load')
                 if source==SOURCE:page.wait_for_function('window.__ICON_GUIDE_READY__ === true')
             page.on('pageerror',lambda error:errors.append(str(error)))
-            load();check('catalog cards',page.locator('.icon-card').count()==48)
-            check('native drawings on cards',page.locator('.master-strip svg').count()==288)
-            check('labeled appearance examples',page.locator('.sample-control').count()==96)
-            check('size matrix concepts',page.locator('[data-matrix]').count()==48)
-            check('per-icon review notes',page.locator('[data-review]').count()==48)
+            load();check('catalog cards',page.locator('.icon-card').count()==77)
+            check('native drawings on cards',page.locator('.master-strip svg').count()==462)
+            check('labeled appearance examples',page.locator('.sample-control').count()==154)
+            check('size matrix concepts',page.locator('[data-matrix]').count()==77)
+            check('per-icon review notes',page.locator('[data-review]').count()==77)
             # Compare all runtime SVG downloads to the exported files, not only counts.
             blobs=page.evaluate('''() => Object.fromEntries(window.VectorUIPilot.ids.flatMap(id => ['outline','filled'].flatMap(a => [12,16,24].map(n => [a+'/'+n+'/'+id+'.svg',window.VectorUIPilot.exported(id,a,n)]))))''')
             mismatch=[p for p,t in blobs.items() if t!=(R/'generated/outline'/p).read_text()]
-            check('all 288 runtime SVG strings match files',len(blobs)==288 and not mismatch)
-            page.locator('#new-only').click();check('pilot filter returns 15',page.locator('.icon-card:visible').count()==15)
+            check('all 462 runtime SVG strings match files',len(blobs)==462 and not mismatch)
+            page.locator('#new-only').click();check('new filter returns 29',page.locator('.icon-card:visible').count()==29)
             page.locator('#reset').click();page.locator('#search').fill('settings')
             shown=page.locator('.icon-card:visible').evaluate_all('(els)=>els.map(e=>e.dataset.icon).sort()')
             check('settings is a search keyword, not an alias',shown==['gear','sliders'],shown)
             page.locator('#search').fill('zz-no-icon');check('empty search state',page.locator('.icon-card:visible').count()==0 and page.locator('#empty').is_visible())
-            page.locator('#empty-reset').click();check('reset shows all',page.locator('.icon-card:visible').count()==48)
+            page.locator('#empty-reset').click();check('reset shows all',page.locator('.icon-card:visible').count()==77)
             for cat in sorted({i['category'] for i in CAT['icons']}):
                 page.locator('#category').select_option(cat)
                 check('category '+cat,page.locator('.icon-card:visible').count()==sum(i['category']==cat for i in CAT['icons']))
@@ -122,13 +122,13 @@ def main():
             check('toggle box stays fixed',toggle.bounding_box()['width']==old['width'] and toggle.bounding_box()['height']==old['height'])
             page.keyboard.press('Space');check('toggle deselected',toggle.get_attribute('aria-pressed')=='false')
             page.locator('#example-size').select_option('12');page.locator('#example-theme').select_option('dark')
-            check('all examples use chosen native size',page.locator('.example-icon svg[width="12"]').count()==96)
+            check('all examples use chosen native size',page.locator('.example-icon svg[width="12"]').count()==154)
             # Explicit no-JavaScript view: static pairs/examples still exist.
             nojs=browser.new_context(java_script_enabled=False,viewport={'width':375,'height':900});np=nojs.new_page()
             if args.mode=='full':np.goto(url+'docs/catalog/index.html')
             else:np.set_content(SOURCE)
-            check('noscript catalog complete',np.locator('.icon-card').count()==48)
-            check('noscript examples complete',np.locator('.sample-control').count()==96)
+            check('noscript catalog complete',np.locator('.icon-card').count()==77)
+            check('noscript examples complete',np.locator('.sample-control').count()==154)
             check('noscript notice',np.locator('noscript').is_visible());nojs.close()
             if args.mode=='full':
                 consumer=context.new_page();consumer.goto(url+'tests/integration/consumer.html');consumer.wait_for_function('window.__CONSUMER_READY__===true')
@@ -143,7 +143,7 @@ def main():
             page.set_viewport_size({'width':1440,'height':1100})
             for mode in ['all','new']:
                 proof=(R/f'docs/catalog/proof-{mode}.html').read_text();page.set_content(proof)
-                page.screenshot(path=str(report_directory(R)/('captures/paired-icon-sheet.png' if mode=='all' else 'captures/pilot-additions.png')),full_page=True)
+                page.screenshot(path=str(report_directory(R)/('captures/paired-icon-sheet.png' if mode=='all' else 'captures/product-additions.png')),full_page=True)
             # Native matrix strips at 1x/2x on both high-contrast surfaces.
             paths=json.loads((R/'generated/registry.json').read_text())['paths']
             for dpr in [1,2]:

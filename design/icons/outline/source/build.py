@@ -9,7 +9,7 @@ import sys, json, hashlib, html, csv, re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from source.outline import baseline, additions
+from source.outline import baseline, additions, product
 
 
 def svg_text(label: str, appearance: str, n: int, path: str) -> str:
@@ -30,7 +30,7 @@ def build() -> dict:
         for a in ('outline','filled'):
             paths[id][a]={}
             for n in (12,16,24):
-                g=(additions.draw if id in additions.NAMES else baseline.draw)(id,n,a)
+                g=(product.draw if id in product.NAMES else additions.draw if id in additions.NAMES else baseline.draw)(id,n,a)
                 if not g.is_valid or g.is_empty: raise ValueError(f'Invalid geometry {id}/{a}/{n}')
                 path=baseline.path_data(g)
                 rel=f'outline/{a}/{n}/{id}.svg'

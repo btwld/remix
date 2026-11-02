@@ -1,0 +1,4 @@
+// GENERATED: isolated icon; does not import the full registry.
+import {renderIcon} from '../render.mjs';
+export const nativePaths = {"outline":{"12":"M1 2L1 3L11 3L11 2ZM3 9L11 9L11 8L3 8ZM5 6L11 6L11 5L5 5Z","16":"M1.5 2.5L1.5 4L14.5 4L14.5 2.5ZM4.5 14L14.5 14L14.5 12.5L4.5 12.5ZM7.5 9L14.5 9L14.5 7.5L7.5 7.5Z","24":"M2 5L22 5L22 3L2 3ZM6 15L22 15L22 13L6 13ZM10 10L22 10L22 8L10 8ZM14 20L22 20L22 18L14 18Z"},"filled":{"12":"M1 2L1 4L11 4L11 2ZM3 10L11 10L11 8L3 8ZM5 7L11 7L11 5L5 5Z","16":"M1.5 2L1.5 4.5L14.5 4.5L14.5 2ZM4.5 14.5L14.5 14.5L14.5 12L4.5 12ZM7.5 9.5L14.5 9.5L14.5 7L7.5 7Z","24":"M2 6L22 6L22 3L2 3ZM6 16L22 16L22 13L6 13ZM10 11L22 11L22 8L10 8ZM14 21L22 21L22 18L14 18Z"}};
+export default function icon(options = {}) { return renderIcon("align-right","Align right",nativePaths,options); }

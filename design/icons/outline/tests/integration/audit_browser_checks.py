@@ -3,7 +3,7 @@
 
 Forced-colors ratios use screenshot pixels as well as computed control colors.
 Grid validation compares SVG coordinate matrices, not decorative panel spacing.
-Native proofs are checked at 1x and 2x device density for all 288 drawings.
+Native proofs are checked at 1x and 2x device density for all 462 drawings.
 """
 from __future__ import annotations
 import argparse

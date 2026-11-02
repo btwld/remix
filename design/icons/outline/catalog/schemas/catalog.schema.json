@@ -44,8 +44,8 @@
     },
     "icons": {
       "type": "array",
-      "minItems": 48,
-      "maxItems": 48,
+      "minItems": 77,
+      "maxItems": 77,
       "items": {
         "type": "object",
         "required": [
@@ -95,7 +95,8 @@
           "stage": {
             "enum": [
               "baseline",
-              "pilot-addition"
+              "pilot-addition",
+              "product-addition"
             ]
           },
           "pairModel": {

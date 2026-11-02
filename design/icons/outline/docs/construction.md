@@ -42,6 +42,28 @@ These are 2026-11-01 local design judgments between prototypes compared at nativ
 
 Only M/L/Z expanded polygons are supported by the Outline parser. It rejects curves rather than silently ignoring them. legacy fillet proposal requires a curve-aware bounds and measurement implementation or tested flattening with a declared tolerance before any legacy fillet proposal release.
 
+## Product inventory decisions
+
+These 29 concepts complete the shared inventory. Constructors live in `source/outline/product/`, grouped by kind. They are local design judgments from native-size boards, not recognition results. `tests/test_product_inventory.py` checks structure from exported paths.
+
+- **Circle, Check circle, Close circle, Ban:** there are no curves here, so Circle is a regular octagon. The enclosed status marks use Info's frame, with longer flats for their marks. Check and Close fit inside the clearance target. Filled Ban is divided by its negative slash, so it cannot read as a filled Close circle.
+- **Circle, Square, Dot:** Square sits a step inside Circle's keyline, because corners carry more visual mass. Dot is solid in both styles, because hollow belongs to Circle. It stays under 55% of Circle's width.
+- **Loader:** seven of eight octagon facets, cut radially so the gaps have parallel sides. Its facet ends are therefore not square. With square ends, holding the gap target at the heavier weight shortened each facet to a block about as long as it was wide. The omitted facet makes rotation visible. The radial facets separate it from Sun's hub and rays.
+- **Code and Terminal:** Code has source brackets and a slash and no frame; Terminal keeps a window and a prompt. Filled Code stops at 1.25 and 1.75 px at 12 and 16 px, because heavier strokes turned the brackets into arrowheads.
+- **Dashboard and Grid:** Dashboard is four panels in staggered columns, so panels are unequal. Grid stays four equal cells.
+- **Group, Focus, User:** Group is a marching-ants selection frame around two objects. It has side dashes, which Focus does not, and it means grouped selection, not people. Outline objects are apart; Filled objects overlap into one. Group needs a visible label at 12 px, like Focus.
+- **Chevrons:** two copies of the native Chevron, with pitch tuned per weight to hold the gap. Painted bounds are centered, not the tip coordinates.
+- **Align:** unequal rows separate these from Menu. There are three rows at 12 and 16 px and four at 24 px.
+- **Bold and Type:** authored letters, no font outlines. Bold's waist is a notch between chamfered bowls. Type's head drops and foot keep it apart from Plus.
+- **Box and Layers:** both use 2:1 slopes rather than 45°, which flatten the top face and leave room for the lower faces or sheets. Box shows three faces. Layers is a top sheet over open V strokes.
+- **Moon and Sun:** Moon is a faceted crescent with equal inner facets at 24 px, because longer axis edges read as an L. Sun's rays clear each other by the gap target, which keeps them short. Filled Sun changes the hub, not the rays.
+- **Wand:** Filled uses a concave sparkle, because a solid diamond on the rod read as a hammer head.
+- **Input:** a tall I-beam breaks the field into two open brackets, so no closed window competes with Terminal.
+
+No product drawing needed a measured gap exception: every separated part and counter meets its general target, so `catalog/exceptions.json` is unchanged.
+
+Four drawings coincide with a scaled 24 px master: Circle in both styles and outline Ban at 12 px, and filled Square at 16 px. They have no detail to vary, and 1 and 2 px contours keep the 12:24 ratio. All other masters carry their own decisions, and `tests/test_product_inventory.py` fails if another one coincides.
+
 ## Scope heuristic
 
 80/20 is a proposed workflow-coverage target, not a rule that every icon occupies 80% of a canvas or receives 20% arbitrary deviation. Measure it against actual target screens before claiming coverage.

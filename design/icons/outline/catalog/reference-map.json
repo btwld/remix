@@ -242,6 +242,151 @@
       "id": "focus",
       "externalPathSource": null,
       "method": "preserved-user-supplied-construction"
+    },
+    {
+      "id": "activity",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "align-center",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "align-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "align-right",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "box",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "check-circle",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "circle",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "ban",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "close-circle",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "cursor",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "dot",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevrons-left",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "chevrons-right",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "bold",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "type",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "group",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "heart",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "input",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "laptop",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "wand",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "smartphone",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "moon",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "square",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "layers",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "sun",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "table",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "loader",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "code",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
+    },
+    {
+      "id": "dashboard",
+      "externalPathSource": null,
+      "method": "original-construction-with-family-primitives"
     }
   ]
 }

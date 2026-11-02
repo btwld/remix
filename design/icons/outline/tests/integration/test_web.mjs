@@ -15,7 +15,7 @@ process.on('exit',()=>fs.rmSync(work,{recursive:true,force:true}));
 execFileSync(process.env.PYTHON || 'python',['tools/evidence.py','capture','--output',startPath],{cwd:root});
 const registry=JSON.parse(fs.readFileSync(path.join(root,'generated/registry.json'))).paths;
 let drawings=0, isolated=0;
-assert.equal(iconNames.length,48);
+assert.equal(iconNames.length,77);
 for (const name of iconNames) {
   const single=await import(pathToFileURL(path.join(root,'packages/web/icons',name+'.mjs')));
   for (const appearance of ['outline','filled']) for (const master of [12,16,24]) {
@@ -51,6 +51,13 @@ for(const appearance of ['outline','filled']) for(const master of [12,16,24]) {
 assert.equal(getIconUsage('warning',{appearance:'filled',size:20}).master,24);
 assert.equal(getIconUsage('warning',{appearance:'outline',size:32}).visibleLabelRequired,true);
 assert.equal(getIconUsage('sliders').visibleLabelRequired,false);
+assert.equal(drawings,462);
+// Product concepts are separate artwork, not aliases of their nearest neighbours.
+for (const [name, neighbour] of [['code','terminal'],['dashboard','grid'],['group','user'],['group','focus'],['circle','dot'],['loader','sun'],['check-circle','close-circle'],['chevrons-right','chevron-right']]) {
+  for (const appearance of ['outline','filled']) for (const master of [12,16,24]) assert.notEqual(registry[name][appearance][master],registry[neighbour][appearance][master]);
+}
+assert.throws(()=>iconSvg('magicWand'),/Unknown canonical/);
+assert.equal(getIconUsage('wand').visibleLabelRequired,false);
 assert.throws(()=>getIconUsage('settings'),/Unknown canonical/);
 assert.throws(()=>getIconUsage('warning',{appearance:'bad'}));
 assert.throws(()=>getIconUsage('warning',{master:20}));

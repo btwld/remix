@@ -32,7 +32,7 @@ def sheet(names,out,dark=False):
 if __name__=='__main__':
     out=report_directory(ROOT)/'captures'
     out.mkdir(exist_ok=True)
-    nd=[i['id'] for i in CAT['icons'] if i['stage']=='pilot-addition']
+    nd=[i['id'] for i in CAT['icons'] if i['stage']=='product-addition']
     for j in range(0,len(nd),8):sheet(nd[j:j+8],out/f'new-icons-{j//8+1}.png')
-    for j in range(0,48,12):sheet([i['id'] for i in CAT['icons'][j:j+12]],out/f'all-icons-{j//12+1}.png')
+    for j in range(0,len(CAT['icons']),12):sheet([i['id'] for i in CAT['icons'][j:j+12]],out/f'all-icons-{j//12+1}.png')
     sheet(['sliders','gear','filter','info','help','warning','save','bookmark','edit'],out/'dense-icons-dark.png',True)

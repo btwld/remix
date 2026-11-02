@@ -22,4 +22,6 @@ A stroke with an odd pixel width cannot be both centered and crisp on an even ca
 - **A single symmetric 1.5 px stem at 16 px stays centered at ±0.25.** This covers stems such as Plus, Minus, the arrow shafts, Sliders rails, and Info and Help marks. Two 75% lines are softer than a half-pixel stem; this is an accepted tradeoff, because moving one stem off center would skew the head or crossing built around it.
 - **Diagonals are not snapped.** Only axis-aligned edges carry this rule. Diagonal vertices keep their angle, and pixel softness on a diagonal is not a defect.
 
+The product concepts follow the same rule. At 12 px, Type, Sun, Dot and Box are built on the 5.5 center, so their single strokes render at full strength. Align and Table use whole-pixel rows. Each size also carries detail decisions: Layers has two lower sheets only at 24 px, Align has a fourth row only at 24 px, and Wand has no accent marks at 12 px, one at 16 px, and two at 24 px.
+
 Pixel snapshots detect regression. Optical review compares recognition cues, meaningful negative space, local line widths, silhouette density, centering, and edge pressure in context. Painted area and centroids are diagnostics, not quality scores or automatic centering instructions.

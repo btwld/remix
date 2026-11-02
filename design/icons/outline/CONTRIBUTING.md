@@ -8,7 +8,7 @@ State the unmet interface need, literal glyph name, control action, nearest conf
 
 ## Draw
 
-Author native geometry in `source/outline/additions.py` or a new construction module. Reuse final-width primitives, not stretched expanded SVGs. Do not trace a reference library and call the result original. Record any externally reused material and its terms before importing it.
+Author native geometry in a cohesive module under `source/outline/product/` or a new construction module; `baseline.py` and `additions.py` hold locked artwork. Reuse final-width primitives, not stretched expanded SVGs. Do not trace a reference library and call the result original. Record any externally reused material and its terms before importing it.
 
 Every promised concept has outline / filled at 12 / 16 / 24 px. Open glyphs may use a regular/heavier pair. Do not produce micro versions only by scaling 24 px output. Directional copies may share native geometry through exact rotation/reflection.
 

@@ -92,8 +92,10 @@ class LedgerScope(unittest.TestCase):
         self.assertNotRegex(readme, r'!\[[^\]]*\]\(review/')
         self.assertIn('historical capture', readme)
 
-    def test_inventory_is_not_expanded(self):
-        self.assertEqual(len(REG), 48)
+    def test_inventory_has_exactly_the_product_concepts(self):
+        contract = json.loads((ROOT / 'tests/fixtures/product-inventory-2026-11-01.json').read_text())
+        self.assertEqual(set(REG), {concept['id'] for concept in contract['concepts']})
+        self.assertEqual(len(REG), 77)
         for icon in REG:
             self.assertEqual(set(REG[icon]), set(STYLES))
             for style in STYLES:

@@ -6,7 +6,7 @@ Favorite is the guide's actual toggle. Its accessible name stays stable and `ari
 
 Default sample controls are at least 44 px high. Icon size and control size are separate. Maintain visible keyboard focus on every surface; the guide uses the foreground color on icon cards, including cobalt. No hover-only information is required. Native dialog behavior provides Escape and focus handling.
 
-Status meaning should include labels and shape, not color alone. Keep visible labels with Warning, Focus, Branch, and small Help. Actual application contrast depends on its colors and adjacent surfaces. Do not infer a full WCAG audit from icon geometry tests.
+Status meaning should include labels and shape, not color alone. Keep visible labels with Warning, Focus, Branch, small Help, small Group, and Wand. Check circle, Close circle and Ban state a status, so pair them with text. Circle, Square and Dot are shapes, not controls. Loader's caller owns motion, reduced-motion behavior and the progress text. Actual application contrast depends on its colors and adjacent surfaces. Do not infer a full WCAG audit from icon geometry tests.
 
 Literal arrows, media symbols, and glyph artwork do not automatically mirror under RTL. The application selects a left/right glyph when navigation semantics require it. No screen-reader or localized workflow study was performed in this pass.
 

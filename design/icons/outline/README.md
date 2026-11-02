@@ -1,24 +1,24 @@
-# Vector UI — Outline pilot 48
+# Vector UI — Outline 77
 
 **Working name · 0.5.0-pilot.2 · private review build, not a public release**
 
-48 canonical icons, two appearances, and three optical masters: **288 individual SVG drawings**. The original 33 concepts started from the supplied v0.4.1 baseline; the 15 additions use the same authored construction system. Every SVG either matches its pilot hash byte for byte or is listed with its old and new hash in `tests/fixtures/shape-revision-2026-11-01.json`.
+77 canonical icons, two appearances, and three optical masters: **462 individual SVG drawings**. The original 33 concepts started from the supplied v0.4.1 baseline; 15 pilot additions and 29 product concepts use the same authored construction system. Each of the 288 pilot SVGs either matches its pilot hash byte for byte or is listed with its old and new hash in `tests/fixtures/shape-revision-2026-11-01.json`. The 174 product SVGs are pinned by native pixel snapshots.
 
 Open [`docs/catalog/index.html`](docs/catalog/index.html) for the complete catalog. The HTML embeds its data and artwork; it does not load fonts, libraries, or SVGs from a network. All cards, native pairs, examples, and notes are present without JavaScript. Search, inspector, downloads, and toggles require JavaScript.
 
 ## What is finished in this pilot
 
-- 48 icons in `outline` / `filled`, at native 12 / 16 / 24 px.
+- 77 icons in `outline` / `filled`, at native 12 / 16 / 24 px.
 - A canonical catalog, keywords, explicit availability, provenance, pair policy, and review notes.
 - A deterministic SVG/registry/sprite/catalog build; immutable baseline and pilot hashes, plus a ledger of the deliberate revisions.
-- A self-contained guide with all 48 icons, 96 labeled examples, six display sizes, four surfaces, SVG inspection, and native downloads.
-- An ES-module helper and 48 isolated per-icon imports. No React or Vue adapter is claimed.
+- A self-contained guide with all 77 icons, 154 labeled examples, six display sizes, four surfaces, SVG inspection, and native downloads.
+- An ES-module helper and 77 isolated per-icon imports. No React or Vue adapter is claimed.
 - Schema, SVG safety, geometry, critical-gap, raster, export, module, and rebuild checks.
 - Root GitHub Actions validation and an explicit release gate.
 
 ## What is not finished
 
-This private pack includes 48 Outline and 12 Rounded concepts.
+This family includes 77 Outline concepts; the shared inventory and the sibling Rounded family are maintained at the pack level.
 The legacy fillet proposal, independent design approval, recognition testing, final naming, and
 publication are not included. BSD 3-Clause is selected; no package is published.
 
@@ -116,10 +116,10 @@ Do not use `--create-baseline` to hide a failed diff. That option is a maintaine
 
 ```text
 catalog/                 identities, availability, keywords, schemas, exceptions
-source/outline/          baseline constructors and 15 authored additions
+source/outline/          baseline constructors, 15 pilot additions, and product/ with 29 product concepts
 source/web/              guide presentation and behavior
 source/build.py          one deterministic generation entry point
-generated/outline/       288 standalone SVG assets
+generated/outline/       462 standalone SVG assets
 generated/sprites/       six size/appearance sprites and one combined sprite
 packages/web/            ES-module API and isolated imports
 docs/catalog/            self-contained catalog and proof pages

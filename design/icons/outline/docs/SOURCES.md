@@ -1,6 +1,6 @@
 # Primary implementation references
 
-Checked 24 September 2026. These inform the implementation; no external icon SVGs were downloaded or traced for the pilot additions.
+Checked 24 September 2026. These inform the implementation; no external icon SVGs, font outlines or third-party paths were downloaded or traced for the pilot additions or the 29 product concepts.
 
 - IBM Design Language, UI icon design: https://www.ibm.com/design/language/iconography/ui-icons/design/ — grids, padding, key shapes, fine adjustments, and avoiding crowding. Our native sizes and gap targets are project choices, not IBM compliance claims.
 - W3C WAI-ARIA APG, Button Pattern: https://www.w3.org/WAI/ARIA/apg/patterns/button/ — accessible names, keyboard operation, and stable labels with aria-pressed.
