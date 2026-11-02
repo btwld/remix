@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/agent.dart';
 
@@ -89,7 +88,7 @@ void main() {
     final execution = find.byType(AgentExecution);
     for (final icon in [
       RemixIcons.terminal,
-      LucideIcons.circleCheck,
+      RemixIcons.checkCircle,
       RemixIcons.chevronUp,
       RemixIcons.copy,
       RemixIcons.refresh,

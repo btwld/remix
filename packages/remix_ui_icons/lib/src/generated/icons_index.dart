@@ -776,8 +776,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.arrowUpRight,
     tags: ['external', 'outbound'],
     aliases: ['arrowTopRight'],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -790,8 +792,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.arrowUpRightFilled,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -804,8 +808,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.arrowUpRight16,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -818,8 +824,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.arrowUpRightFilled16,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -832,8 +840,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.arrowUpRight12,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -846,8 +856,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: OutlineIcons.arrowUpRightFilled12,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7376,8 +7388,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.arrowUpRight,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7390,8 +7404,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.arrowUpRightFilled,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7404,8 +7420,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.arrowUpRight16,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7418,8 +7436,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.arrowUpRightFilled16,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7432,8 +7452,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.arrowUpRight12,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -7446,8 +7468,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.arrowUpRightFilled12,
     tags: ['external', 'outbound'],
     aliases: [],
-    requiresLabel: false,
-    usage: ['Opens another destination; keep a visible action label.'],
+    requiresLabel: true,
+    usage: [
+      'Requires a visible action label at every size: it opens another destination.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(

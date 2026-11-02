@@ -22,9 +22,9 @@ from sources import Source, stage
 FONT_FILE = "fonts/RemixIcons.otf"
 COPYRIGHT = "Vector UI icons. Copyright (c) 2026, Leo Farias. BSD 3-Clause License."
 
-# GlyphPact rounds outlines to whole font units. 15360 is the largest multiple
-# of 48 (the least common multiple of the 12, 16, and 24 px masters) that
-# OpenType allows, so one pixel of every master is a whole number of units:
+# GlyphPact rounds outlines to whole font units. We use 15360, a multiple
+# of 48 (the least common multiple of the 12, 16, and 24 px masters), so
+# one pixel of every master is a whole number of units:
 # 640 at 24 px, 960 at 16 px, 1280 at 12 px. At 1000 units the masters drifted
 # visibly from their drawings at 8x; see raster.py.
 UNITS_PER_EM = 15360

@@ -510,7 +510,8 @@ abstract final class OutlineIcons {
 
   /// Arrow up right, outline style, 24 px master.
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   ///
   /// ![Arrow up right, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xOCAxNUwyMCAxNUwyMCA0TDkgNEw5IDZMMTYuNTg2IDZMMy4yOTMgMTkuMjkzTDQuNzA3IDIwLjcwN0wxOCA3LjQxNFoiLz48L3N2Zz4=)
   static const IconData arrowUpRight = IconData(
@@ -521,7 +522,8 @@ abstract final class OutlineIcons {
 
   /// Arrow up right, filled style, 24 px master.
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   ///
   /// ![Arrow up right, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNy41IDE1TDIwLjUgMTVMMjAuNSAzLjVMOSAzLjVMOSA2LjVMMTUuMzc5IDYuNUwyLjkzOSAxOC45MzlMNS4wNjEgMjEuMDYxTDE3LjUgOC42MjFaIi8+PC9zdmc+)
   static const IconData arrowUpRightFilled = IconData(
@@ -532,7 +534,8 @@ abstract final class OutlineIcons {
 
   /// Arrow up right, outline style, 16 px master.
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   ///
   /// ![Arrow up right, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMEwxMy41IDEwTDEzLjUgMi41TDYgMi41TDYgNEwxMC45MzkgNEwyLjIyIDEyLjcyTDMuMjggMTMuNzhMMTIgNS4wNjFaIi8+PC9zdmc+)
   static const IconData arrowUpRight16 = IconData(
@@ -543,7 +546,8 @@ abstract final class OutlineIcons {
 
   /// Arrow up right, filled style, 16 px master.
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   ///
   /// ![Arrow up right, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMS41IDEwTDE0IDEwTDE0IDJMNiAyTDYgNC41TDkuNzMyIDQuNUwxLjg2NiAxMi4zNjZMMy42MzQgMTQuMTM0TDExLjUgNi4yNjhaIi8+PC9zdmc+)
   static const IconData arrowUpRightFilled16 = IconData(
@@ -554,7 +558,8 @@ abstract final class OutlineIcons {
 
   /// Arrow up right, outline style, 12 px master.
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   ///
   /// ![Arrow up right, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05IDcuNUwxMCA3LjVMMTAgMkw0LjUgMkw0LjUgM0w4LjI5MyAzTDEuNjQ2IDkuNjQ2TDIuMzU0IDEwLjM1NEw5IDMuNzA3WiIvPjwvc3ZnPg==)
   static const IconData arrowUpRight12 = IconData(
@@ -565,7 +570,8 @@ abstract final class OutlineIcons {
 
   /// Arrow up right, filled style, 12 px master.
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   ///
   /// ![Arrow up right, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04LjUgNy41TDEwLjUgNy41TDEwLjUgMS41TDQuNSAxLjVMNC41IDMuNUw3LjA4NiAzLjVMMS4yOTMgOS4yOTNMMi43MDcgMTAuNzA3TDguNSA0LjkxNFoiLz48L3N2Zz4=)
   static const IconData arrowUpRightFilled12 = IconData(

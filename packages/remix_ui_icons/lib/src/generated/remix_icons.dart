@@ -185,33 +185,39 @@ abstract final class RemixIcons {
 
   /// Arrow up right, outline style, 24 px master. Same as [OutlineIcons.arrowUpRight].
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   static const IconData arrowUpRight = OutlineIcons.arrowUpRight;
 
   /// Arrow up right, filled style, 24 px master. Same as [OutlineIcons.arrowUpRightFilled].
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   static const IconData arrowUpRightFilled = OutlineIcons.arrowUpRightFilled;
 
   /// Arrow up right, outline style, 16 px master. Same as [OutlineIcons.arrowUpRight16].
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   static const IconData arrowUpRight16 = OutlineIcons.arrowUpRight16;
 
   /// Arrow up right, filled style, 16 px master. Same as [OutlineIcons.arrowUpRightFilled16].
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   static const IconData arrowUpRightFilled16 =
       OutlineIcons.arrowUpRightFilled16;
 
   /// Arrow up right, outline style, 12 px master. Same as [OutlineIcons.arrowUpRight12].
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   static const IconData arrowUpRight12 = OutlineIcons.arrowUpRight12;
 
   /// Arrow up right, filled style, 12 px master. Same as [OutlineIcons.arrowUpRightFilled12].
   ///
-  /// Opens another destination; keep a visible action label.
+  /// Requires a visible action label at every size: it opens another
+  /// destination.
   static const IconData arrowUpRightFilled12 =
       OutlineIcons.arrowUpRightFilled12;
 

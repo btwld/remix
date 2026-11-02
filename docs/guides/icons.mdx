@@ -17,19 +17,20 @@ import 'package:flutter/widgets.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 const search = Icon(RemixIcons.search);
-const close = Icon(RemixIcons.close, size: 16);
+const close = Icon(RemixIcons.close16, size: 16);
 ```
 
 ## Families
 
 | Family | Class | Concepts | Glyphs |
 | --- | --- | ---: | ---: |
-| Outline | `OutlineIcons` | 48 | 288 |
-| Rounded | `RoundedIcons` | 12 | 72 |
+| Outline | `OutlineIcons` | 77 | 462 |
+| Rounded | `RoundedIcons` | 77 | 462 |
 
 `RemixIcons` is the default and is the Outline family under the same names.
 Rounded (circles, stadiums, round joins) is drawn from its own primitives
-rather than filtered from Outline, and covers 12 of its concepts.
+rather than filtered from Outline. Both families cover the same 77 concepts,
+with 924 masters in total.
 
 ## Styles and masters
 
@@ -79,8 +80,9 @@ The rules depend on the family and master:
 | --- | --- |
 | Warning, every family and style | Required at every size. A tooltip or semantic label is not a substitute. |
 | Rounded Branch | Required at every size. |
-| Outline Help, Branch, Focus | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
+| Help, Focus, Group in both families; Outline Branch | Required at 12 px; a contextual label is recommended at 16 and 24 px. |
 | Rounded Link | Required at 12 px. |
+| Outline Wand; Outline Check circle, Ban, Close circle | Required at every size; state the action or status in text. |
 | Arrow up-right in both families | Required at every size: it opens another destination, so state the action in text. |
 
 Each constant's documentation states its rule, and the index below reports it
@@ -104,11 +106,11 @@ final labelled = remixIconEntries.where((entry) => entry.requiresLabel);
 
 ## Icons in registry presets
 
-The Vanilla and Fortal presets use 51 icons. Remix draws 24 of them and the
-rest render from [Lucide](https://pub.dev/packages/lucide_flutter), so
-installing a preset item that uses icons adds `lucide_flutter` beside
-`remix_ui_icons`. Set `iconLibrary: lucide` in `remix.yaml` to render every
-preset icon from Lucide instead; see [Open Code](/open-code).
+The registry has 52 canonical icon keys. Outline and Rounded each draw all of
+them. Set `iconLibrary: remix` (the default) or `iconLibrary: rounded` in
+`remix.yaml`; either choice uses `remix_ui_icons`. `iconLibrary: lucide` remains
+available as an alternative. Refresh the affected items after changing the
+library; see [Open Code](/open-code).
 
 ## Migrating from 0.1.x
 
@@ -117,10 +119,10 @@ them, and moves every codepoint, so it is a new major version:
 
 | 0.1.x names | Count | In 1.0 |
 | --- | ---: | --- |
-| Unchanged, such as `check` and `chevronDown` | 27 | Same name, new drawing |
-| Renamed, such as `magnifyingGlass` | 19 | Deprecated alias of the new name until 2.0.0 |
+| Unchanged, such as `check` and `chevronDown` | 45 | Same name, new drawing |
+| Renamed, such as `magnifyingGlass` | 31 | Deprecated alias of the new name until 2.0.0 |
 | Partial matches, such as `avatar` | 25 | Removed; a Remix concept covers part of the meaning |
-| No match, such as `accessibility` | 247 | Removed; use the suggested Lucide icon |
+| No match, such as `accessibility` | 217 | Removed; use the suggested Lucide icon |
 
 The package's
 [MIGRATION.md](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)

@@ -1,7 +1,5 @@
 ## 1.0.0-beta.14
 
-Prepared in source; publication is on hold.
-
 ### Breaking changes
 
 - Item columns in scrolling `RemixMenu` panels styled through `overlay` and
