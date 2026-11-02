@@ -5,8 +5,8 @@ import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
   testWidgets('visible toast follows live Fortal theme changes', (
@@ -16,13 +16,13 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: LucideIcons.circleCheck),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
     final toastIcon = find.descendant(
       of: find.byType(RemixToast),
-      matching: find.byIcon(LucideIcons.circleCheck),
+      matching: find.byIcon(RemixIcons.checkCircle),
     );
     final before = tester.widget<Icon>(toastIcon).color;
 
@@ -59,7 +59,7 @@ void main() {
       context,
       RemixToastData(
         title: 'Customer archived',
-        icon: LucideIcons.circleCheck,
+        icon: RemixIcons.checkCircle,
         action: RemixToastAction(label: 'Undo', onPressed: () => actionCount++),
       ),
     );
@@ -79,7 +79,7 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: LucideIcons.circleCheck),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
@@ -101,14 +101,11 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'First toast', icon: LucideIcons.circleCheck),
+      const RemixToastData(title: 'First toast', icon: RemixIcons.checkCircle),
     );
     showRemixToast(
       context,
-      const RemixToastData(
-        title: 'Second toast',
-        icon: LucideIcons.circleCheck,
-      ),
+      const RemixToastData(title: 'Second toast', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
@@ -146,7 +143,7 @@ void main() {
     // this only works when the scope sits above the Navigator.
     showRemixToast(
       dialogContext,
-      const RemixToastData(title: 'Invite sent', icon: LucideIcons.circleCheck),
+      const RemixToastData(title: 'Invite sent', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 
@@ -163,7 +160,7 @@ void main() {
 
     showRemixToast(
       context,
-      const RemixToastData(title: 'Saved', icon: LucideIcons.circleCheck),
+      const RemixToastData(title: 'Saved', icon: RemixIcons.checkCircle),
     );
     await _settle(tester);
 

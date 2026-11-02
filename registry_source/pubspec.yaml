@@ -33,9 +33,6 @@ dependencies:
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.3
   remix_ui_icons: ^1.0.0-beta.1
-  # The registry's icons.yaml renders the icons remix_ui_icons does not draw
-  # from Lucide, so authored source names them as LucideIcons constants.
-  lucide_flutter: ^1.47.0
   remix_ui_fonts: ^0.1.0
 
 dev_dependencies:

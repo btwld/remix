@@ -18,7 +18,6 @@ dependencies:
   # hosted constraints keep the app manifest deployable outside the workspace.
   remix: ^1.0.0-beta.14
   remix_ui_icons: ^1.0.0-beta.1
-  lucide_flutter: ^1.47.0
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.3
 
