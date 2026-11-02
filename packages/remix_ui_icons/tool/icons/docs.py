@@ -19,7 +19,12 @@ class DocsError(Exception):
 
 
 def _kebab(name: str) -> str:
-    return re.sub(r"(?<=[a-z0-9])([A-Z])", r"-\1", name).lower()
+    """A Lucide constant's lucide.dev slug: `link2Off` is `link-2-off`.
+
+    A number starts a new word, except the far side of a size such as `2x2`.
+    """
+    words = re.sub(r"(?<=[a-z0-9])([A-Z])", r"-\1", name)
+    return re.sub(r"(?<=[a-z])(?<!\dx)(\d)", r"-\1", words).lower()
 
 
 def _lucide(icon: LegacyIcon) -> str:

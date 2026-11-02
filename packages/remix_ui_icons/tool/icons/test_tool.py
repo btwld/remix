@@ -14,6 +14,7 @@ from pathlib import Path
 
 import check
 import codegen
+import docs
 import lock
 from manifest import ManifestError, Reserved, _validate_members, load_manifest
 from sources import Source, SourceError, validate_svg
@@ -166,6 +167,37 @@ class CodegenTest(unittest.TestCase):
         self.assertIn("RoundedIcons.starFilled12", api)
         self.assertIn("OutlineIconSets.searchFilled", api)
         self.assertEqual(len(api), len(set(api)))
+
+
+class LucideSlugTest(unittest.TestCase):
+    # Copied from the `lucide.dev/icons/...` links in lucide_flutter 1.47.0's doc
+    # comments, not derived from `_kebab`.
+    NUMBERED = {
+        "columns2": "columns-2",
+        "grid2x2": "grid-2x2",
+        "grid3x3": "grid-3x3",
+        "link2": "link-2",
+        "link2Off": "link-2-off",
+        "mousePointer2": "mouse-pointer-2",
+        "rows2": "rows-2",
+        "share2": "share-2",
+        "unlink2": "unlink-2",
+        "volume1": "volume-1",
+        "volume2": "volume-2",
+    }
+
+    def test_numbered_names_match_lucide(self) -> None:
+        for name, slug in self.NUMBERED.items():
+            self.assertEqual(docs._kebab(name), slug, name)
+
+    def test_every_numbered_name_in_the_manifest_is_listed(self) -> None:
+        # A new one fails here until its real slug is checked against the package.
+        numbered = {icon.lucide for icon in MANIFEST.legacy if icon.lucide and any(c.isdigit() for c in icon.lucide)}
+        self.assertEqual(numbered, set(self.NUMBERED))
+
+    def test_plain_names_still_split_on_capitals(self) -> None:
+        self.assertEqual(docs._kebab("aLargeSmall"), "a-large-small")
+        self.assertEqual(docs._kebab("activity"), "activity")
 
 
 class ApiGateTest(unittest.TestCase):
