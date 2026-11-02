@@ -1,5 +1,19 @@
 ## Unreleased
 
+- Strengthen Orla primary roles to dark/white fills while retaining exact Radix
+  scales and subtle neutral surfaces. Add `accentMarkHover` for coherent selected
+  control and theme-swatch interaction states, retain visible white-thumb rings,
+  and prevent bright solid buttons from returning to idle color when pressed.
+
+- Pair the seven Fortal themes with pinned Radix Colors 3.0.0 accent and neutral
+  scales. Theme selection now controls the subtle gray tint as well as the accent.
+  Serra uses Gold/Olive and Duna Brown/Sand. Remove `gray:`, `grayColor` dashboard
+  settings and `FortalGrayColor`; existing named `accent:` values remain supported.
+- Preserve upstream scales and license, with reproducible package extraction.
+  Keep contrast-tested functional content, labelled fills, control boundaries and
+  focus roles separate from raw swatches. Custom brand generation and semantic
+  error red remain supported.
+
 - Rename Calçadão to Orla in theme choices, generated palettes and examples,
   preserving all color values. Keep `calcadao` as a deprecated enum and palette
   alias. Serialized neutral names now use `orla`; migrate saved preferences

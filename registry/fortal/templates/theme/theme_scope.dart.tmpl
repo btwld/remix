@@ -60,7 +60,6 @@ class {{typePrefix}}Theme extends StatelessWidget {
     this.mode,
     this.accent,
     this.accentPalette,
-    this.gray,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -79,7 +78,6 @@ class {{typePrefix}}Theme extends StatelessWidget {
 
   final {{typePrefix}}AccentColor? accent;
   final {{typePrefix}}ColorTheme? accentPalette;
-  final {{typePrefix}}GrayColor? gray;
   final {{typePrefix}}PanelBackground? panelBackground;
   final {{typePrefix}}Radius? radius;
   final {{typePrefix}}Scaling? scaling;
@@ -139,7 +137,6 @@ class {{typePrefix}}Theme extends StatelessWidget {
           accent: accent ?? config.accent,
           accentPalette:
               accentPalette ?? (accent == null ? config.accentPalette : null),
-          gray: gray ?? config.gray,
           brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,
           radius: radius ?? config.radius,
@@ -170,8 +167,7 @@ class {{typePrefix}}Theme extends StatelessWidget {
     Widget scoped = child;
     if (parent == null) {
       scoped = _{{valuePrefix}}RootTextStyle(tokens: tokens, child: scoped);
-    } else if (parent.brightness != data.brightness ||
-        parent.gray != data.gray) {
+    } else if (parent.brightness != data.brightness) {
       scoped = _{{valuePrefix}}Recolored(foreground, scoped);
     }
     Widget result = MixScope(
@@ -212,7 +208,6 @@ class {{typePrefix}}Theme extends StatelessWidget {
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? {{typePrefix}}GrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

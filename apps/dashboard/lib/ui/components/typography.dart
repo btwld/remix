@@ -55,7 +55,9 @@ TextStyler uiApplyTextFlow(
 }
 
 TextStyler uiAccentForeground(TextStyler style, {required bool highContrast}) =>
-    style.color(highContrast ? UiTokens.accent12() : UiTokens.accentA11());
+    style.color(
+      highContrast ? UiTokens.accent12() : UiTokens.accentContentAlpha(),
+    );
 
 /// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
 /// so unlike the other recipes they cannot stay context-free.

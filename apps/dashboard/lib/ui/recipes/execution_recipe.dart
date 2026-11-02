@@ -48,7 +48,9 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
     meta: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
     status: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
     toolIcon: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
-    statusIcon: IconStyler().color(UiTokens.accent9()).size(UiTokens.space3()),
+    statusIcon: IconStyler()
+        .color(UiTokens.accentIndicator())
+        .size(UiTokens.space3()),
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),

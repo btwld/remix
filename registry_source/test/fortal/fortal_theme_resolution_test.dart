@@ -9,7 +9,6 @@ void main() {
     const config = FortalThemeConfig();
 
     expect(config.accent, isNull);
-    expect(config.gray, isNull);
     expect(config.brightness, isNull);
     expect(config.panelBackground, isNull);
     expect(config.radius, isNull);
@@ -32,7 +31,6 @@ void main() {
     );
 
     expect(data.accent, FortalAccentColor.orla);
-    expect(data.gray, FortalGrayColor.orla);
     expect(data.brightness, Brightness.light);
     expect(data.panelBackground, FortalPanelBackground.solid);
     expect(data.radius, FortalRadius.medium);
@@ -198,7 +196,6 @@ void main() {
     await tester.pumpWidget(
       FortalTheme(
         accent: .caju,
-        gray: .orla,
         mode: .dark,
         radius: .large,
         child: Builder(
@@ -219,7 +216,7 @@ void main() {
     );
 
     expect(inner.accent, outer.accent);
-    expect(inner.gray, outer.gray);
+    expect(resolveFortalTokens(inner).gray, resolveFortalTokens(outer).gray);
     expect(inner.brightness, outer.brightness);
     expect(inner.radius, outer.radius);
     expect(inner.scaling, FortalScaling.percent110);

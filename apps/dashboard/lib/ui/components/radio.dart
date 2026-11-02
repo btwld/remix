@@ -81,7 +81,9 @@ RadioStyler _uiRadioSurfaceStyler(
         ),
       )
       .indicator(
-        .color(UiTokens.accent9()).borderRadius(.all(UiTokens.radiusCircle())),
+        .color(
+          UiTokens.accentIndicator(),
+        ).borderRadius(.all(UiTokens.radiusCircle())),
       )
       .onSelected(
         .color(highContrast ? UiTokens.accent12() : UiTokens.accentIndicator())
@@ -123,12 +125,12 @@ RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
       // ring keeps a 3:1 boundary in every enabled state.
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          uiInsetSurface(strokes: [UiTokens.accentA8()]),
+          uiInsetSurface(strokes: [UiTokens.focus8()]),
         ),
       )
       .indicator(
         .color(
-          highContrast ? UiTokens.accent12() : UiTokens.accent11(),
+          highContrast ? UiTokens.accent12() : UiTokens.accentContent(),
         ).borderRadius(.all(UiTokens.radiusCircle())),
       )
       .onSelected(
@@ -137,7 +139,9 @@ RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
             )
             .indicator(
-              .color(highContrast ? UiTokens.accent12() : UiTokens.accent11()),
+              .color(
+                highContrast ? UiTokens.accent12() : UiTokens.accentContent(),
+              ),
             ),
       )
       .onDisabled(

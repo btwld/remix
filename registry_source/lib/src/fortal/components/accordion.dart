@@ -140,7 +140,7 @@ AccordionStyler _fortalAccordionSoftStyler([
       )
       .trigger(.color(FortalTokens.accent2()))
       .title(.color(FortalTokens.accent12()))
-      .trailingIcon(.color(FortalTokens.accent11()))
+      .trailingIcon(.color(FortalTokens.accentContent()))
       .content(
         BoxStyler()
             .foregroundDecoration(

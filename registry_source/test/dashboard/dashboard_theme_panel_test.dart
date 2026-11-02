@@ -54,9 +54,7 @@ void main() {
           final reason = '${accent.name}/${state?.name ?? 'idle'}';
           expect(
             fill,
-            state == null
-                ? tokens.accent.indicator
-                : tokens.accent.scale.step(10),
+            state == null ? tokens.accent.indicator : tokens.accent.markHover,
             reason: reason,
           );
           expect(tick.color, tokens.accentIndicatorContrast, reason: reason);

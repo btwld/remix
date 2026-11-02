@@ -57,7 +57,7 @@ class FortalThemePanel extends StatelessWidget {
             apply: (value) => settings.copyWith(appearance: value),
           ),
           _Control(
-            label: 'Accent color',
+            label: 'Theme',
             child: WrapBox(
               style: WrapBoxStyler().spacing(8).runSpacing(8),
               children: [
@@ -70,22 +70,6 @@ class FortalThemePanel extends StatelessWidget {
                         scope.onChanged(settings.copyWith(accentColor: accent)),
                   ),
               ],
-            ),
-          ),
-          _Control(
-            label: 'Gray color',
-            child: FortalSelect<FortalGrayColor>(
-              trigger: const RemixSelectTrigger(placeholder: 'Choose gray'),
-              selectedValue: settings.grayColor,
-              items: [
-                for (final gray in FortalGrayColor.values)
-                  RemixSelectItem(value: gray, label: enumLabel(gray)),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  scope.onChanged(settings.copyWith(grayColor: value));
-                }
-              },
             ),
           ),
           choice<FortalPanelBackground>(
@@ -203,8 +187,8 @@ class _AccentSwatch extends StatelessWidget {
           // A swatch uses the palette's mark fill and selected-mark ink.
           .color(FortalTokens.accentIndicator())
           .iconColor(const Color(0x00000000))
-          .onHovered(ToggleStyler().color(FortalTokens.accent10()))
-          .onPressed(ToggleStyler().color(FortalTokens.accent10()));
+          .onHovered(ToggleStyler().color(FortalTokens.accentMarkHover()))
+          .onPressed(ToggleStyler().color(FortalTokens.accentMarkHover()));
 
   final FortalAccentColor accent;
   final bool selected;

@@ -126,7 +126,7 @@ DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
             .wrap(
               _fortalDisclosureForeground(
                 color: FortalTokens.accent12(),
-                iconColor: FortalTokens.accent11(),
+                iconColor: FortalTokens.accentContent(),
               ),
             ),
       )
@@ -142,7 +142,7 @@ DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
             .wrap(
               _fortalDisclosureForeground(
                 color: FortalTokens.accent12(),
-                iconColor: FortalTokens.accent11(),
+                iconColor: FortalTokens.accentContent(),
               ),
             ),
       )

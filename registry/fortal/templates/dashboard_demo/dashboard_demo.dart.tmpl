@@ -223,7 +223,7 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
                               .color(
                                 _notificationsRead
                                     ? {{typePrefix}}Tokens.gray6()
-                                    : {{typePrefix}}Tokens.accent9(),
+                                    : {{typePrefix}}Tokens.accentIndicator(),
                               )
                               .borderRadius(.circular(4)),
                         ),
@@ -270,7 +270,7 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
                         style: BoxStyler()
                             .width(7)
                             .height(7)
-                            .color({{typePrefix}}Tokens.accent9())
+                            .color({{typePrefix}}Tokens.accentIndicator())
                             .borderRadius(.circular(4)),
                       ),
                     ),
@@ -514,7 +514,6 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         key: const ValueKey('dashboard-theme-scope'),
         mode: isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
         accent: _settings.accentColor,
-        gray: _settings.grayColor,
         panelBackground: _settings.panelBackground,
         radius: _settings.radius,
         scaling: _settings.scaling,

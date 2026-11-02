@@ -8,7 +8,6 @@ class FortalThemeSettings {
   const FortalThemeSettings({
     this.appearance = .system,
     this.accentColor = .orla,
-    this.grayColor = .orla,
     this.panelBackground = .solid,
     this.radius = .medium,
     this.scaling = .percent100,
@@ -16,7 +15,6 @@ class FortalThemeSettings {
 
   final FortalThemeMode appearance;
   final FortalAccentColor accentColor;
-  final FortalGrayColor grayColor;
   final FortalPanelBackground panelBackground;
   final FortalRadius radius;
   final FortalScaling scaling;
@@ -24,14 +22,12 @@ class FortalThemeSettings {
   FortalThemeSettings copyWith({
     FortalThemeMode? appearance,
     FortalAccentColor? accentColor,
-    FortalGrayColor? grayColor,
     FortalPanelBackground? panelBackground,
     FortalRadius? radius,
     FortalScaling? scaling,
   }) => FortalThemeSettings(
     appearance: appearance ?? this.appearance,
     accentColor: accentColor ?? this.accentColor,
-    grayColor: grayColor ?? this.grayColor,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
@@ -43,20 +39,13 @@ class FortalThemeSettings {
       other is FortalThemeSettings &&
           other.appearance == appearance &&
           other.accentColor == accentColor &&
-          other.grayColor == grayColor &&
           other.panelBackground == panelBackground &&
           other.radius == radius &&
           other.scaling == scaling;
 
   @override
-  int get hashCode => Object.hash(
-    appearance,
-    accentColor,
-    grayColor,
-    panelBackground,
-    radius,
-    scaling,
-  );
+  int get hashCode =>
+      Object.hash(appearance, accentColor, panelBackground, radius, scaling);
 }
 
 /// Provides live [FortalThemeSettings] to the dashboard demo subtree.

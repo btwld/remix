@@ -35,7 +35,9 @@ AvatarStyler uiAvatarStyle({
   AvatarStyler style = const AvatarStyler.create(),
 }) {
   final base = _uiAvatarBaseStyler(size, fallbackLength: fallbackLength);
-  final softContent = highContrast ? UiTokens.accent12() : UiTokens.accentA11();
+  final softContent = highContrast
+      ? UiTokens.accent12()
+      : UiTokens.accentContentAlpha();
   final solidContent = highContrast
       ? UiTokens.accent1()
       : UiTokens.accentContrast();
@@ -66,7 +68,7 @@ AvatarStyler _uiAvatarBaseStyler(
           style: fallbackText.mix(),
         ).fontWeight(UiTokens.fontWeightMedium()),
       )
-      .icon(.size(_uiAvatarIconSize(size)).color(UiTokens.accentA11()))
+      .icon(.size(_uiAvatarIconSize(size)).color(UiTokens.accentContentAlpha()))
       .size(dimension, dimension)
       .borderRadius(.all(_uiAvatarRadius(size)));
 }

@@ -68,7 +68,7 @@ ToggleStyler _{{valuePrefix}}ToggleGhostStyler(
 }) {
   final selectedContent = highContrast
       ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accent11();
+      : {{typePrefix}}Tokens.accentContent();
   return _{{valuePrefix}}ToggleBaseStyler(size)
       .color(const Color(0x00000000))
       .onHovered(ToggleStyler().color({{typePrefix}}Tokens.grayA3()))
@@ -91,7 +91,7 @@ ToggleStyler _{{valuePrefix}}ToggleOutlineStyler(
 }) {
   final selectedContent = highContrast
       ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accent11();
+      : {{typePrefix}}Tokens.accentContent();
   return _{{valuePrefix}}ToggleBaseStyler(size)
       .color(const Color(0x00000000))
       .border(

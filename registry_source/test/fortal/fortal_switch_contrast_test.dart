@@ -50,7 +50,7 @@ void main() {
                           : const Color(0xFFFFFFFF))
                     : (highContrast
                           ? tokens.accent.scale.step(12)
-                          : tokens.accent.scale.step(11));
+                          : tokens.accentContent);
                 final thumb = _color(resolved.style.thumb);
                 final ring = _border(resolved.style.thumb);
                 final track = Color.alphaBlend(
@@ -104,28 +104,29 @@ void main() {
     }
   }
 
-  testWidgets('default neutral dark selected thumb contrasts with limestone', (
-    tester,
-  ) async {
-    for (final pressed in [false, true]) {
-      final spec = await resolveInFortalTheme(
-        tester,
-        (context) {
-          expect(FortalTheme.of(context).brightness, Brightness.dark);
-          return fortalSwitchStyle().build(context).spec;
-        },
-        mode: .dark,
-        states: {WidgetState.selected, if (pressed) WidgetState.pressed},
-      );
-      expect(_color(spec.thumb), const Color(0xffffffff));
-      expect(_border(spec.thumb).color, const Color(0xff13181d));
-      expect(_border(spec.thumb).width, 2);
-      expect(
-        _color(spec.container),
-        pressed ? const Color(0xffffffff) : const Color(0xfffaf9f6),
-      );
-    }
-  });
+  testWidgets(
+    'default neutral dark selected thumb is outlined on the white track',
+    (tester) async {
+      for (final pressed in [false, true]) {
+        final spec = await resolveInFortalTheme(
+          tester,
+          (context) {
+            expect(FortalTheme.of(context).brightness, Brightness.dark);
+            return fortalSwitchStyle().build(context).spec;
+          },
+          mode: .dark,
+          states: {WidgetState.selected, if (pressed) WidgetState.pressed},
+        );
+        expect(_color(spec.thumb), const Color(0xffffffff));
+        expect(_border(spec.thumb).color, const Color(0xff111111));
+        expect(_border(spec.thumb).width, 2);
+        expect(
+          _color(spec.container),
+          pressed ? orla.dark.markHover : orla.dark.track,
+        );
+      }
+    },
+  );
 
   testWidgets(
     'base and state-specific thumb overrides follow variant precedence',

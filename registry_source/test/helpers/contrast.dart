@@ -16,7 +16,7 @@ double contrastRatio(Color first, Color second) {
 
 /// Contrast of [foreground] after src-over compositing onto [fill] onto [panel].
 ///
-/// Soft badges paint accentA11 (or accent12 when `highContrast: true`) over
+/// Soft badges paint accentContentAlpha (or accent12 when `highContrast: true`) over
 /// accentA3 over colorPanelSolid -- a badge sitting on a card.
 double compositedContrast({
   required Color foreground,

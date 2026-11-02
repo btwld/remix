@@ -92,6 +92,8 @@ void main() {
       'calcadao',
       'serra',
       'blackAlpha',
+      'acmeSlateNeutral',
+      'acmeNeutralPalettes',
     ]) {
       final result = _generate([
         '--name',

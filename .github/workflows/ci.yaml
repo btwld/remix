@@ -46,6 +46,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify pinned Fortal color source
+        working-directory: registry_source/tool/fortal_palettes/radix
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run check
       - run: dart run melos run ci:codegen
 
   flutter-tests:

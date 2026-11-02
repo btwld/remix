@@ -91,7 +91,7 @@ ProgressStyler _uiProgressSoftStyler(
           _uiProgressInsetRing(UiTokens.controlBorder()),
         ),
       )
-      .indicatorColor(highContrast ? UiTokens.accent12() : UiTokens.accent8());
+      .indicatorColor(highContrast ? UiTokens.accent12() : UiTokens.focus8());
 }
 
 ({double height, Radius radius}) _uiProgressMetrics(UiProgressSize size) =>

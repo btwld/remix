@@ -277,7 +277,7 @@ _InteractionStateStyles _softStateStyles({required bool highContrast}) => (
   idle: FortalBaseButtonStateStyle(
     foreground: highContrast
         ? FortalTokens.accent12()
-        : FortalTokens.accentA11(),
+        : FortalTokens.accentContentAlpha(),
     background: FortalTokens.accentA3(),
   ),
   hovered: FortalBaseButtonStateStyle(background: FortalTokens.accentA4()),
@@ -293,7 +293,7 @@ _InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
   idle: FortalBaseButtonStateStyle(
     foreground: highContrast
         ? FortalTokens.accent12()
-        : FortalTokens.accentA11(),
+        : FortalTokens.accentContentAlpha(),
     background: FortalTokens.accentSurface(),
     effects: RemixBoxEffectsMix.behindContent(
       fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
@@ -333,7 +333,7 @@ _InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
     idle: FortalBaseButtonStateStyle(
       foreground: highContrast
           ? FortalTokens.accent12()
-          : FortalTokens.accentA11(),
+          : FortalTokens.accentContentAlpha(),
       effects: effects,
     ),
     hovered: FortalBaseButtonStateStyle(
@@ -359,7 +359,7 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   idle: FortalBaseButtonStateStyle(
     foreground: highContrast
         ? FortalTokens.accent12()
-        : FortalTokens.accentA11(),
+        : FortalTokens.accentContentAlpha(),
     background: const Color(0x00000000),
   ),
   hovered: FortalBaseButtonStateStyle(background: FortalTokens.accentA3()),
@@ -373,21 +373,33 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
 
 /// Ordinary solid press: the labelled hover fill darkens under a light label
 /// and lightens under a dark ink, so the label keeps its contrast in both
-/// modes and for every palette, including custom ones.
+/// modes and for every palette, including custom ones. If lightening a bright
+/// hover returns to the idle fill, darken it instead to retain a visible press.
 const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
 
 Color _resolveSolidPressedFill(BuildContext context) {
   final label = FortalTokens.accentContrast.resolve(context);
   final fill = FortalTokens.accentSolid.resolve(context);
-  return _fortalFilteredColor(
-    FortalTokens.accentSolidHover.resolve(context),
-    label.computeLuminance() > fill.computeLuminance()
+  final hover = FortalTokens.accentSolidHover.resolve(context);
+  final lightLabel = label.computeLuminance() > fill.computeLuminance();
+  final pressed = _fortalFilteredColor(
+    hover,
+    lightLabel
         ? const [
             RemixCssColorFilterOperation.brightness(0.92),
             RemixCssColorFilterOperation.saturate(1.1),
           ]
         : const [RemixCssColorFilterOperation.brightness(1.08)],
   );
+  if (!lightLabel &&
+      (pressed.r - fill.r).abs() <= 2 / 255 &&
+      (pressed.g - fill.g).abs() <= 2 / 255 &&
+      (pressed.b - fill.b).abs() <= 2 / 255) {
+    return _fortalFilteredColor(hover, const [
+      RemixCssColorFilterOperation.brightness(0.92),
+    ]);
+  }
+  return pressed;
 }
 
 const _highContrastHoveredFill = ContextToken<Color>(

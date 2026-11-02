@@ -60,7 +60,6 @@ class FortalTheme extends StatelessWidget {
     this.mode,
     this.accent,
     this.accentPalette,
-    this.gray,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -79,7 +78,6 @@ class FortalTheme extends StatelessWidget {
 
   final FortalAccentColor? accent;
   final FortalColorTheme? accentPalette;
-  final FortalGrayColor? gray;
   final FortalPanelBackground? panelBackground;
   final FortalRadius? radius;
   final FortalScaling? scaling;
@@ -139,7 +137,6 @@ class FortalTheme extends StatelessWidget {
           accent: accent ?? config.accent,
           accentPalette:
               accentPalette ?? (accent == null ? config.accentPalette : null),
-          gray: gray ?? config.gray,
           brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,
           radius: radius ?? config.radius,
@@ -170,8 +167,7 @@ class FortalTheme extends StatelessWidget {
     Widget scoped = child;
     if (parent == null) {
       scoped = _fortalRootTextStyle(tokens: tokens, child: scoped);
-    } else if (parent.brightness != data.brightness ||
-        parent.gray != data.gray) {
+    } else if (parent.brightness != data.brightness) {
       scoped = _fortalRecolored(foreground, scoped);
     }
     Widget result = MixScope(
@@ -212,7 +208,6 @@ FortalThemeData _resolveFortalTheme(
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? FortalGrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

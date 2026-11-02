@@ -115,7 +115,7 @@ _fortalToastMetrics(FortalToastSize size) => switch (size) {
 };
 
 Color _fortalToastIntentColor(FortalToastIntent intent) => switch (intent) {
-  .accent => FortalTokens.accent11(),
+  .accent => FortalTokens.accentContent(),
   .neutral => FortalTokens.gray11(),
   .error => FortalTokens.error11(),
 };

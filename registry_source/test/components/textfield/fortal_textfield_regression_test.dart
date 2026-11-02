@@ -77,7 +77,7 @@ void main() {
     expect(spec.label.spec.style?.fontWeight, FontWeight.w500);
   });
 
-  testWidgets('soft inputs keep an accent-8 frame that disabled clears', (
+  testWidgets('soft inputs keep a fitted accent frame that disabled clears', (
     tester,
   ) async {
     for (final brightness in [Brightness.light, Brightness.dark]) {
@@ -102,7 +102,7 @@ void main() {
             ? [result.error8]
             : states.contains(WidgetState.disabled)
             ? <Color>[]
-            : [result.accentA8];
+            : [result.focus8];
         expect(
           [
             ...?result.spec.containerEffects?.overContent?.shadows.map(
@@ -309,7 +309,6 @@ Future<
     Color grayA10,
     Color accentA3,
     Color accentA5,
-    Color accentA8,
     Color accent12,
     Color focus8,
     Color focusA5,
@@ -341,7 +340,6 @@ _resolve(
     Color grayA10,
     Color accentA3,
     Color accentA5,
-    Color accentA8,
     Color accent12,
     Color focus8,
     Color focusA5,
@@ -381,7 +379,6 @@ _resolve(
               grayA7: MixScope.tokenOf(FortalTokens.grayA7, context),
               grayA10: MixScope.tokenOf(FortalTokens.grayA10, context),
               accentA3: MixScope.tokenOf(FortalTokens.accentA3, context),
-              accentA8: MixScope.tokenOf(FortalTokens.accentA8, context),
               accentA5: MixScope.tokenOf(FortalTokens.accentA5, context),
               accent12: MixScope.tokenOf(FortalTokens.accent12, context),
               focus8: MixScope.tokenOf(FortalTokens.focus8, context),

@@ -249,7 +249,10 @@ void main() {
       'token-default typography isolates every hostile ambient field',
       (tester) async {
         final gray12 = await _resolveToken(tester, FortalTokens.gray12);
-        final accentA11 = await _resolveToken(tester, FortalTokens.accentA11);
+        final accentContentAlpha = await _resolveToken(
+          tester,
+          FortalTokens.accentContentAlpha,
+        );
         final samples = Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -306,11 +309,11 @@ void main() {
         final expected = <String, (double, Color)>{
           'body copy': (16, gray12),
           'section heading': (24, gray12),
-          'soft code': (16 * 0.95 * 0.95, accentA11),
+          'soft code': (16 * 0.95 * 0.95, accentContentAlpha),
           'ghost code': (16 * 0.95, Colors.green),
           'command key': (16 * 0.75, gray12),
-          'inert link': (16, accentA11),
-          'actionable link': (16, accentA11),
+          'inert link': (16, accentContentAlpha),
+          'actionable link': (16, accentContentAlpha),
         };
         for (final entry in expected.entries) {
           final style = _renderedTextStyle(tester, entry.key);
@@ -592,9 +595,15 @@ void main() {
                 );
               case FortalCodeVariant.soft:
                 expect(fill, tokens.accentA3);
-                expect(fg, highContrast ? tokens.accent12 : tokens.accentA11);
+                expect(
+                  fg,
+                  highContrast ? tokens.accent12 : tokens.accentContentAlpha,
+                );
               case FortalCodeVariant.outline:
-                expect(fg, highContrast ? tokens.accent12 : tokens.accentA11);
+                expect(
+                  fg,
+                  highContrast ? tokens.accent12 : tokens.accentContentAlpha,
+                );
               case FortalCodeVariant.ghost:
                 // Upstream gates ghost's colour on an explicit accent, so an
                 // opt-out ghost inherits the ambient foreground.
@@ -657,7 +666,10 @@ void main() {
         ),
       );
       expect(_renderedTextStyle(tester, 'plain ghost').color, Colors.purple);
-      expect(_text(tester, 'accent ghost').style?.color, tokens.accentA11);
+      expect(
+        _text(tester, 'accent ghost').style?.color,
+        tokens.accentContentAlpha,
+      );
       expect(_text(tester, 'accent hc ghost').style?.color, tokens.accent12);
     });
 
@@ -769,9 +781,9 @@ void main() {
       tester,
     ) async {
       for (final brightness in Brightness.values) {
-        final accentA11 = await _resolveToken(
+        final accentContentAlpha = await _resolveToken(
           tester,
-          FortalTokens.accentA11,
+          FortalTokens.accentContentAlpha,
           brightness: brightness,
         );
         final accent12 = await _resolveToken(
@@ -796,7 +808,7 @@ void main() {
         );
         expect(
           _text(tester, 'plain-${brightness.name}').style?.color,
-          accentA11,
+          accentContentAlpha,
         );
         expect(_text(tester, 'high-${brightness.name}').style?.color, accent12);
       }
@@ -1166,7 +1178,10 @@ void main() {
     testWidgets('text and heading take the accent only when opted in', (
       tester,
     ) async {
-      final accentA11 = await _resolveToken(tester, FortalTokens.accentA11);
+      final accentContentAlpha = await _resolveToken(
+        tester,
+        FortalTokens.accentContentAlpha,
+      );
       final accent12 = await _resolveToken(tester, FortalTokens.accent12);
       final gray12 = await _resolveToken(tester, FortalTokens.gray12);
 
@@ -1192,11 +1207,11 @@ void main() {
 
       expect(_text(tester, 'neutral text').style?.color, gray12);
       expect(_text(tester, 'neutral hc text').style?.color, gray12);
-      expect(_text(tester, 'accent text').style?.color, accentA11);
+      expect(_text(tester, 'accent text').style?.color, accentContentAlpha);
       expect(_text(tester, 'accent hc text').style?.color, accent12);
       expect(_text(tester, 'neutral heading').style?.color, gray12);
       expect(_text(tester, 'neutral hc heading').style?.color, gray12);
-      expect(_text(tester, 'accent heading').style?.color, accentA11);
+      expect(_text(tester, 'accent heading').style?.color, accentContentAlpha);
       expect(_text(tester, 'accent hc heading').style?.color, accent12);
     });
 
@@ -1364,7 +1379,7 @@ Future<
     Color accentA7,
     Color accentA8,
     Color accentSolid,
-    Color accentA11,
+    Color accentContentAlpha,
     Color accentContrast,
   })
 >
@@ -1376,7 +1391,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
     Color accentA7,
     Color accentA8,
     Color accentSolid,
-    Color accentA11,
+    Color accentContentAlpha,
     Color accentContrast,
   })
   result;
@@ -1393,7 +1408,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
             accentA7: token(FortalTokens.accentA7),
             accentA8: token(FortalTokens.accentA8),
             accentSolid: token(FortalTokens.accentSolid),
-            accentA11: token(FortalTokens.accentA11),
+            accentContentAlpha: token(FortalTokens.accentContentAlpha),
             accentContrast: token(FortalTokens.accentContrast),
           );
           return const SizedBox.shrink();

@@ -59,7 +59,6 @@ class UiTheme extends StatelessWidget {
     this.mode,
     this.accent,
     this.accentPalette,
-    this.gray,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -78,7 +77,6 @@ class UiTheme extends StatelessWidget {
 
   final UiAccentColor? accent;
   final UiColorTheme? accentPalette;
-  final UiGrayColor? gray;
   final UiPanelBackground? panelBackground;
   final UiRadius? radius;
   final UiScaling? scaling;
@@ -138,7 +136,6 @@ class UiTheme extends StatelessWidget {
           accent: accent ?? config.accent,
           accentPalette:
               accentPalette ?? (accent == null ? config.accentPalette : null),
-          gray: gray ?? config.gray,
           brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,
           radius: radius ?? config.radius,
@@ -169,8 +166,7 @@ class UiTheme extends StatelessWidget {
     Widget scoped = child;
     if (parent == null) {
       scoped = _uiRootTextStyle(tokens: tokens, child: scoped);
-    } else if (parent.brightness != data.brightness ||
-        parent.gray != data.gray) {
+    } else if (parent.brightness != data.brightness) {
       scoped = _uiRecolored(foreground, scoped);
     }
     Widget result = MixScope(
@@ -208,7 +204,6 @@ UiThemeData _resolveUiTheme(UiThemeConfig config, {UiThemeData? parent}) {
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? UiGrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

@@ -8,7 +8,6 @@ class UiThemeSettings {
   const UiThemeSettings({
     this.appearance = .system,
     this.accentColor = .orla,
-    this.grayColor = .orla,
     this.panelBackground = .solid,
     this.radius = .medium,
     this.scaling = .percent100,
@@ -16,7 +15,6 @@ class UiThemeSettings {
 
   final UiThemeMode appearance;
   final UiAccentColor accentColor;
-  final UiGrayColor grayColor;
   final UiPanelBackground panelBackground;
   final UiRadius radius;
   final UiScaling scaling;
@@ -24,14 +22,12 @@ class UiThemeSettings {
   UiThemeSettings copyWith({
     UiThemeMode? appearance,
     UiAccentColor? accentColor,
-    UiGrayColor? grayColor,
     UiPanelBackground? panelBackground,
     UiRadius? radius,
     UiScaling? scaling,
   }) => UiThemeSettings(
     appearance: appearance ?? this.appearance,
     accentColor: accentColor ?? this.accentColor,
-    grayColor: grayColor ?? this.grayColor,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
@@ -43,20 +39,13 @@ class UiThemeSettings {
       other is UiThemeSettings &&
           other.appearance == appearance &&
           other.accentColor == accentColor &&
-          other.grayColor == grayColor &&
           other.panelBackground == panelBackground &&
           other.radius == radius &&
           other.scaling == scaling;
 
   @override
-  int get hashCode => Object.hash(
-    appearance,
-    accentColor,
-    grayColor,
-    panelBackground,
-    radius,
-    scaling,
-  );
+  int get hashCode =>
+      Object.hash(appearance, accentColor, panelBackground, radius, scaling);
 }
 
 /// Provides live [UiThemeSettings] to the dashboard demo subtree.

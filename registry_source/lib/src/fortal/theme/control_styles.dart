@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
-/// Fortal's focus ring: solid step 8, 2px wide, with a 2px gap.
+/// Fortal's focus ring: contrast-fitted focus8, 2px wide, with a 2px gap.
 /// Tokens resolve at the control, so nested themes and overrides work.
 /// The outline takes no layout space and never replaces the control's border.
 RemixBoxEffectsMix fortalFocusOutline() => RemixBoxEffectsMix(

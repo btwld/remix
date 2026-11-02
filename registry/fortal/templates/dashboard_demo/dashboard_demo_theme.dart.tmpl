@@ -8,7 +8,6 @@ class {{typePrefix}}ThemeSettings {
   const {{typePrefix}}ThemeSettings({
     this.appearance = .system,
     this.accentColor = .orla,
-    this.grayColor = .orla,
     this.panelBackground = .solid,
     this.radius = .medium,
     this.scaling = .percent100,
@@ -16,7 +15,6 @@ class {{typePrefix}}ThemeSettings {
 
   final {{typePrefix}}ThemeMode appearance;
   final {{typePrefix}}AccentColor accentColor;
-  final {{typePrefix}}GrayColor grayColor;
   final {{typePrefix}}PanelBackground panelBackground;
   final {{typePrefix}}Radius radius;
   final {{typePrefix}}Scaling scaling;
@@ -24,14 +22,12 @@ class {{typePrefix}}ThemeSettings {
   {{typePrefix}}ThemeSettings copyWith({
     {{typePrefix}}ThemeMode? appearance,
     {{typePrefix}}AccentColor? accentColor,
-    {{typePrefix}}GrayColor? grayColor,
     {{typePrefix}}PanelBackground? panelBackground,
     {{typePrefix}}Radius? radius,
     {{typePrefix}}Scaling? scaling,
   }) => {{typePrefix}}ThemeSettings(
     appearance: appearance ?? this.appearance,
     accentColor: accentColor ?? this.accentColor,
-    grayColor: grayColor ?? this.grayColor,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
@@ -43,20 +39,13 @@ class {{typePrefix}}ThemeSettings {
       other is {{typePrefix}}ThemeSettings &&
           other.appearance == appearance &&
           other.accentColor == accentColor &&
-          other.grayColor == grayColor &&
           other.panelBackground == panelBackground &&
           other.radius == radius &&
           other.scaling == scaling;
 
   @override
-  int get hashCode => Object.hash(
-    appearance,
-    accentColor,
-    grayColor,
-    panelBackground,
-    radius,
-    scaling,
-  );
+  int get hashCode =>
+      Object.hash(appearance, accentColor, panelBackground, radius, scaling);
 }
 
 /// Provides live [{{typePrefix}}ThemeSettings] to the dashboard demo subtree.

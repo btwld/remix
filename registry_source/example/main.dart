@@ -13,7 +13,6 @@ class FortalExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FortalTheme(
       accent: .ceu,
-      gray: .orla,
       mode: .light,
       child: WidgetsApp(
         color: const Color(0xFFF8FAFC),
@@ -37,7 +36,7 @@ class _FortalExampleScreenState extends State<FortalExampleScreen> {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: const Color(0xFFF8FAFC),
+      color: FortalTokens.colorBackground.resolve(context),
       child: SafeArea(
         child: Center(
           child: Padding(
