@@ -89,7 +89,7 @@ jobs:
       - run: dart run melos run ci:open-code:${{ matrix.preset }}
 
   open-code-icons:
-    name: Open-code Lucide icons
+    name: Open-code icon libraries
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
