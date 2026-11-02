@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from tests.geometry.paths import parse_svg
 from tools.evidence import report_directory, snapshot, stamp_report, verify_report, differences
-from source.restrictions import load_restrictions, usage_text, effective_catalog
+from source.restrictions import load_restrictions, usage_text, effective_catalog, write_usage_outputs
 
 
 class StrictSvgRegression(unittest.TestCase):
@@ -93,6 +93,16 @@ class RestrictionRegression(unittest.TestCase):
         self.assertIn(expected,(ROOT/'docs/usage-restrictions.md').read_text())
         warning_notes=re.search(r'<details data-review="warning">(.*?)</details>',html,re.S)[1]
         self.assertNotIn('contextual label recommended at other sizes',warning_notes)
+
+    def test_usage_markdown_has_one_final_newline(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            (root/'docs').mkdir()
+            (root/'packages/web').mkdir(parents=True)
+            write_usage_outputs(root,self.catalog,self.records)
+            generated=(root/'docs/usage-restrictions.md').read_bytes()
+        self.assertTrue(generated.endswith(b'|\n'),'expected the last table row, then one newline')
+        self.assertEqual(generated,(ROOT/'docs/usage-restrictions.md').read_bytes())
 
     def test_all_six_cells_have_visible_labels_and_exact_geometry(self):
         for n in (12,16,24):

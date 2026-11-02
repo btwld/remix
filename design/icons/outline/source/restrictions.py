@@ -76,7 +76,7 @@ def write_usage_outputs(root: Path, catalog: dict, restrictions: dict) -> None:
             for a, cell in appearances.items():
                 lines.append(f"| {n} | {a} | {'Required' if cell['visibleLabelRequired'] else 'No additional rule'} | {', '.join(cell['exceptionIds']) or 'None'} | `{cell['geometrySha256']}` |")
         lines += ['']
-    (root / 'docs/usage-restrictions.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
+    (root / 'docs/usage-restrictions.md').write_text('\n'.join(lines).rstrip()+'\n', encoding='utf-8')
     (root / 'packages/web/usage-data.mjs').write_text(
         '// GENERATED from catalog/restrictions.json.\nexport const usageRecords = '
         + json.dumps(data, separators=(',', ':')) + ';\n', encoding='utf-8')
