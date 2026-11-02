@@ -74,6 +74,13 @@ The unreleased preset drops classic control/card/inline variants without aliases
 keeps radius/scaling/appearance and high-contrast options, and defers full
 Fortaleza branding, Anton and cobogó patterns.
 
+2026-11-02 · Color-source update: use the pinned @radix-ui/colors 3.0.0 opaque
+and alpha scales in seven named accent/neutral combinations. A theme owns its
+neutral; remove independent gray configuration. Raw source scales remain exact,
+while Fortal's functional label, content, focus and mark roles retain its WCAG
+contrast contract. This replaces the seed-generated built-in color decision;
+geometry, behavior, custom brand generation and dedicated error red remain owned.
+
 ## HeroUI ports reference design over Remix (HeroUI ADR-0001, ADR-0002)
 
 2026-10-19 · Accepted; shared-API adoption recorded 2026-10-27 · [Reference evidence](registry_source/reference/heroui_3_2_6/README.md) · [Family map](registry_source/reference/heroui_3_2_6/families.json) · [Worksheets](registry_source/specs/heroui/)

@@ -46,8 +46,8 @@ void main() {
   });
 }
 
-/// Hovers [target] and checks the solid fill between `accent9` and
-/// `accent10` partway through each transition.
+/// Hovers [target] and checks the solid fill between `accentSolid` and
+/// `accentSolidHover` partway through each transition.
 Future<void> _expectHoverMotion(
   WidgetTester tester, {
   required Finder target,
@@ -55,8 +55,8 @@ Future<void> _expectHoverMotion(
 }) async {
   await tester.pumpAndSettle();
   final context = tester.element(target);
-  final idle = MixScope.tokenOf(FortalTokens.accent9, context);
-  final hovered = MixScope.tokenOf(FortalTokens.accent10, context);
+  final idle = MixScope.tokenOf(FortalTokens.accentSolid, context);
+  final hovered = MixScope.tokenOf(FortalTokens.accentSolidHover, context);
   expect(fill(), idle);
 
   final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);

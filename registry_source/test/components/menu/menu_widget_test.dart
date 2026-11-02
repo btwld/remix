@@ -69,7 +69,7 @@ void main() {
 
         final context = tester.element(find.text('Checked'));
         final highlighted = switch (variant) {
-          .solid => FortalTokens.accent9.resolve(context),
+          .solid => FortalTokens.accentSolid.resolve(context),
           .soft => FortalTokens.accentA4.resolve(context),
         };
         final submenuOpen = switch (variant) {
@@ -336,7 +336,7 @@ void main() {
       await tester.pump();
       expect(
         _menuRowColor(tester, 'View profile'),
-        FortalTokens.accent9.resolve(context),
+        FortalTokens.accentSolid.resolve(context),
       );
     },
   );

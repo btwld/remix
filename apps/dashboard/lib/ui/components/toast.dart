@@ -107,7 +107,7 @@ _uiToastMetrics(UiToastSize size) => switch (size) {
 };
 
 Color _uiToastIntentColor(UiToastIntent intent) => switch (intent) {
-  .accent => UiTokens.accent11(),
+  .accent => UiTokens.accentContent(),
   .neutral => UiTokens.gray11(),
   .error => UiTokens.error11(),
 };

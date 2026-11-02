@@ -276,13 +276,13 @@ enum _Preset {
 
   /// The resting foreground of a ghost control.
   Color ink(BuildContext context) => switch (this) {
-    .fortal => MixScope.tokenOf(FortalTokens.accentA11, context),
+    .fortal => MixScope.tokenOf(FortalTokens.accentContentAlpha, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.foreground, context),
   };
 
   /// The foreground under the pointer or a press.
   Color highlightedInk(BuildContext context) => switch (this) {
-    .fortal => MixScope.tokenOf(FortalTokens.accentA11, context),
+    .fortal => MixScope.tokenOf(FortalTokens.accentContentAlpha, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.accentForeground, context),
   };
 

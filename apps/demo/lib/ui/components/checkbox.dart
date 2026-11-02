@@ -157,7 +157,7 @@ CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
 
 CheckboxStyler _fortalCheckboxSoft(CheckboxStyler base, bool highContrast) {
   final selected = CheckboxStyler().indicatorColor(
-    highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+    highContrast ? FortalTokens.accent12() : FortalTokens.accentContentAlpha(),
   );
 
   return base
@@ -169,7 +169,7 @@ CheckboxStyler _fortalCheckboxSoft(CheckboxStyler base, bool highContrast) {
       // ring keeps a 3:1 boundary in every enabled state.
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+          fortalInsetSurface(strokes: [FortalTokens.focus8()]),
         ),
       )
       .onSelected(selected)

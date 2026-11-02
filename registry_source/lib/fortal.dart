@@ -11,7 +11,14 @@ library;
 export 'src/fortal/icons.dart';
 
 /// THEME
-export 'src/fortal/theme/fortal_colors.dart';
+export 'src/fortal/theme/fortal_colors.dart'
+    hide
+        fortalNeutralPalettes,
+        fortalGrayNeutral,
+        fortalSageNeutral,
+        fortalSlateNeutral,
+        fortalOliveNeutral,
+        fortalSandNeutral;
 export 'src/fortal/theme/palette.dart';
 export 'src/fortal/theme/theme.dart';
 export 'src/fortal/components/base_button.dart'

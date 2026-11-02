@@ -80,15 +80,13 @@ void main() {
               }
               expect(
                 iconColor,
-                soft
-                    ? colors.accent.scale.step(11)
-                    : colors.gray.scale.step(11),
+                soft ? colors.accentContent : colors.gray.scale.step(11),
                 reason: reason,
               );
               expect(
                 hint,
                 soft
-                    ? colors.accent.scale.alphaStep(11)
+                    ? colors.accentContentAlpha
                     : colors.gray.scale.alphaStep(11),
                 reason: reason,
               );

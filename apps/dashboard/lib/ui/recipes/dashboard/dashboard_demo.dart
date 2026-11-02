@@ -218,7 +218,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                               .color(
                                 _notificationsRead
                                     ? UiTokens.gray6()
-                                    : UiTokens.accent9(),
+                                    : UiTokens.accentIndicator(),
                               )
                               .borderRadius(.circular(4)),
                         ),
@@ -265,7 +265,7 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                         style: BoxStyler()
                             .width(7)
                             .height(7)
-                            .color(UiTokens.accent9())
+                            .color(UiTokens.accentIndicator())
                             .borderRadius(.circular(4)),
                       ),
                     ),
@@ -509,7 +509,6 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
         key: const ValueKey('dashboard-theme-scope'),
         mode: isDark ? UiThemeMode.dark : UiThemeMode.light,
         accent: _settings.accentColor,
-        gray: _settings.grayColor,
         panelBackground: _settings.panelBackground,
         radius: _settings.radius,
         scaling: _settings.scaling,

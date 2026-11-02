@@ -37,7 +37,7 @@ AvatarStyler fortalAvatarStyle({
   final base = _fortalAvatarBaseStyler(size, fallbackLength: fallbackLength);
   final softContent = highContrast
       ? FortalTokens.accent12()
-      : FortalTokens.accentA11();
+      : FortalTokens.accentContentAlpha();
   final solidContent = highContrast
       ? FortalTokens.accent1()
       : FortalTokens.accentContrast();
@@ -70,7 +70,11 @@ AvatarStyler _fortalAvatarBaseStyler(
           style: fallbackText.mix(),
         ).fontWeight(FortalTokens.fontWeightMedium()),
       )
-      .icon(.size(_fortalAvatarIconSize(size)).color(FortalTokens.accentA11()))
+      .icon(
+        .size(
+          _fortalAvatarIconSize(size),
+        ).color(FortalTokens.accentContentAlpha()),
+      )
       .size(dimension, dimension)
       .borderRadius(.all(_fortalAvatarRadius(size)));
 }

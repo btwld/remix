@@ -223,7 +223,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                               .color(
                                 _notificationsRead
                                     ? FortalTokens.gray6()
-                                    : FortalTokens.accent9(),
+                                    : FortalTokens.accentIndicator(),
                               )
                               .borderRadius(.circular(4)),
                         ),
@@ -270,7 +270,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                         style: BoxStyler()
                             .width(7)
                             .height(7)
-                            .color(FortalTokens.accent9())
+                            .color(FortalTokens.accentIndicator())
                             .borderRadius(.circular(4)),
                       ),
                     ),
@@ -514,7 +514,6 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
         key: const ValueKey('dashboard-theme-scope'),
         mode: isDark ? FortalThemeMode.dark : FortalThemeMode.light,
         accent: _settings.accentColor,
-        gray: _settings.grayColor,
         panelBackground: _settings.panelBackground,
         radius: _settings.radius,
         scaling: _settings.scaling,

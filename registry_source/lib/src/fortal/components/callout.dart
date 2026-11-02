@@ -22,7 +22,7 @@ CalloutStyler fortalCalloutStyle({
 }) {
   final contentColor = highContrast
       ? FortalTokens.accent12()
-      : FortalTokens.accentA11();
+      : FortalTokens.accentContentAlpha();
   final base = _fortalCalloutBaseStyler(
     size,
   ).iconColor(contentColor).textColor(contentColor);

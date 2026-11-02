@@ -1,7 +1,7 @@
 /// {{typePrefix}} computed tokens and functional color utilities.
 ///
 /// Implements computed role tokens (accent-contrast, accent-track, etc.) and
-/// background/overlay colors derived from {{typePrefix}}-owned palettes.
+/// background/overlay colors derived from the selected paired theme.
 ///
 /// Components should use these functional roles rather than raw color steps.
 library;
@@ -17,8 +17,14 @@ import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
-/// Computes solid focus ring color (accent step 8).
-Color computeFocus8({{typePrefix}}ColorScale accent) => accent.step(8);
+/// Fits the source step-8 focus color to the surfaces it must identify.
+Color computeFocus8({{typePrefix}}ColorScale accent, {List<Color>? surfaces}) =>
+    _fitForeground(
+      accent.step(8),
+      accent.step(12),
+      surfaces ?? [accent.step(1), accent.step(2)],
+      3.05,
+    );
 
 /// Computes translucent text selection color (accent alpha step 5).
 Color computeFocusA5({{typePrefix}}ColorScale accent) => accent.alphaStep(5);
@@ -28,7 +34,7 @@ Color computeFocusA8({{typePrefix}}ColorScale accent) => accent.alphaStep(8);
 
 /// Computes primary page background color.
 ///
-/// Both modes use Orla step 1, including the warm off-white light page.
+/// Uses step 1 of the neutral paired with the selected theme.
 Color computeColorBackground({{typePrefix}}ColorScale gray, {required bool isDark}) =>
     gray.step(1);
 
@@ -44,35 +50,89 @@ Color computeColorPanelSolid({{typePrefix}}ColorScale gray, {required bool isDar
 Color computeColorPanelTranslucent(
   {{typePrefix}}ColorScale gray, {
   required bool isDark,
-}) => gray.alphaStep(2);
+}) {
+  final page = gray.step(1), panel = gray.step(2);
+  final backgrounds = [page.r, page.g, page.b];
+  final channels = [panel.r, panel.g, panel.b];
+  var opacity = 0.0;
+  for (var i = 0; i < 3; i++) {
+    final background = backgrounds[i], channel = channels[i];
+    final needed = channel < background
+        ? (background - channel) / background
+        : channel > background
+        ? (channel - background) / (1 - background)
+        : 0.0;
+    opacity = math.max(opacity, needed);
+  }
+  if (opacity == 0) return const Color(0x00000000);
+  final alpha = (opacity * 255).ceil();
+  final a = alpha / 255;
+  int foreground(int i) => ((channels[i] - backgrounds[i] * (1 - a)) / a * 255)
+      .round()
+      .clamp(0, 255);
+  return Color.fromARGB(alpha, foreground(0), foreground(1), foreground(2));
+}
 
 /// Computes the neutral control surface color.
 ///
-/// Controls use the neutral step-2 surface in the active mode.
-Color computeColorSurface({required bool isDark}) =>
-    (isDark ? orla.dark : orla.light).scale.step(2);
+/// Controls use step 2 of the selected theme's paired neutral.
+Color computeColorSurface({{typePrefix}}ColorScale gray) => gray.step(2);
 
 /// Computes the neutral boundary of active empty controls.
 ///
 /// Unchecked checkboxes and radios, the off switch's track and thumb, and
 /// surface text inputs draw this line where it is the visual cue that a
-/// control is there. It keeps at least 3:1 against the page, the solid panel
-/// and the off track (gray alpha 3 over either): gray step 8 deepened toward
-/// step 11 in light mode, and step 7 lifted toward step 8 in dark mode.
-/// Disabled controls keep their quieter strokes.
+/// control is there. It fits source step 8 toward the strong neutral text tone
+/// until page, panel and off-track cues retain their 3:1 contrast requirement.
+/// The [isDark] argument remains for source compatibility; the scale carries
+/// its own appearance values.
 Color computeControlBorder({{typePrefix}}ColorScale gray, {required bool isDark}) =>
-    isDark
-    ? mixOklabPremultiplied(gray.step(7), gray.step(8), .7)
-    : mixOklabPremultiplied(gray.step(8), gray.step(11), .15);
+    _fitForeground(gray.step(8), gray.step(12), [
+      for (final surface in [gray.step(1), gray.step(2)]) ...[
+        surface,
+        Color.alphaBlend(gray.alphaStep(3), surface),
+      ],
+    ], 3.05);
+
+/// Least movement toward the strong source text tone that meets the role.
+/// Raw upstream scale and alpha steps remain untouched.
+Color _fitForeground(
+  Color start,
+  Color end,
+  List<Color> surfaces,
+  double floor,
+) {
+  bool passes(Color color) => surfaces.every((surface) {
+    final ink = Color.alphaBlend(color, surface).computeLuminance();
+    final background = surface.computeLuminance();
+    return (math.max(ink, background) + .05) /
+            (math.min(ink, background) + .05) >=
+        floor;
+  });
+  if (passes(start)) return start;
+  var low = 0.0, high = 1.0;
+  for (var i = 0; i < 12; i++) {
+    final middle = (low + high) / 2;
+    if (passes(mixOklabPremultiplied(start, end, middle))) {
+      high = middle;
+    } else {
+      low = middle;
+    }
+  }
+  return mixOklabPremultiplied(start, end, high);
+}
 
 /// Computes the ink of checks and radio dots on the accent's indicator.
 ///
 /// Marks need 3:1 on the fill they sit on, which is the indicator, not the
 /// labelled solid. White wherever it keeps 3:1 on the indicator; otherwise the
 /// palette's [{{typePrefix}}Color.contrast] when that keeps 3:1 there; otherwise
-/// Orla's dark ink, which always does where white cannot.
+/// a deep neutral fallback for hand-authored palettes.
 Color computeAccentIndicatorContrast({{typePrefix}}Color accent) =>
-    _markInk(accent.indicator, accent.contrast);
+    accent.markContrast != null &&
+        _keepsMarkContrast(accent.markContrast!, accent.indicator)
+    ? accent.markContrast!
+    : _markInk(accent.indicator, accent.contrast);
 
 /// Computes the outline of track-coloured shapes: light switch and slider
 /// thumbs, and the filled extent of a surface progress bar.
@@ -90,8 +150,14 @@ Color computeAccentThumbRing(
   List<Color>? surfaces,
 }) {
   final track = accent.track;
-  if (!_keepsMarkContrast(_white, track)) {
-    return _markInk(track, accent.contrast);
+  if (!_keepsMarkContrast(_white, track) ||
+      (accent.markContrast != null &&
+          !_keepsMarkContrast(_white, accent.markHover))) {
+    final ink = computeAccentIndicatorContrast(accent);
+    // Hand-authored palettes can give the indicator and track different fills.
+    return _keepsMarkContrast(ink, track)
+        ? ink
+        : _markInk(track, accent.contrast);
   }
   final clear =
       surfaces != null &&
@@ -104,7 +170,7 @@ const _white = Color(0xFFFFFFFF);
 Color _markInk(Color fill, Color supplied) {
   if (_keepsMarkContrast(_white, fill)) return _white;
   if (_keepsMarkContrast(supplied, fill)) return supplied;
-  return orla.dark.contrast;
+  return const Color(0xff13181d);
 }
 
 /// WCAG 2 contrast of at least 3:1, the non-text threshold.
@@ -292,6 +358,31 @@ class {{typePrefix}}ThemeColors {
   /// Ink of checks and radio dots on the accent's indicator.
   Color get accentIndicatorContrast => computeAccentIndicatorContrast(accent);
 
+  List<Color> get _contentSurfaces => [
+    for (var step = 1; step <= 5; step++) accent.scale.step(step),
+    for (final surface in [colorBackground, colorPanelSolid]) ...[
+      surface,
+      for (var step = 3; step <= 5; step++)
+        Color.alphaBlend(accent.scale.alphaStep(step), surface),
+    ],
+  ];
+
+  /// Accessible normal text across soft, surface and outline treatments.
+  Color get accentContent => _fitForeground(
+    accent.scale.step(11),
+    accent.scale.step(12),
+    _contentSurfaces,
+    4.6,
+  );
+
+  /// Retains upstream alpha text where it meets the same content contract.
+  Color get accentContentAlpha => _fitForeground(
+    accent.scale.alphaStep(11),
+    accentContent,
+    _contentSurfaces,
+    4.6,
+  );
+
   const {{typePrefix}}ThemeColors({
     required this.accent,
     required this.gray,
@@ -325,7 +416,7 @@ const Map<String, {{typePrefix}}ColorTheme> _accentThemesByName = {
 /// Resolves all computed tokens for a theme configuration.
 {{typePrefix}}ThemeColors resolve{{typePrefix}}Tokens({{typePrefix}}ThemeConfig theme) {
   final accentColor = theme.accent ?? {{typePrefix}}AccentColor.orla;
-  const grayTheme = orla;
+  final grayTheme = {{valuePrefix}}NeutralPalettes[accentColor.name]!;
   final accentTheme =
       theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
   final {{typePrefix}}Color accentRC = theme.isDark
@@ -354,13 +445,16 @@ const Map<String, {{typePrefix}}ColorTheme> _accentThemesByName = {
     gray,
     isDark: theme.isDark,
   );
-  final Color colorSurface = computeColorSurface(isDark: theme.isDark);
+  final Color colorSurface = computeColorSurface(gray);
   final Color colorOverlay = computeColorOverlay(isDark: theme.isDark);
   final Color shadowStroke = computeShadowStroke(gray, isDark: theme.isDark);
   final Color controlBorder = computeControlBorder(gray, isDark: theme.isDark);
 
   // Focus
-  final Color focus8 = computeFocus8(accent);
+  final Color focus8 = computeFocus8(
+    accent,
+    surfaces: [colorBackground, colorPanelSolid],
+  );
   final Color focusA5 = computeFocusA5(accent);
   final Color focusA8 = computeFocusA8(accent);
 

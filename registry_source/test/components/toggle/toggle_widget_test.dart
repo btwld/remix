@@ -58,7 +58,9 @@ void main() {
               );
               expect(
                 tester.widget<Text>(find.text('Bold')).style!.color,
-                color(selected ? FortalTokens.accent11 : FortalTokens.gray12),
+                color(
+                  selected ? FortalTokens.accentContent : FortalTokens.gray12,
+                ),
               );
               if (variant == FortalToggleVariant.outline) {
                 final border = decoration.border! as Border;

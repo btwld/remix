@@ -82,7 +82,7 @@ RadioStyler _{{valuePrefix}}RadioSurfaceStyler(
       )
       .indicator(
         .color(
-          {{typePrefix}}Tokens.accent9(),
+          {{typePrefix}}Tokens.accentIndicator(),
         ).borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
       )
       .onSelected(
@@ -132,12 +132,12 @@ RadioStyler _{{valuePrefix}}RadioSoftStyler(
       // ring keeps a 3:1 boundary in every enabled state.
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.focus8()]),
         ),
       )
       .indicator(
         .color(
-          highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent11(),
+          highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContent(),
         ).borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
       )
       .onSelected(
@@ -149,7 +149,7 @@ RadioStyler _{{valuePrefix}}RadioSoftStyler(
               .color(
                 highContrast
                     ? {{typePrefix}}Tokens.accent12()
-                    : {{typePrefix}}Tokens.accent11(),
+                    : {{typePrefix}}Tokens.accentContent(),
               ),
             ),
       )

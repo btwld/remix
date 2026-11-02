@@ -122,6 +122,44 @@ void main() {
     expect(contrastRatio(cream, fallback.buttonFill), greaterThan(4.5));
   });
 
+  testWidgets('independent indicator and track fills keep their own contrast', (
+    tester,
+  ) async {
+    const deep = Color(0xff005783);
+    final colors = FortalColor(
+      ceu.light.scale,
+      ceu.light.surface,
+      deep,
+      yellow,
+      white,
+      solid: deep,
+      solidHover: const Color(0xff00486c),
+    );
+    for (final dark in [false, true]) {
+      for (final state in [null, WidgetState.pressed]) {
+        final resolved = await resolve(
+          tester,
+          colors,
+          dark: dark,
+          state: state,
+        );
+        expect(resolved.check, white);
+        expect(
+          contrastRatio(resolved.check, resolved.checkFill),
+          greaterThanOrEqualTo(3),
+        );
+        expect(
+          [
+            contrastRatio(white, resolved.track),
+            contrastRatio(resolved.ring, resolved.track),
+          ].reduce((a, b) => a > b ? a : b),
+          greaterThanOrEqualTo(3),
+          reason: 'dark=$dark state=$state: the thumb must read on its track',
+        );
+      }
+    }
+  });
+
   testWidgets('five-argument palettes keep their labels on steps 9 and 10', (
     tester,
   ) async {

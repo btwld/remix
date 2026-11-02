@@ -34,7 +34,7 @@ BadgeStyler uiBadgeStyle({
           .labelColor(
             // Step 11 is Ui secondary text, not WCAG AA 4.5:1 on
             // accentA3 over colorPanelSolid. highContrast promotes accent12.
-            highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+            highContrast ? UiTokens.accent12() : UiTokens.accentContentAlpha(),
           ),
     .surface =>
       base
@@ -45,7 +45,7 @@ BadgeStyler uiBadgeStyle({
             ),
           )
           .labelColor(
-            highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+            highContrast ? UiTokens.accent12() : UiTokens.accentContentAlpha(),
           ),
     .outline =>
       base
@@ -60,7 +60,7 @@ BadgeStyler uiBadgeStyle({
             ),
           )
           .labelColor(
-            highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+            highContrast ? UiTokens.accent12() : UiTokens.accentContentAlpha(),
           ),
   }).merge(style);
 }

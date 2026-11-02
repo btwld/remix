@@ -36,7 +36,7 @@ void main() {
 
     final after = tester.widget<Icon>(toastIcon).color;
     final expected = MixScope.tokenOf(
-      UiTokens.accent11,
+      UiTokens.accentContent,
       tester.element(find.byType(UiDashboardDemo)),
     );
 

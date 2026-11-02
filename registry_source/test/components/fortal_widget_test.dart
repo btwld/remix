@@ -128,7 +128,7 @@ void main() {
     });
 
     testWidgets(
-      'non-solid FortalBadge variants use the low-contrast A11 label',
+      'non-solid FortalBadge variants use the accessible content label',
       (tester) async {
         final colors = resolveFortalTokens(const FortalThemeConfig());
 
@@ -145,43 +145,48 @@ void main() {
           final label = tester.widget<Text>(find.text(variant.name));
           expect(
             label.style?.color,
-            colors.accent.scale.alphaStep(11),
+            colors.accentContentAlpha,
             reason: '${variant.name} badges use the Fortal secondary text step',
           );
         }
       },
     );
 
-    testWidgets('default soft badge pairs accentA3 fill with accentA11 label', (
-      tester,
-    ) async {
-      late Color fill;
-      late Color label;
-      late Color accentA3;
-      late Color accentA11;
-      late Color accent12;
+    testWidgets(
+      'default soft badge pairs accentA3 fill with accentContentAlpha label',
+      (tester) async {
+        late Color fill;
+        late Color label;
+        late Color accentA3;
+        late Color accentContentAlpha;
+        late Color accent12;
 
-      await tester.pumpWidget(
-        FortalTheme(
-          child: WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            builder: (context, child) {
-              final spec = fortalBadgeStyle(variant: .soft).build(context).spec;
-              fill = (spec.container.spec.decoration as BoxDecoration).color!;
-              label = spec.label.spec.style!.color!;
-              accentA3 = FortalTokens.accentA3.resolve(context);
-              accentA11 = FortalTokens.accentA11.resolve(context);
-              accent12 = FortalTokens.accent12.resolve(context);
-              return const SizedBox.shrink();
-            },
+        await tester.pumpWidget(
+          FortalTheme(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              builder: (context, child) {
+                final spec = fortalBadgeStyle(
+                  variant: .soft,
+                ).build(context).spec;
+                fill = (spec.container.spec.decoration as BoxDecoration).color!;
+                label = spec.label.spec.style!.color!;
+                accentA3 = FortalTokens.accentA3.resolve(context);
+                accentContentAlpha = FortalTokens.accentContentAlpha.resolve(
+                  context,
+                );
+                accent12 = FortalTokens.accent12.resolve(context);
+                return const SizedBox.shrink();
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(fill, accentA3);
-      expect(label, accentA11);
-      expect(label, isNot(accent12));
-    });
+        expect(fill, accentA3);
+        expect(label, accentContentAlpha);
+        expect(label, isNot(accent12));
+      },
+    );
 
     testWidgets('highContrast soft badge promotes the label to accent12', (
       tester,
@@ -269,7 +274,7 @@ void main() {
               FortalThemeConfig(accent: accent, brightness: brightness),
             );
             final ratio = compositedContrast(
-              foreground: colors.accent.scale.alphaStep(11),
+              foreground: colors.accentContentAlpha,
               fill: colors.accent.scale.alphaStep(3),
               panel: colors.colorPanelSolid,
             );

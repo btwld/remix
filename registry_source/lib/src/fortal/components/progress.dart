@@ -94,7 +94,7 @@ ProgressStyler _fortalProgressSoftStyler(
         ),
       )
       .indicatorColor(
-        highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
+        highContrast ? FortalTokens.accent12() : FortalTokens.focus8(),
       );
 }
 

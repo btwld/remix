@@ -20,13 +20,11 @@ void main() {
         FortalAccentColor.values.map((value) => value.name),
         enums['accent']['values'],
       );
-      expect(FortalGrayColor.values.map((value) => value.name), ['orla']);
       for (final theme in [
         const FortalThemeData.light(),
         const FortalThemeData.dark(),
       ]) {
         expect(theme.accent.name, enums['accent']['default']);
-        expect(theme.gray.name, enums['gray']['default']);
         expect(theme.panelBackground.name, 'solid');
         expect(theme.radius.name, 'medium');
         expect(theme.scaling.name, 'percent100');
@@ -38,7 +36,6 @@ void main() {
   for (final dark in [false, true]) {
     final brightness = dark ? Brightness.dark : Brightness.light;
     test('${brightness.name}: page, panel, error and typography roles', () {
-      final neutral = dark ? orla.dark : orla.light;
       final errors = dark ? fortalError.dark : fortalError.light;
       // Error roles ignore every named accent and a custom brand palette.
       for (final theme in [
@@ -47,6 +44,9 @@ void main() {
         const FortalThemeData.light(accentPalette: caju),
         const FortalThemeData.light(accentPalette: fortalError),
       ]) {
+        final neutral = resolveFortalTokens(
+          theme.copyWith(brightness: brightness),
+        ).gray;
         final label = theme.accentPalette == null
             ? theme.accent.name
             : 'custom palette';

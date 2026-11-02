@@ -42,10 +42,10 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
     pendingStatus: IconStyler().color(UiTokens.gray9()).size(UiTokens.space4()),
     activeStatus: IconStyler()
-        .color(UiTokens.accent9())
+        .color(UiTokens.accentIndicator())
         .size(UiTokens.space4()),
     completedStatus: IconStyler()
-        .color(UiTokens.accent9())
+        .color(UiTokens.accentIndicator())
         .size(UiTokens.space4()),
   ).merge(style),
   disclosureStyle: uiDisclosureStyle(

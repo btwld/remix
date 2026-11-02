@@ -124,7 +124,7 @@ DisclosureStyler _uiDisclosureSoftStyler(UiDisclosureSize size) {
             .wrap(
               _uiDisclosureForeground(
                 color: UiTokens.accent12(),
-                iconColor: UiTokens.accent11(),
+                iconColor: UiTokens.accentContent(),
               ),
             ),
       )
@@ -140,7 +140,7 @@ DisclosureStyler _uiDisclosureSoftStyler(UiDisclosureSize size) {
             .wrap(
               _uiDisclosureForeground(
                 color: UiTokens.accent12(),
-                iconColor: UiTokens.accent11(),
+                iconColor: UiTokens.accentContent(),
               ),
             ),
       )

@@ -1,0 +1,726 @@
+{
+  "source": {
+    "package": "@radix-ui/colors",
+    "version": "3.0.0",
+    "integrity": "sha512-FUOsGBkHrYJwCSEtWRCIfQbZG7q1e6DgxCIOe1SUQzDe/7rXXeA47s8yCn6fuTNQAj1Zq4oTFi9Yjp3wzElcxg==",
+    "repository": "https://github.com/radix-ui/colors",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2021 Radix\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+    "colorSpace": "sRGB",
+    "alphaEncoding": "#RRGGBBAA; opaque alpha entries may use #RRGGBB"
+  },
+  "pairs": {
+    "orla": {
+      "accent": "gray",
+      "neutral": "gray"
+    },
+    "mar": {
+      "accent": "teal",
+      "neutral": "sage"
+    },
+    "ceu": {
+      "accent": "blue",
+      "neutral": "slate"
+    },
+    "serra": {
+      "accent": "gold",
+      "neutral": "olive"
+    },
+    "sol": {
+      "accent": "amber",
+      "neutral": "sand"
+    },
+    "duna": {
+      "accent": "brown",
+      "neutral": "sand"
+    },
+    "caju": {
+      "accent": "orange",
+      "neutral": "sand"
+    }
+  },
+  "scales": {
+    "amber": {
+      "light": {
+        "solid": [
+          "#fefdfb",
+          "#fefbe9",
+          "#fff7c2",
+          "#ffee9c",
+          "#fbe577",
+          "#f3d673",
+          "#e9c162",
+          "#e2a336",
+          "#ffc53d",
+          "#ffba18",
+          "#ab6400",
+          "#4f3422"
+        ],
+        "alpha": [
+          "#c0800004",
+          "#f4d10016",
+          "#ffde003d",
+          "#ffd40063",
+          "#f8cf0088",
+          "#eab5008c",
+          "#dc9b009d",
+          "#da8a00c9",
+          "#ffb300c2",
+          "#ffb300e7",
+          "#ab6400",
+          "#341500dd"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#16120c",
+          "#1d180f",
+          "#302008",
+          "#3f2700",
+          "#4d3000",
+          "#5c3d05",
+          "#714f19",
+          "#8f6424",
+          "#ffc53d",
+          "#ffd60a",
+          "#ffca16",
+          "#ffe7b3"
+        ],
+        "alpha": [
+          "#e63c0006",
+          "#fd9b000d",
+          "#fa820022",
+          "#fc820032",
+          "#fd8b0041",
+          "#fd9b0051",
+          "#ffab2567",
+          "#ffae3587",
+          "#ffc53d",
+          "#ffd60a",
+          "#ffca16",
+          "#ffe7b3"
+        ]
+      }
+    },
+    "blue": {
+      "light": {
+        "solid": [
+          "#fbfdff",
+          "#f4faff",
+          "#e6f4fe",
+          "#d5efff",
+          "#c2e5ff",
+          "#acd8fc",
+          "#8ec8f6",
+          "#5eb1ef",
+          "#0090ff",
+          "#0588f0",
+          "#0d74ce",
+          "#113264"
+        ],
+        "alpha": [
+          "#0080ff04",
+          "#008cff0b",
+          "#008ff519",
+          "#009eff2a",
+          "#0093ff3d",
+          "#0088f653",
+          "#0083eb71",
+          "#0084e6a1",
+          "#0090ff",
+          "#0086f0fa",
+          "#006dcbf2",
+          "#002359ee"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#0d1520",
+          "#111927",
+          "#0d2847",
+          "#003362",
+          "#004074",
+          "#104d87",
+          "#205d9e",
+          "#2870bd",
+          "#0090ff",
+          "#3b9eff",
+          "#70b8ff",
+          "#c2e6ff"
+        ],
+        "alpha": [
+          "#004df211",
+          "#1166fb18",
+          "#0077ff3a",
+          "#0075ff57",
+          "#0081fd6b",
+          "#0f89fd7f",
+          "#2a91fe98",
+          "#3094feb9",
+          "#0090ff",
+          "#3b9eff",
+          "#70b8ff",
+          "#c2e6ff"
+        ]
+      }
+    },
+    "brown": {
+      "light": {
+        "solid": [
+          "#fefdfc",
+          "#fcf9f6",
+          "#f6eee7",
+          "#f0e4d9",
+          "#ebdaca",
+          "#e4cdb7",
+          "#dcbc9f",
+          "#cea37e",
+          "#ad7f58",
+          "#a07553",
+          "#815e46",
+          "#3e332e"
+        ],
+        "alpha": [
+          "#aa550003",
+          "#aa550009",
+          "#a04b0018",
+          "#9b4a0026",
+          "#9f4d0035",
+          "#a04e0048",
+          "#a34e0060",
+          "#9f4a0081",
+          "#823c00a7",
+          "#723300ac",
+          "#522100b9",
+          "#140600d1"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#12110f",
+          "#1c1816",
+          "#28211d",
+          "#322922",
+          "#3e3128",
+          "#4d3c2f",
+          "#614a39",
+          "#7c5f46",
+          "#ad7f58",
+          "#b88c67",
+          "#dbb594",
+          "#f2e1ca"
+        ],
+        "alpha": [
+          "#91110002",
+          "#fba67c0c",
+          "#fcb58c19",
+          "#fbbb8a24",
+          "#fcb88931",
+          "#fdba8741",
+          "#ffbb8856",
+          "#ffbe8773",
+          "#feb87da8",
+          "#ffc18cb3",
+          "#fed1aad9",
+          "#feecd4f2"
+        ]
+      }
+    },
+    "gold": {
+      "light": {
+        "solid": [
+          "#fdfdfc",
+          "#faf9f2",
+          "#f2f0e7",
+          "#eae6db",
+          "#e1dccf",
+          "#d8d0bf",
+          "#cbc0aa",
+          "#b9a88d",
+          "#978365",
+          "#8c7a5e",
+          "#71624b",
+          "#3b352b"
+        ],
+        "alpha": [
+          "#55550003",
+          "#9d8a000d",
+          "#75600018",
+          "#6b4e0024",
+          "#60460030",
+          "#64440040",
+          "#63420055",
+          "#633d0072",
+          "#5332009a",
+          "#492d00a1",
+          "#362100b4",
+          "#130c00d4"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#121211",
+          "#1b1a17",
+          "#24231f",
+          "#2d2b26",
+          "#38352e",
+          "#444039",
+          "#544f46",
+          "#696256",
+          "#978365",
+          "#a39073",
+          "#cbb99f",
+          "#e8e2d9"
+        ],
+        "alpha": [
+          "#91911102",
+          "#f9e29d0b",
+          "#f8ecbb15",
+          "#ffeec41e",
+          "#feecc22a",
+          "#feebcb37",
+          "#ffedcd48",
+          "#fdeaca5f",
+          "#ffdba690",
+          "#fedfb09d",
+          "#fee7c6c8",
+          "#fef7ede7"
+        ]
+      }
+    },
+    "gray": {
+      "light": {
+        "solid": [
+          "#fcfcfc",
+          "#f9f9f9",
+          "#f0f0f0",
+          "#e8e8e8",
+          "#e0e0e0",
+          "#d9d9d9",
+          "#cecece",
+          "#bbbbbb",
+          "#8d8d8d",
+          "#838383",
+          "#646464",
+          "#202020"
+        ],
+        "alpha": [
+          "#00000003",
+          "#00000006",
+          "#0000000f",
+          "#00000017",
+          "#0000001f",
+          "#00000026",
+          "#00000031",
+          "#00000044",
+          "#00000072",
+          "#0000007c",
+          "#0000009b",
+          "#000000df"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#111111",
+          "#191919",
+          "#222222",
+          "#2a2a2a",
+          "#313131",
+          "#3a3a3a",
+          "#484848",
+          "#606060",
+          "#6e6e6e",
+          "#7b7b7b",
+          "#b4b4b4",
+          "#eeeeee"
+        ],
+        "alpha": [
+          "#00000000",
+          "#ffffff09",
+          "#ffffff12",
+          "#ffffff1b",
+          "#ffffff22",
+          "#ffffff2c",
+          "#ffffff3b",
+          "#ffffff55",
+          "#ffffff64",
+          "#ffffff72",
+          "#ffffffaf",
+          "#ffffffed"
+        ]
+      }
+    },
+    "olive": {
+      "light": {
+        "solid": [
+          "#fcfdfc",
+          "#f8faf8",
+          "#eff1ef",
+          "#e7e9e7",
+          "#dfe2df",
+          "#d7dad7",
+          "#cccfcc",
+          "#b9bcb8",
+          "#898e87",
+          "#7f847d",
+          "#60655f",
+          "#1d211c"
+        ],
+        "alpha": [
+          "#00550003",
+          "#00490007",
+          "#00200010",
+          "#00160018",
+          "#00180020",
+          "#00140028",
+          "#000f0033",
+          "#040f0047",
+          "#050f0078",
+          "#040e0082",
+          "#020a00a0",
+          "#010600e3"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#111210",
+          "#181917",
+          "#212220",
+          "#282a27",
+          "#2f312e",
+          "#383a36",
+          "#454843",
+          "#5c625b",
+          "#687066",
+          "#767d74",
+          "#afb5ad",
+          "#eceeec"
+        ],
+        "alpha": [
+          "#00000000",
+          "#f1f2f008",
+          "#f4f5f312",
+          "#f3fef21a",
+          "#f2fbf122",
+          "#f4faed2c",
+          "#f2fced3b",
+          "#edfdeb57",
+          "#ebfde766",
+          "#f0fdec74",
+          "#f6fef4b0",
+          "#fdfffded"
+        ]
+      }
+    },
+    "orange": {
+      "light": {
+        "solid": [
+          "#fefcfb",
+          "#fff7ed",
+          "#ffefd6",
+          "#ffdfb5",
+          "#ffd19a",
+          "#ffc182",
+          "#f5ae73",
+          "#ec9455",
+          "#f76b15",
+          "#ef5f00",
+          "#cc4e00",
+          "#582d1d"
+        ],
+        "alpha": [
+          "#c0400004",
+          "#ff8e0012",
+          "#ff9c0029",
+          "#ff91014a",
+          "#ff8b0065",
+          "#ff81007d",
+          "#ed6c008c",
+          "#e35f00aa",
+          "#f65e00ea",
+          "#ef5f00",
+          "#cc4e00",
+          "#431200e2"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#17120e",
+          "#1e160f",
+          "#331e0b",
+          "#462100",
+          "#562800",
+          "#66350c",
+          "#7e451d",
+          "#a35829",
+          "#f76b15",
+          "#ff801f",
+          "#ffa057",
+          "#ffe0c2"
+        ],
+        "alpha": [
+          "#ec360007",
+          "#fe6d000e",
+          "#fb6a0025",
+          "#ff590039",
+          "#ff61004a",
+          "#fd75045c",
+          "#ff832c75",
+          "#fe84389d",
+          "#fe6d15f7",
+          "#ff801f",
+          "#ffa057",
+          "#ffe0c2"
+        ]
+      }
+    },
+    "sage": {
+      "light": {
+        "solid": [
+          "#fbfdfc",
+          "#f7f9f8",
+          "#eef1f0",
+          "#e6e9e8",
+          "#dfe2e0",
+          "#d7dad9",
+          "#cbcfcd",
+          "#b8bcba",
+          "#868e8b",
+          "#7c8481",
+          "#5f6563",
+          "#1a211e"
+        ],
+        "alpha": [
+          "#00804004",
+          "#00402008",
+          "#002d1e11",
+          "#001f1519",
+          "#00180820",
+          "#00140d28",
+          "#00140a34",
+          "#000f0847",
+          "#00110b79",
+          "#00100a83",
+          "#000a07a0",
+          "#000805e5"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#101211",
+          "#171918",
+          "#202221",
+          "#272a29",
+          "#2e3130",
+          "#373b39",
+          "#444947",
+          "#5b625f",
+          "#63706b",
+          "#717d79",
+          "#adb5b2",
+          "#eceeed"
+        ],
+        "alpha": [
+          "#00000000",
+          "#f0f2f108",
+          "#f3f5f412",
+          "#f2fefd1a",
+          "#f1fbfa22",
+          "#edfbf42d",
+          "#edfcf73c",
+          "#ebfdf657",
+          "#dffdf266",
+          "#e5fdf674",
+          "#f4fefbb0",
+          "#fdfffeed"
+        ]
+      }
+    },
+    "sand": {
+      "light": {
+        "solid": [
+          "#fdfdfc",
+          "#f9f9f8",
+          "#f1f0ef",
+          "#e9e8e6",
+          "#e2e1de",
+          "#dad9d6",
+          "#cfceca",
+          "#bcbbb5",
+          "#8d8d86",
+          "#82827c",
+          "#63635e",
+          "#21201c"
+        ],
+        "alpha": [
+          "#55550003",
+          "#25250007",
+          "#20100010",
+          "#1f150019",
+          "#1f180021",
+          "#19130029",
+          "#19140035",
+          "#1915014a",
+          "#0f0f0079",
+          "#0c0c0083",
+          "#080800a1",
+          "#060500e3"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#111110",
+          "#191918",
+          "#222221",
+          "#2a2a28",
+          "#31312e",
+          "#3b3a37",
+          "#494844",
+          "#62605b",
+          "#6f6d66",
+          "#7c7b74",
+          "#b5b3ad",
+          "#eeeeec"
+        ],
+        "alpha": [
+          "#00000000",
+          "#f4f4f309",
+          "#f6f6f513",
+          "#fefef31b",
+          "#fbfbeb23",
+          "#fffaed2d",
+          "#fffbed3c",
+          "#fff9eb57",
+          "#fffae965",
+          "#fffdee73",
+          "#fffcf4b0",
+          "#fffffded"
+        ]
+      }
+    },
+    "slate": {
+      "light": {
+        "solid": [
+          "#fcfcfd",
+          "#f9f9fb",
+          "#f0f0f3",
+          "#e8e8ec",
+          "#e0e1e6",
+          "#d9d9e0",
+          "#cdced6",
+          "#b9bbc6",
+          "#8b8d98",
+          "#80838d",
+          "#60646c",
+          "#1c2024"
+        ],
+        "alpha": [
+          "#00005503",
+          "#00005506",
+          "#0000330f",
+          "#00002d17",
+          "#0009321f",
+          "#00002f26",
+          "#00062e32",
+          "#00083046",
+          "#00051d74",
+          "#00071b7f",
+          "#0007149f",
+          "#000509e3"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#111113",
+          "#18191b",
+          "#212225",
+          "#272a2d",
+          "#2e3135",
+          "#363a3f",
+          "#43484e",
+          "#5a6169",
+          "#696e77",
+          "#777b84",
+          "#b0b4ba",
+          "#edeef0"
+        ],
+        "alpha": [
+          "#00000000",
+          "#d8f4f609",
+          "#ddeaf814",
+          "#d3edf81d",
+          "#d9edfe25",
+          "#d6ebfd30",
+          "#d9edff40",
+          "#d9edff5d",
+          "#dfebfd6d",
+          "#e5edfd7b",
+          "#f1f7feb5",
+          "#fcfdffef"
+        ]
+      }
+    },
+    "teal": {
+      "light": {
+        "solid": [
+          "#fafefd",
+          "#f3fbf9",
+          "#e0f8f3",
+          "#ccf3ea",
+          "#b8eae0",
+          "#a1ded2",
+          "#83cdc1",
+          "#53b9ab",
+          "#12a594",
+          "#0d9b8a",
+          "#008573",
+          "#0d3d38"
+        ],
+        "alpha": [
+          "#00cc9905",
+          "#00aa800c",
+          "#00c69d1f",
+          "#00c39633",
+          "#00b49047",
+          "#00a6855e",
+          "#0099807c",
+          "#009783ac",
+          "#009e8ced",
+          "#009684f2",
+          "#008573",
+          "#00332df2"
+        ]
+      },
+      "dark": {
+        "solid": [
+          "#0d1514",
+          "#111c1b",
+          "#0d2d2a",
+          "#023b37",
+          "#084843",
+          "#145750",
+          "#1c6961",
+          "#207e73",
+          "#12a594",
+          "#0eb39e",
+          "#0bd8b6",
+          "#adf0dd"
+        ],
+        "alpha": [
+          "#00deab05",
+          "#12fbe60c",
+          "#00ffe61e",
+          "#00ffe92d",
+          "#00ffea3b",
+          "#1cffe84b",
+          "#2efde85f",
+          "#32ffe775",
+          "#13ffe49f",
+          "#0dffe0ae",
+          "#0afed5d6",
+          "#b8ffebef"
+        ]
+      }
+    }
+  }
+}

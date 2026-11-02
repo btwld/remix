@@ -17,7 +17,6 @@ class FortalButtonComprehensiveTest extends StatefulWidget {
 class _FortalButtonComprehensiveTestState
     extends State<FortalButtonComprehensiveTest> {
   FortalAccentColor _accent = FortalAccentColor.ceu;
-  FortalGrayColor _gray = FortalGrayColor.orla;
   Brightness _brightness = .light;
 
   @override
@@ -31,7 +30,6 @@ class _FortalButtonComprehensiveTestState
       ),
       builder: (context, child) => FortalTheme(
         accent: _accent,
-        gray: _gray,
         mode: _brightness == Brightness.dark ? .dark : .light,
         child: Overlay.wrap(
           child: RemixToastScope(style: fortalToastStyle(), child: child!),
@@ -39,11 +37,9 @@ class _FortalButtonComprehensiveTestState
       ),
       home: _ComprehensiveTestScreen(
         onAccentChanged: (accent) => setState(() => _accent = accent),
-        onGrayChanged: (gray) => setState(() => _gray = gray),
         onBrightnessChanged: (brightness) =>
             setState(() => _brightness = brightness),
         currentAccent: _accent,
-        currentGray: _gray,
         currentBrightness: _brightness,
       ),
       title: 'Fortal Button Comprehensive Test',
@@ -54,18 +50,14 @@ class _FortalButtonComprehensiveTestState
 class _ComprehensiveTestScreen extends StatelessWidget {
   const _ComprehensiveTestScreen({
     required this.onAccentChanged,
-    required this.onGrayChanged,
     required this.onBrightnessChanged,
     required this.currentAccent,
-    required this.currentGray,
     required this.currentBrightness,
   });
 
   final ValueChanged<FortalAccentColor> onAccentChanged;
-  final ValueChanged<FortalGrayColor> onGrayChanged;
   final ValueChanged<Brightness> onBrightnessChanged;
   final FortalAccentColor currentAccent;
-  final FortalGrayColor currentGray;
 
   final Brightness currentBrightness;
 
@@ -99,9 +91,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
               children: [
                 _ThemeControls(
                   accent: currentAccent,
-                  gray: currentGray,
                   onAccentChanged: onAccentChanged,
-                  onGrayChanged: onGrayChanged,
                 ),
                 const SizedBox(height: 24),
                 const Text(
@@ -126,7 +116,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
                 const _StateTestingSection(),
                 const SizedBox(height: 32),
                 const Text(
-                  'Accent Color Showcase - Solid Variant',
+                  'Theme Showcase - Solid Variant',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
@@ -141,78 +131,28 @@ class _ComprehensiveTestScreen extends StatelessWidget {
 }
 
 class _ThemeControls extends StatelessWidget {
-  const _ThemeControls({
-    required this.accent,
-    required this.gray,
-    required this.onAccentChanged,
-    required this.onGrayChanged,
-  });
+  const _ThemeControls({required this.accent, required this.onAccentChanged});
 
   final FortalAccentColor accent;
-  final FortalGrayColor gray;
   final ValueChanged<FortalAccentColor> onAccentChanged;
 
-  final ValueChanged<FortalGrayColor> onGrayChanged;
-
   @override
-  Widget build(BuildContext context) {
-    return FortalCard(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            const Text(
-              'Theme Configuration',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: FortalSelect<FortalAccentColor>(
-                    items: FortalAccentColor.values
-                        .map(
-                          (color) => RemixSelectItem(
-                            value: color,
-                            label: 'Accent: ${color.name}',
-                          ),
-                        )
-                        .toList(),
-                    selectedValue: accent,
-                    trigger: const RemixSelectTrigger(
-                      placeholder: 'Choose accent',
-                    ),
-                    onChanged: (value) =>
-                        value != null ? onAccentChanged(value) : null,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: FortalSelect<FortalGrayColor>(
-                    items: FortalGrayColor.values
-                        .map(
-                          (color) => RemixSelectItem(
-                            value: color,
-                            label: 'Gray: ${color.name}',
-                          ),
-                        )
-                        .toList(),
-                    selectedValue: gray,
-                    trigger: const RemixSelectTrigger(
-                      placeholder: 'Choose gray',
-                    ),
-                    onChanged: (value) =>
-                        value != null ? onGrayChanged(value) : null,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+  Widget build(BuildContext context) => FortalCard(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: FortalSelect<FortalAccentColor>(
+        items: [
+          for (final theme in FortalAccentColor.values)
+            RemixSelectItem(value: theme, label: theme.name),
+        ],
+        selectedValue: accent,
+        trigger: const RemixSelectTrigger(placeholder: 'Choose theme'),
+        onChanged: (value) {
+          if (value != null) onAccentChanged(value);
+        },
       ),
-    );
-  }
+    ),
+  );
 }
 
 class _AllVariantsSection extends StatelessWidget {
@@ -372,14 +312,7 @@ class _AccentShowcaseSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final popularAccents = [
-      FortalAccentColor.ceu,
-      FortalAccentColor.ceu,
-      FortalAccentColor.serra,
-      FortalAccentColor.caju,
-      FortalAccentColor.ceu,
-      FortalAccentColor.sol,
-    ];
+    const popularAccents = FortalAccentColor.values;
 
     return Wrap(
       spacing: 8,
@@ -388,7 +321,6 @@ class _AccentShowcaseSection extends StatelessWidget {
         // Create temporary scope to show the accent
         return FortalTheme(
           accent: accentColor,
-          gray: FortalGrayColor.orla,
 
           child: fortalButtonStyle(variant: .solid).call(
             label: accentColor.name,

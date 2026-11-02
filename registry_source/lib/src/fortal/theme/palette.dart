@@ -24,6 +24,8 @@ class FortalColor {
     this.contrast, {
     this._solid,
     this._solidHover,
+    this.markContrast,
+    this._markHover,
   });
 
   final FortalColorScale scale;
@@ -34,8 +36,16 @@ class FortalColor {
   /// Label colour on [solid] and [solidHover].
   final Color contrast;
 
+  /// Optional ink shared by the indicator's normal and hovered fills.
+  /// Source palettes with a brighter hover may need a deep hue for both.
+  final Color? markContrast;
+
   final Color? _solid;
   final Color? _solidHover;
+  final Color? _markHover;
+
+  /// Hovered or pressed mark/track fill; source step 10 unless supplied.
+  Color get markHover => _markHover ?? scale.step(10);
 
   /// Labelled solid fill; scale step 9 unless supplied.
   Color get solid => _solid ?? scale.step(9);

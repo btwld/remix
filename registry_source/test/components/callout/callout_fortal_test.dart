@@ -61,7 +61,7 @@ void main() {
       );
 
       expect(_color(soft.container), tokens.accentA3);
-      expect(soft.text.spec.style!.color, tokens.accentA11);
+      expect(soft.text.spec.style!.color, tokens.accentContentAlpha);
       expect(_color(surface.container), tokens.accentA2);
       expect(
         surface.containerEffects!.behindContent!.shadows.single.color,
@@ -105,7 +105,7 @@ Future<
     Color accentA3,
     Color accentA6,
     Color accentA7,
-    Color accentA11,
+    Color accentContentAlpha,
   })
 >
 _tokens(WidgetTester tester) async {
@@ -115,7 +115,7 @@ _tokens(WidgetTester tester) async {
     Color accentA3,
     Color accentA6,
     Color accentA7,
-    Color accentA11,
+    Color accentContentAlpha,
   })
   result;
   await tester.pumpWidget(
@@ -131,7 +131,7 @@ _tokens(WidgetTester tester) async {
             accentA3: token(FortalTokens.accentA3),
             accentA6: token(FortalTokens.accentA6),
             accentA7: token(FortalTokens.accentA7),
-            accentA11: token(FortalTokens.accentA11),
+            accentContentAlpha: token(FortalTokens.accentContentAlpha),
           );
           return const SizedBox.shrink();
         },

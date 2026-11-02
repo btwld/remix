@@ -1,0 +1,12 @@
+{
+  "name": "fortal-radix-colors-source",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "extract": "node extract.mjs",
+    "check": "node extract.mjs --check"
+  },
+  "devDependencies": {
+    "@radix-ui/colors": "3.0.0"
+  }
+}

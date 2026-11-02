@@ -6,7 +6,7 @@ import 'theme_data.dart';
 import 'tokens.dart';
 
 /// Establishes Fortal's body text and neutral foreground at the root.
-/// Nested scopes preserve the surrounding text run; mode changes recolor it.
+/// Nested scopes preserve text metrics; neutral foreground changes recolor it.
 Widget _fortalRootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
   required Widget child,
@@ -60,7 +60,6 @@ class FortalTheme extends StatelessWidget {
     this.mode,
     this.accent,
     this.accentPalette,
-    this.gray,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -79,7 +78,6 @@ class FortalTheme extends StatelessWidget {
 
   final FortalAccentColor? accent;
   final FortalColorTheme? accentPalette;
-  final FortalGrayColor? gray;
   final FortalPanelBackground? panelBackground;
   final FortalRadius? radius;
   final FortalScaling? scaling;
@@ -139,7 +137,6 @@ class FortalTheme extends StatelessWidget {
           accent: accent ?? config.accent,
           accentPalette:
               accentPalette ?? (accent == null ? config.accentPalette : null),
-          gray: gray ?? config.gray,
           brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,
           radius: radius ?? config.radius,
@@ -171,16 +168,16 @@ class FortalTheme extends StatelessWidget {
     if (parent == null) {
       scoped = _fortalRootTextStyle(tokens: tokens, child: scoped);
     } else if (parent.brightness != data.brightness ||
-        parent.gray != data.gray) {
+        MixScope.tokenOf(FortalTokens.gray12, context) != foreground) {
       scoped = _fortalRecolored(foreground, scoped);
     }
     Widget result = MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
       // Theme-root identity, not `hasBackground`, decides who owns the text
-      // run: a scope nested for its accent or scaling must leave the current
-      // run alone, while a root scope with `hasBackground: false` still
-      // establishes it.
+      // run: nested scopes preserve its metrics and only recolor when their
+      // neutral foreground changes. A root with `hasBackground: false` still
+      // establishes the run.
       child: scoped,
     );
     if (data.hasBackground) {
@@ -212,7 +209,6 @@ FortalThemeData _resolveFortalTheme(
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? FortalGrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

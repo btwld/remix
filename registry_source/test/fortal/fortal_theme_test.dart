@@ -15,14 +15,11 @@ void main() {
       'duna',
       'caju',
     ]);
-    expect(FortalGrayColor.values.map((value) => value.name), ['orla']);
   });
 
   test('legacy palette identifiers still resolve to the renamed palettes', () {
     // ignore: deprecated_member_use_from_same_package
     expect(FortalAccentColor.calcadao, FortalAccentColor.orla);
-    // ignore: deprecated_member_use_from_same_package
-    expect(FortalGrayColor.calcadao, FortalGrayColor.orla);
     // ignore: deprecated_member_use_from_same_package
     expect(identical(colors.calcadao, colors.orla), isTrue);
   });
@@ -138,7 +135,6 @@ void main() {
       FortalTheme(
         mode: .light,
         accent: .orla,
-        gray: .orla,
         child: WidgetsApp(
           color: const Color(0xFF000000),
           builder: (context, child) {

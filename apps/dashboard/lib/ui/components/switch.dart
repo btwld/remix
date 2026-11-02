@@ -92,7 +92,7 @@ SwitchStyler _uiSwitchSurfaceStyler(
             .trackColor(UiTokens.grayA4())
             .onSelected(
               SwitchStyler().trackColor(
-                highContrast ? UiTokens.accent12() : UiTokens.accent10(),
+                highContrast ? UiTokens.accent12() : UiTokens.accentMarkHover(),
               ),
             )
             .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer())),
@@ -195,7 +195,7 @@ BoxStyler _uiSwitchSelectedThumbStyler(bool highContrast) => highContrast
 
 /// Selected soft thumbs keep their accent content role on the tinted track.
 BoxStyler _uiSwitchSoftSelectedThumbStyler(bool highContrast) => BoxStyler()
-    .color(highContrast ? UiTokens.accent12() : UiTokens.accent11())
+    .color(highContrast ? UiTokens.accent12() : UiTokens.accentContent())
     .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())));
 
 /// A 1px inset track ring, or none when [color] is null.
