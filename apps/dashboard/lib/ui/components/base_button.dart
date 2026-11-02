@@ -272,7 +272,9 @@ _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
 
 _InteractionStateStyles _softStateStyles({required bool highContrast}) => (
   idle: UiBaseButtonStateStyle(
-    foreground: highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+    foreground: highContrast
+        ? UiTokens.accent12()
+        : UiTokens.accentContentAlpha(),
     background: UiTokens.accentA3(),
   ),
   hovered: UiBaseButtonStateStyle(background: UiTokens.accentA4()),
@@ -286,7 +288,9 @@ _InteractionStateStyles _softStateStyles({required bool highContrast}) => (
 
 _InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
   idle: UiBaseButtonStateStyle(
-    foreground: highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+    foreground: highContrast
+        ? UiTokens.accent12()
+        : UiTokens.accentContentAlpha(),
     background: UiTokens.accentSurface(),
     effects: RemixBoxEffectsMix.behindContent(
       uiInsetSurface(strokes: [UiTokens.accentA7()]),
@@ -324,7 +328,9 @@ _InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
 
   return (
     idle: UiBaseButtonStateStyle(
-      foreground: highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+      foreground: highContrast
+          ? UiTokens.accent12()
+          : UiTokens.accentContentAlpha(),
       effects: effects,
     ),
     hovered: UiBaseButtonStateStyle(
@@ -348,7 +354,9 @@ _InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
 
 _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
   idle: UiBaseButtonStateStyle(
-    foreground: highContrast ? UiTokens.accent12() : UiTokens.accentA11(),
+    foreground: highContrast
+        ? UiTokens.accent12()
+        : UiTokens.accentContentAlpha(),
     background: const Color(0x00000000),
   ),
   hovered: UiBaseButtonStateStyle(background: UiTokens.accentA3()),
@@ -362,21 +370,33 @@ _InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
 
 /// Ordinary solid press: the labelled hover fill darkens under a light label
 /// and lightens under a dark ink, so the label keeps its contrast in both
-/// modes and for every palette, including custom ones.
+/// modes and for every palette, including custom ones. If lightening a bright
+/// hover returns to the idle fill, darken it instead to retain a visible press.
 const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
 
 Color _resolveSolidPressedFill(BuildContext context) {
   final label = UiTokens.accentContrast.resolve(context);
   final fill = UiTokens.accentSolid.resolve(context);
-  return _uiFilteredColor(
-    UiTokens.accentSolidHover.resolve(context),
-    label.computeLuminance() > fill.computeLuminance()
+  final hover = UiTokens.accentSolidHover.resolve(context);
+  final lightLabel = label.computeLuminance() > fill.computeLuminance();
+  final pressed = _uiFilteredColor(
+    hover,
+    lightLabel
         ? const [
             RemixCssColorFilterOperation.brightness(0.92),
             RemixCssColorFilterOperation.saturate(1.1),
           ]
         : const [RemixCssColorFilterOperation.brightness(1.08)],
   );
+  if (!lightLabel &&
+      (pressed.r - fill.r).abs() <= 2 / 255 &&
+      (pressed.g - fill.g).abs() <= 2 / 255 &&
+      (pressed.b - fill.b).abs() <= 2 / 255) {
+    return _uiFilteredColor(hover, const [
+      RemixCssColorFilterOperation.brightness(0.92),
+    ]);
+  }
+  return pressed;
 }
 
 const _highContrastHoveredFill = ContextToken<Color>(

@@ -109,13 +109,22 @@ void main() {
     });
   }
 
-  test('non-luminous palettes carry white labels and white marks', () {
+  test('neutral and chromatic labels retain their contrasting mark policy', () {
     for (final MapEntry(key: name, value: palette) in palettes.entries) {
-      if (name == 'orla' || name == 'sol' || name == 'duna') continue;
+      if (name == 'sol') continue;
       for (final colors in [palette.light, palette.dark]) {
-        expect(colors.contrast, white, reason: name);
         expect(
-          contrastRatio(white, colors.indicator),
+          colors.contrast,
+          name == 'orla' && identical(colors, orla.dark)
+              ? const Color(0xff111111)
+              : white,
+          reason: name,
+        );
+        expect(
+          contrastRatio(
+            computeAccentIndicatorContrast(colors),
+            colors.indicator,
+          ),
           greaterThanOrEqualTo(3),
           reason: '$name mark',
         );

@@ -65,7 +65,7 @@ ToggleStyler _uiToggleGhostStyler(
 }) {
   final selectedContent = highContrast
       ? UiTokens.accent12()
-      : UiTokens.accent11();
+      : UiTokens.accentContent();
   return _uiToggleBaseStyler(size)
       .color(const Color(0x00000000))
       .onHovered(ToggleStyler().color(UiTokens.grayA3()))
@@ -88,7 +88,7 @@ ToggleStyler _uiToggleOutlineStyler(
 }) {
   final selectedContent = highContrast
       ? UiTokens.accent12()
-      : UiTokens.accent11();
+      : UiTokens.accentContent();
   return _uiToggleBaseStyler(size)
       .color(const Color(0x00000000))
       .border(

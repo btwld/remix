@@ -4,9 +4,14 @@ An independent, city-inspired design system for [Remix](https://pub.dev/packages
 
 This private workspace package is the analyzed authoring source for the
 application-owned `fortal` preset, not a published consumer package. It owns
-seven seed-generated OKLCH palettes, neutral Orla defaults, flat controls,
+seven paired Radix color themes, Orla defaults, flat controls,
 solid panels, a shared focus ring, and contrast-tested soft labels.
 Consumers install editable source with the CLI.
+
+Orla uses dark primary actions in light mode and white actions in dark mode,
+with matching selected-control roles. Its panels and secondary content retain
+the Radix gray hierarchy. Raw scales remain exact; this is Fortal's default
+primary-role policy, separate from explicit `highContrast` component variants.
 
 ## Installation
 
@@ -53,7 +58,7 @@ and sets default text and icon styles (`DefaultTextStyle` using `text3` and
 `IconTheme` using `gray12`). Fortal typography components (`FortalText`,
 `FortalCode`, `FortalKbd`, and `FortalLink`) resolve their defaults directly from
 active scope tokens. A nested scope updates design tokens for its subtree; when
-`brightness` or `gray` changes, it updates `DefaultTextStyle` and `IconTheme` to
+`brightness` changes, it updates `DefaultTextStyle` and `IconTheme` to
 the new `gray12` color while preserving font metrics. Transparent, non-accent
 `FortalCode.ghost` is an exception and inherits surrounding text color unless
 restyled.
@@ -161,10 +166,32 @@ import 'package:remix_ui_icons/icons_index.dart';
 final search = remixIconEntries.firstWhere((entry) => entry.name == 'search');
 ```
 
+## Paired theme colors
+
+Select only the Fortal theme; its neutral family follows automatically.
+The public option keeps the `accent:` spelling, for example `.mar`.
+There is no separate `gray:` option or `FortalGrayColor` enum.
+
+| Theme | Dart value | Radix accent | Paired neutral |
+| --- | --- | --- | --- |
+| Orla | `orla` | Gray | Gray |
+| Mar | `mar` | Teal | Sage |
+| Céu | `ceu` | Blue | Slate |
+| Serra | `serra` | Gold | Olive |
+| Sol | `sol` | Amber | Sand |
+| Duna | `duna` | Brown | Sand |
+| Caju | `caju` | Orange | Sand |
+
+The data comes from @radix-ui/colors 3.0.0, including the MIT notice in installed
+source. Raw steps remain exact; functional content, labelled fills, marks and
+focus roles retain Fortal's contrast contract. See the [Fortal guide](https://docs.page/btwld/remix/fortal)
+for light/dark swatches and migration details. A custom `accentPalette` inherits
+the selected named theme's neutral, defaulting to Orla.
+
 ## Soft variants and contrast
 
 Default `fortalBadgeStyle(variant: .soft)` pairs fill `accentA3` with label
-`accentA11`. All seven palettes meet WCAG AA 4.5:1 on soft fills in light and
+`accentContentAlpha`. All seven themes meet WCAG AA 4.5:1 on soft fills in light and
 dark mode, including compositing on the page and solid panels. The optional
 `highContrast: true` promotes the label to `accent12` for stronger emphasis;
 it is not required to make default soft labels readable.
@@ -220,7 +247,7 @@ final donut = PieChart(
 
 Fortal styles are built on a token system that includes:
 
-- **Colors**: seven generated 12-step OKLCH palettes, with Orla as accent and sole gray by default
+- **Colors**: seven paired 12-step Radix accent/neutral themes, with Orla as the default
 - **Spacing**: 9-step spacing scale
 - **Border Radius**: 6-step radius scale
 - **Shadows**: 6-level shadow system
@@ -296,7 +323,7 @@ ensuring horizontal alignment across scaling settings.
 `specs/fortal_catalog.json` owns the machine-readable API/test inventory.
 `dart run tool/check_fortal.dart` from the repository root checks that inventory.
 Palette/geometry/focus tests and the demo polish-board goldens protect the
-visual contract without an external fixture.
+visual contract; the pinned Radix snapshot checks exact source color data.
 
 Run `fvm flutter run -d chrome -t lib/polish_main.dart` in `apps/demo` for the
 39-family board: every size and variant, seven accents, both modes, a 4px

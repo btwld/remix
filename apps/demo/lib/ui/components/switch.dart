@@ -98,7 +98,7 @@ SwitchStyler _fortalSwitchSurfaceStyler(
               SwitchStyler().trackColor(
                 highContrast
                     ? FortalTokens.accent12()
-                    : FortalTokens.accent10(),
+                    : FortalTokens.accentMarkHover(),
               ),
             )
             .trackEffects(
@@ -219,7 +219,9 @@ BoxStyler _fortalSwitchSelectedThumbStyler(bool highContrast) => highContrast
 
 /// Selected soft thumbs keep their accent content role on the tinted track.
 BoxStyler _fortalSwitchSoftSelectedThumbStyler(bool highContrast) => BoxStyler()
-    .color(highContrast ? FortalTokens.accent12() : FortalTokens.accent11())
+    .color(
+      highContrast ? FortalTokens.accent12() : FortalTokens.accentContent(),
+    )
     .border(
       .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
     );

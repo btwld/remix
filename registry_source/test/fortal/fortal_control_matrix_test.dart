@@ -223,7 +223,9 @@ void main() {
                 isNot(resolved.tokens.gray.scale.step(9)),
               );
             } else {
-              expect(color, resolved.tokens.gray);
+              // Orla retains the neutral's raw scale, with stronger primary
+              // functional roles than the internal gray palette.
+              expect(color.scale, resolved.tokens.gray.scale);
             }
             // Labelled fills read the solid role; marks read the indicator.
             expect(
@@ -253,7 +255,7 @@ void main() {
             );
             expect(
               resolved.badge.label.spec.style?.color,
-              color.scale.alphaStep(11),
+              resolved.tokens.accentContentAlpha,
             );
           },
         );

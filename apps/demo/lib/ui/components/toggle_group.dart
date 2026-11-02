@@ -38,7 +38,7 @@ ToggleGroupStyler fortalToggleGroupStyle({
   };
   final selectedForeground = highContrast
       ? FortalTokens.accent12()
-      : FortalTokens.accent11();
+      : FortalTokens.accentContent();
 
   return ToggleGroupStyler(
     container: FlexBoxStyler(

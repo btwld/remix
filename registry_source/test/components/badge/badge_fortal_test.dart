@@ -111,7 +111,7 @@ void main() {
         );
 
         expect(_color(soft.container.spec), tokens.accentA3);
-        expect(soft.label.spec.style!.color, tokens.accentA11);
+        expect(soft.label.spec.style!.color, tokens.accentContentAlpha);
         expect(_color(solidHigh.container.spec), tokens.accent12);
         expect(solidHigh.label.spec.style!.color, tokens.accent1);
         expect(_color(surface.container.spec), tokens.accentSurface);
@@ -163,7 +163,7 @@ Future<
     Color accentA3,
     Color accentA6,
     Color accentA7,
-    Color accentA11,
+    Color accentContentAlpha,
     Color accentSurface,
     Color grayA11,
   })
@@ -175,7 +175,7 @@ _tokens(WidgetTester tester) async {
     Color accentA3,
     Color accentA6,
     Color accentA7,
-    Color accentA11,
+    Color accentContentAlpha,
     Color accentSurface,
     Color grayA11,
   })
@@ -194,7 +194,7 @@ _tokens(WidgetTester tester) async {
             accentA3: token(FortalTokens.accentA3),
             accentA6: token(FortalTokens.accentA6),
             accentA7: token(FortalTokens.accentA7),
-            accentA11: token(FortalTokens.accentA11),
+            accentContentAlpha: token(FortalTokens.accentContentAlpha),
             accentSurface: token(FortalTokens.accentSurface),
             grayA11: token(FortalTokens.grayA11),
           );

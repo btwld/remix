@@ -59,7 +59,7 @@ TextStyler fortalAccentForeground(
   TextStyler style, {
   required bool highContrast,
 }) => style.color(
-  highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+  highContrast ? FortalTokens.accent12() : FortalTokens.accentContentAlpha(),
 );
 
 /// Code, Kbd, and Link derive em-relative geometry from the resolved font size,

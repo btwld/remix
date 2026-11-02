@@ -158,9 +158,9 @@ TextFieldStyler _fortalApplySoftTextInput(TextFieldStyler base) => base
     )
     .textColor(FortalTokens.accent12())
     .text(.selectionColor(FortalTokens.accentA5()))
-    .onEnabled(.hintText(.color(FortalTokens.accentA11())))
+    .onEnabled(.hintText(.color(FortalTokens.accentContentAlpha())))
     // Base-level icon overrides remain available while enabled.
-    .wrap(.iconTheme(color: FortalTokens.accent11()))
+    .wrap(.iconTheme(color: FortalTokens.accentContent()))
     .color(FortalTokens.accentA3())
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -170,7 +170,7 @@ TextFieldStyler _fortalApplySoftTextInput(TextFieldStyler base) => base
     // the base so caller base overrides still win; disabled clears it.
     .containerEffects(
       RemixBoxEffectsMix.overContent(
-        fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+        fortalInsetSurface(strokes: [FortalTokens.focus8()]),
       ),
     )
     .onDisabled(

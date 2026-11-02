@@ -319,7 +319,6 @@ void main() {
       theme.settings.copyWith(
         appearance: UiThemeMode.dark,
         accentColor: .mar,
-        grayColor: .orla,
         panelBackground: .translucent,
         radius: .large,
         scaling: .percent110,
@@ -330,7 +329,6 @@ void main() {
     final scope = tester.widget<UiTheme>(find.byType(UiTheme));
     expect(scope.mode, UiThemeMode.dark);
     expect(scope.accent, UiAccentColor.mar);
-    expect(scope.gray, UiGrayColor.orla);
     expect(scope.panelBackground, UiPanelBackground.translucent);
     expect(scope.radius, UiRadius.large);
     expect(scope.scaling, UiScaling.percent110);

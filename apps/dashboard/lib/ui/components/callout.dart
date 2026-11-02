@@ -22,7 +22,7 @@ CalloutStyler uiCalloutStyle({
 }) {
   final contentColor = highContrast
       ? UiTokens.accent12()
-      : UiTokens.accentA11();
+      : UiTokens.accentContentAlpha();
   final base = _uiCalloutBaseStyler(
     size,
   ).iconColor(contentColor).textColor(contentColor);

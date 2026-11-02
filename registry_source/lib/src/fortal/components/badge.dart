@@ -38,7 +38,9 @@ BadgeStyler fortalBadgeStyle({
           .labelColor(
             // Step 11 is Fortal secondary text, not WCAG AA 4.5:1 on
             // accentA3 over colorPanelSolid. highContrast promotes accent12.
-            highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+            highContrast
+                ? FortalTokens.accent12()
+                : FortalTokens.accentContentAlpha(),
           ),
     .surface =>
       base
@@ -49,7 +51,9 @@ BadgeStyler fortalBadgeStyle({
             ),
           )
           .labelColor(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+            highContrast
+                ? FortalTokens.accent12()
+                : FortalTokens.accentContentAlpha(),
           ),
     .outline =>
       base
@@ -66,7 +70,9 @@ BadgeStyler fortalBadgeStyle({
             ),
           )
           .labelColor(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+            highContrast
+                ? FortalTokens.accent12()
+                : FortalTokens.accentContentAlpha(),
           ),
   }).merge(style);
 }

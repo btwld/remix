@@ -132,7 +132,7 @@ AccordionStyler _uiAccordionSoftStyler([UiAccordionSize size = .size2]) {
       )
       .trigger(.color(UiTokens.accent2()))
       .title(.color(UiTokens.accent12()))
-      .trailingIcon(.color(UiTokens.accent11()))
+      .trailingIcon(.color(UiTokens.accentContent()))
       .content(
         BoxStyler()
             .foregroundDecoration(

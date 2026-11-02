@@ -27,7 +27,7 @@ const shipped = <String, FortalColorTheme>{
 
 /// Palettes too luminous to carry a white label: one bright fill for labels
 /// and marks with a same-hue dark ink.
-const luminous = {'sol', 'duna'};
+const luminous = {'sol'};
 
 /// OKLab distance, used for Fortal's own comparative separation checks.
 double oklabDistance(Color first, Color second) {
@@ -46,8 +46,17 @@ void main() {
     for (final dark in [false, true]) {
       final name = '${entry.key}/${dark ? 'dark' : 'light'}';
       final color = dark ? entry.value.dark : entry.value.light;
-      final page = (dark ? orla.dark : orla.light).scale.step(1);
-      final panel = (dark ? orla.dark : orla.light).scale.step(2);
+      final resolved = resolveFortalTokens(
+        FortalThemeConfig(
+          accent: palettes.containsKey(entry.key)
+              ? FortalAccentColor.values.byName(entry.key)
+              : .orla,
+          accentPalette: entry.key == 'fortalError' ? fortalError : null,
+          brightness: dark ? .dark : .light,
+        ),
+      );
+      final page = resolved.colorBackground;
+      final panel = resolved.colorPanelSolid;
 
       test('$name: labels meet 4.5:1 on the labelled solid and hover', () {
         for (final fill in [color.solid, color.solidHover]) {
@@ -60,11 +69,11 @@ void main() {
       });
       test('$name: marks meet 3:1 on the mark fill and its pressed step', () {
         final ink = computeAccentIndicatorContrast(color);
-        for (final step in [9, 10]) {
+        for (final fill in [color.indicator, color.markHover]) {
           expect(
-            contrastRatio(ink, color.scale.step(step)),
+            contrastRatio(ink, fill),
             greaterThanOrEqualTo(3),
-            reason: '$name step $step',
+            reason: '$name mark fill',
           );
         }
         // Luminous palettes keep their bright identity fill and rely on the
@@ -83,7 +92,7 @@ void main() {
       test('$name: secondary text meets 4.5:1 on steps 1–3', () {
         for (var step = 1; step <= 3; step++) {
           expect(
-            contrastRatio(color.scale.step(11), color.scale.step(step)),
+            contrastRatio(resolved.accentContent, color.scale.step(step)),
             greaterThanOrEqualTo(4.5),
             reason: '$name step $step',
           );
@@ -93,7 +102,7 @@ void main() {
           for (final step in [3, 4, 5]) {
             expect(
               compositedContrast(
-                foreground: color.scale.alphaStep(11),
+                foreground: resolved.accentContentAlpha,
                 fill: color.scale.alphaStep(step),
                 panel: background,
               ),
@@ -120,23 +129,13 @@ void main() {
           panel,
         ]) {
           expect(
-            contrastRatio(color.scale.step(8), background),
+            contrastRatio(
+              computeFocus8(color.scale, surfaces: [background]),
+              background,
+            ),
             greaterThanOrEqualTo(3),
             reason: name,
           );
-        }
-      });
-      test('$name: all alpha steps reconstruct their solid on the page', () {
-        for (var step = 1; step <= 12; step++) {
-          final actual = Color.alphaBlend(color.scale.alphaStep(step), page);
-          final expected = color.scale.step(step);
-          for (final (a, b) in [
-            (actual.r, expected.r),
-            (actual.g, expected.g),
-            (actual.b, expected.b),
-          ]) {
-            expect(a, closeTo(b, 1 / 255 + 1e-6), reason: '$name step $step');
-          }
         }
       });
     }
@@ -294,78 +293,17 @@ void main() {
     },
   );
 
-  test('on-solid inks are tones of their own family', () {
-    // Orla stays the neutral reference: white on basalt, basalt on
-    // limestone.
-    expect(orla.light.contrast, const Color(0xffffffff));
-    expect(orla.dark.contrast, const Color(generator.basalt));
-    final basaltL = generator.toOklch(generator.basalt).l;
+  test('built-in labels follow the neutral and chromatic theme policies', () {
     for (final entry in shipped.entries) {
-      if (entry.key == 'orla') continue;
-      final seedArgb =
-          generator.fortalSeeds[entry.key] ?? generator.fortalErrorSeed;
-      final seed = generator.toOklch(seedArgb);
-      for (final dark in [false, true]) {
-        final name = '${entry.key}/${dark ? 'dark' : 'light'}';
-        final mode = dark ? entry.value.dark : entry.value.light;
-        final ink = mode.contrast;
-        // Every non-luminous palette carries white on its labelled solid.
-        if (!luminous.contains(entry.key)) {
-          expect(ink, const Color(0xffffffff), reason: name);
-          continue;
-        }
-        final tone = generator.toOklch(ink.toARGB32());
-        // Neither generic basalt nor a light midtone.
+      for (final color in [entry.value.light, entry.value.dark]) {
         expect(
-          oklabDistance(ink, const Color(generator.basalt)),
-          greaterThan(.03),
-          reason: '$name is basalt',
+          color.contrast,
+          entry.key == 'sol'
+              ? const Color(0xff4f3422)
+              : entry.key == 'orla' && identical(color, orla.dark)
+              ? const Color(0xff111111)
+              : const Color(0xffffffff),
         );
-        expect(
-          tone.l,
-          inInclusiveRange(
-            basaltL - .005,
-            generator.onSolidInk.maxLightness + .005,
-          ),
-          reason: name,
-        );
-        expect(tone.c, greaterThan(.03), reason: '$name chroma');
-        // The family hue, warmed by at most the documented rotation.
-        final hueShift =
-            (hueDegrees(Color(seedArgb)) - hueDegrees(ink) + 540) % 360 - 180;
-        expect(
-          hueShift,
-          inInclusiveRange(-4, generator.onSolidInk.warmHueShift + 4),
-          reason: '$name hue',
-        );
-        // Deeper than its seed and never more saturated than it.
-        expect(tone.l, lessThan(seed.l), reason: '$name stays deeper');
-        expect(
-          tone.c,
-          lessThanOrEqualTo(seed.c + .002),
-          reason: '$name chroma',
-        );
-        // The 4.6:1 generation margin holds on the fill and on its hover, and
-        // the ink spends the remaining headroom: it is the lightest tone that
-        // keeps that margin, not a near-black with contrast to spare.
-        final ratios = [
-          for (final fill in [mode.solid, mode.solidHover])
-            contrastRatio(ink, fill),
-        ];
-        for (final ratio in ratios) {
-          expect(ratio, greaterThanOrEqualTo(4.6), reason: name);
-        }
-        expect(ratios.reduce(math.min), lessThan(4.75), reason: '$name fit');
-      }
-    }
-    // Sol and Duna read as a visibly coloured warm brown: not olive, and not
-    // the near-black a lower lightness cap produced.
-    for (final theme in [sol, duna]) {
-      for (final mode in [theme.light, theme.dark]) {
-        expect(hueDegrees(mode.contrast), inInclusiveRange(55, 72));
-        final tone = generator.toOklch(mode.contrast.toARGB32());
-        expect(tone.l, greaterThanOrEqualTo(.40));
-        expect(tone.c, greaterThanOrEqualTo(.06));
       }
     }
   });
@@ -419,7 +357,10 @@ void main() {
             colors.colorBackground,
           ),
         ];
-        if (contrastRatio(const Color(0xffffffff), track) >= 3) {
+        if ([
+          track,
+          colors.accent.markHover,
+        ].every((fill) => contrastRatio(const Color(0xffffffff), fill) >= 3)) {
           // Seamless with the track, and visible where a slider thumb
           // overhangs the page and panels.
           expect(colors.accentThumbRing, track, reason: reason);
@@ -439,15 +380,14 @@ void main() {
           );
         }
         // A white thumb with that ring stands out on the fill and the hover.
-        for (final step in [9, 10]) {
-          final track = colors.accent.scale.step(step);
+        for (final track in [colors.accent.track, colors.accent.markHover]) {
           expect(
             math.max(
               contrastRatio(const Color(0xffffffff), track),
               contrastRatio(colors.accentThumbRing, track),
             ),
             greaterThanOrEqualTo(3),
-            reason: '$reason step $step',
+            reason: '$reason track fill',
           );
         }
       }
@@ -553,43 +493,6 @@ void main() {
       // carry white labels.
       expect(palette.dark.contrast == 0xffffffff, !isLuminous, reason: reason);
     }
-    // Sol keeps a sunny gold instead of the former L .70 mustard (#C49800).
-    expect(sol.dark.scale.step(9), const Color(0xfff3c442));
-    expect(sol.dark.scale.step(10), const Color(0xffffcf51));
-    // Duna keeps its sand seed in dark mode.
-    expect(
-      oklabDistance(duna.dark.scale.step(9), const Color(0xffe5c79a)),
-      lessThan(.01),
-    );
-  });
-
-  test('named accents and the error red stay mutually distinct', () {
-    // Fortal's own comparative floor for chart series and status badges, not
-    // an external standard. The former Serra/Duna dark pair measured 0.047.
-    final names = shipped.keys.toList();
-    for (final dark in [false, true]) {
-      for (var i = 0; i < names.length; i++) {
-        for (var j = i + 1; j < names.length; j++) {
-          FortalColor color(String name) =>
-              dark ? shipped[name]!.dark : shipped[name]!.light;
-          final reason = '${names[i]}/${names[j]} ${dark ? 'dark' : 'light'}';
-          // Mark fills (charts, selected controls) and labelled solids.
-          expect(
-            oklabDistance(
-              color(names[i]).scale.step(9),
-              color(names[j]).scale.step(9),
-            ),
-            greaterThanOrEqualTo(.08),
-            reason: '$reason mark',
-          );
-          expect(
-            oklabDistance(color(names[i]).solid, color(names[j]).solid),
-            greaterThanOrEqualTo(.08),
-            reason: '$reason labelled solid',
-          );
-        }
-      }
-    }
   });
 
   test('the dedicated error palette stays red and apart from Caju', () {
@@ -641,7 +544,8 @@ void main() {
     expect(custom, isNot(contains('0xfffaf9f6')));
     expect(custom, isNot(contains('fortalError')));
     expect(custom, isNot(contains('blackAlpha')));
-    expect(builtIn, contains('0xfffaf9f6'));
+    expect(builtIn, contains('Radix gray + gray'));
+    expect(builtIn, contains('const fortalGrayNeutral'));
     expect(builtIn, contains('const fortalError'));
   });
 

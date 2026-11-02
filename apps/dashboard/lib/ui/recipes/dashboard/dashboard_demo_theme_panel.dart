@@ -57,7 +57,7 @@ class UiThemePanel extends StatelessWidget {
             apply: (value) => settings.copyWith(appearance: value),
           ),
           _Control(
-            label: 'Accent color',
+            label: 'Theme',
             child: WrapBox(
               style: WrapBoxStyler().spacing(8).runSpacing(8),
               children: [
@@ -70,22 +70,6 @@ class UiThemePanel extends StatelessWidget {
                         scope.onChanged(settings.copyWith(accentColor: accent)),
                   ),
               ],
-            ),
-          ),
-          _Control(
-            label: 'Gray color',
-            child: UiSelect<UiGrayColor>(
-              trigger: const RemixSelectTrigger(placeholder: 'Choose gray'),
-              selectedValue: settings.grayColor,
-              items: [
-                for (final gray in UiGrayColor.values)
-                  RemixSelectItem(value: gray, label: enumLabel(gray)),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  scope.onChanged(settings.copyWith(grayColor: value));
-                }
-              },
             ),
           ),
           choice<UiPanelBackground>(
@@ -202,8 +186,8 @@ class _AccentSwatch extends StatelessWidget {
           // A swatch uses the palette's mark fill and selected-mark ink.
           .color(UiTokens.accentIndicator())
           .iconColor(const Color(0x00000000))
-          .onHovered(ToggleStyler().color(UiTokens.accent10()))
-          .onPressed(ToggleStyler().color(UiTokens.accent10()));
+          .onHovered(ToggleStyler().color(UiTokens.accentMarkHover()))
+          .onPressed(ToggleStyler().color(UiTokens.accentMarkHover()));
 
   final UiAccentColor accent;
   final bool selected;

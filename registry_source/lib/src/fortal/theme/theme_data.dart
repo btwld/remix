@@ -11,7 +11,8 @@ import 'palette.dart';
 import 'theme_scope.dart' show FortalTheme;
 import 'tokens.dart';
 
-/// Fortal palettes, named for the landscapes and coastal materials. Error
+/// Paired Fortal themes, named for Fortaleza landscapes and coastal materials.
+/// Each choice owns its accent and subtly tinted neutral scales. Error
 /// roles use a dedicated red palette that is not a selectable accent.
 enum FortalAccentColor {
   orla,
@@ -21,14 +22,6 @@ enum FortalAccentColor {
   sol,
   duna,
   caju;
-
-  @Deprecated('Use orla instead.')
-  static const calcadao = orla;
-}
-
-/// The neutral palette. The enum leaves room for future neutral families.
-enum FortalGrayColor {
-  orla;
 
   @Deprecated('Use orla instead.')
   static const calcadao = orla;
@@ -64,7 +57,6 @@ class FortalThemeConfig {
   const FortalThemeConfig({
     this.accent,
     this.accentPalette,
-    this.gray,
     this.brightness,
     this.panelBackground,
     this.radius,
@@ -76,7 +68,6 @@ class FortalThemeConfig {
 
   /// Optional seed-generated brand palette, overriding the named accent.
   final FortalColorTheme? accentPalette;
-  final FortalGrayColor? gray;
   final Brightness? brightness;
   final FortalPanelBackground? panelBackground;
   final FortalRadius? radius;
@@ -88,7 +79,6 @@ class FortalThemeConfig {
   FortalThemeConfig copyWith({
     FortalAccentColor? accent,
     FortalColorTheme? accentPalette,
-    FortalGrayColor? gray,
     Brightness? brightness,
     FortalPanelBackground? panelBackground,
     FortalRadius? radius,
@@ -98,7 +88,6 @@ class FortalThemeConfig {
     accent: accent ?? this.accent,
     accentPalette:
         accentPalette ?? (accent == null ? this.accentPalette : null),
-    gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
@@ -112,7 +101,6 @@ class FortalThemeConfig {
       other is FortalThemeConfig &&
           accent == other.accent &&
           accentPalette == other.accentPalette &&
-          gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
           radius == other.radius &&
@@ -123,7 +111,6 @@ class FortalThemeConfig {
   int get hashCode => Object.hash(
     accent,
     accentPalette,
-    gray,
     brightness,
     panelBackground,
     radius,
@@ -138,7 +125,6 @@ class FortalThemeData extends FortalThemeConfig {
   const FortalThemeData({
     required FortalAccentColor super.accent,
     super.accentPalette,
-    required FortalGrayColor super.gray,
     required Brightness super.brightness,
     required FortalPanelBackground super.panelBackground,
     required FortalRadius super.radius,
@@ -150,7 +136,6 @@ class FortalThemeData extends FortalThemeConfig {
   const FortalThemeData.light({
     FortalAccentColor accent = FortalAccentColor.orla,
     FortalColorTheme? accentPalette,
-    FortalGrayColor gray = FortalGrayColor.orla,
     FortalPanelBackground panelBackground = FortalPanelBackground.solid,
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
@@ -158,7 +143,6 @@ class FortalThemeData extends FortalThemeConfig {
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
-         gray: gray,
          brightness: Brightness.light,
          panelBackground: panelBackground,
          radius: radius,
@@ -170,7 +154,6 @@ class FortalThemeData extends FortalThemeConfig {
   const FortalThemeData.dark({
     FortalAccentColor accent = FortalAccentColor.orla,
     FortalColorTheme? accentPalette,
-    FortalGrayColor gray = FortalGrayColor.orla,
     FortalPanelBackground panelBackground = FortalPanelBackground.solid,
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
@@ -178,7 +161,6 @@ class FortalThemeData extends FortalThemeConfig {
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
-         gray: gray,
          brightness: Brightness.dark,
          panelBackground: panelBackground,
          radius: radius,
@@ -188,8 +170,6 @@ class FortalThemeData extends FortalThemeConfig {
 
   @override
   FortalAccentColor get accent => super.accent!;
-  @override
-  FortalGrayColor get gray => super.gray!;
   @override
   Brightness get brightness => super.brightness!;
   @override
@@ -208,7 +188,6 @@ class FortalThemeData extends FortalThemeConfig {
   FortalThemeData copyWith({
     FortalAccentColor? accent,
     FortalColorTheme? accentPalette,
-    FortalGrayColor? gray,
     Brightness? brightness,
     FortalPanelBackground? panelBackground,
     FortalRadius? radius,
@@ -218,7 +197,6 @@ class FortalThemeData extends FortalThemeConfig {
     accent: accent ?? this.accent,
     accentPalette:
         accentPalette ?? (accent == null ? this.accentPalette : null),
-    gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
@@ -232,7 +210,6 @@ class FortalThemeData extends FortalThemeConfig {
       other is FortalThemeData &&
           accent == other.accent &&
           accentPalette == other.accentPalette &&
-          gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
           radius == other.radius &&
@@ -243,7 +220,6 @@ class FortalThemeData extends FortalThemeConfig {
   int get hashCode => Object.hash(
     accent,
     accentPalette,
-    gray,
     brightness,
     panelBackground,
     radius,
@@ -704,9 +680,12 @@ Map<ColorToken, Color> _accentColorTokens(FortalThemeColors tokens) {
     FortalTokens.accentSurface: tokens.accent.surface,
     FortalTokens.accentIndicator: tokens.accent.indicator,
     FortalTokens.accentTrack: tokens.accent.track,
+    FortalTokens.accentMarkHover: tokens.accent.markHover,
     FortalTokens.accentContrast: tokens.accent.contrast,
     FortalTokens.accentSolid: tokens.accent.solid,
     FortalTokens.accentSolidHover: tokens.accent.solidHover,
+    FortalTokens.accentContent: tokens.accentContent,
+    FortalTokens.accentContentAlpha: tokens.accentContentAlpha,
     FortalTokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
     FortalTokens.focus8: tokens.focus8,
     FortalTokens.focusA5: tokens.focusA5,

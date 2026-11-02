@@ -22,7 +22,7 @@ final _retiredFortalAccents = <(RegExp, String)>[
       r'purple|violet|iris|indigo|blue|cyan|teal|jade|green|grass|brown|orange|'
       r'sky|mint|lime|yellow|amber|gold|bronze)\b',
     ),
-    'retired Radix accent; use orla, mar, ceu, serra, sol, duna or caju',
+    'retired Radix accent name; use orla, mar, ceu, serra, sol, duna or caju',
   ),
 ];
 
@@ -152,7 +152,7 @@ final _retiredApis = <(RegExp, String)>[
   ..._retiredFortalAccents,
   (
     RegExp(r'\bRadixColor\b|\bradix_colors\b'),
-    'retired Radix color data; Fortal generates its own palettes',
+    'retired Radix color API; select a named Fortal theme',
   ),
   (
     RegExp(
@@ -237,7 +237,7 @@ const _consumerDocumentationFiles = <String>[
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
   (
     RegExp(r'Radix[- ]Themes[- ]inspired|Radix-shaped', caseSensitive: false),
-    'stale claim that Fortal follows Radix; it is an independent design system',
+    'stale claim that Fortal follows Radix Themes; it adopts Radix color data only',
   ),
   (
     RegExp(r'one enum-based constructor', caseSensitive: false),

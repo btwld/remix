@@ -82,7 +82,7 @@ RadioStyler _fortalRadioSurfaceStyler(
       )
       .indicator(
         .color(
-          FortalTokens.accent9(),
+          FortalTokens.accentIndicator(),
         ).borderRadius(.all(FortalTokens.radiusCircle())),
       )
       .onSelected(
@@ -132,12 +132,12 @@ RadioStyler _fortalRadioSoftStyler(
       // ring keeps a 3:1 boundary in every enabled state.
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
+          fortalInsetSurface(strokes: [FortalTokens.focus8()]),
         ),
       )
       .indicator(
         .color(
-          highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+          highContrast ? FortalTokens.accent12() : FortalTokens.accentContent(),
         ).borderRadius(.all(FortalTokens.radiusCircle())),
       )
       .onSelected(
@@ -149,7 +149,7 @@ RadioStyler _fortalRadioSoftStyler(
               .color(
                 highContrast
                     ? FortalTokens.accent12()
-                    : FortalTokens.accent11(),
+                    : FortalTokens.accentContent(),
               ),
             ),
       )

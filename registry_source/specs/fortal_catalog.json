@@ -16,12 +16,6 @@
         ],
         "default": "orla"
       },
-      "gray": {
-        "values": [
-          "orla"
-        ],
-        "default": "orla"
-      },
       "panelBackground": {
         "values": [
           "solid",
@@ -67,7 +61,38 @@
       28,
       36,
       60
-    ]
+    ],
+    "colorSource": "@radix-ui/colors 3.0.0",
+    "pairings": {
+      "orla": [
+        "gray",
+        "gray"
+      ],
+      "mar": [
+        "teal",
+        "sage"
+      ],
+      "ceu": [
+        "blue",
+        "slate"
+      ],
+      "serra": [
+        "gold",
+        "olive"
+      ],
+      "sol": [
+        "amber",
+        "sand"
+      ],
+      "duna": [
+        "brown",
+        "sand"
+      ],
+      "caju": [
+        "orange",
+        "sand"
+      ]
+    }
   },
   "contrast": {
     "solidAndHover": 4.5,

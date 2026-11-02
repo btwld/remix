@@ -68,7 +68,7 @@ ToggleStyler _fortalToggleGhostStyler(
 }) {
   final selectedContent = highContrast
       ? FortalTokens.accent12()
-      : FortalTokens.accent11();
+      : FortalTokens.accentContent();
   return _fortalToggleBaseStyler(size)
       .color(const Color(0x00000000))
       .onHovered(ToggleStyler().color(FortalTokens.grayA3()))
@@ -91,7 +91,7 @@ ToggleStyler _fortalToggleOutlineStyler(
 }) {
   final selectedContent = highContrast
       ? FortalTokens.accent12()
-      : FortalTokens.accent11();
+      : FortalTokens.accentContent();
   return _fortalToggleBaseStyler(size)
       .color(const Color(0x00000000))
       .border(

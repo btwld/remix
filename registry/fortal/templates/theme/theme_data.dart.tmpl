@@ -11,7 +11,8 @@ import 'palette.dart';
 import 'theme_scope.dart' show {{typePrefix}}Theme;
 import 'tokens.dart';
 
-/// {{typePrefix}} palettes, named for the landscapes and coastal materials. Error
+/// Paired {{typePrefix}} themes, named for {{typePrefix}}eza landscapes and coastal materials.
+/// Each choice owns its accent and subtly tinted neutral scales. Error
 /// roles use a dedicated red palette that is not a selectable accent.
 enum {{typePrefix}}AccentColor {
   orla,
@@ -21,14 +22,6 @@ enum {{typePrefix}}AccentColor {
   sol,
   duna,
   caju;
-
-  @Deprecated('Use orla instead.')
-  static const calcadao = orla;
-}
-
-/// The neutral palette. The enum leaves room for future neutral families.
-enum {{typePrefix}}GrayColor {
-  orla;
 
   @Deprecated('Use orla instead.')
   static const calcadao = orla;
@@ -64,7 +57,6 @@ class {{typePrefix}}ThemeConfig {
   const {{typePrefix}}ThemeConfig({
     this.accent,
     this.accentPalette,
-    this.gray,
     this.brightness,
     this.panelBackground,
     this.radius,
@@ -76,7 +68,6 @@ class {{typePrefix}}ThemeConfig {
 
   /// Optional seed-generated brand palette, overriding the named accent.
   final {{typePrefix}}ColorTheme? accentPalette;
-  final {{typePrefix}}GrayColor? gray;
   final Brightness? brightness;
   final {{typePrefix}}PanelBackground? panelBackground;
   final {{typePrefix}}Radius? radius;
@@ -88,7 +79,6 @@ class {{typePrefix}}ThemeConfig {
   {{typePrefix}}ThemeConfig copyWith({
     {{typePrefix}}AccentColor? accent,
     {{typePrefix}}ColorTheme? accentPalette,
-    {{typePrefix}}GrayColor? gray,
     Brightness? brightness,
     {{typePrefix}}PanelBackground? panelBackground,
     {{typePrefix}}Radius? radius,
@@ -98,7 +88,6 @@ class {{typePrefix}}ThemeConfig {
     accent: accent ?? this.accent,
     accentPalette:
         accentPalette ?? (accent == null ? this.accentPalette : null),
-    gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
@@ -112,7 +101,6 @@ class {{typePrefix}}ThemeConfig {
       other is {{typePrefix}}ThemeConfig &&
           accent == other.accent &&
           accentPalette == other.accentPalette &&
-          gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
           radius == other.radius &&
@@ -123,7 +111,6 @@ class {{typePrefix}}ThemeConfig {
   int get hashCode => Object.hash(
     accent,
     accentPalette,
-    gray,
     brightness,
     panelBackground,
     radius,
@@ -138,7 +125,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   const {{typePrefix}}ThemeData({
     required {{typePrefix}}AccentColor super.accent,
     super.accentPalette,
-    required {{typePrefix}}GrayColor super.gray,
     required Brightness super.brightness,
     required {{typePrefix}}PanelBackground super.panelBackground,
     required {{typePrefix}}Radius super.radius,
@@ -150,7 +136,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   const {{typePrefix}}ThemeData.light({
     {{typePrefix}}AccentColor accent = {{typePrefix}}AccentColor.orla,
     {{typePrefix}}ColorTheme? accentPalette,
-    {{typePrefix}}GrayColor gray = {{typePrefix}}GrayColor.orla,
     {{typePrefix}}PanelBackground panelBackground = {{typePrefix}}PanelBackground.solid,
     {{typePrefix}}Radius radius = {{typePrefix}}Radius.medium,
     {{typePrefix}}Scaling scaling = {{typePrefix}}Scaling.percent100,
@@ -158,7 +143,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
-         gray: gray,
          brightness: Brightness.light,
          panelBackground: panelBackground,
          radius: radius,
@@ -170,7 +154,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   const {{typePrefix}}ThemeData.dark({
     {{typePrefix}}AccentColor accent = {{typePrefix}}AccentColor.orla,
     {{typePrefix}}ColorTheme? accentPalette,
-    {{typePrefix}}GrayColor gray = {{typePrefix}}GrayColor.orla,
     {{typePrefix}}PanelBackground panelBackground = {{typePrefix}}PanelBackground.solid,
     {{typePrefix}}Radius radius = {{typePrefix}}Radius.medium,
     {{typePrefix}}Scaling scaling = {{typePrefix}}Scaling.percent100,
@@ -178,7 +161,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
-         gray: gray,
          brightness: Brightness.dark,
          panelBackground: panelBackground,
          radius: radius,
@@ -188,8 +170,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
 
   @override
   {{typePrefix}}AccentColor get accent => super.accent!;
-  @override
-  {{typePrefix}}GrayColor get gray => super.gray!;
   @override
   Brightness get brightness => super.brightness!;
   @override
@@ -208,7 +188,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   {{typePrefix}}ThemeData copyWith({
     {{typePrefix}}AccentColor? accent,
     {{typePrefix}}ColorTheme? accentPalette,
-    {{typePrefix}}GrayColor? gray,
     Brightness? brightness,
     {{typePrefix}}PanelBackground? panelBackground,
     {{typePrefix}}Radius? radius,
@@ -218,7 +197,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
     accent: accent ?? this.accent,
     accentPalette:
         accentPalette ?? (accent == null ? this.accentPalette : null),
-    gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
@@ -232,7 +210,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
       other is {{typePrefix}}ThemeData &&
           accent == other.accent &&
           accentPalette == other.accentPalette &&
-          gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
           radius == other.radius &&
@@ -243,7 +220,6 @@ class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   int get hashCode => Object.hash(
     accent,
     accentPalette,
-    gray,
     brightness,
     panelBackground,
     radius,
@@ -704,9 +680,12 @@ Map<ColorToken, Color> _accentColorTokens({{typePrefix}}ThemeColors tokens) {
     {{typePrefix}}Tokens.accentSurface: tokens.accent.surface,
     {{typePrefix}}Tokens.accentIndicator: tokens.accent.indicator,
     {{typePrefix}}Tokens.accentTrack: tokens.accent.track,
+    {{typePrefix}}Tokens.accentMarkHover: tokens.accent.markHover,
     {{typePrefix}}Tokens.accentContrast: tokens.accent.contrast,
     {{typePrefix}}Tokens.accentSolid: tokens.accent.solid,
     {{typePrefix}}Tokens.accentSolidHover: tokens.accent.solidHover,
+    {{typePrefix}}Tokens.accentContent: tokens.accentContent,
+    {{typePrefix}}Tokens.accentContentAlpha: tokens.accentContentAlpha,
     {{typePrefix}}Tokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
     {{typePrefix}}Tokens.focus8: tokens.focus8,
     {{typePrefix}}Tokens.focusA5: tokens.focusA5,

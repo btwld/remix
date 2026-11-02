@@ -64,7 +64,7 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
         .color(FortalTokens.gray12())
         .size(FortalTokens.space4()),
     statusIcon: IconStyler()
-        .color(FortalTokens.accent9())
+        .color(FortalTokens.accentIndicator())
         .size(FortalTokens.space3()),
     indicator: IconStyler()
         .color(FortalTokens.gray12())

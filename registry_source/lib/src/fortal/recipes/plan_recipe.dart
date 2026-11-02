@@ -46,10 +46,10 @@ FortalAgentPlanRecipe fortalAgentPlanRecipe({
         .color(FortalTokens.gray9())
         .size(FortalTokens.space4()),
     activeStatus: IconStyler()
-        .color(FortalTokens.accent9())
+        .color(FortalTokens.accentIndicator())
         .size(FortalTokens.space4()),
     completedStatus: IconStyler()
-        .color(FortalTokens.accent9())
+        .color(FortalTokens.accentIndicator())
         .size(FortalTokens.space4()),
     cancelledStatus: IconStyler()
         .color(FortalTokens.gray9())

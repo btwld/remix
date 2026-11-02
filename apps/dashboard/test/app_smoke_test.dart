@@ -372,8 +372,7 @@ void main() {
     expect(panel, findsOneWidget);
     for (final control in const [
       'Appearance',
-      'Accent color',
-      'Gray color',
+      'Theme',
       'Panel background',
       'Radius',
       'Scaling',

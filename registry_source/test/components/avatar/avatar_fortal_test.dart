@@ -187,10 +187,10 @@ void main() {
       final tokens = await _tokens(tester);
 
       expect(_color(soft), tokens.accentA3);
-      expect(soft.label.spec.style!.color, tokens.accentA11);
+      expect(soft.label.spec.style!.color, tokens.accentContentAlpha);
       expect(_color(softHigh), tokens.accentA3);
       expect(softHigh.label.spec.style!.color, tokens.accent12);
-      expect(_color(solid), tokens.accent9);
+      expect(_color(solid), tokens.accentSolid);
       expect(solid.label.spec.style!.color, tokens.accentContrast);
       expect(_color(solidHigh), tokens.accent12);
       expect(solidHigh.label.spec.style!.color, tokens.accent1);
@@ -226,20 +226,20 @@ Future<AvatarSpec> _resolve(
 Future<
   ({
     Color accent1,
-    Color accent9,
+    Color accentSolid,
     Color accent12,
     Color accentA3,
-    Color accentA11,
+    Color accentContentAlpha,
     Color accentContrast,
   })
 >
 _tokens(WidgetTester tester) async {
   late ({
     Color accent1,
-    Color accent9,
+    Color accentSolid,
     Color accent12,
     Color accentA3,
-    Color accentA11,
+    Color accentContentAlpha,
     Color accentContrast,
   })
   result;
@@ -253,10 +253,10 @@ _tokens(WidgetTester tester) async {
           Color token(ColorToken value) => MixScope.tokenOf(value, context);
           result = (
             accent1: token(FortalTokens.accent1),
-            accent9: token(FortalTokens.accent9),
+            accentSolid: token(FortalTokens.accentSolid),
             accent12: token(FortalTokens.accent12),
             accentA3: token(FortalTokens.accentA3),
-            accentA11: token(FortalTokens.accentA11),
+            accentContentAlpha: token(FortalTokens.accentContentAlpha),
             accentContrast: token(FortalTokens.accentContrast),
           );
           return const SizedBox.shrink();

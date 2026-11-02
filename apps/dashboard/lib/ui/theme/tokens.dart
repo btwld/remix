@@ -2,7 +2,7 @@ import 'package:remix/remix.dart';
 
 import 'theme_scope.dart' show UiTheme;
 
-/// Design tokens for the Ui UI system (Ui-owned palettes).
+/// Design tokens for the Ui UI system and its paired color themes.
 ///
 /// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
 /// shadows (6-level), typography (9-size), and functional colors.
@@ -79,6 +79,9 @@ class UiTokens {
   /// thumb outlined by [accentThumbRing].
   static const accentTrack = ColorToken('ui.accent.track');
 
+  /// Hovered or pressed selected mark/track fill, paired with its mark ink.
+  static const accentMarkHover = ColorToken('ui.accent.mark-hover');
+
   /// Mode-aware overlay used by high-contrast slider ranges.
   static const sliderHighContrastOverlay = ColorToken(
     'ui.slider.high-contrast-overlay',
@@ -89,7 +92,7 @@ class UiTokens {
 
   /// Labelled solid fill of buttons, icon buttons, solid badges, avatars,
   /// code and highlighted menu and select items. It can be deeper than
-  /// [accent9], which is the mark fill.
+  /// raw [accent9]. Small-control marks use [accentIndicator].
   static const accentSolid = ColorToken('ui.accent.solid');
 
   /// Hovered [accentSolid]; pressed fills are derived from it.
@@ -110,7 +113,7 @@ class UiTokens {
   /// off switch, surface text input), at least 3:1 against page and panel.
   static const controlBorder = ColorToken('ui.control.border');
 
-  /// Solid focus ring color (accent step 8).
+  /// Source accent step 8 fitted to the focus ring's 3:1 contrast contract.
   static const focus8 = ColorToken('ui.focus.8');
 
   /// Translucent text-selection color (accent alpha step 5).
@@ -163,6 +166,12 @@ class UiTokens {
 
   /// Accent step 11 - Low contrast text.
   static const accent11 = ColorToken('ui.accent.11');
+
+  /// Normal content fitted to the theme's soft and neutral surfaces.
+  static const accentContent = ColorToken('ui.accent.content');
+
+  /// Alpha content retained or fitted to the same contrast contract.
+  static const accentContentAlpha = ColorToken('ui.accent.content-alpha');
 
   /// Accent step 12 - High contrast text.
   static const accent12 = ColorToken('ui.accent.12');

@@ -8,187 +8,135 @@ size-linked recipes over Remix; no behavioral component is reimplemented.
 
 ## Sources and decisions
 
-The [design provenance](../docs/fortal/refresh-brief.md) records Leo Farias's
-2026-10-29 brief, which established the palette names, role model, contrast
-targets, and component direction. Leo's 2026-10-31
-palette review replaced Mangue with Serra, set the Céu and Caju seeds, moved
-errors to a dedicated red, and bounded dark solid lightness. The 2026-10-31
-foreground review then separated labelled solids from marks, gave secondary
-surfaces visible hue and lighter step-11 text, and stopped lifting dark solids
-toward pastel. OKLab conversion
-uses Björn Ottosson's published equations; contrast uses WCAG 2 relative
-luminance. All palette data is generated here, with no external color dataset.
-The [independence ADR](../docs/adr/fortal/0003-independent-design-system.md)
-records scope and precedence. Geist and the separate Remix Icons package are
-unchanged; Anton, cobogó patterns, and full Fortaleza branding are out of scope.
+The [design provenance](../docs/fortal/refresh-brief.md) records the original
+Fortaleza brief. On 2026-11-02, the color decision changed to paired themes
+using **@radix-ui/colors 3.0.0**. The [pinned source snapshot](fortal_radix_colors.json)
+contains the package integrity, complete MIT notice, exact sRGB opaque and alpha
+scales, and the approved pairings. `tool/fortal_palettes/radix/extract.mjs` imports
+the package's structured exports. Geometry, components, behavior and contrast
+requirements remain Fortal's; this is a color-data adoption, not a Radix widget port.
+The [architecture decision](../../../ARCHITECTURE.md#fortal-owns-its-visual-contract-fortal-adr-0003)
+records this update. Geist and Remix Icons remain the typography and icon sources.
 
-## Color tokens
+## Paired themes
 
-| Palette / Dart name | Seed | Purpose |
-| --- | --- | --- |
-| Orla / `orla` | `#13181D` | Neutral accent and the sole gray; inverse limestone in dark mode |
-| Mar / `mar` | `#036F6B` | Signature sea green |
-| Céu / `ceu` | `#1A95D8` | Sky blue; white labels on a deeper sky solid |
-| Serra / `serra` | `#6F7845` | Earthy olive of the hills inland |
-| Sol / `sol` | `#FFCF50` | Sunny yellow and highlights |
-| Duna / `duna` | `#E5C79A` | Warm sand |
-| Caju / `caju` | `#E76A32` | Cashew-fruit orange-red; white labels on a deeper solid |
+Select one named theme with `FortalTheme(accent: .mar, child: child)`. The existing
+`FortalAccentColor` name is retained, but each value now selects its accent and
+subtly tinted neutral together. There is no separate gray selector, `gray`
+configuration parameter, or `FortalGrayColor` enum. Upstream gray names are
+implementation details, not additional Fortal themes.
 
-Error roles use a dedicated red, `fortalError` (seed `#C92E3B`, installed as
-`<prefix>Error`). It is generated with the accents but is not a selectable
-accent, so an orange Caju accent and a red error never share a palette.
+| Theme | Dart value | Radix accent | Paired neutral |
+| --- | --- | --- | --- |
+| Orla | `orla` | Gray | Gray |
+| Mar | `mar` | Teal | Sage |
+| Céu | `ceu` | Blue | Slate |
+| Serra | `serra` | Gold | Olive |
+| Sol | `sol` | Amber | Sand |
+| Duna | `duna` | Brown | Sand |
+| Caju | `caju` | Orange | Sand |
 
-Both theme defaults are Orla. The page is gray step 1 in both modes; solid
-panels and surface fields are gray step 2. Panel background defaults to `solid`
-with zero blur; `translucent` remains opt-in. Error roles always resolve to the
-dedicated error red, independently of the current accent or a custom brand
-palette. Status examples keep a text label or icon: color reinforces meaning
-but never carries it alone.
+Orla is the default. Page backgrounds use the paired neutral's step 1; solid
+panels and surface inputs use step 2. The optional translucent panel computes
+an overlay that reconstructs that step-2 color over its own page. The imported
+alpha scale stays unchanged. Serra now has a muted gold accent and Duna a brown
+accent; their names identify these approved combinations, not the former seeds.
 
-| Steps | Role |
+Error roles keep the separate generated red `fortalError` (seed `#C92E3B`,
+installed as `<prefix>Error`). Error is not a theme choice. Status examples
+must retain labels or icons because similar accent hues cannot carry meaning alone.
+A custom `accentPalette` inherits the selected named theme's neutral pairing;
+when no theme is specified it uses Orla's neutral. A named accent clears an
+inherited custom accent, as before.
+
+## Raw scales and functional roles
+
+Each imported appearance keeps all twelve opaque and twelve alpha steps exactly
+as published. sRGB values are used; `#RRGGBBAA` alpha values are converted to
+Dart ARGB, and six-digit entries in an alpha scale are fully opaque. The generator
+and source-fidelity tests check both modes against the pinned snapshot.
+
+| Steps | Upstream role |
 | --- | --- |
 | 1–2 | Page and subtle backgrounds |
-| 3–5 | Rest, hover, and pressed fills |
-| 6–8 | Subtle, normal, and strong borders; 8 is also focus |
-| 9–10 | Mark fill and its pressed step |
-| 11–12 | Secondary and primary text |
+| 3–5 | Rest, hover and selected fills |
+| 6–8 | Borders of increasing strength |
+| 9–10 | Accent swatch and hover |
+| 11–12 | Secondary and strong text |
 
-Each appearance provides twelve opaque and twelve transparent steps plus
-`surface`, `indicator`, `track`, `contrast`, `solid` and `solidHover`.
-Transparent steps are derived by sRGB source-over inversion against the neutral
-page; they reconstruct their solid step to within one 8-bit channel and adapt
-to the underlying panel. They are fills for the page or a panel, not overlays
-for another accent step: a reconstructed tint can be fully opaque. `surface` is
-alpha step 3; `indicator` and `track` are solid step 9.
+Raw Radix steps do not by themselves guarantee Fortal's WCAG contrast thresholds
+in every Flutter component and state. Functional colors keep that contract without
+rewriting the source scales:
 
-Labels and marks are separate jobs. Steps 9 and 10 are the mark fill and its
-pressed step: selected checkboxes and radios, switch tracks, slider and
-progress ranges, tab indicators, accent dots and chart series. `solid` and
-`solidHover` (tokens `accentSolid`, `accentSolidHover`) are the labelled fills
-of buttons, icon buttons, solid badges, avatars, code and highlighted menu and
-select items, and `contrast` is fitted to them. A palette writes the labelled
-pair only where it differs from steps 9 and 10; otherwise, and for palettes
-constructed without it, `solid` is step 9 and `solidHover` step 10. A `solid`
-supplied without `solidHover` is also its own hover, so the label pairing
-holds.
+- `accentSolid` and `accentSolidHover` pair with `accentContrast` at **4.5:1**
+  or more. White labels use the source fills when they meet the 4.6:1 generation
+  margin; otherwise the labelled fill is deepened in OKLCH, and its hover is
+  0.035 lightness deeper. Sol uses the source Amber-12 warm-brown ink with
+  the original Amber fills. Source swatches remain the unmodified steps 9–10.
+- `accentIndicator` and `accentTrack` identify selected marks and ranges.
+  `accentMarkHover` is their hover/pressed fill; it defaults to source step 10.
+  Non-luminous light marks are deepened only when their paired page/panel
+  needs the 3.05:1 margin. `markContrast` is white when it keeps 3:1 on both
+  the indicator and functional mark hover; otherwise it uses the source family's deep
+  light-mode step 12. Custom palettes retain the validated ink fallback.
+- `accentContent` and `accentContentAlpha` retain the source step-11 colors
+  where they pass. Otherwise they move toward the strong source text tone in
+  premultiplied OKLab, to keep **4.5:1** on soft fills 3–5 over the theme's page
+  and panel. Recipes use these content roles, not raw step 11, for normal text.
+- `focus8` fits source step 8 toward step 12 only as needed for **3:1** on
+  the page and panel. Empty soft controls use this solid ring rather than
+  relying on their low-contrast tint alone. Focus stays 2px wide with a 2px gap.
+- `controlBorder` fits neutral step 8 toward neutral step 12 for **3:1** on
+  the page, panel and off-track fill. Disabled controls keep quieter strokes.
+- Selected surface switch and slider thumbs stay white. Their `accentThumbRing`
+  uses the mark ink on a bright fill or hover, the track when it is visible on
+  surrounding surfaces, and otherwise the neutral control border. Selected soft
+  thumbs use accessible accent content; high contrast keeps the source knockout.
 
-The generator (`tool/fortal_palettes/`) gamut-maps OKLCH by reducing chroma.
-Background, border, and text roles share lightness stops across palettes.
-Chromatic seeds give steps 1–8, 11 and 12 the seed's chroma times a per-step
-weight, with a 0.09 chroma floor, so low-chroma seeds (Mar, Serra, Duna) tint
-their surfaces with their own hue instead of gray. Achromatic seeds and the
-neutral keep the original, quieter weights. Step 11 is fitted rather than
-fixed: the lightest same-hue tone, from OKLCH 0.52 (light) or 0.82 (dark), that
-keeps 4.6:1 on the step-5 tint over the solid panel and on the panel.
+### Orla primary-role override
 
-Steps 9 and 10 follow the seed. A seed is **luminous** when a white label would
-need its fill darkened by more than 0.12 OKLCH lightness: Sol, Duna and
-near-white custom seeds. Luminous palettes keep one bright fill for labels and
-marks. It is the seed in light mode; in dark mode it keeps the seed's lightness
-clamped to 0.70–0.84 (Sol stays gold `#F3C442`, not mustard; Duna keeps its sand
-seed). Their `contrast` is a tone of the palette's own hue: the lightest up to
-OKLCH lightness 0.70 that keeps 4.6:1 on fill and hover, chroma up to the
-seed's (at most 0.14), with yellow and sand hues rotated up to 18° toward
-orange so they read warm brown (Sol `#764B00`, Duna `#694624`/`#704D2B`).
+Orla deliberately uses a stronger default than standard Radix Gray. In light
+mode, labelled solids and selected marks/tracks use Gray-12 `#202020`, hover
+`#303030`, and white ink. In dark mode they use true white, Gray-12 `#EEEEEE`
+on hover, and Gray-1 `#111111` ink. The white thumb retains a 2px dark ring.
+Raw opaque/alpha scales, Gray-2 panels, secondary text, soft variants, focus and
+disabled roles remain unchanged. This is a Fortal functional-role policy,
+not a claim that Radix's default gray accent is white or black.
 
-Every other palette splits its solid roles:
-
-- **Mark fill.** In light mode, the exact seed where white marks, the page and
-  the solid panel all keep the 3.05:1 generation margin; otherwise the seed's
-  hue and chroma, deepened in 0.002 steps until they do. In dark mode it starts
-  from the seed's lightness clamped to 0.58–0.72, so dark solids are no longer
-  lifted toward pastel. Step 10 is 0.035 deeper.
-- **Labelled solid.** From the mark fill, deepened further only as far as a
-  white label needs to keep 4.6:1 on the fill and its 0.035-deeper hover.
-
-The neutral accent keeps inverse limestone. The dedicated error red is curated:
-its dark mark starts at 0.61 and its labelled solid sits at 0.53 in both modes,
-so destructive marks and actions read red, not coral, beside Caju's orange.
-Margins of 4.6:1 and 3.05:1 sit above the 4.5:1 and 3:1 requirements so 8-bit
-rounding cannot cross them.
-
-### Labels and marks
-
-`contrast` is the label colour on `solid` and `solidHover`: button, icon button
-and spinner foregrounds, solid badge and avatar text, solid code and solid
-menu/select highlights. It is white for every non-luminous palette in both
-modes, warm brown for Sol and Duna, and the basalt/limestone inversion for
-Orla.
-
-Checks and radio dots read `accentIndicatorContrast`, derived from the
-`indicator` they sit on rather than from the label. It is white where white
-keeps 3:1 on the indicator. Otherwise it is `contrast`, if that keeps 3:1
-there, and otherwise Orla's dark ink. A hand-authored palette that pairs a
-deep labelled solid with a bright indicator therefore still gets a dark check.
-
-Normal selected surface-switch thumbs and enabled slider thumbs are white
-surfaces with an outline, `accentThumbRing`, derived from the `track` they sit
-on. Where white keeps 3:1 on the track, the outline is the track colour
-itself, seamless on the track, provided that colour keeps 3:1 against the page,
-the solid panel and the translucent panel a slider thumb overhangs; otherwise
-it is `controlBorder`. On a bright track the outline takes the mark-ink rule
-instead (warm brown on Sol and Duna). The exported
-`computeAccentThumbRing(accent, controlBorder)` keeps that two-argument form.
-Its optional `surfaces` lets theme resolution choose the track-coloured
-outline; without them it keeps `controlBorder` wherever white already fits the
-track. Off switch thumbs are white with a
-`controlBorder` ring. Selected soft thumbs keep their `accent11`/`accent12`
-fill, the explicit high-contrast surface thumb keeps its `accent1` knockout,
-and disabled thumbs keep gray 2 with a gray-6 border (see Components).
-
-### Control boundaries
-
-`controlBorder` is the neutral boundary of active empty controls: unchecked
-checkbox and radio outlines, the off switch's track edge and thumb ring, and
-surface text field and text area borders. It is gray step 8 deepened 15%
-toward step 11 in OKLab (light) and step 7 lifted 70% toward step 8 (dark), and
-keeps at least **3:1** against the page, the solid panel, the translucent
-panel over the default page, and the off track (gray alpha 3 over each). Soft
-empty checkboxes and radios, and soft text fields and text areas, add an
-`accentA8` inset ring for the same reason: their tint alone is near 1.2:1, and
-a blank soft input may show no text, hint or label at all. Disabled controls
-keep their quieter strokes. These guarantees cover Fortal's
-own page and panel surfaces; content placed over arbitrary colours or images
-must be checked in context.
-
-High-contrast variants are a deliberate knockout: their fill is step 12 and
-their foreground is step 1 (or neutral gray 1 for buttons), so in dark mode
-they remain near-black on a pale tint, at 7:1 or more by construction.
+Ordinary solid press lightens under dark ink unless that returns to the idle
+fill within 2/255 per RGB channel; then it darkens the hover by 0.92 instead.
+Orla dark therefore retains distinct white/near-white/pressed states. Explicit
+`highContrast` variants retain their existing source step-12/step-1 treatment;
+in dark mode that fill is slightly dimmer than Orla's default white.
 
 ### Contrast requirements (both appearances)
 
-- `contrast` on `solid` and `solidHover`, including the derived pressed fill:
-  at least **4.5:1**.
-- `accentIndicatorContrast` on the indicator and step 10: at least **3:1**.
-  Non-luminous mark fills keep 3:1 against the page and solid panel.
-- Step 11 on steps 1–3: at least **4.5:1**. Actual alpha soft text over fills
-  3–5 on both page and solid panel must also pass 4.5:1.
-- Step 12 on steps 1–5: at least **7:1**.
-- Step 8 on steps 1–2 and the neutral page/panel: at least **3:1**.
-- `controlBorder` on page, solid panel, translucent panel and off track: at
-  least **3:1**. A thumb's white fill or its `accentThumbRing` on steps 9–10:
-  at least **3:1**.
-- A bare progress bar's whole track and its filled extent each keep a fully
-  covered band at **3:1** or more against the page, solid panel and
-  translucent panel, at 0, part and full.
+The component and rendered-pixel gates retain their thresholds:
 
-Custom palettes generated from one `#RRGGBB` seed use the same model and can
-be supplied as `FortalTheme(accentPalette: brand)`. An explicit named accent
-clears an inherited custom palette. See the palette tool README for the command.
+- Label ink on normal, hovered and pressed labelled solids: **4.5:1**.
+- Normal functional content on soft fills and neutral surfaces: **4.5:1**.
+- Strong source text on source fills 1–5: **7:1**.
+- Mark ink, focus rings, empty control boundaries, and the white thumb or its
+  outline on the track: **3:1**.
+- Bare progress tracks and filled extents: a fully covered **3:1** band on
+  the page, solid and translucent panels.
 
-### Very light custom accents
+These guarantees cover Fortal's own surfaces; arbitrary image backgrounds and
+hand-authored custom palettes need contextual checks. The former comparative
+OKLab separation floor for Fortal-generated named seeds is retired: imported
+families retain upstream values, and chart/status examples keep labels or icons.
 
-Luminous fills preserve a light seed when its label meets the contrast
-contract. They do not guarantee 3:1 against the page: for example, `#F4F4F0`
-remains `#F4F4F0` in light mode, about 1.05:1 against the neutral page, while
-its deep neutral ink (`#2E2E2C`) reaches 12.3:1. This also preserves the
-intended Sol and Duna fills, whose checks, dots and thumb outlines take the
-dark ink. In dark mode such seeds take the 0.84 lightness cap, so their dark
-fill is a light tone (`#CDCCB2`) with that ink rather than the seed itself.
-Use `highContrast: true` on controls that expose it when a stronger active
-fill is needed, or choose an outline/surface treatment with an explicit
-step-8 border. Focus remains step 8; label and focus guarantees apply in both
-modes. Check the actual component and background when using a custom palette.
+### Custom palette generation
+
+`generate.dart --name brand --seed '#8038CC'` still generates a separate OKLCH
+brand palette. The generated brand and dedicated error red use WCAG luminance,
+Björn Ottosson's OKLab equations, and the existing gamut and role fitting.
+Custom generation uses the pinned Orla gray page/panel reference values; the
+source-fidelity tests distinguish these designed values from imported scales.
+
+Near-white custom seeds can blend into the page even with readable labels.
+Use an available `highContrast: true` treatment or a visible outline when the
+fill must identify the control. Check the actual component on its host surface.
 
 ## Fixed scales and geometry
 
@@ -203,7 +151,7 @@ modes. Check the actual component and background when using a custom palette.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
   target**, which does not shrink at 90/95% scaling. Hosts must leave room for
   that target instead of imposing a smaller tight constraint.
-- Focus: one **2px solid accent-8 outline, 2px outside** the painted control.
+- Focus: one **2px solid functional `focus8` outline, 2px outside** the painted control.
   The helper reads `focusRingWidth` and `focusRingOffset`; it never changes
   layout or replaces a variant's border. Text inputs show it on focus; other
   controls show it on keyboard-visible focus. Disabled controls do not ring.
@@ -224,7 +172,7 @@ frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
 toasts retain outer elevation; a shadow means the surface floats. Surface text
 fields and text areas use an opaque gray-2 fill and the `controlBorder` frame,
 so a field without a visible label can still be found; soft fields and areas
-keep their accent-3 fill inside an accent-8 ring, the recipe's base frame so
+keep their accent-3 fill inside a fitted `focus8` ring, the recipe's base frame so
 caller frames still win. Error replaces either frame with error step 8, and
 disabled clears the soft ring (error keeps its precedence). Select triggers keep their gray-7 frame (gray alpha 8
 when open or hovered): their value and chevron identify them.
@@ -233,7 +181,7 @@ hints and icons use secondary accent content. Disabled input treatments stay sep
 
 Selected surface switch thumbs are white with a 2px `accentThumbRing`, or
 `accent1` against the high-contrast `accent12` track. Selected soft thumbs use
-`accent11`, promoted to `accent12` at high contrast. Off thumbs stay white with
+`accentContent`, promoted to `accent12` at high contrast. Off thumbs stay white with
 a 1px `controlBorder` ring on a track edged in `controlBorder`; the selected
 surface track keeps its quiet gray-alpha-5 edge. Disabled switches keep a
 neutral gray-2 thumb with a gray-6 border and drop the active track edge
@@ -246,8 +194,8 @@ Progress bars carry their value without text, in two extents. The whole track
 (gray alpha 3, or gray alpha 4 for soft) is edged in a 1px inset
 `controlBorder`, so the total stays readable at 0. The surface fill is the
 track role with a 1px inset `accentThumbRing` outline: seamless where the fill
-already contrasts, warm brown on bright Sol and Duna fills. The soft fill is
-step 8 alone, which keeps 3:1 on the page and panels. High contrast fills with
+already contrasts, warm brown on bright Sol fills. The soft fill is
+the fitted `focus8` role, which keeps 3:1 on the page and panels. High contrast fills with
 step 12 and no outline. Height, radius, value and semantics are unchanged.
 
 Solid button hover and press recolor only the fill. Hover uses `solidHover`. Press

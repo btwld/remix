@@ -11,7 +11,8 @@ import 'palette.dart';
 import 'theme_scope.dart' show UiTheme;
 import 'tokens.dart';
 
-/// Ui palettes, named for the landscapes and coastal materials. Error
+/// Paired Ui themes, named for Uieza landscapes and coastal materials.
+/// Each choice owns its accent and subtly tinted neutral scales. Error
 /// roles use a dedicated red palette that is not a selectable accent.
 enum UiAccentColor {
   orla,
@@ -21,14 +22,6 @@ enum UiAccentColor {
   sol,
   duna,
   caju;
-
-  @Deprecated('Use orla instead.')
-  static const calcadao = orla;
-}
-
-/// The neutral palette. The enum leaves room for future neutral families.
-enum UiGrayColor {
-  orla;
 
   @Deprecated('Use orla instead.')
   static const calcadao = orla;
@@ -64,7 +57,6 @@ class UiThemeConfig {
   const UiThemeConfig({
     this.accent,
     this.accentPalette,
-    this.gray,
     this.brightness,
     this.panelBackground,
     this.radius,
@@ -76,7 +68,6 @@ class UiThemeConfig {
 
   /// Optional seed-generated brand palette, overriding the named accent.
   final UiColorTheme? accentPalette;
-  final UiGrayColor? gray;
   final Brightness? brightness;
   final UiPanelBackground? panelBackground;
   final UiRadius? radius;
@@ -88,7 +79,6 @@ class UiThemeConfig {
   UiThemeConfig copyWith({
     UiAccentColor? accent,
     UiColorTheme? accentPalette,
-    UiGrayColor? gray,
     Brightness? brightness,
     UiPanelBackground? panelBackground,
     UiRadius? radius,
@@ -98,7 +88,6 @@ class UiThemeConfig {
     accent: accent ?? this.accent,
     accentPalette:
         accentPalette ?? (accent == null ? this.accentPalette : null),
-    gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
@@ -112,7 +101,6 @@ class UiThemeConfig {
       other is UiThemeConfig &&
           accent == other.accent &&
           accentPalette == other.accentPalette &&
-          gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
           radius == other.radius &&
@@ -123,7 +111,6 @@ class UiThemeConfig {
   int get hashCode => Object.hash(
     accent,
     accentPalette,
-    gray,
     brightness,
     panelBackground,
     radius,
@@ -138,7 +125,6 @@ class UiThemeData extends UiThemeConfig {
   const UiThemeData({
     required UiAccentColor super.accent,
     super.accentPalette,
-    required UiGrayColor super.gray,
     required Brightness super.brightness,
     required UiPanelBackground super.panelBackground,
     required UiRadius super.radius,
@@ -150,7 +136,6 @@ class UiThemeData extends UiThemeConfig {
   const UiThemeData.light({
     UiAccentColor accent = UiAccentColor.orla,
     UiColorTheme? accentPalette,
-    UiGrayColor gray = UiGrayColor.orla,
     UiPanelBackground panelBackground = UiPanelBackground.solid,
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
@@ -158,7 +143,6 @@ class UiThemeData extends UiThemeConfig {
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
-         gray: gray,
          brightness: Brightness.light,
          panelBackground: panelBackground,
          radius: radius,
@@ -170,7 +154,6 @@ class UiThemeData extends UiThemeConfig {
   const UiThemeData.dark({
     UiAccentColor accent = UiAccentColor.orla,
     UiColorTheme? accentPalette,
-    UiGrayColor gray = UiGrayColor.orla,
     UiPanelBackground panelBackground = UiPanelBackground.solid,
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
@@ -178,7 +161,6 @@ class UiThemeData extends UiThemeConfig {
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
-         gray: gray,
          brightness: Brightness.dark,
          panelBackground: panelBackground,
          radius: radius,
@@ -188,8 +170,6 @@ class UiThemeData extends UiThemeConfig {
 
   @override
   UiAccentColor get accent => super.accent!;
-  @override
-  UiGrayColor get gray => super.gray!;
   @override
   Brightness get brightness => super.brightness!;
   @override
@@ -208,7 +188,6 @@ class UiThemeData extends UiThemeConfig {
   UiThemeData copyWith({
     UiAccentColor? accent,
     UiColorTheme? accentPalette,
-    UiGrayColor? gray,
     Brightness? brightness,
     UiPanelBackground? panelBackground,
     UiRadius? radius,
@@ -218,7 +197,6 @@ class UiThemeData extends UiThemeConfig {
     accent: accent ?? this.accent,
     accentPalette:
         accentPalette ?? (accent == null ? this.accentPalette : null),
-    gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
@@ -232,7 +210,6 @@ class UiThemeData extends UiThemeConfig {
       other is UiThemeData &&
           accent == other.accent &&
           accentPalette == other.accentPalette &&
-          gray == other.gray &&
           brightness == other.brightness &&
           panelBackground == other.panelBackground &&
           radius == other.radius &&
@@ -243,7 +220,6 @@ class UiThemeData extends UiThemeConfig {
   int get hashCode => Object.hash(
     accent,
     accentPalette,
-    gray,
     brightness,
     panelBackground,
     radius,
@@ -705,9 +681,12 @@ Map<ColorToken, Color> _accentColorTokens(UiThemeColors tokens) {
     UiTokens.accentSurface: tokens.accent.surface,
     UiTokens.accentIndicator: tokens.accent.indicator,
     UiTokens.accentTrack: tokens.accent.track,
+    UiTokens.accentMarkHover: tokens.accent.markHover,
     UiTokens.accentContrast: tokens.accent.contrast,
     UiTokens.accentSolid: tokens.accent.solid,
     UiTokens.accentSolidHover: tokens.accent.solidHover,
+    UiTokens.accentContent: tokens.accentContent,
+    UiTokens.accentContentAlpha: tokens.accentContentAlpha,
     UiTokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
     UiTokens.focus8: tokens.focus8,
     UiTokens.focusA5: tokens.focusA5,

@@ -34,7 +34,7 @@ ToggleGroupStyler uiToggleGroupStyle({
   };
   final selectedForeground = highContrast
       ? UiTokens.accent12()
-      : UiTokens.accent11();
+      : UiTokens.accentContent();
 
   return ToggleGroupStyler(
     container: FlexBoxStyler(

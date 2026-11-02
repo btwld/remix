@@ -38,7 +38,9 @@ BadgeStyler {{valuePrefix}}BadgeStyle({
           .labelColor(
             // Step 11 is {{typePrefix}} secondary text, not WCAG AA 4.5:1 on
             // accentA3 over colorPanelSolid. highContrast promotes accent12.
-            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+            highContrast
+                ? {{typePrefix}}Tokens.accent12()
+                : {{typePrefix}}Tokens.accentContentAlpha(),
           ),
     .surface =>
       base
@@ -49,7 +51,9 @@ BadgeStyler {{valuePrefix}}BadgeStyle({
             ),
           )
           .labelColor(
-            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+            highContrast
+                ? {{typePrefix}}Tokens.accent12()
+                : {{typePrefix}}Tokens.accentContentAlpha(),
           ),
     .outline =>
       base
@@ -66,7 +70,9 @@ BadgeStyler {{valuePrefix}}BadgeStyle({
             ),
           )
           .labelColor(
-            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+            highContrast
+                ? {{typePrefix}}Tokens.accent12()
+                : {{typePrefix}}Tokens.accentContentAlpha(),
           ),
   }).merge(style);
 }

@@ -157,7 +157,7 @@ CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highCon
 
 CheckboxStyler _{{valuePrefix}}CheckboxSoft(CheckboxStyler base, bool highContrast) {
   final selected = CheckboxStyler().indicatorColor(
-    highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+    highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContentAlpha(),
   );
 
   return base
@@ -169,7 +169,7 @@ CheckboxStyler _{{valuePrefix}}CheckboxSoft(CheckboxStyler base, bool highContra
       // ring keeps a 3:1 boundary in every enabled state.
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.focus8()]),
         ),
       )
       .onSelected(selected)

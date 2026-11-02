@@ -10,16 +10,15 @@ import 'dart:math' as math;
 const basalt = 0xff13181d;
 const limestone = 0xfffaf9f6;
 
-/// Selectable accent seeds. Orla, Mar, Sol and Duna keep the refresh brief
-/// (2026-10-29) values; the 2026-10-31 palette review set Céu, Serra and Caju.
-const fortalSeeds = <String, int>{
-  'orla': basalt,
-  'mar': 0xff036f6b,
-  'ceu': 0xff1a95d8,
-  'serra': 0xff6f7845,
-  'sol': 0xffffcf50,
-  'duna': 0xffe5c79a,
-  'caju': 0xffe76a32,
+/// Canonical theme identifiers; built-in values live in the pinned Radix snapshot.
+const builtInPaletteNames = {
+  'orla',
+  'mar',
+  'ceu',
+  'serra',
+  'sol',
+  'duna',
+  'caju',
 };
 
 /// Dedicated error red. It is generated with the accents but is not one of
@@ -209,14 +208,9 @@ bool _isLuminous(int seed) {
 }
 
 /// The neutral page (step 1) or solid panel (step 2) of either appearance.
-int neutralSurface(int step, {required bool dark}) {
-  final lightness = dark ? [.19, .225] : [.985, .97];
-  return fromOklch((
-    l: lightness[step - 1],
-    c: dark ? .012 * baseChromaWeight[step - 1] : .004,
-    h: dark ? toOklch(basalt).h : 90,
-  ));
-}
+int neutralSurface(int step, {required bool dark}) => (dark
+    ? const [0xff111111, 0xff191919]
+    : const [0xfffcfcfc, 0xfff9f9f9])[step - 1];
 
 GeneratedMode _generateMode(
   int seed, {

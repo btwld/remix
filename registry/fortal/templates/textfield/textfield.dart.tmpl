@@ -158,9 +158,9 @@ TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(TextFieldStyler base) => base
     )
     .textColor({{typePrefix}}Tokens.accent12())
     .text(.selectionColor({{typePrefix}}Tokens.accentA5()))
-    .onEnabled(.hintText(.color({{typePrefix}}Tokens.accentA11())))
+    .onEnabled(.hintText(.color({{typePrefix}}Tokens.accentContentAlpha())))
     // Base-level icon overrides remain available while enabled.
-    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent11()))
+    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accentContent()))
     .color({{typePrefix}}Tokens.accentA3())
     .containerEffects(
       RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
@@ -170,7 +170,7 @@ TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(TextFieldStyler base) => base
     // the base so caller base overrides still win; disabled clears it.
     .containerEffects(
       RemixBoxEffectsMix.overContent(
-        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.focus8()]),
       ),
     )
     .onDisabled(

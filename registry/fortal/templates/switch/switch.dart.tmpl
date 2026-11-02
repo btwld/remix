@@ -98,7 +98,7 @@ SwitchStyler _{{valuePrefix}}SwitchSurfaceStyler(
               SwitchStyler().trackColor(
                 highContrast
                     ? {{typePrefix}}Tokens.accent12()
-                    : {{typePrefix}}Tokens.accent10(),
+                    : {{typePrefix}}Tokens.accentMarkHover(),
               ),
             )
             .trackEffects(
@@ -219,7 +219,9 @@ BoxStyler _{{valuePrefix}}SwitchSelectedThumbStyler(bool highContrast) => highCo
 
 /// Selected soft thumbs keep their accent content role on the tinted track.
 BoxStyler _{{valuePrefix}}SwitchSoftSelectedThumbStyler(bool highContrast) => BoxStyler()
-    .color(highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent11())
+    .color(
+      highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContent(),
+    )
     .border(
       .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
     );

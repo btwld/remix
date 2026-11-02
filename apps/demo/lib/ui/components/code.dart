@@ -62,7 +62,10 @@ BadgeStyler fortalCodeStyle(
   final accent12 = fortalResolveColor(context, FortalTokens.accent12);
   final accentA3 = fortalResolveColor(context, FortalTokens.accentA3);
   final accentSolid = fortalResolveColor(context, FortalTokens.accentSolid);
-  final accentA11 = fortalResolveColor(context, FortalTokens.accentA11);
+  final accentContent = fortalResolveColor(
+    context,
+    FortalTokens.accentContentAlpha,
+  );
   final accentContrast = fortalResolveColor(
     context,
     FortalTokens.accentContrast,
@@ -73,16 +76,16 @@ BadgeStyler fortalCodeStyle(
       foreground = highContrast ? accent1 : accentContrast;
     case .soft:
       fill = accentA3;
-      foreground = highContrast ? accent12 : accentA11;
+      foreground = highContrast ? accent12 : accentContent;
     case .outline:
-      foreground = highContrast ? accent12 : accentA11;
+      foreground = highContrast ? accent12 : accentContent;
     case .ghost:
       // Ghost is transparent and inherits the ambient colour unless the caller
       // opts into the local accent. Apply only that intended ambient field
       // after Mix composition so an explicit recipe colour or foreground can
       // override it without creating an invalid Flutter TextStyle.
       if (accent) {
-        foreground = highContrast ? accent12 : accentA11;
+        foreground = highContrast ? accent12 : accentContent;
       } else {
         textStyle = textStyle.merge(
           TextStyler.create(

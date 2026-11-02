@@ -24,8 +24,8 @@ extension WidgetTesterHelpers on WidgetTester {
   }) async {
     await pumpWidget(
       FortalTheme(
-        // Orla is both the default accent and the gray, so a recipe that
-        // reads one where it should read the other would still pass under it.
+        // Orla's raw accent scale is the gray's, so a recipe that reads one
+        // where it should read the other would still pass under it.
         accent: accent ?? (accentPalette == null ? .mar : null),
         accentPalette: accentPalette,
         mode: mode,

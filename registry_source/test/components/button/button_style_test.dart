@@ -27,7 +27,7 @@ void main() {
         Color color(ColorToken token) => MixScope.tokenOf(token, context);
         final box = resolved.spec.container.spec.box!.spec;
         final expectedFill = switch (variant) {
-          FortalButtonVariant.solid => color(FortalTokens.accent9),
+          FortalButtonVariant.solid => color(FortalTokens.accentSolid),
           FortalButtonVariant.soft => color(FortalTokens.accentA3),
           FortalButtonVariant.surface => color(FortalTokens.accentSurface),
           FortalButtonVariant.outline => null,
@@ -36,7 +36,7 @@ void main() {
         expect((box.decoration as BoxDecoration?)?.color, expectedFill);
         final expectedLabel = variant == FortalButtonVariant.solid
             ? color(FortalTokens.accentContrast)
-            : color(FortalTokens.accentA11);
+            : color(FortalTokens.accentContentAlpha);
         expect(resolved.spec.label.spec.style!.color, expectedLabel);
         final effects = resolved.spec.containerEffects?.behindContent;
         if (variant == FortalButtonVariant.surface ||

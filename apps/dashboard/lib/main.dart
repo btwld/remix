@@ -60,7 +60,6 @@ class _DashboardAppState extends State<DashboardApp> {
         builder: (context, child) => UiTheme(
           key: const ValueKey('dashboard-theme-scope'),
           accent: _settings.accentColor,
-          gray: _settings.grayColor,
           mode: _settings.appearance,
           panelBackground: _settings.panelBackground,
           radius: _settings.radius,

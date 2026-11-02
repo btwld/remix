@@ -6,6 +6,12 @@ import 'package:registry_source/fortal.dart';
 import '../helpers/contrast.dart';
 
 void main() {
+  final normalColors = resolveFortalTokens(
+    const FortalThemeData.light(accent: .ceu),
+  );
+  final darkColors = resolveFortalTokens(
+    const FortalThemeData.dark(accent: .ceu),
+  );
   group('Fortal high-contrast recipes', () {
     testWidgets('solid controls retain dark high-contrast interaction roles', (
       tester,
@@ -27,7 +33,7 @@ void main() {
         // Hover and press recolor the step-12 fill itself (no subtree
         // filter, so focus rings are untouched); the knockout keeps 7:1.
         final fill = _flexBoxColor(button.spec.container)!;
-        final label = orla.dark.scale.step(1);
+        final label = darkColors.gray.scale.step(1);
         expect(_textColor(button.spec.label), label);
         expect(
           contrastRatio(label, fill),
@@ -142,9 +148,12 @@ void main() {
             ceu.light.scale.step(12),
           );
           expect(normal.spec.icon.spec.color, ceu.light.contrast);
-          expect(highContrast.spec.icon.spec.color, orla.light.scale.step(1));
+          expect(
+            highContrast.spec.icon.spec.color,
+            normalColors.gray.scale.step(1),
+          );
         } else {
-          expect(normal.spec.icon.spec.color, ceu.light.scale.alphaStep(11));
+          expect(normal.spec.icon.spec.color, normalColors.accentContentAlpha);
           expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));
         }
       }
@@ -173,7 +182,10 @@ void main() {
           expect(_textColor(normal.spec.label), ceu.light.contrast);
           expect(_textColor(highContrast.spec.label), ceu.light.scale.step(1));
         } else {
-          expect(_textColor(normal.spec.label), ceu.light.scale.alphaStep(11));
+          expect(
+            _textColor(normal.spec.label),
+            normalColors.accentContentAlpha,
+          );
           expect(_textColor(highContrast.spec.label), ceu.light.scale.step(12));
         }
       }
@@ -195,9 +207,9 @@ void main() {
           ).build(context),
         );
 
-        expect(_textColor(normal.spec.text), ceu.light.scale.alphaStep(11));
+        expect(_textColor(normal.spec.text), normalColors.accentContentAlpha);
         expect(_textColor(highContrast.spec.text), ceu.light.scale.step(12));
-        expect(normal.spec.icon.spec.color, ceu.light.scale.alphaStep(11));
+        expect(normal.spec.icon.spec.color, normalColors.accentContentAlpha);
         expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));
       }
     });
@@ -234,7 +246,7 @@ void main() {
         } else {
           expect(
             normal.spec.indicator.spec.color,
-            ceu.light.scale.alphaStep(11),
+            normalColors.accentContentAlpha,
           );
           expect(
             highContrast.spec.indicator.spec.color,
@@ -274,7 +286,7 @@ void main() {
             ceu.light.scale.step(1),
           );
         } else {
-          expect(_boxColor(normal.spec.indicator), ceu.light.scale.step(11));
+          expect(_boxColor(normal.spec.indicator), normalColors.accentContent);
           expect(
             _boxColor(highContrast.spec.indicator),
             ceu.light.scale.step(12),
@@ -400,8 +412,8 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .ghost => ceu.light.scale.step(11),
-          .outline => ceu.light.scale.step(11),
+          .ghost => normalColors.accentContent,
+          .outline => normalColors.accentContent,
         };
         expect(_textColor(normal.spec.label), expectedNormal);
         expect(_textColor(highContrast.spec.label), ceu.light.scale.step(12));
@@ -492,7 +504,7 @@ void main() {
 
         final expectedNormal = switch (variant) {
           .surface => ceu.light.indicator,
-          .soft => ceu.light.scale.step(8),
+          .soft => normalColors.focus8,
         };
         expect(_boxColor(normal.spec.indicator), expectedNormal);
         expect(

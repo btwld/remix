@@ -62,7 +62,7 @@ BadgeStyler uiCodeStyle(
   final accent12 = uiResolveColor(context, UiTokens.accent12);
   final accentA3 = uiResolveColor(context, UiTokens.accentA3);
   final accentSolid = uiResolveColor(context, UiTokens.accentSolid);
-  final accentA11 = uiResolveColor(context, UiTokens.accentA11);
+  final accentContent = uiResolveColor(context, UiTokens.accentContentAlpha);
   final accentContrast = uiResolveColor(context, UiTokens.accentContrast);
   switch (variant) {
     case .solid:
@@ -70,16 +70,16 @@ BadgeStyler uiCodeStyle(
       foreground = highContrast ? accent1 : accentContrast;
     case .soft:
       fill = accentA3;
-      foreground = highContrast ? accent12 : accentA11;
+      foreground = highContrast ? accent12 : accentContent;
     case .outline:
-      foreground = highContrast ? accent12 : accentA11;
+      foreground = highContrast ? accent12 : accentContent;
     case .ghost:
       // Ghost is transparent and inherits the ambient colour unless the caller
       // opts into the local accent. Apply only that intended ambient field
       // after Mix composition so an explicit recipe colour or foreground can
       // override it without creating an invalid Flutter TextStyle.
       if (accent) {
-        foreground = highContrast ? accent12 : accentA11;
+        foreground = highContrast ? accent12 : accentContent;
       } else {
         textStyle = textStyle.merge(
           TextStyler.create(

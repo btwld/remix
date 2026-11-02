@@ -37,7 +37,7 @@ AvatarStyler {{valuePrefix}}AvatarStyle({
   final base = _{{valuePrefix}}AvatarBaseStyler(size, fallbackLength: fallbackLength);
   final softContent = highContrast
       ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentA11();
+      : {{typePrefix}}Tokens.accentContentAlpha();
   final solidContent = highContrast
       ? {{typePrefix}}Tokens.accent1()
       : {{typePrefix}}Tokens.accentContrast();
@@ -70,7 +70,11 @@ AvatarStyler _{{valuePrefix}}AvatarBaseStyler(
           style: fallbackText.mix(),
         ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
       )
-      .icon(.size(_{{valuePrefix}}AvatarIconSize(size)).color({{typePrefix}}Tokens.accentA11()))
+      .icon(
+        .size(
+          _{{valuePrefix}}AvatarIconSize(size),
+        ).color({{typePrefix}}Tokens.accentContentAlpha()),
+      )
       .size(dimension, dimension)
       .borderRadius(.all(_{{valuePrefix}}AvatarRadius(size)));
 }
