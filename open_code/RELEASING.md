@@ -6,10 +6,11 @@ and CLI publication have separate gates. Publishing tags/releases is a release
 operator action, not something the builder performs.
 
 When adding a preset, follow [Adding a first-party preset](ADDING_PRESETS.md).
-Extend both the aggregate hosted checks and the explicit remote-candidate smoke
-commands in `.github/workflows/registry.yml`, plus the examples below. Normal
-CI coverage does not establish that the promotion workflow smoke-tests a new
-preset. The commands here cover all currently implemented presets.
+Extend `open-code:release:check` in the root pubspec and the examples below.
+The promotion workflow runs that aggregate once with
+`REMIX_REGISTRY_RELEASE_REF` set to its exact commit, so the same preset list
+owns hosted and remote-candidate coverage. Normal checkout CI alone does not
+establish hosted compatibility. The commands here cover all current presets.
 
 ## Validate the candidate
 
@@ -190,8 +191,9 @@ fvm dart run melos run open-code:release:check
 
 Merge the reviewed commit to `main`. **Promote registry** validates
 generation drift, dependency constraints, CLI compatibility, and all supported
-presets against hosted runtimes. It smoke-tests that commit, then
-fast-forwards `registry-stable`. A hand-started run promotes only when it
+presets against hosted runtimes in one remote-candidate pass. Each preset
+reads the exact workflow commit; the workflow then fast-forwards
+`registry-stable`. A hand-started run promotes only when it
 is executing `main`.
 
 If the registry's Remix floor is not on pub.dev yet, the run fails and
@@ -264,3 +266,4 @@ review or restore that source separately through application version control.
 Schemas 1 and 2 are not readable. A project still on one names no registry, so
 it is reinitialized rather than migrated. See [the registry contract](REGISTRIES.md)
 for source ownership.
+
