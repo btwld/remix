@@ -82,7 +82,7 @@ void main() {
 
   testWidgets('the default glyph is the icon library cross', (tester) async {
     await _pump(tester);
-    expect(tester.widget<Icon>(find.byType(Icon)).icon, RemixIcons.cross2);
+    expect(tester.widget<Icon>(find.byType(Icon)).icon, RemixIcons.close);
   });
 
   testWidgets('a caller icon replaces the cross', (tester) async {

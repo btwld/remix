@@ -69,7 +69,7 @@ Color? _fill(TextFieldSpec spec) =>
     (spec.container.spec.decoration as BoxDecoration?)?.color;
 
 IconButtonSpec _clearSpec(WidgetTester tester) =>
-    tester.resolvedSpecOf<IconButtonSpec>(find.byIcon(RemixIcons.cross2));
+    tester.resolvedSpecOf<IconButtonSpec>(find.byIcon(RemixIcons.close));
 
 Color? _clearFill(WidgetTester tester) =>
     (_clearSpec(tester).container.spec.decoration as BoxDecoration?)?.color;
@@ -145,7 +145,7 @@ void main() {
       final controller = TextEditingController();
       addTearDown(controller.dispose);
       await _pump(tester, controller, mode: mode);
-      final icon = tester.widget<Icon>(find.byIcon(RemixIcons.magnifyingGlass));
+      final icon = tester.widget<Icon>(find.byIcon(RemixIcons.search));
       final upstream = heroUiCase('search-primary-full-rest-icon', mode: mode);
       expect(icon.size, upstream.size.width);
       expect(icon.color, heroUiToken(HeroUiTokens.fieldPlaceholder, mode));
@@ -216,7 +216,7 @@ void main() {
         mode: mode,
       );
       expect(
-        tester.opacityAbove(find.byIcon(RemixIcons.cross2)),
+        tester.opacityAbove(find.byIcon(RemixIcons.close)),
         double.parse(disabled.styles['opacity']!),
       );
     });
@@ -228,7 +228,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     await tester.pumpHeroUi(HeroUiSearchClearButton(onPressed: () {}));
     await tester.pumpAndSettle();
-    expect(find.byIcon(RemixIcons.cross2), findsOneWidget);
+    expect(find.byIcon(RemixIcons.close), findsOneWidget);
     expect(find.bySemanticsLabel('Clear search'), findsOneWidget);
     semantics.dispose();
   });
@@ -400,7 +400,7 @@ void main() {
     );
     // The browser compounds the group's dimming and the button's own.
     expect(
-      tester.opacityAbove(find.byIcon(RemixIcons.cross2)),
+      tester.opacityAbove(find.byIcon(RemixIcons.close)),
       double.parse(group.styles['opacity']!) *
           double.parse(clear.styles['opacity']!),
     );
