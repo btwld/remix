@@ -64,26 +64,6 @@ WidgetModifierConfig {{valuePrefix}}FocusRingModifier({
 }) =>
     WidgetModifierConfig.modifier(_{{typePrefix}}FocusRingMix(radius, visible, inset));
 
-extension {{typePrefix}}FocusRingToggle on ToggleStyler {
-  ToggleStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
-}
-
-extension {{typePrefix}}FocusRingToggleGroup on ToggleGroupItemStyler {
-  ToggleGroupItemStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
-}
-
-extension {{typePrefix}}FocusRingTab on TabStyler {
-  TabStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
-}
-
-extension {{typePrefix}}FocusRingDisclosure on DisclosureStyler {
-  DisclosureStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
-      trigger(BoxStyler().wrap({{valuePrefix}}FocusRingModifier(radius: radius)));
-}
-
 extension {{typePrefix}}FocusRingFlexBox on FlexBoxStyler {
   FlexBoxStyler {{valuePrefix}}FocusRing({Radius? radius}) =>
       wrap({{valuePrefix}}FocusRingModifier(radius: radius));

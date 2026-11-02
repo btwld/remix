@@ -36,12 +36,12 @@ ProgressStyler _{{valuePrefix}}ProgressBaseStyler({{typePrefix}}ProgressSize siz
     track: .width(.infinity).height(metrics.height),
     indicator: .height(metrics.height).borderRadius(.all(metrics.radius)),
     trackEffects: RemixBoxEffectsMix(
-      behindContent: _{{valuePrefix}}ProgressLayer(),
-      overContent: _{{valuePrefix}}ProgressLayer(),
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
     ),
     indicatorEffects: RemixBoxEffectsMix(
-      behindContent: _{{valuePrefix}}ProgressLayer(),
-      overContent: _{{valuePrefix}}ProgressLayer(),
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
     ),
   );
 }
@@ -117,11 +117,6 @@ ProgressStyler _{{valuePrefix}}ProgressSoftStyler(
 
 /// A 1px inset ring that follows the bar's radius.
 RemixBoxEffectLayerMix _{{valuePrefix}}ProgressInsetRing(Color color) =>
-    _{{valuePrefix}}ProgressLayer(
+    RemixBoxEffectLayerMix(
       shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
     );
-
-RemixBoxEffectLayerMix _{{valuePrefix}}ProgressLayer({
-  List<RemixBoxShadowMix>? shadows,
-  RemixBoxShadowListToken? shadowToken,
-}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);

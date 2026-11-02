@@ -36,12 +36,12 @@ ProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
     track: .width(.infinity).height(metrics.height),
     indicator: .height(metrics.height).borderRadius(.all(metrics.radius)),
     trackEffects: RemixBoxEffectsMix(
-      behindContent: _fortalProgressLayer(),
-      overContent: _fortalProgressLayer(),
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
     ),
     indicatorEffects: RemixBoxEffectsMix(
-      behindContent: _fortalProgressLayer(),
-      overContent: _fortalProgressLayer(),
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
     ),
   );
 }
@@ -117,11 +117,6 @@ ProgressStyler _fortalProgressSoftStyler(
 
 /// A 1px inset ring that follows the bar's radius.
 RemixBoxEffectLayerMix _fortalProgressInsetRing(Color color) =>
-    _fortalProgressLayer(
+    RemixBoxEffectLayerMix(
       shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
     );
-
-RemixBoxEffectLayerMix _fortalProgressLayer({
-  List<RemixBoxShadowMix>? shadows,
-  RemixBoxShadowListToken? shadowToken,
-}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);

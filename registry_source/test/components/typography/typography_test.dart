@@ -1341,6 +1341,7 @@ Future<void> _pump(
       pageBuilder: (context, _, _) => builder(context),
     ),
     home: FortalTheme(
+      accent: .mar,
       scaling: scaling,
       mode: brightness == Brightness.dark ? .dark : .light,
       child: DefaultTextStyle(style: ambient, child: child),
@@ -1397,6 +1398,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
   result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {
@@ -1428,6 +1430,7 @@ Future<Color> _resolveToken(
   late Color result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {

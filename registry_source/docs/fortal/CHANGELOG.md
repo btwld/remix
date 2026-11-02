@@ -22,6 +22,21 @@
 - Adopt Remix effects slots for control focus, anchor-width select sizing,
   styled radio/switch labels and caller-owned menu controls. Preserve the
   shared focus tokens and the independent Fortal palette/contrast roles.
+- **Breaking:** `FortalActionMenu` takes a `RemixMenuTrigger` instead of
+  `semanticLabel` and a `trigger` widget, and `fortalDataTableActionsTrigger`
+  now returns a `RemixMenuTrigger`.
+- **Breaking:** the select panel is at least as wide as its trigger
+  (`minWidth(remixAnchorWidth())`). A caller's `maxWidth` below the trigger width
+  must also set `minWidth`.
+- **Breaking:** remove the unused `fortalFocusRing()` extensions on
+  `ToggleStyler`, `ToggleGroupItemStyler`, `TabStyler` and `DisclosureStyler`.
+  Use `containerEffects(fortalFocusOutline())`, or `triggerEffects(...)` for a
+  disclosure.
+- Keep Tab inside one pane of `FortalSidebarLayout` and `VanillaSidebarLayout` at
+  a time, so keyboard focus no longer zigzags between the sidebar and the page.
+  Explicit `FocusTraversalOrder` values now apply within a pane, not across both.
+- A disabled surface select keeps gray step 2 and steps off it with `grayA2`, the
+  same treatment as a disabled surface text field.
 
 - **Breaking:** replace Mangue with Serra, a new earthy olive (`#6F7845`).
   `FortalAccentColor.mangue` and the `mangue` palette constant are removed

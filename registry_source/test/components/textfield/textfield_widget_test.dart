@@ -13,7 +13,7 @@ void main() {
   ) async {
     await tester.pumpRemixApp(const FortalTextField.surface());
     var context = tester.element(find.byType(FortalTextField));
-    var colors = resolveFortalTokens(const FortalThemeConfig());
+    var colors = resolveFortalTokens(const FortalThemeConfig(accent: .mar));
     var spec = fortalTextFieldStyle(
       variant: FortalTextFieldVariant.surface,
     ).resolve(context).spec;
@@ -24,7 +24,7 @@ void main() {
 
     await tester.pumpRemixApp(const FortalTextField.soft());
     context = tester.element(find.byType(FortalTextField));
-    colors = resolveFortalTokens(const FortalThemeConfig());
+    colors = resolveFortalTokens(const FortalThemeConfig(accent: .mar));
     spec = fortalTextFieldStyle(
       variant: FortalTextFieldVariant.soft,
     ).resolve(context).spec;

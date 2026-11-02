@@ -350,6 +350,7 @@ _resolve(
   result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: WidgetStateProvider(

@@ -64,26 +64,6 @@ WidgetModifierConfig fortalFocusRingModifier({
 }) =>
     WidgetModifierConfig.modifier(_FortalFocusRingMix(radius, visible, inset));
 
-extension FortalFocusRingToggle on ToggleStyler {
-  ToggleStyler fortalFocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap(fortalFocusRingModifier(radius: radius)));
-}
-
-extension FortalFocusRingToggleGroup on ToggleGroupItemStyler {
-  ToggleGroupItemStyler fortalFocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap(fortalFocusRingModifier(radius: radius)));
-}
-
-extension FortalFocusRingTab on TabStyler {
-  TabStyler fortalFocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap(fortalFocusRingModifier(radius: radius)));
-}
-
-extension FortalFocusRingDisclosure on DisclosureStyler {
-  DisclosureStyler fortalFocusRing({Radius? radius}) =>
-      trigger(BoxStyler().wrap(fortalFocusRingModifier(radius: radius)));
-}
-
 extension FortalFocusRingFlexBox on FlexBoxStyler {
   FlexBoxStyler fortalFocusRing({Radius? radius}) =>
       wrap(fortalFocusRingModifier(radius: radius));

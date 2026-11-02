@@ -154,7 +154,7 @@ directly for the rest of the Vector UI pack: the Outline family in outline and
 filled styles at native 24, 16, and 12 px masters, with `RoundedIcons`
 beside it. There is deliberately no runtime name-to-icon map on
 `RemixIcons` itself because dynamic lookup would keep the full font reachable.
-Fortal controls otherwise use Remix's inline Radix-shaped vector defaults.
+Fortal controls otherwise use Remix's inline vector defaults.
 
 Catalogs, galleries, and drift tests that must enumerate every glyph can import
 the opt-in index. An application that never imports it keeps full font
@@ -344,4 +344,4 @@ down to plain Remix stylers at any point.
 
 ## License
 
-BSD-3-Clause. See [LICENSE](LICENSE).
+BSD-3-Clause. See [LICENSE](../../LICENSE).

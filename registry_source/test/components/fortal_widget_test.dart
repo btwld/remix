@@ -130,7 +130,9 @@ void main() {
     testWidgets(
       'non-solid FortalBadge variants use the accessible content label',
       (tester) async {
-        final colors = resolveFortalTokens(const FortalThemeConfig());
+        final colors = resolveFortalTokens(
+          const FortalThemeConfig(accent: .mar),
+        );
 
         for (final variant in [
           FortalBadgeVariant.soft,
@@ -163,6 +165,7 @@ void main() {
 
         await tester.pumpWidget(
           FortalTheme(
+            accent: .mar,
             child: WidgetsApp(
               color: const Color(0xFFFFFFFF),
               builder: (context, child) {
@@ -198,6 +201,7 @@ void main() {
 
       await tester.pumpWidget(
         FortalTheme(
+          accent: .mar,
           child: WidgetsApp(
             color: const Color(0xFFFFFFFF),
             builder: (context, child) {

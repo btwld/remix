@@ -15,6 +15,9 @@ extension WidgetTesterHelpers on WidgetTester {
   /// Host-contract tests that verify minimal host requirements should provide
   /// only the capability under test, such as `Overlay.wrap` or a caller-owned
   /// `Navigator`.
+  ///
+  /// Defaults to the Mar accent. An [accentPalette] replaces it and keeps the
+  /// preset's Orla neutrals; pass `accent: .orla` for the preset's default.
   Future<void> pumpRemixApp(
     Widget widget, {
     TextDirection textDirection = TextDirection.ltr,
@@ -24,7 +27,9 @@ extension WidgetTesterHelpers on WidgetTester {
   }) async {
     await pumpWidget(
       FortalTheme(
-        accent: accent,
+        // Orla's raw accent scale is the gray's, so a recipe that reads one
+        // where it should read the other would still pass under it.
+        accent: accent ?? (accentPalette == null ? .mar : null),
         accentPalette: accentPalette,
         mode: mode,
         child: WidgetsApp(
@@ -53,7 +58,9 @@ extension WidgetTesterHelpers on WidgetTester {
 }
 
 /// Resolves a value inside [FortalTheme], optionally selecting the accent or
-/// palette, appearance, and widget states. Defaults retain the neutral preset.
+/// palette, appearance, and widget states. Defaults to the same Mar accent as
+/// [WidgetTesterHelpers.pumpRemixApp]; pass `accent: .orla` for the preset's
+/// neutral default.
 Future<T> resolveInFortalTheme<T>(
   WidgetTester tester,
   T Function(BuildContext context) resolve, {

@@ -63,26 +63,6 @@ WidgetModifierConfig uiFocusRingModifier({
   double inset = 0,
 }) => WidgetModifierConfig.modifier(_UiFocusRingMix(radius, visible, inset));
 
-extension UiFocusRingToggle on ToggleStyler {
-  ToggleStyler uiFocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap(uiFocusRingModifier(radius: radius)));
-}
-
-extension UiFocusRingToggleGroup on ToggleGroupItemStyler {
-  ToggleGroupItemStyler uiFocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap(uiFocusRingModifier(radius: radius)));
-}
-
-extension UiFocusRingTab on TabStyler {
-  TabStyler uiFocusRing({Radius? radius}) =>
-      container(FlexBoxStyler().wrap(uiFocusRingModifier(radius: radius)));
-}
-
-extension UiFocusRingDisclosure on DisclosureStyler {
-  DisclosureStyler uiFocusRing({Radius? radius}) =>
-      trigger(BoxStyler().wrap(uiFocusRingModifier(radius: radius)));
-}
-
 extension UiFocusRingFlexBox on FlexBoxStyler {
   FlexBoxStyler uiFocusRing({Radius? radius}) =>
       wrap(uiFocusRingModifier(radius: radius));

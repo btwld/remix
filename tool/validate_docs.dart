@@ -10,6 +10,22 @@ final _removedComponentBackgroundColorInvocation = RegExp(
   r'\s*\.backgroundColor\s*\(',
 );
 
+final _retiredFortalAccents = <(RegExp, String)>[
+  (
+    RegExp(r'\.mangue\b'),
+    'retired Mangue accent; use serra (errors use the dedicated error palette)',
+  ),
+  (
+    RegExp(
+      r'\baccent\s*:\s*(?:[A-Z][A-Za-z0-9_]*AccentColor)?\.'
+      r'(?:gray|mauve|slate|sage|olive|sand|tomato|red|ruby|crimson|pink|plum|'
+      r'purple|violet|iris|indigo|blue|cyan|teal|jade|green|grass|brown|orange|'
+      r'sky|mint|lime|yellow|amber|gold|bronze)\b',
+    ),
+    'retired Radix accent name; use orla, mar, ceu, serra, sol, duna or caju',
+  ),
+];
+
 final _retiredApis = <(RegExp, String)>[
   (
     RegExp(
@@ -133,9 +149,10 @@ final _retiredApis = <(RegExp, String)>[
     ),
     'retired theme scope class; use <Prefix>Theme',
   ),
+  ..._retiredFortalAccents,
   (
-    RegExp(r'\.mangue\b'),
-    'retired Mangue accent; use serra (errors use the dedicated error palette)',
+    RegExp(r'\bRadixColor\b|\bradix_colors\b'),
+    'retired Radix color API; select a named Fortal theme',
   ),
   (
     RegExp(
@@ -218,6 +235,10 @@ const _consumerDocumentationFiles = <String>[
 ];
 
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
+  (
+    RegExp(r'Radix[- ]Themes[- ]inspired|Radix-shaped', caseSensitive: false),
+    'stale claim that Fortal follows Radix Themes; it adopts Radix color data only',
+  ),
   (
     RegExp(r'one enum-based constructor', caseSensitive: false),
     'stale single-constructor Fortal claim',
@@ -411,6 +432,7 @@ Future<void> main() async {
           .whereType<File>()
           .where((file) => file.path.endsWith('.md')),
   ]..sort((a, b) => a.path.compareTo(b.path));
+
   final extraction = _extractAnalyzableSnippets(
     [...docs, ...skillDocuments],
     workspaceRoot,
@@ -541,9 +563,19 @@ void _checkSkillEvalMetadata(Directory workspaceRoot, List<String> failures) {
       continue;
     }
 
+    final source = evalsFile.readAsStringSync();
+    // Evals are JSON, so the snippet extraction never reads them.
+    for (final (pattern, description) in _retiredFortalAccents) {
+      if (pattern.hasMatch(source)) {
+        failures.add(
+          '$skillDirectory/evals/evals.json contains a $description.',
+        );
+      }
+    }
+
     Object? decoded;
     try {
-      decoded = jsonDecode(evalsFile.readAsStringSync());
+      decoded = jsonDecode(source);
     } on FormatException catch (error) {
       failures.add('$skillDirectory/evals/evals.json is invalid: $error');
       continue;

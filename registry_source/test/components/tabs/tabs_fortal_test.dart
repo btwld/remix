@@ -27,6 +27,7 @@ Future<({TabSpec spec, Color grayA3, Color accentA3})> _resolve(
 
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) => WidgetStateStyleOverride(

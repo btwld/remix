@@ -36,7 +36,7 @@ approximations:
       trailing: ListenableBuilder(listenable: controller, builder: (_, _) =>
           controller.text.isEmpty ? const SizedBox.shrink()
           : HeroUiSearchClearButton(onPressed: controller.clear)),
-  - The search and clear glyphs are Remix icons (Radix magnifier and cross), not HeroUI's SVGs.
+  - The search and clear glyphs are Remix icons (magnifier and cross), not HeroUI's SVGs.
   - While invalid, `search-field.css` hides the description and shows a FieldError; the recipe keeps one `helperText` line that becomes the message.
   - Focus on the clear button does not keep the group's focus ring, which upstream draws on `:focus-within`.
   - The browser's native clear control and autofill highlight do not exist in Flutter.

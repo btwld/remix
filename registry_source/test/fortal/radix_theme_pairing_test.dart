@@ -60,6 +60,7 @@ void main() {
         final spec = await resolveInFortalTheme(
           tester,
           (context) => fortalButtonStyle().build(context).spec,
+          accent: .orla,
           mode: dark ? .dark : .light,
           states: {?state},
         );
@@ -78,6 +79,7 @@ void main() {
         final spec = await resolveInFortalTheme(
           tester,
           (context) => fortalSwitchStyle().build(context).spec,
+          accent: .orla,
           mode: dark ? .dark : .light,
           states: {WidgetState.selected, if (pressed) WidgetState.pressed},
         );

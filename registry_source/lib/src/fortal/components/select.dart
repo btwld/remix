@@ -159,13 +159,21 @@ SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
         ),
       )
       .onDisabled(
-        .color(FortalTokens.grayA2())
+        .color(FortalTokens.gray2())
             .label(.color(FortalTokens.grayA11()))
             .icon(.color(FortalTokens.grayA9()))
             .indicator(.color(FortalTokens.grayA9()))
             .containerEffects(
               RemixBoxEffectsMix.behindContent(
-                fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
+                fortalInsetSurface(strokes: [FortalTokens.grayA6()]).merge(
+                  RemixBoxEffectLayerMix(
+                    gradients: [
+                      RemixLinearGradientMix(
+                        colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
       );
@@ -213,7 +221,7 @@ SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
     .size2 || .size3 => FortalTokens.radius4(),
   };
   return SelectContentStyler()
-      // select.css:45: `min-width: var(--radix-select-trigger-width)`.
+      // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(
         .all(switch (size) {

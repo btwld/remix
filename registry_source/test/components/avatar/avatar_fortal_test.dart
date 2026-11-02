@@ -77,6 +77,7 @@ void main() {
       for (final (size, dimension, _) in metrics) {
         await tester.pumpWidget(
           FortalTheme(
+            accent: .mar,
             mode: .light,
             child: WidgetsApp(
               color: const Color(0xFFFFFFFF),
@@ -98,6 +99,7 @@ void main() {
         double? builderSize;
         await tester.pumpWidget(
           FortalTheme(
+            accent: .mar,
             mode: .light,
             child: WidgetsApp(
               color: const Color(0xFFFFFFFF),
@@ -205,6 +207,7 @@ Future<AvatarSpec> _resolve(
   late AvatarSpec resolved;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: .light,
       scaling: scaling,
       radius: radius,
@@ -242,6 +245,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,
