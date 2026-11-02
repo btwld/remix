@@ -22,7 +22,7 @@ repository does not commit installed skills; the index points at the sources.
 ```
 
 - `using-remix`: app UI with `Remix*` widgets or an installed Vanilla/Fortal/HeroUI preset.
-- `building-remix-design-system`: authoring a first-party preset or a third-party registry; read `open_code/ADDING_PRESETS.md` before adding a preset beside Fortal.
+- `building-remix-design-system`: authoring a first-party preset or a third-party registry.
 - `mix`: stylers, specs, tokens, variants, animations, and modifiers.
 - `releasing-a-package`: version bumps, contract checkers, release PRs, and tags.
 

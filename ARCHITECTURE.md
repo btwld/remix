@@ -63,7 +63,7 @@ checkout consumer success cannot establish hosted minimum-version support.
 
 ## Fortal owns its visual contract (Fortal ADR-0003)
 
-2026-10-29 · Accepted; supersedes Radix Themes visual parity · [Specification](registry_source/specs/fortal.md) · [Design provenance](registry_source/docs/fortal/refresh-brief.md)
+2026-10-29 · Accepted; supersedes external visual parity · [Specification](registry_source/specs/fortal.md) · [Design provenance](registry_source/docs/fortal/refresh-brief.md)
 
 Use seven owned, deterministic seed-generated palettes and Fortal's own visual
 specification, retaining twelve-step roles and Remix/Naked UI behavior, because
@@ -73,6 +73,19 @@ exception; the former parity gate may be removed only after replacements pass.
 The unreleased preset drops classic control/card/inline variants without aliases,
 keeps radius/scaling/appearance and high-contrast options, and defers full
 Fortaleza branding, Anton and cobogó patterns.
+
+## HeroUI ports reference design over Remix (HeroUI ADR-0001, ADR-0002)
+
+2026-10-19 · Accepted; shared-API adoption recorded 2026-10-27 · [Reference evidence](registry_source/reference/heroui_3_2_6/README.md) · [Family map](registry_source/reference/heroui_3_2_6/families.json) · [Worksheets](registry_source/specs/heroui/)
+
+Reproduce HeroUI's visual design and semantic token model over Remix and Naked UI,
+keeping rendering, interaction, focus, semantics and state in the shared runtime
+while validating appearance against pinned reference evidence. Supported families
+map to `@MixWidget` recipes or stateless Remix/Mix compositions using HeroUI's
+component, variant and size vocabulary, while families requiring behavior Remix
+does not provide remain deferred in `families.json`. Shared-library additions
+must be general across presets, additive and shipped separately before preset
+adoption, with remaining visual approximations recorded in `specs/heroui/`.
 
 ## Retain the private Fortal package (Fortal ADR-0001, superseded)
 
