@@ -28,6 +28,32 @@ The isolated consumer checker injects a test-only transport for the committed
 resolution, generation, analysis and consumers without requiring unpublished
 content on GitHub. This is not a local-registry feature of the shipped CLI.
 
+## Bootstrap the current train
+
+Remix `1.0.0-beta.14` raises the registry floor and adds a third preset, so
+this train has a fixed order. Each package keeps its own gate; if one fails,
+stop there rather than publishing around it.
+
+1. **Publish `remix_cli` `1.0.0-beta.1` from the historical commit
+   `d153c5c3975a67aa879e2d613ccefbe79b0e81ab`, before Remix `1.0.0-beta.14`.**
+   Its `packages/remix_cli` tree (`e6efa8d1e063493fe84045848339e3895eaf566f`)
+   is identical to the reviewed merge's; confirm that with
+   `git rev-parse <commit>:packages/remix_cli` first. That commit's hosted check
+   covers the Vanilla and Fortal presets at the `^1.0.0-beta.13` floor and
+   requires a fresh app to resolve Remix exactly at that floor, so it can only
+   pass while `1.0.0-beta.13` is the newest Remix on pub.dev. The reviewed
+   merge can't run this gate, because its floors aren't published yet.
+2. Publish `naked_ui` `1.4.0`, then `remix_ui_icons` `1.0.0-beta.1`, from the
+   reviewed merge. Wait until pub.dev serves each one.
+3. Publish Remix `1.0.0-beta.14` from the reviewed merge.
+4. Re-run **Promote registry** on `main`, then run the hosted checks below,
+   including the `--hosted-cli` ones.
+
+Merging before step 1 is safe: promotion fails until the floor is published, so
+`registry-stable` stays put. Tags follow the
+[release skill's tag check](../.claude/skills/releasing-a-package/SKILL.md#check-a-tag-before-creating-it).
+Remove this section when the train is done.
+
 ## Publish the required runtimes first
 
 Confirm every hosted dependency floor exists on pub.dev. Runtime releases use
