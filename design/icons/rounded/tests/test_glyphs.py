@@ -85,6 +85,17 @@ class InventoryTests(unittest.TestCase):
         for path, sha in pinned.items():
             self.assertEqual(hashlib.sha256((ROOT / 'generated' / path).read_bytes()).hexdigest(), sha, path)
 
+    def test_all_462_reviewed_drawings_are_byte_identical(self):
+        # Frozen from the reviewed art. Changing a drawing on purpose means
+        # re-reviewing it and replacing that hash here, in the same change.
+        pinned = json.loads((ROOT / 'tests' / 'fixtures' / 'reviewed-462-sha256.json').read_text())
+        self.assertEqual(len(pinned), 462)
+        generated = ROOT / 'generated'
+        current = {p.relative_to(generated).as_posix() for p in (generated / 'rounded').rglob('*.svg')}
+        self.assertEqual(current, set(pinned))
+        for path, sha in pinned.items():
+            self.assertEqual(hashlib.sha256((generated / path).read_bytes()).hexdigest(), sha, path)
+
     def test_every_usage_text_is_one_the_shared_contract_classifies(self):
         allowed = {
             'Use the action name on the enclosing control; 12 px is for labeled information.',
