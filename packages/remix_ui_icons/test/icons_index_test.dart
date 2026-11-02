@@ -55,7 +55,10 @@ void main() {
     };
     expect(labelled, {
       for (final family in ['outline', 'rounded'])
-        for (final master in [12, 16, 24]) '$family.warning@$master',
+        for (final master in [12, 16, 24]) ...[
+          '$family.warning@$master',
+          '$family.arrowUpRight@$master',
+        ],
       for (final master in [12, 16, 24]) 'rounded.branch@$master',
       'outline.help@12',
       'outline.branch@12',

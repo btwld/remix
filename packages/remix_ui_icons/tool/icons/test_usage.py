@@ -1,6 +1,6 @@
 """The manifest's usage rules agree with the Vector UI design contract.
 
-The contract lives in each family's catalog (`review.usage`,
+The contract lives in each family's catalog (`meaning`, `review.usage`,
 `review.usageRestriction`) and the pack and family READMEs. This test derives
 which glyphs need a visible label from those sources and compares the result
 with the manifest, so a contract change cannot silently leave the generated
@@ -38,6 +38,21 @@ CATALOG_USAGE.update({
     'Announce progress in text; the caller owns motion and reduced-motion behavior.': None,
 })
 CATALOG_RESTRICTIONS = {"warning-visible-label": ALL}
+
+# Catalog `meaning` texts that mention a label: (masters it requires a label at).
+# `None` means the meaning adds no requirement of its own: the enclosing control
+# can carry the name, or `review.usage` or a restriction record states the rule.
+CATALOG_MEANING = {
+    # The only place these two catalogs state Arrow up right's rule.
+    "Open another destination. Keep a visible action label.": ALL,
+    "Up direction or collapse, with a label.": None,
+    "Down direction or disclosure, with a label.": None,
+    "A warning requiring a visible text label in every supported appearance and native size.": None,
+    "A branching relationship. Use a visible label, especially at 12 px.": None,
+    "Jump left or to the first item, with an enclosing action label.": None,
+    "Jump right or to the last item, with an enclosing action label.": None,
+    "An assisted or automatic action, with an action label.": None,
+}
 
 # Requirements stated only in prose: (source, quote, family, concept, masters).
 PROSE = (
@@ -89,6 +104,9 @@ class UsageContractTest(unittest.TestCase):
                 restriction = review.get("usageRestriction")
                 if restriction:
                     self.assertIn(restriction, CATALOG_RESTRICTIONS, f"{family.key}.{icon['id']}")
+                meaning = icon.get("meaning", "")
+                if re.search(r"\blabel\b", meaning, re.IGNORECASE):
+                    self.assertIn(meaning, CATALOG_MEANING, f"{family.key}.{icon['id']}: classify {meaning!r}")
 
     def test_required_labels_match_the_contract(self) -> None:
         expected: set[tuple[str, str, int]] = set()
@@ -96,6 +114,7 @@ class UsageContractTest(unittest.TestCase):
             for icon in _catalog(family.key):
                 review = icon.get("review", {})
                 for masters in (
+                    CATALOG_MEANING.get(icon.get("meaning")),
                     CATALOG_USAGE.get(review.get("usage")),
                     CATALOG_RESTRICTIONS.get(review.get("usageRestriction")),
                 ):
@@ -105,6 +124,16 @@ class UsageContractTest(unittest.TestCase):
             expected |= {(family, concept, master) for master in masters}
 
         self.assertEqual(_manifest_required(), expected)
+
+    def test_arrow_up_right_requires_its_action_label_everywhere(self) -> None:
+        # Written out, not derived, so a catalog edit cannot quietly drop the rule.
+        required = _manifest_required()
+        for family in ("outline", "rounded"):
+            for master in MASTERS:
+                self.assertIn((family, "arrow-up-right", master), required)
+        glyphs = [glyph for glyph in MANIFEST.glyphs if glyph.concept.id == "arrow-up-right"]
+        self.assertEqual(len(glyphs), 12)  # Two families, two styles, three masters.
+        self.assertTrue(all(glyph.requires_label for glyph in glyphs))
 
 
 

@@ -103,13 +103,13 @@ concepts:
     since: 1.0.0-beta.1
     usage:
       - families: [outline]
-        kind: label-contextual
-        note: "Opens another destination; keep a visible action label."
+        kind: label-required
+        note: "Requires a visible action label at every size: it opens another destination."
         source: outline/catalog/icons.json
         quote: "Open another destination. Keep a visible action label."
       - families: [rounded]
-        kind: label-contextual
-        note: "Opens another destination; keep a visible action label."
+        kind: label-required
+        note: "Requires a visible action label at every size: it opens another destination."
         source: rounded/catalog/icons.json
         quote: "Open another destination. Keep a visible action label."
   chevron-left:
