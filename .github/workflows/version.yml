@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   version:
+    timeout-minutes: 15
     name: Bump Remix version and changelog
     runs-on: ubuntu-latest
     steps:

@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   build:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_BASE_PATH: /remix
@@ -81,6 +82,7 @@ jobs:
           path: build/pages
 
   deploy:
+    timeout-minutes: 10
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     environment:
       name: github-pages
