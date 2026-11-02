@@ -108,6 +108,24 @@ void main() {
       );
     });
 
+    test('a raw blurred shadow counts as casting one', () {
+      appendToButton('final shadow = BoxShadowMix(blurRadius: 8);');
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('button casts a shadow')),
+      );
+    });
+
+    test('a modifier or nested generics cannot hide a public widget', () {
+      appendToButton(
+        'final class FortalHidden<T extends List<int>> extends StatelessWidget {}',
+      );
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('FortalHidden is public')),
+      );
+    });
+
     test('a generated public widget must join the catalog', () {
       File(
         '${candidate.path}/registry_source/lib/src/fortal/components/button.g.dart',

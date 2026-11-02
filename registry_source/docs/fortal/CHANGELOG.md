@@ -28,8 +28,13 @@
 - **Breaking:** the select panel is at least as wide as its trigger
   (`minWidth(remixAnchorWidth())`). A caller's `maxWidth` below the trigger width
   must also set `minWidth`.
-- Keep Tab inside one pane of `FortalSidebarLayout` at a time, so keyboard focus
-  no longer zigzags between the sidebar and the page.
+- **Breaking:** remove the unused `fortalFocusRing()` extensions on
+  `ToggleStyler`, `ToggleGroupItemStyler`, `TabStyler` and `DisclosureStyler`.
+  Use `containerEffects(fortalFocusOutline())`, or `triggerEffects(...)` for a
+  disclosure.
+- Keep Tab inside one pane of `FortalSidebarLayout` and `VanillaSidebarLayout` at
+  a time, so keyboard focus no longer zigzags between the sidebar and the page.
+  Explicit `FocusTraversalOrder` values now apply within a pane, not across both.
 - A disabled surface select keeps gray step 2 and steps off it with `grayA2`, the
   same treatment as a disabled surface text field.
 

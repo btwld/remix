@@ -432,26 +432,6 @@ Future<void> main() async {
           .whereType<File>()
           .where((file) => file.path.endsWith('.md')),
   ]..sort((a, b) => a.path.compareTo(b.path));
-  // Evals are JSON, so the snippet extraction below never reads them.
-  for (final relativeDirectory in _publishedSkillDirectories) {
-    final evals = Directory('${workspaceRoot.path}/$relativeDirectory/evals');
-    if (!evals.existsSync()) continue;
-    for (final file in evals.listSync().whereType<File>()) {
-      final name = file.uri.pathSegments.last;
-      final source = file.readAsStringSync();
-      for (final (pattern, description) in _retiredFortalAccents) {
-        if (pattern.hasMatch(source)) {
-          failures.add(
-            '$relativeDirectory/evals/$name contains a $description.',
-          );
-        }
-      }
-    }
-  }
-  if (failures.isNotEmpty) {
-    _finish(failures);
-    return;
-  }
 
   final extraction = _extractAnalyzableSnippets(
     [...docs, ...skillDocuments],
@@ -583,9 +563,19 @@ void _checkSkillEvalMetadata(Directory workspaceRoot, List<String> failures) {
       continue;
     }
 
+    final source = evalsFile.readAsStringSync();
+    // Evals are JSON, so the snippet extraction never reads them.
+    for (final (pattern, description) in _retiredFortalAccents) {
+      if (pattern.hasMatch(source)) {
+        failures.add(
+          '$skillDirectory/evals/evals.json contains a $description.',
+        );
+      }
+    }
+
     Object? decoded;
     try {
-      decoded = jsonDecode(evalsFile.readAsStringSync());
+      decoded = jsonDecode(source);
     } on FormatException catch (error) {
       failures.add('$skillDirectory/evals/evals.json is invalid: $error');
       continue;

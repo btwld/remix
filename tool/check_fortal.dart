@@ -167,6 +167,8 @@ const _familyParts = {
 };
 
 /// Scans recipe sources for rules the spec states but no token can enforce.
+/// This only sees spellings, so it is a tripwire rather than a proof: a shadow
+/// built another way, or a widget outside `components/`, gets past it.
 void _checkRecipeSources(
   String root,
   Map<String, dynamic> catalog,
@@ -187,7 +189,9 @@ void _checkRecipeSources(
       final text = file.readAsStringSync();
       if (!name.endsWith('.g')) {
         if (!_floatingRecipes.contains(name) &&
-            RegExp(r'FortalTokens\.shadow[1-6]').hasMatch(text)) {
+            RegExp(
+              r'FortalTokens\.shadow[1-6]|\bBoxShadowMix\(|\bblurRadius\s*:',
+            ).hasMatch(text)) {
           failures.add('$name casts a shadow but is not a floating layer.');
         }
         if (!_handBuiltRingAllowed.contains(name) &&
@@ -198,7 +202,8 @@ void _checkRecipeSources(
       if (directory != 'components') continue;
       // Most public widgets are generated, so this one reads .g.dart as well.
       for (final match in RegExp(
-        r'^class (Fortal\w+)(?:<[^>]*>)?\s+extends\s+(?:Stateless|Stateful)Widget',
+        r'^(?:(?:final|base|sealed)\s+)*class (Fortal\w+)\b[^{]*?\bextends\s+'
+        r'(?:Stateless|Stateful)Widget',
         multiLine: true,
       ).allMatches(text)) {
         final widget = match.group(1)!;

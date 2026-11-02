@@ -74,57 +74,62 @@ void main() {
       expect(visited, names);
     });
 
-    testWidgets('$preset: the panes keep an app traversal policy', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
+    for (final inSidebar in [false, true]) {
+      final pane = inSidebar ? 'sidebar' : 'body';
+      testWidgets('$preset: the $pane keeps an app traversal policy', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1200, 800);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
 
-      final first = FocusNode(debugLabel: 'first');
-      final second = FocusNode(debugLabel: 'second');
-      final third = FocusNode(debugLabel: 'third');
-      addTearDown(first.dispose);
-      addTearDown(second.dispose);
-      addTearDown(third.dispose);
+        final first = FocusNode(debugLabel: 'first');
+        final second = FocusNode(debugLabel: 'second');
+        final third = FocusNode(debugLabel: 'third');
+        addTearDown(first.dispose);
+        addTearDown(second.dispose);
+        addTearDown(third.dispose);
 
-      await tester.pumpWidget(
-        WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          builder: (context, _) => FocusTraversalGroup(
-            policy: OrderedTraversalPolicy(),
-            child: layout(
-              const SizedBox.shrink(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // Stacked in reverse: by position alone, Tab from the bottom
-                // stop would wrap to the top one, third.
-                children: [
-                  FocusTraversalOrder(
-                    order: const NumericFocusOrder(3),
-                    child: _stop(third),
-                  ),
-                  FocusTraversalOrder(
-                    order: const NumericFocusOrder(2),
-                    child: _stop(second),
-                  ),
-                  FocusTraversalOrder(
-                    order: const NumericFocusOrder(1),
-                    child: _stop(first),
-                  ),
-                ],
+        final stops = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // Stacked in reverse: by position alone, Tab from the bottom stop
+          // would wrap to the top one, third.
+          children: [
+            FocusTraversalOrder(
+              order: const NumericFocusOrder(3),
+              child: _stop(third),
+            ),
+            FocusTraversalOrder(
+              order: const NumericFocusOrder(2),
+              child: _stop(second),
+            ),
+            FocusTraversalOrder(
+              order: const NumericFocusOrder(1),
+              child: _stop(first),
+            ),
+          ],
+        );
+
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            builder: (context, _) => FocusTraversalGroup(
+              policy: OrderedTraversalPolicy(),
+              child: layout(
+                inSidebar ? stops : const SizedBox.shrink(),
+                inSidebar ? const SizedBox.shrink() : stops,
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      first.requestFocus();
-      await tester.pump();
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
+        first.requestFocus();
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
 
-      expect(FocusManager.instance.primaryFocus, second);
-    });
+        expect(FocusManager.instance.primaryFocus, second);
+      });
+    }
   }
 }

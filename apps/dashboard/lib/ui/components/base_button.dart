@@ -236,10 +236,10 @@ typedef _InteractionStateStyles = ({
   UiBaseButtonStateStyle disabled,
 });
 
-// Solid hover and press recolor only the fill. The brightness and saturation
-// operations are applied to the fill color itself, never to the painted
-// subtree, so the label, icon, spinner and 2px focus ring keep their colors
-// (a subtree filter would also dim or lighten the focus ring against the
+// Solid hover and press recolor only the fill. The brightness, saturation and
+// contrast operations are applied to the fill color itself, never to the
+// painted subtree, so the label, icon, spinner and 2px focus ring keep their
+// colors (a subtree filter would also dim or lighten the focus ring against the
 // unfiltered page) and caller foreground overrides stay in force.
 _InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   final foreground = highContrast

@@ -15,6 +15,9 @@ extension WidgetTesterHelpers on WidgetTester {
   /// Host-contract tests that verify minimal host requirements should provide
   /// only the capability under test, such as `Overlay.wrap` or a caller-owned
   /// `Navigator`.
+  ///
+  /// Defaults to the Mar accent. An [accentPalette] replaces it and keeps the
+  /// preset's Orla neutrals; pass `accent: .orla` for the preset's default.
   Future<void> pumpRemixApp(
     Widget widget, {
     TextDirection textDirection = TextDirection.ltr,
