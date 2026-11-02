@@ -16,7 +16,9 @@ dart run melos run icons:check      # the checks CI runs, without Flutter
 - `manifest.yaml` is the source of truth: the families, every concept with its
   Dart name, families, tags, RTL behavior, label requirement, and version, and
   what became of every 0.1.x name (an exact replacement, a partial match, or
-  removed, each with the closest Lucide icon).
+  removed, each with the closest Lucide icon). Its `source.revision` is a
+  provenance pointer, validated as a full commit SHA and never resolved, so
+  the tools work from a source archive or a shallow clone.
 - `design/icons/<family>/generated/<family>/<style>/<master>/<concept>.svg`
   are the drawings. They are already filled outlines (one `currentColor`
   path, even-odd fill, no strokes), so nothing is expanded before the build;

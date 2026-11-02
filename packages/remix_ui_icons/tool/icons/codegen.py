@@ -2,7 +2,7 @@
 
 The output is already in `dart format` style (80 columns, tall style), so a
 regenerate-and-diff check needs no Dart toolchain and the workspace format
-check sees no drift. `test_codegen.py` holds the formatting rules to that.
+check sees no drift. `test_tool.py` holds the formatting rules to that.
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ import re
 import textwrap
 from dataclasses import dataclass
 
-from manifest import Family, Glyph, LegacyIcon, Manifest
+from manifest import Family, Glyph, Manifest
 
 HEADER = (
     "// GENERATED CODE - DO NOT MODIFY BY HAND.\n"
@@ -327,7 +327,3 @@ def public_api(manifest: Manifest) -> list[str]:
                     f"{family.sets_class_name}.{concept.name}Filled",
                 ]
     return sorted(members)
-
-
-def legacy_targets(manifest: Manifest) -> dict[str, LegacyIcon]:
-    return {icon.name: icon for icon in manifest.legacy}

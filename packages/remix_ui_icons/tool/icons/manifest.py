@@ -185,6 +185,9 @@ class Manifest:
     font_family: str
     start_codepoint: int
     source_root: Path
+    # Provenance only: records the commit the masters were reviewed at. It is
+    # validated for shape and never resolved, so generation and checks work
+    # from a source archive or a shallow clone. Glyph bytes bind the drawings.
     source_revision: str
     reserved: tuple[Reserved, ...]
     families: tuple[Family, ...]

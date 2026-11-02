@@ -11,7 +11,9 @@ fontFamily: RemixIcons
 startCodepoint: "0xE200"
 source:
   root: ../../../../design/icons
-  # Commit containing the current masters; glyph source hashes bind each drawing.
+  # Provenance pointer to a commit containing the current masters. It is only
+  # validated as a full SHA and never resolved, so archives and shallow clones
+  # work; glyph source hashes are what bind each drawing.
   revision: 20e148ea04ddf980fdf98618f66641bd95869be1
 reserved:
   # remix_ui_icons 0.1.x shipped the Radix Icons 1.3.2 glyphs here. Never reuse.
