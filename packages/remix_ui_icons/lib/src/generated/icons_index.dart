@@ -11108,8 +11108,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.checkCircle,
     tags: ['checkCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11122,8 +11124,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.checkCircleFilled,
     tags: ['checkCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11136,8 +11140,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.checkCircle16,
     tags: ['checkCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11150,8 +11156,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.checkCircleFilled16,
     tags: ['checkCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11164,8 +11172,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.checkCircle12,
     tags: ['checkCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11178,8 +11188,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.checkCircleFilled12,
     tags: ['checkCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11193,7 +11205,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['circle'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11207,7 +11221,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['circle'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11221,7 +11237,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['circle'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11235,7 +11253,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['circle'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11249,7 +11269,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['circle'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11263,7 +11285,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['circle'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11276,8 +11300,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.ban,
     tags: ['circleBackslash'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11290,8 +11316,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.banFilled,
     tags: ['circleBackslash'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11304,8 +11332,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.ban16,
     tags: ['circleBackslash'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11318,8 +11348,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.banFilled16,
     tags: ['circleBackslash'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11332,8 +11364,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.ban12,
     tags: ['circleBackslash'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11346,8 +11380,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.banFilled12,
     tags: ['circleBackslash'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11360,8 +11396,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.closeCircle,
     tags: ['crossCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11374,8 +11412,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.closeCircleFilled,
     tags: ['crossCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11388,8 +11428,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.closeCircle16,
     tags: ['crossCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11402,8 +11444,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.closeCircleFilled16,
     tags: ['crossCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11416,8 +11460,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.closeCircle12,
     tags: ['crossCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11430,8 +11476,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.closeCircleFilled12,
     tags: ['crossCircled'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11529,7 +11577,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dotFilled'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11543,7 +11593,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dotFilled'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11557,7 +11609,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dotFilled'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11571,7 +11625,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dotFilled'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11585,7 +11641,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dotFilled'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -11599,7 +11657,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['dotFilled'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12284,8 +12344,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.wand,
     tags: ['magicWand'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Keep a visible action label: the wand does not say what the automatic action does.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12298,8 +12360,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.wandFilled,
     tags: ['magicWand'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Keep a visible action label: the wand does not say what the automatic action does.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12312,8 +12376,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.wand16,
     tags: ['magicWand'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Keep a visible action label: the wand does not say what the automatic action does.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12326,8 +12392,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.wandFilled16,
     tags: ['magicWand'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Keep a visible action label: the wand does not say what the automatic action does.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12340,8 +12408,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.wand12,
     tags: ['magicWand'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Keep a visible action label: the wand does not say what the automatic action does.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12354,8 +12424,10 @@ const List<RemixIconEntry> remixIconEntries = [
     icon: RoundedIcons.wandFilled12,
     tags: ['magicWand'],
     aliases: [],
-    requiresLabel: false,
-    usage: [],
+    requiresLabel: true,
+    usage: [
+      'Keep a visible action label: the wand does not say what the automatic action does.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12453,7 +12525,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['moon'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12467,7 +12541,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['moon'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12481,7 +12557,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['moon'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12495,7 +12573,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['moon'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12509,7 +12589,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['moon'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12523,7 +12605,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['moon'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12537,7 +12621,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['square'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12551,7 +12637,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['square'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12565,7 +12653,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['square'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12579,7 +12669,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['square'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12593,7 +12685,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['square'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12607,7 +12701,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['square'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12705,7 +12801,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['sun'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12719,7 +12817,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['sun'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12733,7 +12833,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['sun'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12747,7 +12849,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['sun'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12761,7 +12865,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['sun'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12775,7 +12881,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['sun'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Name the appearance on the enclosing control; this is not a generic status.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12873,7 +12981,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['update'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Announce progress in text; the caller owns motion and reduced-motion behavior.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12887,7 +12997,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['update'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Announce progress in text; the caller owns motion and reduced-motion behavior.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12901,7 +13013,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['update'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Announce progress in text; the caller owns motion and reduced-motion behavior.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12915,7 +13029,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['update'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Announce progress in text; the caller owns motion and reduced-motion behavior.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12929,7 +13045,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['update'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Announce progress in text; the caller owns motion and reduced-motion behavior.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
@@ -12943,7 +13061,9 @@ const List<RemixIconEntry> remixIconEntries = [
     tags: ['update'],
     aliases: [],
     requiresLabel: false,
-    usage: [],
+    usage: [
+      'Announce progress in text; the caller owns motion and reduced-motion behavior.',
+    ],
     since: '1.0.0-beta.1',
   ),
   RemixIconEntry(
