@@ -1,6 +1,7 @@
-"""Author the 12 Rounded calibration icons from Rounded primitives.
+"""Author the Rounded icons from Rounded primitives, and dispatch every concept.
 
-Native 12 / 16 / 24 masters. Outline and filled. No Outline path reuse.
+Native 12 / 16 / 24 masters. Outline and filled. No Outline path reuse. The calibration drawings
+that set the grammar stay here; the other concepts live in source/glyphs/, grouped by construction.
 """
 from __future__ import annotations
 
@@ -9,25 +10,15 @@ import math
 from shapely import affinity
 from shapely.geometry import box
 
+from source.glyphs import direction, frames, marks, objects
+from source.glyphs.kit import tokens as _tokens
 from source.primitives import (
     circle, clean, polygon, polyline_capsule, ring, round_all, round_convex,
     rounded_hull, rounded_rect, stadium_line, union,
 )
 from source.seams import (
-    ACUTE_JOIN, BOLD_WIDTH, CANONICAL_IDS, CORNER_TOKEN, CUT_JOIN, GAP_TARGET, LINK_BOLD_WIDTH,
-    MASTERS, OUTLINE_WIDTH, PADDING, QUAD_SEGS, STAR_JOIN, UnknownAppearanceError, UnknownIconError,
-    UnknownMasterError,
+    CANONICAL_IDS, CUT_JOIN, GAP_TARGET, LINK_BOLD_WIDTH, QUAD_SEGS, STAR_JOIN, UnknownIconError,
 )
-
-
-def _tokens(n: int, appearance: str):
-    if n not in MASTERS:
-        raise UnknownMasterError(f'No native Rounded master {n}')
-    if appearance not in ('outline', 'filled'):
-        raise UnknownAppearanceError(f'Unknown appearance {appearance!r}')
-    w = OUTLINE_WIDTH[n]
-    t = w if appearance == 'outline' else BOLD_WIDTH[n]
-    return w, t, PADDING[n], appearance == 'outline', CORNER_TOKEN[n], ACUTE_JOIN[n]
 
 
 def _doorway(shape, door, w, outlined):
@@ -88,18 +79,6 @@ def _plus(n, appearance):
     return union(
         stadium_line(c, p + r, c, n - p - r, t),
         stadium_line(p + r, c, n - p - r, c, t),
-    )
-
-
-def _arrow_right(n, appearance):
-    w, t, p, outlined, R, acute = _tokens(n, appearance)
-    # The 1 px shaft sits on a pixel row: on the even canvas centre it paints two half rows.
-    c = 5.5 if n == 12 and outlined else n / 2
-    # One continuous shaft into a 45-degree head, spanning two thirds of the canvas.
-    tail, tip, reach = {12: (1.5, 10.5, 4.0), 16: (2.25, 13.75, 5.25), 24: (3.0, 21.0, 8.0)}[n]
-    return union(
-        stadium_line(tail, c, tip, c, t),
-        polyline_capsule([(tip - reach, c - reach), (tip, c), (tip - reach, c + reach)], t),
     )
 
 
@@ -292,7 +271,6 @@ _DRAWERS = {
     'home': _home,
     'search': _search,
     'plus': _plus,
-    'arrow-right': _arrow_right,
     'user': _user,
     'file': _file,
     'calendar': _calendar,
@@ -301,6 +279,10 @@ _DRAWERS = {
     'link': _link,
     'branch': _branch,
     'star': _star,
+    **direction.DRAWERS,
+    **marks.DRAWERS,
+    **frames.DRAWERS,
+    **objects.DRAWERS,
 }
 
 
@@ -308,8 +290,6 @@ def draw(icon_id: str, master: int, appearance: str):
     """Return Shapely geometry for one Rounded drawing. Raises on unknown inputs."""
     if icon_id not in CANONICAL_IDS:
         raise UnknownIconError(f'Unknown Rounded icon {icon_id!r}')
-    if icon_id not in _DRAWERS:
-        raise UnknownIconError(f'Rounded icon {icon_id!r} is not drawn in this pilot')
     g = clean(_DRAWERS[icon_id](master, appearance))
     if g is None or g.is_empty or not g.is_valid:
         raise ValueError(f'Invalid geometry {icon_id}/{appearance}/{master}')

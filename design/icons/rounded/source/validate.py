@@ -1,4 +1,4 @@
-"""Curve-aware path parser for the Rounded pilot.
+"""Curve-aware path parser for Rounded.
 
 Outline's parser rejects curves. Rounded requires this module: construction uses
 round caps/joins and circular nodes, and serialized files may contain A/C/Q.

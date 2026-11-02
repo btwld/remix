@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Deterministically build the 12-icon Rounded calibration pilot.
+"""Deterministically build the Rounded family.
 
-Run from the pilot root: python source/build.py
+Run from the family root: python source/build.py
 Does not write into design/icons/outline/.
 """
 from __future__ import annotations
@@ -20,10 +20,9 @@ REPO = ROOT.parents[2]
 sys.path.insert(0, str(ROOT))
 
 from source.draw import draw
-from source.lookup import icon_svg
 from source.seams import (
-    APPEARANCES, BOLD_WIDTH, CANONICAL_IDS, COUNTER_FLOOR, GAP_TARGET, LABELS, MASTERS, PACK,
-    VERSION,
+    APPEARANCES, BOLD_WIDTH, CANONICAL_IDS, CENTRED_AXIS, COUNTER_FLOOR, GAP_TARGET, MASTERS, PACK,
+    PAIR_MODEL, THINNED_FILLED_STROKE, VERSION,
 )
 from source.svg import path_data, svg_text
 from source.validate import parse_svg
@@ -140,23 +139,50 @@ def measure_tradeoffs() -> list[dict]:
                         'Node ring counters distinguish outline from filled, so this small shortfall '
                         'is kept rather than removing them. Nominal diameter is 1.3 px; artwork unchanged.'))
                     break
-    arrow = _canvas_offset(draw('arrow-right', 12, 'outline'), 12, 1)
-    if arrow > 0.01:
-        records.append(_tradeoff(
-            'arrow-right', 'outline', 12, 'weight-pair-centerline-offset', 0, arrow,
-            'name-on-enclosing-control',
-            'The 1 px shaft sits on one pixel row, so it matches the head at 1x. Filled stays on the '
-            'canvas centre, where its 2 px shaft is already crisp.'))
-    for n in MASTERS:
-        for appearance in APPEARANCES:
-            offset = _canvas_offset(draw('warning', n, appearance), n, 0)
-            if offset > 0.01:
+    for icon in THINNED_FILLED_STROKE:
+        reason = _THINNED_REASON[icon]
+        for n in MASTERS:
+            width = min(2 * maximum_inscribed_circle(p).length for p in _components(draw(icon, n, 'filled')))
+            if width < BOLD_WIDTH[n] - FLATTENING_SLACK:
                 records.append(_tradeoff(
-                    'warning', appearance, n, 'canvas-centre-offset', 0, offset,
-                    'visible-label-required',
-                    'Centred on a pixel column so the punctuation is solid at 1x. An icon-only '
-                    'centred use would sit 0.5 px left, but Warning always carries a visible label.'))
+                    icon, 'filled', n, 'open-glyph-filled-width', BOLD_WIDTH[n], width,
+                    'visible-label-required' if icon == 'group' and n == 12 else 'name-on-enclosing-control',
+                    reason))
+    for icon, axis in CENTRED_AXIS.items():
+        for n in MASTERS:
+            for appearance in APPEARANCES:
+                offset = _canvas_offset(draw(icon, n, appearance), n, 0 if axis == 'x' else 1)
+                if offset <= 0.01:
+                    continue
+                rule = 'weight-pair-centerline-offset' if PAIR_MODEL[icon] == 'weight' else 'canvas-centre-offset'
+                records.append(_tradeoff(
+                    icon, appearance, n, rule, 0, offset,
+                    'visible-label-required' if icon == 'warning' else 'name-on-enclosing-control',
+                    _OFFSET_REASON.get(icon, _OFFSET_REASON['*'])))
     return records
+
+
+_ARROW_OFFSET = (
+    'The 1 px shaft sits on one pixel {}, so it matches the head at 1x. Filled stays on the '
+    'canvas centre, where its 2 px shaft is already crisp.')
+_OFFSET_REASON = {
+    '*': 'The 1 px stroke sits on one pixel line, so it is solid at 1x, inside the rows its filled '
+         'partner paints. Filled stays on the canvas centre, where its 2 px stroke is already crisp.',
+    'arrow-right': _ARROW_OFFSET.format('row'),
+    'arrow-left': _ARROW_OFFSET.format('row'),
+    'arrow-up': _ARROW_OFFSET.format('column'),
+    'arrow-down': _ARROW_OFFSET.format('column'),
+    'warning': 'Centred on a pixel column so the punctuation is solid at 1x. An icon-only centred '
+               'use would sit 0.5 px left, but Warning always carries a visible label.',
+}
+_THINNED_REASON = {
+    'code': 'Three strokes must share the canvas at the gap target, so the filled stroke stays below '
+            'the action width. It is still heavier than outline.',
+    'group': 'The handles and two objects must keep the gap target, so the filled handles stay below '
+             'the action width. They are still heavier than outline.',
+    'loader': 'Eight segments must keep the gap target around the ring, so the filled stroke stays '
+              'below the action width. It is still heavier than outline.',
+}
 
 
 def build_catalog_html(catalog: dict, paths: dict, inventory: list[dict]) -> None:
@@ -173,7 +199,8 @@ def build_catalog_html(catalog: dict, paths: dict, inventory: list[dict]) -> Non
                     f'<div class="stage s{n}">{svg}</div></figure>'
                 )
         compare = ''
-        if OUTLINE_GENERATED.is_dir():
+        # Outline's concepts are its own inventory. A concept it has not drawn gets no comparison.
+        if (OUTLINE_GENERATED / 'outline' / '24' / f'{icon_id}.svg').is_file():
             a_out = (OUTLINE_GENERATED / 'outline' / '24' / f'{icon_id}.svg').read_text()
             a_fill = (OUTLINE_GENERATED / 'filled' / '24' / f'{icon_id}.svg').read_text()
             s_out = (ROOT / 'generated' / PACK / 'outline' / '24' / f'{icon_id}.svg').read_text()
@@ -200,7 +227,7 @@ def build_catalog_html(catalog: dict, paths: dict, inventory: list[dict]) -> Non
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vector UI Rounded calibration pack — 12 icons</title>
+<title>Vector UI Rounded — {len(CANONICAL_IDS)} icons</title>
 <style>
 :root {{ --ink:#1b1612; --paper:#f6f1ea; --card:#fffaf4; --line:#d9cfc4; --rounded:#c45c26; }}
 * {{ box-sizing:border-box; }}
@@ -229,11 +256,11 @@ figcaption {{ font-size:.75rem; color:#6a6158; margin-bottom:.25rem; }}
 </head>
 <body>
 <header class="hero">
-<h1>Vector UI Rounded — 12-icon calibration pack</h1>
-<p class="meta">{VERSION} · {len(CANONICAL_IDS)} IDs × 2 appearances × 3 masters = {len(inventory)} SVGs · private pilot, not a public pack</p>
-<p>Same canonical IDs and meanings as Outline. Rounded is a separate grammar (capsule terminals, circular nodes, continuous curvature). Outline drawings below are <strong>read-only snapshots</strong> for comparison; this build does not edit them.</p>
+<h1>Vector UI Rounded — {len(CANONICAL_IDS)} icons</h1>
+<p class="meta">{VERSION} · {len(CANONICAL_IDS)} IDs × 2 appearances × 3 masters = {len(inventory)} SVGs · private source pack, not a public release</p>
+<p>Shared canonical IDs and meanings with Outline. Rounded is a separate grammar (capsule terminals, circular nodes, continuous curvature). Outline drawings below are <strong>read-only snapshots</strong> for comparison; this build does not edit them.</p>
 <p>Product files are expanded <code>M L Z</code> polylines: round construction is flattened at quad_segs=8. That is the shipping representation. The validator still accepts <code>C Q A</code> so a curve cannot be ignored; products do not emit native arcs.</p>
-<div class="banner"><strong>Warning</strong> requires a visible text label in every appearance and native size, including scaled uses of those masters. A tooltip or accessible name is not a substitute. Branch requires one at every size, and Link at 12 px.</div>
+<div class="banner"><strong>Warning</strong> requires a visible text label in every appearance and native size, including scaled uses of those masters. A tooltip or accessible name is not a substitute. Branch requires one at every size. Link, Help, Focus, and Group require one at 12 px.</div>
 </header>
 <main>
 {''.join(cards)}
@@ -312,7 +339,7 @@ def build() -> dict:
             if r['id'] == 'warning' and r['appearance'] == rec['appearance'] and r['master'] == rec['nativeSize']
         )
         if not rec['meetsTarget']:
-            rec['status'] = 'pilot-exception-needs-design-review'
+            rec['status'] = 'design-tradeoff-owner-review-pending'
             rec['permittedUse'] = 'visible-label-required'
             rec['reason'] = (
                 'Rounded Warning punctuation/frame spacing is below the nominal gap target. '

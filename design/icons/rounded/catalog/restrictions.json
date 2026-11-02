@@ -5,7 +5,7 @@
       "id": "warning-visible-label",
       "icon": "warning",
       "pack": "rounded",
-      "status": "concept-level-restriction-pilot",
+      "status": "concept-level-restriction",
       "owner": null,
       "reviewer": null,
       "reason": "The Warning visible-label rule is a family concept, not an Outline-only leftover. Rounded inherits the meaning; hashes bind to Rounded artwork after build.",

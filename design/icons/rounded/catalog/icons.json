@@ -3,12 +3,12 @@
   "family": "Vector UI",
   "pack": "rounded",
   "nameStatus": "working-name",
-  "version": "0.1.0-soft-pilot",
-  "status": "calibration-pilot-not-public",
+  "version": "0.2.0-private",
+  "status": "private-source-pack-not-public",
   "public": false,
   "counts": {
-    "icons": 12,
-    "drawings": 72
+    "icons": 77,
+    "drawings": 462
   },
   "icons": [
     {
@@ -21,6 +21,32 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "One rounded pentagon: ACUTE_JOIN gable and shoulders, CORNER_TOKEN feet, apex on the top keyline. 16 px door is narrower and sits lower so the outline still reads as a house.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Open navigation or a menu.",
+      "keywords": ["hamburger", "navigation"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Three equal capsule rows. The 12 outline rows sit on pixel rows inside the filled 2 px rows, a registered 0.5 px offset from the canvas centre.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "more",
+      "label": "More",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Additional actions in an overflow menu.",
+      "keywords": ["overflow", "ellipsis"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Three round dots. A ring this small would close, so filled means larger dots, not a different shape.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
@@ -38,16 +64,29 @@
       }
     },
     {
-      "id": "plus",
-      "label": "Plus",
-      "category": "actions",
-      "pairModel": "weight",
-      "meaning": "Add or create. Distinct from expand and zoom-in.",
-      "keywords": ["add", "new", "create"],
+      "id": "grid",
+      "label": "Grid",
+      "category": "navigation",
+      "pairModel": "silhouette",
+      "meaning": "Open an application grid or change to grid view.",
+      "keywords": ["apps", "tiles"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Two crossing capsules. Round terminals are the Rounded tell versus Outline square caps.",
+        "note": "Four identical rounded panels with one gutter. Dashboard shares the gutter and changes the panel heights.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-left",
+      "label": "Arrow left",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Literal left arrow; application chooses its navigation role.",
+      "keywords": ["previous", "back"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "An exact reflection of Arrow right, so the 12 outline shaft stays on the same pixel row. Registered 0.5 px offset.",
+        "usage": "The application chooses left/right; artwork does not auto-mirror."
       }
     },
     {
@@ -64,41 +103,210 @@
       }
     },
     {
-      "id": "user",
-      "label": "User",
-      "category": "people-communication",
-      "pairModel": "silhouette",
-      "meaning": "A person or profile.",
-      "keywords": ["person", "account"],
+      "id": "arrow-up",
+      "label": "Arrow up",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Literal up arrow, not Upload.",
+      "keywords": ["up", "move"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Circular head over a dome torso: broad shoulder circles and smaller base corners. Outline uses an octagonal head.",
+        "note": "Arrow right turned up, on pixel column 5.5 at 12 outline. Registered 0.5 px offset. Not Upload: it has no baseline.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
     {
-      "id": "file",
-      "label": "File",
-      "category": "content",
-      "pairModel": "silhouette",
-      "meaning": "A document. Not a duplicate action.",
-      "keywords": ["document", "page"],
+      "id": "arrow-down",
+      "label": "Arrow down",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Literal down arrow, not Download.",
+      "keywords": ["down", "move"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Portrait page with CORNER_TOKEN on its three page corners and a turned-down corner: solid in outline, where a counter would be a sub-pixel pocket, and split off by a gap-target slit in filled. Two unequal left-aligned lines at 24 px only.",
+        "note": "A reflection of Arrow right, so it shares Arrow up's pixel column instead of the opposite one. Registered 0.5 px offset. Not Download: it has no baseline.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
     {
-      "id": "calendar",
-      "label": "Calendar",
-      "category": "content",
-      "pairModel": "silhouette",
-      "meaning": "A date or calendar.",
-      "keywords": ["date", "schedule"],
+      "id": "arrow-up-right",
+      "label": "Arrow up right",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Open another destination. Keep a visible action label.",
+      "keywords": ["external", "outbound"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "CORNER_TOKEN body with tabs and a header rail at contour weight. No date marks at 12 or 16 px; a row of three at 24 px.",
+        "note": "One diagonal shaft running into a 90-degree round corner. The arms stop short, so the mass stays clear of the top and right keylines.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevron-left",
+      "label": "Chevron left",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Compact left direction. Navigation semantics stay in the component.",
+      "keywords": ["previous", "back"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "An exact reflection of Chevron right.",
+        "usage": "The application chooses left/right; artwork does not auto-mirror."
+      }
+    },
+    {
+      "id": "chevron-right",
+      "label": "Chevron right",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Compact right direction. Not an external-link marker.",
+      "keywords": ["next", "forward"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One 90-degree round bend, centred on the canvas, with a shorter field than an arrow.",
+        "usage": "The application chooses left/right; artwork does not auto-mirror."
+      }
+    },
+    {
+      "id": "chevron-up",
+      "label": "Chevron up",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Up direction or collapse, with a label.",
+      "keywords": ["collapse", "up"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Chevron right turned up.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevron-down",
+      "label": "Chevron down",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Down direction or disclosure, with a label.",
+      "keywords": ["expand", "down"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Chevron right reflected to point down.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "plus",
+      "label": "Plus",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Add or create. Distinct from expand and zoom-in.",
+      "keywords": ["add", "new", "create"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two crossing capsules. Round terminals are the Rounded tell versus Outline square caps.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "minus",
+      "label": "Minus",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Decrease or subtract. Not a destructive delete substitute.",
+      "keywords": ["subtract", "decrease"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One capsule at Plus's stroke weights. The 12 outline sits on a pixel row, a registered 0.5 px offset.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "check",
+      "label": "Check",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Confirm or communicate completion.",
+      "keywords": ["done", "complete", "success"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One asymmetric round bend. The long arm rises past the short arm's start.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "close",
+      "label": "Close",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Dismiss or close. Do not use as a destructive delete substitute.",
+      "keywords": ["dismiss", "cancel"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two crossing capsules on the diagonals, with no cut at the crossing.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "edit",
+      "label": "Edit",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "A pencil for editing content.",
+      "keywords": ["pencil", "modify"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A pencil on one diagonal: round tip, parallel sides, and a soft eraser end split off by one rail, which is a cut in filled.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "copy",
+      "label": "Copy",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "Create a duplicate or copy to clipboard.",
+      "keywords": ["duplicate", "clipboard"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A front sheet over a rear contour. The rear stays a round-capped contour in both styles, so filled never becomes two blocks.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "trash",
+      "label": "Trash",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "Delete. Confirm destructive behavior at the application level.",
+      "keywords": ["delete", "remove"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A capsule lid with a handle bump, floating over a tapered body at the gap target. Two slots at 24 px only.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "refresh",
+      "label": "Refresh",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Reload the current data. Not Undo or Redo.",
+      "keywords": ["reload", "update"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One open cycle ending in one round-joined head. The arc starts later in filled, so the heavier head keeps the gap target from its tail.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "filter",
+      "label": "Filter",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "A funnel that narrows a result set. Not generic adjustment controls.",
+      "keywords": ["funnel", "results"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One funnel with soft shoulders. The stem is exactly two contours wide, so the outline ring leaves it solid.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
@@ -116,16 +324,68 @@
       }
     },
     {
-      "id": "warning",
-      "label": "Warning",
-      "category": "status-security",
-      "pairModel": "silhouette",
-      "meaning": "A warning requiring a visible text label in every supported appearance and native size.",
-      "keywords": ["caution", "attention"],
+      "id": "upload",
+      "label": "Upload",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Transfer into a service.",
+      "keywords": ["import", "send"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "ACUTE_JOIN triangle authored from its corner circles, so the apex stays on the keyline, with capsule stem and circular dot at the gap target. At 12 and 16 px the glyph is centred on a pixel column, a registered 0.5 px offset, so the mark is solid at 1x. Visible-label restriction is concept-level.",
-        "usageRestriction": "warning-visible-label"
+        "note": "Arrow up over a capsule baseline, at the gap target or wider. The 12 outline sits on pixel column 5.5, a registered 0.5 px offset.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "download",
+      "label": "Download",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Transfer out to this device.",
+      "keywords": ["export", "receive"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Arrow down over the same baseline as Upload. The 12 outline sits on pixel column 5.5, a registered 0.5 px offset.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "save",
+      "label": "Save",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "A disk metaphor for committing changes. Not Bookmark or Download.",
+      "keywords": ["disk", "commit"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A disk with a clipped round corner, a shutter slot, and a label window. The label is a rail that meets the frame in outline and a window cut in filled.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A document. Not a duplicate action.",
+      "keywords": ["document", "page"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Portrait page with CORNER_TOKEN on its three page corners and a turned-down corner: solid in outline, where a counter would be a sub-pixel pocket, and split off by a gap-target slit in filled. Two unequal left-aligned lines at 24 px only.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "folder",
+      "label": "Folder",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A folder or grouped files.",
+      "keywords": ["directory", "organize"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A soft tab on a wider body, with a softened junction. Filled stays solid: the tab already names it.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
     {
@@ -142,16 +402,16 @@
       }
     },
     {
-      "id": "branch",
-      "label": "Branch",
-      "category": "system-data",
+      "id": "bookmark",
+      "label": "Bookmark",
+      "category": "content",
       "pairModel": "silhouette",
-      "meaning": "A branching relationship. Requires a visible text label at every size.",
-      "keywords": ["workflow", "fork"],
+      "meaning": "Save a reference for later. Different from saving changed data.",
+      "keywords": ["reading", "later"],
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
-        "note": "Three circular nodes and round-joined connectors. Outline uses square nodes. The 16 px outline node counters are a registered shortfall against the counter floor.",
-        "usage": "Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record."
+        "note": "A ribbon with soft top corners, two round points, and an open V notch.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     },
     {
@@ -164,6 +424,591 @@
       "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
       "review": {
         "note": "Five-point star with round points and round inner notches. STAR_JOIN is ~0.5× outline (0.65 / 0.85 / 1.0); 1.0×+ join collapses mass. Outer radius is sized so filled 24 mass tracks Outline (~0.27 of canvas) rather than sitting ~30% light.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A date or calendar.",
+      "keywords": ["date", "schedule"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "CORNER_TOKEN body with tabs and a header rail at contour weight. No date marks at 12 or 16 px; a row of three at 24 px.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "category": "people-communication",
+      "pairModel": "silhouette",
+      "meaning": "A person or profile.",
+      "keywords": ["person", "account"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Circular head over a dome torso: broad shoulder circles and smaller base corners. Outline uses an octagonal head.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "category": "people-communication",
+      "pairModel": "silhouette",
+      "meaning": "A message or conversation.",
+      "keywords": ["message", "conversation"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A rounded bubble with one round tail. A content line appears at 24 px only.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "bell",
+      "label": "Bell",
+      "category": "people-communication",
+      "pairModel": "silhouette",
+      "meaning": "Notifications. Do not imply a warning or failure by shape alone.",
+      "keywords": ["notification", "alert"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A dome running into a rim, with a detached capsule clapper at the gap target. A crown stub at 16 and 24 px.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "A warning requiring a visible text label in every supported appearance and native size.",
+      "keywords": ["caution", "attention"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "ACUTE_JOIN triangle authored from its corner circles, so the apex stays on the keyline, with capsule stem and circular dot at the gap target. At 12 and 16 px the glyph is centred on a pixel column, a registered 0.5 px offset, so the mark is solid at 1x. Visible-label restriction is concept-level.",
+        "usageRestriction": "warning-visible-label"
+      }
+    },
+    {
+      "id": "info",
+      "label": "Info",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Information about content or a status. Distinct from Help and Warning.",
+      "keywords": ["information", "about"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A circular frame with a dot over a capsule stem, on the canvas centre. The stem is 1.5 px at 12 and 16, so it covers two columns evenly and stays symmetric in the frame.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "help",
+      "label": "Help",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Assistance or documentation. Distinct from information status.",
+      "keywords": ["question", "support"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A circular frame with a round hook and dot, at the gap target. The 16 px hook has no separate stem, so the gaps fit.",
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "lock",
+      "label": "Lock",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Restricted access or locked content.",
+      "keywords": ["secure", "private"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A round shackle with an open counter on a rounded body. A keyhole at 24 px only.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "shield",
+      "label": "Shield",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Protection or policy. Pair with the actual status in text.",
+      "keywords": ["protection", "policy"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Broad shoulders and straight sides tapering to one round point, with no status mark. Pair it with the status in text.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "gear",
+      "label": "Gear",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A gear settings metaphor. Sliders remains a separate adjustment glyph.",
+      "keywords": ["settings", "cog", "preferences"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Teeth grown from one body, with the hub as the only counter. Six teeth at 12 px, eight at 16 and 24 px. Outline has a wider hub; filled has a smaller one.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "terminal",
+      "label": "Terminal",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A command interface. Not an ordinary next arrow.",
+      "keywords": ["console", "command"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A rounded window holding a chevron prompt and a cursor. Marks are positive in outline and cut out in filled.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A branching relationship. Use a visible label, especially at 12 px.",
+      "keywords": ["workflow", "fork"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Three circular nodes and round-joined connectors. Outline uses square nodes. The 16 px outline node counters are a registered shortfall against the counter floor.",
+        "usage": "Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record."
+      }
+    },
+    {
+      "id": "chart",
+      "label": "Chart",
+      "category": "system-data",
+      "pairModel": "weight",
+      "meaning": "A bar chart or analytics view.",
+      "keywords": ["analytics", "metrics"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Three ascending capsule bars. The 12 outline bars sit on pixel columns inside the filled 2 px bars, a registered 0.5 px offset.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "play",
+      "label": "Play",
+      "category": "media",
+      "pairModel": "silhouette",
+      "meaning": "Play media or start an operation. Do not auto-mirror in RTL.",
+      "keywords": ["run", "start"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A round-joined triangle, shifted right of the canvas centre so its mass balances. Not auto-mirrored.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "pause",
+      "label": "Pause",
+      "category": "media",
+      "pairModel": "weight",
+      "meaning": "Pause an operation. Do not use for stop.",
+      "keywords": ["hold", "wait"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two capsule bars. Heavier in filled, and never hollow, because a slot would be fragile at 12 px.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "focus",
+      "label": "Focus",
+      "category": "media",
+      "pairModel": "weight",
+      "meaning": "Focus a region. Context is required; not a star or fullscreen symbol.",
+      "keywords": ["target", "region"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Four round corner brackets around a round centre. Filled is a heavier stroke and a larger centre.",
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "category": "system-data",
+      "pairModel": "weight",
+      "meaning": "A pulse of activity; existing registry activity motif.",
+      "keywords": ["activityLog"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One round-joined pulse line on a shared baseline, unchanged in filled except for weight.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "align-center",
+      "label": "Align center",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "Align selected objects on a horizontal center axis; distinct from text paragraph formatting.",
+      "keywords": ["alignCenterHorizontally"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A vertical axis stopping at two panels centred on it. Both panels share one horizontal centre. At 12 px the axis sits on a pixel column, a registered 0.5 px offset in both styles.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "align-left",
+      "label": "Align left",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "Align selected objects to their left edge; distinct from paragraph formatting.",
+      "keywords": ["alignLeft"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A vertical guide at the left with two selected panels flush against it, at the gap target. Object alignment, not text: the panels and axis separate it from Menu.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "align-right",
+      "label": "Align right",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "Align selected objects to their right edge; distinct from paragraph formatting.",
+      "keywords": ["alignRight"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Align left reflected exactly: the guide and the panels' shared edge are on the right.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "box",
+      "label": "Box",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A package or inventory box.",
+      "keywords": ["box"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A package seen from above a corner: a round-cornered hexagon with three faces meeting at the centre. The filled spine stops short of the lower corner, to keep the shared outer bound.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "check-circle",
+      "label": "Check circle",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Confirmed or successful status in an enclosing circle.",
+      "keywords": ["checkCircled"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Check inside the circular frame, clear of it by the gap target. Status needs its text as well.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "circle",
+      "label": "Circle",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A circular shape; do not imply control behavior.",
+      "keywords": ["circle"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A circle on the padding keyline. Ring in outline, disc in filled. It implies no control behavior.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "ban",
+      "label": "Ban",
+      "category": "status-security",
+      "pairModel": "weight",
+      "meaning": "Prohibited or unavailable action.",
+      "keywords": ["circleBackslash"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A heavier ring and bar in filled rather than a solid disc: the two counters are the prohibition sign, so they stay open.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "close-circle",
+      "label": "Close circle",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Dismissed or failed status in an enclosing circle.",
+      "keywords": ["crossCircled"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Close inside the circular frame, clear of it by the gap target. Status needs its text as well.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "A pointer or selection tool.",
+      "keywords": ["cursorArrow"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A pointer: one acute round tip at the upper left and a notch opposite. A filled body, not a filled-in outline.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "dot",
+      "label": "Dot",
+      "category": "system-data",
+      "pairModel": "weight",
+      "meaning": "A small solid dot, optically distinct from the full-size Circle.",
+      "keywords": ["dotFilled"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Solid in both styles and well inside the keyline, so it cannot read as Circle. Filled is larger.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "chevrons-left",
+      "label": "Chevrons left",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Jump left or to the first item, with an enclosing action label.",
+      "keywords": ["doubleArrowLeft"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Chevrons right reflected exactly.",
+        "usage": "The application chooses left/right; artwork does not auto-mirror."
+      }
+    },
+    {
+      "id": "chevrons-right",
+      "label": "Chevrons right",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Jump right or to the last item, with an enclosing action label.",
+      "keywords": ["doubleArrowRight"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two chevrons, spaced so that the heavier pair still clears the gap target.",
+        "usage": "The application chooses left/right; artwork does not auto-mirror."
+      }
+    },
+    {
+      "id": "bold",
+      "label": "Bold",
+      "category": "content",
+      "pairModel": "weight",
+      "meaning": "Bold text formatting; authored letter B, no font outline reuse.",
+      "keywords": ["fontBold"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "An authored B: two bowls on one stem, with no font outline. The heavier stroke keeps both counters open.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "type",
+      "label": "Type",
+      "category": "content",
+      "pairModel": "weight",
+      "meaning": "Typography or text-size controls; authored letter T.",
+      "keywords": ["fontSize"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "An authored T, with no font outline. Serifs and a foot at 16 and 24 px keep it a letter; the 12 px master is the plain two strokes. The 12 outline stem sits on a pixel column, a registered 0.5 px offset.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "group",
+      "label": "Group",
+      "category": "system-data",
+      "pairModel": "weight",
+      "meaning": "Group or arrange selected objects, matching the current selection-group meaning.",
+      "keywords": ["group"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Selection handles around two small objects: an arrange command, never people. Filled handles are registered below the action width at 12 and 16 px, to keep the objects clear.",
+        "usage": "Visible label required at 12 px; contextual label recommended at other sizes."
+      }
+    },
+    {
+      "id": "heart",
+      "label": "Heart",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "Like or favorite with context; distinct from Star.",
+      "keywords": ["heart"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two lobes running into one round point, with a soft notch. Distinct from Star's five points.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "input",
+      "label": "Input",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A text input field with an insertion cursor.",
+      "keywords": ["input"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A wide field with a caret at its start. No prompt chevron, so it cannot read as Terminal.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "laptop",
+      "label": "Laptop",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A laptop device or desktop-sized preview.",
+      "keywords": ["laptop"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A rounded screen over a wider capsule base, floating at the gap target.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "wand",
+      "label": "Wand",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "An assisted or automatic action, with an action label.",
+      "keywords": ["magicWand"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A capsule stick and a sparkle. The sparkle is a crossed capsule in outline and a four-point star in filled. A second accent at 24 px only.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "smartphone",
+      "label": "Smartphone",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A mobile phone device or narrow preview.",
+      "keywords": ["mobile"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A portrait rounded frame with a capsule home indicator, which separates it from an empty frame.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "moon",
+      "label": "Moon",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Dark appearance or night; not a generic status.",
+      "keywords": ["moon"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A crescent cut by one circle, with rounded tips. Not a generic status.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "square",
+      "label": "Square",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A square shape; do not imply control behavior.",
+      "keywords": ["square"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A rounded square, CORNER_TOKEN on all four corners. It implies no control behavior.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "layers",
+      "label": "Layers",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A stack of layers or related objects.",
+      "keywords": ["stack"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "One sheet in plan with the edge of another beneath. A second edge at 24 px only.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "sun",
+      "label": "Sun",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "Light appearance or daylight.",
+      "keywords": ["sun"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A round core and eight detached rays. Rays and bounds are shared; only the core fills.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "table",
+      "label": "Table",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "Tabular data with a header and cells.",
+      "keywords": ["table"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "A rounded frame with a header band and cells. The header stays solid in filled. Two cells at 12 px, four at 16 and 24 px.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "loader",
+      "label": "Loader",
+      "category": "system-data",
+      "pairModel": "weight",
+      "meaning": "An in-progress segmented ring; animation belongs to the caller.",
+      "keywords": ["update"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Eight capsule segments in a ring, with no centre, unlike Sun. Filled segments are registered below the action width at 12 and 16 px, to keep the gap target. Animation belongs to the caller.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "code",
+      "label": "Code",
+      "category": "system-data",
+      "pairModel": "weight",
+      "meaning": "Source code brackets, distinct from the Terminal prompt.",
+      "keywords": ["code"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Two angle brackets and a slash, with no frame or cursor, unlike Terminal. Filled strokes are registered below the action width at 12 and 16 px, where three parts must fit.",
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "category": "navigation",
+      "pairModel": "silhouette",
+      "meaning": "An overview of multiple panels, distinct from a uniform Grid.",
+      "keywords": ["dashboard"],
+      "availability": {"rounded": {"appearances": ["outline", "filled"], "opticalSizes": [12, 16, 24]}},
+      "review": {
+        "note": "Four panels of unequal height on the Grid gutter: an overview, distinct from a uniform Grid.",
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
     }

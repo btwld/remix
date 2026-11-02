@@ -67,7 +67,6 @@
       },
       "status": {
         "enum": [
-          "pilot-exception-needs-design-review",
           "design-tradeoff-owner-review-pending"
         ]
       },

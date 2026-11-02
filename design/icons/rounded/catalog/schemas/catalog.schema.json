@@ -15,14 +15,14 @@
       "type": "object",
       "required": ["icons", "drawings"],
       "properties": {
-        "icons": {"const": 12},
-        "drawings": {"const": 72}
+        "icons": {"const": 77},
+        "drawings": {"const": 462}
       }
     },
     "icons": {
       "type": "array",
-      "minItems": 12,
-      "maxItems": 12,
+      "minItems": 77,
+      "maxItems": 77,
       "items": {
         "type": "object",
         "required": ["id", "label", "category", "pairModel", "meaning", "availability", "review"],

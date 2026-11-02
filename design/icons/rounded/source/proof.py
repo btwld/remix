@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render native 12/16/24 raster proofs for the Rounded pilot."""
+"""Render native 12/16/24 raster proofs for Rounded, at 4x, 2x, and 1x, on light and dark."""
 from __future__ import annotations
 
 import io
@@ -11,7 +11,7 @@ import cairosvg
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from source.seams import CANONICAL_IDS, LABELS
+from source.seams import APPEARANCES, CANONICAL_IDS, LABELS, MASTERS
 
 FONT = next(
     path for path in (
@@ -21,6 +21,7 @@ FONT = next(
 )
 INK = '#1b1612'
 PAPER = '#f6f1ea'
+SCALES = (4, 2, 1)
 
 
 def _svg_png(path: Path, color: str, scale: int) -> Image.Image:
@@ -30,38 +31,46 @@ def _svg_png(path: Path, color: str, scale: int) -> Image.Image:
     return Image.open(io.BytesIO(b)).convert('RGBA')
 
 
-def sheet(out: Path, dark: bool = False) -> None:
+def sheet(out: Path, names=CANONICAL_IDS, dark: bool = False) -> None:
+    """One row per concept: each master and style at 4x, 2x, and 1x."""
     bg = '#14110f' if dark else PAPER
     ink = '#f6f1ea' if dark else INK
-    names = list(CANONICAL_IDS)
-    W, row_h = 1280, 118
+    rule = '#4d453e' if dark else '#8a7f74'
+    columns = {12: 128, 16: 164, 24: 220}
+    W, row_h = 170 + 2 * sum(columns.values()) + 20, 118
     H = 92 + len(names) * row_h
     im = Image.new('RGB', (W, H), bg)
     d = ImageDraw.Draw(im)
     font = ImageFont.truetype(FONT, 20)
     small = ImageFont.truetype(FONT, 13)
+    label = ImageFont.truetype(FONT, 16)
     d.text((24, 18), 'ROUNDED / NATIVE OPTICAL DRAWINGS', font=font, fill=ink)
-    for col, n in enumerate([12, 16, 24]):
-        d.text((250 + col * 320, 54), f'{n} px / outline + filled / 4× + native', font=small, fill=ink)
+    x = 170
+    for n in MASTERS:
+        d.text((x, 54), f'{n} px / outline, filled / 4x, 2x, 1x', font=small, fill=ink)
+        x += 2 * columns[n]
     for row, name in enumerate(names):
         y = 88 + row * row_h
-        d.line((24, y, W - 24, y), fill='#8a7f74', width=1)
-        d.text((24, y + 40), LABELS[name], font=ImageFont.truetype(FONT, 16), fill=ink)
-        for col, n in enumerate([12, 16, 24]):
-            for j, appearance in enumerate(['outline', 'filled']):
+        d.line((24, y, W - 24, y), fill=rule, width=1)
+        d.text((24, y + 40), LABELS[name], font=label, fill=ink)
+        x = 170
+        for n in MASTERS:
+            for appearance in APPEARANCES:
                 svg = ROOT / 'generated' / 'rounded' / appearance / str(n) / f'{name}.svg'
-                big = _svg_png(svg, ink, 4)
-                native = _svg_png(svg, ink, 1)
-                x = 250 + col * 320 + j * 140
-                im.paste(big, (x, y + (row_h - n * 4) // 2), big)
-                im.paste(native, (x + 110, y + 58), native)
+                cursor = x
+                for scale in SCALES:
+                    pic = _svg_png(svg, ink, scale)
+                    im.paste(pic, (cursor, y + (row_h - n * scale) // 2), pic)
+                    cursor += n * scale + 6
+                x += columns[n]
     out.parent.mkdir(parents=True, exist_ok=True)
     im.save(out)
 
 
 def compare_sheet(out: Path, master: int = 24) -> None:
+    """Family comparison, for the concepts that Outline has drawn in this checkout."""
     outline = ROOT.parents[2] / 'design' / 'icons' / 'outline' / 'generated' / 'outline'
-    names = list(CANONICAL_IDS)
+    names = [n for n in CANONICAL_IDS if (outline / 'outline' / str(master) / f'{n}.svg').is_file()]
     scale = 4 if master == 24 else 6
     cell = master * scale
     W, row_h = 1100, max(110, cell + 16)

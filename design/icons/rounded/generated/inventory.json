@@ -48,6 +48,102 @@
     "sha256": "ee05d00b2d18c89f23b7c832a736bdb950a05b58b0690ffc56903deea41f814e"
   },
   {
+    "id": "menu",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/menu.svg",
+    "sha256": "4d08c359a27ec8400113a03300e82a9095d75e4fb2445dbc1af00b082549746a"
+  },
+  {
+    "id": "menu",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/menu.svg",
+    "sha256": "00a366b11cdab56cc2493ee88996d45e507d5aaa2ce86ffb8e98fa87edf30812"
+  },
+  {
+    "id": "menu",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/menu.svg",
+    "sha256": "e51cc53947630421375c3a025d895598087510e978ae93b7c0bf2aef8c2ee858"
+  },
+  {
+    "id": "menu",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/menu.svg",
+    "sha256": "a007f08ed8b024787ebceca0482d67839d4a934fca049188e72362d1390054ee"
+  },
+  {
+    "id": "menu",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/menu.svg",
+    "sha256": "6d03e2ffd721b0531263eabfd180fb6bbd74fe31978cdfbd43895518d3bb6b10"
+  },
+  {
+    "id": "menu",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/menu.svg",
+    "sha256": "e1b9d3aa8b35f293694e534f56a9e79630825e7658ed91e3b1ee9c0b01452946"
+  },
+  {
+    "id": "more",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/more.svg",
+    "sha256": "7f363a9c9a2ca398af86dd1eef49923a02f5d7243e2566aa555bd48cf6d82672"
+  },
+  {
+    "id": "more",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/more.svg",
+    "sha256": "b473d90d13522401f3a186741749e4510a6977cbc5fba4865c8262785b5f67e5"
+  },
+  {
+    "id": "more",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/more.svg",
+    "sha256": "56d866dffc56804c21035e9e1a137436ff3df085590e8a07fcc9064c3561b8f9"
+  },
+  {
+    "id": "more",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/more.svg",
+    "sha256": "1e00b1a31a692ab4f2a2d1befde1ada8737ae04218ef4d351e465ada712c2dc4"
+  },
+  {
+    "id": "more",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/more.svg",
+    "sha256": "9a09bcdcd595c374c18ea849f7864ac8e872dce8eed6d834a9fbbe9dafd724bc"
+  },
+  {
+    "id": "more",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/more.svg",
+    "sha256": "ba2109568ca3097f5f39da753897ab0331cd060bf490dd6ef854075abbff3b30"
+  },
+  {
     "id": "search",
     "pack": "rounded",
     "appearance": "outline",
@@ -96,52 +192,100 @@
     "sha256": "ab2eff53f9914ab2b970c2a7fc822d51cf9c4b115375f8bb369d5580513224fe"
   },
   {
-    "id": "plus",
+    "id": "grid",
     "pack": "rounded",
     "appearance": "outline",
     "master": 12,
-    "path": "rounded/outline/12/plus.svg",
-    "sha256": "9c6b00168792fbe3040c3f7af8d19291b67dfa01ddedc05621949639ae33c0fc"
+    "path": "rounded/outline/12/grid.svg",
+    "sha256": "a72dae0a280b361b7369837081f711faac9cb11b632e35885f3a9f6a14f87eb6"
   },
   {
-    "id": "plus",
+    "id": "grid",
     "pack": "rounded",
     "appearance": "outline",
     "master": 16,
-    "path": "rounded/outline/16/plus.svg",
-    "sha256": "2cbc4437c4adc53b936aa976203fb3dac85d7f70e41d63dfc30276c08fb62f75"
+    "path": "rounded/outline/16/grid.svg",
+    "sha256": "249c1d45265f9667fd4b933ffc04a9382e938068c7409f982535a0458f940c8d"
   },
   {
-    "id": "plus",
+    "id": "grid",
     "pack": "rounded",
     "appearance": "outline",
     "master": 24,
-    "path": "rounded/outline/24/plus.svg",
-    "sha256": "623bb279fd16a6c0479cbe07b76a33df1e8687435c45bb302f22e79ca6b36348"
+    "path": "rounded/outline/24/grid.svg",
+    "sha256": "50a38d03eee489c939aea1b7921c50ea1ca27bda174f467d53eea99563157880"
   },
   {
-    "id": "plus",
+    "id": "grid",
     "pack": "rounded",
     "appearance": "filled",
     "master": 12,
-    "path": "rounded/filled/12/plus.svg",
-    "sha256": "2f12ab7b9852353c636f45d1c317451a394a714a033a5dd52b788e0d482dd5df"
+    "path": "rounded/filled/12/grid.svg",
+    "sha256": "ec61c7ae45679fa29d7611703330d1284906fb5ff7274203d0162f5a3763fa1a"
   },
   {
-    "id": "plus",
+    "id": "grid",
     "pack": "rounded",
     "appearance": "filled",
     "master": 16,
-    "path": "rounded/filled/16/plus.svg",
-    "sha256": "456fb8e47c70a7403c4797b8d2f495272563e97ca2fed962c6135baffe13720f"
+    "path": "rounded/filled/16/grid.svg",
+    "sha256": "5c6fed4080f8d3fd0bc9afff78f0760aeca385a87e8da1cc6d9192185f39bf90"
   },
   {
-    "id": "plus",
+    "id": "grid",
     "pack": "rounded",
     "appearance": "filled",
     "master": 24,
-    "path": "rounded/filled/24/plus.svg",
-    "sha256": "8d44791d2fbb5122c96391e92be97723ce15167b9cf320c5e836b56aa4ef1494"
+    "path": "rounded/filled/24/grid.svg",
+    "sha256": "78b9a67eb610dd002d20d1f337b28e527355afb7752b6f85a1e63b6854162897"
+  },
+  {
+    "id": "arrow-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/arrow-left.svg",
+    "sha256": "617b7ea68e819c698cc77d74a43d97bc5d86d51fd6571b1d25a26a269a249321"
+  },
+  {
+    "id": "arrow-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/arrow-left.svg",
+    "sha256": "28d05c45e4ff22b65b6bbf8e82cce0139981cd50675f40d4c3f9494dd567555f"
+  },
+  {
+    "id": "arrow-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/arrow-left.svg",
+    "sha256": "5e1ad754782ffd9b0b9be9268ef6c6c0441f72d1f0e5cd22e665254f39a7c9eb"
+  },
+  {
+    "id": "arrow-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/arrow-left.svg",
+    "sha256": "cc87152905283c0b3f8f55591cd853f20cc841918221a773f1ab07a19687f6f8"
+  },
+  {
+    "id": "arrow-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/arrow-left.svg",
+    "sha256": "cd328a6612289699ced3ceb46fdc8723c8f0794b20aae805540170bae7e67ae1"
+  },
+  {
+    "id": "arrow-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/arrow-left.svg",
+    "sha256": "6c6a8a5cfeaf50693aaf460668e9c0a949c840bca3805d12a94bfb4eb950c9f7"
   },
   {
     "id": "arrow-right",
@@ -192,148 +336,772 @@
     "sha256": "b66b8674396e3f2c5d39de68e7956def31a5412c8fa3bc56156d577beed9fb86"
   },
   {
-    "id": "user",
+    "id": "arrow-up",
     "pack": "rounded",
     "appearance": "outline",
     "master": 12,
-    "path": "rounded/outline/12/user.svg",
-    "sha256": "6aea68031e4f8743fa6093c6a60c4f8b9962cf130d1d1e3e35a7b84004d997c7"
+    "path": "rounded/outline/12/arrow-up.svg",
+    "sha256": "af190665d0f4542d779d57144aed98dd7679aea6c6dbb28a0bd8d6b9d63a3761"
   },
   {
-    "id": "user",
+    "id": "arrow-up",
     "pack": "rounded",
     "appearance": "outline",
     "master": 16,
-    "path": "rounded/outline/16/user.svg",
-    "sha256": "335dfb7eb9c71b7cd74f58c56d1939601c69881b38b654ef900dafbfa99777d5"
+    "path": "rounded/outline/16/arrow-up.svg",
+    "sha256": "d44aca122012b84d768165d6cb15baf5698cf37099e74dfc1520c1c5d2979668"
   },
   {
-    "id": "user",
+    "id": "arrow-up",
     "pack": "rounded",
     "appearance": "outline",
     "master": 24,
-    "path": "rounded/outline/24/user.svg",
-    "sha256": "5917ea16e57f8b8f5a73f7a156885e10af3db7c77a2efe13d64a4b4adbf3231b"
+    "path": "rounded/outline/24/arrow-up.svg",
+    "sha256": "9b4c31f1860909d9b280ce98c684c8bba798504a1789b85903ecdca55ac682c8"
   },
   {
-    "id": "user",
+    "id": "arrow-up",
     "pack": "rounded",
     "appearance": "filled",
     "master": 12,
-    "path": "rounded/filled/12/user.svg",
-    "sha256": "ca7c769a0e71ce3dd83efee474ee13893c6c8394b2ba47804da005042c06a144"
+    "path": "rounded/filled/12/arrow-up.svg",
+    "sha256": "47a5ecfd2436983b134589e4ee65a1ee6acfe1fcf7a47bf63cf4624bdb98abf3"
   },
   {
-    "id": "user",
+    "id": "arrow-up",
     "pack": "rounded",
     "appearance": "filled",
     "master": 16,
-    "path": "rounded/filled/16/user.svg",
-    "sha256": "598b251e763eec93ee2073174ea581c237b10e52165ef447eb103192445218c7"
+    "path": "rounded/filled/16/arrow-up.svg",
+    "sha256": "3d80bb8e281d7f980bcc1c2b3ae618544c967959c9faf6590ca7325e426a5f86"
   },
   {
-    "id": "user",
+    "id": "arrow-up",
     "pack": "rounded",
     "appearance": "filled",
     "master": 24,
-    "path": "rounded/filled/24/user.svg",
-    "sha256": "1f7a7df106920dffeed6b50ecb6fd4d363421729b5db262194644dd6e1f7da5b"
+    "path": "rounded/filled/24/arrow-up.svg",
+    "sha256": "90456d8a0cc41f739591f2003b944352bf108d4d719d92584cc12fb3d2d46ff5"
   },
   {
-    "id": "file",
+    "id": "arrow-down",
     "pack": "rounded",
     "appearance": "outline",
     "master": 12,
-    "path": "rounded/outline/12/file.svg",
-    "sha256": "224ae17c09b25f43858857d37538df45021ca30f106e1dda3d79f681d938e311"
+    "path": "rounded/outline/12/arrow-down.svg",
+    "sha256": "464d8f2a8eef441700f6fb67039e5387a14b0c493cb9213283a3f49981a183d6"
   },
   {
-    "id": "file",
+    "id": "arrow-down",
     "pack": "rounded",
     "appearance": "outline",
     "master": 16,
-    "path": "rounded/outline/16/file.svg",
-    "sha256": "8e3505190bd13d2d313eed3da516e3c799ef7e68cb317c41ec271c2929c035ad"
+    "path": "rounded/outline/16/arrow-down.svg",
+    "sha256": "c1efd7a02fdf70b9e38154f656c64c62175053a7d9b633831dc273f30ae1a11a"
   },
   {
-    "id": "file",
+    "id": "arrow-down",
     "pack": "rounded",
     "appearance": "outline",
     "master": 24,
-    "path": "rounded/outline/24/file.svg",
-    "sha256": "acc67716d937c693dbec1bd0c70c0880104b3c8a1173c321234f46970f499cc6"
+    "path": "rounded/outline/24/arrow-down.svg",
+    "sha256": "f29e1b7e7f6ec32612c6789259a0e0712e39e047732d90dcbc9df22dfb4268b2"
   },
   {
-    "id": "file",
+    "id": "arrow-down",
     "pack": "rounded",
     "appearance": "filled",
     "master": 12,
-    "path": "rounded/filled/12/file.svg",
-    "sha256": "fc5802f46542d31ee6ef80c14581ad3b65cbb7a7244a88a9b4ebe7df2b4cce2d"
+    "path": "rounded/filled/12/arrow-down.svg",
+    "sha256": "4158493083f852500fb556232fe93de374d2cd5db85ebe1073bd932045f407f8"
   },
   {
-    "id": "file",
+    "id": "arrow-down",
     "pack": "rounded",
     "appearance": "filled",
     "master": 16,
-    "path": "rounded/filled/16/file.svg",
-    "sha256": "487502a722ce8a4f80cefa7d76032c292bf567e10e45cbd4e9824dfa471578cb"
+    "path": "rounded/filled/16/arrow-down.svg",
+    "sha256": "e4249cbee7f7704a17a0d6eb0e47211de575d905a397ef759d24fc0c558a320d"
   },
   {
-    "id": "file",
+    "id": "arrow-down",
     "pack": "rounded",
     "appearance": "filled",
     "master": 24,
-    "path": "rounded/filled/24/file.svg",
-    "sha256": "e85c656c0675506ecfa697d8e2460a0117e8958a8256eaf00fdc971e3f9b455f"
+    "path": "rounded/filled/24/arrow-down.svg",
+    "sha256": "f191a8078fff88dc8c8202a9bb48c2f952d34f101948d9c9080184d820f2daf6"
   },
   {
-    "id": "calendar",
+    "id": "arrow-up-right",
     "pack": "rounded",
     "appearance": "outline",
     "master": 12,
-    "path": "rounded/outline/12/calendar.svg",
-    "sha256": "9861bef8299884ba667e1ab1108254a89b5d7c3fe23cda353eeca4b87d58bad3"
+    "path": "rounded/outline/12/arrow-up-right.svg",
+    "sha256": "b1dd1efb83475ef0ade885179ff47ce6a9e3fce1144a39f36af446128e0b6b12"
   },
   {
-    "id": "calendar",
+    "id": "arrow-up-right",
     "pack": "rounded",
     "appearance": "outline",
     "master": 16,
-    "path": "rounded/outline/16/calendar.svg",
-    "sha256": "b752069c87f862af1ca9b62088864483efea75011748996d721d0afa8ddb3dae"
+    "path": "rounded/outline/16/arrow-up-right.svg",
+    "sha256": "4e7cb447c1882c118637c0d0e7fc62f55e890bfdb71c2b813f7a2097f8964ed3"
   },
   {
-    "id": "calendar",
+    "id": "arrow-up-right",
     "pack": "rounded",
     "appearance": "outline",
     "master": 24,
-    "path": "rounded/outline/24/calendar.svg",
-    "sha256": "532410faa8d533acc578f56ba5018d94fa6c80e5c1aed1f1b61ae36780408bd5"
+    "path": "rounded/outline/24/arrow-up-right.svg",
+    "sha256": "c382925f12d09606fb9ca138132dc3ba17344d0362f47409fe5b4957fc7adeb3"
   },
   {
-    "id": "calendar",
+    "id": "arrow-up-right",
     "pack": "rounded",
     "appearance": "filled",
     "master": 12,
-    "path": "rounded/filled/12/calendar.svg",
-    "sha256": "d174d7e73ed6d17e70385a2a841eb8ac55e6da893204002c40f79d3a9a6431e1"
+    "path": "rounded/filled/12/arrow-up-right.svg",
+    "sha256": "1bbb0c7017f07c4c89608c14cc947853dae481ce009b8a4af5960a33e7d45400"
   },
   {
-    "id": "calendar",
+    "id": "arrow-up-right",
     "pack": "rounded",
     "appearance": "filled",
     "master": 16,
-    "path": "rounded/filled/16/calendar.svg",
-    "sha256": "e91754f3da887ba03ad25d95fd4e4bbde15bd3661055f07daab0227026326ae6"
+    "path": "rounded/filled/16/arrow-up-right.svg",
+    "sha256": "417dfd09611d3072f1871f1109d361802fe2ad2d49d476c8af599fcfa20657d3"
   },
   {
-    "id": "calendar",
+    "id": "arrow-up-right",
     "pack": "rounded",
     "appearance": "filled",
     "master": 24,
-    "path": "rounded/filled/24/calendar.svg",
-    "sha256": "307345273932e302f2372ec9f02f7ed78abad4f747cd8b72ca973631a5f80891"
+    "path": "rounded/filled/24/arrow-up-right.svg",
+    "sha256": "a392dfa2a2f5b086e907dca55e8ff17b17e5dc9c3d226a7438a5bf6e9dd1a2a9"
+  },
+  {
+    "id": "chevron-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chevron-left.svg",
+    "sha256": "37da97e79dc08b2fd855e73ad32ce68cef665777925df555e585865eca8bbc37"
+  },
+  {
+    "id": "chevron-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chevron-left.svg",
+    "sha256": "14bd21f3e84f3c581c76467c0f7f90d6d2fa5531178fa152df6c30e74b8f5c2f"
+  },
+  {
+    "id": "chevron-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chevron-left.svg",
+    "sha256": "24a5ec8a5846e367ec63dd635358a8d16f0d7a234a2c2f922097e902055ad642"
+  },
+  {
+    "id": "chevron-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chevron-left.svg",
+    "sha256": "610c210456f80246bf091c79d6290701d02dbca3b25db8efad720e5037abc58a"
+  },
+  {
+    "id": "chevron-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chevron-left.svg",
+    "sha256": "e7e8cba4188f69f38a8a5cfdd115f76d8227be23597e978e74227c458c77cd53"
+  },
+  {
+    "id": "chevron-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chevron-left.svg",
+    "sha256": "17228b950207d2a5e6093013864aeefa793a10c6918f1140e3dde5aa00595b76"
+  },
+  {
+    "id": "chevron-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chevron-right.svg",
+    "sha256": "c942e45c9ca9acedde1840f4aad976028b249e08fd538641def8aeea1556801b"
+  },
+  {
+    "id": "chevron-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chevron-right.svg",
+    "sha256": "b5da397d5a4b66ebfe8781ac403ddd5ff88917b9dc14e75cbb28506073eaf3fd"
+  },
+  {
+    "id": "chevron-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chevron-right.svg",
+    "sha256": "71c636e90a5eeb0f796db0b84fa42f20c3f65722854686d86ce6c6d7014c4fb1"
+  },
+  {
+    "id": "chevron-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chevron-right.svg",
+    "sha256": "fb84faf66b3ebc342be99a7b7a54f99eedc806cfc42b4e26a5740b1bc4d416cc"
+  },
+  {
+    "id": "chevron-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chevron-right.svg",
+    "sha256": "dc40c456bd4b87c0a8836f4a0b868219133f21817971181d3f702f40ddcf193b"
+  },
+  {
+    "id": "chevron-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chevron-right.svg",
+    "sha256": "306b793566356f62ec8a77682275705e677980ab33287ae1b107cc509ce87e72"
+  },
+  {
+    "id": "chevron-up",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chevron-up.svg",
+    "sha256": "83c3eef2dbce1242722362c49477af33ca8af16d52eba6dab75091c9a01bf330"
+  },
+  {
+    "id": "chevron-up",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chevron-up.svg",
+    "sha256": "224475f76307ba42bc9d2e150a834ef9ece68cd08b81929752305ee6c2c9c06f"
+  },
+  {
+    "id": "chevron-up",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chevron-up.svg",
+    "sha256": "dc4aa38a5ef6aa45e8cc71278135589edcdda127df273b76c328bb7514e76618"
+  },
+  {
+    "id": "chevron-up",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chevron-up.svg",
+    "sha256": "44590ad578fa952432348522fcd770bf0e3cf95fe6c0618cd2b096a566cea100"
+  },
+  {
+    "id": "chevron-up",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chevron-up.svg",
+    "sha256": "11217a7cf9b8fc878a5c27862b006720d96aae07ae55fa23cd69bf3bb088a314"
+  },
+  {
+    "id": "chevron-up",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chevron-up.svg",
+    "sha256": "760a23996c8a7fa4ccb1f860aa56d3b574eb654507166e8c997e4144739e4bb4"
+  },
+  {
+    "id": "chevron-down",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chevron-down.svg",
+    "sha256": "15528ad5b1b8ab7af31c53330a11ac887c45eb559c71be955a090b14ff108203"
+  },
+  {
+    "id": "chevron-down",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chevron-down.svg",
+    "sha256": "44814b2c820b372a723424d7c3b52ff1d652fe538c98f75e6db57339edf7e6df"
+  },
+  {
+    "id": "chevron-down",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chevron-down.svg",
+    "sha256": "8f0430a2d5a95c38327dcab63842f3258144afb5398e1df6fdaf83a424cfc66d"
+  },
+  {
+    "id": "chevron-down",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chevron-down.svg",
+    "sha256": "ec345ea74f96bb97be8028c45e67d04edf4ab1bc57caf37e62e9890cc30be50a"
+  },
+  {
+    "id": "chevron-down",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chevron-down.svg",
+    "sha256": "f9b8755ea1e98eb2590678d796e517a0db3db112132869481e8dacdfb306e5c1"
+  },
+  {
+    "id": "chevron-down",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chevron-down.svg",
+    "sha256": "c7d8ac260017295e82e62af80c7651bd5be3f2f88d80d948c811cf5dd5ae14d5"
+  },
+  {
+    "id": "plus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/plus.svg",
+    "sha256": "9c6b00168792fbe3040c3f7af8d19291b67dfa01ddedc05621949639ae33c0fc"
+  },
+  {
+    "id": "plus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/plus.svg",
+    "sha256": "2cbc4437c4adc53b936aa976203fb3dac85d7f70e41d63dfc30276c08fb62f75"
+  },
+  {
+    "id": "plus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/plus.svg",
+    "sha256": "623bb279fd16a6c0479cbe07b76a33df1e8687435c45bb302f22e79ca6b36348"
+  },
+  {
+    "id": "plus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/plus.svg",
+    "sha256": "2f12ab7b9852353c636f45d1c317451a394a714a033a5dd52b788e0d482dd5df"
+  },
+  {
+    "id": "plus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/plus.svg",
+    "sha256": "456fb8e47c70a7403c4797b8d2f495272563e97ca2fed962c6135baffe13720f"
+  },
+  {
+    "id": "plus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/plus.svg",
+    "sha256": "8d44791d2fbb5122c96391e92be97723ce15167b9cf320c5e836b56aa4ef1494"
+  },
+  {
+    "id": "minus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/minus.svg",
+    "sha256": "67a3bc7c89af85e46961c770bc694ecb33d2fc0704fa96cda2bb0563c6992f91"
+  },
+  {
+    "id": "minus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/minus.svg",
+    "sha256": "58087874e03dba0a18f5fb70f79cf88b8bcc7270e9888140d3c1dbe99a999d32"
+  },
+  {
+    "id": "minus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/minus.svg",
+    "sha256": "3bfc828ffd1e8a9667c30bbe58bffd60c2cd8d5c1e7ceced5fb1ace22a639fcd"
+  },
+  {
+    "id": "minus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/minus.svg",
+    "sha256": "6845edf793d11264f5ea6debb1daabceb47fb977fa282481280dea917f1f13df"
+  },
+  {
+    "id": "minus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/minus.svg",
+    "sha256": "f833b49adbdd2a9bb22b2d88c499db6905e4e5ebed3f161cb115bdf0c309e07a"
+  },
+  {
+    "id": "minus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/minus.svg",
+    "sha256": "79e5854a867110f8b084c09dc8f9307060f7db0f7fc81d00fdeb801d606aa520"
+  },
+  {
+    "id": "check",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/check.svg",
+    "sha256": "69b34108f4f9fcf6a3ea0391cdbac2b962e667e9066985b44142ab7e5d883fb7"
+  },
+  {
+    "id": "check",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/check.svg",
+    "sha256": "cd6f596af81bee805992cf06a9798ef4eb891702d970a92cb0960f9de8fd4bd9"
+  },
+  {
+    "id": "check",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/check.svg",
+    "sha256": "7b66aababf5a00ae9c1bdeaa5755f2567b7abcca52ddfb3a2c7a9a8552307cb7"
+  },
+  {
+    "id": "check",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/check.svg",
+    "sha256": "ab8db210e4f63fbe6be7e0346a5442b3e27001c9e06cdae2987c95b767c08ca2"
+  },
+  {
+    "id": "check",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/check.svg",
+    "sha256": "75a6ee3ad19e2a59a78814d5d2fdf8575984b190f35d781a9e1903cbd3da01f0"
+  },
+  {
+    "id": "check",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/check.svg",
+    "sha256": "304e6acfcb51b4ae6517698364c4604c963dae51426ffdbcc7d32f420ccd166e"
+  },
+  {
+    "id": "close",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/close.svg",
+    "sha256": "1870afaad4e6fc14803d3288ad13b14de16a0703250f17c1e90ebd48c30bd4fb"
+  },
+  {
+    "id": "close",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/close.svg",
+    "sha256": "9260daf1f7197828c2ee526786f6bfb15532929c3987e15c6142778e43f3b29f"
+  },
+  {
+    "id": "close",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/close.svg",
+    "sha256": "2d3d8789899dd6423f35177eeab2f114baa73b4819f875d80b310890f3f35a52"
+  },
+  {
+    "id": "close",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/close.svg",
+    "sha256": "b1e1d3e41e3164d420436c443f292ebd7514b9c9a3f3c91e73525382ab5efd12"
+  },
+  {
+    "id": "close",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/close.svg",
+    "sha256": "2b13a52411c305dadc51d1ca59a389d4544509797f477fef69d77298726589e5"
+  },
+  {
+    "id": "close",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/close.svg",
+    "sha256": "12f2c58f64ac82a23c89dc3648a9da2ab8a42cf97560bfe3939411cfe63d5a5b"
+  },
+  {
+    "id": "edit",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/edit.svg",
+    "sha256": "e24754abc3d693798d30987fe364dc7a240c2b7964078afef98b3a67a0a87fc0"
+  },
+  {
+    "id": "edit",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/edit.svg",
+    "sha256": "33e07f4da161a15e0b26f2a9975f15d6f9e2f24618162d36dcc71b575a1c4223"
+  },
+  {
+    "id": "edit",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/edit.svg",
+    "sha256": "e9aad572d5e7d531c32ebd8670542e67398afba26714a53c5fb0e0e099ed500c"
+  },
+  {
+    "id": "edit",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/edit.svg",
+    "sha256": "95be543a4756b2948f0800982884e97f006f74a009e21c51e12d1d14bd9679b0"
+  },
+  {
+    "id": "edit",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/edit.svg",
+    "sha256": "362562027d55eb5ba9e466a9549c4fa2ffec877bbdecae0a5a1bef645f408e04"
+  },
+  {
+    "id": "edit",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/edit.svg",
+    "sha256": "e03b230492b1fd8c9bc01f8d03f9124b2ac98e78558ecbe07face9b2c2a360d3"
+  },
+  {
+    "id": "copy",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/copy.svg",
+    "sha256": "c8714ebc3e3d8c261e8cbc3510d79a799fd18e149b55c36f62ecc1fbb8456eb8"
+  },
+  {
+    "id": "copy",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/copy.svg",
+    "sha256": "354e8bf1afca10ac4fb2bf8a4567816421383fef6fb8322c90a326c0eed9932d"
+  },
+  {
+    "id": "copy",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/copy.svg",
+    "sha256": "1df0ac50843cccb79cb08d70572ae21f6959381035ddd71b7a6e468939f905a8"
+  },
+  {
+    "id": "copy",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/copy.svg",
+    "sha256": "c85c699ceace0e737e8ac78d7d77d35120b1f2abb0c6866667d6bb197a747775"
+  },
+  {
+    "id": "copy",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/copy.svg",
+    "sha256": "5df73c9ef70c92a48d458d77f538149860735554f2121818f04ba99ce31cee93"
+  },
+  {
+    "id": "copy",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/copy.svg",
+    "sha256": "3b252df305ff7661a94791b81058a5a7d23ee4fec19d2e5fd66942b2cf5bae42"
+  },
+  {
+    "id": "trash",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/trash.svg",
+    "sha256": "5bf3bc3c01ba9b5811eae1c03f1ee352019a4ff212268e32f8a8b13ad5ec7cb9"
+  },
+  {
+    "id": "trash",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/trash.svg",
+    "sha256": "c5e6c0fd9bbc76a9eb95581fc794a8395c6665ad9c5e48367c563ffafb941be2"
+  },
+  {
+    "id": "trash",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/trash.svg",
+    "sha256": "14920cdffdcee0be66eb3e6f9da26e4cf6c99212315ee9e8dd3650e9082c641f"
+  },
+  {
+    "id": "trash",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/trash.svg",
+    "sha256": "41aeebdc2286887eb82bef15981c1c2da0f14721a464f419fcbf3d9ec75fb7b7"
+  },
+  {
+    "id": "trash",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/trash.svg",
+    "sha256": "08b49bf2078215e0d1ec7d8a244a29d10b0d46c08355c524f680d7465335b20e"
+  },
+  {
+    "id": "trash",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/trash.svg",
+    "sha256": "95fbbac227e50c8d372e6ae37873fff1c6a53e0605048bcc5fe9e46791b180b6"
+  },
+  {
+    "id": "refresh",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/refresh.svg",
+    "sha256": "735868b351577dece81604196378d006c13e88be3b862a8794a642818456358d"
+  },
+  {
+    "id": "refresh",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/refresh.svg",
+    "sha256": "7d6eb9b77df1c7f2a7c9bb542fe8c41f0ac75e975738fe9066f744bf6a30ba9c"
+  },
+  {
+    "id": "refresh",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/refresh.svg",
+    "sha256": "31768188109957769ae678e603bc54dfc9491c1a3437957063e24cfe74e8d59f"
+  },
+  {
+    "id": "refresh",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/refresh.svg",
+    "sha256": "52e0f51244fcf6a4a41a2f527166607cded131c754ad2e0210f8cc7d6b1c8e99"
+  },
+  {
+    "id": "refresh",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/refresh.svg",
+    "sha256": "8c1f1ef51f988a6a3b4df21e3b3105df348bfed3a8d0a4ce96aeccd4859bc88c"
+  },
+  {
+    "id": "refresh",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/refresh.svg",
+    "sha256": "2eead9ba5685072285aad43f965ea98de4c1f47236ed960c6da1d3638b4ee6c8"
+  },
+  {
+    "id": "filter",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/filter.svg",
+    "sha256": "a641e13001f78e7af1215fe20a96a5996ade0bc43b2a51a11c8572b303d4b690"
+  },
+  {
+    "id": "filter",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/filter.svg",
+    "sha256": "004034e1b3b4b6e591cf2b60b090f2d8a1103e31990ee86d0a67bb97a9d49618"
+  },
+  {
+    "id": "filter",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/filter.svg",
+    "sha256": "92474cc6dda2f368f1c4636e0c8b46b337941b718cdd2385e1a7e5af11826239"
+  },
+  {
+    "id": "filter",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/filter.svg",
+    "sha256": "a5fb5acd642e1409c390857c3cce45158e797735eac631acad612d696e60a27d"
+  },
+  {
+    "id": "filter",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/filter.svg",
+    "sha256": "79b87cb264f4bff9142632537f7da45125db0f49db7db31e25513d5b6ac6bac9"
+  },
+  {
+    "id": "filter",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/filter.svg",
+    "sha256": "a3f898a710a3df227674cf6948bd4cec7f056669fb19b641552f58c7ea70112b"
   },
   {
     "id": "sliders",
@@ -384,52 +1152,244 @@
     "sha256": "de0129a5175b11a474faf4d08519a10f1cc5dd662bdab4ef030c6cfc4294b34e"
   },
   {
-    "id": "warning",
+    "id": "upload",
     "pack": "rounded",
     "appearance": "outline",
     "master": 12,
-    "path": "rounded/outline/12/warning.svg",
-    "sha256": "b6bf3819f577f56b58ed5e80186e93c73617e0b786af7ba2dc478ff5a7a59087"
+    "path": "rounded/outline/12/upload.svg",
+    "sha256": "3f830c710d9bbe0afbe2d25c12a72e584486876e83ce761c2758194488272927"
   },
   {
-    "id": "warning",
+    "id": "upload",
     "pack": "rounded",
     "appearance": "outline",
     "master": 16,
-    "path": "rounded/outline/16/warning.svg",
-    "sha256": "a20bd8c409e3c3c39033bb4c7b2eecb8ff3fa221898e6407a3bf7a91e8c6b6fd"
+    "path": "rounded/outline/16/upload.svg",
+    "sha256": "224bc460561666921920ccd51a1527327c4ae6c903baf53036b6b7c6838d2a7b"
   },
   {
-    "id": "warning",
+    "id": "upload",
     "pack": "rounded",
     "appearance": "outline",
     "master": 24,
-    "path": "rounded/outline/24/warning.svg",
-    "sha256": "bd014f68ad48741ea3da723b01a53e9f3f03239eeb75f6d9ff8249160b10b9e0"
+    "path": "rounded/outline/24/upload.svg",
+    "sha256": "de52f8f61f1d367eaecdb4629aa790cae2298bbe0e5e9578e67a2be6a71aa512"
   },
   {
-    "id": "warning",
+    "id": "upload",
     "pack": "rounded",
     "appearance": "filled",
     "master": 12,
-    "path": "rounded/filled/12/warning.svg",
-    "sha256": "a071b89023e4d145fef099ffa01b4517d47460fbdfbda323091204a7a2270f90"
+    "path": "rounded/filled/12/upload.svg",
+    "sha256": "c116c1eaba0fbd653bddab677b78f9d9a5f27fd7be1b674131a189b84d2f4442"
   },
   {
-    "id": "warning",
+    "id": "upload",
     "pack": "rounded",
     "appearance": "filled",
     "master": 16,
-    "path": "rounded/filled/16/warning.svg",
-    "sha256": "082b40abe68413d5ab5988e827686abff4469b86dbdc13ad0910f13cc84f5ea4"
+    "path": "rounded/filled/16/upload.svg",
+    "sha256": "44e9622da052424385e6cee1b2858a17c68ef75e1bbddbd772469e0352a789b0"
   },
   {
-    "id": "warning",
+    "id": "upload",
     "pack": "rounded",
     "appearance": "filled",
     "master": 24,
-    "path": "rounded/filled/24/warning.svg",
-    "sha256": "0d3bc1f997e47733e28ea0e4228bee6319c3eff3ec0fe46bcff646802b804363"
+    "path": "rounded/filled/24/upload.svg",
+    "sha256": "a2af66dffe8563994bb55b65bf6e5dd9aca2cbfd92180dce3dc76bebe11b1317"
+  },
+  {
+    "id": "download",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/download.svg",
+    "sha256": "77ab5da7d3e412b6657b98ae2435760cedc38376c30f2a608bad8a8b8adeb0d6"
+  },
+  {
+    "id": "download",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/download.svg",
+    "sha256": "1c77f22a7b4c117313432f967653bd73bfd30e00dd6c8d6ace11596b3f247119"
+  },
+  {
+    "id": "download",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/download.svg",
+    "sha256": "af798fd4ed07f92b5964d9e46ed658e3e1a0995b6030b285bc1f37243d168150"
+  },
+  {
+    "id": "download",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/download.svg",
+    "sha256": "e73e7cb1a0fa2b1dc2340a514fcbc2c3c78a3518355ab04b74beb235c2fb3cfd"
+  },
+  {
+    "id": "download",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/download.svg",
+    "sha256": "e458de2368c9a1a0f9dcbf1918a9babf77608623c2fab48138d47d08397193ae"
+  },
+  {
+    "id": "download",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/download.svg",
+    "sha256": "632185520e1fc9ff724e3500927321d8311602a63bc20bfa67c71049d4a87580"
+  },
+  {
+    "id": "save",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/save.svg",
+    "sha256": "2bd4f545e82d7690594befae21c05e1e896f6e6e098ad7fa93cc06bd1096ba06"
+  },
+  {
+    "id": "save",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/save.svg",
+    "sha256": "96d885d4f4202b16faea2508426d3df830b415f247ac48759d7a94ab706d5da9"
+  },
+  {
+    "id": "save",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/save.svg",
+    "sha256": "f8e660ce8c874b2013bca7e670f9ecdf4235476cf2280adb6bbfd80eb27be6a0"
+  },
+  {
+    "id": "save",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/save.svg",
+    "sha256": "68745c1c38f2b39cf23b5ec2d61e514458d03d64dc266564257dd55f42a99ae2"
+  },
+  {
+    "id": "save",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/save.svg",
+    "sha256": "71bb4e7f324cb3a9dda153be4dcf4f879c61e446d6d66e0849b74df4aaa5f7c8"
+  },
+  {
+    "id": "save",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/save.svg",
+    "sha256": "dec4d66accbf5635905abf3effc9e4a0f1e6e69051ae6c88e099c1fd6b7b97c6"
+  },
+  {
+    "id": "file",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/file.svg",
+    "sha256": "224ae17c09b25f43858857d37538df45021ca30f106e1dda3d79f681d938e311"
+  },
+  {
+    "id": "file",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/file.svg",
+    "sha256": "8e3505190bd13d2d313eed3da516e3c799ef7e68cb317c41ec271c2929c035ad"
+  },
+  {
+    "id": "file",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/file.svg",
+    "sha256": "acc67716d937c693dbec1bd0c70c0880104b3c8a1173c321234f46970f499cc6"
+  },
+  {
+    "id": "file",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/file.svg",
+    "sha256": "fc5802f46542d31ee6ef80c14581ad3b65cbb7a7244a88a9b4ebe7df2b4cce2d"
+  },
+  {
+    "id": "file",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/file.svg",
+    "sha256": "487502a722ce8a4f80cefa7d76032c292bf567e10e45cbd4e9824dfa471578cb"
+  },
+  {
+    "id": "file",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/file.svg",
+    "sha256": "e85c656c0675506ecfa697d8e2460a0117e8958a8256eaf00fdc971e3f9b455f"
+  },
+  {
+    "id": "folder",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/folder.svg",
+    "sha256": "0f233ce3e35adc9589c65fe6c8228a6c50803e2da06c6ff63c9c5746bb704868"
+  },
+  {
+    "id": "folder",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/folder.svg",
+    "sha256": "a50cdbe85165652ab48f44059d43a13eb43a9a9f3300cf3f101049bd53992988"
+  },
+  {
+    "id": "folder",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/folder.svg",
+    "sha256": "db433e87883b0ba2af03784e4e055f9bb590544704d764fffeb684624c44599a"
+  },
+  {
+    "id": "folder",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/folder.svg",
+    "sha256": "b3554a0bd3eb0ee273169bc5ecc6552b3f0e7ea36ab5dc26df66c010bc9b0889"
+  },
+  {
+    "id": "folder",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/folder.svg",
+    "sha256": "cbf7450eb785f5dfaaaa45863840356b148afd634f4c6bc302884f2597fc1694"
+  },
+  {
+    "id": "folder",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/folder.svg",
+    "sha256": "3c41d8e52d0bef3036d3fc0e36c2ed65cfc9a36a9303247fda3a0341d94071b9"
   },
   {
     "id": "link",
@@ -480,52 +1440,52 @@
     "sha256": "6aae1babcca3200335fd91be84294684ad7af4a86a082fda092727c494039732"
   },
   {
-    "id": "branch",
+    "id": "bookmark",
     "pack": "rounded",
     "appearance": "outline",
     "master": 12,
-    "path": "rounded/outline/12/branch.svg",
-    "sha256": "b0472df094c912fd8e5f4b29e75f2affddf346bd539e6ae135d3f9f0c34d1292"
+    "path": "rounded/outline/12/bookmark.svg",
+    "sha256": "25dbf4bebd97275b182e314b6c93ea57bd7b1da5dfc3c30496b009041ddaa04d"
   },
   {
-    "id": "branch",
+    "id": "bookmark",
     "pack": "rounded",
     "appearance": "outline",
     "master": 16,
-    "path": "rounded/outline/16/branch.svg",
-    "sha256": "21b87f742eda87a7728cdd620dba5bb1bce4ab8663cbaf0c1643c7282e86f525"
+    "path": "rounded/outline/16/bookmark.svg",
+    "sha256": "0101d660f7f09bc15a95ada9bd6b4d5208db7e500b9899c753cc176dd1e3e2de"
   },
   {
-    "id": "branch",
+    "id": "bookmark",
     "pack": "rounded",
     "appearance": "outline",
     "master": 24,
-    "path": "rounded/outline/24/branch.svg",
-    "sha256": "d2dd9df3c4832459887340b549e890fef78c2da83d669d10c85b422316740970"
+    "path": "rounded/outline/24/bookmark.svg",
+    "sha256": "211e653acd30b6b6ec82b3380850c6a9aaf50a4d84855e46a11af6711b9ccfac"
   },
   {
-    "id": "branch",
+    "id": "bookmark",
     "pack": "rounded",
     "appearance": "filled",
     "master": 12,
-    "path": "rounded/filled/12/branch.svg",
-    "sha256": "44f8afa591901bf835fa0c9b5659df8da681925129b48d69c80fc2fc05289233"
+    "path": "rounded/filled/12/bookmark.svg",
+    "sha256": "d4a57cd9a0c9947f4fdd65de0fb360041636efc69fd7b3262aad3100ad0fddf2"
   },
   {
-    "id": "branch",
+    "id": "bookmark",
     "pack": "rounded",
     "appearance": "filled",
     "master": 16,
-    "path": "rounded/filled/16/branch.svg",
-    "sha256": "211fb62bb516a6e296b26b120b823546afc5f92c5d2629ae2e320d757f0bf572"
+    "path": "rounded/filled/16/bookmark.svg",
+    "sha256": "1c2d1887f13e27fe1681573f1ea184feb949bcbf8cfad719a9febce3bbfce952"
   },
   {
-    "id": "branch",
+    "id": "bookmark",
     "pack": "rounded",
     "appearance": "filled",
     "master": 24,
-    "path": "rounded/filled/24/branch.svg",
-    "sha256": "8b2a3b38fd2212c00f6201d9a819f5a17f9a1c882cb6da6873229a5d92f4866e"
+    "path": "rounded/filled/24/bookmark.svg",
+    "sha256": "05d31816c13dfcc693cc7616665708f20c59687fb9a29495e0da19bc0b7008e8"
   },
   {
     "id": "star",
@@ -574,5 +1534,2165 @@
     "master": 24,
     "path": "rounded/filled/24/star.svg",
     "sha256": "56fd42be4b130e10006b58e906cc64025063bae08a6c6e7efe5e7afa5a99c26d"
+  },
+  {
+    "id": "calendar",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/calendar.svg",
+    "sha256": "9861bef8299884ba667e1ab1108254a89b5d7c3fe23cda353eeca4b87d58bad3"
+  },
+  {
+    "id": "calendar",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/calendar.svg",
+    "sha256": "b752069c87f862af1ca9b62088864483efea75011748996d721d0afa8ddb3dae"
+  },
+  {
+    "id": "calendar",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/calendar.svg",
+    "sha256": "532410faa8d533acc578f56ba5018d94fa6c80e5c1aed1f1b61ae36780408bd5"
+  },
+  {
+    "id": "calendar",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/calendar.svg",
+    "sha256": "d174d7e73ed6d17e70385a2a841eb8ac55e6da893204002c40f79d3a9a6431e1"
+  },
+  {
+    "id": "calendar",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/calendar.svg",
+    "sha256": "e91754f3da887ba03ad25d95fd4e4bbde15bd3661055f07daab0227026326ae6"
+  },
+  {
+    "id": "calendar",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/calendar.svg",
+    "sha256": "307345273932e302f2372ec9f02f7ed78abad4f747cd8b72ca973631a5f80891"
+  },
+  {
+    "id": "user",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/user.svg",
+    "sha256": "6aea68031e4f8743fa6093c6a60c4f8b9962cf130d1d1e3e35a7b84004d997c7"
+  },
+  {
+    "id": "user",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/user.svg",
+    "sha256": "335dfb7eb9c71b7cd74f58c56d1939601c69881b38b654ef900dafbfa99777d5"
+  },
+  {
+    "id": "user",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/user.svg",
+    "sha256": "5917ea16e57f8b8f5a73f7a156885e10af3db7c77a2efe13d64a4b4adbf3231b"
+  },
+  {
+    "id": "user",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/user.svg",
+    "sha256": "ca7c769a0e71ce3dd83efee474ee13893c6c8394b2ba47804da005042c06a144"
+  },
+  {
+    "id": "user",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/user.svg",
+    "sha256": "598b251e763eec93ee2073174ea581c237b10e52165ef447eb103192445218c7"
+  },
+  {
+    "id": "user",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/user.svg",
+    "sha256": "1f7a7df106920dffeed6b50ecb6fd4d363421729b5db262194644dd6e1f7da5b"
+  },
+  {
+    "id": "chat",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chat.svg",
+    "sha256": "386714eace6d5c07ac7111b0e38fb285d0056b6f36717f2db6ac228e5bb1f953"
+  },
+  {
+    "id": "chat",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chat.svg",
+    "sha256": "c18598a6b115f250f6e3b564c0718b62c6fd6aa505d4188cac3cc81ad54dc2e0"
+  },
+  {
+    "id": "chat",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chat.svg",
+    "sha256": "086d449158e4a316ea2b8071de4eec307c3757511a73df41301685fb3e1d0b23"
+  },
+  {
+    "id": "chat",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chat.svg",
+    "sha256": "5ba971d1d7190c042dc00f1cf52547567d60662bc7205e08798b9ff36d7f5798"
+  },
+  {
+    "id": "chat",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chat.svg",
+    "sha256": "6f472e57530eeb6ef1401932321993602fdb7dfe375f196657bbef5c98522ec8"
+  },
+  {
+    "id": "chat",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chat.svg",
+    "sha256": "bc890a4be0b9f54ecfbb7de7f6d119e688b5d040376e2407210fa1ddc889e794"
+  },
+  {
+    "id": "bell",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/bell.svg",
+    "sha256": "5368de6e1c13bd1fcaad25a6125004042668e97c1b60b466de1270cc7dca20a3"
+  },
+  {
+    "id": "bell",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/bell.svg",
+    "sha256": "a19d9f2017cd72dfd1702207905f56e881df99bb101527763592b164173909e8"
+  },
+  {
+    "id": "bell",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/bell.svg",
+    "sha256": "530906be8f4ace6b8a9481bc5e1919bde7e63e82fdc2b66f8816dc06849230a9"
+  },
+  {
+    "id": "bell",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/bell.svg",
+    "sha256": "2ce9ed48950edfe263284eba0a4bc7c02147de3d3906155bb51b5b184fb24633"
+  },
+  {
+    "id": "bell",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/bell.svg",
+    "sha256": "d27a89131889b54029dd6d49a177476ee8760cdfd526f6f610028d80882c8142"
+  },
+  {
+    "id": "bell",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/bell.svg",
+    "sha256": "27c4441e979f7a6a4e3c7b2aa61c4da1bbaffb7645b49a4dad3e07c9c09aba28"
+  },
+  {
+    "id": "warning",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/warning.svg",
+    "sha256": "b6bf3819f577f56b58ed5e80186e93c73617e0b786af7ba2dc478ff5a7a59087"
+  },
+  {
+    "id": "warning",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/warning.svg",
+    "sha256": "a20bd8c409e3c3c39033bb4c7b2eecb8ff3fa221898e6407a3bf7a91e8c6b6fd"
+  },
+  {
+    "id": "warning",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/warning.svg",
+    "sha256": "bd014f68ad48741ea3da723b01a53e9f3f03239eeb75f6d9ff8249160b10b9e0"
+  },
+  {
+    "id": "warning",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/warning.svg",
+    "sha256": "a071b89023e4d145fef099ffa01b4517d47460fbdfbda323091204a7a2270f90"
+  },
+  {
+    "id": "warning",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/warning.svg",
+    "sha256": "082b40abe68413d5ab5988e827686abff4469b86dbdc13ad0910f13cc84f5ea4"
+  },
+  {
+    "id": "warning",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/warning.svg",
+    "sha256": "0d3bc1f997e47733e28ea0e4228bee6319c3eff3ec0fe46bcff646802b804363"
+  },
+  {
+    "id": "info",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/info.svg",
+    "sha256": "a9c984dd3dccae5999539b22f97183ded3bdbed7399bb13dbc62f4376dc86fb2"
+  },
+  {
+    "id": "info",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/info.svg",
+    "sha256": "ed6ccdca7287c1f20777cab09e228636c3d0db9950a0c56229f726555ee77fec"
+  },
+  {
+    "id": "info",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/info.svg",
+    "sha256": "d933c5f90e35864ab563d183cb99a3384952d0f58af64229bf47db39b88b637a"
+  },
+  {
+    "id": "info",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/info.svg",
+    "sha256": "119343c59b557d4942db3cf6d57dc0822be35be27439014556726fddcd8d4b16"
+  },
+  {
+    "id": "info",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/info.svg",
+    "sha256": "9f04e50faa7d90ef22511e7764e9d59a61884ff657a073b1fbe709761512b58b"
+  },
+  {
+    "id": "info",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/info.svg",
+    "sha256": "5aa82e3079a9a08eda1ae8ee78c82b0e3a366b5adbae2bdea8621b945a426552"
+  },
+  {
+    "id": "help",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/help.svg",
+    "sha256": "c72b0d072beb0ad3f0854ffc6f33a98f7b4622bb06861eeb27ceaa29b741ccbc"
+  },
+  {
+    "id": "help",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/help.svg",
+    "sha256": "a8a971cb4a01fb856f8319014287b3cb62b9d52253271cb946ab32c70e88d9e4"
+  },
+  {
+    "id": "help",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/help.svg",
+    "sha256": "9b50655d872f9b95e2b996853a8b94c9a0bcec845c5e4537f23fff107652118e"
+  },
+  {
+    "id": "help",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/help.svg",
+    "sha256": "2ef0dd8919d27b3b061575287fa6ad8d25b0708f9a468a83653c525720c0dc57"
+  },
+  {
+    "id": "help",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/help.svg",
+    "sha256": "09fb5ef989a6819a6e2a5abb81315a0740bf81328f68f794cbcad5392a62ee5c"
+  },
+  {
+    "id": "help",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/help.svg",
+    "sha256": "976d3f5735db3ab48d2b5a419a6f77c1dcf524a85503111f18c8930d0593ba15"
+  },
+  {
+    "id": "lock",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/lock.svg",
+    "sha256": "fd0d65c2a399d5364c1a39d08a0543c2a333ef7342eb904cf037a81b753f55d6"
+  },
+  {
+    "id": "lock",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/lock.svg",
+    "sha256": "60ad9fa9070095986366df9d717c67434ad5ee18cd7dd1a5b4d724594a7e9a16"
+  },
+  {
+    "id": "lock",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/lock.svg",
+    "sha256": "5fcbe66db5adbc6712299576fee88159f949909d3bad0a3d8b1439b97d778ffd"
+  },
+  {
+    "id": "lock",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/lock.svg",
+    "sha256": "6f858c9d01d503e578d7f16e7e34f86efad44995d640b5ea126e0155a6588730"
+  },
+  {
+    "id": "lock",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/lock.svg",
+    "sha256": "1434b37793e08b435ae03078b5d4039269acc84c1cfae5b1c08690eea6e46193"
+  },
+  {
+    "id": "lock",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/lock.svg",
+    "sha256": "dfa186168fbe176f55d85bb01544c7350c4839dc74f5bca90da30f51aaa6ef44"
+  },
+  {
+    "id": "shield",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/shield.svg",
+    "sha256": "5f3d9d4ec7e694337c62a4ee5480fca551339b6d723858a735cd9c871b9236ca"
+  },
+  {
+    "id": "shield",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/shield.svg",
+    "sha256": "6d8d56b70f0c9aa54e520f63dfd62b2cbc8c2c1eebfd170fb22e264e630282b9"
+  },
+  {
+    "id": "shield",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/shield.svg",
+    "sha256": "ee18c7970ccd660c1f77e9812ba0432ad8f56e7f1cdd4e702a0d1dee5872c20c"
+  },
+  {
+    "id": "shield",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/shield.svg",
+    "sha256": "6610944f56899950694f2e02c73bcbdf7cac5557fea1125e3f27a099c2a45393"
+  },
+  {
+    "id": "shield",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/shield.svg",
+    "sha256": "5a15a42fcdee77c4250ef7fdc51cbbba8283f4179dc2e73d097588ab2b5bc0ec"
+  },
+  {
+    "id": "shield",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/shield.svg",
+    "sha256": "cee4135d9b7ba47e45c522b76523acdee9697c14b20f2d41bcb5f4a27908dc5b"
+  },
+  {
+    "id": "gear",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/gear.svg",
+    "sha256": "427daf16049e06efa5b945e12a232a85a93618733f8784f36674e3139010e6a9"
+  },
+  {
+    "id": "gear",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/gear.svg",
+    "sha256": "1cc5c860ef3f8bf3941eeef91d69d6c15160b96dbdbbd135cb751032b75a6ce7"
+  },
+  {
+    "id": "gear",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/gear.svg",
+    "sha256": "de9c49f73e1e05eff0993816fde12d7ed9cd574032f31baaf566f620e5e473d0"
+  },
+  {
+    "id": "gear",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/gear.svg",
+    "sha256": "a6dd6beebbc4809f34580e9c98489e536de25643b221f29e27b0cf9ff38484ef"
+  },
+  {
+    "id": "gear",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/gear.svg",
+    "sha256": "f52cb475f541f0ed61355af6e582136723c8710b551f9ead3c69725f4e4616e3"
+  },
+  {
+    "id": "gear",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/gear.svg",
+    "sha256": "5d67041835845a2efa97459bdfe89fb34370dd7b1a56f6f222af38d732120009"
+  },
+  {
+    "id": "terminal",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/terminal.svg",
+    "sha256": "47543913f4efada8dc8fbbfbd293701e0f2703d898cb6e068e401a2e63c665cc"
+  },
+  {
+    "id": "terminal",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/terminal.svg",
+    "sha256": "ccf6494782f499de3b1e18b549c1df436af92fa8f2efc477ab46c89c6eeb8e3b"
+  },
+  {
+    "id": "terminal",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/terminal.svg",
+    "sha256": "7655ab60f35f6f670f2e110c8ca74de468928d8dba6ca2e4b9ebd19f0cb0163b"
+  },
+  {
+    "id": "terminal",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/terminal.svg",
+    "sha256": "3c74950dc544297b86721107a9d2e6dcddcc1dd59c1adc795ce2ac0b5ae7ed89"
+  },
+  {
+    "id": "terminal",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/terminal.svg",
+    "sha256": "bdb8b943651d0c9fdd401274ddb654201b9c3f1c41f22d61f380f749f9be767f"
+  },
+  {
+    "id": "terminal",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/terminal.svg",
+    "sha256": "e58baad293cea20dd60b62362e07b09a69b5a3250d64b36b02749e389bf98af5"
+  },
+  {
+    "id": "branch",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/branch.svg",
+    "sha256": "b0472df094c912fd8e5f4b29e75f2affddf346bd539e6ae135d3f9f0c34d1292"
+  },
+  {
+    "id": "branch",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/branch.svg",
+    "sha256": "21b87f742eda87a7728cdd620dba5bb1bce4ab8663cbaf0c1643c7282e86f525"
+  },
+  {
+    "id": "branch",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/branch.svg",
+    "sha256": "d2dd9df3c4832459887340b549e890fef78c2da83d669d10c85b422316740970"
+  },
+  {
+    "id": "branch",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/branch.svg",
+    "sha256": "44f8afa591901bf835fa0c9b5659df8da681925129b48d69c80fc2fc05289233"
+  },
+  {
+    "id": "branch",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/branch.svg",
+    "sha256": "211fb62bb516a6e296b26b120b823546afc5f92c5d2629ae2e320d757f0bf572"
+  },
+  {
+    "id": "branch",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/branch.svg",
+    "sha256": "8b2a3b38fd2212c00f6201d9a819f5a17f9a1c882cb6da6873229a5d92f4866e"
+  },
+  {
+    "id": "chart",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chart.svg",
+    "sha256": "1bdefde3d456001e67e5d888593f92404361664e4d7eecc7f32376a5b18912b0"
+  },
+  {
+    "id": "chart",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chart.svg",
+    "sha256": "b03705f2f64c85949d9c2c3fccbae27e75df4f09f65a4b49fd630744f9cad7ab"
+  },
+  {
+    "id": "chart",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chart.svg",
+    "sha256": "9f0ab81157878e56f95b8d800d4e55207b1c4ba2907744a90c7e29a160662e0a"
+  },
+  {
+    "id": "chart",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chart.svg",
+    "sha256": "7c8610d13030276c3f356b80a5234bf8e9e1379ff7f1a872204424689a096a9d"
+  },
+  {
+    "id": "chart",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chart.svg",
+    "sha256": "c3b7e349f657096bbfae8c22a9acf3f5cdbbcdd31837004c55bfff51aaa131bf"
+  },
+  {
+    "id": "chart",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chart.svg",
+    "sha256": "fb1e0648896de00ffb15654bd7dfac09e7158e8d18968f0a20f9f25f3efbd03f"
+  },
+  {
+    "id": "play",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/play.svg",
+    "sha256": "c334a9d54ce5f099f323e48acb4a9207badc86afde5564d7d130c277252f4239"
+  },
+  {
+    "id": "play",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/play.svg",
+    "sha256": "1edd9add6e0bde491479c57f81862945645bff60f888b349df2c200d9d069374"
+  },
+  {
+    "id": "play",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/play.svg",
+    "sha256": "9b5c3abbd7880a9b8e1cdf34b7940462f925e399fba1a9c245726a5767b2d19a"
+  },
+  {
+    "id": "play",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/play.svg",
+    "sha256": "6982eaa77bfdad8b424d630aeec803d291131f6fc9e03240ea5c2a35ab91f7ff"
+  },
+  {
+    "id": "play",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/play.svg",
+    "sha256": "fc3413491d75d008a48740192dee8b43dee37b2500188353aec46053542715e5"
+  },
+  {
+    "id": "play",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/play.svg",
+    "sha256": "3b40757bdec231174f33e9a527bd53dfa6f84b779542ca81b09122e8f3c8493d"
+  },
+  {
+    "id": "pause",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/pause.svg",
+    "sha256": "beeec3e226319e2567f20c4d87094c47f352087af67cd2cf108778d5aaf3a2f0"
+  },
+  {
+    "id": "pause",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/pause.svg",
+    "sha256": "79fa62aa815c9f931360e53e81104dc96ad5bf7befae508ec5fbe6c8ce39369e"
+  },
+  {
+    "id": "pause",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/pause.svg",
+    "sha256": "d5a84c38d43ffe21fe6d7e673a982be591bc3af81e99969aa437b45fbca5703f"
+  },
+  {
+    "id": "pause",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/pause.svg",
+    "sha256": "0901e665c52b72c64e940254761994bfd87c18cf9b02ab9f380fbfae81ee4614"
+  },
+  {
+    "id": "pause",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/pause.svg",
+    "sha256": "cf0339b2df9943df9092b5268679c3ab801d85f84a2344582f21495e1121fcd6"
+  },
+  {
+    "id": "pause",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/pause.svg",
+    "sha256": "46359713693ec4ed8d33d103fce34c5dadbefc36abbe112b3273bb82dfafb918"
+  },
+  {
+    "id": "focus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/focus.svg",
+    "sha256": "d971033f86a73d9b015032ccd857d1a8262b25e958931ffdd60aceac99fd60de"
+  },
+  {
+    "id": "focus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/focus.svg",
+    "sha256": "2637ece66eac7d9711682c745d6050689afa819da8b4050b4a9de8218306f8da"
+  },
+  {
+    "id": "focus",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/focus.svg",
+    "sha256": "9d10f6e7027d027a6f44dceedd63bee44ad47978ed47fb85e15f13b5b7211147"
+  },
+  {
+    "id": "focus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/focus.svg",
+    "sha256": "7c681c8140ede8f0572d68e815f0d0a653138b336e96ee2a0191c66448172b5a"
+  },
+  {
+    "id": "focus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/focus.svg",
+    "sha256": "e3ac989740d4ce9d130814490391637264dd9224a895c77c012ed4fbde9a2264"
+  },
+  {
+    "id": "focus",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/focus.svg",
+    "sha256": "16ba843f5dae00557b1b5cd6b06c1bb77bb7426bee2a983daf2cc00648936737"
+  },
+  {
+    "id": "activity",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/activity.svg",
+    "sha256": "a8899a0d03184edeab7c3e0bf457b7b5eba289ec41e32c97a9d801c04daf9b26"
+  },
+  {
+    "id": "activity",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/activity.svg",
+    "sha256": "c0adaf8292fb4175bb08a6b9397d17ef8cf95c76d6ba904119452d064a297c89"
+  },
+  {
+    "id": "activity",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/activity.svg",
+    "sha256": "3a4cea7b2e26bfb01d70f12165d336c6e5fcf5a5ad7671878164756388faea0e"
+  },
+  {
+    "id": "activity",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/activity.svg",
+    "sha256": "4daa3823b86f8b6cdb9778cef6792db2659ea52070cc62b6841134ababe5c631"
+  },
+  {
+    "id": "activity",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/activity.svg",
+    "sha256": "6d74b04b8d4e181e6cf947c3f60844cff6c1fe7793b02d09bd92af6330ca9dc3"
+  },
+  {
+    "id": "activity",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/activity.svg",
+    "sha256": "c27a8043926ceaa615cbb50052d120c4d78b3dd38d8336a7c1d5ce6a7e81f526"
+  },
+  {
+    "id": "align-center",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/align-center.svg",
+    "sha256": "951e8dffb623791795f07308a1a9e2e6206b7b37a8b44f26141f089029d37fb2"
+  },
+  {
+    "id": "align-center",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/align-center.svg",
+    "sha256": "d712cd2b4aef30955527ebee6f950bba0fb6da88b1c64fd8dc656d63f4219a30"
+  },
+  {
+    "id": "align-center",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/align-center.svg",
+    "sha256": "60371b68f5aa5421e8680de19e5db5a498a8fab67ad9b906abf0c68c7f4f5537"
+  },
+  {
+    "id": "align-center",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/align-center.svg",
+    "sha256": "6545788c5e2484c2dad1c968a65afdb8ba95d589b3c68005eb1569f878f944b9"
+  },
+  {
+    "id": "align-center",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/align-center.svg",
+    "sha256": "472759a55710dc675a4148fbbce4b232573ab207fcf4751288869c0a5da40df8"
+  },
+  {
+    "id": "align-center",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/align-center.svg",
+    "sha256": "811c0227dde30116f6d1980c9eaef7b8cc1b995ea1886270f92f33977cd6e14f"
+  },
+  {
+    "id": "align-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/align-left.svg",
+    "sha256": "4260451c00439d92ac0515e3dd6dedeae897acb55e7881392edb40802afe34b2"
+  },
+  {
+    "id": "align-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/align-left.svg",
+    "sha256": "94aec0f9abc3ec2169a7dfcc58985b237eb7d3f2697df77e785a8796dfa67353"
+  },
+  {
+    "id": "align-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/align-left.svg",
+    "sha256": "d66f44f5b7abf15b406347168b1941e5183a555b89ddb6d9566f957de0943320"
+  },
+  {
+    "id": "align-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/align-left.svg",
+    "sha256": "c9025d696a8409c4ca482b7d4a2ce9fa19b18e00128fb81257753b6bd54c232f"
+  },
+  {
+    "id": "align-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/align-left.svg",
+    "sha256": "3d52b6242c033b48fed43e681e2880e3c0651efd79e3d30d3796fbab3c2dc105"
+  },
+  {
+    "id": "align-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/align-left.svg",
+    "sha256": "254797c5b07e2e6fce572a9521a995c9dc17d6a97220e0671eedbabaadecdf72"
+  },
+  {
+    "id": "align-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/align-right.svg",
+    "sha256": "f9d1e4c771314e3d5299207713c2d65ebc7e5ef5abbbc9769b576f58e4dd71a3"
+  },
+  {
+    "id": "align-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/align-right.svg",
+    "sha256": "ba2916e3d4184a81d53659b0e9b4b5b81edcdf54716f919af619b028428b2791"
+  },
+  {
+    "id": "align-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/align-right.svg",
+    "sha256": "cbff46297146eb9eab4d98a5c5860f384aac572d83f916275484cbbe16c6b0ce"
+  },
+  {
+    "id": "align-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/align-right.svg",
+    "sha256": "201fdefe539edce99a48dbc5e3314c812a425cc127785f50e9f6d2db161e8bfc"
+  },
+  {
+    "id": "align-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/align-right.svg",
+    "sha256": "48dbc24c6d44d674559f12702216f64a3ad8f539911216a5f598f8c145e185cf"
+  },
+  {
+    "id": "align-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/align-right.svg",
+    "sha256": "e67809da9485ea3033ae8a5a0c99643800320ad5a881a8c6ed54588b6c8c1f8e"
+  },
+  {
+    "id": "box",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/box.svg",
+    "sha256": "740a506af6b36053c7ddae19c85913874ea1f5308b7d0620b5256c9f6e736919"
+  },
+  {
+    "id": "box",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/box.svg",
+    "sha256": "71daa03ff2b26610d35b29fd0f0cd13323c98977584d239c02a9418b6ec21370"
+  },
+  {
+    "id": "box",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/box.svg",
+    "sha256": "ca2cfb5326dd5095cb55d1501c91d70fdde9fcae8050b772891fb8f58ca32448"
+  },
+  {
+    "id": "box",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/box.svg",
+    "sha256": "6fa70050fdd974436afbb39e3103a7842a6cfa767eddb6bbb60b70e1060b21e4"
+  },
+  {
+    "id": "box",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/box.svg",
+    "sha256": "43d64acef770eb7d68732fa101a2bf868198fb5868000fdae4d417e401ca323d"
+  },
+  {
+    "id": "box",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/box.svg",
+    "sha256": "32ed87bb035316e54dd7b111f01a55c4178c753c0f5adb1b76f62ad281b82498"
+  },
+  {
+    "id": "check-circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/check-circle.svg",
+    "sha256": "8e1d82a33c55dcb8cfce6730e37472f2ded53cde443ddfd4207cf69c9ce74db5"
+  },
+  {
+    "id": "check-circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/check-circle.svg",
+    "sha256": "e8ce29d79dcc121f54fbfad8b21b98c427e294f9666b383fd4f620bf55444061"
+  },
+  {
+    "id": "check-circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/check-circle.svg",
+    "sha256": "b5bc514ac10873446c337f605ac8a20409a247363146989c1786cabc3c2a3ecd"
+  },
+  {
+    "id": "check-circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/check-circle.svg",
+    "sha256": "6bbe2e8e7c08d3f234e458beaafe6b87f198a6682b04ab9b9a1498974e9601fb"
+  },
+  {
+    "id": "check-circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/check-circle.svg",
+    "sha256": "a8c4768b816a32a5249691cce2f061427f46dc24518e6637e8740ba07cf93158"
+  },
+  {
+    "id": "check-circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/check-circle.svg",
+    "sha256": "e1a3d5e5024bbb8931a0186237fa7ba4b78b5bd9d93756d890ea37d629791c5c"
+  },
+  {
+    "id": "circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/circle.svg",
+    "sha256": "9df5ea97f52eb7d966a9415eb520216e7bdfc459f22b1c6e23aa9bf752c57746"
+  },
+  {
+    "id": "circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/circle.svg",
+    "sha256": "af35d7d4f7760b3c3849e4f087dc8e9ab8cc5c539256988a6ae93d2de3371590"
+  },
+  {
+    "id": "circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/circle.svg",
+    "sha256": "268237e81eaa6403748d2183463b3f7f65e5391b9039c1a3c5e4c72be5b5e954"
+  },
+  {
+    "id": "circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/circle.svg",
+    "sha256": "c36a969a7b913d3c7d9f4dcd9c4b9ee17a6001053262d0206136a63a4bd9fa91"
+  },
+  {
+    "id": "circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/circle.svg",
+    "sha256": "2fa6ca61e6ce9b03dba57d1f527e760bc1e57dc95a08abfd7ddd5e9afe9fd294"
+  },
+  {
+    "id": "circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/circle.svg",
+    "sha256": "fdd3c02fc014f3fff3a39a98e8bce13c12f6162894817b7534677ddee63c8465"
+  },
+  {
+    "id": "ban",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/ban.svg",
+    "sha256": "d60b427921aa354e02d1d64263303896dc3e53a9678a763de51c5872b2e365d3"
+  },
+  {
+    "id": "ban",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/ban.svg",
+    "sha256": "de1f82780d315f152709b0865b151b69f62b4dfbd39d23252840e1add8414303"
+  },
+  {
+    "id": "ban",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/ban.svg",
+    "sha256": "6338c3a954e4f6bfeaba322f02afa323fd9f2ac1116cd8b113197fb961bfed53"
+  },
+  {
+    "id": "ban",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/ban.svg",
+    "sha256": "9c127472e46cacf6c178e9eaff6b15d496e17b1ef93cc61054edbe2d721ae35c"
+  },
+  {
+    "id": "ban",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/ban.svg",
+    "sha256": "860a7395dad5ec7b004d8734832d688ab64559892f48b0fc3d10dcdf6c8575da"
+  },
+  {
+    "id": "ban",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/ban.svg",
+    "sha256": "1c37a82eb760314486d8080870df9835c9e150cc4c2673e9dd8d633c43b78d88"
+  },
+  {
+    "id": "close-circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/close-circle.svg",
+    "sha256": "a5a3d9aaff57d1cc5583fcfcf22c3cc0a26b045db5c1511fa882df0ff213b5e4"
+  },
+  {
+    "id": "close-circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/close-circle.svg",
+    "sha256": "260073e3f2454c2bf0642c6de9d7351684b512a23f31212f8bda8bbb564d0d32"
+  },
+  {
+    "id": "close-circle",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/close-circle.svg",
+    "sha256": "2abec5a1b6a3a0ab0bf45ffbed79d0bb812c28a49ec7415dbf15670b8993ef58"
+  },
+  {
+    "id": "close-circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/close-circle.svg",
+    "sha256": "4b55d7ac1e68d6595f559086d921e3da45b0e7a7b65ed6f7c8a188b78d1dd374"
+  },
+  {
+    "id": "close-circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/close-circle.svg",
+    "sha256": "a55178a1c3cd936455cf8ee38c11433f592e437c67ce2293a2cb0628b7fba1d1"
+  },
+  {
+    "id": "close-circle",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/close-circle.svg",
+    "sha256": "d8b291c48918c6e90b78eda4e10ecc4350f80589655d27d3dfcc1e7a253de257"
+  },
+  {
+    "id": "cursor",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/cursor.svg",
+    "sha256": "bd949aecde2adf99520aea60f8a1411c7df7bee9c13f928e98eb5eda6c1ecd84"
+  },
+  {
+    "id": "cursor",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/cursor.svg",
+    "sha256": "689b0fa873b157454d77745c383c6b3b2738c3fc7068bb9fca0578a675f10283"
+  },
+  {
+    "id": "cursor",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/cursor.svg",
+    "sha256": "4fed8cc6cda9da16f9ba1aa1296fcb06c0d7ea5c0c4b63bd59a9c63731cb96d3"
+  },
+  {
+    "id": "cursor",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/cursor.svg",
+    "sha256": "f2a62e06e5a650b62b1a616608d121ccba6c272c5e09b8bca519d89166ad4038"
+  },
+  {
+    "id": "cursor",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/cursor.svg",
+    "sha256": "5e10448ad9177ccd47262223995960d76ee4b0c1466143d8a0e0196ae5be1c0d"
+  },
+  {
+    "id": "cursor",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/cursor.svg",
+    "sha256": "70c1b3036763b5d80272b1ed9fb0793315dbc2284f3e51b66d6f7a76498967b7"
+  },
+  {
+    "id": "dot",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/dot.svg",
+    "sha256": "94687baebb09c8f021788837968e7c8e084ca33f792c860b8c5bf90b2b39a4a6"
+  },
+  {
+    "id": "dot",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/dot.svg",
+    "sha256": "2bae111e457761fc5cc9b669e6a7989c0004698e6da233fccb3fe6de129f55ef"
+  },
+  {
+    "id": "dot",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/dot.svg",
+    "sha256": "08251e2fc103abc40421d2518e4dd4c6e93b3391b8bd0024f244be71e885fcbe"
+  },
+  {
+    "id": "dot",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/dot.svg",
+    "sha256": "e614076ffd80eea38a397bea5582d765b9c7efec944fbb65f220fbeaf3203c77"
+  },
+  {
+    "id": "dot",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/dot.svg",
+    "sha256": "7e3432cbcb798f87c2c7e33554d172f04f32d4da364a9236044b430121a8d032"
+  },
+  {
+    "id": "dot",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/dot.svg",
+    "sha256": "f11ca576b948b01a52e9c4bce009e67df835af289b2a6f6b7c5ac2fc3e5e5aca"
+  },
+  {
+    "id": "chevrons-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chevrons-left.svg",
+    "sha256": "576c29d0e961849f154723e445de665c4204fb1e1a2369042f75a2eb8989ada3"
+  },
+  {
+    "id": "chevrons-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chevrons-left.svg",
+    "sha256": "68f009897bfa978b6f56e4c0b72c8f756f539cce6f919c0463377d1fcd6b7342"
+  },
+  {
+    "id": "chevrons-left",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chevrons-left.svg",
+    "sha256": "ec4f0b0eb35fd346dd5b57e650007bd92c24971eb98e65aa73cd2012eff8b202"
+  },
+  {
+    "id": "chevrons-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chevrons-left.svg",
+    "sha256": "1fb7eb6d30007252d09f176ff42899eb26b4e13cec54b590bf279f11c6b177c0"
+  },
+  {
+    "id": "chevrons-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chevrons-left.svg",
+    "sha256": "280c0191ce6f49c8b2bd44555ce505fd88437161eab9e8fb3af0ceded1d059b4"
+  },
+  {
+    "id": "chevrons-left",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chevrons-left.svg",
+    "sha256": "4532497d7f0c97c4bb9db1abb0138aaab8c5a27f0c39f5f4e5dd3f767507a5ea"
+  },
+  {
+    "id": "chevrons-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/chevrons-right.svg",
+    "sha256": "32d436e022dbdf44ef06bc34e75ecfba5425566d257338f01e97b21544f682a9"
+  },
+  {
+    "id": "chevrons-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/chevrons-right.svg",
+    "sha256": "d313ef61f127381d5d335092533aa863d2c181749a24df28e5816fa9259cda72"
+  },
+  {
+    "id": "chevrons-right",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/chevrons-right.svg",
+    "sha256": "9ebdedfd5a5d27838551b499a1d888703ac8998dfe47aceda2be96964a4d7fe8"
+  },
+  {
+    "id": "chevrons-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/chevrons-right.svg",
+    "sha256": "2ab9434127b088e00a1396da415f94c57db2131c9b08a098cf3b592df538dd91"
+  },
+  {
+    "id": "chevrons-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/chevrons-right.svg",
+    "sha256": "53e5311d70c331213b6b29d1e05d9a50008489a9d4fc4f3b869e97b899578034"
+  },
+  {
+    "id": "chevrons-right",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/chevrons-right.svg",
+    "sha256": "c0228d3973758cc04e8c781c494a43b9b91fff089475f2279dc9ac9cdd342a6c"
+  },
+  {
+    "id": "bold",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/bold.svg",
+    "sha256": "8d34f3889afc2069c92c1eb97be191d18a01808f6cf150d6a9516a1d756da1df"
+  },
+  {
+    "id": "bold",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/bold.svg",
+    "sha256": "22f08fa99530eb59f472b29d82dce21daa203f359a4686d8d8b351f50af13aee"
+  },
+  {
+    "id": "bold",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/bold.svg",
+    "sha256": "257069458992a707da80ec286e48ee6360323ba275fe986fa5c30ca3269bce16"
+  },
+  {
+    "id": "bold",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/bold.svg",
+    "sha256": "aa394825b2b00b9afb637c387c145b1cf0fe34c431e49dba09e77a35d10e5624"
+  },
+  {
+    "id": "bold",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/bold.svg",
+    "sha256": "549db3f323228593f37c89741cff2b1bd09751b0e5755185de35e3133b0b8d65"
+  },
+  {
+    "id": "bold",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/bold.svg",
+    "sha256": "985597a14ab79582c3fb2ba967fa4dfc7c2931f0c9d5d20416d6360b4821052f"
+  },
+  {
+    "id": "type",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/type.svg",
+    "sha256": "d4ec37b97ab796c972366a93ead93bbf65a989f9dc87290b2ce2aeeb65f0c29d"
+  },
+  {
+    "id": "type",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/type.svg",
+    "sha256": "125dfa55eb57272647c701f17695940667d525d07b60fcf65e0823b70a8eb367"
+  },
+  {
+    "id": "type",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/type.svg",
+    "sha256": "c2ba188b1f6c71b48d7adee4a3d131c21ce5f2086b3cceee999a9b4d8f2a86ff"
+  },
+  {
+    "id": "type",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/type.svg",
+    "sha256": "38c08a8761c5d69d005bbcceea315c1dd1480fab534132bf2ce418b7f631fb35"
+  },
+  {
+    "id": "type",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/type.svg",
+    "sha256": "ae2401097990ff7f6a8b887a83c18004994baeaa34e9fd1c03714e849e0e4059"
+  },
+  {
+    "id": "type",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/type.svg",
+    "sha256": "1d0b25b4835c2c8567d048c522c1c5f7ae219497b2501c979671749645ec0208"
+  },
+  {
+    "id": "group",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/group.svg",
+    "sha256": "6dffe632a42f4f26f46a01be8bbf26f739952bd7b394839211a8223aa25bdcd4"
+  },
+  {
+    "id": "group",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/group.svg",
+    "sha256": "6756bd3f30c3898c6ac63195f634515a1b485040891d19bdd5dac1b9623fe506"
+  },
+  {
+    "id": "group",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/group.svg",
+    "sha256": "8171c52a3578285a74df6cc6b67aef4ec1962a290eb25df411b513c6218931ac"
+  },
+  {
+    "id": "group",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/group.svg",
+    "sha256": "c7b447deeb772c455a7e3f1f760a121f3ec2ca411448de3d6edd8451674afcb1"
+  },
+  {
+    "id": "group",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/group.svg",
+    "sha256": "5681a569f7dda5b01f1b6887a4f1c408058fc5d19ad34b0d57b8683457da838d"
+  },
+  {
+    "id": "group",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/group.svg",
+    "sha256": "b0a2be695a3850bf88cd347fb7f28135e64a28e15162242e050fb42956abb74d"
+  },
+  {
+    "id": "heart",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/heart.svg",
+    "sha256": "d257af232508bc37929f347b3729af0f9984732d6aa965728a864f11e25f3d09"
+  },
+  {
+    "id": "heart",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/heart.svg",
+    "sha256": "93c900db7f60c0736dba2e6b52ba1fa7124986030372519dc295aa3ccc81c5d9"
+  },
+  {
+    "id": "heart",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/heart.svg",
+    "sha256": "980458337022b76a334be21e95215e9f5da3b2b2045b1d87a4eed570a373268a"
+  },
+  {
+    "id": "heart",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/heart.svg",
+    "sha256": "07dde73653795e2ead3de49d7d7653122e7af5199f0d7f074049e40df38251fd"
+  },
+  {
+    "id": "heart",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/heart.svg",
+    "sha256": "d34c67a95e1097b68f2385b3d8cf1137cf69908bd8adab0ae7b46b4154d0531f"
+  },
+  {
+    "id": "heart",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/heart.svg",
+    "sha256": "db401ce647c60248bbf92fb91dcb854ba9276184e793f509db97c47615bdf3f8"
+  },
+  {
+    "id": "input",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/input.svg",
+    "sha256": "7a3cf93853be6ef7bfec4ef9752214a37ed3bb3bd2c3b1adab449f03cae61d88"
+  },
+  {
+    "id": "input",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/input.svg",
+    "sha256": "a31bbedd6ecce47dcd322869f1cdf5f782a84b327799f2e666f63ecf58a76671"
+  },
+  {
+    "id": "input",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/input.svg",
+    "sha256": "876b3a473b32d0493dd9aa896ac2fb1f380307bfcd152cba33de464360576893"
+  },
+  {
+    "id": "input",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/input.svg",
+    "sha256": "a77aacabac92cadd99316bf1ef181c07fe4443e787b1e06087d308d5b10fc927"
+  },
+  {
+    "id": "input",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/input.svg",
+    "sha256": "695540829f4a7e5fb4c7fd1e54ea5cd727d04ddb40f5282c6fbddfd311232c85"
+  },
+  {
+    "id": "input",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/input.svg",
+    "sha256": "5622cb62676b076a7f727cc9e146fb1e8921428af92d81f66350caed78ead7f3"
+  },
+  {
+    "id": "laptop",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/laptop.svg",
+    "sha256": "a1249e836816ec6587a7982c7260970f41e7e7e7c12211518accd816646407d0"
+  },
+  {
+    "id": "laptop",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/laptop.svg",
+    "sha256": "8c0f13cbe3ceaa1e09b61dd8669d85363351d22c3703668e03ffec458eaac608"
+  },
+  {
+    "id": "laptop",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/laptop.svg",
+    "sha256": "ac4646db4686ed69b499c6f33ac954eb2a58233e018aaf3c9735e5bd9860cf10"
+  },
+  {
+    "id": "laptop",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/laptop.svg",
+    "sha256": "759183baa10a6790e366f7e761a3bbf01c8eab386354adb63380f26a419fb4ce"
+  },
+  {
+    "id": "laptop",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/laptop.svg",
+    "sha256": "8f993901c4d09a4ff5d8b6115c3de20832bfeefe39552def777adaf6f3da53ee"
+  },
+  {
+    "id": "laptop",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/laptop.svg",
+    "sha256": "525cd8574bd224cd06a85f45c8a9842c062f7534f9707d83645d8fae10f3836a"
+  },
+  {
+    "id": "wand",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/wand.svg",
+    "sha256": "bf727c206309f25291dffa6ba701c9260df94c7a9a3666731f4f448c716ff823"
+  },
+  {
+    "id": "wand",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/wand.svg",
+    "sha256": "a4877381b116ce193b25bbf3a5efb9e8ff6c76e66d1b6c7acde8983391881d8f"
+  },
+  {
+    "id": "wand",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/wand.svg",
+    "sha256": "ad890cbe212472833408f22e9e9f4696ef9900f17ecbe34ede37bf416e012e78"
+  },
+  {
+    "id": "wand",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/wand.svg",
+    "sha256": "18dc8446cd69ab15bb5000a91fdca39a3939a66c998718f0347527ade414d785"
+  },
+  {
+    "id": "wand",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/wand.svg",
+    "sha256": "3d13214ea944ac47641ef26146b7fb37d7f6bdf941b825ccf31b85c73a0f900a"
+  },
+  {
+    "id": "wand",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/wand.svg",
+    "sha256": "80928c8bf0ad407804fc1370f32732c354f1d44a2880d17c444d6c901947233d"
+  },
+  {
+    "id": "smartphone",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/smartphone.svg",
+    "sha256": "d1f8a4ebcc12d7d28a29f03ea5ccc9f650749b7d56bfeb29005845a689088312"
+  },
+  {
+    "id": "smartphone",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/smartphone.svg",
+    "sha256": "f782a5b8d349844e80549539eeead8319b0dcd3b98b43a01a3eb13655775d1a4"
+  },
+  {
+    "id": "smartphone",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/smartphone.svg",
+    "sha256": "aab2f422a2addd629c3e2e424bc5f8dfd9b91522d2d09d6e64ed19114cf19740"
+  },
+  {
+    "id": "smartphone",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/smartphone.svg",
+    "sha256": "e33acf643d82e106a5fc8d714163c8ee36ba2cb172d132573fabbaaaff4c0d1f"
+  },
+  {
+    "id": "smartphone",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/smartphone.svg",
+    "sha256": "c89d11ff64044bab8de75be593c4c12efd45cd673b9885307de99726a1c58757"
+  },
+  {
+    "id": "smartphone",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/smartphone.svg",
+    "sha256": "182197e2c5658efcf27ec253ed33c523f58adfb63577162005da209d65d0812c"
+  },
+  {
+    "id": "moon",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/moon.svg",
+    "sha256": "3bf6c5bc255398cbdc43e09c8808afeb25645330c0bd7e2f153cb8c871258fbb"
+  },
+  {
+    "id": "moon",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/moon.svg",
+    "sha256": "e27f511d70d09e7a1ef6de5b822db994ee0ed7c97f86a1ef0177ebbb0ab34abd"
+  },
+  {
+    "id": "moon",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/moon.svg",
+    "sha256": "ebd323a56435b25f66782b9243b63e15c8cc8a2ac56fb7b0525ac55e2cf1e807"
+  },
+  {
+    "id": "moon",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/moon.svg",
+    "sha256": "5037a74cf243c22dd1629ae9f4699b0a6be078c3462932027150444259cb7b13"
+  },
+  {
+    "id": "moon",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/moon.svg",
+    "sha256": "667be38e4f0a99b9f64e83487892e4adbe4faf8e09c5cdb0371966d35f495e12"
+  },
+  {
+    "id": "moon",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/moon.svg",
+    "sha256": "0e9254309426bdc669f1ddcf87d3a095b85fa0702278ea5b966baa01cb39f45e"
+  },
+  {
+    "id": "square",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/square.svg",
+    "sha256": "da61360bbd568f7e5d99a8e1d2522bee90fc5ddcfca288aa5307c4ab9206404d"
+  },
+  {
+    "id": "square",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/square.svg",
+    "sha256": "1f46c431b40599a53822e5bc6910851f03350eace3044e8f39bce3c1293405a8"
+  },
+  {
+    "id": "square",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/square.svg",
+    "sha256": "9afb8fae9f7100a3d83fc160977df5e7ab3f99e82b1d635cd182fb6142e6a129"
+  },
+  {
+    "id": "square",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/square.svg",
+    "sha256": "17a86bfea96c0bc0af90e20b17e57ee6fe5087360042ba77f45b133295d20a0b"
+  },
+  {
+    "id": "square",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/square.svg",
+    "sha256": "a5a607ee3ef0e62843765a2700743c00661e2943add049bee9a465484ace749a"
+  },
+  {
+    "id": "square",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/square.svg",
+    "sha256": "5a4e4b5d481a008504afbd964efb795b74ed739d7c7d5c6345ac7e229bd22b00"
+  },
+  {
+    "id": "layers",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/layers.svg",
+    "sha256": "866ac1c4035107187271b70106d397ead41e93dda2d1f238879e07b3c96067bc"
+  },
+  {
+    "id": "layers",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/layers.svg",
+    "sha256": "5ae8c70164d80fb2c9ff5f69b0bf25eb47391d73925c1aa0489e9cd329f50059"
+  },
+  {
+    "id": "layers",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/layers.svg",
+    "sha256": "c50f7dbdd8474a97f8729292cd9549acff24ef39d2413141f1322530d1a16b1d"
+  },
+  {
+    "id": "layers",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/layers.svg",
+    "sha256": "df6fd35d8dc90cdefc76cbd7dc3446eb6103119922f864cdbf9ee430140ed3d7"
+  },
+  {
+    "id": "layers",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/layers.svg",
+    "sha256": "126e3104b035e177b0d0a53d30991154c49f98ebf4187c54a77d86f1f361d6e9"
+  },
+  {
+    "id": "layers",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/layers.svg",
+    "sha256": "739d7a72f9398d0a0a8dbfe429e11b7c1328486853c9ed078a3dfe011a673867"
+  },
+  {
+    "id": "sun",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/sun.svg",
+    "sha256": "1e2691251fabfd46b1d46bf8b6e9548a56c420035c3f751e032b48dc1fc533ad"
+  },
+  {
+    "id": "sun",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/sun.svg",
+    "sha256": "f095550c4865545f7330d7b0fe2d12a81ba138036626298d168fd29ef73b3e54"
+  },
+  {
+    "id": "sun",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/sun.svg",
+    "sha256": "4eb661ef0ee7d5fa04eeaca1827c0fb880f34d9498cd28ecd145cd623e37f2f8"
+  },
+  {
+    "id": "sun",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/sun.svg",
+    "sha256": "2cd381a777aca683a9c08f154586ef2f4594f9a0d449c761b1d60a18d48f2f64"
+  },
+  {
+    "id": "sun",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/sun.svg",
+    "sha256": "4687e0e6a8698d8641b140704af206273228581c7bc9d92b905034b79bc42198"
+  },
+  {
+    "id": "sun",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/sun.svg",
+    "sha256": "9296cbdd75922ac8d1a63e2a8c6c6ffe19e6217005a379956aaf8402171bd6a6"
+  },
+  {
+    "id": "table",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/table.svg",
+    "sha256": "963f8ab342d5601fac48e67617cf7bc5ae0e89c8f3868296cd29eb36e6cb0991"
+  },
+  {
+    "id": "table",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/table.svg",
+    "sha256": "8e659f42496762adb7fb50e12c02c328bb22728ddb62cd6c9c20969e4b689a12"
+  },
+  {
+    "id": "table",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/table.svg",
+    "sha256": "0d0e72404c05461e4326e6c251d91903a9ab131780810b43048839dab9aa7ec4"
+  },
+  {
+    "id": "table",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/table.svg",
+    "sha256": "6ffcf96021e6a7927433f563b088e38838f1b8bfff3d495ec6b756ab20d7b595"
+  },
+  {
+    "id": "table",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/table.svg",
+    "sha256": "2b4662a5c244b5496a38f19def3b441a9cfc90274812ceaafeab9f2dbdafedb3"
+  },
+  {
+    "id": "table",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/table.svg",
+    "sha256": "16e7eb7739306e295b63deefd3fab457e3ff1928dcc78225de2bcdd0b6a14902"
+  },
+  {
+    "id": "loader",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/loader.svg",
+    "sha256": "f176e05cee779b88cc272298e5a2eb9b159d06f71607a13df02899e64cef5db0"
+  },
+  {
+    "id": "loader",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/loader.svg",
+    "sha256": "4f063df0eb1d4ee645383a644ee2fd0ebc33f2b6edb0a8934427e328ffa9cc54"
+  },
+  {
+    "id": "loader",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/loader.svg",
+    "sha256": "a6fef895dec0bd16d69cc3d0fc3c4882abf6698992df62c2861fab1bc7eb8c31"
+  },
+  {
+    "id": "loader",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/loader.svg",
+    "sha256": "30d33d7bce55f3205e92c776f45e13bcf564120013f022e388ba8a9ca4595559"
+  },
+  {
+    "id": "loader",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/loader.svg",
+    "sha256": "1847b623aeca91e280072638a12941c5f68ff0aa0dc02c4e4c507980fc2fb88d"
+  },
+  {
+    "id": "loader",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/loader.svg",
+    "sha256": "640d34ad360ca605f4196acffa4d983f8c33cbe6522740d29ca4e04a25bb5b6a"
+  },
+  {
+    "id": "code",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/code.svg",
+    "sha256": "69cf414013f4fffa00e8207dffee585fb226ee62c63e3304257bc87d720bcbdb"
+  },
+  {
+    "id": "code",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/code.svg",
+    "sha256": "3eb41357fe244e0ab18ed5044f67ccce3ee55981da6d27e000c369df4a5980b8"
+  },
+  {
+    "id": "code",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/code.svg",
+    "sha256": "97ea353b0de884d25dfc750ec2a370e9064b40f7f973a93b59766edf8e7c2fdf"
+  },
+  {
+    "id": "code",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/code.svg",
+    "sha256": "16e52e0309985246cbf67c67b7a54e6fe0c274a1ca7c66a6bfca7c1ac0530bd3"
+  },
+  {
+    "id": "code",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/code.svg",
+    "sha256": "082a6fcde998aed22ddcfee58c103028b007a90d0a91d8424e88282bc2575207"
+  },
+  {
+    "id": "code",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/code.svg",
+    "sha256": "db7c091221c71ac8a92ecbd5584dff2363bf21f10d8629b74ff9f5e9e0daebaa"
+  },
+  {
+    "id": "dashboard",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 12,
+    "path": "rounded/outline/12/dashboard.svg",
+    "sha256": "a732d84b5cb8b050e09ba8974efc61f7076bd2dbbc4c6f85f911e03251680ef8"
+  },
+  {
+    "id": "dashboard",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 16,
+    "path": "rounded/outline/16/dashboard.svg",
+    "sha256": "5c1b8209df7fafd77efd5c15b258673ff114889a4d38004f92b06e56c8621484"
+  },
+  {
+    "id": "dashboard",
+    "pack": "rounded",
+    "appearance": "outline",
+    "master": 24,
+    "path": "rounded/outline/24/dashboard.svg",
+    "sha256": "e2ce5370118f5c8582e8cc416fa50599a300e479bfacf9857bfef655f8887204"
+  },
+  {
+    "id": "dashboard",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 12,
+    "path": "rounded/filled/12/dashboard.svg",
+    "sha256": "a169952dd1a4fd349aec280cec5dc4e69b9c6dc51523473fd82ed6c717587a65"
+  },
+  {
+    "id": "dashboard",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 16,
+    "path": "rounded/filled/16/dashboard.svg",
+    "sha256": "e358fc43e68edd51e25b5e4d477f05d6d6910809edf2f9e30c2619e4507669db"
+  },
+  {
+    "id": "dashboard",
+    "pack": "rounded",
+    "appearance": "filled",
+    "master": 24,
+    "path": "rounded/filled/24/dashboard.svg",
+    "sha256": "8b2c5e22b401816cd65f906e5d42e8f8623b7537e23659e0ac26b7a172ef636f"
   }
 ]

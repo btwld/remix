@@ -20,7 +20,7 @@ def select_master(display_size: int) -> int:
 def icon_svg(icon_id: str, *, appearance: str, master: int, pack: str = PACK) -> str:
     if pack != PACK:
         raise CrossPackFallbackError(
-            f'Rounded pilot will not serve pack {pack!r}; no silent fallback')
+            f'Rounded will not serve pack {pack!r}; no silent fallback')
     if icon_id not in CANONICAL_IDS:
         raise UnknownIconError(f'Unknown Rounded icon {icon_id!r}')
     if appearance not in APPEARANCES:
