@@ -15,8 +15,5 @@ a dedicated panel-overview glyph and a person glyph for Customers.
 | --- | --- |
 | ![Dashboard before icon family completion](icons-beta1-before.png) | ![Dashboard after icon family completion](icons-beta1-after.png) |
 
-The private review viewer contains every glyph at native and enlarged sizes,
-light/dark normal/Retina captures, and the complete labeled control matrix.
-It also includes a fresh dashboard installed with `iconLibrary: rounded`.
 Icon sizes describe drawings; control hit areas and accessible action names
 remain the enclosing component's responsibility.
