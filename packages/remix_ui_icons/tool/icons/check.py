@@ -35,6 +35,7 @@ import codegen
 import generate
 import lock
 import raster
+import reference
 from manifest import PACKAGE_ROOT, TOOL_ROOT, Manifest, load_manifest
 from sources import load_sources
 
@@ -162,6 +163,7 @@ def check_dart(manifest: Manifest, codepoints: dict[str, int]) -> list[str]:
 def check_flutter_render(flutter: str, sources: list) -> list[str]:
     with tempfile.TemporaryDirectory(prefix="remix-icon-rasters-") as directory:
         raster.write_rasters(sources, Path(directory), scale=4)
+        reference.write_reference(sources, Path(directory))
         result = subprocess.run(
             [flutter, "test", "tool/icons/flutter"],
             cwd=PACKAGE_ROOT,

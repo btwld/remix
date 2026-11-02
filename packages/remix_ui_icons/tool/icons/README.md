@@ -54,7 +54,14 @@ generated Dart declares every glyph at its locked codepoint and every alias is
 deprecated; a raster comparison of every glyph in the font with its SVG
 (`raster.py`, at native size and 8x, plus the 288 reviewed Outline
 snapshots); and the API gate. With `--flutter`, it also renders every glyph
-through Flutter (`flutter/glyph_render_test.dart`).
+through Flutter (`flutter/glyph_render_test.dart`). A test-only font is built
+directly from the SVGs with an independent cmap, without reading GlyphPact's
+compiled font or codepoint lock. Both fonts then use the platform's own text
+rasterizer, with the same mean-alpha limit of 6. CoreText and Cairo differ in
+edge coverage, so a direct cross-rasterizer alpha comparison is not portable.
+The coverage limit remains 0.5% against both the source font and Cairo PNGs.
+Wrong drawings, missing glyphs and displaced glyphs must still fail. Cairo's
+compiled-outline/source/snapshot checks run independently before this gate.
 
 `tree_shake.py --flutter <flutter>` builds a release web app that refers to a
 few glyphs and fails unless the shipped font holds exactly those glyphs. CI
