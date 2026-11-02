@@ -2,8 +2,9 @@ name: CI
 
 # The verification work is defined by the `ci` script in the root pubspec, and
 # each of its steps runs below as its own job. They are independent, so running
-# them in parallel costs the slowest job rather than their sum -- which is what
+# them in parallel reduces elapsed time to the slowest job -- which is what
 # took this pipeline from ~20 minutes to roughly the length of `open-code`.
+# Runner usage still adds together across every parallel job.
 #
 # Jobs are sized by cost, not by theme: `checks` bundles the contract checkers
 # that together take seconds, while each open-code preset gets a job of its own
@@ -30,6 +31,7 @@ concurrency:
 
 jobs:
   checks:
+    timeout-minutes: 15
     name: Contract checks
     runs-on: ubuntu-latest
     steps:
@@ -41,6 +43,7 @@ jobs:
       - run: dart run melos run ci:checks
 
   codegen:
+    timeout-minutes: 20
     name: Generated source drift
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +60,7 @@ jobs:
       - run: dart run melos run ci:codegen
 
   flutter-tests:
+    timeout-minutes: 30
     name: Flutter package tests
     runs-on: ubuntu-latest
     steps:
@@ -73,6 +77,7 @@ jobs:
           retention-days: 7
 
   cli-tests:
+    timeout-minutes: 30
     name: CLI tests and consumer mirrors
     runs-on: ubuntu-latest
     steps:
@@ -85,6 +90,7 @@ jobs:
   # matrix they cost the slowest preset. `fail-fast: false` so a break in one
   # preset still reports the others rather than masking them.
   open-code:
+    timeout-minutes: 45
     name: Open-code consumers (${{ matrix.preset }})
     runs-on: ubuntu-latest
     strategy:
@@ -97,6 +103,7 @@ jobs:
       - run: dart run melos run ci:open-code:${{ matrix.preset }}
 
   open-code-icons:
+    timeout-minutes: 30
     name: Open-code icon libraries
     runs-on: ubuntu-latest
     steps:
@@ -128,6 +135,7 @@ jobs:
   # and the Vector UI masters in design/icons. The job keeps the id `icons`,
   # and so the check name it has always reported.
   icons:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -167,6 +175,7 @@ jobs:
   # Flutter the package supports and on current stable. The tree shaker
   # changes between releases (ConstFinder today, record_use on master).
   icons-tree-shake:
+    timeout-minutes: 30
     name: Icon tree shaking (Flutter ${{ matrix.flutter }})
     runs-on: ubuntu-latest
     strategy:

@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   validate:
+    timeout-minutes: 90
     name: Validate registry
     runs-on: ubuntu-latest
     permissions:
@@ -50,6 +51,7 @@ jobs:
           dart run tool/check_open_code.dart --preset heroui --source hosted
 
   promote:
+    timeout-minutes: 15
     name: Promote registry
     needs: validate
     if: github.ref == 'refs/heads/main'
