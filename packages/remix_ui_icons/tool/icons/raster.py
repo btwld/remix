@@ -7,7 +7,7 @@ shifted, mirrored, or simplified differently from its drawing fails here.
 
 Each glyph is checked at its native master size, where the pack reviews its
 pixels, and at 8x, where sub-pixel geometry differences become visible.
-Outline glyphs are also checked against the pack's 288 reviewed native-pixel
+Outline glyphs are also checked against the pack's 462 reviewed native-pixel
 snapshots, so this compares with the reviewed drawings, not only with
 whatever the SVG says today.
 """

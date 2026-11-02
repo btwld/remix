@@ -29,7 +29,6 @@ import 'dashboard_demo_records.dart';
 import 'dashboard_demo_settings.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 
 /// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 class VanillaDashboardDemo extends StatefulWidget {
@@ -177,7 +176,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
   List<Widget> _chromeActions() => [
     VanillaIconButton.ghost(
       key: const ValueKey('dashboard-appearance-toggle'),
-      icon: _isDark ? LucideIcons.sun : LucideIcons.moon,
+      icon: _isDark ? RemixIcons.sun : RemixIcons.moon,
       semanticLabel: _isDark ? 'Use light appearance' : 'Use dark appearance',
       onPressed: () => setState(() => _dark = !_isDark),
     ),

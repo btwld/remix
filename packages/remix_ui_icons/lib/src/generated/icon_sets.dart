@@ -682,6 +682,412 @@ abstract final class OutlineIconSets {
     OutlineIcons.focusFilled16,
     OutlineIcons.focusFilled,
   );
+
+  /// Activity, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet activity = RemixIconSet(
+    OutlineIcons.activity12,
+    OutlineIcons.activity16,
+    OutlineIcons.activity,
+  );
+
+  /// Activity, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet activityFilled = RemixIconSet(
+    OutlineIcons.activityFilled12,
+    OutlineIcons.activityFilled16,
+    OutlineIcons.activityFilled,
+  );
+
+  /// Align center, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet alignCenter = RemixIconSet(
+    OutlineIcons.alignCenter12,
+    OutlineIcons.alignCenter16,
+    OutlineIcons.alignCenter,
+  );
+
+  /// Align center, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet alignCenterFilled = RemixIconSet(
+    OutlineIcons.alignCenterFilled12,
+    OutlineIcons.alignCenterFilled16,
+    OutlineIcons.alignCenterFilled,
+  );
+
+  /// Align left, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet alignLeft = RemixIconSet(
+    OutlineIcons.alignLeft12,
+    OutlineIcons.alignLeft16,
+    OutlineIcons.alignLeft,
+  );
+
+  /// Align left, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet alignLeftFilled = RemixIconSet(
+    OutlineIcons.alignLeftFilled12,
+    OutlineIcons.alignLeftFilled16,
+    OutlineIcons.alignLeftFilled,
+  );
+
+  /// Align right, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet alignRight = RemixIconSet(
+    OutlineIcons.alignRight12,
+    OutlineIcons.alignRight16,
+    OutlineIcons.alignRight,
+  );
+
+  /// Align right, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet alignRightFilled = RemixIconSet(
+    OutlineIcons.alignRightFilled12,
+    OutlineIcons.alignRightFilled16,
+    OutlineIcons.alignRightFilled,
+  );
+
+  /// Box, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet box = RemixIconSet(
+    OutlineIcons.box12,
+    OutlineIcons.box16,
+    OutlineIcons.box,
+  );
+
+  /// Box, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet boxFilled = RemixIconSet(
+    OutlineIcons.boxFilled12,
+    OutlineIcons.boxFilled16,
+    OutlineIcons.boxFilled,
+  );
+
+  /// Check circle, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet checkCircle = RemixIconSet(
+    OutlineIcons.checkCircle12,
+    OutlineIcons.checkCircle16,
+    OutlineIcons.checkCircle,
+  );
+
+  /// Check circle, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet checkCircleFilled = RemixIconSet(
+    OutlineIcons.checkCircleFilled12,
+    OutlineIcons.checkCircleFilled16,
+    OutlineIcons.checkCircleFilled,
+  );
+
+  /// Circle, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet circle = RemixIconSet(
+    OutlineIcons.circle12,
+    OutlineIcons.circle16,
+    OutlineIcons.circle,
+  );
+
+  /// Circle, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet circleFilled = RemixIconSet(
+    OutlineIcons.circleFilled12,
+    OutlineIcons.circleFilled16,
+    OutlineIcons.circleFilled,
+  );
+
+  /// Ban, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet ban = RemixIconSet(
+    OutlineIcons.ban12,
+    OutlineIcons.ban16,
+    OutlineIcons.ban,
+  );
+
+  /// Ban, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet banFilled = RemixIconSet(
+    OutlineIcons.banFilled12,
+    OutlineIcons.banFilled16,
+    OutlineIcons.banFilled,
+  );
+
+  /// Close circle, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet closeCircle = RemixIconSet(
+    OutlineIcons.closeCircle12,
+    OutlineIcons.closeCircle16,
+    OutlineIcons.closeCircle,
+  );
+
+  /// Close circle, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet closeCircleFilled = RemixIconSet(
+    OutlineIcons.closeCircleFilled12,
+    OutlineIcons.closeCircleFilled16,
+    OutlineIcons.closeCircleFilled,
+  );
+
+  /// Cursor, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet cursor = RemixIconSet(
+    OutlineIcons.cursor12,
+    OutlineIcons.cursor16,
+    OutlineIcons.cursor,
+  );
+
+  /// Cursor, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet cursorFilled = RemixIconSet(
+    OutlineIcons.cursorFilled12,
+    OutlineIcons.cursorFilled16,
+    OutlineIcons.cursorFilled,
+  );
+
+  /// Dot, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet dot = RemixIconSet(
+    OutlineIcons.dot12,
+    OutlineIcons.dot16,
+    OutlineIcons.dot,
+  );
+
+  /// Dot, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet dotFilled = RemixIconSet(
+    OutlineIcons.dotFilled12,
+    OutlineIcons.dotFilled16,
+    OutlineIcons.dotFilled,
+  );
+
+  /// Chevrons left, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsLeft = RemixIconSet(
+    OutlineIcons.chevronsLeft12,
+    OutlineIcons.chevronsLeft16,
+    OutlineIcons.chevronsLeft,
+  );
+
+  /// Chevrons left, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsLeftFilled = RemixIconSet(
+    OutlineIcons.chevronsLeftFilled12,
+    OutlineIcons.chevronsLeftFilled16,
+    OutlineIcons.chevronsLeftFilled,
+  );
+
+  /// Chevrons right, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsRight = RemixIconSet(
+    OutlineIcons.chevronsRight12,
+    OutlineIcons.chevronsRight16,
+    OutlineIcons.chevronsRight,
+  );
+
+  /// Chevrons right, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsRightFilled = RemixIconSet(
+    OutlineIcons.chevronsRightFilled12,
+    OutlineIcons.chevronsRightFilled16,
+    OutlineIcons.chevronsRightFilled,
+  );
+
+  /// Bold, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet bold = RemixIconSet(
+    OutlineIcons.bold12,
+    OutlineIcons.bold16,
+    OutlineIcons.bold,
+  );
+
+  /// Bold, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet boldFilled = RemixIconSet(
+    OutlineIcons.boldFilled12,
+    OutlineIcons.boldFilled16,
+    OutlineIcons.boldFilled,
+  );
+
+  /// Type, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet type = RemixIconSet(
+    OutlineIcons.type12,
+    OutlineIcons.type16,
+    OutlineIcons.type,
+  );
+
+  /// Type, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet typeFilled = RemixIconSet(
+    OutlineIcons.typeFilled12,
+    OutlineIcons.typeFilled16,
+    OutlineIcons.typeFilled,
+  );
+
+  /// Group, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet group = RemixIconSet(
+    OutlineIcons.group12,
+    OutlineIcons.group16,
+    OutlineIcons.group,
+  );
+
+  /// Group, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet groupFilled = RemixIconSet(
+    OutlineIcons.groupFilled12,
+    OutlineIcons.groupFilled16,
+    OutlineIcons.groupFilled,
+  );
+
+  /// Heart, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet heart = RemixIconSet(
+    OutlineIcons.heart12,
+    OutlineIcons.heart16,
+    OutlineIcons.heart,
+  );
+
+  /// Heart, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet heartFilled = RemixIconSet(
+    OutlineIcons.heartFilled12,
+    OutlineIcons.heartFilled16,
+    OutlineIcons.heartFilled,
+  );
+
+  /// Input, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet input = RemixIconSet(
+    OutlineIcons.input12,
+    OutlineIcons.input16,
+    OutlineIcons.input,
+  );
+
+  /// Input, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet inputFilled = RemixIconSet(
+    OutlineIcons.inputFilled12,
+    OutlineIcons.inputFilled16,
+    OutlineIcons.inputFilled,
+  );
+
+  /// Laptop, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet laptop = RemixIconSet(
+    OutlineIcons.laptop12,
+    OutlineIcons.laptop16,
+    OutlineIcons.laptop,
+  );
+
+  /// Laptop, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet laptopFilled = RemixIconSet(
+    OutlineIcons.laptopFilled12,
+    OutlineIcons.laptopFilled16,
+    OutlineIcons.laptopFilled,
+  );
+
+  /// Wand, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet wand = RemixIconSet(
+    OutlineIcons.wand12,
+    OutlineIcons.wand16,
+    OutlineIcons.wand,
+  );
+
+  /// Wand, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet wandFilled = RemixIconSet(
+    OutlineIcons.wandFilled12,
+    OutlineIcons.wandFilled16,
+    OutlineIcons.wandFilled,
+  );
+
+  /// Smartphone, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet smartphone = RemixIconSet(
+    OutlineIcons.smartphone12,
+    OutlineIcons.smartphone16,
+    OutlineIcons.smartphone,
+  );
+
+  /// Smartphone, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet smartphoneFilled = RemixIconSet(
+    OutlineIcons.smartphoneFilled12,
+    OutlineIcons.smartphoneFilled16,
+    OutlineIcons.smartphoneFilled,
+  );
+
+  /// Moon, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet moon = RemixIconSet(
+    OutlineIcons.moon12,
+    OutlineIcons.moon16,
+    OutlineIcons.moon,
+  );
+
+  /// Moon, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet moonFilled = RemixIconSet(
+    OutlineIcons.moonFilled12,
+    OutlineIcons.moonFilled16,
+    OutlineIcons.moonFilled,
+  );
+
+  /// Square, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet square = RemixIconSet(
+    OutlineIcons.square12,
+    OutlineIcons.square16,
+    OutlineIcons.square,
+  );
+
+  /// Square, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet squareFilled = RemixIconSet(
+    OutlineIcons.squareFilled12,
+    OutlineIcons.squareFilled16,
+    OutlineIcons.squareFilled,
+  );
+
+  /// Layers, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet layers = RemixIconSet(
+    OutlineIcons.layers12,
+    OutlineIcons.layers16,
+    OutlineIcons.layers,
+  );
+
+  /// Layers, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet layersFilled = RemixIconSet(
+    OutlineIcons.layersFilled12,
+    OutlineIcons.layersFilled16,
+    OutlineIcons.layersFilled,
+  );
+
+  /// Sun, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet sun = RemixIconSet(
+    OutlineIcons.sun12,
+    OutlineIcons.sun16,
+    OutlineIcons.sun,
+  );
+
+  /// Sun, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet sunFilled = RemixIconSet(
+    OutlineIcons.sunFilled12,
+    OutlineIcons.sunFilled16,
+    OutlineIcons.sunFilled,
+  );
+
+  /// Table, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet table = RemixIconSet(
+    OutlineIcons.table12,
+    OutlineIcons.table16,
+    OutlineIcons.table,
+  );
+
+  /// Table, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet tableFilled = RemixIconSet(
+    OutlineIcons.tableFilled12,
+    OutlineIcons.tableFilled16,
+    OutlineIcons.tableFilled,
+  );
+
+  /// Loader, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet loader = RemixIconSet(
+    OutlineIcons.loader12,
+    OutlineIcons.loader16,
+    OutlineIcons.loader,
+  );
+
+  /// Loader, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet loaderFilled = RemixIconSet(
+    OutlineIcons.loaderFilled12,
+    OutlineIcons.loaderFilled16,
+    OutlineIcons.loaderFilled,
+  );
+
+  /// Code, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet code = RemixIconSet(
+    OutlineIcons.code12,
+    OutlineIcons.code16,
+    OutlineIcons.code,
+  );
+
+  /// Code, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet codeFilled = RemixIconSet(
+    OutlineIcons.codeFilled12,
+    OutlineIcons.codeFilled16,
+    OutlineIcons.codeFilled,
+  );
+
+  /// Dashboard, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet dashboard = RemixIconSet(
+    OutlineIcons.dashboard12,
+    OutlineIcons.dashboard16,
+    OutlineIcons.dashboard,
+  );
+
+  /// Dashboard, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet dashboardFilled = RemixIconSet(
+    OutlineIcons.dashboardFilled12,
+    OutlineIcons.dashboardFilled16,
+    OutlineIcons.dashboardFilled,
+  );
 }
 
 /// Every [RoundedIcons] concept and style as a [RemixIconSet] of its
@@ -702,6 +1108,34 @@ abstract final class RoundedIconSets {
     RoundedIcons.homeFilled,
   );
 
+  /// Menu, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet menu = RemixIconSet(
+    RoundedIcons.menu12,
+    RoundedIcons.menu16,
+    RoundedIcons.menu,
+  );
+
+  /// Menu, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet menuFilled = RemixIconSet(
+    RoundedIcons.menuFilled12,
+    RoundedIcons.menuFilled16,
+    RoundedIcons.menuFilled,
+  );
+
+  /// More, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet more = RemixIconSet(
+    RoundedIcons.more12,
+    RoundedIcons.more16,
+    RoundedIcons.more,
+  );
+
+  /// More, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet moreFilled = RemixIconSet(
+    RoundedIcons.moreFilled12,
+    RoundedIcons.moreFilled16,
+    RoundedIcons.moreFilled,
+  );
+
   /// Search, outline style, at 12, 16, and 24 px.
   static const RemixIconSet search = RemixIconSet(
     RoundedIcons.search12,
@@ -714,6 +1148,34 @@ abstract final class RoundedIconSets {
     RoundedIcons.searchFilled12,
     RoundedIcons.searchFilled16,
     RoundedIcons.searchFilled,
+  );
+
+  /// Grid, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet grid = RemixIconSet(
+    RoundedIcons.grid12,
+    RoundedIcons.grid16,
+    RoundedIcons.grid,
+  );
+
+  /// Grid, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet gridFilled = RemixIconSet(
+    RoundedIcons.gridFilled12,
+    RoundedIcons.gridFilled16,
+    RoundedIcons.gridFilled,
+  );
+
+  /// Arrow left, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowLeft = RemixIconSet(
+    RoundedIcons.arrowLeft12,
+    RoundedIcons.arrowLeft16,
+    RoundedIcons.arrowLeft,
+  );
+
+  /// Arrow left, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowLeftFilled = RemixIconSet(
+    RoundedIcons.arrowLeftFilled12,
+    RoundedIcons.arrowLeftFilled16,
+    RoundedIcons.arrowLeftFilled,
   );
 
   /// Arrow right, outline style, at 12, 16, and 24 px.
@@ -730,6 +1192,104 @@ abstract final class RoundedIconSets {
     RoundedIcons.arrowRightFilled,
   );
 
+  /// Arrow up, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowUp = RemixIconSet(
+    RoundedIcons.arrowUp12,
+    RoundedIcons.arrowUp16,
+    RoundedIcons.arrowUp,
+  );
+
+  /// Arrow up, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowUpFilled = RemixIconSet(
+    RoundedIcons.arrowUpFilled12,
+    RoundedIcons.arrowUpFilled16,
+    RoundedIcons.arrowUpFilled,
+  );
+
+  /// Arrow down, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowDown = RemixIconSet(
+    RoundedIcons.arrowDown12,
+    RoundedIcons.arrowDown16,
+    RoundedIcons.arrowDown,
+  );
+
+  /// Arrow down, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowDownFilled = RemixIconSet(
+    RoundedIcons.arrowDownFilled12,
+    RoundedIcons.arrowDownFilled16,
+    RoundedIcons.arrowDownFilled,
+  );
+
+  /// Arrow up right, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowUpRight = RemixIconSet(
+    RoundedIcons.arrowUpRight12,
+    RoundedIcons.arrowUpRight16,
+    RoundedIcons.arrowUpRight,
+  );
+
+  /// Arrow up right, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet arrowUpRightFilled = RemixIconSet(
+    RoundedIcons.arrowUpRightFilled12,
+    RoundedIcons.arrowUpRightFilled16,
+    RoundedIcons.arrowUpRightFilled,
+  );
+
+  /// Chevron left, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronLeft = RemixIconSet(
+    RoundedIcons.chevronLeft12,
+    RoundedIcons.chevronLeft16,
+    RoundedIcons.chevronLeft,
+  );
+
+  /// Chevron left, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronLeftFilled = RemixIconSet(
+    RoundedIcons.chevronLeftFilled12,
+    RoundedIcons.chevronLeftFilled16,
+    RoundedIcons.chevronLeftFilled,
+  );
+
+  /// Chevron right, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronRight = RemixIconSet(
+    RoundedIcons.chevronRight12,
+    RoundedIcons.chevronRight16,
+    RoundedIcons.chevronRight,
+  );
+
+  /// Chevron right, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronRightFilled = RemixIconSet(
+    RoundedIcons.chevronRightFilled12,
+    RoundedIcons.chevronRightFilled16,
+    RoundedIcons.chevronRightFilled,
+  );
+
+  /// Chevron up, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronUp = RemixIconSet(
+    RoundedIcons.chevronUp12,
+    RoundedIcons.chevronUp16,
+    RoundedIcons.chevronUp,
+  );
+
+  /// Chevron up, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronUpFilled = RemixIconSet(
+    RoundedIcons.chevronUpFilled12,
+    RoundedIcons.chevronUpFilled16,
+    RoundedIcons.chevronUpFilled,
+  );
+
+  /// Chevron down, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronDown = RemixIconSet(
+    RoundedIcons.chevronDown12,
+    RoundedIcons.chevronDown16,
+    RoundedIcons.chevronDown,
+  );
+
+  /// Chevron down, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronDownFilled = RemixIconSet(
+    RoundedIcons.chevronDownFilled12,
+    RoundedIcons.chevronDownFilled16,
+    RoundedIcons.chevronDownFilled,
+  );
+
   /// Plus, outline style, at 12, 16, and 24 px.
   static const RemixIconSet plus = RemixIconSet(
     RoundedIcons.plus12,
@@ -742,6 +1302,118 @@ abstract final class RoundedIconSets {
     RoundedIcons.plusFilled12,
     RoundedIcons.plusFilled16,
     RoundedIcons.plusFilled,
+  );
+
+  /// Minus, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet minus = RemixIconSet(
+    RoundedIcons.minus12,
+    RoundedIcons.minus16,
+    RoundedIcons.minus,
+  );
+
+  /// Minus, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet minusFilled = RemixIconSet(
+    RoundedIcons.minusFilled12,
+    RoundedIcons.minusFilled16,
+    RoundedIcons.minusFilled,
+  );
+
+  /// Check, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet check = RemixIconSet(
+    RoundedIcons.check12,
+    RoundedIcons.check16,
+    RoundedIcons.check,
+  );
+
+  /// Check, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet checkFilled = RemixIconSet(
+    RoundedIcons.checkFilled12,
+    RoundedIcons.checkFilled16,
+    RoundedIcons.checkFilled,
+  );
+
+  /// Close, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet close = RemixIconSet(
+    RoundedIcons.close12,
+    RoundedIcons.close16,
+    RoundedIcons.close,
+  );
+
+  /// Close, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet closeFilled = RemixIconSet(
+    RoundedIcons.closeFilled12,
+    RoundedIcons.closeFilled16,
+    RoundedIcons.closeFilled,
+  );
+
+  /// Edit, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet edit = RemixIconSet(
+    RoundedIcons.edit12,
+    RoundedIcons.edit16,
+    RoundedIcons.edit,
+  );
+
+  /// Edit, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet editFilled = RemixIconSet(
+    RoundedIcons.editFilled12,
+    RoundedIcons.editFilled16,
+    RoundedIcons.editFilled,
+  );
+
+  /// Copy, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet copy = RemixIconSet(
+    RoundedIcons.copy12,
+    RoundedIcons.copy16,
+    RoundedIcons.copy,
+  );
+
+  /// Copy, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet copyFilled = RemixIconSet(
+    RoundedIcons.copyFilled12,
+    RoundedIcons.copyFilled16,
+    RoundedIcons.copyFilled,
+  );
+
+  /// Trash, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet trash = RemixIconSet(
+    RoundedIcons.trash12,
+    RoundedIcons.trash16,
+    RoundedIcons.trash,
+  );
+
+  /// Trash, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet trashFilled = RemixIconSet(
+    RoundedIcons.trashFilled12,
+    RoundedIcons.trashFilled16,
+    RoundedIcons.trashFilled,
+  );
+
+  /// Refresh, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet refresh = RemixIconSet(
+    RoundedIcons.refresh12,
+    RoundedIcons.refresh16,
+    RoundedIcons.refresh,
+  );
+
+  /// Refresh, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet refreshFilled = RemixIconSet(
+    RoundedIcons.refreshFilled12,
+    RoundedIcons.refreshFilled16,
+    RoundedIcons.refreshFilled,
+  );
+
+  /// Filter, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet filter = RemixIconSet(
+    RoundedIcons.filter12,
+    RoundedIcons.filter16,
+    RoundedIcons.filter,
+  );
+
+  /// Filter, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet filterFilled = RemixIconSet(
+    RoundedIcons.filterFilled12,
+    RoundedIcons.filterFilled16,
+    RoundedIcons.filterFilled,
   );
 
   /// Sliders, outline style, at 12, 16, and 24 px.
@@ -758,6 +1430,48 @@ abstract final class RoundedIconSets {
     RoundedIcons.slidersFilled,
   );
 
+  /// Upload, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet upload = RemixIconSet(
+    RoundedIcons.upload12,
+    RoundedIcons.upload16,
+    RoundedIcons.upload,
+  );
+
+  /// Upload, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet uploadFilled = RemixIconSet(
+    RoundedIcons.uploadFilled12,
+    RoundedIcons.uploadFilled16,
+    RoundedIcons.uploadFilled,
+  );
+
+  /// Download, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet download = RemixIconSet(
+    RoundedIcons.download12,
+    RoundedIcons.download16,
+    RoundedIcons.download,
+  );
+
+  /// Download, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet downloadFilled = RemixIconSet(
+    RoundedIcons.downloadFilled12,
+    RoundedIcons.downloadFilled16,
+    RoundedIcons.downloadFilled,
+  );
+
+  /// Save, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet save = RemixIconSet(
+    RoundedIcons.save12,
+    RoundedIcons.save16,
+    RoundedIcons.save,
+  );
+
+  /// Save, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet saveFilled = RemixIconSet(
+    RoundedIcons.saveFilled12,
+    RoundedIcons.saveFilled16,
+    RoundedIcons.saveFilled,
+  );
+
   /// File, outline style, at 12, 16, and 24 px.
   static const RemixIconSet file = RemixIconSet(
     RoundedIcons.file12,
@@ -772,6 +1486,20 @@ abstract final class RoundedIconSets {
     RoundedIcons.fileFilled,
   );
 
+  /// Folder, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet folder = RemixIconSet(
+    RoundedIcons.folder12,
+    RoundedIcons.folder16,
+    RoundedIcons.folder,
+  );
+
+  /// Folder, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet folderFilled = RemixIconSet(
+    RoundedIcons.folderFilled12,
+    RoundedIcons.folderFilled16,
+    RoundedIcons.folderFilled,
+  );
+
   /// Link, outline style, at 12, 16, and 24 px.
   static const RemixIconSet link = RemixIconSet(
     RoundedIcons.link12,
@@ -784,6 +1512,20 @@ abstract final class RoundedIconSets {
     RoundedIcons.linkFilled12,
     RoundedIcons.linkFilled16,
     RoundedIcons.linkFilled,
+  );
+
+  /// Bookmark, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet bookmark = RemixIconSet(
+    RoundedIcons.bookmark12,
+    RoundedIcons.bookmark16,
+    RoundedIcons.bookmark,
+  );
+
+  /// Bookmark, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet bookmarkFilled = RemixIconSet(
+    RoundedIcons.bookmarkFilled12,
+    RoundedIcons.bookmarkFilled16,
+    RoundedIcons.bookmarkFilled,
   );
 
   /// Star, outline style, at 12, 16, and 24 px.
@@ -828,6 +1570,34 @@ abstract final class RoundedIconSets {
     RoundedIcons.userFilled,
   );
 
+  /// Chat, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chat = RemixIconSet(
+    RoundedIcons.chat12,
+    RoundedIcons.chat16,
+    RoundedIcons.chat,
+  );
+
+  /// Chat, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chatFilled = RemixIconSet(
+    RoundedIcons.chatFilled12,
+    RoundedIcons.chatFilled16,
+    RoundedIcons.chatFilled,
+  );
+
+  /// Bell, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet bell = RemixIconSet(
+    RoundedIcons.bell12,
+    RoundedIcons.bell16,
+    RoundedIcons.bell,
+  );
+
+  /// Bell, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet bellFilled = RemixIconSet(
+    RoundedIcons.bellFilled12,
+    RoundedIcons.bellFilled16,
+    RoundedIcons.bellFilled,
+  );
+
   /// Warning, outline style, at 12, 16, and 24 px.
   static const RemixIconSet warning = RemixIconSet(
     RoundedIcons.warning12,
@@ -842,6 +1612,90 @@ abstract final class RoundedIconSets {
     RoundedIcons.warningFilled,
   );
 
+  /// Info, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet info = RemixIconSet(
+    RoundedIcons.info12,
+    RoundedIcons.info16,
+    RoundedIcons.info,
+  );
+
+  /// Info, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet infoFilled = RemixIconSet(
+    RoundedIcons.infoFilled12,
+    RoundedIcons.infoFilled16,
+    RoundedIcons.infoFilled,
+  );
+
+  /// Help, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet help = RemixIconSet(
+    RoundedIcons.help12,
+    RoundedIcons.help16,
+    RoundedIcons.help,
+  );
+
+  /// Help, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet helpFilled = RemixIconSet(
+    RoundedIcons.helpFilled12,
+    RoundedIcons.helpFilled16,
+    RoundedIcons.helpFilled,
+  );
+
+  /// Lock, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet lock = RemixIconSet(
+    RoundedIcons.lock12,
+    RoundedIcons.lock16,
+    RoundedIcons.lock,
+  );
+
+  /// Lock, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet lockFilled = RemixIconSet(
+    RoundedIcons.lockFilled12,
+    RoundedIcons.lockFilled16,
+    RoundedIcons.lockFilled,
+  );
+
+  /// Shield, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet shield = RemixIconSet(
+    RoundedIcons.shield12,
+    RoundedIcons.shield16,
+    RoundedIcons.shield,
+  );
+
+  /// Shield, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet shieldFilled = RemixIconSet(
+    RoundedIcons.shieldFilled12,
+    RoundedIcons.shieldFilled16,
+    RoundedIcons.shieldFilled,
+  );
+
+  /// Gear, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet gear = RemixIconSet(
+    RoundedIcons.gear12,
+    RoundedIcons.gear16,
+    RoundedIcons.gear,
+  );
+
+  /// Gear, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet gearFilled = RemixIconSet(
+    RoundedIcons.gearFilled12,
+    RoundedIcons.gearFilled16,
+    RoundedIcons.gearFilled,
+  );
+
+  /// Terminal, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet terminal = RemixIconSet(
+    RoundedIcons.terminal12,
+    RoundedIcons.terminal16,
+    RoundedIcons.terminal,
+  );
+
+  /// Terminal, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet terminalFilled = RemixIconSet(
+    RoundedIcons.terminalFilled12,
+    RoundedIcons.terminalFilled16,
+    RoundedIcons.terminalFilled,
+  );
+
   /// Branch, outline style, at 12, 16, and 24 px.
   static const RemixIconSet branch = RemixIconSet(
     RoundedIcons.branch12,
@@ -854,5 +1708,467 @@ abstract final class RoundedIconSets {
     RoundedIcons.branchFilled12,
     RoundedIcons.branchFilled16,
     RoundedIcons.branchFilled,
+  );
+
+  /// Chart, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chart = RemixIconSet(
+    RoundedIcons.chart12,
+    RoundedIcons.chart16,
+    RoundedIcons.chart,
+  );
+
+  /// Chart, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chartFilled = RemixIconSet(
+    RoundedIcons.chartFilled12,
+    RoundedIcons.chartFilled16,
+    RoundedIcons.chartFilled,
+  );
+
+  /// Play, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet play = RemixIconSet(
+    RoundedIcons.play12,
+    RoundedIcons.play16,
+    RoundedIcons.play,
+  );
+
+  /// Play, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet playFilled = RemixIconSet(
+    RoundedIcons.playFilled12,
+    RoundedIcons.playFilled16,
+    RoundedIcons.playFilled,
+  );
+
+  /// Pause, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet pause = RemixIconSet(
+    RoundedIcons.pause12,
+    RoundedIcons.pause16,
+    RoundedIcons.pause,
+  );
+
+  /// Pause, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet pauseFilled = RemixIconSet(
+    RoundedIcons.pauseFilled12,
+    RoundedIcons.pauseFilled16,
+    RoundedIcons.pauseFilled,
+  );
+
+  /// Focus, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet focus = RemixIconSet(
+    RoundedIcons.focus12,
+    RoundedIcons.focus16,
+    RoundedIcons.focus,
+  );
+
+  /// Focus, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet focusFilled = RemixIconSet(
+    RoundedIcons.focusFilled12,
+    RoundedIcons.focusFilled16,
+    RoundedIcons.focusFilled,
+  );
+
+  /// Activity, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet activity = RemixIconSet(
+    RoundedIcons.activity12,
+    RoundedIcons.activity16,
+    RoundedIcons.activity,
+  );
+
+  /// Activity, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet activityFilled = RemixIconSet(
+    RoundedIcons.activityFilled12,
+    RoundedIcons.activityFilled16,
+    RoundedIcons.activityFilled,
+  );
+
+  /// Align center, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet alignCenter = RemixIconSet(
+    RoundedIcons.alignCenter12,
+    RoundedIcons.alignCenter16,
+    RoundedIcons.alignCenter,
+  );
+
+  /// Align center, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet alignCenterFilled = RemixIconSet(
+    RoundedIcons.alignCenterFilled12,
+    RoundedIcons.alignCenterFilled16,
+    RoundedIcons.alignCenterFilled,
+  );
+
+  /// Align left, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet alignLeft = RemixIconSet(
+    RoundedIcons.alignLeft12,
+    RoundedIcons.alignLeft16,
+    RoundedIcons.alignLeft,
+  );
+
+  /// Align left, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet alignLeftFilled = RemixIconSet(
+    RoundedIcons.alignLeftFilled12,
+    RoundedIcons.alignLeftFilled16,
+    RoundedIcons.alignLeftFilled,
+  );
+
+  /// Align right, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet alignRight = RemixIconSet(
+    RoundedIcons.alignRight12,
+    RoundedIcons.alignRight16,
+    RoundedIcons.alignRight,
+  );
+
+  /// Align right, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet alignRightFilled = RemixIconSet(
+    RoundedIcons.alignRightFilled12,
+    RoundedIcons.alignRightFilled16,
+    RoundedIcons.alignRightFilled,
+  );
+
+  /// Box, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet box = RemixIconSet(
+    RoundedIcons.box12,
+    RoundedIcons.box16,
+    RoundedIcons.box,
+  );
+
+  /// Box, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet boxFilled = RemixIconSet(
+    RoundedIcons.boxFilled12,
+    RoundedIcons.boxFilled16,
+    RoundedIcons.boxFilled,
+  );
+
+  /// Check circle, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet checkCircle = RemixIconSet(
+    RoundedIcons.checkCircle12,
+    RoundedIcons.checkCircle16,
+    RoundedIcons.checkCircle,
+  );
+
+  /// Check circle, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet checkCircleFilled = RemixIconSet(
+    RoundedIcons.checkCircleFilled12,
+    RoundedIcons.checkCircleFilled16,
+    RoundedIcons.checkCircleFilled,
+  );
+
+  /// Circle, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet circle = RemixIconSet(
+    RoundedIcons.circle12,
+    RoundedIcons.circle16,
+    RoundedIcons.circle,
+  );
+
+  /// Circle, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet circleFilled = RemixIconSet(
+    RoundedIcons.circleFilled12,
+    RoundedIcons.circleFilled16,
+    RoundedIcons.circleFilled,
+  );
+
+  /// Ban, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet ban = RemixIconSet(
+    RoundedIcons.ban12,
+    RoundedIcons.ban16,
+    RoundedIcons.ban,
+  );
+
+  /// Ban, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet banFilled = RemixIconSet(
+    RoundedIcons.banFilled12,
+    RoundedIcons.banFilled16,
+    RoundedIcons.banFilled,
+  );
+
+  /// Close circle, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet closeCircle = RemixIconSet(
+    RoundedIcons.closeCircle12,
+    RoundedIcons.closeCircle16,
+    RoundedIcons.closeCircle,
+  );
+
+  /// Close circle, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet closeCircleFilled = RemixIconSet(
+    RoundedIcons.closeCircleFilled12,
+    RoundedIcons.closeCircleFilled16,
+    RoundedIcons.closeCircleFilled,
+  );
+
+  /// Cursor, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet cursor = RemixIconSet(
+    RoundedIcons.cursor12,
+    RoundedIcons.cursor16,
+    RoundedIcons.cursor,
+  );
+
+  /// Cursor, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet cursorFilled = RemixIconSet(
+    RoundedIcons.cursorFilled12,
+    RoundedIcons.cursorFilled16,
+    RoundedIcons.cursorFilled,
+  );
+
+  /// Dot, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet dot = RemixIconSet(
+    RoundedIcons.dot12,
+    RoundedIcons.dot16,
+    RoundedIcons.dot,
+  );
+
+  /// Dot, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet dotFilled = RemixIconSet(
+    RoundedIcons.dotFilled12,
+    RoundedIcons.dotFilled16,
+    RoundedIcons.dotFilled,
+  );
+
+  /// Chevrons left, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsLeft = RemixIconSet(
+    RoundedIcons.chevronsLeft12,
+    RoundedIcons.chevronsLeft16,
+    RoundedIcons.chevronsLeft,
+  );
+
+  /// Chevrons left, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsLeftFilled = RemixIconSet(
+    RoundedIcons.chevronsLeftFilled12,
+    RoundedIcons.chevronsLeftFilled16,
+    RoundedIcons.chevronsLeftFilled,
+  );
+
+  /// Chevrons right, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsRight = RemixIconSet(
+    RoundedIcons.chevronsRight12,
+    RoundedIcons.chevronsRight16,
+    RoundedIcons.chevronsRight,
+  );
+
+  /// Chevrons right, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet chevronsRightFilled = RemixIconSet(
+    RoundedIcons.chevronsRightFilled12,
+    RoundedIcons.chevronsRightFilled16,
+    RoundedIcons.chevronsRightFilled,
+  );
+
+  /// Bold, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet bold = RemixIconSet(
+    RoundedIcons.bold12,
+    RoundedIcons.bold16,
+    RoundedIcons.bold,
+  );
+
+  /// Bold, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet boldFilled = RemixIconSet(
+    RoundedIcons.boldFilled12,
+    RoundedIcons.boldFilled16,
+    RoundedIcons.boldFilled,
+  );
+
+  /// Type, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet type = RemixIconSet(
+    RoundedIcons.type12,
+    RoundedIcons.type16,
+    RoundedIcons.type,
+  );
+
+  /// Type, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet typeFilled = RemixIconSet(
+    RoundedIcons.typeFilled12,
+    RoundedIcons.typeFilled16,
+    RoundedIcons.typeFilled,
+  );
+
+  /// Group, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet group = RemixIconSet(
+    RoundedIcons.group12,
+    RoundedIcons.group16,
+    RoundedIcons.group,
+  );
+
+  /// Group, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet groupFilled = RemixIconSet(
+    RoundedIcons.groupFilled12,
+    RoundedIcons.groupFilled16,
+    RoundedIcons.groupFilled,
+  );
+
+  /// Heart, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet heart = RemixIconSet(
+    RoundedIcons.heart12,
+    RoundedIcons.heart16,
+    RoundedIcons.heart,
+  );
+
+  /// Heart, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet heartFilled = RemixIconSet(
+    RoundedIcons.heartFilled12,
+    RoundedIcons.heartFilled16,
+    RoundedIcons.heartFilled,
+  );
+
+  /// Input, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet input = RemixIconSet(
+    RoundedIcons.input12,
+    RoundedIcons.input16,
+    RoundedIcons.input,
+  );
+
+  /// Input, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet inputFilled = RemixIconSet(
+    RoundedIcons.inputFilled12,
+    RoundedIcons.inputFilled16,
+    RoundedIcons.inputFilled,
+  );
+
+  /// Laptop, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet laptop = RemixIconSet(
+    RoundedIcons.laptop12,
+    RoundedIcons.laptop16,
+    RoundedIcons.laptop,
+  );
+
+  /// Laptop, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet laptopFilled = RemixIconSet(
+    RoundedIcons.laptopFilled12,
+    RoundedIcons.laptopFilled16,
+    RoundedIcons.laptopFilled,
+  );
+
+  /// Wand, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet wand = RemixIconSet(
+    RoundedIcons.wand12,
+    RoundedIcons.wand16,
+    RoundedIcons.wand,
+  );
+
+  /// Wand, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet wandFilled = RemixIconSet(
+    RoundedIcons.wandFilled12,
+    RoundedIcons.wandFilled16,
+    RoundedIcons.wandFilled,
+  );
+
+  /// Smartphone, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet smartphone = RemixIconSet(
+    RoundedIcons.smartphone12,
+    RoundedIcons.smartphone16,
+    RoundedIcons.smartphone,
+  );
+
+  /// Smartphone, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet smartphoneFilled = RemixIconSet(
+    RoundedIcons.smartphoneFilled12,
+    RoundedIcons.smartphoneFilled16,
+    RoundedIcons.smartphoneFilled,
+  );
+
+  /// Moon, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet moon = RemixIconSet(
+    RoundedIcons.moon12,
+    RoundedIcons.moon16,
+    RoundedIcons.moon,
+  );
+
+  /// Moon, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet moonFilled = RemixIconSet(
+    RoundedIcons.moonFilled12,
+    RoundedIcons.moonFilled16,
+    RoundedIcons.moonFilled,
+  );
+
+  /// Square, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet square = RemixIconSet(
+    RoundedIcons.square12,
+    RoundedIcons.square16,
+    RoundedIcons.square,
+  );
+
+  /// Square, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet squareFilled = RemixIconSet(
+    RoundedIcons.squareFilled12,
+    RoundedIcons.squareFilled16,
+    RoundedIcons.squareFilled,
+  );
+
+  /// Layers, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet layers = RemixIconSet(
+    RoundedIcons.layers12,
+    RoundedIcons.layers16,
+    RoundedIcons.layers,
+  );
+
+  /// Layers, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet layersFilled = RemixIconSet(
+    RoundedIcons.layersFilled12,
+    RoundedIcons.layersFilled16,
+    RoundedIcons.layersFilled,
+  );
+
+  /// Sun, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet sun = RemixIconSet(
+    RoundedIcons.sun12,
+    RoundedIcons.sun16,
+    RoundedIcons.sun,
+  );
+
+  /// Sun, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet sunFilled = RemixIconSet(
+    RoundedIcons.sunFilled12,
+    RoundedIcons.sunFilled16,
+    RoundedIcons.sunFilled,
+  );
+
+  /// Table, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet table = RemixIconSet(
+    RoundedIcons.table12,
+    RoundedIcons.table16,
+    RoundedIcons.table,
+  );
+
+  /// Table, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet tableFilled = RemixIconSet(
+    RoundedIcons.tableFilled12,
+    RoundedIcons.tableFilled16,
+    RoundedIcons.tableFilled,
+  );
+
+  /// Loader, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet loader = RemixIconSet(
+    RoundedIcons.loader12,
+    RoundedIcons.loader16,
+    RoundedIcons.loader,
+  );
+
+  /// Loader, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet loaderFilled = RemixIconSet(
+    RoundedIcons.loaderFilled12,
+    RoundedIcons.loaderFilled16,
+    RoundedIcons.loaderFilled,
+  );
+
+  /// Code, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet code = RemixIconSet(
+    RoundedIcons.code12,
+    RoundedIcons.code16,
+    RoundedIcons.code,
+  );
+
+  /// Code, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet codeFilled = RemixIconSet(
+    RoundedIcons.codeFilled12,
+    RoundedIcons.codeFilled16,
+    RoundedIcons.codeFilled,
+  );
+
+  /// Dashboard, outline style, at 12, 16, and 24 px.
+  static const RemixIconSet dashboard = RemixIconSet(
+    RoundedIcons.dashboard12,
+    RoundedIcons.dashboard16,
+    RoundedIcons.dashboard,
+  );
+
+  /// Dashboard, filled style, at 12, 16, and 24 px.
+  static const RemixIconSet dashboardFilled = RemixIconSet(
+    RoundedIcons.dashboardFilled12,
+    RoundedIcons.dashboardFilled16,
+    RoundedIcons.dashboardFilled,
   );
 }

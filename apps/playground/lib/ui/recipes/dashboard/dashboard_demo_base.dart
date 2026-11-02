@@ -1,6 +1,5 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -20,15 +19,11 @@ enum PlaygroundDashboardDemoPage {
   overview(
     PlaygroundDashboardDemoSection.workspace,
     'Overview',
-    RemixIcons.grid,
+    RemixIcons.dashboard,
   ),
   chat(PlaygroundDashboardDemoSection.workspace, 'Chat', RemixIcons.chat),
-  customers(
-    PlaygroundDashboardDemoSection.data,
-    'Customers',
-    LucideIcons.group,
-  ),
-  orders(PlaygroundDashboardDemoSection.data, 'Orders', LucideIcons.table),
+  customers(PlaygroundDashboardDemoSection.data, 'Customers', RemixIcons.user),
+  orders(PlaygroundDashboardDemoSection.data, 'Orders', RemixIcons.table),
   settings(
     PlaygroundDashboardDemoSection.manage,
     'Settings',

@@ -23,7 +23,6 @@ import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 
 /// Product brand supplied through the installed shell's brand slot.
 class FortalDashboardBrand extends StatelessWidget {
@@ -115,7 +114,7 @@ class FortalDashboardSidebarAccount extends StatelessWidget {
           title: value == 'signout'
               ? 'Signed out of demo'
               : '${capitalize(value)} opened',
-          icon: LucideIcons.circleCheck,
+          icon: RemixIcons.checkCircle,
         ),
       ),
     ),
@@ -159,7 +158,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                 theme.settings.copyWith(appearance: isDark ? .light : .dark),
               );
             },
-            icon: isDark ? LucideIcons.sun : LucideIcons.moon,
+            icon: isDark ? RemixIcons.sun : RemixIcons.moon,
           ),
         ),
         if (!compact)
@@ -202,7 +201,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                               context,
                               const RemixToastData(
                                 title: 'All notifications marked read',
-                                icon: LucideIcons.circleCheck,
+                                icon: RemixIcons.checkCircle,
                               ),
                             );
                           },
@@ -334,7 +333,7 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
                 title: value == 'signout'
                     ? 'Signed out of demo'
                     : 'Opened $value',
-                icon: LucideIcons.circleCheck,
+                icon: RemixIcons.checkCircle,
               ),
             ),
           ),

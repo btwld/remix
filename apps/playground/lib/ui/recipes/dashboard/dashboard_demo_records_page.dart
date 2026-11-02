@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -105,7 +104,7 @@ class _PlaygroundDashboardCustomersPageState
                       context,
                       RemixToastData(
                         title: '${_selectedIds.length} customers archived',
-                        icon: LucideIcons.circleCheck,
+                        icon: RemixIcons.checkCircle,
                         action: const RemixToastAction(
                           label: 'Undo',
                           onPressed: _noop,

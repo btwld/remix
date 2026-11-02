@@ -306,12 +306,15 @@ melos:
 
     ci:open-code:icons:
       steps:
+        - dart run tool/check_open_code.dart --source checkout --item icons --icon-library rounded
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_demo --icon-library rounded
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --icon-library rounded
         - dart run tool/check_open_code.dart --source checkout --item icons --icon-library lucide
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo --icon-library lucide
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --icon-library lucide
       description: >-
-        Install the icon alias and both presets' dashboards under lucide; the
-        full preset runs already cover the default library
+        Install icon aliases and both dashboards under Rounded and Lucide;
+        full preset runs cover the default Outline library
 
     ci:coverage:check:
       run: dart run tool/check_ci_coverage.dart

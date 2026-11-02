@@ -71,7 +71,7 @@ class LockTest(unittest.TestCase):
         seeded = lock.seed(MANIFEST, _sources(), None)
         codepoints = lock.codepoints(seeded)
         ordered = [codepoints[glyph.source] for glyph in MANIFEST.glyphs]
-        self.assertEqual(ordered, list(range(0xE200, 0xE200 + len(ordered))))
+        self.assertEqual(ordered, list(range(0xE200, 0xE368)) + list(range(0xE3B0, 0xE5E4)))
         self.assertEqual(lock.check(MANIFEST, seeded), [])
 
     def test_keeps_assignments_and_appends_above_everything_assigned(self) -> None:
@@ -126,13 +126,13 @@ class LockTest(unittest.TestCase):
 
 class ManifestTest(unittest.TestCase):
     def test_counts(self) -> None:
-        self.assertEqual(len(MANIFEST.glyphs), 360)
+        self.assertEqual(len(MANIFEST.glyphs), 924)
         self.assertEqual(len(MANIFEST.legacy), 318)
-        self.assertEqual(len(MANIFEST.deprecated_aliases), 19)
+        self.assertEqual(len(MANIFEST.deprecated_aliases), 31)
         statuses = [icon.status for icon in MANIFEST.legacy]
         self.assertEqual(
             (statuses.count("exact"), statuses.count("partial"), statuses.count("removed")),
-            (46, 25, 247),
+            (76, 25, 217),
         )
 
     def test_member_names_follow_the_suffix_convention(self) -> None:

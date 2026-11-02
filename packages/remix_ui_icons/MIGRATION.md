@@ -4,7 +4,7 @@
 # Migrating from remix_ui_icons 0.1.x
 
 remix_ui_icons 1.0 replaces the 318 Radix Icons 1.3.2 glyphs of 0.1.x with
-the Vector UI pack: 48 concepts, 360 glyphs. The font family is
+the Vector UI pack: 77 concepts, 924 glyphs. The font family is
 still `RemixIcons`, but every glyph is new and every codepoint
 moved: 1.0 starts at `0xE200`, and the 0.1.x range
 `0xE000`–`0xE13D` is reserved and never reused, so a
@@ -14,10 +14,10 @@ Every 0.1.x name falls into one of three groups:
 
 | Group | Names | What happens in 1.0 |
 | --- | ---: | --- |
-| Same name | 27 | The name is unchanged and renders the new drawing. |
-| Renamed | 19 | A `@Deprecated` alias on `RemixIcons` renders the new drawing until 2.0.0. |
+| Same name | 45 | The name is unchanged and renders the new drawing. |
+| Renamed | 31 | A `@Deprecated` alias on `RemixIcons` renders the new drawing until 2.0.0. |
 | Partial match | 25 | Removed. A Remix concept covers part of the meaning; review it before switching. |
-| No match | 247 | Removed. Use the suggested Lucide icon or your own artwork. |
+| No match | 217 | Removed. Use the suggested Lucide icon or your own artwork. |
 
 The Lucide suggestions name constants in
 [`lucide_flutter`](https://pub.dev/packages/lucide_flutter) 1.47. Add it with
@@ -35,31 +35,43 @@ replacement. Rename them before 2.0.0.
 
 | 0.1.x name | Use instead |
 | --- | --- |
+| `RemixIcons.alignCenterHorizontally` | `RemixIcons.alignCenter` |
 | `RemixIcons.arrowTopRight` | `RemixIcons.arrowUpRight` |
 | `RemixIcons.barChart` | `RemixIcons.chart` |
 | `RemixIcons.chatBubble` | `RemixIcons.chat` |
+| `RemixIcons.checkCircled` | `RemixIcons.checkCircle` |
+| `RemixIcons.circleBackslash` | `RemixIcons.ban` |
 | `RemixIcons.cross1` | `RemixIcons.close` |
 | `RemixIcons.cross2` | `RemixIcons.close` |
+| `RemixIcons.crossCircled` | `RemixIcons.closeCircle` |
+| `RemixIcons.cursorArrow` | `RemixIcons.cursor` |
 | `RemixIcons.dotsHorizontal` | `RemixIcons.more` |
+| `RemixIcons.doubleArrowLeft` | `RemixIcons.chevronsLeft` |
+| `RemixIcons.doubleArrowRight` | `RemixIcons.chevronsRight` |
 | `RemixIcons.exclamationTriangle` | `RemixIcons.warning` |
+| `RemixIcons.fontBold` | `RemixIcons.bold` |
+| `RemixIcons.fontSize` | `RemixIcons.type` |
 | `RemixIcons.hamburgerMenu` | `RemixIcons.menu` |
 | `RemixIcons.infoCircled` | `RemixIcons.info` |
 | `RemixIcons.link1` | `RemixIcons.link` |
 | `RemixIcons.link2` | `RemixIcons.link` |
 | `RemixIcons.lockClosed` | `RemixIcons.lock` |
+| `RemixIcons.magicWand` | `RemixIcons.wand` |
 | `RemixIcons.magnifyingGlass` | `RemixIcons.search` |
 | `RemixIcons.mixerHorizontal` | `RemixIcons.sliders` |
+| `RemixIcons.mobile` | `RemixIcons.smartphone` |
 | `RemixIcons.pencil1` | `RemixIcons.edit` |
 | `RemixIcons.pencil2` | `RemixIcons.edit` |
 | `RemixIcons.person` | `RemixIcons.user` |
 | `RemixIcons.questionMarkCircled` | `RemixIcons.help` |
 | `RemixIcons.reload` | `RemixIcons.refresh` |
+| `RemixIcons.stack` | `RemixIcons.layers` |
 
 ## Same name
 
 No code change. Each renders the Vector UI drawing of the concept.
 
-`arrowDown`, `arrowLeft`, `arrowRight`, `arrowUp`, `bell`, `bookmark`, `bookmarkFilled`, `calendar`, `check`, `chevronDown`, `chevronLeft`, `chevronRight`, `chevronUp`, `copy`, `download`, `file`, `gear`, `grid`, `home`, `minus`, `pause`, `play`, `plus`, `star`, `starFilled`, `trash`, `upload`.
+`alignLeft`, `alignRight`, `arrowDown`, `arrowLeft`, `arrowRight`, `arrowUp`, `bell`, `bookmark`, `bookmarkFilled`, `box`, `calendar`, `check`, `chevronDown`, `chevronLeft`, `chevronRight`, `chevronUp`, `circle`, `code`, `copy`, `dashboard`, `dot`, `dotFilled`, `download`, `file`, `gear`, `grid`, `group`, `heart`, `heartFilled`, `home`, `input`, `laptop`, `layers`, `minus`, `moon`, `pause`, `play`, `plus`, `square`, `star`, `starFilled`, `sun`, `table`, `trash`, `upload`.
 
 ## Partial matches
 
@@ -68,17 +80,16 @@ the note says what it does not cover.
 
 | 0.1.x name | Closest Remix icon | What differs | Lucide |
 | --- | --- | --- | --- |
+| `activityLog` | `RemixIcons.activity` | Activity uses the pulse motif already used by the registry; it is not a historical log-list drawing. | [`LucideIcons.activity`](https://lucide.dev/icons/activity) |
 | `avatar` | `RemixIcons.user` | User metaphor only; avatar enclosure/face differs. | [`LucideIcons.circleUser`](https://lucide.dev/icons/circle-user) |
 | `caretDown` | `RemixIcons.chevronDown` | Chevron is open; caret is a filled triangle. | [`LucideIcons.chevronDown`](https://lucide.dev/icons/chevron-down) |
 | `caretLeft` | `RemixIcons.chevronLeft` | Chevron is open; caret is a filled triangle. | [`LucideIcons.chevronLeft`](https://lucide.dev/icons/chevron-left) |
 | `caretRight` | `RemixIcons.chevronRight` | Chevron is open; caret is a filled triangle. | [`LucideIcons.chevronRight`](https://lucide.dev/icons/chevron-right) |
 | `caretUp` | `RemixIcons.chevronUp` | Chevron is open; caret is a filled triangle. | [`LucideIcons.chevronUp`](https://lucide.dev/icons/chevron-up) |
 | `clipboardCopy` | `RemixIcons.copy` | Copy action exists; clipboard outline is lost. | [`LucideIcons.clipboardCopy`](https://lucide.dev/icons/clipboard-copy) |
-| `code` | `RemixIcons.terminal` | Terminal window/prompt replaces code brackets; product decision required. | [`LucideIcons.code`](https://lucide.dev/icons/code) |
 | `crosshair1` | `RemixIcons.focus` | Region brackets/center square replace crosshair. | [`LucideIcons.crosshair`](https://lucide.dev/icons/crosshair) |
 | `crosshair2` | `RemixIcons.focus` | Region brackets/center square replace crosshair. | [`LucideIcons.crosshair`](https://lucide.dev/icons/crosshair) |
 | `dash` | `RemixIcons.minus` | Text dash versus decrease action. | [`LucideIcons.minus`](https://lucide.dev/icons/minus) |
-| `dashboard` | `RemixIcons.grid` | Grid is app/grid view, not dashboard panels; Home also changes metaphor. | [`LucideIcons.layoutDashboard`](https://lucide.dev/icons/layout-dashboard) |
 | `dividerHorizontal` | `RemixIcons.minus` | Minus is an action, not a layout divider. | [`LucideIcons.separatorHorizontal`](https://lucide.dev/icons/separator-horizontal) |
 | `dotsVertical` | `RemixIcons.more` | New more is horizontal, not vertical. | [`LucideIcons.ellipsisVertical`](https://lucide.dev/icons/ellipsis-vertical) |
 | `externalLink` | `RemixIcons.arrowUpRight` | Diagonal arrow lacks enclosing external-link/window frame. | [`LucideIcons.externalLink`](https://lucide.dev/icons/external-link) |
@@ -92,6 +103,7 @@ the note says what it does not cover.
 | `thickArrowLeft` | `RemixIcons.arrowLeft` | Filled weight may approximate; not old thick-arrow shape. | [`LucideIcons.arrowBigLeft`](https://lucide.dev/icons/arrow-big-left) |
 | `thickArrowRight` | `RemixIcons.arrowRight` | Filled weight may approximate; not old thick-arrow shape. | [`LucideIcons.arrowBigRight`](https://lucide.dev/icons/arrow-big-right) |
 | `thickArrowUp` | `RemixIcons.arrowUp` | Filled weight may approximate; not old thick-arrow shape. | [`LucideIcons.arrowBigUp`](https://lucide.dev/icons/arrow-big-up) |
+| `update` | `RemixIcons.loader` | Loader represents progress, not the old update/history action. | [`LucideIcons.loaderCircle`](https://lucide.dev/icons/loader-circle) |
 | `viewGrid` | `RemixIcons.grid` | Grid exists; layout/structure differs. | [`LucideIcons.layoutGrid`](https://lucide.dev/icons/layout-grid) |
 
 ## No match
@@ -101,13 +113,9 @@ Removed in 1.0, with no Vector UI concept.
 | 0.1.x name | Lucide | Note |
 | --- | --- | --- |
 | `accessibility` | [`LucideIcons.accessibility`](https://lucide.dev/icons/accessibility) |  |
-| `activityLog` | [`LucideIcons.activity`](https://lucide.dev/icons/activity) |  |
 | `alignBaseline` | [`LucideIcons.alignVerticalJustifyEnd`](https://lucide.dev/icons/align-vertical-justify-end) |  |
 | `alignBottom` | [`LucideIcons.alignEndHorizontal`](https://lucide.dev/icons/align-end-horizontal) |  |
-| `alignCenterHorizontally` | [`LucideIcons.alignCenter`](https://lucide.dev/icons/align-center) |  |
 | `alignCenterVertically` | [`LucideIcons.alignCenterVertical`](https://lucide.dev/icons/align-center-vertical) |  |
-| `alignLeft` | [`LucideIcons.alignLeft`](https://lucide.dev/icons/align-left) |  |
-| `alignRight` | [`LucideIcons.alignRight`](https://lucide.dev/icons/align-right) |  |
 | `alignTop` | [`LucideIcons.alignStartHorizontal`](https://lucide.dev/icons/align-start-horizontal) |  |
 | `allSides` | [`LucideIcons.move`](https://lucide.dev/icons/move) |  |
 | `angle` | [`LucideIcons.angle`](https://lucide.dev/icons/angle) |  |
@@ -131,7 +139,6 @@ Removed in 1.0, with no Vector UI concept.
 | `borderStyle` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `borderTop` | [`LucideIcons.panelTop`](https://lucide.dev/icons/panel-top) |  |
 | `borderWidth` | [`LucideIcons.lineSquiggle`](https://lucide.dev/icons/line-squiggle) |  |
-| `box` | [`LucideIcons.box`](https://lucide.dev/icons/box) |  |
 | `boxModel` | [`LucideIcons.boxSelect`](https://lucide.dev/icons/box-select) |  |
 | `button` | [`LucideIcons.rectangleHorizontal`](https://lucide.dev/icons/rectangle-horizontal) |  |
 | `camera` | [`LucideIcons.camera`](https://lucide.dev/icons/camera) |  |
@@ -139,10 +146,7 @@ Removed in 1.0, with no Vector UI concept.
 | `cardStackMinus` | [`LucideIcons.layersMinus`](https://lucide.dev/icons/layers-minus) |  |
 | `cardStackPlus` | [`LucideIcons.layersPlus`](https://lucide.dev/icons/layers-plus) |  |
 | `caretSort` | [`LucideIcons.chevronsUpDown`](https://lucide.dev/icons/chevrons-up-down) |  |
-| `checkCircled` | [`LucideIcons.circleCheck`](https://lucide.dev/icons/circle-check) |  |
 | `checkbox` | [`LucideIcons.squareCheck`](https://lucide.dev/icons/square-check) |  |
-| `circle` | [`LucideIcons.circle`](https://lucide.dev/icons/circle) |  |
-| `circleBackslash` | [`LucideIcons.ban`](https://lucide.dev/icons/ban) |  |
 | `clipboard` | [`LucideIcons.clipboard`](https://lucide.dev/icons/clipboard) |  |
 | `clock` | [`LucideIcons.clock`](https://lucide.dev/icons/clock) |  |
 | `codesandboxLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
@@ -166,21 +170,15 @@ Removed in 1.0, with no Vector UI concept.
 | `countdownTimer` | [`LucideIcons.timerReset`](https://lucide.dev/icons/timer-reset) |  |
 | `counterClockwiseClock` | [`LucideIcons.history`](https://lucide.dev/icons/history) |  |
 | `crop` | [`LucideIcons.crop`](https://lucide.dev/icons/crop) |  |
-| `crossCircled` | [`LucideIcons.circleX`](https://lucide.dev/icons/circle-x) |  |
 | `crumpledPaper` | [`LucideIcons.fileX`](https://lucide.dev/icons/file-x) |  |
 | `cube` | [`LucideIcons.box`](https://lucide.dev/icons/box) |  |
-| `cursorArrow` | [`LucideIcons.mousePointer2`](https://lucide.dev/icons/mouse-pointer2) |  |
 | `cursorText` | [`LucideIcons.textCursor`](https://lucide.dev/icons/text-cursor) |  |
 | `desktop` | [`LucideIcons.monitor`](https://lucide.dev/icons/monitor) |  |
 | `dimensions` | [`LucideIcons.ruler`](https://lucide.dev/icons/ruler) |  |
 | `disc` | [`LucideIcons.disc`](https://lucide.dev/icons/disc) |  |
 | `discordLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `dividerVertical` | [`LucideIcons.separatorVertical`](https://lucide.dev/icons/separator-vertical) |  |
-| `dot` | [`LucideIcons.dot`](https://lucide.dev/icons/dot) |  |
-| `dotFilled` | [`LucideIcons.dot`](https://lucide.dev/icons/dot) |  |
 | `doubleArrowDown` | [`LucideIcons.chevronsDown`](https://lucide.dev/icons/chevrons-down) |  |
-| `doubleArrowLeft` | [`LucideIcons.chevronsLeft`](https://lucide.dev/icons/chevrons-left) |  |
-| `doubleArrowRight` | [`LucideIcons.chevronsRight`](https://lucide.dev/icons/chevrons-right) |  |
 | `doubleArrowUp` | [`LucideIcons.chevronsUp`](https://lucide.dev/icons/chevrons-up) |  |
 | `dragHandleDots1` | [`LucideIcons.gripVertical`](https://lucide.dev/icons/grip-vertical) |  |
 | `dragHandleDots2` | [`LucideIcons.gripVertical`](https://lucide.dev/icons/grip-vertical) |  |
@@ -203,34 +201,26 @@ Removed in 1.0, with no Vector UI concept.
 | `figmaLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `fileMinus` | [`LucideIcons.fileMinus`](https://lucide.dev/icons/file-minus) |  |
 | `filePlus` | [`LucideIcons.filePlus`](https://lucide.dev/icons/file-plus) |  |
-| `fontBold` | [`LucideIcons.bold`](https://lucide.dev/icons/bold) |  |
 | `fontFamily` | [`LucideIcons.type`](https://lucide.dev/icons/type) |  |
 | `fontItalic` | [`LucideIcons.italic`](https://lucide.dev/icons/italic) |  |
 | `fontRoman` | [`LucideIcons.type`](https://lucide.dev/icons/type) |  |
-| `fontSize` | [`LucideIcons.aLargeSmall`](https://lucide.dev/icons/a-large-small) |  |
 | `fontStyle` | [`LucideIcons.italic`](https://lucide.dev/icons/italic) |  |
 | `frame` | [`LucideIcons.frame`](https://lucide.dev/icons/frame) |  |
 | `framerLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `githubLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `globe` | [`LucideIcons.globe`](https://lucide.dev/icons/globe) |  |
-| `group` | [`LucideIcons.group`](https://lucide.dev/icons/group) |  |
 | `half1` | [`LucideIcons.circleDashed`](https://lucide.dev/icons/circle-dashed) |  |
 | `half2` | [`LucideIcons.contrast`](https://lucide.dev/icons/contrast) |  |
 | `hand` | [`LucideIcons.hand`](https://lucide.dev/icons/hand) |  |
 | `heading` | [`LucideIcons.heading`](https://lucide.dev/icons/heading) |  |
-| `heart` | [`LucideIcons.heart`](https://lucide.dev/icons/heart) |  |
-| `heartFilled` | [`LucideIcons.heart`](https://lucide.dev/icons/heart) |  |
 | `height` | [`LucideIcons.moveVertical`](https://lucide.dev/icons/move-vertical) |  |
 | `hobbyKnife` | [`LucideIcons.slice`](https://lucide.dev/icons/slice) |  |
 | `iconjarLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `idCard` | [`LucideIcons.idCard`](https://lucide.dev/icons/id-card) |  |
 | `image` | [`LucideIcons.image`](https://lucide.dev/icons/image) |  |
-| `input` | [`LucideIcons.formInput`](https://lucide.dev/icons/form-input) |  |
 | `instagramLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `keyboard` | [`LucideIcons.keyboard`](https://lucide.dev/icons/keyboard) |  |
 | `lapTimer` | [`LucideIcons.timer`](https://lucide.dev/icons/timer) |  |
-| `laptop` | [`LucideIcons.laptop`](https://lucide.dev/icons/laptop) |  |
-| `layers` | [`LucideIcons.layers`](https://lucide.dev/icons/layers) |  |
 | `layout` | [`LucideIcons.layout`](https://lucide.dev/icons/layout) |  |
 | `letterCaseCapitalize` | [`LucideIcons.caseSensitive`](https://lucide.dev/icons/case-sensitive) |  |
 | `letterCaseLowercase` | [`LucideIcons.caseLower`](https://lucide.dev/icons/case-lower) |  |
@@ -248,15 +238,12 @@ Removed in 1.0, with no Vector UI concept.
 | `lockOpen1` | [`LucideIcons.lockOpen`](https://lucide.dev/icons/lock-open) |  |
 | `lockOpen2` | [`LucideIcons.lockKeyholeOpen`](https://lucide.dev/icons/lock-keyhole-open) |  |
 | `loop` | [`LucideIcons.repeat`](https://lucide.dev/icons/repeat) |  |
-| `magicWand` | [`LucideIcons.wandSparkles`](https://lucide.dev/icons/wand-sparkles) |  |
 | `margin` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `maskOff` | [`LucideIcons.squareDashed`](https://lucide.dev/icons/square-dashed) |  |
 | `maskOn` | [`LucideIcons.squareSquare`](https://lucide.dev/icons/square-square) |  |
 | `minusCircled` | [`LucideIcons.circleMinus`](https://lucide.dev/icons/circle-minus) |  |
 | `mix` | [`LucideIcons.blend`](https://lucide.dev/icons/blend) |  |
-| `mobile` | [`LucideIcons.smartphone`](https://lucide.dev/icons/smartphone) |  |
 | `modulzLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
-| `moon` | [`LucideIcons.moon`](https://lucide.dev/icons/moon) |  |
 | `move` | [`LucideIcons.move`](https://lucide.dev/icons/move) |  |
 | `notionLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `opacity` | [`LucideIcons.droplet`](https://lucide.dev/icons/droplet) |  |
@@ -303,18 +290,14 @@ Removed in 1.0, with no Vector UI concept.
 | `speakerModerate` | [`LucideIcons.volume1`](https://lucide.dev/icons/volume1) |  |
 | `speakerOff` | [`LucideIcons.volumeX`](https://lucide.dev/icons/volume-x) |  |
 | `speakerQuiet` | [`LucideIcons.volume`](https://lucide.dev/icons/volume) |  |
-| `square` | [`LucideIcons.square`](https://lucide.dev/icons/square) |  |
-| `stack` | [`LucideIcons.layers`](https://lucide.dev/icons/layers) |  |
 | `stitchesLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `stop` | [`LucideIcons.octagon`](https://lucide.dev/icons/octagon) |  |
 | `stopwatch` | [`LucideIcons.timer`](https://lucide.dev/icons/timer) |  |
 | `stretchHorizontally` | [`LucideIcons.stretchHorizontal`](https://lucide.dev/icons/stretch-horizontal) |  |
 | `stretchVertically` | [`LucideIcons.stretchVertical`](https://lucide.dev/icons/stretch-vertical) |  |
 | `strikethrough` | [`LucideIcons.strikethrough`](https://lucide.dev/icons/strikethrough) |  |
-| `sun` | [`LucideIcons.sun`](https://lucide.dev/icons/sun) |  |
 | `switchIcon` | [`LucideIcons.toggleRight`](https://lucide.dev/icons/toggle-right) |  |
 | `symbol` | [`LucideIcons.shapes`](https://lucide.dev/icons/shapes) |  |
-| `table` | [`LucideIcons.table`](https://lucide.dev/icons/table) |  |
 | `text` | [`LucideIcons.text`](https://lucide.dev/icons/text) |  |
 | `textAlignBottom` | [`LucideIcons.alignVerticalJustifyEnd`](https://lucide.dev/icons/align-vertical-justify-end) |  |
 | `textAlignCenter` | [`LucideIcons.textAlignCenter`](https://lucide.dev/icons/text-align-center) |  |
@@ -336,7 +319,6 @@ Removed in 1.0, with no Vector UI concept.
 | `triangleUp` | [`LucideIcons.triangle`](https://lucide.dev/icons/triangle) |  |
 | `twitterLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
 | `underline` | [`LucideIcons.underline`](https://lucide.dev/icons/underline) |  |
-| `update` | [`LucideIcons.loaderCircle`](https://lucide.dev/icons/loader-circle) |  |
 | `value` | [`LucideIcons.circle`](https://lucide.dev/icons/circle) |  |
 | `valueNone` | [`LucideIcons.circleOff`](https://lucide.dev/icons/circle-off) |  |
 | `vercelLogo` | — | Brand mark. Lucide ships no brand logos; use the brand's own asset. |
@@ -350,7 +332,7 @@ Removed in 1.0, with no Vector UI concept.
 
 ## Remix registry presets
 
-The Vanilla and Fortal presets render every registry icon Remix covers
-and fall back to Lucide for the rest, so installing them adds
-`lucide_flutter` alongside `remix_ui_icons`. Projects on the `lucide`
+The Vanilla, Fortal, and HeroUI presets have native coverage for every
+registry icon in both families. Select `remix` for Outline or `rounded`
+for Rounded; either installs `remix_ui_icons`. Projects on the `lucide`
 icon library are unaffected.

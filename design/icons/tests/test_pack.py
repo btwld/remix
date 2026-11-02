@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, str(ROOT))
 
-from source.catalog import FAMILIES, MASTERS, APPEARANCES, SHARED, render_catalog, svg_file
+from source.catalog import FAMILIES, MASTERS, APPEARANCES, shared_ids, render_catalog, svg_file
 
 CONSTRUCTORS = (
     "rounded/source/draw.py",
@@ -65,7 +65,8 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(list(ROOT.rglob("pubspec.yaml")), [])
 
     def test_constructors_do_not_read_outline_paths(self):
-        for relative in CONSTRUCTORS:
+        constructors = list(CONSTRUCTORS) + [str(p.relative_to(ROOT)) for p in (ROOT / "rounded/source/glyphs").rglob("*.py")]
+        for relative in constructors:
             text = (ROOT / relative).read_text(encoding="utf-8")
             for token in FORBIDDEN:
                 self.assertNotIn(token, text, f"{relative} contains {token}")
@@ -92,21 +93,26 @@ class WarningTests(unittest.TestCase):
 
 
 class GeometryTests(unittest.TestCase):
+    def test_complete_inventory_matches_the_approved_product_scope(self):
+        scope = _json(ROOT / "tests/fixtures/product-inventory.json")
+        self.assertEqual(len(scope["concepts"]), 77)
+        self.assertEqual(set(shared_ids(ROOT)), set(scope["concepts"]))
+
     def test_counts_and_outline_hashes(self):
         inventory = _json(ROOT / "outline" / "generated" / "inventory.json")
-        self.assertEqual(len(inventory), 288)
+        self.assertEqual(len(inventory), 462)
         for row in inventory:
             path = ROOT / "outline" / "generated" / row["path"]
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(digest, row["sha256"], row["path"])
-        self.assertEqual(len(list((ROOT / "rounded" / "generated" / "rounded").rglob("*.svg"))), 72)
+        self.assertEqual(len(list((ROOT / "rounded" / "generated" / "rounded").rglob("*.svg"))), 462)
 
     def test_rounded_paths_differ_from_outline(self):
         registries = {
             "outline": _json(ROOT / "outline" / "generated" / "registry.json")["paths"],
             "rounded": _json(ROOT / "rounded" / "generated" / "registry.json")["paths"],
         }
-        for icon_id in SHARED:
+        for icon_id in shared_ids(ROOT):
             for appearance in APPEARANCES:
                 for size in MASTERS:
                     outline = registries["outline"][icon_id][appearance][str(size)]
@@ -124,7 +130,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("A tooltip or accessible name alone does not replace the visible label.", rendered)
         for family in ("Outline", "Rounded"):
             self.assertIn(family, rendered)
-        for icon_id in SHARED:
+        for icon_id in shared_ids(ROOT):
             self.assertIn(f'id="{icon_id}"', rendered)
         for size in MASTERS:
             for appearance in APPEARANCES:

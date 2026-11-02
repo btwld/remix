@@ -955,6 +955,728 @@ abstract final class RemixIcons {
   /// Requires a visible text label at 12 px.
   static const IconData focusFilled12 = OutlineIcons.focusFilled12;
 
+  /// Activity, outline style, 24 px master. Same as [OutlineIcons.activity].
+  static const IconData activity = OutlineIcons.activity;
+
+  /// Activity, filled style, 24 px master. Same as [OutlineIcons.activityFilled].
+  static const IconData activityFilled = OutlineIcons.activityFilled;
+
+  /// Activity, outline style, 16 px master. Same as [OutlineIcons.activity16].
+  static const IconData activity16 = OutlineIcons.activity16;
+
+  /// Activity, filled style, 16 px master. Same as [OutlineIcons.activityFilled16].
+  static const IconData activityFilled16 = OutlineIcons.activityFilled16;
+
+  /// Activity, outline style, 12 px master. Same as [OutlineIcons.activity12].
+  static const IconData activity12 = OutlineIcons.activity12;
+
+  /// Activity, filled style, 12 px master. Same as [OutlineIcons.activityFilled12].
+  static const IconData activityFilled12 = OutlineIcons.activityFilled12;
+
+  /// Align center, outline style, 24 px master. Same as [OutlineIcons.alignCenter].
+  static const IconData alignCenter = OutlineIcons.alignCenter;
+
+  /// Align center, filled style, 24 px master. Same as [OutlineIcons.alignCenterFilled].
+  static const IconData alignCenterFilled = OutlineIcons.alignCenterFilled;
+
+  /// Align center, outline style, 16 px master. Same as [OutlineIcons.alignCenter16].
+  static const IconData alignCenter16 = OutlineIcons.alignCenter16;
+
+  /// Align center, filled style, 16 px master. Same as [OutlineIcons.alignCenterFilled16].
+  static const IconData alignCenterFilled16 = OutlineIcons.alignCenterFilled16;
+
+  /// Align center, outline style, 12 px master. Same as [OutlineIcons.alignCenter12].
+  static const IconData alignCenter12 = OutlineIcons.alignCenter12;
+
+  /// Align center, filled style, 12 px master. Same as [OutlineIcons.alignCenterFilled12].
+  static const IconData alignCenterFilled12 = OutlineIcons.alignCenterFilled12;
+
+  /// Align left, outline style, 24 px master. Same as [OutlineIcons.alignLeft].
+  static const IconData alignLeft = OutlineIcons.alignLeft;
+
+  /// Align left, filled style, 24 px master. Same as [OutlineIcons.alignLeftFilled].
+  static const IconData alignLeftFilled = OutlineIcons.alignLeftFilled;
+
+  /// Align left, outline style, 16 px master. Same as [OutlineIcons.alignLeft16].
+  static const IconData alignLeft16 = OutlineIcons.alignLeft16;
+
+  /// Align left, filled style, 16 px master. Same as [OutlineIcons.alignLeftFilled16].
+  static const IconData alignLeftFilled16 = OutlineIcons.alignLeftFilled16;
+
+  /// Align left, outline style, 12 px master. Same as [OutlineIcons.alignLeft12].
+  static const IconData alignLeft12 = OutlineIcons.alignLeft12;
+
+  /// Align left, filled style, 12 px master. Same as [OutlineIcons.alignLeftFilled12].
+  static const IconData alignLeftFilled12 = OutlineIcons.alignLeftFilled12;
+
+  /// Align right, outline style, 24 px master. Same as [OutlineIcons.alignRight].
+  static const IconData alignRight = OutlineIcons.alignRight;
+
+  /// Align right, filled style, 24 px master. Same as [OutlineIcons.alignRightFilled].
+  static const IconData alignRightFilled = OutlineIcons.alignRightFilled;
+
+  /// Align right, outline style, 16 px master. Same as [OutlineIcons.alignRight16].
+  static const IconData alignRight16 = OutlineIcons.alignRight16;
+
+  /// Align right, filled style, 16 px master. Same as [OutlineIcons.alignRightFilled16].
+  static const IconData alignRightFilled16 = OutlineIcons.alignRightFilled16;
+
+  /// Align right, outline style, 12 px master. Same as [OutlineIcons.alignRight12].
+  static const IconData alignRight12 = OutlineIcons.alignRight12;
+
+  /// Align right, filled style, 12 px master. Same as [OutlineIcons.alignRightFilled12].
+  static const IconData alignRightFilled12 = OutlineIcons.alignRightFilled12;
+
+  /// Box, outline style, 24 px master. Same as [OutlineIcons.box].
+  static const IconData box = OutlineIcons.box;
+
+  /// Box, filled style, 24 px master. Same as [OutlineIcons.boxFilled].
+  static const IconData boxFilled = OutlineIcons.boxFilled;
+
+  /// Box, outline style, 16 px master. Same as [OutlineIcons.box16].
+  static const IconData box16 = OutlineIcons.box16;
+
+  /// Box, filled style, 16 px master. Same as [OutlineIcons.boxFilled16].
+  static const IconData boxFilled16 = OutlineIcons.boxFilled16;
+
+  /// Box, outline style, 12 px master. Same as [OutlineIcons.box12].
+  static const IconData box12 = OutlineIcons.box12;
+
+  /// Box, filled style, 12 px master. Same as [OutlineIcons.boxFilled12].
+  static const IconData boxFilled12 = OutlineIcons.boxFilled12;
+
+  /// Check circle, outline style, 24 px master. Same as [OutlineIcons.checkCircle].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData checkCircle = OutlineIcons.checkCircle;
+
+  /// Check circle, filled style, 24 px master. Same as [OutlineIcons.checkCircleFilled].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData checkCircleFilled = OutlineIcons.checkCircleFilled;
+
+  /// Check circle, outline style, 16 px master. Same as [OutlineIcons.checkCircle16].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData checkCircle16 = OutlineIcons.checkCircle16;
+
+  /// Check circle, filled style, 16 px master. Same as [OutlineIcons.checkCircleFilled16].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData checkCircleFilled16 = OutlineIcons.checkCircleFilled16;
+
+  /// Check circle, outline style, 12 px master. Same as [OutlineIcons.checkCircle12].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData checkCircle12 = OutlineIcons.checkCircle12;
+
+  /// Check circle, filled style, 12 px master. Same as [OutlineIcons.checkCircleFilled12].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData checkCircleFilled12 = OutlineIcons.checkCircleFilled12;
+
+  /// Circle, outline style, 24 px master. Same as [OutlineIcons.circle].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData circle = OutlineIcons.circle;
+
+  /// Circle, filled style, 24 px master. Same as [OutlineIcons.circleFilled].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData circleFilled = OutlineIcons.circleFilled;
+
+  /// Circle, outline style, 16 px master. Same as [OutlineIcons.circle16].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData circle16 = OutlineIcons.circle16;
+
+  /// Circle, filled style, 16 px master. Same as [OutlineIcons.circleFilled16].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData circleFilled16 = OutlineIcons.circleFilled16;
+
+  /// Circle, outline style, 12 px master. Same as [OutlineIcons.circle12].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData circle12 = OutlineIcons.circle12;
+
+  /// Circle, filled style, 12 px master. Same as [OutlineIcons.circleFilled12].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData circleFilled12 = OutlineIcons.circleFilled12;
+
+  /// Ban, outline style, 24 px master. Same as [OutlineIcons.ban].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData ban = OutlineIcons.ban;
+
+  /// Ban, filled style, 24 px master. Same as [OutlineIcons.banFilled].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData banFilled = OutlineIcons.banFilled;
+
+  /// Ban, outline style, 16 px master. Same as [OutlineIcons.ban16].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData ban16 = OutlineIcons.ban16;
+
+  /// Ban, filled style, 16 px master. Same as [OutlineIcons.banFilled16].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData banFilled16 = OutlineIcons.banFilled16;
+
+  /// Ban, outline style, 12 px master. Same as [OutlineIcons.ban12].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData ban12 = OutlineIcons.ban12;
+
+  /// Ban, filled style, 12 px master. Same as [OutlineIcons.banFilled12].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData banFilled12 = OutlineIcons.banFilled12;
+
+  /// Close circle, outline style, 24 px master. Same as [OutlineIcons.closeCircle].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData closeCircle = OutlineIcons.closeCircle;
+
+  /// Close circle, filled style, 24 px master. Same as [OutlineIcons.closeCircleFilled].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData closeCircleFilled = OutlineIcons.closeCircleFilled;
+
+  /// Close circle, outline style, 16 px master. Same as [OutlineIcons.closeCircle16].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData closeCircle16 = OutlineIcons.closeCircle16;
+
+  /// Close circle, filled style, 16 px master. Same as [OutlineIcons.closeCircleFilled16].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData closeCircleFilled16 = OutlineIcons.closeCircleFilled16;
+
+  /// Close circle, outline style, 12 px master. Same as [OutlineIcons.closeCircle12].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData closeCircle12 = OutlineIcons.closeCircle12;
+
+  /// Close circle, filled style, 12 px master. Same as [OutlineIcons.closeCircleFilled12].
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  static const IconData closeCircleFilled12 = OutlineIcons.closeCircleFilled12;
+
+  /// Cursor, outline style, 24 px master. Same as [OutlineIcons.cursor].
+  static const IconData cursor = OutlineIcons.cursor;
+
+  /// Cursor, filled style, 24 px master. Same as [OutlineIcons.cursorFilled].
+  static const IconData cursorFilled = OutlineIcons.cursorFilled;
+
+  /// Cursor, outline style, 16 px master. Same as [OutlineIcons.cursor16].
+  static const IconData cursor16 = OutlineIcons.cursor16;
+
+  /// Cursor, filled style, 16 px master. Same as [OutlineIcons.cursorFilled16].
+  static const IconData cursorFilled16 = OutlineIcons.cursorFilled16;
+
+  /// Cursor, outline style, 12 px master. Same as [OutlineIcons.cursor12].
+  static const IconData cursor12 = OutlineIcons.cursor12;
+
+  /// Cursor, filled style, 12 px master. Same as [OutlineIcons.cursorFilled12].
+  static const IconData cursorFilled12 = OutlineIcons.cursorFilled12;
+
+  /// Dot, outline style, 24 px master. Same as [OutlineIcons.dot].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData dot = OutlineIcons.dot;
+
+  /// Dot, filled style, 24 px master. Same as [OutlineIcons.dotFilled].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData dotFilled = OutlineIcons.dotFilled;
+
+  /// Dot, outline style, 16 px master. Same as [OutlineIcons.dot16].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData dot16 = OutlineIcons.dot16;
+
+  /// Dot, filled style, 16 px master. Same as [OutlineIcons.dotFilled16].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData dotFilled16 = OutlineIcons.dotFilled16;
+
+  /// Dot, outline style, 12 px master. Same as [OutlineIcons.dot12].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData dot12 = OutlineIcons.dot12;
+
+  /// Dot, filled style, 12 px master. Same as [OutlineIcons.dotFilled12].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData dotFilled12 = OutlineIcons.dotFilled12;
+
+  /// Chevrons left, outline style, 24 px master. Same as [OutlineIcons.chevronsLeft].
+  static const IconData chevronsLeft = OutlineIcons.chevronsLeft;
+
+  /// Chevrons left, filled style, 24 px master. Same as [OutlineIcons.chevronsLeftFilled].
+  static const IconData chevronsLeftFilled = OutlineIcons.chevronsLeftFilled;
+
+  /// Chevrons left, outline style, 16 px master. Same as [OutlineIcons.chevronsLeft16].
+  static const IconData chevronsLeft16 = OutlineIcons.chevronsLeft16;
+
+  /// Chevrons left, filled style, 16 px master. Same as [OutlineIcons.chevronsLeftFilled16].
+  static const IconData chevronsLeftFilled16 =
+      OutlineIcons.chevronsLeftFilled16;
+
+  /// Chevrons left, outline style, 12 px master. Same as [OutlineIcons.chevronsLeft12].
+  static const IconData chevronsLeft12 = OutlineIcons.chevronsLeft12;
+
+  /// Chevrons left, filled style, 12 px master. Same as [OutlineIcons.chevronsLeftFilled12].
+  static const IconData chevronsLeftFilled12 =
+      OutlineIcons.chevronsLeftFilled12;
+
+  /// Chevrons right, outline style, 24 px master. Same as [OutlineIcons.chevronsRight].
+  static const IconData chevronsRight = OutlineIcons.chevronsRight;
+
+  /// Chevrons right, filled style, 24 px master. Same as [OutlineIcons.chevronsRightFilled].
+  static const IconData chevronsRightFilled = OutlineIcons.chevronsRightFilled;
+
+  /// Chevrons right, outline style, 16 px master. Same as [OutlineIcons.chevronsRight16].
+  static const IconData chevronsRight16 = OutlineIcons.chevronsRight16;
+
+  /// Chevrons right, filled style, 16 px master. Same as [OutlineIcons.chevronsRightFilled16].
+  static const IconData chevronsRightFilled16 =
+      OutlineIcons.chevronsRightFilled16;
+
+  /// Chevrons right, outline style, 12 px master. Same as [OutlineIcons.chevronsRight12].
+  static const IconData chevronsRight12 = OutlineIcons.chevronsRight12;
+
+  /// Chevrons right, filled style, 12 px master. Same as [OutlineIcons.chevronsRightFilled12].
+  static const IconData chevronsRightFilled12 =
+      OutlineIcons.chevronsRightFilled12;
+
+  /// Bold, outline style, 24 px master. Same as [OutlineIcons.bold].
+  static const IconData bold = OutlineIcons.bold;
+
+  /// Bold, filled style, 24 px master. Same as [OutlineIcons.boldFilled].
+  static const IconData boldFilled = OutlineIcons.boldFilled;
+
+  /// Bold, outline style, 16 px master. Same as [OutlineIcons.bold16].
+  static const IconData bold16 = OutlineIcons.bold16;
+
+  /// Bold, filled style, 16 px master. Same as [OutlineIcons.boldFilled16].
+  static const IconData boldFilled16 = OutlineIcons.boldFilled16;
+
+  /// Bold, outline style, 12 px master. Same as [OutlineIcons.bold12].
+  static const IconData bold12 = OutlineIcons.bold12;
+
+  /// Bold, filled style, 12 px master. Same as [OutlineIcons.boldFilled12].
+  static const IconData boldFilled12 = OutlineIcons.boldFilled12;
+
+  /// Type, outline style, 24 px master. Same as [OutlineIcons.type].
+  static const IconData type = OutlineIcons.type;
+
+  /// Type, filled style, 24 px master. Same as [OutlineIcons.typeFilled].
+  static const IconData typeFilled = OutlineIcons.typeFilled;
+
+  /// Type, outline style, 16 px master. Same as [OutlineIcons.type16].
+  static const IconData type16 = OutlineIcons.type16;
+
+  /// Type, filled style, 16 px master. Same as [OutlineIcons.typeFilled16].
+  static const IconData typeFilled16 = OutlineIcons.typeFilled16;
+
+  /// Type, outline style, 12 px master. Same as [OutlineIcons.type12].
+  static const IconData type12 = OutlineIcons.type12;
+
+  /// Type, filled style, 12 px master. Same as [OutlineIcons.typeFilled12].
+  static const IconData typeFilled12 = OutlineIcons.typeFilled12;
+
+  /// Group, outline style, 24 px master. Same as [OutlineIcons.group].
+  ///
+  /// A contextual label is recommended.
+  static const IconData group = OutlineIcons.group;
+
+  /// Group, filled style, 24 px master. Same as [OutlineIcons.groupFilled].
+  ///
+  /// A contextual label is recommended.
+  static const IconData groupFilled = OutlineIcons.groupFilled;
+
+  /// Group, outline style, 16 px master. Same as [OutlineIcons.group16].
+  ///
+  /// A contextual label is recommended.
+  static const IconData group16 = OutlineIcons.group16;
+
+  /// Group, filled style, 16 px master. Same as [OutlineIcons.groupFilled16].
+  ///
+  /// A contextual label is recommended.
+  static const IconData groupFilled16 = OutlineIcons.groupFilled16;
+
+  /// Group, outline style, 12 px master. Same as [OutlineIcons.group12].
+  ///
+  /// Requires a visible text label at 12 px.
+  static const IconData group12 = OutlineIcons.group12;
+
+  /// Group, filled style, 12 px master. Same as [OutlineIcons.groupFilled12].
+  ///
+  /// Requires a visible text label at 12 px.
+  static const IconData groupFilled12 = OutlineIcons.groupFilled12;
+
+  /// Heart, outline style, 24 px master. Same as [OutlineIcons.heart].
+  static const IconData heart = OutlineIcons.heart;
+
+  /// Heart, filled style, 24 px master. Same as [OutlineIcons.heartFilled].
+  static const IconData heartFilled = OutlineIcons.heartFilled;
+
+  /// Heart, outline style, 16 px master. Same as [OutlineIcons.heart16].
+  static const IconData heart16 = OutlineIcons.heart16;
+
+  /// Heart, filled style, 16 px master. Same as [OutlineIcons.heartFilled16].
+  static const IconData heartFilled16 = OutlineIcons.heartFilled16;
+
+  /// Heart, outline style, 12 px master. Same as [OutlineIcons.heart12].
+  static const IconData heart12 = OutlineIcons.heart12;
+
+  /// Heart, filled style, 12 px master. Same as [OutlineIcons.heartFilled12].
+  static const IconData heartFilled12 = OutlineIcons.heartFilled12;
+
+  /// Input, outline style, 24 px master. Same as [OutlineIcons.input].
+  static const IconData input = OutlineIcons.input;
+
+  /// Input, filled style, 24 px master. Same as [OutlineIcons.inputFilled].
+  static const IconData inputFilled = OutlineIcons.inputFilled;
+
+  /// Input, outline style, 16 px master. Same as [OutlineIcons.input16].
+  static const IconData input16 = OutlineIcons.input16;
+
+  /// Input, filled style, 16 px master. Same as [OutlineIcons.inputFilled16].
+  static const IconData inputFilled16 = OutlineIcons.inputFilled16;
+
+  /// Input, outline style, 12 px master. Same as [OutlineIcons.input12].
+  static const IconData input12 = OutlineIcons.input12;
+
+  /// Input, filled style, 12 px master. Same as [OutlineIcons.inputFilled12].
+  static const IconData inputFilled12 = OutlineIcons.inputFilled12;
+
+  /// Laptop, outline style, 24 px master. Same as [OutlineIcons.laptop].
+  static const IconData laptop = OutlineIcons.laptop;
+
+  /// Laptop, filled style, 24 px master. Same as [OutlineIcons.laptopFilled].
+  static const IconData laptopFilled = OutlineIcons.laptopFilled;
+
+  /// Laptop, outline style, 16 px master. Same as [OutlineIcons.laptop16].
+  static const IconData laptop16 = OutlineIcons.laptop16;
+
+  /// Laptop, filled style, 16 px master. Same as [OutlineIcons.laptopFilled16].
+  static const IconData laptopFilled16 = OutlineIcons.laptopFilled16;
+
+  /// Laptop, outline style, 12 px master. Same as [OutlineIcons.laptop12].
+  static const IconData laptop12 = OutlineIcons.laptop12;
+
+  /// Laptop, filled style, 12 px master. Same as [OutlineIcons.laptopFilled12].
+  static const IconData laptopFilled12 = OutlineIcons.laptopFilled12;
+
+  /// Wand, outline style, 24 px master. Same as [OutlineIcons.wand].
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  static const IconData wand = OutlineIcons.wand;
+
+  /// Wand, filled style, 24 px master. Same as [OutlineIcons.wandFilled].
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  static const IconData wandFilled = OutlineIcons.wandFilled;
+
+  /// Wand, outline style, 16 px master. Same as [OutlineIcons.wand16].
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  static const IconData wand16 = OutlineIcons.wand16;
+
+  /// Wand, filled style, 16 px master. Same as [OutlineIcons.wandFilled16].
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  static const IconData wandFilled16 = OutlineIcons.wandFilled16;
+
+  /// Wand, outline style, 12 px master. Same as [OutlineIcons.wand12].
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  static const IconData wand12 = OutlineIcons.wand12;
+
+  /// Wand, filled style, 12 px master. Same as [OutlineIcons.wandFilled12].
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  static const IconData wandFilled12 = OutlineIcons.wandFilled12;
+
+  /// Smartphone, outline style, 24 px master. Same as [OutlineIcons.smartphone].
+  static const IconData smartphone = OutlineIcons.smartphone;
+
+  /// Smartphone, filled style, 24 px master. Same as [OutlineIcons.smartphoneFilled].
+  static const IconData smartphoneFilled = OutlineIcons.smartphoneFilled;
+
+  /// Smartphone, outline style, 16 px master. Same as [OutlineIcons.smartphone16].
+  static const IconData smartphone16 = OutlineIcons.smartphone16;
+
+  /// Smartphone, filled style, 16 px master. Same as [OutlineIcons.smartphoneFilled16].
+  static const IconData smartphoneFilled16 = OutlineIcons.smartphoneFilled16;
+
+  /// Smartphone, outline style, 12 px master. Same as [OutlineIcons.smartphone12].
+  static const IconData smartphone12 = OutlineIcons.smartphone12;
+
+  /// Smartphone, filled style, 12 px master. Same as [OutlineIcons.smartphoneFilled12].
+  static const IconData smartphoneFilled12 = OutlineIcons.smartphoneFilled12;
+
+  /// Moon, outline style, 24 px master. Same as [OutlineIcons.moon].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData moon = OutlineIcons.moon;
+
+  /// Moon, filled style, 24 px master. Same as [OutlineIcons.moonFilled].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData moonFilled = OutlineIcons.moonFilled;
+
+  /// Moon, outline style, 16 px master. Same as [OutlineIcons.moon16].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData moon16 = OutlineIcons.moon16;
+
+  /// Moon, filled style, 16 px master. Same as [OutlineIcons.moonFilled16].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData moonFilled16 = OutlineIcons.moonFilled16;
+
+  /// Moon, outline style, 12 px master. Same as [OutlineIcons.moon12].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData moon12 = OutlineIcons.moon12;
+
+  /// Moon, filled style, 12 px master. Same as [OutlineIcons.moonFilled12].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData moonFilled12 = OutlineIcons.moonFilled12;
+
+  /// Square, outline style, 24 px master. Same as [OutlineIcons.square].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData square = OutlineIcons.square;
+
+  /// Square, filled style, 24 px master. Same as [OutlineIcons.squareFilled].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData squareFilled = OutlineIcons.squareFilled;
+
+  /// Square, outline style, 16 px master. Same as [OutlineIcons.square16].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData square16 = OutlineIcons.square16;
+
+  /// Square, filled style, 16 px master. Same as [OutlineIcons.squareFilled16].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData squareFilled16 = OutlineIcons.squareFilled16;
+
+  /// Square, outline style, 12 px master. Same as [OutlineIcons.square12].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData square12 = OutlineIcons.square12;
+
+  /// Square, filled style, 12 px master. Same as [OutlineIcons.squareFilled12].
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  static const IconData squareFilled12 = OutlineIcons.squareFilled12;
+
+  /// Layers, outline style, 24 px master. Same as [OutlineIcons.layers].
+  static const IconData layers = OutlineIcons.layers;
+
+  /// Layers, filled style, 24 px master. Same as [OutlineIcons.layersFilled].
+  static const IconData layersFilled = OutlineIcons.layersFilled;
+
+  /// Layers, outline style, 16 px master. Same as [OutlineIcons.layers16].
+  static const IconData layers16 = OutlineIcons.layers16;
+
+  /// Layers, filled style, 16 px master. Same as [OutlineIcons.layersFilled16].
+  static const IconData layersFilled16 = OutlineIcons.layersFilled16;
+
+  /// Layers, outline style, 12 px master. Same as [OutlineIcons.layers12].
+  static const IconData layers12 = OutlineIcons.layers12;
+
+  /// Layers, filled style, 12 px master. Same as [OutlineIcons.layersFilled12].
+  static const IconData layersFilled12 = OutlineIcons.layersFilled12;
+
+  /// Sun, outline style, 24 px master. Same as [OutlineIcons.sun].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData sun = OutlineIcons.sun;
+
+  /// Sun, filled style, 24 px master. Same as [OutlineIcons.sunFilled].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData sunFilled = OutlineIcons.sunFilled;
+
+  /// Sun, outline style, 16 px master. Same as [OutlineIcons.sun16].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData sun16 = OutlineIcons.sun16;
+
+  /// Sun, filled style, 16 px master. Same as [OutlineIcons.sunFilled16].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData sunFilled16 = OutlineIcons.sunFilled16;
+
+  /// Sun, outline style, 12 px master. Same as [OutlineIcons.sun12].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData sun12 = OutlineIcons.sun12;
+
+  /// Sun, filled style, 12 px master. Same as [OutlineIcons.sunFilled12].
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  static const IconData sunFilled12 = OutlineIcons.sunFilled12;
+
+  /// Table, outline style, 24 px master. Same as [OutlineIcons.table].
+  static const IconData table = OutlineIcons.table;
+
+  /// Table, filled style, 24 px master. Same as [OutlineIcons.tableFilled].
+  static const IconData tableFilled = OutlineIcons.tableFilled;
+
+  /// Table, outline style, 16 px master. Same as [OutlineIcons.table16].
+  static const IconData table16 = OutlineIcons.table16;
+
+  /// Table, filled style, 16 px master. Same as [OutlineIcons.tableFilled16].
+  static const IconData tableFilled16 = OutlineIcons.tableFilled16;
+
+  /// Table, outline style, 12 px master. Same as [OutlineIcons.table12].
+  static const IconData table12 = OutlineIcons.table12;
+
+  /// Table, filled style, 12 px master. Same as [OutlineIcons.tableFilled12].
+  static const IconData tableFilled12 = OutlineIcons.tableFilled12;
+
+  /// Loader, outline style, 24 px master. Same as [OutlineIcons.loader].
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  static const IconData loader = OutlineIcons.loader;
+
+  /// Loader, filled style, 24 px master. Same as [OutlineIcons.loaderFilled].
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  static const IconData loaderFilled = OutlineIcons.loaderFilled;
+
+  /// Loader, outline style, 16 px master. Same as [OutlineIcons.loader16].
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  static const IconData loader16 = OutlineIcons.loader16;
+
+  /// Loader, filled style, 16 px master. Same as [OutlineIcons.loaderFilled16].
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  static const IconData loaderFilled16 = OutlineIcons.loaderFilled16;
+
+  /// Loader, outline style, 12 px master. Same as [OutlineIcons.loader12].
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  static const IconData loader12 = OutlineIcons.loader12;
+
+  /// Loader, filled style, 12 px master. Same as [OutlineIcons.loaderFilled12].
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  static const IconData loaderFilled12 = OutlineIcons.loaderFilled12;
+
+  /// Code, outline style, 24 px master. Same as [OutlineIcons.code].
+  static const IconData code = OutlineIcons.code;
+
+  /// Code, filled style, 24 px master. Same as [OutlineIcons.codeFilled].
+  static const IconData codeFilled = OutlineIcons.codeFilled;
+
+  /// Code, outline style, 16 px master. Same as [OutlineIcons.code16].
+  static const IconData code16 = OutlineIcons.code16;
+
+  /// Code, filled style, 16 px master. Same as [OutlineIcons.codeFilled16].
+  static const IconData codeFilled16 = OutlineIcons.codeFilled16;
+
+  /// Code, outline style, 12 px master. Same as [OutlineIcons.code12].
+  static const IconData code12 = OutlineIcons.code12;
+
+  /// Code, filled style, 12 px master. Same as [OutlineIcons.codeFilled12].
+  static const IconData codeFilled12 = OutlineIcons.codeFilled12;
+
+  /// Dashboard, outline style, 24 px master. Same as [OutlineIcons.dashboard].
+  static const IconData dashboard = OutlineIcons.dashboard;
+
+  /// Dashboard, filled style, 24 px master. Same as [OutlineIcons.dashboardFilled].
+  static const IconData dashboardFilled = OutlineIcons.dashboardFilled;
+
+  /// Dashboard, outline style, 16 px master. Same as [OutlineIcons.dashboard16].
+  static const IconData dashboard16 = OutlineIcons.dashboard16;
+
+  /// Dashboard, filled style, 16 px master. Same as [OutlineIcons.dashboardFilled16].
+  static const IconData dashboardFilled16 = OutlineIcons.dashboardFilled16;
+
+  /// Dashboard, outline style, 12 px master. Same as [OutlineIcons.dashboard12].
+  static const IconData dashboard12 = OutlineIcons.dashboard12;
+
+  /// Dashboard, filled style, 12 px master. Same as [OutlineIcons.dashboardFilled12].
+  static const IconData dashboardFilled12 = OutlineIcons.dashboardFilled12;
+
+  /// The remix_ui_icons 0.1.x name for [alignCenter].
+  @Deprecated('Use RemixIcons.alignCenter. Removed in 2.0.0.')
+  static const IconData alignCenterHorizontally = OutlineIcons.alignCenter;
+
   /// The remix_ui_icons 0.1.x name for [arrowUpRight].
   @Deprecated('Use RemixIcons.arrowUpRight. Removed in 2.0.0.')
   static const IconData arrowTopRight = OutlineIcons.arrowUpRight;
@@ -967,6 +1689,14 @@ abstract final class RemixIcons {
   @Deprecated('Use RemixIcons.chat. Removed in 2.0.0.')
   static const IconData chatBubble = OutlineIcons.chat;
 
+  /// The remix_ui_icons 0.1.x name for [checkCircle].
+  @Deprecated('Use RemixIcons.checkCircle. Removed in 2.0.0.')
+  static const IconData checkCircled = OutlineIcons.checkCircle;
+
+  /// The remix_ui_icons 0.1.x name for [ban].
+  @Deprecated('Use RemixIcons.ban. Removed in 2.0.0.')
+  static const IconData circleBackslash = OutlineIcons.ban;
+
   /// The remix_ui_icons 0.1.x name for [close].
   @Deprecated('Use RemixIcons.close. Removed in 2.0.0.')
   static const IconData cross1 = OutlineIcons.close;
@@ -975,13 +1705,37 @@ abstract final class RemixIcons {
   @Deprecated('Use RemixIcons.close. Removed in 2.0.0.')
   static const IconData cross2 = OutlineIcons.close;
 
+  /// The remix_ui_icons 0.1.x name for [closeCircle].
+  @Deprecated('Use RemixIcons.closeCircle. Removed in 2.0.0.')
+  static const IconData crossCircled = OutlineIcons.closeCircle;
+
+  /// The remix_ui_icons 0.1.x name for [cursor].
+  @Deprecated('Use RemixIcons.cursor. Removed in 2.0.0.')
+  static const IconData cursorArrow = OutlineIcons.cursor;
+
   /// The remix_ui_icons 0.1.x name for [more].
   @Deprecated('Use RemixIcons.more. Removed in 2.0.0.')
   static const IconData dotsHorizontal = OutlineIcons.more;
 
+  /// The remix_ui_icons 0.1.x name for [chevronsLeft].
+  @Deprecated('Use RemixIcons.chevronsLeft. Removed in 2.0.0.')
+  static const IconData doubleArrowLeft = OutlineIcons.chevronsLeft;
+
+  /// The remix_ui_icons 0.1.x name for [chevronsRight].
+  @Deprecated('Use RemixIcons.chevronsRight. Removed in 2.0.0.')
+  static const IconData doubleArrowRight = OutlineIcons.chevronsRight;
+
   /// The remix_ui_icons 0.1.x name for [warning].
   @Deprecated('Use RemixIcons.warning. Removed in 2.0.0.')
   static const IconData exclamationTriangle = OutlineIcons.warning;
+
+  /// The remix_ui_icons 0.1.x name for [bold].
+  @Deprecated('Use RemixIcons.bold. Removed in 2.0.0.')
+  static const IconData fontBold = OutlineIcons.bold;
+
+  /// The remix_ui_icons 0.1.x name for [type].
+  @Deprecated('Use RemixIcons.type. Removed in 2.0.0.')
+  static const IconData fontSize = OutlineIcons.type;
 
   /// The remix_ui_icons 0.1.x name for [menu].
   @Deprecated('Use RemixIcons.menu. Removed in 2.0.0.')
@@ -1003,6 +1757,10 @@ abstract final class RemixIcons {
   @Deprecated('Use RemixIcons.lock. Removed in 2.0.0.')
   static const IconData lockClosed = OutlineIcons.lock;
 
+  /// The remix_ui_icons 0.1.x name for [wand].
+  @Deprecated('Use RemixIcons.wand. Removed in 2.0.0.')
+  static const IconData magicWand = OutlineIcons.wand;
+
   /// The remix_ui_icons 0.1.x name for [search].
   @Deprecated('Use RemixIcons.search. Removed in 2.0.0.')
   static const IconData magnifyingGlass = OutlineIcons.search;
@@ -1010,6 +1768,10 @@ abstract final class RemixIcons {
   /// The remix_ui_icons 0.1.x name for [sliders].
   @Deprecated('Use RemixIcons.sliders. Removed in 2.0.0.')
   static const IconData mixerHorizontal = OutlineIcons.sliders;
+
+  /// The remix_ui_icons 0.1.x name for [smartphone].
+  @Deprecated('Use RemixIcons.smartphone. Removed in 2.0.0.')
+  static const IconData mobile = OutlineIcons.smartphone;
 
   /// The remix_ui_icons 0.1.x name for [edit].
   @Deprecated('Use RemixIcons.edit. Removed in 2.0.0.')
@@ -1030,4 +1792,8 @@ abstract final class RemixIcons {
   /// The remix_ui_icons 0.1.x name for [refresh].
   @Deprecated('Use RemixIcons.refresh. Removed in 2.0.0.')
   static const IconData reload = OutlineIcons.refresh;
+
+  /// The remix_ui_icons 0.1.x name for [layers].
+  @Deprecated('Use RemixIcons.layers. Removed in 2.0.0.')
+  static const IconData stack = OutlineIcons.layers;
 }

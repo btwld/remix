@@ -18,13 +18,13 @@ const rounded = Icon(RoundedIcons.home);
 <!-- generated:coverage:begin -->
 | Family | Class | Concepts | Glyphs |
 | --- | --- | ---: | ---: |
-| Outline | `OutlineIcons` | 48 | 288 |
-| Rounded | `RoundedIcons` | 12 | 72 |
-| **Total** | | | **360** |
+| Outline | `OutlineIcons` | 77 | 462 |
+| Rounded | `RoundedIcons` | 77 | 462 |
+| **Total** | | | **924** |
 <!-- generated:coverage:end -->
 
 Rounded is a sibling of Outline, not a filter over it: it draws its
-concepts from its own primitives and covers a subset of Outline's concepts.
+concepts from its own primitives. Both families cover the same 77 concepts.
 `RemixIcons` is the default set and is the Outline family under the same names.
 
 ## Styles and masters

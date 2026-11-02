@@ -11,7 +11,6 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 
 /// Tag row under a stat card's value: delta badge plus caption.
 final fortalStatTagsStyle = WrapBoxStyler()
@@ -47,9 +46,9 @@ class FortalStatCard extends StatelessWidget {
         switch (label) {
           'Revenue' => RemixIcons.chart,
           'Active customers' => RemixIcons.user,
-          'Open orders' => LucideIcons.box,
-          'Fulfillment' => LucideIcons.activity,
-          _ => LucideIcons.activity,
+          'Open orders' => RemixIcons.box,
+          'Fulfillment' => RemixIcons.activity,
+          _ => RemixIcons.activity,
         };
     final column = ColumnBox(
       style: FlexBoxStyler()

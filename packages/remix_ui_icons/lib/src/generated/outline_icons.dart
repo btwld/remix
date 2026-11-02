@@ -3,7 +3,7 @@
 
 import 'package:flutter/widgets.dart';
 
-/// The Outline family: 48 concepts, each drawn in an
+/// The Outline family: 77 concepts, each drawn in an
 /// outline and a filled style at native 24, 16, and 12 px masters.
 ///
 /// The bare name is the outline style at the 24 px master. `Filled`
@@ -2676,6 +2676,1764 @@ abstract final class OutlineIcons {
   /// ![Focus, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDMuNUwyLjUgMy41TDIuNSAyLjVMMy41IDIuNUwzLjUgMUwyLjUgMUwxIDFMMSAyLjVaTTEgMTFMMi41IDExTDMuNSAxMUwzLjUgOS41TDIuNSA5LjVMMi41IDguNUwxIDguNUwxIDkuNVpNNyA3TDcgNUw1IDVMNSA3Wk05LjUgMi41TDkuNSAzLjVMMTEgMy41TDExIDIuNUwxMSAxTDkuNSAxTDguNSAxTDguNSAyLjVaTTkuNSA5LjVMOC41IDkuNUw4LjUgMTFMOS41IDExTDExIDExTDExIDkuNUwxMSA4LjVMOS41IDguNVoiLz48L3N2Zz4=)
   static const IconData focusFilled12 = IconData(
     0xE31F,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Activity, outline style, 24 px master.
+  ///
+  /// ![Activity, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjExOCAxM0w4Ljc1IDcuNzM2TDE1LjI1IDIwLjczNkwxOS4xMTggMTNMMjIgMTNMMjIgMTFMMTcuODgyIDExTDE1LjI1IDE2LjI2NEw4Ljc1IDMuMjY0TDQuODgyIDExTDIgMTFMMiAxM1oiLz48L3N2Zz4=)
+  static const IconData activity = IconData(
+    0xE3B0,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Activity, filled style, 24 px master.
+  ///
+  /// ![Activity, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjQyNyAxMy41TDguNzUgOC44NTRMMTUuMjUgMjEuODU0TDE5LjQyNyAxMy41TDIyIDEzLjVMMjIgMTAuNUwxNy41NzMgMTAuNUwxNS4yNSAxNS4xNDZMOC43NSAyLjE0Nkw0LjU3MyAxMC41TDIgMTAuNUwyIDEzLjVaIi8+PC9zdmc+)
+  static const IconData activityFilled = IconData(
+    0xE3B1,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Activity, outline style, 16 px master.
+  ///
+  /// ![Activity, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjIxNCA4Ljc1TDUuNzAyIDUuNzczTDEwLjQ1MiAxMy4yNzNMMTIuNzE0IDguNzVMMTQuNSA4Ljc1TDE0LjUgNy4yNUwxMS43ODYgNy4yNUwxMC4yOTggMTAuMjI3TDUuNTQ4IDIuNzI3TDMuMjg2IDcuMjVMMS41IDcuMjVMMS41IDguNzVaIi8+PC9zdmc+)
+  static const IconData activity16 = IconData(
+    0xE3B2,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Activity, filled style, 16 px master.
+  ///
+  /// ![Activity, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjUyMyA5LjI1TDUuNzUzIDYuNzg5TDEwLjUwMyAxNC4yODlMMTMuMDIzIDkuMjVMMTQuNSA5LjI1TDE0LjUgNi43NUwxMS40NzcgNi43NUwxMC4yNDcgOS4yMTFMNS40OTcgMS43MTFMMi45NzcgNi43NUwxLjUgNi43NUwxLjUgOS4yNVoiLz48L3N2Zz4=)
+  static const IconData activityFilled16 = IconData(
+    0xE3B3,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Activity, outline style, 12 px master.
+  ///
+  /// ![Activity, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjMwOSA2TDQuNSAzLjYxOEw3LjUgOS42MThMOS4zMDkgNkwxMSA2TDExIDVMOC42OTEgNUw3LjUgNy4zODJMNC41IDEuMzgyTDIuNjkxIDVMMSA1TDEgNloiLz48L3N2Zz4=)
+  static const IconData activity12 = IconData(
+    0xE3B4,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Activity, filled style, 12 px master.
+  ///
+  /// ![Activity, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjQ2NCA2Ljc1TDQuNSA0LjY3N0w3LjUgMTAuNjc3TDkuNDY0IDYuNzVMMTEgNi43NUwxMSA1LjI1TDguNTM2IDUuMjVMNy41IDcuMzIzTDQuNSAxLjMyM0wyLjUzNiA1LjI1TDEgNS4yNUwxIDYuNzVaIi8+PC9zdmc+)
+  static const IconData activityFilled12 = IconData(
+    0xE3B5,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align center, outline style, 24 px master.
+  ///
+  /// ![Align center, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDVMMjIgNUwyMiAzTDIgM1pNNCAxNUwyMCAxNUwyMCAxM0w0IDEzWk02IDEwTDE4IDEwTDE4IDhMNiA4Wk04IDIwTDE2IDIwTDE2IDE4TDggMThaIi8+PC9zdmc+)
+  static const IconData alignCenter = IconData(
+    0xE3B6,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align center, filled style, 24 px master.
+  ///
+  /// ![Align center, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMjIgNkwyMiAzTDIgM1pNNCAxNkwyMCAxNkwyMCAxM0w0IDEzWk02IDExTDE4IDExTDE4IDhMNiA4Wk04IDIxTDE2IDIxTDE2IDE4TDggMThaIi8+PC9zdmc+)
+  static const IconData alignCenterFilled = IconData(
+    0xE3B7,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align center, outline style, 16 px master.
+  ///
+  /// ![Align center, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMi41TDEuNSA0TDE0LjUgNEwxNC41IDIuNVpNMyAxNEwxMyAxNEwxMyAxMi41TDMgMTIuNVpNNC41IDlMMTEuNSA5TDExLjUgNy41TDQuNSA3LjVaIi8+PC9zdmc+)
+  static const IconData alignCenter16 = IconData(
+    0xE3B8,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align center, filled style, 16 px master.
+  ///
+  /// ![Align center, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMkwxLjUgNC41TDE0LjUgNC41TDE0LjUgMlpNMyAxNC41TDEzIDE0LjVMMTMgMTJMMyAxMlpNNC41IDkuNUwxMS41IDkuNUwxMS41IDdMNC41IDdaIi8+PC9zdmc+)
+  static const IconData alignCenterFilled16 = IconData(
+    0xE3B9,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align center, outline style, 12 px master.
+  ///
+  /// ![Align center, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSAzTDExIDNMMTEgMlpNMiA5TDEwIDlMMTAgOEwyIDhaTTMgNkw5IDZMOSA1TDMgNVoiLz48L3N2Zz4=)
+  static const IconData alignCenter12 = IconData(
+    0xE3BA,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align center, filled style, 12 px master.
+  ///
+  /// ![Align center, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSA0TDExIDRMMTEgMlpNMiAxMEwxMCAxMEwxMCA4TDIgOFpNMyA3TDkgN0w5IDVMMyA1WiIvPjwvc3ZnPg==)
+  static const IconData alignCenterFilled12 = IconData(
+    0xE3BB,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align left, outline style, 24 px master.
+  ///
+  /// ![Align left, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDVMMjIgNUwyMiAzTDIgM1pNMiAxMEwxNCAxMEwxNCA4TDIgOFpNMiAxNUwxOCAxNUwxOCAxM0wyIDEzWk0yIDIwTDEwIDIwTDEwIDE4TDIgMThaIi8+PC9zdmc+)
+  static const IconData alignLeft = IconData(
+    0xE3BC,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align left, filled style, 24 px master.
+  ///
+  /// ![Align left, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMjIgNkwyMiAzTDIgM1pNMiAxMUwxNCAxMUwxNCA4TDIgOFpNMiAxNkwxOCAxNkwxOCAxM0wyIDEzWk0yIDIxTDEwIDIxTDEwIDE4TDIgMThaIi8+PC9zdmc+)
+  static const IconData alignLeftFilled = IconData(
+    0xE3BD,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align left, outline style, 16 px master.
+  ///
+  /// ![Align left, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMi41TDEuNSA0TDE0LjUgNEwxNC41IDIuNVpNMS41IDlMOC41IDlMOC41IDcuNUwxLjUgNy41Wk0xLjUgMTRMMTEuNSAxNEwxMS41IDEyLjVMMS41IDEyLjVaIi8+PC9zdmc+)
+  static const IconData alignLeft16 = IconData(
+    0xE3BE,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align left, filled style, 16 px master.
+  ///
+  /// ![Align left, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMkwxLjUgNC41TDE0LjUgNC41TDE0LjUgMlpNMS41IDkuNUw4LjUgOS41TDguNSA3TDEuNSA3Wk0xLjUgMTQuNUwxMS41IDE0LjVMMTEuNSAxMkwxLjUgMTJaIi8+PC9zdmc+)
+  static const IconData alignLeftFilled16 = IconData(
+    0xE3BF,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align left, outline style, 12 px master.
+  ///
+  /// ![Align left, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSAzTDExIDNMMTEgMlpNMSA2TDcgNkw3IDVMMSA1Wk0xIDlMOSA5TDkgOEwxIDhaIi8+PC9zdmc+)
+  static const IconData alignLeft12 = IconData(
+    0xE3C0,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align left, filled style, 12 px master.
+  ///
+  /// ![Align left, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSA0TDExIDRMMTEgMlpNMSA3TDcgN0w3IDVMMSA1Wk0xIDEwTDkgMTBMOSA4TDEgOFoiLz48L3N2Zz4=)
+  static const IconData alignLeftFilled12 = IconData(
+    0xE3C1,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align right, outline style, 24 px master.
+  ///
+  /// ![Align right, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDVMMjIgNUwyMiAzTDIgM1pNNiAxNUwyMiAxNUwyMiAxM0w2IDEzWk0xMCAxMEwyMiAxMEwyMiA4TDEwIDhaTTE0IDIwTDIyIDIwTDIyIDE4TDE0IDE4WiIvPjwvc3ZnPg==)
+  static const IconData alignRight = IconData(
+    0xE3C2,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align right, filled style, 24 px master.
+  ///
+  /// ![Align right, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMjIgNkwyMiAzTDIgM1pNNiAxNkwyMiAxNkwyMiAxM0w2IDEzWk0xMCAxMUwyMiAxMUwyMiA4TDEwIDhaTTE0IDIxTDIyIDIxTDIyIDE4TDE0IDE4WiIvPjwvc3ZnPg==)
+  static const IconData alignRightFilled = IconData(
+    0xE3C3,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align right, outline style, 16 px master.
+  ///
+  /// ![Align right, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMi41TDEuNSA0TDE0LjUgNEwxNC41IDIuNVpNNC41IDE0TDE0LjUgMTRMMTQuNSAxMi41TDQuNSAxMi41Wk03LjUgOUwxNC41IDlMMTQuNSA3LjVMNy41IDcuNVoiLz48L3N2Zz4=)
+  static const IconData alignRight16 = IconData(
+    0xE3C4,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align right, filled style, 16 px master.
+  ///
+  /// ![Align right, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMkwxLjUgNC41TDE0LjUgNC41TDE0LjUgMlpNNC41IDE0LjVMMTQuNSAxNC41TDE0LjUgMTJMNC41IDEyWk03LjUgOS41TDE0LjUgOS41TDE0LjUgN0w3LjUgN1oiLz48L3N2Zz4=)
+  static const IconData alignRightFilled16 = IconData(
+    0xE3C5,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align right, outline style, 12 px master.
+  ///
+  /// ![Align right, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSAzTDExIDNMMTEgMlpNMyA5TDExIDlMMTEgOEwzIDhaTTUgNkwxMSA2TDExIDVMNSA1WiIvPjwvc3ZnPg==)
+  static const IconData alignRight12 = IconData(
+    0xE3C6,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Align right, filled style, 12 px master.
+  ///
+  /// ![Align right, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDJMMSA0TDExIDRMMTEgMlpNMyAxMEwxMSAxMEwxMSA4TDMgOFpNNSA3TDExIDdMMTEgNUw1IDVaIi8+PC9zdmc+)
+  static const IconData alignRightFilled12 = IconData(
+    0xE3C7,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Box, outline style, 24 px master.
+  ///
+  /// ![Box, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDcuNjE4TDMgMThMMTEgMjJMMTMgMjJMMjEgMThMMjEgNy42MThMMjEgNi41TDE5Ljg4MiA1Ljk0MUwxMiAyTDQuMTE4IDUuOTQxTDMgNi41Wk0xOSAxNi43NjRMMTMgMTkuNzY0TDEzIDExLjYxOEwxOSA4LjYxOFpNNSAxNi43NjRMNSA4LjYxOEwxMSAxMS42MThMMTEgMTkuNzY0Wk0xMiA0LjIzNkwxNy42NDYgNy4wNTlMMTIgOS44ODJMNi4zNTQgNy4wNTlaIi8+PC9zdmc+)
+  static const IconData box = IconData(
+    0xE3C8,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Box, filled style, 24 px master.
+  ///
+  /// ![Box, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDE4TDExIDIyTDExIDExLjYxOEwzIDcuNjE4Wk0xMiAyTDQuMTE4IDUuOTQxTDEyIDkuODgyTDE5Ljg4MiA1Ljk0MVpNMjEgMThMMjEgNy42MThMMTMgMTEuNjE4TDEzIDIyWiIvPjwvc3ZnPg==)
+  static const IconData boxFilled = IconData(
+    0xE3C9,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Box, outline style, 16 px master.
+  ///
+  /// ![Box, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDUuMzM5TDIgMTEuODc1TDcuMjUgMTQuNUw4Ljc1IDE0LjVMMTQgMTEuODc1TDE0IDUuMzM5TDE0IDQuNUwxMy4xNjEgNC4wODFMOCAxLjVMMi44MzkgNC4wODFMMiA0LjVaTTEyLjUgMTAuOTQ4TDguNzUgMTIuODIzTDguNzUgNy45NjRMMTIuNSA2LjA4OVpNMy41IDEwLjk0OEwzLjUgNi4wODlMNy4yNSA3Ljk2NEw3LjI1IDEyLjgyM1pNOCAzLjE3N0wxMS40ODQgNC45MTlMOCA2LjY2MUw0LjUxNiA0LjkxOVoiLz48L3N2Zz4=)
+  static const IconData box16 = IconData(
+    0xE3CA,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Box, filled style, 16 px master.
+  ///
+  /// ![Box, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDExLjg3NUw3LjI1IDE0LjVMNy4yNSA3Ljk2NEwyIDUuMzM5Wk04IDEuNUwyLjgzOSA0LjA4MUw4IDYuNjYxTDEzLjE2MSA0LjA4MVpNMTQgMTEuODc1TDE0IDUuMzM5TDguNzUgNy45NjRMOC43NSAxNC41WiIvPjwvc3ZnPg==)
+  static const IconData boxFilled16 = IconData(
+    0xE3CB,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Box, outline style, 12 px master.
+  ///
+  /// ![Box, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDMuODA5TDEgOUw1IDExTDYgMTFMMTAgOUwxMCAzLjgwOUwxMCAzLjI1TDkuNDQxIDIuOTdMNS41IDFMMS41NTkgMi45N0wxIDMuMjVaTTkgOC4zODJMNiA5Ljg4Mkw2IDUuODA5TDkgNC4zMDlaTTIgOC4zODJMMiA0LjMwOUw1IDUuODA5TDUgOS44ODJaTTUuNSAyLjExOEw4LjMyMyAzLjUzTDUuNSA0Ljk0MUwyLjY3NyAzLjUzWiIvPjwvc3ZnPg==)
+  static const IconData box12 = IconData(
+    0xE3CC,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Box, filled style, 12 px master.
+  ///
+  /// ![Box, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMNSAxMUw1IDUuODA5TDEgMy44MDlaTTUuNSAxTDEuNTU5IDIuOTdMNS41IDQuOTQxTDkuNDQxIDIuOTdaTTEwIDlMMTAgMy44MDlMNiA1LjgwOUw2IDExWiIvPjwvc3ZnPg==)
+  static const IconData boxFilled12 = IconData(
+    0xE3CD,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Check circle, outline style, 24 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Check circle, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDYgMjJMMTggMjJMMjIgMThMMjIgNkwxOCAyTDYgMkwyIDZaTTIwIDYuODI4TDIwIDE3LjE3MkwxNy4xNzIgMjBMNi44MjggMjBMNCAxNy4xNzJMNCA2LjgyOEw2LjgyOCA0TDE3LjE3MiA0Wk0xNy43MDcgOS4yMDdMMTYuMjkzIDcuNzkzTDEwLjUgMTMuNTg2TDcuNzA3IDEwLjc5M0w2LjI5MyAxMi4yMDdMMTAuNSAxNi40MTRaIi8+PC9zdmc+)
+  static const IconData checkCircle = IconData(
+    0xE3CE,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Check circle, filled style, 24 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Check circle, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMiAxOEw2IDIyTDE4IDIyTDIyIDE4TDIyIDZMMTggMkw2IDJaTTYuMTE2IDEyLjM4NEw3Ljg4NCAxMC42MTZMMTAuNSAxMy4yMzJMMTYuMTE2IDcuNjE2TDE3Ljg4NCA5LjM4NEwxMC41IDE2Ljc2OFoiLz48L3N2Zz4=)
+  static const IconData checkCircleFilled = IconData(
+    0xE3CF,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Check circle, outline style, 16 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Check circle, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUw0LjUgMTQuNUwxMS41IDE0LjVMMTQuNSAxMS41TDE0LjUgNC41TDExLjUgMS41TDQuNSAxLjVMMS41IDQuNVpNMTMgNS4xMjFMMTMgMTAuODc5TDEwLjg3OSAxM0w1LjEyMSAxM0wzIDEwLjg3OUwzIDUuMTIxTDUuMTIxIDNMMTAuODc5IDNaTTExLjI4IDYuNzhMMTAuMjIgNS43Mkw3LjI1IDguNjg5TDUuNzggNy4yMkw0LjcyIDguMjhMNy4yNSAxMC44MTFaIi8+PC9zdmc+)
+  static const IconData checkCircle16 = IconData(
+    0xE3D0,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Check circle, filled style, 16 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Check circle, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNC41TDEuNSAxMS41TDQuNSAxNC41TDExLjUgMTQuNUwxNC41IDExLjVMMTQuNSA0LjVMMTEuNSAxLjVMNC41IDEuNVpNNC42MzEgOC4zNjlMNS44NjkgNy4xMzFMNy4yNSA4LjUxM0wxMC4xMzEgNS42MzFMMTEuMzY5IDYuODY5TDcuMjUgMTAuOTg3WiIvPjwvc3ZnPg==)
+  static const IconData checkCircleFilled16 = IconData(
+    0xE3D1,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Check circle, outline style, 12 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Check circle, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyAxMUw5IDExTDExIDlMMTEgM0w5IDFMMyAxTDEgM1pNMTAgMy40MTRMMTAgOC41ODZMOC41ODYgMTBMMy40MTQgMTBMMiA4LjU4NkwyIDMuNDE0TDMuNDE0IDJMOC41ODYgMlpNOC44NTQgNC4xMDRMOC4xNDYgMy4zOTZMNSA2LjU0M0wzLjg1NCA1LjM5NkwzLjE0NiA2LjEwNEw1IDcuOTU3WiIvPjwvc3ZnPg==)
+  static const IconData checkCircle12 = IconData(
+    0xE3D2,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Check circle, filled style, 12 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Check circle, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDNMMSA5TDMgMTFMOSAxMUwxMSA5TDExIDNMOSAxTDMgMVpNMi45NyA2LjI4TDQuMDMgNS4yMkw1IDYuMTg5TDcuOTcgMy4yMkw5LjAzIDQuMjhMNSA4LjMxMVoiLz48L3N2Zz4=)
+  static const IconData checkCircleFilled12 = IconData(
+    0xE3D3,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Circle, outline style, 24 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Circle, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDhMMiAxNkw4IDIyTDE2IDIyTDIyIDE2TDIyIDhMMTYgMkw4IDJaTTE1LjE3MiA0TDIwIDguODI4TDIwIDE1LjE3MkwxNS4xNzIgMjBMOC44MjggMjBMNCAxNS4xNzJMNCA4LjgyOEw4LjgyOCA0WiIvPjwvc3ZnPg==)
+  static const IconData circle = IconData(
+    0xE3D4,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Circle, filled style, 24 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Circle, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04IDJMMTYgMkwyMiA4TDIyIDE2TDE2IDIyTDggMjJMMiAxNkwyIDhaIi8+PC9zdmc+)
+  static const IconData circleFilled = IconData(
+    0xE3D5,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Circle, outline style, 16 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Circle, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNS41TDEuNSAxMC41TDUuNSAxNC41TDEwLjUgMTQuNUwxNC41IDEwLjVMMTQuNSA1LjVMMTAuNSAxLjVMNS41IDEuNVpNOS44NzkgM0wxMyA2LjEyMUwxMyA5Ljg3OUw5Ljg3OSAxM0w2LjEyMSAxM0wzIDkuODc5TDMgNi4xMjFMNi4xMjEgM1oiLz48L3N2Zz4=)
+  static const IconData circle16 = IconData(
+    0xE3D6,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Circle, filled style, 16 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Circle, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01LjUgMS41TDEwLjUgMS41TDE0LjUgNS41TDE0LjUgMTAuNUwxMC41IDE0LjVMNS41IDE0LjVMMS41IDEwLjVMMS41IDUuNVoiLz48L3N2Zz4=)
+  static const IconData circleFilled16 = IconData(
+    0xE3D7,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Circle, outline style, 12 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Circle, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDRMMSA4TDQgMTFMOCAxMUwxMSA4TDExIDRMOCAxTDQgMVpNNy41ODYgMkwxMCA0LjQxNEwxMCA3LjU4Nkw3LjU4NiAxMEw0LjQxNCAxMEwyIDcuNTg2TDIgNC40MTRMNC40MTQgMloiLz48L3N2Zz4=)
+  static const IconData circle12 = IconData(
+    0xE3D8,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Circle, filled style, 12 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Circle, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDFMOCAxTDExIDRMMTEgOEw4IDExTDQgMTFMMSA4TDEgNFoiLz48L3N2Zz4=)
+  static const IconData circleFilled12 = IconData(
+    0xE3D9,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Ban, outline style, 24 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Ban, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDYgMjJMMTggMjJMMTkuMjkzIDIwLjcwN0wyMC43MDcgMTkuMjkzTDIyIDE4TDIyIDZMMTggMkw2IDJMNC43MDcgMy4yOTNMNC43MDcgMy4yOTNMMy4yOTMgNC43MDdMMy4yOTMgNC43MDdMMiA2Wk0yMCA2LjgyOEwyMCAxNy4xNzJMMTkuMjkzIDE3Ljg3OUw2LjEyMSA0LjcwN0w2LjgyOCA0TDE3LjE3MiA0Wk0xNy4xNzIgMjBMNi44MjggMjBMNCAxNy4xNzJMNCA2LjgyOEw0LjcwNyA2LjEyMUwxNy44NzkgMTkuMjkzWiIvPjwvc3ZnPg==)
+  static const IconData ban = IconData(
+    0xE3DA,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Ban, filled style, 24 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Ban, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMiAxOEw2IDIyTDE4IDIyTDE5LjExNiAyMC44ODRMMy4xMTYgNC44ODRaTTIyIDE4TDIyIDZMMTggMkw2IDJMNC44ODQgMy4xMTZMMjAuODg0IDE5LjExNloiLz48L3N2Zz4=)
+  static const IconData banFilled = IconData(
+    0xE3DB,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Ban, outline style, 16 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Ban, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUw0LjUgMTQuNUwxMS41IDE0LjVMMTIuNDcgMTMuNTNMMTMuNTMgMTIuNDdMMTQuNSAxMS41TDE0LjUgNC41TDExLjUgMS41TDQuNSAxLjVMMy41MyAyLjQ3TDIuNDcgMy41M0wxLjUgNC41Wk0xMyA1LjEyMUwxMyAxMC44NzlMMTIuNDcgMTEuNDA5TDQuNTkxIDMuNTNMNS4xMjEgM0wxMC44NzkgM1pNMTAuODc5IDEzTDUuMTIxIDEzTDMgMTAuODc5TDMgNS4xMjFMMy41MyA0LjU5MUwxMS40MDkgMTIuNDdaIi8+PC9zdmc+)
+  static const IconData ban16 = IconData(
+    0xE3DC,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Ban, filled style, 16 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Ban, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNC41TDEuNSAxMS41TDQuNSAxNC41TDExLjUgMTQuNUwxMi4yOTMgMTMuNzA3TDIuMjkzIDMuNzA3Wk0xNC41IDExLjVMMTQuNSA0LjVMMTEuNSAxLjVMNC41IDEuNUwzLjcwNyAyLjI5M0wxMy43MDcgMTIuMjkzWiIvPjwvc3ZnPg==)
+  static const IconData banFilled16 = IconData(
+    0xE3DD,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Ban, outline style, 12 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Ban, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyAxMUw5IDExTDkuNjQ2IDEwLjM1NEwxMC4zNTQgOS42NDZMMTEgOUwxMSAzTDkgMUwzIDFMMi4zNTQgMS42NDZMMi4zNTQgMS42NDZMMS42NDYgMi4zNTRMMS42NDYgMi4zNTRMMSAzWk0xMCAzLjQxNEwxMCA4LjU4Nkw5LjY0NiA4LjkzOUwzLjA2MSAyLjM1NEwzLjQxNCAyTDguNTg2IDJaTTguNTg2IDEwTDMuNDE0IDEwTDIgOC41ODZMMiAzLjQxNEwyLjM1NCAzLjA2MUw4LjkzOSA5LjY0NloiLz48L3N2Zz4=)
+  static const IconData ban12 = IconData(
+    0xE3DE,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Ban, filled style, 12 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Ban, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDNMMSA5TDMgMTFMOSAxMUw5LjQ3IDEwLjUzTDEuNDcgMi41M1pNMTEgOUwxMSAzTDkgMUwzIDFMMi41MyAxLjQ3TDEwLjUzIDkuNDdaIi8+PC9zdmc+)
+  static const IconData banFilled12 = IconData(
+    0xE3DF,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Close circle, outline style, 24 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Close circle, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDYgMjJMMTggMjJMMjIgMThMMjIgNkwxOCAyTDYgMkwyIDZaTTIwIDYuODI4TDIwIDE3LjE3MkwxNy4xNzIgMjBMNi44MjggMjBMNCAxNy4xNzJMNCA2LjgyOEw2LjgyOCA0TDE3LjE3MiA0Wk0xMy40MTQgMTJMMTcuMjA3IDguMjA3TDE1Ljc5MyA2Ljc5M0wxMiAxMC41ODZMOC4yMDcgNi43OTNMNi43OTMgOC4yMDdMMTAuNTg2IDEyTDYuNzkzIDE1Ljc5M0w4LjIwNyAxNy4yMDdMMTIgMTMuNDE0TDE1Ljc5MyAxNy4yMDdMMTcuMjA3IDE1Ljc5M1oiLz48L3N2Zz4=)
+  static const IconData closeCircle = IconData(
+    0xE3E0,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Close circle, filled style, 24 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Close circle, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMiAxOEw2IDIyTDE4IDIyTDIyIDE4TDIyIDZMMTggMkw2IDJaTTE1LjYxNiAxNy4zODRMMTIgMTMuNzY4TDguMzg0IDE3LjM4NEw2LjYxNiAxNS42MTZMMTAuMjMyIDEyTDYuNjE2IDguMzg0TDguMzg0IDYuNjE2TDEyIDEwLjIzMkwxNS42MTYgNi42MTZMMTcuMzg0IDguMzg0TDEzLjc2OCAxMkwxNy4zODQgMTUuNjE2WiIvPjwvc3ZnPg==)
+  static const IconData closeCircleFilled = IconData(
+    0xE3E1,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Close circle, outline style, 16 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Close circle, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUw0LjUgMTQuNUwxMS41IDE0LjVMMTQuNSAxMS41TDE0LjUgNC41TDExLjUgMS41TDQuNSAxLjVMMS41IDQuNVpNMTMgNS4xMjFMMTMgMTAuODc5TDEwLjg3OSAxM0w1LjEyMSAxM0wzIDEwLjg3OUwzIDUuMTIxTDUuMTIxIDNMMTAuODc5IDNaTTkuMDYxIDhMMTEuMjggNS43OEwxMC4yMiA0LjcyTDggNi45MzlMNS43OCA0LjcyTDQuNzIgNS43OEw2LjkzOSA4TDQuNzIgMTAuMjJMNS43OCAxMS4yOEw4IDkuMDYxTDEwLjIyIDExLjI4TDExLjI4IDEwLjIyWiIvPjwvc3ZnPg==)
+  static const IconData closeCircle16 = IconData(
+    0xE3E2,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Close circle, filled style, 16 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Close circle, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNC41TDEuNSAxMS41TDQuNSAxNC41TDExLjUgMTQuNUwxNC41IDExLjVMMTQuNSA0LjVMMTEuNSAxLjVMNC41IDEuNVpNMTAuMTMxIDExLjM2OUw4IDkuMjM3TDUuODY5IDExLjM2OUw0LjYzMSAxMC4xMzFMNi43NjMgOEw0LjYzMSA1Ljg2OUw1Ljg2OSA0LjYzMUw4IDYuNzYzTDEwLjEzMSA0LjYzMUwxMS4zNjkgNS44NjlMOS4yMzcgOEwxMS4zNjkgMTAuMTMxWiIvPjwvc3ZnPg==)
+  static const IconData closeCircleFilled16 = IconData(
+    0xE3E3,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Close circle, outline style, 12 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Close circle, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyAxMUw5IDExTDExIDlMMTEgM0w5IDFMMyAxTDEgM1pNMTAgMy40MTRMMTAgOC41ODZMOC41ODYgMTBMMy40MTQgMTBMMiA4LjU4NkwyIDMuNDE0TDMuNDE0IDJMOC41ODYgMlpNNi43MDcgNkw4LjM1NCA0LjM1NEw3LjY0NiAzLjY0Nkw2IDUuMjkzTDQuMzU0IDMuNjQ2TDMuNjQ2IDQuMzU0TDUuMjkzIDZMMy42NDYgNy42NDZMNC4zNTQgOC4zNTRMNiA2LjcwN0w3LjY0NiA4LjM1NEw4LjM1NCA3LjY0NloiLz48L3N2Zz4=)
+  static const IconData closeCircle12 = IconData(
+    0xE3E4,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Close circle, filled style, 12 px master.
+  ///
+  /// Pair with text that states the status; shape and color do not carry it
+  /// alone. 12 px is for labeled information.
+  ///
+  /// ![Close circle, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDNMMSA5TDMgMTFMOSAxMUwxMSA5TDExIDNMOSAxTDMgMVpNNy40NyA4LjUzTDYgNy4wNjFMNC41MyA4LjUzTDMuNDcgNy40N0w0LjkzOSA2TDMuNDcgNC41M0w0LjUzIDMuNDdMNiA0LjkzOUw3LjQ3IDMuNDdMOC41MyA0LjUzTDcuMDYxIDZMOC41MyA3LjQ3WiIvPjwvc3ZnPg==)
+  static const IconData closeCircleFilled12 = IconData(
+    0xE3E5,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Cursor, outline style, 24 px master.
+  ///
+  /// ![Cursor, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDIxTDEwIDE2LjVMMTMuNSAyMkwxNyAyMkwxNCAxN0wyMCAxN0w1IDJaTTE1LjE3MiAxNUwxMS40MTYgMTVMMTAuNDE5IDEzLjQzM0w3IDE2LjUwOUw3IDYuODI4WiIvPjwvc3ZnPg==)
+  static const IconData cursor = IconData(
+    0xE3E6,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Cursor, filled style, 24 px master.
+  ///
+  /// ![Cursor, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDJMMjAgMTdMMTQgMTdMMTcgMjJMMTMuNSAyMkwxMCAxNi41TDUgMjFaIi8+PC9zdmc+)
+  static const IconData cursorFilled = IconData(
+    0xE3E7,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Cursor, outline style, 16 px master.
+  ///
+  /// ![Cursor, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEzLjVMNiAxMUw4IDE0LjVMMTAuNSAxNC41TDguNSAxMUwxMi41IDExTDMgMS41Wk04Ljg3OSA5LjVMNi44NyA5LjVMNi40MTQgOC43MDJMNC41IDEwLjI5N0w0LjUgNS4xMjFaIi8+PC9zdmc+)
+  static const IconData cursor16 = IconData(
+    0xE3E8,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Cursor, filled style, 16 px master.
+  ///
+  /// ![Cursor, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEuNUwxMi41IDExTDguNSAxMUwxMC41IDE0LjVMOCAxNC41TDYgMTFMMyAxMy41WiIvPjwvc3ZnPg==)
+  static const IconData cursorFilled16 = IconData(
+    0xE3E9,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Cursor, outline style, 12 px master.
+  ///
+  /// ![Cursor, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDEwTDQgOEw1LjUgMTFMNy41IDExTDYgOEw5IDhMMiAxWk02LjU4NiA3TDQuNjE4IDdMNC4yNzQgNi4zMTJMMyA3LjU4NkwzIDMuNDE0WiIvPjwvc3ZnPg==)
+  static const IconData cursor12 = IconData(
+    0xE3EA,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Cursor, filled style, 12 px master.
+  ///
+  /// ![Cursor, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDFMOSA4TDYgOEw3LjUgMTFMNS41IDExTDQgOEwyIDEwWiIvPjwvc3ZnPg==)
+  static const IconData cursorFilled12 = IconData(
+    0xE3EB,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dot, outline style, 24 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Dot, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMC43NSA5TDEzLjI1IDlMMTUgMTAuNzVMMTUgMTMuMjVMMTMuMjUgMTVMMTAuNzUgMTVMOSAxMy4yNUw5IDEwLjc1WiIvPjwvc3ZnPg==)
+  static const IconData dot = IconData(
+    0xE3EC,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dot, filled style, 24 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Dot, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05Ljc1IDdMMTQuMjUgN0wxNyA5Ljc1TDE3IDE0LjI1TDE0LjI1IDE3TDkuNzUgMTdMNyAxNC4yNUw3IDkuNzVaIi8+PC9zdmc+)
+  static const IconData dotFilled = IconData(
+    0xE3ED,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dot, outline style, 16 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Dot, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02Ljc1IDUuNUw5LjI1IDUuNUwxMC41IDYuNzVMMTAuNSA5LjI1TDkuMjUgMTAuNUw2Ljc1IDEwLjVMNS41IDkuMjVMNS41IDYuNzVaIi8+PC9zdmc+)
+  static const IconData dot16 = IconData(
+    0xE3EE,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dot, filled style, 16 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Dot, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjI1IDQuNUw5Ljc1IDQuNUwxMS41IDYuMjVMMTEuNSA5Ljc1TDkuNzUgMTEuNUw2LjI1IDExLjVMNC41IDkuNzVMNC41IDYuMjVaIi8+PC9zdmc+)
+  static const IconData dotFilled16 = IconData(
+    0xE3EF,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dot, outline style, 12 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Dot, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00Ljc1IDRMNi4yNSA0TDcgNC43NUw3IDYuMjVMNi4yNSA3TDQuNzUgN0w0IDYuMjVMNCA0Ljc1WiIvPjwvc3ZnPg==)
+  static const IconData dot12 = IconData(
+    0xE3F0,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dot, filled style, 12 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Dot, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDRMNyA0TDggNUw4IDdMNyA4TDUgOEw0IDdMNCA1WiIvPjwvc3ZnPg==)
+  static const IconData dotFilled12 = IconData(
+    0xE3F1,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons left, outline style, 24 px master.
+  ///
+  /// ![Chevrons left, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMy42ODYgNS43MDdMMTIuMjcxIDQuMjkzTDQuNTY0IDEyTDEyLjI3MSAxOS43MDdMMTMuNjg2IDE4LjI5M0w3LjM5MyAxMlpNMTkuNDM2IDUuNzA3TDE4LjAyMSA0LjI5M0wxMC4zMTQgMTJMMTguMDIxIDE5LjcwN0wxOS40MzYgMTguMjkzTDEzLjE0MyAxMloiLz48L3N2Zz4=)
+  static const IconData chevronsLeft = IconData(
+    0xE3F2,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons left, filled style, 24 px master.
+  ///
+  /// ![Chevrons left, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMy4zNDEgNi4wNjFMMTEuMjIgMy45MzlMMy4xNTkgMTJMMTEuMjIgMjAuMDYxTDEzLjM0MSAxNy45MzlMNy40MDIgMTJaTTIwLjg0MSA2LjA2MUwxOC43MiAzLjkzOUwxMC42NTkgMTJMMTguNzIgMjAuMDYxTDIwLjg0MSAxNy45MzlMMTQuOTAyIDEyWiIvPjwvc3ZnPg==)
+  static const IconData chevronsLeftFilled = IconData(
+    0xE3F3,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons left, outline style, 16 px master.
+  ///
+  /// ![Chevrons left, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04Ljc5NSA0LjAzTDcuNzM1IDIuOTdMMi43MDUgOEw3LjczNSAxMy4wM0w4Ljc5NSAxMS45N0w0LjgyNiA4Wk0xMy4yOTUgNC4wM0wxMi4yMzUgMi45N0w3LjIwNSA4TDEyLjIzNSAxMy4wM0wxMy4yOTUgMTEuOTdMOS4zMjYgOFoiLz48L3N2Zz4=)
+  static const IconData chevronsLeft16 = IconData(
+    0xE3F4,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons left, filled style, 16 px master.
+  ///
+  /// ![Chevrons left, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04LjcwMSA0LjM4NEw2LjkzMyAyLjYxNkwxLjU0OSA4TDYuOTMzIDEzLjM4NEw4LjcwMSAxMS42MTZMNS4wODUgOFpNMTQuNDUxIDQuMzg0TDEyLjY4MyAyLjYxNkw3LjI5OSA4TDEyLjY4MyAxMy4zODRMMTQuNDUxIDExLjYxNkwxMC44MzUgOFoiLz48L3N2Zz4=)
+  static const IconData chevronsLeftFilled16 = IconData(
+    0xE3F5,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons left, outline style, 12 px master.
+  ///
+  /// ![Chevrons left, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02Ljc4IDIuODU0TDYuMDczIDIuMTQ2TDIuMjIgNkw2LjA3MyA5Ljg1NEw2Ljc4IDkuMTQ2TDMuNjM0IDZaTTkuNzggMi44NTRMOS4wNzMgMi4xNDZMNS4yMiA2TDkuMDczIDkuODU0TDkuNzggOS4xNDZMNi42MzQgNloiLz48L3N2Zz4=)
+  static const IconData chevronsLeft12 = IconData(
+    0xE3F6,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons left, filled style, 12 px master.
+  ///
+  /// ![Chevrons left, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjY4NiAzLjIwN0w1LjI3MSAxLjc5M0wxLjA2NCA2TDUuMjcxIDEwLjIwN0w2LjY4NiA4Ljc5M0wzLjg5MyA2Wk0xMC45MzYgMy4yMDdMOS41MjEgMS43OTNMNS4zMTQgNkw5LjUyMSAxMC4yMDdMMTAuOTM2IDguNzkzTDguMTQzIDZaIi8+PC9zdmc+)
+  static const IconData chevronsLeftFilled12 = IconData(
+    0xE3F7,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons right, outline style, 24 px master.
+  ///
+  /// ![Chevrons right, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjU2NCAxOC4yOTNMNS45NzkgMTkuNzA3TDEzLjY4NiAxMkw1Ljk3OSA0LjI5M0w0LjU2NCA1LjcwN0wxMC44NTcgMTJaTTEwLjMxNCAxOC4yOTNMMTEuNzI5IDE5LjcwN0wxOS40MzYgMTJMMTEuNzI5IDQuMjkzTDEwLjMxNCA1LjcwN0wxNi42MDcgMTJaIi8+PC9zdmc+)
+  static const IconData chevronsRight = IconData(
+    0xE3F8,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons right, filled style, 24 px master.
+  ///
+  /// ![Chevrons right, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjE1OSAxNy45MzlMNS4yOCAyMC4wNjFMMTMuMzQxIDEyTDUuMjggMy45MzlMMy4xNTkgNi4wNjFMOS4wOTggMTJaTTEwLjY1OSAxNy45MzlMMTIuNzggMjAuMDYxTDIwLjg0MSAxMkwxMi43OCAzLjkzOUwxMC42NTkgNi4wNjFMMTYuNTk4IDEyWiIvPjwvc3ZnPg==)
+  static const IconData chevronsRightFilled = IconData(
+    0xE3F9,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons right, outline style, 16 px master.
+  ///
+  /// ![Chevrons right, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjcwNSAxMS45N0wzLjc2NSAxMy4wM0w4Ljc5NSA4TDMuNzY1IDIuOTdMMi43MDUgNC4wM0w2LjY3NCA4Wk03LjIwNSAxMS45N0w4LjI2NSAxMy4wM0wxMy4yOTUgOEw4LjI2NSAyLjk3TDcuMjA1IDQuMDNMMTEuMTc0IDhaIi8+PC9zdmc+)
+  static const IconData chevronsRight16 = IconData(
+    0xE3FA,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons right, filled style, 16 px master.
+  ///
+  /// ![Chevrons right, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjU0OSAxMS42MTZMMy4zMTcgMTMuMzg0TDguNzAxIDhMMy4zMTcgMi42MTZMMS41NDkgNC4zODRMNS4xNjUgOFpNNy4yOTkgMTEuNjE2TDkuMDY3IDEzLjM4NEwxNC40NTEgOEw5LjA2NyAyLjYxNkw3LjI5OSA0LjM4NEwxMC45MTUgOFoiLz48L3N2Zz4=)
+  static const IconData chevronsRightFilled16 = IconData(
+    0xE3FB,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons right, outline style, 12 px master.
+  ///
+  /// ![Chevrons right, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjIyIDkuMTQ2TDIuOTI3IDkuODU0TDYuNzggNkwyLjkyNyAyLjE0NkwyLjIyIDIuODU0TDUuMzY2IDZaTTUuMjIgOS4xNDZMNS45MjcgOS44NTRMOS43OCA2TDUuOTI3IDIuMTQ2TDUuMjIgMi44NTRMOC4zNjYgNloiLz48L3N2Zz4=)
+  static const IconData chevronsRight12 = IconData(
+    0xE3FC,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Chevrons right, filled style, 12 px master.
+  ///
+  /// ![Chevrons right, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjA2NCA4Ljc5M0wyLjQ3OSAxMC4yMDdMNi42ODYgNkwyLjQ3OSAxLjc5M0wxLjA2NCAzLjIwN0wzLjg1NyA2Wk01LjMxNCA4Ljc5M0w2LjcyOSAxMC4yMDdMMTAuOTM2IDZMNi43MjkgMS43OTNMNS4zMTQgMy4yMDdMOC4xMDcgNloiLz48L3N2Zz4=)
+  static const IconData chevronsRightFilled12 = IconData(
+    0xE3FD,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Bold, outline style, 24 px master.
+  ///
+  /// ![Bold, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDEyTDUgMjFMMTYgMjFMMTkgMThMMTkgMTVMMTYgMTJMMTYgMTBMMTggOEwxOCA2TDE1IDNMNSAzTDUgMTBaTTcgMTBMNyA1TDE0LjE3MiA1TDE2IDYuODI4TDE2IDcuMTcyTDE0IDkuMTcyTDE0IDEwWk0xNCAxMkwxNCAxMi44MjhMMTcgMTUuODI4TDE3IDE3LjE3MkwxNS4xNzIgMTlMNyAxOUw3IDEyWiIvPjwvc3ZnPg==)
+  static const IconData bold = IconData(
+    0xE3FE,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Bold, filled style, 24 px master.
+  ///
+  /// ![Bold, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDIxTDE2IDIxTDE5IDE4TDE5IDE1TDE2IDEyTDE2IDEwTDE4IDhMMTggNkwxNSAzTDUgM1pNMTQgNkwxNCA4TDkgOEw5IDZaTTE1IDE0TDE1IDE4TDkgMThMOSAxNFoiLz48L3N2Zz4=)
+  static const IconData boldFilled = IconData(
+    0xE3FF,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Bold, outline style, 16 px master.
+  ///
+  /// ![Bold, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgOC41TDMuNSAxNEwxMSAxNEwxMi41IDEyLjVMMTIuNSAxMUwxMCA4LjVMMTAgN0wxMS41IDUuNUwxMS41IDMuNUwxMCAyTDMuNSAyTDMuNSA3Wk01IDdMNSAzLjVMOS4zNzkgMy41TDEwIDQuMTIxTDEwIDQuODc5TDguNSA2LjM3OUw4LjUgN1pNOC41IDguNUw4LjUgOS4xMjFMMTEgMTEuNjIxTDExIDExLjg3OUwxMC4zNzkgMTIuNUw1IDEyLjVMNSA4LjVaIi8+PC9zdmc+)
+  static const IconData bold16 = IconData(
+    0xE400,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Bold, filled style, 16 px master.
+  ///
+  /// ![Bold, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTRMMTEgMTRMMTIuNSAxMi41TDEyLjUgMTFMMTAgOC41TDEwIDdMMTEuNSA1LjVMMTEuNSAzLjVMMTAgMkwzLjUgMlpNOSA0TDkgNS41TDYuNSA1LjVMNi41IDRaTTEwIDkuNUwxMCAxMS41TDYuNSAxMS41TDYuNSA5LjVaIi8+PC9zdmc+)
+  static const IconData boldFilled16 = IconData(
+    0xE401,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Bold, outline style, 12 px master.
+  ///
+  /// ![Bold, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDZMMyAxMUw4IDExTDkgMTBMOSA4TDcgNkw3IDVMOCA0TDggMkw3IDFMMyAxTDMgNVpNNCA1TDQgMkw2LjU4NiAyTDcgMi40MTRMNyAzLjU4Nkw2IDQuNTg2TDYgNVpNNiA2TDYgNi40MTRMOCA4LjQxNEw4IDkuNTg2TDcuNTg2IDEwTDQgMTBMNCA2WiIvPjwvc3ZnPg==)
+  static const IconData bold12 = IconData(
+    0xE402,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Bold, filled style, 12 px master.
+  ///
+  /// ![Bold, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDExTDggMTFMOSAxMEw5IDhMNyA2TDcgNUw4IDRMOCAyTDcgMUwzIDFaTTYgM0w2IDRMNSA0TDUgM1pNNyA3TDcgOUw1IDlMNSA3WiIvPjwvc3ZnPg==)
+  static const IconData boldFilled12 = IconData(
+    0xE403,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Type, outline style, 24 px master.
+  ///
+  /// ![Type, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAzTDE4IDNMMTMgM0wxMSAzTDYgM0w0IDNMNCA1TDQgOEw2IDhMNiA1TDExIDVMMTEgMTlMOCAxOUw4IDIxTDExIDIxTDEzIDIxTDE2IDIxTDE2IDE5TDEzIDE5TDEzIDVMMTggNUwxOCA4TDIwIDhMMjAgNVoiLz48L3N2Zz4=)
+  static const IconData type = IconData(
+    0xE404,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Type, filled style, 24 px master.
+  ///
+  /// ![Type, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAzTDE3IDNMMTQgM0wxMCAzTDcgM0w0IDNMNCA2TDQgOUw3IDlMNyA2TDEwIDZMMTAgMThMNyAxOEw3IDIxTDEwIDIxTDE0IDIxTDE3IDIxTDE3IDE4TDE0IDE4TDE0IDZMMTcgNkwxNyA5TDIwIDlMMjAgNloiLz48L3N2Zz4=)
+  static const IconData typeFilled = IconData(
+    0xE405,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Type, outline style, 16 px master.
+  ///
+  /// ![Type, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDEyLjUgMkw4Ljc1IDJMNy4yNSAyTDMuNSAyTDIgMkwyIDMuNUwyIDUuNUwzLjUgNS41TDMuNSAzLjVMNy4yNSAzLjVMNy4yNSAxMi41TDUgMTIuNUw1IDE0TDcuMjUgMTRMOC43NSAxNEwxMSAxNEwxMSAxMi41TDguNzUgMTIuNUw4Ljc1IDMuNUwxMi41IDMuNUwxMi41IDUuNUwxNCA1LjVMMTQgMy41WiIvPjwvc3ZnPg==)
+  static const IconData type16 = IconData(
+    0xE406,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Type, filled style, 16 px master.
+  ///
+  /// ![Type, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDExLjUgMkw5LjUgMkw2LjUgMkw0LjUgMkwyIDJMMiA0LjVMMiA2TDQuNSA2TDQuNSA0LjVMNi41IDQuNUw2LjUgMTEuNUw0LjUgMTEuNUw0LjUgMTRMNi41IDE0TDkuNSAxNEwxMS41IDE0TDExLjUgMTEuNUw5LjUgMTEuNUw5LjUgNC41TDExLjUgNC41TDExLjUgNkwxNCA2TDE0IDQuNVoiLz48L3N2Zz4=)
+  static const IconData typeFilled16 = IconData(
+    0xE407,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Type, outline style, 12 px master.
+  ///
+  /// ![Type, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMCAxTDkgMUw2IDFMNSAxTDIgMUwxIDFMMSAyTDEgM0wyIDNMMiAyTDUgMkw1IDlMMyA5TDMgMTBMNSAxMEw2IDEwTDggMTBMOCA5TDYgOUw2IDJMOSAyTDkgM0wxMCAzTDEwIDJaIi8+PC9zdmc+)
+  static const IconData type12 = IconData(
+    0xE408,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Type, filled style, 12 px master.
+  ///
+  /// ![Type, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxTDkgMUw3IDFMNSAxTDMgMUwxIDFMMSAzTDEgNEwzIDRMMyAzTDUgM0w1IDlMMyA5TDMgMTFMNSAxMUw3IDExTDkgMTFMOSA5TDcgOUw3IDNMOSAzTDkgNEwxMSA0TDExIDNaIi8+PC9zdmc+)
+  static const IconData typeFilled12 = IconData(
+    0xE409,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Group, outline style, 24 px master.
+  ///
+  /// A contextual label is recommended.
+  ///
+  /// ![Group, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDJMMiAyTDIgNEwyIDdMNCA3TDQgNEw3IDRMNyAyWk00IDlMMiA5TDIgMTVMNCAxNVpNMiAyMkw0IDIyTDcgMjJMNyAyMEw0IDIwTDQgMTdMMiAxN0wyIDIwWk0xMSA2TDYgNkw2IDExTDExIDExWk0xNSAyTDkgMkw5IDRMMTUgNFpNMTUgMjBMOSAyMEw5IDIyTDE1IDIyWk0xOCAxM0wxMyAxM0wxMyAxOEwxOCAxOFpNMTcgMkwxNyA0TDIwIDRMMjAgN0wyMiA3TDIyIDRMMjIgMkwyMCAyWk0xNyAyMkwyMCAyMkwyMiAyMkwyMiAyMEwyMiAxN0wyMCAxN0wyMCAyMEwxNyAyMFpNMjIgOUwyMCA5TDIwIDE1TDIyIDE1WiIvPjwvc3ZnPg==)
+  static const IconData group = IconData(
+    0xE40A,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Group, filled style, 24 px master.
+  ///
+  /// A contextual label is recommended.
+  ///
+  /// ![Group, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDJMMiAyTDIgNEwyIDdMNCA3TDQgNEw3IDRMNyAyWk00IDlMMiA5TDIgMTVMNCAxNVpNMiAyMkw0IDIyTDcgMjJMNyAyMEw0IDIwTDQgMTdMMiAxN0wyIDIwWk0xMyA2TDYgNkw2IDEzTDExIDEzTDExIDE4TDE4IDE4TDE4IDExTDEzIDExWk0xNSAyTDkgMkw5IDRMMTUgNFpNMTUgMjBMOSAyMEw5IDIyTDE1IDIyWk0xNyAyTDE3IDRMMjAgNEwyMCA3TDIyIDdMMjIgNEwyMiAyTDIwIDJaTTE3IDIyTDIwIDIyTDIyIDIyTDIyIDIwTDIyIDE3TDIwIDE3TDIwIDIwTDE3IDIwWk0yMiA5TDIwIDlMMjAgMTVMMjIgMTVaIi8+PC9zdmc+)
+  static const IconData groupFilled = IconData(
+    0xE40B,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Group, outline style, 16 px master.
+  ///
+  /// A contextual label is recommended.
+  ///
+  /// ![Group, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEuNUwxLjUgMS41TDEuNSAzTDEuNSA0LjVMMyA0LjVMMyAzTDQuNSAzTDQuNSAxLjVaTTMgNkwxLjUgNkwxLjUgMTBMMyAxMFpNMS41IDE0LjVMMyAxNC41TDQuNSAxNC41TDQuNSAxM0wzIDEzTDMgMTEuNUwxLjUgMTEuNUwxLjUgMTNaTTcgNC41TDQuNSA0LjVMNC41IDdMNyA3Wk0xMCAxLjVMNiAxLjVMNiAzTDEwIDNaTTEwIDEzTDYgMTNMNiAxNC41TDEwIDE0LjVaTTExLjUgOUw5IDlMOSAxMS41TDExLjUgMTEuNVpNMTEuNSAxLjVMMTEuNSAzTDEzIDNMMTMgNC41TDE0LjUgNC41TDE0LjUgM0wxNC41IDEuNUwxMyAxLjVaTTExLjUgMTQuNUwxMyAxNC41TDE0LjUgMTQuNUwxNC41IDEzTDE0LjUgMTEuNUwxMyAxMS41TDEzIDEzTDExLjUgMTNaTTE0LjUgNkwxMyA2TDEzIDEwTDE0LjUgMTBaIi8+PC9zdmc+)
+  static const IconData group16 = IconData(
+    0xE40C,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Group, filled style, 16 px master.
+  ///
+  /// A contextual label is recommended.
+  ///
+  /// ![Group, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEuNUwxLjUgMS41TDEuNSAzTDEuNSA0LjVMMyA0LjVMMyAzTDQuNSAzTDQuNSAxLjVaTTMgNkwxLjUgNkwxLjUgMTBMMyAxMFpNMS41IDE0LjVMMyAxNC41TDQuNSAxNC41TDQuNSAxM0wzIDEzTDMgMTEuNUwxLjUgMTEuNUwxLjUgMTNaTTkgNC41TDQuNSA0LjVMNC41IDlMNyA5TDcgMTEuNUwxMS41IDExLjVMMTEuNSA3TDkgN1pNMTAgMS41TDYgMS41TDYgM0wxMCAzWk0xMCAxM0w2IDEzTDYgMTQuNUwxMCAxNC41Wk0xMS41IDEuNUwxMS41IDNMMTMgM0wxMyA0LjVMMTQuNSA0LjVMMTQuNSAzTDE0LjUgMS41TDEzIDEuNVpNMTEuNSAxNC41TDEzIDE0LjVMMTQuNSAxNC41TDE0LjUgMTNMMTQuNSAxMS41TDEzIDExLjVMMTMgMTNMMTEuNSAxM1pNMTQuNSA2TDEzIDZMMTMgMTBMMTQuNSAxMFoiLz48L3N2Zz4=)
+  static const IconData groupFilled16 = IconData(
+    0xE40D,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Group, outline style, 12 px master.
+  ///
+  /// Requires a visible text label at 12 px.
+  ///
+  /// ![Group, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDFMMSAxTDEgMkwxIDNMMiAzTDIgMkwzIDJMMyAxWk0yIDVMMSA1TDEgN0wyIDdaTTEgMTFMMiAxMUwzIDExTDMgMTBMMiAxMEwyIDlMMSA5TDEgMTBaTTUgM0wzIDNMMyA1TDUgNVpNNyAxTDUgMUw1IDJMNyAyWk03IDEwTDUgMTBMNSAxMUw3IDExWk05IDdMNyA3TDcgOUw5IDlaTTkgMUw5IDJMMTAgMkwxMCAzTDExIDNMMTEgMkwxMSAxTDEwIDFaTTkgMTFMMTAgMTFMMTEgMTFMMTEgMTBMMTEgOUwxMCA5TDEwIDEwTDkgMTBaTTExIDVMMTAgNUwxMCA3TDExIDdaIi8+PC9zdmc+)
+  static const IconData group12 = IconData(
+    0xE40E,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Group, filled style, 12 px master.
+  ///
+  /// Requires a visible text label at 12 px.
+  ///
+  /// ![Group, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDFMMSAxTDEgMkwxIDNMMiAzTDIgMkwzIDJMMyAxWk0yIDVMMSA1TDEgN0wyIDdaTTEgMTFMMiAxMUwzIDExTDMgMTBMMiAxMEwyIDlMMSA5TDEgMTBaTTcgM0wzIDNMMyA3TDUgN0w1IDlMOSA5TDkgNUw3IDVaTTcgMUw1IDFMNSAyTDcgMlpNNyAxMEw1IDEwTDUgMTFMNyAxMVpNOSAxTDkgMkwxMCAyTDEwIDNMMTEgM0wxMSAyTDExIDFMMTAgMVpNOSAxMUwxMCAxMUwxMSAxMUwxMSAxMEwxMSA5TDEwIDlMMTAgMTBMOSAxMFpNMTEgNUwxMCA1TDEwIDdMMTEgN1oiLz48L3N2Zz4=)
+  static const IconData groupFilled12 = IconData(
+    0xE40F,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Heart, outline style, 24 px master.
+  ///
+  /// ![Heart, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMiAxMUwyMiA2TDE5IDNMMTUgM0wxMiA2TDkgM0w1IDNMMiA2TDIgMTFMMTIgMjFaTTQgMTAuMTcyTDQgNi44MjhMNS44MjggNUw4LjE3MiA1TDEyIDguODI4TDE1LjgyOCA1TDE4LjE3MiA1TDIwIDYuODI4TDIwIDEwLjE3MkwxMiAxOC4xNzJaIi8+PC9zdmc+)
+  static const IconData heart = IconData(
+    0xE410,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Heart, filled style, 24 px master.
+  ///
+  /// ![Heart, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAyMUwyIDExTDIgNkw1IDNMOSAzTDEyIDZMMTUgM0wxOSAzTDIyIDZMMjIgMTFaIi8+PC9zdmc+)
+  static const IconData heartFilled = IconData(
+    0xE411,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Heart, outline style, 16 px master.
+  ///
+  /// ![Heart, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNC41IDcuNUwxNC41IDQuNUwxMi41IDIuNUwxMCAyLjVMOCA0LjVMNiAyLjVMMy41IDIuNUwxLjUgNC41TDEuNSA3LjVMOCAxNFpNMyA2Ljg3OUwzIDUuMTIxTDQuMTIxIDRMNS4zNzkgNEw4IDYuNjIxTDEwLjYyMSA0TDExLjg3OSA0TDEzIDUuMTIxTDEzIDYuODc5TDggMTEuODc5WiIvPjwvc3ZnPg==)
+  static const IconData heart16 = IconData(
+    0xE412,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Heart, filled style, 16 px master.
+  ///
+  /// ![Heart, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04IDE0TDEuNSA3LjVMMS41IDQuNUwzLjUgMi41TDYgMi41TDggNC41TDEwIDIuNUwxMi41IDIuNUwxNC41IDQuNUwxNC41IDcuNVoiLz48L3N2Zz4=)
+  static const IconData heartFilled16 = IconData(
+    0xE413,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Heart, outline style, 12 px master.
+  ///
+  /// ![Heart, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSA2TDExIDNMOSAxTDggMUw2IDNMNCAxTDMgMUwxIDNMMSA2TDYgMTFaTTIgNS41ODZMMiAzLjQxNEwzLjQxNCAyTDMuNTg2IDJMNiA0LjQxNEw4LjQxNCAyTDguNTg2IDJMMTAgMy40MTRMMTAgNS41ODZMNiA5LjU4NloiLz48L3N2Zz4=)
+  static const IconData heart12 = IconData(
+    0xE414,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Heart, filled style, 12 px master.
+  ///
+  /// ![Heart, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02IDExTDEgNkwxIDNMMyAxTDQgMUw2IDNMOCAxTDkgMUwxMSAzTDExIDZaIi8+PC9zdmc+)
+  static const IconData heartFilled12 = IconData(
+    0xE415,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Input, outline style, 24 px master.
+  ///
+  /// ![Input, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDE4TDUgMTZMNCAxNkw0IDhMNSA4TDUgNkwyIDZMMiAxOFpNOSAyTDcgMkw1IDJMNSA0TDcgNEw3IDIwTDUgMjBMNSAyMkw3IDIyTDkgMjJMMTEgMjJMMTEgMjBMOSAyMEw5IDRMMTEgNEwxMSAyWk0xMSA2TDExIDhMMjAgOEwyMCAxNkwxMSAxNkwxMSAxOEwyMiAxOEwyMiA2WiIvPjwvc3ZnPg==)
+  static const IconData input = IconData(
+    0xE416,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Input, filled style, 24 px master.
+  ///
+  /// ![Input, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDE4TDUgMThMNSA2TDIgNlpNOSAyTDcgMkw1IDJMNSA0TDcgNEw3IDIwTDUgMjBMNSAyMkw3IDIyTDkgMjJMMTEgMjJMMTEgMjBMOSAyMEw5IDRMMTEgNEwxMSAyWk0xMSA2TDExIDE4TDIyIDE4TDIyIDZaIi8+PC9zdmc+)
+  static const IconData inputFilled = IconData(
+    0xE417,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Input, outline style, 16 px master.
+  ///
+  /// ![Input, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjUgMTEuNUwzLjUgMTBMMyAxMEwzIDZMMy41IDZMMy41IDQuNUwxLjUgNC41TDEuNSAxMS41Wk02LjUgMS41TDUgMS41TDMuNSAxLjVMMy41IDNMNSAzTDUgMTNMMy41IDEzTDMuNSAxNC41TDUgMTQuNUw2LjUgMTQuNUw4IDE0LjVMOCAxM0w2LjUgMTNMNi41IDNMOCAzTDggMS41Wk04IDQuNUw4IDZMMTMgNkwxMyAxMEw4IDEwTDggMTEuNUwxNC41IDExLjVMMTQuNSA0LjVaIi8+PC9zdmc+)
+  static const IconData input16 = IconData(
+    0xE418,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Input, filled style, 16 px master.
+  ///
+  /// ![Input, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMTEuNUwzLjUgMTEuNUwzLjUgNC41TDEuNSA0LjVaTTYuNSAxLjVMNSAxLjVMMy41IDEuNUwzLjUgM0w1IDNMNSAxM0wzLjUgMTNMMy41IDE0LjVMNSAxNC41TDYuNSAxNC41TDggMTQuNUw4IDEzTDYuNSAxM0w2LjUgM0w4IDNMOCAxLjVaTTggNC41TDggMTEuNUwxNC41IDExLjVMMTQuNSA0LjVaIi8+PC9zdmc+)
+  static const IconData inputFilled16 = IconData(
+    0xE419,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Input, outline style, 12 px master.
+  ///
+  /// ![Input, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDlMMyA4TDIgOEwyIDRMMyA0TDMgM0wxIDNMMSA5Wk01IDFMNCAxTDMgMUwzIDJMNCAyTDQgMTBMMyAxMEwzIDExTDQgMTFMNSAxMUw2IDExTDYgMTBMNSAxMEw1IDJMNiAyTDYgMVpNNiAzTDYgNEwxMCA0TDEwIDhMNiA4TDYgOUwxMSA5TDExIDNaIi8+PC9zdmc+)
+  static const IconData input12 = IconData(
+    0xE41A,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Input, filled style, 12 px master.
+  ///
+  /// ![Input, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDlMMyA5TDMgM0wxIDNaTTUgMUw0IDFMMyAxTDMgMkw0IDJMNCAxMEwzIDEwTDMgMTFMNCAxMUw1IDExTDYgMTFMNiAxMEw1IDEwTDUgMkw2IDJMNiAxWk02IDNMNiA5TDExIDlMMTEgM1oiLz48L3N2Zz4=)
+  static const IconData inputFilled12 = IconData(
+    0xE41B,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Laptop, outline style, 24 px master.
+  ///
+  /// ![Laptop, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDIwTDIwIDIwTDIyIDE4TDIgMThaTTQgMTZMMjAgMTZMMjAgM0w0IDNaTTYgMTRMNiA1TDE4IDVMMTggMTRaIi8+PC9zdmc+)
+  static const IconData laptop = IconData(
+    0xE41C,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Laptop, filled style, 24 px master.
+  ///
+  /// ![Laptop, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDIwTDIwIDIwTDIyIDE4TDIgMThaTTQgM0w0IDE2TDIwIDE2TDIwIDNaIi8+PC9zdmc+)
+  static const IconData laptopFilled = IconData(
+    0xE41D,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Laptop, outline style, 16 px master.
+  ///
+  /// ![Laptop, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDE0TDEzIDE0TDE0LjUgMTIuNUwxLjUgMTIuNVpNMyAxMUwxMyAxMUwxMyAzTDMgM1pNNC41IDkuNUw0LjUgNC41TDExLjUgNC41TDExLjUgOS41WiIvPjwvc3ZnPg==)
+  static const IconData laptop16 = IconData(
+    0xE41E,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Laptop, filled style, 16 px master.
+  ///
+  /// ![Laptop, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDE0TDEzIDE0TDE0LjUgMTIuNUwxLjUgMTIuNVpNMyAzTDMgMTFMMTMgMTFMMTMgM1oiLz48L3N2Zz4=)
+  static const IconData laptopFilled16 = IconData(
+    0xE41F,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Laptop, outline style, 12 px master.
+  ///
+  /// ![Laptop, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDEwTDEwIDEwTDExIDlMMSA5Wk0yIDhMMTAgOEwxMCAyTDIgMlpNMyA3TDMgM0w5IDNMOSA3WiIvPjwvc3ZnPg==)
+  static const IconData laptop12 = IconData(
+    0xE420,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Laptop, filled style, 12 px master.
+  ///
+  /// ![Laptop, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDEwTDEwIDEwTDExIDlMMSA5Wk0yIDJMMiA4TDEwIDhMMTAgMloiLz48L3N2Zz4=)
+  static const IconData laptopFilled12 = IconData(
+    0xE421,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Wand, outline style, 24 px master.
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  ///
+  /// ![Wand, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjI5MyAyMC4yOTNMMy43MDcgMjEuNzA3TDEyLjcwNyAxMi43MDdMMTEuMjkzIDExLjI5M1pNNSA3TDcgN0w3IDVMNSA1Wk0xNiA2TDEyIDZMMTIgOEwxNiA4TDE2IDEyTDE4IDEyTDE4IDhMMjIgOEwyMiA2TDE4IDZMMTggMkwxNiAyWk0xOSAxOUwyMSAxOUwyMSAxN0wxOSAxN1oiLz48L3N2Zz4=)
+  static const IconData wand = IconData(
+    0xE422,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Wand, filled style, 24 px master.
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  ///
+  /// ![Wand, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjQzOSAxOS40MzlMNC41NjEgMjEuNTYxTDExLjU2MSAxNC41NjFMOS40MzkgMTIuNDM5Wk00IDdMNyA3TDcgNEw0IDRaTTEwIDhMMTQuNSA5LjVMMTYgMTRMMTcuNSA5LjVMMjIgOEwxNy41IDYuNUwxNiAyTDE0LjUgNi41Wk0xOCAyMEwyMSAyMEwyMSAxN0wxOCAxN1oiLz48L3N2Zz4=)
+  static const IconData wandFilled = IconData(
+    0xE423,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Wand, outline style, 16 px master.
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  ///
+  /// ![Wand, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjcyIDEzLjIyTDIuNzggMTQuMjhMOC41MyA4LjUzTDcuNDcgNy40N1pNMyAzTDMgNC41TDQuNSA0LjVMNC41IDNaTTEwLjUgNEw4IDRMOCA1LjVMMTAuNSA1LjVMMTAuNSA4TDEyIDhMMTIgNS41TDE0LjUgNS41TDE0LjUgNEwxMiA0TDEyIDEuNUwxMC41IDEuNVoiLz48L3N2Zz4=)
+  static const IconData wand16 = IconData(
+    0xE424,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Wand, filled style, 16 px master.
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  ///
+  /// ![Wand, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjYxNiAxMi42MTZMMy4zODQgMTQuMzg0TDcuODg0IDkuODg0TDYuMTE2IDguMTE2Wk0yLjUgMi41TDIuNSA0LjVMNC41IDQuNUw0LjUgMi41Wk02LjUgNS41TDkuMjUgNi43NUwxMC41IDkuNUwxMS43NSA2Ljc1TDE0LjUgNS41TDExLjc1IDQuMjVMMTAuNSAxLjVMOS4yNSA0LjI1WiIvPjwvc3ZnPg==)
+  static const IconData wandFilled16 = IconData(
+    0xE425,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Wand, outline style, 12 px master.
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  ///
+  /// ![Wand, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01LjY0NiA1LjY0NkwxLjE0NiAxMC4xNDZMMS44NTQgMTAuODU0TDYuMzU0IDYuMzU0Wk04IDFMOCAzTDYgM0w2IDRMOCA0TDggNkw5IDZMOSA0TDExIDRMMTEgM0w5IDNMOSAxWiIvPjwvc3ZnPg==)
+  static const IconData wand12 = IconData(
+    0xE426,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Wand, filled style, 12 px master.
+  ///
+  /// Keep a visible action label: the wand does not say what the automatic
+  /// action does.
+  ///
+  /// ![Wand, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjcyIDYuMjJMMS4yMiA5LjcyTDIuMjggMTAuNzhMNS43OCA3LjI4Wk03IDNMNSA0TDcgNUw4IDdMOSA1TDExIDRMOSAzTDggMVoiLz48L3N2Zz4=)
+  static const IconData wandFilled12 = IconData(
+    0xE427,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Smartphone, outline style, 24 px master.
+  ///
+  /// ![Smartphone, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02IDIwTDggMjJMMTYgMjJMMTggMjBMMTggNEwxNiAyTDggMkw2IDRaTTE2IDQuODI4TDE2IDE5LjE3MkwxNS4xNzIgMjBMOC44MjggMjBMOCAxOS4xNzJMOCA0LjgyOEw4LjgyOCA0TDE1LjE3MiA0Wk0xMCAxNkwxMCAxOEwxNCAxOEwxNCAxNloiLz48L3N2Zz4=)
+  static const IconData smartphone = IconData(
+    0xE428,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Smartphone, filled style, 24 px master.
+  ///
+  /// ![Smartphone, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02IDRMNiAyMEw4IDIyTDE2IDIyTDE4IDIwTDE4IDRMMTYgMkw4IDJaTTE0IDE4TDEwIDE4TDEwIDE2TDE0IDE2WiIvPjwvc3ZnPg==)
+  static const IconData smartphoneFilled = IconData(
+    0xE429,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Smartphone, outline style, 16 px master.
+  ///
+  /// ![Smartphone, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDEzTDUuNSAxNC41TDEwLjUgMTQuNUwxMiAxM0wxMiAzTDEwLjUgMS41TDUuNSAxLjVMNCAzWk0xMC41IDMuNjIxTDEwLjUgMTIuMzc5TDkuODc5IDEzTDYuMTIxIDEzTDUuNSAxMi4zNzlMNS41IDMuNjIxTDYuMTIxIDNMOS44NzkgM1pNNyAxMEw3IDExLjVMOSAxMS41TDkgMTBaIi8+PC9zdmc+)
+  static const IconData smartphone16 = IconData(
+    0xE42A,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Smartphone, filled style, 16 px master.
+  ///
+  /// ![Smartphone, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDNMNCAxM0w1LjUgMTQuNUwxMC41IDE0LjVMMTIgMTNMMTIgM0wxMC41IDEuNUw1LjUgMS41Wk05IDExLjVMNyAxMS41TDcgMTBMOSAxMFoiLz48L3N2Zz4=)
+  static const IconData smartphoneFilled16 = IconData(
+    0xE42B,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Smartphone, outline style, 12 px master.
+  ///
+  /// ![Smartphone, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEwTDQgMTFMOCAxMUw5IDEwTDkgMkw4IDFMNCAxTDMgMlpNOCAyLjQxNEw4IDkuNTg2TDcuNTg2IDEwTDQuNDE0IDEwTDQgOS41ODZMNCAyLjQxNEw0LjQxNCAyTDcuNTg2IDJaTTUgN0w1IDlMNyA5TDcgN1oiLz48L3N2Zz4=)
+  static const IconData smartphone12 = IconData(
+    0xE42C,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Smartphone, filled style, 12 px master.
+  ///
+  /// ![Smartphone, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDJMMyAxMEw0IDExTDggMTFMOSAxMEw5IDJMOCAxTDQgMVpNNyA5TDUgOUw1IDdMNyA3WiIvPjwvc3ZnPg==)
+  static const IconData smartphoneFilled12 = IconData(
+    0xE42D,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Moon, outline style, 24 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Moon, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04IDNMMyA4TDMgMTZMOCAyMUwxNiAyMUwyMSAxNkwyMSAxNUwxNCAxNUw5IDEwTDkgM1pNNyAxMC44MjhMMTMuMTcyIDE3TDE3LjE3MiAxN0wxNS4xNzIgMTlMOC44MjggMTlMNSAxNS4xNzJMNSA4LjgyOEw3IDYuODI4WiIvPjwvc3ZnPg==)
+  static const IconData moon = IconData(
+    0xE42E,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Moon, filled style, 24 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Moon, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik05IDNMOCAzTDMgOEwzIDE2TDggMjFMMTYgMjFMMjEgMTZMMjEgMTVMMTQgMTVMOSAxMFoiLz48L3N2Zz4=)
+  static const IconData moonFilled = IconData(
+    0xE42F,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Moon, outline style, 16 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Moon, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01LjUgMkwyIDUuNUwyIDEwLjVMNS41IDE0TDEwLjUgMTRMMTQgMTAuNUwxNCA5LjVMOS41IDkuNUw2LjUgNi41TDYuNSAyWk01IDcuMTIxTDguODc5IDExTDExLjM3OSAxMUw5Ljg3OSAxMi41TDYuMTIxIDEyLjVMMy41IDkuODc5TDMuNSA2LjEyMUw1IDQuNjIxWiIvPjwvc3ZnPg==)
+  static const IconData moon16 = IconData(
+    0xE430,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Moon, filled style, 16 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Moon, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjUgMkw1LjUgMkwyIDUuNUwyIDEwLjVMNS41IDE0TDEwLjUgMTRMMTQgMTAuNUwxNCA5LjVMOS41IDkuNUw2LjUgNi41WiIvPjwvc3ZnPg==)
+  static const IconData moonFilled16 = IconData(
+    0xE431,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Moon, outline style, 12 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Moon, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00IDFMMSA0TDEgOEw0IDExTDggMTFMMTEgOEwxMSA3TDggN0w1IDRMNSAxWk00IDQuNDE0TDcuNTg2IDhMOS41ODYgOEw3LjU4NiAxMEw0LjQxNCAxMEwyIDcuNTg2TDIgNC40MTRMNCAyLjQxNFoiLz48L3N2Zz4=)
+  static const IconData moon12 = IconData(
+    0xE432,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Moon, filled style, 12 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Moon, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDFMNCAxTDEgNEwxIDhMNCAxMUw4IDExTDExIDhMMTEgN0w4IDdMNSA0WiIvPjwvc3ZnPg==)
+  static const IconData moonFilled12 = IconData(
+    0xE433,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Square, outline style, 24 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Square, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDNMMyAyMUwyMSAyMUwyMSAzWk0xOSAxOUw1IDE5TDUgNUwxOSA1WiIvPjwvc3ZnPg==)
+  static const IconData square = IconData(
+    0xE434,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Square, filled style, 24 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Square, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMSAzTDIxIDIxTDMgMjFMMyAzWiIvPjwvc3ZnPg==)
+  static const IconData squareFilled = IconData(
+    0xE435,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Square, outline style, 16 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Square, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDJMMiAxNEwxNCAxNEwxNCAyWk0xMi41IDEyLjVMMy41IDEyLjVMMy41IDMuNUwxMi41IDMuNVoiLz48L3N2Zz4=)
+  static const IconData square16 = IconData(
+    0xE436,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Square, filled style, 16 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Square, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNCAyTDE0IDE0TDIgMTRMMiAyWiIvPjwvc3ZnPg==)
+  static const IconData squareFilled16 = IconData(
+    0xE437,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Square, outline style, 12 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Square, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDJMMiAxMEwxMCAxMEwxMCAyWk05IDlMMyA5TDMgM0w5IDNaIi8+PC9zdmc+)
+  static const IconData square12 = IconData(
+    0xE438,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Square, filled style, 12 px master.
+  ///
+  /// A plain shape, not a control. Do not imply behavior; name any action on
+  /// the enclosing control.
+  ///
+  /// ![Square, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMCAyTDEwIDEwTDIgMTBMMiAyWiIvPjwvc3ZnPg==)
+  static const IconData squareFilled12 = IconData(
+    0xE439,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Layers, outline style, 24 px master.
+  ///
+  /// ![Layers, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMkwyMiA3TDEyIDJMMiA3Wk0xMiA5Ljc2NEw2LjQ3MiA3TDEyIDQuMjM2TDE3LjUyOCA3Wk0xMiAxNC4zODJMMiA5LjM4MkwyIDExLjYxOEwxMiAxNi42MThMMjIgMTEuNjE4TDIyIDkuMzgyWk0xMiAxOC44ODJMMiAxMy44ODJMMiAxNi4xMThMMTIgMjEuMTE4TDIyIDE2LjExOEwyMiAxMy44ODJaIi8+PC9zdmc+)
+  static const IconData layers = IconData(
+    0xE43A,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Layers, filled style, 24 px master.
+  ///
+  /// ![Layers, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDdMMTIgMTJMMjIgN0wxMiAyWk0xMiAxNC4yNDJMMiA5LjI0MkwyIDExLjc1OEwxMiAxNi43NThMMjIgMTEuNzU4TDIyIDkuMjQyWk0xMiAxOC45OTJMMiAxMy45OTJMMiAxNi41MDhMMTIgMjEuNTA4TDIyIDE2LjUwOEwyMiAxMy45OTJaIi8+PC9zdmc+)
+  static const IconData layersFilled = IconData(
+    0xE43B,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Layers, outline style, 16 px master.
+  ///
+  /// ![Layers, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik04IDhMMTQuNSA0Ljc1TDggMS41TDEuNSA0Ljc1Wk04IDYuMzIzTDQuODU0IDQuNzVMOCAzLjE3N0wxMS4xNDYgNC43NVpNMTQuNSA3LjQxMUw4IDEwLjY2MUwxLjUgNy40MTFMMS41IDkuMDg5TDggMTIuMzM5TDE0LjUgOS4wODlaIi8+PC9zdmc+)
+  static const IconData layers16 = IconData(
+    0xE43C,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Layers, filled style, 16 px master.
+  ///
+  /// ![Layers, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNC43NUw4IDhMMTQuNSA0Ljc1TDggMS41Wk0xNC41IDcuMzgyTDggMTAuNjMyTDEuNSA3LjM4MkwxLjUgOS42MThMOCAxMi44NjhMMTQuNSA5LjYxOFoiLz48L3N2Zz4=)
+  static const IconData layersFilled16 = IconData(
+    0xE43D,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Layers, outline style, 12 px master.
+  ///
+  /// ![Layers, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02IDZMMTEgMy41TDYgMUwxIDMuNVpNNiA0Ljg4MkwzLjIzNiAzLjVMNiAyLjExOEw4Ljc2NCAzLjVaTTExIDUuMTkxTDYgNy42OTFMMSA1LjE5MUwxIDYuMzA5TDYgOC44MDlMMTEgNi4zMDlaIi8+PC9zdmc+)
+  static const IconData layers12 = IconData(
+    0xE43E,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Layers, filled style, 12 px master.
+  ///
+  /// ![Layers, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDMuNUw2IDZMMTEgMy41TDYgMVpNMTEgNS40MTFMNiA3LjkxMUwxIDUuNDExTDEgNy4wODlMNiA5LjU4OUwxMSA3LjA4OVoiLz48L3N2Zz4=)
+  static const IconData layersFilled12 = IconData(
+    0xE43F,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Sun, outline style, 24 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Sun, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDExTDIgMTFMMiAxM0w1IDEzWk03Ljc1NyA2LjM0M0w1LjYzNiA0LjIyMkw0LjIyMiA1LjYzNkw2LjM0MyA3Ljc1N1pNNi4zNDMgMTYuMjQzTDQuMjIyIDE4LjM2NEw1LjYzNiAxOS43NzhMNy43NTcgMTcuNjU3Wk0xMy41IDE2TDE2IDEzLjVMMTYgMTAuNUwxMy41IDhMMTAuNSA4TDggMTAuNUw4IDEzLjVMMTAuNSAxNlpNMTIuNjcyIDE0TDExLjMyOCAxNEwxMCAxMi42NzJMMTAgMTEuMzI4TDExLjMyOCAxMEwxMi42NzIgMTBMMTQgMTEuMzI4TDE0IDEyLjY3MlpNMTMgNUwxMyAyTDExIDJMMTEgNVpNMTEgMjJMMTMgMjJMMTMgMTlMMTEgMTlaTTE3LjY1NyA3Ljc1N0wxOS43NzggNS42MzZMMTguMzY0IDQuMjIyTDE2LjI0MyA2LjM0M1pNMTguMzY0IDE5Ljc3OEwxOS43NzggMTguMzY0TDE3LjY1NyAxNi4yNDNMMTYuMjQzIDE3LjY1N1pNMTkgMTNMMjIgMTNMMjIgMTFMMTkgMTFaIi8+PC9zdmc+)
+  static const IconData sun = IconData(
+    0xE440,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Sun, filled style, 24 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Sun, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDExTDIgMTFMMiAxM0w1IDEzWk03Ljc1NyA2LjM0M0w1LjYzNiA0LjIyMkw0LjIyMiA1LjYzNkw2LjM0MyA3Ljc1N1pNNi4zNDMgMTYuMjQzTDQuMjIyIDE4LjM2NEw1LjYzNiAxOS43NzhMNy43NTcgMTcuNjU3Wk0xMCAxN0wxNCAxN0wxNyAxNEwxNyAxMEwxNCA3TDEwIDdMNyAxMEw3IDE0Wk0xMyA1TDEzIDJMMTEgMkwxMSA1Wk0xMSAyMkwxMyAyMkwxMyAxOUwxMSAxOVpNMTcuNjU3IDcuNzU3TDE5Ljc3OCA1LjYzNkwxOC4zNjQgNC4yMjJMMTYuMjQzIDYuMzQzWk0xOC4zNjQgMTkuNzc4TDE5Ljc3OCAxOC4zNjRMMTcuNjU3IDE2LjI0M0wxNi4yNDMgMTcuNjU3Wk0xOSAxM0wyMiAxM0wyMiAxMUwxOSAxMVoiLz48L3N2Zz4=)
+  static const IconData sunFilled = IconData(
+    0xE441,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Sun, outline style, 16 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Sun, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDcuMjVMMS41IDcuMjVMMS41IDguNzVMMyA4Ljc1Wk00Ljk5NSAzLjkzNEwzLjkzNCAyLjg3M0wyLjg3MyAzLjkzNEwzLjkzNCA0Ljk5NVpNMy45MzQgMTEuMDA1TDIuODczIDEyLjA2NkwzLjkzNCAxMy4xMjdMNC45OTUgMTIuMDY2Wk05LjI1IDEwLjVMMTAuNSA5LjI1TDEwLjUgNi43NUw5LjI1IDUuNUw2Ljc1IDUuNUw1LjUgNi43NUw1LjUgOS4yNUw2Ljc1IDEwLjVaTTguNjI5IDlMNy4zNzEgOUw3IDguNjI5TDcgNy4zNzFMNy4zNzEgN0w4LjYyOSA3TDkgNy4zNzFMOSA4LjYyOVpNOC43NSAzTDguNzUgMS41TDcuMjUgMS41TDcuMjUgM1pNNy4yNSAxNC41TDguNzUgMTQuNUw4Ljc1IDEzTDcuMjUgMTNaTTEyLjA2NiA0Ljk5NUwxMy4xMjcgMy45MzRMMTIuMDY2IDIuODczTDExLjAwNSAzLjkzNFpNMTIuMDY2IDEzLjEyN0wxMy4xMjcgMTIuMDY2TDEyLjA2NiAxMS4wMDVMMTEuMDA1IDEyLjA2NlpNMTMgOC43NUwxNC41IDguNzVMMTQuNSA3LjI1TDEzIDcuMjVaIi8+PC9zdmc+)
+  static const IconData sun16 = IconData(
+    0xE442,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Sun, filled style, 16 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Sun, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDcuMjVMMS41IDcuMjVMMS41IDguNzVMMyA4Ljc1Wk00Ljk5NSAzLjkzNEwzLjkzNCAyLjg3M0wyLjg3MyAzLjkzNEwzLjkzNCA0Ljk5NVpNMy45MzQgMTEuMDA1TDIuODczIDEyLjA2NkwzLjkzNCAxMy4xMjdMNC45OTUgMTIuMDY2Wk02LjUgMTFMOS41IDExTDExIDkuNUwxMSA2LjVMOS41IDVMNi41IDVMNSA2LjVMNSA5LjVaTTguNzUgM0w4Ljc1IDEuNUw3LjI1IDEuNUw3LjI1IDNaTTcuMjUgMTQuNUw4Ljc1IDE0LjVMOC43NSAxM0w3LjI1IDEzWk0xMi4wNjYgNC45OTVMMTMuMTI3IDMuOTM0TDEyLjA2NiAyLjg3M0wxMS4wMDUgMy45MzRaTTEyLjA2NiAxMy4xMjdMMTMuMTI3IDEyLjA2NkwxMi4wNjYgMTEuMDA1TDExLjAwNSAxMi4wNjZaTTEzIDguNzVMMTQuNSA4Ljc1TDE0LjUgNy4yNUwxMyA3LjI1WiIvPjwvc3ZnPg==)
+  static const IconData sunFilled16 = IconData(
+    0xE443,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Sun, outline style, 12 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Sun, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMiA1TDEgNUwxIDZaTTMgM0wzIDJMMiAyTDIgM1pNMyA5TDMgOEwyIDhMMiA5Wk02LjUgOEw4IDYuNUw4IDQuNUw2LjUgM0w0LjUgM0wzIDQuNUwzIDYuNUw0LjUgOFpNNi4wODYgN0w0LjkxNCA3TDQgNi4wODZMNCA0LjkxNEw0LjkxNCA0TDYuMDg2IDRMNyA0LjkxNEw3IDYuMDg2Wk02IDJMNiAxTDUgMUw1IDJaTTYgOUw1IDlMNSAxMEw2IDEwWk05IDNMOSAyTDggMkw4IDNaTTkgOEw4IDhMOCA5TDkgOVpNMTAgNkwxMCA1TDkgNUw5IDZaIi8+PC9zdmc+)
+  static const IconData sun12 = IconData(
+    0xE444,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Sun, filled style, 12 px master.
+  ///
+  /// Name the appearance on the enclosing control; this is not a generic
+  /// status.
+  ///
+  /// ![Sun, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDZMMiA1TDEgNUwxIDZaTTMgM0wzIDJMMiAyTDIgM1pNMyA5TDMgOEwyIDhMMiA5Wk00LjUgOEw2LjUgOEw4IDYuNUw4IDQuNUw2LjUgM0w0LjUgM0wzIDQuNUwzIDYuNVpNNiAyTDYgMUw1IDFMNSAyWk02IDlMNSA5TDUgMTBMNiAxMFpNOSAzTDkgMkw4IDJMOCAzWk05IDhMOCA4TDggOUw5IDlaTTEwIDZMMTAgNUw5IDVMOSA2WiIvPjwvc3ZnPg==)
+  static const IconData sunFilled12 = IconData(
+    0xE445,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Table, outline style, 24 px master.
+  ///
+  /// ![Table, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMSAzTDMgM0wzIDdMMyA5TDMgMTNMMyAxNUwzIDIxTDExIDIxTDEzIDIxTDIxIDIxTDIxIDE1TDIxIDEzTDIxIDlMMjEgN1pNMTkgMTNMMTMgMTNMMTMgOUwxOSA5Wk0xOSAxOUwxMyAxOUwxMyAxNUwxOSAxNVpNNSAxOUw1IDE1TDExIDE1TDExIDE5Wk01IDlMMTEgOUwxMSAxM0w1IDEzWk01IDVMMTkgNUwxOSA3TDUgN1oiLz48L3N2Zz4=)
+  static const IconData table = IconData(
+    0xE446,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Table, filled style, 24 px master.
+  ///
+  /// ![Table, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDNMMyAyMUwyMSAyMUwyMSAzWk01IDlMMTEgOUwxMSAxM0w1IDEzWk0xMyA5TDE5IDlMMTkgMTNMMTMgMTNaTTUgMTVMMTEgMTVMMTEgMTlMNSAxOVpNMTMgMTVMMTkgMTVMMTkgMTlMMTMgMTlaIi8+PC9zdmc+)
+  static const IconData tableFilled = IconData(
+    0xE447,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Table, outline style, 16 px master.
+  ///
+  /// ![Table, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xNC41IDEuNUwxLjUgMS41TDEuNSA1TDEuNSA2LjVMMS41IDlMMS41IDEwLjVMMS41IDE0LjVMNy4yNSAxNC41TDguNzUgMTQuNUwxNC41IDE0LjVMMTQuNSAxMC41TDE0LjUgOUwxNC41IDYuNUwxNC41IDVaTTEzIDlMOC43NSA5TDguNzUgNi41TDEzIDYuNVpNMTMgMTNMOC43NSAxM0w4Ljc1IDEwLjVMMTMgMTAuNVpNMyAxM0wzIDEwLjVMNy4yNSAxMC41TDcuMjUgMTNaTTMgNi41TDcuMjUgNi41TDcuMjUgOUwzIDlaTTMgM0wxMyAzTDEzIDVMMyA1WiIvPjwvc3ZnPg==)
+  static const IconData table16 = IconData(
+    0xE448,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Table, filled style, 16 px master.
+  ///
+  /// ![Table, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgMS41TDEuNSAxNC41TDE0LjUgMTQuNUwxNC41IDEuNVpNMyA2LjVMNy4yNSA2LjVMNy4yNSA5TDMgOVpNOC43NSA2LjVMMTMgNi41TDEzIDlMOC43NSA5Wk0zIDEwLjVMNy4yNSAxMC41TDcuMjUgMTNMMyAxM1pNOC43NSAxMC41TDEzIDEwLjVMMTMgMTNMOC43NSAxM1oiLz48L3N2Zz4=)
+  static const IconData tableFilled16 = IconData(
+    0xE449,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Table, outline style, 12 px master.
+  ///
+  /// ![Table, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxTDEgMUwxIDRMMSA1TDEgN0wxIDhMMSAxMUw1IDExTDYgMTFMMTEgMTFMMTEgOEwxMSA3TDExIDVMMTEgNFpNMTAgN0w2IDdMNiA1TDEwIDVaTTEwIDEwTDYgMTBMNiA4TDEwIDhaTTIgMTBMMiA4TDUgOEw1IDEwWk0yIDVMNSA1TDUgN0wyIDdaTTIgMkwxMCAyTDEwIDRMMiA0WiIvPjwvc3ZnPg==)
+  static const IconData table12 = IconData(
+    0xE44A,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Table, filled style, 12 px master.
+  ///
+  /// ![Table, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDFMMSAxMUwxMSAxMUwxMSAxWk0yIDVMNSA1TDUgN0wyIDdaTTYgNUwxMCA1TDEwIDdMNiA3Wk0yIDhMNSA4TDUgMTBMMiAxMFpNNiA4TDEwIDhMMTAgMTBMNiAxMFoiLz48L3N2Zz4=)
+  static const IconData tableFilled12 = IconData(
+    0xE44B,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Loader, outline style, 24 px master.
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  ///
+  /// ![Loader, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDkuMjExTDIgMTQuNzg5TDQgMTMuOTYxTDQgMTAuMDM5Wk0zLjA1NyAxNy4wNTdMNi45NDMgMjAuOTQzTDcuNzcxIDE4Ljk0M0w1LjA1NyAxNi4yMjlaTTYuOTQzIDMuMDU3TDMuMDU3IDYuOTQzTDUuMDU3IDcuNzcxTDcuNzcxIDUuMDU3Wk0xMy45NjEgNEwxNC43ODkgMkw5LjIxMSAyTDEwLjAzOSA0Wk05LjIxMSAyMkwxNC43ODkgMjJMMTMuOTYxIDIwTDEwLjAzOSAyMFpNMTcuMDU3IDIwLjk0M0wyMC45NDMgMTcuMDU3TDE4Ljk0MyAxNi4yMjlMMTYuMjI5IDE4Ljk0M1pNMjIgMTQuNzg5TDIyIDkuMjExTDIwIDEwLjAzOUwyMCAxMy45NjFaIi8+PC9zdmc+)
+  static const IconData loader = IconData(
+    0xE44C,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Loader, filled style, 24 px master.
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  ///
+  /// ![Loader, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yIDkuMjExTDIgMTQuNzg5TDQuNSAxMy43NTRMNC41IDEwLjI0NlpNMy4wNTcgMTcuMDU3TDYuOTQzIDIwLjk0M0w3Ljk3OCAxOC40NDNMNS41NTcgMTYuMDIyWk02Ljk0MyAzLjA1N0wzLjA1NyA2Ljk0M0w1LjU1NyA3Ljk3OEw3Ljk3OCA1LjU1N1pNMTMuNzU0IDQuNUwxNC43ODkgMkw5LjIxMSAyTDEwLjI0NiA0LjVaTTkuMjExIDIyTDE0Ljc4OSAyMkwxMy43NTQgMTkuNUwxMC4yNDYgMTkuNVpNMTcuMDU3IDIwLjk0M0wyMC45NDMgMTcuMDU3TDE4LjQ0MyAxNi4wMjJMMTYuMDIyIDE4LjQ0M1pNMjIgMTQuNzg5TDIyIDkuMjExTDE5LjUgMTAuMjQ2TDE5LjUgMTMuNzU0WiIvPjwvc3ZnPg==)
+  static const IconData loaderFilled = IconData(
+    0xE44D,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Loader, outline style, 16 px master.
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  ///
+  /// ![Loader, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNi4xMTlMMS41IDkuODgxTDMgOS4yNTlMMyA2Ljc0MVpNMi4yMSAxMS4yMUw0Ljc5IDEzLjc5TDUuNDExIDEyLjI5TDMuNzEgMTAuNTg5Wk00Ljc5IDIuMjFMMi4yMSA0Ljc5TDMuNzEgNS40MTFMNS40MTEgMy43MVpNOS4yNTkgM0w5Ljg4MSAxLjVMNi4xMTkgMS41TDYuNzQxIDNaTTYuMTE5IDE0LjVMOS44ODEgMTQuNUw5LjI1OSAxM0w2Ljc0MSAxM1pNMTEuMjEgMTMuNzlMMTMuNzkgMTEuMjFMMTIuMjkgMTAuNTg5TDEwLjU4OSAxMi4yOVpNMTQuNSA5Ljg4MUwxNC41IDYuMTE5TDEzIDYuNzQxTDEzIDkuMjU5WiIvPjwvc3ZnPg==)
+  static const IconData loader16 = IconData(
+    0xE44E,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Loader, filled style, 16 px master.
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  ///
+  /// ![Loader, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgNi4xMTlMMS41IDkuODgxTDMuNSA5LjA1MkwzLjUgNi45NDhaTTIuMjEgMTEuMjFMNC43OSAxMy43OUw1LjYxOCAxMS43OUw0LjIxIDEwLjM4MlpNNC43OSAyLjIxTDIuMjEgNC43OUw0LjIxIDUuNjE4TDUuNjE4IDQuMjFaTTkuMDUyIDMuNUw5Ljg4MSAxLjVMNi4xMTkgMS41TDYuOTQ4IDMuNVpNNi4xMTkgMTQuNUw5Ljg4MSAxNC41TDkuMDUyIDEyLjVMNi45NDggMTIuNVpNMTEuMjEgMTMuNzlMMTMuNzkgMTEuMjFMMTEuNzkgMTAuMzgyTDEwLjM4MiAxMS43OVpNMTQuNSA5Ljg4MUwxNC41IDYuMTE5TDEyLjUgNi45NDhMMTIuNSA5LjA1MloiLz48L3N2Zz4=)
+  static const IconData loaderFilled16 = IconData(
+    0xE44F,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Loader, outline style, 12 px master.
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  ///
+  /// ![Loader, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDQuNDdMMSA3LjUzTDIgNy4xMTZMMiA0Ljg4NFpNMS40MzMgOC40MzNMMy41NjcgMTAuNTY3TDMuOTgxIDkuNTY3TDIuNDMzIDguMDE5Wk0zLjU2NyAxLjQzM0wxLjQzMyAzLjU2N0wyLjQzMyAzLjk4MUwzLjk4MSAyLjQzM1pNNy4xMTYgMkw3LjUzIDFMNC40NyAxTDQuODg0IDJaTTQuNDcgMTFMNy41MyAxMUw3LjExNiAxMEw0Ljg4NCAxMFpNOC40MzMgMTAuNTY3TDEwLjU2NyA4LjQzM0w5LjU2NyA4LjAxOUw4LjAxOSA5LjU2N1pNMTEgNy41M0wxMSA0LjQ3TDEwIDQuODg0TDEwIDcuMTE2WiIvPjwvc3ZnPg==)
+  static const IconData loader12 = IconData(
+    0xE450,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Loader, filled style, 12 px master.
+  ///
+  /// Announce progress in text; the caller owns motion and reduced-motion
+  /// behavior.
+  ///
+  /// ![Loader, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDQuNDdMMSA3LjUzTDIuNSA2LjkwOUwyLjUgNS4wOTFaTTEuNDMzIDguNDMzTDMuNTY3IDEwLjU2N0w0LjE4OCA5LjA2N0wyLjkzMyA3LjgxMlpNMy41NjcgMS40MzNMMS40MzMgMy41NjdMMi45MzMgNC4xODhMNC4xODggMi45MzNaTTYuOTA5IDIuNUw3LjUzIDFMNC40NyAxTDUuMDkxIDIuNVpNNC40NyAxMUw3LjUzIDExTDYuOTA5IDkuNUw1LjA5MSA5LjVaTTguNDMzIDEwLjU2N0wxMC41NjcgOC40MzNMOS4wNjcgNy44MTJMNy44MTIgOS4wNjdaTTExIDcuNTNMMTEgNC40N0w5LjUgNS4wOTFMOS41IDYuOTA5WiIvPjwvc3ZnPg==)
+  static const IconData loaderFilled12 = IconData(
+    0xE451,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Code, outline style, 24 px master.
+  ///
+  /// ![Code, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02Ljk1NyAxNi45NTdMOC4zNzEgMTUuNTQzTDQuODI4IDEyTDguMzcxIDguNDU3TDYuOTU3IDcuMDQzTDIgMTJaTTkuNDg5IDIyTDExLjUxMSAyMkwxNC41MTEgMkwxMi40ODkgMlpNMTUuNjI5IDguNDU3TDE5LjE3MiAxMkwxNS42MjkgMTUuNTQzTDE3LjA0MyAxNi45NTdMMjIgMTJMMTcuMDQzIDcuMDQzWiIvPjwvc3ZnPg==)
+  static const IconData code = IconData(
+    0xE452,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Code, filled style, 24 px master.
+  ///
+  /// ![Code, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik02LjYzNCAxNi42MzRMOC40MDIgMTQuODY2TDUuNTM2IDEyTDguNDAyIDkuMTM0TDYuNjM0IDcuMzY2TDIgMTJaTTkuNzQ0IDIyTDEyLjI1NiAyMkwxNC4yNTYgMkwxMS43NDQgMlpNMTUuNTk4IDkuMTM0TDE4LjQ2NCAxMkwxNS41OTggMTQuODY2TDE3LjM2NiAxNi42MzRMMjIgMTJMMTcuMzY2IDcuMzY2WiIvPjwvc3ZnPg==)
+  static const IconData codeFilled = IconData(
+    0xE453,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Code, outline style, 16 px master.
+  ///
+  /// ![Code, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjAzIDEwLjUzTDUuMDkxIDkuNDdMMy42MjEgOEw1LjA5MSA2LjUzTDQuMDMgNS40N0wxLjUgOFpNNi4yNDEgMTQuNUw3Ljc1OSAxNC41TDkuNzU5IDEuNUw4LjI0MSAxLjVaTTEwLjkwOSA2LjUzTDEyLjM3OSA4TDEwLjkwOSA5LjQ3TDExLjk3IDEwLjUzTDE0LjUgOEwxMS45NyA1LjQ3WiIvPjwvc3ZnPg==)
+  static const IconData code16 = IconData(
+    0xE454,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Code, filled style, 16 px master.
+  ///
+  /// ![Code, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik00LjExOSAxMC42MTlMNS4zNTYgOS4zODFMMy45NzUgOEw1LjM1NiA2LjYxOUw0LjExOSA1LjM4MUwxLjUgOFpNNi4xMTUgMTQuNUw3Ljg4NSAxNC41TDkuODg1IDEuNUw4LjExNSAxLjVaTTEwLjY0NCA2LjYxOUwxMi4wMjUgOEwxMC42NDQgOS4zODFMMTEuODgxIDEwLjYxOUwxNC41IDhMMTEuODgxIDUuMzgxWiIvPjwvc3ZnPg==)
+  static const IconData codeFilled16 = IconData(
+    0xE455,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Code, outline style, 12 px master.
+  ///
+  /// ![Code, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjM1NCA4LjM1NEw0LjA2MSA3LjY0NkwyLjQxNCA2TDQuMDYxIDQuMzU0TDMuMzU0IDMuNjQ2TDEgNlpNNC40OSAxMUw1LjUxIDExTDcuNTEgMUw2LjQ5IDFaTTcuOTM5IDQuMzU0TDkuNTg2IDZMNy45MzkgNy42NDZMOC42NDYgOC4zNTRMMTEgNkw4LjY0NiAzLjY0NloiLz48L3N2Zz4=)
+  static const IconData code12 = IconData(
+    0xE456,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Code, filled style, 12 px master.
+  ///
+  /// ![Code, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zLjE5MiA4LjE5Mkw0LjA3NiA3LjMwOEwyLjc2OCA2TDQuMDc2IDQuNjkyTDMuMTkyIDMuODA4TDEgNlpNNC42MTggMTFMNS44ODIgMTFMNy4zODIgMUw2LjExOCAxWk03LjkyNCA0LjY5Mkw5LjIzMiA2TDcuOTI0IDcuMzA4TDguODA4IDguMTkyTDExIDZMOC44MDggMy44MDhaIi8+PC9zdmc+)
+  static const IconData codeFilled12 = IconData(
+    0xE457,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dashboard, outline style, 24 px master.
+  ///
+  /// ![Dashboard, outline style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxM0wxMSAzTDMgM0wzIDEzWk01IDVMOSA1TDkgMTFMNSAxMVpNMTEgMjFMMTEgMTVMMyAxNUwzIDIxWk01IDE3TDkgMTdMOSAxOUw1IDE5Wk0yMSA5TDIxIDNMMTMgM0wxMyA5Wk0xNSA1TDE5IDVMMTkgN0wxNSA3Wk0yMSAyMUwyMSAxMUwxMyAxMUwxMyAyMVpNMTUgMTNMMTkgMTNMMTkgMTlMMTUgMTlaIi8+PC9zdmc+)
+  static const IconData dashboard = IconData(
+    0xE458,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dashboard, filled style, 24 px master.
+  ///
+  /// ![Dashboard, filled style, 24 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zIDEzTDExIDEzTDExIDNMMyAzWk0zIDIxTDExIDIxTDExIDE1TDMgMTVaTTEzIDlMMjEgOUwyMSAzTDEzIDNaTTEzIDIxTDIxIDIxTDIxIDExTDEzIDExWiIvPjwvc3ZnPg==)
+  static const IconData dashboardFilled = IconData(
+    0xE459,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dashboard, outline style, 16 px master.
+  ///
+  /// ![Dashboard, outline style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik03IDhMNyAxLjVMMS41IDEuNUwxLjUgOFpNMyAzTDUuNSAzTDUuNSA2LjVMMyA2LjVaTTcgMTQuNUw3IDEwTDEuNSAxMEwxLjUgMTQuNVpNMyAxMS41TDUuNSAxMS41TDUuNSAxM0wzIDEzWk0xNC41IDZMMTQuNSAxLjVMOSAxLjVMOSA2Wk0xMC41IDNMMTMgM0wxMyA0LjVMMTAuNSA0LjVaTTE0LjUgMTQuNUwxNC41IDhMOSA4TDkgMTQuNVpNMTAuNSA5LjVMMTMgOS41TDEzIDEzTDEwLjUgMTNaIi8+PC9zdmc+)
+  static const IconData dashboard16 = IconData(
+    0xE45A,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dashboard, filled style, 16 px master.
+  ///
+  /// ![Dashboard, filled style, 16 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xLjUgOEw3IDhMNyAxLjVMMS41IDEuNVpNMS41IDE0LjVMNyAxNC41TDcgMTBMMS41IDEwWk05IDZMMTQuNSA2TDE0LjUgMS41TDkgMS41Wk05IDE0LjVMMTQuNSAxNC41TDE0LjUgOEw5IDhaIi8+PC9zdmc+)
+  static const IconData dashboardFilled16 = IconData(
+    0xE45B,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dashboard, outline style, 12 px master.
+  ///
+  /// ![Dashboard, outline style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik01IDZMNSAxTDEgMUwxIDZaTTIgMkw0IDJMNCA1TDIgNVpNNSAxMUw1IDhMMSA4TDEgMTFaTTIgOUw0IDlMNCAxMEwyIDEwWk0xMSA0TDExIDFMNyAxTDcgNFpNOCAyTDEwIDJMMTAgM0w4IDNaTTExIDExTDExIDZMNyA2TDcgMTFaTTggN0wxMCA3TDEwIDEwTDggMTBaIi8+PC9zdmc+)
+  static const IconData dashboard12 = IconData(
+    0xE45C,
+    fontFamily: _fontFamily,
+    fontPackage: _fontPackage,
+  );
+
+  /// Dashboard, filled style, 12 px master.
+  ///
+  /// ![Dashboard, filled style, 12 px master](data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MnB4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xIDZMNSA2TDUgMUwxIDFaTTEgMTFMNSAxMUw1IDhMMSA4Wk03IDRMMTEgNEwxMSAxTDcgMVpNNyAxMUwxMSAxMUwxMSA2TDcgNloiLz48L3N2Zz4=)
+  static const IconData dashboardFilled12 = IconData(
+    0xE45D,
     fontFamily: _fontFamily,
     fontPackage: _fontPackage,
   );

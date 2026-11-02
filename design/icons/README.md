@@ -4,8 +4,8 @@ Private review pack for two sibling families:
 
 | Family | Icons | SVGs | Construction |
 | --- | --- | --- | --- |
-| Outline | 48 | 288 | Validated Outline geometry, outline and filled, native 12 / 16 / 24 |
-| Rounded | 12 | 72 | Rounded primitives (circles, stadiums, round joins), not an Outline path filter |
+| Outline | 77 | 462 | Validated Outline geometry, outline and filled, native 12 / 16 / 24 |
+| Rounded | 77 | 462 | Rounded primitives (circles, stadiums, round joins), not an Outline path filter |
 
 The families are **Outline** and **Rounded**.
 The appearance names `outline` and `filled` are unchanged.
@@ -52,17 +52,18 @@ The drawings were recovered from closed, unmerged pulls and rebuilt as one pack:
 
 Family READMEs describe their maintained construction and usage contracts. Use this file for the combined pack.
 
-## Not ready to merge
+## Review and publication
 
-Design sign-off and recognition testing remain open. Family usage limits stay in force until real evidence supports changing them. The Angular release gate stays closed while the pack is private. The undrawn fillet proposal previously called Rounded needs a product naming decision.
+The families have matching product coverage: 77 concepts, each with both
+appearances at 12, 16, and 24 px (924 drawings in total). Native-size and
+application-context review accompany the compiled Flutter package release.
+Label requirements and measured geometry exceptions remain part of the contract;
+agent review does not substitute for a human recognition study.
 
-Existing web API pack/package identifiers, sprite symbol IDs, pilot version tags,
-immutable fixture keys retain their historical spellings pending compatibility
-decisions. Current native proof captions identify Outline and Rounded. The family catalogs also
-retain the unavailable legacy roadmap keys
-(`rounded`); resolving those keys together with the old fillet
-proposal requires a product decision. The Angular release gate keeps its name
-and remains closed. License and copyright text is unchanged.
+The private authoring pack and its web adapters are separate from the compiled
+Flutter package. The authoring pack's web publication gate remains closed until
+its own acceptance requirements are met. Historical package identifiers, sprite
+IDs, fixture keys and review records retain their compatible spellings.
 
 The archived browser capture `outline/review/pilot-additions.png` predates the
 current shape revisions. Use the rebuilt catalogs and native proofs to review

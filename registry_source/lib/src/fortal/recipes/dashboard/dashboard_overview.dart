@@ -18,7 +18,6 @@ import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 
 class FortalDashboardOverview extends StatelessWidget {
   const FortalDashboardOverview({
@@ -260,8 +259,8 @@ class _FortalActivityIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
       .customer => (RemixIcons.user, FortalAccentColor.ceu),
-      .order => (LucideIcons.box, FortalAccentColor.ceu),
-      .payment => (LucideIcons.circleCheck, FortalAccentColor.serra),
+      .order => (RemixIcons.box, FortalAccentColor.ceu),
+      .payment => (RemixIcons.checkCircle, FortalAccentColor.serra),
       .alert => (RemixIcons.warning, FortalAccentColor.sol),
     };
 
@@ -288,7 +287,7 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .size1,
             label: 'View all',
-            trailingIcon: LucideIcons.chevronsRight,
+            trailingIcon: RemixIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],

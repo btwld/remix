@@ -154,9 +154,9 @@ def migration(manifest: Manifest) -> str:
         "",
         "## Remix registry presets",
         "",
-        "The Vanilla and Fortal presets render every registry icon Remix covers",
-        "and fall back to Lucide for the rest, so installing them adds",
-        "`lucide_flutter` alongside `remix_ui_icons`. Projects on the `lucide`",
+        "The Vanilla, Fortal, and HeroUI presets have native coverage for every",
+        "registry icon in both families. Select `remix` for Outline or `rounded`",
+        "for Rounded; either installs `remix_ui_icons`. Projects on the `lucide`",
         "icon library are unaffected.",
         "",
     ]

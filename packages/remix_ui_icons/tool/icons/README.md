@@ -52,7 +52,7 @@ number of font units, and keeps six decimals of the drawings' coordinates.
 `check.py` runs, in order: the drift check; the lock rules; that the
 generated Dart declares every glyph at its locked codepoint and every alias is
 deprecated; a raster comparison of every glyph in the font with its SVG
-(`raster.py`, at native size and 8x, plus the 288 reviewed Outline
+(`raster.py`, at native size and 8x, plus the 462 reviewed Outline
 snapshots); and the API gate. With `--flutter`, it also renders every glyph
 through Flutter (`flutter/glyph_render_test.dart`). A test-only font is built
 directly from the SVGs with an independent cmap, without reading GlyphPact's

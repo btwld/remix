@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -149,7 +148,7 @@ class _FortalDashboardSettingsPageState
                         context,
                         const RemixToastData(
                           title: 'Profile settings saved',
-                          icon: LucideIcons.circleCheck,
+                          icon: RemixIcons.checkCircle,
                         ),
                       ),
                       label: 'Save changes',
@@ -169,7 +168,7 @@ class _FortalDashboardSettingsPageState
                         'Tune every Fortal theme parameter in real time.',
                   ),
                   FortalCallout(
-                    icon: LucideIcons.wandSparkles,
+                    icon: RemixIcons.wand,
                     text: 'Changes apply live across the entire dashboard.',
                   ),
                   SingleChildScrollView(

@@ -12,20 +12,6 @@ from pathlib import Path
 FAMILIES = ("outline", "rounded")
 MASTERS = (12, 16, 24)
 APPEARANCES = ("outline", "filled")
-SHARED = (
-    "home",
-    "search",
-    "plus",
-    "arrow-right",
-    "user",
-    "file",
-    "calendar",
-    "sliders",
-    "warning",
-    "link",
-    "branch",
-    "star",
-)
 FAMILY_LABEL = {"outline": "Outline", "rounded": "Rounded"}
 WARNING_SENTENCE = (
     "Visible text label required for outline at 12 / 16 / 24 px and filled at "
@@ -52,6 +38,16 @@ def _load_json(path: Path):
 
 def _icons(root: Path, family: str) -> list[dict]:
     return _load_json(root / family / "catalog" / "icons.json")["icons"]
+
+
+def shared_ids(root: Path) -> tuple[str, ...]:
+    """Both families must cover the same complete concept inventory."""
+    identities = {family: [icon["id"] for icon in _icons(root, family)] for family in FAMILIES}
+    expected = identities["outline"]
+    for family, ids in identities.items():
+        if len(ids) != len(set(ids)) or set(ids) != set(expected):
+            raise ValueError(f"Family inventory mismatch: {family}")
+    return tuple(expected)
 
 
 def _labels(root: Path, family: str) -> dict[str, str]:
@@ -171,7 +167,7 @@ def _usage_limits(root: Path) -> str:
 
 def _proof(root: Path, labels: dict[str, str]) -> str:
     rows = []
-    for icon_id in SHARED:
+    for icon_id in shared_ids(root):
         cells = "".join(
             f"<div>{_figure(root, family, 'outline', 24, icon_id)}</div>"
             for family in FAMILIES
@@ -193,7 +189,7 @@ def _proof(root: Path, labels: dict[str, str]) -> str:
 
 def _detail(root: Path, labels: dict[str, str]) -> str:
     articles = []
-    for icon_id in SHARED:
+    for icon_id in shared_ids(root):
         rows = []
         for size in MASTERS:
             for appearance in APPEARANCES:
@@ -221,32 +217,9 @@ def _detail(root: Path, labels: dict[str, str]) -> str:
     )
 
 
-def _outline_only(root: Path, labels: dict[str, str]) -> str:
-    outline_ids = [icon["id"] for icon in _icons(root, "outline")]
-    extra = [icon_id for icon_id in outline_ids if icon_id not in SHARED]
-    cards = []
-    for icon_id in extra:
-        outline = _figure(root, "outline", "outline", 24, icon_id)
-        filled = _figure(root, "outline", "filled", 24, icon_id)
-        cards.append(
-            f'<article id="{_esc(icon_id)}">'
-            f"<h3>{_esc(labels[icon_id])} <code>{_esc(icon_id)}</code></h3>"
-            f'<div class="solo">{outline}{filled}</div>'
-            "</article>"
-        )
-    return (
-        '<section id="outline-only">'
-        "<h2>Outline icons without a Rounded sibling</h2>"
-        f"<p>{len(extra)} Outline icons are in this pack. Rounded currently "
-        "covers the shared 12 only. Shown here at native 24, outline then filled.</p>"
-        f'<div class="solo-grid">{"".join(cards)}</div>'
-        "</section>"
-    )
-
-
 def render_catalog(root: Path) -> str:
     labels = {family: _labels(root, family) for family in FAMILIES}
-    for icon_id in SHARED:
+    for icon_id in shared_ids(root):
         names = {labels[family][icon_id] for family in FAMILIES}
         if len(names) != 1:
             raise ValueError(f"label mismatch for {icon_id}: {names}")
@@ -255,7 +228,7 @@ def render_catalog(root: Path) -> str:
         family: len(list((root / family / "generated" / family).rglob("*.svg")))
         for family in FAMILIES
     }
-    expected = {"outline": 288, "rounded": 72}
+    expected = {family: len(shared_ids(root)) * len(MASTERS) * len(APPEARANCES) for family in FAMILIES}
     if counts != expected:
         raise ValueError(f"unexpected SVG counts: {counts}")
     return f"""<!DOCTYPE html>
@@ -370,7 +343,7 @@ body:has(#surface:checked) {{
 <header>
 <p class="kicker">Private review pack · not for publication</p>
 <h1>Vector UI icon families</h1>
-<p>Outline and Rounded live here as siblings. Outline has {counts["outline"]} SVGs. Rounded has {counts["rounded"]}. Each drawing is outline or filled at native 12, 16, or 24.</p>
+<p>Outline and Rounded live here as siblings. Outline has {counts["outline"]} SVGs. Rounded has {counts["rounded"]}. Both cover the same {len(shared_ids(root))} concepts. Each drawing is outline or filled at native 12, 16, or 24.</p>
 <p class="banner"><strong>Warning.</strong> {WARNING_SENTENCE} The rule applies to Outline and Rounded. A recorded gap exception does not lift it.</p>
 <label class="surface"><input id="surface" type="checkbox"> Dark surface</label>
 <nav>
@@ -380,7 +353,6 @@ body:has(#surface:checked) {{
 <a href="#questions">Open questions</a>
 <a href="#families">All masters</a>
 <a href="#warning">Warning icon</a>
-<a href="#outline-only">Outline only</a>
 </nav>
 </header>
 <main>
@@ -401,7 +373,6 @@ body:has(#surface:checked) {{
 {_usage_limits(root)}
 </section>
 {_detail(root, shared_labels)}
-{_outline_only(root, shared_labels)}
 </main>
 <footer>
 <p>BSD 3-Clause. Copyright 2026, Leo Farias. <code>package.json</code> is <code>private</code>. This source pack is not published to npm or pub.dev; <code>remix_ui_icons</code> compiles its masters into a Flutter icon font.</p>

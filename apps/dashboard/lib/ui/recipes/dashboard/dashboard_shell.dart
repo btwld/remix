@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -85,8 +84,8 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
       sidebarHeaderStyle: sidebarHeaderStyle,
       menuIcon: RemixIcons.menu,
       searchIcon: RemixIcons.search,
-      backwardIcon: LucideIcons.chevronsLeft,
-      forwardIcon: LucideIcons.chevronsRight,
+      backwardIcon: RemixIcons.chevronsLeft,
+      forwardIcon: RemixIcons.chevronsRight,
       layoutBuilder:
           (
             context, {

@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -47,9 +46,9 @@ class UiStatCard extends StatelessWidget {
         switch (label) {
           'Revenue' => RemixIcons.chart,
           'Active customers' => RemixIcons.user,
-          'Open orders' => LucideIcons.box,
-          'Fulfillment' => LucideIcons.activity,
-          _ => LucideIcons.activity,
+          'Open orders' => RemixIcons.box,
+          'Fulfillment' => RemixIcons.activity,
+          _ => RemixIcons.activity,
         };
     final column = ColumnBox(
       style: FlexBoxStyler()

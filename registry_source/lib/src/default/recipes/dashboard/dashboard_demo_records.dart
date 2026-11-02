@@ -13,7 +13,6 @@ import '../../components/segmented_control.dart';
 import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_text.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
@@ -105,7 +104,7 @@ class _VanillaDashboardCustomersPageState
                       context,
                       RemixToastData(
                         title: '${_selectedIds.length} customers archived',
-                        icon: LucideIcons.circleCheck,
+                        icon: RemixIcons.checkCircle,
                         action: const RemixToastAction(
                           label: 'Undo',
                           onPressed: _noop,

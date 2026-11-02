@@ -30,6 +30,13 @@ CATALOG_USAGE = {
     "Requires a visible text label at 12 px. At 16 and 24 px, use the action name on the enclosing control.": frozenset({12}),
     "Requires a visible text label at every size and appearance. This rule is separate from the Warning restriction record.": ALL,
 }
+CATALOG_USAGE.update({
+    'Keep a visible action label: the wand does not say what the automatic action does.': ALL,
+    'Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.': ALL,
+    'A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.': None,
+    'Name the appearance on the enclosing control; this is not a generic status.': None,
+    'Announce progress in text; the caller owns motion and reduced-motion behavior.': None,
+})
 CATALOG_RESTRICTIONS = {"warning-visible-label": ALL}
 
 # Requirements stated only in prose: (source, quote, family, concept, masters).

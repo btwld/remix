@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -184,7 +183,7 @@ class _PlaygroundDashboardSettingsPageState
                   .spacing(PlaygroundTokens.s4),
               children: [
                 const PlaygroundCallout(
-                  icon: LucideIcons.wandSparkles,
+                  icon: RemixIcons.wand,
                   text:
                       'Changes are deterministic and remain local to the demo.',
                 ),

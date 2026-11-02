@@ -11,8 +11,8 @@ published.
   codepoint: glyphs start at `0xE200`, and the 0.1.x range `0xE000`–`0xE13D` is
   reserved and never reused.
 <!-- generated:1.0.0:begin -->
-- 360 glyphs: 48 concepts in Outline (48), Rounded (12), each in outline and filled styles at native 24, 16, and 12 px masters.
-- Of the 318 0.1.x names, 27 are unchanged, 19 are deprecated aliases until 2.0.0, and 272 are removed (25 partial matches, 247 with no match). [MIGRATION.md](MIGRATION.md) lists every name with its replacement or closest Lucide icon.
+- 924 glyphs: 77 concepts in Outline (77), Rounded (77), each in outline and filled styles at native 24, 16, and 12 px masters.
+- Of the 318 0.1.x names, 45 are unchanged, 31 are deprecated aliases until 2.0.0, and 242 are removed (25 partial matches, 217 with no match). [MIGRATION.md](MIGRATION.md) lists every name with its replacement or closest Lucide icon.
 <!-- generated:1.0.0:end -->
 - `remixIconsByName` is replaced by `remixIconEntries` in
   `package:remix_ui_icons/icons_index.dart`. Each entry adds the family,
@@ -25,25 +25,37 @@ replacements, until 2.0.0:
 <!-- generated:1.0.0-aliases:begin -->
 | 0.1.x name | Use instead |
 | --- | --- |
+| `RemixIcons.alignCenterHorizontally` | `RemixIcons.alignCenter` |
 | `RemixIcons.arrowTopRight` | `RemixIcons.arrowUpRight` |
 | `RemixIcons.barChart` | `RemixIcons.chart` |
 | `RemixIcons.chatBubble` | `RemixIcons.chat` |
+| `RemixIcons.checkCircled` | `RemixIcons.checkCircle` |
+| `RemixIcons.circleBackslash` | `RemixIcons.ban` |
 | `RemixIcons.cross1` | `RemixIcons.close` |
 | `RemixIcons.cross2` | `RemixIcons.close` |
+| `RemixIcons.crossCircled` | `RemixIcons.closeCircle` |
+| `RemixIcons.cursorArrow` | `RemixIcons.cursor` |
 | `RemixIcons.dotsHorizontal` | `RemixIcons.more` |
+| `RemixIcons.doubleArrowLeft` | `RemixIcons.chevronsLeft` |
+| `RemixIcons.doubleArrowRight` | `RemixIcons.chevronsRight` |
 | `RemixIcons.exclamationTriangle` | `RemixIcons.warning` |
+| `RemixIcons.fontBold` | `RemixIcons.bold` |
+| `RemixIcons.fontSize` | `RemixIcons.type` |
 | `RemixIcons.hamburgerMenu` | `RemixIcons.menu` |
 | `RemixIcons.infoCircled` | `RemixIcons.info` |
 | `RemixIcons.link1` | `RemixIcons.link` |
 | `RemixIcons.link2` | `RemixIcons.link` |
 | `RemixIcons.lockClosed` | `RemixIcons.lock` |
+| `RemixIcons.magicWand` | `RemixIcons.wand` |
 | `RemixIcons.magnifyingGlass` | `RemixIcons.search` |
 | `RemixIcons.mixerHorizontal` | `RemixIcons.sliders` |
+| `RemixIcons.mobile` | `RemixIcons.smartphone` |
 | `RemixIcons.pencil1` | `RemixIcons.edit` |
 | `RemixIcons.pencil2` | `RemixIcons.edit` |
 | `RemixIcons.person` | `RemixIcons.user` |
 | `RemixIcons.questionMarkCircled` | `RemixIcons.help` |
 | `RemixIcons.reload` | `RemixIcons.refresh` |
+| `RemixIcons.stack` | `RemixIcons.layers` |
 <!-- generated:1.0.0-aliases:end -->
 
 ### Features

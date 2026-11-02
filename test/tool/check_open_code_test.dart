@@ -467,6 +467,19 @@ Future<void> main(List<String> arguments) async {
     }
   });
 
+  test('the complete Rounded library is available to a fresh consumer', () {
+    final options = checker.parseConsumerCheckOptions([
+      '--source',
+      'checkout',
+      '--icon-library',
+      'rounded',
+    ])!;
+    expect(options.iconLibrary, 'rounded');
+    final table = File('registry/icons.yaml').readAsStringSync();
+    expect(checker.iconPackagesFor(table, 'rounded'), ['remix_ui_icons']);
+    expect(checker.iconPackagesFor(table, 'remix'), ['remix_ui_icons']);
+  });
+
   test('focused inventories derive grouped recipes from registry.yaml', () {
     final vanillaShell = checker.focusedInventoryForTest('dashboard_shell');
     expect(

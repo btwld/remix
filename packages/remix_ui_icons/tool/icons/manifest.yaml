@@ -12,7 +12,7 @@ startCodepoint: "0xE200"
 source:
   root: ../../../../design/icons
   # Commit containing the current masters; glyph source hashes bind each drawing.
-  revision: 767eeb62e29e8b8dba0070e8553509f8043bc2dc
+  revision: 000f3fdf52ac24120493055f82c14da4c9a81894
 reserved:
   # remix_ui_icons 0.1.x shipped the Radix Icons 1.3.2 glyphs here. Never reuse.
   - first: "0xE000"
@@ -41,14 +41,14 @@ concepts:
   menu:
     name: menu
     label: "Menu"
-    families: [outline]
+    families: [outline, rounded]
     tags: [hamburger, navigation]
     rtl: false
     since: 1.0.0-beta.1
   more:
     name: more
     label: "More"
-    families: [outline]
+    families: [outline, rounded]
     tags: [overflow, ellipsis]
     rtl: false
     since: 1.0.0-beta.1
@@ -62,14 +62,14 @@ concepts:
   grid:
     name: grid
     label: "Grid"
-    families: [outline]
+    families: [outline, rounded]
     tags: [apps, tiles]
     rtl: false
     since: 1.0.0-beta.1
   arrow-left:
     name: arrowLeft
     label: "Arrow left"
-    families: [outline]
+    families: [outline, rounded]
     tags: [previous, back]
     rtl: false
     since: 1.0.0-beta.1
@@ -83,21 +83,21 @@ concepts:
   arrow-up:
     name: arrowUp
     label: "Arrow up"
-    families: [outline]
+    families: [outline, rounded]
     tags: [up, move]
     rtl: false
     since: 1.0.0-beta.1
   arrow-down:
     name: arrowDown
     label: "Arrow down"
-    families: [outline]
+    families: [outline, rounded]
     tags: [down, move]
     rtl: false
     since: 1.0.0-beta.1
   arrow-up-right:
     name: arrowUpRight
     label: "Arrow up right"
-    families: [outline]
+    families: [outline, rounded]
     tags: [external, outbound]
     rtl: false
     since: 1.0.0-beta.1
@@ -110,28 +110,28 @@ concepts:
   chevron-left:
     name: chevronLeft
     label: "Chevron left"
-    families: [outline]
+    families: [outline, rounded]
     tags: [previous, back]
     rtl: false
     since: 1.0.0-beta.1
   chevron-right:
     name: chevronRight
     label: "Chevron right"
-    families: [outline]
+    families: [outline, rounded]
     tags: [next, forward]
     rtl: false
     since: 1.0.0-beta.1
   chevron-up:
     name: chevronUp
     label: "Chevron up"
-    families: [outline]
+    families: [outline, rounded]
     tags: [collapse, up]
     rtl: false
     since: 1.0.0-beta.1
   chevron-down:
     name: chevronDown
     label: "Chevron down"
-    families: [outline]
+    families: [outline, rounded]
     tags: [expand, down]
     rtl: false
     since: 1.0.0-beta.1
@@ -145,56 +145,56 @@ concepts:
   minus:
     name: minus
     label: "Minus"
-    families: [outline]
+    families: [outline, rounded]
     tags: [subtract, decrease]
     rtl: false
     since: 1.0.0-beta.1
   check:
     name: check
     label: "Check"
-    families: [outline]
+    families: [outline, rounded]
     tags: [done, complete, success]
     rtl: false
     since: 1.0.0-beta.1
   close:
     name: close
     label: "Close"
-    families: [outline]
+    families: [outline, rounded]
     tags: [dismiss, cancel]
     rtl: false
     since: 1.0.0-beta.1
   edit:
     name: edit
     label: "Edit"
-    families: [outline]
+    families: [outline, rounded]
     tags: [pencil, modify]
     rtl: false
     since: 1.0.0-beta.1
   copy:
     name: copy
     label: "Copy"
-    families: [outline]
+    families: [outline, rounded]
     tags: [duplicate, clipboard]
     rtl: false
     since: 1.0.0-beta.1
   trash:
     name: trash
     label: "Trash"
-    families: [outline]
+    families: [outline, rounded]
     tags: [delete, remove]
     rtl: false
     since: 1.0.0-beta.1
   refresh:
     name: refresh
     label: "Refresh"
-    families: [outline]
+    families: [outline, rounded]
     tags: [reload, update]
     rtl: false
     since: 1.0.0-beta.1
   filter:
     name: filter
     label: "Filter"
-    families: [outline]
+    families: [outline, rounded]
     tags: [funnel, results]
     rtl: false
     since: 1.0.0-beta.1
@@ -208,21 +208,21 @@ concepts:
   upload:
     name: upload
     label: "Upload"
-    families: [outline]
+    families: [outline, rounded]
     tags: [import, send]
     rtl: false
     since: 1.0.0-beta.1
   download:
     name: download
     label: "Download"
-    families: [outline]
+    families: [outline, rounded]
     tags: [export, receive]
     rtl: false
     since: 1.0.0-beta.1
   save:
     name: save
     label: "Save"
-    families: [outline]
+    families: [outline, rounded]
     tags: [disk, commit]
     rtl: false
     since: 1.0.0-beta.1
@@ -236,7 +236,7 @@ concepts:
   folder:
     name: folder
     label: "Folder"
-    families: [outline]
+    families: [outline, rounded]
     tags: [directory, organize]
     rtl: false
     since: 1.0.0-beta.1
@@ -257,7 +257,7 @@ concepts:
   bookmark:
     name: bookmark
     label: "Bookmark"
-    families: [outline]
+    families: [outline, rounded]
     tags: [reading, later]
     rtl: false
     since: 1.0.0-beta.1
@@ -285,14 +285,14 @@ concepts:
   chat:
     name: chat
     label: "Chat"
-    families: [outline]
+    families: [outline, rounded]
     tags: [message, conversation]
     rtl: false
     since: 1.0.0-beta.1
   bell:
     name: bell
     label: "Bell"
-    families: [outline]
+    families: [outline, rounded]
     tags: [notification, alert]
     rtl: false
     since: 1.0.0-beta.1
@@ -312,14 +312,14 @@ concepts:
   info:
     name: info
     label: "Info"
-    families: [outline]
+    families: [outline, rounded]
     tags: [information, about]
     rtl: false
     since: 1.0.0-beta.1
   help:
     name: help
     label: "Help"
-    families: [outline]
+    families: [outline, rounded]
     tags: [question, support]
     rtl: false
     since: 1.0.0-beta.1
@@ -336,31 +336,48 @@ concepts:
         note: "A contextual label is recommended."
         source: outline/catalog/icons.json
         quote: "Visible label required at 12 px; contextual label recommended at other sizes."
+      - families:
+        - rounded
+        masters:
+        - 12
+        kind: label-required
+        note: Requires a visible text label at 12 px.
+        source: rounded/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+      - families:
+        - rounded
+        masters:
+        - 24
+        - 16
+        kind: label-contextual
+        note: A contextual label is recommended.
+        source: rounded/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
   lock:
     name: lock
     label: "Lock"
-    families: [outline]
+    families: [outline, rounded]
     tags: [secure, private]
     rtl: false
     since: 1.0.0-beta.1
   shield:
     name: shield
     label: "Shield"
-    families: [outline]
+    families: [outline, rounded]
     tags: [protection, policy]
     rtl: false
     since: 1.0.0-beta.1
   gear:
     name: gear
     label: "Gear"
-    families: [outline]
+    families: [outline, rounded]
     tags: [settings, cog, preferences]
     rtl: false
     since: 1.0.0-beta.1
   terminal:
     name: terminal
     label: "Terminal"
-    families: [outline]
+    families: [outline, rounded]
     tags: [console, command]
     rtl: false
     since: 1.0.0-beta.1
@@ -392,28 +409,28 @@ concepts:
   chart:
     name: chart
     label: "Chart"
-    families: [outline]
+    families: [outline, rounded]
     tags: [analytics, metrics]
     rtl: false
     since: 1.0.0-beta.1
   play:
     name: play
     label: "Play"
-    families: [outline]
+    families: [outline, rounded]
     tags: [run, start]
     rtl: false
     since: 1.0.0-beta.1
   pause:
     name: pause
     label: "Pause"
-    families: [outline]
+    families: [outline, rounded]
     tags: [hold, wait]
     rtl: false
     since: 1.0.0-beta.1
   focus:
     name: focus
     label: "Focus"
-    families: [outline]
+    families: [outline, rounded]
     tags: [target, region]
     rtl: false
     since: 1.0.0-beta.1
@@ -434,15 +451,431 @@ concepts:
 # @Deprecated aliases until 2.0.0 (or remain canonical when the name is
 # unchanged); `partial` and `removed` names are gone in 1.0.0 and appear
 # only in the migration guide, with the closest Lucide icon.
+      - families:
+        - rounded
+        masters:
+        - 12
+        kind: label-required
+        note: Requires a visible text label at 12 px.
+        source: rounded/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+      - families:
+        - rounded
+        masters:
+        - 24
+        - 16
+        kind: label-contextual
+        note: A contextual label is recommended.
+        source: rounded/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+  activity:
+    name: activity
+    label: Activity
+    families:
+    - outline
+    - rounded
+    tags:
+    - activityLog
+    rtl: false
+    since: 1.0.0-beta.1
+  align-center:
+    name: alignCenter
+    label: Align center
+    families:
+    - outline
+    - rounded
+    tags:
+    - alignCenterHorizontally
+    rtl: false
+    since: 1.0.0-beta.1
+  align-left:
+    name: alignLeft
+    label: Align left
+    families:
+    - outline
+    - rounded
+    tags:
+    - alignLeft
+    rtl: false
+    since: 1.0.0-beta.1
+  align-right:
+    name: alignRight
+    label: Align right
+    families:
+    - outline
+    - rounded
+    tags:
+    - alignRight
+    rtl: false
+    since: 1.0.0-beta.1
+  box:
+    name: box
+    label: Box
+    families:
+    - outline
+    - rounded
+    tags:
+    - box
+    rtl: false
+    since: 1.0.0-beta.1
+  check-circle:
+    name: checkCircle
+    label: Check circle
+    families:
+    - outline
+    - rounded
+    tags:
+    - checkCircled
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-required
+        note: Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.
+        source: outline/catalog/icons.json
+        quote: Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.
+  circle:
+    name: circle
+    label: Circle
+    families:
+    - outline
+    - rounded
+    tags:
+    - circle
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-contextual
+        note: A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.
+        source: outline/catalog/icons.json
+        quote: A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.
+  ban:
+    name: ban
+    label: Ban
+    families:
+    - outline
+    - rounded
+    tags:
+    - circleBackslash
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-required
+        note: Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.
+        source: outline/catalog/icons.json
+        quote: Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.
+  close-circle:
+    name: closeCircle
+    label: Close circle
+    families:
+    - outline
+    - rounded
+    tags:
+    - crossCircled
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-required
+        note: Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.
+        source: outline/catalog/icons.json
+        quote: Pair with text that states the status; shape and color do not carry it alone. 12 px is for labeled information.
+  cursor:
+    name: cursor
+    label: Cursor
+    families:
+    - outline
+    - rounded
+    tags:
+    - cursorArrow
+    rtl: false
+    since: 1.0.0-beta.1
+  dot:
+    name: dot
+    label: Dot
+    families:
+    - outline
+    - rounded
+    tags:
+    - dotFilled
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-contextual
+        note: A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.
+        source: outline/catalog/icons.json
+        quote: A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.
+  chevrons-left:
+    name: chevronsLeft
+    label: Chevrons left
+    families:
+    - outline
+    - rounded
+    tags:
+    - doubleArrowLeft
+    rtl: false
+    since: 1.0.0-beta.1
+  chevrons-right:
+    name: chevronsRight
+    label: Chevrons right
+    families:
+    - outline
+    - rounded
+    tags:
+    - doubleArrowRight
+    rtl: false
+    since: 1.0.0-beta.1
+  bold:
+    name: bold
+    label: Bold
+    families:
+    - outline
+    - rounded
+    tags:
+    - fontBold
+    rtl: false
+    since: 1.0.0-beta.1
+  type:
+    name: type
+    label: Type
+    families:
+    - outline
+    - rounded
+    tags:
+    - fontSize
+    rtl: false
+    since: 1.0.0-beta.1
+  group:
+    name: group
+    label: Group
+    families:
+    - outline
+    - rounded
+    tags:
+    - group
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        masters:
+        - 12
+        kind: label-required
+        note: Requires a visible text label at 12 px.
+        source: outline/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+      - families:
+        - outline
+        masters:
+        - 24
+        - 16
+        kind: label-contextual
+        note: A contextual label is recommended.
+        source: outline/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+      - families:
+        - rounded
+        masters:
+        - 12
+        kind: label-required
+        note: Requires a visible text label at 12 px.
+        source: rounded/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+      - families:
+        - rounded
+        masters:
+        - 24
+        - 16
+        kind: label-contextual
+        note: A contextual label is recommended.
+        source: rounded/catalog/icons.json
+        quote: Visible label required at 12 px; contextual label recommended at other sizes.
+  heart:
+    name: heart
+    label: Heart
+    families:
+    - outline
+    - rounded
+    tags:
+    - heart
+    rtl: false
+    since: 1.0.0-beta.1
+  input:
+    name: input
+    label: Input
+    families:
+    - outline
+    - rounded
+    tags:
+    - input
+    rtl: false
+    since: 1.0.0-beta.1
+  laptop:
+    name: laptop
+    label: Laptop
+    families:
+    - outline
+    - rounded
+    tags:
+    - laptop
+    rtl: false
+    since: 1.0.0-beta.1
+  wand:
+    name: wand
+    label: Wand
+    families:
+    - outline
+    - rounded
+    tags:
+    - magicWand
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-required
+        note: 'Keep a visible action label: the wand does not say what the automatic action does.'
+        source: outline/catalog/icons.json
+        quote: 'Keep a visible action label: the wand does not say what the automatic action does.'
+  smartphone:
+    name: smartphone
+    label: Smartphone
+    families:
+    - outline
+    - rounded
+    tags:
+    - mobile
+    rtl: false
+    since: 1.0.0-beta.1
+  moon:
+    name: moon
+    label: Moon
+    families:
+    - outline
+    - rounded
+    tags:
+    - moon
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-contextual
+        note: Name the appearance on the enclosing control; this is not a generic status.
+        source: outline/catalog/icons.json
+        quote: Name the appearance on the enclosing control; this is not a generic status.
+  square:
+    name: square
+    label: Square
+    families:
+    - outline
+    - rounded
+    tags:
+    - square
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-contextual
+        note: A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.
+        source: outline/catalog/icons.json
+        quote: A plain shape, not a control. Do not imply behavior; name any action on the enclosing control.
+  layers:
+    name: layers
+    label: Layers
+    families:
+    - outline
+    - rounded
+    tags:
+    - stack
+    rtl: false
+    since: 1.0.0-beta.1
+  sun:
+    name: sun
+    label: Sun
+    families:
+    - outline
+    - rounded
+    tags:
+    - sun
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-contextual
+        note: Name the appearance on the enclosing control; this is not a generic status.
+        source: outline/catalog/icons.json
+        quote: Name the appearance on the enclosing control; this is not a generic status.
+  table:
+    name: table
+    label: Table
+    families:
+    - outline
+    - rounded
+    tags:
+    - table
+    rtl: false
+    since: 1.0.0-beta.1
+  loader:
+    name: loader
+    label: Loader
+    families:
+    - outline
+    - rounded
+    tags:
+    - update
+    rtl: false
+    since: 1.0.0-beta.1
+    usage:
+      - families:
+        - outline
+        kind: label-contextual
+        note: Announce progress in text; the caller owns motion and reduced-motion behavior.
+        source: outline/catalog/icons.json
+        quote: Announce progress in text; the caller owns motion and reduced-motion behavior.
+  code:
+    name: code
+    label: Code
+    families:
+    - outline
+    - rounded
+    tags:
+    - code
+    rtl: false
+    since: 1.0.0-beta.1
+  dashboard:
+    name: dashboard
+    label: Dashboard
+    families:
+    - outline
+    - rounded
+    tags:
+    - dashboard
+    rtl: false
+    since: 1.0.0-beta.1
+
 legacy:
   accessibility:
     codepoint: "0xE000"
     status: removed
     lucide: accessibility
   activityLog:
-    codepoint: "0xE001"
-    status: removed
+    codepoint: '0xE001'
+    status: partial
     lucide: activity
+    target: activity
+    note: Activity uses the pulse motif already used by the registry; it is not a historical
+      log-list drawing.
   alignBaseline:
     codepoint: "0xE002"
     status: removed
@@ -452,21 +885,24 @@ legacy:
     status: removed
     lucide: alignEndHorizontal
   alignCenterHorizontally:
-    codepoint: "0xE004"
-    status: removed
+    codepoint: '0xE004'
+    status: exact
     lucide: alignCenter
+    target: alignCenter
   alignCenterVertically:
     codepoint: "0xE005"
     status: removed
     lucide: alignCenterVertical
   alignLeft:
-    codepoint: "0xE006"
-    status: removed
+    codepoint: '0xE006'
+    status: exact
     lucide: alignLeft
+    target: alignLeft
   alignRight:
-    codepoint: "0xE007"
-    status: removed
+    codepoint: '0xE007'
+    status: exact
     lucide: alignRight
+    target: alignRight
   alignTop:
     codepoint: "0xE008"
     status: removed
@@ -492,17 +928,17 @@ legacy:
     status: removed
     lucide: arrowDownRight
   arrowDown:
-    codepoint: "0xE00E"
+    codepoint: '0xE00E'
     status: exact
     target: arrowDown
     lucide: arrowDown
   arrowLeft:
-    codepoint: "0xE00F"
+    codepoint: '0xE00F'
     status: exact
     target: arrowLeft
     lucide: arrowLeft
   arrowRight:
-    codepoint: "0xE010"
+    codepoint: '0xE010'
     status: exact
     target: arrowRight
     lucide: arrowRight
@@ -516,7 +952,7 @@ legacy:
     target: arrowUpRight
     lucide: arrowUpRight
   arrowUp:
-    codepoint: "0xE013"
+    codepoint: '0xE013'
     status: exact
     target: arrowUp
     lucide: arrowUp
@@ -539,12 +975,12 @@ legacy:
     status: removed
     lucide: badge
   barChart:
-    codepoint: "0xE018"
+    codepoint: '0xE018'
     status: exact
     target: chart
     lucide: chartColumn
   bell:
-    codepoint: "0xE019"
+    codepoint: '0xE019'
     status: exact
     target: bell
     lucide: bell
@@ -553,12 +989,12 @@ legacy:
     status: removed
     lucide: blend
   bookmarkFilled:
-    codepoint: "0xE01B"
+    codepoint: '0xE01B'
     status: exact
     target: bookmarkFilled
     lucide: bookmark
   bookmark:
-    codepoint: "0xE01C"
+    codepoint: '0xE01C'
     status: exact
     target: bookmark
     lucide: bookmark
@@ -615,15 +1051,16 @@ legacy:
     status: removed
     lucide: boxSelect
   box:
-    codepoint: "0xE02A"
-    status: removed
+    codepoint: '0xE02A'
+    status: exact
     lucide: box
+    target: box
   button:
     codepoint: "0xE02B"
     status: removed
     lucide: rectangleHorizontal
   calendar:
-    codepoint: "0xE02C"
+    codepoint: '0xE02C'
     status: exact
     target: calendar
     lucide: calendar
@@ -672,16 +1109,17 @@ legacy:
     lucide: chevronUp
     note: "Chevron is open; caret is a filled triangle."
   chatBubble:
-    codepoint: "0xE036"
+    codepoint: '0xE036'
     status: exact
     target: chat
     lucide: messageCircle
   checkCircled:
-    codepoint: "0xE037"
-    status: removed
+    codepoint: '0xE037'
+    status: exact
     lucide: circleCheck
+    target: checkCircle
   check:
-    codepoint: "0xE038"
+    codepoint: '0xE038'
     status: exact
     target: check
     lucide: check
@@ -690,33 +1128,35 @@ legacy:
     status: removed
     lucide: squareCheck
   chevronDown:
-    codepoint: "0xE03A"
+    codepoint: '0xE03A'
     status: exact
     target: chevronDown
     lucide: chevronDown
   chevronLeft:
-    codepoint: "0xE03B"
+    codepoint: '0xE03B'
     status: exact
     target: chevronLeft
     lucide: chevronLeft
   chevronRight:
-    codepoint: "0xE03C"
+    codepoint: '0xE03C'
     status: exact
     target: chevronRight
     lucide: chevronRight
   chevronUp:
-    codepoint: "0xE03D"
+    codepoint: '0xE03D'
     status: exact
     target: chevronUp
     lucide: chevronUp
   circleBackslash:
-    codepoint: "0xE03E"
-    status: removed
+    codepoint: '0xE03E'
+    status: exact
     lucide: ban
+    target: ban
   circle:
-    codepoint: "0xE03F"
-    status: removed
+    codepoint: '0xE03F'
+    status: exact
     lucide: circle
+    target: circle
   clipboardCopy:
     codepoint: "0xE040"
     status: partial
@@ -732,11 +1172,10 @@ legacy:
     status: removed
     lucide: clock
   code:
-    codepoint: "0xE043"
-    status: partial
-    target: terminal
+    codepoint: '0xE043'
+    status: exact
+    target: code
     lucide: code
-    note: "Terminal window/prompt replaces code brackets; product decision required."
   codesandboxLogo:
     codepoint: "0xE044"
     status: removed
@@ -791,7 +1230,7 @@ legacy:
     status: removed
     lucide: cookie
   copy:
-    codepoint: "0xE051"
+    codepoint: '0xE051'
     status: exact
     target: copy
     lucide: copy
@@ -833,14 +1272,15 @@ legacy:
     target: close
     lucide: x
   cross2:
-    codepoint: "0xE05B"
+    codepoint: '0xE05B'
     status: exact
     target: close
     lucide: x
   crossCircled:
-    codepoint: "0xE05C"
-    status: removed
+    codepoint: '0xE05C'
+    status: exact
     lucide: circleX
+    target: closeCircle
   crosshair1:
     codepoint: "0xE05D"
     status: partial
@@ -862,9 +1302,10 @@ legacy:
     status: removed
     lucide: box
   cursorArrow:
-    codepoint: "0xE061"
-    status: removed
+    codepoint: '0xE061'
+    status: exact
     lucide: mousePointer2
+    target: cursor
   cursorText:
     codepoint: "0xE062"
     status: removed
@@ -876,11 +1317,10 @@ legacy:
     lucide: minus
     note: "Text dash versus decrease action."
   dashboard:
-    codepoint: "0xE064"
-    status: partial
-    target: grid
+    codepoint: '0xE064'
+    status: exact
+    target: dashboard
     lucide: layoutDashboard
-    note: "Grid is app/grid view, not dashboard panels; Home also changes metaphor."
   desktop:
     codepoint: "0xE065"
     status: removed
@@ -909,15 +1349,17 @@ legacy:
     status: removed
     lucide: separatorVertical
   dotFilled:
-    codepoint: "0xE06B"
-    status: removed
+    codepoint: '0xE06B'
+    status: exact
     lucide: dot
+    target: dotFilled
   dot:
-    codepoint: "0xE06C"
-    status: removed
+    codepoint: '0xE06C'
+    status: exact
     lucide: dot
+    target: dot
   dotsHorizontal:
-    codepoint: "0xE06D"
+    codepoint: '0xE06D'
     status: exact
     target: more
     lucide: ellipsis
@@ -932,19 +1374,21 @@ legacy:
     status: removed
     lucide: chevronsDown
   doubleArrowLeft:
-    codepoint: "0xE070"
-    status: removed
+    codepoint: '0xE070'
+    status: exact
     lucide: chevronsLeft
+    target: chevronsLeft
   doubleArrowRight:
-    codepoint: "0xE071"
-    status: removed
+    codepoint: '0xE071'
+    status: exact
     lucide: chevronsRight
+    target: chevronsRight
   doubleArrowUp:
     codepoint: "0xE072"
     status: removed
     lucide: chevronsUp
   download:
-    codepoint: "0xE073"
+    codepoint: '0xE073'
     status: exact
     target: download
     lucide: download
@@ -997,7 +1441,7 @@ legacy:
     status: removed
     lucide: eraser
   exclamationTriangle:
-    codepoint: "0xE080"
+    codepoint: '0xE080'
     status: exact
     target: warning
     lucide: triangleAlert
@@ -1051,14 +1495,15 @@ legacy:
     lucide: fileText
     note: "Generic file loses text lines."
   file:
-    codepoint: "0xE08C"
+    codepoint: '0xE08C'
     status: exact
     target: file
     lucide: file
   fontBold:
-    codepoint: "0xE08D"
-    status: removed
+    codepoint: '0xE08D'
+    status: exact
     lucide: bold
+    target: bold
   fontFamily:
     codepoint: "0xE08E"
     status: removed
@@ -1072,9 +1517,10 @@ legacy:
     status: removed
     lucide: type
   fontSize:
-    codepoint: "0xE091"
-    status: removed
+    codepoint: '0xE091'
+    status: exact
     lucide: aLargeSmall
+    target: type
   fontStyle:
     codepoint: "0xE092"
     status: removed
@@ -1089,7 +1535,7 @@ legacy:
     lucide: null
     note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
   gear:
-    codepoint: "0xE095"
+    codepoint: '0xE095'
     status: exact
     target: gear
     lucide: settings
@@ -1103,14 +1549,15 @@ legacy:
     status: removed
     lucide: globe
   grid:
-    codepoint: "0xE098"
+    codepoint: '0xE098'
     status: exact
     target: grid
     lucide: grid3x3
   group:
-    codepoint: "0xE099"
-    status: removed
+    codepoint: '0xE099'
+    status: exact
     lucide: group
+    target: group
   half1:
     codepoint: "0xE09A"
     status: removed
@@ -1120,7 +1567,7 @@ legacy:
     status: removed
     lucide: contrast
   hamburgerMenu:
-    codepoint: "0xE09C"
+    codepoint: '0xE09C'
     status: exact
     target: menu
     lucide: menu
@@ -1133,13 +1580,15 @@ legacy:
     status: removed
     lucide: heading
   heartFilled:
-    codepoint: "0xE09F"
-    status: removed
+    codepoint: '0xE09F'
+    status: exact
     lucide: heart
+    target: heartFilled
   heart:
-    codepoint: "0xE0A0"
-    status: removed
+    codepoint: '0xE0A0'
+    status: exact
     lucide: heart
+    target: heart
   height:
     codepoint: "0xE0A1"
     status: removed
@@ -1149,7 +1598,7 @@ legacy:
     status: removed
     lucide: slice
   home:
-    codepoint: "0xE0A3"
+    codepoint: '0xE0A3'
     status: exact
     target: home
     lucide: house
@@ -1167,14 +1616,15 @@ legacy:
     status: removed
     lucide: image
   infoCircled:
-    codepoint: "0xE0A7"
+    codepoint: '0xE0A7'
     status: exact
     target: info
     lucide: info
   input:
-    codepoint: "0xE0A8"
-    status: removed
+    codepoint: '0xE0A8'
+    status: exact
     lucide: formInput
+    target: input
   instagramLogo:
     codepoint: "0xE0A9"
     status: removed
@@ -1189,13 +1639,15 @@ legacy:
     status: removed
     lucide: timer
   laptop:
-    codepoint: "0xE0AC"
-    status: removed
+    codepoint: '0xE0AC'
+    status: exact
     lucide: laptop
+    target: laptop
   layers:
-    codepoint: "0xE0AD"
-    status: removed
+    codepoint: '0xE0AD'
+    status: exact
     lucide: layers
+    target: layers
   layout:
     codepoint: "0xE0AE"
     status: removed
@@ -1264,7 +1716,7 @@ legacy:
     status: removed
     lucide: list
   lockClosed:
-    codepoint: "0xE0BE"
+    codepoint: '0xE0BE'
     status: exact
     target: lock
     lucide: lock
@@ -1281,11 +1733,12 @@ legacy:
     status: removed
     lucide: repeat
   magicWand:
-    codepoint: "0xE0C2"
-    status: removed
+    codepoint: '0xE0C2'
+    status: exact
     lucide: wandSparkles
+    target: wand
   magnifyingGlass:
-    codepoint: "0xE0C3"
+    codepoint: '0xE0C3'
     status: exact
     target: search
     lucide: search
@@ -1306,7 +1759,7 @@ legacy:
     status: removed
     lucide: circleMinus
   minus:
-    codepoint: "0xE0C8"
+    codepoint: '0xE0C8'
     status: exact
     target: minus
     lucide: minus
@@ -1315,7 +1768,7 @@ legacy:
     status: removed
     lucide: blend
   mixerHorizontal:
-    codepoint: "0xE0CA"
+    codepoint: '0xE0CA'
     status: exact
     target: sliders
     lucide: slidersHorizontal
@@ -1326,18 +1779,20 @@ legacy:
     lucide: slidersVertical
     note: "Only horizontal adjustment drawing."
   mobile:
-    codepoint: "0xE0CC"
-    status: removed
+    codepoint: '0xE0CC'
+    status: exact
     lucide: smartphone
+    target: smartphone
   modulzLogo:
     codepoint: "0xE0CD"
     status: removed
     lucide: null
     note: "Brand mark. Lucide ships no brand logos; use the brand's own asset."
   moon:
-    codepoint: "0xE0CE"
-    status: removed
+    codepoint: '0xE0CE'
+    status: exact
     lucide: moon
+    target: moon
   move:
     codepoint: "0xE0CF"
     status: removed
@@ -1370,7 +1825,7 @@ legacy:
     status: removed
     lucide: send
   pause:
-    codepoint: "0xE0D6"
+    codepoint: '0xE0D6'
     status: exact
     target: pause
     lucide: pause
@@ -1385,7 +1840,7 @@ legacy:
     target: edit
     lucide: pencilLine
   person:
-    codepoint: "0xE0D9"
+    codepoint: '0xE0D9'
     status: exact
     target: user
     lucide: user
@@ -1414,7 +1869,7 @@ legacy:
     status: removed
     lucide: pin
   play:
-    codepoint: "0xE0E0"
+    codepoint: '0xE0E0'
     status: exact
     target: play
     lucide: play
@@ -1423,7 +1878,7 @@ legacy:
     status: removed
     lucide: circlePlus
   plus:
-    codepoint: "0xE0E2"
+    codepoint: '0xE0E2'
     status: exact
     target: plus
     lucide: plus
@@ -1451,7 +1906,7 @@ legacy:
     status: removed
     lucide: bookOpen
   reload:
-    codepoint: "0xE0E8"
+    codepoint: '0xE0E8'
     status: exact
     target: refresh
     lucide: rotateCcw
@@ -1583,20 +2038,22 @@ legacy:
     status: removed
     lucide: volume
   square:
-    codepoint: "0xE108"
-    status: removed
+    codepoint: '0xE108'
+    status: exact
     lucide: square
+    target: square
   stack:
-    codepoint: "0xE109"
-    status: removed
+    codepoint: '0xE109'
+    status: exact
     lucide: layers
+    target: layers
   starFilled:
-    codepoint: "0xE10A"
+    codepoint: '0xE10A'
     status: exact
     target: starFilled
     lucide: star
   star:
-    codepoint: "0xE10B"
+    codepoint: '0xE10B'
     status: exact
     target: star
     lucide: star
@@ -1626,9 +2083,10 @@ legacy:
     status: removed
     lucide: strikethrough
   sun:
-    codepoint: "0xE112"
-    status: removed
+    codepoint: '0xE112'
+    status: exact
     lucide: sun
+    target: sun
   switchIcon:
     codepoint: "0xE113"
     status: removed
@@ -1638,9 +2096,10 @@ legacy:
     status: removed
     lucide: shapes
   table:
-    codepoint: "0xE115"
-    status: removed
+    codepoint: '0xE115'
+    status: exact
     lucide: table
+    target: table
   target:
     codepoint: "0xE116"
     status: partial
@@ -1732,7 +2191,7 @@ legacy:
     status: removed
     lucide: grid2x2
   trash:
-    codepoint: "0xE12A"
+    codepoint: '0xE12A'
     status: exact
     target: trash
     lucide: trash
@@ -1762,11 +2221,13 @@ legacy:
     status: removed
     lucide: underline
   update:
-    codepoint: "0xE131"
-    status: removed
+    codepoint: '0xE131'
+    status: partial
     lucide: loaderCircle
+    target: loader
+    note: Loader represents progress, not the old update/history action.
   upload:
-    codepoint: "0xE132"
+    codepoint: '0xE132'
     status: exact
     target: upload
     lucide: upload

@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -256,8 +255,8 @@ class _UiActivityIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final (icon, accent) = switch (kind) {
       .customer => (RemixIcons.user, UiAccentColor.ceu),
-      .order => (LucideIcons.box, UiAccentColor.ceu),
-      .payment => (LucideIcons.circleCheck, UiAccentColor.serra),
+      .order => (RemixIcons.box, UiAccentColor.ceu),
+      .payment => (RemixIcons.checkCircle, UiAccentColor.serra),
       .alert => (RemixIcons.warning, UiAccentColor.sol),
     };
 
@@ -282,7 +281,7 @@ Widget _ordersCard(UiDashboardSampleData data, VoidCallback? onViewOrders) =>
                 key: const ValueKey('overview-view-orders'),
                 size: .size1,
                 label: 'View all',
-                trailingIcon: LucideIcons.chevronsRight,
+                trailingIcon: RemixIcons.chevronsRight,
                 onPressed: onViewOrders,
               ),
             ],

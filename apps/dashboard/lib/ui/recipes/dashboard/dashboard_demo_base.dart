@@ -1,6 +1,5 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -17,10 +16,10 @@ enum UiDashboardDemoSection {
 
 /// The navigation destinations in the dashboard demo.
 enum UiDashboardDemoPage {
-  overview(UiDashboardDemoSection.workspace, 'Overview', RemixIcons.grid),
+  overview(UiDashboardDemoSection.workspace, 'Overview', RemixIcons.dashboard),
   chat(UiDashboardDemoSection.workspace, 'Chat', RemixIcons.chat),
-  customers(UiDashboardDemoSection.data, 'Customers', LucideIcons.group),
-  orders(UiDashboardDemoSection.data, 'Orders', LucideIcons.table),
+  customers(UiDashboardDemoSection.data, 'Customers', RemixIcons.user),
+  orders(UiDashboardDemoSection.data, 'Orders', RemixIcons.table),
   settings(UiDashboardDemoSection.manage, 'Settings', RemixIcons.sliders);
 
   const UiDashboardDemoPage(this.section, this.label, this.icon);

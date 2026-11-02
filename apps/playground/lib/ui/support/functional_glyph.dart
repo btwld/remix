@@ -1,25 +1,24 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 abstract final class _Glyphs {
   static const arrowUp = RemixIcons.arrowUp;
-  static const square = LucideIcons.square;
+  static const square = RemixIcons.square;
   static const copy = RemixIcons.copy;
   static const rotateCcw = RemixIcons.refresh;
   static const chevronUp = RemixIcons.chevronUp;
   static const chevronDown = RemixIcons.chevronDown;
-  static const circle = LucideIcons.circle;
-  static const circleDot = LucideIcons.dot;
+  static const circle = RemixIcons.circle;
+  static const circleDot = RemixIcons.dotFilled;
   static const check = RemixIcons.check;
   static const x = RemixIcons.close;
   static const circleAlert = RemixIcons.warning;
   static const squareTerminal = RemixIcons.terminal;
-  static const loaderCircle = LucideIcons.loaderCircle;
-  static const circleCheck = LucideIcons.circleCheck;
-  static const ban = LucideIcons.ban;
-  static const circleX = LucideIcons.circleX;
+  static const loaderCircle = RemixIcons.loader;
+  static const circleCheck = RemixIcons.checkCircle;
+  static const ban = RemixIcons.ban;
+  static const circleX = RemixIcons.closeCircle;
   static const shieldCheck = RemixIcons.lock;
 }
 

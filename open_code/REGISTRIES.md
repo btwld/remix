@@ -10,7 +10,7 @@ Repeating initialization preserves the existing configuration and pin.
 schema: 3
 prefix: Ui
 preset: fortal
-iconLibrary: remix # optional: remix (default) or lucide
+iconLibrary: remix # optional: remix (default), rounded, or lucide
 paths:
   ui: lib/ui
 defaultRegistry: "@remix"
@@ -23,6 +23,10 @@ registries:
 ```
 
 The optional `iconLibrary` is resolved when templates are installed.
+`remix` uses the angular Outline family and `rounded` uses Rounded, both from
+`remix_ui_icons`. Each covers every registry icon; `lucide` remains available
+as an alternative. Changing this setting affects the next installation or
+refresh of an item, so reinstall every item whose icons should change.
 Registries publish `icons.yaml` beside their preset catalogs; the CLI must
 ship support for that table, and for its schema, before a registry begins
 using them. Schema 2 (`remix_cli` 1.0.0-beta.1) lets an icon name a `fallback`

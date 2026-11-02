@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -232,7 +231,7 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
             _page = 0;
           }),
           emptyBuilder: (_) => UiEmptyState(
-            icon: LucideIcons.table,
+            icon: RemixIcons.table,
             title: 'No matching orders',
             body: 'Choose another status to see more orders.',
             action: _filter == .all
@@ -407,5 +406,5 @@ class _Page extends StatelessWidget {
 
 void _toast(BuildContext context, String title) => showRemixToast(
   context,
-  RemixToastData(title: title, icon: LucideIcons.circleCheck),
+  RemixToastData(title: title, icon: RemixIcons.checkCircle),
 );

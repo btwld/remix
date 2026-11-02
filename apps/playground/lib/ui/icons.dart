@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 /// Application-owned aliases for the icons used by this UI layer.
@@ -22,11 +21,11 @@ abstract final class PlaygroundIcons {
   static const IconData magnifyingGlass = RemixIcons.search;
 
   /// Moves a start-edge panel toward the left.
-  static const IconData doubleArrowLeft = LucideIcons.chevronsLeft;
+  static const IconData doubleArrowLeft = RemixIcons.chevronsLeft;
 
   /// Moves a start-edge panel toward the right.
-  static const IconData doubleArrowRight = LucideIcons.chevronsRight;
+  static const IconData doubleArrowRight = RemixIcons.chevronsRight;
 
   /// Represents the dashboard overview destination.
-  static const IconData dashboard = RemixIcons.grid;
+  static const IconData dashboard = RemixIcons.dashboard;
 }
