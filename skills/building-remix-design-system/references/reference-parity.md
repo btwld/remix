@@ -35,7 +35,7 @@ When styling seems unable to express a design decision:
    for other presets, and fits Remix's part-builder convention
    (`<part>Builder(context, <Part>Spec, …)`). It is additive, tested, and
    documented: a separate, reviewed change to the shared library, recorded in
-   the preset's ADR, never a preset-specific flag.
+   `ARCHITECTURE.md`, never a preset-specific flag.
 4. **Approximate or defer**, and record the difference in the worksheet.
 
 Never change existing shared behavior to match a web library.
