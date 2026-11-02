@@ -63,7 +63,7 @@ checkout consumer success cannot establish hosted minimum-version support.
 
 ## Fortal owns its visual contract (Fortal ADR-0003)
 
-2026-10-29 · Accepted; supersedes Radix Themes visual parity · [Specification](registry_source/specs/fortal.md) · [Design provenance](registry_source/docs/fortal/refresh-brief.md)
+2026-10-29 · Accepted; supersedes external visual parity · [Specification](registry_source/specs/fortal.md) · [Design provenance](registry_source/docs/fortal/refresh-brief.md)
 
 Use seven owned, deterministic seed-generated palettes and Fortal's own visual
 specification, retaining twelve-step roles and Remix/Naked UI behavior, because
@@ -78,28 +78,14 @@ Fortaleza branding, Anton and cobogó patterns.
 
 2026-10-19 · Accepted; shared-API adoption recorded 2026-10-27 · [Reference evidence](registry_source/reference/heroui_3_2_6/README.md) · [Family map](registry_source/reference/heroui_3_2_6/families.json) · [Worksheets](registry_source/specs/heroui/)
 
-Pin `@heroui/react` and `@heroui/styles` 3.2.6 (commit `e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e`,
-compiled CSS, and Chromium token/geometry captures; Apache-2.0 text retained in
-`LICENSE.upstream` and `theme/license.dart`) as visual-only reference evidence
-checked by `tool/heroui_parity/check.dart`, while Remix and Naked UI retain
-rendering, interaction, focus, semantics and state. `HeroUiThemeData.colors`
-keeps HeroUI's semantic color roles (`specs/heroui/tokens.json`) and CSS-variable
-derivation model (OKLCH to OKLab `color-mix`, then channel-clipped sRGB for Mix
-`Color.lerp`), `rem = 16px`, `sm = 640px` / `md = 768px` breakpoints, platform
-default `fontFamily`, and Geist Mono from `remix_ui_fonts` for code text.
-Components are `@MixWidget(target: Remix<X>.new)` recipes or stateless Remix/Mix
-compositions using HeroUI's component, variant and size names (explicitly
-translating Dart-reserved or hyphenated values such as `defaultColor`/`defaultCard`
-and `dangerSoft`), while families needing behavior Remix lacks (`Form`,
-`NumberField`, `InputOTP`, `ComboBox`, standalone `Menu`) are deferred in
-`families.json`. Shared-library additions must be general across presets,
-additive and shipped separately: HeroUI adopted `containerEffects`/`triggerEffects`
-(`heroUiFocusRing()`, `heroUiSurfaceEffects()`), `remixAnchorWidth()`,
-`RemixRadio`/`RemixSwitch` labels, and `RemixMenuTrigger.control` (#359, #360),
-leaving component-level visual approximations (clipped surface-accordion rings,
-640–768px toast action spacing, Flutter shadow blur, spinner/check/skeleton
-polish, and Mix `.animate` reduced-motion behavior) recorded in
-`specs/heroui/components/`.
+Reproduce HeroUI's visual design and semantic token model over Remix and Naked UI,
+keeping rendering, interaction, focus, semantics and state in the shared runtime
+while validating appearance against pinned reference evidence. Supported families
+map to `@MixWidget` recipes or stateless Remix/Mix compositions using HeroUI's
+component, variant and size vocabulary, while families requiring behavior Remix
+does not provide remain deferred in `families.json`. Shared-library additions
+must be general across presets, additive and shipped separately before preset
+adoption, with remaining visual approximations recorded in `specs/heroui/`.
 
 ## Retain the private Fortal package (Fortal ADR-0001, superseded)
 

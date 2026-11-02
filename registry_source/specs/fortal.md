@@ -251,7 +251,7 @@ step 8 alone, which keeps 3:1 on the page and panels. High contrast fills with
 step 12 and no outline. Height, radius, value and semantics are unchanged.
 
 Solid button hover and press recolor only the fill. Hover uses `solidHover`. Press
-applies the Radix-derived CSS operations to the fill colour itself: darker
+applies the brightness and saturation operations to the fill colour itself: darker
 (brightness 0.92, saturate 1.1) under a light label, lighter (brightness 1.08)
 under a deep ink, so the label keeps its contrast. High-contrast hover and
 press recolor the step-12 fill with their light/dark operation sets. No solid
