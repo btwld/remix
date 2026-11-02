@@ -105,6 +105,8 @@ jobs:
       - run: dart run melos run ci:open-code:icons
 
   cli-windows:
+    # Paused to limit GitHub Actions usage.
+    if: ${{ false }}
     name: Verify the CLI with the Windows Flutter SDK
     runs-on: windows-latest
     steps:
@@ -186,3 +188,4 @@ jobs:
           cache-dependency-glob: packages/remix_ui_icons/tool/icons/uv.lock
       - name: Build a release web app and inspect the shipped font
         run: uv run --frozen --project packages/remix_ui_icons/tool/icons python packages/remix_ui_icons/tool/icons/tree_shake.py --flutter flutter
+
