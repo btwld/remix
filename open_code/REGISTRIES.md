@@ -252,7 +252,7 @@ owns the visual contract.
 Catalog structure and templates are derived. Maintained inputs are
 `registry/icons.yaml` (mapping/library floors) and Vanilla's dependency and
 dev-dependency floors, read back by the builder and shared with Fortal and HeroUI. Change
-floors through the [package release workflow](../.claude/skills/releasing-a-package/SKILL.md).
+floors through the [package release workflow](RELEASING.md).
 
 ## Repository consumers
 
