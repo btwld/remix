@@ -13,7 +13,8 @@ preset. The commands here cover all currently implemented presets.
 
 ## Validate the candidate
 
-With the pinned Flutter 3.44.0 SDK (`icons` and `cli-windows` are CI-only):
+With the pinned Flutter 3.44.0 SDK (`icons`, `icons-tree-shake`, and
+`cli-windows` are CI-only):
 
 ```shell
 fvm flutter pub get
@@ -27,32 +28,6 @@ The isolated consumer checker injects a test-only transport for the committed
 `registry/` distribution. It exercises schema 3, the real installer, package
 resolution, generation, analysis and consumers without requiring unpublished
 content on GitHub. This is not a local-registry feature of the shipped CLI.
-
-## Bootstrap the current train
-
-Remix `1.0.0-beta.14` raises the registry floor and adds a third preset, so
-this train has a fixed order. Each package keeps its own gate; if one fails,
-stop there rather than publishing around it.
-
-1. **Publish `remix_cli` `1.0.0-beta.1` from the historical commit
-   `d153c5c3975a67aa879e2d613ccefbe79b0e81ab`, before Remix `1.0.0-beta.14`.**
-   Its `packages/remix_cli` tree (`e6efa8d1e063493fe84045848339e3895eaf566f`)
-   is identical to the reviewed merge's; confirm that with
-   `git rev-parse <commit>:packages/remix_cli` first. That commit's hosted check
-   covers the Vanilla and Fortal presets at the `^1.0.0-beta.13` floor and
-   requires a fresh app to resolve Remix exactly at that floor, so it can only
-   pass while `1.0.0-beta.13` is the newest Remix on pub.dev. The reviewed
-   merge can't run this gate, because its floors aren't published yet.
-2. Publish `naked_ui` `1.4.0`, then `remix_ui_icons` `1.0.0-beta.1`, from the
-   reviewed merge. Wait until pub.dev serves each one.
-3. Publish Remix `1.0.0-beta.14` from the reviewed merge.
-4. Re-run **Promote registry** on `main`, then run the hosted checks below,
-   including the `--hosted-cli` ones.
-
-Merging before step 1 is safe: promotion fails until the floor is published, so
-`registry-stable` stays put. Tags follow the
-[tag check](#check-a-tag-before-creating-it).
-Remove this section when the train is done.
 
 ## Package version bumps and tags
 
@@ -176,6 +151,7 @@ git ls-remote https://github.com/btwld/remix.git \
   "refs/tags/<tag>" "refs/tags/<tag>^{}"
 ```
 
+- **Absent from GitHub, no local tag:** create it at the reviewed merge.
 - **Absent from GitHub, stale locally:** record the IDs, delete only the local
   tag, and recreate it at the reviewed merge:
 
@@ -199,8 +175,9 @@ git push https://github.com/btwld/remix.git "refs/tags/<tag>:refs/tags/<tag>"
 ## Publish the required runtimes first
 
 Confirm every hosted dependency floor exists on pub.dev. Runtime releases use
-the package publishing workflows and tag patterns above. Runtime version
-preparation updates the remote catalog floor and regenerates all affected
+the package publishing workflows and tag patterns above. Each package keeps
+its own gate; if one fails, stop there rather than publishing around it. Runtime
+version preparation updates the remote catalog floor and regenerates all affected
 remote presets.
 
 Validate against hosted runtimes, without checkout substitution:

@@ -4,7 +4,7 @@
 /// ```shell
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
 ///     [--source both|hosted|checkout]
-///     [--item dashboard_demo|dashboard_shell|icons]
+///     [--item dashboard_demo|dashboard_shell|icons|ownership|search_field]
 ///     [--icon-library remix|rounded|lucide] [--hosted-cli] [--jobs N] [--keep]
 /// ```
 ///
@@ -597,7 +597,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
       if (selected != 'dashboard_demo' &&
           selected != 'dashboard_shell' &&
           selected != 'ownership' &&
-          selected != 'icons') {
+          selected != 'icons' &&
+          selected != 'search_field') {
         return null;
       }
       item = selected;
@@ -692,8 +693,9 @@ Future<void> main(List<String> arguments) async {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
       '[--preset vanilla|fortal|heroui] [--source both|hosted|checkout] '
-      '[--item dashboard_demo|dashboard_shell|icons|ownership (requires --source '
-      'checkout; icons/ownership are vanilla)] [--icon-library remix|rounded|lucide] '
+      '[--item dashboard_demo|dashboard_shell|icons|ownership|search_field (requires '
+      '--source checkout; icons/ownership are vanilla, search_field is heroui)] '
+      '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep]',
     );
@@ -1377,12 +1379,14 @@ _Failure? _verifyFocusedDependencies(
   final development = sections['dev_dependencies'] ?? const <String, Object?>{};
   // Every focused install still resolves the preset's theme, and with it the
   // theme's packages. The chart package follows the item, and the icon alias
-  // alone installs no generated component.
+  // alone installs no generated component. HeroUI's theme leaves the fonts
+  // package to its `typography` item, which no focused item depends on.
   final runtimeExpected = {
     'flutter',
     for (final package in preset.requiredRuntimeDependencies)
       if ((package != 'mix_chart' || item == 'dashboard_demo') &&
-          (package != 'mix_annotations' || item != 'icons'))
+          (package != 'mix_annotations' || item != 'icons') &&
+          (package != 'remix_ui_fonts' || preset.name != 'heroui'))
         package,
   };
   final developmentExpected = {

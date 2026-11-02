@@ -167,6 +167,7 @@ melos:
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --preset heroui --source checkout --item search_field
         - dart run tool/check_open_code.dart --source checkout
         - dart run tool/check_open_code.dart --preset fortal --source checkout
         - dart run tool/check_open_code.dart --preset heroui --source checkout
@@ -303,7 +304,9 @@ melos:
       description: Install every Fortal-preset item against the Remix checkout
 
     ci:open-code:heroui:
-      run: dart run tool/check_open_code.dart --preset heroui --source checkout
+      steps:
+        - dart run tool/check_open_code.dart --preset heroui --source checkout --item search_field
+        - dart run tool/check_open_code.dart --preset heroui --source checkout
       description: Install every HeroUI item against the Remix checkout
 
     ci:open-code:icons:
