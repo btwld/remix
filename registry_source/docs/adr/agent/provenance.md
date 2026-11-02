@@ -27,9 +27,8 @@ The benchmark informed workflow questions such as component boundaries,
 disclosure placement, lifecycle states, live-edge behavior, and functional icon
 choices. It is not an API, branding, or pixel-parity target. The implementation
 uses Flutter, Naked UI behavior, Remix controls, generated Mix specs, and
-this repository's `remix_ui_icons` font, with Lucide for the statuses that
-font does not draw (stop, pending, active, loading, and the circled
-outcomes). Domain specs have empty visual
+this repository's `remix_ui_icons` font, including its stop, pending, active,
+loading, and circled-outcome statuses. Domain specs have empty visual
 defaults; both presets supply installed recipe bundles. Agent defines its own
 controlled/uncontrolled, accessibility, keyboard, lifecycle and scroll ownership
 contracts rather than copying the benchmark API.

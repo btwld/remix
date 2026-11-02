@@ -403,8 +403,7 @@ authored recipes and generated OKLCH palettes are copied from the same source
 checked by Fortal's specification, contrast tests, and owned goldens.
 `remix` remains the behavior and styling-engine boundary;
 `mix_annotations`, `build_runner`, and `mix_generator` support adapter
-generation. `icons` additionally installs `remix_ui_icons` and its
-`lucide_flutter` fallback, and `chart` installs `mix_chart`. The preset adds no direct `mix`, `naked_ui`, or
+generation. `icons` additionally installs `remix_ui_icons`, and `chart` installs `mix_chart`. The preset adds no direct `mix`, `naked_ui`, or
 `remix_fortal` dependency.
 
 The source is deliberately editable. Change the token map, add an accent or
@@ -743,9 +742,9 @@ Section placement is enforced, because the installed source lives under your
 |---|---|
 | `remix`, `mix_annotations` | `dependencies` |
 | `mix_chart` | `dependencies` when `chart` is installed |
-| `remix_ui_icons` | `dependencies` when an installed item uses icons (the default `iconLibrary`) |
+| `remix_ui_icons` | `dependencies` when an installed item uses icons (`iconLibrary: remix`, the default, or `rounded`) |
 | `remix_ui_fonts` | `dependencies` with the Vanilla preset's `theme` |
-| `lucide_flutter` | `dependencies` when an installed item uses an icon Remix does not draw, and in place of `remix_ui_icons` when `iconLibrary: lucide` is selected |
+| `lucide_flutter` | `dependencies` in place of `remix_ui_icons` when `iconLibrary: lucide` is selected |
 | `build_runner`, `mix_generator` | either (build-time only) |
 
 A runtime package declared only under `dev_dependencies` fails **before** any
@@ -924,10 +923,10 @@ re-export `mix_chart`.
 
 In Vanilla and Fortal, `remix add icons` installs a small app-owned alias
 surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
-`RemixIcons` (the default) or `LucideIcons`, and add the selected package.
-Remix does not draw every icon the presets use. With the default library,
-those icons render from Lucide and the installer adds `lucide_flutter` too;
-`icons.yaml` names each fallback.
+`RemixIcons` (the default), `RoundedIcons`, or `LucideIcons`, and add the
+selected package. Outline and Rounded each draw every icon the presets use, so
+neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
+for how presets size those icons.
 Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
 `dashboard_demo`, and `support`. HeroUI has no `icons` item; its three icon
 users are `breadcrumbs`, `close_button`, and `search_field`. To switch an
@@ -956,7 +955,7 @@ Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires
 write source until your `pubspec.yaml` declares it. Update the constraint,
 then follow the package's
 [migration guide](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)
-for your own icon references: 19 renamed names keep working as deprecated
+for your own icon references: 31 renamed names keep working as deprecated
 aliases until 2.0.0, and the guide names a Lucide icon for each removed one.
 
 Some Remix widgets are behavioral and carry no style, so the registry has

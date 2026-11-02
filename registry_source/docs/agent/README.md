@@ -9,7 +9,7 @@ package boundary and the runtime/recipe split. They are available from both
 existing presets; there is no separate Agent preset.
 
 Agent domain source composes [remix](https://pub.dev/packages/remix), Mix
-styling, remix_ui_icons and lucide_flutter inside the private authoring package. The domain
+styling and remix_ui_icons inside the private authoring package. The domain
 itself defines no theme, token scope or model SDK. Every visual surface exposes
 a generated `Agent*Spec` and `Agent*Styler`; every visual field is empty until the host
 supplies a style.
@@ -19,8 +19,7 @@ and `disclosureStyle`, so their hover, press, focus, selected variants,
 animations, and modifiers resolve against the child control's own state.
 
 Functional glyphs (send, stop, copy, retry, disclosure, tool, and statuses)
-have neutral Material-free defaults from `remix_ui_icons`, and from
-`lucide_flutter` where Remix draws no equivalent. Their public builders remain the
+have neutral Material-free defaults from `remix_ui_icons`. Their public builders remain the
 replacement point; visual color and size still come from host styles.
 
 A `MixScope` is not an Agent requirement. Add one only when the host's own

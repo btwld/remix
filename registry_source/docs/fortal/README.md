@@ -137,9 +137,8 @@ preset:
 dart run remix_cli:remix add icons
 ```
 
-That item adds `remix_ui_icons` and `lucide_flutter`, and creates a small
-`FortalIcons` alias set you can edit as the application's vocabulary evolves.
-The double arrows come from Lucide, because Remix does not draw them:
+That item adds `remix_ui_icons` and creates a small `FortalIcons` alias set you
+can edit as the application's vocabulary evolves:
 
 ```dart
 const Icon(FortalIcons.check)

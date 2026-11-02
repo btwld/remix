@@ -112,6 +112,12 @@ them. Set `iconLibrary: remix` (the default) or `iconLibrary: rounded` in
 available as an alternative. Refresh the affected items after changing the
 library; see [Open Code](/open-code).
 
+Installed presets currently map each key to its 24 px master and scale it to
+the control's size, so they don't yet follow the master guidance above at 12
+or 16 px. To use a native 12 or 16 px drawing, select it from the package
+directly, as in `OutlineIcons.sliders16`. Per-size mappings are planned for a
+later CLI; this beta doesn't change the table or its schema.
+
 ## Migrating from 0.1.x
 
 0.1.x shipped the 318 Radix Icons 1.3.2 glyphs. 1.0 replaces every one of
