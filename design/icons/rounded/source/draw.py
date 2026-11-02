@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import math
 
-from shapely import affinity
+from shapely import affinity, set_precision
 from shapely.geometry import box
 
 from source.glyphs import direction, frames, marks, objects
@@ -17,7 +17,8 @@ from source.primitives import (
     rounded_hull, rounded_rect, stadium_line, union,
 )
 from source.seams import (
-    CANONICAL_IDS, CUT_JOIN, GAP_TARGET, LINK_BOLD_WIDTH, QUAD_SEGS, STAR_JOIN, UnknownIconError,
+    CANONICAL_IDS, CUT_JOIN, FONT_EXACT_GRID, FONT_EXACT_MASTERS, GAP_TARGET, LINK_BOLD_WIDTH, QUAD_SEGS,
+    STAR_JOIN, UnknownIconError,
 )
 
 
@@ -291,6 +292,8 @@ def draw(icon_id: str, master: int, appearance: str):
     if icon_id not in CANONICAL_IDS:
         raise UnknownIconError(f'Unknown Rounded icon {icon_id!r}')
     g = clean(_DRAWERS[icon_id](master, appearance))
+    if (icon_id, master, appearance) in FONT_EXACT_MASTERS:
+        g = set_precision(g, FONT_EXACT_GRID, mode='valid_output')
     if g is None or g.is_empty or not g.is_valid:
         raise ValueError(f'Invalid geometry {icon_id}/{appearance}/{master}')
     minx, miny, maxx, maxy = g.bounds

@@ -227,6 +227,12 @@ Stroke-as-attribute SVG is not used. Exports are expanded `fill="currentColor"` 
 
 Do not describe the 462 files as native-arc/`C` exports. They are not.
 
+### Font-unit phase
+
+`remix_ui_icons` compiles at 15360 units per em, so a coordinate moves by up to half a font unit: 1/1920 px at 16. That is invisible, but Cairo stores coordinates in 1/256 px steps and samples coverage on a coarse grid at 1×. A coordinate just beside a step can round across it, and one pixel changes by up to 1/15 of full coverage. The native-size gate rejects that. No threshold moves for it.
+
+The fix belongs in the drawing. A master that fails is snapped to `FONT_EXACT_GRID`, 1/80 px, the coarsest grid exact in both four-decimal SVG and font units at every master, so it compiles with nothing to round. The grid is too fine to change the drawing at any visible size, and the corners stay round. Today this applies to two masters, listed in `FONT_EXACT_MASTERS`: Play and Box, outline 16. `tests/test_font_phase.py` rounds every master to font units with CairoSVG and holds it to the same limits as the compiled-font gate.
+
 ### Validator commands (construction / test infrastructure)
 
 The parser **accepts** `M L C Q A Z` and **rejects** everything else. It flattens `C Q A` at declared sagitta 0.05 px so a future native-arc drawing, or a hand-edited curve, cannot be silently ignored. That is fail-closed measurement infrastructure. It is not product export.

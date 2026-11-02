@@ -327,7 +327,7 @@ def build() -> dict:
         json.dumps({'version': VERSION, 'pack': PACK, 'paths': paths}, indent=2) + '\n')
     (ROOT / 'generated' / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n')
     with (ROOT / 'generated' / 'inventory.csv').open('w', newline='') as f:
-        wr = csv.DictWriter(f, fieldnames=list(inventory[0]))
+        wr = csv.DictWriter(f, fieldnames=list(inventory[0]), lineterminator="\n")
         wr.writeheader()
         wr.writerows(inventory)
 

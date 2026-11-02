@@ -48,6 +48,13 @@ CUT_JOIN = {12: 0.3, 16: 0.45, 24: 0.6}
 # Pointed silhouette exception: star join ~0.5× outline. 1.0×+ collapses optical mass.
 STAR_JOIN = {12: 0.65, 16: 0.85, 24: 1.0}
 
+# remix_ui_icons compiles at this many units per em, so one pixel is 15360 / master units.
+FONT_UNITS_PER_EM = 15360
+# 1/80 px is the coarsest grid exact in both four-decimal SVG coordinates and font units at every
+# master. A master on it compiles with nothing to round. Used only where rounding flips a pixel.
+FONT_EXACT_GRID = 0.0125
+FONT_EXACT_MASTERS = frozenset({('play', 16, 'outline'), ('box', 16, 'outline')})
+
 # Explicit reviewed display-size mapping. Anything else must raise.
 MASTER_SELECTION = {12: 12, 14: 16, 16: 16, 20: 24, 24: 24, 32: 24}
 

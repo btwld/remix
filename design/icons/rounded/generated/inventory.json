@@ -2173,7 +2173,7 @@
     "appearance": "outline",
     "master": 16,
     "path": "rounded/outline/16/play.svg",
-    "sha256": "1edd9add6e0bde491479c57f81862945645bff60f888b349df2c200d9d069374"
+    "sha256": "60833cc9465ae10e1b7b50571bfaf50d3911bc553a73528797988e08536adb6d"
   },
   {
     "id": "play",
@@ -2509,7 +2509,7 @@
     "appearance": "outline",
     "master": 16,
     "path": "rounded/outline/16/box.svg",
-    "sha256": "71daa03ff2b26610d35b29fd0f0cd13323c98977584d239c02a9418b6ec21370"
+    "sha256": "372a5793ceab8dfa1d37632d6df6fc1037d120455817458364178a80f337856c"
   },
   {
     "id": "box",

@@ -270,7 +270,7 @@ chart,rounded,filled,12,rounded/filled/12/chart.svg,7c8610d13030276c3f356b80a523
 chart,rounded,filled,16,rounded/filled/16/chart.svg,c3b7e349f657096bbfae8c22a9acf3f5cdbbcdd31837004c55bfff51aaa131bf
 chart,rounded,filled,24,rounded/filled/24/chart.svg,fb1e0648896de00ffb15654bd7dfac09e7158e8d18968f0a20f9f25f3efbd03f
 play,rounded,outline,12,rounded/outline/12/play.svg,c334a9d54ce5f099f323e48acb4a9207badc86afde5564d7d130c277252f4239
-play,rounded,outline,16,rounded/outline/16/play.svg,1edd9add6e0bde491479c57f81862945645bff60f888b349df2c200d9d069374
+play,rounded,outline,16,rounded/outline/16/play.svg,60833cc9465ae10e1b7b50571bfaf50d3911bc553a73528797988e08536adb6d
 play,rounded,outline,24,rounded/outline/24/play.svg,9b5c3abbd7880a9b8e1cdf34b7940462f925e399fba1a9c245726a5767b2d19a
 play,rounded,filled,12,rounded/filled/12/play.svg,6982eaa77bfdad8b424d630aeec803d291131f6fc9e03240ea5c2a35ab91f7ff
 play,rounded,filled,16,rounded/filled/16/play.svg,fc3413491d75d008a48740192dee8b43dee37b2500188353aec46053542715e5
@@ -312,7 +312,7 @@ align-right,rounded,filled,12,rounded/filled/12/align-right.svg,201fdefe539edce9
 align-right,rounded,filled,16,rounded/filled/16/align-right.svg,48dbc24c6d44d674559f12702216f64a3ad8f539911216a5f598f8c145e185cf
 align-right,rounded,filled,24,rounded/filled/24/align-right.svg,e67809da9485ea3033ae8a5a0c99643800320ad5a881a8c6ed54588b6c8c1f8e
 box,rounded,outline,12,rounded/outline/12/box.svg,740a506af6b36053c7ddae19c85913874ea1f5308b7d0620b5256c9f6e736919
-box,rounded,outline,16,rounded/outline/16/box.svg,71daa03ff2b26610d35b29fd0f0cd13323c98977584d239c02a9418b6ec21370
+box,rounded,outline,16,rounded/outline/16/box.svg,372a5793ceab8dfa1d37632d6df6fc1037d120455817458364178a80f337856c
 box,rounded,outline,24,rounded/outline/24/box.svg,ca2cfb5326dd5095cb55d1501c91d70fdde9fcae8050b772891fb8f58ca32448
 box,rounded,filled,12,rounded/filled/12/box.svg,6fa70050fdd974436afbb39e3103a7842a6cfa767eddb6bbb60b70e1060b21e4
 box,rounded,filled,16,rounded/filled/16/box.svg,43d64acef770eb7d68732fa101a2bf868198fb5868000fdae4d417e401ca323d
