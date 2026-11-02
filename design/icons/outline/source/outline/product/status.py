@@ -97,11 +97,18 @@ def loader(_, n, outlined):
     return U(*kept)
 
 
+ACTIVITY_PEAKS = {12: {True: (2, 9), False: (2, 10)}, 16: {True: (3, 13), False: (2, 14)}, 24: {True: (4, 20), False: (3, 21)}}
+
+
 @icon('activity')
 def activity(_, n, outlined):
     t = OUTLINE[n] if outlined else {12: 1.5, 16: 2.5, 24: 3}[n]
     pts = {12: [(1, 5.5), (3, 5.5), (4.5, 2.5), (7.5, 8.5), (9, 5.5), (11, 5.5)] if outlined
            else [(1, 6), (3, 6), (4.5, 3), (7.5, 9), (9, 6), (11, 6)],
-           16: [(1.5, 8), (3.75, 8), (5.625, 4.25), (10.375, 11.75), (12.25, 8), (14.5, 8)],
+           16: [(1.5, 8), (4.25, 8), (6.125, 4.25), (9.875, 11.75), (11.75, 8), (14.5, 8)],
            24: [(2, 12), (5.5, 12), (8.75, 5.5), (15.25, 18.5), (18.5, 12), (22, 12)]}[n]
-    return line(pts, t)
+    # The mitred peaks are cut flat on the pixel grid. A full mitre ends in a sliver
+    # thinner than a pixel, which a font rasterizer's edge coverage turns into a stray
+    # pixel outside the drawing.
+    top, bottom = ACTIVITY_PEAKS[n][outlined]
+    return line(pts, t).intersection(box(0, top, n, bottom))

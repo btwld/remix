@@ -1,6 +1,7 @@
 """Devices, containers and interface objects."""
 from __future__ import annotations
 
+from shapely import affinity
 from shapely.geometry import box
 
 from ..baseline import OUTLINE, P, U, line, octagon, ring
@@ -44,6 +45,34 @@ def layers(_, n, outlined):
         stroke = line([(a - 2, apex - half / 2 - 1), (c, apex), (z + 2, apex - half / 2 - 1)], t)
         sheets.append(stroke.intersection(box(a, 0, z, n)))
     return U(ring(top, OUTLINE[n]) if outlined else top, *sheets)
+
+
+# Selected-object alignment: a guide and two panels of different widths. Guide
+# rectangle, long and short panel spans, and the two panel rows. All are authored
+# for Align left; Align right is its exact mirror. The center spec has its own spans,
+# because its guide runs between the panels and the panels share one x center. At
+# 16 px, Left and Right set their outer edges on whole pixels; Center keeps the guide
+# showing above and below its panels.
+ALIGN = {
+    12: {'guide': (1, 2), 'spans': ((3, 11), (3, 8)), 'center': ((5, 6), (1, 10), (3, 8)), 'rows': ((2, 5), (7, 10))},
+    16: {'guide': (2, 3.5), 'spans': ((5, 14), (5, 11)), 'center': ((7.25, 8.75), (2, 14), (5, 11)), 'rows': ((2, 6.5), (9.5, 14)), 'center_rows': ((2.5, 7), (9, 13.5))},
+    24: {'guide': (2, 4), 'spans': ((6, 22), (6, 14)), 'center': ((11, 13), (2, 22), (6, 18)), 'rows': ((4, 10), (14, 20))},
+}
+
+
+@icon('align-left', 'align-center', 'align-right')
+def align(name, n, outlined):
+    spec = ALIGN[n]
+    a, z = {12: (1, 11), 16: (1.5, 14.5), 24: (2, 22)}[n]
+    if name == 'align-center':
+        (g0, g1), *spans = spec['center']
+    else:
+        (g0, g1), spans = spec['guide'], spec['spans']
+    rows = spec.get('center_rows', spec['rows']) if name == 'align-center' else spec['rows']
+    panels = [box(x0, y0, x1, y1) for (x0, x1), (y0, y1) in zip(spans, rows)]
+    guide = box(g0, a, g1, z).difference(U(*panels))
+    drawn = U(guide, *[ring(p, OUTLINE[n]) if outlined else p for p in panels])
+    return affinity.scale(drawn, -1, 1, origin=(n / 2, n / 2)) if name == 'align-right' else drawn
 
 
 @icon('laptop')

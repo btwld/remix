@@ -1,3 +1,11 @@
+# Unreleased — product inventory follow-up
+
+Corrects new masters only. All 288 pilot SVGs and snapshots, the ledger and the frozen fixtures are unchanged, and thresholds are unchanged.
+
+- Align left, center and right: redraw as selected-object alignment, with a vertical guide and two panels of different widths. Replaces text rows, which were the wrong meaning. IDs are unchanged; the pair model is now silhouette.
+- Box and six other concepts (Ban, Bold, Group, Input, Table, Type): export real corners only, so an SVG and its compiled glyph rasterize alike. Geometry is unchanged.
+- Activity: cut mitred peaks flat on the pixel grid, which removes stray coverage in Flutter at 12 px.
+
 # Unreleased — complete product inventory
 
 Adds 29 concepts and 174 native SVGs, for 77 concepts and 462 SVGs. All 288 existing SVG bytes, the 70-entry revision ledger and the frozen fixtures are unchanged, and those fixtures are now explicitly legacy scope. No version, release or approval status changes.

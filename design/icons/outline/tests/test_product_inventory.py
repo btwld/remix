@@ -12,7 +12,7 @@ import unittest
 from pathlib import Path
 
 import cairosvg
-from PIL import Image
+from PIL import Image, ImageChops, ImageStat
 from shapely import affinity, maximum_inscribed_circle
 from shapely.geometry import LineString, Point, Polygon, box
 
@@ -267,6 +267,187 @@ class StatusAndShapes(unittest.TestCase):
                     self.assertLess(g.intersection(box(x0, 0, (x0 + x1) / 2, n)).centroid.y, g.intersection(box((x0 + x1) / 2, 0, x1, n)).centroid.y)
 
 
+def bands(g, n):
+    """Horizontal extents per quarter-pixel row, merged into runs: (x0, x1, y0, y1)."""
+    runs = []
+    for row in range(n * 4):
+        y = row / 4
+        slice_ = g.intersection(box(0, y + .1, n, y + .15))
+        if slice_.is_empty:
+            continue
+        x0, _, x1, _ = slice_.bounds
+        if runs and abs(runs[-1][0] - x0) < .01 and abs(runs[-1][1] - x1) < .01 and abs(runs[-1][3] - y) < .01:
+            runs[-1][3] = y + .25
+        else:
+            runs.append([x0, x1, y, y + .25])
+    return runs
+
+
+class SelectedObjectAlignment(unittest.TestCase):
+    """Align concepts move selected objects to a guide; they are not paragraph formatting."""
+
+    def side_parts(self, icon, style, n):
+        pieces = parts(geometry(icon, style, n))
+        guide = max(pieces, key=lambda p: size(p)[1])
+        return guide, sorted((p for p in pieces if p is not guide), key=lambda p: p.bounds[1])
+
+    def test_left_and_right_are_a_guide_and_two_objects(self):
+        for icon in ('align-left', 'align-right'):
+            for n in MASTERS:
+                for style in STYLES:
+                    guide, panels = self.side_parts(icon, style, n)
+                    with self.subTest(icon=icon, master=n, style=style):
+                        self.assertEqual(len(panels), 2)
+                        # A real vertical axis: as thin as a contour, and taller than the group.
+                        self.assertAlmostEqual(size(guide)[0], GAP[n], delta=.002)
+                        self.assertLess(guide.bounds[1], panels[0].bounds[1])
+                        self.assertGreater(guide.bounds[3], panels[1].bounds[3])
+                        self.assertGreaterEqual(min(guide.distance(p) for p in panels), GAP[n] - .002)
+                        self.assertGreater(panels[1].bounds[1], panels[0].bounds[3])
+
+    def test_objects_share_the_named_edge_and_differ_in_size(self):
+        for n in MASTERS:
+            for style in STYLES:
+                guide, left = self.side_parts('align-left', style, n)
+                far_guide, right = self.side_parts('align-right', style, n)
+                with self.subTest(master=n, style=style):
+                    self.assertAlmostEqual(left[0].bounds[0], left[1].bounds[0], delta=.002)
+                    self.assertAlmostEqual(right[0].bounds[2], right[1].bounds[2], delta=.002)
+                    self.assertGreater(abs(left[0].bounds[2] - left[1].bounds[2]), GAP[n])
+                    self.assertGreater(abs(right[0].bounds[0] - right[1].bounds[0]), GAP[n])
+                    # Each guide sits on the side its name says.
+                    self.assertLess(guide.centroid.x, min(p.bounds[0] for p in left))
+                    self.assertGreater(far_guide.centroid.x, max(p.bounds[2] for p in right))
+
+    def test_right_is_the_exact_mirror_of_left(self):
+        for n in MASTERS:
+            for style in STYLES:
+                with self.subTest(master=n, style=style):
+                    self.assertLess(mirrored(geometry('align-left', style, n), n).symmetric_difference(geometry('align-right', style, n)).area, .02)
+
+    def test_center_shares_one_x_coordinate_on_a_vertical_guide(self):
+        for n in MASTERS:
+            for style in STYLES:
+                g = geometry('align-center', style, n)
+                runs = bands(g, n)
+                panels = sorted((r for r in runs if r[1] - r[0] > GAP[n] + .01), key=lambda r: r[2])
+                guides = [r for r in runs if abs((r[1] - r[0]) - GAP[n]) < .01]
+                with self.subTest(master=n, style=style):
+                    self.assertEqual(len(parts(g)), 1)
+                    self.assertEqual(len(panels), 2)
+                    self.assertEqual(len(guides), 3, 'The guide shows above, between and below the objects')
+                    axis = {round((r[0] + r[1]) / 2, 3) for r in panels + guides}
+                    self.assertEqual(len(axis), 1, 'Objects and guide share one x coordinate')
+                    self.assertGreater(abs((panels[0][1] - panels[0][0]) - (panels[1][1] - panels[1][0])), 2 * GAP[n])
+                    # A vertical axis: the objects are stacked on it, not lined up in a row.
+                    self.assertGreater(panels[1][2], panels[0][3])
+                    self.assertLess(guides[0][3], panels[0][2] + .01)
+                    self.assertGreater(guides[-1][2], panels[1][3] - .01)
+
+    def test_center_axis_is_a_full_strength_column_at_12_px(self):
+        for style in STYLES:
+            pixels = alpha('align-center', style, 12)
+            with self.subTest(style=style):
+                self.assertEqual(pixels.getpixel((5, 1)), 255)
+                self.assertEqual(pixels.getpixel((5, 6)), 255)
+                self.assertEqual(pixels.getpixel((4, 1)), 0)
+                self.assertEqual(pixels.getpixel((6, 6)), 0)
+
+    def test_three_directions_are_distinct_at_native_size(self):
+        for n in MASTERS:
+            for style in STYLES:
+                names = ('align-left', 'align-center', 'align-right')
+                for i, a in enumerate(names):
+                    for b in names[i + 1:]:
+                        with self.subTest(a=a, b=b, master=n, style=style):
+                            self.assertGreater(geometry(a, style, n).symmetric_difference(geometry(b, style, n)).area, 10 * GAP[n] ** 2)
+
+    def test_objects_are_panels_not_text_rows(self):
+        for n in MASTERS:
+            for icon in ('align-left', 'align-center', 'align-right'):
+                outline, filled = geometry(icon, 'outline', n), geometry(icon, 'filled', n)
+                with self.subTest(icon=icon, master=n):
+                    # Two hollow objects in Outline; text rows would be solid bars of three or four.
+                    self.assertEqual(len(holes(outline)), 2)
+                    self.assertEqual(holes(filled), [])
+                    self.assertEqual(ICONS[icon]['pairModel'], 'silhouette')
+                    self.assertLess(overlap(filled, geometry('menu', 'filled', n)), .6)
+                    if icon == 'align-center':
+                        heights = [r[3] - r[2] for r in bands(filled, n) if r[1] - r[0] > GAP[n] + .01]
+                    else:
+                        heights = [size(panel)[1] for panel in self.side_parts(icon, 'filled', n)[1]]
+                    # An object is taller than a contour-weight text row, by a clear margin.
+                    self.assertEqual(len(heights), 2)
+                    self.assertTrue(all(height >= 3 * GAP[n] - .002 for height in heights), heights)
+
+
+class FontCompatibility(unittest.TestCase):
+    """The compiled glyph must rasterize like its SVG, so test what the compiler does to a path."""
+
+    UNITS = {12: 1280, 16: 960, 24: 640}
+
+    def test_exported_rings_have_only_real_corners(self):
+        for icon, style, n in ALL:
+            for p in parts(geometry(icon, style, n)):
+                for ring_ in (p.exterior, *p.interiors):
+                    c = list(ring_.coords)[:-1]
+                    for i, (bx, by) in enumerate(c):
+                        (ax, ay), (cx, cy) = c[i - 1], c[(i + 1) % len(c)]
+                        turn = abs((bx - ax) * (cy - by) - (by - ay) * (cx - bx))
+                        with self.subTest(icon=icon, style=style, master=n, vertex=(bx, by)):
+                            # Exported coordinates have three decimals, so allow rounding only.
+                            self.assertGreater(turn, .002)
+
+    def on_font_grid(self, icon, style, n):
+        units = self.UNITS[n]
+        rings = []
+        for p in parts(geometry(icon, style, n)):
+            for ring_ in (p.exterior, *p.interiors):
+                rings.append('M' + 'L'.join(f'{round(x * units) / units:.6f} {round(y * units) / units:.6f}' for x, y in list(ring_.coords)[:-1]) + 'Z')
+        svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="{n}" height="{n}" viewBox="0 0 {n} {n}" fill="#000" fill-rule="evenodd"><path d="{"".join(rings)}"/></svg>'
+        return Image.open(io.BytesIO(cairosvg.svg2png(bytestring=svg.encode()))).convert('RGBA').getchannel('A')
+
+    def test_drawings_rasterize_alike_on_the_font_grid(self):
+        # The root gate's native limits, unchanged: mean 0.5 and peak 8 of 255.
+        for icon, style, n in ALL:
+            delta = ImageChops.difference(alpha(icon, style, n), self.on_font_grid(icon, style, n))
+            with self.subTest(icon=icon, style=style, master=n):
+                self.assertLessEqual(ImageStat.Stat(delta).mean[0], .5)
+                self.assertLessEqual(delta.getextrema()[1], 8)
+
+    def faint_outliers(self, icon, style, n):
+        """Ink at 4× more than a pixel beyond any half-covered pixel, as a share of covered pixels."""
+        size_ = n * 4
+        pixels = alpha(icon, style, n, 4)
+        covered = {(x, y) for y in range(size_) for x in range(size_) if pixels.getpixel((x, y)) >= 128}
+        faint = 0
+        for y in range(size_):
+            for x in range(size_):
+                if 10 <= pixels.getpixel((x, y)) < 128 and not any((x + dx, y + dy) in covered for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                    faint += 1
+        return faint / max(len(covered), 1)
+
+    def test_no_sliver_a_font_rasterizer_could_turn_into_stray_ink(self):
+        # CoreText's edge coverage can lift faint ink to half strength. The root Flutter
+        # gate allows 0.5% stray coverage against Cairo, so hold the source to that limit.
+        for icon, style, n in ALL:
+            with self.subTest(icon=icon, style=style, master=n):
+                self.assertLessEqual(self.faint_outliers(icon, style, n), .005)
+
+    def test_activity_peaks_are_flat_on_the_pixel_grid(self):
+        for n in MASTERS:
+            for style in STYLES:
+                g = geometry('activity', style, n)
+                _, y0, _, y1 = g.bounds
+                top = g.intersection(box(0, y0, n, y0 + .05)).bounds
+                bottom = g.intersection(box(0, y1 - .05, n, y1)).bounds
+                with self.subTest(master=n, style=style):
+                    self.assertAlmostEqual(y0, round(y0), delta=.002)
+                    self.assertAlmostEqual(y1, round(y1), delta=.002)
+                    self.assertGreaterEqual(top[2] - top[0], .4)
+                    self.assertGreaterEqual(bottom[2] - bottom[0], .4)
+
+
 class DirectionAndText(unittest.TestCase):
     def test_chevrons_reuse_the_native_chevron_exactly(self):
         for n in MASTERS:
@@ -292,28 +473,6 @@ class DirectionAndText(unittest.TestCase):
                 x0, _, x1, _ = geometry('chevrons-right', style, n).bounds
                 with self.subTest(master=n, style=style):
                     self.assertAlmostEqual(x0 + x1, n, delta=.01)
-
-    def test_alignment_edges_and_mirror(self):
-        for n in MASTERS:
-            for style in STYLES:
-                left, center, right = (parts(geometry(i, style, n)) for i in ('align-left', 'align-center', 'align-right'))
-                menu = parts(geometry('menu', style, n))
-                with self.subTest(master=n, style=style):
-                    self.assertGreaterEqual(len(left), 3)
-                    self.assertEqual(len({round(p.bounds[0], 3) for p in left}), 1)
-                    self.assertEqual(len({round(p.bounds[2], 3) for p in right}), 1)
-                    self.assertEqual(len({round(p.centroid.x, 3) for p in center}), 1)
-                    self.assertLess(mirrored(geometry('align-left', style, n), n).symmetric_difference(geometry('align-right', style, n)).area, .02)
-                    # Unequal rows are what separates alignment from Menu's equal bars.
-                    self.assertGreater(len({round(size(p)[0], 3) for p in left}), 1)
-                    self.assertEqual(len({round(size(p)[0], 3) for p in menu}), 1)
-
-    def test_paragraph_detail_is_only_at_24(self):
-        for n, rows in ((12, 3), (16, 3), (24, 4)):
-            for icon in ('align-left', 'align-center', 'align-right'):
-                for style in STYLES:
-                    with self.subTest(icon=icon, master=n, style=style):
-                        self.assertEqual(len(parts(geometry(icon, style, n))), rows)
 
     def test_type_is_a_t_with_head_and_foot(self):
         for n in MASTERS:

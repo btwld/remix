@@ -53,12 +53,15 @@ These 29 concepts complete the shared inventory. Constructors live in `source/ou
 - **Dashboard and Grid:** Dashboard is four panels in staggered columns, so panels are unequal. Grid stays four equal cells.
 - **Group, Focus, User:** Group is a marching-ants selection frame around two objects. It has side dashes, which Focus does not, and it means grouped selection, not people. Outline objects are apart; Filled objects overlap into one. Group needs a visible label at 12 px, like Focus.
 - **Chevrons:** two copies of the native Chevron, with pitch tuned per weight to hold the gap. Painted bounds are centered, not the tip coordinates.
-- **Align:** unequal rows separate these from Menu. There are three rows at 12 and 16 px and four at 24 px.
+- **Align:** selected-object alignment, not paragraph formatting. A vertical guide and two panels of different widths, at every master. Left and Right share an edge beside the guide and are exact mirrors. Center shares one x coordinate, with the guide running above, between and below the panels; it is a vertical axis, matching the registry's `alignCenterHorizontally`.
+- **Activity:** its peaks are cut flat on the pixel grid. A full mitre ended in a sliver thinner than a pixel, which CoreText's edge coverage rendered at half strength, more than a pixel outside anything Cairo painted that strongly.
 - **Bold and Type:** authored letters, no font outlines. Bold's waist is a notch between chamfered bowls. Type's head drops and foot keep it apart from Plus.
 - **Box and Layers:** both use 2:1 slopes rather than 45°, which flatten the top face and leave room for the lower faces or sheets. Box shows three faces. Layers is a top sheet over open V strokes.
 - **Moon and Sun:** Moon is a faceted crescent with equal inner facets at 24 px, because longer axis edges read as an L. Sun's rays clear each other by the gap target, which keeps them short. Filled Sun changes the hub, not the rays.
 - **Wand:** Filled uses a concave sparkle, because a solid diamond on the rod read as a hammer head.
 - **Input:** a tall I-beam breaks the field into two open brackets, so no closed window competes with Terminal.
+
+Exported product paths contain real corners only. A boolean union leaves vertices along straight edges, which the font compiler drops, and Cairo samples a pixel row differently when a vertex falls inside it. That made Box 16 differ from its own glyph by up to 12/255, so `product.draw()` removes them and a test renders each drawing on the font grid.
 
 No product drawing needed a measured gap exception: every separated part and counter meets its general target, so `catalog/exceptions.json` is unchanged.
 

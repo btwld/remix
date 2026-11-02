@@ -2142,7 +2142,7 @@
         "optical": "product-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "One open pulse stroke on a shared baseline, in regular and heavier weights. Its parallel 2:1 flanks keep it apart from Chart and from a plain zigzag. Filled 12 px uses a 1.5 px stroke: the 2 px token closed the pulse.",
+        "note": "One open pulse stroke on a shared baseline, in regular and heavier weights. Its parallel 2:1 flanks keep it apart from Chart and from a plain zigzag. Peaks are cut flat on the pixel grid, because a full mitre left a sliver that font rendering turned into stray pixels. Filled 12 px uses a 1.5 px stroke: the 2 px token closed the pulse.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -2153,17 +2153,18 @@
       "category": "content",
       "legacyGroup": null,
       "stage": "product-addition",
-      "pairModel": "weight",
+      "pairModel": "silhouette",
       "meaning": "Align selected objects on a horizontal center axis; distinct from text paragraph formatting.",
       "keywords": [
-        "text",
-        "alignment",
+        "objects",
+        "selection",
+        "guide",
         "center",
         "alignCenterHorizontally"
       ],
       "aliases": [],
       "rtlPolicy": "literal-no-automatic-mirroring",
-      "example": "Center text",
+      "example": "Align objects center",
       "availability": {
         "outline": {
           "appearances": [
@@ -2179,7 +2180,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/outline/product/text.py",
+        "source": "source/outline/product/objects.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -2187,7 +2188,7 @@
         "optical": "product-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Unequal rows centered on the canvas, which is what separates it from Menu. Three rows at 12 and 16 px; a fourth at 24 px makes it read as a paragraph.",
+        "note": "Two panels of different widths share one x center on a vertical guide, which runs above, between and below them. This is object alignment, not centered text. The guide sits on column 5-6 at 12 px, so the panels center on 5.5.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -2198,17 +2199,18 @@
       "category": "content",
       "legacyGroup": null,
       "stage": "product-addition",
-      "pairModel": "weight",
+      "pairModel": "silhouette",
       "meaning": "Align selected objects to their left edge; distinct from paragraph formatting.",
       "keywords": [
-        "text",
-        "alignment",
+        "objects",
+        "selection",
+        "guide",
         "left",
         "alignLeft"
       ],
       "aliases": [],
       "rtlPolicy": "literal-no-automatic-mirroring",
-      "example": "Align text left",
+      "example": "Align objects left",
       "availability": {
         "outline": {
           "appearances": [
@@ -2224,7 +2226,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/outline/product/text.py",
+        "source": "source/outline/product/objects.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -2232,7 +2234,7 @@
         "optical": "product-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "Unequal rows on a shared left edge. Three rows at 12 and 16 px; a fourth at 24 px makes it read as a paragraph.",
+        "note": "Two panels of different widths share one left edge beside a vertical guide. This is object alignment, not paragraph formatting.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }
@@ -2243,17 +2245,18 @@
       "category": "content",
       "legacyGroup": null,
       "stage": "product-addition",
-      "pairModel": "weight",
+      "pairModel": "silhouette",
       "meaning": "Align selected objects to their right edge; distinct from paragraph formatting.",
       "keywords": [
-        "text",
-        "alignment",
+        "objects",
+        "selection",
+        "guide",
         "right",
         "alignRight"
       ],
       "aliases": [],
       "rtlPolicy": "literal-no-automatic-mirroring",
-      "example": "Align text right",
+      "example": "Align objects right",
       "availability": {
         "outline": {
           "appearances": [
@@ -2269,7 +2272,7 @@
       },
       "provenance": {
         "method": "original-construction-with-family-primitives",
-        "source": "source/outline/product/text.py",
+        "source": "source/outline/product/objects.py",
         "externalArtworkUsed": false
       },
       "review": {
@@ -2277,7 +2280,7 @@
         "optical": "product-local-review",
         "recognition": "not-user-tested",
         "independentApproval": "pending",
-        "note": "The exact mirror of Align left. It describes the text edge and does not flip under RTL.",
+        "note": "The exact mirror of Align left. It describes the objects' edge and does not flip under RTL.",
         "exceptions": [],
         "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
       }

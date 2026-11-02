@@ -1,4 +1,4 @@
-"""Directional doubles, text alignment, authored letters and source brackets."""
+"""Directional doubles, authored letters and source brackets."""
 from __future__ import annotations
 
 import math
@@ -22,26 +22,6 @@ def chevrons(name, n, outlined):
     # Center what is painted: the mitred tip reaches further than the arm ends.
     pair = affinity.translate(pair, n / 2 - (pair.bounds[0] + pair.bounds[2]) / 2)
     return affinity.rotate(pair, 180, origin=(n / 2, n / 2)) if name == 'chevrons-left' else pair
-
-
-# Line lengths are one text block per master. Compact masters keep three rows
-# (Menu's rows); 24 px has room for a fourth, which makes it read as a paragraph.
-ALIGN = {12: ((2.5, 5.5, 8.5), (3, 6, 9), (10, 6, 8)),
-         16: ((3.25, 8.25, 13.25), (3.25, 8.25, 13.25), (13, 7, 10)),
-         24: ((4, 9, 14, 19), (4.5, 9.5, 14.5, 19.5), (20, 12, 16, 8))}
-
-
-@icon('align-left', 'align-center', 'align-right')
-def align(name, n, outlined):
-    outline_rows, filled_rows, lengths = ALIGN[n]
-    rows = outline_rows if outlined else filled_rows
-    t = OUTLINE[n] if outlined else BOLD[n]
-    a, z = CANVAS[n]
-    bars = []
-    for y, length in zip(rows, lengths):
-        x0 = {'align-left': a, 'align-right': z - length, 'align-center': (a + z - length) / 2}[name]
-        bars.append(box(x0, y - t / 2, x0 + length, y + t / 2))
-    return U(*bars)
 
 
 @icon('type')
