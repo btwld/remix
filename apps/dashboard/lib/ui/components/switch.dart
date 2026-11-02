@@ -53,14 +53,14 @@ SwitchStyler _uiSwitchBaseStyler(UiSwitchSize size) {
           metrics.thumbSize,
         ).borderRadius(.all(metrics.radius)),
         trackEffects: RemixBoxEffectsMix(
-          behindContent: _uiSwitchLayer(),
-          overContent: _uiSwitchLayer(),
+          behindContent: RemixBoxEffectLayerMix(),
+          overContent: RemixBoxEffectLayerMix(),
         ),
       )
       .thumbColor(const Color(0xFFFFFFFF))
       .onFocusVisible(.trackEffects(uiFocusOutline()))
       .trackColor(UiTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
+      .trackEffects(RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()))
       .trackEffects(
         RemixBoxEffectsMix.overContent(
           _uiSwitchInsetRing(UiTokens.controlBorder()),
@@ -79,7 +79,9 @@ SwitchStyler _uiSwitchSurfaceStyler(
             .trackColor(
               highContrast ? UiTokens.accent12() : UiTokens.accentTrack(),
             )
-            .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
             .trackEffects(
               RemixBoxEffectsMix.overContent(
                 _uiSwitchInsetRing(UiTokens.grayA5()),
@@ -95,7 +97,9 @@ SwitchStyler _uiSwitchSurfaceStyler(
                 highContrast ? UiTokens.accent12() : UiTokens.accent10(),
               ),
             )
-            .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer())),
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            ),
       )
       .onDisabled(_uiSwitchDisabledStyler());
 }
@@ -110,7 +114,9 @@ SwitchStyler _uiSwitchSoftStyler(
             .trackColor(
               highContrast ? UiTokens.accentA6() : UiTokens.accentA4(),
             )
-            .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer()))
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
             .trackEffects(
               RemixBoxEffectsMix.overContent(_uiSwitchInsetRing(null)),
             )
@@ -124,7 +130,9 @@ SwitchStyler _uiSwitchSoftStyler(
                 highContrast ? UiTokens.accentA7() : UiTokens.accentA5(),
               ),
             )
-            .trackEffects(RemixBoxEffectsMix.behindContent(_uiSwitchLayer())),
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            ),
       )
       .onDisabled(_uiSwitchDisabledStyler(soft: true));
 }
@@ -199,14 +207,10 @@ BoxStyler _uiSwitchSoftSelectedThumbStyler(bool highContrast) => BoxStyler()
     .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())));
 
 /// A 1px inset track ring, or none when [color] is null.
-RemixBoxEffectLayerMix _uiSwitchInsetRing(Color? color) => _uiSwitchLayer(
-  shadows: [
-    if (color != null)
-      RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1),
-  ],
-);
-
-RemixBoxEffectLayerMix _uiSwitchLayer({
-  List<RemixBoxShadowMix>? shadows,
-  RemixBoxShadowListToken? shadowToken,
-}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);
+RemixBoxEffectLayerMix _uiSwitchInsetRing(Color? color) =>
+    RemixBoxEffectLayerMix(
+      shadows: [
+        if (color != null)
+          RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1),
+      ],
+    );

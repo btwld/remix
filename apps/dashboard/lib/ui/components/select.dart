@@ -151,13 +151,21 @@ SelectTriggerStyler _uiSelectSurfaceTrigger(SelectTriggerStyler base) {
         ),
       )
       .onDisabled(
-        .color(UiTokens.grayA2())
+        .color(UiTokens.gray2())
             .label(.color(UiTokens.grayA11()))
             .icon(.color(UiTokens.grayA9()))
             .indicator(.color(UiTokens.grayA9()))
             .containerEffects(
               RemixBoxEffectsMix.behindContent(
-                uiInsetSurface(strokes: [UiTokens.grayA6()]),
+                uiInsetSurface(strokes: [UiTokens.grayA6()]).merge(
+                  RemixBoxEffectLayerMix(
+                    gradients: [
+                      RemixLinearGradientMix(
+                        colors: [UiTokens.grayA2(), UiTokens.grayA2()],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
       );
@@ -205,7 +213,7 @@ SelectContentStyler _uiSelectContentStyler(UiSelectSize size) {
     .size2 || .size3 => UiTokens.radius4(),
   };
   return SelectContentStyler()
-      // select.css:45: `min-width: var(--radix-select-trigger-width)`.
+      // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(
         .all(switch (size) {

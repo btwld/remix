@@ -255,6 +255,7 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
   Widget _wideRow() {
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final policy = FocusTraversalGroup.maybeOf(context);
     return RowBox(
       style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
@@ -270,9 +271,16 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
                       : const Duration(milliseconds: 200),
                 ),
               ),
-          child: widget.sidebar,
+          // Grouped so Tab finishes one pane before the other, rather than
+          // zigzagging between controls that sit at similar heights.
+          child: FocusTraversalGroup(policy: policy, child: widget.sidebar),
         ),
-        Expanded(child: _body(besideSidebar: true)),
+        Expanded(
+          child: FocusTraversalGroup(
+            policy: policy,
+            child: _body(besideSidebar: true),
+          ),
+        ),
       ],
     );
   }

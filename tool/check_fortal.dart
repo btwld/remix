@@ -134,12 +134,80 @@ List<String> checkFortalContract(Directory workspace) {
     if (!File('$root/$path').existsSync())
       failures.add('Missing Fortal gate $path.');
   }
+  _checkRecipeSources(root, catalog, failures);
   final visualGate = catalog['visualGate'] as String?;
   if (visualGate == null ||
       !File('${workspace.path}/$visualGate').existsSync()) {
     failures.add('Missing Fortal polish-board visual gate.');
   }
   return failures;
+}
+
+/// Layers that float, the only recipes that may cast a shadow.
+const _floatingRecipes = {
+  'dialog',
+  'menu',
+  'popover',
+  'select',
+  'toast',
+  'tooltip',
+};
+
+/// The accent picker draws its selected and focused rings itself, because a
+/// swatch's ring has to clear the panel edge.
+const _handBuiltRingAllowed = {'dashboard_demo_theme_panel'};
+
+/// Public widgets documented under a catalogued family's page.
+const _familyParts = {
+  'FortalBarChart',
+  'FortalCheckboxGroupItem',
+  'FortalPieChart',
+  'FortalTab',
+  'FortalTabView',
+};
+
+/// Scans recipe sources for rules the spec states but no token can enforce.
+void _checkRecipeSources(
+  String root,
+  Map<String, dynamic> catalog,
+  List<String> failures,
+) {
+  final catalogued = {
+    for (final family in catalog['families'] as List) family['fortalType'],
+  };
+  for (final directory in ['components', 'recipes']) {
+    final source = Directory('$root/lib/src/fortal/$directory');
+    if (!source.existsSync()) continue;
+    final files = source
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.dart'));
+    for (final file in files) {
+      final name = file.uri.pathSegments.last.replaceFirst('.dart', '');
+      final text = file.readAsStringSync();
+      if (!name.endsWith('.g')) {
+        if (!_floatingRecipes.contains(name) &&
+            RegExp(r'FortalTokens\.shadow[1-6]').hasMatch(text)) {
+          failures.add('$name casts a shadow but is not a floating layer.');
+        }
+        if (!_handBuiltRingAllowed.contains(name) &&
+            RegExp(r'\boutlineOffset\s*[:(]').hasMatch(text)) {
+          failures.add('$name builds a focus ring by hand.');
+        }
+      }
+      if (directory != 'components') continue;
+      // Most public widgets are generated, so this one reads .g.dart as well.
+      for (final match in RegExp(
+        r'^class (Fortal\w+)(?:<[^>]*>)?\s+extends\s+(?:Stateless|Stateful)Widget',
+        multiLine: true,
+      ).allMatches(text)) {
+        final widget = match.group(1)!;
+        if (!catalogued.contains(widget) && !_familyParts.contains(widget)) {
+          failures.add('$widget is public but not in the Fortal catalog.');
+        }
+      }
+    }
+  }
 }
 
 void _checkEnum(

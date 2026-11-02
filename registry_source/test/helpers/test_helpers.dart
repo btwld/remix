@@ -24,7 +24,9 @@ extension WidgetTesterHelpers on WidgetTester {
   }) async {
     await pumpWidget(
       FortalTheme(
-        accent: accent,
+        // Calçadão is both the default accent and the gray, so a recipe that
+        // reads one where it should read the other would still pass under it.
+        accent: accent ?? (accentPalette == null ? .mar : null),
         accentPalette: accentPalette,
         mode: mode,
         child: WidgetsApp(
@@ -53,7 +55,9 @@ extension WidgetTesterHelpers on WidgetTester {
 }
 
 /// Resolves a value inside [FortalTheme], optionally selecting the accent or
-/// palette, appearance, and widget states. Defaults retain the neutral preset.
+/// palette, appearance, and widget states. Defaults to the same Mar accent as
+/// [WidgetTesterHelpers.pumpRemixApp]; pass `accent: .calcadao` for the preset's
+/// neutral default.
 Future<T> resolveInFortalTheme<T>(
   WidgetTester tester,
   T Function(BuildContext context) resolve, {

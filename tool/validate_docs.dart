@@ -10,6 +10,22 @@ final _removedComponentBackgroundColorInvocation = RegExp(
   r'\s*\.backgroundColor\s*\(',
 );
 
+final _retiredFortalAccents = <(RegExp, String)>[
+  (
+    RegExp(r'\.mangue\b'),
+    'retired Mangue accent; use serra (errors use the dedicated error palette)',
+  ),
+  (
+    RegExp(
+      r'\baccent\s*:\s*(?:[A-Z][A-Za-z0-9_]*AccentColor)?\.'
+      r'(?:gray|mauve|slate|sage|olive|sand|tomato|red|ruby|crimson|pink|plum|'
+      r'purple|violet|iris|indigo|blue|cyan|teal|jade|green|grass|brown|orange|'
+      r'sky|mint|lime|yellow|amber|gold|bronze)\b',
+    ),
+    'retired Radix accent; use calcadao, mar, ceu, serra, sol, duna or caju',
+  ),
+];
+
 final _retiredApis = <(RegExp, String)>[
   (
     RegExp(
@@ -133,9 +149,10 @@ final _retiredApis = <(RegExp, String)>[
     ),
     'retired theme scope class; use <Prefix>Theme',
   ),
+  ..._retiredFortalAccents,
   (
-    RegExp(r'\.mangue\b'),
-    'retired Mangue accent; use serra (errors use the dedicated error palette)',
+    RegExp(r'\bRadixColor\b|\bradix_colors\b'),
+    'retired Radix color data; Fortal generates its own palettes',
   ),
   (
     RegExp(
@@ -218,6 +235,10 @@ const _consumerDocumentationFiles = <String>[
 ];
 
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
+  (
+    RegExp(r'Radix[- ]Themes[- ]inspired|Radix-shaped', caseSensitive: false),
+    'stale claim that Fortal follows Radix; it is an independent design system',
+  ),
   (
     RegExp(r'one enum-based constructor', caseSensitive: false),
     'stale single-constructor Fortal claim',
@@ -411,6 +432,27 @@ Future<void> main() async {
           .whereType<File>()
           .where((file) => file.path.endsWith('.md')),
   ]..sort((a, b) => a.path.compareTo(b.path));
+  // Evals are JSON, so the snippet extraction below never reads them.
+  for (final relativeDirectory in _publishedSkillDirectories) {
+    final evals = Directory('${workspaceRoot.path}/$relativeDirectory/evals');
+    if (!evals.existsSync()) continue;
+    for (final file in evals.listSync().whereType<File>()) {
+      final name = file.uri.pathSegments.last;
+      final source = file.readAsStringSync();
+      for (final (pattern, description) in _retiredFortalAccents) {
+        if (pattern.hasMatch(source)) {
+          failures.add(
+            '$relativeDirectory/evals/$name contains a $description.',
+          );
+        }
+      }
+    }
+  }
+  if (failures.isNotEmpty) {
+    _finish(failures);
+    return;
+  }
+
   final extraction = _extractAnalyzableSnippets(
     [...docs, ...skillDocuments],
     workspaceRoot,

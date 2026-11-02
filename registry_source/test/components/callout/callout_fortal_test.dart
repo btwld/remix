@@ -84,6 +84,7 @@ Future<CalloutSpec> _resolve(
   late CalloutSpec result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: .light,
       scaling: scaling,
       child: WidgetsApp(
@@ -120,6 +121,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

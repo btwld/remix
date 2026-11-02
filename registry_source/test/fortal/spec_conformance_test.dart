@@ -163,7 +163,20 @@ void main() {
       final tokens = buildFortalScopeTokens(
         FortalThemeData.light(scaling: scaling),
       );
-      expect(tokens[FortalTokens.space4], 16 * scaling.factor);
+      final spacing = {
+        FortalTokens.space1: 4,
+        FortalTokens.space2: 8,
+        FortalTokens.space3: 12,
+        FortalTokens.space4: 16,
+        FortalTokens.space5: 24,
+        FortalTokens.space6: 32,
+        FortalTokens.space7: 40,
+        FortalTokens.space8: 48,
+        FortalTokens.space9: 64,
+      };
+      for (final MapEntry(key: token, value: size) in spacing.entries) {
+        expect(tokens[token], size * scaling.factor);
+      }
       expect(
         (tokens[FortalTokens.text8] as TextStyle).fontSize,
         36 * scaling.factor,

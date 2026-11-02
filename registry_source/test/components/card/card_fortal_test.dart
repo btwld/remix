@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+
 void main() {
   test('flat card API and defaults', () {
     expect(FortalCardVariant.values.map((v) => v.name), ['surface', 'ghost']);
@@ -94,6 +96,29 @@ void main() {
       states: {WidgetState.disabled, WidgetState.focused},
     );
     expect(disabled.containerEffects!.outline.style, BorderStyle.none);
+  });
+
+  testWidgets('a focused card hides its ring in touch mode', (tester) async {
+    final strategy = FocusManager.instance.highlightStrategy;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTouch;
+    addTearDown(() => FocusManager.instance.highlightStrategy = strategy);
+
+    await tester.pumpRemixApp(
+      WidgetStateProvider(
+        states: const {WidgetState.focused},
+        child: const FortalCard(child: Text('Card')),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final spec = tester.resolvedSpecOf<CardSpec>(find.text('Card'));
+    expect(spec.containerEffects?.outline.width, 0);
+  });
+
+  testWidgets('a card clips its content to the frame', (tester) async {
+    final spec = await _resolve(tester);
+    expect(spec.container.spec.clipBehavior, Clip.antiAlias);
   });
 
   testWidgets('ghost state fills keep their independent semantics', (

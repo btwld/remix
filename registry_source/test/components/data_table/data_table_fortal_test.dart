@@ -225,6 +225,7 @@ void main() {
       // each control resolves against its own states.
       await tester.pumpWidget(
         FortalTheme(
+          accent: .mar,
           child: WidgetsApp(
             color: Colors.black,
             builder: (context, child) => Align(
@@ -286,6 +287,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         FortalTheme(
+          accent: .mar,
           child: WidgetsApp(
             color: Colors.black,
             builder: (context, child) => Align(
@@ -369,6 +371,7 @@ void main() {
       RemixDataTableSort? sort;
       await tester.pumpWidget(
         FortalTheme(
+          accent: .mar,
           scaling: .percent90,
           child: WidgetsApp(
             color: Colors.black,
@@ -417,6 +420,7 @@ void main() {
             RemixDataTableSort? sort;
             await tester.pumpWidget(
               FortalTheme(
+                accent: .mar,
                 mode: mode,
                 scaling: .percent90,
                 child: WidgetsApp(
@@ -519,6 +523,7 @@ void main() {
       late Color gray12;
       await tester.pumpWidget(
         FortalTheme(
+          accent: .mar,
           child: WidgetsApp(
             color: Colors.black,
             builder: (context, child) {
@@ -564,6 +569,7 @@ Future<void> _pumpSelectableTable(
 }) async {
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       scaling: scaling,
       child: WidgetsApp(
         color: Colors.black,
@@ -600,6 +606,7 @@ Future<DataTableSpec> _resolve(
   late DataTableSpec result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: WidgetsApp(
@@ -649,6 +656,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: .light,
       child: WidgetsApp(
         color: Colors.black,

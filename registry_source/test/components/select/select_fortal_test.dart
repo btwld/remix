@@ -348,18 +348,17 @@ void main() {
         open.trigger.spec.containerEffects!.behindContent!.shadows.single.color,
         tokens.grayA8,
       );
-      expect(_flexColor(disabledHover.trigger.spec.container), tokens.grayA2);
       expect(
-        disabledHover
-            .trigger
-            .spec
-            .containerEffects!
-            .behindContent!
-            .shadows
-            .single
-            .color,
-        tokens.grayA6,
+        _flexColor(disabledHover.trigger.spec.container),
+        tokens.colorSurface,
       );
+      final disabledLayer =
+          disabledHover.trigger.spec.containerEffects!.behindContent!;
+      expect(disabledLayer.shadows.single.color, tokens.grayA6);
+      expect(disabledLayer.gradients.single.colors, [
+        tokens.grayA2,
+        tokens.grayA2,
+      ]);
       expect(
         disabledHover.trigger.spec.label.spec.style!.color,
         tokens.grayA11,
@@ -424,6 +423,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       FortalTheme(
+        accent: .mar,
         child: WidgetsApp(
           color: const Color(0xFFFFFFFF),
           pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
@@ -472,6 +472,7 @@ Future<SelectSpec> _resolve(
   late SelectSpec resolved;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       radius: radius,
@@ -544,6 +545,7 @@ _tokens(WidgetTester tester, {Brightness brightness = .light}) async {
   result;
   await tester.pumpWidget(
     FortalTheme(
+      accent: .mar,
       mode: brightness == Brightness.dark ? .dark : .light,
       child: WidgetsApp(
         color: Colors.black,

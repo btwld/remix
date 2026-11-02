@@ -76,6 +76,56 @@ void main() {
       );
     });
 
+    File candidateButton() => File(
+      '${candidate.path}/registry_source/lib/src/fortal/components/button.dart',
+    );
+
+    void appendToButton(String source) => candidateButton().writeAsStringSync(
+      '${candidateButton().readAsStringSync()}\n$source\n',
+    );
+
+    test('a control cannot start casting a shadow', () {
+      appendToButton('final shadow = FortalTokens.shadow2;');
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('button casts a shadow')),
+      );
+    });
+
+    test('a recipe cannot build its own focus ring', () {
+      appendToButton('final ring = RemixBoxEffectsMix(outlineOffset: 3);');
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('button builds a focus ring by hand')),
+      );
+    });
+
+    test('the shadow scan also reads layered shadow tokens', () {
+      appendToButton('final shadow = FortalTokens.shadow1Layers;');
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('button casts a shadow')),
+      );
+    });
+
+    test('a generated public widget must join the catalog', () {
+      File(
+        '${candidate.path}/registry_source/lib/src/fortal/components/button.g.dart',
+      ).writeAsStringSync('class FortalMadeThing extends StatelessWidget {}\n');
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('FortalMadeThing is public')),
+      );
+    });
+
+    test('a new public widget must join the catalog', () {
+      appendToButton('class FortalNewThing extends StatelessWidget {}');
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('FortalNewThing is public')),
+      );
+    });
+
     test('documented defaults must match the theme constructors', () {
       catalog['theme']['enums']['panelBackground']['default'] = 'translucent';
       catalogFile.writeAsStringSync(jsonEncode(catalog));

@@ -215,8 +215,7 @@ void main() {
                   badge: fortalBadgeStyle().build(context).spec,
                 );
               },
-              // The Calçadão cases deliberately exercise the omitted default.
-              accent: accent == .mar ? .mar : null,
+              accent: accent,
               mode: dark ? .dark : .light,
               states: {WidgetState.selected},
             );

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with a green accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalTheme(accent: .green), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses dart run remix_cli:remix init --prefix Fortal --preset fortal and adds the required items.",
+      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalTheme(accent: .mar), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses dart run remix_cli:remix init --prefix Fortal --preset fortal and adds the required items.",
       "files": [],
       "expectations": [
         "Uses the Fortal preset and its owned ui/ui.dart barrel, importing remix only if base Remix types are used.",
