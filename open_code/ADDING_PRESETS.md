@@ -20,8 +20,9 @@ Use [PRESETS.md](PRESETS.md) for the current distribution contract and
 - Target the exported Remix components. Compose families that have no Remix
   widget from Remix widgets and Mix primitives; defer those that would need
   behavior Remix lacks. A shared-library API is a separate change: general to
-  every preset, additive, tested, documented, and recorded in the preset's ADR
-  (see the porting guide's extension order).
+  every preset, additive, tested, documented, and recorded in
+  [ARCHITECTURE.md](../ARCHITECTURE.md) (see the porting guide's extension
+  order).
 - Generate every catalog, template, and the registry index with
   `tool/build_registry.dart`. Do not hand-edit `registry/` outputs.
 - Keep one preset and one app-chosen prefix per consumer. A new preset must
@@ -39,8 +40,8 @@ not inherently require a configuration-schema change.
 
 ## Gate 1 — Source and scope
 
-Before recipes, create a scope/source ADR under
-`registry_source/docs/adr/<preset>/` and a pinned reference under
+Before recipes, record the preset's scope and source decision in
+[ARCHITECTURE.md](../ARCHITECTURE.md) and create a pinned reference under
 `registry_source/reference/<upstream>_<version>/`.
 
 Record the exact release and source hashes, license/notice evidence, theme

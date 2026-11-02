@@ -17,14 +17,13 @@ repository does not commit installed skills; the index points at the sources.
 [Mix skill]|root: https://raw.githubusercontent.com/btwld/mix/main/skills/mix
 |mix:{SKILL.md,references/{animations.md,architecture.md,code-generation.md,design-tokens.md,development-workflow.md,examples.md,fluent-api.md,layout.md,styler-api-policy.md,testing.md,variants.md,widget-modifiers-directives.md}}
 [Maintainer workflows]|root: .
-|releasing-a-package:.claude/skills/releasing-a-package/SKILL.md
 |open_code:{README.md,REGISTRIES.md,PRESETS.md,ADDING_PRESETS.md,RELEASING.md}
 ```
 
 - `using-remix`: app UI with `Remix*` widgets or an installed Vanilla/Fortal/HeroUI preset.
-- `building-remix-design-system`: authoring a first-party preset or a third-party registry; read `open_code/ADDING_PRESETS.md` before adding a preset beside Fortal.
+- `building-remix-design-system`: authoring a first-party preset or a third-party registry.
 - `mix`: stylers, specs, tokens, variants, animations, and modifiers.
-- `releasing-a-package`: version bumps, contract checkers, release PRs, and tags.
+- `open_code/RELEASING.md`: version bumps, contract checkers, release PRs, tags, and registry promotion.
 
 Architecture rationale lives in [ARCHITECTURE.md](ARCHITECTURE.md).
 Read [Adding a preset](open_code/ADDING_PRESETS.md) before adding a first-party
@@ -47,7 +46,7 @@ or `borderRounded`.
   `registry/icons.yaml` (icon mappings and library floors) and the Vanilla
   dependency and dev-dependency floors in `registry/vanilla/registry.yaml`, which the
   builder reads back as input. Edit those floors through the release workflow
-  documented in `.claude/skills/releasing-a-package/SKILL.md`.
+  documented in [open_code/RELEASING.md](open_code/RELEASING.md).
 - `apps/`: `playground`, `demo`, `dashboard`, and `widgetbook_vanilla` are
   workspace consumers pinned in their `remix.yaml`; `docs` is the docs site;
   `naked_ui_example`.

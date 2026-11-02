@@ -156,26 +156,11 @@ HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
 and `toggle_button_group` to shared names such as `button` and `select`.
 It includes no Agent, dashboard, chart or icons items. Its installed-source
-gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md).
+gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md) and
+[Adding a preset](ADDING_PRESETS.md).
 
 Vanilla and Fortal Agent source: `activity`, `answer`, `composer`, `execution`, `message`,
 `permission`, `plan`, `transcript`; shared `models` and `support` install
 transitively. Styled bundles: `activity_recipe`, `answer_recipe`,
 `composer_recipe`, `execution_recipe`, `message_recipe`, `permission_recipe`,
 `plan_recipe`, `transcript_recipe`.
-
-## HeroUI preset
-
-Initialize with `dart run remix_cli:remix init --prefix Acme --preset heroui`.
-The registry follows HeroUI's component names, adding `alert`, `avatar_group`,
-`breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
-`dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
-`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
-`toggle_button`, and `toggle_button_group` to shared names such as `button` and
-`select`.
-HeroUI does not ship Agent or dashboard recipes.
-
-`open_code/heroui_fixture` exercises every installed widget. Run
-`dart run tool/check_open_code.dart --preset heroui --source checkout --keep`
-to retain the review gallery. See [Adding a preset](ADDING_PRESETS.md) for the
-first-party authoring workflow.
