@@ -141,8 +141,10 @@ melos:
         scope: remix_cli
 
     version:align:check:
-      run: dart run tool/check_version_alignment.dart
-      description: Verify the registry's remix and remix_ui_fonts floors match the packages
+      steps:
+        - dart test test/tool/check_version_alignment_test.dart
+        - dart run tool/check_version_alignment.dart
+      description: Verify the registry's remix, remix_ui_fonts, and every icon library's remix_ui_icons floors match the packages
 
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
