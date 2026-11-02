@@ -13,10 +13,26 @@ import 'tokens.dart';
 
 /// Ui palettes, named for the landscapes and coastal materials. Error
 /// roles use a dedicated red palette that is not a selectable accent.
-enum UiAccentColor { calcadao, mar, ceu, serra, sol, duna, caju }
+enum UiAccentColor {
+  orla,
+  mar,
+  ceu,
+  serra,
+  sol,
+  duna,
+  caju;
+
+  @Deprecated('Use orla instead.')
+  static const calcadao = orla;
+}
 
 /// The neutral palette. The enum leaves room for future neutral families.
-enum UiGrayColor { calcadao }
+enum UiGrayColor {
+  orla;
+
+  @Deprecated('Use orla instead.')
+  static const calcadao = orla;
+}
 
 /// Theme-level radius multipliers.
 enum UiRadius { none, small, medium, large, full }
@@ -132,9 +148,9 @@ class UiThemeData extends UiThemeConfig {
 
   /// The preset's light appearance, with editable design options.
   const UiThemeData.light({
-    UiAccentColor accent = UiAccentColor.calcadao,
+    UiAccentColor accent = UiAccentColor.orla,
     UiColorTheme? accentPalette,
-    UiGrayColor gray = UiGrayColor.calcadao,
+    UiGrayColor gray = UiGrayColor.orla,
     UiPanelBackground panelBackground = UiPanelBackground.solid,
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
@@ -152,9 +168,9 @@ class UiThemeData extends UiThemeConfig {
 
   /// The preset's dark appearance, with editable design options.
   const UiThemeData.dark({
-    UiAccentColor accent = UiAccentColor.calcadao,
+    UiAccentColor accent = UiAccentColor.orla,
     UiColorTheme? accentPalette,
-    UiGrayColor gray = UiGrayColor.calcadao,
+    UiGrayColor gray = UiGrayColor.orla,
     UiPanelBackground panelBackground = UiPanelBackground.solid,
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,

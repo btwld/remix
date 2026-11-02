@@ -114,7 +114,7 @@ void main() {
           expect(FortalTheme.of(context).brightness, Brightness.dark);
           return fortalSwitchStyle().build(context).spec;
         },
-        accent: .calcadao,
+        accent: .orla,
         mode: .dark,
         states: {WidgetState.selected, if (pressed) WidgetState.pressed},
       );

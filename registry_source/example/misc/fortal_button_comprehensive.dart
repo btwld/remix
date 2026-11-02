@@ -17,7 +17,7 @@ class FortalButtonComprehensiveTest extends StatefulWidget {
 class _FortalButtonComprehensiveTestState
     extends State<FortalButtonComprehensiveTest> {
   FortalAccentColor _accent = FortalAccentColor.ceu;
-  FortalGrayColor _gray = FortalGrayColor.calcadao;
+  FortalGrayColor _gray = FortalGrayColor.orla;
   Brightness _brightness = .light;
 
   @override
@@ -388,7 +388,7 @@ class _AccentShowcaseSection extends StatelessWidget {
         // Create temporary scope to show the accent
         return FortalTheme(
           accent: accentColor,
-          gray: FortalGrayColor.calcadao,
+          gray: FortalGrayColor.orla,
 
           child: fortalButtonStyle(variant: .solid).call(
             label: accentColor.name,

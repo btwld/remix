@@ -54,7 +54,7 @@ void main() {
     testWidgets(
       '${dark ? 'dark' : 'light'} surface is flat in every interaction state',
       (tester) async {
-        final scale = (dark ? calcadao.dark : calcadao.light).scale;
+        final scale = (dark ? orla.dark : orla.light).scale;
         for (final states in <Set<WidgetState>>[
           {},
           {WidgetState.hovered},
@@ -126,9 +126,9 @@ void main() {
   ) async {
     for (final (states, color) in [
       (<WidgetState>{}, const Color(0x00000000)),
-      ({WidgetState.hovered}, calcadao.light.scale.alphaStep(3)),
-      ({WidgetState.pressed}, calcadao.light.scale.alphaStep(4)),
-      ({WidgetState.selected}, calcadao.light.scale.alphaStep(3)),
+      ({WidgetState.hovered}, orla.light.scale.alphaStep(3)),
+      ({WidgetState.pressed}, orla.light.scale.alphaStep(4)),
+      ({WidgetState.selected}, orla.light.scale.alphaStep(3)),
     ]) {
       final card = await _resolve(tester, variant: .ghost, states: states);
       expect((card.container.spec.decoration! as BoxDecoration).color, color);

@@ -41,7 +41,7 @@ import 'components/dialog.dart' as dialog;
 class FortalPolishBoard extends StatefulWidget {
   const FortalPolishBoard({
     super.key,
-    this.initialAccent = .calcadao,
+    this.initialAccent = .orla,
     this.initialGroup = 'All',
   });
   final FortalAccentColor initialAccent;
@@ -151,7 +151,7 @@ class _FortalPolishBoardState extends State<FortalPolishBoard> {
 }
 
 String paletteLabel(FortalAccentColor value) => switch (value) {
-  .calcadao => 'Calçadão',
+  .orla => 'Orla',
   .ceu => 'Céu',
   _ => '${value.name[0].toUpperCase()}${value.name.substring(1)}',
 };
@@ -271,7 +271,7 @@ List<String> get polishFamilyIds => [for (final family in _families) family.id];
 class FortalPolishContents extends StatelessWidget {
   const FortalPolishContents({
     super.key,
-    this.accent = .calcadao,
+    this.accent = .orla,
     this.group = 'All',
     this.grid = true,
     this.fontFamily,

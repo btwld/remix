@@ -657,7 +657,7 @@ void main() {
     );
     await tester.pump();
 
-    final swatch = find.byKey(const ValueKey('accent-calcadao'));
+    final swatch = find.byKey(const ValueKey('accent-orla'));
     final toggle = find.descendant(
       of: swatch,
       matching: find.byType(RemixToggle),

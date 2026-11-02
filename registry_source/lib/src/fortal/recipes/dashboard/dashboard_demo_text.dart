@@ -8,7 +8,6 @@ final _wordBoundary = RegExp('([A-Z])');
 /// `percent100` becomes `Percent100` and `formatAlignLeft` becomes
 /// `Format align left`.
 String enumLabel(Enum value) => switch (value.name) {
-  'calcadao' => 'Calçadão',
   'ceu' => 'Céu',
   _ => capitalize(
     value.name.replaceAllMapped(

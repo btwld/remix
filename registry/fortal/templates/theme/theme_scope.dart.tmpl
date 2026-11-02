@@ -205,14 +205,14 @@ class {{typePrefix}}Theme extends StatelessWidget {
   {{typePrefix}}ThemeConfig config, {
   {{typePrefix}}ThemeData? parent,
 }) {
-  final accent = config.accent ?? parent?.accent ?? {{typePrefix}}AccentColor.calcadao;
+  final accent = config.accent ?? parent?.accent ?? {{typePrefix}}AccentColor.orla;
 
   return {{typePrefix}}ThemeData(
     accent: accent,
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? {{typePrefix}}GrayColor.calcadao,
+    gray: config.gray ?? parent?.gray ?? {{typePrefix}}GrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

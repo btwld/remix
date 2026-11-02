@@ -2,8 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/fortal_colors.dart' as colors;
 
 void main() {
+  test('palette names are canonical without duplicating legacy choices', () {
+    expect(FortalAccentColor.values.map((value) => value.name), [
+      'orla',
+      'mar',
+      'ceu',
+      'serra',
+      'sol',
+      'duna',
+      'caju',
+    ]);
+    expect(FortalGrayColor.values.map((value) => value.name), ['orla']);
+  });
+
+  test('legacy palette identifiers still resolve to the renamed palettes', () {
+    // ignore: deprecated_member_use_from_same_package
+    expect(FortalAccentColor.calcadao, FortalAccentColor.orla);
+    // ignore: deprecated_member_use_from_same_package
+    expect(FortalGrayColor.calcadao, FortalGrayColor.orla);
+    // ignore: deprecated_member_use_from_same_package
+    expect(identical(colors.calcadao, colors.orla), isTrue);
+  });
+
   group('Fortal scaled tokens', () {
     for (final scaling in FortalScaling.values) {
       for (final radius in FortalRadius.values) {
@@ -114,8 +137,8 @@ void main() {
     await tester.pumpWidget(
       FortalTheme(
         mode: .light,
-        accent: .calcadao,
-        gray: .calcadao,
+        accent: .orla,
+        gray: .orla,
         child: WidgetsApp(
           color: const Color(0xFF000000),
           builder: (context, child) {
@@ -128,6 +151,6 @@ void main() {
     );
 
     expect(accent9, gray9);
-    expect(accent9, calcadao.light.scale.step(9));
+    expect(accent9, orla.light.scale.step(9));
   });
 }

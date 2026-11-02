@@ -5,7 +5,7 @@ import 'package:flutter/painting.dart';
 import 'palette.dart';
 
 /// Seed: #13181D.
-const calcadao = FortalColorTheme(
+const orla = FortalColorTheme(
   FortalColor(
     FortalColorScale(
       ColorSwatch(0xff13181d, {
@@ -547,6 +547,8 @@ const caju = FortalColorTheme(
     solidHover: Color(0xffb94600),
   ),
 );
+@Deprecated('Use orla instead.')
+const calcadao = orla;
 
 /// Seed: #C92E3B. Error roles only; not a selectable accent.
 const fortalError = FortalColorTheme(

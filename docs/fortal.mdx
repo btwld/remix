@@ -150,11 +150,11 @@ import 'ui/ui.dart';
 
 Widget withAppearance(Widget child) => FortalTheme(
   theme: const FortalThemeConfig(
-    accent: FortalAccentColor.calcadao,
+    accent: FortalAccentColor.orla,
     brightness: Brightness.light,
   ),
   darkTheme: const FortalThemeConfig(
-    accent: FortalAccentColor.calcadao,
+    accent: FortalAccentColor.orla,
     brightness: Brightness.dark,
   ),
   mode: FortalThemeMode.system,
@@ -283,19 +283,24 @@ final search = remixIconEntries.firstWhere((entry) => entry.name == 'search');
 
 ## Seven palettes
 
-Both the default accent and the sole gray family are **Calçadão**: basalt and
+Both the default accent and the sole gray family are **Orla**: basalt and
 limestone neutrals. The page uses neutral step 1 and solid panels use step 2
 in both modes. Choose a named accent with `FortalTheme(accent: .mar, child: child)`.
 
 | Palette | Enum | Seed | Character | Solid foreground |
 | --- | --- | --- | --- | --- |
-| Calçadão | `calcadao` | `#13181D` | Basalt and limestone neutral | Limestone / basalt by mode |
+| Orla | `orla` | `#13181D` | Basalt and limestone neutral | Limestone / basalt by mode |
 | Mar | `mar` | `#036F6B` | Signature sea green | White |
 | Céu | `ceu` | `#1A95D8` | Sky blue | White |
 | Serra | `serra` | `#6F7845` | Earthy olive | White |
 | Sol | `sol` | `#FFCF50` | Sunny yellow | Warm brown |
 | Duna | `duna` | `#E5C79A` | Warm sand | Warm brown |
 | Caju | `caju` | `#E76A32` | Cashew-fruit orange-red | White |
+
+Orla replaces Calçadão. Existing `calcadao` enum references and palette constants
+remain as deprecated aliases. The neutral enum's `.name` and `values.byName`
+now use `orla`; migrate stored names when loading saved theme preferences.
+Céu keeps the ASCII identifier `ceu`. All palette colors are unchanged.
 
 Seeds identify each palette; the generator fits final colors to sRGB and the
 contrast contract. Background, border, and text steps share OKLCH lightness

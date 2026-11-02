@@ -201,14 +201,14 @@ class UiTheme extends StatelessWidget {
 }
 
 UiThemeData _resolveUiTheme(UiThemeConfig config, {UiThemeData? parent}) {
-  final accent = config.accent ?? parent?.accent ?? UiAccentColor.calcadao;
+  final accent = config.accent ?? parent?.accent ?? UiAccentColor.orla;
 
   return UiThemeData(
     accent: accent,
     accentPalette:
         config.accentPalette ??
         (config.accent == null ? parent?.accentPalette : null),
-    gray: config.gray ?? parent?.gray ?? UiGrayColor.calcadao,
+    gray: config.gray ?? parent?.gray ?? UiGrayColor.orla,
     brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
     panelBackground:
         config.panelBackground ??

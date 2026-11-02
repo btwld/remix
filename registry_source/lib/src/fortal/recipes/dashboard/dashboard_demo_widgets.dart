@@ -111,7 +111,7 @@ class FortalStatusBadge extends StatelessWidget {
       .paid => .serra,
       .pending => .sol,
       .refunded => null,
-      .cancelled => .calcadao,
+      .cancelled => .orla,
     },
   );
 
@@ -137,7 +137,7 @@ class FortalStatusBadge extends StatelessWidget {
         'paid' || 'active' || 'fulfilled' || 'ready' => .serra,
         'pending' || 'processing' || 'review' => .sol,
         'refunded' || 'suspended' => null,
-        'cancelled' => .calcadao,
+        'cancelled' => .orla,
         'invited' => .ceu,
         _ => .mar,
       },

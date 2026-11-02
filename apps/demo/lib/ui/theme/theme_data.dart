@@ -13,10 +13,26 @@ import 'tokens.dart';
 
 /// Fortal palettes, named for the landscapes and coastal materials. Error
 /// roles use a dedicated red palette that is not a selectable accent.
-enum FortalAccentColor { calcadao, mar, ceu, serra, sol, duna, caju }
+enum FortalAccentColor {
+  orla,
+  mar,
+  ceu,
+  serra,
+  sol,
+  duna,
+  caju;
+
+  @Deprecated('Use orla instead.')
+  static const calcadao = orla;
+}
 
 /// The neutral palette. The enum leaves room for future neutral families.
-enum FortalGrayColor { calcadao }
+enum FortalGrayColor {
+  orla;
+
+  @Deprecated('Use orla instead.')
+  static const calcadao = orla;
+}
 
 /// Theme-level radius multipliers.
 enum FortalRadius { none, small, medium, large, full }
@@ -132,9 +148,9 @@ class FortalThemeData extends FortalThemeConfig {
 
   /// The preset's light appearance, with editable design options.
   const FortalThemeData.light({
-    FortalAccentColor accent = FortalAccentColor.calcadao,
+    FortalAccentColor accent = FortalAccentColor.orla,
     FortalColorTheme? accentPalette,
-    FortalGrayColor gray = FortalGrayColor.calcadao,
+    FortalGrayColor gray = FortalGrayColor.orla,
     FortalPanelBackground panelBackground = FortalPanelBackground.solid,
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
@@ -152,9 +168,9 @@ class FortalThemeData extends FortalThemeConfig {
 
   /// The preset's dark appearance, with editable design options.
   const FortalThemeData.dark({
-    FortalAccentColor accent = FortalAccentColor.calcadao,
+    FortalAccentColor accent = FortalAccentColor.orla,
     FortalColorTheme? accentPalette,
-    FortalGrayColor gray = FortalGrayColor.calcadao,
+    FortalGrayColor gray = FortalGrayColor.orla,
     FortalPanelBackground panelBackground = FortalPanelBackground.solid,
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,

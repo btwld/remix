@@ -20,7 +20,7 @@ void main() {
         FortalAccentColor.values.map((value) => value.name),
         enums['accent']['values'],
       );
-      expect(FortalGrayColor.values.map((value) => value.name), ['calcadao']);
+      expect(FortalGrayColor.values.map((value) => value.name), ['orla']);
       for (final theme in [
         const FortalThemeData.light(),
         const FortalThemeData.dark(),
@@ -38,7 +38,7 @@ void main() {
   for (final dark in [false, true]) {
     final brightness = dark ? Brightness.dark : Brightness.light;
     test('${brightness.name}: page, panel, error and typography roles', () {
-      final neutral = dark ? calcadao.dark : calcadao.light;
+      final neutral = dark ? orla.dark : orla.light;
       final errors = dark ? fortalError.dark : fortalError.light;
       // Error roles ignore every named accent and a custom brand palette.
       for (final theme in [
@@ -91,7 +91,7 @@ void main() {
               textDirection: TextDirection.ltr,
               child: Builder(
                 builder: (context) {
-                  final neutral = dark ? calcadao.dark : calcadao.light;
+                  final neutral = dark ? orla.dark : orla.light;
                   final card = fortalCardStyle().build(context).spec;
                   final decoration =
                       card.container.spec.decoration! as BoxDecoration;

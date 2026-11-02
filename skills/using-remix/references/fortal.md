@@ -82,7 +82,7 @@ and `child` — see [theme selection](../SKILL.md#place-the-theme-scope) for
 the shared `theme`/`darkTheme`/`mode` rules. `FortalThemeConfig` is the
 immutable config object form (`FortalThemeData extends FortalThemeConfig`):
 
-Use one `const FortalThemeConfig(accent: .mar, gray: .calcadao)` in both
+Use one `const FortalThemeConfig(accent: .mar, gray: .orla)` in both
 `theme` and `darkTheme` when the config should follow either brightness.
 
 Leave `brightness` unset on `brand` itself: the scope fills it per slot,
@@ -104,7 +104,7 @@ the rules that are not obvious from a token's name:
   shape that must stay circular regardless of the theme's radius setting.
 - `colorPanel` follows `panelBackground`: it resolves to `colorPanelSolid`
   when `panelBackground == .solid`, otherwise to `colorPanelTranslucent`.
-- `colorBackground` and `colorPanelSolid` use Calçadão `gray1`/`gray2` in
+- `colorBackground` and `colorPanelSolid` use Orla `gray1`/`gray2` in
   both modes. Error tokens use the dedicated error red (`<prefix>Error` in
   `ui/theme/fortal_colors.dart`) regardless of the active accent or a custom
   palette; it is not a selectable accent, and Caju is an orange-red accent.
@@ -121,10 +121,10 @@ call-form mechanics (`.mix()`, `.resolve(context)`).
 
 ## Palettes and review
 
-The accents are `calcadao`, `mar`, `ceu`, `serra`, `sol`, `duna`, and `caju`.
+The accents are `orla`, `mar`, `ceu`, `serra`, `sol`, `duna`, and `caju`.
 For destructive or negative content, scope the error palette with
 `accentPalette:` instead of choosing Caju, and keep a text label or icon.
-Both the accent and sole gray default to `calcadao`. All colors come from
+Both the accent and sole gray default to `orla`. All colors come from
 Fortal's own seed-based generator, not an external dataset.
 
 The twelve flat-control families expose no `classic` constructor. Kbd defaults

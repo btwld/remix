@@ -28,7 +28,7 @@ import '../helpers/contrast.dart';
 /// carries the state.
 void main() {
   const palettes = <String, FortalColorTheme>{
-    'calcadao': calcadao,
+    'orla': orla,
     'mar': mar,
     'ceu': ceu,
     'serra': serra,

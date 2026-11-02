@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Rename Calçadão to Orla in theme choices, generated palettes and examples,
+  preserving all color values. Keep `calcadao` as a deprecated enum and palette
+  alias. Serialized neutral names now use `orla`; migrate saved preferences
+  that contain `calcadao`.
+
 - Adopt Remix effects slots for control focus, anchor-width select sizing,
   styled radio/switch labels and caller-owned menu controls. Preserve the
   shared focus tokens and the independent Fortal palette/contrast roles.
