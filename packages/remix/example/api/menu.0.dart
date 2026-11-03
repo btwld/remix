@@ -50,6 +50,7 @@ class _MenuExampleState extends State<MenuExample> {
                 value: 'History',
                 leadingIcon: Icons.history,
                 label: 'History',
+                trailingText: '⌘Y',
                 style: menuItemStyle,
               ),
               RemixMenuItem(
@@ -112,6 +113,7 @@ class _MenuExampleState extends State<MenuExample> {
         .overlay(
           FlexBoxStyler(
             padding: EdgeInsetsMix.all(12),
+            constraints: BoxConstraintsMix(minWidth: 200),
             decoration: BoxDecorationMix(
               color: Colors.white,
               borderRadius: BorderRadiusMix.all(const Radius.circular(12)),

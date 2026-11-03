@@ -407,12 +407,14 @@ import 'package:remix/remix.dart';
 
 final appMenu = RemixMenu<String>(
   trigger: const RemixMenuTrigger(label: 'More'),
-  style: MenuStyler().item(
-    MenuItemStyler()
-        .spacing(8)
-        .label(TextStyler().fontSize(13).color(Colors.black87))
-        .trailingText(TextStyler().fontSize(12).color(Colors.black45)),
-  ),
+  style: MenuStyler()
+      .overlay(FlexBoxStyler().minWidth(200))
+      .item(
+        MenuItemStyler()
+            .spacing(8)
+            .label(TextStyler().fontSize(13).color(Colors.black87))
+            .trailingText(TextStyler().fontSize(12).color(Colors.black45)),
+      ),
   onSelected: (value) => debugPrint(value),
   items: const [
     RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
@@ -426,11 +428,12 @@ final appMenu = RemixMenu<String>(
 );
 ```
 
-The text appears before any trailing icon or submenu chevron. It inherits the
-label's text style, so style only what differs, such as a muted color. Screen
-readers announce it after the label unless the item sets `semanticLabel`.
-`trailingText` only displays a shortcut; bind the key with `Shortcuts` or
-`CallbackShortcuts`.
+The text appears before any trailing icon or submenu chevron. A minimum panel
+width, as above, leaves room between the longest label and its text. It
+inherits the label's text style, so style only what differs, such as a muted
+color. Screen readers announce it after the label unless the item sets
+`semanticLabel`. `trailingText` only displays a shortcut; bind the key with
+`Shortcuts` or `CallbackShortcuts`.
 
 ## Long menus
 
