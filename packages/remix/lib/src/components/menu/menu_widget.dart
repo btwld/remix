@@ -59,7 +59,12 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
-  }) : assert(trailingText != '', 'Item trailing text must not be empty');
+  }) : assert(
+         label != '' || semanticLabel != null,
+         'Icon-only items need a semanticLabel',
+       ),
+       assert(trailingText != '', 'Item trailing text must not be empty'),
+       assert(semanticLabel != '', 'Item semantic labels must not be empty');
 }
 
 /// A controlled checkbox item in a [RemixMenu].

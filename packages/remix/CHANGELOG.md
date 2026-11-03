@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Breaking changes
+
+- `RemixMenuItem` now asserts that an icon-only item (empty `label`) has a
+  `semanticLabel` and that `semanticLabel` is not empty. Such rows had no
+  accessible name.
+
 ### Features
 
 - Add `trailingText` to `RemixMenuItem`, `RemixMenuCheckboxItem`,

@@ -1937,7 +1937,27 @@ void main() {
       expect(submenu, isA<RemixMenuItemData<String>>());
     });
 
-    test('compound labels and semantic labels must not be empty', () {
+    test('every item has a non-empty accessible name', () {
+      expect(
+        () => RemixMenuItem<String>(value: 'item', label: ''),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(
+          value: 'item',
+          label: 'Item',
+          semanticLabel: '',
+        ),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(
+          value: 'item',
+          label: '',
+          semanticLabel: 'Favorite',
+        ),
+        returnsNormally,
+      );
       expect(
         () => RemixMenuCheckboxItem<String>(
           value: 'checkbox',
