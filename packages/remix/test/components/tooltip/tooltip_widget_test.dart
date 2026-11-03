@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -699,6 +700,71 @@ void main() {
         await gesture.removePointer();
         await tester.pump(const Duration(milliseconds: 100));
         await tester.pumpAndSettle();
+      });
+    });
+
+    group('Focus', () {
+      testWidgets('focus a menu returns after a click does not show it', (
+        tester,
+      ) async {
+        FocusNode? triggerFocus;
+        final selected = <String>[];
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            onSelected: selected.add,
+            items: const [RemixMenuItem(value: 'refresh', label: 'Refresh')],
+            trigger: RemixMenuTrigger.control(
+              builder: (context, menu) {
+                triggerFocus = menu.focusNode;
+                return RemixTooltip(
+                  tooltipChild: const Text('More'),
+                  child: RemixButton(
+                    label: 'Open',
+                    focusNode: menu.focusNode,
+                    onPressed: menu.toggle,
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer(location: Offset.zero);
+        addTearDown(mouse.removePointer);
+        Future<void> click(Finder finder) async {
+          final center = tester.getCenter(finder);
+          await mouse.moveTo(center);
+          await tester.pump();
+          await mouse.down(center);
+          await mouse.up();
+          await tester.pumpAndSettle();
+        }
+
+        await click(find.text('Open'));
+        await click(find.text('Refresh'));
+        await mouse.moveTo(Offset.zero);
+        // Past the 300ms show delay a focus change would start.
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpAndSettle();
+
+        expect(selected, ['refresh']);
+        expect(triggerFocus!.hasFocus, isTrue);
+        expect(find.text('More'), findsNothing);
+      });
+
+      testWidgets('keyboard focus shows it', (tester) async {
+        await tester.pumpRemixApp(
+          RemixTooltip(
+            tooltipChild: const Text('More'),
+            child: RemixButton(label: 'Open', onPressed: () {}),
+          ),
+        );
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpAndSettle();
+
+        expect(find.text('More'), findsOneWidget);
       });
     });
   });

@@ -1,3 +1,11 @@
+## Unreleased
+
+### Fixes
+
+- `RemixTooltip` no longer opens when a menu or dialog returns focus to its
+  trigger after a click. It opens on hover and on keyboard focus, as the
+  WAI-ARIA tooltip pattern describes.
+
 ## 1.0.0-beta.15
 
 ### Breaking changes
