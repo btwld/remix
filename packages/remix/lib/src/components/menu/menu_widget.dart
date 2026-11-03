@@ -28,11 +28,10 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   /// Icon to display after the label.
   final IconData? trailingIcon;
 
-  /// Text shown at the row's trailing edge, such as a keyboard shortcut
-  /// (`⌘R`) or a count.
+  /// Text to display after the label, such as a keyboard shortcut or a count.
   ///
-  /// It sits after the label and before [trailingIcon], separated by the row's
-  /// spacing, and is styled by [MenuItemStyler.trailingText].
+  /// Appears before [trailingIcon]. Style it with
+  /// [MenuItemStyler.trailingText].
   final String? trailingText;
 
   /// Whether this item can be selected.
@@ -103,9 +102,9 @@ final class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
   /// Optional content icon in the trailing slot.
   final IconData? trailingIcon;
 
-  /// Optional text at the row's trailing edge, such as a keyboard shortcut.
+  /// Optional text after the label, such as a keyboard shortcut or a count.
   ///
-  /// It sits after the label and before [trailingIcon], styled by
+  /// Appears before [trailingIcon]. Style it with
   /// [MenuItemStyler.trailingText].
   final String? trailingText;
 
@@ -185,9 +184,9 @@ final class RemixMenuRadioItem<T> {
   /// Optional content icon in the trailing slot.
   final IconData? trailingIcon;
 
-  /// Optional text at the row's trailing edge, such as a keyboard shortcut.
+  /// Optional text after the label, such as a keyboard shortcut or a count.
   ///
-  /// It sits after the label and before [trailingIcon], styled by
+  /// Appears before [trailingIcon]. Style it with
   /// [MenuItemStyler.trailingText].
   final String? trailingText;
 
@@ -257,10 +256,10 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   /// Optional trailing icon replacing the default directional chevron.
   final IconData? trailingIcon;
 
-  /// Optional text at the row's trailing edge, such as a count.
+  /// Optional text after the label, such as a count.
   ///
-  /// It sits after the label and before the chevron or [trailingIcon], styled
-  /// by [MenuItemStyler.trailingText].
+  /// Appears before the chevron or [trailingIcon]. Style it with
+  /// [MenuItemStyler.trailingText].
   final String? trailingText;
 
   /// Optional controller for programmatic submenu control.
@@ -1024,9 +1023,7 @@ class _RemixMenuItemContent extends StatelessWidget {
         else
           StyledText(label, styleSpec: spec.label),
         if (trailingText case final text?)
-          // Inherits the label's text style, so an unstyled trailing text
-          // matches the label; `trailingText` styles override it field by
-          // field.
+          // Starts from the label's text style; `trailingText` overrides it.
           DefaultTextStyle.merge(
             style: spec.label.spec.style,
             child: StyledText(text, styleSpec: spec.trailingText),

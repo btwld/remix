@@ -202,9 +202,8 @@ class MenuItemSpec with _$MenuItemSpec {
 
   /// Text style for the optional trailing text, such as a keyboard shortcut.
   ///
-  /// The trailing text inherits [label]'s text style; fields set here
-  /// override it, so a preset typically sets only a muted color or a smaller
-  /// size.
+  /// Inherits [label]'s text style, so set only what differs, such as a
+  /// muted color.
   @override
   final StyleSpec<TextSpec> trailingText;
 
