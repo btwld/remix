@@ -115,6 +115,10 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .trailingIcon(
       .size(VanillaTokens.s2_5).color(VanillaTokens.mutedForeground()),
     )
+    // A shortcut or count: `textXs` in `mutedForeground`, like the icons.
+    .trailingText(
+      .style(VanillaTokens.textXs.mix()).color(VanillaTokens.mutedForeground()),
+    )
     .indicator(
       .size(VanillaTokens.s2_5).color(VanillaTokens.popoverForeground()),
     )
@@ -125,7 +129,7 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
 /// The row under the pointer or the keyboard cursor.
 ///
 /// The label and the check mark follow the row onto `accentForeground`; the
-/// leading and trailing icons stay `mutedForeground`, so they keep reading as
+/// icons and the trailing text stay `mutedForeground`, so they keep reading as
 /// markers beside the label rather than as part of it.
 MenuItemStyler _highlighted() => MenuItemStyler()
     .color(VanillaTokens.accent())

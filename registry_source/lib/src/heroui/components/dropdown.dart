@@ -54,6 +54,10 @@ MenuItemStyler heroUiDropdownItemStyle({
       // them `size-4`.
       .leadingIcon(.size(_leadingIcon).color(label()))
       .trailingIcon(.size(_trailingIcon).color(HeroUiTokens.muted()))
+      // A shortcut or count: `text-xs text-muted`, like the trailing icon.
+      .trailingText(
+        .style(HeroUiTokens.textXs.mix()).color(HeroUiTokens.muted()),
+      )
       .onHovered(.color(HeroUiTokens.defaultColor()))
       .onPressed(MenuItemStyler().scale(_itemPressedScale))
       .onFocusVisible(MenuItemStyler().containerEffects(heroUiFocusRing()))

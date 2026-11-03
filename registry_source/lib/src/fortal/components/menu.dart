@@ -94,6 +94,8 @@ MenuItemStyler _fortalMenuItemStyler(
       .trailingIcon(
         .color(FortalTokens.grayA11()).size(metrics.contentIconSize),
       )
+      // A shortcut or count follows the trailing icon's color in every state.
+      .trailingText(.color(FortalTokens.grayA11()))
       .indicator(.color(FortalTokens.gray12()).size(metrics.indicatorSize));
   final highlighted = _fortalMenuHighlightedItemStyler(
     variant,
@@ -105,6 +107,7 @@ MenuItemStyler _fortalMenuItemStyler(
       .label(.color(FortalTokens.grayA8()))
       .leadingIcon(.color(FortalTokens.grayA8()))
       .trailingIcon(.color(FortalTokens.grayA8()))
+      .trailingText(.color(FortalTokens.grayA8()))
       .indicator(.color(FortalTokens.grayA8()));
 
   return base
@@ -136,11 +139,13 @@ MenuItemStyler _fortalMenuHighlightedItemStyler(
           .label(.color(solidForeground))
           .leadingIcon(.color(solidForeground))
           .trailingIcon(.color(solidForeground))
+          .trailingText(.color(solidForeground))
           .indicator(.color(solidForeground)),
     .soft =>
       MenuItemStyler()
           .color(FortalTokens.accentA4())
-          .trailingIcon(.color(FortalTokens.gray12())),
+          .trailingIcon(.color(FortalTokens.gray12()))
+          .trailingText(.color(FortalTokens.gray12())),
   };
 }
 
