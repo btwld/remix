@@ -1,3 +1,15 @@
+## Unreleased
+
+### Features
+
+- Add `trailingText` to `RemixMenuItem`, `RemixMenuCheckboxItem`,
+  `RemixMenuRadioItem`, and `RemixMenuSubmenu` for a keyboard shortcut or
+  count at the row's trailing edge, after the label and before the trailing
+  icon or submenu chevron. Style it with `MenuItemSpec.trailingText` and
+  `MenuItemStyler.trailingText`; unset fields inherit the label's text style.
+  Without a `semanticLabel`, the row's accessible name is the label followed
+  by the trailing text on a new line.
+
 ## 1.0.0-beta.14
 
 ### Breaking changes

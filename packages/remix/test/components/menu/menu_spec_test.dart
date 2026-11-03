@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart' show TextStyle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -480,6 +481,7 @@ void main() {
         expect(spec.label, isA<StyleSpec<TextSpec>>());
         expect(spec.leadingIcon, isA<StyleSpec<IconSpec>>());
         expect(spec.trailingIcon, isA<StyleSpec<IconSpec>>());
+        expect(spec.trailingText, isA<StyleSpec<TextSpec>>());
         expect(spec.indicator, isA<StyleSpec<IconSpec>>());
       });
 
@@ -488,6 +490,7 @@ void main() {
         final label = StyleSpec(spec: TextSpec());
         final leadingIcon = StyleSpec(spec: IconSpec());
         final trailingIcon = StyleSpec(spec: IconSpec());
+        final trailingText = StyleSpec(spec: TextSpec(maxLines: 1));
         final indicator = StyleSpec(spec: IconSpec());
 
         final spec = MenuItemSpec(
@@ -495,6 +498,7 @@ void main() {
           label: label,
           leadingIcon: leadingIcon,
           trailingIcon: trailingIcon,
+          trailingText: trailingText,
           indicator: indicator,
         );
 
@@ -502,6 +506,7 @@ void main() {
         expect(spec.label, equals(label));
         expect(spec.leadingIcon, equals(leadingIcon));
         expect(spec.trailingIcon, equals(trailingIcon));
+        expect(spec.trailingText, equals(trailingText));
         expect(spec.indicator, equals(indicator));
       });
     });
@@ -535,6 +540,7 @@ void main() {
         final newLabel = StyleSpec(spec: TextSpec());
         final newLeadingIcon = StyleSpec(spec: IconSpec());
         final newTrailingIcon = StyleSpec(spec: IconSpec());
+        final newTrailingText = StyleSpec(spec: TextSpec(maxLines: 1));
         final newIndicator = StyleSpec(spec: IconSpec());
 
         final updatedSpec = originalSpec.copyWith(
@@ -542,6 +548,7 @@ void main() {
           label: newLabel,
           leadingIcon: newLeadingIcon,
           trailingIcon: newTrailingIcon,
+          trailingText: newTrailingText,
           indicator: newIndicator,
         );
 
@@ -549,6 +556,7 @@ void main() {
         expect(updatedSpec.label, equals(newLabel));
         expect(updatedSpec.leadingIcon, equals(newLeadingIcon));
         expect(updatedSpec.trailingIcon, equals(newTrailingIcon));
+        expect(updatedSpec.trailingText, equals(newTrailingText));
         expect(updatedSpec.indicator, equals(newIndicator));
       });
     });
@@ -610,12 +618,13 @@ void main() {
       test('props list contains all properties', () {
         const spec = MenuItemSpec();
 
-        expect(spec.props, hasLength(6));
+        expect(spec.props, hasLength(7));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.leadingIcon));
         expect(spec.props, contains(spec.trailingIcon));
+        expect(spec.props, contains(spec.trailingText));
         expect(spec.props, contains(spec.indicator));
       });
     });
@@ -633,6 +642,7 @@ void main() {
             'label',
             'leadingIcon',
             'trailingIcon',
+            'trailingText',
             'indicator',
           ]),
         );
@@ -647,6 +657,23 @@ void main() {
         final updatedSpec = spec.copyWith(container: null);
 
         expect(updatedSpec.container, equals(originalContainer));
+      });
+
+      test('lerps trailing text style', () {
+        const start = MenuItemSpec(
+          trailingText: StyleSpec(
+            spec: TextSpec(style: TextStyle(fontSize: 10)),
+          ),
+        );
+        const end = MenuItemSpec(
+          trailingText: StyleSpec(
+            spec: TextSpec(style: TextStyle(fontSize: 14)),
+          ),
+        );
+
+        final middle = start.lerp(end, 0.5);
+
+        expect(middle.trailingText.spec.style?.fontSize, 12);
       });
 
       test('lerps indicator style', () {

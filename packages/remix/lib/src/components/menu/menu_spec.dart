@@ -200,6 +200,14 @@ class MenuItemSpec with _$MenuItemSpec {
   @override
   final StyleSpec<IconSpec> trailingIcon;
 
+  /// Text style for the optional trailing text, such as a keyboard shortcut.
+  ///
+  /// The trailing text inherits [label]'s text style; fields set here
+  /// override it, so a preset typically sets only a muted color or a smaller
+  /// size.
+  @override
+  final StyleSpec<TextSpec> trailingText;
+
   /// Icon style shared by checked checkbox and selected radio indicators.
   @override
   final StyleSpec<IconSpec> indicator;
@@ -211,11 +219,13 @@ class MenuItemSpec with _$MenuItemSpec {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
+    StyleSpec<TextSpec>? trailingText,
     StyleSpec<IconSpec>? indicator,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        leadingIcon = leadingIcon ?? const StyleSpec(spec: IconSpec()),
        trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec()),
+       trailingText = trailingText ?? const StyleSpec(spec: TextSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;

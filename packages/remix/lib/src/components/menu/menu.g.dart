@@ -227,6 +227,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<IconSpec> get trailingIcon;
+  StyleSpec<TextSpec> get trailingText;
   StyleSpec<IconSpec> get indicator;
 
   @override
@@ -239,6 +240,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
+    StyleSpec<TextSpec>? trailingText,
     StyleSpec<IconSpec>? indicator,
   }) {
     return MenuItemSpec(
@@ -247,6 +249,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
       label: label ?? this.label,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       trailingIcon: trailingIcon ?? this.trailingIcon,
+      trailingText: trailingText ?? this.trailingText,
       indicator: indicator ?? this.indicator,
     );
   }
@@ -263,6 +266,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
       label: label.lerp(other?.label, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
+      trailingText: trailingText.lerp(other?.trailingText, t),
       indicator: indicator.lerp(other?.indicator, t),
     );
   }
@@ -274,6 +278,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
     label,
     leadingIcon,
     trailingIcon,
+    trailingText,
     indicator,
   ];
 
@@ -322,6 +327,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
+      ..add(DiagnosticsProperty('trailingText', trailingText))
       ..add(DiagnosticsProperty('indicator', indicator));
   }
 }
@@ -1324,6 +1330,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
+  final Prop<StyleSpec<TextSpec>>? $trailingText;
   final Prop<StyleSpec<IconSpec>>? $indicator;
 
   const MenuItemStyler.create({
@@ -1332,6 +1339,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<IconSpec>>? trailingIcon,
+    Prop<StyleSpec<TextSpec>>? trailingText,
     Prop<StyleSpec<IconSpec>>? indicator,
     super.variants,
     super.modifier,
@@ -1341,6 +1349,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
        $label = label,
        $leadingIcon = leadingIcon,
        $trailingIcon = trailingIcon,
+       $trailingText = trailingText,
        $indicator = indicator;
 
   MenuItemStyler({
@@ -1349,6 +1358,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     TextStyler? label,
     IconStyler? leadingIcon,
     IconStyler? trailingIcon,
+    TextStyler? trailingText,
     IconStyler? indicator,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -1359,6 +1369,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
          label: Prop.maybeMix(label),
          leadingIcon: Prop.maybeMix(leadingIcon),
          trailingIcon: Prop.maybeMix(trailingIcon),
+         trailingText: Prop.maybeMix(trailingText),
          indicator: Prop.maybeMix(indicator),
          variants: variants,
          modifier: modifier,
@@ -1375,6 +1386,8 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       MenuItemStyler().leadingIcon(value);
   factory MenuItemStyler.trailingIcon(IconStyler value) =>
       MenuItemStyler().trailingIcon(value);
+  factory MenuItemStyler.trailingText(TextStyler value) =>
+      MenuItemStyler().trailingText(value);
   factory MenuItemStyler.indicator(IconStyler value) =>
       MenuItemStyler().indicator(value);
   factory MenuItemStyler.color(Color value) => MenuItemStyler().color(value);
@@ -1933,6 +1946,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     'label',
     'leadingIcon',
     'trailingIcon',
+    'trailingText',
     'indicator',
     'animation',
     'modifier',
@@ -1962,6 +1976,11 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   /// Sets the trailingIcon.
   MenuItemStyler trailingIcon(IconStyler value) {
     return merge(MenuItemStyler(trailingIcon: value));
+  }
+
+  /// Sets the trailingText.
+  MenuItemStyler trailingText(TextStyler value) {
+    return merge(MenuItemStyler(trailingText: value));
   }
 
   /// Sets the indicator.
@@ -2004,6 +2023,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       label: MixOps.merge($label, other?.$label),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
+      trailingText: MixOps.merge($trailingText, other?.$trailingText),
       indicator: MixOps.merge($indicator, other?.$indicator),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -2020,6 +2040,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       label: MixOps.resolve(context, $label),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
+      trailingText: MixOps.resolve(context, $trailingText),
       indicator: MixOps.resolve(context, $indicator),
     );
 
@@ -2039,6 +2060,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
+      ..add(DiagnosticsProperty('trailingText', $trailingText))
       ..add(DiagnosticsProperty('indicator', $indicator));
   }
 
@@ -2049,6 +2071,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     $label,
     $leadingIcon,
     $trailingIcon,
+    $trailingText,
     $indicator,
     $animation,
     $modifier,

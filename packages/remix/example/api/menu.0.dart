@@ -56,6 +56,7 @@ class _MenuExampleState extends State<MenuExample> {
                 value: 'Settings',
                 leadingIcon: Icons.settings,
                 label: 'Settings',
+                trailingText: '⌘,',
                 style: menuItemStyle,
               ),
               const RemixMenuDivider(),
@@ -142,6 +143,7 @@ class _MenuExampleState extends State<MenuExample> {
         .spacing(8)
         .borderRadius(.all(const Radius.circular(8)))
         .label(TextStyler().color(Colors.blueGrey.shade800))
+        .trailingText(TextStyler().color(Colors.blueGrey.shade400))
         .onHovered(MenuItemStyler().color(Colors.blueGrey.shade50));
   }
 }

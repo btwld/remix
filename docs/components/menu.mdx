@@ -396,6 +396,45 @@ that panel directly contains a checkbox or radio group. Nested submenu panels
 decide this independently. A custom `trailingIcon` replaces the default
 directional submenu chevron.
 
+## Shortcuts and counts
+
+`trailingText` shows a short string at a row's trailing edge, such as a
+keyboard shortcut or a count. Ordinary items, checkbox items, radio items, and
+submenu triggers accept it.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final appMenu = RemixMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'More'),
+  style: MenuStyler().item(
+    MenuItemStyler()
+        .spacing(8)
+        .label(TextStyler().fontSize(13).color(Colors.black87))
+        .trailingText(TextStyler().fontSize(12).color(Colors.black45)),
+  ),
+  onSelected: (value) => debugPrint(value),
+  items: const [
+    RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+    RemixMenuItem(value: 'settings', label: 'Settings…', trailingText: '⌘,'),
+    RemixMenuItem(
+      value: 'shortcuts',
+      label: 'Keyboard shortcuts',
+      trailingText: '?',
+    ),
+  ],
+);
+```
+
+The text sits after the label and before the trailing icon or submenu chevron,
+separated from both by the row's spacing. It inherits the label's text style,
+so `MenuItemStyler.trailingText` usually sets only what differs, such as a
+muted color. The row's accessible name is the label followed by the trailing
+text on a new line, so screen readers announce the shortcut; an item's
+`semanticLabel` replaces the whole name. `trailingText` only displays the
+shortcut; bind the key itself with `Shortcuts` or `CallbackShortcuts`.
+
 ## Long menus
 
 The panel scrolls when its items are taller than the room beside the trigger.
@@ -900,6 +939,11 @@ Configures the leading icon style.
 #### `trailingIcon(IconStyler value)`
 
 Configures the trailing icon style.
+
+#### `trailingText(TextStyler value)`
+
+Configures the trailing text style. Unset fields inherit the label's text
+style.
 
 #### `indicator(IconStyler value)`
 
