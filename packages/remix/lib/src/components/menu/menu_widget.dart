@@ -19,8 +19,8 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   /// Passed to onSelected callback when item is activated.
   final T value;
 
-  /// The text label to display.
-  final String label;
+  /// The text label to display, or `null` for an icon-only item.
+  final String? label;
 
   /// Icon to display before the label.
   final IconData? leadingIcon;
@@ -43,6 +43,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   /// Optional accessible name.
   ///
   /// Defaults to [label], followed by [trailingText] on a new line when set.
+  /// Icon-only items must provide this.
   final String? semanticLabel;
 
   /// Per-item visual style applied after [MenuStyler.item].
@@ -51,7 +52,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   const RemixMenuItem({
     super.key,
     required this.value,
-    required this.label,
+    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.trailingText,
@@ -59,12 +60,17 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
-  }) : assert(
-         label != '' || semanticLabel != null,
-         'Icon-only items need a semanticLabel',
-       ),
+  }) : assert(label != '', 'Item labels must not be empty'),
        assert(trailingText != '', 'Item trailing text must not be empty'),
-       assert(semanticLabel != '', 'Item semantic labels must not be empty');
+       assert(semanticLabel != '', 'Item semantic labels must not be empty'),
+       assert(
+         label != null || leadingIcon != null || trailingIcon != null,
+         'At least one of label or icon must be provided',
+       ),
+       assert(
+         label != null || semanticLabel != null,
+         'Icon-only menu items require a semanticLabel',
+       );
 }
 
 /// A controlled checkbox item in a [RemixMenu].
@@ -618,9 +624,9 @@ enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu }
 /// visible [label] and [trailingText], one per line, so a shortcut is read.
 String _semanticLabelOf(
   String? semanticLabel,
-  String label,
+  String? label,
   String? trailingText,
-) => semanticLabel ?? [label, ?trailingText].join('\n');
+) => semanticLabel ?? [?label, ?trailingText].join('\n');
 
 /// Carries either unresolved fluent styles or one fully resolved raw spec.
 ///
@@ -769,7 +775,9 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       ),
       closeOnActivate: item.closeOnActivate,
       builder: (context, state, _) => _RemixMenuItemContent(
-        label: item.label,
+        // An icon-only row keeps an empty label line, so it is as tall as
+        // labeled rows.
+        label: item.label ?? '',
         leadingIcon: item.leadingIcon,
         trailingIcon: item.trailingIcon,
         trailingText: item.trailingText,

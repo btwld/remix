@@ -182,7 +182,6 @@ void main() {
     final controller = MenuController();
     final item = RemixMenuItem<String>(
       value: 'favorite',
-      label: '',
       leadingIcon: Icons.star,
       semanticLabel: 'Favorite item',
     );

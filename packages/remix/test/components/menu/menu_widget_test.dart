@@ -1951,9 +1951,17 @@ void main() {
         throwsAssertionError,
       );
       expect(
+        () => RemixMenuItem<String>(value: 'item', leadingIcon: Icons.star),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(value: 'item', semanticLabel: 'Favorite'),
+        throwsAssertionError,
+      );
+      expect(
         () => RemixMenuItem<String>(
           value: 'item',
-          label: '',
+          leadingIcon: Icons.star,
           semanticLabel: 'Favorite',
         ),
         returnsNormally,
@@ -1986,6 +1994,40 @@ void main() {
       expect(
         () => RemixMenuRadioGroup<String?>(value: null, items: const []),
         throwsAssertionError,
+      );
+    });
+
+    testWidgets('icon-only items are as tall as labeled items', (tester) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          style: MenuStyler().item(
+            MenuItemStyler().leadingIcon(IconStyler().size(4)),
+          ),
+          items: const [
+            RemixMenuItem(
+              key: Key('labeled'),
+              value: 'labeled',
+              label: 'Labeled',
+              leadingIcon: Icons.star,
+            ),
+            RemixMenuItem(
+              key: Key('icon-only'),
+              value: 'icon-only',
+              leadingIcon: Icons.star,
+              semanticLabel: 'Favorite',
+            ),
+          ],
+        ),
+      );
+      controller.open();
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSize(find.byKey(const Key('icon-only'))).height,
+        tester.getSize(find.byKey(const Key('labeled'))).height,
       );
     });
 

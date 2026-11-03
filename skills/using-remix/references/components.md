@@ -166,6 +166,7 @@ for Overlay, Navigator and toast scope placement.
   Show a keyboard shortcut or count on a row with `trailingText:` (ordinary,
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.
+  An icon-only `RemixMenuItem` omits `label` and sets `semanticLabel`.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null

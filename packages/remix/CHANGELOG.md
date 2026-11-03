@@ -2,9 +2,9 @@
 
 ### Breaking changes
 
-- `RemixMenuItem` now asserts that an icon-only item (empty `label`) has a
-  `semanticLabel` and that `semanticLabel` is not empty. Such rows had no
-  accessible name.
+- `RemixMenuItem.label` is now `String?`. Omit it, rather than passing `''`,
+  for an icon-only item, and set `semanticLabel`. Empty labels and semantic
+  labels now fail an assert, like the other menu items.
 
 ### Features
 
