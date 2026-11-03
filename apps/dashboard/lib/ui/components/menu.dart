@@ -86,6 +86,8 @@ MenuItemStyler _uiMenuItemStyler(
       .label(.style(metrics.text.mix()).color(UiTokens.gray12()))
       .leadingIcon(.color(UiTokens.gray12()).size(metrics.contentIconSize))
       .trailingIcon(.color(UiTokens.grayA11()).size(metrics.contentIconSize))
+      // A shortcut or count follows the trailing icon's color in every state.
+      .trailingText(.color(UiTokens.grayA11()))
       .indicator(.color(UiTokens.gray12()).size(metrics.indicatorSize));
   final highlighted = _uiMenuHighlightedItemStyler(
     variant,
@@ -97,6 +99,7 @@ MenuItemStyler _uiMenuItemStyler(
       .label(.color(UiTokens.grayA8()))
       .leadingIcon(.color(UiTokens.grayA8()))
       .trailingIcon(.color(UiTokens.grayA8()))
+      .trailingText(.color(UiTokens.grayA8()))
       .indicator(.color(UiTokens.grayA8()));
 
   return base
@@ -126,11 +129,13 @@ MenuItemStyler _uiMenuHighlightedItemStyler(
           .label(.color(solidForeground))
           .leadingIcon(.color(solidForeground))
           .trailingIcon(.color(solidForeground))
+          .trailingText(.color(solidForeground))
           .indicator(.color(solidForeground)),
     .soft =>
       MenuItemStyler()
           .color(UiTokens.accentA4())
-          .trailingIcon(.color(UiTokens.gray12())),
+          .trailingIcon(.color(UiTokens.gray12()))
+          .trailingText(.color(UiTokens.gray12())),
   };
 }
 
