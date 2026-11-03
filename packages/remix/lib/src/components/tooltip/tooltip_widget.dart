@@ -2,8 +2,8 @@ part of 'tooltip.dart';
 
 /// A trigger widget that displays styled content in a tooltip overlay.
 ///
-/// Renders [tooltipChild] inside the overlay. Users hover, focus, or
-/// long-press [child] to reveal the tooltip.
+/// Renders [tooltipChild] inside the overlay. Users hover, focus by keyboard,
+/// or long-press [child] to reveal the tooltip.
 class RemixTooltip extends StatelessWidget {
   /// Creates a [RemixTooltip].
   const RemixTooltip({
@@ -54,6 +54,9 @@ class RemixTooltip extends StatelessWidget {
         return NakedTooltip(
           tooltipKey: tooltipKey,
           onOpenChanged: onOpenChanged,
+          // Keyboard focus shows the tooltip; focus a closing menu or dialog
+          // returns after a click does not (WAI-ARIA tooltip pattern).
+          isFocusVisible: () => FocusVisibility.isVisible,
           overlayBuilder: (context, animation) => FadeTransition(
             opacity: animation,
             child: Box(

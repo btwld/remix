@@ -52,6 +52,7 @@ class NakedTooltip extends StatefulWidget {
     )
     this.open,
     this.onOpenChanged,
+    this.isFocusVisible,
     this.hoverDelay = Duration.zero,
     this.touchDelay = const Duration(milliseconds: 1500),
     this.dismissDelay = const Duration(milliseconds: 100),
@@ -111,6 +112,18 @@ class NakedTooltip extends StatefulWidget {
   /// When the deprecated [open] parameter is non-null, this callback requests a
   /// state change that the caller applies by updating [open].
   final ValueChanged<bool>? onOpenChanged;
+
+  /// Reports whether focus is visible, as CSS `:focus-visible` defines it:
+  /// true after keyboard navigation, false after a pointer press.
+  ///
+  /// Gaining focus shows the tooltip only when this returns true, so focus
+  /// that a closing menu or dialog hands back to the trigger after pointer
+  /// use does not open it. Hover still does. When `null`, every focus shows
+  /// the tooltip.
+  ///
+  /// The deprecated [open], [useRootOverlay], and [disableHoverableContent]
+  /// parameters run the 1.1.0 implementation, which ignores this.
+  final ValueGetter<bool>? isFocusVisible;
 
   /// The semantic label attached to the trigger.
   final String? semanticLabel;
@@ -416,11 +429,14 @@ class _NakedTooltipState extends State<NakedTooltip>
   }
 
   void _handleFocusChange(bool focused) {
-    if (focused == _focusWithin) return;
-    _focusWithin = focused;
+    // Focus that is not visible, such as focus a menu hands back after a
+    // click, neither shows the tooltip nor holds it open.
+    final holds = focused && (widget.isFocusVisible?.call() ?? true);
+    if (holds == _focusWithin) return;
+    _focusWithin = holds;
     _focusTimer?.cancel();
     _focusTimer = null;
-    if (focused) {
+    if (holds) {
       if (_visible || widget.hoverDelay == Duration.zero) {
         _holdForFocus();
       } else {

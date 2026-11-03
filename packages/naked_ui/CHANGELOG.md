@@ -1,3 +1,12 @@
+## Unreleased
+
+### Features
+
+- Add `NakedTooltip.isFocusVisible`. Gaining focus shows the tooltip only when
+  it returns true, so focus that a closing menu or dialog hands back to the
+  trigger after a click does not open it; hover still does. Without it, every
+  focus shows the tooltip, as before.
+
 ## 1.4.0
 
 ### Features

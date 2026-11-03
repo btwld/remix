@@ -593,5 +593,75 @@ void main() {
         },
       );
     });
+
+    group('isFocusVisible', () {
+      const trigger = Key('trigger');
+
+      Future<FocusNode> pumpTooltip(
+        WidgetTester tester, {
+        required ValueGetter<bool> isFocusVisible,
+      }) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        await tester.pumpMaterialWidget(
+          Center(
+            child: NakedTooltip(
+              isFocusVisible: isFocusVisible,
+              overlayBuilder: (context, animation) => const Text('Tooltip'),
+              child: Focus(
+                focusNode: focusNode,
+                child: const SizedBox(key: trigger, width: 80, height: 40),
+              ),
+            ),
+          ),
+        );
+        return focusNode;
+      }
+
+      testWidgets('focus that is not visible does not show the tooltip', (
+        tester,
+      ) async {
+        final focusNode = await pumpTooltip(
+          tester,
+          isFocusVisible: () => false,
+        );
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+        expect(focusNode.hasFocus, isTrue);
+        expect(find.text('Tooltip'), findsNothing);
+      });
+
+      testWidgets('hover still shows it while focus is not visible', (
+        tester,
+      ) async {
+        final focusNode = await pumpTooltip(
+          tester,
+          isFocusVisible: () => false,
+        );
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer(location: Offset.zero);
+        addTearDown(mouse.removePointer);
+        await mouse.moveTo(tester.getCenter(find.byKey(trigger)));
+        await tester.pumpAndSettle();
+        expect(find.text('Tooltip'), findsOneWidget);
+
+        // Leaving the trigger closes it: invisible focus does not hold it.
+        await mouse.moveTo(Offset.zero);
+        await tester.pumpAndSettle();
+        expect(find.text('Tooltip'), findsNothing);
+      });
+
+      testWidgets('visible focus shows the tooltip', (tester) async {
+        final focusNode = await pumpTooltip(tester, isFocusVisible: () => true);
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+        expect(find.text('Tooltip'), findsOneWidget);
+      });
+    });
   });
 }
