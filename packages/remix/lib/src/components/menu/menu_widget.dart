@@ -19,8 +19,8 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   /// Passed to onSelected callback when item is activated.
   final T value;
 
-  /// The text label to display.
-  final String label;
+  /// The text label to display, or `null` for an icon-only item.
+  final String? label;
 
   /// Icon to display before the label.
   final IconData? leadingIcon;
@@ -28,13 +28,22 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   /// Icon to display after the label.
   final IconData? trailingIcon;
 
+  /// Text to display after the label, such as a keyboard shortcut or a count.
+  ///
+  /// Appears before [trailingIcon]. Style it with
+  /// [MenuItemStyler.trailingText].
+  final String? trailingText;
+
   /// Whether this item can be selected.
   final bool enabled;
 
   /// Whether the menu closes when this item is activated.
   final bool closeOnActivate;
 
-  /// Semantic label for accessibility.
+  /// Optional accessible name.
+  ///
+  /// Defaults to [label], followed by [trailingText] on a new line when set.
+  /// Icon-only items must provide this.
   final String? semanticLabel;
 
   /// Per-item visual style applied after [MenuStyler.item].
@@ -43,14 +52,25 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   const RemixMenuItem({
     super.key,
     required this.value,
-    required this.label,
+    this.label,
     this.leadingIcon,
     this.trailingIcon,
+    this.trailingText,
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
-  });
+  }) : assert(label != '', 'Item labels must not be empty'),
+       assert(trailingText != '', 'Item trailing text must not be empty'),
+       assert(semanticLabel != '', 'Item semantic labels must not be empty'),
+       assert(
+         label != null || leadingIcon != null || trailingIcon != null,
+         'At least one of label or icon must be provided',
+       ),
+       assert(
+         label != null || semanticLabel != null,
+         'Icon-only menu items require a semanticLabel',
+       );
 }
 
 /// A controlled checkbox item in a [RemixMenu].
@@ -66,11 +86,13 @@ final class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
     this.onChanged,
     this.leadingIcon,
     this.trailingIcon,
+    this.trailingText,
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
   }) : assert(label != '', 'Item labels must not be empty'),
+       assert(trailingText != '', 'Item trailing text must not be empty'),
        assert(semanticLabel != '', 'Item semantic labels must not be empty');
 
   /// The value reported to [RemixMenu.onSelected].
@@ -91,13 +113,21 @@ final class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
   /// Optional content icon in the trailing slot.
   final IconData? trailingIcon;
 
+  /// Optional text after the label, such as a keyboard shortcut or a count.
+  ///
+  /// Appears before [trailingIcon]. Style it with
+  /// [MenuItemStyler.trailingText].
+  final String? trailingText;
+
   /// Whether the item participates in interaction.
   final bool enabled;
 
   /// Whether activation closes the complete menu hierarchy.
   final bool closeOnActivate;
 
-  /// Optional accessible name. Defaults to [label].
+  /// Optional accessible name.
+  ///
+  /// Defaults to [label], followed by [trailingText] on a new line when set.
   final String? semanticLabel;
 
   /// Per-item visual style applied after the menu-wide shared and checkbox
@@ -141,11 +171,13 @@ final class RemixMenuRadioItem<T> {
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
+    this.trailingText,
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
   }) : assert(label != '', 'Item labels must not be empty'),
+       assert(trailingText != '', 'Item trailing text must not be empty'),
        assert(semanticLabel != '', 'Item semantic labels must not be empty');
 
   /// Optional caller-owned identity for the rendered radio item root.
@@ -163,13 +195,21 @@ final class RemixMenuRadioItem<T> {
   /// Optional content icon in the trailing slot.
   final IconData? trailingIcon;
 
+  /// Optional text after the label, such as a keyboard shortcut or a count.
+  ///
+  /// Appears before [trailingIcon]. Style it with
+  /// [MenuItemStyler.trailingText].
+  final String? trailingText;
+
   /// Whether this item participates in interaction.
   final bool enabled;
 
   /// Whether activation closes the complete menu hierarchy.
   final bool closeOnActivate;
 
-  /// Optional accessible name. Defaults to [label].
+  /// Optional accessible name.
+  ///
+  /// Defaults to [label], followed by [trailingText] on a new line when set.
   final String? semanticLabel;
 
   /// Per-item visual style applied after the menu-wide shared and radio item
@@ -199,6 +239,7 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
     required this.items,
     this.leadingIcon,
     this.trailingIcon,
+    this.trailingText,
     this.controller,
     this.enabled = true,
     this.hoverDelay = const Duration(milliseconds: 100),
@@ -211,6 +252,7 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   }) : positioning = positioning ?? _defaultLtrPositioning,
        _usesDefaultPositioning = positioning == null,
        assert(label != '', 'Item labels must not be empty'),
+       assert(trailingText != '', 'Item trailing text must not be empty'),
        assert(semanticLabel != '', 'Item semantic labels must not be empty');
 
   /// The visible submenu trigger label.
@@ -224,6 +266,12 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
 
   /// Optional trailing icon replacing the default directional chevron.
   final IconData? trailingIcon;
+
+  /// Optional text after the label, such as a count.
+  ///
+  /// Appears before the chevron or [trailingIcon]. Style it with
+  /// [MenuItemStyler.trailingText].
+  final String? trailingText;
 
   /// Optional controller for programmatic submenu control.
   final MenuController? controller;
@@ -246,7 +294,9 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   /// Optional caller-owned focus node for the submenu trigger.
   final FocusNode? focusNode;
 
-  /// Optional accessible name. Defaults to [label].
+  /// Optional accessible name.
+  ///
+  /// Defaults to [label], followed by [trailingText] on a new line when set.
   final String? semanticLabel;
 
   /// Called after the submenu opens.
@@ -570,6 +620,14 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
 enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu }
 
+/// The row's accessible name: an explicit [semanticLabel] wins; otherwise the
+/// visible [label] and [trailingText], one per line, so a shortcut is read.
+String _semanticLabelOf(
+  String? semanticLabel,
+  String? label,
+  String? trailingText,
+) => semanticLabel ?? [?label, ?trailingText].join('\n');
+
 /// Carries either unresolved fluent styles or one fully resolved raw spec.
 ///
 /// Keeping the complete menu style together makes the base-to-semantic merge
@@ -710,12 +768,19 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       key: item.key,
       value: item.value,
       enabled: item.enabled,
-      semanticLabel: item.semanticLabel ?? item.label,
+      semanticLabel: _semanticLabelOf(
+        item.semanticLabel,
+        item.label,
+        item.trailingText,
+      ),
       closeOnActivate: item.closeOnActivate,
       builder: (context, state, _) => _RemixMenuItemContent(
-        label: item.label,
+        // An icon-only row keeps an empty label line, so it is as tall as
+        // labeled rows.
+        label: item.label ?? '',
         leadingIcon: item.leadingIcon,
         trailingIcon: item.trailingIcon,
+        trailingText: item.trailingText,
         style: item.style,
         kind: .ordinary,
         controller: NakedMenuItemState.controllerOf<T>(context),
@@ -740,12 +805,17 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       // item. Remix must gate on the public callbacks itself.
       enabled:
           item.enabled && (item.onChanged != null || hasRootSelectionCallback),
-      semanticLabel: item.semanticLabel ?? item.label,
+      semanticLabel: _semanticLabelOf(
+        item.semanticLabel,
+        item.label,
+        item.trailingText,
+      ),
       closeOnActivate: item.closeOnActivate,
       builder: (context, state, _) => _RemixMenuItemContent(
         label: item.label,
         leadingIcon: item.leadingIcon,
         trailingIcon: item.trailingIcon,
+        trailingText: item.trailingText,
         showIndicator: item.checked,
         style: item.style,
         kind: .checkbox,
@@ -796,12 +866,17 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
                 enabled:
                     item.enabled &&
                     (group.onChanged != null || hasRootSelectionCallback),
-                semanticLabel: item.semanticLabel ?? item.label,
+                semanticLabel: _semanticLabelOf(
+                  item.semanticLabel,
+                  item.label,
+                  item.trailingText,
+                ),
                 closeOnActivate: item.closeOnActivate,
                 builder: (context, state, _) => _RemixMenuItemContent(
                   label: item.label,
                   leadingIcon: item.leadingIcon,
                   trailingIcon: item.trailingIcon,
+                  trailingText: item.trailingText,
                   showIndicator: item.value == group.value,
                   style: item.style,
                   kind: .radio,
@@ -828,7 +903,11 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       hoverDelay: submenu.hoverDelay,
       positioning: submenu._resolvePositioning(Directionality.of(context)),
       focusNode: submenu.focusNode,
-      semanticLabel: submenu.semanticLabel ?? submenu.label,
+      semanticLabel: _semanticLabelOf(
+        submenu.semanticLabel,
+        submenu.label,
+        submenu.trailingText,
+      ),
       onOpen: submenu.onOpen,
       onClose: submenu.onClose,
       overlayBuilder: (context, info) => _RemixMenuItemsPanel<T>(
@@ -843,6 +922,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
         label: submenu.label,
         leadingIcon: submenu.leadingIcon,
         trailingIcon: submenu.trailingIcon,
+        trailingText: submenu.trailingText,
         submenuOpen: state.isOpen,
         style: submenu.style,
         kind: .submenu,
@@ -864,6 +944,7 @@ class _RemixMenuItemContent extends StatelessWidget {
     required this.itemStyles,
     this.leadingIcon,
     this.trailingIcon,
+    this.trailingText,
     this.showIndicator = false,
     this.submenuOpen = false,
   });
@@ -873,6 +954,7 @@ class _RemixMenuItemContent extends StatelessWidget {
   final String label;
   final IconData? leadingIcon;
   final IconData? trailingIcon;
+  final String? trailingText;
   final bool showIndicator;
   final bool submenuOpen;
   final MenuItemStyler style;
@@ -953,6 +1035,12 @@ class _RemixMenuItemContent extends StatelessWidget {
           Expanded(child: StyledText(label, styleSpec: spec.label))
         else
           StyledText(label, styleSpec: spec.label),
+        if (trailingText case final text?)
+          // Starts from the label's text style; `trailingText` overrides it.
+          DefaultTextStyle.merge(
+            style: spec.label.spec.style,
+            child: StyledText(text, styleSpec: spec.trailingText),
+          ),
         if (trailing != null) trailing,
       ],
     );

@@ -1,3 +1,19 @@
+## Unreleased
+
+### Breaking changes
+
+- `RemixMenuItem.label` is now `String?`. Omit it, rather than passing `''`,
+  for an icon-only item, and set `semanticLabel`. Empty labels and semantic
+  labels now fail an assert, like the other menu items.
+
+### Features
+
+- Add `trailingText` to `RemixMenuItem`, `RemixMenuCheckboxItem`,
+  `RemixMenuRadioItem`, and `RemixMenuSubmenu` for a keyboard shortcut or
+  count after the label. `MenuItemStyler.trailingText` styles it on top of
+  the label's text style. Screen readers announce it after the label unless
+  the item sets `semanticLabel`.
+
 ## 1.0.0-beta.14
 
 ### Breaking changes

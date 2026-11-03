@@ -129,6 +129,9 @@ class _MenuExampleState extends State<MenuExample> {
 ```
 </CodeGroup>
 
+An item without a `label` is icon-only and must set `semanticLabel`, the name
+screen readers announce.
+
 ## Custom trigger content
 
 `RemixMenuTrigger` is a configuration object, not a widget. The same object is
@@ -395,6 +398,45 @@ The renderer reserves one leading choice slot for every row in a panel when
 that panel directly contains a checkbox or radio group. Nested submenu panels
 decide this independently. A custom `trailingIcon` replaces the default
 directional submenu chevron.
+
+## Shortcuts and counts
+
+`trailingText` adds a short string after an item's label, such as a keyboard
+shortcut or a count. Items, checkbox items, radio items, and submenus accept it.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final appMenu = RemixMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'More'),
+  style: MenuStyler()
+      .overlay(FlexBoxStyler().minWidth(200))
+      .item(
+        MenuItemStyler()
+            .spacing(8)
+            .label(TextStyler().fontSize(13).color(Colors.black87))
+            .trailingText(TextStyler().fontSize(12).color(Colors.black45)),
+      ),
+  onSelected: (value) => debugPrint(value),
+  items: const [
+    RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+    RemixMenuItem(value: 'settings', label: 'Settings…', trailingText: '⌘,'),
+    RemixMenuItem(
+      value: 'shortcuts',
+      label: 'Keyboard shortcuts',
+      trailingText: '?',
+    ),
+  ],
+);
+```
+
+The text appears before any trailing icon or submenu chevron. A minimum panel
+width, as above, leaves room between the longest label and its text. It
+inherits the label's text style, so style only what differs, such as a muted
+color. Screen readers announce it after the label unless the item sets
+`semanticLabel`. `trailingText` only displays a shortcut; bind the key with
+`Shortcuts` or `CallbackShortcuts`.
 
 ## Long menus
 
@@ -725,6 +767,11 @@ Configures the trigger button style.
 Configures the menu overlay container style. Its `width`, `minWidth`, and
 `maxWidth` accept `remixAnchorWidth()` to follow the trigger width.
 
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures the outline and paint layers drawn around the popup panel without
+affecting layout.
+
 #### `item(MenuItemStyler value)`
 
 Configures the shared default for every actionable menu row.
@@ -770,6 +817,11 @@ Creates a RemixMenu widget with this style applied.
 #### `container(FlexBoxStyler value)`
 
 Configures the trigger container style.
+
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures the outline and paint layers drawn around the trigger without
+affecting layout, such as a focus ring.
 
 #### `label(TextStyler value)`
 
@@ -889,6 +941,11 @@ Sets single icon shadow
 
 Configures the item container style.
 
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures the outline and paint layers drawn around the row without
+affecting layout, such as a focus ring.
+
 #### `label(TextStyler value)`
 
 Configures the label text style using a TextStyler.
@@ -901,6 +958,10 @@ Configures the leading icon style.
 
 Configures the trailing icon style.
 
+#### `trailingText(TextStyler value)`
+
+Configures the trailing text style, which inherits the label's.
+
 #### `indicator(IconStyler value)`
 
 Configures the checkbox and radio indicator style.
@@ -912,6 +973,10 @@ Sets container alignment
 #### `padding(EdgeInsetsGeometryMix value)`
 
 Sets the container padding.
+
+#### `spacing(double value)`
+
+Sets the gap between the row's indicator, icons, label, and trailing text.
 
 #### `color(Color value)`
 

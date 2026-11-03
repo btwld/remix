@@ -50,12 +50,14 @@ class _MenuExampleState extends State<MenuExample> {
                 value: 'History',
                 leadingIcon: Icons.history,
                 label: 'History',
+                trailingText: '⌘Y',
                 style: menuItemStyle,
               ),
               RemixMenuItem(
                 value: 'Settings',
                 leadingIcon: Icons.settings,
                 label: 'Settings',
+                trailingText: '⌘,',
                 style: menuItemStyle,
               ),
               const RemixMenuDivider(),
@@ -111,6 +113,7 @@ class _MenuExampleState extends State<MenuExample> {
         .overlay(
           FlexBoxStyler(
             padding: EdgeInsetsMix.all(12),
+            constraints: BoxConstraintsMix(minWidth: 200),
             decoration: BoxDecorationMix(
               color: Colors.white,
               borderRadius: BorderRadiusMix.all(const Radius.circular(12)),
@@ -142,6 +145,7 @@ class _MenuExampleState extends State<MenuExample> {
         .spacing(8)
         .borderRadius(.all(const Radius.circular(8)))
         .label(TextStyler().color(Colors.blueGrey.shade800))
+        .trailingText(TextStyler().color(Colors.blueGrey.shade400))
         .onHovered(MenuItemStyler().color(Colors.blueGrey.shade50));
   }
 }

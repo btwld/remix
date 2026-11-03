@@ -2,6 +2,7 @@ import 'dart:ui' show CheckedState, SemanticsRole, Tristate;
 
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter/semantics.dart' show SemanticsNode;
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
@@ -1936,7 +1937,35 @@ void main() {
       expect(submenu, isA<RemixMenuItemData<String>>());
     });
 
-    test('compound labels and semantic labels must not be empty', () {
+    test('every item has a non-empty accessible name', () {
+      expect(
+        () => RemixMenuItem<String>(value: 'item', label: ''),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(
+          value: 'item',
+          label: 'Item',
+          semanticLabel: '',
+        ),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(value: 'item', leadingIcon: Icons.star),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(value: 'item', semanticLabel: 'Favorite'),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuItem<String>(
+          value: 'item',
+          leadingIcon: Icons.star,
+          semanticLabel: 'Favorite',
+        ),
+        returnsNormally,
+      );
       expect(
         () => RemixMenuCheckboxItem<String>(
           value: 'checkbox',
@@ -1965,6 +1994,40 @@ void main() {
       expect(
         () => RemixMenuRadioGroup<String?>(value: null, items: const []),
         throwsAssertionError,
+      );
+    });
+
+    testWidgets('icon-only items are as tall as labeled items', (tester) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          style: MenuStyler().item(
+            MenuItemStyler().leadingIcon(IconStyler().size(4)),
+          ),
+          items: const [
+            RemixMenuItem(
+              key: Key('labeled'),
+              value: 'labeled',
+              label: 'Labeled',
+              leadingIcon: Icons.star,
+            ),
+            RemixMenuItem(
+              key: Key('icon-only'),
+              value: 'icon-only',
+              leadingIcon: Icons.star,
+              semanticLabel: 'Favorite',
+            ),
+          ],
+        ),
+      );
+      controller.open();
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSize(find.byKey(const Key('icon-only'))).height,
+        tester.getSize(find.byKey(const Key('labeled'))).height,
       );
     });
 
@@ -3266,6 +3329,339 @@ void main() {
       expect(find.bySemanticsLabel('Compact density'), findsOneWidget);
       expect(find.bySemanticsLabel('More actions'), findsOneWidget);
       semantics.dispose();
+    });
+  });
+
+  group('RemixMenu trailing text', () {
+    Future<void> openMenu(
+      WidgetTester tester,
+      List<RemixMenuItemData<String>> items, {
+      MenuStyler? style,
+      MenuSpec? styleSpec,
+      TextDirection textDirection = TextDirection.ltr,
+    }) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (_) {},
+          style: style ?? const MenuStyler.create(),
+          styleSpec: styleSpec,
+          items: items,
+        ),
+        textDirection: textDirection,
+      );
+      await tester.pump();
+      controller.open();
+      await tester.pump();
+    }
+
+    Finder rowOf(String label) => find
+        .ancestor(
+          of: find.text(label),
+          matching: find.byType(RemixFlexBoxAdapter),
+        )
+        .first;
+
+    TextStyle renderedStyleOf(WidgetTester tester, String text) =>
+        tester.renderObject<RenderParagraph>(find.text(text)).text.style!;
+
+    test('items keep the trailing text they were given', () {
+      expect(
+        const RemixMenuItem(
+          value: 'r',
+          label: 'R',
+          trailingText: '⌘R',
+        ).trailingText,
+        '⌘R',
+      );
+      expect(
+        const RemixMenuCheckboxItem(
+          value: 'c',
+          label: 'C',
+          checked: false,
+          trailingText: '⌘B',
+        ).trailingText,
+        '⌘B',
+      );
+      expect(
+        const RemixMenuRadioItem(
+          value: 'r',
+          label: 'R',
+          trailingText: '⌘1',
+        ).trailingText,
+        '⌘1',
+      );
+      expect(
+        const RemixMenuSubmenu<String>(
+          label: 'S',
+          items: [],
+          trailingText: '3',
+        ).trailingText,
+        '3',
+      );
+      expect(const RemixMenuItem(value: 'r', label: 'R').trailingText, isNull);
+    });
+
+    testWidgets(
+      'sits at the trailing edge, after the label and before the trailing icon',
+      (tester) async {
+        for (final direction in TextDirection.values) {
+          await openMenu(
+            tester,
+            const [
+              RemixMenuItem(
+                value: 'refresh',
+                label: 'Refresh',
+                trailingText: '⌘R',
+              ),
+              RemixMenuItem(
+                value: 'settings',
+                label: 'A much longer settings label',
+                trailingText: '⌘,',
+                trailingIcon: Icons.star,
+              ),
+            ],
+            style: MenuStyler().item(
+              MenuItemStyler()
+                  .direction(.horizontal)
+                  .mainAxisSize(.max)
+                  .width(360)
+                  .spacing(12),
+            ),
+            textDirection: direction,
+          );
+
+          final label = tester.getRect(find.text('Refresh'));
+          final shortcut = tester.getRect(find.text('⌘R'));
+          final row = tester.getRect(rowOf('Refresh'));
+          final longLabel = tester.getRect(
+            find.text('A much longer settings label'),
+          );
+          final settingsShortcut = tester.getRect(find.text('⌘,'));
+          final icon = tester.getRect(find.byIcon(Icons.star));
+
+          if (direction == TextDirection.ltr) {
+            expect(shortcut.right, row.right);
+            expect(shortcut.left - label.right, greaterThanOrEqualTo(12));
+            expect(settingsShortcut.left - longLabel.right, 12);
+            expect(icon.left - settingsShortcut.right, 12);
+            expect(icon.right, row.right);
+          } else {
+            expect(shortcut.left, row.left);
+            expect(label.left - shortcut.right, greaterThanOrEqualTo(12));
+            expect(longLabel.left - settingsShortcut.right, 12);
+            expect(settingsShortcut.left - icon.right, 12);
+            expect(icon.left, row.left);
+          }
+        }
+      },
+    );
+
+    testWidgets('inherits the label style and applies the trailingText style', (
+      tester,
+    ) async {
+      await openMenu(
+        tester,
+        const [
+          RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+        ],
+        style: MenuStyler().item(
+          MenuItemStyler()
+              .label(TextStyler().fontSize(15).color(Colors.blue))
+              .trailingText(TextStyler().color(Colors.grey)),
+        ),
+      );
+
+      final shortcut = renderedStyleOf(tester, '⌘R');
+      expect(shortcut.color, Colors.grey);
+      expect(shortcut.fontSize, 15);
+      expect(renderedStyleOf(tester, 'Refresh').color, Colors.blue);
+    });
+
+    testWidgets('per-item and raw spec styles reach the trailing text', (
+      tester,
+    ) async {
+      await openMenu(tester, [
+        RemixMenuItem(
+          value: 'refresh',
+          label: 'Refresh',
+          trailingText: '⌘R',
+          style: MenuItemStyler().trailingText(
+            TextStyler().fontSize(11).color(Colors.red),
+          ),
+        ),
+      ]);
+      expect(renderedStyleOf(tester, '⌘R').color, Colors.red);
+      expect(renderedStyleOf(tester, '⌘R').fontSize, 11);
+
+      await openMenu(
+        tester,
+        const [
+          RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+        ],
+        styleSpec: const MenuSpec(
+          item: StyleSpec(
+            spec: MenuItemSpec(
+              trailingText: StyleSpec(
+                spec: TextSpec(style: TextStyle(color: Colors.green)),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(renderedStyleOf(tester, '⌘R').color, Colors.green);
+    });
+
+    testWidgets('follows the row state through trailingText variants', (
+      tester,
+    ) async {
+      await openMenu(
+        tester,
+        const [
+          RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+        ],
+        style: MenuStyler().item(
+          MenuItemStyler()
+              .trailingText(TextStyler().color(Colors.grey))
+              .onHovered(
+                MenuItemStyler().trailingText(TextStyler().color(Colors.black)),
+              ),
+        ),
+      );
+      expect(renderedStyleOf(tester, '⌘R').color, Colors.grey);
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(mouse.removePointer);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(tester.getCenter(find.text('Refresh')));
+      await tester.pump();
+      expect(renderedStyleOf(tester, '⌘R').color, Colors.black);
+    });
+
+    testWidgets('absent trailing text adds no widget to the row', (
+      tester,
+    ) async {
+      await openMenu(tester, const [
+        RemixMenuItem(value: 'copy', label: 'Copy'),
+        RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+      ]);
+
+      List<Widget> rowChildren(String label) =>
+          tester.widget<RemixFlexBoxAdapter>(rowOf(label)).children;
+
+      expect(rowChildren('Copy'), hasLength(1));
+      expect(rowChildren('Refresh'), hasLength(2));
+      expect(
+        find.descendant(of: rowOf('Copy'), matching: find.byType(StyledText)),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('renders on checkbox, radio and submenu rows', (tester) async {
+      await openMenu(tester, const [
+        RemixMenuCheckboxItem(
+          value: 'wrap',
+          label: 'Word wrap',
+          checked: true,
+          trailingText: '⌥Z',
+        ),
+        RemixMenuRadioGroup(
+          value: 'compact',
+          items: [
+            RemixMenuRadioItem(
+              value: 'compact',
+              label: 'Compact',
+              trailingText: '⌘1',
+            ),
+            RemixMenuRadioItem(
+              value: 'comfortable',
+              label: 'Comfortable',
+              trailingText: '⌘2',
+            ),
+          ],
+        ),
+        RemixMenuSubmenu(
+          label: 'Recent',
+          trailingText: '12',
+          items: [RemixMenuItem(value: 'a', label: 'A')],
+        ),
+      ]);
+
+      for (final (label, text) in [
+        ('Word wrap', '⌥Z'),
+        ('Compact', '⌘1'),
+        ('Comfortable', '⌘2'),
+        ('Recent', '12'),
+      ]) {
+        expect(
+          find.descendant(of: rowOf(label), matching: find.text(text)),
+          findsOneWidget,
+        );
+        expect(
+          tester.getRect(find.text(text)).left,
+          greaterThanOrEqualTo(tester.getRect(find.text(label)).right),
+        );
+      }
+
+      final chevron = tester.getRect(
+        find.byKey(const ValueKey('remix-menu-submenu-chevron-Recent')),
+      );
+      expect(
+        chevron.left,
+        greaterThanOrEqualTo(tester.getRect(find.text('12')).right),
+      );
+    });
+
+    testWidgets('the accessible name reads the trailing text', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await openMenu(tester, const [
+        RemixMenuItem(value: 'refresh', label: 'Refresh', trailingText: '⌘R'),
+        RemixMenuItem(
+          value: 'settings',
+          label: 'Settings…',
+          trailingText: '⌘,',
+          semanticLabel: 'Open settings',
+        ),
+        RemixMenuCheckboxItem(
+          value: 'wrap',
+          label: 'Word wrap',
+          checked: true,
+          trailingText: '⌥Z',
+        ),
+        RemixMenuRadioGroup(
+          value: 'compact',
+          items: [
+            RemixMenuRadioItem(
+              value: 'compact',
+              label: 'Compact',
+              trailingText: '⌘1',
+            ),
+          ],
+        ),
+        RemixMenuSubmenu(
+          label: 'Recent',
+          trailingText: '12',
+          items: [RemixMenuItem(value: 'a', label: 'A')],
+        ),
+      ]);
+
+      final names = [
+        'Refresh\n⌘R',
+        'Open settings',
+        'Word wrap\n⌥Z',
+        'Compact\n⌘1',
+        'Recent\n12',
+      ];
+      final counts = [
+        for (final name in names) find.bySemanticsLabel(name).evaluate().length,
+      ];
+      final shortcutOnly = find.bySemanticsLabel('⌘R').evaluate().length;
+      semantics.dispose();
+
+      expect(counts, everyElement(1));
+      expect(shortcutOnly, 0);
     });
   });
 }

@@ -617,6 +617,7 @@ void main() {
         final label = Prop.maybeMix(TextStyler());
         final leadingIcon = Prop.maybeMix(IconStyler());
         final trailingIcon = Prop.maybeMix(IconStyler());
+        final trailingText = Prop.maybeMix(TextStyler());
         final indicator = Prop.maybeMix(IconStyler());
         final variants = <VariantStyle<MenuItemSpec>>[];
 
@@ -625,6 +626,7 @@ void main() {
           label: label,
           leadingIcon: leadingIcon,
           trailingIcon: trailingIcon,
+          trailingText: trailingText,
           indicator: indicator,
           variants: variants,
         );
@@ -634,6 +636,7 @@ void main() {
         expect(style.$label, equals(label));
         expect(style.$leadingIcon, equals(leadingIcon));
         expect(style.$trailingIcon, equals(trailingIcon));
+        expect(style.$trailingText, equals(trailingText));
         expect(style.$indicator, equals(indicator));
         expect(style.$variants, equals(variants));
       });
@@ -643,6 +646,7 @@ void main() {
         final labelStyler = TextStyler();
         final leadingIconStyler = IconStyler();
         final trailingIconStyler = IconStyler();
+        final trailingTextStyler = TextStyler();
         final indicatorStyler = IconStyler();
 
         final style = MenuItemStyler(
@@ -650,6 +654,7 @@ void main() {
           label: labelStyler,
           leadingIcon: leadingIconStyler,
           trailingIcon: trailingIconStyler,
+          trailingText: trailingTextStyler,
           indicator: indicatorStyler,
         );
 
@@ -658,6 +663,7 @@ void main() {
         expect(style.$label, isNotNull);
         expect(style.$leadingIcon, isNotNull);
         expect(style.$trailingIcon, isNotNull);
+        expect(style.$trailingText, isNotNull);
         expect(style.$indicator, isNotNull);
       });
     });
@@ -687,6 +693,18 @@ void main() {
         modify: (style) => style.trailingIcon(IconStyler()),
         expect: (style) {
           expect(style.$trailingIcon, equals(Prop.maybeMix(IconStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'trailingText',
+        initial: MenuItemStyler(),
+        modify: (style) => style.trailingText(TextStyler().fontSize(12)),
+        expect: (style) {
+          expect(
+            style.$trailingText,
+            equals(Prop.maybeMix(TextStyler().fontSize(12))),
+          );
         },
       );
 
@@ -896,6 +914,7 @@ void main() {
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.leadingIcon, isA<StyleSpec<IconSpec>>());
                 expect(spec.spec.trailingIcon, isA<StyleSpec<IconSpec>>());
+                expect(spec.spec.trailingText, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.indicator, isA<StyleSpec<IconSpec>>());
 
                 return Container();
