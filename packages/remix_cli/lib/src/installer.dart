@@ -202,7 +202,7 @@ final class Installer {
     );
   }
 
-  Future<void> add(AddOptions options) async {
+  Future<AddResult> add(AddOptions options) async {
     final plan = await _planAdd(options);
 
     _printPlan(
@@ -222,14 +222,14 @@ final class Installer {
         'build.yaml: enable spec-styler generation for installed source.',
       );
     }
-    if (options.mode == AddMode.dryRun) return;
+    if (options.mode == AddMode.dryRun) return AddResult.done;
     if (options.mode == AddMode.diff) {
       // The diff has to predict what `add` would write, and `add` formats with
       // the project's Flutter SDK. Formatting the proposed tree with whichever
       // Dart happens to run this CLI would report formatter-version
       // differences that no install would ever produce.
       final diffToolchain = await _resolveFlutter(plan.root);
-      await _printDiff(
+      return _printDiff(
         dart: diffToolchain.dart,
         root: plan.root,
         requestedNames: plan.requestedNames,
@@ -242,10 +242,10 @@ final class Installer {
         proposedBarrel: plan.proposedBarrel,
         builderConfiguration: plan.builderConfiguration,
       );
-      return;
     }
 
     await _install(plan, options);
+    return AddResult.done;
   }
 
   /// Resolves everything an install depends on without writing anything.
@@ -713,7 +713,9 @@ final class Installer {
     return output;
   }
 
-  Future<void> _printDiff({
+  /// Returns the verdict from the same test that picks the printed line, so
+  /// the exit code and the output cannot disagree.
+  Future<AddResult> _printDiff({
     required String dart,
     required Directory root,
     required Set<String> requestedNames,
@@ -791,9 +793,10 @@ final class Installer {
       }
       if (output.stdout.trim().isEmpty) {
         _writeOut('No authored-source differences.');
-      } else {
-        _writeOut(output.stdout.trimRight());
+        return AddResult.done;
       }
+      _writeOut(output.stdout.trimRight());
+      return AddResult.differs;
     } finally {
       if (parent.existsSync()) parent.deleteSync(recursive: true);
     }

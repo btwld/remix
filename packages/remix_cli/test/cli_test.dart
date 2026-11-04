@@ -144,7 +144,10 @@ void main() {
       ['add', 'button', '--diff'],
       writeOut: fail,
       writeError: fail,
-      onAdd: (options) async => received = options,
+      onAdd: (options) async {
+        received = options;
+        return AddResult.done;
+      },
     );
 
     expect(code, successExitCode);
@@ -159,7 +162,10 @@ void main() {
       ['add', 'button', 'card', 'dialog'],
       writeOut: fail,
       writeError: fail,
-      onAdd: (options) async => received = options,
+      onAdd: (options) async {
+        received = options;
+        return AddResult.done;
+      },
     );
 
     expect(code, successExitCode);
@@ -175,7 +181,10 @@ void main() {
       ['add'],
       writeOut: (_) {},
       writeError: errors.add,
-      onAdd: (_) async => dispatched = true,
+      onAdd: (_) async {
+        dispatched = true;
+        return AddResult.done;
+      },
     );
 
     expect(code, usageExitCode);
@@ -191,7 +200,10 @@ void main() {
       ['add', 'button', 'card', 'button'],
       writeOut: (_) {},
       writeError: errors.add,
-      onAdd: (_) async => dispatched = true,
+      onAdd: (_) async {
+        dispatched = true;
+        return AddResult.done;
+      },
     );
 
     expect(code, usageExitCode);
@@ -207,12 +219,44 @@ void main() {
       ['add', 'button', '--dry-run', '--overwrite'],
       writeOut: fail,
       writeError: errors.add,
-      onAdd: (_) async => dispatched = true,
+      onAdd: (_) async {
+        dispatched = true;
+        return AddResult.done;
+      },
     );
 
     expect(code, usageExitCode);
     expect(dispatched, isFalse);
     expect(errors.join('\n'), contains('mutually exclusive'));
+  });
+
+  group('add --exit-code', () {
+    Future<int> run(List<String> flags, AddResult result) => runRemixCli(
+      ['add', 'button', ...flags],
+      writeOut: fail,
+      writeError: fail,
+      onAdd: (_) async => result,
+    );
+
+    test('exits $driftExitCode only when --diff found differences', () async {
+      expect(await run(['--diff', '--exit-code'], AddResult.differs), 2);
+      expect(await run(['--diff', '--exit-code'], AddResult.done), 0);
+      expect(await run(['--diff'], AddResult.differs), 0);
+    });
+
+    test('without --diff is a usage error before dispatch', () async {
+      final errors = <String>[];
+
+      final code = await runRemixCli(
+        ['add', 'button', '--exit-code'],
+        writeOut: fail,
+        writeError: errors.add,
+        onAdd: (_) async => fail('dispatched'),
+      );
+
+      expect(code, usageExitCode);
+      expect(errors.first, '--exit-code requires --diff.');
+    });
   });
 
   test('runtime handler failures use a stable failure exit', () async {

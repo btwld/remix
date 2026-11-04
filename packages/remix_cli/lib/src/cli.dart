@@ -14,6 +14,11 @@ const usageExitCode = 64;
 /// A runtime failure after valid command parsing.
 const failureExitCode = 1;
 
+/// `add --diff --exit-code` found authored source that differs.
+///
+/// Not [failureExitCode]: CI has to tell drift from a failed `pub get`.
+const driftExitCode = 2;
+
 typedef LineWriter = void Function(String line);
 
 /// An install that stopped partway, with the steps that finished and the
@@ -57,7 +62,16 @@ String _bugReport(Object error, StackTrace stack) {
 typedef InitHandler = Future<void> Function(InitOptions options);
 typedef RegistryHandler = Future<void> Function(RegistryOptions options);
 
-typedef AddHandler = Future<void> Function(AddOptions options);
+/// The installer reports what `add` found; only the shell maps it to an exit
+/// code, so `--exit-code` never reaches [AddOptions].
+typedef AddHandler = Future<AddResult> Function(AddOptions options);
+
+enum AddResult {
+  done,
+
+  /// `--diff` found authored source that differs from the registry.
+  differs,
+}
 
 final class InitOptions {
   const InitOptions({
@@ -243,6 +257,13 @@ final class _AddCommand extends Command<int> {
         'adopt',
         negatable: false,
         help: 'Record verified legacy ownership without replacing source.',
+      )
+      ..addFlag(
+        'exit-code',
+        negatable: false,
+        help:
+            'With --diff, exit $driftExitCode when authored source differs, '
+            'like git diff --exit-code.',
       );
   }
 
@@ -281,18 +302,24 @@ final class _AddCommand extends Command<int> {
     if (argResults!.flag('adopt') && argResults!.flag('overwrite')) {
       usageException('--adopt and --overwrite cannot be combined.');
     }
+    final exitOnDrift = argResults!.flag('exit-code');
+    if (exitOnDrift && !argResults!.flag('diff')) {
+      usageException('--exit-code requires --diff.');
+    }
     final handler = _handler;
     if (handler == null) {
       throw StateError('The add command is not available.');
     }
-    await handler(
+    final result = await handler(
       AddOptions(
         items: List.unmodifiable(positional),
         mode: modes.isEmpty ? AddMode.write : modes.single,
         adopt: argResults!.flag('adopt'),
       ),
     );
-    return successExitCode;
+    return exitOnDrift && result == AddResult.differs
+        ? driftExitCode
+        : successExitCode;
   }
 }
 

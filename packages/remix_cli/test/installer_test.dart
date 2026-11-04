@@ -951,7 +951,7 @@ packages:
     });
     final output = <String>[];
 
-    await Installer(
+    final result = await Installer(
       projectRoot: root,
       writeOut: output.add,
       processRunner: runner,
@@ -961,6 +961,7 @@ packages:
     expect(snapshotFiles(root), before);
     expect(runner.calls, hasLength(3));
     expect(output.last, 'diff body');
+    expect(result, AddResult.differs);
   });
 
   test(
@@ -1024,7 +1025,7 @@ packages:
         final before = snapshotFiles(caseRoot);
         final output = <String>[];
 
-        await Installer(
+        final result = await Installer(
           projectRoot: caseRoot,
           writeOut: output.add,
           processRunner: happyRunner(
@@ -1037,6 +1038,7 @@ packages:
 
         expect(snapshotFiles(caseRoot), before, reason: item);
         expect(output.last, 'No authored-source differences.', reason: item);
+        expect(result, AddResult.done, reason: item);
       }
     },
   );
