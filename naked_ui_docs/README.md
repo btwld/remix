@@ -6,7 +6,7 @@ This directory owns Naked UI documentation for the active package in
 
 The 18 archived pages were imported from `btwld/naked_ui`; `SOURCES.json` records
 the exact revision and original bytes. Keep its BSD-3-Clause `LICENSE` alongside
-this content. The pages are adapted to naked_ui 1.4.0. Five additional pages cover
+this content. The pages are adapted to naked_ui 1.5.0. Five additional pages cover
 Combobox, Menubar, Scrollbar, TextMagnifier and ToggleGroup. The `widget/switch`
 route remains valid and documents `NakedToggle(asSwitch: true)`.
 

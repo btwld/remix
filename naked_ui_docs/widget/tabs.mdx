@@ -182,15 +182,17 @@ class _PanelBox extends StatelessWidget {
 
 ### NakedTabs
 
+{/* dart-excerpt: API signature for NakedTabs; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedTabs({
-  Key? key,
+  super.key,
   required this.child,
   this.controller,
   this.selectedTabId,
-  this.activationMode = NakedTabActivationMode.automatic,
   this.onChanged,
   this.orientation = Axis.horizontal,
+  this.activationMode = NakedTabActivationMode.automatic,
   this.enabled = true,
   this.onEscapePressed,
 })
@@ -204,9 +206,11 @@ const NakedTabs({
 
 ### NakedTab
 
+{/* dart-excerpt: API signature for NakedTab; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedTab({
-  Key? key,
+  super.key,
   this.child,
   required this.tabId,
   this.enabled = true,
@@ -231,9 +235,11 @@ const NakedTab({
 
 ### NakedTabView
 
+{/* dart-excerpt: API signature for NakedTabView; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedTabView({
-  Key? key,
+  super.key,
   required this.child,
   required this.tabId,
   this.maintainState = true,

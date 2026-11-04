@@ -65,20 +65,42 @@ class TooltipExample extends StatelessWidget {
 
 ## Constructor
 
+{/* dart-excerpt: API signature for NakedTooltip; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedTooltip({
-  Key? key,
+  super.key,
   required this.child,
   required this.overlayBuilder,
+  this.tooltipKey,
+  @Deprecated(
+    'Use tooltipKey to show on command and onOpenChanged to observe '
+    'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
+    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
+  this.open,
+  this.onOpenChanged,
+  this.isFocusVisible,
   this.hoverDelay = Duration.zero,
   this.touchDelay = const Duration(milliseconds: 1500),
   this.dismissDelay = const Duration(milliseconds: 100),
+  @Deprecated(
+    'RawTooltip keeps the tooltip visible while its content is hovered. '
+    'Setting this runs the naked_ui 1.1.0 implementation. '
+    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
+  this.disableHoverableContent = false,
   this.enableTapToDismiss = true,
   this.triggerMode = TooltipTriggerMode.longPress,
   this.enableFeedback = true,
   this.onTriggered,
-  this.animationStyle,
+  this.animationStyle = _defaultTooltipAnimationStyle,
   this.positioning = const OverlayPositionConfig(),
+  @Deprecated(
+    'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
+    '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
+  this.useRootOverlay = false,
   this.semanticLabel,
   this.excludeSemantics = false,
   this.excludeOverlaySemantics,
@@ -128,3 +150,5 @@ OverlayPositionConfig examplePosition() => const OverlayPositionConfig(
 For fully custom positioning beyond what `OverlayPositionConfig` exposes, drop down to Flutter's `RawTooltip` directly and supply your own `TooltipPositionDelegate`.
 
 Opening is managed by `RawTooltip` and its trigger mode. The legacy `open`, `useRootOverlay` and `disableHoverableContent` parameters are deprecated; do not use them for new integrations.
+
+`isFocusVisible` can report keyboard-visible focus. When provided, focus restored after a pointer action does not open or hold the tooltip unless this callback returns true; hover still opens it. Without the callback, any focus opens the tooltip.

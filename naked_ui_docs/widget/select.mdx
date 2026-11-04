@@ -142,9 +142,11 @@ class _SelectOption extends StatelessWidget {
 
 ## NakedSelect Constructor
 
+{/* dart-excerpt: API signature for NakedSelect; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedSelect({
-  Key? key,
+  super.key,
   this.child,
   this.builder,
   required this.overlayBuilder,
@@ -157,17 +159,19 @@ const NakedSelect({
   this.triggerFocusNode,
   this.semanticLabel,
   this.semanticValue,
-  this.positioning = const OverlayPositionConfig(alignment: OverlayAlignment.center),
+  this.positioning = const OverlayPositionConfig(
+    alignment: OverlayAlignment.center,
+  ),
+  this.constrainToAvailableHeight = false,
   this.onOpen,
   this.onClose,
+  this.open,
+  this.onOpenChanged,
   this.onCanceled,
   this.onOpenRequested,
   this.onCloseRequested,
   this.consumeOutsideTaps = true,
   this.useRootOverlay = false,
-  this.constrainToAvailableHeight = false,
-  this.open,
-  this.onOpenChanged,
   this.excludeSemantics = false,
 })
 ```
@@ -191,14 +195,16 @@ const NakedSelect({
 
 `NakedSelect.Option<T>` is a factory for `NakedSelectOption<T>`:
 
+{/* dart-excerpt: API signature for NakedSelectOption; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedSelectOption({
-  Key? key,
-  required T value,
-  Widget? child,
-  ValueWidgetBuilder<NakedSelectOptionState<T>>? builder,
-  bool enabled = true,
-  String? semanticLabel,
+  super.key,
+  required super.value,
+  super.enabled = true,
+  super.semanticLabel,
+  super.child,
+  super.builder,
 })
 ```
 

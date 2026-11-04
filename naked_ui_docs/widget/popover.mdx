@@ -142,9 +142,11 @@ class _AnimatedPopoverState extends State<AnimatedPopover>
 
 ## Constructor
 
+{/* dart-excerpt: API signature for NakedPopover; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedPopover({
-  Key? key,
+  super.key,
   this.child,
   this.builder,
   required this.popoverBuilder,
@@ -152,13 +154,13 @@ const NakedPopover({
   this.consumeOutsideTaps = true,
   this.useRootOverlay = false,
   this.openOnTap = true,
+  this.anchorKey,
   this.triggerFocusNode,
   this.onOpen,
   this.onClose,
   this.onOpenRequested,
   this.onCloseRequested,
   this.controller,
-  this.anchorKey,
   this.semanticLabel,
   this.excludeSemantics = false,
 })

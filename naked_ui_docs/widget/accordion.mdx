@@ -218,9 +218,11 @@ a separate controller.
 
 ### NakedAccordionGroup
 
+{/* dart-excerpt: API signature for NakedAccordionGroup; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedAccordionGroup({
-  Key? key,
+  super.key,
   required this.child,
   required this.controller,
   this.initialExpandedValues = const [],
@@ -233,10 +235,12 @@ const NakedAccordionGroup({
 
 ### NakedAccordion
 
+{/* dart-excerpt: API signature for NakedAccordion; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedAccordion({
-  Key? key,
-  required this.builder,        // Recommended approach
+  super.key,
+  required this.builder,
   required this.value,
   required this.child,
   this.itemBuilder,

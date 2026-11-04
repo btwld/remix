@@ -169,28 +169,34 @@ focus stop, and semantic action.
 
 ## Constructor
 
+{/* dart-excerpt: API signature for NakedDisclosure; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedDisclosure({
-  Key? key,
-  Widget? child,
-  ValueWidgetBuilder<NakedDisclosureState>? builder,
-  required Widget panel,
-  ValueWidgetBuilder<NakedDisclosureState>? itemBuilder,
-  bool? expanded,
-  bool defaultExpanded = false,
-  ValueChanged<bool>? onExpandedChanged,
-  bool enabled = true,
-  MouseCursor mouseCursor = SystemMouseCursors.click,
-  bool enableFeedback = true,
-  FocusNode? focusNode,
-  bool autofocus = false,
-  ValueChanged<bool>? onFocusChange,
-  ValueChanged<bool>? onHoverChange,
-  ValueChanged<bool>? onPressChange,
-  String? semanticLabel,
-  String? semanticHint,
-  bool excludeSemantics = false,
-  NakedDisclosureTransitionBuilder? transitionBuilder,
-  AnimationStyle animationStyle = const AnimationStyle(...),
+  super.key,
+  this.child,
+  this.builder,
+  required this.panel,
+  this.itemBuilder,
+  this.expanded,
+  this.defaultExpanded = false,
+  this.onExpandedChanged,
+  this.enabled = true,
+  this.mouseCursor = SystemMouseCursors.click,
+  this.enableFeedback = true,
+  this.focusNode,
+  this.autofocus = false,
+  this.onFocusChange,
+  this.onHoverChange,
+  this.onPressChange,
+  this.semanticLabel,
+  this.semanticHint,
+  this.excludeSemantics = false,
+  this.transitionBuilder,
+  this.animationStyle = const AnimationStyle(
+    curve: Curves.ease,
+    duration: Duration(milliseconds: 200),
+    reverseDuration: Duration(milliseconds: 200),
+  ),
 })
 ```

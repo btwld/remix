@@ -90,20 +90,22 @@ return showNakedAlertDialog<bool>(
 
 ### `showNakedDialog`
 
+{/* dart-excerpt: API signature for showNakedDialog; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 Future<T?> showNakedDialog<T>({
-  required BuildContext context,
-  required WidgetBuilder builder,
-  required Color barrierColor,
-  bool barrierDismissible = true,
-  String? barrierLabel,
-  bool useRootNavigator = true,
-  RouteSettings? routeSettings,
-  Offset? anchorPoint,
-  Duration transitionDuration = const Duration(milliseconds: 400),
-  RouteTransitionsBuilder? transitionBuilder,
-  bool requestFocus = true,
-  TraversalEdgeBehavior? traversalEdgeBehavior,
+required BuildContext context,
+required WidgetBuilder builder,
+required Color barrierColor,
+bool barrierDismissible = true,
+String? barrierLabel,
+bool useRootNavigator = true,
+RouteSettings? routeSettings,
+Offset? anchorPoint,
+Duration transitionDuration = const Duration(milliseconds: 400),
+RouteTransitionsBuilder? transitionBuilder,
+bool requestFocus = true,
+TraversalEdgeBehavior? traversalEdgeBehavior,
 })
 ```
 
@@ -118,20 +120,22 @@ Future<T?> showNakedDialog<T>({
 
 ### `showNakedAlertDialog`
 
+{/* dart-excerpt: API signature for showNakedAlertDialog; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 Future<T?> showNakedAlertDialog<T>({
-  required BuildContext context,
-  required WidgetBuilder builder,
-  required Color barrierColor,
-  required String semanticLabel,
-  String? barrierLabel,
-  bool barrierDismissible = false,
-  bool useRootNavigator = true,
-  RouteSettings? routeSettings,
-  Offset? anchorPoint,
-  Duration transitionDuration = const Duration(milliseconds: 400),
-  RouteTransitionsBuilder? transitionBuilder,
-  FocusNode? initialFocusNode,
+required BuildContext context,
+required WidgetBuilder builder,
+required Color barrierColor,
+required String semanticLabel,
+String? barrierLabel,
+bool barrierDismissible = false,
+bool useRootNavigator = true,
+RouteSettings? routeSettings,
+Offset? anchorPoint,
+Duration transitionDuration = const Duration(milliseconds: 400),
+RouteTransitionsBuilder? transitionBuilder,
+FocusNode? initialFocusNode,
 })
 ```
 
@@ -143,17 +147,17 @@ Future<T?> showNakedAlertDialog<T>({
 
 ### `NakedDialog`
 
+{/* dart-excerpt: API signature for NakedDialog; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
-class NakedDialog extends StatelessWidget {
-  const NakedDialog({
-    Key? key,
-    required this.child,
-    this.modal = true,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-    this.semanticsRole = SemanticsRole.dialog,
-  });
-}
+const NakedDialog({
+  super.key,
+  required this.child,
+  this.modal = true,
+  this.semanticLabel,
+  this.excludeSemantics = false,
+  this.semanticsRole = SemanticsRole.dialog,
+})
 ```
 
 - child: Your dialog content.

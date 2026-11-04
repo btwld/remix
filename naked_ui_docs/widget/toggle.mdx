@@ -155,9 +155,11 @@ If you prefer simple composition, pass a `child` instead and style it externally
 
 ## Constructor
 
+{/* dart-excerpt: API signature for NakedToggle; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedToggle({
-  Key? key,
+  super.key,
   required this.value,
   this.onChanged,
   this.child,
@@ -262,17 +264,19 @@ class _SegmentChip extends StatelessWidget {
 
 ### Group API
 
+{/* dart-excerpt: API signature for NakedToggleGroup; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedToggleGroup({
-  Key? key,
-  required Widget child,
-  required T? selectedValue,
-  ValueChanged<T?>? onChanged,
-  bool enabled = true,
-  Axis orientation = Axis.horizontal,
-  bool loop = true,
-  String? semanticLabel,
-  bool excludeSemantics = false,
+  super.key,
+  required this.child,
+  required this.selectedValue,
+  this.onChanged,
+  this.enabled = true,
+  this.orientation = Axis.horizontal,
+  this.loop = true,
+  this.semanticLabel,
+  this.excludeSemantics = false,
 })
 ```
 
@@ -285,22 +289,24 @@ const NakedToggleGroup({
 
 ### Option API
 
+{/* dart-excerpt: API signature for NakedToggleOption; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedToggleOption({
-  Key? key,
-  required T value,
-  Widget? child,
-  ValueWidgetBuilder<NakedToggleOptionState<T>>? builder,
-  bool enabled = true,
-  MouseCursor? mouseCursor,
-  bool enableFeedback = true,
-  FocusNode? focusNode,
-  bool autofocus = false,
-  ValueChanged<bool>? onFocusChange,
-  ValueChanged<bool>? onHoverChange,
-  ValueChanged<bool>? onPressChange,
-  String? semanticLabel,
-  bool excludeSemantics = false,
+  super.key,
+  required this.value,
+  this.child,
+  this.enabled = true,
+  this.mouseCursor,
+  this.enableFeedback = true,
+  this.focusNode,
+  this.autofocus = false,
+  this.onFocusChange,
+  this.onHoverChange,
+  this.onPressChange,
+  this.builder,
+  this.semanticLabel,
+  this.excludeSemantics = false,
 })
 ```
 

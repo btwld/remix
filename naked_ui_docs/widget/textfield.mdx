@@ -84,22 +84,27 @@ class _HeadlessFieldState extends State<HeadlessField> {
 
 `NakedTextFieldBuilder` has the signature:
 
+{/* dart-excerpt: API signature for NakedTextFieldBuilder; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
-typedef NakedTextFieldBuilder = Widget Function(
-  BuildContext context,
-  NakedTextFieldState state,
-  Widget editableText,
-);
+typedef NakedTextFieldBuilder =
+  Widget Function(
+    BuildContext context,
+    NakedTextFieldState value,
+    Widget editableText,
+  );
 ```
 
 The provided `editableText` widget is an `EditableText` configured with all parameters from `NakedTextField`. The `state` parameter gives you access to interaction states like `state.isFocused`, `state.isHovered`, and `state.when()` for conditional styling. Wrap the editable text with decoration, icons, paddings, or animations—just return the composed widget.
 
 ## Constructor Highlights
 
+{/* dart-excerpt: API signature for NakedTextField; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedTextField({
-  Key? key,
-  this.groupId = EditableText,
+  super.key,
+  this.groupId = EditableText, // Keeps parity with EditableText default.
   this.controller,
   this.focusNode,
   this.undoController,
@@ -133,7 +138,7 @@ const NakedTextField({
   this.cursorHeight,
   this.cursorRadius,
   this.cursorOpacityAnimates,
-  this.cursorColor,
+  this.cursorColor, // override adaptive color if needed
   this.selectionHeightStyle = ui.BoxHeightStyle.tight,
   this.selectionWidthStyle = ui.BoxWidthStyle.tight,
   this.keyboardAppearance,
@@ -141,7 +146,7 @@ const NakedTextField({
   this.dragStartBehavior = DragStartBehavior.start,
   this.enableInteractiveSelection = true,
   this.selectionControls,
-  this.onTap,
+  this.onTap, // prefer this name for a field tap
   this.onTapAlwaysCalled = false,
   this.onTapChange,
   this.onTapOutside,

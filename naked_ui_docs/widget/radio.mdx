@@ -123,13 +123,10 @@ class _RadioChip extends StatelessWidget {
 
 ## RadioGroup Constructor
 
+{/* dart-excerpt: API signature for RadioGroup; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
-const RadioGroup({
-  Key? key,
-  required this.groupValue,
-  required this.onChanged,
-  required this.child,
-})
+const RadioGroup({super.key, this.groupValue, required this.onChanged, required this.child})
 ```
 
 - `groupValue` → the selected value (nullable to allow “no selection”)
@@ -138,9 +135,11 @@ const RadioGroup({
 
 ## NakedRadio Constructor
 
+{/* dart-excerpt: API signature for NakedRadio; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
-const NakedRadio<T>({
-  Key? key,
+const NakedRadio({
+  super.key,
   required this.value,
   this.child,
   this.enabled = true,

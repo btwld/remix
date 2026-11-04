@@ -170,9 +170,11 @@ class _MenuItem extends StatelessWidget {
 
 ## NakedMenu Constructor
 
+{/* dart-excerpt: API signature for NakedMenu; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedMenu({
-  Key? key,
+  super.key,
   this.child,
   this.builder,
   required this.overlayBuilder,
@@ -186,8 +188,10 @@ const NakedMenu({
   this.consumeOutsideTaps = true,
   this.useRootOverlay = false,
   this.closeOnClickOutside = true,
+  this.openOnTap = true,
   this.triggerFocusNode,
   this.positioning = const OverlayPositionConfig(),
+  this.constrainToAvailableHeight = false,
   this.semanticLabel,
   this.excludeSemantics = false,
 })
@@ -210,15 +214,17 @@ const NakedMenu({
 
 `NakedMenuItem<T>` extends the shared `OverlayItem` base. Provide either `child` or a builder; the builder gets a `NakedMenuItemState<T>` typed snapshot. `NakedMenu.Item` is exported as a convenience alias for the constructor.
 
+{/* dart-excerpt: API signature for NakedMenuItem; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedMenuItem({
-  Key? key,
-  required T value,
-  Widget? child,
-  ValueWidgetBuilder<NakedMenuItemState<T>>? builder,
-  bool enabled = true,
-  String? semanticLabel,
-  bool closeOnActivate = true,
+  super.key,
+  required super.value,
+  super.enabled = true,
+  super.semanticLabel,
+  super.child,
+  super.builder,
+  this.closeOnActivate = true,
 })
 ```
 

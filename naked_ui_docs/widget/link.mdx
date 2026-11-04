@@ -92,24 +92,26 @@ equivalent accessible navigation path.
 
 ## Constructor
 
+{/* dart-excerpt: API signature for NakedLink; copied from the active declaration. It describes the API and has no implementation body. */}
+
 ```dart
 const NakedLink({
-  Key? key,
-  Widget? child,
-  ValueWidgetBuilder<NakedLinkState>? builder,
-  VoidCallback? onPressed,
-  Uri? linkUrl,
-  bool enabled = true,
-  FocusNode? focusNode,
-  bool autofocus = false,
-  MouseCursor? mouseCursor,
-  bool enableFeedback = true,
-  ValueChanged<bool>? onFocusChange,
-  ValueChanged<bool>? onHoverChange,
-  ValueChanged<bool>? onPressChange,
-  String? semanticLabel,
-  String? semanticHint,
-  bool excludeSemantics = false,
+  super.key,
+  this.child,
+  this.builder,
+  this.onPressed,
+  this.linkUrl,
+  this.enabled = true,
+  this.focusNode,
+  this.autofocus = false,
+  this.mouseCursor,
+  this.enableFeedback = true,
+  this.onFocusChange,
+  this.onHoverChange,
+  this.onPressChange,
+  this.semanticLabel,
+  this.semanticHint,
+  this.excludeSemantics = false,
 })
 ```
 
