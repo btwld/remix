@@ -1,0 +1,123 @@
+{
+  "name": "naked",
+  "description": "Headless Flutter components with behavior and accessibility, no styling. Complete design freedom.",
+  "theme": {
+    "primaryColor": "#3D3D3D",
+    "accentColor": "#2563EB",
+    "backgroundColor": "#FFFFFF"
+  },
+  "navigation": {
+    "github": "https://github.com/btwld/naked_ui"
+  },
+  "search": {
+    "enabled": true
+  },
+  "social": {
+    "github": "btwld/naked_ui"
+  },
+  "meta": {
+    "author": "Bitwild",
+    "keywords": ["flutter", "headless", "components", "ui", "widgets", "unstyled", "accessibility"]
+  },
+  "footer": {
+    "links": [
+      {
+        "title": "Documentation",
+        "url": "/"
+      },
+      {
+        "title": "GitHub",
+        "url": "https://github.com/btwld/naked_ui"
+      },
+      {
+        "title": "pub.dev",
+        "url": "https://pub.dev/packages/naked_ui"
+      }
+    ],
+    "copyright": "© 2024 Bitwild. MIT License."
+  },
+  "sidebar": [
+    {
+      "group": "Introduction",
+      "pages": [
+        {
+          "title": "Getting Started",
+          "href": "/"
+        }
+      ]
+    },
+    {
+      "group": "Widgets",
+      "pages": [
+        {
+          "title": "NakedAccordion",
+          "href": "/widget/accordion"
+        },
+        {
+          "title": "NakedButton",
+          "href": "/widget/button"
+        },
+        {
+          "title": "NakedCheckbox",
+          "href": "/widget/checkbox"
+        },
+        {
+          "title": "NakedDialog",
+          "href": "/widget/dialog"
+        },
+        {
+          "title": "NakedDisclosure",
+          "href": "/widget/disclosure"
+        },
+        {
+          "title": "NakedLink",
+          "href": "/widget/link"
+        },
+        {
+          "title": "NakedMenu",
+          "href": "/widget/menu"
+        },
+        {
+          "title": "NakedPopover",
+          "href": "/widget/popover"
+        },
+        {
+          "title": "NakedRadio",
+          "href": "/widget/radio"
+        },
+        {
+          "title": "NakedSelect",
+          "href": "/widget/select"
+        },
+        {
+          "title": "NakedSlider",
+          "href": "/widget/slider"
+        },
+        {
+          "title": "NakedSwitch",
+          "href": "/widget/switch"
+        },
+        {
+          "title": "NakedTabs",
+          "href": "/widget/tabs"
+        },
+        {
+          "title": "NakedTextField",
+          "href": "/widget/textfield"
+        },
+        {
+          "title": "NakedToastScope",
+          "href": "/widget/toast"
+        },
+        {
+          "title": "NakedToggle",
+          "href": "/widget/toggle"
+        },
+        {
+          "title": "NakedTooltip",
+          "href": "/widget/tooltip"
+        }
+      ]
+    }
+  ]
+}
