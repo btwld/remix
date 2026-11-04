@@ -264,10 +264,14 @@ class _NakedPopoverState extends State<NakedPopover>
     return null;
   }
 
-  FocusNode? get _childOwnedTriggerNode =>
-      widget.openOnTap && widget.triggerFocusNode == null
-      ? _extractChildFocusNode()
-      : null;
+  FocusNode? get _childOwnedTriggerNode {
+    if (!widget.openOnTap) return null;
+    final childFocusNode = _extractChildFocusNode();
+    final returnNode =
+        widget.triggerFocusNode ?? childFocusNode ?? _internalTriggerNode;
+
+    return identical(returnNode, childFocusNode) ? childFocusNode : null;
+  }
 
   void _updateObservedChildFocusNode() {
     final next = _childOwnedTriggerNode;

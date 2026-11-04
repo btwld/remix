@@ -186,7 +186,11 @@ void main() {
               value: false,
               enabled: enabled,
               onChanged: (_) {},
-              onPressChange: pressChanges.add,
+              onPressChange: (pressed) {
+                setState(() {
+                  pressChanges.add(pressed);
+                });
+              },
               builder: (context, state, child) {
                 latestStates = state.states.toSet();
                 return child ?? const SizedBox.shrink();
