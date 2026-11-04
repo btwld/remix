@@ -1,14 +1,9 @@
-// The deprecated parameters are read here to route them to the 1.1.0
-// implementation.
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'legacy_naked_tooltip.dart';
 import 'utilities/positioning.dart';
 import 'utilities/reduced_motion.dart';
 
@@ -32,12 +27,7 @@ const _defaultTooltipAnimationStyle = AnimationStyle(
 ///
 /// Only one [NakedTooltip] is visible at a time. Hover, focus, touch, or
 /// [tooltipKey] activation replaces the visible tooltip without moving focus,
-/// and the replaced tooltip disappears without an exit animation. Tooltips
-/// using the deprecated parameters below are not replaced.
-///
-/// Setting any of the deprecated [open], [useRootOverlay], or
-/// [disableHoverableContent] parameters uses the legacy 1.1.0 implementation.
-/// These parameters will be removed in 2.0.0.
+/// and the replaced tooltip disappears without an exit animation.
 class NakedTooltip extends StatefulWidget {
   /// Creates a headless tooltip.
   const NakedTooltip({
@@ -45,43 +35,21 @@ class NakedTooltip extends StatefulWidget {
     required this.child,
     required this.overlayBuilder,
     this.tooltipKey,
-    @Deprecated(
-      'Use tooltipKey to show on command and onOpenChanged to observe '
-      'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
-      'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-    )
-    this.open,
     this.onOpenChanged,
     this.isFocusVisible,
     this.hoverDelay = Duration.zero,
     this.touchDelay = const Duration(milliseconds: 1500),
     this.dismissDelay = const Duration(milliseconds: 100),
-    @Deprecated(
-      'RawTooltip keeps the tooltip visible while its content is hovered. '
-      'Setting this runs the naked_ui 1.1.0 implementation. '
-      'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-    )
-    this.disableHoverableContent = false,
     this.enableTapToDismiss = true,
     this.triggerMode = TooltipTriggerMode.longPress,
     this.enableFeedback = true,
     this.onTriggered,
     this.animationStyle = _defaultTooltipAnimationStyle,
     this.positioning = const OverlayPositionConfig(),
-    @Deprecated(
-      'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
-      '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-    )
-    this.useRootOverlay = false,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.excludeOverlaySemantics,
-  }) : assert(
-         tooltipKey == null ||
-             (open == null && !useRootOverlay && !disableHoverableContent),
-         'tooltipKey has no effect with the deprecated open, '
-         'useRootOverlay, or disableHoverableContent parameters.',
-       );
+  });
 
   /// The widget that triggers the tooltip.
   final Widget child;
@@ -95,22 +63,11 @@ class NakedTooltip extends StatefulWidget {
   /// A key for imperative control via [RawTooltipState.ensureTooltipVisible].
   final GlobalKey<RawTooltipState>? tooltipKey;
 
-  /// Whether the tooltip is open when controlled, or `null` when uncontrolled.
-  @Deprecated(
-    'Use tooltipKey to show on command and onOpenChanged to observe '
-    'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
-    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  final bool? open;
-
   /// A callback invoked when the tooltip visible state changes.
   ///
   /// [RawTooltip] owns visibility. A tooltip replaced by another reports
   /// `false` at once. Notifications arrive after the current frame and stop
   /// when this widget is disposed.
-  ///
-  /// When the deprecated [open] parameter is non-null, this callback requests a
-  /// state change that the caller applies by updating [open].
   final ValueChanged<bool>? onOpenChanged;
 
   /// Reports whether focus is visible, as CSS `:focus-visible` defines it:
@@ -120,9 +77,6 @@ class NakedTooltip extends StatefulWidget {
   /// that a closing menu or dialog hands back to the trigger after pointer
   /// use does not open it. Hover still does. When `null`, every focus shows
   /// the tooltip.
-  ///
-  /// The deprecated [open], [useRootOverlay], and [disableHoverableContent]
-  /// parameters run the 1.1.0 implementation, which ignores this.
   final ValueGetter<bool>? isFocusVisible;
 
   /// The semantic label attached to the trigger.
@@ -139,14 +93,6 @@ class NakedTooltip extends StatefulWidget {
 
   /// The delay before pointer exit requests the tooltip to close.
   final Duration dismissDelay;
-
-  /// Whether hovering the overlay content does not preserve visibility.
-  @Deprecated(
-    'RawTooltip keeps the tooltip visible while its content is hovered. '
-    'Setting this runs the naked_ui 1.1.0 implementation. '
-    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  final bool disableHoverableContent;
 
   /// Whether tapping outside an open tooltip dismisses it.
   final bool enableTapToDismiss;
@@ -173,13 +119,6 @@ class NakedTooltip extends StatefulWidget {
   /// off may still show once without motion.
   final AnimationStyle animationStyle;
 
-  /// Whether the tooltip is inserted into the root overlay.
-  @Deprecated(
-    'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
-    '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  final bool useRootOverlay;
-
   /// Whether to hide the trigger and overlay subtrees from the semantics tree.
   final bool excludeSemantics;
 
@@ -205,7 +144,6 @@ class _NakedTooltipState extends State<NakedTooltip>
   // activation each supersede the previous one, hiding it.
   static _NakedTooltipState? _current;
 
-  final _childKey = GlobalKey();
   final _internalTooltipKey = GlobalKey<RawTooltipState>();
   // Hides the overlay content as soon as another tooltip takes over, so the
   // previous bubble's exit animation never overlaps the next bubble.
@@ -216,9 +154,7 @@ class _NakedTooltipState extends State<NakedTooltip>
   bool _reducedMotion = false;
   CurvedAnimation? _rawAnimation;
 
-  // RawTooltip has no focus trigger, Escape binding, or placement callback.
-  // The fields below keep naked_ui 1.1.0's focus, Escape, and placement
-  // behavior on top of it.
+  // Focus trigger, Escape dismissal, and placement state layered over RawTooltip.
   Timer? _focusTimer;
   bool _focusWithin = false;
   bool _triggerHovered = false;
@@ -321,22 +257,6 @@ class _NakedTooltipState extends State<NakedTooltip>
         widget.positioning.alignment != oldWidget.positioning.alignment) {
       _placement = _initialPlacement(widget.positioning);
     }
-    if (_usesLegacyTooltip && identical(_current, this)) _current = null;
-    if (oldWidget.open != null && widget.open == null && _usesLegacyTooltip) {
-      _visible = oldWidget.open!;
-    }
-    if (_usesLegacy(oldWidget) && !_usesLegacyTooltip) {
-      // 1.1.0 kept the last accepted state when a controlled tooltip became
-      // uncontrolled. The RawTooltip path starts closed, so reopen it.
-      if (oldWidget.open == true) {
-        _visible = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && !_usesLegacyTooltip) _show();
-        });
-      } else if (_visible) {
-        _setVisible(false);
-      }
-    }
   }
 
   @override
@@ -351,9 +271,8 @@ class _NakedTooltipState extends State<NakedTooltip>
 
   void _show() => _tooltipKey.currentState?.ensureTooltipVisible();
 
-  Iterable<_NakedTooltipState> get _others => _mountedTooltips.where(
-    (tooltip) => !identical(tooltip, this) && !tooltip._usesLegacyTooltip,
-  );
+  Iterable<_NakedTooltipState> get _others =>
+      _mountedTooltips.where((tooltip) => !identical(tooltip, this));
 
   // Makes this the only tooltip that may be visible. RawTooltip already
   // dismisses unhovered tooltips when another trigger is hovered, so hover
@@ -505,49 +424,8 @@ class _NakedTooltipState extends State<NakedTooltip>
     });
   }
 
-  static bool _usesLegacy(NakedTooltip widget) =>
-      widget.open != null ||
-      widget.useRootOverlay ||
-      widget.disableHoverableContent;
-
-  bool get _usesLegacyTooltip => _usesLegacy(widget);
-
-  Widget _buildLegacyTooltip(Widget child) => LegacyNakedTooltip(
-    overlayBuilder: widget.overlayBuilder,
-    open: widget.open,
-    onOpenChanged: (open) {
-      if (widget.open == null) _visible = open;
-      widget.onOpenChanged?.call(open);
-    },
-    hoverDelay: widget.hoverDelay,
-    touchDelay: widget.touchDelay,
-    dismissDelay: widget.dismissDelay,
-    disableHoverableContent: widget.disableHoverableContent,
-    enableTapToDismiss: widget.enableTapToDismiss,
-    triggerMode: widget.triggerMode,
-    enableFeedback: widget.enableFeedback,
-    onTriggered: widget.onTriggered,
-    animationStyle: _reducedMotion
-        ? widget.animationStyle.copyWith(
-            duration: Duration.zero,
-            reverseDuration: Duration.zero,
-          )
-        : widget.animationStyle,
-    positioning: widget.positioning,
-    useRootOverlay: widget.useRootOverlay,
-    semanticLabel: widget.semanticLabel,
-    excludeSemantics: widget.excludeSemantics,
-    excludeOverlaySemantics: widget.excludeOverlaySemantics,
-    child: child,
-  );
-
   @override
   Widget build(BuildContext context) {
-    // Keep the trigger's state when a deprecated parameter switches between
-    // the RawTooltip path and the 1.1.0 implementation.
-    final child = KeyedSubtree(key: _childKey, child: widget.child);
-    if (_usesLegacyTooltip) return _buildLegacyTooltip(child);
-
     final textDirection = Directionality.of(context);
     final animationStyle = _animationStyle;
     Widget result = RawTooltip(
@@ -604,7 +482,7 @@ class _NakedTooltipState extends State<NakedTooltip>
 
         return placement.offset;
       },
-      child: child,
+      child: widget.child,
     );
     result = MouseRegion(
       opaque: false,

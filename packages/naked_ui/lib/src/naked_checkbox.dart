@@ -241,8 +241,8 @@ class _NakedCheckboxState extends State<NakedCheckbox>
   void didUpdateWidget(covariant NakedCheckbox oldWidget) {
     super.didUpdateWidget(oldWidget);
     syncWidgetStates();
-    if (oldWidget.value != widget.value) {
-      updateSelectedState(widget.value == true, null);
+    if (!widget._effectiveEnabled) {
+      updatePressState(false, widget.onPressChange);
     }
   }
 

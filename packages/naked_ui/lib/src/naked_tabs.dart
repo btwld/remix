@@ -451,12 +451,21 @@ class _NakedTabState extends State<NakedTab>
     if (target != null) requestFocusInView(target);
   }
 
+  void _syncTabStates() {
+    updateDisabledState(!_isEnabled);
+    updateSelectedState(_scope.isTabSelected(widget.tabId), null);
+    if (!_isEnabled) {
+      updatePressState(false, widget.onPressChange);
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _scope = NakedTabsScope.of(context);
     _isEnabled = widget.enabled && _scope.enabled;
     _applyFocusability();
+    _syncTabStates();
   }
 
   @override
@@ -464,6 +473,7 @@ class _NakedTabState extends State<NakedTab>
     super.didUpdateWidget(oldWidget);
     _isEnabled = widget.enabled && _scope.enabled;
     _applyFocusability();
+    _syncTabStates();
   }
 
   @override
@@ -471,8 +481,6 @@ class _NakedTabState extends State<NakedTab>
     assert(widget.tabId.isNotEmpty, 'tabId cannot be empty');
 
     final isSelected = _scope.isTabSelected(widget.tabId);
-    updateDisabledState(!_isEnabled);
-    updateSelectedState(isSelected, null);
 
     final tabState = NakedTabState(states: widgetStates, tabId: widget.tabId);
 

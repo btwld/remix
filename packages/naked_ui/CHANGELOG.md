@@ -1,3 +1,24 @@
+## Unreleased
+
+### Breaking changes
+
+- Remove the deprecated `NakedTooltip.open`, `useRootOverlay`, and
+  `disableHoverableContent` parameters and the internal 1.1.0 compatibility
+  fallback (`LegacyNakedTooltip`). `NakedTooltip` now always builds on
+  `RawTooltip`; use `tooltipKey` (`GlobalKey<RawTooltipState>`) to show a
+  tooltip imperatively and `onOpenChanged` to observe visibility.
+
+### Fixes
+
+- Replace visible trigger text with `NakedPopover.semanticLabel` on the default
+  `NakedButton` trigger path as well as the child-owned `Focus` trigger path,
+  and stop observing a child `FocusNode` when `openOnTap` is `false` or
+  `triggerFocusNode` is provided.
+- Move `NakedTab` disabled and selected `WidgetState` synchronization out of
+  `build()` into `didChangeDependencies` and `didUpdateWidget`, and clear
+  `WidgetState.pressed` when a pressed `NakedTab` or `NakedCheckbox` becomes
+  disabled.
+
 ## 1.5.0
 
 ### Features

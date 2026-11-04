@@ -456,6 +456,40 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets(
+      'semanticLabel overrides visible trigger text on both trigger paths',
+      (tester) async {
+        final handle = tester.ensureSemantics();
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        for (final child in <Widget>[
+          const Text('Visible Trigger'),
+          Focus(focusNode: focusNode, child: const Text('Visible Trigger')),
+        ]) {
+          await tester.pumpWidget(
+            _buildTestApp(
+              NakedPopover(
+                semanticLabel: 'Filter options',
+                popoverBuilder: (context, info) => const Text('Content'),
+                child: child,
+              ),
+            ),
+          );
+
+          final data = tester
+              .getSemantics(find.text('Visible Trigger'))
+              .getSemanticsData();
+          expect(data.label, 'Filter options');
+          expect(data.flagsCollection.isButton, isTrue);
+          expect(data.flagsCollection.isExpanded, Tristate.isFalse);
+          expect(data.hasAction(SemanticsAction.tap), isTrue);
+        }
+
+        handle.dispose();
+      },
+    );
+
     // AC: openOnTap: false does not gain controller-mutating expand/collapse
     // actions; the trigger's activation policy stays caller-owned.
     testWidgets('openOnTap: false exposes no expand/collapse actions or state', (
