@@ -307,6 +307,7 @@ registries:
 
     expect(progress, [
       'Fetching registry items...',
+      'Checking the Flutter SDK...',
       'Adding dependencies...',
       'Resolving dependencies...',
       'Generating adapters...',
@@ -331,6 +332,7 @@ registries:
 
     expect(progress, [
       'Fetching registry items...',
+      'Checking the Flutter SDK...',
       'Comparing with installed source...',
     ]);
     expect(output.last, 'No authored-source differences.');
@@ -356,9 +358,9 @@ registries:
         sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsA(
-        isA<FormatException>().having(
-          (error) => error.message,
-          'message',
+        isA<ProcessFailure>().having(
+          (error) => error.toString(),
+          'toString',
           'Could not inspect the active Flutter SDK: could not start '
               'flutter. No such file or directory',
         ),
@@ -1143,9 +1145,9 @@ packages:
         sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['theme'], mode: AddMode.diff)),
       throwsA(
-        isA<FormatException>().having(
-          (error) => error.message,
-          'message',
+        isA<ProcessFailure>().having(
+          (error) => error.toString(),
+          'toString',
           startsWith('Could not diff with git: could not start git.'),
         ),
       ),
@@ -1968,6 +1970,7 @@ dev_dependencies:
     test('a bug inside the install keeps its own type and stack', () async {
       writeRequiredPubspec(root);
       writeRequiredLock(root);
+      final progress = <String>[];
       final happy = happyRunner(root);
       final runner = RecordingProcessRunner((invocation) {
         if (invocation.arguments.join(' ') == 'pub get') {
@@ -1980,6 +1983,7 @@ dev_dependencies:
         Installer(
           projectRoot: root,
           writeOut: (_) {},
+          writeProgress: progress.add,
           processRunner: runner,
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
@@ -1991,6 +1995,7 @@ dev_dependencies:
           ),
         ),
       );
+      expect(progress.last, 'Completed steps: none.');
     });
 
     test('an unknown item in the batch fails before any write', () async {

@@ -17,16 +17,16 @@ const failureExitCode = 1;
 
 /// `add --diff --exit-code` found authored source that differs.
 ///
-/// Not [failureExitCode]: CI has to tell drift from a failed `pub get`.
+/// CI has to tell drift from a failed `pub get`, so this is not
+/// [failureExitCode].
 const driftExitCode = 2;
 
 typedef LineWriter = void Function(String line);
 
 /// The presets `remix init --help` describes, in `registry/index.yaml` order.
 ///
-/// Help text, not validation: the pinned index owns the real set and
-/// `catalogPathForPreset` enforces it, so a newer preset still installs with
-/// an older CLI. A test pins these keys to the checkout's index.
+/// Help only. The pinned index validates the preset, so no `allowed:` list
+/// rejects a preset this build predates.
 const officialPresets = {
   'vanilla': 'Neutral, minimal theme inspired by shadcn/ui.',
   'fortal': "Fortal's own visual language.",
@@ -45,15 +45,11 @@ final class InstallFailure implements Exception {
 }
 
 /// The text for a failure the user can act on, or null when [error] is a bug.
-///
-/// Expected failures print as their message alone, never behind a Dart type
-/// name. Anything this does not recognize is a defect in remix_cli and gets
-/// a bug report with its stack instead.
 String? expectedFailureMessage(Object error) => switch (error) {
   InstallFailure(:final message) => message,
   ProcessFailure() => error.toString(),
   FileSystemException(:final message, :final path, :final osError) =>
-    '$message${path == null ? '' : ': $path'}'
+    '$message${path == null || path.isEmpty ? '' : ': $path'}'
         '${osError == null ? '' : ' (${osError.message})'}',
   // toString, not message: YamlException keeps its line and column there, and
   // jsonDecode keeps its offset and excerpt.
@@ -66,8 +62,8 @@ String? expectedFailureMessage(Object error) => switch (error) {
 
 String _bugReport(Object error, StackTrace stack) {
   final details = '$error\n$stack'.trimRight().replaceAll('\n', '\n  ');
-  return 'remix_cli $remixCliVersion hit an unexpected error. This is a bug; '
-      'please report it at https://github.com/btwld/remix/issues with the '
+  return 'remix_cli $remixCliVersion hit an unexpected error. This is a bug. '
+      'Report it at https://github.com/btwld/remix/issues with the '
       'output below.\n  $details';
 }
 
@@ -75,8 +71,6 @@ typedef InitHandler = Future<void> Function(InitOptions options);
 typedef ListHandler = Future<void> Function(ListOptions options);
 typedef RegistryHandler = Future<void> Function(RegistryOptions options);
 
-/// The installer reports what `add` found; only the shell maps it to an exit
-/// code, so `--exit-code` never reaches [AddOptions].
 typedef AddHandler = Future<AddResult> Function(AddOptions options);
 
 enum AddResult {
@@ -184,6 +178,14 @@ Future<int> runRemixCli(
     writeError(runner.usage);
     return usageExitCode;
   }
+  if (!arguments.first.startsWith('-') &&
+      !runner.commands.containsKey(arguments.first)) {
+    return _writeUnknownCommand(
+      arguments.first,
+      runner: runner,
+      writeError: writeError,
+    );
+  }
 
   try {
     // CommandRunner already prints help when it returns no command result.
@@ -198,9 +200,32 @@ Future<int> runRemixCli(
   }
 }
 
-/// Subclassed only for the footer, which args exposes as a getter.
+int _writeUnknownCommand(
+  String name, {
+  required CommandRunner<int> runner,
+  required LineWriter writeError,
+}) {
+  writeError(
+    [
+      'Could not find a command named "$name".',
+      ?didYouMean(name, [
+        for (final MapEntry(:key, :value) in runner.commands.entries)
+          if (!value.hidden) key,
+      ]),
+    ].join('\n'),
+  );
+  writeError(runner.usage);
+  return usageExitCode;
+}
+
 final class _RemixRunner extends CommandRunner<int> {
-  _RemixRunner() : super('remix', 'Install editable Remix UI source.');
+  // args has its own command suggester; turning it off leaves one voice.
+  _RemixRunner()
+    : super(
+        'remix',
+        'Install editable Remix UI source.',
+        suggestionDistanceLimit: 0,
+      );
 
   @override
   String get usageFooter => '''
@@ -237,17 +262,11 @@ int? _writeRequestedHelp(
 
   final command = runner.commands[commandName];
   if (command == null || commandName == 'help') {
-    writeError(
-      [
-        'Could not find a command named "$commandName".',
-        ?didYouMean(commandName, [
-          for (final MapEntry(:key, :value) in runner.commands.entries)
-            if (!value.hidden) key,
-        ]),
-      ].join('\n'),
+    return _writeUnknownCommand(
+      commandName,
+      runner: runner,
+      writeError: writeError,
     );
-    writeError(runner.usage);
-    return usageExitCode;
   }
   writeOut(command.usage);
   return successExitCode;
@@ -262,8 +281,6 @@ final class _InitCommand extends Command<int> {
         valueHelp: 'Name',
         help: 'Type prefix for installed widgets, as in UiButton.',
       )
-      // No `allowed:`: the parser would reject a preset that the pinned
-      // index publishes but this CLI build predates.
       ..addOption(
         'preset',
         defaultsTo: 'vanilla',
@@ -294,8 +311,8 @@ final class _InitCommand extends Command<int> {
   String get usageFooter => '''
 
 Examples:
-  remix init                                  Vanilla preset, Ui prefix, source in lib/ui.
-  remix init --preset fortal --prefix Acme    Fortal source with widgets named AcmeButton.''';
+  remix init                                  Vanilla, Ui prefix, lib/ui.
+  remix init --preset fortal --prefix Acme    Fortal preset, AcmeButton.''';
 
   @override
   Future<int> run() async {
@@ -329,7 +346,7 @@ final class _AddCommand extends Command<int> {
         'diff',
         negatable: false,
         help:
-            'Show how installed source differs from the registry; write '
+            'Show how installed source differs from the registry and write '
             'nothing.',
       )
       ..addFlag(
@@ -369,11 +386,11 @@ final class _AddCommand extends Command<int> {
       '''
 
 Examples:
-  remix add button                       Install button and the items it needs.
+  remix add button                       Install button and what it needs.
   remix add button card dialog           Install several items at once.
-  remix add button --dry-run             Print the plan; change nothing.
-  remix add button --diff --exit-code    Exit $driftExitCode when installed source differs.
-  remix add @acme/card                   Install from a registry added with remix registry add.''';
+  remix add button --dry-run             Print the plan and change nothing.
+  remix add button --diff --exit-code    Exit $driftExitCode on drift, for CI.
+  remix add @acme/card                   Install from a registry you added.''';
 
   @override
   Future<int> run() async {
@@ -472,9 +489,9 @@ final class _RegistryCommand extends Command<int> {
   String get usageFooter => '''
 
 Examples:
-  remix registry add @acme --repository acme/design    Pin acme/design at its default branch.
-  remix registry update @remix                         Move @remix to the newest stable commit.
-  remix add @acme/card --diff                          Review what a moved pin would change.''';
+  remix registry add @acme --repository acme/design   Pin its default branch.
+  remix registry update @remix                        Re-pin to the newest stable commit.
+  remix add @acme/card --diff                         Review what a moved pin changes.''';
 }
 
 final class _RegistryActionCommand extends Command<int> {

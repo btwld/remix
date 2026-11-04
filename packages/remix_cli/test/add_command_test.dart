@@ -75,6 +75,33 @@ void main() {
     expect(runner.calls, isEmpty);
   });
 
+  test('a two-letter typo gets the list hint but no suggestion', () async {
+    final root = createFlutterPackage();
+    addTearDown(() => root.deleteSync(recursive: true));
+    final installer = Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      sources: const FixtureOfficialResolver(),
+    );
+    await installer.initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
+    );
+    final errors = <String>[];
+
+    await runInstallerCli(
+      ['add', 'bu'],
+      installer,
+      writeOut: (_) {},
+      writeError: errors.add,
+    );
+
+    expect(
+      errors.single,
+      'Unknown registry item @remix/bu in the vanilla preset.\n'
+      'Run remix list to see every item in the vanilla preset.',
+    );
+  });
+
   test('a misspelled item suggests the near match', () async {
     final root = createFlutterPackage();
     addTearDown(() => root.deleteSync(recursive: true));
@@ -99,7 +126,7 @@ void main() {
     expect(
       errors.single,
       'Unknown registry item @remix/buton in the vanilla preset.\n'
-      'Did you mean @remix/button?\n'
+      'Did you mean button?\n'
       'Run remix list to see every item in the vanilla preset.',
     );
   });

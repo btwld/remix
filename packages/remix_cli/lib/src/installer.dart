@@ -76,8 +76,6 @@ void _silent(String _) {}
 
 final class Installer {
   /// [writeProgress] receives a line before each wait that can last seconds.
-  /// It is status, not result, so `bin/remix.dart` sends it to stderr and
-  /// `add --diff` output stays a clean patch.
   Installer({
     required Directory projectRoot,
     required LineWriter writeOut,
@@ -164,13 +162,12 @@ final class Installer {
     });
   }
 
-  /// Reads `remix.yaml`, or names the command that needs `remix init` first.
-  (Directory, ProjectConfig) _readConfig({required String before}) {
+  (Directory, ProjectConfig) _readConfig({required String command}) {
     final root = validateFlutterPackageRoot(projectRoot);
     validateProjectFilePath(root, projectConfigFileName);
     final file = _projectFile(root, projectConfigFileName);
     if (!file.existsSync()) {
-      throw FormatException('Run remix init before remix $before.');
+      throw FormatException('Run remix init before remix $command.');
     }
     return (
       root,
@@ -179,10 +176,9 @@ final class Installer {
   }
 
   /// Prints every item the configured registries offer for the project's
-  /// preset, default registry first. It reads the pinned catalogs and nothing
-  /// else, so it runs no process and writes no file.
+  /// preset, default registry first.
   Future<void> list(ListOptions options) async {
-    final (_, config) = _readConfig(before: 'list');
+    final (_, config) = _readConfig(command: 'list');
     _writeProgress('Fetching registry items...');
     final catalogs = <String, RegistryCatalog>{
       for (final namespace in {
@@ -201,7 +197,7 @@ final class Installer {
   }
 
   Future<void> registry(RegistryOptions options) async {
-    final (root, config) = _readConfig(before: 'registry');
+    final (root, config) = _readConfig(command: 'registry');
     final file = _projectFile(root, projectConfigFileName);
     final namespace = options.namespace!;
     validateNamespace(namespace);
@@ -294,7 +290,7 @@ final class Installer {
   /// written, which is also what lets `--dry-run` and `--diff` report from the
   /// same work a real install would do rather than from a second guess at it.
   Future<_InstallPlan> _planAdd(AddOptions options) async {
-    final (root, config) = _readConfig(before: 'add');
+    final (root, config) = _readConfig(command: 'add');
     final barrelRelative = p.posix.join(config.uiPath, 'ui.dart');
     validateProjectFilePath(root, barrelRelative);
     final barrel = _projectFile(root, barrelRelative);
@@ -658,8 +654,11 @@ final class Installer {
       completed.add('analysis');
     } on Object catch (error) {
       final message = expectedFailureMessage(error);
-      if (message == null) rethrow;
       final done = completed.isEmpty ? 'none' : completed.join(', ');
+      if (message == null) {
+        _writeProgress('Completed steps: $done.');
+        rethrow;
+      }
       throw InstallFailure(
         '$message\nCompleted steps: $done. Fix the reported problem, then '
         'rerun remix add ${options.items.join(' ')}.',
@@ -694,6 +693,7 @@ final class Installer {
     final output = await _run(
       invocation,
       failure: 'Could not inspect the active Flutter SDK',
+      progress: 'Checking the Flutter SDK...',
     );
     final Object? machine;
     try {
@@ -734,11 +734,6 @@ final class Installer {
     );
   }
 
-  /// Every installer process goes through here, so each call site decides
-  /// its failure message and its phase line together.
-  ///
-  /// A [ProcessException] means the tool is not installed or not on PATH,
-  /// which is the user's environment, so it becomes an expected failure.
   /// [okExitCodes] exists for `git diff`, whose 1 means "differences".
   Future<ProcessOutput> _run(
     ProcessInvocation invocation, {
@@ -751,10 +746,7 @@ final class Installer {
     try {
       output = await _processRunner.run(invocation);
     } on ProcessException catch (error) {
-      throw FormatException(
-        '$failure: could not start ${invocation.executable}. '
-        '${error.message}',
-      );
+      throw ProcessFailure.unstarted(invocation, error, detail: failure);
     }
     if (!okExitCodes.contains(output.exitCode)) {
       throw ProcessFailure(invocation, output, detail: failure);
@@ -762,8 +754,6 @@ final class Installer {
     return output;
   }
 
-  /// Returns the verdict from the same test that picks the printed line, so
-  /// the exit code and the output cannot disagree.
   Future<AddResult> _printDiff({
     required String dart,
     required Directory root,

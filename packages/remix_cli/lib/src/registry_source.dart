@@ -137,8 +137,7 @@ String catalogPathForPreset(
   final presets = index['presets'];
   final catalogPath = presets is YamlMap ? presets[preset] : null;
   if (catalogPath is! String) {
-    // Only entries with a catalog path are presets, and YAML keys need not be
-    // strings.
+    // YAML keys need not be strings.
     final names = presets is YamlMap
         ? [
             for (final MapEntry(:key, :value) in presets.entries)

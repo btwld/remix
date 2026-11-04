@@ -11,8 +11,7 @@ String revisionLine(ProjectConfig config, String namespace) =>
     '${config.registries[namespace]!.revision}';
 
 /// The `remix list` text. Each registry prints its revision line, then its
-/// items grouped by the directory their first file installs to. A schema-2
-/// catalog carries no category, so the install layout is the grouping.
+/// items grouped by the directory their first file installs to.
 ///
 /// Names print the way `add` accepts them: bare for the default registry,
 /// qualified for every other one.
@@ -40,14 +39,14 @@ String catalogListingText(
         2;
     final groups = <String, List<RegistryItem>>{};
     for (final item in items) {
-      groups.putIfAbsent(_group(config, item), () => []).add(item);
+      groups.putIfAbsent(_installDirectory(config, item), () => []).add(item);
     }
     for (final MapEntry(key: group, value: members) in groups.entries) {
       lines.add('$group/');
       for (final item in members) {
         final needs = [
           for (final dependency in item.registryDependencies)
-            display(_qualify(dependency, namespace)),
+            display(qualifyRegistryItem(dependency, namespace)),
         ];
         final name = display('$namespace/${item.name}');
         lines.add(
@@ -65,12 +64,12 @@ String catalogListingText(
   return lines.join('\n');
 }
 
-/// The `remix list --json` document for scripts and agents. Ids are
-/// qualified, because `add` accepts that form for every registry.
+/// The `remix list --json` document. Ids are qualified.
 String catalogListingJson(
   ProjectConfig config,
   Map<String, RegistryCatalog> catalogs,
 ) => const JsonEncoder.withIndent('  ').convert({
+  'schema': 1,
   'preset': config.preset,
   'registries': [
     for (final MapEntry(key: namespace, value: catalog) in catalogs.entries)
@@ -83,10 +82,10 @@ String catalogListingJson(
           for (final item in catalog.items.values)
             {
               'id': '$namespace/${item.name}',
-              'group': _group(config, item),
+              'group': _installDirectory(config, item),
               'registryDependencies': [
                 for (final dependency in item.registryDependencies)
-                  _qualify(dependency, namespace),
+                  qualifyRegistryItem(dependency, namespace),
               ],
               'files': [
                 for (final file in item.files) config.targetPath(file.target),
@@ -100,13 +99,8 @@ String catalogListingJson(
   ],
 });
 
-String _group(ProjectConfig config, RegistryItem item) =>
+String _installDirectory(ProjectConfig config, RegistryItem item) =>
     p.posix.dirname(config.targetPath(item.files.first.target));
-
-/// Catalog dependencies are bare within their own registry and qualified
-/// across registries.
-String _qualify(String dependency, String namespace) =>
-    dependency.startsWith('@') ? dependency : '$namespace/$dependency';
 
 String _collapse(List<String> names) => names.length <= 4
     ? names.join(', ')

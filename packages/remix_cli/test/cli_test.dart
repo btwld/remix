@@ -26,7 +26,7 @@ void main() {
   group('help', () {
     test('describes every option and flag', () async {
       final undescribed = RegExp(
-        r'^\s*(-\w, )?--[\w-]+(=<[^>]+>)?\s*(\(defaults to [^)]*\))?$',
+        r'^\s*(-\w, )?--(\[no-\])?[\w-]+(=<[^>]+>)?\s*(\(defaults to [^)]*\))?$',
         multiLine: true,
       );
       for (final command in [
@@ -189,21 +189,32 @@ void main() {
     expect(errors.join('\n'), contains('Could not find a command named'));
   });
 
-  test('help for a misspelled list suggests it', () async {
-    final errors = <String>[];
+  test(
+    'a misspelled command suggests the same way with or without help',
+    () async {
+      for (final arguments in [
+        ['lsit'],
+        ['help', 'lsit'],
+        ['lsit', '--help'],
+      ]) {
+        final errors = <String>[];
 
-    final code = await runRemixCli(
-      ['help', 'lsit'],
-      writeOut: fail,
-      writeError: errors.add,
-    );
+        final code = await runRemixCli(
+          arguments,
+          writeOut: fail,
+          writeError: errors.add,
+        );
 
-    expect(code, usageExitCode);
-    expect(
-      errors.first,
-      'Could not find a command named "lsit".\nDid you mean list or init?',
-    );
-  });
+        expect(code, usageExitCode, reason: arguments.join(' '));
+        expect(
+          errors.first,
+          'Could not find a command named "lsit".\nDid you mean list or init?',
+          reason: arguments.join(' '),
+        );
+        expect(errors.last, contains('Usage: remix <command>'));
+      }
+    },
+  );
 
   test('list dispatches its output mode', () async {
     ListOptions? received;
@@ -477,6 +488,10 @@ void main() {
           OSError('Permission denied', 13),
         ),
         equals('Cannot open file: lib/ui/ui.dart (Permission denied)'),
+      ),
+      'FileSystemException without a path': (
+        const FileSystemException('Disk full'),
+        equals('Disk full'),
       ),
       'InstallFailure': (
         const InstallFailure('stopped\nCompleted steps: none.'),

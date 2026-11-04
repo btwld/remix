@@ -6,6 +6,23 @@ import 'package:remix_cli/src/process_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('an unstarted tool names the tool and the reason', () {
+    final failure = ProcessFailure.unstarted(
+      ProcessInvocation(
+        executable: 'git',
+        arguments: const ['diff'],
+        workingDirectory: '.',
+      ),
+      const ProcessException('git', ['diff'], 'No such file or directory', 2),
+      detail: 'Could not diff with git',
+    );
+
+    expect(
+      failure.toString(),
+      'Could not diff with git: could not start git. No such file or directory',
+    );
+  });
+
   test(
     'SystemProcessRunner passes literal arguments and environment',
     () async {

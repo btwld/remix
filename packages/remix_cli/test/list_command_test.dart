@@ -79,6 +79,7 @@ void main() {
     expect(await list(['--json']), successExitCode);
 
     final document = jsonDecode(output.single) as Map<String, Object?>;
+    expect(document['schema'], 1);
     expect(document['preset'], 'vanilla');
     final registry = (document['registries']! as List).single as Map;
     expect(registry['namespace'], '@remix');

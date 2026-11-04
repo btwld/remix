@@ -3,15 +3,15 @@ import 'dart:math' as math;
 /// The "Did you mean" sentence for [input] among [candidates], or null when
 /// none is close.
 ///
-/// Close means an edit distance of at most 2, the limit args uses for command
-/// names, or a candidate that starts with an input of three or more
-/// characters, so `data` finds `data_table`. At most three names, nearest
-/// first, ties alphabetical.
+/// Close means an edit distance of at most 2, or a candidate that starts with
+/// an input of three or more characters, so `data` finds `data_table`. At most
+/// three names, nearest first, ties alphabetical.
 String? didYouMean(String input, Iterable<String> candidates) {
   final close =
       [
         for (final candidate in candidates.toSet())
-          if (_editDistance(input, candidate) case final distance
+          if (_optimalStringAlignmentDistance(input, candidate)
+              case final distance
               when distance <= 2 ||
                   (input.length >= 3 && candidate.startsWith(input)))
             (distance: distance, name: candidate),
@@ -28,9 +28,7 @@ String? didYouMean(String input, Iterable<String> candidates) {
   };
 }
 
-/// Optimal string alignment distance: Levenshtein plus adjacent
-/// transpositions, so `lsit` is one edit from `list`.
-int _editDistance(String a, String b) {
+int _optimalStringAlignmentDistance(String a, String b) {
   final rows = List.generate(
     a.length + 1,
     (i) => List.generate(b.length + 1, (j) => i == 0 ? j : (j == 0 ? i : 0)),
