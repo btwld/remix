@@ -293,6 +293,79 @@ registries:
     },
   );
 
+  test('add reports each slow phase on the progress writer only', () async {
+    final output = <String>[];
+    final progress = <String>[];
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      writeProgress: progress.add,
+      processRunner: happyRunner(root, addMissingDependencies: true),
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+
+    expect(progress, [
+      'Fetching registry items...',
+      'Adding dependencies...',
+      'Resolving dependencies...',
+      'Generating adapters...',
+      'Analyzing...',
+    ]);
+    expect(output, isNot(contains(endsWith('...'))));
+    expect(output.last, 'Generated lib/ui/components/button.g.dart.');
+  });
+
+  test('diff reports fetching and comparing on the progress writer', () async {
+    await installButton(root);
+    final output = <String>[];
+    final progress = <String>[];
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      writeProgress: progress.add,
+      processRunner: happyRunner(root),
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.diff));
+
+    expect(progress, [
+      'Fetching registry items...',
+      'Comparing with installed source...',
+    ]);
+    expect(output.last, 'No authored-source differences.');
+  });
+
+  test('a missing Flutter SDK is an expected failure', () async {
+    writeRequiredPubspec(root);
+    writeRequiredLock(root);
+    final runner = RecordingProcessRunner(
+      (invocation) => throw ProcessException(
+        invocation.executable,
+        invocation.arguments,
+        'No such file or directory',
+        2,
+      ),
+    );
+
+    await expectLater(
+      Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          'Could not inspect the active Flutter SDK: could not start '
+              'flutter. No such file or directory',
+        ),
+      ),
+    );
+  });
+
   test('generated build filter strips the lib/ directory', () async {
     final caseRoot = createFlutterPackage();
     addTearDown(() => caseRoot.deleteSync(recursive: true));
@@ -911,7 +984,7 @@ packages:
       );
       expect(
         output.join('\n'),
-        contains('Generated: lib/ui/components/button.g.dart'),
+        contains('Will generate: lib/ui/components/button.g.dart'),
       );
     },
   );
@@ -1069,7 +1142,13 @@ packages:
         processRunner: runner,
         sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['theme'], mode: AddMode.diff)),
-      throwsFormatException,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          startsWith('Could not diff with git: could not start git.'),
+        ),
+      ),
     );
     expect(snapshotFiles(root), before);
   });

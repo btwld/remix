@@ -70,21 +70,29 @@ final class AtomicProjectFileWriter implements ProjectFileWriter {
   }
 }
 
+void _silent(String _) {}
+
 final class Installer {
+  /// [writeProgress] receives a line before each wait that can last seconds.
+  /// It is status, not result, so `bin/remix.dart` sends it to stderr and
+  /// `add --diff` output stays a clean patch.
   Installer({
     required Directory projectRoot,
     required LineWriter writeOut,
+    LineWriter writeProgress = _silent,
     ProcessRunner processRunner = const SystemProcessRunner(),
     ProjectFileWriter fileWriter = const AtomicProjectFileWriter(),
     RegistrySources sources = const GitHubSources(),
   }) : projectRoot = projectRoot.absolute,
        _writeOut = writeOut,
+       _writeProgress = writeProgress,
        _processRunner = processRunner,
        _fileWriter = fileWriter,
        _sources = sources;
 
   final Directory projectRoot;
   final LineWriter _writeOut;
+  final LineWriter _writeProgress;
   final ProcessRunner _processRunner;
   final ProjectFileWriter _fileWriter;
   final RegistrySources _sources;
@@ -274,6 +282,7 @@ final class Installer {
     final currentBarrel = barrel.readAsStringSync();
     validateManagedBarrel(currentBarrel);
 
+    _writeProgress('Fetching registry items...');
     final graph = await RegistryGraph.resolve(config, options.items, _sources);
     for (final namespace in graph.catalogs.keys) {
       _writeOut(
@@ -495,7 +504,7 @@ final class Installer {
           final descriptor = '${requirement.name}@${requirement.constraint}';
           arguments.add(requirement.dev ? 'dev:$descriptor' : descriptor);
         }
-        await _checked(
+        await _run(
           ProcessInvocation(
             // Windows batch execution consumes caret version constraints.
             // Dart pub uses the same SDK through FLUTTER_ROOT.
@@ -506,18 +515,20 @@ final class Installer {
                 ? {'FLUTTER_ROOT': toolchain.sdkRoot}
                 : null,
           ),
-          detail: 'Could not add required dependencies',
+          failure: 'Could not add required dependencies',
+          progress: 'Adding dependencies...',
         );
         completed.add('dependency declarations');
       }
 
-      await _checked(
+      await _run(
         ProcessInvocation(
           executable: toolchain.flutter,
           arguments: const ['pub', 'get'],
           workingDirectory: root.path,
         ),
-        detail: 'Could not resolve consumer dependencies',
+        failure: 'Could not resolve consumer dependencies',
+        progress: 'Resolving dependencies...',
       );
       completed.add('pub get');
       final locked = _verifyLockedVersions(root, requirements);
@@ -566,13 +577,13 @@ final class Installer {
       }
       if (pathsToWrite.isNotEmpty) {
         completed.add('authored source');
-        await _checked(
+        await _run(
           ProcessInvocation(
             executable: toolchain.dart,
             arguments: ['format', ...pathsToWrite],
             workingDirectory: root.path,
           ),
-          detail: 'Could not format installed source',
+          failure: 'Could not format installed source',
         );
         completed.add('format');
       }
@@ -592,7 +603,7 @@ final class Installer {
       if (needsGeneration) {
         final packageName =
             (loadYaml(pubspec.readAsStringSync()) as YamlMap)['name'] as String;
-        await _checked(
+        await _run(
           ProcessInvocation(
             executable: toolchain.dart,
             arguments: [
@@ -604,7 +615,8 @@ final class Installer {
             ],
             workingDirectory: root.path,
           ),
-          detail: 'Mix code generation failed',
+          failure: 'Mix code generation failed',
+          progress: 'Generating adapters...',
         );
         for (final target in generationTargets) {
           if (!_projectFile(root, target).existsSync()) {
@@ -615,13 +627,14 @@ final class Installer {
         regenerated = true;
       }
 
-      await _checked(
+      await _run(
         ProcessInvocation(
           executable: toolchain.dart,
           arguments: ['analyze', config.uiPath],
           workingDirectory: root.path,
         ),
-        detail: 'Installed UI analysis failed',
+        failure: 'Installed UI analysis failed',
+        progress: 'Analyzing...',
       );
       completed.add('analysis');
     } on Object catch (error) {
@@ -659,9 +672,9 @@ final class Installer {
       arguments: const ['--version', '--machine'],
       workingDirectory: root.path,
     );
-    final output = await _checked(
+    final output = await _run(
       invocation,
-      detail: 'Could not inspect the active Flutter SDK',
+      failure: 'Could not inspect the active Flutter SDK',
     );
     final Object? machine;
     try {
@@ -702,13 +715,30 @@ final class Installer {
     );
   }
 
-  Future<ProcessOutput> _checked(
+  /// Every installer process goes through here, so each call site decides
+  /// its failure message and its phase line together.
+  ///
+  /// A [ProcessException] means the tool is not installed or not on PATH,
+  /// which is the user's environment, so it becomes an expected failure.
+  /// [okExitCodes] exists for `git diff`, whose 1 means "differences".
+  Future<ProcessOutput> _run(
     ProcessInvocation invocation, {
-    required String detail,
+    required String failure,
+    String? progress,
+    Set<int> okExitCodes = const {0},
   }) async {
-    final output = await _processRunner.run(invocation);
-    if (output.exitCode != 0) {
-      throw ProcessFailure(invocation, output, detail: detail);
+    if (progress != null) _writeProgress(progress);
+    final ProcessOutput output;
+    try {
+      output = await _processRunner.run(invocation);
+    } on ProcessException catch (error) {
+      throw FormatException(
+        '$failure: could not start ${invocation.executable}. '
+        '${error.message}',
+      );
+    }
+    if (!okExitCodes.contains(output.exitCode)) {
+      throw ProcessFailure(invocation, output, detail: failure);
     }
     return output;
   }
@@ -762,35 +792,31 @@ final class Installer {
       _writeDiffFile(proposed, barrelRelative, proposedBarrel);
       proposedDartPaths.add(barrelRelative);
 
-      await _checked(
+      await _run(
         ProcessInvocation(
           executable: dart,
           arguments: ['format', ...proposedDartPaths],
           workingDirectory: proposed.path,
         ),
-        detail: 'Could not format proposed source for diff',
+        failure: 'Could not format proposed source for diff',
+        progress: 'Comparing with installed source...',
       );
 
-      final invocation = ProcessInvocation(
-        executable: 'git',
-        arguments: [
-          'diff',
-          '--no-index',
-          '--',
-          p.basename(current.path),
-          p.basename(proposed.path),
-        ],
-        workingDirectory: parent.path,
+      final output = await _run(
+        ProcessInvocation(
+          executable: 'git',
+          arguments: [
+            'diff',
+            '--no-index',
+            '--',
+            p.basename(current.path),
+            p.basename(proposed.path),
+          ],
+          workingDirectory: parent.path,
+        ),
+        failure: 'Could not diff with git',
+        okExitCodes: const {0, 1},
       );
-      final ProcessOutput output;
-      try {
-        output = await _processRunner.run(invocation);
-      } on ProcessException catch (error) {
-        throw FormatException('Git is required for --diff: $error');
-      }
-      if (output.exitCode != 0 && output.exitCode != 1) {
-        throw ProcessFailure(invocation, output, detail: 'Git diff failed');
-      }
       if (output.stdout.trim().isEmpty) {
         _writeOut('No authored-source differences.');
         return AddResult.done;
@@ -827,7 +853,7 @@ final class Installer {
     }
     _writeOut('Exports: ${exports.join(', ')}');
     _writeOut(
-      'Generated: ${generated.isEmpty ? 'none' : generated.join(', ')}',
+      'Will generate: ${generated.isEmpty ? 'none' : generated.join(', ')}',
     );
   }
 }
