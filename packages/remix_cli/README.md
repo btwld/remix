@@ -204,6 +204,25 @@ theme files, not a complete app host or appearance picker. See the
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
 
+## List the items you can add
+
+```shell
+dart run remix_cli:remix list
+```
+
+`list` prints every item the pinned registries offer for the project's preset,
+grouped by the directory it installs to, with the items each one needs. Names
+print the way `add` accepts them: bare for the default registry, qualified
+(`@acme/card`) for every other registry in `remix.yaml`. `list` reads the
+pinned catalogs and changes nothing.
+
+For scripts and agents, `--json` prints one JSON document on stdout with
+qualified ids, dependencies, and the files each item installs:
+
+```shell
+dart run remix_cli:remix list --json
+```
+
 ## Add a component
 
 ```shell
@@ -409,6 +428,16 @@ Compare the requested item with the pinned registry source using Git's no-index 
 dart run remix_cli:remix add button --diff
 ```
 
+`--diff` exits `0` whether or not it finds differences. To fail a CI step when
+installed source drifts from the pin, add `--exit-code`:
+
+```shell
+dart run remix_cli:remix add button --diff --exit-code
+```
+
+The command then exits `2` when authored source differs, and `1` still means a
+failure.
+
 After reviewing the difference, replace only the requested item's authored
 files:
 
@@ -443,6 +472,12 @@ in place for inspection. Fix the reported issue and rerun the same command.
 - `64`: invalid command or command-line arguments
 - `1`: project/configuration, registry, dependency, process, generation,
   analysis, or filesystem failure
+- `2`: `--diff --exit-code` found authored-source differences
+
+Errors print as plain messages on stderr. An unexpected internal error prints a
+bug report with the `remix_cli` version and a stack trace instead. While `add`
+runs, it prints one progress line on stderr before each slow phase, so stdout
+keeps only the plan, the diff, and the result.
 
 ## Manual updates
 
